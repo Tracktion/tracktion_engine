@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -26,29 +26,33 @@ ExternalController::ExternalController (Engine& e, ControlSurface* c)  : engine 
     wantsClock = cs.wantsClock;
     followsTrackSelection = cs.followsTrackSelection;
     deletable = cs.deletable;
-    auxBank = cs.wantsAuxBanks ? 0 : -1;
+    auxBank = cs.wantsAuxBanks || cs.auxMode == AuxPosition::byPosition ? 0 : -1;
     allowBankingOffEnd = cs.allowBankingOffEnd;
 
     numDevices = engine.getPropertyStorage().getPropertyItem (SettingID::externControlNum, getName(), 1);
     mainDevice = engine.getPropertyStorage().getPropertyItem (SettingID::externControlMain, getName(), 0);
 
-    inputDeviceName[0]  = storage.getPropertyItem (SettingID::externControlIn, getName());
-    outputDeviceName[0] = storage.getPropertyItem (SettingID::externControlOut, getName());
+    inputDeviceNames.add (storage.getPropertyItem (SettingID::externControlIn, getName()));
+    outputDeviceNames.add (storage.getPropertyItem (SettingID::externControlOut, getName()));
 
     for (int i = 1; i < maxDevices; i++)
     {
-        inputDeviceName[i]  = storage.getPropertyItem (SettingID::externControlIn, getName() + juce::String (i));
-        outputDeviceName[i] = storage.getPropertyItem (SettingID::externControlOut, getName() + juce::String (i));
+        inputDeviceNames.add (storage.getPropertyItem (SettingID::externControlIn, getName() + juce::String (i)));
+        outputDeviceNames.add (storage.getPropertyItem (SettingID::externControlOut, getName() + juce::String (i)));
     }
 
-    oscInputPort        = storage.getPropertyItem (SettingID::externOscInputPort, getName());
-    oscOutputPort       = storage.getPropertyItem (SettingID::externOscOutputPort, getName());
-    oscOutputAddr       = storage.getPropertyItem (SettingID::externOscOutputAddr, getName());
+    inputDevices.resize ((size_t) maxDevices);
+    outputDevices.resize ((size_t) maxDevices);
 
-    showSelection       = storage.getPropertyItem (SettingID::externControlShowSelection, getName());
-    selectionColour     = juce::Colour::fromString (storage.getPropertyItem (SettingID::externControlSelectionColour, getName(),
+    oscInputPort            = storage.getPropertyItem (SettingID::externOscInputPort, getName());
+    oscOutputPort           = storage.getPropertyItem (SettingID::externOscOutputPort, getName());
+    oscOutputAddr           = storage.getPropertyItem (SettingID::externOscOutputAddr, getName());
+
+    showTrackSelection      = storage.getPropertyItem (SettingID::externControlShowSelection, getName());
+    showClipSlotSelection   = storage.getPropertyItem (SettingID::externControlShowClipSlotSelection, getName());
+    selectionColour         = juce::Colour::fromString (storage.getPropertyItem (SettingID::externControlSelectionColour, getName(),
                                                                           juce::Colours::red.withHue (0.0f).withSaturation (0.7f).toString()).toString());
-    enabled             = storage.getPropertyItem (SettingID::externControlEnable, getName());
+    enabled                 = storage.getPropertyItem (SettingID::externControlEnable, getName());
 
     midiInOutDevicesChanged();
     oscSettingsChanged();
@@ -59,6 +63,9 @@ ExternalController::ExternalController (Engine& e, ControlSurface* c)  : engine 
 
     updateDeviceState();
     changeParamBank (0);
+
+    auto& dm = engine.getDeviceManager();
+    dm.addChangeListener (this);
 }
 
 ExternalController::~ExternalController()
@@ -73,9 +80,10 @@ ExternalController::~ExternalController()
     controlSurface = nullptr;
 
     auto& dm = engine.getDeviceManager();
+    dm.removeChangeListener (this);
 
-    for (int i = dm.getNumMidiInDevices(); --i >= 0;)
-        if (auto min = dynamic_cast<PhysicalMidiInputDevice*> (dm.getMidiInDevice(i)))
+    for (auto& d : dm.getMidiInDevices())
+        if (auto min = dynamic_cast<PhysicalMidiInputDevice*> (d.get()))
             if (min->isEnabled())
                 min->removeExternalController (this);
 
@@ -86,12 +94,25 @@ ExternalController::~ExternalController()
     }
 }
 
+void ExternalController::changeListenerCallback (juce::ChangeBroadcaster*)
+{
+    hasMidiInput = {};
+}
+
 juce::String ExternalController::getName() const
 {
     if (auto cs = controlSurface.get())
         return cs->deviceDescription;
 
     return {};
+}
+
+bool ExternalController::wantsDevice (const MidiID& m)
+{
+    if (auto cs = controlSurface.get())
+        return cs->wantsDevice (m);
+
+    return false;
 }
 
 juce::String ExternalController::getDesiredMidiChannel() const
@@ -124,10 +145,26 @@ void ExternalController::currentEditChanged (Edit* edit)
     }
 }
 
+void ExternalController::currentSelectionManagerChanged (SelectionManager* sm)
+{
+    if (controlSurface != nullptr)
+    {
+        CRASH_TRACER
+        getControlSurface().currentSelectionManagerChanged (sm);
+    }
+}
+
 bool ExternalController::isEnabled() const
 {
     if (needsChannel)
-        return getMidiInputDevice (0).isNotEmpty();
+    {
+        if (hasMidiInput.has_value())
+            return *hasMidiInput;
+
+        hasMidiInput = getMidiInputDevice (0).isNotEmpty();
+
+        return *hasMidiInput;
+    }
 
     return enabled;
 }
@@ -178,8 +215,10 @@ void ExternalController::setMainDevice (int num)
 
 juce::String ExternalController::getMidiInputDevice (int idx) const
 {
-    if (getMidiInputPorts().contains (inputDeviceName[idx]))
-        return inputDeviceName[idx];
+    auto name = inputDeviceNames[idx];
+
+    if (name.isNotEmpty() && getMidiInputPorts().contains (name))
+        return name;
 
     return {};
 }
@@ -194,16 +233,21 @@ void ExternalController::setMidiInputDevice (int idx, const juce::String& nameOf
                 if (c != this && c->getMidiInputDevice (idx) == nameOfMidiInput)
                     c->setMidiInputDevice (idx, {});
 
-    inputDeviceName[idx] = nameOfMidiInput;
-    engine.getPropertyStorage().setPropertyItem (SettingID::externControlIn, getName() + (idx > 0 ? juce::String (idx) : juce::String()), inputDeviceName[idx]);
+    hasMidiInput = {};
+    inputDeviceNames.set (idx, nameOfMidiInput);
+    engine.getPropertyStorage().setPropertyItem (SettingID::externControlIn,
+                                                 getName() + (idx > 0 ? juce::String (idx) : juce::String()),
+                                                 nameOfMidiInput);
 
     midiInOutDevicesChanged();
 }
 
 juce::String ExternalController::getBackChannelDevice (int idx) const
 {
-    if (getMidiOutputPorts().contains (outputDeviceName[idx]))
-        return outputDeviceName[idx];
+    auto name = outputDeviceNames[idx];
+
+    if (name.isNotEmpty() && getMidiOutputPorts().contains (name))
+        return name;
 
     return {};
 }
@@ -253,30 +297,36 @@ void ExternalController::midiInOutDevicesChanged()
 
     auto& dm = engine.getDeviceManager();
 
+    auto oldInputDevices = inputDevices;
+    auto oldOutputDevices = outputDevices;
+
     for (auto& i : inputDevices)
         i = nullptr;
 
-    for (int i = dm.getNumMidiInDevices(); --i >= 0;)
+    for (auto& d : dm.getMidiInDevices())
     {
         CRASH_TRACER
-        auto min = dynamic_cast<PhysicalMidiInputDevice*> (dm.getMidiInDevice(i));
 
-        if (min != nullptr && min->isEnabled())
+        if (auto min = dynamic_cast<PhysicalMidiInputDevice*> (d.get()))
         {
-            bool used = false;
-            for (int j = 0; j < numDevices; j++)
+            if (min->isEnabled())
             {
-                if (min->getName().equalsIgnoreCase (inputDeviceName[j]))
-                {
-                    inputDevices[j] = min;
-                    used = true;
-                }
-            }
+                bool used = false;
 
-            if (used)
-                min->setExternalController (this);
-            else
-                min->removeExternalController (this);
+                for (int j = 0; j < numDevices; j++)
+                {
+                    if (min->getName().equalsIgnoreCase (inputDeviceNames[j]))
+                    {
+                        inputDevices[(size_t) j] = min;
+                        used = true;
+                    }
+                }
+
+                if (used)
+                    min->setExternalController (this);
+                else
+                    min->removeExternalController (this);
+            }
         }
     }
 
@@ -288,23 +338,31 @@ void ExternalController::midiInOutDevicesChanged()
         CRASH_TRACER
         auto mo = dm.getMidiOutDevice (i);
 
+        bool used = false;
         for (int j = 0; j < numDevices; j++)
         {
-            if (mo != nullptr && mo->isEnabled() && mo->getName().equalsIgnoreCase (outputDeviceName[j]))
+            if (mo != nullptr && mo->isEnabled() && mo->getName().equalsIgnoreCase (outputDeviceNames[j]))
             {
-                outputDevices[j] = mo;
+                outputDevices[(size_t) j] = mo;
                 mo->setSendControllerMidiClock (wantsClock);
+                used = true;
             }
         }
+
+        if (used)
+            mo->setExternalController (this);
+        else
+            mo->removeExternalController (this);
     }
 
-    startTimer (100);
+    if (oldInputDevices != inputDevices || oldOutputDevices != outputDevices)
+        startTimer (100);
 }
 
 void ExternalController::timerCallback()
 {
     stopTimer();
-    
+
     CRASH_TRACER
     if (controlSurface != nullptr)
         getControlSurface().initialiseDevice (isEnabled());
@@ -340,8 +398,10 @@ void ExternalController::setBackChannelDevice (int idx, const juce::String& name
                     c->setBackChannelDevice (i, {});
     }
 
-    outputDeviceName[idx] = nameOfMidiOutput;
-    engine.getPropertyStorage().setPropertyItem (SettingID::externControlOut, getName() + (idx > 0 ? juce::String (idx) : juce::String()), outputDeviceName[idx]);
+    outputDeviceNames.set (idx, nameOfMidiOutput);
+    engine.getPropertyStorage().setPropertyItem (SettingID::externControlOut,
+                                                 getName() + (idx > 0 ? juce::String (idx) : juce::String()),
+                                                 nameOfMidiOutput);
 
     midiInOutDevicesChanged();
 }
@@ -351,7 +411,7 @@ bool ExternalController::isUsingMidiOutputDevice (const MidiOutputDevice* d) con
     for (auto od : outputDevices)
         if (od == d)
             return true;
-    
+
     return false;
 }
 
@@ -389,12 +449,22 @@ void ExternalController::setSelectionColour (juce::Colour c)
     }
 }
 
-void ExternalController::setShowSelectionColour (bool b)
+void ExternalController::setShowTrackSelectionColour (bool b)
 {
-    if (showSelection != b)
+    if (showTrackSelection != b)
     {
-        showSelection = b;
+        showTrackSelection = b;
         engine.getPropertyStorage().setPropertyItem (SettingID::externControlShowSelection, getName(), b);
+        getControlSurface().changed();
+    }
+}
+
+void ExternalController::setShowClipSlotSelectionColour (bool b)
+{
+    if (showClipSlotSelection != b)
+    {
+        showClipSlotSelection = b;
+        engine.getPropertyStorage().setPropertyItem (SettingID::externControlShowClipSlotSelection, getName(), b);
         getControlSurface().changed();
     }
 }
@@ -407,11 +477,11 @@ void ExternalController::moveFader (int channelNum, float newSliderPos)
         getControlSurface().moveFader (i, newSliderPos);
 }
 
-void ExternalController::moveMasterFaders (float newLeftPos, float newRightPos)
+void ExternalController::moveMasterFader (float newPos)
 {
     CRASH_TRACER
     if (controlSurface != nullptr)
-        getControlSurface().moveMasterLevelFader (newLeftPos, newRightPos);
+        getControlSurface().moveMasterLevelFader (newPos);
 }
 
 void ExternalController::movePanPot (int channelNum, float newPan)
@@ -420,6 +490,11 @@ void ExternalController::movePanPot (int channelNum, float newPan)
 
     if (i >= 0)
         getControlSurface().movePanPot (i, newPan);
+}
+
+void ExternalController::moveMasterPanPot (float newPan)
+{
+    getControlSurface().moveMasterPanPot (newPan);
 }
 
 void ExternalController::updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState state, bool isBright)
@@ -582,7 +657,7 @@ void ExternalController::changeFaderBank (int delta, bool moveSelection)
 
             updateDeviceState();
 
-            if (selectedChannels.size() > 0 && getShowSelectionColour() && isEnabled())
+            if (selectedChannels.size() > 0 && getShowTrackSelectionColour() && isEnabled())
                 for (int i = 0; i < selectedChannels.size(); ++i)
                     ecm.repaintTrack (selectedChannels[i]);
 
@@ -593,6 +668,23 @@ void ExternalController::changeFaderBank (int delta, bool moveSelection)
                         if (! sm->isSelected (t) || sm->getNumObjectsSelected() != 1)
                             sm->selectOnly (t);
             }
+        }
+    }
+}
+
+void ExternalController::changePadBank (int delta)
+{
+    if (controlSurface != nullptr)
+    {
+        padStart = std::max (0, padStart + delta);
+        updatePadColours();
+
+        auto& ecm = getExternalControllerManager();
+
+        if (getShowClipSlotSelectionColour() && isEnabled())
+        {
+            for (int i = channelStart; i < (channelStart + getNumFaderChannels()); ++i)
+                ecm.repaintSlots (i);
         }
     }
 }
@@ -632,7 +724,7 @@ void ExternalController::updateParamList()
             else
            #endif
             {
-                if (getControlSurfaceIfType<CustomControlSurface>() == nullptr)
+                if (getControlSurface().wantsDummyParams)
                     for (int i = 0; i < 2; ++i)
                         possibleParams.add (nullptr);
             }
@@ -653,10 +745,15 @@ void ExternalController::updateParamList()
     }
 }
 
-void ExternalController::userMovedParameterControl (int paramNumber, float newValue)
+void ExternalController::userMovedParameterControl (int paramNumber, float newValue, bool delta)
 {
     if (auto p = currentParams[paramNumber])
-        p->midiControllerMoved (newValue);
+    {
+        if (delta)
+            p->midiControllerMoved (std::clamp (p->getCurrentNormalisedValue() + newValue, 0.0f, 1.0f));
+        else
+            p->midiControllerMoved (newValue);
+    }
 }
 
 void ExternalController::userPressedParameterControl (int paramNumber)
@@ -853,7 +950,7 @@ void ExternalController::curveHasChanged (AutomatableParameter&)
     triggerAsyncUpdate();
 }
 
-void ExternalController::currentValueChanged (AutomatableParameter&, float)
+void ExternalController::currentValueChanged (AutomatableParameter&)
 {
     updateParams = true;
     triggerAsyncUpdate();
@@ -861,11 +958,17 @@ void ExternalController::currentValueChanged (AutomatableParameter&, float)
 
 void ExternalController::updateTrackSelectLights()
 {
-    if (getEdit() != nullptr)
-        if (auto sm = getExternalControllerManager().getSelectionManager())
-            for (int chan = channelStart; chan < (channelStart + getNumFaderChannels()); ++chan)
+    for (int chan = channelStart; chan < (channelStart + getNumFaderChannels()); ++chan)
+    {
+        bool selected = false;
+
+        if (getEdit() != nullptr)
+            if (auto sm = getExternalControllerManager().getSelectionManager())
                 if (auto t = getExternalControllerManager().getChannelTrack (chan))
-                    trackSelected (chan, sm->isSelected (t));
+                    selected = sm->isSelected (t);
+
+        trackSelected (chan, selected);
+    }
 }
 
 void ExternalController::updateTrackRecordLights()
@@ -884,7 +987,7 @@ void ExternalController::updateTrackRecordLights()
                 {
                     if (auto at = dynamic_cast<AudioTrack*> (t))
                     {
-                        if (in->isRecordingActive (*at) && in->getTargetTracks().contains (at))
+                        if (in->isRecordingActive (at->itemID) && in->getTargets().contains (at->itemID))
                         {
                             isRecording = true;
                             break;
@@ -894,7 +997,16 @@ void ExternalController::updateTrackRecordLights()
 
                 getControlSurface().trackRecordEnabled (chan - channelStart, isRecording);
             }
+            else
+            {
+                getControlSurface().trackRecordEnabled (chan - channelStart, false);
+            }
         }
+    }
+    else
+    {
+        for (int chan = channelStart; chan < (channelStart + getNumFaderChannels()); ++chan)
+            getControlSurface().trackRecordEnabled (chan - channelStart, false);
     }
 }
 
@@ -917,6 +1029,171 @@ void ExternalController::updateUndoLights()
         if (auto cs = controlSurface.get())
             cs->undoStatusChanged (ed->getUndoManager().canUndo(),
                                    ed->getUndoManager().canRedo());
+}
+
+void ExternalController::clearPadColours()
+{
+    auto& cs = getControlSurface();
+
+    if (cs.numberOfTrackPads > 0)
+    {
+        for (auto track = 0; track < cs.numberOfFaderChannels; track++)
+        {
+            cs.clipsPlayingStateChanged (track, false);
+            for (auto scene = 0; scene < cs.numberOfTrackPads; scene++)
+                cs.padStateChanged (track, scene, 0, 0);
+        }
+    }
+}
+
+void ExternalController::updatePadColours()
+{
+    auto& ecm = getExternalControllerManager();
+    auto& cs = getControlSurface();
+
+    if (cs.numberOfTrackPads > 0)
+    {
+        for (auto track = 0; track < cs.numberOfFaderChannels; track++)
+        {
+            {
+                bool isPlaying = false;
+
+                if (auto at = dynamic_cast<AudioTrack*> (ecm.getChannelTrack (track + channelStart)))
+                {
+                    for (auto slot : at->getClipSlotList().getClipSlots())
+                    {
+                        if (auto dest = slot->getInputDestination(); dest && dest->input.isRecording (dest->targetID))
+                            isPlaying = true;
+
+                        if (auto c = slot->getClip())
+                            if (auto lh = c->getLaunchHandle())
+                                if (lh->getPlayingStatus() == LaunchHandle::PlayState::playing || lh->getQueuedStatus() == LaunchHandle::QueueState::playQueued)
+                                    isPlaying = true;
+
+                        if (isPlaying)
+                            break;
+                    }
+                }
+
+                cs.clipsPlayingStateChanged (track, isPlaying);
+            }
+
+            for (auto scene = 0; scene < cs.numberOfTrackPads; scene++)
+            {
+                auto colourIdx = 0;
+                auto state = 0;
+
+                if (auto ft = dynamic_cast<FolderTrack*> (ecm.getChannelTrack (track + channelStart)))
+                {
+                    for (auto at : ft->getAllAudioSubTracks (true))
+                    {
+                        if (auto slot = at->getClipSlotList().getClipSlots()[padStart + scene])
+                        {
+                            if (auto c = slot->getClip())
+                            {
+                                auto col = c->getColour();
+
+                                if (! col.isTransparent())
+                                {
+                                    auto numColours = 19;
+                                    auto newHue = col.getHue();
+
+                                    colourIdx = cs.limitedPadColours ? 1 : juce::jlimit (0, numColours - 1, juce::roundToInt (newHue * (numColours - 1) + 1));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (auto at = dynamic_cast<AudioTrack*> (ecm.getChannelTrack (track + channelStart)))
+                {
+                    if (auto slot = at->getClipSlotList().getClipSlots()[padStart + scene])
+                    {
+                        if (auto dest = slot->getInputDestination(); dest && dest->input.isRecording (dest->targetID))
+                        {
+                            auto epc = dest->input.edit.getTransport().getCurrentPlaybackContext();
+                            const auto currentTime = epc ? epc->getUnloopedPosition() : dest->input.edit.getTransport().getPosition();
+
+                            if (currentTime < dest->input.getPunchInTime (dest->targetID))
+                            {
+                                colourIdx = cs.limitedPadColours ? 3 : 1;
+                                state = 1;
+                            }
+                            else
+                            {
+                                colourIdx = cs.limitedPadColours ? 3 : 1;
+                                state = 2;
+                            }
+                        }
+                        else if (auto c = slot->getClip())
+                        {
+                            auto col = c->getColour();
+
+                            if (! col.isTransparent())
+                            {
+                                auto numColours = 19;
+                                auto newHue = col.getHue();
+
+                                colourIdx = cs.limitedPadColours ? 1 : juce::jlimit (0, numColours - 1, juce::roundToInt (newHue * (numColours - 1) + 1));
+                            }
+
+                            if (auto tc = getTransport())
+                            {
+                                if (auto lh = c->getLaunchHandle())
+                                {
+                                    if (lh->getPlayingStatus() == LaunchHandle::PlayState::playing)
+                                    {
+                                        colourIdx = cs.limitedPadColours ? 2 : 8;
+                                        state = tc->isPlaying() ? 2 : 1;
+                                    }
+                                    else if (lh->getQueuedStatus() == LaunchHandle::QueueState::playQueued)
+                                    {
+                                        colourIdx = cs.limitedPadColours ? 2 : 8;;
+                                        state = 1;
+                                    }
+                                }
+                            }
+                        }
+                        else if (cs.recentlyPressedPads.contains ({track + channelStart, padStart + scene}))
+                        {
+                            auto anyPlaying = [&]()
+                            {
+                                if (auto tc = getTransport())
+                                {
+                                    for (auto slot_ : at->getClipSlotList().getClipSlots())
+                                    {
+                                        if (auto c_ = slot_->getClip())
+                                        {
+                                            if (auto lh = c_->getLaunchHandle())
+                                            {
+                                                if (lh->getPlayingStatus() == LaunchHandle::PlayState::playing && tc->isPlaying())
+                                                    return true;
+                                                else if (lh->getQueuedStatus() == LaunchHandle::QueueState::playQueued)
+                                                    return true;
+                                            }
+                                        }
+                                    }
+                                }
+                                return false;
+                            };
+
+                            if (anyPlaying())
+                            {
+                                colourIdx = cs.limitedPadColours ? 3 : 1;
+                                state = 1;
+                            }
+                            else
+                            {
+                                cs.recentlyPressedPads.erase ({track + channelStart, padStart + scene});
+                            }
+                        }
+                    }
+                }
+
+                cs.padStateChanged (track, scene, colourIdx, state);
+            }
+        }
+    }
 }
 
 void ExternalController::updateDeviceState()
@@ -972,19 +1249,19 @@ void ExternalController::updateDeviceState()
                     }
                 }
 
+                updateTrackSelectLights();
+                updateTrackRecordLights();
                 soloCountChanged (anySoloTracks);
             }
 
             {
                 CRASH_TRACER
-                float l = 0, r = 0;
 
                 if (auto masterVol = edit->getMasterVolumePlugin())
-                    getGainsFromVolumeFaderPositionAndPan (masterVol->getSliderPos(), masterVol->getPan(),
-                                                           getDefaultPanLaw(), l, r);
-
-                moveMasterFaders (gainToVolumeFaderPosition (l),
-                                  gainToVolumeFaderPosition (r));
+                {
+                    moveMasterFader (masterVol->getSliderPos());
+                    moveMasterPanPot (masterVol->getPan());
+                }
 
                 juce::StringArray trackNames;
 
@@ -999,7 +1276,7 @@ void ExternalController::updateDeviceState()
                         if (trackName.startsWithIgnoreCase (TRANS("Track") + " ") && trackName.length() > maxTrackNameChars)
                             trackName = juce::String (trackName.getTrailingIntValue());
                         else if (trackName.length() > maxTrackNameChars)
-                            trackName = shortenName (trackName, 7);
+                            trackName = shortenName (trackName, maxTrackNameChars);
 
                         name = trackName.substring (0, maxTrackNameChars);
                     }
@@ -1008,6 +1285,8 @@ void ExternalController::updateDeviceState()
                 }
 
                 cs.faderBankChanged (channelStart, trackNames);
+
+                updatePadColours();
 
                 if (cs.showingMarkers())
                     ecm.updateMarkers();
@@ -1042,6 +1321,12 @@ void ExternalController::updateDeviceState()
                 jassertfalse;
             }
         }
+        else
+        {
+            updateTrackSelectLights();
+            updateTrackRecordLights();
+            clearPadColours();
+        }
     }
 }
 
@@ -1058,24 +1343,54 @@ void ExternalController::auxSendLevelsChanged()
             {
                 auto at = dynamic_cast<AudioTrack*> (t);
 
-                if (auto aux = at ? at->getAuxSendPlugin (auxBank) : nullptr)
+                if (at == nullptr)
                 {
-                    auto nm = aux->getBusName();
+                    for (auto i = 0; i < cs.numAuxes; i++)
+                        cs.clearAux (chan - channelStart, i);
+                }
+                else if (cs.auxMode == AuxPosition::byPosition)
+                {
+                    for (auto i = 0; i < cs.numAuxes; i++)
+                    {
+                        if (auto aux = at->getAuxSendPlugin (auxBank + i, AuxPosition::byPosition))
+                        {
+                            auto nm = aux->getBusName();
 
-                    if (nm.length() > cs.numCharactersForAuxLabels)
-                        nm = shortenName (nm, 7);
+                            if (nm.length() > cs.numCharactersForAuxLabels)
+                                nm = shortenName (nm, cs.numCharactersForAuxLabels);
 
-                    cs.moveAux (chan - channelStart, nm.toRawUTF8(),
-                                decibelsToVolumeFaderPosition (aux->getGainDb()));
+                            cs.moveAux (chan - channelStart, i, nm.toRawUTF8(), decibelsToVolumeFaderPosition (aux->getGainDb()));
+                        }
+                        else
+                        {
+                            cs.clearAux (chan - channelStart, i);
+                        }
+                    }
                 }
                 else
                 {
-                    cs.clearAux (chan - channelStart);
+                    for (auto i = 0; i < cs.numAuxes; i++)
+                    {
+                        if (auto aux = at->getAuxSendPlugin (auxBank + i, AuxPosition::byBus))
+                        {
+                            auto nm = aux->getBusName();
+
+                            if (nm.length() > cs.numCharactersForAuxLabels)
+                                nm = shortenName (nm, cs.numCharactersForAuxLabels);
+
+                            cs.moveAux (chan - channelStart, i, nm.toRawUTF8(), decibelsToVolumeFaderPosition (aux->getGainDb()));
+                        }
+                        else
+                        {
+                            cs.clearAux (chan - channelStart, i);
+                        }
+                    }
                 }
             }
             else
             {
-                cs.clearAux (chan - channelStart);
+                for (auto i = 0; i < cs.numAuxes; i++)
+                    cs.clearAux (chan - channelStart, i);
             }
         }
     }
@@ -1087,11 +1402,12 @@ void ExternalController::acceptMidiMessage (MidiInputDevice& d, const juce::Midi
     const juce::ScopedLock sl (incomingMidiLock);
 
     int idx = 0;
-    for (int i = 0; i < int (std::size (inputDevices)); i++)
-        if (inputDevices[i] == &d)
-            idx = i;
 
-    pendingMidiMessages.add ({idx, m});
+    for (size_t i = 0; i < inputDevices.size(); ++i)
+        if (inputDevices[i] == &d)
+            idx = (int) i;
+
+    pendingMidiMessages.add ({ idx, m });
     processMidi = true;
     triggerAsyncUpdate();
 }
@@ -1099,9 +1415,10 @@ void ExternalController::acceptMidiMessage (MidiInputDevice& d, const juce::Midi
 bool ExternalController::wantsMessage (MidiInputDevice& d, const juce::MidiMessage& m)
 {
     int idx = 0;
-    for (int i = 0; i < int (std::size (inputDevices)); i++)
+
+    for (size_t i = 0; i < inputDevices.size(); ++i)
         if (inputDevices[i] == &d)
-            idx = i;
+            idx = (int) i;
 
     return controlSurface != nullptr && getControlSurface().wantsMessage (idx, m);
 }
@@ -1160,10 +1477,19 @@ juce::StringArray ExternalController::getMidiInputPorts() const
 
     auto& dm = engine.getDeviceManager();
 
-    for (int i = 0; i < dm.getNumMidiInDevices(); ++i)
-        if (auto m = dm.getMidiInDevice (i))
-            if (m->isEnabled())
-                inputNames.add (m->getName());
+    auto wantsDevice = [] ([[maybe_unused]] MidiInputDevice* in)
+    {
+       #if ! JUCE_DEBUG
+        if (dynamic_cast<VirtualMidiInputDevice*> (in))
+            return false;
+       #endif
+
+        return true;
+    };
+
+    for (auto& m : dm.getMidiInDevices())
+        if (m->isEnabled() && wantsDevice (m.get()))
+            inputNames.add (m->getName());
 
     return inputNames;
 }
@@ -1188,7 +1514,7 @@ bool ExternalController::shouldTrackBeColoured (int channelNum)
     return channelNum >= channelStart
             && channelNum < (channelStart + getNumFaderChannels())
             && getControlSurface().showingTracks()
-            && getShowSelectionColour()
+            && getShowTrackSelectionColour()
             && isEnabled();
 }
 
@@ -1197,7 +1523,7 @@ void ExternalController::getTrackColour (int channelNum, juce::Colour& color)
     if (channelNum >= channelStart
          && channelNum < channelStart + getNumFaderChannels()
          && getControlSurface().showingTracks()
-         && getShowSelectionColour()
+         && getShowTrackSelectionColour()
          && isEnabled())
     {
         if (color.getARGB() == 0)
@@ -1207,18 +1533,44 @@ void ExternalController::getTrackColour (int channelNum, juce::Colour& color)
     }
 }
 
+std::optional<ColourArea> ExternalController::getColouredArea (const Edit& e)
+{
+    if (&e != getEdit())
+        return {};
+
+    if (controlSurface == nullptr || controlSurface->numberOfTrackPads == 0 || ! getControlSurface().showingClipSlots() || ! getShowClipSlotSelectionColour() || ! isEnabled())
+        return {};
+
+    auto& ecm = getExternalControllerManager();
+
+    auto t1 = ecm.getChannelTrack (channelStart);
+    auto t2 = t1;
+
+    for (auto i = 0; i < controlSurface->numberOfFaderChannels; i++)
+        if (auto t = t2 = ecm.getChannelTrack (channelStart + i))
+            t2 = t;
+
+    if (t1 && t2)
+    {
+        ColourArea c = {getSelectionColour(), *t1, *t2, padStart, padStart + controlSurface->numberOfTrackPads - 1};
+        return c;
+    }
+
+    return {};
+}
+
 bool ExternalController::shouldPluginBeColoured (Plugin* p)
 {
     return controlSurface != nullptr
             && (getControlSurface().isPluginSelected (p)
                  || (p == currentParamSource && getControlSurface().showingPluginParams()))
-            && getShowSelectionColour()
+            && getShowTrackSelectionColour()
             && isEnabled();
 }
 
 void ExternalController::getPluginColour (Plugin* plugin, juce::Colour& color)
 {
-    if (shouldPluginBeColoured (plugin) && getShowSelectionColour() && isEnabled())
+    if (shouldPluginBeColoured (plugin) && getShowTrackSelectionColour() && isEnabled())
     {
         if (color.getARGB() == 0)
             color = getSelectionColour();
@@ -1305,7 +1657,24 @@ void ExternalController::changeAuxBank (int delta)
 {
     if (controlSurface != nullptr)
     {
-        auxBank = juce::jlimit (-1, 7, auxBank + delta);
+        if (getControlSurface().auxMode == AuxPosition::byPosition)
+            auxBank = juce::jlimit (0, 15, auxBank + delta);
+        else
+            auxBank = juce::jlimit (-1, 31, auxBank + delta);
+
+        getControlSurface().auxBankChanged (auxBank);
+        auxSendLevelsChanged();
+    }
+}
+
+void ExternalController::setAuxBank (int num)
+{
+    if (controlSurface != nullptr)
+    {
+        if (getControlSurface().auxMode == AuxPosition::byPosition)
+            auxBank = juce::jlimit (0, 15, num);
+        else
+            auxBank = juce::jlimit (-1, 31, num);
 
         getControlSurface().auxBankChanged (auxBank);
         auxSendLevelsChanged();

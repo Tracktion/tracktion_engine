@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -32,7 +32,7 @@ struct ProgramSet
     juce::OwnedArray<BankSet> banks;
 };
 
-std::unique_ptr<juce::XmlElement> exportProgramSet (ProgramSet& set)
+inline std::unique_ptr<juce::XmlElement> exportProgramSet (ProgramSet& set)
 {
     if (set.banks.isEmpty())
         return {};
@@ -58,7 +58,7 @@ std::unique_ptr<juce::XmlElement> exportProgramSet (ProgramSet& set)
     return rootXml;
 }
 
-BankSet* getBankSet (ProgramSet& set, const juce::String& name)
+inline BankSet* getBankSet (ProgramSet& set, const juce::String& name)
 {
     for (int i = 0; i < set.banks.size(); ++i)
         if (set.banks.getUnchecked (i)->name == name)
@@ -67,7 +67,7 @@ BankSet* getBankSet (ProgramSet& set, const juce::String& name)
     return set.banks.add (new BankSet (name));
 }
 
-std::unique_ptr<juce::XmlElement> convertMidnamToXml (const juce::File& src)
+inline std::unique_ptr<juce::XmlElement> convertMidnamToXml (const juce::File& src)
 {
     juce::String manufacturer;
     juce::StringArray models;

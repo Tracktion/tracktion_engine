@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -35,14 +35,13 @@ public:
     //==============================================================================
     static const char* xmlTypeName;
 
-    juce::String getName() override                     { return TRANS("VCA"); }
+    juce::String getName() const override               { return TRANS("VCA"); }
     juce::String getSelectableDescription() override    { return getName(); }
     juce::String getPluginType() override               { return xmlTypeName; }
     bool canBeAddedToClip() override                    { return false; }
     bool canBeAddedToRack() override                    { return false; }
     bool canBeAddedToFolderTrack()   override           { return true;  }
     bool canBeMoved() override;
-    bool needsConstantBufferSize() override             { return false; }
 
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;

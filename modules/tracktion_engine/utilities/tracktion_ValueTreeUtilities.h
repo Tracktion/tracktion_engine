@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -22,6 +22,17 @@ namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
+/** Ensures a property is a given type which can avoid having to parse a string
+    every time it is read after loading from XML.
+*/
+template<typename VarType>
+inline void convertPropertyToType (juce::ValueTree& v, const juce::Identifier& id)
+{
+    if (const auto* prop = v.getPropertyPointer (id))
+        if (prop->isString())
+            (*const_cast<juce::var*> (prop)) = static_cast<VarType> (*prop);
+}
+
 /** Sets a value if it is different and returns true, otherwise simply returns false. */
 template <typename T>
 static bool setIfDifferent (T& val, T newVal) noexcept
@@ -231,6 +242,7 @@ public:
     {
         int index1 = parent.indexOf (first->state);
         int index2 = parent.indexOf (second->state);
+        jassert (index1 >= 0 && index2 >= 0);
         return index1 - index2;
     }
 
@@ -453,6 +465,21 @@ static inline juce::ValueTree loadValueTree (const juce::File& file, bool asXml)
     return {};
 }
 
+/** Attempts to load a ValueTree from a file if the outer tag matches a given name.
+    This will first try to read as XML and the fall back to binary.
+*/
+static inline juce::ValueTree loadValueTree (const juce::File& file, const juce::Identifier& requiredTag)
+{
+    if (auto xml = juce::parseXMLIfTagMatches (file, requiredTag))
+        return juce::ValueTree::fromXml (*xml);
+
+    if (juce::FileInputStream is (file); is.openedOk())
+        if (auto vt = juce::ValueTree::readFromStream (is); vt.hasType (requiredTag))
+            return vt;
+
+    return {};
+}
+
 /** Saves a ValueTree to a File. */
 static inline bool saveValueTree (const juce::File& file, const juce::ValueTree& v, bool asXml)
 {
@@ -542,32 +569,16 @@ static inline juce::ValueTree getChildWithPropertyRecursively (const juce::Value
     return {};
 }
 
-/** Iterates the params array and copies and properties that are present in the ValueTree. */
-template<typename ValueType>
-static void copyPropertiesToNullTerminatedCachedValues (const juce::ValueTree& v, juce::CachedValue<ValueType>** params)
+template<typename ValueType, typename... CachedValues>
+static void copyPropertiesToCachedValues (const juce::ValueTree& v, juce::CachedValue<ValueType>& cachedValue, CachedValues&&... cachedValues)
 {
-    if (params == nullptr)
-    {
-        jassertfalse;
-        return;
-    }
+    if (auto p = v.getPropertyPointer (cachedValue.getPropertyID()))
+        cachedValue = ValueType (*p);
+    else
+        cachedValue.resetToDefault();
 
-    for (;;)
-    {
-        if (juce::CachedValue<ValueType>* cv = *params++)
-        {
-            const juce::Identifier& prop = cv->getPropertyID();
-
-            if (v.hasProperty (prop))
-                *cv = ValueType (v.getProperty (prop));
-            else
-                cv->resetToDefault();
-        }
-        else
-        {
-            break;
-        }
-    }
+    if constexpr (sizeof...(cachedValues) != 0)
+        copyPropertiesToCachedValues (v, std::forward<CachedValues> (cachedValues)...);
 }
 
 /** Strips out any invalid trees from the array. */

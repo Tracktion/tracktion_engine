@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -13,23 +13,29 @@ namespace tracktion { inline namespace engine
 
 namespace AppFunctions
 {
-    UIBehaviour& getCurrentUIBehaviour()
+    inline UIBehaviour& getCurrentUIBehaviour()
     {
         auto e = Engine::getEngines()[0];
         jassert (e != nullptr);
         return e->getUIBehaviour();
     }
 
-    Edit* getCurrentlyFocusedEdit()
+    inline PropertyStorage& getCurrentPropertyStorage()
+    {
+        auto e = Engine::getEngines()[0];
+        jassert (e != nullptr);
+        return e->getPropertyStorage();
+    }
+
+    inline Edit* getCurrentlyFocusedEdit()
     {
         if (auto e = getCurrentUIBehaviour().getCurrentlyFocusedEdit())
             return e;
-        
-        jassertfalse;
+
         return nullptr;
     }
 
-    TransportControl* getActiveTransport()
+    inline TransportControl* getActiveTransport()
     {
         if (auto ed = getCurrentlyFocusedEdit())
             return &ed->getTransport();
@@ -37,7 +43,7 @@ namespace AppFunctions
         return {};
     }
 
-    SelectionManager* getCurrentlyFocusedSelectionManagerWithValidEdit()
+    inline SelectionManager* getCurrentlyFocusedSelectionManagerWithValidEdit()
     {
         if (auto sm = getCurrentUIBehaviour().getCurrentlyFocusedSelectionManager())
             if (sm->edit != nullptr)
@@ -46,7 +52,7 @@ namespace AppFunctions
         return nullptr;
     }
 
-    SelectableList getSelectedItems()
+    inline SelectableList getSelectedItems()
     {
         SelectableList items;
 
@@ -67,17 +73,17 @@ namespace AppFunctions
         return false;
     }
 
-    void nudgeSelected (const juce::String& commandDesc)
+    inline void nudgeSelected (const juce::String& commandDesc)
     {
         getCurrentUIBehaviour().nudgeSelected (commandDesc);
     }
 
-    void zoomHorizontal (float increment)
+    inline void zoomHorizontal (float increment)
     {
         getCurrentUIBehaviour().zoomHorizontal (increment);
     }
 
-    void zoomVertical (float amount)
+    inline void zoomVertical (float amount)
     {
         getCurrentUIBehaviour().zoomVertical (amount);
     }
@@ -165,13 +171,19 @@ namespace AppFunctions
     void goToStart()
     {
         if (auto transport = getActiveTransport())
+        {
             toStart (*transport, getSelectedItems());
+            transport->startPosition = transport->getPosition();
+        }
     }
 
     void goToEnd()
     {
         if (auto transport = getActiveTransport())
+        {
             toEnd (*transport, getSelectedItems());
+            transport->startPosition = transport->getPosition();
+        }
     }
 
     void markIn (bool forceAtCursor)
@@ -197,7 +209,17 @@ namespace AppFunctions
     void stop()
     {
         if (auto transport = getActiveTransport())
-            transport->stop (false, false, true, juce::ModifierKeys::getCurrentModifiersRealtime().isCtrlDown());
+        {
+            if (transport->isPlaying())
+            {
+                transport->stop (false, false, true);
+            }
+            else
+            {
+                transport->startPosition = 0_tp;
+                transport->setPosition (0_tp);
+            }
+        }
     }
 
     void startStopPlay()
@@ -205,9 +227,27 @@ namespace AppFunctions
         if (auto transport = getActiveTransport())
         {
             if (transport->isPlaying())
+            {
+                stop();
+            }
+            else
+            {
+                if (getCurrentPropertyStorage().getProperty (SettingID::resetCursorOnPlay))
+                    transport->playFromStart (true);
+                else
+                    transport->play (true);
+            }
+        }
+    }
+
+    void continueStopPlay()
+    {
+        if (auto transport = getActiveTransport())
+        {
+            if (transport->isPlaying())
                 stop();
             else
-                start();
+                transport->play (true);
         }
     }
 
@@ -217,12 +257,19 @@ namespace AppFunctions
         {
             const bool wasRecording = transport->isRecording();
 
-            transport->stop (false, false);
-
-            if (! wasRecording)
+            if (wasRecording)
+            {
+                transport->stop (false, false);
+            }
+            else
             {
                 getCurrentUIBehaviour().stopPreviewPlayback();
-                transport->record (true);
+
+                if (! transport->isPlaying())
+                    if (getCurrentPropertyStorage().getProperty (SettingID::resetCursorOnPlay))
+                        transport->setPosition (transport->startPosition);
+
+                transport->record (true, true);
             }
         }
     }
@@ -318,7 +365,7 @@ namespace AppFunctions
     {
         if (auto ed = getCurrentlyFocusedEdit())
             return EditFileOperations (*ed).save (true, true, false);
-        
+
         return false;
     }
 
@@ -339,11 +386,11 @@ namespace AppFunctions
 
             for (auto in : ed->getAllInputDevices())
             {
-                if (in->isAttachedToTrack())
+                if (isAttached (*in))
                 {
-                    for (auto t : in->getTargetTracks())
+                    for (auto t : getTargetTracks (*in))
                     {
-                        if (in->isRecordingEnabled (*t))
+                        if (in->isRecordingEnabled (t->itemID))
                             ++numArmed;
                         else
                             ++numDisarmed;
@@ -352,9 +399,9 @@ namespace AppFunctions
             }
 
             for (auto in : ed->getAllInputDevices())
-                if (in->isAttachedToTrack())
-                    for (auto t : in->getTargetTracks())
-                        in->setRecordingEnabled (*t, numArmed <= numDisarmed);
+                if (isAttached (*in))
+                    for (auto t : getTargetTracks (*in))
+                        in->setRecordingEnabled (t->itemID, numArmed <= numDisarmed);
         }
     }
 
@@ -443,7 +490,7 @@ namespace AppFunctions
             if (transport->isRecording())
             {
                 transport->stop (true, true);
-                transport->record (true);
+                transport->record (true, true);
             }
         }
     }

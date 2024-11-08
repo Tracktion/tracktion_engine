@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -72,7 +72,7 @@ struct MPEStartTrimmer
         if (! wasFound (lastNoteOnIndex))
             return;
 
-        const auto noteOn = data.events[(size_t) lastNoteOnIndex].message.getShortMessage();
+        const auto& noteOn = data.events[(size_t) lastNoteOnIndex].message;
         const auto initial = searchBackForExpression (data, lastNoteOnIndex, (uint8_t) channel1to16, MessageToStopAt::noteOff);
         const auto mostRecent = searchBackForExpression (data, (int) trimIndex, (uint8_t) channel1to16, MessageToStopAt::noteOn);
 
@@ -119,10 +119,10 @@ private:
         {
             const auto& e = data.events[(size_t) startIndex];
 
-            if (! e.message.isShortMessage())
-                continue;
+            const auto& m = e.message;
 
-            const auto m = e.message.getShortMessage();
+            if (! m.isShortMessage())
+                continue;
 
             if (m.getChannel1to16() == channel1to16)
             {
@@ -190,12 +190,10 @@ private:
 
         for (int i = startIndex; --i >= 0;) // Find initial note-on timbre value
         {
-            const auto& e = data.events[(size_t) startIndex];
+            const auto& m = data.events[(size_t) startIndex].message;
 
-            if (! e.message.isShortMessage())
+            if (! m.isShortMessage())
                 continue;
-
-            const auto m = e.message.getShortMessage();
 
             if (m.getChannel1to16() != channel)
                 continue;

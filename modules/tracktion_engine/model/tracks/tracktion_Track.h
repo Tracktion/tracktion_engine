@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -18,13 +18,12 @@ namespace tracktion { inline namespace engine
 class Track   : public EditItem,
                 public Selectable,
                 public juce::ReferenceCountedObject,
-                public MacroParameterElement,
-                protected juce::ValueTree::Listener
+                protected juce::ValueTree::Listener,
+                protected juce::AsyncUpdater
 {
 public:
     /** Creates a track with a given state. */
-    Track (Edit&, const juce::ValueTree&,
-           double defaultTrackHeight, double minTrackHeight, double maxTrackHeight);
+    Track (Edit&, const juce::ValueTree&, bool hasModifierList);
 
     /** Destructor. */
     ~Track() override;
@@ -39,12 +38,12 @@ public:
         @see Edit::insertTrack
     */
     virtual void initialise();
-    
+
     /** Flushes all plugin states on the track to the state object.
         This is usually called automatically when an Edit is saved.
     */
     virtual void flushStateToValueTree();
-    
+
     /** Updates the current parameter bases on the set IDs.
         This is usually called automatically by the Edit when the ID changes or an
         Edit is loaded.
@@ -54,17 +53,17 @@ public:
 
     //==============================================================================
     /** Returns the name of the Track. */
-    juce::String getName() override                             { return trackName; }
+    juce::String getName() const override                       { return trackName; }
 
     /** Sets the name of the Track. */
     void setName (const juce::String&);
-    
+
     /** Sets the name of the Track to an empty string.
         Base classes may then use this an an indication to return a name based on
         the track type and index
     */
     void resetName();
-    
+
     /** Sub-classes can impliment this to avoid certain characters being used in a name. */
     virtual void sanityCheckName()                              {}
 
@@ -111,9 +110,6 @@ public:
 
     /** Returns true if this Track is movable. @see AudioTrack, FolderTrack */
     bool isMovable() const                                      { return isAudioTrack() || isFolderTrack(); }
-
-    /** Returns true if this a global Track and should be on top of others. @see MarkerTrack, TempoTrack */
-    bool isOnTop() const;
 
     /** Returns true if this track can have inputs assigned to it. @see AudioTrack */
     bool acceptsInput() const                                   { return isAudioTrack(); }
@@ -180,10 +176,10 @@ public:
         May be nullptr if it doesn't.
     */
     TrackList* getSubTrackList() const                          { return trackList.get(); }
-    
+
     /** Returns true if this track has any subtracks. */
     bool hasSubTracks() const                                   { return trackList != nullptr; }
-    
+
     /** Returns a clip one with a matching ID can be found on this Track. */
     virtual Clip* findClipForID (EditItemID) const;
 
@@ -223,10 +219,10 @@ public:
     juce::ValueTree getParentTrackTree() const;
 
     /** Returns the parent Track if this is a nested track. */
-    Track* getParentTrack() const                               { return dynamic_cast<Track*> (cachedParentTrack.get()); }
+    Track* getParentTrack() const                               { return cachedParentTrack; }
 
     /** Returns the parent FolderTrack if this is nested in one. */
-    FolderTrack* getParentFolderTrack() const                   { return getParentTrack() != nullptr ? cachedParentFolderTrack : nullptr; }
+    FolderTrack* getParentFolderTrack() const                   { return cachedParentFolderTrack; }
 
     /** Tests whether this is a child of a given Track. */
     bool isAChildOf (const Track& possibleParent) const;
@@ -240,7 +236,7 @@ public:
         Useful for naming Tracks.
     */
     int getIndexInEditTrackList() const;
-    
+
     /** Returns the number of parents within which this track is nested */
     int getTrackDepth() const;
 
@@ -298,8 +294,11 @@ public:
     void updateAudibility (bool areAnyTracksSolo);
 
     //==============================================================================
-    /** Returns all the parameteres for this track's Plugin[s] and Modifier[s]. */
+    /** Returns all the parameters for this track's Plugin[s] and Modifier[s]. */
     juce::Array<AutomatableParameter*> getAllAutomatableParams() const;
+
+    /** Visits all the parameters for this track's Plugin[s] and Modifier[s]. */
+    void visitAllAutomatableParams (const std::function<void(AutomatableParameter&)>&) const;
 
     /** Returns the parameter whos curve should be shown on this Track. */
     AutomatableParameter* getCurrentlyShownAutoParam() const noexcept;
@@ -321,12 +320,12 @@ public:
         @see Plugin, Modifier
     */
     juce::Array<AutomatableEditItem*> getAllAutomatableEditItems() const;
-    
+
     /** Returns all pugins on this Track.
         Subclasses may implement this to also return Plugin[s] on Clip[s]
     */
     virtual Plugin::Array getAllPlugins() const;
-    
+
     /** Sends a message to all plugins that the given plugin has changed. */
     virtual void sendMirrorUpdateToAllPlugins (Plugin& changedPlugin) const;
 
@@ -334,17 +333,13 @@ public:
     void flipAllPluginsEnablement();
 
     //==============================================================================
-    /** Returns the ModifierList for this Track. */
-    ModifierList& getModifierList() const                   { return *modifierList; }
+    /** Returns the ModifierList for this track, if it has one. */
+    ModifierList* getModifierList() const                   { return modifierList.get(); }
 
     //==============================================================================
     static const int minTrackHeightForDetail = 10;  /**< The minimim height to show track contents at. */
     static const int trackHeightForEditor = 180;    /**< The height at which inline editors should be shown. */
     static const int frozenTrackHeight = 15;        /**< The height to show group frozen tracks. */
-
-    const double defaultTrackHeight;    /**< The default height of this Track. */
-    const double minTrackHeight;        /**< The minimum height of this Track. */
-    const double maxTrackHeight;        /**< The maximum height of this Track. */
 
     //==============================================================================
     /** Sets a colour for this track to use. */
@@ -404,6 +399,8 @@ protected:
     void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override {}
     /** @internal */
     void valueTreeParentChanged (juce::ValueTree&) override;
+    /** @internal */
+    void handleAsyncUpdate() override;
 
     /** Returns whether this Track should be audible.
         Subclasses can override for custom behaviour.
@@ -428,8 +425,8 @@ private:
     bool imageChanged = false;
     std::atomic<bool> isAudible { true };
 
-    juce::WeakReference<Selectable> cachedParentTrack;
-    FolderTrack* cachedParentFolderTrack = nullptr;
+    SafeSelectable<Track> cachedParentTrack;
+    SafeSelectable<FolderTrack> cachedParentFolderTrack;
 
     //==============================================================================
     void updateTrackList();

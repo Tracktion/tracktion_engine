@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -11,8 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
-ChordClip::ChordClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTrack)
-    : Clip (v, targetTrack, id, Type::chord)
+ChordClip::ChordClip (const juce::ValueTree& v, EditItemID id, ClipOwner& targetParent)
+    : Clip (v, targetParent, id, Type::chord)
 {
     if (clipName.get().isEmpty())
         clipName = TRANS("Chord");
@@ -21,7 +21,7 @@ ChordClip::ChordClip (const juce::ValueTree& v, EditItemID id, ClipTrack& target
 
     if (pgen.isValid())
     {
-        patternGenerator.reset (new PatternGenerator (*this, pgen));
+        patternGenerator = std::make_unique<PatternGenerator> (*this, pgen);
 
         if (patternGenerator->getChordProgression().isEmpty())
             patternGenerator->setChordProgressionFromChordNames ({ "i" });
@@ -54,22 +54,17 @@ juce::Colour ChordClip::getDefaultColour() const
     return juce::Colours::red.withHue (1.0f / 9.0f);
 }
 
-void ChordClip::setTrack (ClipTrack* ct)
-{
-    Clip::setTrack (ct);
-}
-
 //==============================================================================
-bool ChordClip::canGoOnTrack (Track& t)
+bool ChordClip::canBeAddedTo (ClipOwner& co)
 {
-    return t.isChordTrack();
+    return isChordTrack (co);
 }
 
 void ChordClip::valueTreeChildAdded (juce::ValueTree&, juce::ValueTree& c)
 {
     if (c.hasType (IDs::PATTERNGENERATOR))
     {
-        patternGenerator.reset (new PatternGenerator (*this, c));
+        patternGenerator = std::make_unique<PatternGenerator> (*this, c);
 
         if (patternGenerator->getChordProgression().isEmpty())
             patternGenerator->setChordProgressionFromChordNames ({ "i" });

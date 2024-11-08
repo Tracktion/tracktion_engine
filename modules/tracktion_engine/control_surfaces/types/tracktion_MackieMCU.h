@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -10,6 +10,8 @@
 
 namespace tracktion { inline namespace engine
 {
+
+class MackieXT;
 
 class MackieMCU  : public ControlSurface,
                    protected juce::Timer,
@@ -50,10 +52,10 @@ public:
     virtual void setAssignmentMode (AssignmentMode);
     void moveFaderInt (int dev, int channelNum, float newSliderPos);
     void moveFader (int channelNum, float newSliderPos) override;
-    void moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos) override;
+    void moveMasterLevelFader (float newPos) override;
     void movePanPotInt (int dev, int channelNum, float newPan);
     void movePanPot (int channelNum, float newPan) override;
-    void moveAux (int channelNum, const char* bus, float newPos) override;
+    void moveAux (int channelNum, int auxNum, const char* bus, float newPos) override;
     void lightUpButton (int dev, int buttonNum, bool on);
     void updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState, bool isBright) override;
     void soloCountChanged (bool) override;
@@ -83,7 +85,7 @@ public:
     void markerChanged (int parameterNumber, const MarkerSetting&) override;
     void clearMarker (int parameterNumber) override;
     void auxBankChanged (int bank) override;
-    void clearAux (int channel) override;
+    void clearAux (int channel, int auxNum) override;
 
     //==============================================================================
     void registerXT (MackieXT*);

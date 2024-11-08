@@ -19,58 +19,90 @@ Basically CHOC is aimed at people (like me) who just want to use some decent lib
 
 ### Highlights
 
-The library is getting quite big now. Some of its many delights include:
+The library is getting quite big now! Some of its many delights include:
 
-##### Miscellaneous
+#### Miscellaneous
 
 - A tiny [platform-detection](./platform/choc_Platform.h) header.
 - A fast, round-trip-accurate [float/double to string converter](./text/choc_FloatToString.h).
-- Helpers for reading writing data with different [endianness](./platform/choc_Endianness.h).
 - Some headers which will [disable and reenable warnings](./platform/choc_DisableAllWarnings.h) for times when you have to include messy 3rd-party code in your otherwise faultless codebase.
 - The world's simplest [unit test framework](./tests/choc_UnitTest.h). I mainly wrote this so that CHOC can self-host its own unit-tests without any external dependencies, but have found it surprisingly useful for something that's about 100 lines of code.
 - Cross-platform [dynamic library loading](./platform/choc_DynamicLibrary.h).
+- A tempting-but-probably-perilous [in-memory DLL loader](./platform/choc_MemoryDLL.h) which can load a DLL from memory instead of a file (Windows only).
 - Various maths and bit-twiddling [bits and bobs](./math/choc_MathHelpers.h).
+- A system for easily adding and collecting all the [open-source licenses](./text/choc_OpenSourceLicenseList.h) that your project uses into a single string for displaying to a user (for license compliance).
+- A one-file header-only [encapsulation of zlib](./containers/choc_zlib.h), exposing `std::iostream` compatible classes for compressing and decompressing data.
+- A [Zip file reader](./containers/choc_ZipFile.h) and decompressor class.
+- A [HTTP and WebSocket server](./network/choc_HTTPServer.h) class. Life is too short to learn how `boost::beast` works and write all the boilerplate required just to serve some content and talk down a web-socket, so this class hides all the horribleness behind a very simple API.
 
-##### Text and Files
+#### Text and Files
 
 - [Utterly basic string stuff](./text/choc_StringUtilities.h) like trimming, splitting, joining, comparisons, etc. For god's sake, I shouldn't need to write my own library just to trim a string...
 - Some [more esoteric](./text/choc_StringUtilities.h) string utilities like pretty-printing durations and sizes, URI encoding, etc.
 - Some [UTF8](./text/choc_UTF8.h) validation and iteration classes.
 - Some [file utilities](./text/choc_Files.h) to provide single-function-call ways to do obvious things like loading a file's content, or saving a string into a file, creating self-deleting temp files, etc.
-- A [CodePrinter](./text/CodePrinter.h) class to help creating indented code listings.
+- A [file watcher](./platform/choc_FileWatcher.h) class for monitoring changes to a file or folder.
+- A [CodePrinter](./text/choc_CodePrinter.h) class to help creating indented code listings.
 - A [HTML generator](./text/choc_HTML.h) for creating a tree of DOM objects and generating HTML text for it
 - A [text table generator](./text/choc_TextTable.h), which can take an array of strings and tabulate it to align the columns nicely.
 - A [file wildcard](./text/choc_Wildcard.h) matcher. I claim this is the cleanest possible implementation of this algorithm - I challenge you to prove me wrong!
-- A [base64](./text/choc_Base64.h) encoder/decoder.
-- An implementation of the [xxHash](./text/choc_xxHash.h) very-fast-but-pretty-secure hash algorithm.
+- A simple [command-line argumment helper](./containers/choc_ArgumentList.h) which simplifies a lot of basic command-line arg parsing tasks.
 
-##### Containers
+#### Containers
 
 - A [span](./containers/choc_Span.h) class to fill the gap until we can finally use `std::span`.
 - Some [type and value](./containers/choc_Value.h) classes which can represent typed values, but also build them dynamically, serialise them to a compact binary format (or as JSON).
 - A handy [SmallVector](./containers/choc_SmallVector.h) class which offers a std::vector interface but has pre-allocated internal storage.
-- One of those [aligned memory block](./containers/choc_AlignedMemoryBlock.h) classes that you always end up needing for some reason.
 - Everyone hates COM, but sometimes you need some [COM helper classes](./containers/choc_COM.h) to hide the ugliness.
-- A range of atomic FIFOs, and a handy [variable size object FIFO](./containers/choc_VariableSizeFIFO.h) for handling queues of heterogenous objects without locking.
-- A lock-free [dirty list](./containers/choc_DirtyList.h) for efficiently queueing up objects that need some attention.
 
-##### Scripting and JSON
+#### Memory
+
+- One of those [aligned memory block](./memory/choc_AlignedMemoryBlock.h) classes that you always end up needing for some reason.
+- A fast [memory pool allocator](./memory/choc_PoolAllocator.h).
+- Helpers for reading writing data with different [endianness](./memory/choc_Endianness.h).
+- Some [integer compression and zigzag encoding](./memory/choc_VariableLengthEncoding.h) functions.
+- A [base64](./memory/choc_Base64.h) encoder/decoder.
+- An implementation of the [xxHash](./memory/choc_xxHash.h) very-fast-but-pretty-secure hash algorithm.
+
+#### GUI
+
+- Some bare-bones [message loop](./gui/choc_MessageLoop.h) control functions.
+- A [timer class](./gui/choc_MessageLoop.h) for cross-platform message loop timer callbacks.
+- The world's most hassle-free single-header [WebView](./gui/choc_WebView.h) class!
+
+  This lets you create an embedded browser view (either as a desktop window or added to an existing window), and interact with it by invoking javascript code and binding callback C++ functions to be called by javascript. Something that makes this particularly special compared to other web-view libraries is that on Windows, it provides the modern Edge browser without you needing to install extra SDKs to compile it, and without any need to link or redistribute the Microsoft loader DLLs - it's literally a *dependency-free single-header Edge implementation*. (Internally, some absolutely hideous shenanegans are involved to make this possible!)
+
+  To try it out, if you compile the choc/tests project and run it with the command-line arg "webview", it pops up an example page and shows how to do some event-handling.
+
+#### Javascript and JSON
+
+- A cross-engine [Javascript](./javascript/choc_javascript.h) API, with implementations for V8, QuickJS and Duktape!
+
+  Both QuickJS and Duktape have been squashed into single-file header-only implementations, so are trivially easy to add to any project. V8 unfortunately requires you to link to their enormous static libraries, but obviously provides optimum performance.
+  All these engines are abstracted behind the same `choc::javascript::Context` base-class, and you can choose to use any combination of engines interchangeably (or simultaneously) in your project.
 
 - A [JSON](./text/choc_JSON.h) parser that uses choc::value::Value objects.
-- A [Javascript](./javascript/choc_javascript.h) interpreter (which is a header-only encapsulation of the duktape library).
 
-##### Audio
+#### Audio
 
 - Some [audio buffer classes](./audio/choc_SampleBuffers.h) for managing blocks of multi-channel sample data. These can flexibly handle both owned buffers and non-owned views in either packed/interleaved or separate-channel formats.
-- Utility classes for handling [MIDI messages](./audio/choc_MIDI.h), [MIDI sequences](./audio/choc_MIDISequence.h) and [MIDI files](./.audio/choc_MIDIFile.h).
+- Utility classes for handling [MIDI messages](./audio/choc_MIDI.h), [MIDI sequences](./audio/choc_MIDISequence.h) and [MIDI files](./audio/choc_MIDIFile.h).
+- An [AudioFileFormat](./audio/choc_AudioFileFormat.h) system for reading/writing audio files, with support for WAV, FLAC, Ogg-Vorbis, and read-only support for MP3. Hopefully more formats will get added in due course.
 - Some basic audio utilities like simple [oscillators](./audio/choc_Oscillators.h).
 - A [sinc interpolator](./audio/choc_SincInterpolator.h)
 - A [MIDI/audio block sync](./audio/choc_AudioMIDIBlockDispatcher.h) mechanism.
 - Functions for packing/unpacking [integer sample data](./audio/choc_AudioSampleData.h) to floats.
 
+#### Threading
+
+- Some threading helpers such as a [thread-safe functor](./threading/choc_ThreadSafeFunctor.h), a [task thread](./threading/choc_TaskThread.h) and [spin-lock](./threading/choc_SpinLock.h)
+- A range of atomic FIFOs, and a handy [variable size object FIFO](./containers/choc_VariableSizeFIFO.h) for handling queues of heterogenous objects without locking.
+- A lock-free [dirty list](./containers/choc_DirtyList.h) for efficiently queueing up objects that need some attention.
+
+
 -----------------------------------------------------------------------
 
-Hopefully some of you will find some of these things useful! If you like it, please tell your friends! If you think you're up to contributing, that's great, but be aware that anything other than an utterly immaculate pull request will be given short shrift :)
+Hopefully some people will find some of these things useful! If you like it, please tell your friends! If you think you're up to contributing, that's great, but be aware that anything other than an utterly immaculate pull request will be given short shrift :)
 
 -- Jules
 

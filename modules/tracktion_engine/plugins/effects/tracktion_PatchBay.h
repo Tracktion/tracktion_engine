@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -38,14 +38,13 @@ public:
     static const char* getPluginName()                  { return NEEDS_TRANS("Patch Bay"); }
     static const char* xmlTypeName;
 
-    juce::String getName() override                     { return TRANS("Patch Bay Plugin"); }
+    juce::String getName() const override               { return TRANS("Patch Bay Plugin"); }
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getShortName (int) override            { return TRANS("Patch"); }
     juce::String getSelectableDescription() override    { return TRANS("Patch Bay Plugin"); }
     bool canBeAddedToClip() override                    { return false; }
     bool canBeAddedToRack() override                    { return false; }
     bool canBeDisabled() override                       { return false; }
-    bool needsConstantBufferSize() override             { return false; }
 
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
@@ -57,6 +56,9 @@ private:
     struct WireList;
     std::unique_ptr<WireList> list;
     bool recursionCheck = false;
+    SafeSelectable<Plugin> inputPlugin, outputPlugin;
+
+    void cacheInputAndOutputPlugins();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PatchBayPlugin)
 };

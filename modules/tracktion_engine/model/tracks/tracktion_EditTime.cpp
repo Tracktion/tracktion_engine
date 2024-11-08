@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -30,5 +30,17 @@ TimeRange toTime (BeatRange r, const TempoSequence& ts)
 {
     return { toTime (r.getStart(), ts), toTime (r.getEnd(), ts) };
 }
+
+ClipPosition createClipPosition (const TempoSequence&, TimeRange range, TimeDuration offset)
+{
+    return { range, offset };
+}
+
+ClipPosition createClipPosition (const TempoSequence& ts, BeatRange range, BeatDuration offset)
+{
+    return { ts.toTime (range), toDuration (ts.toTime (toPosition (offset))) };
+}
+
+
 
 }} // namespace tracktion { inline namespace engine

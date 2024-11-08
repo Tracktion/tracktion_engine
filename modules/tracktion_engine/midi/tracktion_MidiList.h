@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -55,6 +55,10 @@ public:
 
     /** If the data was pulled from a midi file then this may have a useful name describing its purpose. */
     juce::String getImportedMidiTrackName() const noexcept          { return importedName; }
+
+    /** Set the imported file name if you want it to appear on the clip */
+    juce::String getImportedFileName() const noexcept               { return importedFileName; }
+    void setImportedFileName (const juce::String& n)                { importedFileName = n; }
 
     //==============================================================================
     bool isEmpty() const noexcept                                   { return state.getNumChildren() == 0; }
@@ -189,6 +193,7 @@ private:
     juce::CachedValue<MidiChannel> midiChannel;
     juce::CachedValue<bool> isComp;
 
+    juce::String importedFileName;
     juce::String importedName;
 
     void initialise (juce::UndoManager*);

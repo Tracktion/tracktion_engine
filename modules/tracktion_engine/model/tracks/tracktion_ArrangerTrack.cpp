@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -12,7 +12,7 @@ namespace tracktion { inline namespace engine
 {
 
 ArrangerTrack::ArrangerTrack (Edit& e, const juce::ValueTree& v)
-    : ClipTrack (e, v, 30, 13, 60)
+    : ClipTrack (e, v, false)
 {
 }
 
@@ -23,7 +23,7 @@ ArrangerTrack::~ArrangerTrack()
 
 bool ArrangerTrack::isArrangerTrack() const             { return true; }
 juce::String ArrangerTrack::getSelectableDescription()  { return getName(); }
-juce::String ArrangerTrack::getName()                   { return TRANS("Arranger"); }
+juce::String ArrangerTrack::getName() const             { return TRANS("Arranger"); }
 bool ArrangerTrack::canContainPlugin (Plugin*) const    { return false; }
 
 }} // namespace tracktion { inline namespace engine

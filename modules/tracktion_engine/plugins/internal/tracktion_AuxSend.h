@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -33,8 +33,9 @@ public:
     //==============================================================================
     static const char* getPluginName()              { return NEEDS_TRANS("Aux Send"); }
     static const char* xmlTypeName;
+    static juce::ValueTree create();
 
-    juce::String getName() override;
+    juce::String getName() const override;
     juce::String getShortName (int suggestedMaxLength) override;
     juce::String getPluginType() override           { return xmlTypeName; }
 
@@ -55,14 +56,20 @@ public:
 
     juce::CachedValue<int> busNumber;
     juce::CachedValue<float> gainLevel;
+    juce::CachedValue<bool> invertPhase;
 
     AutomatableParameter::Ptr gain;
+
+    /// @internal N.B. used only for testing
+    bool isOwnedBy (Track&);
 
 private:
     bool shouldProcess();
     //==============================================================================
     juce::CachedValue<float> lastVolumeBeforeMute;
     float lastGain = 1.0f;
+
+    juce::CriticalSection ownerTrackLock;
     Track* ownerTrack = nullptr;
 
     //==============================================================================

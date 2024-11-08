@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -27,7 +27,7 @@ public:
     static const char* getPluginName()      { return NEEDS_TRANS("MIDI Modifier"); }
     static const char* xmlTypeName;
 
-    juce::String getName() override;
+    juce::String getName() const override;
     juce::String getPluginType() override;
     juce::String getShortName (int) override;
     void initialise (const PluginInitialisationInfo&) override;
@@ -37,7 +37,6 @@ public:
     void getChannelNames (juce::StringArray*, juce::StringArray*) override;
     bool takesAudioInput() override;
     bool canBeAddedToClip() override;
-    bool needsConstantBufferSize() override;
 
     void applyToBuffer (const PluginRenderContext&) override;
 

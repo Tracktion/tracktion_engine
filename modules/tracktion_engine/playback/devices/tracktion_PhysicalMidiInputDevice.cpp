@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -88,7 +88,7 @@ struct MidiTimecodeReader  : private juce::MessageListener,
 
                     if (auto epc = transport.getCurrentPlaybackContext())
                         epc->setSpeedCompensation (speedComp);
-                        
+
                     break;
                 }
 
@@ -136,7 +136,7 @@ private:
         if (transport.isPlaying())
         {
             transport.stop (false, false, false);
-            transport.setCurrentPosition (correctedTime);
+            transport.setPosition (TimePosition::fromSeconds (correctedTime));
             averageDrift = 0.0;
             averageDriftNumSamples = 0;
         }
@@ -162,7 +162,7 @@ private:
                 if (transport.isPlaying())
                 {
                     transport.stop (false, false, false);
-                    transport.setCurrentPosition (correctedTime);
+                    transport.setPosition (TimePosition::fromSeconds (correctedTime));
                     averageDrift = 0.0;
                     averageDriftNumSamples = 0;
                 }
@@ -179,7 +179,7 @@ private:
             }
             else if (m->type == 3) // goto last time
             {
-                transport.setCurrentPosition (correctedTime);
+                transport.setPosition (TimePosition::fromSeconds (correctedTime));
 
                 averageDrift = 0.0;
                 averageDriftNumSamples = 0;
@@ -221,7 +221,7 @@ private:
     void handleMMCGoto (int hours_, int minutes_, int seconds_, int frames_)
     {
         const int fps = owner.edit.getTimecodeFormat().getFPS();
-        transport.setCurrentPosition (hours_ * 3600 + minutes_ * 60 + seconds_ + (1.0 / double (fps) * frames_));
+        transport.setPosition (TimePosition::fromSeconds (hours_ * 3600 + minutes_ * 60 + seconds_ + (1.0 / double (fps) * frames_)));
     }
 
     double getFPS() const noexcept
@@ -271,34 +271,14 @@ struct PhysicalMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
         return timecodeReader->processMessage (message);
     }
 
-    juce::String prepareToRecord (TimePosition start, TimePosition punchIn, double sampleRate,
-                                  int blockSizeSamples, bool isLivePunch) override
+    std::vector<tl::expected<std::unique_ptr<RecordingContext>, juce::String>> prepareToRecord (RecordingParameters params) override
     {
-        MidiInputDeviceInstanceBase::prepareToRecord (start, punchIn, sampleRate, blockSizeSamples, isLivePunch);
-
         if (getPhysicalMidiInput().inputDevice != nullptr)
-            return {};
+            return MidiInputDeviceInstanceBase::prepareToRecord (params);
 
-        return TRANS("Couldn't open the MIDI port");
-    }
-
-    bool startRecording() override
-    {
-        // We need to keep a list of tracks the are being recorded to
-        // here, since user may un-arm track to stop recording
-        activeTracks.clear();
-
-        for (auto destTrack : getTargetTracks())
-            if (isRecordingActive (*destTrack))
-                activeTracks.add (destTrack);
-        
-        if (getPhysicalMidiInput().inputDevice != nullptr)
-        {
-            getPhysicalMidiInput().masterTimeUpdate (startTime.inSeconds());
-            recording = true;
-        }
-
-        return recording;
+        std::vector<tl::expected<std::unique_ptr<RecordingContext>, juce::String>> res;
+        res.emplace_back (tl::unexpected (TRANS("Couldn't open the MIDI port")));
+        return res;
     }
 
     PhysicalMidiInputDevice& getPhysicalMidiInput() const   { return static_cast<PhysicalMidiInputDevice&> (owner); }
@@ -310,13 +290,13 @@ private:
 };
 
 //==============================================================================
-PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine& e, const juce::String& deviceName, int deviceIndexToUse)
-   : MidiInputDevice (e, TRANS("MIDI Input"), deviceName),
-     deviceIndex (deviceIndexToUse)
+PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine& e, juce::MidiDeviceInfo info)
+   : MidiInputDevice (e, TRANS("MIDI Input"), info.name, "midiin_" + juce::String::toHexString (info.identifier.hashCode())),
+     deviceInfo (std::move (info))
 {
     enabled = true;
 
-    controllerParser.reset (new MidiControllerParser (e));
+    controllerParser = std::make_unique<MidiControllerParser> (e);
     loadProps();
 }
 
@@ -328,7 +308,7 @@ PhysicalMidiInputDevice::~PhysicalMidiInputDevice()
 InputDeviceInstance* PhysicalMidiInputDevice::createInstance (EditPlaybackContext& c)
 {
     if (! isTrackDevice() && retrospectiveBuffer == nullptr)
-        retrospectiveBuffer.reset (new RetrospectiveMidiBuffer (c.edit.engine));
+        retrospectiveBuffer = std::make_unique<RetrospectiveMidiBuffer> (c.edit.engine);
 
     return new PhysicalMidiInputDeviceInstance (*this, c);
 }
@@ -341,11 +321,11 @@ juce::String PhysicalMidiInputDevice::openDevice()
     if (inputDevice == nullptr)
     {
         CRASH_TRACER
-        inputDevice = juce::MidiInput::openDevice (juce::MidiInput::getAvailableDevices()[deviceIndex].identifier, this);
+        inputDevice = juce::MidiInput::openDevice (deviceInfo.identifier, this);
 
         if (inputDevice != nullptr)
         {
-            TRACKTION_LOG ("opening MIDI in device: " + getName());
+            TRACKTION_LOG ("opening MIDI in device: " + getDeviceID() + " (" + getName() + ")");
             inputDevice->start();
         }
     }
@@ -413,21 +393,48 @@ bool PhysicalMidiInputDevice::tryToSendTimecode (const juce::MidiMessage& messag
     return false;
 }
 
-void PhysicalMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage& m)
+void PhysicalMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage& m, MPESourceID sourceID)
 {
+    if (minimumLengthMs > 0)
+    {
+        if (m.isNoteOn())
+        {
+            auto idx = (m.getChannel() - 1) + m.getNoteNumber();
+            lastNoteOns[size_t (idx)] = juce::Time::getMillisecondCounterHiRes();
+
+            if (noteDispatcher)
+                noteDispatcher->clear (m.getChannel(), m.getNoteNumber());
+        }
+        else if (m.isNoteOff())
+        {
+            auto idx = (m.getChannel() - 1) + m.getNoteNumber();
+            auto now = juce::Time::getMillisecondCounterHiRes();
+
+            if (now - lastNoteOns[size_t (idx)] < minimumLengthMs)
+            {
+                auto delta = minimumLengthMs - (now - lastNoteOns[size_t (idx)]);
+
+                if (noteDispatcher)
+                    noteDispatcher->enqueue (now + delta, m);
+
+                return;
+            }
+        }
+    }
+
     if (m.isNoteOn())
     {
         if (activeNotes.isNoteActive (m.getChannel(), m.getNoteNumber()))
         {
             // If the note is on and we get another on, send the off before the on
-            handleIncomingMidiMessageInt (juce::MidiMessage::noteOff (m.getChannel(), m.getNoteNumber(), 0.0f));
-            handleIncomingMidiMessageInt (m);
+            handleIncomingMidiMessageInt (juce::MidiMessage::noteOff (m.getChannel(), m.getNoteNumber(), 0.0f), sourceID);
+            handleIncomingMidiMessageInt (m, sourceID);
         }
         else
         {
             // otherwise send the on and track its on
             activeNotes.startNote (m.getChannel(), m.getNoteNumber());
-            handleIncomingMidiMessageInt (m);
+            handleIncomingMidiMessageInt (m, sourceID);
         }
     }
     else if (m.isNoteOff())
@@ -436,47 +443,42 @@ void PhysicalMidiInputDevice::handleIncomingMidiMessage (const juce::MidiMessage
         if (activeNotes.isNoteActive (m.getChannel(), m.getNoteNumber()))
         {
             activeNotes.clearNote (m.getChannel(), m.getNoteNumber());
-            handleIncomingMidiMessageInt (m);
+            handleIncomingMidiMessageInt (m, sourceID);
         }
     }
     else
     {
-        handleIncomingMidiMessageInt (m);
+        handleIncomingMidiMessageInt (m, sourceID);
     }
 }
 
-void PhysicalMidiInputDevice::handleIncomingMidiMessageInt (const juce::MidiMessage& m)
+void PhysicalMidiInputDevice::handleIncomingMidiMessageInt (const juce::MidiMessage& m, MPESourceID sourceID)
 {
+    {
+        const std::scoped_lock sl (listenerLock);
+        listeners.call ([m] (Listener& l) { l.handleIncomingMidiMessage (m); });
+    }
+
     if (externalController != nullptr && externalController->wantsMessage (*this, m))
     {
         externalController->acceptMidiMessage (*this, m);
     }
     else
     {
-        if (! (m.isActiveSense() || disallowedChannels[m.getChannel() - 1]))
+        auto message = m;
+
+        if (handleIncomingMessage (message))
         {
-            auto message = m;
-
-            if (m.getTimeStamp() == 0 || (! engine.getEngineBehaviour().isMidiDriverUsedForIncommingMessageTiming()))
-                message.setTimeStamp (juce::Time::getMillisecondCounterHiRes() * 0.001);
-
-            message.addToTimeStamp (adjustSecs);
-
-            sendNoteOnToMidiKeyListeners (message);
-
-            if (! retrospectiveRecordLock && retrospectiveBuffer != nullptr)
-                retrospectiveBuffer->addMessage (message, adjustSecs);
-
             if (! tryToSendTimecode (message))
             {
                 if (isTakingControllerMessages)
                     controllerParser->processMessage (message);
 
-                sendMessageToInstances (message);
+                sendMessageToInstances (message, sourceID);
             }
         }
 
-        VirtualMidiInputDevice::broadcastMessageToAllVirtualDevices (this, m);
+        engine.getDeviceManager().broadcastMessageToAllVirtualDevices (*this, m);
     }
 }
 
@@ -489,7 +491,7 @@ void PhysicalMidiInputDevice::loadProps()
     if (n != nullptr)
         isTakingControllerMessages = n->getBoolAttribute ("controllerMessages", isTakingControllerMessages);
 
-    MidiInputDevice::loadProps (n.get());
+    MidiInputDevice::loadMidiProps (n.get());
 }
 
 void PhysicalMidiInputDevice::saveProps()
@@ -500,7 +502,7 @@ void PhysicalMidiInputDevice::saveProps()
     juce::XmlElement n ("SETTINGS");
     n.setAttribute ("controllerMessages", isTakingControllerMessages);
 
-    MidiInputDevice::saveProps (n);
+    MidiInputDevice::saveMidiProps (n);
 
     engine.getPropertyStorage().setXmlPropertyItem (SettingID::midiin, getName(), n);
 }

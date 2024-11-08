@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -11,16 +11,9 @@
 namespace tracktion { inline namespace engine
 {
 
-Track::Track (Edit& ed, const juce::ValueTree& v, double defaultHeight, double minHeight, double maxHeight)
-    : EditItem (EditItemID::readOrCreateNewID (ed, v), ed),
-      MacroParameterElement (ed, v), // TODO: @Dave - this dumps an XML element in every track, including tempo, marker, etc - is that needed?
-      defaultTrackHeight (defaultHeight),
-      minTrackHeight (minHeight),
-      maxTrackHeight (maxHeight),
-      state (v),
-      pluginList (ed)
+Track::Track (Edit& ed, const juce::ValueTree& v, bool hasModifierList)
+    : EditItem (ed, v), state (v), pluginList (ed)
 {
-    edit.trackCache.addItem (*this);
     auto um = &edit.getUndoManager();
 
     trackName.referTo (state, IDs::name, um, {});
@@ -32,14 +25,17 @@ Track::Track (Edit& ed, const juce::ValueTree& v, double defaultHeight, double m
     currentAutoParamPlugin.referTo (state, IDs::currentAutoParamPluginID, um, EditItemID());
     currentAutoParamID.referTo (state, IDs::currentAutoParamTag, um, {});
 
-    modifierList = std::make_unique<ModifierList> (edit, state.getOrCreateChildWithName (IDs::MODIFIERS, um));
+    if (hasModifierList)
+        modifierList = std::make_unique<ModifierList> (edit, state.getOrCreateChildWithName (IDs::MODIFIERS, um));
 
     state.addListener (this);
+    edit.trackCache.addItem (*this);
 }
 
 Track::~Track()
 {
     edit.trackCache.removeItem (*this);
+    cachedParentTrack = nullptr;
     cachedParentFolderTrack = nullptr;
     masterReference.clear();
     state.removeListener (this);
@@ -90,12 +86,6 @@ void Track::setName (const juce::String& n)
 void Track::resetName()
 {
     trackName.resetToDefault();
-}
-
-bool Track::isOnTop() const
-{
-    return isMarkerTrack() || isTempoTrack() || isChordTrack() || isArrangerTrack() || isMasterTrack()
-        || (isAutomationTrack() && getParentTrack() != nullptr && getParentTrack()->isMasterTrack());
 }
 
 int Track::getIndexInEditTrackList() const
@@ -170,10 +160,10 @@ Track* Track::getSiblingTrack (int delta, bool keepWithinSameParent) const
         tracks = getAllTracks (edit);
     }
 
-    auto index = tracks.indexOf (const_cast<Track*> (this));
-    jassert (index >= 0);
+    if (auto index = tracks.indexOf (const_cast<Track*> (this)); index >= 0)
+        return tracks[index + delta];
 
-    return tracks[index + delta];
+    return {};
 }
 
 //==============================================================================
@@ -270,12 +260,14 @@ juce::Array<AutomatableEditItem*> Track::getAllAutomatableEditItems() const
     auto plugins = getAllPlugins();
     destArray.addArray (plugins);
 
-    for (auto m : modifierList->getModifiers())
-        if (auto aei = dynamic_cast<AutomatableEditItem*> (m))
-            destArray.add (aei);
+    if (modifierList != nullptr)
+        for (auto m : modifierList->getModifiers())
+            if (auto aei = dynamic_cast<AutomatableEditItem*> (m))
+                destArray.add (aei);
 
     for (auto p : plugins)
-        destArray.add (&p->macroParameterList);
+        if (auto mpl = p->getMacroParameterList())
+            destArray.add (mpl);
 
     return destArray;
 }
@@ -324,24 +316,45 @@ juce::Array<AutomatableParameter*> Track::getAllAutomatableParams() const
         for (int j = 0; j < p->getNumAutomatableParameters(); ++j)
             params.add (p->getAutomatableParameter (j).get());
 
-        params.addArray (p->macroParameterList.getMacroParameters());
+        params.addArray (p->getMacroParameters());
     }
 
-    for (auto m : modifierList->getModifiers())
-        params.addArray (m->getAutomatableParameters());
+    if (modifierList != nullptr)
+        for (auto m : modifierList->getModifiers())
+            params.addArray (m->getAutomatableParameters());
 
     return params;
+}
+
+void Track::visitAllAutomatableParams (const std::function<void(AutomatableParameter&)>& visit) const
+{
+    for (auto p : getAllPlugins())
+    {
+        if (auto mpl = p->getMacroParameterList())
+            mpl->visitAllAutomatableParams (visit);
+
+        p->visitAllAutomatableParams (visit);
+    }
+
+    if (modifierList != nullptr)
+        for (auto m : modifierList->getModifiers())
+            m->visitAllAutomatableParams (visit);
 }
 
 static AutomatableParameter::Ptr findAutomatableParam (Edit& edit, EditItemID pluginID, const juce::String& paramID)
 {
     if (pluginID.isValid() && paramID.isNotEmpty())
     {
-        juce::Array<AutomatableParameter*> list (edit.getAllAutomatableParams (false));
+        AutomatableParameter::Ptr found;
 
-        for (auto p : list)
-            if (p->getOwnerID() == pluginID && p->paramID == paramID)
-                return p;
+        edit.visitAllAutomatableParams (false, [&] (AutomatableParameter& p)
+        {
+            if (p.paramID == paramID && p.getOwnerID() == pluginID)
+                found = p;
+        });
+
+        if (found)
+            return found;
 
         if (auto p = edit.getPluginCache().getPluginFor (pluginID))
         {
@@ -464,30 +477,26 @@ void Track::updateTrackList()
     if (TrackList::hasAnySubTracks (state))
     {
         if (trackList == nullptr)
-            trackList.reset (new TrackList (edit, state));
+        {
+            trackList = std::make_unique<TrackList> (edit, state);
+            trackList->initialise();
+        }
     }
     else
     {
         trackList.reset();
     }
-    
+
     changed();
 }
 
 void Track::updateCachedParent()
 {
     CRASH_TRACER
-    auto parent = getParentTrackTree();
-
-    if (parent.isValid())
-    {
-        if (auto t = edit.trackCache.findItem (EditItemID::fromID (parent)))
-            cachedParentTrack = t;
-    }
+    if (auto parent = getParentTrackTree(); parent.isValid())
+        cachedParentTrack = dynamic_cast<Track*> (edit.trackCache.findItem (EditItemID::fromID (parent)));
     else
-    {
         cachedParentTrack = nullptr;
-    }
 
     auto newFolder = dynamic_cast<FolderTrack*> (cachedParentTrack.get());
 
@@ -498,11 +507,10 @@ void Track::updateCachedParent()
 
         if (newFolder != nullptr)
             newFolder->setDirtyClips();
-        
+
+        cachedParentFolderTrack = newFolder;
         changed();
     }
-
-    cachedParentFolderTrack = newFolder;
 }
 
 //==============================================================================
@@ -541,17 +549,20 @@ void Track::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier
         else if (i == IDs::name)
         {
             changed();
-            
+
             if (! edit.isLoading())
-                juce::MessageManager::callAsync ([trackRef = getWeakRef()]
+                juce::MessageManager::callAsync ([trackRef = makeSafeRef (*this)]
                                                  {
-                                                     if (trackRef != nullptr)
-                                                         SelectionManager::refreshAllPropertyPanelsShowing (*trackRef);
+                                                     if (auto t = trackRef.get())
+                                                         SelectionManager::refreshAllPropertyPanelsShowing (*t);
                                                  });
+
+            triggerAsyncUpdate();
         }
         else if (i == IDs::colour)
         {
             changed();
+            triggerAsyncUpdate();
         }
         else if (i == IDs::imageIdOrData)
         {
@@ -597,6 +608,11 @@ void Track::valueTreeParentChanged (juce::ValueTree& v)
 {
     if (v == state)
         updateCachedParent();
+}
+
+void Track::handleAsyncUpdate()
+{
+    pluginList.updateTrackProperties();
 }
 
 }} // namespace tracktion { inline namespace engine

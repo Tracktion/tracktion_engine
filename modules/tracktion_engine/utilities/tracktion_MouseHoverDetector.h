@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -84,6 +84,8 @@ private:
                                    public juce::Timer
     {
     public:
+        HoverDetectorInternal() = default;
+
         MouseHoverDetector* owner = nullptr;
         juce::Point<int> lastPos;
 
@@ -134,6 +136,8 @@ private:
             stopTimer();
             owner->checkJustHoveredCallback();
         }
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(HoverDetectorInternal)
     };
 
     HoverDetectorInternal internalTimer;

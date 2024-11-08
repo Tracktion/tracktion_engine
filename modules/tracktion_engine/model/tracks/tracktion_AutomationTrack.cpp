@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -12,7 +12,7 @@ namespace tracktion { inline namespace engine
 {
 
 AutomationTrack::AutomationTrack (Edit& e, const juce::ValueTree& v)
-    : Track (e, v, 50, 13, 2000)
+    : Track (e, v, false)
 {
 }
 
@@ -28,7 +28,7 @@ juce::String AutomationTrack::getSelectableDescription()
     return TRANS("Automation") + (n.isEmpty() ? juce::String() : " - \"" + getName() + "\"");
 }
 
-juce::String AutomationTrack::getName()
+juce::String AutomationTrack::getName() const
 {
     if (auto ap = getCurrentlyShownAutoParam())
         return ap->getFullName();

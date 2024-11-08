@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -383,7 +383,7 @@ void TempoSequence::insertSpaceIntoSequence (TimePosition time, TimeDuration amo
 void TempoSequence::deleteRegion (TimeRange range)
 {
     const auto beatRange = toBeats (range);
-    
+
     removeTemposBetween (range, false);
     removeTimeSigsBetween (range);
 
@@ -597,11 +597,13 @@ void TempoSequence::updateTempoData()
 
 void TempoSequence::updateTempoDataIfNeeded() const
 {
+    // The check on isUpdatePending is to avoid triggering a message thread assert
+    // if this is called on a background thread when no update is needed
     if (tempos->isUpdatePending())
-        tempos->handleAsyncUpdate();
+        tempos->handleUpdateNowIfNeeded();
 
     if (timeSigs->isUpdatePending())
-        timeSigs->handleAsyncUpdate();
+        timeSigs->handleUpdateNowIfNeeded();
 }
 
 void TempoSequence::handleAsyncUpdate()
@@ -698,20 +700,34 @@ void EditTimecodeRemapperSnapshot::savePreChangeState (Edit& ed)
     auto& tempoSequence = ed.tempoSequence;
 
     clips.clear();
+    
+    auto addClip = [this, &tempoSequence] (auto clip)
+    {
+        auto pos = clip->getPosition();
+
+        ClipPos cp;
+        cp.clip = clip;
+        cp.startBeat        = tempoSequence.toBeats (pos.getStart());
+        cp.endBeat          = tempoSequence.toBeats (pos.getEnd());
+        cp.contentStartBeat = toDuration (tempoSequence.toBeats (pos.getStartOfSource()));
+        clips.add (cp);
+    };
 
     for (auto t : getClipTracks (ed))
     {
         for (auto& c : t->getClips())
         {
-            auto pos = c->getPosition();
+            addClip (c);
 
-            ClipPos cp;
-            cp.clip = c;
-            cp.startBeat        = tempoSequence.toBeats (pos.getStart());
-            cp.endBeat          = tempoSequence.toBeats (pos.getEnd());
-            cp.contentStartBeat = toDuration (tempoSequence.toBeats (pos.getStartOfSource()));
-            clips.add (cp);
+            if (auto cc = dynamic_cast<ClipOwner*> (c))
+                for (auto childClip : cc->getClips())
+                    addClip (childClip);
         }
+        
+        if (auto at = dynamic_cast<AudioTrack*> (t))
+            for (auto slot : at->getClipSlotList().getClipSlots())
+                if (auto cc = slot->getClip())
+                    addClip (cc);
     }
 
     automation.clear();
@@ -745,6 +761,8 @@ void EditTimecodeRemapperSnapshot::savePreChangeState (Edit& ed)
     const auto loopRange = ed.getTransport().getLoopRange();
     loopPositionBeats = { tempoSequence.toBeats (loopRange.getStart()),
                           tempoSequence.toBeats (loopRange.getEnd()) };
+
+    startPositionBeats = tempoSequence.toBeats (ed.getTransport().startPosition);
 }
 
 void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
@@ -753,11 +771,12 @@ void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
     auto& tempoSequence = ed.tempoSequence;
     tempoSequence.updateTempoData();
 
+    transport.startPosition = tempoSequence.toTime (startPositionBeats);
     transport.setLoopRange (tempoSequence.toTime (loopPositionBeats));
 
     for (auto& cp : clips)
     {
-        if (auto c = dynamic_cast<Clip*> (cp.clip.get()))
+        if (auto c = cp.clip.get())
         {
             auto newStart  = tempoSequence.toTime (cp.startBeat);
             auto newEnd    = tempoSequence.toTime (cp.endBeat);
@@ -774,7 +793,7 @@ void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
 
                 if (c->type == TrackItem::Type::wave)
                 {
-                    auto ac = dynamic_cast<AudioClipBase*> (cp.clip.get());
+                    auto ac = dynamic_cast<AudioClipBase*> (c);
 
                     if (ac != nullptr && ac->getAutoTempo())
                         c->setPosition ({ { newStart, newEnd }, newOffset });
@@ -795,6 +814,8 @@ void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
         for (int i = a.beats.size(); --i >= 0;)
             a.curve.setPointTime (i, tempoSequence.toTime (a.beats.getUnchecked (i)));
 }
+
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_TEMPO_SEQUENCE
 
 //==============================================================================
 //==============================================================================
@@ -928,5 +949,7 @@ private:
 };
 
 static TempoSequenceTests tempoSequenceTests;
+
+#endif
 
 }} // namespace tracktion { inline namespace engine

@@ -39,6 +39,44 @@ namespace Icons
         p.loadPathFromData (pathData, sizeof (pathData));
         return p;
     }
+
+    Path getPlayPath()
+    {
+        static const unsigned char pathData[] = { 110,109,0,0,0,0,0,0,128,62,108,0,0,112,64,126,29,32,64,108,0,0,0,0,0,0,152,64,108,0,0,0,0,0,0,128,62,99,101,0,0 };
+
+        Path path;
+        path.loadPathFromData (pathData, sizeof (pathData));
+        return path;
+    }
+
+    Path getStopPath()
+    {
+        static const unsigned char pathData[] = { 110,109,0,0,0,0,0,0,0,0,108,0,0,128,63,0,0,0,0,108,0,0,128,63,0,0,128,63,108,0,0,0,0,0,0,128,63,108,0,0,0,0,0,0,0,0,99,101,0,0 };
+
+        Path path;
+        path.loadPathFromData (pathData, sizeof (pathData));
+        return path;
+    }
+
+    Path getRecPath()
+    {
+        static const unsigned char pathData[] = { 110,109,0,0,128,63,0,0,0,63,98,0,0,128,63,62,177,70,63,62,177,70,63,0,0,128,63,0,0,0,63,0,0,128,63,98,8,59,101,62,0,0,128,63,0,0,0,0,62,177,70,63,0,0,0,0,0,0,0,63,98,0,0,0,0,8,59,101,62,8,59,101,62,0,0,0,0,0,0,0,63,0,0,0,0,98,62,177,70,63,0,0,0,0,0,0,
+                                                  128,63,8,59,101,62,0,0,128,63,0,0,0,63,99,101,0,0 };
+
+        Path path;
+        path.loadPathFromData (pathData, sizeof (pathData));
+        return path;
+    }
+
+    Path getPlusPath()
+    {
+        static const unsigned char pathData[] = { 110,109,0,0,0,64,0,0,0,64,108,0,0,0,64,0,0,0,0,108,0,0,64,64,0,0,0,0,108,0,0,64,64,0,0,0,64,108,0,0,160,64,0,0,0,64,108,0,0,160,64,0,0,64,64,108,0,0,64,64,0,0,64,64,108,0,0,64,64,0,0,160,64,108,0,0,0,64,0,0,160,64,108,0,0,0,64,0,0,64,64,108,0,0,0,0,0,
+                                                  0,64,64,108,0,0,0,0,0,0,0,64,108,0,0,0,64,0,0,0,64,99,101,0,0 };
+
+        Path path;
+        path.loadPathFromData (pathData, sizeof (pathData));
+        return path;
+    }
 }
 
 namespace DemoBinaryData

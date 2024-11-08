@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -114,6 +114,7 @@ void RenderOptions::loadFromUserSettings()
         dither            = storage.getProperty (SettingID::renderDither, true);
         qualityIndex      = storage.getProperty (SettingID::quality, 5);
         addMetadata       = storage.getProperty (SettingID::addId3Info, false);
+        addAcidMetadata   = storage.getProperty (SettingID::addAcidMetadata, false);
         realTime          = storage.getProperty (SettingID::realtime, false);
         usePlugins        = storage.getProperty (SettingID::passThroughFilters, true);
     }
@@ -129,6 +130,7 @@ void RenderOptions::loadFromUserSettings()
         rmsLevelDb        = storage.getProperty (SettingID::editClipRenderRMSLevelDb, -12.0);
         peakLevelDb       = storage.getProperty (SettingID::editClipRenderPeakLevelDb, 0.0);
         usePlugins        = storage.getProperty (SettingID::editClipPassThroughFilters, true);
+        addAcidMetadata   = storage.getProperty (SettingID::addAcidMetadata, false);
 
         return;
     }
@@ -162,6 +164,7 @@ void RenderOptions::saveToUserSettings()
         storage.setProperty (SettingID::editClipRenderRMSLevelDb, rmsLevelDb.get());
         storage.setProperty (SettingID::editClipRenderPeakLevelDb, peakLevelDb.get());
         storage.setProperty (SettingID::editClipPassThroughFilters, usePlugins.get());
+        storage.setProperty (SettingID::addAcidMetadata, addAcidMetadata.get());
     }
     else if (isExportAll())
     {
@@ -179,6 +182,7 @@ void RenderOptions::saveToUserSettings()
         storage.setProperty (SettingID::renderDither, dither.get());
         storage.setProperty (SettingID::quality, qualityIndex.get());
         storage.setProperty (SettingID::addId3Info, addMetadata.get());
+        storage.setProperty (SettingID::addAcidMetadata, addAcidMetadata.get());
         storage.setProperty (SettingID::realtime, realTime.get());
         storage.setProperty (SettingID::passThroughFilters, usePlugins.get());
     }
@@ -213,7 +217,8 @@ RenderManager::Job::Ptr RenderOptions::performBackgroundRender (Edit& edit, Sele
     if (isTrackRender())
         p.endAllowance = markedRegion ? 0.0s : 10.0s;
 
-    addAcidInfo (edit, p);
+    if (addAcidMetadata)
+        addAcidInfo (edit, p);
 
     return (p.audioFormat != nullptr || p.createMidiFile)
                 ? EditRenderJob::getOrCreateRenderJob (edit.engine, p, false, false, false)
@@ -250,6 +255,7 @@ void RenderOptions::relinkCachedValues (juce::UndoManager* um)
     addRenderToLibrary.referTo (state, IDs::addRenderToLibrary, um, false);
     reverseRender.referTo (state, IDs::reverseRender, um, false);
     addMetadata.referTo (state, IDs::renderAddMetadata, um, false);
+    addAcidMetadata.referTo (state, IDs::addAcidMetadata, um, false);
 
     sampleRate = engine.getDeviceManager().getSampleRate();
     tracks = EditItemID::parseStringList (tracksProperty);
@@ -310,13 +316,11 @@ Renderer::Parameters RenderOptions::getRenderParameters (Edit& edit, SelectionMa
     params.realTimeRender           = realTime;
     params.ditheringEnabled         = dither;
     params.quality                  = qualityIndex;
-    params.category                 = ProjectItem::Category::rendered;
     params.separateTracks           = tracksToSeparateFiles;
-    params.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (edit.engine);
 
     if (! isMarkedRegionBigEnough (markedRegionTime))
         markedRegion = false;
-    
+
     if (markedRegion)
         params.time = markedRegionTime;
     else
@@ -375,6 +379,9 @@ Renderer::Parameters RenderOptions::getRenderParameters (Edit& edit, SelectionMa
     if (addMetadata)
         params.metadata = getMetadata (edit);
 
+    if (addAcidMetadata)
+        params.metadata.addArray (createAcidInfo (edit, params.time));
+
     return params;
 }
 
@@ -402,7 +409,6 @@ Renderer::Parameters RenderOptions::getRenderParameters (EditClip& clip)
     params.quality                  = qualityIndex;
     params.category                 = ProjectItem::Category::rendered;
     params.separateTracks           = tracksToSeparateFiles;
-    params.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (clip.edit.engine);
 
     if (const EditSnapshot::Ptr snapshot = clip.getEditSnapshot())
     {
@@ -442,7 +448,6 @@ Renderer::Parameters RenderOptions::getRenderParameters (MidiClip& clip)
     params.ditheringEnabled         = dither;
     params.quality                  = qualityIndex;
     params.category                 = ProjectItem::Category::rendered;
-    params.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (clip.edit.engine);
     params.time                     = clip.getEditTimeRange();
     params.tracksToDo               = getTrackIndexes (clip.edit);
     params.allowedClips             = allowedClips;
@@ -515,13 +520,14 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
             trackToUse = dynamic_cast<AudioTrack*> (lastTrack->getSiblingTrack (1, false));
             break;
 
-        case thisTrack:
+        case thisTrack:     [[ fallthrough ]];
         case replaceClips:
             trackToUse = dynamic_cast<AudioTrack*> (lastTrack.get());
+            break;
 
-        case addTrack:
-        case replaceTrack:
-        case none:
+        case addTrack:      [[ fallthrough ]];
+        case replaceTrack:  [[ fallthrough ]];
+        case none:          [[ fallthrough ]];
         default:
             break;
     }
@@ -549,7 +555,7 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
                 if (auto targetTrack = at->getOutput().getDestinationTrack())
                     trackToUse->getOutput().setOutputToTrack (targetTrack);
                 else
-                    trackToUse->getOutput().setOutputByName (at->getOutput().getOutputName());
+                    trackToUse->getOutput().setOutputToDeviceID (at->getOutput().getOutputDeviceID());
 
                 break;
             }
@@ -642,7 +648,7 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
             else
             {
                 for (auto c : allowedClips)
-                    c->removeFromParentTrack();
+                    c->removeFromParent();
             }
         }
     }
@@ -711,6 +717,7 @@ void RenderOptions::setToDefault()
     reverseRender            = false;
 
     addMetadata              = false;
+    addAcidMetadata          = false;
 }
 
 void RenderOptions::updateLastUsedRenderPath (RenderOptions& renderOptions, const juce::String& itemID)
@@ -778,7 +785,7 @@ std::unique_ptr<RenderOptions> RenderOptions::forClipRender (juce::Array<Clip*> 
 
         ro->allowedClips = clips;
         bool areAllClipsMono = true;
-        
+
         for (auto c : clips)
         {
             if (auto t = c->getTrack())
@@ -789,7 +796,7 @@ std::unique_ptr<RenderOptions> RenderOptions::forClipRender (juce::Array<Clip*> 
                     if (auto dest = at->getOutput().getDestinationTrack())
                         ro->tracks.addIfNotAlreadyThere (dest->itemID);
             }
-            
+
             // Assume any non-audio clips should be rendered in stereo
             if (auto audioClip = dynamic_cast<AudioClipBase*> (c))
             {
@@ -801,7 +808,7 @@ std::unique_ptr<RenderOptions> RenderOptions::forClipRender (juce::Array<Clip*> 
                 areAllClipsMono = false;
             }
         }
-        
+
         ro->type = midiNotes ? RenderType::midi
                              : RenderType::clip;
 
@@ -1155,7 +1162,8 @@ void RenderOptions::updateHash()
            ^ (((HashCode) tracksToSeparateFiles) << 13)
            ^ (((HashCode) realTime)              << 14)
            ^ (((HashCode) usePlugins)            << 15)
-           ^ (((HashCode) addMetadata)           << 16);
+           ^ (((HashCode) addMetadata)           << 16)
+           ^ (((HashCode) addAcidMetadata)       << 17);
 }
 
 void RenderOptions::updateFileName()

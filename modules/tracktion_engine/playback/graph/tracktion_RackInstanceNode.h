@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -28,6 +28,7 @@ public:
     tracktion::graph::NodeProperties getNodeProperties() override;
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
+    void preProcess (choc::buffer::FrameCount, juce::Range<int64_t>) override;
     void process (ProcessContext&) override;
 
 private:
@@ -36,6 +37,7 @@ private:
     ChannelMap channelMap;
     int maxNumChannels = 0;
     float lastGain[2];
+    bool canUseSourceBuffers = false;
 };
 
 }} // namespace tracktion { inline namespace engine

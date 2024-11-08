@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -22,7 +22,7 @@ MidiNoteDispatcher::~MidiNoteDispatcher()
 
 void MidiNoteDispatcher::dispatchPendingMessagesForDevices (TimePosition editTime)
 {
-    juce::ScopedLock s (deviceLock);
+    const std::shared_lock sl (deviceMutex);
 
     for (auto state : devices)
         dispatchPendingMessages (*state, editTime);
@@ -30,7 +30,7 @@ void MidiNoteDispatcher::dispatchPendingMessagesForDevices (TimePosition editTim
 
 void MidiNoteDispatcher::masterTimeUpdate (TimePosition editTime)
 {
-    const juce::ScopedLock s (timeLock);
+    const std::scoped_lock s (timeLock);
     masterTime = editTime;
     hiResClockOfMasterTime = juce::Time::getMillisecondCounterHiRes();
 }
@@ -42,19 +42,22 @@ void MidiNoteDispatcher::prepareToPlay (TimePosition editTime)
 
 TimePosition MidiNoteDispatcher::getCurrentTime() const
 {
-    const juce::ScopedLock s (timeLock);
+    const std::scoped_lock s (timeLock);
     return masterTime + TimeDuration::fromSeconds ((juce::Time::getMillisecondCounterHiRes() - hiResClockOfMasterTime) * 0.001);
 }
 
 void MidiNoteDispatcher::dispatchPendingMessages (DeviceState& state, TimePosition editTime)
 {
-    // N.B. This should only be called under a deviceLock
+    // N.B. This should only be called under a deviceLock (which is separate to the bufferMutex)
     auto& pendingBuffer = state.device.getPendingMessages();
     state.device.context.masterLevels.processMidi (pendingBuffer, nullptr);
     const auto delay = state.device.getMidiOutput().getDeviceDelay();
-    
+
     if (! state.device.sendMessages (pendingBuffer, editTime - delay))
+    {
+        const std::scoped_lock sl (state.bufferMutex);
         state.buffer.mergeFromAndClear (pendingBuffer);
+    }
 }
 
 void MidiNoteDispatcher::setMidiDeviceList (const juce::OwnedArray<MidiOutputDeviceInstance>& newList)
@@ -71,7 +74,7 @@ void MidiNoteDispatcher::setMidiDeviceList (const juce::OwnedArray<MidiOutputDev
     bool startTimerFlag = false;
 
     {
-        const juce::ScopedLock sl (deviceLock);
+        const std::unique_lock sl (deviceMutex);
         newDevices.swapWith (devices);
         startTimerFlag = ! devices.isEmpty();
     }
@@ -92,7 +95,7 @@ void MidiNoteDispatcher::hiResTimerCallback()
     messagesToSend.ensureStorageAllocated (32);
 
     {
-        const juce::ScopedLock sl (deviceLock);
+        const std::shared_lock sl (deviceMutex);
 
         for (auto d : devices)
         {
@@ -100,33 +103,30 @@ void MidiNoteDispatcher::hiResTimerCallback()
             auto& buffer = d->buffer;
             auto& midiOut = device.getMidiOutput();
 
+            const std::scoped_lock bufferLock (d->bufferMutex);
+
             if (buffer.isAllNotesOff)
-            {
-                buffer.clear();
                 midiOut.sendNoteOffMessages();
-            }
-            else
+            
+            while (buffer.isNotEmpty())
             {
-                while (buffer.isNotEmpty())
+                auto& message = buffer[0];
+
+                auto noteTime = TimePosition::fromSeconds (message.getTimeStamp());
+                auto currentTime = getCurrentTime();
+
+                if (noteTime > currentTime + TimeDuration::fromSeconds (0.25))
                 {
-                    auto& message = buffer[0];
-
-                    auto noteTime = TimePosition::fromSeconds (message.getTimeStamp());
-                    auto currentTime = getCurrentTime();
-
-                    if (noteTime > currentTime + TimeDuration::fromSeconds (0.25))
-                    {
-                        buffer.remove (0);
-                    }
-                    else if (noteTime <= currentTime)
-                    {
-                        messagesToSend.add ({ &device, message });
-                        buffer.remove (0);
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    buffer.remove (0);
+                }
+                else if (noteTime <= currentTime)
+                {
+                    messagesToSend.add ({ &device, message });
+                    buffer.remove (0);
+                }
+                else
+                {
+                    break;
                 }
             }
         }

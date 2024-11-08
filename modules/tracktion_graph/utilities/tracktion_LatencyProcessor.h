@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -18,7 +18,7 @@ namespace tracktion { inline namespace graph
 struct LatencyProcessor
 {
     LatencyProcessor() = default;
-    
+
     /** Returns ture if the the sample rate, channels etc. are the same between the two objects. */
     bool hasSameConfigurationAs (const LatencyProcessor& o) const
     {
@@ -39,22 +39,23 @@ struct LatencyProcessor
     {
         return latencyNumSamples;
     }
-    
+
     void setLatencyNumSamples (int numLatencySamples)
     {
+        assert (numLatencySamples < (196'000 * 60) && "Invalid latency size");
         latencyNumSamples = numLatencySamples;
     }
-    
+
     void prepareToPlay (double sampleRateToUse, int blockSize, int numChannels)
     {
         sampleRate = sampleRateToUse;
         latencyTimeSeconds = sampleToTime (latencyNumSamples, sampleRate);
-        
+
         fifo.setSize ((choc::buffer::ChannelCount) numChannels, (choc::buffer::FrameCount) (latencyNumSamples + blockSize + 1));
         fifo.writeSilence ((choc::buffer::FrameCount) latencyNumSamples);
         jassert (fifo.getNumReady() == latencyNumSamples);
     }
-    
+
     void writeAudio (choc::buffer::ChannelArrayView<float> src)
     {
         if (fifo.getNumChannels() == 0)
@@ -63,7 +64,7 @@ struct LatencyProcessor
         jassert (fifo.getNumChannels() >= src.getNumChannels());
         fifo.write (src);
     }
-    
+
     void writeMIDI (const tracktion_engine::MidiMessageArray& src)
     {
         midi.mergeFromWithOffset (src, latencyTimeSeconds);
@@ -95,7 +96,7 @@ struct LatencyProcessor
         for (int i = midi.size(); --i >= 0;)
         {
            auto& m = midi[i];
-           
+
            if (m.getTimeStamp() <= blockTimeSeconds)
            {
                dst.add (m);
@@ -114,7 +115,7 @@ struct LatencyProcessor
            jassert (m.getTimeStamp() >= 0.0);
         }
     }
-    
+
     void clearAudio (int numSamples)
     {
         fifo.removeSamples (numSamples);

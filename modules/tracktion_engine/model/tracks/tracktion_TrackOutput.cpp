@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -41,7 +41,7 @@ void TrackOutput::flushStateToValueTree()
     if (! destTrackID.isValid())
         return;
 
-    if (auto at = dynamic_cast<AudioTrack*> (findTrackForID (owner.edit, destTrackID)))
+    if (auto at = findAudioTrackForID (owner.edit, destTrackID))
         setOutputToTrack (at);
 }
 
@@ -146,9 +146,24 @@ bool TrackOutput::outputsToDestTrack (AudioTrack& t) const
     return t.itemID == destTrackID;
 }
 
+bool TrackOutput::usesDefaultAudioOut() const
+{
+    return outputDevice == DeviceManager::getDefaultAudioOutDeviceName (false);
+}
+
+bool TrackOutput::usesDefaultMIDIOut() const
+{
+    return outputDevice == DeviceManager::getDefaultMidiOutDeviceName (false);
+}
+
 OutputDevice* TrackOutput::getOutputDevice (bool traceThroughDestTracks) const
 {
-    auto dev = owner.edit.engine.getDeviceManager().findOutputDeviceWithName (outputDevice);
+    auto& dm = owner.edit.engine.getDeviceManager();
+
+    auto dev = dm.findOutputDeviceForID (outputDevice);
+
+    if (dev == nullptr)
+        dev = dm.findOutputDeviceWithName (outputDevice);
 
     if ((dev == nullptr || ! dev->isEnabled()) && traceThroughDestTracks)
         if (auto t = getDestinationTrack())
@@ -157,10 +172,21 @@ OutputDevice* TrackOutput::getOutputDevice (bool traceThroughDestTracks) const
     return dev;
 }
 
+juce::String TrackOutput::getOutputDeviceID() const
+{
+    if (destTrackID.isValid())
+        return {};
+
+    if (auto dev = getOutputDevice (false))
+        return dev->getName();
+
+    return outputDevice;
+}
+
 juce::String TrackOutput::getOutputName() const
 {
     if (auto t = getDestinationTrack())
-        return TRANS("Track") + " " + juce::String (t->getAudioTrackNumber());
+        return t->getNameAsTrackNumber();
 
     return outputDevice;
 }
@@ -178,18 +204,15 @@ juce::String TrackOutput::getDescriptiveOutputName() const
                  .replace ("123", juce::String (t->getAudioTrackNumber()));
     }
 
-    if (auto dev = owner.edit.engine.getDeviceManager().findOutputDeviceWithName (outputDevice))
+    if (auto dev = getOutputDevice (false))
         return dev->getAlias();
 
     return outputDevice;
 }
 
-void TrackOutput::setOutputByName (const juce::String& name)
+void TrackOutput::setOutputToDeviceID (const juce::String& deviceID)
 {
-    if (name.startsWith (TRANS("Track") + " "))
-        outputDevice = juce::String ("track ") + juce::String (name.upToFirstOccurrenceOf ("(", false, false).trim().getTrailingIntValue());
-    else
-        outputDevice = name;
+    outputDevice = deviceID;
 }
 
 bool TrackOutput::canPlayAudio() const
@@ -226,20 +249,6 @@ void TrackOutput::setOutputToDefaultDevice (bool isMidi)
 {
     outputDevice = isMidi ? DeviceManager::getDefaultMidiOutDeviceName (false)
                           : DeviceManager::getDefaultAudioOutDeviceName (false);
-}
-
-static bool feedsIntoAnyOf (AudioTrack* t, const juce::Array<AudioTrack*>& tracks)
-{
-    if (tracks.contains (t))
-        return true;
-
-    auto& output = t->getOutput();
-
-    for (auto track : tracks)
-        if (output.feedsInto (track))
-            return true;
-
-    return false;
 }
 
 void TrackOutput::getPossibleOutputDeviceNames (const juce::Array<AudioTrack*>& tracks,
@@ -281,35 +290,6 @@ void TrackOutput::getPossibleOutputDeviceNames (const juce::Array<AudioTrack*>& 
                 s.add (out->getName());
                 a.add (out->getAlias());
             }
-        }
-    }
-}
-
-void TrackOutput::getPossibleOutputNames (const juce::Array<AudioTrack*>& tracks,
-                                          juce::StringArray& s, juce::StringArray& a,
-                                          juce::BigInteger& hasAudio,
-                                          juce::BigInteger& hasMidi)
-{
-    if (tracks.isEmpty())
-        return;
-
-    getPossibleOutputDeviceNames (tracks, s, a, hasAudio, hasMidi);
-
-    auto& edit = tracks[0]->edit;
-
-    for (auto t : getAudioTracks (edit))
-    {
-        if (t->createsOutput() && ! feedsIntoAnyOf (t, tracks))
-        {
-            juce::String trackName, trackNum (t->getAudioTrackNumber());
-
-            if (! t->getName().startsWithIgnoreCase (TRANS("Track") + " "))
-                trackName = (TRANS("Track") + " " + trackNum + " (" + t->getName() + ")");
-            else
-                trackName = (TRANS("Track") + " " + trackNum);
-
-            s.add (trackName);
-            a.add (trackName);
         }
     }
 }

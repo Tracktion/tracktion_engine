@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -19,38 +19,63 @@ class MidiInputDeviceNode final : public tracktion::graph::Node,
 {
 public:
     MidiInputDeviceNode (InputDeviceInstance&,
-                         MidiInputDevice&, MidiMessageArray::MPESourceID,
-                         tracktion::graph::PlayHeadState&);
+                         MidiInputDevice&, MPESourceID,
+                         tracktion::graph::PlayHeadState&,
+                         EditItemID targetID);
     ~MidiInputDeviceNode() override;
-    
+
     tracktion::graph::NodeProperties getNodeProperties() override;
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 
-    void handleIncomingMidiMessage (const juce::MidiMessage&) override;
-    void discardRecordings() override;
+    void handleIncomingMidiMessage (const juce::MidiMessage&, MPESourceID) override;
+    void discardRecordings (EditItemID) override;
 
 private:
     //==============================================================================
     InputDeviceInstance& instance;
     MidiInputDevice& midiInputDevice;
-    const  MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::notMPE;
+    const MPESourceID midiSourceID;
     tracktion::graph::PlayHeadState& playHeadState;
+    const EditItemID targetID;
+    const size_t nodeID = hash ((size_t) midiSourceID, targetID);
 
-    juce::CriticalSection bufferLock;
-    juce::OwnedArray<juce::MidiMessage> incomingMessages;
-    int numMessages = 0;
-    MidiMessageArray liveRecordedMessages;
-    int numLiveMessagesToPlay = 0; // the index of the first message that's been recorded in the current loop
-    juce::CriticalSection liveInputLock;
-    unsigned int lastReadTime = 0, maxExpectedMsPerBuffer = 0;
-    double sampleRate = 44100.0, lastPlayheadTime = 0;
+    unsigned int maxExpectedMsPerBuffer = 0;
+    double sampleRate = 44100.0;
+
+    LambdaTimer loopOverdubsChecker { [this] { updateLoopOverdubs(); } };
+
+    struct NodeState
+    {
+        NodeState()
+        {
+            for (int i = 256; --i >= 0;)
+                incomingMessages.push_back (std::make_unique<MidiMessageWithSource> (juce::MidiMessage (0x80, 0, 0), MPESourceID()));
+        }
+
+        std::atomic<MidiInputDeviceNode*> activeNode { nullptr };
+
+        std::mutex incomingMessagesMutex;
+        std::vector<std::unique_ptr<MidiMessageWithSource>> incomingMessages;
+        uint32_t numIncomingMessages = 0;
+
+        std::mutex liveMessagesMutex;
+        MidiMessageArray liveRecordedMessages;
+        int numLiveMessagesToPlay = 0; // the index of the first message that's been recorded in the current loop
+
+        juce::uint32 lastReadTime = juce::Time::getApproximateMillisecondCounter();
+        double lastPlayheadTime = 0;
+        std::atomic<bool> canLoop { true };
+    };
+
+    std::shared_ptr<NodeState> state;
 
     //==============================================================================
     void processSection (ProcessContext&, juce::Range<int64_t> timelineRange);
     void createProgramChanges (MidiMessageArray&);
     bool isLivePlayOverActive();
+    void updateLoopOverdubs();
 };
 
 }} // namespace tracktion { inline namespace engine

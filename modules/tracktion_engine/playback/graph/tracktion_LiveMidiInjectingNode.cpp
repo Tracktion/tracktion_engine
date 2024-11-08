@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -32,8 +32,9 @@ tracktion::graph::NodeProperties LiveMidiInjectingNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
     props.hasMidi = true;
+    assert (props.nodeID != 0);
     hash_combine (props.nodeID, track->itemID.getRawID());
-    
+
     return props;
 }
 
@@ -44,28 +45,15 @@ std::vector<tracktion::graph::Node*> LiveMidiInjectingNode::getDirectInputNodes(
 
 void LiveMidiInjectingNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
-    if (info.rootNodeToReplace == nullptr)
-        return;
-    
-    auto nodeIDToLookFor = getNodeProperties().nodeID;
-    
-    if (nodeIDToLookFor == 0)
-        return;
-
-    auto visitor = [this, nodeIDToLookFor] (Node& node)
+    if (auto oldNode = findNodeWithIDIfNonZero<LiveMidiInjectingNode> (info.nodeGraphToReplace, getNodeProperties().nodeID))
     {
-        if (auto other = dynamic_cast<LiveMidiInjectingNode*> (&node))
+        if (oldNode->track == track)
         {
-            if (other->getNodeProperties().nodeID == nodeIDToLookFor
-                && other->track == track)
-            {
-                const juce::ScopedLock sl2 (other->liveMidiLock);
-                liveMidiMessages.swapWith (other->liveMidiMessages);
-                midiSourceID = other->midiSourceID;
-            }
+            const juce::ScopedLock sl2 (oldNode->liveMidiLock);
+            liveMidiMessages.swapWith (oldNode->liveMidiMessages);
+            midiSourceID = oldNode->midiSourceID;
         }
-    };
-    visitNodes (*info.rootNodeToReplace, visitor, true);
+    }
 }
 
 bool LiveMidiInjectingNode::isReadyToProcess()
@@ -83,15 +71,15 @@ void LiveMidiInjectingNode::process (ProcessContext& pc)
     setAudioOutput (input.get(), sourceBuffers.audio);
 
     const juce::ScopedLock sl (liveMidiLock);
-    
+
     if (liveMidiMessages.isEmpty())
         return;
-    
+
     destMidiBlock.mergeFromAndClear (liveMidiMessages);
 }
 
 //==============================================================================
-void LiveMidiInjectingNode::injectMessage (MidiMessageArray::MidiMessageWithSource mm)
+void LiveMidiInjectingNode::injectMessage (MidiMessageWithSource mm)
 {
     mm.setTimeStamp (0.0);
 
@@ -100,7 +88,7 @@ void LiveMidiInjectingNode::injectMessage (MidiMessageArray::MidiMessageWithSour
 }
 
 //==============================================================================
-void LiveMidiInjectingNode::injectLiveMidiMessage (AudioTrack& at, const MidiMessageArray::MidiMessageWithSource& mm, bool& wasUsed)
+void LiveMidiInjectingNode::injectLiveMidiMessage (AudioTrack& at, const MidiMessageWithSource& mm, bool& wasUsed)
 {
     if (&at != track.get())
         return;

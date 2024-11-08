@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -20,7 +20,7 @@ class TempoTrack  : public Track
 public:
     /** Create the TempoTrack for an Edit with a given state. */
     TempoTrack (Edit&, const juce::ValueTree&);
-    
+
     /** Destructor. */
     ~TempoTrack() override;
 
@@ -29,7 +29,7 @@ public:
     /** @internal */
     bool isTempoTrack() const override;
     /** @internal */
-    juce::String getName() override;
+    juce::String getName() const override;
     /** @internal */
     juce::String getSelectableDescription() override;
 

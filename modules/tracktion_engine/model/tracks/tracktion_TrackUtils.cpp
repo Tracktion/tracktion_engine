@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -67,17 +67,27 @@ TrackInsertPoint::TrackInsertPoint (const juce::ValueTree& v)
     }
 }
 
+TrackInsertPoint TrackInsertPoint::getEndOfTracks (Edit& e)
+{
+    return TrackInsertPoint (nullptr, getTopLevelTracks (e).getLast());
+}
+
 //==============================================================================
 TrackList::TrackList (Edit& e, const juce::ValueTree& parentTree)
     : ValueTreeObjectList<Track> (parentTree), edit (e)
 {
-    rebuildObjects();
-    rebuilding = false;
 }
 
 TrackList::~TrackList()
 {
+    cancelPendingUpdate();
     freeObjects();
+}
+
+void TrackList::initialise()
+{
+    rebuildObjects();
+    rebuilding = false;
 }
 
 Track* TrackList::getTrackFor (const juce::ValueTree& v) const
@@ -202,18 +212,18 @@ void TrackList::deleteObject (Track* t)
 
 void TrackList::newObjectAdded (Track* t)
 {
-    if (! edit.isLoading())
-    {
-        triggerAsyncUpdate();
-        t->refreshCurrentAutoParam();
+    if (edit.isLoading())
+        return;
 
-        if (auto tl = t->getSubTrackList())
-            tl->visitAllRecursive ([] (Track& track)
-                                   {
-                                       track.refreshCurrentAutoParam();
-                                       return true;
-                                   });
-    }
+    triggerAsyncUpdate();
+    t->refreshCurrentAutoParam();
+
+    if (auto tl = t->getSubTrackList())
+        tl->visitAllRecursive ([] (Track& track)
+                               {
+                                   track.refreshCurrentAutoParam();
+                                   return true;
+                               });
 }
 
 void TrackList::objectRemoved (Track*) {}
@@ -231,9 +241,9 @@ void TrackList::sortTracksByType (juce::ValueTree& editState, juce::UndoManager*
         {
             if (isMovableTrack (v))     return 6;
             if (isMasterTrack (v))      return 5;
-            if (isChordTrack (v))       return 4;
+            if (isTempoTrack (v))       return 4;
             if (isMarkerTrack (v))      return 3;
-            if (isTempoTrack (v))       return 2;
+            if (isChordTrack (v))       return 2;
             if (isArrangerTrack (v))    return 1;
             return 0;
         }
@@ -254,6 +264,22 @@ void TrackList::handleAsyncUpdate()
         sortTracksByType (edit.state, &edit.getUndoManager());
 }
 
+//==============================================================================
+int countNumTracks (const juce::ValueTree& v)
+{
+    int total = 0;
+
+    for (const auto& c : v)
+    {
+        if (! TrackList::isTrack (c.getType()))
+            continue;
+
+        ++total;
+        total += countNumTracks (c);
+    }
+
+    return total;
+}
 
 //==============================================================================
 TrackAutomationSection::TrackAutomationSection (TrackItem& c)
@@ -352,7 +378,10 @@ void moveAutomation (const juce::Array<TrackAutomationSection>& origSections, Ti
                 {
                     TrackAutomationSection::ActiveParameters ap;
                     ap.param = param;
-                    ap.curve = param->getCurve();
+                    ap.curve.setState (param->getCurve().state);
+                    ap.curve.setParentState (param->getCurve().parentState);
+                    ap.curve.setOwnerParameter (param->getCurve().getOwnerParameter());
+
                     section.activeParameters.add (ap);
                 }
             }

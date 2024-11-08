@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -12,10 +12,12 @@ namespace tracktion { inline namespace engine
 {
 
 EditInputDevices::EditInputDevices (Edit& e, const juce::ValueTree& v)
-    : edit (e), state (v), editState (e.state)
+    : edit (e), state (v)
 {
     editState.addListener (this);
-    callBlocking ([this] { edit.engine.getDeviceManager().addChangeListener (this); });
+
+    if (edit.shouldPlay())
+        callBlocking ([this] { edit.engine.getDeviceManager().addChangeListener (this); });
 }
 
 EditInputDevices::~EditInputDevices()
@@ -30,7 +32,7 @@ int EditInputDevices::getMaxNumInputs() const
     return 4;
 }
 
-static bool isForDevice (const juce::ValueTree& v, const InputDevice& d)
+static bool isForDevice (const juce::ValueTree& v, const InputDevice& d, bool fallbackToNameCheck)
 {
     auto typeProp = v.getPropertyPointer (IDs::type);
 
@@ -40,7 +42,23 @@ static bool isForDevice (const juce::ValueTree& v, const InputDevice& d)
     if (d.getDeviceType() == InputDevice::DeviceType::trackMidiDevice)
         return typeProp != nullptr && *typeProp == "MIDI" && v[IDs::sourceTrack] == d.getName();
 
-    return v[IDs::name] == d.getName();
+    if (v[IDs::deviceID] == d.getDeviceID())
+        return true;
+
+    return fallbackToNameCheck && v[IDs::name] == d.getName();
+}
+
+static juce::ValueTree findDeviceState (const juce::ValueTree& parent, const InputDevice& d)
+{
+    for (const auto& v : parent)
+        if (isForDevice (v, d, false))
+            return v;
+
+    for (const auto& v : parent)
+        if (isForDevice (v, d, true))
+            return v;
+
+    return {};
 }
 
 static bool isTrackInputDeviceMIDI (const juce::ValueTree& v)
@@ -50,17 +68,13 @@ static bool isTrackInputDeviceMIDI (const juce::ValueTree& v)
 
 bool EditInputDevices::isInputDeviceAssigned (const InputDevice& d)
 {
-    for (const auto& v : state)
-        if (isForDevice (v, d))
-            return true;
-
-    return false;
+    return findDeviceState (state, d).isValid();
 }
 
-void EditInputDevices::clearAllInputs (AudioTrack& at)
+void EditInputDevices::clearAllInputs (AudioTrack& at, juce::UndoManager* um)
 {
     for (auto idi : getDevicesForTargetTrack (at))
-        idi->removeTargetTrack (at);
+        [[ maybe_unused]] auto res = idi->removeTarget (at.itemID, um);
 }
 
 static bool isInstanceRecording (InputDeviceInstance* idi)
@@ -74,18 +88,18 @@ static bool isInstanceRecording (InputDeviceInstance* idi)
     return true;
 }
 
-void EditInputDevices::clearInputsOfDevice (AudioTrack& at, const InputDevice& d)
+void EditInputDevices::clearInputsOfDevice (AudioTrack& at, const InputDevice& d, juce::UndoManager* um)
 {
     for (auto idi : getDevicesForTargetTrack (at))
         if (&idi->owner == &d)
             if (! isInstanceRecording (idi))
-                idi->removeTargetTrack (at);
+                [[ maybe_unused ]] auto res = idi->removeTarget (at.itemID, um);
 }
 
 InputDeviceInstance* EditInputDevices::getInputInstance (const AudioTrack& at, int index) const
 {
-    for (auto* idi : getDevicesForTargetTrack (at))
-        if (idi->isOnTargetTrack (at, index))
+    for (auto idi : getDevicesForTargetTrack (at))
+        if (isOnTargetTrack (*idi, at, index))
             return idi;
 
     return {};
@@ -95,8 +109,8 @@ juce::Array<InputDeviceInstance*> EditInputDevices::getDevicesForTargetTrack (co
 {
     juce::Array<InputDeviceInstance*> devices;
 
-    for (auto* idi : edit.getAllInputDevices())
-        if (idi->isOnTargetTrack (at))
+    for (auto idi : edit.getAllInputDevices())
+        if (idi->getTargets().contains (at.itemID))
             devices.add (idi);
 
     return devices;
@@ -104,9 +118,13 @@ juce::Array<InputDeviceInstance*> EditInputDevices::getDevicesForTargetTrack (co
 
 juce::ValueTree EditInputDevices::getInstanceStateForInputDevice (const InputDevice& d)
 {
-    for (const auto& v : state)
-        if (isForDevice (v, d))
-            return v;
+    if (auto v = findDeviceState (state, d); v.isValid())
+    {
+        // Refresh the ID to update from legacy edits
+        v.setProperty (IDs::deviceID, d.getDeviceID(), nullptr);
+        v.setProperty (IDs::name, d.getName(), nullptr);
+        return v;
+    }
 
     juce::ValueTree v (IDs::INPUTDEVICE);
 
@@ -122,6 +140,7 @@ juce::ValueTree EditInputDevices::getInstanceStateForInputDevice (const InputDev
     }
     else
     {
+        v.setProperty (IDs::deviceID, d.getDeviceID(), nullptr);
         v.setProperty (IDs::name, d.getName(), nullptr);
     }
 
@@ -134,7 +153,10 @@ void EditInputDevices::removeNonExistantInputDeviceStates()
 {
     auto& dm = edit.engine.getDeviceManager();
     juce::Array<InputDevice*> devices;
-    devices.addArray (dm.midiInputs);
+
+    for (auto& d : dm.midiInputs)
+        devices.add (d.get());
+
     devices.addArray (dm.waveInputs);
 
     if (! edit.isLoading())
@@ -154,7 +176,7 @@ void EditInputDevices::removeNonExistantInputDeviceStates()
     auto isDevicePresent = [devices] (const juce::ValueTree& v)
     {
         for (auto* d : devices)
-            if (isForDevice (v, *d))
+            if (isForDevice (v, *d, true))
                 return true;
 
         return false;
@@ -192,7 +214,7 @@ InputDevice* EditInputDevices::getTrackDeviceForState (const juce::ValueTree& v)
 
     if (trackID.isValid())
     {
-        if (auto at = dynamic_cast<AudioTrack*> (findTrackForID (edit, trackID)))
+        if (auto at = findAudioTrackForID (edit, trackID))
         {
             if (isTrackInputDeviceMIDI (v))
                 return &at->getMidiInputDevice();

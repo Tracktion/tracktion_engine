@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -799,7 +799,7 @@ void MackieC4::acceptMidiMessage (int, const juce::MidiMessage& m)
                     if (potNum >= 0 && potNum < 8)
                         userChangedAuxBank (potNum - auxBank);
                     else
-                        userPressedAux (potNum - 8);
+                        userPressedAux (potNum - 8, 0);
                 }
             }
         }
@@ -824,7 +824,7 @@ void MackieC4::acceptMidiMessage (int, const juce::MidiMessage& m)
             else if (mode == AuxMode)
             {
                 const int chan = result.theExt1 - 8;
-                userMovedAux (chan, currentPotPos[result.theExt1]);
+                userMovedAux (chan, 0, currentPotPos[result.theExt1]);
             }
         }
     }
@@ -850,7 +850,7 @@ void MackieC4::currentSelectionChanged (juce::String)
 void MackieC4::parameterChanged (int parameterNumber, const ParameterSetting& newValue)
 {
     ControlSurface::parameterChanged (parameterNumber, newValue);
-    
+
     if (mode == PluginMode3
         && parameterNumber >= 0
         && parameterNumber < 32)
@@ -954,10 +954,10 @@ void MackieC4::faderBankChanged (int, const juce::StringArray& trackNames)
     }
 }
 
-void MackieC4::moveAux (int channelNum, const char* bus, float newPos)
+void MackieC4::moveAux (int channelNum, int num, const char* bus, float newPos)
 {
-    ControlSurface::moveAux (channelNum, bus, newPos);
-    
+    ControlSurface::moveAux (channelNum, num, bus, newPos);
+
     if (mode == AuxMode)
     {
         currentPotPos[channelNum + 8] = newPos;
@@ -966,12 +966,12 @@ void MackieC4::moveAux (int channelNum, const char* bus, float newPos)
     }
 }
 
-void MackieC4::clearAux (int channel)
+void MackieC4::clearAux (int channel, int)
 {
     if (mode == AuxMode)
     {
         setDisplayText (channel + 8, 1, {});
-        lightUpPotButton(channel + 8, false);
+        lightUpPotButton (channel + 8, false);
     }
 }
 

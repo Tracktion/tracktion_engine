@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -28,6 +28,7 @@ public:
 
     bool isMasterVolAndPan()                                { return isMasterVolume; }
     bool canBeAddedToRack() override                        { return ! isMasterVolume; }
+    bool canBeMoved() override                              { return ! isMasterVolume; }
 
     //==============================================================================
     float getVolumeDb() const;
@@ -46,21 +47,21 @@ public:
 
     void muteOrUnmute();
 
+    bool shouldMeasureCpuUsage() const noexcept final       { return false; }
+
     //==============================================================================
     static const char* xmlTypeName;
 
-    juce::String getName() override                         { return TRANS("Volume & Pan Plugin"); }
+    juce::String getName() const override                   { return TRANS("Volume & Pan Plugin"); }
     juce::String getPluginType() override                   { return xmlTypeName; }
     juce::String getShortName (int) override                { return "VolPan"; }
     juce::String getSelectableDescription() override        { return getName(); }
-    bool needsConstantBufferSize() override                 { return false; }
 
     void initialise (const PluginInitialisationInfo&) override;
     void initialiseWithoutStopping (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;
     int getNumOutputChannelsGivenInputs (int numInputs) override    { return juce::jmax (2, numInputs); }
-    bool canBeMoved() override                              { return ! isMasterVolume; }
 
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 
@@ -72,13 +73,21 @@ public:
     // NB the units used here are slider position
     AutomatableParameter::Ptr volParam, panParam;
 
-private:
-    float lastGainL = 0.0f, lastGainR = 0.0f, lastGainS = 0.0f, lastVolumeBeforeMute = 0.0f;
+    /// This is the time over which volume changes will be ramped, to avoid
+    /// zipper noise.
+    double smoothingRampTimeSeconds = 0.05;
 
+private:
+    float lastVolumeBeforeMute = 0.0f;
+    juce::SmoothedValue<float> smoothedGainL, smoothedGainR, smoothedGain;
+
+    RealTimeSpinLock vcaTrackLock;
     juce::ReferenceCountedObjectPtr<AudioTrack> vcaTrack;
     const bool isMasterVolume = false;
 
+    void setSmoothedValueTargets (TimePosition, bool);
     void refreshVCATrack();
+    float getVCAPosDelta (TimePosition);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VolumeAndPanPlugin)
 };

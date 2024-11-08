@@ -1,11 +1,11 @@
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -21,8 +21,9 @@
 
 #include <vector>
 #include <mutex>
+#include <type_traits>
 #include "../platform/choc_Assert.h"
-#include "../platform/choc_SpinLock.h"
+#include "../threading/choc_SpinLock.h"
 
 namespace choc::fifo
 {
@@ -86,7 +87,9 @@ struct VariableSizeFIFO
     /// Allows access to all the available item in the FIFO via a callback.
     /// If there are any pending items in the FIFO, the handleItem function will be called
     /// for each of them. HandleItem must be a functor or lambda which can be called as
-    /// handleItems (const void* data, uint32_t size).
+    /// handleItems (const void* data, uint32_t size). Optionally, the functor can return
+    /// a bool, in which case returning true will pop the current item and continue, but
+    /// false will leave the current item in the FIFO and stop.
     template <typename HandleItem>
     void popAllAvailable (HandleItem&&);
 
@@ -166,7 +169,7 @@ bool VariableSizeFIFO::push (uint32_t numBytes, DataProvider&& writeSourceData)
 
     auto bytesNeeded = numBytes + headerSize;
 
-    const std::lock_guard<decltype(writeLock)> lock (writeLock);
+    const std::scoped_lock lock (writeLock);
 
     auto destOffset = writePos.load();
     auto dest = buffer.data() + destOffset;
@@ -239,7 +242,16 @@ void VariableSizeFIFO::popAllAvailable (HandleItem&& handleItem)
 
         if (itemSize != 0)
         {
-            handleItem (static_cast<void*> (itemData + headerSize), itemSize);
+            if constexpr (std::is_void<decltype(handleItem(nullptr, 0))>::value)
+            {
+                handleItem (static_cast<void*> (itemData + headerSize), itemSize);
+            }
+            else
+            {
+                if (! handleItem (static_cast<void*> (itemData + headerSize), itemSize))
+                    break;
+            }
+
             newReadPos = (newReadPos + itemSize + headerSize) % capacity;
         }
         else

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -240,19 +240,16 @@ public:
 
             if (edit != nullptr)
             {
-                if (auto* transport = getTransport())
-                {
-                    auto markPos = createPosition (edit->tempoSequence);
-                    const auto loopRange = transport->getLoopRange();
+                auto markPos = createPosition (edit->tempoSequence);
+                const auto loopRange = edit->getTransport().getLoopRange();
 
-                    markPos.set (loopRange.getStart());
-                    rewireLoopStart = juce::roundToInt (markPos.getPPQTime() * kReWirePPQ);
+                markPos.set (loopRange.getStart());
+                rewireLoopStart = juce::roundToInt (markPos.getPPQTime() * kReWirePPQ);
 
-                    markPos.set (loopRange.getEnd());
-                    rewireLoopEnd = juce::roundToInt (markPos.getPPQTime() * kReWirePPQ);
+                markPos.set (loopRange.getEnd());
+                rewireLoopEnd = juce::roundToInt (markPos.getPPQTime() * kReWirePPQ);
 
-                    rewireLooping = transport->looping;
-                }
+                rewireLooping = edit->getTransport().looping;
             }
 
             // time limit for guessing if we need to chase the time
@@ -441,7 +438,7 @@ public:
 
     bool isPlaying (const PluginRenderContext& fc, ReWireDriveAudioInputParams& in)
     {
-        const auto playheadOutputTime = fc.editTime;
+        const auto playheadOutputTime = fc.editTime.getStart();
 
         if ((fc.isPlaying && playheadOutputTime >= 0s) || fc.isRendering)
         {
@@ -531,18 +528,15 @@ public:
 
     void timerCallback() override
     {
-        auto containerEdit = getEdit();
-
         if (timeSigRequest)
         {
             CRASH_TRACER
 
-            if (containerEdit != nullptr && containerEdit->tempoSequence.getNumTempos() == 1)
-            {
-                containerEdit->tempoSequence.getTimeSig(0)->setStringTimeSig (juce::String (requestedTimeSigNum)
-                                                                               + "/"
-                                                                               + juce::String (requestedTimeSigDenom));
-            }
+            if (auto edit = editRef.get())
+                if (edit->tempoSequence.getNumTempos() == 1)
+                    edit->tempoSequence.getTimeSig(0)->setStringTimeSig (juce::String (requestedTimeSigNum)
+                                                                           + "/"
+                                                                           + juce::String (requestedTimeSigDenom));
 
             timeSigRequest = false;
         }
@@ -551,8 +545,9 @@ public:
         {
             CRASH_TRACER
 
-            if (containerEdit != nullptr && containerEdit->tempoSequence.getNumTempos() == 1)
-                containerEdit->tempoSequence.getTempo(0)->setBpm (requestedTempo / 1000.0);
+            if (auto edit = editRef.get())
+                if (edit->tempoSequence.getNumTempos() == 1)
+                    edit->tempoSequence.getTempo(0)->setBpm (requestedTempo / 1000.0);
 
             requestTempo = false;
         }
@@ -561,50 +556,48 @@ public:
         {
             CRASH_TRACER
 
-            if (containerEdit != nullptr)
+            if (auto edit = editRef.get())
             {
-                if (auto* transport = getTransport())
-                {
-                    transport->looping = rewireLooping;
+                edit->getTransport().looping = rewireLooping;
 
-                    auto markPos = createPosition (containerEdit->tempoSequence);
+                auto markPos = createPosition (edit->tempoSequence);
 
-                    markPos.setPPQTime (rewireLoopStart / (double)kReWirePPQ);
-                    transport->setLoopIn (markPos.getTime());
+                markPos.setPPQTime (rewireLoopStart / (double) kReWirePPQ);
+                edit->getTransport().setLoopIn (markPos.getTime());
 
-                    markPos.setPPQTime (rewireLoopEnd / (double)kReWirePPQ);
-                    transport->setLoopOut (markPos.getTime());
-                }
+                markPos.setPPQTime (rewireLoopEnd / (double) kReWirePPQ);
+                edit->getTransport().setLoopOut (markPos.getTime());
             }
 
             requestLoop = false;
         }
-        else if (containerEdit != nullptr)
+        else
         {
-            CRASH_TRACER
-
-            if (auto transport = getTransport())
+            if (auto edit = editRef.get())
             {
-                auto markPos = createPosition (containerEdit->tempoSequence);
-                const auto loopRange = transport->getLoopRange();
+                CRASH_TRACER
+
+                auto markPos = createPosition (edit->tempoSequence);
+                const auto loopRange = edit->getTransport().getLoopRange();
                 markPos.set (loopRange.getStart());
                 rewireLoopStart = juce::roundToInt (markPos.getPPQTime() * kReWirePPQ);
 
                 markPos.set (loopRange.getEnd());
                 rewireLoopEnd = juce::roundToInt (markPos.getPPQTime() * kReWirePPQ);
 
-                rewireLooping = transport->looping;
+                rewireLooping = edit->getTransport().looping;
             }
         }
 
         if (requestedReposition)
         {
-            CRASH_TRACER
-            if (auto transport = getTransport())
+            if (auto edit = editRef.get())
             {
-                auto pos = createPosition (containerEdit->tempoSequence);
+                CRASH_TRACER
+
+                auto pos = createPosition (edit->tempoSequence);
                 pos.setPPQTime (requestedPosition);
-                transport->setPosition (pos.getTime());
+                edit->getTransport().setPosition (pos.getTime());
             }
 
             requestedReposition = false;
@@ -613,8 +606,8 @@ public:
         if (requestedPlay)
         {
             CRASH_TRACER
-            if (auto transport = getTransport())
-                transport->play (true);
+            if (auto edit = editRef.get())
+                edit->getTransport().play (true);
 
             requestedPlay = false;
         }
@@ -622,8 +615,8 @@ public:
         if (requestedStop)
         {
             CRASH_TRACER
-            if (auto* transport = getTransport())
-                transport->stop (false, false);
+            if (auto edit = editRef.get())
+                edit->getTransport().stop (false, false);
 
             requestedStop = false;
         }
@@ -714,14 +707,6 @@ public:
         }
     }
 
-    TransportControl* getTransport() const
-    {
-        if (auto containerEdit = getEdit())
-            return &containerEdit->getTransport();
-
-        return {};
-    }
-
     Engine& engine;
     TRWMDeviceHandle handle;
     juce::String deviceName;
@@ -742,16 +727,14 @@ private:
     juce::BigInteger bufferSourceChannels;
 
     juce::OwnedArray<ReWireMIDIEvent> storedMessages;
-    MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::createUniqueMPESourceID();
+    MPESourceID midiSourceID = createUniqueMPESourceID();
 
     int references = 0, pluginsServedThisFrame = 0;
     double sampleRate = 0;
     TimePosition lastTime;
     TimeDuration timePerBlock;
     bool wasPlaying = false;
-    Edit::WeakRef editRef;
-
-    Edit* getEdit() const   { return dynamic_cast<Edit*> (editRef.get()); }
+    SafeSelectable<Edit> editRef;
 
     double requestedPosition = 0;
     int requestedTempo = 0, requestedTimeSigNum = 0, requestedTimeSigDenom = 0;
@@ -1075,7 +1058,7 @@ void ReWirePlugin::handleAsyncUpdate()
     initialiseFully();
 }
 
-juce::String ReWirePlugin::getName()
+juce::String ReWirePlugin::getName() const
 {
     if (device != nullptr)
         return currentDeviceName;
@@ -1105,7 +1088,7 @@ void ReWirePlugin::initialise (const PluginInitialisationInfo& info)
         device->prepareToPlay (info.sampleRate, info.blockSizeSamples,
                                channelIndexL, channelIndexR, &edit);
 
-        currentTempoPosition.reset (new tempo::Sequence::Position (createPosition (edit.tempoSequence)));
+        currentTempoPosition = std::make_unique<tempo::Sequence::Position> (createPosition (edit.tempoSequence));
     }
 }
 
@@ -1342,12 +1325,10 @@ void ReWirePlugin::setMidiChannel (int channel)
     }
 }
 
-bool ReWirePlugin::hasNameForMidiNoteNumber (int note, int midiChannel, juce::String& name)
+bool ReWirePlugin::hasNameForMidiNoteNumber (int note, int /*midiChannel*/, juce::String& name)
 {
     if (device != nullptr)
     {
-        --midiChannel;
-
         ReWireEventTarget eventTarget;
         ReWirePrepareEventTarget (&eventTarget, (unsigned short)currentBus, (unsigned short)currentChannel);
 

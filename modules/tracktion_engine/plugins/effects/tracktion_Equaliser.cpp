@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -170,13 +170,9 @@ void EqualiserPlugin::resetToDefault()
 
 void EqualiserPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    juce::CachedValue<float>* cvsFloat[]  = { &loFreqValue, &loGainValue, &loQValue,
-                                              &hiFreqValue, &hiGainValue, &hiQValue,
-                                              &midFreqValue1, &midGainValue1, &midQValue1,
-                                              &midFreqValue2, &midGainValue2, &midQValue2, nullptr };
-    juce::CachedValue<bool>* cvsBool[]    = { &phaseInvert, nullptr };
-    copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
-    copyPropertiesToNullTerminatedCachedValues (v, cvsBool);
+    copyPropertiesToCachedValues (v, loFreqValue, loGainValue, loQValue, hiFreqValue, hiGainValue,
+                                  hiQValue, midFreqValue1, midGainValue1, midQValue1, midFreqValue2,
+                                  midGainValue2, midQValue2, phaseInvert);
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();

@@ -1,5 +1,6 @@
 #!/bin/bash -e
 
+export GENERATE_IDE_PROJECTS=1
 export DISABLE_BUILD=1
 
 DIR=$(cd "$(dirname "$0")/"; pwd)

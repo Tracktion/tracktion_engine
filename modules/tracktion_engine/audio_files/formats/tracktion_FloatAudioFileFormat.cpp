@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -11,7 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
-static int getFloatFileHeaderInt()  { return (int) juce::ByteOrder::littleEndianInt ("TRKF"); }
+static int getFloatFileHeaderIntV1()  { return (int) juce::ByteOrder::littleEndianInt ("TRKF"); }
+static int getFloatFileHeaderIntV2()  { return (int) juce::ByteOrder::littleEndianInt ("TF64"); }
 
 
 //==============================================================================
@@ -23,7 +24,8 @@ public:
     {
         usesFloatingPointData = true;
 
-        if (in->readInt() == getFloatFileHeaderInt())
+        auto header = in->readInt();
+        if (header == getFloatFileHeaderIntV1())
         {
             dataStartOffset = in->readInt();
             sampleRate      = in->readInt();
@@ -35,10 +37,22 @@ public:
             if (sampleRate < 32000 || sampleRate > 192000 || numChannels < 1 || numChannels > 16)
                 sampleRate = 0;
         }
+        else if (header == getFloatFileHeaderIntV2())
+        {
+            dataStartOffset = in->readInt();
+            sampleRate      = in->readInt();
+            lengthInSamples = in->readInt64();
+            numChannels     = (unsigned int) in->readShort();
+            bigEndian       = in->readShort() != 0;
+            bitsPerSample   = 32;
+
+            if (sampleRate < 32000 || sampleRate > 192000 || numChannels < 1 || numChannels > 16)
+                sampleRate = 0;
+        }
     }
 
-    bool readSamples (int** destSamples, int numDestChannels, int startOffsetInDestBuffer,
-                      juce::int64 startSampleInFile, int numSamples)
+    bool readSamples (int* const* destSamples, int numDestChannels, int startOffsetInDestBuffer,
+                      juce::int64 startSampleInFile, int numSamples) override
     {
         clearSamplesBeyondAvailableLength (destSamples, numDestChannels, startOffsetInDestBuffer,
                                            startSampleInFile, numSamples, lengthInSamples);
@@ -99,14 +113,14 @@ public:
         writeHeader();
     }
 
-    ~FloatAudioFormatWriter()
+    ~FloatAudioFormatWriter() override
     {
         output->setPosition (0);
         writeHeader();
     }
 
     //==============================================================================
-    bool write (const int** data, int numSamps)
+    bool write (const int** data, int numSamps) override
     {
         lengthInSamples += numSamps;
 
@@ -130,16 +144,26 @@ public:
         return true;
     }
 
+    bool flush() override
+    {
+        auto pos = output->getPosition();
+        output->setPosition (0);
+        writeHeader();
+        output->setPosition (pos);
+
+        return true;
+    }
+
 private:
-    int lengthInSamples;
+    juce::int64 lengthInSamples;
 
     void writeHeader()
     {
         const int headerSize = 512;
-        output->writeInt (getFloatFileHeaderInt());
+        output->writeInt (getFloatFileHeaderIntV2());
         output->writeInt (headerSize);
         output->writeInt (juce::roundToInt (sampleRate));
-        output->writeInt (lengthInSamples);
+        output->writeInt64 (lengthInSamples);
         output->writeShort ((short)numChannels);
         output->writeShort (0); // big-endian
 
@@ -163,7 +187,7 @@ public:
     {
     }
 
-    bool readSamples (int** destSamples, int numDestChannels, int startOffsetInDestBuffer,
+    bool readSamples (int* const* destSamples, int numDestChannels, int startOffsetInDestBuffer,
                       juce::int64 startSampleInFile, int numSamples) override
     {
         clearSamplesBeyondAvailableLength (destSamples, numDestChannels, startOffsetInDestBuffer,

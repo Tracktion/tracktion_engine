@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -78,7 +78,7 @@ enum class SettingID
     renameClipRenamesSource,
     renameMode,
     renderRecentFilesList,
-    resetCursorOnStop,
+    resetCursorOnPlay,
     retrospectiveRecord,
     reWireEnabled,
     safeRecord,
@@ -93,6 +93,7 @@ enum class SettingID
     xtIndices,
     virtualmididevices,
     virtualmidiin,
+    midiScanIntervalSeconds,
     useSeparateProcessForScanning,
     useRealtime,
     wavein,
@@ -130,6 +131,8 @@ enum class SettingID
     addId3Info,
     realtime,
     passThroughFilters,
+    externControlShowClipSlotSelection,
+    addAcidMetadata,
 };
 
 }} // namespace tracktion { inline namespace engine

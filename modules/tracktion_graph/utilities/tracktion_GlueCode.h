@@ -1,12 +1,16 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
+
+#pragma once
+
+#include "../../3rd_party/choc/audio/choc_MIDISequence.h"
 
 namespace tracktion { inline namespace graph
 {
@@ -26,6 +30,14 @@ inline choc::buffer::BufferView<SampleType, choc::buffer::SeparateChannelLayout>
                                                  (choc::buffer::ChannelCount) buffer.getNumChannels(),
                                                  (choc::buffer::FrameCount) buffer.getNumSamples());
 }
+
+/** Creates a FrameRange from any integral type. */
+inline choc::buffer::FrameRange createFrameRange (std::integral auto start, std::integral auto end)
+{
+    return { .start = static_cast<choc::buffer::FrameCount> (start),
+             .end = static_cast<choc::buffer::FrameCount> (end) };
+}
+
 
 //==============================================================================
 /** Converts a choc::midi event to a juce::MidiMessage */
@@ -47,7 +59,7 @@ void multiplyBy (BufferViewType& view, juce::SmoothedValue<SampleType, Smoothing
     {
         const auto numChannels = view.getNumChannels();
         const auto numFrames = view.getNumFrames();
-        
+
         for (choc::buffer::FrameCount i = 0; i < numFrames; ++i)
         {
             const auto scaler = value.getNextValue();
@@ -55,6 +67,24 @@ void multiplyBy (BufferViewType& view, juce::SmoothedValue<SampleType, Smoothing
             for (choc::buffer::ChannelCount ch = 0; ch < numChannels; ++ch)
                 view.getSample (ch, i) *= scaler;
         }
+    }
+}
+
+/** Applies a gain ram to a choc::buffer::BufferView. */
+template<typename BufferType, typename GainType>
+void applyGainRamp (BufferType&& buffer,
+                    GainType startGain, GainType endGain) noexcept
+{
+    if (juce::approximatelyEqual (startGain, endGain))
+    {
+        choc::buffer::applyGain (buffer, startGain);
+    }
+    else
+    {
+        auto size = buffer.getSize();
+        const auto increment = (endGain - startGain) / (float) size.getNumFrames();
+        choc::buffer::applyGainPerFrame (buffer,
+                                         [startGain, increment] (auto frameNum) { return startGain * (increment * frameNum); });
     }
 }
 
@@ -72,13 +102,23 @@ inline choc::buffer::ChannelRange channelRangeWithStartAndLength (choc::buffer::
 
 
 //==============================================================================
+template<typename Buffer>
+void sanitise (Buffer& buffer)
+{
+    choc::buffer::setAllSamples (buffer,
+        [] (auto s)
+        {
+            return std::isnan (s) ? typename Buffer::Sample() : s;
+        });
+}
+
 /** Checks that the channels have valid pointers if they have a non-zero number of frames. */
 template <typename SampleType, template<typename> typename LayoutType>
 void sanityCheckView (const choc::buffer::BufferView<SampleType, LayoutType>& view)
 {
     if (view.getNumFrames() == 0)
         return;
-    
+
     for (choc::buffer::ChannelCount channel = 0; channel < view.getNumChannels(); ++channel)
         jassert (view.getIterator (channel).sample != nullptr);
 }
@@ -110,7 +150,7 @@ static void addApplyingGainRamp (DestBuffer&& dest, const SourceBuffer& source, 
 {
     auto size = source.getSize();
     CHOC_ASSERT (size == dest.getSize());
-    
+
     const auto delta = (endGain - startGain) / size.numFrames;
 
     for (decltype (size.numChannels) chan = 0; chan < size.numChannels; ++chan)
@@ -143,7 +183,7 @@ static void copyIfNotAliased (DestBuffer&& dest, const SourceBuffer& source)
     {
         auto src = source.getIterator (chan);
         auto dst = dest.getIterator (chan);
-        
+
         if (src.sample == dst.sample)
             continue;
 
@@ -158,3 +198,32 @@ static void copyIfNotAliased (DestBuffer&& dest, const SourceBuffer& source)
 }
 
 }} // namespace tracktion
+
+#ifndef DOXYGEN
+template<>
+struct std::hash<juce::MidiMessageSequence>
+{
+    size_t operator() (const juce::MidiMessageSequence& sequence) const noexcept
+    {
+        size_t seed = 0;
+
+        for (auto meh : sequence)
+        {
+            auto& me = meh->message;
+            tracktion::hash_combine (seed, me.getTimeStamp());
+            tracktion::hash_range (seed, me.getRawData(), me.getRawData() + me.getRawDataSize());
+        }
+
+        return seed;
+    }
+};
+
+template<>
+struct std::hash<std::vector<juce::MidiMessageSequence>>
+{
+    size_t operator() (const std::vector<juce::MidiMessageSequence>& sequences) const noexcept
+    {
+        return tracktion::hash_range (sequences);
+    }
+};
+#endif

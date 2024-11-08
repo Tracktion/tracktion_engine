@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -11,9 +11,19 @@
 namespace tracktion { inline namespace engine
 {
 
+Project::Ptr getProjectForEdit (const Edit& e)
+{
+    return e.engine.getProjectManager().getProject (e);
+}
+
+ProjectItem::Ptr getProjectItemForEdit (const Edit& e)
+{
+    return e.engine.getProjectManager().getProjectItem (e);
+}
+
 juce::File getEditFileFromProjectManager (Edit& edit)
 {
-    if (auto item = edit.engine.getProjectManager().getProjectItem (edit))
+    if (auto item = getProjectItemForEdit (edit))
         return item->getSourceFile();
 
     return {};
@@ -60,6 +70,29 @@ void insertSpaceIntoEditFromBeatRange (Edit& edit, BeatRange beatRange)
     insertSpaceIntoEdit (edit, TimeRange (timeToInsertAt, lengthInTimeToInsert));
 }
 
+EditItem* findEditItemForID (Edit& edit, EditItemID itemID)
+{
+    if (auto item = findTrackForID (edit, itemID))
+        return item;
+
+    if (auto item = findClipForID (edit, itemID))
+        return item;
+
+    if (auto item = findPluginForID (edit, itemID))
+        return item.get();
+
+    if (auto item = findModifierForID (edit, itemID))
+        return item.get();
+
+    if (auto item = findClipSlotForID (edit, itemID))
+        return item;
+
+    if (auto item = edit.getRackList().getRackTypeForID (itemID))
+        return item.get();
+
+    return {};
+}
+
 //==============================================================================
 juce::Array<Track*> getAllTracks (const Edit& edit)
 {
@@ -95,6 +128,11 @@ int getTotalNumTracks (const Edit& edit)
 Track* findTrackForID (const Edit& edit, EditItemID id)
 {
     return findTrackForPredicate (edit, [id] (Track& t) { return t.itemID == id; });
+}
+
+AudioTrack* findAudioTrackForID (const Edit& edit, EditItemID id)
+{
+    return dynamic_cast<AudioTrack*> (findTrackForID (edit, id));
 }
 
 juce::Array<Track*> findTracksForIDs (const Edit& edit, const juce::Array<EditItemID>& ids)
@@ -174,6 +212,10 @@ juce::Array<Track*> findAllTracksContainingSelectedItems (const SelectableList& 
         for (auto& i : items.getItemsOfType<TrackItem>())
             if (auto t = i->getTrack())
                 tracks.addIfNotAlreadyThere (t);
+
+    if (tracks.isEmpty())
+        for (auto& cs : items.getItemsOfType<ClipSlot>())
+            tracks.addIfNotAlreadyThere (&cs->track);
 
     std::sort (tracks.begin(), tracks.end(),
                [] (Track* t1, Track* t2)
@@ -259,7 +301,7 @@ void deleteRegionOfClip (Clip& c, TimeRange timeRangeToDelete)
 
         if (timeRangeToDelete.contains (clipTimeRange))
         {
-            c.removeFromParentTrack();
+            c.removeFromParent();
         }
         else if (clipTimeRange.getStart() < timeRangeToDelete.getStart() && clipTimeRange.getEnd() > timeRangeToDelete.getEnd())
         {
@@ -373,7 +415,7 @@ void deleteRegionOfTracks (Edit& edit, TimeRange rangeToDelete, bool onlySelecte
 
     if (selectionManager != nullptr)
     {
-        selectionState.reset (new SelectionManager::ScopedSelectionState (*selectionManager));
+        selectionState = std::make_unique<SelectionManager::ScopedSelectionState> (*selectionManager);
         selectionManager->deselectAll();
     }
 
@@ -418,7 +460,7 @@ void deleteRegionOfTracks (Edit& edit, TimeRange rangeToDelete, bool onlySelecte
                     clipsToRemove.add (c);
 
             for (auto c : clipsToRemove)
-                c->removeFromParentTrack();
+                c->removeFromParent();
 
             if (closeGap == CloseGap::yes)
             {
@@ -548,14 +590,35 @@ SelectableList getClipSelectionWithCollectionClipContents (const SelectableList&
 {
     SelectableList result;
 
-    for (auto ti : in.getItemsOfType<TrackItem>())
+    if (in.size() > 1000)
     {
-        if (auto clip = dynamic_cast<Clip*> (ti))
-            result.addIfNotAlreadyThere (clip);
+        // For large sizes it's much quicker to add all the items and then remove duplicates
+        std::vector<Selectable*> selectables;
+        selectables.reserve (static_cast<size_t> (in.size()));
 
-        if (auto cc = dynamic_cast<CollectionClip*> (ti))
-            for (auto c : cc->getClips())
-                result.addIfNotAlreadyThere (c);
+        for (auto ti : in.getItemsOfType<TrackItem>())
+        {
+            if (auto clip = dynamic_cast<Clip*> (ti))
+                selectables.push_back (clip);
+
+            if (auto cc = dynamic_cast<CollectionClip*> (ti))
+                for (auto c : cc->getClips())
+                    selectables.push_back (c);
+        }
+
+        return stable_remove_duplicates (selectables);
+    }
+    else
+    {
+        for (auto ti : in.getItemsOfType<TrackItem>())
+        {
+            if (auto clip = dynamic_cast<Clip*> (ti))
+                result.addIfNotAlreadyThere (clip);
+
+            if (auto cc = dynamic_cast<CollectionClip*> (ti))
+                for (auto c : cc->getClips())
+                    result.addIfNotAlreadyThere (c);
+        }
     }
 
     return result;
@@ -575,6 +638,57 @@ juce::Array<ClipEffect*> getAllClipEffects (Edit& edit)
     return res;
 }
 
+
+//==============================================================================
+ClipOwner* findClipOwnerForID (const Edit& edit, EditItemID id)
+{
+    if (auto clipTrack = dynamic_cast<ClipTrack*> (findTrackForID (edit, id)))
+        return clipTrack;
+
+    if (auto clipSlot = findClipSlotForID (edit, id))
+        return clipSlot;
+
+    if (auto containerClip = dynamic_cast<ContainerClip*> (findClipForID (edit, id)))
+        return containerClip;
+
+    return nullptr;
+}
+
+//==============================================================================
+ClipSlot* findClipSlotForID (const Edit& edit, EditItemID id)
+{
+    ClipSlot* result = nullptr;
+
+    edit.visitAllTracksRecursive ([&] (Track& t)
+                                  {
+                                      if (auto at = dynamic_cast<AudioTrack*> (&t))
+                                      {
+                                          for (auto cs : at->getClipSlotList().getClipSlots())
+                                          {
+                                              if (cs->itemID == id)
+                                              {
+                                                  result = cs;
+                                                  return false;
+                                              }
+                                          }
+                                      }
+
+                                      return true;
+                                  });
+
+    return result;
+}
+
+int findClipSlotIndex (ClipSlot& slot)
+{
+    if (auto at = dynamic_cast<AudioTrack*> (&slot.track))
+        return at->getClipSlotList().getClipSlots().indexOf (&slot);
+
+    jassertfalse; // This should never happen
+    return -1;
+}
+
+
 //==============================================================================
 Clip* findClipForID (const Edit& edit, EditItemID clipID)
 {
@@ -586,6 +700,15 @@ Clip* findClipForID (const Edit& edit, EditItemID clipID)
                                       {
                                           result = c;
                                           return false;
+                                      }
+
+                                      for (auto cc : getTrackItemsOfType<ContainerClip> (t))
+                                      {
+                                          if (auto c = findClipForID (*cc, clipID))
+                                          {
+                                              result = c;
+                                              return false;
+                                          }
                                       }
 
                                       return true;
@@ -617,7 +740,23 @@ Clip* findClipForState (const Edit& edit, const juce::ValueTree& v)
 
 bool containsClip (const Edit& edit, Clip* clip)
 {
-    return findTrackForPredicate (edit, [clip] (Track& t) { return t.indexOfTrackItem (clip) >= 0; }) != nullptr;
+    return findTrackForPredicate (edit,
+                                  [clip] (Track& t)
+                                  {
+                                      if (t.indexOfTrackItem (clip) >= 0)
+                                          return true;
+
+                                      if (auto at = dynamic_cast<AudioTrack*> (&t))
+                                          for (auto slot : at->getClipSlotList().getClipSlots())
+                                              if (clip == slot->getClip())
+                                                  return true;
+
+                                      for (auto cc : getTrackItemsOfType<ContainerClip> (t))
+                                          if (cc->getClips().contains (clip))
+                                              return true;
+
+                                      return false;
+                                  }) != nullptr;
 }
 
 void visitAllTrackItems (const Edit& edit, std::function<bool (TrackItem&)> f)
@@ -632,6 +771,17 @@ void visitAllTrackItems (const Edit& edit, std::function<bool (TrackItem&)> f)
                                               if (! f (*ti))
                                                   return false;
                                       }
+
+                                      if (auto at = dynamic_cast<AudioTrack*> (&t))
+                                          for (auto slot : at->getClipSlotList().getClipSlots())
+                                              if (auto c = slot->getClip())
+                                                  if (! f (*c))
+                                                      return false;
+
+                                      for (auto cc : getTrackItemsOfType<ContainerClip> (t))
+                                          for (auto c : cc->getClips())
+                                              if (! f (*c))
+                                                  return false;
 
                                       return true;
                                   });
@@ -674,7 +824,7 @@ MidiNote* findNoteForState (const Edit& edit, const juce::ValueTree& v)
     return result;
 }
 
-juce::Result mergeMidiClips (juce::Array<MidiClip*> clips)
+juce::Result mergeMidiClips (juce::Array<MidiClip*> clips, SelectionManager* sm)
 {
     for (auto c : clips)
         if (c->getClipTrack() == nullptr || c->getClipTrack()->isFrozen (Track::anyFreeze))
@@ -686,7 +836,7 @@ juce::Result mergeMidiClips (juce::Array<MidiClip*> clips)
     {
         if (auto track = first->getClipTrack())
         {
-            if (auto newClip = track->insertMIDIClip (first->getName(), first->getPosition().time, nullptr))
+            if (auto newClip = track->insertMIDIClip (first->getName(), first->getPosition().time, sm))
             {
                 newClip->setQuantisation (first->getQuantisation());
                 newClip->setGrooveTemplate (first->getGrooveTemplate());
@@ -723,7 +873,7 @@ juce::Result mergeMidiClips (juce::Array<MidiClip*> clips)
                 newClip->getSequence().addFrom (destinationList, &track->edit.getUndoManager());
 
                 for (int i = clips.size(); --i >= 0;)
-                    clips.getUnchecked (i)->removeFromParentTrack();
+                    clips.getUnchecked (i)->removeFromParent();
             }
 
             return juce::Result::ok();
@@ -732,6 +882,52 @@ juce::Result mergeMidiClips (juce::Array<MidiClip*> clips)
 
     return juce::Result::fail (TRANS("No clips to merge"));
 }
+
+juce::OwnedArray<MidiList> readFileToMidiList (juce::File midiFile, bool importAsNoteExpression)
+{
+    CRASH_TRACER
+    juce::OwnedArray<MidiList> lists;
+    juce::Array<BeatPosition> tempoChangeBeatNumbers;
+    juce::Array<double> bpms;
+    juce::Array<int> numerators, denominators;
+    BeatDuration len;
+
+    if (MidiList::readSeparateTracksFromFile (midiFile, lists,
+                                              tempoChangeBeatNumbers, bpms,
+                                              numerators, denominators, len,
+                                              importAsNoteExpression))
+    {
+        return lists;
+    }
+
+    return {};
+}
+
+MidiClip::Ptr createClipFromFile (juce::File midiFile, ClipOwner& owner, bool importAsNoteExpression)
+{
+    auto lists = readFileToMidiList (std::move (midiFile), importAsNoteExpression);
+
+    if (auto l = lists.getFirst())
+    {
+        const auto& ts = owner.getClipOwnerEdit().tempoSequence;
+        const auto endTime = ts.toTime (l->getLastBeatNumber());
+        const auto barsBeats = ts.toBarsAndBeats (endTime);
+        const auto totalBars = barsBeats.getTotalBars();
+        const auto nextBar = static_cast<int> (std::ceil (totalBars));
+        const auto clipEndTime = ts.toTime ({ nextBar });
+
+        if (auto c = insertMIDIClip (owner, { 0_tp, clipEndTime }))
+        {
+            c->setName (l->getImportedFileName ());
+            c->getSequence ().copyFrom (*l, &owner.getClipOwnerEdit().getUndoManager());
+
+            return c;
+        }
+    }
+
+    return {};
+}
+
 
 //==============================================================================
 Plugin::Array getAllPlugins (const Edit& edit, bool includeMasterVolume)
@@ -786,6 +982,15 @@ Plugin::Ptr findPluginForState (const Edit& edit, const juce::ValueTree& v)
     return {};
 }
 
+Plugin::Ptr findPluginForID (const Edit& edit, EditItemID id)
+{
+    for (auto p : getAllPlugins (edit, true))
+        if (p->itemID == id)
+            return p;
+
+    return {};
+}
+
 Track* getTrackContainingPlugin (const Edit& edit, const Plugin* p)
 {
     return findTrackForPredicate (edit, [p] (Track& t) { return t.containsPlugin (p); });
@@ -812,7 +1017,7 @@ juce::Array<RackInstance*> getRackInstancesInEditForType (const RackType& rt)
     return instances;
 }
 
-void muteOrUnmuteAllPlugins (Edit& edit)
+void muteOrUnmuteAllPlugins (const Edit& edit)
 {
     auto allPlugins = getAllPlugins (edit, true);
 
@@ -826,6 +1031,16 @@ void muteOrUnmuteAllPlugins (Edit& edit)
         p->setEnabled (numEnabled == 0);
 }
 
+void midiPanic (Edit& edit, bool resetPlugins)
+{
+    for (auto p : getAllPlugins (edit, false))
+    {
+        p->midiPanic();
+
+        if (resetPlugins)
+            p->reset();
+    }
+}
 
 //==============================================================================
 juce::Array<AutomatableEditItem*> getAllAutomatableEditItems (const Edit& edit)
@@ -833,18 +1048,24 @@ juce::Array<AutomatableEditItem*> getAllAutomatableEditItems (const Edit& edit)
     CRASH_TRACER
     juce::Array<AutomatableEditItem*> destArray;
 
-    destArray.add (&edit.getGlobalMacros().macroParameterList);
+    if (auto mpl = edit.getGlobalMacros().getMacroParameterList())
+        destArray.add (mpl);
 
     edit.visitAllTracksRecursive ([&] (Track& t)
-                                  {
-                                      destArray.add (&t.macroParameterList);
-                                      destArray.addArray (t.getAllAutomatableEditItems());
-                                      return true;
-                                  });
+    {
+        if (auto m = dynamic_cast<MacroParameterElement*> (&t))
+            if (auto mpl = m->getMacroParameterList())
+                destArray.add (mpl);
+
+        destArray.addArray (t.getAllAutomatableEditItems());
+        return true;
+    });
 
     for (auto p : edit.getMasterPluginList())
     {
-        destArray.add (&p->macroParameterList);
+        if (auto mpl = p->getMacroParameterList())
+            destArray.add (mpl);
+
         destArray.add (p);
     }
 
@@ -853,10 +1074,14 @@ juce::Array<AutomatableEditItem*> getAllAutomatableEditItems (const Edit& edit)
         for (auto p : r->getPlugins())
         {
             destArray.add (p);
-            destArray.add (&p->macroParameterList);
+
+            if (auto mpl = p->getMacroParameterList())
+                destArray.add (mpl);
         }
 
-        destArray.add (&r->macroParameterList);
+        if (auto mpl = r->getMacroParameterList())
+            destArray.add (mpl);
+
         destArray.addArray (r->getModifierList().getModifiers());
     }
 
@@ -900,7 +1125,7 @@ juce::Array<AutomatableParameter::ModifierSource*> getAllModifierSources (const 
     sources.addArray (getAllModifiers (edit));
 
     for (auto mpe : getAllMacroParameterElements (edit))
-        sources.addArray (mpe->macroParameterList.getMacroParameters());
+        sources.addArray (mpe->getMacroParameters());
 
     return sources;
 }
@@ -913,10 +1138,12 @@ juce::ReferenceCountedArray<Modifier> getAllModifiers (const Edit& edit)
         modifiers.addArray (r->getModifierList().getModifiers());
 
     edit.visitAllTracksRecursive ([&] (Track& t)
-                                  {
-                                      modifiers.addArray (t.getModifierList().getModifiers());
-                                      return true;
-                                  });
+    {
+        if (auto modifierList = t.getModifierList())
+            modifiers.addArray (modifierList->getModifiers());
+
+        return true;
+    });
 
     return modifiers;
 }
@@ -944,7 +1171,13 @@ Track* getTrackContainingModifier (const Edit& edit, const Modifier::Ptr& m)
     if (m == nullptr)
         return nullptr;
 
-    return findTrackForPredicate (edit, [m] (Track& t) { return t.getModifierList().getModifiers().contains (m); });
+    return findTrackForPredicate (edit, [m] (Track& t)
+    {
+        if (auto list = t.getModifierList())
+            return list->getModifiers().contains (m);
+
+        return false;
+    });
 }
 
 //==============================================================================
@@ -966,10 +1199,123 @@ juce::Array<MacroParameterElement*> getAllMacroParameterElements (const Edit& ed
 
     elements.add (&edit.getGlobalMacros());
     elements.addArray (edit.getRackList().getTypes());
-    elements.addArray (getAllTracks (edit));
+    elements.addArray (getAudioTracks (edit));
     elements.addArray (getAllPlugins (edit, false));
 
     return elements;
+}
+
+InputDeviceInstance::RecordingParameters getDefaultRecordingParameters (const EditPlaybackContext& context,
+                                                                        TimePosition playStart,
+                                                                        TimePosition punchIn)
+{
+    InputDeviceInstance::RecordingParameters params;
+
+    const auto& edit = context.edit;
+
+    params.punchRange   = { punchIn, Edit::getMaximumEditTimeRange().getEnd() };
+
+    if (edit.recordingPunchInOut)
+    {
+        const auto loopRange = context.transport.getLoopRange();
+        params.punchRange = params.punchRange.withStart (std::max (params.punchRange.getStart(), loopRange.getStart() - 0.5s));
+
+        if (edit.getNumCountInBeats() > 0 && context.getLoopTimes().getStart() > loopRange.getStart())
+            params.punchRange = params.punchRange.withStart (context.getLoopTimes().getStart());
+
+        // Ignore punch out if we start recording very close to the end of the punch markers
+        if (playStart < loopRange.getEnd() - 0.5s)
+            params.punchRange = params.punchRange.withEnd (loopRange.getEnd());
+    }
+    else if (context.isLooping())
+    {
+        params.punchRange = params.punchRange.withStart (context.getLoopTimes().getStart());
+    }
+
+    return params;
+}
+
+juce::Result prepareAndPunchRecord (InputDeviceInstance& instance, EditItemID targetID)
+{
+    CRASH_TRACER
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    InputDeviceInstance::Destination* dest = nullptr;
+
+    for (auto inputDest : instance.destinations)
+    {
+        if (inputDest->targetID == targetID)
+        {
+            dest = inputDest;
+            break;
+        }
+    }
+
+    if (! dest)
+        return juce::Result::fail (TRANS("Input not assigned to this destination"));
+
+    if (! instance.edit.getTransport().isRecording())
+        return juce::Result::fail (TRANS("Transport must be recording to punch record"));
+
+    if (! dest->recordEnabled)
+        return juce::Result::fail (TRANS("Input must be armed to punch record"));
+
+    // Punch in at the current play time don't punch out until recording is stopped
+    InputDeviceInstance::RecordingParameters params;
+    params.punchRange   = { instance.context.getPosition(), Edit::getMaximumEditTimeRange().getEnd() };
+
+    if (auto [recContexts, errors] = extract (instance.prepareToRecord (params)); errors.isEmpty())
+        instance.startRecording (std::move (recContexts));
+    else
+        return juce::Result::fail (errors[0]);
+
+    return juce::Result::ok();
+}
+
+tl::expected<Clip::Array, juce::String> punchOutRecording (InputDeviceInstance& instance)
+{
+    auto& transport = instance.edit.getTransport();
+    jassert (transport.isPlaying()); // If this isn't playing the getUnloopedPosition call below will be incorrect
+
+    InputDeviceInstance::StopRecordingParameters params;
+
+    for (auto targetID : instance.getTargets())
+        params.targetsToStop.push_back (targetID);
+
+    if (auto epc = transport.getCurrentPlaybackContext())
+        params.unloopedTimeToEndRecording = epc->getUnloopedPosition();
+
+    params.isLooping = transport.looping;
+    params.markedRange = transport.getLoopRange();
+    params.discardRecordings = false;
+
+    instance.prepareToStopRecording (params.targetsToStop);
+
+    return instance.stopRecording (params);
+}
+
+bool isRecording (EditPlaybackContext& epc)
+{
+    for (auto input : epc.getAllInputs())
+        if (input->isRecording())
+            return true;
+
+    return false;
+}
+
+InputDeviceInstance::Destination* assignTrackAsInput (AudioTrack& destTrack, const AudioTrack& sourceTrack, InputDevice::DeviceType type)
+{
+    assert (&sourceTrack.edit == &destTrack.edit);
+    assert (type == InputDevice::trackMidiDevice || type == InputDevice::trackWaveDevice);
+
+    auto& edit = destTrack.edit;
+    auto sourceDevice = type == InputDevice::trackMidiDevice
+                            ? static_cast<InputDevice*> (&sourceTrack.getMidiInputDevice())
+                            : static_cast<InputDevice*> (&sourceTrack.getWaveInputDevice());
+    edit.getTransport().ensureContextAllocated();
+    edit.getEditInputDevices().getInstanceStateForInputDevice (*sourceDevice);
+    auto res = edit.getCurrentPlaybackContext()->getInputFor (sourceDevice)->setTarget (destTrack.itemID, false, nullptr);
+
+    return res ? *res : nullptr;
 }
 
 }} // namespace tracktion { inline namespace engine

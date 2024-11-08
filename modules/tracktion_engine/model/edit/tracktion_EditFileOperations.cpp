@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -80,7 +80,7 @@ struct SharedEditFileDataCache
             jassert (Selectable::isSelectableValid (&edit));
 
             // If we managed to shutdown cleanly (i.e. without crashing) then delete the temp file
-            if (auto item = edit.engine.getProjectManager().getProjectItem (edit))
+            if (auto item = getProjectItemForEdit (edit))
                 EditFileOperations::getTempVersionOfEditFile (item->getSourceFile()).deleteFile();
         }
 
@@ -174,7 +174,7 @@ bool EditFileOperations::writeToFile (const juce::File& file, bool writeQuickBin
     CRASH_TRACER
     bool ok = false;
     std::unique_ptr<ScopedWaitCursor> waitCursor;
-    
+
     if (! writeQuickBinaryVersion)
     {
         EditPlaybackContext::RealtimePriorityDisabler realtimeDisabler (edit.engine);
@@ -240,8 +240,7 @@ bool EditFileOperations::save (bool warnOfFailure,
         return false;
 
     CustomControlSurface::saveAllSettings (edit.engine);
-    auto controllerMappings = state.getOrCreateChildWithName (IDs::CONTROLLERMAPPINGS, nullptr);
-    edit.getParameterControlMappings().saveTo (controllerMappings);
+    edit.getParameterControlMappings().saveToEdit();
 
     auto tempFile = getTempVersionFile();
 
@@ -251,7 +250,7 @@ bool EditFileOperations::save (bool warnOfFailure,
     if (forceSaveEvenIfNotModified || edit.hasChangedSinceSaved())
     {
         // Updates the project list if showing
-        if (auto proj = edit.engine.getProjectManager().getProject (edit))
+        if (auto proj = getProjectForEdit (edit))
             proj->Selectable::changed();
 
         if (offerToDiscardChanges)
@@ -280,7 +279,7 @@ bool EditFileOperations::save (bool warnOfFailure,
 
     tempFile.deleteFile();
 
-    if (auto item = edit.engine.getProjectManager().getProjectItem (edit))
+    if (auto item = getProjectItemForEdit (edit))
         item->setLength (edit.getLength().inSeconds());
 
     edit.resetChangedStatus();
@@ -318,11 +317,9 @@ bool EditFileOperations::saveAs (const juce::File& f, bool forceOverwriteExistin
             return false;
     }
 
-    auto& pm = edit.engine.getProjectManager();
-
-    if (auto project = pm.getProject (edit))
+    if (auto project = getProjectForEdit (edit))
     {
-        if (auto item = pm.getProjectItem (edit))
+        if (auto item = getProjectItemForEdit (edit))
         {
             if (f.create())
             {
@@ -357,13 +354,22 @@ bool EditFileOperations::saveAs (const juce::File& f, bool forceOverwriteExistin
         CRASH_TRACER
 
         CustomControlSurface::saveAllSettings (edit.engine);
-        auto controllerMappings = state.getOrCreateChildWithName (IDs::CONTROLLERMAPPINGS, nullptr);
-        edit.getParameterControlMappings().saveTo (controllerMappings);
+        edit.getParameterControlMappings().saveToEdit();
 
         auto tempFile = getTempVersionFile();
 
-        if (! saveTempVersion (true))
-            return editSaveError (edit, tempFile, true);
+        if (tempFile == juce::File())
+        {
+            tempFile = getTempVersionOfEditFile (f);
+
+            if (! writeToFile (tempFile, false))
+                return editSaveError (edit, tempFile, true);
+        }
+        else
+        {
+            if (! saveTempVersion (true))
+                return editSaveError (edit, tempFile, true);
+        }
 
         if (editSnapshot != nullptr)
             editSnapshot->refreshCacheAndNotifyListeners();
@@ -427,6 +433,11 @@ juce::ValueTree loadEditFromProjectManager (ProjectManager& pm, ProjectItemID it
     return {};
 }
 
+std::unique_ptr<Edit> loadEditForExamining (ProjectManager& pm, ProjectItemID itemID, Edit::EditRole role)
+{
+    return Edit::createEditForExamining (pm.engine, loadEditFromProjectManager (pm, itemID), role);
+}
+
 juce::ValueTree loadEditFromFile (Engine& e, const juce::File& f, ProjectItemID itemID)
 {
     CRASH_TRACER
@@ -454,7 +465,7 @@ juce::ValueTree loadEditFromFile (Engine& e, const juce::File& f, ProjectItemID 
         // If the file already exists and is not empty, don't write over it as it could have been corrupted and be recoverable
         if (f.existsAsFile() && f.getSize() > 0)
             return {};
-        
+
         state = juce::ValueTree (IDs::EDIT);
         state.setProperty (IDs::appVersion, e.getPropertyStorage().getApplicationVersion(), nullptr);
     }
@@ -464,54 +475,51 @@ juce::ValueTree loadEditFromFile (Engine& e, const juce::File& f, ProjectItemID 
     return state;
 }
 
-std::unique_ptr<Edit> loadEditFromFile (Engine& engine, const juce::File& editFile)
+juce::ValueTree createEmptyEdit (Engine& e)
 {
-    auto editState = loadEditFromFile (engine, editFile, {});
+    return loadEditFromFile (e, {}, ProjectItemID::createNewID (0));
+}
+
+std::unique_ptr<Edit> loadEditFromFile (Engine& engine, const juce::File& editFile, Edit::EditRole role)
+{
+    auto editState = loadEditFromFile (engine, editFile, ProjectItemID{});
+
+    if (! editState.isValid())
+        return {};
+
     auto id = ProjectItemID::fromProperty (editState, IDs::projectID);
-    
+
     if (! id.isValid())
         id = ProjectItemID::createNewID (0);
-    
-    Edit::Options options =
+
+    return Edit::createEdit (Edit::Options
     {
         engine,
         editState,
         id,
-        
-        Edit::forEditing,
+        role,
         nullptr,
         Edit::getDefaultNumUndoLevels(),
-        
         [editFile] { return editFile; },
         {}
-    };
-    
-    return std::make_unique<Edit> (options);
+    });
 }
 
 std::unique_ptr<Edit> createEmptyEdit (Engine& engine, const juce::File& editFile)
 {
     auto id = ProjectItemID::createNewID (0);
-    Edit::Options options =
+
+    return Edit::createEdit (Edit::Options
     {
         engine,
         loadEditFromFile (engine, {}, id),
         id,
-        
         Edit::forEditing,
         nullptr,
         Edit::getDefaultNumUndoLevels(),
-        
         [editFile] { return editFile; },
         {}
-    };
-    
-    return std::make_unique<Edit> (options);
-}
-
-juce::ValueTree createEmptyEdit (Engine& e)
-{
-    return loadEditFromFile (e, {}, ProjectItemID::createNewID (0));
+    });
 }
 
 }} // namespace tracktion { inline namespace engine

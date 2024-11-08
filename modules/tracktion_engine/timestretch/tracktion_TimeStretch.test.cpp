@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#if TRACKTION_UNIT_TESTS
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_TIMESTRETCHER
 
 // Enable this to dump the output of the current test file to the desktop
 #define TIMESTRETCHER_WRITE_WRITE_TEST_FILES 0
@@ -20,7 +20,7 @@ class TimeStretcherTests  : public juce::UnitTest
 public:
     //==============================================================================
     TimeStretcherTests()
-        : juce::UnitTest ("TimeStretcherTests", "Tracktion")
+        : juce::UnitTest ("TimeStretcherTests", "tracktion_engine")
     {
     }
 
@@ -41,12 +41,20 @@ public:
             runTimestretchTest (mode);
         }
        #endif
-        
+
        #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE
         {
-            const auto mode = tracktion::engine::TimeStretcher::elastiquePro;
-            runPitchShiftTest (mode);
-            runTimestretchTest (mode);
+            {
+                const auto mode = tracktion::engine::TimeStretcher::elastiquePro;
+                runPitchShiftTest (mode);
+                runTimestretchTest (mode);
+            }
+
+            {
+                const auto mode = tracktion::engine::TimeStretcher::elastiqueDirectPro;
+                runPitchShiftTest (mode);
+                runTimestretchTest (mode);
+            }
         }
        #endif
     }
@@ -56,7 +64,7 @@ private:
     inline void writeToFile (juce::File file, const juce::AudioBuffer<float>& buffer, double sampleRate)
     {
         file.deleteFile();
-        
+
         if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (juce::WavAudioFormat().createWriterFor (file.createOutputStream().release(),
                                                                                                             sampleRate,
                                                                                                             (uint32_t) buffer.getNumChannels(),
@@ -71,7 +79,7 @@ private:
     void runPitchShiftTest (tracktion::engine::TimeStretcher::Mode mode)
     {
         beginTest ("Pitch shift: " + tracktion::engine::TimeStretcher::getNameOfMode (mode));
-        
+
         testStretcher (mode, 1.0f, 0.0f);
         testStretcher (mode, 1.0f, 1.0f);
         testStretcher (mode, 1.0f, 2.0f);
@@ -79,7 +87,7 @@ private:
         testStretcher (mode, 1.0f, 12.0f);
         testStretcher (mode, 1.0f, 24.0f);
     }
-    
+
     void runTimestretchTest (tracktion::engine::TimeStretcher::Mode mode)
     {
         beginTest ("Time-stretch: " + tracktion::engine::TimeStretcher::getNameOfMode (mode));
@@ -104,7 +112,8 @@ private:
 
         const auto sourceBuffer = createSinBuffer (sampleRate, numChannels, sourcePitch);
         const auto resultBuffer = processBuffer (stretcher, sourceBuffer, blockSize, stretchRatio,
-                                                 mode == tracktion::engine::TimeStretcher::elastiquePro);
+                                                 mode == tracktion::engine::TimeStretcher::elastiquePro
+                                                 || mode == tracktion::engine::TimeStretcher::elastiqueDirectPro);
 
        #if TIMESTRETCHER_WRITE_WRITE_TEST_FILES
         writeToFile (juce::File::getSpecialLocation (juce::File::userDesktopDirectory).getChildFile ("original.wav"), sourceBuffer, sampleRate);
@@ -120,11 +129,11 @@ private:
 
         // Compare shiftedPitch to expectedPitchValue with a 6% tolerance
         expectWithinAbsoluteError (shiftedPitch, expectedPitchValue, expectedPitchValue * 0.06f);
-        
+
         // Compare expectedSize with the actual size of the results 5% tolerance
         expectWithinAbsoluteError (resultBuffer.getNumSamples(), expectedSize, juce::roundToInt (expectedSize * 0.05f));
     }
-        
+
     //==============================================================================
     static juce::AudioBuffer<float> createSinBuffer (double sampleRate, int numChannels, float pitch)
     {
@@ -138,30 +147,30 @@ private:
         // Generate sin wave and store in buffer channel 0
         {
             auto chan = sinBuffer.getWritePointer (0);
-            
+
             for (int sample = 0; sample < sinBuffer.getNumSamples(); ++sample)
             {
                 chan[sample] = (float) std::sin (currentAngle);
                 currentAngle += angleDelta;
             }
         }
-        
+
         // Then copy to subsequent channels
         for (int c = 1; c < sinBuffer.getNumChannels(); ++c)
             sinBuffer.copyFrom (c, 0, sinBuffer,
                                 0, 0, sinBuffer.getNumSamples());
-        
+
         return sinBuffer;
     }
-    
+
     static juce::AudioBuffer<float> processBuffer (tracktion::engine::TimeStretcher& stretcher,
                                                    const juce::AudioBuffer<float>& sourceBuffer,
                                                    const int blockSize, float stretchRatio,
                                                    bool stretcherRequiresFramesNeeded)
     {
-        const int numChannels = sourceBuffer.getNumChannels();
+        [[ maybe_unused ]] const int numChannels = sourceBuffer.getNumChannels();
         jassert (numChannels == 2); // Expected stereo for now
-        
+
         const int destSize = (int) std::ceil (sourceBuffer.getNumSamples() * stretchRatio);
         juce::AudioBuffer<float> resultBuffer (sourceBuffer.getNumChannels(), destSize + 8192);
         int numInputsDone = 0, numOutputsDone = 0;
@@ -170,7 +179,7 @@ private:
         {
             const int numInputSamplesLeft = sourceBuffer.getNumSamples() - numInputsDone;
             const int numInputSamplesThisBlock = std::min (stretcher.getFramesNeeded(), numInputSamplesLeft);
-            
+
             if (stretcherRequiresFramesNeeded && numInputSamplesThisBlock < stretcher.getFramesNeeded())
                 break;
 
@@ -180,15 +189,15 @@ private:
                                        sourceBuffer.getReadPointer (1, numInputsDone) };
             float* outputs[2] = { resultBuffer.getWritePointer (0, numOutputsDone),
                                   resultBuffer.getWritePointer (1, numOutputsDone) };
-            
+
             // Process sin wave to shift pitch and store in resultBuffer
             const int numOutputSamplesThisBlock = stretcher.processData (inputs, numInputSamplesThisBlock,
                                                                          outputs);
             jassert (numOutputSamplesThisBlock <= blockSize);
-            
+
             numInputsDone += numInputSamplesThisBlock;
             numOutputsDone += numOutputSamplesThisBlock;
-            
+
             if (numInputsDone >= sourceBuffer.getNumSamples())
                 break;
 
@@ -201,33 +210,30 @@ private:
         {
             if (numOutputsDone >= destSize)
                 break;
-            
+
             float* outputs[2] = { resultBuffer.getWritePointer (0, numOutputsDone),
                                   resultBuffer.getWritePointer (1, numOutputsDone) };
-            
+
             const int numOutputSamplesThisBlock = stretcher.flush (outputs);
             jassert (numOutputSamplesThisBlock <= blockSize);
             numOutputsDone += numOutputSamplesThisBlock;
 
             if (numOutputSamplesThisBlock <= 0)
                 break;
-
-            if (numOutputSamplesThisBlock < blockSize)
-                break;
         }
-        
+
         // Trim output buffer size
         resultBuffer.setSize (resultBuffer.getNumChannels(), numOutputsDone, true);
-        
+
         return resultBuffer;
     }
-    
+
     static float getPitchFromNumZeroCrossings (const int numZeroCrossings, const int numSamples, const double sampleRate)
     {
         const float bufferTimeInSeconds = (float) numSamples / (float) sampleRate;
         const float numCycles = (float) numZeroCrossings / 2.0f;
         const float pitchInHertz = numCycles / bufferTimeInSeconds;
-        
+
         return pitchInHertz;
     }
 

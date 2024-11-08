@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -95,9 +95,9 @@ private:
                     assertFuncPtr = &assertFunction;
                    #endif
 
-                    const SizedStruct<ARA_MEMBER_PTR_ARGS (ARAInterfaceConfiguration, assertFunctionAddress)> interfaceConfig =
+                    const SizedStruct<ARA_STRUCT_MEMBER (ARAInterfaceConfiguration, assertFunctionAddress)> interfaceConfig =
                     {
-                        std::min<ARAAPIGeneration> (factory->highestSupportedApiGeneration, kARAAPIGeneration_2_0_Draft),
+                        std::min<ARAAPIGeneration> (factory->highestSupportedApiGeneration, kARAAPIGeneration_2_0_Final),
                         assertFuncPtr
                     };
 
@@ -140,7 +140,7 @@ private:
         if (type == "VST3")
             factory = getFactoryVST3();
 
-        if (factory != nullptr && factory->lowestSupportedApiGeneration > kARAAPIGeneration_2_0_Draft)
+        if (factory != nullptr && factory->lowestSupportedApiGeneration > kARAAPIGeneration_2_0_Final)
             factory = nullptr;
     }
 
@@ -164,7 +164,7 @@ private:
     Steinberg::IPtr<entrypoint_t> getVST3EntryPoint (juce::AudioPluginInstance& p)
     {
         entrypoint_t* ep = nullptr;
-        
+
         auto getIComponent = [] (juce::AudioPluginInstance& p) -> Steinberg::Vst::IComponent*
         {
             struct VST3Visitor : public juce::ExtensionsVisitor
@@ -173,16 +173,16 @@ private:
                 {
                     icomponent = static_cast<Steinberg::Vst::IComponent*> (client.getIComponentPtr());
                 }
-                
+
                 Steinberg::Vst::IComponent* icomponent = nullptr;
             };
 
             VST3Visitor vst3Visitor;
             p.getExtensions (vst3Visitor);
-            
+
             return vst3Visitor.icomponent;
         };
-        
+
         if (auto component = getIComponent (p))
             component->queryInterface (entrypoint_t::iid, (void**) &ep);
 
@@ -268,7 +268,7 @@ static std::unique_ptr<juce::AudioPluginInstance> createMelodynePlugin (Engine& 
 
     auto araDescs = engine.getPluginManager().getARACompatiblePlugDescriptions();
 
-    if (auto p = createMelodynePlugin (Engine::getInstance(), "VST3", araDescs))
+    if (auto p = createMelodynePlugin (engine, "VST3", araDescs))
         return p;
 
     return {};

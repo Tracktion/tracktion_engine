@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -15,25 +15,26 @@ namespace tracktion { inline namespace engine
     A Node that intercepts MIDI from a plugin callback and inserts it in to the playback graph.
 */
 class HostedMidiInputDeviceNode final : public tracktion::graph::Node,
-                                        public InputDeviceInstance::Consumer
+                                        public InputDeviceInstance::Consumer,
+                                        private TracktionEngineNode
 {
 public:
     HostedMidiInputDeviceNode (InputDeviceInstance&,
-                               MidiInputDevice&, MidiMessageArray::MPESourceID,
-                               tracktion::graph::PlayHeadState&);
+                               MidiInputDevice&,
+                               tracktion::graph::PlayHeadState&,
+                               tracktion::ProcessState&);
     ~HostedMidiInputDeviceNode() override;
-    
+
     tracktion::graph::NodeProperties getNodeProperties() override;
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 
-    void handleIncomingMidiMessage (const juce::MidiMessage&) override;
+    void handleIncomingMidiMessage (const juce::MidiMessage&, MPESourceID) override;
 
 private:
     //==============================================================================
     InputDeviceInstance& instance;
-    const  MidiMessageArray::MPESourceID midiSourceID = MidiMessageArray::notMPE;
 
     tracktion::graph::RealTimeSpinLock bufferMutex;
     MidiMessageArray incomingMessages;

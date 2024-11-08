@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -10,6 +10,7 @@
 
 #include "tracktion_MidiNodeHelpers.h"
 
+#define TRACKTION_SANITY_CHECK_MIDI_BUFFERS 0
 
 namespace tracktion { inline namespace engine
 {
@@ -34,7 +35,8 @@ MidiNode::MidiNode (std::vector<juce::MidiMessageSequence> sequences,
       shouldBeMutedDelegate (std::move (shouldBeMuted)),
       wasMute (liveClipLevel.isMute())
 {
-    jassert (channelNumbers.getStart() > 0 && channelNumbers.getEnd() <= 16);
+    // -1 from the channel numbers end here as Range end is exclusive
+    jassert (channelNumbers.getStart() > 0 && (channelNumbers.getEnd() - 1) <= 16);
 
     for (auto& s : ms)
         s.updateMatchedPairs();
@@ -54,25 +56,8 @@ void MidiNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo
 {
     sampleRate = info.sampleRate;
 
-    if (info.rootNodeToReplace != nullptr)
-    {
-        bool foundNodeToReplace = false;
-        const auto nodeIDToLookFor = getNodeProperties().nodeID;
-
-        visitNodes (info.rootNode, [&] (Node& n)
-                    {
-                        if (auto midiNode = dynamic_cast<MidiNode*> (&n))
-                        {
-                            if (midiNode->getNodeProperties().nodeID == nodeIDToLookFor)
-                            {
-                                midiSourceID = midiNode->midiSourceID;
-                                foundNodeToReplace = true;
-                            }
-                        }
-                    }, true);
-
-        shouldCreateMessagesForTime = ! foundNodeToReplace;
-    }
+    if (info.nodeGraphToReplace != nullptr)
+        shouldCreateMessagesForTime = findNodeWithID<MidiNode> (*info.nodeGraphToReplace, getNodeProperties().nodeID) == nullptr;
 }
 
 bool MidiNode::isReadyToProcess()
@@ -216,6 +201,10 @@ void MidiNode::processSection (Node::ProcessContext& pc,
                                          localTime.getEnd(),
                                          localTime.getLength() - 0.00001,
                                          getPlayHead().isPlaying());
+
+   #if TRACKTION_SANITY_CHECK_MIDI_BUFFERS
+    MidiNodeHelpers::sanityCheckMidiBuffer (pc.buffers.midi, localTime.getLength());
+   #endif
 }
 
 

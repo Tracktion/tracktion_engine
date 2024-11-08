@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -64,7 +64,7 @@ struct AbletonLink::ImplBase  : public juce::Timer
 
         // Find the phase offset between tracktion
         // If this is 0 this means perfect phase, > 0 means link is ahead, < 0 means tracktion is ahead
-        auto offsetPhase = linkPhase - localPhase;
+        auto offsetPhase = circularDifference (linkPhase, localPhase);
         chaseProportion = offsetPhase;
 
         const auto offsetBeats = offsetPhase * numerator;
@@ -90,12 +90,11 @@ struct AbletonLink::ImplBase  : public juce::Timer
 
     void setTempoFromLink (double bpm)
     {
-        Edit::WeakRef bailOut (&transport.edit);
         bpm = getTempoInRange (bpm);
 
-        juce::MessageManager::callAsync ([this, bailOut, bpm]
+        juce::MessageManager::callAsync ([this, editRef = makeSafeRef (transport.edit), bpm]
         {
-            if (bailOut != nullptr)
+            if (editRef != nullptr)
             {
                 inhibitTimer = juce::Time::getMillisecondCounter() + 100;
                 listeners.call (&Listener::linkRequestedTempoChange, bpm);
@@ -105,23 +104,21 @@ struct AbletonLink::ImplBase  : public juce::Timer
 
     void setStartStopFromLink (bool isPlaying)
     {
-        juce::MessageManager::callAsync ([this, bailOut = Edit::WeakRef (&transport.edit), isPlaying]
+        juce::MessageManager::callAsync ([this, editRef = makeSafeRef (transport.edit), isPlaying]
         {
-            if (bailOut == nullptr)
-                return;
-
-            inhibitTimer = juce::Time::getMillisecondCounter() + 100;
-            listeners.call (&Listener::linkRequestedStartStopChange, isPlaying);
+            if (editRef != nullptr)
+            {
+                inhibitTimer = juce::Time::getMillisecondCounter() + 100;
+                listeners.call (&Listener::linkRequestedStartStopChange, isPlaying);
+            }
         });
     }
 
     void callConnectionChanged()
     {
-        Edit::WeakRef bailOut (&transport.edit);
-
-        juce::MessageManager::callAsync ([this, bailOut]
+        juce::MessageManager::callAsync ([this, editRef = makeSafeRef (transport.edit)]
         {
-            if (bailOut != nullptr)
+            if (editRef != nullptr)
                 listeners.call (&AbletonLink::Listener::linkConnectionChanged);
         });
     }
@@ -162,7 +159,7 @@ struct AbletonLink::ImplBase  : public juce::Timer
 
     bool isTempoOutOfRange (double bpm) const
     {
-        return ! allowedTempos.contains (bpm);
+        return ! (allowedTempos.getStart() <= bpm && bpm <= allowedTempos.getEnd());
     }
 
     virtual bool isEnabled() const = 0;
@@ -184,17 +181,20 @@ struct AbletonLink::ImplBase  : public juce::Timer
         return a - b * std::floor (a / b);
     }
 
+    static inline double circularDifference (double a, double b)
+    {
+        double diff = a - b;
+
+        if (diff < -0.5)    return diff + 1.0;
+        if (diff > 0.5)     return diff - 1.0;
+
+        return diff;
+    }
+
     void setSpeedCompensation (double phaseProportion)
     {
         if (auto epc = transport.getCurrentPlaybackContext())
-        {
-           #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
             epc->setTempoAdjustment (phaseProportion * 10.0);
-           #else
-            const double speedComp = juce::jlimit (-10.0, 10.0, phaseProportion * 1000.0);
-            epc->setSpeedCompensation (speedComp);
-           #endif
-        }
     }
 
     TransportControl& transport;
@@ -205,6 +205,8 @@ struct AbletonLink::ImplBase  : public juce::Timer
     std::atomic<double> linkBarPhase { 0.0 }, chaseProportion { 0.0 };
 
     juce::Range<double> allowedTempos { 0.0, 999.0 };
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ImplBase)
 };
 
 #if TRACKTION_ENABLE_ABLETON_LINK
@@ -290,7 +292,9 @@ struct AbletonLink::ImplBase  : public juce::Timer
 
         double getTempoFromLink() override
         {
-            jassert (! juce::MessageManager::existsAndIsCurrentThread());
+            if (juce::MessageManager::existsAndIsCurrentThread())
+                return link.captureAppSessionState().tempo();
+
             return link.captureAudioSessionState().tempo();
         }
 
@@ -328,6 +332,7 @@ struct AbletonLink::ImplBase  : public juce::Timer
             ABLLinkSetSessionTempoCallback (link, tempoChangedCallback, this);
             ABLLinkSetIsConnectedCallback (link, isConnectedCallback, this);
             ABLLinkSetIsEnabledCallback (link, isEnabledCallback, this);
+            ABLLinkSetStartStopCallback (link, startStopCallback, this);
 
             setEnabled (isActive);
         }
@@ -351,11 +356,9 @@ struct AbletonLink::ImplBase  : public juce::Timer
 
             // We don't necessarily get an isConnectedCallback callback after
             // enabling, make sure everything is up to date.
-            Edit::WeakRef bailOut (&transport.edit);
-
-            Timer::callAfterDelay (500, [this, bailOut]
+            Timer::callAfterDelay (500, [this, editRef = makeSafeRef (transport.edit)]
             {
-                if (bailOut != nullptr)
+                if (editRef != nullptr)
                     isConnectedCallback (ABLLinkIsConnected (link), this);
             });
         }
@@ -444,6 +447,12 @@ struct AbletonLink::ImplBase  : public juce::Timer
                 broadcastTempo (thisPtr);
         }
 
+        static void startStopCallback (bool isPlaying, void *context)
+        {
+            auto* thisPtr = static_cast<LinkImpl*> (context);
+            thisPtr->setStartStopFromLink (isPlaying);
+        }
+
         static void broadcastTempo (LinkImpl* context)
         {
             context->setTempoFromLink (context->getTempoFromLink());
@@ -463,7 +472,7 @@ struct AbletonLink::ImplBase  : public juce::Timer
 AbletonLink::AbletonLink (TransportControl& t)
 {
    #if TRACKTION_ENABLE_ABLETON_LINK
-    implementation.reset (new LinkImpl (t));
+    implementation = std::make_unique<LinkImpl> (t);
    #endif
 
     juce::ignoreUnused (t);
@@ -548,12 +557,12 @@ double AbletonLink::getChaseProportion() const
     return implementation != nullptr ? implementation->chaseProportion.load() : 0.0;
 }
 
-double AbletonLink::getSessionTempo() const
+std::optional<double> AbletonLink::getSessionTempo() const
 {
     if (implementation != nullptr)
         return implementation->getTempoFromLink();
 
-    return 120.0;
+    return {};
 }
 
 void AbletonLink::setCustomOffset (int offsetMs)

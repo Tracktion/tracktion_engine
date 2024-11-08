@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -25,39 +25,45 @@ public:
     void initialise();
     void flushStateToValueTree();
 
-    /** called as a sanity-check after edit has created all the tracks */
+    /// called as a sanity-check after edit has created all the tracks
     void updateOutput();
 
     //==============================================================================
-    /** if compareDefaultDevices is true, then this returns true if the device name
-        is 'default ..' and the actual device is named, or vice-versa
-    */
+    /// if compareDefaultDevices is true, then this returns true if the device name
+    /// is 'default ..' and the actual device is named, or vice-versa
     bool outputsToDevice (const juce::String& deviceName, bool compareDefaultDevices) const;
 
-    /** description of where it's going. */
+    /// The ID of the track's target device (if one is set).
+    juce::String getOutputDeviceID() const;
+
+    /// description of where it's going.
     juce::String getOutputName() const;
 
-    /** includes the dest track's name, if relevant */
+    /// includes the dest track's name, if relevant
     juce::String getDescriptiveOutputName() const;
 
-    /** if the track's being routed into another one, this returns it */
+    /// if the track's being routed into another one, this returns it
     AudioTrack* getDestinationTrack() const;
 
-    /** True if this track's direct destination is the one given */
+    /// True if this track's direct destination is the one given
     bool outputsToDestTrack (AudioTrack&) const;
 
-    /** true if any downstream tracks match this one */
+    /// true if any downstream tracks match this one
     bool feedsInto (const Track* possibleDestTrack) const;
 
-    /** finds the output device.
+    /// True if this output is going to the default audio out
+    bool usesDefaultAudioOut() const;
+    /// True if this output is going to the default MIDI out
+    bool usesDefaultMIDIOut() const;
 
-        If the track feeds into another track, this will optionally recurse into the
-        dest track to find the device.
-    */
+    /// finds the output device.
+    ///
+    /// If the track feeds into another track, this will optionally recurse into the
+    /// dest track to find the device.
     OutputDevice* getOutputDevice (bool traceThroughDestTracks) const;
 
     //==============================================================================
-    void setOutputByName (const juce::String& name);
+    void setOutputToDeviceID (const juce::String& deviceID);
     void setOutputToTrack (AudioTrack*);
     void setOutputToDefaultDevice (bool isMidi);
 
@@ -66,17 +72,12 @@ public:
                                               juce::BigInteger& hasAudio,
                                               juce::BigInteger& hasMidi);
 
-    static void getPossibleOutputNames (const juce::Array<AudioTrack*>& tracks,
-                                        juce::StringArray& s, juce::StringArray& a,
-                                        juce::BigInteger& hasAudio,
-                                        juce::BigInteger& hasMidi);
-
     //==============================================================================
     bool canPlayAudio() const;
-    /** (also true for virtual devices with midi synths) */
+    /// (also true for virtual devices with midi synths)
     bool canPlayMidi() const;
 
-    /** false if not possible */
+    /// false if not possible
     bool injectLiveMidiMessage (const juce::MidiMessage&);
 
     juce::ValueTree state;

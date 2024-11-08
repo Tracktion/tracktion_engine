@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -16,10 +16,12 @@ namespace tracktion { inline namespace engine
 namespace MidiNodeHelpers
 {
     inline void createMessagesForTime (MidiMessageArray& destBuffer,
-                                       juce::MidiMessageSequence& sourceSequence, double time,
+                                       juce::MidiMessageSequence& sourceSequence,
+                                       double time,
                                        juce::Range<int> channelNumbers,
                                        LiveClipLevel& clipLevel,
-                                       bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID,
+                                       bool useMPEChannelMode,
+                                       MPESourceID midiSourceID,
                                        juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer)
     {
         if (useMPEChannelMode)
@@ -28,7 +30,7 @@ namespace MidiNodeHelpers
 
             controllerMessagesScratchBuffer.clearQuick();
 
-            for (int i = channelNumbers.getStart(); i <= channelNumbers.getEnd(); ++i)
+            for (int i = channelNumbers.getStart(); i < channelNumbers.getEnd(); ++i)
                 MPEStartTrimmer::reconstructExpression (controllerMessagesScratchBuffer, sourceSequence, indexOfTime, i);
 
             for (auto& m : controllerMessagesScratchBuffer)
@@ -39,11 +41,11 @@ namespace MidiNodeHelpers
             {
                 controllerMessagesScratchBuffer.clearQuick();
 
-                for (int i = channelNumbers.getStart(); i <= channelNumbers.getEnd(); ++i)
+                for (int i = channelNumbers.getStart(); i < channelNumbers.getEnd(); ++i)
                     sourceSequence.createControllerUpdatesForTime (i, time, controllerMessagesScratchBuffer);
 
                 for (auto& m : controllerMessagesScratchBuffer)
-                    destBuffer.addMidiMessage (m, midiSourceID);
+                    destBuffer.addMidiMessage (m, 0.0001, midiSourceID);
             }
 
             if (! clipLevel.isMute())
@@ -77,7 +79,7 @@ namespace MidiNodeHelpers
     }
 
     inline void createNoteOffs (MidiMessageArray& destination, const juce::MidiMessageSequence& sourceSequence,
-                                MidiMessageArray::MPESourceID midiSourceID,
+                                MPESourceID midiSourceID,
                                 double time, double midiTimeOffset, bool isPlaying)
     {
         int activeChannels = 0;
@@ -102,6 +104,44 @@ namespace MidiNodeHelpers
             }
         }
 
+        for (int i = 1; i <= 16; ++i)
+        {
+            if ((activeChannels & (1 << i)) != 0)
+            {
+                destination.addMidiMessage (juce::MidiMessage::controllerEvent (i, 66 /* sustain pedal off */, 0), midiTimeOffset, midiSourceID);
+                destination.addMidiMessage (juce::MidiMessage::controllerEvent (i, 64 /* hold pedal off */, 0), midiTimeOffset, midiSourceID);
+
+                // NB: Some buggy plugins seem to fail to respond to note-ons if they are preceded
+                // by an all-notes-off, so avoid this while playing.
+                if (! isPlaying)
+                    destination.addMidiMessage (juce::MidiMessage::allNotesOff (i), midiTimeOffset, midiSourceID);
+            }
+        }
+    }
+
+    /** Asserts if any MIDI messages are timestamped outside the given range. */
+    inline void sanityCheckMidiBuffer (const MidiMessageArray& midi, double maxTimeStamp)
+    {
+        for (const auto& m : midi)
+            jassertquiet (m.getTimeStamp() < maxTimeStamp);
+    }
+
+    inline void createNoteOffs (ActiveNoteList& activeNoteList,
+                                MidiMessageArray& destination,
+                                MPESourceID midiSourceID,
+                                double midiTimeOffset, bool isPlaying)
+    {
+        int activeChannels = 0;
+
+        // First send note-off events for currently playing notes
+        activeNoteList.iterate ([&] (int channel, int noteNumber)
+                                {
+                                    activeChannels |= (1 << channel);
+                                    destination.addMidiMessage (juce::MidiMessage::noteOff (channel, noteNumber), midiTimeOffset, midiSourceID);
+                                });
+        activeNoteList.reset();
+
+        // Send controller off events for used channels
         for (int i = 1; i <= 16; ++i)
         {
             if ((activeChannels & (1 << i)) != 0)

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -41,16 +41,37 @@ tracktion::graph::NodeProperties RackInstanceNode::getNodeProperties()
     props.hasMidi = true;
     props.hasAudio = true;
 
+    if (props.nodeID != 0)
+        hash_combine (props.nodeID, static_cast<size_t> (3615177560026405684)); // "RackInstanceNode"
+
     return props;
 }
 
-void RackInstanceNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&)
+void RackInstanceNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
+    if (input->numOutputNodes > 1)
+        return;
+
+    const auto inputNumChannels = input->getNodeProperties().numberOfChannels;
+    const auto desiredNumChannels = getNodeProperties().numberOfChannels;
+
+    if (info.enableNodeMemorySharing && inputNumChannels >= desiredNumChannels)
+    {
+        canUseSourceBuffers = true;
+        setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                            tracktion::graph::AllocateAudioBuffer::no });
+    }
 }
 
 bool RackInstanceNode::isReadyToProcess()
 {
     return input->hasProcessed();
+}
+
+void RackInstanceNode::preProcess (choc::buffer::FrameCount, juce::Range<int64_t>)
+{
+    if (canUseSourceBuffers)
+        setBufferViewToUse (input.get(), input->getProcessedOutput().audio);
 }
 
 void RackInstanceNode::process (ProcessContext& pc)
@@ -82,7 +103,7 @@ void RackInstanceNode::process (ProcessContext& pc)
         auto dest = pc.buffers.audio.getChannel ((choc::buffer::ChannelCount) destChan);
         auto gain = dbToGain (std::get<2> (chan)->getCurrentValue());
 
-        copy (dest, src);
+        copyIfNotAliased (dest, src);
 
         if (gain == lastGain[channel])
         {

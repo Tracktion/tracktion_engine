@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -66,7 +66,7 @@ void ModifierNode::prepareToPlay (const tracktion::graph::PlaybackInitialisation
 {
     juce::ignoreUnused (info);
     jassert (sampleRate == info.sampleRate);
-    
+
     auto props = getNodeProperties();
 
     if (props.latencyNumSamples > 0)
@@ -77,7 +77,7 @@ void ModifierNode::process (ProcessContext& pc)
 {
     auto inputBuffers = input->getProcessedOutput();
     auto& inputAudioBlock = inputBuffers.audio;
-    
+
     auto& outputBuffers = pc.buffers;
     auto& outputAudioBlock = outputBuffers.audio;
 
@@ -97,16 +97,16 @@ void ModifierNode::process (ProcessContext& pc)
     // Then MIDI buffers
     midiMessageArray.copyFrom (inputBuffers.midi);
     bool shouldProcess = getBoolParamValue (*modifier->enabledParam);
-    
+
     if (playHeadState != nullptr && playHeadState->didPlayheadJump())
         midiMessageArray.isAllNotesOff = true;
-    
+
     if (trackMuteState != nullptr)
     {
         if (! trackMuteState->shouldTrackContentsBeProcessed())
         {
             shouldProcess = shouldProcess && trackMuteState->shouldTrackBeAudible();
-        
+
             if (trackMuteState->wasJustMuted())
                 midiMessageArray.isAllNotesOff = true;
         }
@@ -114,8 +114,8 @@ void ModifierNode::process (ProcessContext& pc)
 
     // Process the plugin
     if (shouldProcess)
-        modifier->baseClassApplyToBuffer (getPluginRenderContext (pc.referenceSampleRange.getStart(), outputAudioBuffer));
-    
+        modifier->baseClassApplyToBuffer (getPluginRenderContext (pc.referenceSampleRange, outputAudioBuffer));
+
     // Then copy the buffers to the outputs
     outputBuffers.midi.copyFrom (midiMessageArray);
 }
@@ -128,7 +128,7 @@ void ModifierNode::initialiseModifier (double sampleRateToUse, int blockSizeToUs
     isInitialised = true;
 }
 
-PluginRenderContext ModifierNode::getPluginRenderContext (int64_t referenceSamplePosition, juce::AudioBuffer<float>& destBuffer)
+PluginRenderContext ModifierNode::getPluginRenderContext (juce::Range<int64_t> referenceSampleRange, juce::AudioBuffer<float>& destBuffer)
 {
     if (audioRenderContextProvider != nullptr)
     {
@@ -138,18 +138,21 @@ PluginRenderContext ModifierNode::getPluginRenderContext (int64_t referenceSampl
         rc.bufferNumSamples = destBuffer.getNumSamples();
         rc.bufferForMidiMessages = &midiMessageArray;
         rc.midiBufferOffset = 0.0;
-        
+
         return rc;
     }
 
     jassert (playHeadState != nullptr);
     auto& playHead = playHeadState->playHead;
-    
+
+    const auto timelineRange = referenceSampleRangeToSplitTimelineRange (playHead, referenceSampleRange);
+    jassert (! timelineRange.isSplit);
+
     return { &destBuffer,
              juce::AudioChannelSet::canonicalChannelSet (destBuffer.getNumChannels()),
              0, destBuffer.getNumSamples(),
              &midiMessageArray, 0.0,
-             TimePosition::fromSamples (playHead.referenceSamplePositionToTimelinePosition (referenceSamplePosition), sampleRate) + automationAdjustmentTime,
+             timeRangeFromSamples (timelineRange.timelineRange1, sampleRate) + automationAdjustmentTime,
              playHead.isPlaying(), playHead.isUserDragging(), isRendering, false };
 }
 

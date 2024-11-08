@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -79,7 +79,7 @@ bool Clipboard::ContentType::pasteIntoEdit (const EditPastingOptions&) const    
 Clipboard::ProjectItems::ProjectItems() {}
 Clipboard::ProjectItems::~ProjectItems() {}
 
-static AudioTrack* getOrInsertAudioTrackNearestIndex (Edit& edit, int trackIndex)
+AudioTrack* getOrInsertAudioTrackNearestIndex (Edit& edit, int trackIndex)
 {
     int i = 0;
 
@@ -97,7 +97,7 @@ static AudioTrack* getOrInsertAudioTrackNearestIndex (Edit& edit, int trackIndex
 }
 
 static TimePosition pasteMIDIFileIntoEdit (Edit& edit, const juce::File& midiFile,
-                                           int& targetTrackIndex,
+                                           int& targetTrackIndex, int& targetSlotIndex,
                                            TimePosition startTime, bool importTempoChanges)
 {
     CRASH_TRACER
@@ -136,7 +136,7 @@ static TimePosition pasteMIDIFileIntoEdit (Edit& edit, const juce::File& midiFil
         {
             if (tempoChangeBeatNumbers.size() > 0)
                 tempoSequence.removeTemposBetween (TimeRange (startTime, tempoSequence.toTime (endBeat))
-                                                     .expanded (TimeDuration::fromSeconds (0.001)), true);
+                                                     .expanded (0.001_td), true);
 
             for (int i = 0; i < tempoChangeBeatNumbers.size(); ++i)
             {
@@ -165,9 +165,9 @@ static TimePosition pasteMIDIFileIntoEdit (Edit& edit, const juce::File& midiFil
         for (auto list : lists)
         {
             auto listBeatStart = list->getFirstBeatNumber();
-            auto listBeatEnd = std::max (listBeatStart + BeatDuration::fromBeats (1),
+            auto listBeatEnd = std::max (listBeatStart + 1_bd,
                                          std::max (list->getLastBeatNumber(),
-                                                   BeatPosition::fromBeats ((endBeat - startBeat).inBeats())));
+                                                   toPosition (endBeat - startBeat)));
 
             if (lastTrackEndTime > listBeatStart)
                 ++targetTrackIndex;
@@ -184,12 +184,43 @@ static TimePosition pasteMIDIFileIntoEdit (Edit& edit, const juce::File& midiFil
             {
                 const auto timeRange = tempoSequence.toTime ({ startBeat, endBeat });
 
-                if (auto newClip = at->insertClipWithState (clipState, list->getImportedMidiTrackName(), TrackItem::Type::midi,
-                                                            { timeRange, 0_td }, false, false))
+                auto clipName = list->getImportedMidiTrackName();
+                if (auto fn = list->getImportedFileName(); fn.isNotEmpty())
+                    clipName += " - " + fn;
+
+                auto targetOwner = [&]() -> ClipOwner*
                 {
-                    if (importAsNoteExpression)
-                        if (auto mc = dynamic_cast<MidiClip*> (newClip))
-                            mc->setMPEMode (true);
+                    if (targetSlotIndex < 0)
+                        return at;
+
+                    auto& slotList = at->getClipSlotList();
+                    auto slots = slotList.getClipSlots();
+
+                    if (targetSlotIndex < slots.size())
+                        return slots[targetSlotIndex];
+
+                    if (! slots.isEmpty())
+                        return slots.getFirst();
+
+                    return at;
+                }();
+
+                if (auto newClip = insertClipWithState (*targetOwner,
+                                                        clipState, clipName, TrackItem::Type::midi,
+                                                        { timeRange, 0_td }, DeleteExistingClips::no, false))
+                {
+                    if (auto mc = dynamic_cast<MidiClip*> (newClip))
+                    {
+                        if (mc->getClipSlot() != nullptr)
+                        {
+                            mc->setUsesProxy (false);
+                            mc->setStart (0_tp, false, true);
+                            mc->setLoopRangeBeats (mc->getEditBeatRange());
+                        }
+
+                        if (importAsNoteExpression)
+                            mc->setMPEMode(true);
+                    }
 
                     newClipEndTime = std::max (newClipEndTime, newClip->getPosition().getEnd());
                 }
@@ -254,7 +285,7 @@ static void askUserAboutProjectItemPastingOptions (Engine& engine,
 
     if (numAudioClips > 1)
     {
-        if (numAudioClipsWithBWAV > 0)
+        if (numAudioClipsWithBWAV > 0 && ! engine.getEngineBehaviour().ignoreBWavTimestamps())
         {
            #if JUCE_MODAL_LOOPS_PERMITTED
             juce::ToggleButton toggle (TRANS("Snap to BWAV"));
@@ -288,14 +319,17 @@ static void askUserAboutProjectItemPastingOptions (Engine& engine,
     }
     else if (numAudioClips == 1 && numAudioClipsWithBWAV == 1)
     {
-        options.snapBWavsToOriginalTime = ui.showOkCancelAlertBox (TRANS("BWAV Clip"),
-                                                                   TRANS("Do you want clip placed at BWAV timestamp or cursor position?"),
-                                                                   TRANS("BWAV timestamp"),
-                                                                   TRANS("Cursor position"));
+        if (engine.getEngineBehaviour().ignoreBWavTimestamps())
+            options.snapBWavsToOriginalTime = false;
+        else
+            options.snapBWavsToOriginalTime = ui.showOkCancelAlertBox (TRANS("BWAV Clip"),
+                                                                       TRANS("Do you want clip placed at BWAV timestamp or cursor position?"),
+                                                                       TRANS("BWAV timestamp"),
+                                                                       TRANS("Cursor position"));
     }
 }
 
-bool isRecursiveEditClipPaste (const Clipboard::ProjectItems& items, Edit& edit)
+inline bool isRecursiveEditClipPaste (const Clipboard::ProjectItems& items, Edit& edit)
 {
     auto& pm = edit.engine.getProjectManager();
 
@@ -316,7 +350,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
 
     ProjectItemPastingOptions pastingOptions;
 
-    pastingOptions.separateTracks = options.preferredLayout == FileDragList::vertical;
+    pastingOptions.separateTracks = options.preferredLayout == FileDragList::consecutiveTracks;
 
     if (! options.silent)
         askUserAboutProjectItemPastingOptions (e, *this, pastingOptions);
@@ -330,20 +364,22 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
         return false;
     }
 
-    TimePosition startTime;
-    Track::Ptr insertPointTrack;
-    options.insertPoint.chooseInsertPoint (insertPointTrack, startTime, false, options.selectionManager);
+    auto [insertPointTrack, clipOwner, time] = options.insertPoint.chooseInsertPoint (false, options.selectionManager,
+                                                                                      [] (auto& t) { return t.isAudioTrack() || t.isFolderTrack(); });
+    auto startTime = time.value_or (0_tp);
 
-    if (insertPointTrack == nullptr)
+    if (insertPointTrack == nullptr || clipOwner == nullptr)
     {
         jassertfalse;
         return false;
     }
 
+    const bool pastingInToClipLauncher = dynamic_cast<ClipSlot*> (clipOwner) != nullptr;
+
     int targetTrackIndex = insertPointTrack->getIndexInEditTrackList();
     SelectableList itemsAdded;
 
-    for (auto& item : itemIDs)
+    for (auto [index, item] : juce::enumerate (itemIDs))
     {
         if (auto sourceItem = pm.getProjectItem (item.itemID))
         {
@@ -352,48 +388,118 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
 
             if (file.exists())
             {
-                if (auto targetTrack = getOrInsertAudioTrackNearestIndex (options.edit, targetTrackIndex))
+                if (sourceItem->isMidi())
                 {
-                    if (sourceItem->isMidi())
-                    {
-                        newClipEndTime = pasteMIDIFileIntoEdit (options.edit, file, targetTrackIndex, startTime,
-                                                                pastingOptions.shouldImportTempoChangesFromMIDI);
-                    }
-                    else if (sourceItem->isWave())
-                    {
-                        sourceItem->verifyLength();
-                        jassert (sourceItem->getLength() > 0);
+                    int targetSlotIndex = -1;
 
-                        if (auto newClip = targetTrack->insertWaveClip (sourceItem->getName(), sourceItem->getID(),
-                                                                        { { startTime, TimePosition::fromSeconds (startTime.inSeconds() + sourceItem->getLength()) }, TimeDuration() }, false))
+                    if (auto targetSlot = dynamic_cast<ClipSlot*> (clipOwner))
+                        targetSlotIndex = findClipSlotIndex (*targetSlot);
+
+                    newClipEndTime = pasteMIDIFileIntoEdit (options.edit, file, targetTrackIndex, targetSlotIndex,
+                                                            startTime, pastingOptions.shouldImportTempoChangesFromMIDI);
+                }
+                else if (sourceItem->isWave())
+                {
+                    sourceItem->verifyLength();
+                    jassert (sourceItem->getLength() > 0);
+
+                    if (auto clipSlot = dynamic_cast<ClipSlot*> (clipOwner->getClipOwnerSelectable()))
+                        if (auto existingClip = clipSlot->getClip())
+                            existingClip->removeFromParent();
+
+                    if (auto newClip = insertWaveClip (*clipOwner,
+                                                       sourceItem->getName(), sourceItem->getID(),
+                                                       { { startTime, TimePosition::fromSeconds (startTime.inSeconds() + sourceItem->getLength()) }, 0_td },
+                                                       DeleteExistingClips::no))
+                    {
+                        newClipEndTime = newClip->getPosition().getEnd();
+                        itemsAdded.add (newClip.get());
+
+                        if (pastingOptions.snapBWavsToOriginalTime)
+                            newClip->snapToOriginalBWavTime();
+
+                        // Set sensible defaults for new launcher clips
+                        if (newClip->getClipSlot())
                         {
-                            newClipEndTime = newClip->getPosition().getEnd();
-                            itemsAdded.add (newClip.get());
+                            if (newClip->effectsEnabled())
+                                newClip->enableEffects (false, false);
 
-                            if (pastingOptions.snapBWavsToOriginalTime)
-                                newClip->snapToOriginalBWavTime();
+                            newClip->setUsesProxy (false);
+                            newClip->setAutoTempo (true);
+                            newClip->setStart (0_tp, false, true);
+                            newClip->setLoopRangeBeats ({ 0_bp, newClip->getLengthInBeats() });
                         }
-
                     }
-                    else if (sourceItem->isEdit())
+
+                }
+                else if (sourceItem->isEdit())
+                {
+                    sourceItem->verifyLength();
+                    jassert (sourceItem->getLength() > 0);
+
+                    if (auto newClip = insertEditClip (*clipOwner,
+                                                       { startTime, startTime + TimeDuration::fromSeconds (sourceItem->getLength()) },
+                                                         sourceItem->getID()))
                     {
-                        sourceItem->verifyLength();
-                        jassert (sourceItem->getLength() > 0);
+                        newClipEndTime = newClip->getPosition().getEnd();
+                        itemsAdded.add (newClip.get());
 
-                        if (auto newClip = targetTrack->insertEditClip ({ startTime, startTime + TimeDuration::fromSeconds (sourceItem->getLength()) },
-                                                                        sourceItem->getID()))
+                        // Set sensible defaults for new launcher clips
+                        if (newClip->getClipSlot())
                         {
-                            newClipEndTime = newClip->getPosition().getEnd();
-                            itemsAdded.add (newClip.get());
+                            if (newClip->effectsEnabled())
+                                newClip->enableEffects (false, false);
+
+                            newClip->setUsesProxy (false);
+                            newClip->setAutoTempo (true);
+                            newClip->setLoopRangeBeats ({ 0_bp, newClip->getLengthInBeats() });
                         }
                     }
+                }
 
-                    anythingPasted = true;
+                anythingPasted = true;
 
-                    if (pastingOptions.separateTracks)
-                        ++targetTrackIndex;
+                if (int (index) < int (itemIDs.size() - 1))
+                {
+                    if (pastingInToClipLauncher)
+                    {
+                        if (juce::ModifierKeys::currentModifiers.isCommandDown() || options.preferredLayout == FileDragList::consecutiveTracks)
+                        {
+                            ++targetTrackIndex;
+                            auto newTrack = getOrInsertAudioTrackNearestIndex (options.edit, targetTrackIndex);
+
+                            auto slot = dynamic_cast<ClipSlot*> (clipOwner);
+                            auto& at = *dynamic_cast<AudioTrack*> (&slot->track);
+                            auto& list = at.getClipSlotList();
+
+                            auto idx = list.getClipSlots().indexOf (slot);
+
+                            options.edit.getSceneList().ensureNumberOfScenes (list.getClipSlots().size());
+
+                            clipOwner = newTrack->getClipSlotList().getClipSlots()[idx];
+                        }
+                        else
+                        {
+                            auto slot = dynamic_cast<ClipSlot*> (clipOwner);
+                            auto& at = *dynamic_cast<AudioTrack*> (&slot->track);
+                            auto& list = at.getClipSlotList();
+
+                            auto idx = list.getClipSlots().indexOf (slot) + 1;
+
+                            options.edit.getSceneList().ensureNumberOfScenes (idx + 1);
+
+                            clipOwner = list.getClipSlots()[idx];
+                        }
+                    }
                     else
-                        startTime = newClipEndTime;
+                    {
+                        if (pastingOptions.separateTracks)
+                            ++targetTrackIndex;
+                        else
+                            startTime = newClipEndTime;
+
+                        clipOwner = getOrInsertAudioTrackNearestIndex (options.edit, targetTrackIndex);
+                    }
                 }
             }
         }
@@ -454,9 +560,10 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects,
         return;
 
     auto& ed = clipsToPaste.getFirst()->edit;
-    
+
     auto allTracks = getAllTracks (ed);
 
+    auto firstSlotIndex = ed.engine.getEngineBehaviour().getEditLimits().maxClipsInTrack;
     auto firstTrackIndex = ed.engine.getEngineBehaviour().getEditLimits().maxNumTracks;
     auto overallStartTime = TimePosition::fromSeconds (Edit::maximumLength);
 
@@ -464,6 +571,9 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects,
     {
         overallStartTime = std::min (overallStartTime, std::max (clip->getPosition().getStart(), range.getStart()));
         firstTrackIndex  = std::min (firstTrackIndex,  std::max (0, allTracks.indexOf (clip->getTrack())));
+
+        if (auto slot = clip->getClipSlot())
+            firstSlotIndex = std::min (firstSlotIndex, slot->getIndex());
     }
 
     for (auto clip : clipsToPaste)
@@ -476,6 +586,8 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects,
             auto clippedEnd = std::min (clipPos.getEnd(), range.getEnd());
 
             ClipInfo info;
+
+            info.grouped = clip->isGrouped();
 
             clip->flushStateToValueTree();
             info.state = clip->state.createCopy();
@@ -507,9 +619,17 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects,
                                             IDs::fadeIn,  fadeIn.overlaps (inOutPoints)  ? fadeIn.getIntersectionWith (inOutPoints).getLength().inSeconds() : 0.0,
                                             IDs::fadeOut, fadeOut.overlaps (inOutPoints) ? fadeOut.getIntersectionWith (inOutPoints).getLength().inSeconds() : 0.0);
                 }
+
+                // Also flush these properties so the defaults aren't picked up
+                addValueTreeProperties (info.state,
+                                        IDs::proxyAllowed, acb->canUseProxy(),
+                                        IDs::resamplingQuality, juce::VariantConverter<ResamplingQuality>::toVar (acb->getResamplingQuality()));
             }
 
             info.trackOffset = allTracks.indexOf (clip->getTrack()) - firstTrackIndex;
+
+            if (auto slot = clip->getClipSlot())
+                info.slotOffset = slot->getIndex() - firstSlotIndex;
 
             if (acb == nullptr || acb->getAutoTempo())
             {
@@ -533,7 +653,7 @@ void Clipboard::Clips::addAutomation (const juce::Array<TrackSection>& trackSect
 {
     if (range.isEmpty() || trackSections.isEmpty())
         return;
-    
+
     auto& edit = trackSections.getFirst().track->edit;
     auto allTracks = getAllTracks (edit);
     auto firstTrackIndex = edit.engine.getEngineBehaviour().getEditLimits().maxNumTracks;
@@ -544,7 +664,7 @@ void Clipboard::Clips::addAutomation (const juce::Array<TrackSection>& trackSect
         overallStartTime = std::min (overallStartTime, std::max (trackSection.range.getStart(), range.getStart()));
         firstTrackIndex  = std::min (firstTrackIndex,  std::max (0, allTracks.indexOf (trackSection.track)));
     }
-    
+
     for (const auto& trackSection : trackSections)
     {
         for (auto plugin : trackSection.track->pluginList)
@@ -601,6 +721,7 @@ void Clipboard::Clips::addAutomation (const juce::Array<TrackSection>& trackSect
 }
 
 static void fixClipTimes (juce::ValueTree& state, const Clipboard::Clips::ClipInfo& clip,
+                          const std::vector<Clipboard::Clips::ClipInfo>& otherClips,
                           TempoSequence& tempoSequence, TimePosition startOffset)
 {
     TimePosition start, offset;
@@ -608,8 +729,15 @@ static void fixClipTimes (juce::ValueTree& state, const Clipboard::Clips::ClipIn
 
     if (clip.hasBeatTimes)
     {
+        BeatDuration slotOffset;
+
+        if (clip.slotOffset.has_value())
+            for (const auto& info : otherClips)
+                if (info.trackOffset == clip.trackOffset && info.slotOffset.has_value() && *info.slotOffset < *clip.slotOffset)
+                    slotOffset = slotOffset + info.lengthBeats;
+
         auto offsetInBeats = BeatDuration::fromBeats (tempoSequence.toBeats (startOffset).inBeats());
-        auto range = tempoSequence.toTime ({ clip.startBeats + offsetInBeats, clip.startBeats + offsetInBeats + clip.lengthBeats });
+        auto range = tempoSequence.toTime ({ clip.startBeats + offsetInBeats + slotOffset, clip.startBeats + offsetInBeats + slotOffset + clip.lengthBeats });
         start  = range.getStart();
         length = range.getLength();
         offset = TimePosition::fromSeconds (clip.offsetBeats.inBeats() / tempoSequence.getBeatsPerSecondAt (start));
@@ -641,6 +769,7 @@ static void fixClipTimes (juce::ValueTree& state, const Clipboard::Clips::ClipIn
 static bool pastePointsToCurve (const std::vector<AutomationCurve::AutomationPoint>& points, juce::Range<float> valueRange, AutomationCurve& targetCurve, TimeRange targetRange)
 {
     AutomationCurve newCurve;
+    newCurve.setOwnerParameter (targetCurve.getOwnerParameter());
     auto dstRange = targetCurve.getValueLimits();
     jassert (! dstRange.isEmpty());
 
@@ -655,14 +784,14 @@ static bool pastePointsToCurve (const std::vector<AutomationCurve::AutomationPoi
         newCurve.addPoint (p.time, p.value, p.curve);
     }
 
-    if (newCurve.getLength() > TimeDuration())
+    if (newCurve.getLength() > 0_td)
     {
         if (targetRange.isEmpty())
             targetRange = targetRange.withLength (newCurve.getLength());
         else
-            newCurve.rescaleAllTimes (targetRange.getLength().inSeconds() / newCurve.getLength().inSeconds());
+            newCurve.rescaleAllTimes (targetRange.getLength() / newCurve.getLength());
 
-        targetCurve.mergeOtherCurve (newCurve, targetRange, TimePosition(), TimeDuration(), false, false);
+        targetCurve.mergeOtherCurve (newCurve, targetRange, 0_tp, 0_td, false, false);
         return true;
     }
 
@@ -675,11 +804,14 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
         return false;
 
     auto targetTrack = options.startTrack;
+    auto targetClipOwnerID = options.targetClipOwnerID;
 
     if (targetTrack == nullptr)
     {
-        TimePosition t;
-        options.insertPoint.chooseInsertPoint (targetTrack, t, false, options.selectionManager);
+        auto placement = options.insertPoint.chooseInsertPoint (false, options.selectionManager,
+                                                                [] (auto& t) { return t.isAudioTrack() || t.isFolderTrack(); });
+        targetTrack = placement.track;
+        targetClipOwnerID = placement.clipOwner != nullptr ? placement.clipOwner->getClipOwnerID() : EditItemID();
         jassert (targetTrack != nullptr);
     }
 
@@ -697,7 +829,7 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
     {
         auto newClipState = clip.state.createCopy();
         EditItemID::remapIDs (newClipState, nullptr, options.edit, &remappedIDs);
-        fixClipTimes (newClipState, clip, options.edit.tempoSequence, options.startTime);
+        fixClipTimes (newClipState, clip, clips, options.edit.tempoSequence, options.startTime);
 
         if (newClipState.hasType (IDs::MARKERCLIP))
         {
@@ -734,7 +866,48 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
         }
         else
         {
-            if (auto clipTrack = dynamic_cast<ClipTrack*> (targetTrack->getSiblingTrack (clip.trackOffset, false)))
+            if (auto clipSlot = findClipSlotForID (options.edit, targetClipOwnerID))
+            {
+                if (clip.grouped)
+                {
+                    options.edit.engine.getUIBehaviour().showWarningMessage (TRANS ("Group clips can not be added to the clip launcher"));
+                }
+                else
+                {
+                    auto calcSlotOffset = [&]
+                    {
+                        auto offset = 0;
+
+                        for (const auto& c : clips)
+                            if (c.trackOffset == clip.trackOffset && c.startBeats < clip.startBeats)
+                                offset++;
+
+                        return offset;
+                    };
+
+                    auto slotOffset = clip.slotOffset.has_value() ? *clip.slotOffset : calcSlotOffset();
+
+                    auto tracks = getAudioTracks (options.edit);
+                    auto trackIndex = tracks.indexOf (dynamic_cast<AudioTrack*> (&clipSlot->track));
+                    auto slotIndex  = clipSlot->getIndex();
+
+                    trackIndex += clip.trackOffset;
+                    slotIndex  += slotOffset;
+
+                    options.edit.getSceneList().ensureNumberOfScenes (slotIndex + 1);
+                    options.edit.ensureNumberOfAudioTracks (trackIndex + 1);
+
+                    if (auto at = getAudioTracks (options.edit)[trackIndex])
+                        clipSlot = at->getClipSlotList().getClipSlots()[slotIndex];
+
+                    if (auto existingClip = clipSlot->getClip())
+                        existingClip->removeFromParent();
+
+                    if (auto newClip = insertClipWithState (*clipSlot, newClipState))
+                        itemsAdded.add (newClip);
+                }
+            }
+            else if (auto clipTrack = dynamic_cast<ClipTrack*> (targetTrack->getSiblingTrack (clip.trackOffset, false)))
             {
                 if (auto newClip = clipTrack->insertClipWithState (newClipState))
                     itemsAdded.add (newClip);
@@ -743,6 +916,20 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
             {
                 jassertfalse;
             }
+        }
+    }
+
+    std::map<EditItemID, EditItemID> groupMap;
+    for (auto c : itemsAdded.getItemsOfType<Clip>())
+    {
+        if (c->isGrouped())
+        {
+            auto originalGroup = c->getGroupID();
+
+            if (groupMap.find (originalGroup) == groupMap.end())
+                groupMap[originalGroup] = c->edit.createNewItemID();
+
+            c->setGroup (groupMap[originalGroup]);
         }
     }
 
@@ -777,7 +964,17 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
         return false;
 
     if (auto sm = options.selectionManager)
-        sm->select (itemsAdded);
+    {
+        bool first = true;
+        for (auto i : itemsAdded)
+        {
+            if (auto c = dynamic_cast<Clip*> (i); c->isGrouped())
+                sm->select (c->getGroupClip(), ! first);
+            else
+                sm->select (i, ! first);
+            first = false;
+        }
+    }
 
     if (options.setTransportToEnd && ! options.edit.getTransport().isPlaying())
         options.edit.getTransport().setPosition (getTimeRangeForSelectedItems (itemsAdded).getEnd());
@@ -788,14 +985,28 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
 bool Clipboard::Clips::pasteIntoEdit (Edit& edit, EditInsertPoint& insertPoint, SelectionManager* sm) const
 {
     Clipboard::ContentType::EditPastingOptions options (edit, insertPoint, sm);
-    insertPoint.chooseInsertPoint (options.startTrack, options.startTime, false, sm);
+    auto placement = insertPoint.chooseInsertPoint (false, sm,
+                                                    [] (auto& t) { return t.isAudioTrack() || t.isFolderTrack(); });
+
+    options.startTrack = placement.track;
+    options.startTime = placement.time.value_or (0_tp);
+    options.targetClipOwnerID = placement.clipOwner != nullptr ? placement.clipOwner->getClipOwnerID()
+                                                               : EditItemID();
+
     return pasteIntoEdit (options);
 }
 
 bool Clipboard::Clips::pasteAfterSelected (Edit& edit, EditInsertPoint& insertPoint, SelectionManager& sm) const
 {
     EditPastingOptions options (edit, insertPoint, &sm);
-    insertPoint.chooseInsertPoint (options.startTrack, options.startTime, true, &sm);
+    auto placement = insertPoint.chooseInsertPoint (true, &sm,
+                                                    [] (auto& t) { return t.isAudioTrack() || t.isFolderTrack(); });
+
+    options.startTrack = placement.track;
+    options.startTime = placement.time.value_or (0_tp);
+    options.targetClipOwnerID = placement.clipOwner != nullptr ? placement.clipOwner->getClipOwnerID()
+                                                               : EditItemID();
+
     return pasteIntoEdit (options);
 }
 
@@ -862,8 +1073,69 @@ bool Clipboard::Clips::pasteInsertingAtCursorPos (Edit& edit, EditInsertPoint& i
     }
 
     EditPastingOptions options (edit, insertPoint, &sm);
-    options.startTime = cursorPos;
+    options.startTime = std::max (0_tp, cursorPos);
     return pasteIntoEdit (options);
+}
+
+//==============================================================================
+//==============================================================================
+Clipboard::Scenes::Scenes() {}
+Clipboard::Scenes::~Scenes() {}
+
+bool Clipboard::Scenes::pasteIntoEdit (const EditPastingOptions& options) const
+{
+    auto& sceneList = options.edit.getSceneList();
+
+    auto insertIndex = sceneList.getNumScenes();
+    if (auto sm = options.selectionManager)
+    {
+        auto items = sm->getSelectedObjects().getItemsOfType<Scene>();
+        if (items.size() > 0)
+        {
+            insertIndex = 0;
+            for (auto s : items)
+                insertIndex = std::max (insertIndex, s->getIndex() + 1);
+        }
+        sm->deselectAll();
+    }
+
+    std::map<EditItemID, EditItemID> remappedIDs;
+    SelectableList itemsAdded;
+
+    for (auto info : scenes)
+    {
+        if (auto newScene = sceneList.insertScene (insertIndex))
+        {
+            newScene->state.copyPropertiesAndChildrenFrom (info.state, &options.edit.getUndoManager());
+
+            options.edit.ensureNumberOfAudioTracks (int (info.clips.size()));
+            auto tracks = getAudioTracks (options.edit);
+            for (auto [idx, clip] : juce::enumerate (info.clips))
+            {
+                auto track = tracks[int (idx)];
+                auto slot  = track->getClipSlotList().getClipSlots()[insertIndex];
+
+                if (clip.isValid())
+                {
+                    auto newClipState = clip.createCopy();
+                    EditItemID::remapIDs (newClipState, nullptr, options.edit, &remappedIDs);
+
+                    insertClipWithState (*slot, newClipState);
+                }
+            }
+            itemsAdded.add (newScene);
+        }
+
+        insertIndex++;
+    }
+
+    if (itemsAdded.isEmpty())
+        return false;
+
+    if (auto sm = options.selectionManager)
+        sm->select (itemsAdded);
+
+    return true;
 }
 
 //==============================================================================
@@ -881,8 +1153,9 @@ bool Clipboard::Tracks::pasteIntoEdit (const EditPastingOptions& options) const
     auto targetTrack = options.startTrack;
 
     // When pasting tracks, always paste after the selected group of tracks if the target is
-    // withing the selection
+    // within the selection
     auto allTracks = getAllTracks (options.edit);
+
     if (options.selectionManager != nullptr && options.selectionManager->isSelected (targetTrack.get()))
         for (auto t : options.selectionManager->getItemsOfType<Track>())
             if (allTracks.indexOf (t) > allTracks.indexOf (targetTrack.get()))
@@ -910,8 +1183,7 @@ bool Clipboard::Tracks::pasteIntoEdit (const EditPastingOptions& options) const
         {
             newTracks.add (newTrack);
 
-            if (parentTrack == nullptr)
-                targetTrack = newTrack;
+            targetTrack = newTrack;
         }
         else
         {
@@ -1048,6 +1320,8 @@ bool Clipboard::TempoChanges::pasteTempoSequence (TempoSequence& ts, TimeRange t
     return true;
 }
 
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_CLIPBOARD
+
 //==============================================================================
 //==============================================================================
 class ClipboardTempoTests   : public juce::UnitTest
@@ -1060,6 +1334,7 @@ public:
     {
         runCopyTests();
         runCopyTestsUsingBeatInsertion();
+        runTrackCopyPasteTests();
     }
 
 private:
@@ -1089,11 +1364,11 @@ private:
     {
         auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
         auto& ts = edit->tempoSequence;
-        
+
         beginTest ("Simple copy/paste");
         {
             ts.getTempo (0)->setBpm (120.0);
-            
+
             // N.B. bars start at 0!
             expectEquals (ts.toBeats ({ 0, {} }), 0.0);
             expectEquals (ts.toTime ({ 0, {} }), 0.0);
@@ -1107,14 +1382,14 @@ private:
             expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 6, {} })), 60.0, 1.0f);
             expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 8, {} })), 60.0, 1.0f);
             expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 10, {} })), 120.0, 1.0f);
-            
+
             const BeatRange beatRangeToCopy (ts.toBeats ({ 6, {} }), ts.toBeats ({ 8, {} }));
             const auto timeRangeToCopy = ts.toTime (beatRangeToCopy);
             const BeatDuration numBeatsToInsert = beatRangeToCopy.getLength();
 
             // Copy tempo changes
             Clipboard::TempoChanges tempoChanges (ts, timeRangeToCopy);
-            
+
             // Insert empty space
             const auto timeToInsertAt = ts.toTime ({ 2, {} });
             auto& tempoAtInsertionPoint = ts.getTempoAt (timeToInsertAt);
@@ -1122,7 +1397,7 @@ private:
             const auto beatRangeToInsert = BeatRange (ts.toBeats (timeToInsertAt), numBeatsToInsert);
             const auto lengthInTimeToInsert = ts.toTime (toPosition (beatRangeToInsert.getLength()));
             insertSpaceIntoEdit (*edit, TimeRange (timeToInsertAt, toDuration (lengthInTimeToInsert)));
-            
+
             const auto numBeatsInserted = beatRangeToInsert.getLength();
             const int numBarsInserted = juce::roundToInt (numBeatsInserted.inBeats() / tempoAtInsertionPoint.getMatchingTimeSig().denominator);
             expectWithinAbsoluteError (numBeatsInserted.inBeats(), 8.0, 0.0001);
@@ -1133,7 +1408,7 @@ private:
             expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 6 + numBarsInserted, {} })), 60.0, 1.0f);
             expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 8 + numBarsInserted, {} })), 60.0, 1.0f);
             expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 10 + numBarsInserted, {} })), 120.0, 1.0f);
-            
+
             // Paste tempo changes
             tempoChanges.pasteTempoSequence (ts, TimeRange (timeToInsertAt, lengthInTimeToInsert));
 
@@ -1145,16 +1420,16 @@ private:
             expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 4, {} })), 120.0, 1.0f);
         }
     }
-    
+
     void runCopyTestsUsingBeatInsertion()
     {
         auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
         auto& ts = edit->tempoSequence;
-        
+
         beginTest ("Simple copy/paste");
         {
             ts.getTempo (0)->setBpm (120.0);
-            
+
             // N.B. bars start at 0!
             expectEquals (ts.toBeats ({ 0, {} }), 0.0);
             expectEquals (ts.toTime ({ 0, {} }), 0.0);
@@ -1168,19 +1443,19 @@ private:
             expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 6, {} })), 60.0, 1.0f);
             expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 8, {} })), 60.0, 1.0f);
             expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 10, {} })), 120.0, 1.0f);
-            
+
             const BeatRange beatRangeToCopy (ts.toBeats ({ 6, {} }), ts.toBeats ({ 8, {} }));
             const auto timeRangeToCopy = ts.toTime (beatRangeToCopy);
 
             // Copy tempo changes
             Clipboard::TempoChanges tempoChanges (ts, timeRangeToCopy);
-            
+
             // Insert empty space
             const auto timeToInsertAt = ts.toTime ({ 2, {} });
             auto& tempoAtInsertionPoint = ts.getTempoAt (timeToInsertAt);
             const auto beatRangeToInsert = beatRangeToCopy.movedToStartAt (ts.toBeats (timeToInsertAt));
             insertSpaceIntoEditFromBeatRange (*edit, beatRangeToInsert);
-            
+
             const auto numBeatsInserted = beatRangeToInsert.getLength();
             const int numBarsInserted = juce::roundToInt (numBeatsInserted.inBeats() / tempoAtInsertionPoint.getMatchingTimeSig().denominator);
             expectWithinAbsoluteError (numBeatsInserted.inBeats(), 8.0, 0.0001);
@@ -1191,7 +1466,7 @@ private:
             expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 6 + numBarsInserted, {} })), 60.0, 1.0f);
             expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 8 + numBarsInserted, {} })), 60.0, 1.0f);
             expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 10 + numBarsInserted, {} })), 120.0, 1.0f);
-            
+
             // Paste tempo changes
             tempoChanges.pasteTempoSequence (ts, TimeRange (timeToInsertAt, ts.toTime (beatRangeToInsert.getEnd())));
 
@@ -1203,10 +1478,159 @@ private:
             expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 4, {} })), 120.0, 1.0f);
         }
     }
+
+    void runTrackCopyPasteTests()
+    {
+        beginTest ("Root tracks copy/paste");
+        {
+            auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
+            edit->ensureNumberOfAudioTracks (3);
+
+            {
+                auto tracks = getAudioTracks(*edit);
+                juce::UnitTest::expectEquals (tracks.size(), 3);
+                tracks[0]->setName ("First");
+                tracks[1]->setName ("Second");
+                tracks[2]->setName ("Third");
+
+                Clipboard::Tracks clipboardTracks;
+
+                for (auto at : tracks)
+                    clipboardTracks.tracks.push_back (at->state.createCopy());
+
+                // Rename existing tracks for testing later
+                tracks[0]->setName ("First Original");
+                tracks[1]->setName ("Second Original");
+                tracks[2]->setName ("Third Original");
+
+                EditInsertPoint insertPoint (*edit);
+                Clipboard::ContentType::EditPastingOptions opts (*edit, insertPoint);
+                opts.startTrack = tracks[2];
+                expect (clipboardTracks.pasteIntoEdit (opts));
+            }
+
+            {
+                auto tracks = getAudioTracks(*edit);
+                juce::UnitTest::expectEquals (tracks.size(), 6);
+                juce::UnitTest::expectEquals<juce::String> (tracks[0]->getName(), "First Original");
+                juce::UnitTest::expectEquals<juce::String> (tracks[1]->getName(), "Second Original");
+                juce::UnitTest::expectEquals<juce::String> (tracks[2]->getName(), "Third Original");
+                juce::UnitTest::expectEquals<juce::String> (tracks[3]->getName(), "First");
+                juce::UnitTest::expectEquals<juce::String> (tracks[4]->getName(), "Second");
+                juce::UnitTest::expectEquals<juce::String> (tracks[5]->getName(), "Third");
+            }
+        }
+
+        beginTest ("Root tracks paste in to folder");
+        {
+            auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
+
+            {
+                edit->ensureNumberOfAudioTracks (3);
+                auto tracks = getAudioTracks (*edit);
+                juce::UnitTest::expectEquals (tracks.size(), 3);
+                tracks[0]->setName ("First");
+                tracks[1]->setName ("Second");
+                tracks[2]->setName ("Third");
+            }
+
+            auto ft = edit->insertNewFolderTrack (TrackInsertPoint ({ *getAudioTracks (*edit).getLast(), false }), nullptr, false);
+
+            {
+                Clipboard::Tracks clipboardTracks;
+                auto tracks = getAudioTracks (*edit);
+
+                for (auto at : tracks)
+                    clipboardTracks.tracks.push_back (at->state.createCopy());
+
+                // Rename existing tracks for testing later
+                tracks[0]->setName ("First Original");
+                tracks[1]->setName ("Second Original");
+                tracks[2]->setName ("Third Original");
+
+                EditInsertPoint insertPoint (*edit);
+                Clipboard::ContentType::EditPastingOptions opts (*edit, insertPoint);
+                opts.startTrack = ft;
+                expect (clipboardTracks.pasteIntoEdit (opts));
+            }
+
+            {
+                auto tracks = getAudioTracks (*edit);
+                juce::UnitTest::expectEquals (tracks.size(), 6);
+                juce::UnitTest::expectEquals<juce::String> (tracks[0]->getName(), "First Original");
+                juce::UnitTest::expectEquals<juce::String> (tracks[1]->getName(), "Second Original");
+                juce::UnitTest::expectEquals<juce::String> (tracks[2]->getName(), "Third Original");
+                juce::UnitTest::expectEquals<juce::String> (tracks[3]->getName(), "First");
+                juce::UnitTest::expectEquals<juce::String> (tracks[4]->getName(), "Second");
+                juce::UnitTest::expectEquals<juce::String> (tracks[5]->getName(), "Third");
+            }
+        }
+
+        beginTest ("Tracks inside folder copy/paste");
+        {
+            auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
+
+            {
+                edit->ensureNumberOfAudioTracks (3);
+                auto tracks = getAudioTracks(*edit);
+                juce::UnitTest::expectEquals (tracks.size(), 3);
+                tracks[0]->setName ("First");
+                tracks[1]->setName ("Second");
+                tracks[2]->setName ("Third");
+            }
+
+            auto ft = edit->insertNewFolderTrack (TrackInsertPoint ({}), nullptr, false);
+
+            {
+                auto tracks = getAudioTracks(*edit);
+                edit->moveTrack (tracks[2], TrackInsertPoint (ft.get(), nullptr));
+                edit->moveTrack (tracks[1], TrackInsertPoint (ft.get(), nullptr));
+                edit->moveTrack (tracks[0], TrackInsertPoint (ft.get(), nullptr));
+            }
+
+            {
+                auto subTracks = ft->getInputTracks();
+                juce::UnitTest::expectEquals (subTracks.size(), 3);
+                juce::UnitTest::expectEquals<juce::String> (subTracks[0]->getName(), "First");
+                juce::UnitTest::expectEquals<juce::String> (subTracks[1]->getName(), "Second");
+                juce::UnitTest::expectEquals<juce::String> (subTracks[2]->getName(), "Third");
+            }
+
+            {
+                Clipboard::Tracks clipboardTracks;
+
+                for (auto at : ft->getInputTracks())
+                    clipboardTracks.tracks.push_back (at->state.createCopy());
+
+                // Rename existing tracks for testing later
+                auto subTracks = ft->getInputTracks();
+                subTracks[0]->setName ("First Original");
+                subTracks[1]->setName ("Second Original");
+                subTracks[2]->setName ("Third Original");
+
+                EditInsertPoint insertPoint (*edit);
+                Clipboard::ContentType::EditPastingOptions opts (*edit, insertPoint);
+                opts.startTrack = subTracks[2];
+                expect (clipboardTracks.pasteIntoEdit (opts));
+            }
+
+            {
+                auto subTracks = ft->getInputTracks();
+                juce::UnitTest::expectEquals (subTracks.size(), 6);
+                juce::UnitTest::expectEquals<juce::String> (subTracks[0]->getName(), "First Original");
+                juce::UnitTest::expectEquals<juce::String> (subTracks[1]->getName(), "Second Original");
+                juce::UnitTest::expectEquals<juce::String> (subTracks[2]->getName(), "Third Original");
+                juce::UnitTest::expectEquals<juce::String> (subTracks[3]->getName(), "First");
+                juce::UnitTest::expectEquals<juce::String> (subTracks[4]->getName(), "Second");
+                juce::UnitTest::expectEquals<juce::String> (subTracks[5]->getName(), "Third");
+            }
+        }
+    }
 };
 
 static ClipboardTempoTests clipboardTempoTests;
 
+#endif
 
 //==============================================================================
 //==============================================================================
@@ -1540,13 +1964,13 @@ Clipboard::Plugins::Plugins (const Plugin::Array& items)
     {
         item->edit.flushPluginStateIfNeeded (*item);
         plugins.push_back (item->state.createCopy());
-        
+
         if (auto rackInstance = dynamic_cast<RackInstance*> (item))
         {
             if (auto type = rackInstance->type)
             {
-                auto newEntry = std::make_pair (type->edit.getWeakRef(), type->state);
-                
+                auto newEntry = std::make_pair (makeSafeRef (type->edit), type->state);
+
                 if (std::find (rackTypes.begin(), rackTypes.end(), newEntry) == rackTypes.end())
                     rackTypes.push_back (newEntry);
             }
@@ -1612,7 +2036,7 @@ static bool pastePluginIntoTrack (const Plugin::Ptr& newPlugin, EditInsertPoint&
     return false;
 }
 
-static EditItemID::IDMap pasteRackTypesInToEdit (Edit& edit, const std::vector<std::pair<Selectable::WeakRef, juce::ValueTree>>& editAndTypeStates)
+static EditItemID::IDMap pasteRackTypesInToEdit (Edit& edit, const std::vector<std::pair<SafeSelectable<Edit>, juce::ValueTree>>& editAndTypeStates)
 {
     EditItemID::IDMap reassignedIDs;
 
@@ -1620,13 +2044,13 @@ static EditItemID::IDMap pasteRackTypesInToEdit (Edit& edit, const std::vector<s
     {
         if (editAndTypeState.first == &edit)
             continue;
-        
+
         auto typeState = editAndTypeState.second;
         auto reassignedRackType = typeState.createCopy();
         EditItemID::remapIDs (reassignedRackType, nullptr, edit, &reassignedIDs);
         edit.getRackList().addRackTypeFrom (reassignedRackType);
     }
-    
+
     return reassignedIDs;
 }
 
@@ -1634,7 +2058,7 @@ bool Clipboard::Plugins::pasteIntoEdit (const EditPastingOptions& options) const
 {
     CRASH_TRACER
     bool anyPasted = false;
-    
+
     auto rackIDMap = pasteRackTypesInToEdit (options.edit, rackTypes);
 
     auto pluginsToPaste = plugins;
@@ -1644,13 +2068,13 @@ bool Clipboard::Plugins::pasteIntoEdit (const EditPastingOptions& options) const
     {
         auto stateCopy = item.createCopy();
         EditItemID::remapIDs (stateCopy, nullptr, options.edit);
-        
+
         // Remap RackTypes after the otehr IDs or it will get overwritten
         if (stateCopy[IDs::type].toString() == IDs::rack.toString())
         {
             auto oldRackID = EditItemID::fromProperty (stateCopy, IDs::rackType);
             auto remappedRackID = rackIDMap[oldRackID];
-            
+
             if (remappedRackID.isValid())
                 stateCopy.setProperty (IDs::rackType, remappedRackID, nullptr);
         }
@@ -1730,34 +2154,40 @@ bool Clipboard::Modifiers::pasteIntoEdit (const EditPastingOptions& options) con
         {
             if (auto t = getTrackContainingModifier (options.edit, firstSelectedMod))
             {
-                auto modList = getModifiersOfType<Modifier> (t->getModifierList());
-
-                for (int i = modList.size(); --i >= 0;)
+                if (auto modifierList = t->getModifierList())
                 {
-                    if (modList.getObjectPointer (i) == firstSelectedMod)
-                    {
-                        for (auto m : modifiers)
-                        {
-                            EditItemID::remapIDs (m, nullptr, options.edit);
-                            t->getModifierList().insertModifier (m, i + 1, options.selectionManager);
-                        }
+                    auto modList = getModifiersOfType<Modifier> (*modifierList);
 
-                        return true;
+                    for (int i = modList.size(); --i >= 0;)
+                    {
+                        if (modList.getObjectPointer (i) == firstSelectedMod)
+                        {
+                            for (auto m : modifiers)
+                            {
+                                EditItemID::remapIDs (m, nullptr, options.edit);
+                                modifierList->insertModifier (m, i + 1, options.selectionManager);
+                            }
+
+                            return true;
+                        }
                     }
                 }
             }
         }
     }
 
-    if (options.startTrack != nullptr && ! options.startTrack->isMarkerTrack())
+    if (options.startTrack != nullptr)
     {
-        for (auto m : modifiers)
+        if (auto modifierList = options.startTrack->getModifierList())
         {
-            EditItemID::remapIDs (m, nullptr, options.edit);
-            options.startTrack->getModifierList().insertModifier (m, -1, options.selectionManager);
-        }
+            for (auto m : modifiers)
+            {
+                EditItemID::remapIDs (m, nullptr, options.edit);
+                modifierList->insertModifier (m, -1, options.selectionManager);
+            }
 
-        return true;
+            return true;
+        }
     }
 
     return false;

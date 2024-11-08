@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -401,7 +401,7 @@ int StepClip::PatternInstance::getSequenceIndex() const
 juce::String StepClip::PatternInstance::getSelectableDescription()
 {
     return clip.getName() + "  -  "
-         + TRANS("Variation 123").replace ("123", juce::String (getSequenceIndex() + 1)) + " ("
+         + TRANS("Section 123").replace ("123", juce::String (getSequenceIndex() + 1)) + " ("
          + TRANS("Variation 123").replace ("123", juce::String (patternIndex + 1)) + ")";
 }
 

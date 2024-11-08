@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -13,64 +13,50 @@ namespace tracktion { inline namespace engine
 
 CompressorPlugin::CompressorPlugin (PluginCreationInfo info)  : Plugin (info)
 {
-    thresholdGain   = addParam ("threshold", TRANS("Threshold"), { 0.01f, 1.0f },
-                                [] (float value)             { return gainToDbString (value); },
-                                [] (const juce::String& s)   { return dbStringToGain (s); });
+    thresholdGain   = { *this, "threshold", IDs::threshold, TRANS("Threshold"),
+                        dbToGain (-6.0f), { 0.01f, 1.0f },
+                        [] (float value)             { return gainToDbString (value); },
+                        [] (const juce::String& s)   { return dbStringToGain (s); } };
 
-    ratio           = addParam ("ratio", TRANS("Ratio"), { 0.0f, 0.95f },
-                                [] (float value)              { return (value > 0.001f ? juce::String (1.0f / value, 2)
-                                                                                       : juce::String ("INF")) + " : 1"; },
-                                [] (const juce::String& s)    { return s.getFloatValue(); });
+    ratio           = { *this, "ratio", IDs::ratio, TRANS("Ratio"),
+                        0.5f, { 0.0f, 0.95f },
+                        [] (float value)             { return (value > 0.001f ? juce::String (1.0f / value, 2)
+                                                                              : juce::String ("INF")) + " : 1"; },
+                        [] (const juce::String& s)   { return s.getFloatValue(); } };
 
-    attackMs        = addParam ("attack", TRANS("Attack"), { 0.3f, 200.0f },
-                                [] (float value)             { return juce::String (value, 1) + " ms"; },
-                                [] (const juce::String& s)   { return s.getFloatValue(); });
+    attackMs        = { *this, "attack", IDs::attack, TRANS("Attack"),
+                        100.0f, { 0.3f, 200.0f },
+                        [] (float value)             { return juce::String (value, 1) + " ms"; },
+                        [] (const juce::String& s)   { return s.getFloatValue(); } };
 
-    releaseMs       = addParam ("release", TRANS("Release"), { 10.0f, 300.0f },
-                                [] (float value)             { return juce::String (value, 1) + " ms"; },
-                                [] (const juce::String& s)   { return s.getFloatValue(); });
+    releaseMs       = { *this, "release", IDs::release, TRANS("Release"),
+                        100.0f, { 10.0f, 300.0f },
+                        [] (float value)             { return juce::String (value, 1) + " ms"; },
+                        [] (const juce::String& s)   { return s.getFloatValue(); } };
 
-    outputDb        = addParam ("output gain", TRANS("Output gain"), { -10.0f, 24.0f },
-                                [] (float value)             { return juce::Decibels::toString (value); },
-                                [] (const juce::String& s)   { return dbStringToDb (s); });
+    outputDb        = { *this, "output gain", IDs::outputDb, TRANS("Output gain"),
+                        0.0f, { -10.0f, 24.0f },
+                        [] (float value)             { return juce::Decibels::toString (value); },
+                        [] (const juce::String& s)   { return dbStringToDb (s); } };
 
-    sidechainDb     = addParam ("input gain", TRANS("Sidechain gain"), { -24.0f, 24.0f },
-                                [] (float value)             { return juce::Decibels::toString (value); },
-                                [] (const juce::String& s)   { return dbStringToDb (s); });
+    sidechainDb     = { *this, "input gain", IDs::inputDb, TRANS("Sidechain gain"),
+                        0.0f, { -24.0f, 24.0f },
+                        [] (float value)             { return juce::Decibels::toString (value); },
+                        [] (const juce::String& s)   { return dbStringToDb (s); } };
 
-    auto um = getUndoManager();
-
-    thresholdValue.referTo (state, IDs::threshold, um, dbToGain (-6.0f));
-    thresholdGain->attachToCurrentValue (thresholdValue);
-
-    ratioValue.referTo (state, IDs::ratio, um, 0.5f);
-    ratio->attachToCurrentValue (ratioValue);
-
-    attackValue.referTo (state, IDs::attack, um, 100.0f);
-    attackMs->attachToCurrentValue (attackValue);
-
-    releaseValue.referTo (state, IDs::release, um, 100.0f);
-    releaseMs->attachToCurrentValue (releaseValue);
-
-    outputValue.referTo (state, IDs::outputDb, um);
-    outputDb->attachToCurrentValue (outputValue);
-
-    useSidechainTrigger.referTo (state, IDs::sidechainTrigger, um);
-
-    sidechainValue.referTo (state, IDs::inputDb, um);
-    sidechainDb->attachToCurrentValue (sidechainValue);
+    useSidechainTrigger.referTo (state, IDs::sidechainTrigger, getUndoManager());
 }
 
 CompressorPlugin::~CompressorPlugin()
 {
     notifyListenersOfDeletion();
 
-    thresholdGain->detachFromCurrentValue();
-    ratio->detachFromCurrentValue();
-    attackMs->detachFromCurrentValue();
-    releaseMs->detachFromCurrentValue();
-    outputDb->detachFromCurrentValue();
-    sidechainDb->detachFromCurrentValue();
+    thresholdGain.reset();
+    ratio.reset();
+    attackMs.reset();
+    releaseMs.reset();
+    outputDb.reset();
+    sidechainDb.reset();
 }
 
 const char* CompressorPlugin::xmlTypeName = "compressor";
@@ -104,13 +90,13 @@ void CompressorPlugin::applyToBuffer (const PluginRenderContext& fc)
     SCOPED_REALTIME_CHECK
 
     const double logThreshold = std::log10 (0.01);
-    const double attackFactor = std::pow (10.0, logThreshold / (attackMs->getCurrentValue() * sampleRate / 1000.0));
-    const double releaseFactor = std::pow (10.0, logThreshold / (releaseMs->getCurrentValue() * sampleRate / 1000.0));
-    const float outputGain = dbToGain (outputDb->getCurrentValue());
-    const float thresh = thresholdGain->getCurrentValue();
-    const float rat = ratio->getCurrentValue();
+    const double attackFactor = std::pow (10.0, logThreshold / (attackMs.getCurrentValue() * sampleRate / 1000.0));
+    const double releaseFactor = std::pow (10.0, logThreshold / (releaseMs.getCurrentValue() * sampleRate / 1000.0));
+    const float outputGain = dbToGain (outputDb.getCurrentValue());
+    const float thresh = thresholdGain.getCurrentValue();
+    const float rat = ratio.getCurrentValue();
     const bool useSidechain = useSidechainTrigger.get();
-    const float sidechainGain = dbToGain (sidechainDb->getCurrentValue());
+    const float sidechainGain = dbToGain (sidechainDb.getCurrentValue());
 
     float* b1 = fc.destBuffer->getWritePointer (0, fc.bufferStartSample);
 
@@ -190,36 +176,37 @@ void CompressorPlugin::applyToBuffer (const PluginRenderContext& fc)
 
 float CompressorPlugin::getThreshold() const
 {
-    return thresholdGain->getCurrentValue();
+    return thresholdGain.getCurrentValue();
 }
 
 void CompressorPlugin::setThreshold (float t)
 {
-    thresholdGain->setParameter (juce::jlimit (getMinThreshold(),
-                                               getMaxThreshold(), t),
-                                 juce::sendNotification);
+    thresholdGain.setParameter (juce::jlimit (getMinThreshold(),
+                                              getMaxThreshold(), t),
+                                juce::sendNotification);
 }
 
 float CompressorPlugin::getRatio() const
 {
-    return ratio->getCurrentValue();
+    return ratio.getCurrentValue();
 }
 
 void CompressorPlugin::setRatio (float r)
 {
-    ratio->setParameter (juce::jlimit (0.05f, 1.0f, r),
-                         juce::sendNotification);
+    ratio.setParameter (juce::jlimit (0.05f, 1.0f, r),
+                        juce::sendNotification);
 }
 
 void CompressorPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    juce::CachedValue<float>* cvsFloat[]  = { &thresholdValue, &ratioValue, &attackValue, &releaseValue, &outputValue, &sidechainValue, nullptr };
-    juce::CachedValue<bool>* cvsBool[]    = { &useSidechainTrigger, nullptr };
-    copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
-    copyPropertiesToNullTerminatedCachedValues (v, cvsBool);
+    thresholdGain.setFromValueTree (v);
+    ratio.setFromValueTree (v);
+    attackMs.setFromValueTree (v);
+    releaseMs.setFromValueTree (v);
+    outputDb.setFromValueTree (v);
+    sidechainDb.setFromValueTree (v);
 
-    for (auto p : getAutomatableParameters())
-        p->updateFromAttachedValue();
+    copyPropertiesToCachedValues (v, useSidechainTrigger);
 }
 
 void CompressorPlugin::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& id)

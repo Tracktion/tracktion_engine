@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -55,30 +55,12 @@ namespace
     }
 }
 
-
 //==============================================================================
 //==============================================================================
-ClickGenerator::ClickGenerator (Edit& e, bool isMidi, TimePosition endTime)
+ClickGenerator::ClickGenerator (Edit& e, bool isMidi)
     : edit (e), midi (isMidi)
 {
-    endTime = juce::jmin (endTime, TimePosition::fromSeconds (juce::jmax (edit.getLength().inSeconds() * 2, 60.0 * 60.0)));
-
-    auto pos = createPosition (edit.tempoSequence);
-    pos.set (TimePosition::fromSeconds (1.0e-10));
-    pos.addBars (-8);
-
-    while (pos.getTime() < endTime)
-    {
-        auto barsBeats = pos.getBarsBeats();
-
-        if (barsBeats.getWholeBeats() == 0)
-            loudBeats.setBit (beatTimes.size());
-
-        beatTimes.add (pos.getTime());
-        pos.add (1_bd);
-    }
-
-    beatTimes.add (TimePosition::fromSeconds (1000000.0));
+    assert (edit.getTransport().getCurrentPlaybackContext());
 }
 
 void ClickGenerator::prepareToPlay (double newSampleRate, TimePosition startTime)
@@ -120,9 +102,26 @@ void ClickGenerator::prepareToPlay (double newSampleRate, TimePosition startTime
         }
     }
 
-    for (currentBeat = 0; currentBeat < beatTimes.size(); ++currentBeat)
-        if (beatTimes[currentBeat] > startTime)
-            break;
+    tempoPosition.set (startTime);
+}
+
+namespace
+{
+    struct BeatInfo
+    {
+        TimePosition time;
+        bool isFirstBeatOfBar = false;
+    };
+
+    inline BeatInfo getBeatInfo (const tempo::Sequence& sequence, tempo::Sequence::Position& tempoPosition)
+    {
+        const auto beats = tempoPosition.getBeats().inBeats();
+        int beat = static_cast<int> (std::floor (beats));
+        const auto beatTime = sequence.toTime (BeatPosition::fromBeats (beat));
+        const bool isFirstBeatOfBar = tempoPosition.getBarsBeats().getWholeBeats() == 0;
+
+        return { beatTime, isFirstBeatOfBar };
+    }
 }
 
 void ClickGenerator::processBlock (choc::buffer::ChannelArrayView<float>* destBuffer,
@@ -132,59 +131,70 @@ void ClickGenerator::processBlock (choc::buffer::ChannelArrayView<float>* destBu
     if (isMutedAtTime (editTime.getEnd()))
         return;
 
-    auto gain = edit.getClickTrackVolume();
     const bool emphasis = edit.clickTrackEmphasiseBars;
 
-    while (editTime.getStart() > beatTimes[currentBeat])
-        ++currentBeat;
+    tempoPosition.set (editTime.getStart());
+    auto beatInfo = getBeatInfo (sequence, tempoPosition);
 
-    while (currentBeat > 1 && editTime.getStart() < beatTimes[currentBeat - 1])
-        --currentBeat;
-
-    if (midi && bufferForMidiMessages != nullptr)
+    if (midi)
     {
-        auto t = beatTimes.getUnchecked (currentBeat);
+        if (bufferForMidiMessages == nullptr)
+            return;
+
+        auto gain = edit.getClickTrackVolume();
+        auto t = beatInfo.time;
 
         while (t < editTime.getEnd())
         {
-            auto note = (emphasis && loudBeats[currentBeat]) ? bigClickMidiNote
-                                                             : littleClickMidiNote;
+            auto note = (emphasis && beatInfo.isFirstBeatOfBar) ? bigClickMidiNote
+                                                                : littleClickMidiNote;
 
             if (t >= editTime.getStart())
                 bufferForMidiMessages->addMidiMessage (juce::MidiMessage::noteOn (10, note, gain),
                                                        (t - editTime.getStart()).inSeconds(),
-                                                       MidiMessageArray::notMPE);
+                                                       {});
 
-            t = beatTimes.getUnchecked (++currentBeat);
+            tempoPosition.add (1_bd);
+            beatInfo = getBeatInfo (sequence, tempoPosition);
+            t = beatInfo.time;
         }
     }
-    else if (! midi && destBuffer != nullptr)
+    else
     {
-        --currentBeat;
-        auto t = beatTimes[currentBeat];
+        if (destBuffer == nullptr)
+            return;
+
+        if (isPlaying())
+        {
+            auto num = std::min (samplesRemaining(), int (destBuffer->getNumFrames()));
+            auto dstView = destBuffer->getFrameRange ({ 0, (choc::buffer::FrameCount) num });
+
+            render (dstView);
+        }
+
+        auto t = beatInfo.time;
 
         while (t < editTime.getEnd())
         {
-            auto& b = (emphasis && loudBeats[currentBeat]) ? bigClick : littleClick;
+            auto b = (emphasis && beatInfo.isFirstBeatOfBar) ? &bigClick : &littleClick;
 
-            if (b.getNumSamples() > 0)
+            if (b->getNumSamples() > 0 && t >= editTime.getStart() && ! isMutedAtTime (t))
             {
-                auto clickStartOffset = juce::roundToInt (((t - editTime.getStart()).inSeconds()) * sampleRate);
+                const auto clickStartTime = t - editTime.getStart();
+                const auto clickStartOffset = static_cast<int> (toSamples (clickStartTime, sampleRate));
 
-                auto dstStart = (choc::buffer::FrameCount) std::max (0, clickStartOffset);
-                auto srcStart = (choc::buffer::FrameCount) std::max (0, -clickStartOffset);
-                auto num = std::min (b.getNumSamples() - (int) srcStart,
-                                     (int) destBuffer->getNumFrames() - (int) dstStart);
+                trigger (b);
+                isMutedAtTime (t);
 
-                if (num > 0)
-                {
-                    auto dstView = destBuffer->getFrameRange ({ dstStart, dstStart + (choc::buffer::FrameCount) num });
-                    copyRemappingChannels (dstView, toBufferView (b).getFrameRange ({ srcStart, srcStart + (choc::buffer::FrameCount) num }));
-                    applyGain (dstView, gain);
-                }
+                auto num = std::min (samplesRemaining(), int (destBuffer->getNumFrames()) - int (clickStartOffset));
+                auto dstView = destBuffer->getFrameRange ({ choc::buffer::FrameCount (clickStartOffset), choc::buffer::FrameCount (clickStartOffset + num) });
+
+                render (dstView);
             }
 
-            t = beatTimes.getUnchecked (++currentBeat);
+            tempoPosition.add (1_bd);
+            beatInfo = getBeatInfo (sequence, tempoPosition);
+            t = beatInfo.time;
         }
     }
 }
@@ -193,21 +203,59 @@ bool ClickGenerator::isMutedAtTime (TimePosition time) const
 {
     const bool clickEnabled = edit.clickTrackEnabled.get();
 
+    auto range = edit.getClickTrackRange();
+    if (! range.isEmpty() && time < range.getStart())
+        return true;
+
     if (clickEnabled && edit.clickTrackRecordingOnly)
-        return ! edit.getTransport().isRecording();
+        return ! (edit.getTransport().isRecording() || context.getNumActivelyRecordingDevices() >= 1);
 
     if (! clickEnabled)
-        return ! edit.getClickTrackRange().contains (time);
+        return ! range.contains (time);
 
     return ! clickEnabled;
 }
 
+bool ClickGenerator::isPlaying()
+{
+    return currentSample != nullptr && samplePos >= 0;
+}
+
+void ClickGenerator::trigger (juce::AudioBuffer<float>* s)
+{
+    currentSample = s;
+    samplePos = 0;
+}
+
+int ClickGenerator::samplesRemaining()
+{
+    return currentSample->getNumSamples() - samplePos;
+}
+
+void ClickGenerator::render (choc::buffer::ChannelArrayView<float>& view)
+{
+    auto todo = view.getNumFrames();
+    auto gain = edit.getClickTrackVolume();
+
+    copyRemappingChannels (view, toBufferView (*currentSample).getFrameRange ({ choc::buffer::FrameCount (samplePos), choc::buffer::FrameCount (samplePos) + todo }));
+    applyGain (view, gain);
+
+    samplePos += static_cast<int> (todo);
+    if (samplePos >= currentSample->getNumSamples())
+        reset();
+}
+
+void ClickGenerator::reset()
+{
+    currentSample = nullptr;
+    samplePos = -1;
+}
 
 //==============================================================================
 //==============================================================================
 ClickNode::ClickNode (Edit& e, int numAudioChannels, bool isMidi, tracktion::graph::PlayHead& playHeadToUse)
     : edit (e), playHead (playHeadToUse),
-      clickGenerator (edit, isMidi, Edit::getMaximumEditEnd()),
+      clickGenerator (edit, isMidi),
       numChannels (numAudioChannels), generateMidi (isMidi)
 {
 }

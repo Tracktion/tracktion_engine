@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -47,9 +47,11 @@ public:
 
     PlayHead& playHead;
 
+    /** @internal */
+    bool isPlayHeadRunning = false, playheadJumped = false, lastBlockOfLoop = false, firstBlockOfLoop = false;
+
 private:
     std::chrono::system_clock::time_point lastUserInteractionTime;
-    bool isPlayHeadRunning = false, playheadJumped = false, lastBlockOfLoop = false, firstBlockOfLoop = false;
 };
 
 
@@ -72,7 +74,7 @@ inline void PlayHeadState::update (juce::Range<int64_t> referenceSampleRange)
     }
 
     playheadJumped = jumped;
-    
+
     // Next check if this is the start or end of a loop range
     if (playHead.isLooping())
     {
@@ -80,12 +82,12 @@ inline void PlayHeadState::update (juce::Range<int64_t> referenceSampleRange)
         const auto startTimelinePos = playHead.referenceSamplePositionToTimelinePosition (referenceSampleRange.getStart());
         const auto endTimelinePos = playHead.referenceSamplePositionToTimelinePosition (referenceSampleRange.getEnd() - 1) + 1;
         // The -1/+1 is here to avoid the last sample being wrapped to the beginning of the loop range
-        
+
         if (playHead.isRollingIntoLoop())
             firstBlockOfLoop = false;
         else
             firstBlockOfLoop = startTimelinePos == timelineLoopRange.getStart();
-        
+
         lastBlockOfLoop = endTimelinePos == timelineLoopRange.getEnd();
     }
     else

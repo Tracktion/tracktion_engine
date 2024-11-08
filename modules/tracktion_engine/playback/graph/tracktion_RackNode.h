@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -29,18 +29,18 @@ struct InputProvider
         tracktion::graph::sanityCheckView (audio);
         midi.copyFrom (newBuffers.midi);
     }
-    
+
     tracktion::graph::Node::AudioAndMidiBuffer getInputs()
     {
         tracktion::graph::sanityCheckView (audio);
         return { audio, midi };
     }
-    
+
     void setContext (tracktion::engine::PluginRenderContext* pc)
     {
         context = pc;
     }
-    
+
     /** Returns the context currently in use.
         This is only valid for the duration of the process call.
     */
@@ -49,7 +49,7 @@ struct InputProvider
         jassert (context != nullptr);
         return *context;
     }
-    
+
     choc::buffer::ChannelCount numChannels = 0;
     choc::buffer::ChannelArrayView<float> audio;
     tracktion::engine::MidiMessageArray midi;
@@ -80,7 +80,7 @@ public:
     {
         nodePlayer.setNode (std::move (nodeToProcess), sampleRateToUse, blockSizeToUse);
     }
-    
+
     /** Preapres the processor to be played. */
     void prepareToPlay (double sampleRate, int blockSize)
     {
@@ -88,7 +88,7 @@ public:
         jassert (blockSize != 0);
         nodePlayer.prepareToPlay (sampleRate, blockSize);
     }
-    
+
     int getLatencySamples()
     {
         return nodePlayer.getNode()->getNodeProperties().latencyNumSamples;
@@ -101,22 +101,22 @@ public:
     {
         return process (pc, {}, true, false, false);
     }
-    
+
     /** Processes a block of audio and MIDI data with a given PlayHead and EditTimeRange.
         This should be used when processing ExternalPlugins or they will crash when getting the playhead info.
     */
     int process (const tracktion::graph::Node::ProcessContext& pc,
-                 TimePosition editTime, bool isPlaying, bool isScrubbing, bool isRendering)
+                 TimeRange editTime, bool isPlaying, bool isScrubbing, bool isRendering)
     {
         // The internal nodes won't be interested in the top level audio/midi inputs
         // They should only be referencing this for time and continuity
         tracktion::engine::PluginRenderContext rc (nullptr, juce::AudioChannelSet(), 0, 0,
-                                                  nullptr, 0.0,
-                                                  editTime, isPlaying, isScrubbing, isRendering, true);
+                                                   nullptr, 0.0,
+                                                   editTime, isPlaying, isScrubbing, isRendering, true);
 
         return nodePlayer.process (pc);
     }
-    
+
 private:
     NodePlayerType nodePlayer;
 };

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -14,9 +14,9 @@ namespace tracktion { inline namespace engine
 static Engine* instance = nullptr;
 static juce::Array<Engine*> engines;
 
-Engine::Engine (std::unique_ptr<PropertyStorage> ps, 
-                std::unique_ptr<UIBehaviour> ub, 
-                std::unique_ptr<EngineBehaviour> eb, 
+Engine::Engine (std::unique_ptr<PropertyStorage> ps,
+                std::unique_ptr<UIBehaviour> ub,
+                std::unique_ptr<EngineBehaviour> eb,
                 const std::shared_ptr<juce::AudioDeviceManager>& devMgr)
 {
     instance = this;
@@ -38,9 +38,9 @@ Engine::Engine (std::unique_ptr<PropertyStorage> ps,
     initialise(devMgr);
 }
 
-Engine::Engine (juce::String applicationName, 
-                std::unique_ptr<UIBehaviour> ub, 
-                std::unique_ptr<EngineBehaviour> eb, 
+Engine::Engine (juce::String applicationName,
+                std::unique_ptr<UIBehaviour> ub,
+                std::unique_ptr<EngineBehaviour> eb,
                 const std::shared_ptr<juce::AudioDeviceManager>& devMgr) : Engine (std::make_unique<PropertyStorage> (applicationName), std::move (ub), std::move (eb), devMgr)
 {
 }
@@ -53,26 +53,29 @@ void Engine::initialise(const std::shared_ptr<juce::AudioDeviceManager>& devMgr)
 {
     Selectable::initialise();
     AudioScratchBuffer::initialise();
-    
-    projectManager.reset (new ProjectManager (*this));
-    activeEdits.reset (new ActiveEdits());
-    temporaryFileManager.reset (new TemporaryFileManager (*this));
-    recordingThumbnailManager.reset (new RecordingThumbnailManager (*this));
-    waveInputRecordingThread.reset (new WaveInputRecordingThread (*this));
-    editDeleter.reset (new EditDeleter());
-    audioFileFormatManager.reset (new AudioFileFormatManager());
-    midiLearnState.reset (new MidiLearnState (*this));
-    renderManager.reset (new RenderManager (*this));
-    audioFileManager.reset (new AudioFileManager (*this));
-    deviceManager.reset (new DeviceManager (*this, devMgr));
-    midiProgramManager.reset (new MidiProgramManager (*this));
 
-    externalControllerManager.reset (new ExternalControllerManager (*this));
-    backgroundJobManager.reset (new BackgroundJobManager());
-    pluginManager.reset (new PluginManager (*this));
+    projectManager             = std::make_unique<ProjectManager> (*this);
+    activeEdits                = std::unique_ptr<ActiveEdits> (new ActiveEdits());
+    temporaryFileManager       = std::make_unique<TemporaryFileManager> (*this);
+    recordingThumbnailManager  = std::make_unique<RecordingThumbnailManager> (*this);
+    waveInputRecordingThread   = std::make_unique<WaveInputRecordingThread> (*this);
+    editDeleter                = std::unique_ptr<EditDeleter> (new EditDeleter());
+    audioFileFormatManager     = std::make_unique<AudioFileFormatManager>();
+    midiLearnState             = std::make_unique<MidiLearnState> (*this);
+    renderManager              = std::make_unique<RenderManager> (*this);
+    audioFileManager           = std::make_unique<AudioFileManager> (*this);
+    deviceManager              = std::unique_ptr<DeviceManager> (new DeviceManager (*this));
+    midiProgramManager         = std::make_unique<MidiProgramManager> (*this);
+    externalControllerManager  = std::unique_ptr<ExternalControllerManager> (new ExternalControllerManager (*this));
+    backgroundJobManager       = std::make_unique<BackgroundJobManager>();
+    pluginManager              = std::make_unique<PluginManager> (*this);
 
     if (engineBehaviour->autoInitialiseDeviceManager())
-        deviceManager->initialise();
+    {
+        deviceManager->initialise (getEngineBehaviour().shouldOpenAudioInputByDefault()
+                                        ? DeviceManager::defaultNumChannelsToOpen : 0,
+                                   DeviceManager::defaultNumChannelsToOpen);
+    }
 
     pluginManager->initialise();
     getProjectManager().initialise();
@@ -82,6 +85,9 @@ void Engine::initialise(const std::shared_ptr<juce::AudioDeviceManager>& devMgr)
 
 Engine::~Engine()
 {
+    // First make sure to clear any edits that are in line to be deleted
+    editDeleter.reset();
+
     getProjectManager().saveList();
 
     getExternalControllerManager().shutdown();
@@ -89,8 +95,6 @@ Engine::~Engine()
     getBackgroundJobs().stopAndDeleteAllRunningJobs();
 
     temporaryFileManager->cleanUp();
-
-    editDeleter.reset();
 
     getRenderManager().cleanUp();
     backgroundJobManager.reset();
@@ -111,6 +115,8 @@ Engine::~Engine()
     audioFileManager.reset();
     midiLearnState.reset();
     audioFileFormatManager.reset();
+    backToArrangerUpdateTimer.reset();
+    bufferedAudioFileManager.reset();
 
     instance = nullptr;
     engines.removeFirstMatchingValue (this);
@@ -118,7 +124,7 @@ Engine::~Engine()
 
 juce::String Engine::getVersion()
 {
-    return "Tracktion Engine v1.2.0";
+    return "Tracktion Engine v3.0.0";
 }
 
 juce::Array<Engine*> Engine::getEngines()
@@ -264,6 +270,22 @@ WarpTimeFactory& Engine::getWarpTimeFactory() const
         warpTimeFactory = std::make_unique<WarpTimeFactory>();
 
     return *warpTimeFactory;
+}
+
+SharedTimer& Engine::getBackToArrangerUpdateTimer() const
+{
+    if (! backToArrangerUpdateTimer)
+        backToArrangerUpdateTimer = std::make_unique<SharedTimer> (HertzTag_t, 10);
+
+    return *backToArrangerUpdateTimer;
+}
+
+BufferedAudioFileManager& Engine::getBufferedAudioFileManager()
+{
+    if (! bufferedAudioFileManager)
+        bufferedAudioFileManager = std::make_unique<BufferedAudioFileManager> (*this);
+
+    return *bufferedAudioFileManager;
 }
 
 bool EngineBehaviour::shouldLoadPlugin (ExternalPlugin& p)

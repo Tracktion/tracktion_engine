@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -23,7 +23,7 @@ class SummingNode final : public Node
 {
 public:
     SummingNode() = default;
-    
+
     SummingNode (std::vector<std::unique_ptr<Node>> inputs)
         : ownedNodes (std::move (inputs))
     {
@@ -38,7 +38,7 @@ public:
     {
         assert (std::find (nodes.begin(), nodes.end(), nullptr) == nodes.end());
     }
-    
+
     SummingNode (std::vector<std::unique_ptr<Node>> ownedInputs,
                  std::vector<Node*> referencedInputs)
         : SummingNode (std::move (ownedInputs))
@@ -64,14 +64,18 @@ public:
     {
         useDoublePrecision = shouldSumInDoublePrecision;
     }
-    
+
     //==============================================================================
     NodeProperties getNodeProperties() override
     {
+        if (cachedNodeProperties)
+            return *cachedNodeProperties;
+
         NodeProperties props;
         props.hasAudio = false;
         props.hasMidi = false;
         props.numberOfChannels = 0;
+        props.latencyNumSamples = nodes.empty() ? 0 : std::numeric_limits<int>::min();
 
         for (auto& node : nodes)
         {
@@ -80,37 +84,44 @@ public:
             props.hasMidi = props.hasMidi || nodeProps.hasMidi;
             props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);
             props.latencyNumSamples = std::max (props.latencyNumSamples, nodeProps.latencyNumSamples);
-            hash_combine (props.nodeID, nodeProps.nodeID);
+
+            if (props.nodeID != 0 || nodeProps.nodeID != 0)
+                hash_combine (props.nodeID, nodeProps.nodeID);
         }
+
+        cachedNodeProperties = props;
 
         return props;
     }
-    
+
     std::vector<Node*> getDirectInputNodes() override
     {
-        std::vector<Node*> inputNodes;
-        
-        for (auto& node : nodes)
-            inputNodes.push_back (node);
-
-        return inputNodes;
+        return nodes;
     }
-    
-    bool transform (Node&) override
+
+    TransformResult transform (Node&, const std::vector<Node*>&, TransformCache&) override
     {
         const bool hasFlattened = flattenSummingNodes();
         const bool hasCreatedLatency = createLatencyNodes();
-        
-        return hasFlattened || hasCreatedLatency;
+
+        if (hasFlattened)
+            return TransformResult::nodesDeleted;
+
+        if (hasCreatedLatency)
+            return TransformResult::connectionsMade;
+
+        return TransformResult::none;
     }
 
     void prepareToPlay (const PlaybackInitialisationInfo& info) override
     {
         useDoublePrecision = useDoublePrecision && nodes.size() > 1;
-        
+
         if (useDoublePrecision)
             tempDoubleBuffer.resize ({ (choc::buffer::ChannelCount) getNodeProperties().numberOfChannels,
                                        (choc::buffer::FrameCount) info.blockSize });
+
+        isPrepared = true;
     }
 
     bool isReadyToProcess() override
@@ -118,10 +129,10 @@ public:
         for (auto& node : nodes)
             if (! node->hasProcessed())
                 return false;
-        
+
         return true;
     }
-    
+
     void process (ProcessContext& pc) override
     {
         if (useDoublePrecision)
@@ -134,10 +145,13 @@ private:
     //==============================================================================
     std::vector<std::unique_ptr<Node>> ownedNodes;
     std::vector<Node*> nodes;
-    
+
+    std::optional<NodeProperties> cachedNodeProperties;
+    bool isPrepared = false;
+
     bool useDoublePrecision = false;
     choc::buffer::ChannelArrayBuffer<double> tempDoubleBuffer;
-    
+
     static void sortByTimestampUnstable (tracktion_engine::MidiMessageArray& messages) noexcept
     {
         std::sort (messages.begin(), messages.end(), [] (const juce::MidiMessage& a, const juce::MidiMessage& b)
@@ -165,7 +179,7 @@ private:
         for (auto& node : nodes)
         {
             auto inputFromNode = node->getProcessedOutput();
-            
+
             if (auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels))
                 add (pc.buffers.audio.getFirstChannels (numChannelsToAdd),
                      inputFromNode.audio.getFirstChannels (numChannelsToAdd));
@@ -192,7 +206,7 @@ private:
         for (auto& node : nodes)
         {
             auto inputFromNode = node->getProcessedOutput();
-            
+
             if (auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels))
                 add (doubleView.getFirstChannels (numChannelsToAdd),
                      inputFromNode.audio.getFirstChannels (numChannelsToAdd));
@@ -216,7 +230,7 @@ private:
     bool flattenSummingNodes()
     {
         bool hasChanged = false;
-        
+
         std::vector<std::unique_ptr<Node>> ownedNodesToAdd;
         std::vector<Node*> nodesToAdd, nodesToErase;
 
@@ -234,7 +248,7 @@ private:
                 hasChanged = true;
             }
         }
-        
+
         for (auto& n : ownedNodesToAdd)
             ownedNodes.push_back (std::move (n));
 
@@ -251,7 +265,7 @@ private:
 
         return hasChanged;
     }
-    
+
     bool createLatencyNodes()
     {
         bool topologyChanged = false;
@@ -260,12 +274,13 @@ private:
 
         for (auto& node : nodes)
         {
-            const int nodeLatency = node->getNodeProperties().latencyNumSamples;
-            const int latencyToAdd = maxLatency - nodeLatency;
-            
-            if (latencyToAdd == 0)
+            auto props = node->getNodeProperties();
+            const int nodeLatency = props.latencyNumSamples;
+            const int latencyToAdd = subtractNoWrap (maxLatency, nodeLatency);
+
+            if (latencyToAdd <= 0)
                 continue;
-            
+
             auto getOwnedNode = [this] (auto nodeToFind)
             {
                 for (auto& ownedN : ownedNodes)
@@ -277,18 +292,19 @@ private:
                         return nodeToReturn;
                     }
                 }
-                
+
                 return std::unique_ptr<Node>();
             };
-            
+
             auto ownedNode = getOwnedNode (node);
             auto latencyNode = ownedNode != nullptr ? makeNode<LatencyNode> (std::move (ownedNode), latencyToAdd)
                                                     : makeNode<LatencyNode> (node, latencyToAdd);
             ownedNodesToAdd.push_back (std::move (latencyNode));
             node = nullptr;
             topologyChanged = true;
+            cachedNodeProperties = std::nullopt;
         }
-        
+
         // Take ownership of any new nodes and also ensure they're reference in the raw array
         for (auto& newNode : ownedNodesToAdd)
         {
@@ -303,7 +319,7 @@ private:
         ownedNodes.erase (std::remove_if (ownedNodes.begin(), ownedNodes.end(),
                                           [] (auto& n) { return n == nullptr; }),
                           ownedNodes.end());
-        
+
         return topologyChanged;
     }
 };
@@ -313,10 +329,10 @@ private:
 static inline std::unique_ptr<SummingNode> makeSummingNode (std::initializer_list<Node*> nodes)
 {
     std::vector<std::unique_ptr<Node>> nodeVector;
-    
+
     for (auto node : nodes)
         nodeVector.push_back (std::unique_ptr<Node> (node));
-        
+
     return std::make_unique<SummingNode> (std::move (nodeVector));
 }
 

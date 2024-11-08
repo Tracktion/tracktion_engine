@@ -1,11 +1,11 @@
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -22,7 +22,7 @@
 #include <mutex>
 
 #include "choc_SingleReaderSingleWriterFIFO.h"
-#include "../platform/choc_SpinLock.h"
+#include "../threading/choc_SpinLock.h"
 
 namespace choc::fifo
 {
@@ -30,6 +30,10 @@ namespace choc::fifo
 //==============================================================================
 /**
     A simple atomic single-reader, multiple-writer FIFO.
+
+    Note that the idea with this class is for it to be realtime-safe and lock-free
+    for the reader, but the writers may very briefly block each other if more than
+    one thread attempts to write at the same time.
 */
 template <typename Item>
 struct SingleReaderMultipleWriterFIFO
@@ -86,13 +90,13 @@ private:
 
 template <typename Item> bool SingleReaderMultipleWriterFIFO<Item>::push (const Item& item)
 {
-    const std::lock_guard<decltype (writeLock)> lock (writeLock);
+    const std::scoped_lock lock (writeLock);
     return fifo.push (item);
 }
 
 template <typename Item> bool SingleReaderMultipleWriterFIFO<Item>::push (Item&& item)
 {
-    const std::lock_guard<decltype (writeLock)> lock (writeLock);
+    const std::scoped_lock lock (writeLock);
     return fifo.push (std::move (item));
 }
 

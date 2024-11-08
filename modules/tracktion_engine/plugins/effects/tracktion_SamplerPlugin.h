@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -50,12 +50,11 @@ public:
     static const char* getPluginName()                  { return NEEDS_TRANS("Sampler"); }
     static const char* xmlTypeName;
 
-    juce::String getName() override                     { return TRANS("Sampler"); }
+    juce::String getName() const override               { return TRANS("Sampler"); }
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getShortName (int) override            { return "Smplr"; }
     juce::String getSelectableDescription() override    { return TRANS("Sampler"); }
     bool isSynth() override                             { return true; }
-    bool needsConstantBufferSize() override             { return false; }
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }
     void initialise (const PluginInitialisationInfo&) override;

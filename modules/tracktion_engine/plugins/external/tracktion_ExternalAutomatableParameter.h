@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -48,7 +48,7 @@ public:
         unregisterAsListener();
         notifyListenersOfDeletion();
     }
-    
+
     void registerAsListener()
     {
         if (auto p = getParam())
@@ -63,12 +63,12 @@ public:
             p->removeListener (this);
     }
 
-    float getDefaultValue() const override
+    std::optional<float> getDefaultValue() const override
     {
         if (auto p = getParam())
             return p->getDefaultValue();
 
-        return 0.0f;
+        return {};
     }
 
     void parameterChanged (float newValue, bool byAutomation) override
@@ -310,7 +310,7 @@ private:
     {
         if (! juce::MessageManager::existsAndIsCurrentThread())
             return;
-        
+
         if (parameterIndex == index)
         {
             if (gestureIsStarting)
@@ -331,6 +331,15 @@ private:
 
     void handleAsyncUpdate() override
     {
+        // Some plugins send spurious parameter value changes (e.g. when their UI is opened)
+        // which can reset modifier base values so disable these from coming through if there
+        // are active modifiers etc.
+        // It would be nice to be able to rely on the begin/end gestures to figure out if the user
+        // is actively changing the parameter but as this isn't mandated by the plguin APIs, we can't
+        // do this and we just have to disable control from the plugin UI when there are active Modifiers
+        if (automatableEditElement.edit.isLoading() || hasActiveModifierAssignments())
+            return;
+
         valueChangedByPlugin();
     }
 

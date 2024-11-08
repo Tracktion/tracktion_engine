@@ -1,12 +1,19 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
+
+
+// N.B. There are some limitations to this at the moment:
+// - Only works with audio clips
+// - Only works with WaveAudioClips which have setUsesProxy (false) on them
+#define USE_DYNAMIC_OFFSET_CONTAINER_CLIP 1
+
 
 namespace tracktion { inline namespace engine
 {
@@ -15,11 +22,17 @@ namespace tracktion { inline namespace engine
 //==============================================================================
 namespace
 {
+    enum class ClipRole
+    {
+        arranger,
+        launcher
+    };
+
     template<typename PluginType>
     juce::Array<PluginType*> getAllPluginsOfType (Edit& edit)
     {
         juce::Array<PluginType*> plugins;
-        
+
         // N.B. There is a bit of a hack here checking if the plugin is actually still in the Edit
         // as they are removed from the PluginCache async and we don't want to flush it every time
         // we call this method. This should probably be moved to an EditItemCache like Clips and Tracks
@@ -27,7 +40,7 @@ namespace
             if (auto pt = dynamic_cast<PluginType*> (p))
                 if (pt->state.getParent().isValid() && pt->state.getRoot() == edit.state)
                     plugins.add (pt);
-        
+
         return plugins;
     }
 
@@ -88,20 +101,6 @@ namespace
         return true;
     }
 
-    std::vector<std::pair<int, int>> makeChannelMapRepeatingLastChannel (const juce::AudioChannelSet& source,
-                                                                         const juce::AudioChannelSet& dest)
-    {
-        std::vector<std::pair<int, int>> map;
-        
-        for (int destNum = 0; destNum < dest.size(); ++destNum)
-        {
-            const int sourceNum = std::min (destNum, source.size() - 1);
-            map.push_back ({ sourceNum, destNum });
-        }
-        
-        return map;
-    }
-
     AudioTrack* getTrackContainingTrackDevice (Edit& edit, WaveInputDevice& device)
     {
         for (auto t : getAudioTracks (edit))
@@ -135,7 +134,7 @@ namespace
         for (auto ri : getAllPluginsOfType<RackInstance> (type.edit))
             if (ri->type.get() == &type)
                 instances.add (ri);
-        
+
         return instances;
     }
 
@@ -143,7 +142,7 @@ namespace
     {
         auto instances = getInstancesForRack (type);
         instances.removeIf ([] (auto instance) { return ! instance->isEnabled(); });
-        
+
         return instances;
     }
 
@@ -154,17 +153,17 @@ namespace
     bool shouldRenderTrackInSubmix (Track& t, const CreateNodeParams& params)
     {
         jassert (t.isPartOfSubmix());
-        
+
         if (! params.forRendering)
             return false;
-        
+
         if (params.allowedTracks == nullptr)
             return false;
-        
+
         for (auto allowedTrack : *params.allowedTracks)
             if (t.isAChildOf (*allowedTrack))
                 return false;
-        
+
         return true;
     }
 
@@ -172,9 +171,9 @@ namespace
     {
         if (originalTracks.isEmpty())
             return {};
-     
+
         auto tracks = originalTracks;
-        
+
         // Iterate all original tracks
         // If any tracks are submix tracks, check if their parents are included or any of their children
         // If not, add all children recusively
@@ -185,7 +184,7 @@ namespace
                 st != nullptr && st->isSubmixFolder())
             {
                 bool shouldSkip = false;
-                
+
                 // First check for parents
                 for (auto potentialParent : originalTracks)
                 {
@@ -205,7 +204,7 @@ namespace
                         break;
                     }
                 }
-                
+
                 if (shouldSkip)
                     continue;
 
@@ -214,11 +213,10 @@ namespace
                     tracks.addIfNotAlreadyThere (childTrack);
             }
         }
-    
+
         return tracks;
     }
 
-   #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
     SpeedFadeDescription getSpeedFadeDescription (const AudioClipBase& clip)
     {
         if (clip.getFadeInBehaviour() == AudioClipBase::speedRamp
@@ -347,7 +345,18 @@ namespace
 
         return {};
     }
-   #endif
+
+    bool shouldMonitorTrackDevice (InputDeviceInstance& instance)
+    {
+        switch (instance.owner.getMonitorMode())
+        {
+            case InputDevice::MonitorMode::on:          return true;
+            case InputDevice::MonitorMode::automatic:   return instance.isRecordingActive();
+            case InputDevice::MonitorMode::off:         return false;
+        };
+
+        return false;
+    }
 
 //==============================================================================
 //==============================================================================
@@ -359,12 +368,16 @@ std::unique_ptr<tracktion::graph::Node> createPluginNodeForList (PluginList&, co
 std::unique_ptr<tracktion::graph::Node> createPluginNodeForTrack (Track&, TrackMuteState&, std::unique_ptr<Node>,
                                                                  tracktion::graph::PlayHeadState&, const CreateNodeParams&);
 
-std::unique_ptr<tracktion::graph::Node> createLiveInputNodeForDevice (InputDeviceInstance&, tracktion::graph::PlayHeadState&, const CreateNodeParams&);
+std::unique_ptr<tracktion::graph::Node> createLiveInputNodeForDevice (InputDeviceInstance&, tracktion::graph::PlayHeadState&, const CreateNodeParams&, EditItemID);
 
+std::unique_ptr<tracktion::graph::Node> createNodeForClips (EditItemID, const juce::Array<Clip*>&, const TrackMuteState&, const CreateNodeParams&);
+
+std::unique_ptr<Node> createInsertReturnNode (InsertPlugin&, tracktion::graph::PlayHeadState&, const CreateNodeParams&);
 
 //==============================================================================
 //==============================================================================
-std::unique_ptr<tracktion::graph::Node> createFadeNodeForClip (AudioClipBase& clip, std::unique_ptr<Node> node, const CreateNodeParams& params)
+std::unique_ptr<tracktion::graph::Node> createFadeNodeForClip (AudioClipBase& clip, EditTimeRange clipTimeRangeToUse,
+                                                               std::unique_ptr<Node> node, const CreateNodeParams& params)
 {
     auto fIn = clip.getFadeIn();
     auto fOut = clip.getFadeOut();
@@ -374,7 +387,7 @@ std::unique_ptr<tracktion::graph::Node> createFadeNodeForClip (AudioClipBase& cl
         const bool speedIn = clip.getFadeInBehaviour() == AudioClipBase::speedRamp && fIn > 0_td;
         const bool speedOut = clip.getFadeOutBehaviour() == AudioClipBase::speedRamp && fOut > 0_td;
 
-        auto pos = clip.getPosition();
+        auto pos = toTime (clipTimeRangeToUse, clip.edit.tempoSequence);
         node = makeNode<FadeInOutNode> (std::move (node), params.processState,
                                         speedIn ? TimeRange (pos.getStart(), pos.getStart() + juce::jmin (TimeDuration::fromSeconds (0.003), fIn))
                                                 : TimeRange (pos.getStart(), pos.getStart() + fIn),
@@ -383,12 +396,13 @@ std::unique_ptr<tracktion::graph::Node> createFadeNodeForClip (AudioClipBase& cl
                                         clip.getFadeInType(), clip.getFadeOutType(),
                                         true);
     }
-    
+
     return node;
 }
 
 //==============================================================================
-std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& clip, bool includeMelodyne, const CreateNodeParams& params)
+std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& clip, EditItemID idToUse, EditTimeRange clipTimeRangeToUse,
+                                                                bool includeMelodyne, const CreateNodeParams& params, ClipRole role)
 {
     auto& playHeadState = params.processState.playHeadState;
     const AudioFile playFile (clip.getPlaybackFile());
@@ -412,47 +426,26 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
     // Otherwise use audio file
     auto original = clip.getAudioFile();
 
-    TimeDuration nodeOffset;
-    double speed = 1.0;
-    TimeRange loopRange;
-    const bool usesTimestretchedProxy = clip.usesTimeStretchedProxy();
-
     // Trigger proxy render if it needs it
     clip.beginRenderingNewProxyIfNeeded();
 
-    if (! usesTimestretchedProxy)
-    {
-        nodeOffset = clip.getPosition().getOffset();
-        loopRange = clip.getLoopRange();
-        speed = clip.getSpeedRatio();
-    }
-
-    if (clip.usesTimestretchedPreview())
-    {
-        auto& li = clip.getLoopInfo();
-
-        if (li.getNumBeats() > 0.0 || li.getRootNote() != -1)
-        {
-            auto node = makeNode<TimeStretchingWaveNode> (clip, playHeadState);
-
-            const auto sourceChannels = juce::AudioChannelSet::canonicalChannelSet (clip.getAudioFile().getNumChannels());
-            const auto destChannels = juce::AudioChannelSet::canonicalChannelSet (std::max (2, sourceChannels.size()));
-
-            if (sourceChannels.size() != destChannels.size())
-                node = makeNode<ChannelRemappingNode> (std::move (node),
-                                                       makeChannelMapRepeatingLastChannel (sourceChannels, destChannels),
-                                                       false);
-            
-            return node;
-        }
-    }
-
     std::unique_ptr<Node> node;
 
-   #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
     if (clip.canUseProxy())
-   #endif
     {
+        assert (role != ClipRole::launcher);
+        assert (! clipTimeRangeToUse.isBeats());
+        TimeDuration nodeOffset;
+        double speed = 1.0;
+        TimeRange loopRange;
+
+        if (! clip.usesTimeStretchedProxy())
+        {
+            nodeOffset = clip.getPosition().getOffset();
+            loopRange = clip.getLoopRange();
+            speed = clip.getSpeedRatio();
+        }
+
         if ((clip.getFadeInBehaviour() == AudioClipBase::speedRamp && clip.getFadeIn() != 0_td)
             || (clip.getFadeOutBehaviour() == AudioClipBase::speedRamp && clip.getFadeOut() != 0_td))
         {
@@ -480,7 +473,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
             }
 
             node = tracktion::graph::makeNode<SpeedRampWaveNode> (playFile,
-                                                                  clip.getEditTimeRange(),
+                                                                  toTime (clipTimeRangeToUse, clip.edit.tempoSequence),
                                                                   nodeOffset,
                                                                   loopRange,
                                                                   clip.getLiveClipLevel(),
@@ -488,14 +481,14 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                                   clip.getActiveChannels(),
                                                                   juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
                                                                   params.processState,
-                                                                  clip.itemID,
+                                                                  idToUse,
                                                                   params.forRendering,
                                                                   desc);
         }
         else
         {
             node = tracktion::graph::makeNode<WaveNode> (playFile,
-                                                         clip.getEditTimeRange(),
+                                                         toTime (clipTimeRangeToUse, clip.edit.tempoSequence),
                                                          nodeOffset,
                                                          loopRange,
                                                          clip.getLiveClipLevel(),
@@ -503,22 +496,24 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                          clip.getActiveChannels(),
                                                          juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
                                                          params.processState,
-                                                         clip.itemID,
+                                                         idToUse,
                                                          params.forRendering);
         }
     }
-   #if TRACKTION_ENABLE_REALTIME_TIMESTRETCHING
     else
     {
         const auto timeStretcherMode = clip.getActualTimeStretchMode();
         const auto timeStretcherOpts = clip.elastiqueProOptions.get();
+        const auto readAhead = params.readAheadTimeStretchNodes ? WaveNodeRealTime::ReadAhead::yes
+                                                                : WaveNodeRealTime::ReadAhead::no;
 
         const auto speedFadeDesc = getSpeedFadeDescription (clip);
         auto warpMap = getWarpMap (clip);
         std::optional<tempo::Sequence::Position> editTempoPosition (speedFadeDesc.isEmpty() ? std::optional<tempo::Sequence::Position>() : createPosition (clip.edit.tempoSequence));
 
-        if (clip.getAutoTempo() || clip.getAutoPitch())
+        if (clip.getAutoTempo() || clip.getAutoPitch() || role == ClipRole::launcher)
         {
+            assert (clipTimeRangeToUse.isBeats());
             std::vector<tempo::TempoChange> tempos;
             std::vector<tempo::TimeSigChange> timeSigs;
             std::vector<tempo::KeyChange> keyChanges;
@@ -552,26 +547,63 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                  clip.edit.engine.getEngineBehaviour().lengthOfOneBeatDependsOnTimeSignature() ? tempo::LengthOfOneBeat::dependsOnTimeSignature
                                                                                                                : tempo::LengthOfOneBeat::isAlwaysACrotchet);
 
-            node = makeNode<WaveNodeRealTime> (playFile,
-                                               timeStretcherMode, timeStretcherOpts,
-                                               BeatRange (clip.getStartBeat(), clip.getEndBeat()),
-                                               clip.getOffsetInBeats(),
-                                               BeatRange (clip.getLoopStartBeats(), clip.getLoopLengthBeats()),
-                                               clip.getLiveClipLevel(),
-                                               clip.getActiveChannels(),
-                                               juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
-                                               params.processState,
-                                               clip.itemID,
-                                               params.forRendering,
-                                               speedFadeDesc, std::move (editTempoPosition),
-                                               std::move (warpMap),
-                                               seq, syncTempo, syncPitch,
-                                               getChordTrackSequenceIfRequired (clip));
+            if (role == ClipRole::launcher)
+            {
+                WaveNodeRealTime::BeatConfig config
+                {
+                    .processState = params.processState,
+                    .audioFile = playFile,
+                    .timeStretchMode = timeStretcherMode,
+                    .elastiqueProOptions = timeStretcherOpts,
+                    .editTime = BeatRange (0_bp, BeatPosition::fromBeats (std::numeric_limits<double>::max())),
+                    .offset = clip.getOffsetInBeats(),
+                    .loopSection = clip.getLoopRangeBeats(),
+                    .liveClipLevel = clip.getLiveClipLevel(),
+                    .sourceChannelsToUse = clip.getActiveChannels(),
+                    .destChannelsToFill = juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
+                    .itemID = idToUse,
+                    .isOfflineRender = params.forRendering,
+                    .resamplingQuality = clip.getResamplingQuality(),
+                    .speedFadeDescription = speedFadeDesc,
+                    .editTempoSequence = std::move (editTempoPosition),
+                    .warpMap = std::move (warpMap),
+                    .sourceFileTempoMap = std::move (seq),
+                    .syncTempo = syncTempo,
+                    .syncPitch = syncPitch,
+                    .chordPitchSequence = getChordTrackSequenceIfRequired (clip),
+                    .pitchChangeSemitones = clip.getPitchChange(),
+                    .readAhead = readAhead
+                };
+                node = makeNode<WaveNodeRealTime> (std::move (config));
+            }
+            else
+            {
+                node = makeNode<WaveNodeRealTime> (playFile,
+                                                   timeStretcherMode, timeStretcherOpts,
+                                                   toBeats (clipTimeRangeToUse, clip.edit.tempoSequence),
+                                                   clip.getOffsetInBeats(),
+                                                   BeatRange (clip.getLoopStartBeats(), clip.getLoopLengthBeats()),
+                                                   clip.getLiveClipLevel(),
+                                                   clip.getActiveChannels(),
+                                                   juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
+                                                   params.processState,
+                                                   idToUse,
+                                                   params.forRendering,
+                                                   clip.getResamplingQuality(),
+                                                   speedFadeDesc, std::move (editTempoPosition),
+                                                   std::move (warpMap),
+                                                   seq, syncTempo, syncPitch,
+                                                   getChordTrackSequenceIfRequired (clip),
+                                                   clip.getPitchChange(),
+                                                   readAhead);
+            }
         }
         else
         {
+            assert (role != ClipRole::launcher);
+            assert (! clipTimeRangeToUse.isBeats());
             node = makeNode<WaveNodeRealTime> (playFile,
-                                               clip.getEditTimeRange(),
+                                               toTime (clipTimeRangeToUse, clip.edit.tempoSequence),
                                                clip.getPosition().getOffset(),
                                                clip.getLoopRange(),
                                                clip.getLiveClipLevel(),
@@ -579,14 +611,15 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                clip.getActiveChannels(),
                                                juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
                                                params.processState,
-                                               clip.itemID,
+                                               idToUse,
                                                params.forRendering,
+                                               clip.getResamplingQuality(),
                                                speedFadeDesc, std::move (editTempoPosition),
                                                timeStretcherMode, timeStretcherOpts,
-                                               clip.getPitchChange());
+                                               clip.getPitchChange(),
+                                               readAhead);
         }
     }
-   #endif
 
     // Plugins
     if (params.includePlugins)
@@ -601,12 +634,30 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
     }
 
     // Create FadeInOutNode
-    node = createFadeNodeForClip (clip, std::move (node), params);
-    
+    if (role != ClipRole::launcher)
+        node = createFadeNodeForClip (clip, clipTimeRangeToUse, std::move (node), params);
+
     return node;
 }
 
-std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, const TrackMuteState& trackMuteState, const CreateNodeParams& params)
+std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& clip, bool includeMelodyne,
+                                                                const CreateNodeParams& params, ClipRole role)
+{
+    if (clip.canUseProxy())
+    {
+        assert (role == ClipRole::arranger);
+        return createNodeForAudioClip (clip, clip.itemID, clip.getEditTimeRange(), includeMelodyne, params, role);
+    }
+
+    if (clip.getAutoTempo() || clip.getAutoPitch() || role == ClipRole::launcher)
+        return createNodeForAudioClip (clip, clip.itemID, clip.getEditBeatRange(), includeMelodyne, params, role);
+
+    assert (role == ClipRole::arranger);
+    return createNodeForAudioClip (clip, clip.itemID, clip.getEditTimeRange(), includeMelodyne, params, role);
+}
+
+std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, const TrackMuteState& trackMuteState,
+                                                               const CreateNodeParams& params, ClipRole role)
 {
     CRASH_TRACER
     const bool generateMPE = clip.getMPEMode();
@@ -620,12 +671,14 @@ std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, c
     {
         std::vector<juce::MidiMessageSequence> sequences;
         sequences.emplace_back (clip.getSequence().exportToPlaybackMidiSequence (clip, timeBase, generateMPE));
+        const auto clipBeatRange = role == ClipRole::launcher ? BeatRange (0_bp, BeatPosition::fromBeats (std::numeric_limits<double>::max()))
+                                                              : BeatRange (clip.getStartBeat(), clip.getEndBeat());
 
         return graph::makeNode<LoopingMidiNode> (std::move (sequences),
                                                  channels,
                                                  generateMPE,
-                                                 BeatRange (clip.getStartBeat(), clip.getEndBeat()),
-                                                 BeatRange (clip.getLoopStartBeats(), clip.getLoopLengthBeats()),
+                                                 clipBeatRange,
+                                                 clip.getLoopRangeBeats(),
                                                  clip.getOffsetInBeats(),
                                                  clip.getLiveClipLevel(),
                                                  params.processState,
@@ -643,6 +696,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, c
     }
 
     // Use looped sequence in seconds time base
+    assert (role != ClipRole::launcher);
     const auto clipTimeRange = clip.getEditTimeRange();
     const juce::Range<double> editTimeRange { clipTimeRange.getStart().inSeconds(), clipTimeRange.getEnd().inSeconds() };
 
@@ -666,38 +720,70 @@ std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, c
                                       });
 }
 
-std::unique_ptr<tracktion::graph::Node> createNodeForStepClip (StepClip& clip, const TrackMuteState& trackMuteState, const CreateNodeParams& params)
+std::unique_ptr<tracktion::graph::Node> createNodeForStepClip (StepClip& clip, const TrackMuteState& trackMuteState,
+                                                               const CreateNodeParams& params, ClipRole role)
 {
     CRASH_TRACER
 
     std::unique_ptr<tracktion::graph::Node> node;
 
-    std::vector<juce::MidiMessageSequence> sequences;
-
-    for (int i = clip.usesProbability() ? 64 : 1; --i >= 0;)
+    if (role == ClipRole::launcher)
     {
-        juce::MidiMessageSequence sequence;
-        clip.generateMidiSequence (sequence);
-        sequences.push_back (sequence);
+        std::vector<juce::MidiMessageSequence> sequences;
+
+        for (int i = clip.usesProbability() ? 64 : 1; --i >= 0;)
+            sequences.push_back (clip.generateMidiSequence (MidiList::TimeBase::beatsRaw));
+
+        const auto clipBeatRange = BeatRange (0_bp, BeatPosition::fromBeats (std::numeric_limits<double>::max()));
+        node = graph::makeNode<LoopingMidiNode> (std::move (sequences),
+                                                 juce::Range<int> (1, 16),
+                                                 false,
+                                                 clipBeatRange,
+                                                 clip.getLoopRangeBeats(),
+                                                 clip.getOffsetInBeats(),
+                                                 clip.getLiveClipLevel(),
+                                                 params.processState,
+                                                 clip.itemID,
+                                                 QuantisationType(),
+                                                 nullptr,
+                                                 0.0f,
+                                                 [&trackMuteState]
+                                                 {
+                                                     if (! trackMuteState.shouldTrackBeAudible())
+                                                         return ! trackMuteState.shouldTrackMidiBeProcessed();
+
+                                                     return false;
+                                                 });
     }
+    else
+    {
+        std::vector<juce::MidiMessageSequence> sequences;
 
-    const auto clipRange = clip.getEditTimeRange();
-    const juce::Range<double> editTimeRange (clipRange.getStart().inSeconds(), clipRange.getEnd().inSeconds());
-    node = graph::makeNode<MidiNode> (std::move (sequences),
-                                      MidiList::TimeBase::seconds,
-                                      juce::Range<int> (1, 16),
-                                      false,
-                                      editTimeRange,
-                                      clip.getLiveClipLevel(),
-                                      params.processState,
-                                      clip.itemID,
-                                      [&trackMuteState]
-                                      {
-                                          if (! trackMuteState.shouldTrackBeAudible())
-                                              return ! trackMuteState.shouldTrackMidiBeProcessed();
+        for (int i = clip.usesProbability() ? 64 : 1; --i >= 0;)
+        {
+            juce::MidiMessageSequence sequence;
+            clip.generateMidiSequence (sequence);
+            sequences.push_back (sequence);
+        }
 
-                                          return false;
-                                      });
+        const auto clipRange = clip.getEditTimeRange ();
+        const juce::Range<double> editTimeRange (clipRange.getStart ().inSeconds (), clipRange.getEnd ().inSeconds ());
+        node = graph::makeNode<MidiNode> (std::move (sequences),
+                                          MidiList::TimeBase::seconds,
+                                          juce::Range<int> (1, 16),
+                                          false,
+                                          editTimeRange,
+                                          clip.getLiveClipLevel(),
+                                          params.processState,
+                                          clip.itemID,
+                                          [&trackMuteState]
+                                          {
+                                              if (!trackMuteState.shouldTrackBeAudible ())
+                                                  return !trackMuteState.shouldTrackMidiBeProcessed ();
+
+                                              return false;
+                                          });
+    }
 
     if (node && ! clip.getListeners().isEmpty())
         node = makeNode<LiveMidiOutputNode> (clip, std::move (node));
@@ -705,33 +791,107 @@ std::unique_ptr<tracktion::graph::Node> createNodeForStepClip (StepClip& clip, c
     return node;
 }
 
-std::unique_ptr<tracktion::graph::Node> createNodeForClip (Clip& clip, const TrackMuteState& trackMuteState, const CreateNodeParams& params)
+std::unique_ptr<tracktion::graph::Node> createNodeForContainerClip (ContainerClip& clip, [[ maybe_unused ]] const TrackMuteState& trackMuteState,
+                                                                    const CreateNodeParams& params, ClipRole role)
 {
+    CRASH_TRACER
+    const auto& clips = clip.getClips();
+
+    if (clips.isEmpty())
+        return {};
+
+   #if USE_DYNAMIC_OFFSET_CONTAINER_CLIP
+    std::unique_ptr<Node> node;
+
+    {
+        std::vector<std::unique_ptr<Node>> nodes;
+
+        for (auto c : clips)
+        {
+            if (auto acb = dynamic_cast<AudioClipBase*> (c))
+            {
+                assert (! acb->canUseProxy());
+                assert (acb->getAutoTempo());
+
+                if (auto clipNode = createNodeForAudioClip (*acb, false, params, ClipRole::arranger))
+                    nodes.push_back (std::move (clipNode));
+            }
+            else
+            {
+                assert (false && "Only WaveAudioClips supported at the moment");
+            }
+        }
+
+        auto offsetNode = std::make_unique<DynamicOffsetNode> (params.processState,
+                                                               clip.itemID,
+                                                               role == ClipRole::launcher ? BeatRange (0_bp, BeatPosition::fromBeats (std::numeric_limits<double>::max()))
+                                                                                          : clip.getEditBeatRange(),
+                                                               clip.getOffsetInBeats(),
+                                                               clip.getLoopRangeBeats(),
+                                                               std::move (nodes));
+        node = std::move (offsetNode);
+    }
+   #else
+    // Combiner clip and the contained clips need their own, local PlayHeadState.
+    // This also needs to persist across graph rebuilds to maintain continuity.
+    // Once the ContainerClipNode has been initialised it will update it's children with its own ProcessState
+    auto node = makeNode<ContainerClipNode> (params.processState,
+                                             clip.itemID,
+                                             BeatRange (clip.getStartBeat(), clip.getEndBeat()),
+                                             clip.getOffsetInBeats(),
+                                             clip.getLoopRangeBeats(),
+                                             createNodeForClips (clip.itemID, clips, trackMuteState, params));
+   #endif
+
+    // Plugins
+    if (params.includePlugins)
+    {
+        if (auto pluginList = clip.getPluginList())
+        {
+            for (auto p : *pluginList)
+                p->initialiseFully();
+
+            node = createPluginNodeForList (*pluginList, nullptr, std::move (node), params.processState.playHeadState, params);
+        }
+    }
+
+    // Create FadeInOutNode
+    if (role != ClipRole::launcher)
+        return createFadeNodeForClip (clip, clip.getEditTimeRange(), std::move (node), params);
+
+    return node;
+}
+
+std::unique_ptr<tracktion::graph::Node> createNodeForClip (Clip& clip, const TrackMuteState& trackMuteState,
+                                                           const CreateNodeParams& params, ClipRole role)
+{
+    if (clip.disabled)
+        return {};
+
+    // N.B. This must be checked first as a ContainerClip is an AudioClipBase
+    if (auto containerClip = dynamic_cast<ContainerClip*> (&clip))
+        return createNodeForContainerClip (*containerClip, trackMuteState, params, role);
+
     if (auto audioClip = dynamic_cast<AudioClipBase*> (&clip))
-        return createNodeForAudioClip (*audioClip, false, params);
+        return createNodeForAudioClip (*audioClip, false, params, role);
 
     if (auto midiClip = dynamic_cast<MidiClip*> (&clip))
-        return createNodeForMidiClip (*midiClip, trackMuteState, params);
+        return createNodeForMidiClip (*midiClip, trackMuteState, params, role);
 
     if (auto stepClip = dynamic_cast<StepClip*> (&clip))
-        return createNodeForStepClip (*stepClip, trackMuteState, params);
-    
+        return createNodeForStepClip (*stepClip, trackMuteState, params, role);
+
     return {};
 }
 
-std::unique_ptr<tracktion::graph::Node> createNodeForClips (const juce::Array<Clip*>& clips, const TrackMuteState& trackMuteState, const CreateNodeParams& params)
+std::unique_ptr<tracktion::graph::Node> createNodeForClips (EditItemID trackID, const juce::Array<Clip*>& clips,
+                                                            const TrackMuteState& trackMuteState, const CreateNodeParams& params)
 {
+    // If there are no clips, we still need to send note-offs for clips that might have been deleted whilst still playing
+    // In the future, this will be removed during the transform stage
     if (clips.size() == 0)
-        return {};
+        return std::make_unique<CombiningNode> (trackID, params.processState);
 
-    if (clips.size() == 1)
-    {
-        auto clip = clips.getFirst();
-
-        if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
-            return createNodeForClip (*clip, trackMuteState, params);
-    }
-    
     const bool clipsHaveLatency = [&]
     {
         if (params.includePlugins)
@@ -744,31 +904,113 @@ std::unique_ptr<tracktion::graph::Node> createNodeForClips (const juce::Array<Cl
 
         return false;
     }();
-    
+
     // If any of the clips have latency, it's impossible to use a CombiningNode as it doesn't
     // continuously process Nodes which means the latency FIFO doesn't get flushed. So just
     // use a normal SummingNode instead
     if (clipsHaveLatency)
     {
         auto combiner = std::make_unique<SummingNode>();
-        
+
         for (auto clip : clips)
             if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
-                if (auto clipNode = createNodeForClip (*clip, trackMuteState, params))
+                if (auto clipNode = createNodeForClip (*clip, trackMuteState, params, ClipRole::arranger))
                     combiner->addInput (std::move (clipNode));
-            
+
         return combiner;
     }
 
-    auto combiner = std::make_unique<CombiningNode> (params.processState);
-    
+    if (clips.size() == 1)
+    {
+        auto clip = clips.getFirst();
+
+        if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
+        {
+            auto combiner = std::make_unique<CombiningNode> (trackID, params.processState);
+
+            if (auto clipNode = createNodeForClip (*clip, trackMuteState, params, ClipRole::arranger))
+                combiner->addInput (std::move (clipNode), clip->getPosition().time);
+
+            return combiner;
+        }
+    }
+
+    auto combiner = std::make_unique<CombiningNode> (trackID, params.processState);
+
+    // Use a CombiningNode for most clips
     for (auto clip : clips)
         if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
-            if (auto clipNode = createNodeForClip (*clip, trackMuteState, params))
+            if (auto clipNode = createNodeForClip (*clip, trackMuteState, params, ClipRole::arranger))
                 combiner->addInput (std::move (clipNode), clip->getPosition().time);
-        
+
     return combiner;
 }
+
+std::vector<std::unique_ptr<SlotControlNode>> createNodeForLauncherClips (const ClipSlotList& slotList,
+                                                                          const TrackMuteState& trackMuteState, const CreateNodeParams& params)
+{
+    std::vector<std::unique_ptr<SlotControlNode>> nodes;
+
+    for (auto slot : slotList.getClipSlots())
+    {
+        auto clip = slot->getClip();
+
+        if (! clip)
+            continue;
+
+        if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
+        {
+            if (auto clipNode = createNodeForClip (*clip, trackMuteState, params, ClipRole::launcher))
+            {
+                std::shared_ptr<LaunchHandle> launchHandle;
+
+                if (auto acb = dynamic_cast<AudioClipBase*> (clip))
+                    launchHandle = acb->getLaunchHandle();
+                else if (auto mc = dynamic_cast<MidiClip*> (clip))
+                    launchHandle = mc->getLaunchHandle();
+                else if (auto sc = dynamic_cast<StepClip*> (clip))
+                    launchHandle = sc->getLaunchHandle();
+                else
+                    assert (false);
+
+                std::optional<BeatDuration> clipDuration = clip->isLooping() ? std::optional<BeatDuration>()
+                                                                             : clip->getLengthInBeats();
+
+                switch (clip->followActionDurationType.get())
+                {
+                    case Clip::FollowActionDurationType::beats:
+                        if (auto afterBeats = clip->followActionBeats.get(); afterBeats > 0_bd)
+                            clipDuration = afterBeats;
+
+                        break;
+                    case Clip::FollowActionDurationType::loops:
+                        if (clip->isLooping())
+                        {
+                            if (auto afterLoops = clip->followActionNumLoops.get(); afterLoops > 0.0)
+                                clipDuration = (clip->getLoopLengthBeats() * afterLoops) - clip->getOffsetInBeats();
+                        }
+                        else
+                        {
+                            clipDuration = clip->getLengthInBeats() - clip->getOffsetInBeats();
+                        }
+                        break;
+                }
+
+                auto controlNode = std::make_unique<SlotControlNode> (params.processState,
+                                                                      std::move (launchHandle),
+                                                                      clipDuration,
+                                                                      createFollowAction (*clip),
+                                                                      slot->itemID,
+                                                                      std::move (clipNode));
+
+                nodes.push_back (std::move (controlNode));
+            }
+        }
+    }
+
+    return nodes;
+}
+
 
 //==============================================================================
 std::unique_ptr<tracktion::graph::Node> createNodeForFrozenAudioTrack (AudioTrack& track, tracktion::graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
@@ -809,58 +1051,81 @@ std::unique_ptr<tracktion::graph::Node> createARAClipsNode (const juce::Array<Cl
 
     if (araClips.size() == 0)
         return {};
-    
+
     std::vector<std::unique_ptr<Node>> nodes;
-    
+
     for (auto araClip : araClips)
-        if (auto araNode = createNodeForAudioClip (*araClip, true, params))
-            nodes.push_back (createFadeNodeForClip (*araClip, std::move (araNode), params));
-    
+        if (auto araNode = createNodeForAudioClip (*araClip, true, params, ClipRole::arranger))
+            nodes.push_back (createFadeNodeForClip (*araClip, araClip->getEditTimeRange(), std::move (araNode), params));
+
     if (nodes.size() == 1)
         return std::move (nodes.front());
-    
+
     return std::make_unique<SummingNode> (std::move (nodes));
 }
 
-std::unique_ptr<tracktion::graph::Node> createClipsNode (const juce::Array<Clip*>& clips, const TrackMuteState& trackMuteState,
-                                                        const CreateNodeParams& params)
+std::unique_ptr<tracktion::graph::Node> createClipsNode (AudioTrack& at, const TrackMuteState& trackMuteState,
+                                                         const CreateNodeParams& params)
 {
-    std::vector<std::unique_ptr<Node>> nodes;
+    std::vector<std::unique_ptr<Node>> arrangerNodes;
+    const auto trackID = at.itemID;
+    const auto& clips = at.getClips();
 
-    if (auto clipsNode = createNodeForClips (clips, trackMuteState, params))
-        nodes.push_back (std::move (clipsNode));
-    
+    if (auto clipsNode = createNodeForClips (trackID, clips, trackMuteState, params))
+        arrangerNodes.push_back (std::move (clipsNode));
+
     if (auto araNode = createARAClipsNode (clips, trackMuteState, params))
-        nodes.push_back (std::move (araNode));
-    
-    if (nodes.empty())
+        arrangerNodes.push_back (std::move (araNode));
+
+    if (! params.allowClipSlots)
+    {
+        if (arrangerNodes.empty())
+            return {};
+
+        if (arrangerNodes.size() == 1)
+            return std::move (arrangerNodes.front());
+
+        return  std::make_unique<SummingNode> (std::move (arrangerNodes));
+    }
+
+    auto launcherNodes = createNodeForLauncherClips (at.getClipSlotList(), trackMuteState, params);
+
+    if (arrangerNodes.empty() && launcherNodes.empty())
         return {};
-    
-    if (nodes.size() == 1)
-        return std::move (nodes.front());
-    
-    return std::make_unique<SummingNode> (std::move (nodes));
+
+    std::unique_ptr<Node> arrangerNode;
+
+    if (arrangerNodes.size() == 1)
+        arrangerNode = std::move (arrangerNodes.front());
+    else if (arrangerNodes.size() > 1)
+        arrangerNode = std::make_unique<SummingNode> (std::move (arrangerNodes));
+
+    return makeNode<ArrangerLauncherSwitchingNode> (params.processState, at, std::move (arrangerNode), std::move (launcherNodes));
 }
 
 std::unique_ptr<tracktion::graph::Node> createLiveInputNodeForDevice (InputDeviceInstance& inputDeviceInstance, tracktion::graph::PlayHeadState& playHeadState,
-                                                                     const CreateNodeParams& params)
+                                                                      const CreateNodeParams& params, EditItemID trackID)
 {
     if (auto midiDevice = dynamic_cast<MidiInputDevice*> (&inputDeviceInstance.getInputDevice()))
     {
         if (midiDevice->isTrackDevice())
             if (auto sourceTrack = getTrackContainingTrackDevice (inputDeviceInstance.edit, *midiDevice))
-                return makeNode<TrackMidiInputDeviceNode> (*midiDevice, makeNode<ReturnNode> (getMidiInputDeviceBusID (sourceTrack->itemID)), params.processState);
+                return makeNode<TrackMidiInputDeviceNode> (*midiDevice, makeNode<ReturnNode> (getMidiInputDeviceBusID (sourceTrack->itemID)), params.processState,
+                                                           shouldMonitorTrackDevice (inputDeviceInstance));
 
         if (HostedAudioDeviceInterface::isHostedMidiInputDevice (*midiDevice))
-            return makeNode<HostedMidiInputDeviceNode> (inputDeviceInstance, *midiDevice, midiDevice->getMPESourceID(), playHeadState);
+            return makeNode<HostedMidiInputDeviceNode> (inputDeviceInstance, *midiDevice, playHeadState, params.processState);
 
-        return makeNode<MidiInputDeviceNode> (inputDeviceInstance, *midiDevice, midiDevice->getMPESourceID(), playHeadState);
+        return makeNode<MidiInputDeviceNode> (inputDeviceInstance, *midiDevice, midiDevice->getMPESourceID(), playHeadState, trackID);
     }
     else if (auto waveDevice = dynamic_cast<WaveInputDevice*> (&inputDeviceInstance.getInputDevice()))
     {
         if (waveDevice->isTrackDevice())
             if (auto sourceTrack = getTrackContainingTrackDevice (inputDeviceInstance.edit, *waveDevice))
-                return makeNode<TrackWaveInputDeviceNode> (*waveDevice, makeNode<ReturnNode> (getWaveInputDeviceBusID (sourceTrack->itemID)));
+                return makeNode<TrackWaveInputDeviceNode> (params.processState,
+                                                           *waveDevice,
+                                                           makeNode<ReturnNode> (getWaveInputDeviceBusID (sourceTrack->itemID)),
+                                                           shouldMonitorTrackDevice (inputDeviceInstance));
 
         // For legacy reasons, we always need a stereo output from our live inputs
         return makeNode<WaveInputDeviceNode> (inputDeviceInstance, *waveDevice,
@@ -877,8 +1142,8 @@ std::unique_ptr<tracktion::graph::Node> createLiveInputsNode (AudioTrack& track,
     if (! params.forRendering)
         if (auto context = track.edit.getCurrentPlaybackContext())
             for (auto in : context->getAllInputs())
-                if ((in->isLivePlayEnabled (track) || in->getInputDevice().isTrackDevice()) && in->isOnTargetTrack (track))
-                    if (auto node = createLiveInputNodeForDevice (*in, playHeadState, params))
+                if ((in->isLivePlayEnabled (track) || in->getInputDevice().isTrackDevice()) && in->getTargets().contains (track.itemID))
+                    if (auto node = createLiveInputNodeForDevice (*in, playHeadState, params, track.itemID))
                         nodes.push_back (std::move (node));
 
     if (nodes.empty())
@@ -943,24 +1208,24 @@ std::unique_ptr<tracktion::graph::Node> createNodeForPlugin (Plugin& plugin, con
 
     if (plugin.isDisabled())
         return node;
-    
+
     if (! plugin.isEnabled() && ! params.includeBypassedPlugins)
         return node;
 
     int maxNumChannels = -1;
-    
+
     // If this plugin is on a track or clip and doesn't have a sidechain input we can limit the number of channels it uses
     if (plugin.getOwnerTrack() != nullptr || plugin.getOwnerClip() != nullptr)
         if (! plugin.getSidechainSourceID().isValid())
             maxNumChannels = 2;
-    
+
     node = createSidechainInputNodeForPlugin (plugin, std::move (node));
     node = tracktion::graph::makeNode<PluginNode> (std::move (node),
-                                                  plugin,
-                                                  params.sampleRate, params.blockSize,
-                                                  trackMuteState, params.processState,
-                                                  params.forRendering, params.includeBypassedPlugins,
-                                                  maxNumChannels);
+                                                   plugin,
+                                                   params.sampleRate, params.blockSize,
+                                                   trackMuteState, params.processState,
+                                                   params.forRendering, params.includeBypassedPlugins,
+                                                   maxNumChannels);
 
     return node;
 }
@@ -974,10 +1239,10 @@ std::unique_ptr<tracktion::graph::Node> createNodeForRackInstance (RackInstance&
 
     const auto rackInputID = getRackInputBusID (rackInstance.rackTypeID);
     const auto rackOutputID = getRackOutputBusID (rackInstance.rackTypeID);
-    
+
     // The input to the instance is referenced by the dry signal path
     auto* inputNode = node.get();
-    
+
     // Send
     // N.B. the channel indicies from the RackInstance start a 1 so we need to subtract this to get a 0-indexed channel
     RackInstanceNode::ChannelMap sendChannelMap;
@@ -1000,13 +1265,13 @@ std::unique_ptr<tracktion::graph::Node> createNodeForRackInstance (RackInstance&
 }
 
 std::unique_ptr<tracktion::graph::Node> createPluginNodeForList (PluginList& list, const TrackMuteState* trackMuteState, std::unique_ptr<Node> node,
-                                                                tracktion::graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
+                                                                 tracktion::graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
 {
     for (auto p : list)
     {
         if (! params.forRendering && p->isFrozen())
             continue;
-        
+
         if (auto meterPlugin = dynamic_cast<LevelMeterPlugin*> (p))
         {
             node = makeNode<LevelMeasurerProcessingNode> (std::move (node), *meterPlugin);
@@ -1014,8 +1279,11 @@ std::unique_ptr<tracktion::graph::Node> createPluginNodeForList (PluginList& lis
         else if (auto sendPlugin = dynamic_cast<AuxSendPlugin*> (p))
         {
             if (sendPlugin->isEnabled())
-                node = makeNode<AuxSendNode> (std::move (node), sendPlugin->busNumber, *sendPlugin,
-                                              playHeadState, trackMuteState);
+                node = makeNode<AuxSendNode> (std::move (node), sendPlugin->busNumber,
+                                              SampleRateAndBlockSize { params.sampleRate, params.blockSize },
+                                              *sendPlugin,
+                                              playHeadState, trackMuteState,
+                                              list.getEdit().engine.getEngineBehaviour().shouldProcessAuxSendWhenTrackIsMuted (*sendPlugin));
         }
         else if (auto returnPlugin = dynamic_cast<AuxReturnPlugin*> (p))
         {
@@ -1028,8 +1296,12 @@ std::unique_ptr<tracktion::graph::Node> createPluginNodeForList (PluginList& lis
         }
         else if (auto insertPlugin = dynamic_cast<InsertPlugin*> (p))
         {
-            node = makeNode<InsertSendReturnDependencyNode> (std::move (node), *insertPlugin);
-            node = createNodeForPlugin (*p, trackMuteState, std::move (node), params);
+            if (! insertPlugin->isEnabled())
+                continue;
+
+            if (auto insertReturnNode = createInsertReturnNode (*insertPlugin, playHeadState, params))
+                node = makeNode<InsertNode> (std::move (node), *insertPlugin, std::move (insertReturnNode),
+                                             SampleRateAndBlockSize { params.sampleRate, params.blockSize });
         }
         else
         {
@@ -1040,31 +1312,40 @@ std::unique_ptr<tracktion::graph::Node> createPluginNodeForList (PluginList& lis
     return node;
 }
 
-std::unique_ptr<tracktion::graph::Node> createModifierNodeForList (ModifierList& list, Modifier::ProcessingPosition position, TrackMuteState* trackMuteState,
-                                                                  std::unique_ptr<Node> node,
-                                                                  tracktion::graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
+std::unique_ptr<tracktion::graph::Node> createModifierNodeForList (ModifierList* list,
+                                                                   Modifier::ProcessingPosition position,
+                                                                   TrackMuteState* trackMuteState,
+                                                                   std::unique_ptr<Node> node,
+                                                                   tracktion::graph::PlayHeadState& playHeadState,
+                                                                   const CreateNodeParams& params)
 {
-    for (auto& modifier : list.getModifiers())
+    if (list != nullptr)
     {
-        if (modifier->getProcessingPosition() != position)
-            continue;
+        for (auto& modifier : list->getModifiers())
+        {
+            if (modifier->getProcessingPosition() != position)
+                continue;
 
-        node = makeNode<ModifierNode> (std::move (node), modifier, params.sampleRate, params.blockSize,
-                                       trackMuteState, playHeadState, params.forRendering);
+            node = makeNode<ModifierNode> (std::move (node), modifier, params.sampleRate, params.blockSize,
+                                           trackMuteState, playHeadState, params.forRendering);
+        }
     }
-    
+
     return node;
 }
 
-std::unique_ptr<tracktion::graph::Node> createPluginNodeForTrack (Track& t, TrackMuteState& trackMuteState, std::unique_ptr<Node> node,
-                                                                 tracktion::graph::PlayHeadState& playHeadState, const CreateNodeParams& params)
+std::unique_ptr<tracktion::graph::Node> createPluginNodeForTrack (Track& t,
+                                                                  TrackMuteState& trackMuteState,
+                                                                  std::unique_ptr<Node> node,
+                                                                  tracktion::graph::PlayHeadState& playHeadState,
+                                                                  const CreateNodeParams& params)
 {
     node = createModifierNodeForList (t.getModifierList(), Modifier::ProcessingPosition::preFX,
                                       &trackMuteState, std::move (node), playHeadState, params);
-    
+
     if (params.includePlugins)
         node = createPluginNodeForList (t.pluginList, &trackMuteState, std::move (node), playHeadState, params);
-    
+
     node = createModifierNodeForList (t.getModifierList(), Modifier::ProcessingPosition::postFX,
                                       &trackMuteState, std::move (node), playHeadState, params);
 
@@ -1090,15 +1371,15 @@ std::unique_ptr<tracktion::graph::Node> createTrackCompNode (AudioTrack& at, std
 {
     if (at.getCompGroup() == -1)
         return node;
-    
+
     if (auto tc = at.edit.getTrackCompManager().getTrackComp (&at))
     {
         const auto crossfadeTimeMs = at.edit.engine.getPropertyStorage().getProperty (SettingID::compCrossfadeMs, 20.0);
         const auto crossfadeTime = TimeDuration::fromSeconds (static_cast<double> (crossfadeTimeMs) / 1000.0);
-        
+
         const auto nonMuteTimes = tc->getNonMuteTimes (at, crossfadeTime);
         const auto muteTimes = TrackCompManager::TrackComp::getMuteTimes (nonMuteTimes);
-        
+
         if (muteTimes.isEmpty())
             return node;
 
@@ -1118,7 +1399,7 @@ std::unique_ptr<tracktion::graph::Node> createTrackCompNode (AudioTrack& at, std
                                                 AudioFadeCurve::convex, false);
         }
     }
-    
+
     return node;
 }
 
@@ -1136,22 +1417,30 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioTrack (AudioTrack& at,
     auto clipsMuteState = std::make_unique<TrackMuteState> (at, true, processMidiWhenMuted);
     auto trackMuteState = std::make_unique<TrackMuteState> (at, false, processMidiWhenMuted);
 
-    const auto& clips = at.getClips();
-    std::unique_ptr<Node> node = createClipsNode (clips, *clipsMuteState, params);
-    
+    std::unique_ptr<Node> node = createClipsNode (at, *clipsMuteState, params);
+
     if (node)
     {
         // When recording, clips should be muted but the plugin should still be audible so use two muting Nodes
         node = makeNode<TrackMutingNode> (std::move (clipsMuteState), std::move (node), true);
-        
+
+        // If we have any inputs, we need a third muting Node to fully block the clips whilst recording
+        // The above muting node will still let clips sound if they are going to a aux send, sidechain etc.
+        if (at.edit.engine.getEngineBehaviour().shouldProcessMutedTracks()
+            && ! at.edit.getEditInputDevices().getDevicesForTargetTrack (at).isEmpty())
+        {
+            node = makeNode<TrackMutingNode> (std::make_unique<TrackMuteState> (at, true, processMidiWhenMuted),
+                                              std::move (node), false);
+        }
+
         node = createTrackCompNode (at, std::move (node), params);
     }
-    
+
     auto liveInputNode = createLiveInputsNode (at, playHeadState, params);
-    
+
     if (node && ! at.getListeners().isEmpty())
         node = makeNode<LiveMidiOutputNode> (at, std::move (node));
-    
+
     if (node)
         node = makeNode<LiveMidiInjectingNode> (at, std::move (node));
 
@@ -1166,11 +1455,11 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioTrack (AudioTrack& at,
                 break;
             }
         }
-        
+
         if (! node)
             return {};
     }
-    
+
     if (liveInputNode)
     {
         if (node)
@@ -1185,21 +1474,21 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioTrack (AudioTrack& at,
             node = std::move (liveInputNode);
         }
     }
-    
+
     if (! inputTracks.isEmpty())
     {
         auto sumNode = std::make_unique<SummingNode>();
-        
+
         if (node)
             sumNode->addInput (std::move (node));
 
         for (auto inputTrack : inputTracks)
             if (auto n = createNodeForTrack (*inputTrack, params))
                 sumNode->addInput (std::move (n));
-        
+
         node = std::move (sumNode);
     }
-    
+
     node = createPluginNodeForTrack (at, *trackMuteState, std::move (node), playHeadState, params);
 
     if (isSidechainSource (at))
@@ -1232,14 +1521,14 @@ std::unique_ptr<tracktion::graph::Node> createNodeForSubmixTrack (FolderTrack& s
     {
         if (auto ft = dynamic_cast<AudioTrack*> (t))
             subAudioTracks.add (ft);
-        
+
         if (auto ft = dynamic_cast<FolderTrack*> (t))
             subFolderTracks.add (ft);
     }
 
     if (subAudioTracks.isEmpty() && subFolderTracks.isEmpty())
         return {};
-    
+
     auto sumNode = std::make_unique<tracktion::graph::SummingNode>();
     sumNode->setDoubleProcessingPrecision (submixTrack.edit.engine.getPropertyStorage().getProperty (SettingID::use64Bit, false));
 
@@ -1275,7 +1564,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForSubmixTrack (FolderTrack& s
 
     if (sumNode->getDirectInputNodes().empty())
         return {};
-    
+
     // Finally the effects
     std::unique_ptr<Node> node = std::move (sumNode);
     auto trackMuteState = std::make_unique<TrackMuteState> (submixTrack, false, false);
@@ -1327,9 +1616,9 @@ std::unique_ptr<tracktion::graph::Node> createNodeForTrack (Track& track, const 
 //==============================================================================
 std::unique_ptr<Node> createNodeForRackType (RackType& rackType, const CreateNodeParams& params)
 {
-    const auto rackInputID = getRackInputBusID (rackType.rackID);
-    const auto rackOutputID = getRackOutputBusID (rackType.rackID);
-    
+    const auto rackInputID = getRackInputBusID (rackType.itemID);
+    const auto rackOutputID = getRackOutputBusID (rackType.itemID);
+
     auto rackInputNode = makeNode<ReturnNode> (rackInputID);
     auto rackNode = RackNodeBuilder::createRackNode (rackType, params.sampleRate, params.blockSize, std::move (rackInputNode),
                                                      params.processState, params.forRendering);
@@ -1338,61 +1627,61 @@ std::unique_ptr<Node> createNodeForRackType (RackType& rackType, const CreateNod
     return makeNode<SinkNode> (std::move (rackOutputNode));
 }
 
-std::vector<std::unique_ptr<Node>> createNodesForRacks (RackTypeList& rackTypeList, const CreateNodeParams& params)
+std::vector<std::unique_ptr<Node>> createNodesForRacks (RackTypeList& rackTypeList,
+                                                        const CreateNodeParams& params)
 {
     std::vector<std::unique_ptr<Node>> nodes;
-    
+
     for (auto rackType : rackTypeList.getTypes())
         if (getEnabledInstancesForRack (*rackType).size() > 0)
             if (auto rackNode = createNodeForRackType (*rackType, params))
                 nodes.push_back (std::move (rackNode));
-    
+
     return nodes;
 }
 
-std::unique_ptr<Node> createRackNode (std::unique_ptr<Node> input, RackTypeList& rackTypeList, const CreateNodeParams& params)
+std::unique_ptr<Node> createRackNode (std::unique_ptr<Node> input,
+                                      RackTypeList& rackTypeList,
+                                      const CreateNodeParams& params)
 {
     // Finally add the RackType Nodes
     auto rackNodes = createNodesForRacks (rackTypeList, params);
-    
+
     if (rackNodes.empty())
         return input;
-    
+
     auto sumNode = std::make_unique<SummingNode> (std::move (rackNodes));
     sumNode->addInput (std::move (input));
     input = std::move (sumNode);
-    
+
     return input;
 }
 
 //==============================================================================
-std::unique_ptr<Node> createInsertSendNode (InsertPlugin& insert, OutputDevice& device,
-                                            tracktion::graph::PlayHeadState& playHeadState,
-                                            const CreateNodeParams& params)
+std::unique_ptr<Node> createInsertReturnNode (InsertPlugin& insert,
+                                              tracktion::graph::PlayHeadState& playHeadState,
+                                              const CreateNodeParams& params)
+{
+    if (insert.getReturnDeviceType() != InsertPlugin::noDevice)
+        for (auto i : insert.edit.getAllInputDevices())
+            if (i->owner.getName() == insert.inputDevice)
+                return createLiveInputNodeForDevice (*i, playHeadState, params, EditItemID());
+
+    return {};
+}
+
+std::unique_ptr<Node> createInsertSendNode (InsertPlugin& insert, OutputDevice& device)
 {
     if (insert.outputDevice != device.getName())
         return {};
-    
-    auto sendNode = makeNode<InsertSendNode> (insert);
-    
-    auto getInsertReturnNode = [&] () -> std::unique_ptr<Node>
-    {
-        if (insert.getReturnDeviceType() != InsertPlugin::noDevice)
-            for (auto i : insert.edit.getAllInputDevices())
-                if (i->owner.getName() == insert.inputDevice)
-                    return makeNode<InsertReturnNode> (insert, createLiveInputNodeForDevice (*i, playHeadState, params));
 
-        return {};
-    };
-
-    if (auto returnNode = getInsertReturnNode())
-        return { makeSummingNode ({ returnNode.release(), sendNode.release() }) };
-
-    return sendNode;
+    return makeNode<InsertSendNode> (insert);
 }
 
 //==============================================================================
-std::unique_ptr<tracktion::graph::Node> createGroupFreezeNodeForDevice (Edit& edit, OutputDevice& device, ProcessState& processState)
+std::unique_ptr<tracktion::graph::Node> createGroupFreezeNodeForDevice (Edit& edit,
+                                                                        OutputDevice& device,
+                                                                        ProcessState& processState)
 {
     CRASH_TRACER
 
@@ -1425,7 +1714,10 @@ std::unique_ptr<tracktion::graph::Node> createGroupFreezeNodeForDevice (Edit& ed
 }
 
 //==============================================================================
-std::unique_ptr<tracktion::graph::Node> createNodeForDevice (EditPlaybackContext& epc, OutputDevice& device, PlayHeadState& playHeadState, std::unique_ptr<Node> node)
+std::unique_ptr<tracktion::graph::Node> createNodeForDevice (EditPlaybackContext& epc,
+                                                             OutputDevice& device,
+                                                             PlayHeadState& playHeadState,
+                                                             std::unique_ptr<Node> node)
 {
     if (auto waveDevice = dynamic_cast<WaveOutputDevice*> (&device))
     {
@@ -1436,7 +1728,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForDevice (EditPlaybackContext
         {
             if (channel.indexInDevice != -1)
                 channelMap.push_back (std::make_pair (sourceIndex, channel.indexInDevice));
-            
+
             ++sourceIndex;
         }
 
@@ -1444,21 +1736,30 @@ std::unique_ptr<tracktion::graph::Node> createNodeForDevice (EditPlaybackContext
     }
     else if (auto midiInstance = dynamic_cast<MidiOutputDeviceInstance*> (epc.getOutputFor (&device)))
     {
-        return tracktion::graph::makeNode<MidiOutputDeviceInstanceInjectingNode> (*midiInstance, std::move (node), playHeadState.playHead);
+        return tracktion::graph::makeNode<MidiOutputDeviceInstanceInjectingNode> (*midiInstance, std::move (node),
+                                                                                  playHeadState.playHead);
     }
-    
+
     return {};
 }
 
-std::unique_ptr<tracktion::graph::Node> createMasterPluginsNode (Edit& edit, tracktion::graph::PlayHeadState& playHeadState, std::unique_ptr<Node> node, const CreateNodeParams& params)
+std::unique_ptr<tracktion::graph::Node> createMasterPluginsNode (Edit& edit,
+                                                                 tracktion::graph::PlayHeadState& playHeadState,
+                                                                 std::unique_ptr<Node> node,
+                                                                 const CreateNodeParams& params)
 {
     if (! params.includeMasterPlugins)
         return node;
 
-    auto& tempoModList = edit.getTempoTrack()->getModifierList();
-    auto& masterModList = edit.getMasterTrack()->getModifierList();
+    auto tempoTrack = edit.getTempoTrack();
+    auto tempoModList = tempoTrack != nullptr ? tempoTrack->getModifierList() : nullptr;
+
     node = createModifierNodeForList (tempoModList, Modifier::ProcessingPosition::preFX,
                                       nullptr, std::move (node), playHeadState, params);
+
+    auto masterTrack = edit.getMasterTrack();
+    auto masterModList = masterTrack != nullptr ? masterTrack->getModifierList() : nullptr;
+
     node = createModifierNodeForList (masterModList, Modifier::ProcessingPosition::preFX,
                                       nullptr, std::move (node), playHeadState, params);
 
@@ -1471,21 +1772,23 @@ std::unique_ptr<tracktion::graph::Node> createMasterPluginsNode (Edit& edit, tra
 
     if (auto masterVolPlugin = edit.getMasterVolumePlugin())
         node = createNodeForPlugin (*masterVolPlugin, nullptr, std::move (node), params);
-    
+
     return node;
 }
 
-std::unique_ptr<tracktion::graph::Node> createMasterFadeInOutNode (Edit& edit, std::unique_ptr<Node> node, const CreateNodeParams& params)
+std::unique_ptr<tracktion::graph::Node> createMasterFadeInOutNode (Edit& edit,
+                                                                   std::unique_ptr<Node> node,
+                                                                   const CreateNodeParams& params)
 {
     if (! params.includeMasterPlugins)
         return node;
-    
+
     if (edit.masterFadeIn > 0_td || edit.masterFadeOut > 0_td)
     {
-        auto length = edit.getLength();
+        auto length = toPosition (edit.getLength());
         return makeNode<FadeInOutNode> (std::move (node), params.processState,
-                                        TimeRange { TimePosition(), edit.masterFadeIn },
-                                        TimeRange { toPosition (length) - edit.masterFadeOut, length },
+                                        TimeRange { 0_tp, edit.masterFadeIn },
+                                        TimeRange { length - edit.masterFadeOut, length },
                                         edit.masterFadeInType.get(),
                                         edit.masterFadeOutType.get(),
                                         true);
@@ -1502,7 +1805,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
     Edit& edit = epc.edit;
     auto& playHeadState = params.processState.playHeadState;
     auto insertPlugins = getAllPluginsOfType<InsertPlugin> (edit);
-    
+
     using TrackNodeVector = std::vector<std::unique_ptr<tracktion::graph::Node>>;
     std::map<OutputDevice*, TrackNodeVector> deviceNodes;
     std::vector<OutputDevice*> devicesWithFrozenNodes;
@@ -1518,7 +1821,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
             {
                 if (! device->isEnabled())
                     continue;
-                
+
                 if (! params.forRendering && t->isFrozen (Track::groupFreeze))
                 {
                     if (std::find (devicesWithFrozenNodes.begin(), devicesWithFrozenNodes.end(), device)
@@ -1560,7 +1863,25 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
         {
             if (! edit.isClickTrackDevice (*device))
                 continue;
-            
+
+            auto& trackNodeVector = deviceNodes[device];
+            juce::ignoreUnused (trackNodeVector);
+            // We don't need to add anything to the vector, just ensure the device is in the map
+        }
+    }
+
+    // Add deviceNodes for any devices only being used by the MIDI clock or MTC
+    for (int i = edit.engine.getDeviceManager().getNumMidiOutDevices(); --i >= 0;)
+    {
+        if (auto device = edit.engine.getDeviceManager().getMidiOutDevice (i))
+        {
+            const bool isSendingMidi = device->isSendingClock()
+                                        || device->isSendingTimecode()
+                                        || device->isSendingControllerMidiClock();
+
+            if (! isSendingMidi)
+                continue;
+
             auto& trackNodeVector = deviceNodes[device];
             juce::ignoreUnused (trackNodeVector);
             // We don't need to add anything to the vector, just ensure the device is in the map
@@ -1569,13 +1890,13 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
 
 
     auto outputNode = std::make_unique<tracktion::graph::SummingNode>();
-        
+
     for (auto& deviceAndTrackNode : deviceNodes)
     {
         auto device = deviceAndTrackNode.first;
         jassert (device != nullptr);
         auto tracksVector = std::move (deviceAndTrackNode.second);
-        
+
         auto sumNode = std::make_unique<SummingNode> (std::move (tracksVector));
         sumNode->setDoubleProcessingPrecision (edit.engine.getPropertyStorage().getProperty (SettingID::use64Bit, false));
 
@@ -1586,24 +1907,24 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
         {
             if (ins->isFrozen())
                 continue;
-            
+
             if (ins->outputDevice != device->getName())
                 continue;
 
-            if (auto sendNode = createInsertSendNode (*ins, *device, playHeadState, params))
+            if (auto sendNode = createInsertSendNode (*ins, *device))
             {
                 sumNode->addInput (std::move (sendNode));
                 deviceIsBeingUsedAsInsert = true;
             }
         }
-        
+
         std::unique_ptr<Node> node = std::move (sumNode);
 
         if (! deviceIsBeingUsedAsInsert)
         {
-            if (edit.engine.getDeviceManager().getDefaultWaveOutDevice() == device)
+            if (edit.engine.getDeviceManager().getDefaultWaveOutDeviceID() == device->getDeviceID())
                 node = createMasterPluginsNode (edit, playHeadState, std::move (node), params);
-            
+
             node = createMasterFadeInOutNode (edit, std::move (node), params);
             node = EditNodeBuilder::insertOptionalLastStageNode (std::move (node));
 
@@ -1611,7 +1932,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
                 if (auto previewMeasurer = edit.getPreviewLevelMeasurer())
                     node = makeNode<SharedLevelMeasuringNode> (std::move (previewMeasurer), std::move (node));
         }
-        
+
         if (edit.isClickTrackDevice (*device))
         {
             auto clickAndTracksNode = makeSummingNode ({ node.release(),
@@ -1623,12 +1944,12 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
         if (auto outputDeviceNode = createNodeForDevice (epc, *device, playHeadState, std::move (node)))
             outputNode->addInput (std::move (outputDeviceNode));
     }
-    
+
     std::unique_ptr<Node> finalNode (std::move (outputNode));
     finalNode = makeNode<LevelMeasuringNode> (std::move (finalNode), epc.masterLevels);
     finalNode = createRackNode (std::move (finalNode), edit.getRackList(), params);
     finalNode = makeNode<PlayHeadPositionNode> (params.processState, std::move (finalNode), audibleTimeToUpdate);
-    
+
     return finalNode;
 }
 
@@ -1637,7 +1958,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (Edit& edit, const Cre
     std::vector<std::unique_ptr<tracktion::graph::Node>> trackNodes;
     auto params = originalParams;
     auto& playHeadState = params.processState.playHeadState;
-    
+
     if (params.implicitlyIncludeSubmixChildTracks && params.allowedTracks != nullptr)
         *params.allowedTracks = addImplicitSubmixChildTracks (*params.allowedTracks);
 

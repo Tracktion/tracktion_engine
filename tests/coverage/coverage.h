@@ -27,7 +27,10 @@
 
 #pragma once
 
-using namespace tracktion_engine;
+using namespace tracktion;
+
+#define DOCTEST_CONFIG_IMPLEMENT
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
 
 #include "../../examples/common/tracktion_graph_Dev.h"
 
@@ -36,10 +39,21 @@ using namespace tracktion_engine;
 int main (int, char**)
 {
     ScopedJuceInitialiser_GUI init;
+
+    auto doctestContext = std::make_unique<doctest::Context>();
+    doctestContext->setOption ("duration", true);
+    doctestContext->addFilter("test-suite", "tracktion_core");
+    doctestContext->addFilter("test-suite", "tracktion_graph");
+    doctestContext->addFilter("test-suite", "tracktion_engine");
+
     return TestRunner::runTests ({},
-                                 { "Tracktion",
-                                   "Tracktion:Longer",
-                                   "tracktion_benchmarks",
-                                   "tracktion_graph",
-                                   "tracktion_graph_performance" });
+                                 std::vector<juce::String> {
+                                    "Tracktion",
+                                    "Tracktion:Longer",
+                                    "tracktion_benchmarks",
+                                    "tracktion_core",
+                                    "tracktion_graph",
+                                    "tracktion_engine",
+                                    "tracktion_graph_performance" },
+                                    std::move (doctestContext));
 }

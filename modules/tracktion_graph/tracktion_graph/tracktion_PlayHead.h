@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -101,7 +101,7 @@ public:
     juce::Range<int64_t> getLoopRange() const noexcept;
 
     /** Sets a playback range and whether to loop or not. */
-    void setLoopRange (bool loop, juce::Range<int64_t> loopRange);
+    void setLoopRange (bool loop, juce::Range<int64_t> loopRange, bool updatePosition = true);
 
     /** Puts the play head in to roll in to loop mode.
         If this position is before the loop start position, the play head won't
@@ -115,14 +115,14 @@ public:
 
     /** Returns true if the user is dragging. */
     bool isUserDragging() const;
-    
+
     /** Returns the time of the last user interaction, either a setPosition or setUserIsDragging call. */
     std::chrono::system_clock::time_point getLastUserInteractionTime() const;
 
     //==============================================================================
     /** Sets the length of the small looped blocks to play while scrubbing. E.g. when the user is dragging. */
     void setScrubbingBlockLength (int64_t numSamples);
-    
+
     /** Returns the length of the small looped blocks to play while scrubbing. */
     int64_t getScrubbingBlockLength() const;
 
@@ -135,7 +135,7 @@ public:
 
     /** Converts a reference sample range to a timeline range as if there was no looping set. */
     juce::Range<int64_t> referenceSampleRangeToSourceRangeUnlooped (juce::Range<int64_t> sourceReferenceSampleRange) const;
-    
+
     /** Converts a linear timeline position to a position wrapped in the loop. */
     static int64_t linearPositionToLoopPosition (int64_t position, juce::Range<int64_t> loopRange);
 
@@ -159,12 +159,12 @@ private:
         int64_t referenceSyncPosition = 0;
         int64_t playoutSyncPosition = 0;
     };
-    
-    std::atomic<SyncPositions> syncPositions { SyncPositions() };
+
+    MultipleWriterSeqLock<SyncPositions> syncPositions;
 
     //==============================================================================
-    std::atomic<juce::Range<int64_t>> referenceSampleRange { juce::Range<int64_t>() };
-    std::atomic<juce::Range<int64_t>> timelinePlayRange { juce::Range<int64_t>() };
+    MultipleWriterSeqLock<juce::Range<int64_t>> referenceSampleRange;
+    MultipleWriterSeqLock<juce::Range<int64_t>> timelinePlayRange;
     std::atomic<int64_t> scrubbingBlockLength { static_cast<int64_t> (0.08 * 44100.0) };
 
     std::atomic<int> speed { 0 };
@@ -173,9 +173,9 @@ private:
     std::atomic<std::chrono::system_clock::time_point> userInteractionTime { std::chrono::system_clock::now() };
 
     //==============================================================================
-    SyncPositions getSyncPositions() const              { return syncPositions; }
-    void setSyncPositions (SyncPositions newPositions)  { syncPositions = newPositions; }
-    
+    SyncPositions getSyncPositions() const              { return syncPositions.load(); }
+    void setSyncPositions (SyncPositions newPositions)  { syncPositions.store (newPositions); }
+
     void userInteraction()  { userInteractionTime = std::chrono::system_clock::now(); }
 };
 
@@ -184,11 +184,7 @@ private:
 //==============================================================================
 inline PlayHead::PlayHead() noexcept
 {
-    // There isn't currently a lock-free implementation of this on Linux
-   #if ! JUCE_LINUX && ! JUCE_WINDOWS
-    assert (referenceSampleRange.is_lock_free());
-    assert (syncPositions.is_lock_free());
-   #endif
+    assert (scrubbingBlockLength.is_lock_free());
 }
 
 //==============================================================================
@@ -202,7 +198,7 @@ inline void PlayHead::setPosition (int64_t newPosition)
 
 inline void PlayHead::play (juce::Range<int64_t> rangeToPlay, bool looped)
 {
-    timelinePlayRange = rangeToPlay;
+    timelinePlayRange.store (rangeToPlay);
     looping = looped && (rangeToPlay.getLength() > 50);
     setPosition (rangeToPlay.getStart());
     speed = 1;
@@ -259,23 +255,25 @@ inline bool PlayHead::isLooping() const noexcept                    { return loo
 
 inline bool PlayHead::isRollingIntoLoop() const noexcept            { return rollInToLoop.load (std::memory_order_relaxed); }
 
-inline juce::Range<int64_t> PlayHead::getLoopRange() const noexcept { return timelinePlayRange; }
+inline juce::Range<int64_t> PlayHead::getLoopRange() const noexcept { return timelinePlayRange.load(); }
 
-inline void PlayHead::setLoopRange (bool loop, juce::Range<int64_t> loopRange)
+inline void PlayHead::setLoopRange (bool loop, juce::Range<int64_t> loopRange, bool updatePosition)
 {
     if (looping != loop || (loop && loopRange != getLoopRange()))
     {
         auto lastPos = getPosition();
         looping = loop;
-        timelinePlayRange = loopRange;
-        setPosition (lastPos);
+        timelinePlayRange.store (loopRange);
+
+        if (updatePosition)
+            setPosition (lastPos);
     }
 }
 
 inline void PlayHead::setRollInToLoop (int64_t position)
 {
     rollInToLoop = true;
-    
+
     SyncPositions newSyncPositions;
     newSyncPositions.referenceSyncPosition = referenceSampleRange.load().getStart();
     newSyncPositions.playoutSyncPosition = std::min (position, timelinePlayRange.load().getEnd());
@@ -314,12 +312,12 @@ inline int64_t PlayHead::getScrubbingBlockLength() const
 inline int64_t PlayHead::referenceSamplePositionToTimelinePosition (int64_t referenceSamplePosition) const
 {
     const auto syncPos = getSyncPositions();
-    
+
     if (userDragging)
         return syncPos.playoutSyncPosition + ((referenceSamplePosition - syncPos.referenceSyncPosition) % getScrubbingBlockLength());
 
     if (looping && ! rollInToLoop)
-        return linearPositionToLoopPosition (referenceSamplePositionToTimelinePositionUnlooped (referenceSamplePosition), timelinePlayRange);
+        return linearPositionToLoopPosition (referenceSamplePositionToTimelinePositionUnlooped (referenceSamplePosition), timelinePlayRange.load());
 
     return referenceSamplePositionToTimelinePositionUnlooped (referenceSamplePosition);
 }
@@ -340,13 +338,13 @@ inline juce::Range<int64_t> PlayHead::referenceSampleRangeToSourceRangeUnlooped 
 inline int64_t PlayHead::linearPositionToLoopPosition (int64_t position, juce::Range<int64_t> loopRange)
 {
     const auto loopStart = loopRange.getStart();
-    return loopStart + ((position - loopStart) % loopRange.getLength());
+    return loopStart + juce::negativeAwareModulo ((position - loopStart), loopRange.getLength());
 }
 
 //==============================================================================
 inline void PlayHead::setReferenceSampleRange (juce::Range<int64_t> sampleRange)
 {
-    referenceSampleRange = sampleRange;
+    referenceSampleRange.store (sampleRange);
 
     if (rollInToLoop && getPosition() >= timelinePlayRange.load().getStart())
         rollInToLoop = false;
@@ -354,7 +352,7 @@ inline void PlayHead::setReferenceSampleRange (juce::Range<int64_t> sampleRange)
 
 inline juce::Range<int64_t> PlayHead::getReferenceSampleRange() const
 {
-    return referenceSampleRange;
+    return referenceSampleRange.load();
 }
 
 inline int64_t PlayHead::getPlayoutSyncPosition() const

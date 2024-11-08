@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -19,7 +19,7 @@ ImpulseResponsePlugin::ImpulseResponsePlugin (PluginCreationInfo info)
     auto um = getUndoManager();
 
     name.referTo (state, IDs::name, um);
-    
+
     const juce::NormalisableRange frequencyRange { frequencyToMidiNote (10.0f), frequencyToMidiNote (20'000.0f) };
 
     highPassCutoffValue.referTo (state, IDs::highPassFrequency, um, frequencyRange.start);
@@ -80,7 +80,7 @@ bool ImpulseResponsePlugin::loadImpulseResponse (const void* sourceData, size_t 
 {
     auto is = std::make_unique<juce::MemoryInputStream> (sourceData, sourceDataSize, false);
     auto& formatManager = engine.getAudioFileFormatManager().readFormatManager;
-    
+
     if (auto reader = std::unique_ptr<juce::AudioFormatReader> (formatManager.createReaderFor (std::move (is))))
     {
         juce::AudioBuffer<float> buffer ((int) reader->numChannels, (int) reader->lengthInSamples);
@@ -88,17 +88,17 @@ bool ImpulseResponsePlugin::loadImpulseResponse (const void* sourceData, size_t 
 
         return loadImpulseResponse (std::move (buffer), reader->sampleRate, (int) reader->bitsPerSample);
     }
-    
+
     return false;
 }
 
 bool ImpulseResponsePlugin::loadImpulseResponse (const juce::File& fileImpulseResponse)
 {
     juce::MemoryBlock fileDataMemoryBlock;
-    
+
     if (fileImpulseResponse.loadFileAsData (fileDataMemoryBlock))
         return loadImpulseResponse (fileDataMemoryBlock.getData(), fileDataMemoryBlock.getSize());
-    
+
     return false;
 }
 
@@ -129,10 +129,9 @@ bool ImpulseResponsePlugin::loadImpulseResponse (juce::AudioBuffer<float>&& buff
 
 
 //==============================================================================
-juce::String ImpulseResponsePlugin::getName()                   { return getPluginName(); }
+juce::String ImpulseResponsePlugin::getName() const             { return getPluginName(); }
 juce::String ImpulseResponsePlugin::getShortName (int)          { return "IR"; }
 juce::String ImpulseResponsePlugin::getPluginType()             { return xmlTypeName; }
-bool ImpulseResponsePlugin::needsConstantBufferSize()           { return false; }
 juce::String ImpulseResponsePlugin::getSelectableDescription()  { return getName(); }
 
 double ImpulseResponsePlugin::getLatencySeconds()
@@ -157,7 +156,7 @@ void ImpulseResponsePlugin::initialise (const PluginInitialisationInfo& info)
     const auto wetDry = getWetDryLevels (mixParam->getCurrentValue());
     wetGainSmoother.setTargetValue (wetDry.wet);
     dryGainSmoother.setTargetValue (wetDry.dry);
-    
+
     const double smoothTime = 0.01;
     lowFreqSmoother.reset (info.sampleRate, smoothTime);
     highFreqSmoother.reset (info.sampleRate, smoothTime);
@@ -191,15 +190,15 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
     auto hpf = processorChain.get<HPFIndex>().state;
     auto& lpf = processorChain.get<LPFIndex>().state;
     auto& gain = processorChain.get<gainIndex>();
-    
+
     AudioScratchBuffer dryBuffer (*fc.destBuffer);
-    
+
     if (gainSmoother.isSmoothing() || lowFreqSmoother.isSmoothing() || highFreqSmoother.isSmoothing() || qSmoother.isSmoothing())
     {
         const int blockSize = 32;
         int numSamplesLeft = fc.bufferNumSamples;
         int numSamplesDone = 0;
-        
+
         for (;;)
         {
             const int numThisTime = std::min (blockSize, numSamplesLeft);
@@ -218,7 +217,7 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
 
             numSamplesDone += numThisTime;
             numSamplesLeft -= blockSize;
-            
+
             if (numSamplesDone == fc.bufferNumSamples)
                 break;
         }
@@ -235,7 +234,7 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
         juce::dsp::ProcessContextReplacing <float> context (inOutBlock);
         processorChain.process (context);
     }
-    
+
     const bool isMixed = wetGainSmoother.getCurrentValue() < 1.0f;
     jassert (fc.bufferStartSample == 0); // This assumes bufferStartSample is always 0 which should be the case
     wetGainSmoother.applyGain (*fc.destBuffer, fc.bufferNumSamples);
@@ -253,11 +252,10 @@ void ImpulseResponsePlugin::applyToBuffer (const PluginRenderContext& fc)
 
 void ImpulseResponsePlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    juce::CachedValue<float>* cvsFloat[] = { &gainValue, &highPassCutoffValue, &lowPassCutoffValue, &mixValue, &qValue, nullptr };
-    copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+    copyPropertiesToCachedValues (v, gainValue, highPassCutoffValue, lowPassCutoffValue, mixValue, qValue);
 
     state.setProperty (IDs::name, v[IDs::name], getUndoManager());
-    
+
     if (auto irFileData = v.getProperty (IDs::irFileData).getBinaryData())
         state.setProperty (IDs::irFileData, juce::var (juce::MemoryBlock (*irFileData)), getUndoManager());
 

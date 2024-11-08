@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -153,9 +153,9 @@ namespace chocMidiHelpers
         Kind lastSentKind = Kind::rpn, newestKind = Kind::rpn;
     };
 
-    void createControllerUpdatesForTime (const choc::midi::Sequence& sequence,
-                                         uint8_t channel, double time,
-                                         juce::Array<juce::MidiMessage>& dest)
+    inline void createControllerUpdatesForTime (const choc::midi::Sequence& sequence,
+                                                uint8_t channel, double time,
+                                                juce::Array<juce::MidiMessage>& dest)
     {
         ProgramChange programChange;
         ControllerValues controllerValues;
@@ -167,7 +167,7 @@ namespace chocMidiHelpers
             if (! event.message.isShortMessage())
                 continue;
 
-            const auto mm = event.message.getShortMessage();
+            const auto& mm = event.message;
 
             if (! (mm.getChannel1to16() == channel && event.timeStamp <= time))
                 continue;
@@ -221,11 +221,12 @@ namespace chocMidiHelpers
 namespace MidiHelpers
 {
     /** Snips out a section of a sequence adding note on/off events for notes at the loop boundries. */
-    juce::MidiMessageSequence createLoopSection (juce::MidiMessageSequence sourceSequence,
-                                                 juce::Range<double> loopRange)
+    inline juce::MidiMessageSequence createLoopSection (juce::MidiMessageSequence sourceSequence,
+                                                        juce::Range<double> loopRange)
     {
         juce::MidiMessageSequence res;
 
+        jassert (! loopRange.isEmpty());
         sourceSequence.updateMatchedPairs();
 
         for (int i = 0; i < sourceSequence.getNumEvents(); ++i)
@@ -254,6 +255,11 @@ namespace MidiHelpers
                     if (noteRange.getEnd() > loopRange.getEnd())
                         noteRange = noteRange.withEnd (loopRange.getEnd());
 
+                    // If the size of the note ends up as 0 don't add it.
+                    // This can confuse some synths
+                    if (noteRange.isEmpty())
+                        continue;
+
                     res.addEvent ({ meh->message, noteRange.getStart() });
                     res.addEvent ({ meh->noteOffObject->message, noteRange.getEnd() });
                 }
@@ -277,10 +283,11 @@ namespace MidiHelpers
     }
 
     /** Snips out a section of a set of sequences adding note on/off events for notes at the loop boundries. */
-    std::vector<juce::MidiMessageSequence> createLoopSection (const std::vector<juce::MidiMessageSequence>& sourceSequences,
-                                                              juce::Range<double> loopRange)
+    inline std::vector<juce::MidiMessageSequence> createLoopSection (const std::vector<juce::MidiMessageSequence>& sourceSequences,
+                                                                     juce::Range<double> loopRange)
     {
         std::vector<juce::MidiMessageSequence> res;
+        jassert (! loopRange.isEmpty());
 
         for (auto& seq : sourceSequences)
             res.push_back (createLoopSection (seq, loopRange));
@@ -288,7 +295,7 @@ namespace MidiHelpers
         return res;
     }
 
-    void applyQuantisationToSequence (const QuantisationType& q, juce::MidiMessageSequence& ms, bool canQuantiseNoteOffs)
+    inline void applyQuantisationToSequence (const QuantisationType& q, juce::MidiMessageSequence& ms, bool canQuantiseNoteOffs)
     {
         if (! q.isEnabled())
             return;
@@ -335,7 +342,7 @@ namespace MidiHelpers
         }
     }
 
-    void applyGrooveToSequence (const GrooveTemplate& groove, float grooveStrength, juce::MidiMessageSequence& ms)
+    inline void applyGrooveToSequence (const GrooveTemplate& groove, float grooveStrength, juce::MidiMessageSequence& ms)
     {
         for (auto mh : ms)
         {
@@ -346,38 +353,7 @@ namespace MidiHelpers
         }
     }
 
-    void createNoteOffs (ActiveNoteList& activeNoteList,
-                         MidiMessageArray& destination,
-                         MidiMessageArray::MPESourceID midiSourceID,
-                         double midiTimeOffset, bool isPlaying)
-    {
-        int activeChannels = 0;
-
-        // First send note-off events for currently playing notes
-        activeNoteList.iterate ([&] (int channel, int noteNumber)
-                                {
-                                    activeChannels |= (1 << channel);
-                                    destination.addMidiMessage (juce::MidiMessage::noteOff (channel, noteNumber), midiTimeOffset, midiSourceID);
-                                });
-        activeNoteList.reset();
-
-        // Send controller off events for used channels
-        for (int i = 1; i <= 16; ++i)
-        {
-            if ((activeChannels & (1 << i)) != 0)
-            {
-                destination.addMidiMessage (juce::MidiMessage::controllerEvent (i, 66 /* sustain pedal off */, 0), midiTimeOffset, midiSourceID);
-                destination.addMidiMessage (juce::MidiMessage::controllerEvent (i, 64 /* hold pedal off */, 0), midiTimeOffset, midiSourceID);
-
-                // NB: Some buggy plugins seem to fail to respond to note-ons if they are preceded
-                // by an all-notes-off, so avoid this while playing.
-                if (! isPlaying)
-                    destination.addMidiMessage (juce::MidiMessage::allNotesOff (i), midiTimeOffset, midiSourceID);
-            }
-        }
-    }
-
-    choc::midi::Sequence& addSequence (choc::midi::Sequence& dest, const juce::MidiMessageSequence& src, double timeStampOffset)
+    inline choc::midi::Sequence& addSequence (choc::midi::Sequence& dest, const juce::MidiMessageSequence& src, double timeStampOffset)
     {
         for (auto meh : src)
         {
@@ -388,20 +364,18 @@ namespace MidiHelpers
         return dest;
     }
 
-    void createNoteOffMap (std::vector<std::pair<size_t, size_t>>& noteOffMap,
-                           const choc::midi::Sequence& seq)
+    inline void createNoteOffMap (std::vector<std::pair<size_t, size_t>>& noteOffMap,
+                                  const choc::midi::Sequence& seq)
     {
         noteOffMap.clear();
         const auto seqLen = seq.events.size();
 
         for (size_t i = 0; i < seqLen; ++i)
         {
-            const auto& e = seq.events[i].message;
+            const auto& m = seq.events[i].message;
 
-            if (! e.isShortMessage())
+            if (! m.isShortMessage())
                 continue;
-
-            const auto m = e.getShortMessage();
 
             if (m.isNoteOn())
             {
@@ -410,16 +384,14 @@ namespace MidiHelpers
 
                 for (size_t j = i + 1; j < seqLen; ++j)
                 {
-                    const auto& e2 = seq.events[j].message;
+                    const auto& m2 = seq.events[j].message;
 
-                    if (! e2.isShortMessage())
+                    if (! m2.isShortMessage())
                         continue;
 
-                    const auto m2 = e2.getShortMessage();
-
                     if (m2.getNoteNumber() == note
-                        && m2.getChannel0to15() == chan
-                        && m2.isNoteOff())
+                         && m2.getChannel0to15() == chan
+                         && m2.isNoteOff())
                     {
                         noteOffMap.emplace_back (std::make_pair (i, j));
                         break;
@@ -429,9 +401,9 @@ namespace MidiHelpers
         }
     }
 
-    choc::midi::Sequence::Event* getNoteOff (size_t noteOnIndex,
-                                             choc::midi::Sequence& ms,
-                                             const std::vector<std::pair<size_t, size_t>>& noteOffMap)
+    inline choc::midi::Sequence::Event* getNoteOff (size_t noteOnIndex,
+                                                    choc::midi::Sequence& ms,
+                                                    const std::vector<std::pair<size_t, size_t>>& noteOffMap)
     {
         auto found = std::find_if (noteOffMap.begin(), noteOffMap.end(),
                                    [noteOnIndex] (const auto& m) { return m.first == noteOnIndex; });
@@ -442,9 +414,9 @@ namespace MidiHelpers
         return {};
     }
 
-    const choc::midi::Sequence::Event* getNoteOff (size_t noteOnIndex,
-                                                   const choc::midi::Sequence& ms,
-                                                   const std::vector<std::pair<size_t, size_t>>& noteOffMap)
+    inline const choc::midi::Sequence::Event* getNoteOff (size_t noteOnIndex,
+                                                          const choc::midi::Sequence& ms,
+                                                          const std::vector<std::pair<size_t, size_t>>& noteOffMap)
     {
         auto found = std::find_if (noteOffMap.begin(), noteOffMap.end(),
                                    [noteOnIndex] (const auto& m) { return m.first == noteOnIndex; });
@@ -455,8 +427,21 @@ namespace MidiHelpers
         return {};
     }
 
-    void applyQuantisationToSequence (const QuantisationType& q, bool canQuantiseNoteOffs,
-                                      choc::midi::Sequence& ms, const std::vector<std::pair<size_t, size_t>>& noteOffMap)
+    inline std::optional<size_t> getNoteOffIndex (size_t noteOnIndex,
+                                                  const std::vector<std::pair<size_t, size_t>>& noteOffMap)
+    {
+        auto found = std::find_if (noteOffMap.begin(), noteOffMap.end(),
+                                   [noteOnIndex] (const auto& m) { return m.first == noteOnIndex; });
+
+        if (found != noteOffMap.end())
+            return found->second;
+
+        return {};
+    }
+
+
+    inline void applyQuantisationToSequence (const QuantisationType& q, bool canQuantiseNoteOffs,
+                                             choc::midi::Sequence& ms, const std::vector<std::pair<size_t, size_t>>& noteOffMap)
     {
         if (! q.isEnabled())
             return;
@@ -472,7 +457,7 @@ namespace MidiHelpers
                            if (! e.message.isShortMessage())
                                return;
 
-                           const auto m = e.message.getShortMessage();
+                           const auto& m = e.message;
 
                            if (m.isNoteOn())
                            {
@@ -507,28 +492,21 @@ namespace MidiHelpers
                        });
     }
 
-    void applyGrooveToSequence (const GrooveTemplate& groove, float grooveStrength, choc::midi::Sequence& ms)
+    inline void applyGrooveToSequence (const GrooveTemplate& groove, float grooveStrength, choc::midi::Sequence& ms)
     {
         for (auto& e : ms)
-        {
-            if (! e.message.isShortMessage())
-                continue;
-
-            const auto m = e.message.getShortMessage();
-
-            if (m.isNoteOn() || m.isNoteOff())
+            if (e.message.isNoteOn() || e.message.isNoteOff())
                 e.timeStamp = groove.beatsTimeToGroovyTime (BeatPosition::fromBeats (e.timeStamp), grooveStrength).inBeats();
-        }
     }
 
-    void createMessagesForTime (MidiMessageArray& destBuffer,
-                                const choc::midi::Sequence& sourceSequence,
-                                const std::vector<std::pair<size_t, size_t>>& noteOffMap,
-                                double time,
-                                juce::Range<int> channelNumbers,
-                                LiveClipLevel& clipLevel,
-                                bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID,
-                                juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer)
+    inline void createMessagesForTime (MidiMessageArray& destBuffer,
+                                       const choc::midi::Sequence& sourceSequence,
+                                       const std::vector<std::pair<size_t, size_t>>& noteOffMap,
+                                       double time,
+                                       juce::Range<int> channelNumbers,
+                                       LiveClipLevel& clipLevel,
+                                       bool useMPEChannelMode, MPESourceID midiSourceID,
+                                       juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer)
     {
         if (useMPEChannelMode)
         {
@@ -545,7 +523,7 @@ namespace MidiHelpers
 
             controllerMessagesScratchBuffer.clearQuick();
 
-            for (int i = channelNumbers.getStart(); i <= channelNumbers.getEnd(); ++i)
+            for (int i = channelNumbers.getStart(); i < channelNumbers.getEnd(); ++i)
                 MPEStartTrimmer::reconstructExpression (controllerMessagesScratchBuffer, sourceSequence, indexOfTime, i);
 
             for (auto& m : controllerMessagesScratchBuffer)
@@ -556,7 +534,7 @@ namespace MidiHelpers
             {
                 controllerMessagesScratchBuffer.clearQuick();
 
-                for (int i = channelNumbers.getStart(); i <= channelNumbers.getEnd(); ++i)
+                for (int i = channelNumbers.getStart(); i < channelNumbers.getEnd(); ++i)
                     chocMidiHelpers::createControllerUpdatesForTime (sourceSequence, (uint8_t) i, time, controllerMessagesScratchBuffer);
 
                 for (auto& m : controllerMessagesScratchBuffer)
@@ -570,11 +548,7 @@ namespace MidiHelpers
                 for (size_t i = 0; i < sourceSequence.events.size(); ++i)
                 {
                     auto e = sourceSequence.events[i];
-
-                    if (! e.message.isShortMessage())
-                        continue;
-
-                    const auto m = e.message.getShortMessage();
+                    const auto& m = e.message;
 
                     if (! m.isNoteOn())
                         continue;
@@ -587,7 +561,8 @@ namespace MidiHelpers
                         // don't play very short notes or ones that have already finished
                         if (noteOffEvent->timeStamp > time + 0.0001)
                         {
-                            juce::MidiMessage m2 ((int) m.data[0], (int) m.data[1], (int) m.data[2], e.timeStamp);
+                            auto data = m.data();
+                            juce::MidiMessage m2 ((int) data[0], (int) data[1], (int) data[2], e.timeStamp);
                             m2.multiplyVelocity (volScale);
 
                             // give these a tiny offset to make sure they're played after the controller updates
@@ -597,6 +572,88 @@ namespace MidiHelpers
                 }
             }
         }
+    }
+
+    inline ActiveNoteList getNotesOnAtTime (const choc::midi::Sequence& sourceSequence,
+                                            const std::vector<std::pair<size_t, size_t>>& noteOffMap,
+                                            double time,
+                                            juce::Range<int> channelNumbers, LiveClipLevel& clipLevel)
+    {
+        ActiveNoteList noteList;
+
+        if (clipLevel.isMute())
+            return {};
+
+        for (size_t i = 0; i < sourceSequence.events.size(); ++i)
+        {
+            const auto& e = sourceSequence.events[i];
+            const auto& m = e.message;
+
+            if (! m.isNoteOn())
+                continue;
+
+            if (! channelNumbers.contains ((int) m.getChannel1to16()))
+                continue;
+
+            if (auto noteOffEvent = getNoteOff (i, sourceSequence, noteOffMap))
+            {
+                if (e.timeStamp >= time)
+                    break;
+
+                // don't play very short notes or ones that have already finished
+                if (noteOffEvent->timeStamp > time + 0.0001)
+                    noteList.startNote ((int) m.getChannel1to16(), (int) m.getNoteNumber());
+            }
+        }
+
+        return noteList;
+    }
+
+    inline void clipSequenceToRange (choc::midi::Sequence& sequence, const juce::Range<double> clipRange,
+                                     std::vector<std::pair<size_t, size_t>>& noteOffMap)
+    {
+        if (clipRange.isEmpty())
+            return;
+
+        // Use a special number that won't be in use to signify an event to remove
+        // We have to do it like this to avoid allocating a new sequence
+        constexpr auto timeStampToRemoveFlag = std::numeric_limits<double>::lowest();
+
+        // First adjust all the note times
+        for (auto& m : sequence)
+            if (m.message.isShortMessage())
+                if (auto& sm = m.message; sm.isNoteOn() || sm.isNoteOff())
+                   m.timeStamp = clipRange.clipValue (m.timeStamp);
+
+        // Then change the timestamps of an zero or negative length notes
+        for (int i = (int) sequence.events.size(); --i >= 0;)
+        {
+            auto index = static_cast<size_t> (i);
+            const auto& e = sequence.events[index];
+            const auto& m = e.message;
+
+            if (! m.isNoteOn())
+                continue;
+
+            if (auto noteOffIndex = getNoteOffIndex (index, noteOffMap))
+            {
+                if (*noteOffIndex < index)
+                    continue;
+
+                const auto noteLength = sequence.events[*noteOffIndex].timeStamp - e.timeStamp;
+
+                if (noteLength > 0.0)
+                    continue;
+
+                sequence.events[*noteOffIndex].timeStamp    = timeStampToRemoveFlag;
+                sequence.events[index].timeStamp            = timeStampToRemoveFlag;
+            }
+        }
+
+        // Finally, erase any events with the flagged timestamp
+        sequence.events.erase (std::remove_if (sequence.events.begin(), sequence.events.end(),
+                                               [timeStampToRemoveFlag] (const auto& e) { return juce::approximatelyEqual (e.timeStamp, timeStampToRemoveFlag); }),
+                               sequence.events.end());
     }
 }
 
@@ -614,14 +671,20 @@ public:
                                         ActiveNoteList&,
                                         juce::Range<int> channelNumbers,
                                         LiveClipLevel&,
-                                        bool useMPEChannelMode, MidiMessageArray::MPESourceID,
+                                        bool useMPEChannelMode, MPESourceID,
                                         juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer)
     {
         juce::ignoreUnused (destBuffer, time, channelNumbers, useMPEChannelMode, controllerMessagesScratchBuffer);
     }
 
+    virtual ActiveNoteList getNotesOnAtTime (double /*time*/, juce::Range<int> /*channelNumbers*/, LiveClipLevel&)
+    {
+        jassertfalse; // You shouldn't be calling the default implementation of this!
+        return {};
+    }
+
     //==============================================================================
-    virtual void cacheSequence (double /*offset*/) {}
+    virtual void cacheSequence (double /*offset*/, std::optional<juce::Range<double>> /*clipRange*/) {}
 
     virtual void setTime (double) = 0;
     virtual bool advance() = 0;
@@ -645,11 +708,12 @@ struct EventGenerator   : public MidiGenerator
                                 ActiveNoteList& activeNoteList,
                                 juce::Range<int> channelNumbers,
                                 LiveClipLevel& clipLevel,
-                                bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID,
+                                bool useMPEChannelMode, MPESourceID midiSourceID,
                                 juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer) override
     {
-        thread_local MidiMessageArray scratchBuffer;
+        thread_local MidiMessageArray scratchBuffer, cleanedBufferToMerge;
         scratchBuffer.clear();
+        cleanedBufferToMerge.clear();
 
         MidiHelpers::createMessagesForTime (scratchBuffer,
                                             sequence, noteOffMap,
@@ -663,12 +727,36 @@ struct EventGenerator   : public MidiGenerator
         for (const auto& e : scratchBuffer)
         {
             if (e.isNoteOn())
-                activeNoteList.startNote (e.getChannel(), e.getNoteNumber());
+            {
+                if (! activeNoteList.isNoteActive (e.getChannel(), e.getNoteNumber()))
+                {
+                    cleanedBufferToMerge.add (e);
+                    activeNoteList.startNote (e.getChannel(), e.getNoteNumber());
+                }
+            }
             else if (e.isNoteOff())
-                activeNoteList.clearNote (e.getChannel(), e.getNoteNumber());
+            {
+                if (activeNoteList.isNoteActive (e.getChannel(), e.getNoteNumber()))
+                {
+                    activeNoteList.clearNote (e.getChannel(), e.getNoteNumber());
+                    cleanedBufferToMerge.add (e);
+                }
+            }
+            else
+            {
+                cleanedBufferToMerge.add (e);
+            }
         }
 
-        destBuffer.mergeFrom (scratchBuffer);
+        destBuffer.mergeFrom (cleanedBufferToMerge);
+    }
+
+    ActiveNoteList getNotesOnAtTime (SequenceBeatPosition time, juce::Range<int> channelNumbers, LiveClipLevel& clipLevel) override
+    {
+        return MidiHelpers::getNotesOnAtTime (sequence, noteOffMap,
+                                              time,
+                                              channelNumbers,
+                                              clipLevel);
     }
 
     void setTime (SequenceBeatPosition pos) override
@@ -719,92 +807,6 @@ struct EventGenerator   : public MidiGenerator
 
 
 //==============================================================================
-struct SequenceEventGenerator   : public MidiGenerator
-{
-    SequenceEventGenerator (juce::MidiMessageSequence& seq)
-        : sequence (seq)
-    {
-    }
-
-    void createMessagesForTime (MidiMessageArray& destBuffer,
-                                SequenceBeatPosition time,
-                                ActiveNoteList& activeNoteList,
-                                juce::Range<int> channelNumbers,
-                                LiveClipLevel& clipLevel,
-                                bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID,
-                                juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer) override
-    {
-        thread_local MidiMessageArray scratchBuffer;
-        scratchBuffer.clear();
-
-        MidiNodeHelpers::createMessagesForTime (scratchBuffer,
-                                                sequence,
-                                                time,
-                                                channelNumbers,
-                                                clipLevel,
-                                                useMPEChannelMode, midiSourceID,
-                                                controllerMessagesScratchBuffer);
-
-        // This isn't quite right as there could be notes that are turned on in the original buffer after the scratch buffer?
-        for (const auto& e : scratchBuffer)
-        {
-            if (e.isNoteOn())
-                activeNoteList.startNote (e.getChannel(), e.getNoteNumber());
-            else if (e.isNoteOff())
-                activeNoteList.clearNote (e.getChannel(), e.getNoteNumber());
-        }
-
-        destBuffer.mergeFrom (scratchBuffer);
-    }
-
-    void setTime (SequenceBeatPosition pos) override
-    {
-        auto numEvents = sequence.getNumEvents();
-
-        // Set the index to the start of the range
-        if (numEvents != 0)
-        {
-            currentIndex = juce::jlimit (0, numEvents - 1, currentIndex);
-
-            if (sequence.getEventTime (currentIndex) >= pos)
-            {
-                while (currentIndex > 0 && sequence.getEventTime (currentIndex - 1) >= pos)
-                    --currentIndex;
-            }
-            else
-            {
-                while (currentIndex < numEvents && sequence.getEventTime (currentIndex) < pos)
-                    ++currentIndex;
-            }
-        }
-    }
-
-    juce::MidiMessage getEvent() override
-    {
-        [[ maybe_unused ]] auto numEvents = sequence.getNumEvents();
-        jassert (currentIndex >= 0);
-        jassert (currentIndex < numEvents);
-
-        return sequence.getEventPointer (currentIndex)->message;
-    }
-
-    bool advance() override
-    {
-        ++currentIndex;
-        return ! exhausted();
-    }
-
-    bool exhausted() override
-    {
-        return currentIndex >= sequence.getNumEvents();
-    }
-
-    juce::MidiMessageSequence& sequence;
-    int currentIndex = -1;
-};
-
-
-//==============================================================================
 //==============================================================================
 class CachingMidiEventGenerator : public MidiGenerator
 {
@@ -818,7 +820,7 @@ public:
           grooveStrength (grooveStrength_)
     {
         // Cache the sequence at 0.0 time to reserve the required storage
-        cacheSequence (0.0);
+        cacheSequence (0.0, {});
 
         // Reserve the scratch space for the note on/off map
         size_t maxNumEvents = 0, maxNumNoteOns = 0;
@@ -848,7 +850,7 @@ public:
                                 ActiveNoteList& noteList,
                                 juce::Range<int> channelNumbers,
                                 LiveClipLevel& clipLevel,
-                                bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID,
+                                bool useMPEChannelMode, MPESourceID midiSourceID,
                                 juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer) override
     {
         generator.createMessagesForTime (destBuffer,
@@ -860,19 +862,27 @@ public:
                                          controllerMessagesScratchBuffer);
     }
 
+    ActiveNoteList getNotesOnAtTime (EditBeatPosition time, juce::Range<int> channelNumbers, LiveClipLevel& clipLevel) override
+    {
+        return MidiHelpers::getNotesOnAtTime (currentSequence, noteOffMap,
+                                              time,
+                                              channelNumbers,
+                                              clipLevel);
+    }
+
     void setTime (EditBeatPosition editBeatPosition) override
     {
         generator.setTime (editBeatPosition);
     }
 
-    void cacheSequence (double offsetBeats) override
+    void cacheSequence (double offsetBeats, std::optional<juce::Range<double>> clipRange) override
     {
         // Create a new sequence by:
         // - Iterating the current sequence
         // - Adding the offset timestamp to get Edit times
         // - Applying the quantisation
         // - Applying the groove
-        // - Sortign so events are in order
+        // - Sorting so events are in order
         // - Setting the sequence to be iterated
         // - Updating the offset used
 
@@ -882,7 +892,10 @@ public:
 
         // Create the cached sequence (without allocating)
         currentSequence.events.clear();
-        MidiHelpers::addSequence (currentSequence, sequences[currentSequenceIndex], offsetBeats);
+
+        if (currentSequenceIndex < sequences.size())
+            MidiHelpers::addSequence (currentSequence, sequences[currentSequenceIndex], offsetBeats);
+
         jassert (std::is_sorted (currentSequence.begin(), currentSequence.end()));
         MidiHelpers::createNoteOffMap (noteOffMap, currentSequence);
         MidiHelpers::applyQuantisationToSequence (quantisation, false, currentSequence, noteOffMap);
@@ -891,6 +904,13 @@ public:
             MidiHelpers::applyGrooveToSequence (groove, grooveStrength, currentSequence);
 
         currentSequence.sortEvents();
+
+        if (clipRange)
+        {
+            MidiHelpers::createNoteOffMap (noteOffMap, currentSequence);
+            MidiHelpers::clipSequenceToRange (currentSequence, *clipRange, noteOffMap);
+        }
+
         MidiHelpers::createNoteOffMap (noteOffMap, currentSequence);
 
         cachedSequenceOffset = offsetBeats;
@@ -950,13 +970,14 @@ public:
                                 ActiveNoteList& noteList,
                                 juce::Range<int> channelNumbers,
                                 LiveClipLevel& clipLevel,
-                                bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID,
+                                bool useMPEChannelMode, MPESourceID midiSourceID,
                                 juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer) override
     {
         // Ensure the correct sequence is cached
         setTime (editBeatPosition);
+
         generator->createMessagesForTime (destBuffer,
-                                          editBeatPosition,
+                                          editBeatPositionToSequenceBeatPosition (editBeatPosition),
                                           noteList,
                                           channelNumbers,
                                           clipLevel,
@@ -964,13 +985,28 @@ public:
                                           controllerMessagesScratchBuffer);
     }
 
+    ActiveNoteList getNotesOnAtTime (EditBeatPosition editBeatPosition, juce::Range<int> channelNumbers, LiveClipLevel& clipLevel) override
+    {
+        return generator->getNotesOnAtTime (editBeatPositionToSequenceBeatPosition (editBeatPosition),
+                                            channelNumbers,
+                                            clipLevel);
+    }
+
     void setTime (EditBeatPosition editBeatPosition) override
     {
         const ClipBeatPosition clipPos = editBeatPosition - clipRange.getStart();
-        const SequenceBeatPosition sequencePos = loopTimes.getStart() + std::fmod (clipPos, loopTimes.getLength());
 
-        setLoopIndex (static_cast<int> (clipPos / loopTimes.getLength()));
-        generator->setTime (sequencePos);
+        if (loopTimes.isEmpty())
+        {
+            generator->setTime (clipPos);
+        }
+        else
+        {
+            const SequenceBeatPosition sequencePos = loopTimes.getStart() + std::fmod (clipPos, loopTimes.getLength());
+
+            setLoopIndex (static_cast<int> (clipPos / loopTimes.getLength()));
+            generator->setTime (sequencePos);
+        }
     }
 
     juce::MidiMessage getEvent() override
@@ -986,7 +1022,7 @@ public:
     {
         generator->advance();
 
-        if (exhausted())
+        if (exhausted() && ! loopTimes.isEmpty())
         {
             setLoopIndex (loopIndex + 1);
             generator->setTime (0.0);
@@ -1008,6 +1044,18 @@ private:
     const ClipBeatRange loopTimes;
     int loopIndex = 0;
 
+    SequenceBeatPosition editBeatPositionToSequenceBeatPosition (EditBeatPosition editBeatPosition) const
+    {
+        const ClipBeatPosition clipPos = editBeatPosition - clipRange.getStart();
+
+        if (loopTimes.isEmpty())
+            return clipPos;
+
+        const SequenceBeatPosition sequencePos = loopTimes.getStart() + std::fmod (clipPos, loopTimes.getLength());
+
+        return sequencePos;
+    }
+
     void setLoopIndex (int newLoopIndex)
     {
         if (newLoopIndex == loopIndex)
@@ -1015,7 +1063,7 @@ private:
 
         loopIndex = newLoopIndex;
         const auto sequenceOffset = clipRange.getStart() + (loopIndex * loopTimes.getLength());
-        generator->cacheSequence (sequenceOffset);
+        generator->cacheSequence (sequenceOffset, loopTimes + sequenceOffset);
     }
 };
 
@@ -1025,9 +1073,11 @@ class OffsetMidiEventGenerator  : public MidiGenerator
 {
 public:
     OffsetMidiEventGenerator (std::unique_ptr<MidiGenerator> gen,
-                              ClipBeatDuration offsetToUse)
+                              ClipBeatDuration offsetToUse,
+                              std::shared_ptr<BeatDuration> dynamicOffsetToUse)
         : generator (std::move (gen)),
-          clipOffset (offsetToUse)
+          clipOffset (offsetToUse),
+          dynamicOffset (std::move (dynamicOffsetToUse))
     {
     }
 
@@ -1036,11 +1086,11 @@ public:
                                 ActiveNoteList& noteList,
                                 juce::Range<int> channelNumbers,
                                 LiveClipLevel& clipLevel,
-                                bool useMPEChannelMode, MidiMessageArray::MPESourceID midiSourceID,
+                                bool useMPEChannelMode, MPESourceID midiSourceID,
                                 juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer) override
     {
         generator->createMessagesForTime (destBuffer,
-                                          editBeatPosition + clipOffset,
+                                          editBeatPosition + getOffset(),
                                           noteList,
                                           channelNumbers,
                                           clipLevel,
@@ -1048,15 +1098,22 @@ public:
                                           controllerMessagesScratchBuffer);
     }
 
+    ActiveNoteList getNotesOnAtTime (EditBeatPosition editBeatPosition, juce::Range<int> channelNumbers, LiveClipLevel& clipLevel) override
+    {
+        return generator->getNotesOnAtTime (editBeatPosition + getOffset(),
+                                            channelNumbers,
+                                            clipLevel);
+    }
+
     void setTime (EditBeatPosition editBeatPosition) override
     {
-        generator->setTime (editBeatPosition + clipOffset);
+        generator->setTime (editBeatPosition + getOffset());
     }
 
     juce::MidiMessage getEvent() override
     {
         auto e = generator->getEvent();
-        e.addToTimeStamp (-clipOffset);
+        e.addToTimeStamp (-getOffset());
         return e;
     }
 
@@ -1074,6 +1131,12 @@ private:
     //==============================================================================
     std::unique_ptr<MidiGenerator> generator;
     const ClipBeatDuration clipOffset;
+    std::shared_ptr<BeatDuration> dynamicOffset;
+
+    ClipBeatDuration getOffset() const
+    {
+        return clipOffset - dynamicOffset->inBeats();
+    }
 };
 
 //==============================================================================
@@ -1096,29 +1159,42 @@ public:
           groove (groove_ != nullptr ? *groove_ : GrooveTemplate()),
           grooveStrength (grooveStrength_)
     {
+        assert (sequences.size() > 0);
     }
 
     void initialise (std::shared_ptr<ActiveNoteList> noteListToUse,
-                     bool sendNoteOffs)
+                     bool clipPropertiesHaveChanged, size_t lastSequencesHash,
+                     std::shared_ptr<BeatDuration> dynamicOffsetBeatsToUse)
     {
-        shouldSendNoteOffs = sendNoteOffs;
-        shouldCreateMessagesForTime = shouldSendNoteOffs || noteListToUse == nullptr;
+        if (isInitialised())
+            return;
+
+        assert (sequences.size() > 0);
+        dynamicOffsetBeats = std::move (dynamicOffsetBeatsToUse);
+        shouldCreateMessagesForTime = clipPropertiesHaveChanged || noteListToUse == nullptr;
         activeNoteList = noteListToUse ? std::move (noteListToUse)
                                        : std::make_shared<ActiveNoteList>();
 
         const EditBeatRange clipRangeRaw { editRange.getStart().inBeats(), editRange.getEnd().inBeats() };
         const ClipBeatRange loopRangeRaw { loopRange.getStart().inBeats(), loopRange.getEnd().inBeats() };
 
-        sequences = MidiHelpers::createLoopSection (std::move (sequences), loopRangeRaw);
+        if (! loopRangeRaw.isEmpty())
+            sequences = MidiHelpers::createLoopSection (std::move (sequences), loopRangeRaw);
+
+        sequencesHash = std::hash<std::vector<juce::MidiMessageSequence>>{} (sequences);
+
+        if (sequencesHash != lastSequencesHash || clipPropertiesHaveChanged)
+            shouldSendNoteOffsForNotesNoLongerPlaying = true;
 
         auto cachingGenerator = std::make_unique<CachingMidiEventGenerator> (std::move (sequences),
                                                                              std::move (quantisation), std::move (groove), grooveStrength);
         auto loopedGenerator = std::make_unique<LoopedMidiEventGenerator> (std::move (cachingGenerator),
                                                                            activeNoteList, clipRangeRaw, loopRangeRaw);
         generator = std::make_unique<OffsetMidiEventGenerator> (std::move (loopedGenerator),
-                                                                offset.inBeats());
+                                                                offset.inBeats(), dynamicOffsetBeats);
 
         controllerMessagesScratchBuffer.ensureStorageAllocated (32);
+        initialised = true;
     }
 
     const std::shared_ptr<ActiveNoteList>& getActiveNoteList() const
@@ -1132,47 +1208,79 @@ public:
                          LiveClipLevel& clipLevel,
                          juce::Range<int> channelNumbers,
                          bool useMPEChannelMode,
-                         MidiMessageArray::MPESourceID midiSourceID,
+                         MPESourceID midiSourceID,
                          bool isPlaying,
                          bool isContiguousWithPreviousBlock,
                          bool lastBlockOfLoop)
     {
         const auto secondsPerBeat = sectionEditTimeRange.getLength() / sectionEditBeatRange.getLength().inBeats();
-        const auto blockStartBeatRelativeToClip = sectionEditBeatRange.getStart() - editRange.getStart();
+        const auto blockStartBeatRelativeToClip = sectionEditBeatRange.getStart() - (editRange.getStart() + *dynamicOffsetBeats);
 
         const auto volScale = clipLevel.getGain();
-        const auto isLastBlockOfClip = sectionEditBeatRange.containsInclusive (editRange.getEnd());
+        const auto isLastBlockOfClip = sectionEditBeatRange.containsInclusive ((editRange.getEnd() + *dynamicOffsetBeats));
         const double beatDurationOfOneSample = sectionEditBeatRange.getLength().inBeats() / numSamples;
+        const auto timePositionOfLastSample = sectionEditTimeRange.getLength() > 0_td
+                                                ? (sectionEditTimeRange.getLength() - sectionEditTimeRange.getLength() / numSamples).inSeconds()
+                                                : 0.0;
 
-        const auto clipIntersection = sectionEditBeatRange.getIntersectionWith (editRange);
+        const auto clipIntersection = sectionEditBeatRange.getIntersectionWith (editRange + *dynamicOffsetBeats);
 
         if (clipIntersection.isEmpty())
-            return;
-
-        if (shouldSendNoteOffs)
         {
-            MidiHelpers::createNoteOffs (*activeNoteList,
-                                         destBuffer,
-                                         midiSourceID,
-                                         (sectionEditTimeRange.getLength() - 10us).inSeconds(),
-                                         isPlaying);
-            shouldSendNoteOffs = false;
-            shouldCreateMessagesForTime = true;
+            if (activeNoteList->areAnyNotesActive())
+                MidiNodeHelpers::createNoteOffs (*activeNoteList,
+                                                 destBuffer,
+                                                 midiSourceID,
+                                                 timePositionOfLastSample,
+                                                 isPlaying);
+
+            return;
+        }
+
+        // This turns notes off that are no longer playing due to a change in the sequence
+        // It is only called when the sequence changes
+        if (shouldSendNoteOffsForNotesNoLongerPlaying)
+        {
+            // Find the currently playing notes from the sequence
+            // Send note offs for any active notes, not in that sequence
+            // This should also catch note numbers being moved
+            const auto currentlyPlayingNoteList = generator->getNotesOnAtTime (clipIntersection.getStart().inBeats(), channelNumbers, clipLevel);
+
+            if (activeNoteList->areAnyNotesActive())
+                activeNoteList->iterate ([&] (auto chan, auto note)
+                                         {
+                                             if (currentlyPlayingNoteList.isNoteActive (chan, note))
+                                                 return;
+
+                                             destBuffer.addMidiMessage (juce::MidiMessage::noteOff (chan, note), 0.0, midiSourceID);
+                                             activeNoteList->clearNote (chan, note);
+                                         });
+
+            shouldSendNoteOffsForNotesNoLongerPlaying = false;
         }
 
         if (! isContiguousWithPreviousBlock
-            || blockStartBeatRelativeToClip <= 0.00001_bd
-            || shouldCreateMessagesForTime)
+            || blockStartBeatRelativeToClip <= 0.00001_bd)
         {
-            generator->createMessagesForTime (destBuffer, sectionEditBeatRange.getStart().inBeats(),
+            MidiNodeHelpers::createNoteOffs (*activeNoteList,
+                                             destBuffer,
+                                             midiSourceID,
+                                             0.0,
+                                             isPlaying);
+            shouldCreateMessagesForTime = true;
+        }
+
+        if (shouldCreateMessagesForTime)
+        {
+            generator->createMessagesForTime (destBuffer, clipIntersection.getStart().inBeats(),
                                               *activeNoteList,
                                               channelNumbers, clipLevel, useMPEChannelMode, midiSourceID,
                                               controllerMessagesScratchBuffer);
             shouldCreateMessagesForTime = false;
-        }
 
-        // Ensure generator is initialised
-        generator->setTime (sectionEditBeatRange.getStart().inBeats());
+            // Ensure generator is initialised
+            generator->setTime (clipIntersection.getStart().inBeats());
+        }
 
         // Iterate notes in blocks
         {
@@ -1184,7 +1292,8 @@ public:
                 auto e = generator->getEvent();
                 const EditBeatPosition editBeatPosition = e.getTimeStamp();
 
-                if (editBeatPosition >= sectionEditBeatRange.getEnd().inBeats())
+                // Ensure we stop at the clip end
+                if (editBeatPosition >= clipIntersection.getEnd().inBeats())
                     break;
 
                 BlockBeatPosition blockBeatPosition = editBeatPosition - sectionEditBeatRange.getStart().inBeats();
@@ -1199,7 +1308,7 @@ public:
                 blockBeatPosition = std::max (blockBeatPosition, 0.0);
 
                 // Note-offs that are on the end boundry need to be nudged back by 1 sample so they're not lost (which leads to stuck notes)
-                if (e.isNoteOff() && juce::isWithin (editBeatPosition, sectionEditBeatRange.getEnd().inBeats(), beatDurationOfOneSample))
+                if (e.isNoteOff() && juce::isWithin (editBeatPosition, clipIntersection.getEnd().inBeats(), beatDurationOfOneSample))
                     blockBeatPosition = blockBeatPosition - beatDurationOfOneSample;
 
                 e.multiplyVelocity (volScale);
@@ -1217,27 +1326,30 @@ public:
         }
 
         if (lastBlockOfLoop)
-            MidiHelpers::createNoteOffs (*activeNoteList,
-                                         destBuffer,
-                                         midiSourceID,
-                                         (sectionEditTimeRange.getLength() - 10us).inSeconds(),
-                                         isPlaying);
+            MidiNodeHelpers::createNoteOffs (*activeNoteList,
+                                             destBuffer,
+                                             midiSourceID,
+                                             timePositionOfLastSample,
+                                             isPlaying);
 
         if (isLastBlockOfClip)
         {
-            const auto endOfClipBeats = editRange.getEnd() - sectionEditBeatRange.getStart();
-            const auto eventTimeSeconds = endOfClipBeats.inBeats() * secondsPerBeat.inSeconds();
-            MidiHelpers::createNoteOffs (*activeNoteList,
-                                         destBuffer,
-                                         midiSourceID,
-                                         eventTimeSeconds,
-                                         isPlaying);
+            const auto endOfClipBeats = (editRange.getEnd() + *dynamicOffsetBeats) - sectionEditBeatRange.getStart();
+
+            // If the section ends right at the end of the clip, we need to nudge the note-offs back so they get played in this buffer
+            auto eventTimeSeconds = (endOfClipBeats.inBeats() - beatDurationOfOneSample) * secondsPerBeat.inSeconds();
+
+            MidiNodeHelpers::createNoteOffs (*activeNoteList,
+                                             destBuffer,
+                                             midiSourceID,
+                                             eventTimeSeconds,
+                                             isPlaying);
         }
     }
 
     bool hasSameContentAs (const GeneratorAndNoteList& o) const
     {
-        return editRange == o.editRange
+        return editRange.getStart() == o.editRange.getStart()
                 && loopRange == o.loopRange
                 && offset == o.offset
                 && quantisation == o.quantisation
@@ -1245,18 +1357,31 @@ public:
                 && grooveStrength == o.grooveStrength;
     }
 
+    size_t getSequencesHash() const
+    {
+        return sequencesHash;
+    }
+
+    bool isInitialised() const
+    {
+        return initialised;
+    }
+
 private:
     std::shared_ptr<ActiveNoteList> activeNoteList;
     std::unique_ptr<MidiGenerator> generator;
+    std::shared_ptr<BeatDuration> dynamicOffsetBeats;
 
     std::vector<juce::MidiMessageSequence> sequences;
+    size_t sequencesHash = 0;
     const BeatRange editRange, loopRange;
     const BeatDuration offset;
     QuantisationType quantisation;
     GrooveTemplate groove;
     float grooveStrength = 0.0f;
+    bool initialised = false;
 
-    bool shouldCreateMessagesForTime = false, shouldSendNoteOffs = false;
+    bool shouldCreateMessagesForTime = false, shouldSendNoteOffsForNotesNoLongerPlaying = false;
     juce::Array<juce::MidiMessage> controllerMessagesScratchBuffer;
 };
 
@@ -1285,7 +1410,9 @@ LoopingMidiNode::LoopingMidiNode (std::vector<juce::MidiMessageSequence> sequenc
       shouldBeMutedDelegate (std::move (shouldBeMuted)),
       wasMute (liveClipLevel.isMute())
 {
-    jassert (channelNumbers.getStart() > 0 && channelNumbers.getEnd() <= 16);
+    jassert (! sequences.empty());
+    // -1 from the channel numbers end here as Range end is exclusive
+    jassert (channelNumbers.getStart() > 0 && (channelNumbers.getEnd() - 1) <= 16);
 
     // Create this now but don't initialise it until we know if we have to
     // steal an old node's ActiveNoteList, this happens in prepareToPlay
@@ -1298,6 +1425,30 @@ LoopingMidiNode::LoopingMidiNode (std::vector<juce::MidiMessageSequence> sequenc
                                                                    grooveStrength);
 }
 
+const std::shared_ptr<ActiveNoteList>& LoopingMidiNode::getActiveNoteList() const
+{
+    return generatorAndNoteList->getActiveNoteList();
+}
+
+//==============================================================================
+void LoopingMidiNode::setDynamicOffsetBeats (BeatDuration newOffset)
+{
+    if (juce::approximatelyEqual (dynamicOffsetBeats->inBeats(), newOffset.inBeats()))
+        return;
+
+    (*dynamicOffsetBeats) = newOffset;
+}
+
+void LoopingMidiNode::killActiveNotes (MidiMessageArray& dest, double timestampForNoteOffs)
+{
+    MidiNodeHelpers::createNoteOffs (*generatorAndNoteList->getActiveNoteList(),
+                                     dest,
+                                     midiSourceID,
+                                     timestampForNoteOffs,
+                                     false);
+}
+
+//==============================================================================
 tracktion::graph::NodeProperties LoopingMidiNode::getNodeProperties()
 {
     tracktion::graph::NodeProperties props;
@@ -1308,40 +1459,27 @@ tracktion::graph::NodeProperties LoopingMidiNode::getNodeProperties()
 
 void LoopingMidiNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
-    std::shared_ptr<ActiveNoteList> activeNoteList;
-    bool sendNoteOffEvents = false;
-
-    if (info.rootNodeToReplace != nullptr)
+    if (generatorAndNoteList->isInitialised())
     {
-        const auto nodeIDToLookFor = getNodeProperties().nodeID;
-
-        visitNodes (*info.rootNodeToReplace, [&] (Node& n)
-                    {
-                        LoopingMidiNode* foundMidiNode = nullptr;
-
-                        if (auto midiNode = dynamic_cast<LoopingMidiNode*> (&n))
-                        {
-                            if (midiNode->getNodeProperties().nodeID == nodeIDToLookFor)
-                                foundMidiNode = midiNode;
-                        }
-                        else if (auto combiningNode = dynamic_cast<CombiningNode*> (&n))
-                        {
-                            for (auto internalNode : combiningNode->getInternalNodes())
-                                if (auto internalMidiNode = dynamic_cast<LoopingMidiNode*> (internalNode))
-                                    if (internalMidiNode->getNodeProperties().nodeID == nodeIDToLookFor)
-                                        foundMidiNode = internalMidiNode;
-                        }
-
-                        if (foundMidiNode != nullptr)
-                        {
-                            midiSourceID = foundMidiNode->midiSourceID;
-                            activeNoteList = foundMidiNode->generatorAndNoteList->getActiveNoteList();
-                            sendNoteOffEvents = ! generatorAndNoteList->hasSameContentAs (*foundMidiNode->generatorAndNoteList);
-                        }
-                    }, true);
+        // We shouldn't be getting initialised twice if the graph to replace is only preset on subsequent times
+        jassert (info.nodeGraphToReplace == nullptr);
+        return;
     }
 
-    generatorAndNoteList->initialise (activeNoteList, sendNoteOffEvents);
+    std::shared_ptr<ActiveNoteList> activeNoteList;
+    bool clipPropertiesHaveChanged = false;
+    size_t lastSequencesHash = 0;
+
+    if (auto oldNode = findNodeWithIDIfNonZero<LoopingMidiNode> (info.nodeGraphToReplace, getNodeProperties().nodeID))
+    {
+        midiSourceID = oldNode->midiSourceID;
+        activeNoteList = oldNode->generatorAndNoteList->getActiveNoteList();
+        clipPropertiesHaveChanged = ! generatorAndNoteList->hasSameContentAs (*oldNode->generatorAndNoteList);
+        lastSequencesHash = oldNode->generatorAndNoteList->getSequencesHash();
+        dynamicOffsetBeats = oldNode->dynamicOffsetBeats;
+    }
+
+    generatorAndNoteList->initialise (activeNoteList, clipPropertiesHaveChanged, lastSequencesHash, dynamicOffsetBeats);
 }
 
 bool LoopingMidiNode::isReadyToProcess()
@@ -1352,11 +1490,6 @@ bool LoopingMidiNode::isReadyToProcess()
 void LoopingMidiNode::process (ProcessContext& pc)
 {
     SCOPED_REALTIME_CHECK
-    const auto timelineRange = getTimelineSampleRange();
-
-    if (timelineRange.isEmpty())
-        return;
-
     if (shouldBeMutedDelegate && shouldBeMutedDelegate())
         return;
 
@@ -1367,11 +1500,11 @@ void LoopingMidiNode::process (ProcessContext& pc)
         if (mute != wasMute)
         {
             wasMute = mute;
-            MidiHelpers::createNoteOffs (*generatorAndNoteList->getActiveNoteList(),
-                                         pc.buffers.midi,
-                                         midiSourceID,
-                                         (getEditTimeRange().getLength() - 10us).inSeconds(),
-                                         isPlaying);
+            MidiNodeHelpers::createNoteOffs (*generatorAndNoteList->getActiveNoteList(),
+                                             pc.buffers.midi,
+                                             midiSourceID,
+                                             (getEditTimeRange().getLength() - 10us).inSeconds(),
+                                             isPlaying);
         }
 
         return;
@@ -1387,7 +1520,6 @@ void LoopingMidiNode::process (ProcessContext& pc)
                                           isPlaying,
                                           getPlayHeadState().isContiguousWithPreviousBlock(),
                                           getPlayHeadState().isLastBlockOfLoop());
-
 }
 
 }} // namespace tracktion { inline namespace engine

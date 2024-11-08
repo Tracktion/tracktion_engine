@@ -12,6 +12,10 @@
 
 #include <tracktion_core/utilities/tracktion_Benchmark.h>
 
+#define DOCTEST_CONFIG_IMPLEMENT
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+#undef DOCTEST_CONFIG_IMPLEMENT
+
 using namespace tracktion_engine;
 
 //==============================================================================
@@ -90,7 +94,7 @@ struct CoutLogger : public Logger
 namespace JUnit
 {
     /** Creates a JUnit formatted ValueTree from a UnitTestRunner's results. */
-    ValueTree createJUnitResultValueTree (const UnitTestRunner::TestResult& result)
+    inline ValueTree createJUnitResultValueTree (const UnitTestRunner::TestResult& result)
     {
         ValueTree testcase ("testcase");
         testcase.setProperty ("classname", result.unitTestName, nullptr);
@@ -104,7 +108,7 @@ namespace JUnit
     }
 
     /** Creates a JUnit formatted 'testsuite' ValueTree from a UnitTestRunner's results. */
-    ValueTree createJUnitValueTree (const String& testSuiteName, const UnitTestRunner& runner, RelativeTime duration)
+    inline ValueTree createJUnitValueTree (const String& testSuiteName, const UnitTestRunner& runner, RelativeTime duration)
     {
         ValueTree suite ("testsuite");
         suite.setProperty ("name", testSuiteName, nullptr);
@@ -131,13 +135,13 @@ namespace JUnit
     }
 
     /** Creates a JUnit formatted 'testsuite' XmlElement from a UnitTestRunner's results. */
-    std::unique_ptr<XmlElement> createJUnitXML (const String& testSuiteName, const UnitTestRunner& runner, RelativeTime duration)
+    inline std::unique_ptr<XmlElement> createJUnitXML (const String& testSuiteName, const UnitTestRunner& runner, RelativeTime duration)
     {
         return createJUnitValueTree (testSuiteName, runner, duration).createXml();
     }
 
     /** Converts a UnitTestRunner's results to a JUnit formatted XML file. */
-    Result createJUnitXMLFile (const File& destinationFile, const String& testSuiteName, const UnitTestRunner& runner, RelativeTime duration)
+    inline Result createJUnitXMLFile (const File& destinationFile, const String& testSuiteName, const UnitTestRunner& runner, RelativeTime duration)
     {
         if (auto xml = createJUnitXML (testSuiteName, runner, duration))
             if (! xml->writeTo (destinationFile))
@@ -152,7 +156,7 @@ namespace JUnit
 //==============================================================================
 namespace TestRunner
 {
-    int runTests (const File& junitResultsFile, std::vector<juce::String> categories)
+    inline int runUnitTests (const File& junitResultsFile, Array<UnitTest*> tests, std::unique_ptr<doctest::Context> doctestContext = {})
     {
         CoutLogger logger;
         Logger::setCurrentLogger (&logger);
@@ -161,11 +165,6 @@ namespace TestRunner
 
         UnitTestRunner testRunner;
         testRunner.setAssertOnFailure (false);
-
-        Array<UnitTest*> tests;
-
-        for (auto& category : categories)
-            tests.addArray (UnitTest::getTestsInCategory (category));
 
         const auto startTime = Time::getCurrentTime();
         testRunner.runTests (tests);
@@ -188,14 +187,39 @@ namespace TestRunner
                 Logger::writeToLog (res.getErrorMessage());
         }
 
+        const bool doctestPassed = [&] { return ! doctestContext || doctestContext->run() == 0; }();
+        const bool doctestFailed = ! doctestPassed;
+
         Logger::setCurrentLogger (nullptr);
 
+        return (numFailues > 0 || doctestFailed) ? 1 : 0;
         return numFailues > 0 ? 1 : 0;
     }
 
-    int runTests (const File& junitResultsFile, juce::String category)
+    inline int runTests (const File& junitResultsFile, std::vector<juce::String> categories, std::unique_ptr<doctest::Context> doctestContext)
     {
-        return runTests (junitResultsFile, std::vector<juce::String> { category });
+        Array<UnitTest*> tests;
+
+        for (auto& category : categories)
+            tests.addArray (UnitTest::getTestsInCategory (category));
+
+        return runUnitTests (junitResultsFile, std::move (tests), std::move (doctestContext));
+    }
+
+    inline int runTests (const File& junitResultsFile, juce::String category, std::unique_ptr<doctest::Context> doctestContext)
+    {
+        return runTests (junitResultsFile, std::vector<juce::String> { category }, std::move (doctestContext));
+    }
+
+    inline int runSingleTest (const File& junitResultsFile, juce::String name)
+    {
+        Array<UnitTest*> tests;
+
+        for (auto test : UnitTest::getAllTests())
+            if (test->getName() == name)
+                tests.add (test);
+
+        return runUnitTests (junitResultsFile, std::move (tests), nullptr);
     }
 }
 

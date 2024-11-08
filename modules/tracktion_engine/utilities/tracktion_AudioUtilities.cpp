@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -263,7 +263,7 @@ void getGainsFromVolumeFaderPositionAndPan (float volSliderPos, float pan, const
             case PanLawLinear:
                 jassertfalse; // should have alread been handled?
                 break;
-                
+
             default:
                 jassertfalse; // New pan law?
                 break;
@@ -486,27 +486,22 @@ struct AudioScratchBuffer::BufferList   : private juce::DeletedAtShutdown
     Buffer* get()
     {
         {
-            const juce::ScopedLock sl (lock);
+            const std::shared_lock sl (mutex);
 
             for (auto b : buffers)
-            {
-                if (b->isFree)
-                {
-                    b->isFree = false;
+                if (b->isFree.exchange (false, std::memory_order_acq_rel))
                     return b;
-                }
-            }
         }
 
         auto newBuffer = new Buffer();
         newBuffer->isFree = false;
 
-        const juce::ScopedLock sl (lock);
+        const std::unique_lock sl (mutex);
         buffers.add (newBuffer);
         return newBuffer;
     }
 
-    juce::CriticalSection lock;
+    std::shared_mutex mutex;
     juce::OwnedArray<Buffer> buffers;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BufferList)
@@ -547,12 +542,12 @@ void AudioScratchBuffer::initialise()
 
 //==============================================================================
 //==============================================================================
-#if TRACKTION_UNIT_TESTS
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_PAN_LAW
 
 class PanLawTests : public juce::UnitTest
 {
 public:
-    PanLawTests() : juce::UnitTest ("PanLaw", "Tracktion") {}
+    PanLawTests() : juce::UnitTest ("PanLaw", "tracktion_engine") {}
 
     //==============================================================================
     void runTest() override
@@ -574,7 +569,7 @@ public:
             testPanLaw (PanLawLinear, 1.0f, -0.5f, 1.5f, 0.5f); // 1/2 left
             testPanLaw (PanLawLinear, 1.0f, 0.5f, 0.5f, 1.5f);  // 1 right
         }
-        
+
         beginTest ("-2.5dB");
         {
             const auto centreGain = juce::Decibels::decibelsToGain (-2.5f);
@@ -619,7 +614,7 @@ private:
         expectGreaterOrEqual (gain, 0.0f);
         expectGreaterOrEqual (pan, -1.0f);
         expectLessOrEqual (pan, 1.0f);
-        
+
         float leftGain = 0.0;
         float rightGain = 0.0;
         getGainsFromVolumeFaderPositionAndPan (gainToVolumeFaderPosition (gain), pan, pl,

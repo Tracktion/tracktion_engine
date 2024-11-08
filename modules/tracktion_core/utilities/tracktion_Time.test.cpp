@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -42,11 +42,11 @@ public:
         : juce::UnitTest ("Time", "tracktion_core")
     {
     }
-    
+
     void runTest() override
     {
         using namespace std::literals;
-        
+
         beginTest ("Timeline Point");
         {
             {
@@ -79,7 +79,7 @@ public:
                 TimelinePoint p1;
                 const auto p2 = p1 + Duration (1.0);
                 const auto p3 = p2 + Duration (1.0);
-                
+
                 p1 += Duration (1.0);
 
                 expect (p1 == p2);
@@ -96,7 +96,7 @@ public:
                 expect (t3 == std::chrono::milliseconds (2000));
                 expect (t3 == 2s);
             }
-            
+
             {
                 TimelinePoint p (Duration (-0.5));
 
@@ -123,13 +123,13 @@ public:
                 expect (std::chrono::duration_cast<std::chrono::milliseconds> (t).count() == -500);
             }
         }
-        
+
         beginTest ("Duration");
         {
             const Duration d1 (1.0);
             const Duration d2 (0.5);
             const auto d3 = d1 + d2;
-            
+
             expect (d3.count() == 1.5);
             expect (d3 == 1.5s);
             expect (d3 == 1500ms);
@@ -415,6 +415,18 @@ public:
 
             expectEquals (1_bp / 2_bd,  0.5);
             expectEquals (1_bd / 2_bd,  0.5);
+        }
+
+        beginTest ("Time hashing");
+        {
+            const auto hash1 = std::hash<BeatPosition>() (4_bp);
+            const auto hash2 = std::hash<BeatPosition>() (8_bp);
+            const auto hash3 = std::hash<BeatPosition>() (12_bp);
+            const auto hash4 = std::hash<BeatPosition>() (16_bp);
+
+            expectNotEquals (hash1, hash2);
+            expectNotEquals (hash2, hash3);
+            expectNotEquals (hash3, hash4);
         }
     }
 };

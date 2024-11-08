@@ -4,7 +4,7 @@ In this tutorial, we're going to build a quick retune and tempo-adjust app which
 
 
 ## PitchAndTimeComponent.h
-If you open the PitchAndTimeComponent.h file you'll see it's a JUCE PIP. You can use the Projucer to create a project to build the PIP or use the script in `/tests` to generate one automatically.
+Use the script in `/tests` to generate the `DemoRunner` example project then open the `PitchAndTimeComponent.h` file.
 
 #### PitchAndTimeComponent Class
 The PitchAndTimeComponent is defined similarly to the PlaybackDemo class.
@@ -16,7 +16,7 @@ class PitchAndTimeComponent   : public Component,
 #### Private Members
 - If you look in the private members section of the `PitchAndTimeComponent` again, you'll see similarities with the PlaybackDemo: There's an `Engine` to setup the Tracktion Engine, and an `Edit`. However, this time the `Edit` is a member which we create as an empty Edit, ready for editing.
 ```
-te::Edit edit { engine, te::createEmptyEdit(), te::Edit::forEditing, nullptr, 0 };
+te::Edit edit { engine, te::Edit::EditRole::forEditing };
 ```
 
 - For speed, the next line take a reference to the `Edit`'s `TransportControl`.

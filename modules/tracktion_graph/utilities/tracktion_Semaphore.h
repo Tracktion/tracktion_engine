@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -40,7 +40,7 @@ public:
         problem (like the maximum count has been exceeded)
     */
     bool wait();
-    
+
     /** Attemps to decrement the count by one.
         If the decrement leaves the count above zero this will return true.
         If the decrement would leave the count below zero this will not block and
@@ -64,7 +64,7 @@ public:
 private:
     //==============================================================================
     std::unique_ptr<moodycamel::details::Semaphore> pimpl;
-    
+
     Semaphore(const Semaphore&) = delete;
     Semaphore& operator= (const Semaphore& other) = delete;
 };
@@ -92,14 +92,14 @@ public:
         problem (like the maximum count has been exceeded)
     */
     bool wait();
-    
+
     /** Attemps to decrement the count by one.
         If the decrement leaves the count above zero this will return true.
         If the decrement would leave the count below zero this will not block and
         return false.
     */
     bool try_wait();
-    
+
     /** Performs a wait operation. If the wait would actually block, the block
         happens for the given period of time before returning or the semaphore is
         signalled, whichever happens first.
@@ -116,7 +116,7 @@ public:
 private:
     //==============================================================================
     std::unique_ptr<moodycamel::LightweightSemaphore> pimpl;
-    
+
     LightweightSemaphore(const LightweightSemaphore&) = delete;
     LightweightSemaphore& operator= (const LightweightSemaphore& other) = delete;
 };

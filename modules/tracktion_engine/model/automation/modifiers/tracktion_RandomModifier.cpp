@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -197,7 +197,7 @@ void RandomModifier::applyToBuffer (const PluginRenderContext& prc)
 {
     if (prc.bufferForMidiMessages == nullptr)
         return;
-    
+
     for (auto& m : *prc.bufferForMidiMessages)
         if (m.isNoteOn())
             modifierTimer->resync (prc.bufferNumSamples / getSampleRate());
@@ -259,13 +259,13 @@ void RandomModifier::setPhase (float newPhase)
     jassert (juce::isPositiveAndBelow (newPhase, 1.0f));
     currentPhase.store (newPhase, std::memory_order_release);
 
-    auto newValue = [this, newPhase, s = shapeParam->getCurrentValue()]
+    auto newValue = [this, newPhase, shapeVal = shapeParam->getCurrentValue()]
     {
-        if (newPhase < (1.0f - s))
+        if (newPhase < (1.0f - shapeVal))
             return previousRandom;
 
-        jassert (s > 0.0f);
-        const float skewedPhase = ((newPhase - 1.0f) / s) + 1.0f;
+        jassert (shapeVal > 0.0f);
+        const float skewedPhase = ((newPhase - 1.0f) / shapeVal) + 1.0f;
         return (randomDifference * skewedPhase) + previousRandom;
     }();
 

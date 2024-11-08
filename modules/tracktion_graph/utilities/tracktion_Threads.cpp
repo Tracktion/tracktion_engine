@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -37,7 +37,7 @@ namespace tracktion { inline namespace graph
     bool setThreadPriority (HandleType handle, int priority)
     {
         assert (handle != HandleType());
-        
+
         struct sched_param param;
         int policy;
         priority = std::max (0, std::min (10, priority));
@@ -52,6 +52,65 @@ namespace tracktion { inline namespace graph
 
         param.sched_priority = ((maxPriority - minPriority) * priority) / 10 + minPriority;
         return pthread_setschedparam ((pthread_t) handle, policy, &param) == 0;
+    }
+#endif
+
+#if JUCE_MAC
+    template<typename Type>
+    std::optional<Type> firstOptionalWithValue (const std::initializer_list<std::optional<Type>>& optionals)
+    {
+        for (const auto& optional : optionals)
+            if (optional.has_value())
+                return optional;
+
+        return {};
+    }
+
+    bool tryToUpgradeCurrentThreadToRealtime (const juce::Thread::RealtimeOptions& options)
+    {
+        const auto periodMs = options.getPeriodMs().value_or (0.0);
+
+        const auto processingTimeMs = firstOptionalWithValue (
+        {
+            options.getProcessingTimeMs(),
+            options.getMaximumProcessingTimeMs(),
+            options.getPeriodMs()
+        }).value_or (10.0);
+
+        const auto maxProcessingTimeMs = options.getMaximumProcessingTimeMs()
+                                                .value_or (processingTimeMs);
+
+        // The processing time can not exceed the maximum processing time!
+        jassert (maxProcessingTimeMs >= processingTimeMs);
+
+        thread_time_constraint_policy_data_t policy;
+        policy.period = (uint32_t) juce::Time::secondsToHighResolutionTicks (periodMs / 1'000.0);
+        policy.computation = (uint32_t) juce::Time::secondsToHighResolutionTicks (processingTimeMs / 1'000.0);
+        policy.constraint = (uint32_t) juce::Time::secondsToHighResolutionTicks (maxProcessingTimeMs / 1'000.0);
+        policy.preemptible = true;
+
+        const auto result = thread_policy_set (pthread_mach_thread_np (pthread_self()),
+                                               THREAD_TIME_CONSTRAINT_POLICY,
+                                               (thread_policy_t) &policy,
+                                               THREAD_TIME_CONSTRAINT_POLICY_COUNT);
+
+        if (result == KERN_SUCCESS)
+            return true;
+
+        // testing has shown that passing a computation value > 50ms can
+        // lead to thread_policy_set returning an error indicating that an
+        // invalid argument was passed. If that happens this code tries to
+        // limit that value in the hope of resolving the issue.
+
+        if (result == KERN_INVALID_ARGUMENT && options.getProcessingTimeMs() > 50.0)
+            return tryToUpgradeCurrentThreadToRealtime (options.withProcessingTimeMs (50.0));
+
+        return false;
+    }
+#else
+    bool tryToUpgradeCurrentThreadToRealtime (const juce::Thread::RealtimeOptions&)
+    {
+        return false;
     }
 #endif
 

@@ -6,91 +6,164 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  test:
     strategy:
       fail-fast: false
       matrix:
+        build_config: [ Debug, Release ]
+        name: [ linux, macOS, windows ]
+        target: [ DemoRunner, TestRunner, Benchmarks, EngineInPluginDemo_common ]
         include:
-          - name: Linux
+          - name: linux
             os: ubuntu-latest
-            platform: linux
+            config_preset: "ninja-multi"
+            build_preset: "ninja"
+            cmake_host_system_name: "Linux"
           - name: macOS
             os: macos-latest
-            platform: mac
-          - name: Windows
+            config_preset: "xcode"
+            build_preset: "xcode"
+            cmake_host_system_name: "Darwin"
+          - name: windows
             os: windows-latest
-            platform: windows
-        # cfg:
-        # - { name: Linux, os: ubuntu-16.04, platform: linux }
-        # - { name: macOS, os: macos-latest, platform: mac }
-        # - { name: Windows, os: windows-latest, platform: windows }
+            config_preset: "windows"
+            build_preset: "windows"
+            cmake_host_system_name: "Windows"
+          - publish_benchmark: true
+          # Extra tooled builds (outside of matrix)
+          - name: macOS_asan
+            target: TestRunner
+            os: macos-latest
+            build_config: "Release"
+            config_preset: "xcode"
+            build_preset: "xcode-asan"
+            cmake_host_system_name: "Darwin"
+          - name: macOS_asan
+            target: Benchmarks
+            os: macos-latest
+            build_config: "Release"
+            config_preset: "xcode"
+            build_preset: "xcode-asan"
+            cmake_host_system_name: "Darwin"
+          - name: macOS_tsan
+            target: TestRunner
+            os: macos-latest
+            build_config: "Release"
+            config_preset: "xcode"
+            build_preset: "xcode-tsan"
+            cmake_host_system_name: "Darwin"
+            tsan: true
+          - name: macOS_tsan
+            target: Benchmarks
+            os: macos-latest
+            build_config: "Release"
+            config_preset: "xcode"
+            build_preset: "xcode-tsan"
+            cmake_host_system_name: "Darwin"
+            tsan: true
+          - name: macOS_analyse
+            target: TestRunner
+            os: macos-latest
+            build_config: "Release"
+            config_preset: "xcode"
+            cmake_host_system_name: "Darwin"
+            analyse: true
+          - name: macOS_analyse
+            target: Benchmarks
+            os: macos-latest
+            build_config: "Release"
+            cmake_host_system_name: "Darwin"
+            config_preset: "xcode"
+            analyse: true
+
     runs-on: ${{ matrix.os }}
     steps:
+      # Check if TSan should be run
+      - name: Check TSan jobs
+        if: ${{ matrix.tsan && github.event_name == 'push' }}
+        run: |
+          echo "SKIP_STEPS=1" >> $GITHUB_ENV
+
       # Install dependencies
       - name: Install dependencies
-        if: ${{ matrix.platform == 'linux' }}
+        if: ${{ ! env.SKIP_STEPS && matrix.name == 'linux' }}
         run: |
-            sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-            sudo apt-get update
-            sudo apt-get install -y gcc-7 g++-7 freeglut3-dev g++ libasound2-dev libcurl4-openssl-dev libfreetype6-dev libjack-jackd2-dev libx11-dev libxcomposite-dev libxcursor-dev libxinerama-dev libxrandr-dev mesa-common-dev ladspa-sdk webkit2gtk-4.0 libgtk-3-dev xvfb
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+          sudo apt-get update
+          sudo apt-get install -y gcc-11 g++-11 freeglut3-dev g++ libasound2-dev libcurl4-openssl-dev libfreetype6-dev libjack-jackd2-dev libx11-dev libxcomposite-dev libxcursor-dev libxinerama-dev libxrandr-dev mesa-common-dev ladspa-sdk webkit2gtk-4.0 libgtk-3-dev xvfb ninja-build
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        if: ${{ ! env.SKIP_STEPS }}
         with:
           submodules: true
+
+      - name: Add Rubber Band submodule for testing
+        if: ${{ ! env.SKIP_STEPS }}
+        run: |
+          git submodule add -f https://github.com/breakfastquay/rubberband.git modules/3rd_party/rubberband
+          git submodule update --init
+
+      # Setup Environment Variables
+      - name: Setup Environment Variables
+        if: ${{ ! env.SKIP_STEPS }}
+        shell: bash
+        run: |
+          pwd
+          ls -la
+          VERSION=$(cat VERSION.md)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          TARGET=${{ matrix.target }}
+          CONFIG_PRESET=${{ matrix.config_preset }}
+          TEST_DIR=cmake-build/${{ matrix.cmake_host_system_name }}/cmake-$CONFIG_PRESET
+          echo "TEST_DIR=$TEST_DIR" >> $GITHUB_ENV
+
+      # Generate build files
+      - name: "Generate Build Files"
+        if: ${{ ! env.SKIP_STEPS }}
+        id: generate
+        shell: bash
+        run: |
+          cmake --preset ${{ matrix.config_preset }}
 
       # Build products
       - name: "Build products"
         shell: bash
-        env:
-          BM_API_KEY: ${{ secrets.BM_API_KEY }}
+        if: ${{ ! env.SKIP_STEPS && ! matrix.analyse }}
         run: |
           if [[ "$OSTYPE" == "linux-gnu" ]]; then
             export DISABLE_VALGRIND=1
-            export CC=/usr/bin/gcc-7
-            export CXX=/usr/bin/g++-7
+            export CC=/usr/bin/gcc-11
+            export CXX=/usr/bin/g++-11
             gcc -v
             g++ -v
           fi
 
-          if [[ ${{ github.event_name }} == 'schedule' ]]; then
-            export DISABLE_TOOLS=0
-          else
-            export DISABLE_TOOLS=1
-          fi
+          cmake --build --preset ${{ matrix.build_preset }}-${{ matrix.build_config }} --target ${{ matrix.target }}
 
-          ./tests/build
+      # Run products
+      - name: "Run products"
+        if: ${{ ! env.SKIP_STEPS && ! matrix.analyse }}
+        shell: bash
+        env:
+          BM_API_KEY: ${{ matrix.build_config == 'Release' && matrix.publish_benchmark && secrets.BM_API_KEY || '' }}
+          BM_BRANCH_NAME: ${{ github.ref }}
+        run: |
+          if [ $BM_API_KEY != '' ]; then echo "INFO: Publishing benchmarks"; fi
+          ROOT=$(pwd)
+          echo $ROOT
+          ctest --test-dir ${{ env.TEST_DIR }} -C ${{ matrix.build_config }} -R ${{ matrix.target }} -V
 
-      # Upload test results
-      - uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: test_results_${{ matrix.name }}
-          path: ./bin/test_results/**/TEST-*.xml
-
-  # Upload test results
-  deploy:
-    if: always()
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          path: ./
-
-      - name: Display structure of downloaded files
-        run: ls -la
-    
-      - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1.6
-        with:
-          check_name: Unit Test Results
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          files: ./**/TEST-*.xml
-
-      - name: Publish Performance Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1.6
-        with:
-          check_name: Performance Test Results
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          files: ./**/TEST-*PerformanceTests*.xml
+      # Static analyse
+      - name: "Static analyse products"
+        shell: bash
+        if: ${{ ! env.SKIP_STEPS && matrix.analyse }}
+        run: |
+          cd cmake-build/${{ matrix.cmake_host_system_name }}/cmake-${{ matrix.config_preset }}
+          OUTPUT=`xcodebuild analyze -quiet -target ${{ matrix.target }} -configuration ${{ matrix.build_config }} LLVM_LTO=NO`
+          echo "$OUTPUT"
+          WARNING_LINES=$(echo "$OUTPUT" | grep ": warning:")
+          TRACKTION_WARNING_LINES=$(echo "$WARNING_LINES" | sed -n '/tracktion_engine\/modules\/tracktion_/p')
+          TRACKTION_ONLY_WARNING_LINES=$(echo "$TRACKTION_WARNING_LINES" | sed '/\/3rd_party\//d')
+          echo "TRACKTION_ONLY_WARNING_LINES:\n"
+          echo "$TRACKTION_ONLY_WARNING_LINES"
+          if [[ "$TRACKTION_ONLY_WARNING_LINES" != "" ]]; then exit 1; fi

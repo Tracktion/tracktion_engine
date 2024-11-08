@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -21,5 +21,8 @@ namespace tracktion { inline namespace graph
                         of 5 is normal.
 */
 bool setThreadPriority (std::thread&, int priority);
+
+/** Tries to upgrade the current thread to realtime priority. */
+bool tryToUpgradeCurrentThreadToRealtime (const juce::Thread::RealtimeOptions&);
 
 }} // namespace tracktion_engine

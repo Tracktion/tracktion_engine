@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -13,7 +13,22 @@ namespace tracktion { inline namespace engine
 
 ParameterChangeHandler::ParameterChangeHandler (Edit& e) : edit (e)
 {
-    juce::ignoreUnused (edit);
+}
+
+void ParameterChangeHandler::addListener (Listener& l)
+{
+    std::unique_lock sl (listenerListLock);
+
+    if (std::find (listeners.begin(), listeners.end(), std::addressof (l)) == listeners.end())
+        listeners.push_back (std::addressof (l));
+}
+
+void ParameterChangeHandler::removeListener (Listener& l)
+{
+    std::unique_lock sl (listenerListLock);
+
+    if (auto i = std::find (listeners.begin(), listeners.end(), std::addressof (l)); i != listeners.end())
+        listeners.erase (i);
 }
 
 bool ParameterChangeHandler::isEventPending() const noexcept
@@ -24,17 +39,18 @@ bool ParameterChangeHandler::isEventPending() const noexcept
 //==============================================================================
 void ParameterChangeHandler::parameterChanged (AutomatableParameter& parameter, bool fromAutomation)
 {
-   #if TRACKTION_ENABLE_AUTOMAP && TRACKTION_ENABLE_CONTROL_SURFACES
-    if (edit.shouldPlay())
-        if (auto na = edit.engine.getExternalControllerManager().getAutomap())
-            na->paramChanged (&parameter);
-   #endif
+    {
+        std::shared_lock sl (listenerListLock);
+
+        for (auto& l : listeners)
+            l->pluginParameterChanged (parameter, fromAutomation);
+    }
 
     if (enabled
          && ! fromAutomation
          && (edit.engine.getMidiLearnState().isActive() || parameterLearnActive))
     {
-        const juce::ScopedLock sl (eventLock);
+        std::scoped_lock sl (eventLock);
         pendingActionId = -1;
         pendingParam = &parameter;
         sendChangeMessage();
@@ -43,25 +59,26 @@ void ParameterChangeHandler::parameterChanged (AutomatableParameter& parameter, 
 
 bool ParameterChangeHandler::isParameterPending() const noexcept
 {
-    const juce::ScopedLock sl (eventLock);
+    std::scoped_lock sl (eventLock);
     return pendingParam != nullptr;
 }
 
 AutomatableParameter::Ptr ParameterChangeHandler::getPendingParam (bool consumeEvent) noexcept
 {
-    const juce::ScopedLock sl (eventLock);
-    AutomatableParameter::Ptr paramToReturn (pendingParam);
-
     if (consumeEvent)
-        pendingParam = nullptr;
+    {
+        std::scoped_lock sl (eventLock);
+        return std::move (pendingParam);
+    }
 
-    return paramToReturn;
+    std::scoped_lock sl (eventLock);
+    return pendingParam;
 }
 
 //==============================================================================
 void ParameterChangeHandler::actionFunctionTriggered (int externalControllerID)
 {
-    const juce::ScopedLock sl (eventLock);
+    std::scoped_lock sl (eventLock);
     pendingParam = nullptr;
     pendingActionId = externalControllerID;
     sendChangeMessage();
@@ -69,13 +86,13 @@ void ParameterChangeHandler::actionFunctionTriggered (int externalControllerID)
 
 bool ParameterChangeHandler::isActionFunctionPending() const noexcept
 {
-    const juce::ScopedLock sl (eventLock);
+    std::scoped_lock sl (eventLock);
     return pendingActionId != -1;
 }
 
 int ParameterChangeHandler::getPendingActionFunctionId (bool consumeEvent) noexcept
 {
-    const juce::ScopedLock sl (eventLock);
+    std::scoped_lock sl (eventLock);
     const juce::ScopedValueSetter<int> actionResetter (pendingActionId, pendingActionId,
                                                        consumeEvent ? -1 : pendingActionId);
 

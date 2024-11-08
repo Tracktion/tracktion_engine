@@ -1,7 +1,7 @@
 
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -62,6 +62,23 @@ public:
     virtual void selectableAboutToBeDeleted() {}
 
     //==============================================================================
+    class Listener : public SelectableListener
+    {
+    public:
+        Listener (Selectable&);
+        ~Listener() override;
+
+        void selectableObjectChanged (Selectable*) override {}
+        void selectableObjectAboutToBeDeleted (Selectable*) override {}
+
+    private:
+        juce::WeakReference<Selectable> selectable;
+    };
+
+    //==============================================================================
+    void addListener (SelectableListener*);
+    void removeListener (SelectableListener*);
+
     void addSelectableListener (SelectableListener*);
     void removeSelectableListener (SelectableListener*);
 
@@ -85,10 +102,11 @@ public:
     // MUST be called by all subclasses of Selectable in their destructor!
     void notifyListenersOfDeletion();
 
+    //==============================================================================
+    // This is deprecated: use SafeSelectable<Selectable> instead
     using WeakRef = juce::WeakReference<Selectable>;
     WeakRef::Master masterReference;
-
-    WeakRef getWeakRef()                                        { return WeakRef (this); }
+    [[ deprecated ("Use makeSafeRef() and SafeSelectable instead") ]] WeakRef getWeakRef() { return { this }; }
 
 private:
     //==============================================================================
@@ -129,6 +147,12 @@ struct SelectableList
         items.addArray (initialItems);
     }
 
+    template<typename SelectableType>
+    SelectableList (const std::vector<SelectableType*>& initialItems)
+    {
+        items.addArray (initialItems.data(), static_cast<int> (initialItems.size()));
+    }
+
     //==============================================================================
     /** Returns the selectable class for a given Selectable in the list. */
     SelectableClass* getSelectableClass (int index) const;
@@ -146,7 +170,7 @@ struct SelectableList
 
         for (auto s : items)
             if (auto i = dynamic_cast<SubclassType*> (s))
-                results.addIfNotAlreadyThere (i);
+                results.add (i);
 
         return results;
     }
@@ -210,16 +234,6 @@ struct SelectableList
     inline bool contains (Selectable* elementToLookFor) const   { return items.contains (elementToLookFor); }
     inline int indexOf (Selectable* elementToLookFor) const     { return items.indexOf (elementToLookFor); }
 
-    juce::Array<Selectable::WeakRef> getAsWeakRefList() const
-    {
-        juce::Array<Selectable::WeakRef> result;
-
-        for (auto& i : items)
-            result.add (i);
-
-        return result;
-    }
-
     template <class OtherArrayType>
     inline bool operator== (const OtherArrayType& other) const  { return items == other; }
 
@@ -236,5 +250,137 @@ private:
     juce::Array<Selectable*> items;
     mutable juce::Array<SelectableClass*> classes;
 };
+
+
+//==============================================================================
+/** Holds a pointer to some type of Selectable, which automatically becomes null if
+    the selectable is deleted.
+
+    The SelectableType template parameter must be Selectable, or some subclass of Selectable.
+*/
+template<typename SelectableType>
+class SafeSelectable
+{
+public:
+    /** Creates a null SafeSelectable. */
+    SafeSelectable() = default;
+
+    /** Creates a SafeSelectable that points at the given selectable. */
+    SafeSelectable (SelectableType& selectable)                     : weakRef (&selectable) {}
+
+    /** Creates a SafeSelectable that points at the given selectable. */
+    SafeSelectable (SelectableType* selectable)                     : weakRef (selectable) {}
+
+    /** Creates a copy of another SafeSelectable. */
+    SafeSelectable (const SafeSelectable& other) noexcept           : weakRef (other.weakRef) {}
+
+    /** Copies another pointer to this one. */
+    SafeSelectable& operator= (const SafeSelectable& other)         { weakRef = other.weakRef; return *this; }
+
+    /** Copies another pointer to this one. */
+    SafeSelectable& operator= (SelectableType* newSelectable)       { weakRef = newSelectable; return *this; }
+
+    /** Returns the selectable that this pointer refers to, or null if the selectable no longer exists. */
+    SelectableType* get() const noexcept                            { return dynamic_cast<SelectableType*> (weakRef.get()); }
+
+    /** Returns the selectable that this pointer refers to, or null if the selectable no longer exists. */
+    operator SelectableType*() const noexcept                       { return get(); }
+
+    /** Returns the selectable that this pointer refers to, or null if the selectable no longer exists. */
+    SelectableType* operator->() const noexcept                     { return get(); }
+
+    bool operator== (SelectableType* other) const noexcept          { return weakRef.get() == other; }
+    bool operator!= (SelectableType* other) const noexcept          { return weakRef.get() != other; }
+
+    bool operator== (const SafeSelectable& other) const noexcept    { return weakRef.get() == other.weakRef.get(); }
+    bool operator!= (const SafeSelectable& other) const noexcept    { return weakRef.get() != other.weakRef.get(); }
+
+    bool operator== (const SelectableType& other) const noexcept    { return weakRef.get() == &other; }
+    bool operator!= (const SelectableType& other) const noexcept    { return weakRef.get() != &other; }
+
+    bool operator== (decltype(nullptr)) const noexcept              { return weakRef == nullptr; }
+    bool operator!= (decltype(nullptr)) const noexcept              { return weakRef != nullptr; }
+
+private:
+    juce::WeakReference<Selectable> weakRef;
+};
+
+/** Creates a SafeSelectable for a given selectable object. */
+template<typename SelectableType>
+SafeSelectable<SelectableType> makeSafeRef (SelectableType& selectable)
+{
+    return SafeSelectable<SelectableType> (selectable);
+}
+
+/** Creates a std::vector<SafeSelectable<Something>> for a given juce::Array of selectable objects. */
+template<typename Iterable>
+auto makeSafeVector (const Iterable& selectables) -> std::vector<SafeSelectable<typename std::remove_reference<decltype(*selectables[0])>::type>>
+{
+    using SelectableType = typename std::remove_reference<decltype(*selectables[0])>::type;
+    static_assert (std::is_base_of_v<Selectable, SelectableType>);
+    std::vector<SafeSelectable<SelectableType>> v;
+    v.reserve (static_cast<size_t> (selectables.size()));
+
+    for (auto* s : selectables)
+        v.emplace_back (*s);
+
+    return v;
+}
+
+//==============================================================================
+//==============================================================================
+/**
+    A SelectableListener that safely handles listener to a Selectable and uses
+    a lambda for its callback.
+*/
+class LambdaSelectableListener  : public SelectableListener
+{
+public:
+    /** Constructs an empty listener. */
+    LambdaSelectableListener() = default;
+
+    /** Destructor. */
+    ~LambdaSelectableListener() override
+    {
+        reset();
+    }
+
+    /** Constructs a listener for a Selectable. */
+    LambdaSelectableListener (Selectable& s)
+    {
+        reset (&s);
+    }
+
+    /** Resets the Selectable. */
+    void reset (Selectable* s = nullptr)
+    {
+        if (ref)
+            ref->removeSelectableListener (this);
+
+        ref = s;
+
+        if (ref)
+            ref->addSelectableListener (this);
+    }
+
+    std::function<void()> onSelectableChanged;          /*<< Assignable callback for change events. */
+    std::function<void()> onSelectableAboutToBeDeleted; /*<< Assignable callback for deletion events. */
+
+private:
+    SafeSelectable<Selectable> ref;
+
+    void selectableObjectChanged (Selectable*) override
+    {
+        if (onSelectableChanged)
+            onSelectableChanged();
+    }
+
+    void selectableObjectAboutToBeDeleted (Selectable*) override
+    {
+        if (onSelectableAboutToBeDeleted)
+            onSelectableAboutToBeDeleted();
+    }
+};
+
 
 }} // namespace tracktion { inline namespace engine

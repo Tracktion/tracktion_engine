@@ -1,11 +1,11 @@
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -21,7 +21,9 @@
 
 #include <functional>
 #include "../containers/choc_Span.h"
-#include "../containers/choc_SingleReaderSingleWriterFIFO.h"
+#include "../containers/choc_VariableSizeFIFO.h"
+#include "../platform/choc_HighResolutionSteadyClock.h"
+#include "../memory/choc_Endianness.h"
 #include "choc_SampleBuffers.h"
 #include "choc_MIDI.h"
 
@@ -48,18 +50,34 @@ struct AudioMIDIBlockDispatcher
     void reset (double sampleRate, size_t midiFIFOCapacity = 1024);
 
     //==============================================================================
-    /// Adds an incoming MIDI event to the queue. This can be called from any thread.
-    void addMIDIEvent (choc::midi::ShortMessage);
+    using MIDIDeviceID = const char*;
+    using MIDIEventTime = HighResolutionSteadyClock::time_point;
 
     /// Adds an incoming MIDI event to the queue. This can be called from any thread.
-    void addMIDIEvent (const choc::midi::Message&);
+    template <typename StorageType>
+    void addMIDIEvent (MIDIDeviceID, const choc::midi::Message<StorageType>&);
 
     /// Adds an incoming MIDI event to the queue. This can be called from any thread.
-    void addMIDIEvent (const void* data, uint32_t size);
+    void addMIDIEvent (MIDIDeviceID, const void* data, uint32_t size);
 
     /// Adds a juce::MidiMessage to the queue. This can be called from any thread.
     template <typename JUCECompatibleMIDIMessage>
-    void addMIDIEvent (const JUCECompatibleMIDIMessage&);
+    void addMIDIEvent (MIDIDeviceID, const JUCECompatibleMIDIMessage&);
+
+    /// This struct holds a timestamped MIDI message with details about its source.
+    struct MIDIMessage
+    {
+        /// A global timestamp for this message.
+        /// NB: depending on where the event came from, this could be null.
+        MIDIEventTime time;
+
+        /// An ID for the device that was the source of this event. This is a
+        /// `const char*`, so may be either a null-terminated name, or a nullptr.
+        MIDIDeviceID sourceDeviceID;
+
+        /// The MIDI message itself.
+        choc::midi::MessageView message;
+    };
 
     //==============================================================================
     /// Before calling processInChunks(), this must be called to provide the audio buffers.
@@ -67,11 +85,14 @@ struct AudioMIDIBlockDispatcher
                           choc::buffer::ChannelArrayView<float> output);
 
     /// Before calling processInChunks(), this must be called to provide the audio buffers.
-    void setAudioBuffers (const float** inputData, int numInputChannels,
-                          float** outputData, int numOutputChannels, int numFrames);
+    void setAudioBuffers (const float* const* inputData, int numInputChannels,
+                          float* const* outputData, int numOutputChannels, int numFrames);
+
+    /// A function prototype which accepts a time-stamped MIDI event.
+    using HandleMIDIMessageFn = std::function<void(uint32_t frame, choc::midi::MessageView)>;
 
     /// Before calling processInChunks(), this may be called to receive MIDI output events.
-    void setMidiOutputCallback (std::function<void(uint32_t frame, choc::midi::ShortMessage)>);
+    void setMidiOutputCallback (HandleMIDIMessageFn);
 
     //==============================================================================
     /// This struct is given to a client callback to process.
@@ -79,8 +100,8 @@ struct AudioMIDIBlockDispatcher
     {
         choc::buffer::ChannelArrayView<const float> audioInput;
         choc::buffer::ChannelArrayView<float> audioOutput;
-        choc::span<choc::midi::ShortMessage> midiMessages;
-        std::function<void(uint32_t frame, choc::midi::ShortMessage)>& onMidiOutputMessage;
+        choc::span<MIDIMessage> midiMessages;
+        const HandleMIDIMessageFn& onMidiOutputMessage;
     };
 
     /// After calling setAudioBuffers() to provide the audio channel data, call this
@@ -88,6 +109,9 @@ struct AudioMIDIBlockDispatcher
     /// The callback function provided must take a Block object as its parameter.
     template <typename Callback>
     void processInChunks (Callback&&);
+
+    /// This clears the output buffers which were configured via a call to setAudioBuffers().
+    void clearOutputBuffers();
 
     /// This governs the granularity at which MIDI events are time-stamped, and hence
     /// determines the smallest chunk size into which the callbacks will be split.
@@ -100,28 +124,19 @@ private:
     //==============================================================================
     choc::buffer::ChannelArrayView<float> nextOutputBlock;
     choc::buffer::ChannelArrayView<const float> nextInputBlock;
-    std::function<void(uint32_t frame, choc::midi::ShortMessage)> midiOutputMessageCallback;
+    HandleMIDIMessageFn midiOutputMessageCallback;
 
-    using Clock = std::chrono::high_resolution_clock;
-    using TimePoint = Clock::time_point;
     using DurationType = std::chrono::duration<double, std::ratio<1, 1>>;
     static constexpr int32_t maxCatchUpFrames = 20000;
 
     DurationType frameDuration;
-    TimePoint lastBlockTime;
+    MIDIEventTime lastBlockTime;
     std::vector<uint32_t> midiMessageTimes;
-    std::vector<choc::midi::ShortMessage> midiMessages;
+    std::vector<MIDIMessage> midiMessages;
     uint32_t chunkFrameOffset = 0;
+    choc::fifo::VariableSizeFIFO midiFIFO;
 
-    struct TimestampedMIDIMessage
-    {
-        TimePoint time;
-        choc::midi::ShortMessage message;
-    };
-
-    choc::fifo::SingleReaderSingleWriterFIFO<TimestampedMIDIMessage> midiFIFO;
-
-    void fetchMIDIBlockFromFIFO (uint32_t);
+    void fetchMIDIBlockFromFIFO (choc::fifo::VariableSizeFIFO::BatchReadOperation&, uint32_t);
 };
 
 
@@ -142,34 +157,34 @@ inline void AudioMIDIBlockDispatcher::reset (double sampleRate, size_t midiFIFOC
     midiMessageTimes.reserve (midiFIFOCapacity);
     midiMessages.clear();
     midiMessages.reserve (midiFIFOCapacity);
-    midiFIFO.reset (midiFIFOCapacity);
+    midiFIFO.reset (static_cast<uint32_t> (midiFIFOCapacity * (sizeof (MIDIEventTime) + sizeof (MIDIDeviceID) + 3u)));
     frameDuration = DurationType (1.0 / sampleRate);
 }
 
-inline void AudioMIDIBlockDispatcher::addMIDIEvent (choc::midi::ShortMessage message)
+inline void AudioMIDIBlockDispatcher::addMIDIEvent (MIDIDeviceID deviceID, const void* data, uint32_t size)
 {
-    midiFIFO.push ({ Clock::now(), message });
+    midiFIFO.push (sizeof (MIDIEventTime) + sizeof (MIDIDeviceID) + size,
+                  [time = HighResolutionSteadyClock::now(), deviceID, data, size] (void* dest)
+    {
+        auto d = static_cast<char*> (dest);
+        choc::memory::writeNativeEndian (d, time);
+        d += sizeof (MIDIEventTime);
+        choc::memory::writeNativeEndian (d, deviceID);
+        d += sizeof (MIDIDeviceID);
+        memcpy (d, data, size);
+    });
 }
 
-inline void AudioMIDIBlockDispatcher::addMIDIEvent (const choc::midi::Message& message)
+template <typename StorageType>
+inline void AudioMIDIBlockDispatcher::addMIDIEvent (MIDIDeviceID deviceID, const choc::midi::Message<StorageType>& message)
 {
-    if (message.isShortMessage())
-        addMIDIEvent (message.getShortMessage());
-}
-
-inline void AudioMIDIBlockDispatcher::addMIDIEvent (const void* data, uint32_t size)
-{
-    if (size < 4)
-        addMIDIEvent (choc::midi::ShortMessage (data, size));
-    else
-        addMIDIEvent (choc::midi::Message (data, size));
+    addMIDIEvent (deviceID, message.data(), message.size());
 }
 
 template <typename JUCECompatibleMIDIMessage>
-void AudioMIDIBlockDispatcher::addMIDIEvent (const JUCECompatibleMIDIMessage& message)
+void AudioMIDIBlockDispatcher::addMIDIEvent (MIDIDeviceID deviceID, const JUCECompatibleMIDIMessage& message)
 {
-    addMIDIEvent (message.getRawData(),
-                  static_cast<uint32_t> (message.getRawDataSize()));
+    addMIDIEvent (deviceID, message.getRawData(), static_cast<uint32_t> (message.getRawDataSize()));
 }
 
 inline void AudioMIDIBlockDispatcher::setAudioBuffers (choc::buffer::ChannelArrayView<const float> input,
@@ -180,8 +195,8 @@ inline void AudioMIDIBlockDispatcher::setAudioBuffers (choc::buffer::ChannelArra
     nextOutputBlock = output;
 }
 
-inline void AudioMIDIBlockDispatcher::setAudioBuffers (const float** inputData, int numInputChannels,
-                                                       float** outputData, int numOutputChannels, int numFrames)
+inline void AudioMIDIBlockDispatcher::setAudioBuffers (const float* const* inputData, int numInputChannels,
+                                                       float* const* outputData, int numOutputChannels, int numFrames)
 {
     setAudioBuffers (choc::buffer::createChannelArrayView (inputData,
                                                            static_cast<choc::buffer::ChannelCount> (numInputChannels),
@@ -191,7 +206,7 @@ inline void AudioMIDIBlockDispatcher::setAudioBuffers (const float** inputData, 
                                                            static_cast<choc::buffer::FrameCount> (numFrames)));
 }
 
-inline void AudioMIDIBlockDispatcher::setMidiOutputCallback (std::function<void(uint32_t frame, choc::midi::ShortMessage)> callback)
+inline void AudioMIDIBlockDispatcher::setMidiOutputCallback (AudioMIDIBlockDispatcher::HandleMIDIMessageFn callback)
 {
     if (! callback)
     {
@@ -199,9 +214,9 @@ inline void AudioMIDIBlockDispatcher::setMidiOutputCallback (std::function<void(
         return;
     }
 
-    midiOutputMessageCallback = [this, callback = std::move (callback)] (uint32_t frame, choc::midi::ShortMessage m)
+    midiOutputMessageCallback = [this, cb = std::move (callback)] (uint32_t frame, choc::midi::MessageView m)
                                 {
-                                    callback (frame + chunkFrameOffset, m);
+                                    cb (frame + chunkFrameOffset, m);
                                 };
 }
 
@@ -211,8 +226,9 @@ void AudioMIDIBlockDispatcher::processInChunks (Callback&& process)
     chunkFrameOffset = 0;
     const auto numFrames = nextOutputBlock.getNumFrames();
     CHOC_ASSERT (numFrames == nextInputBlock.getNumFrames());
-    fetchMIDIBlockFromFIFO (numFrames);
-    nextOutputBlock.clear();
+
+    choc::fifo::VariableSizeFIFO::BatchReadOperation midiFIFOBatchOp (midiFIFO);
+    fetchMIDIBlockFromFIFO (midiFIFOBatchOp, numFrames);
 
     if (auto totalNumMIDIMessages = static_cast<uint32_t> (midiMessageTimes.size()))
     {
@@ -239,8 +255,8 @@ void AudioMIDIBlockDispatcher::processInChunks (Callback&& process)
 
             process (Block { nextInputBlock.getFrameRange (chunkToDo),
                              nextOutputBlock.getFrameRange (chunkToDo),
-                             choc::span<const choc::midi::ShortMessage> (midiMessages.data() + midiStart,
-                                                                         midiMessages.data() + endOfMIDI),
+                             choc::span<const MIDIMessage> (midiMessages.data() + midiStart,
+                                                            midiMessages.data() + endOfMIDI),
                              midiOutputMessageCallback });
 
             chunkFrameOffset += chunkToDo.size();
@@ -256,40 +272,48 @@ void AudioMIDIBlockDispatcher::processInChunks (Callback&& process)
     CHOC_ASSERT(chunkFrameOffset <= numFrames);
 }
 
-inline void AudioMIDIBlockDispatcher::fetchMIDIBlockFromFIFO (uint32_t numFramesNeeded)
+inline void AudioMIDIBlockDispatcher::clearOutputBuffers()
+{
+    nextOutputBlock.clear();
+}
+
+inline void AudioMIDIBlockDispatcher::fetchMIDIBlockFromFIFO (choc::fifo::VariableSizeFIFO::BatchReadOperation& midiFIFOBatchOp, uint32_t numFramesNeeded)
 {
     midiMessages.clear();
     midiMessageTimes.clear();
 
     auto blockStartTime = lastBlockTime;
-    lastBlockTime = Clock::now();
+    lastBlockTime = HighResolutionSteadyClock::now();
 
-    if (midiFIFO.getUsedSlots() != 0)
+    while (midiFIFOBatchOp.pop ([&] (const void* d, uint32_t totalSize)
     {
-        TimestampedMIDIMessage m;
+        auto data = static_cast<const char*> (d);
+        auto dataEnd = data + totalSize;
+        auto eventTime = choc::memory::readNativeEndian<MIDIEventTime> (data);
+        auto timeWithinBlock = DurationType (eventTime - blockStartTime);
+        auto frameIndex = static_cast<int32_t> (timeWithinBlock.count() / frameDuration.count());
 
-        while (midiFIFO.pop (m))
+        if (frameIndex < 0)
         {
-            auto timeWithinBlock = DurationType (m.time - blockStartTime);
-            auto frameIndex = static_cast<int32_t> (timeWithinBlock.count() / frameDuration.count());
+            if (frameIndex < -maxCatchUpFrames)
+                return;
 
-            if (frameIndex < 0)
-            {
-                if (frameIndex < -maxCatchUpFrames)
-                    continue;
-
-                frameIndex = 0;
-            }
-            else if (frameIndex > static_cast<int32_t> (numFramesNeeded))
-            {
-                frameIndex = static_cast<int32_t> (numFramesNeeded) - 1;
-            }
-
-            auto snappedIndex = static_cast<uint32_t> (frameIndex) % midiTimingGranularityFrames;
-            midiMessageTimes.push_back (snappedIndex);
-            midiMessages.push_back (m.message);
+            frameIndex = 0;
         }
-    }
+        else if (frameIndex > static_cast<int32_t> (numFramesNeeded))
+        {
+            frameIndex = static_cast<int32_t> (numFramesNeeded) - 1;
+        }
+
+        auto snappedIndex = static_cast<uint32_t> (frameIndex) % midiTimingGranularityFrames;
+        midiMessageTimes.push_back (snappedIndex);
+
+        data += sizeof (MIDIEventTime);
+        auto deviceID = choc::memory::readNativeEndian<MIDIDeviceID> (data);
+        data += sizeof (MIDIDeviceID);
+
+        midiMessages.push_back ({ eventTime, deviceID, { data, static_cast<size_t> (dataEnd - data) }});
+    })) {}
 }
 
 } // namespace choc::audio

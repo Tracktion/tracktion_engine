@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -32,42 +32,40 @@ public:
         isPlaying = playing;
         isLooping = looping;
         loopTimeRange = loopTimes;
+
+        loopStart.set (loopTimeRange.getStart());
+        loopEnd.set (loopTimeRange.getEnd());
+        currentPos.set (time);
     }
 
-    bool getCurrentPosition (CurrentPositionInfo& result) override
+    juce::Optional<PositionInfo> getPosition() const override
     {
-        zerostruct (result);
-        result.frameRate = getFrameRate();
+        PositionInfo result;
+
+        result.setFrameRate (getFrameRate());
 
         auto& transport = plugin.edit.getTransport();
 
-        result.isPlaying        = isPlaying;
-        result.isLooping        = isLooping;
-        result.isRecording      = transport.isRecording();
-        result.editOriginTime   = transport.getTimeWhenStarted().inSeconds();
+        result.setIsPlaying (isPlaying);
+        result.setIsLooping (isLooping);
+        result.setIsRecording (transport.isRecording());
+        result.setEditOriginTime (transport.getTimeWhenStarted().inSeconds());
 
-        if (result.isLooping)
-        {
-            loopStart.set (loopTimeRange.getStart());
-            result.ppqLoopStart = loopStart.getPPQTime();
+        if (isLooping)
+            result.setLoopPoints (juce::AudioPlayHead::LoopPoints ({ loopStart.getPPQTime(), loopEnd.getPPQTime() }));
 
-            loopEnd.set (loopTimeRange.getEnd());
-            result.ppqLoopEnd   = loopEnd.getPPQTime();
-        }
+        result.setTimeInSeconds (time.inSeconds());
+        result.setTimeInSamples (toSamples (time, plugin.getAudioPluginInstance()->getSampleRate()));
 
-        result.timeInSeconds    = time.inSeconds();
-        result.timeInSamples    = toSamples (time, plugin.getAudioPluginInstance()->getSampleRate());
-
-        currentPos.set (time);
         const auto timeSig = currentPos.getTimeSignature();
-        result.bpm                  = currentPos.getTempo();
-        result.timeSigNumerator     = timeSig.numerator;
-        result.timeSigDenominator   = timeSig.denominator;
+        result.setBpm (currentPos.getTempo());
+        result.setTimeSignature (juce::AudioPlayHead::TimeSignature ({ timeSig.numerator, timeSig.denominator }));
 
-        result.ppqPositionOfLastBarStart = currentPos.getPPQTimeOfBarStart();
-        result.ppqPosition = std::max (result.ppqPositionOfLastBarStart, currentPos.getPPQTime());
+        const auto ppqPositionOfLastBarStart = currentPos.getPPQTimeOfBarStart();
+        result.setPpqPositionOfLastBarStart (ppqPositionOfLastBarStart);
+        result.setPpqPosition (std::max (ppqPositionOfLastBarStart, currentPos.getPPQTime()));
 
-        return true;
+        return result;
     }
 
 private:
@@ -133,11 +131,11 @@ tracktion::graph::NodeProperties MelodyneNode::getNodeProperties()
     tracktion::graph::NodeProperties props;
     props.hasAudio = true;
     props.numberOfChannels = fileInfo.numChannels;
-    
+
     if (auto plugin = melodyneProxy->getPlugin())
         if (auto p = plugin->getAudioPluginInstance())
             props.numberOfChannels = juce::jmax (props.numberOfChannels, p->getTotalNumInputChannels(), p->getTotalNumOutputChannels());
-    
+
     return props;
 }
 
@@ -174,7 +172,7 @@ bool MelodyneNode::isReadyToProcess()
 {
     if (! isOfflineRender)
         return true;
-    
+
     return ! analysingContent;
 }
 

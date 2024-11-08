@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -31,7 +31,7 @@ PitchSetting::~PitchSetting()
     notifyListenersOfDeletion();
 }
 
-juce::String PitchSetting::getName()
+juce::String PitchSetting::getName() const
 {
     return juce::MidiMessage::getMidiNoteName (pitch, accidentalsSharp, false,
                                                edit.engine.getEngineBehaviour().getMiddleCOctave());
@@ -52,8 +52,9 @@ ClipPosition PitchSetting::getPosition() const
     auto& ps = edit.pitchSequence;
     auto s = edit.tempoSequence.toTime (startBeat);
 
-    if (auto nextPitch = ps.getPitch (ps.indexOfPitch (this) + 1))
-        return { { s, nextPitch->getPosition().getStart() }, TimeDuration() };
+    if (auto i = ps.indexOfPitch (this); i >= 0)
+        if (auto nextPitch = ps.getPitch (i + 1))
+            return { { s, nextPitch->getPosition().getStart() }, TimeDuration() };
 
     return { { s, s + TimeDuration::fromSeconds (1.0) }, TimeDuration() };
 }

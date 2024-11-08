@@ -279,14 +279,16 @@ void MultiVoiceOscillator::process (juce::AudioBuffer<float>& buffer, int startS
 
             juce::AudioBuffer<float> channelBuffer (dataPointers, 1, numSamples);
 
-            oscillators[i]->setGain (gain * panGain / voices);
-            oscillators[i]->setNote (note);
-            oscillators[i]->process (channelBuffer, 0, numSamples);
+            auto& o = *oscillators[i];
+
+            o.setGain (gain * panGain / voices);
+            o.setNote (note);
+            o.process (channelBuffer, 0, numSamples);
         }
     }
     else
     {
-        for (int i = 0; i < voices * 2; i++)
+        for (int i = 0; i < std::min (voices * 2, oscillators.size()); i++)
         {
             int voiceIndex = (i / 2);
             float localPan = juce::jlimit (-1.0f, 1.0f, ((voiceIndex % 2 == 0) ? 1 : -1) * spread);
@@ -304,9 +306,11 @@ void MultiVoiceOscillator::process (juce::AudioBuffer<float>& buffer, int startS
 
             juce::AudioBuffer<float> channelBuffer (dataPointers, 1, numSamples);
 
-            oscillators[i]->setGain (gain * panGain / voices);
-            oscillators[i]->setNote (base + delta * (i / 2));
-            oscillators[i]->process (channelBuffer, 0, numSamples);
+            auto& o = *oscillators[i];
+
+            o.setGain (gain * panGain / voices);
+            o.setNote (base + delta * (i / 2));
+            o.process (channelBuffer, 0, numSamples);
         }
     }
 }

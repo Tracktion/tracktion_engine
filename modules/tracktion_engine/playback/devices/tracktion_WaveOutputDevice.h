@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -19,7 +19,7 @@ namespace tracktion { inline namespace engine
 class WaveOutputDevice  : public OutputDevice
 {
 public:
-    WaveOutputDevice (Engine&, const juce::String& name, const std::vector<ChannelIndex>& channels);
+    WaveOutputDevice (Engine&, const WaveDeviceDescription&);
     ~WaveOutputDevice() override;
 
     void resetToDefault();
@@ -47,7 +47,7 @@ public:
 
     /** Returns true if the output is a stereo pair. I.e. has two channels. */
     bool isStereoPair() const;
-    
+
     void setStereoPair (bool);
 
     WaveOutputDeviceInstance* createInstance (EditPlaybackContext&);

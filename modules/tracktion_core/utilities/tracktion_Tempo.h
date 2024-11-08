@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -15,6 +15,7 @@
 #include <vector>
 
 #include "tracktion_Time.h"
+#include "tracktion_TimeRange.h"
 #include "tracktion_Bezier.h"
 
 namespace tracktion { inline namespace core
@@ -28,9 +29,9 @@ namespace tempo
     /** Represents a number of bars and then beats in that bar. */
     struct BarsAndBeats
     {
-        int bars = 0;       /**< The number of whole bars. */
-        BeatDuration beats; /**< The number of beats in the current bar. */
-        int numerator = 0;  /**< The number of beats in the current bar. */
+        int bars = 0;               /**< The number of whole bars. */
+        BeatDuration beats = {};    /**< The number of beats in the current bar. */
+        int numerator = 0;          /**< The number of beats in the current bar. */
 
         /** Returns the number bars elapsed. */
         double getTotalBars() const;
@@ -167,6 +168,9 @@ namespace tempo
         /** Returns the key at a position. */
         Key getKeyAt (TimePosition) const;
 
+        /** Returns the TimeSignature at a position. */
+        TimeSignature getTimeSignatureAt (TimePosition) const;
+
         /** Returns a unique hash of this sequence. */
         size_t hash() const;
 
@@ -216,19 +220,19 @@ namespace tempo
             void set (TimePosition);
 
             /** Sets the Position to a new number of beats. */
-            void set (BeatPosition);
+            TimePosition set (BeatPosition);
 
             /** Sets the Position to a new number of bars and beats. */
-            void set (BarsAndBeats);
+            TimePosition set (BarsAndBeats);
 
             /** Increments the position by a time duration. */
-            void add (TimeDuration);
+            TimePosition add (TimeDuration);
 
             /** Increments the position by a number of beats. */
-            void add (BeatDuration);
+            TimePosition add (BeatDuration);
 
             /** Increments the position by a number of bars. */
-            void addBars (int bars);
+            TimePosition addBars (int bars);
 
             /** Moves the position to the next change.
                 @returns true if the position was actually changed.
@@ -311,6 +315,13 @@ namespace tempo
 /** Compares two Keys. */
 [[ nodiscard ]] constexpr bool operator!= (tempo::Key k1, tempo::Key k2) { return ! (k1 == k2); }
 
+/** Converts a BeatRange to a TimeRange. */
+[[ nodiscard ]] TimeRange toTime (const tempo::Sequence&, BeatRange);
+
+/** Converts a TimeRange to a BeatRange. */
+[[ nodiscard ]] BeatRange toBeats (const tempo::Sequence&, TimeRange);
+
+
 //==============================================================================
 //        _        _           _  _
 //     __| |  ___ | |_   __ _ (_)| | ___
@@ -322,10 +333,23 @@ namespace tempo
 //
 //==============================================================================
 
+inline TimeRange toTime (const tempo::Sequence& seq, BeatRange range)
+{
+    return { seq.toTime (range.getStart()),
+             seq.toTime (range.getEnd()) };
+}
+
+inline BeatRange toBeats (const tempo::Sequence& seq, TimeRange range)
+{
+    return { seq.toBeats (range.getStart()),
+             seq.toBeats (range.getEnd()) };
+}
+
+
 namespace tempo
 {
 
-inline double BarsAndBeats::getTotalBars() const                { return bars + (numerator * beats.inBeats()); }
+inline double BarsAndBeats::getTotalBars() const                { return bars + (beats.inBeats() / numerator); }
 inline int BarsAndBeats::getWholeBeats() const                  { return (int) std::floor (beats.inBeats()); }
 inline BeatDuration BarsAndBeats::getFractionalBeats() const    { return BeatDuration::fromBeats (beats.inBeats() - std::floor (beats.inBeats())); }
 
@@ -695,6 +719,20 @@ inline Key Sequence::getKeyAt (TimePosition t) const
     return {};
 }
 
+inline TimeSignature Sequence::getTimeSignatureAt (TimePosition t) const
+{
+    for (int i = (int) sections.size(); --i >= 0;)
+    {
+        auto& it = sections[(size_t) i];
+
+        if (it.startTime <= t || i == 0)
+            return { .numerator = it.numerator, .denominator = it.denominator };
+    }
+
+    assert(false);
+    return {};
+}
+
 inline BeatsPerSecond Sequence::getBeatsPerSecondAt (TimePosition t) const
 {
     for (int i = (int) sections.size(); --i >= 0;)
@@ -792,17 +830,19 @@ inline void Sequence::Position::set (TimePosition t)
     time = t;
 }
 
-inline void Sequence::Position::set (BeatPosition t)
+inline TimePosition Sequence::Position::set (BeatPosition t)
 {
     set (details::toTime (sequence.sections, t));
+    return time;
 }
 
-inline void Sequence::Position::set (BarsAndBeats t)
+inline TimePosition Sequence::Position::set (BarsAndBeats t)
 {
     set (details::toTime (sequence.sections, t));
+    return time;
 }
 
-inline void Sequence::Position::addBars (int bars)
+inline TimePosition Sequence::Position::addBars (int bars)
 {
     if (bars > 0)
     {
@@ -814,6 +854,8 @@ inline void Sequence::Position::addBars (int bars)
         while (++bars <= 0)
             add (BeatDuration::fromBeats (-sequence.sections[index].numerator));
     }
+
+    return time;
 }
 
 inline bool Sequence::Position::next()
@@ -827,7 +869,7 @@ inline bool Sequence::Position::next()
     return true;
 }
 
-inline void Sequence::Position::add (BeatDuration beats)
+inline TimePosition Sequence::Position::add (BeatDuration beats)
 {
     if (beats > BeatDuration())
     {
@@ -838,7 +880,7 @@ inline void Sequence::Position::add (BeatDuration beats)
             auto beatTime = it.secondsPerBeat * beats;
 
             if (index >= maxIndex
-                 || sequence.sections[index + 1].startTime > (time + beatTime))
+                || sequence.sections[index + 1].startTime > (time + beatTime))
             {
                 time = time + beatTime;
                 break;
@@ -858,7 +900,7 @@ inline void Sequence::Position::add (BeatDuration beats)
             const auto beatTime = it.secondsPerBeat * beats;
 
             if (index <= 0
-                 || sequence.sections[index].startTime <= (time + beatTime))
+                || sequence.sections[index].startTime <= (time + beatTime))
             {
                 time = time + beatTime;
                 break;
@@ -869,11 +911,14 @@ inline void Sequence::Position::add (BeatDuration beats)
             --index;
         }
     }
+
+    return time;
 }
 
-inline void Sequence::Position::add (TimeDuration d)
+inline TimePosition Sequence::Position::add (TimeDuration d)
 {
     set (time + d);
+    return time;
 }
 
 //==============================================================================

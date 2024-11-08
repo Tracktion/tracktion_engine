@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -194,6 +194,30 @@ void MidiAssignable::buildMenu (juce::PopupMenu& m)
             case CustomControlSurface::userAction19Id:
             case CustomControlSurface::userAction20Id:
             case CustomControlSurface::emptyTextId:
+            case CustomControlSurface::clip1TrackId:
+            case CustomControlSurface::clip2TrackId:
+            case CustomControlSurface::clip3TrackId:
+            case CustomControlSurface::clip4TrackId:
+            case CustomControlSurface::clip5TrackId:
+            case CustomControlSurface::clip6TrackId:
+            case CustomControlSurface::clip7TrackId:
+            case CustomControlSurface::clip8TrackId:
+            case CustomControlSurface::stopClipsTrackId:
+            case CustomControlSurface::sceneId:
+            case CustomControlSurface::clipBankUp1Id:
+            case CustomControlSurface::clipBankUp4Id:
+            case CustomControlSurface::clipBankUp8Id:
+            case CustomControlSurface::clipBankDown1Id:
+            case CustomControlSurface::clipBankDown4Id:
+            case CustomControlSurface::clipBankDown8Id:
+            case CustomControlSurface::marker1Id:
+            case CustomControlSurface::marker2Id:
+            case CustomControlSurface::marker3Id:
+            case CustomControlSurface::marker4Id:
+            case CustomControlSurface::marker5Id:
+            case CustomControlSurface::marker6Id:
+            case CustomControlSurface::marker7Id:
+            case CustomControlSurface::marker8Id:
             case CustomControlSurface::none:
             default:
             {

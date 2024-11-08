@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -8,16 +8,51 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#if TRACKTION_UNIT_TESTS
+#include <ranges>
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+#include <tracktion_engine/testing/tracktion_EnginePlayer.h>
+
 namespace tracktion { inline namespace engine
 {
 
-#if TRACKTION_UNIT_TESTS
+#if ENGINE_UNIT_TESTS_PLAYBACK
+    TEST_SUITE ("tracktion_engine")
+    {
+        TEST_CASE ("Playback")
+        {
+            auto& engine = *Engine::getEngines()[0];
+            test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512, .inputChannels = 0, .outputChannels = 1,
+                                                           .inputNames = {}, .outputNames = {} });
 
+            auto edit = engine::test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+            auto& tc = edit->getTransport();
+            auto squareFile = graph::test_utilities::getSquareFile<juce::WavAudioFormat> (44100.0, 5.0);
+            auto squareBuffer = *engine::test_utilities::loadFileInToBuffer (engine, squareFile->getFile());
+
+            AudioFile af (engine, squareFile->getFile());
+            auto clip = insertWaveClip (*getAudioTracks (*edit)[0], {}, af.getFile(), { { 0_tp, 5_tp } }, DeleteExistingClips::no);
+            clip->setUsesProxy (false);
+            tc.play (false);
+
+            test_utilities::waitForFileToBeMapped (af);
+
+            player.process (static_cast<int> (af.getLengthInSamples()));
+            auto output = player.getOutput();
+
+            CHECK_EQ (output.getNumFrames(), af.getLengthInSamples());
+
+            CHECK (graph::test_utilities::buffersAreEqual (output, toBufferView (squareBuffer), 0.01f));
+        }
+    }
+#endif
+
+#if ENGINE_UNIT_TESTS_RECORDING
 class RecordingSyncTests    : public juce::UnitTest
 {
 public:
     RecordingSyncTests()
-        : juce::UnitTest ("RecordingSyncTests", "Tracktion:Longer") {}
+        : juce::UnitTest ("RecordingSyncTests", "tracktion_engine") {}
 
     //==============================================================================
     void runTest() override
@@ -26,7 +61,6 @@ public:
         params.sampleRate = 44100.0;
         params.blockSize = 256;
         params.inputChannels = 16;
-        params.fixedBlockSize = true;
         runSynchronisationTest (params);
 
         params.sampleRate = 48000.0;
@@ -55,6 +89,9 @@ public:
 
         audioIO.initialise (params);
         audioIO.prepareToPlay (params.sampleRate, params.blockSize);
+        deviceManager.dispatchPendingUpdates();
+        std::ranges::for_each (deviceManager.getWaveInputDevices(),
+                               [] (auto wi) { wi->setEnabled (true); });
 
         beginTest ("Test device setup");
         {
@@ -63,7 +100,7 @@ public:
                     || (deviceManager.getNumWaveOutDevices() == 2 && ! deviceManager.getWaveOutDevice (0)->isStereoPair()));
         }
 
-        TempCurrentWorkingDirectory tempDir;
+        test_utilities::TempCurrentWorkingDirectory tempDir;
         auto edit = createEditWithTracksForInputs (engine, params);
         auto& transport = edit->getTransport();
 
@@ -109,18 +146,16 @@ public:
                                                [] (auto index) { return index != -1; }),
                           audioFiles.size(), "Some files don't have an impulse in them");
 
-            int fileIndex = 0;
-            
-            for (auto index : sampleIndicies)
+            for (int fileIndex = 0; auto index : sampleIndicies)
             {
                 expectGreaterOrEqual<int64_t> (index, 0, juce::String ("File doesn't have an impulse in: FILE").replace ("FILE", audioFiles[fileIndex].getFullPathName()));
-                
+
                 if (index != sampleIndicies[0])
                     expect (false, juce::String ("Mismatch of impulse indicies (FIRST & SECOND samples, difference of DIFF)")
                                     .replace ("FIRST", juce::String (index))
                                     .replace ("SECOND", juce::String (sampleIndicies[0]))
                                     .replace ("DIFF", juce::String (index - sampleIndicies[0])));
-                
+
                 ++fileIndex;
             }
         }
@@ -141,11 +176,11 @@ public:
         while (Clock::now() < sleep_time)
             std::this_thread::yield();
     }
-    
+
     void waitUntilPlayheadPosition (const EditPlaybackContext& epc, TimePosition time)
     {
         using namespace std::chrono_literals;
-        
+
         while (epc.getUnloopedPosition() < time)
             std::this_thread::sleep_for (1ms);
     }
@@ -153,7 +188,7 @@ public:
     //==============================================================================
     std::unique_ptr<Edit> createEditWithTracksForInputs (Engine& engine, const HostedAudioDeviceInterface::Parameters& params)
     {
-        auto edit = std::make_unique<Edit> (Edit::Options { engine, createEmptyEdit (engine), ProjectItemID::createNewID (0) });
+        auto edit = Edit::createSingleTrackEdit (engine);
         auto& transport = edit->getTransport();
         transport.ensureContextAllocated();
         auto context = transport.getCurrentPlaybackContext();
@@ -170,8 +205,8 @@ public:
         {
             auto track = audioTracks.getUnchecked (i);
             auto inputInstance = inputInstances.getUnchecked (i);
-            inputInstance->setTargetTrack (*track, 0, true);
-            inputInstance->setRecordingEnabled (*track, true);
+            [[ maybe_unused ]] auto res = inputInstance->setTarget (track->itemID, true, nullptr, 0);
+            inputInstance->setRecordingEnabled (track->itemID, true);
         }
 
         return edit;
@@ -190,7 +225,7 @@ public:
             processThread = std::thread ([&, msPerBlock]
                                          {
                                              hasStarted = true;
-                
+
                                              while (! shouldStop.load())
                                              {
                                                  auto endTime = std::chrono::steady_clock::now() + std::chrono::milliseconds (msPerBlock);
@@ -213,7 +248,7 @@ public:
             shouldStop.store (true);
             processThread.join();
         }
-        
+
         void waitForThreadToStart()
         {
             while (! hasStarted)
@@ -224,7 +259,7 @@ public:
         {
             insertImpulse.store (true);
         }
-        
+
         bool needsToInsertImpulse() const
         {
             return insertImpulse;
@@ -241,24 +276,6 @@ public:
         std::atomic<bool> hasStarted { false }, shouldStop { false }, insertImpulse { false };
     };
 
-    //==============================================================================
-    struct TempCurrentWorkingDirectory
-    {
-        TempCurrentWorkingDirectory()
-        {
-            tempDir.createDirectory();
-            tempDir.setAsCurrentWorkingDirectory();
-        }
-
-        ~TempCurrentWorkingDirectory()
-        {
-            tempDir.deleteRecursively (false);
-            originalCwd.setAsCurrentWorkingDirectory();
-        }
-
-        juce::File originalCwd = juce::File::getCurrentWorkingDirectory();
-        juce::File tempDir = juce::File::createTempFile ({});
-    };
 
     //==============================================================================
     template<typename ClipType>
@@ -304,7 +321,7 @@ public:
 
         return sampleIndicies;
     }
-    
+
     double getFileLength (Engine& engine, const juce::File& file)
     {
         if (auto reader = std::unique_ptr<juce::AudioFormatReader> (tracktion::engine::AudioFileUtils::createReaderFor (engine, file)))
@@ -315,10 +332,9 @@ public:
     }
 };
 
-#if 0 //TODO: This test is disabled for now as it seems to have a problem on the CI
 static RecordingSyncTests recordingSyncTests;
-#endif
-
-#endif // TRACKTION_UNIT_TESTS
+#endif // ENGINE_UNIT_TESTS_RECORDING
 
 }} // namespace tracktion { inline namespace engine
+
+#endif // TRACKTION_UNIT_TESTS

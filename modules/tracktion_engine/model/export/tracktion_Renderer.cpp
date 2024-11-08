@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
+namespace tracktion::inline engine
 {
 
 void Renderer::turnOffAllPlugins (Edit& edit)
@@ -25,7 +25,7 @@ namespace render_utils
                                                             juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* thumbnail)
     {
         auto tracksToDo = toTrackArray (*r.edit, r.tracksToDo);
-        
+
         // Initialise playhead and continuity
         auto playHead = std::make_unique<tracktion::graph::PlayHead>();
         auto playHeadState = std::make_unique<tracktion::graph::PlayHeadState> (*playHead);
@@ -39,15 +39,15 @@ namespace render_utils
         cnp.forRendering = true;
         cnp.includePlugins = r.usePlugins;
         cnp.includeMasterPlugins = r.useMasterPlugins;
-        cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
         cnp.includeBypassedPlugins = false;
+        cnp.allowClipSlots = r.edit->engine.getEngineBehaviour().areClipSlotsEnabled();
 
         std::unique_ptr<tracktion::graph::Node> node;
         callBlocking ([&r, &node, &cnp] { node = createNodeForEdit (*r.edit, cnp); });
 
         if (! node)
             return {};
-        
+
         return std::make_unique<Renderer::RenderTask> (desc, r,
                                                        std::move (node), std::move (playHead), std::move (playHeadState), std::move (processState),
                                                        progressToUpdate, thumbnail);
@@ -78,35 +78,42 @@ struct Ditherers
 };
 
 //==============================================================================
-static void addAcidInfo (Edit& edit, Renderer::Parameters& r)
+inline void addAcidInfo (Edit& edit, Renderer::Parameters& r)
 {
     if (r.destFile.hasFileExtension (".wav") && r.endAllowance == 0s)
+        r.metadata.addArray (createAcidInfo (edit, r.time));
+}
+
+juce::StringPairArray createAcidInfo (Edit& edit, TimeRange time)
+{
+    juce::StringPairArray metadata;
+
+    auto& pitch = edit.pitchSequence.getPitchAt (time.getStart());
+    auto& tempo = edit.tempoSequence.getTempoAt (time.getStart());
+    auto& timeSig = edit.tempoSequence.getTimeSigAt (time.getStart());
+
+    metadata.set (juce::WavAudioFormat::acidOneShot, "0");
+    metadata.set (juce::WavAudioFormat::acidRootSet, "1");
+    metadata.set (juce::WavAudioFormat::acidDiskBased, "1");
+    metadata.set (juce::WavAudioFormat::acidizerFlag, "1");
+    metadata.set (juce::WavAudioFormat::acidRootNote, juce::String (pitch.getPitch()));
+
+    auto beats = tempo.getBpm() * (time.getLength().inSeconds() / 60);
+
+    if (std::abs (beats - int (beats)) < 0.001)
     {
-        auto& pitch = edit.pitchSequence.getPitchAt (r.time.getStart());
-        auto& tempo = edit.tempoSequence.getTempoAt (r.time.getStart());
-        auto& timeSig = edit.tempoSequence.getTimeSigAt (r.time.getStart());
-
-        r.metadata.set (juce::WavAudioFormat::acidOneShot, "0");
-        r.metadata.set (juce::WavAudioFormat::acidRootSet, "1");
-        r.metadata.set (juce::WavAudioFormat::acidDiskBased, "1");
-        r.metadata.set (juce::WavAudioFormat::acidizerFlag, "1");
-        r.metadata.set (juce::WavAudioFormat::acidRootNote, juce::String (pitch.getPitch()));
-
-        auto beats = tempo.getBpm() * (r.time.getLength().inSeconds() / 60);
-
-        if (std::abs (beats - int (beats)) < 0.001)
-        {
-            r.metadata.set (juce::WavAudioFormat::acidStretch, "1");
-            r.metadata.set (juce::WavAudioFormat::acidBeats, juce::String (juce::roundToInt (beats)));
-            r.metadata.set (juce::WavAudioFormat::acidDenominator, juce::String (timeSig.denominator.get()));
-            r.metadata.set (juce::WavAudioFormat::acidNumerator, juce::String (timeSig.numerator.get()));
-            r.metadata.set (juce::WavAudioFormat::acidTempo, juce::String (tempo.getBpm()));
-        }
-        else
-        {
-            r.metadata.set (juce::WavAudioFormat::acidStretch, "0");
-        }
+        metadata.set (juce::WavAudioFormat::acidStretch, "1");
+        metadata.set (juce::WavAudioFormat::acidBeats, juce::String (juce::roundToInt (beats)));
+        metadata.set (juce::WavAudioFormat::acidDenominator, juce::String (timeSig.denominator.get()));
+        metadata.set (juce::WavAudioFormat::acidNumerator, juce::String (timeSig.numerator.get()));
+        metadata.set (juce::WavAudioFormat::acidTempo, juce::String (tempo.getBpm()));
     }
+    else
+    {
+        metadata.set (juce::WavAudioFormat::acidStretch, "0");
+    }
+
+    return metadata;
 }
 
 //==============================================================================
@@ -120,7 +127,7 @@ Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
       sourceToUpdate (source)
 {
     auto tracksToDo = toTrackArray (*r.edit, r.tracksToDo);
-    
+
     // Initialise playhead and continuity
     playHead = std::make_unique<tracktion::graph::PlayHead>();
     playHeadState = std::make_unique<tracktion::graph::PlayHeadState> (*playHead);
@@ -134,8 +141,8 @@ Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
     cnp.forRendering = true;
     cnp.includePlugins = r.usePlugins;
     cnp.includeMasterPlugins = r.useMasterPlugins;
-    cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
     cnp.includeBypassedPlugins = false;
+    cnp.allowClipSlots = r.edit->engine.getEngineBehaviour().areClipSlotsEnabled();
 
     callBlocking ([this, &r, &cnp] { graphNode = createNodeForEdit (*r.edit, cnp); });
 }
@@ -154,6 +161,9 @@ Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
      progress (progressToUpdate == nullptr ? progressInternal : *progressToUpdate),
      sourceToUpdate (source)
 {
+    assert (playHead);
+    assert (playHeadState);
+    assert (processState);
 }
 
 Renderer::RenderTask::~RenderTask()
@@ -234,8 +244,8 @@ bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parame
 
     for (SampleCount pos = 0; pos < reader->lengthInSamples;)
     {
-        auto numLeft = static_cast<int> (reader->lengthInSamples - pos);
-        auto samps = std::min (tempBuffer.getNumSamples(), std::min (blockSize, numLeft));
+        auto numLeft = reader->lengthInSamples - pos;
+        auto samps = int (std::min (juce::int64 (tempBuffer.getNumSamples()), std::min (juce::int64 (blockSize), numLeft)));
 
         reader->read (&tempBuffer, 0, samps, pos, true, reader->numChannels > 1);
 
@@ -255,7 +265,7 @@ bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parame
 bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
 {
     CRASH_TRACER
-    
+
     if (! nodeRenderContext)
     {
         callBlocking ([&, this] { nodeRenderContext = std::make_unique<NodeRenderContext> (*this, r,
@@ -265,19 +275,25 @@ bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
                                                                                            std::move (processState),
                                                                                            sourceToUpdate); });
 
+        if (! nodeRenderContext)
+        {
+            errorMessage = NEEDS_TRANS("Quit message or timeout occurred during render initialisation");
+            return true;
+        }
+
         if (! nodeRenderContext->getStatus().wasOk())
         {
             errorMessage = nodeRenderContext->getStatus().getErrorMessage();
             return true;
         }
     }
-    
+
     if (! nodeRenderContext->renderNextBlock (progress))
         return false;
-    
+
     nodeRenderContext.reset();
     progress = 1.0f;
-    
+
     return true;
 }
 
@@ -309,7 +325,7 @@ void Renderer::RenderTask::flushAllPlugins (const Plugin::Array& plugins,
 
                     ep->applyToBuffer (PluginRenderContext (&buffer, channels, 0, samplesPerBlock,
                                                             nullptr, 0.0,
-                                                            TimePosition(), false, false, true, true));
+                                                            TimeRange(), false, false, true, true));
 
                     if (isAudioDataAlmostSilent (buffer.getReadPointer (0), samplesPerBlock))
                         break;
@@ -349,9 +365,8 @@ bool Renderer::RenderTask::addMidiMetaDataAndWriteToFile (juce::File destFile, j
     if (outputSequence.getNumEvents() == 0)
         return false;
 
-    juce::FileOutputStream out (destFile);
-
-    if (out.openedOk())
+    if (juce::FileOutputStream out (destFile);
+        out.openedOk())
     {
         juce::MidiMessageSequence midiTempoSequence;
         auto currentTempoPosition = createPosition (tempoSequence);
@@ -405,6 +420,7 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
                              TimeRange range,
                              const juce::BigInteger& tracksToDo,
                              bool usePlugins,
+                             bool useACID,
                              juce::Array<Clip*> clips,
                              bool useThread)
 {
@@ -417,6 +433,7 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
         tracks.add (getAllTracks (edit)[bit]);
 
     const FreezePointPlugin::ScopedTrackSoloIsolator isolator (edit, tracks);
+    const Renderer::ScopedClipSlotDisabler slotDisabler (edit, tracks);
 
     TransportControl::stopAllTransports (engine, false, true);
     turnOffAllPlugins (edit);
@@ -430,14 +447,15 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
         r.sampleRateForAudio = edit.engine.getDeviceManager().getSampleRate();
         r.blockSizeForAudio  = edit.engine.getDeviceManager().getBlockSize();
         r.time = range;
-        r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (engine);
         r.usePlugins = usePlugins;
         r.useMasterPlugins = usePlugins;
+        r.tracksToDo = tracksToDo;
         r.allowedClips = clips;
         r.createMidiFile = outputFile.hasFileExtension (".mid");
 
-        addAcidInfo (edit, r);
-        
+        if (useACID)
+            addAcidInfo (edit, r);
+
         if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))
         {
             if (useThread)
@@ -457,6 +475,11 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
     return outputFile.existsAsFile();
 }
 
+bool Renderer::renderToFile (Edit& edit, const juce::File& f, bool useThread)
+{
+    return renderToFile ({}, f, edit, { 0_tp, edit.getLength() }, toBitSet (getAllTracks (edit)), true, true, {}, useThread);
+}
+
 juce::File Renderer::renderToFile (const juce::String& taskDescription, const Parameters& r)
 {
     CRASH_TRACER
@@ -474,7 +497,7 @@ juce::File Renderer::renderToFile (const juce::String& taskDescription, const Pa
          && ! r.destFile.isDirectory())
     {
         auto& ui = r.edit->engine.getUIBehaviour();
-        
+
         if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))
         {
             ui.runTaskWithProgressBar (*task);
@@ -504,11 +527,11 @@ juce::File Renderer::renderToFile (const juce::String& taskDescription, const Pa
     return {};
 }
 
-ProjectItem::Ptr Renderer::renderToProjectItem (const juce::String& taskDescription, const Parameters& r)
+ProjectItem::Ptr Renderer::renderToProjectItem (const juce::String& taskDescription, const Parameters& r, ProjectItem::Category category)
 {
     CRASH_TRACER
 
-    auto proj = r.engine->getProjectManager().getProject (*r.edit);
+    auto proj = getProjectForEdit (*r.edit);
 
     if (proj == nullptr)
     {
@@ -524,7 +547,7 @@ ProjectItem::Ptr Renderer::renderToProjectItem (const juce::String& taskDescript
         return {};
     }
 
-    if (r.category == ProjectItem::Category::none)
+    if (category == ProjectItem::Category::none)
     {
         // This test comes from some very old code which leaks the file and doesn't add the project item
         // if the category is 'none'... I've left the check in here but think it may be redundant - if you
@@ -547,7 +570,7 @@ ProjectItem::Ptr Renderer::renderToProjectItem (const juce::String& taskDescript
                                                      : ProjectItem::waveItemType(),
                                     renderedFile.getFileNameWithoutExtension().trim(),
                                     desc,
-                                    r.category,
+                                    category,
                                     true);
     }
 
@@ -557,7 +580,7 @@ ProjectItem::Ptr Renderer::renderToProjectItem (const juce::String& taskDescript
 //==============================================================================
 Renderer::Statistics Renderer::measureStatistics (const juce::String& taskDescription, Edit& edit,
                                                   TimeRange range, const juce::BigInteger& tracksToDo,
-                                                  int blockSizeForAudio)
+                                                  int blockSizeForAudio, double sampleRateForAudio)
 {
     CRASH_TRACER
     Statistics result;
@@ -572,10 +595,10 @@ Renderer::Statistics Renderer::measureStatistics (const juce::String& taskDescri
         Parameters r (edit);
         r.audioFormat = edit.engine.getAudioFileFormatManager().getDefaultFormat();
         r.blockSizeForAudio = blockSizeForAudio;
+        r.sampleRateForAudio = sampleRateForAudio;
         r.time = range;
-        r.addAntiDenormalisationNoise = EditPlaybackContext::shouldAddAntiDenormalisationNoise (edit.engine);
         r.tracksToDo = tracksToDo;
-        
+
         if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))
         {
             edit.engine.getUIBehaviour().runTaskWithProgressBar (*task);
@@ -628,4 +651,63 @@ bool Renderer::checkTargetFile (Engine& e, const juce::File& file)
     return true;
 }
 
-}} // namespace tracktion { inline namespace engine
+//==============================================================================
+//==============================================================================
+EditRenderer::Handle::~Handle()
+{
+    cancel();
+    renderThread.join();
+}
+
+void EditRenderer::Handle::cancel()
+{
+    hasBeenCancelled = true;
+}
+
+float EditRenderer::Handle::getProgress() const
+{
+    return progress;
+}
+
+auto EditRenderer::render (Renderer::Parameters r,
+                           std::function<void (tl::expected<juce::File, std::string>)> finishedCallback_,
+                           std::shared_ptr<juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver> thumbnailToUpdate) -> std::shared_ptr<Handle>
+{
+    assert (finishedCallback_ && "You must supply a finished callback");
+
+    std::shared_ptr<Handle> renderHandle (new Handle());
+    renderHandle->thumbnailToUpdate = std::move (thumbnailToUpdate);
+    auto srs = std::make_unique<Edit::ScopedRenderStatus> (*r.edit, false); // We can't reallocate as this object will be destroyed on a non-message thread
+
+    auto destFile = r.destFile;
+    auto renderTask = render_utils::createRenderTask (std::move (r), {},
+                                                      &renderHandle->progress,
+                                                      renderHandle->thumbnailToUpdate.get());
+
+    renderHandle->renderThread = std::thread ([destFile,
+                                              &hasBeenCancelledFlag = renderHandle->hasBeenCancelled,
+                                              finishedCallback = std::move (finishedCallback_),
+                                              task = std::move (renderTask),
+                                              scopedRenderState = std::move (srs)]
+    {
+        for (;;)
+        {
+            if (hasBeenCancelledFlag)
+                return finishedCallback (tl::unexpected (NEEDS_TRANS("Cancelled")));
+
+            if (task->runJob() == juce::ThreadPoolJob::jobNeedsRunningAgain)
+                continue;
+
+            // Finished
+            if (auto err = task->errorMessage; err.isNotEmpty())
+                return finishedCallback (tl::unexpected (err.toStdString()));
+
+            return finishedCallback (destFile);
+        }
+    });
+
+    return renderHandle;
+}
+
+
+} // namespace tracktion::inline engine

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -23,7 +23,7 @@ AuxReturnPlugin::~AuxReturnPlugin()
 
 const char* AuxReturnPlugin::xmlTypeName = "auxreturn";
 
-juce::String AuxReturnPlugin::getName()
+juce::String AuxReturnPlugin::getName() const
 {
     auto nm = edit.getAuxBusName (busNumber);
 
@@ -57,8 +57,7 @@ void AuxReturnPlugin::applyToBuffer (const PluginRenderContext&)
 
 void AuxReturnPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    juce::CachedValue<int>* cvsInt[] = { &busNumber, nullptr };
-    copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
+    copyPropertiesToCachedValues (v, busNumber);
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();

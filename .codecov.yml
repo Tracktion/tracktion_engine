@@ -1,0 +1,11 @@
+ignore:
+  - "tests"
+  - "examples"
+  - "modules/3rd_party"
+  - "modules/juce"
+  - "**3rd_party*"
+  - "**/3rd_party*"
+  - "**/3rd_party/*"
+  - "modules/tracktion_core/3rd_party"
+  - "modules/tracktion_graph/3rd_party"
+  - "modules/tracktion_engine/3rd_party"

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -116,6 +116,7 @@ public:
         Edit& edit;
         juce::ValueTree state;
         juce::CachedValue<float> value, offset, curve;
+        juce::CachedValue<float> inputStart, inputEnd;
     };
 
     /** Creates an assignment for a given source.
@@ -130,6 +131,9 @@ public:
 
     /** Removes assignments for a ModifierSource. */
     void removeModifier (ModifierSource&);
+
+    /** Returns true if any ModifierSources are currently in use by assignments. */
+    bool hasActiveModifierAssignments() const;
 
     /** Returns all the current ModifierAssignments. */
     juce::ReferenceCountedArray<ModifierAssignment> getAssignments() const;
@@ -171,7 +175,7 @@ public:
     virtual int getNumberOfStates() const                           { return 0; }
     virtual float getValueForState (int) const                      { return 0; }
     virtual int getStateForValue (float) const                      { return 0; }
-    virtual float getDefaultValue() const;
+    virtual std::optional<float> getDefaultValue() const;
 
     virtual bool hasLabels()  const                                 { return false; }
     virtual juce::String getLabelForValue (float) const             { return {}; }
@@ -209,9 +213,9 @@ public:
 
         /** Called when the current value of the parameter changed, either from setting the parameter,
             automation, a macro or modifier.
-            This will be called on the audio thread so make sure you don't do anything time consuming or block etc.
+            This is async so you won't get a callback for every parameter change.
         */
-        virtual void currentValueChanged (AutomatableParameter&, float /*newValue*/) {}
+        virtual void currentValueChanged (AutomatableParameter&) {}
 
         /** Called when the parameter is changed by the plugin or host, not from automation. */
         virtual void parameterChanged (AutomatableParameter&, float /*newValue*/) {}
@@ -230,7 +234,7 @@ protected:
     std::unique_ptr<AttachedValue> attachedValue;
     juce::ListenerList<Listener> listeners;
 
-    juce::WeakReference<Selectable> editRef;
+    SafeSelectable<Edit> editRef;
     Plugin* plugin = nullptr;
     Modifier* modifierOwner = nullptr;
     MacroParameterList* macroOwner = nullptr;
@@ -238,6 +242,7 @@ protected:
     std::atomic<float> currentValue { 0.0f }, currentParameterValue { 0.0f },  currentBaseValue { 0.0f }, currentModifierValue { 0.0f };
     std::atomic<bool> isRecording { false };
     bool updateParametersRecursionCheck = false;
+    AsyncCaller parameterChangedCaller { [this] { listeners.call (&Listener::currentValueChanged, *this); } };
 
     juce::ValueTree modifiersState;
     struct AutomationSourceList;
@@ -287,21 +292,20 @@ juce::Array<ModifierType*> getModifiersOfType (const AutomatableParameter& ap)
     return mods;
 }
 
-/** Returns all the automatable parameters in an Edit. */
-juce::Array<AutomatableParameter*> getAllAutomatableParameter (Edit&);
-
 /** Iterates an Edit looking for all parameters that assigned to a given parameter. */
-template<typename AssignmentType, typename ModifierSourceType>
-juce::ReferenceCountedArray<AssignmentType> getAssignmentsForSource (Edit& edit, const ModifierSourceType& source)
+template<typename AssignmentType, typename ModifierSourceType, typename EditType>
+juce::ReferenceCountedArray<AssignmentType> getAssignmentsForSource (EditType& edit, const ModifierSourceType& source)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     juce::ReferenceCountedArray<AssignmentType> assignments;
 
-    for (auto* ap : getAllAutomatableParameter (edit))
-        for (auto* ass : ap->getAssignments())
+    edit.visitAllAutomatableParams (true, [&] (AutomatableParameter& param)
+    {
+        for (auto* ass : param.getAssignments())
             if (auto* m = dynamic_cast<AssignmentType*> (ass))
                 if (m->isForModifierSource (source))
                     assignments.add (m);
+    });
 
     return assignments;
 }
@@ -348,17 +352,14 @@ public:
 
     //==============================================================================
     virtual bool hasAnAutomatableParameter() = 0;
-    // this will only be called when actually dropped, so if
-    // there is more than one possible param, it can show UI to choose one at this point
-    virtual AutomatableParameter::Ptr getAssociatedAutomatableParameter() = 0;
 
-    // if the user chooses learn mode instead of a specific parameter, this will return
-    // nullptr and set learn flag to true. the default implementation never returns a true
-    // learn flag
-    virtual AutomatableParameter::Ptr getAssociatedAutomatableParameter (bool* learn);
+    // this will only be called when actually dropped, so if there are multiple params,
+    // it should show UI to choose one and then invoke the callback asynchronously
+    virtual void chooseAutomatableParameter (std::function<void(AutomatableParameter::Ptr)> handleChosenParam,
+                                             std::function<void()> startLearnMode) = 0;
 
-    // start the process for learning a parameter
-    virtual void startParameterLearn (ParameterisableDragDropSource*) {}
+    // start the process for learning a parameter and call the callback when one is chosen
+    virtual void startParameterLearn (std::function<void(AutomatableParameter::Ptr)>) {}
 
     // the subclass can call this so it knows to draw itself differently when dragging over
     bool isAutomatableParameterBeingDraggedOver() const;
@@ -402,15 +403,24 @@ struct AutomationIterator
     float getCurrentValue() noexcept            { return currentValue; }
 
 private:
+    void interpolate (const AutomatableParameter&);
+    void copy (const AutomatableParameter&);
+    int updateIndex (TimePosition newTime);
+
+    void setPositionHiRes (TimePosition newTime) noexcept;
+    void setPositionInterpolated (TimePosition newTime) noexcept;
+
     struct AutoPoint
     {
-        TimePosition time;
-        float value;
+        TimePosition time = 0_tp;
+        float value = 0.0f;
+        float curve = 0.0f;
     };
 
     juce::Array<AutoPoint> points;
     int currentIndex = -1;
     float currentValue = 0.0f;
+    bool hiRes = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutomationIterator)
 };

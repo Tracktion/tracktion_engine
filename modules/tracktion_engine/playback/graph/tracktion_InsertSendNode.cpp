@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -11,87 +11,80 @@
 namespace tracktion { inline namespace engine
 {
 
-//==============================================================================
-//==============================================================================
-InsertSendReturnDependencyNode::InsertSendReturnDependencyNode (std::unique_ptr<Node> inputNode, InsertPlugin& ip)
-    : input (std::move (inputNode)), plugin (ip)
+InsertNode::InsertNode (std::unique_ptr<Node> input_, InsertPlugin& ip, std::unique_ptr<Node> returnNode_, SampleRateAndBlockSize info)
+    : owner (ip), plugin (ip),
+      input (std::move (input_)),
+      returnNode (std::move (returnNode_))
 {
+    assert (input);
+    assert (returnNode);
+
     setOptimisations ({ tracktion::graph::ClearBuffers::no,
                         tracktion::graph::AllocateAudioBuffer::no });
+
+    plugin->baseClassInitialise ({ TimePosition(), info.sampleRate, info.blockSize });
+    isInitialised = true;
 }
 
-//==============================================================================
-tracktion::graph::NodeProperties InsertSendReturnDependencyNode::getNodeProperties()
+InsertNode::~InsertNode()
 {
-    return input->getNodeProperties();
+    if (isInitialised && ! plugin->baseClassNeedsInitialising())
+        plugin->baseClassDeinitialise();
 }
 
-std::vector<tracktion::graph::Node*> InsertSendReturnDependencyNode::getDirectInputNodes()
+TransformResult InsertNode::transform (Node&, const std::vector<Node*>& postOrderedNodes, TransformCache&)
 {
-    std::vector<tracktion::graph::Node*> inputs { input.get() };
-    
     if (sendNode)
-        inputs.push_back (sendNode);
-    
-    if (returnNode)
-        inputs.push_back (returnNode);
+        return TransformResult::none;
 
-    return inputs;
-}
-
-bool InsertSendReturnDependencyNode::transform (Node& rootNode)
-{
-    if (sendNode && returnNode)
-        return false;
-    
-    bool foundSend = false, foundReturn = false;
-    
-    for (auto n : getNodes (rootNode, tracktion::graph::VertexOrdering::postordering))
+    for (auto n : postOrderedNodes)
     {
-        if (! sendNode)
+        if (auto in = dynamic_cast<InsertSendNode*> (n))
         {
-            if (auto isn = dynamic_cast<InsertSendNode*> (n))
+            if (&in->getInsert() == plugin.get())
             {
-                if (&isn->getInsert() == plugin.get())
-                {
-                    sendNode = isn;
-                    foundSend = true;
-                }
-            }
-        }
-
-        if (! returnNode)
-        {
-            if (auto irn = dynamic_cast<InsertReturnNode*> (n))
-            {
-               if (&irn->getInsert() == plugin.get())
-               {
-                   returnNode = irn;
-                   foundReturn = true;
-               }
+                sendNode = in;
+                return TransformResult::connectionsMade;
             }
         }
     }
-    
-    return foundSend || foundReturn;
+
+    return TransformResult::none;
 }
 
-void InsertSendReturnDependencyNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&)
+tracktion::graph::NodeProperties InsertNode::getNodeProperties()
+{
+    auto props = returnNode->getNodeProperties();
+    props.latencyNumSamples += owner.getLatencyNumSamples();
+
+    if (sendNode)
+        props.latencyNumSamples += sendNode->getLatencyAtInput();
+
+    if (props.nodeID != 0)
+        hash_combine (props.nodeID, static_cast<size_t> (5738295899482615961ul)); // "InsertNode"
+
+    return props;
+}
+
+std::vector<Node*> InsertNode::getDirectInputNodes()
+{
+    return { returnNode.get() };
+}
+
+void InsertNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&)
 {
 }
 
-bool InsertSendReturnDependencyNode::isReadyToProcess()
+bool InsertNode::isReadyToProcess()
 {
-    return input->hasProcessed()
-        && (sendNode == nullptr || sendNode->hasProcessed())
-        && (returnNode == nullptr || returnNode->hasProcessed());
+    return returnNode->hasProcessed();
 }
 
-void InsertSendReturnDependencyNode::process (ProcessContext& pc)
+void InsertNode::process (ProcessContext& pc)
 {
-    auto inputBuffers = input->getProcessedOutput();
-    setAudioOutput (input.get(), inputBuffers.audio.getStart (pc.buffers.audio.getNumFrames()));
-    pc.buffers.midi.copyFrom (inputBuffers.midi);
+    auto buffers = returnNode->getProcessedOutput();
+    setAudioOutput (returnNode.get(), buffers.audio.getStart (pc.buffers.audio.getNumFrames()));
+    pc.buffers.midi.copyFrom (buffers.midi);
 }
 
 
@@ -102,34 +95,83 @@ InsertSendNode::InsertSendNode (InsertPlugin& ip)
 {
 }
 
+int InsertSendNode::getLatencyAtInput()
+{
+    return input ? input->getNodeProperties().latencyNumSamples
+                 : 0;
+}
+
 //==============================================================================
 tracktion::graph::NodeProperties InsertSendNode::getNodeProperties()
 {
+    if (input)
+    {
+        auto props = input->getNodeProperties();
+        props.latencyNumSamples = std::numeric_limits<int>::min();
+
+        if (props.nodeID != 0)
+            hash_combine (props.nodeID, static_cast<size_t> (18118259460788248666ul)); // "InsertSendNode"
+
+        return props;
+    }
+
     tracktion::graph::NodeProperties props;
     props.hasAudio = owner.hasAudio();
     props.hasMidi = owner.hasMidi();
     props.numberOfChannels = props.hasAudio ? 2 : 0;
-    
+    props.latencyNumSamples = owner.getLatencyNumSamples();
+
     return props;
 }
 
 std::vector<tracktion::graph::Node*> InsertSendNode::getDirectInputNodes()
 {
+    if (input)
+        return { input };
+
     return {};
+}
+
+TransformResult InsertSendNode::transform (Node&, const std::vector<Node*>& postOrderedNodes, TransformCache&)
+{
+    if (input)
+        return TransformResult::none;
+
+    for (auto n : postOrderedNodes)
+    {
+        if (auto in = dynamic_cast<InsertNode*> (n))
+        {
+            if (&in->getInsert() == plugin.get())
+            {
+                input = &in->getInputNode();
+                return TransformResult::connectionsMade;
+            }
+        }
+    }
+
+    return TransformResult::none;
 }
 
 void InsertSendNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&)
 {
+    if (input)
+        setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                            tracktion::graph::AllocateAudioBuffer::no });
 }
 
 bool InsertSendNode::isReadyToProcess()
 {
-    return true;
+    return input == nullptr || input->hasProcessed();
 }
 
 void InsertSendNode::process (ProcessContext& pc)
 {
-    owner.fillSendBuffer (&pc.buffers.audio, &pc.buffers.midi);
+    if (! input)
+        return;
+
+    auto buffers = input->getProcessedOutput();
+    setAudioOutput (input, buffers.audio.getStart (pc.buffers.audio.getNumFrames()));
+    pc.buffers.midi.copyFrom (buffers.midi);
 }
 
 }} // namespace tracktion { inline namespace engine

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -10,17 +10,22 @@
 
 #pragma once
 
+#include <span>
 
 namespace tracktion { inline namespace graph
 {
 
 namespace node_player_utils
 {
-    /** Returns true if all the nodes in the graph have a unique nodeID. */
-    static inline bool areNodeIDsUnique (Node& node, bool ignoreZeroIDs)
+    /** Returns true if all the nodes in this collection have a unique nodeID. */
+    template<typename Collection>
+    bool areNodeIDsUnique (Collection&& nodes, bool ignoreZeroIDs)
     {
         std::vector<size_t> nodeIDs;
-        visitNodes (node, [&] (Node& n) { nodeIDs.push_back (n.getNodeProperties().nodeID); }, false);
+
+        for (auto n : nodes)
+            nodeIDs.push_back (n->getNodeProperties().nodeID);
+
         std::sort (nodeIDs.begin(), nodeIDs.end());
 
         if (ignoreZeroIDs)
@@ -29,28 +34,79 @@ namespace node_player_utils
                            nodeIDs.end());
 
         auto uniqueEnd = std::unique (nodeIDs.begin(), nodeIDs.end());
+
+       #if JUCE_DEBUG
+        if (uniqueEnd != nodeIDs.end())
+        {
+            DBG("-- Duplicate Node IDs:");
+
+            for (auto id : std::span<size_t> (uniqueEnd, nodeIDs.end()))
+                DBG("\t" << id);
+        }
+       #endif
+
         return uniqueEnd == nodeIDs.end();
     }
 
+    /** Returns true if all the nodes in the graph have a unique nodeID. */
+    static inline bool areNodeIDsUnique (Node& node, bool ignoreZeroIDs)
+    {
+        std::vector<Node*> nodes;
+        visitNodes (node, [&] (Node& n) { nodes.push_back (&n); }, false);
+        return areNodeIDsUnique (nodes, ignoreZeroIDs);
+    }
+
+    /** Returns true if all there are any feedback loops in the graph. */
+    static inline bool areThereAnyCycles (const std::vector<Node*>& orderedNodes)
+    {
+        size_t numCycles = 0;
+
+        // Iterate from the first node to the last
+        // Find each input of the Node
+        // Ensure that the input is in a lower position than the current
+        for (auto iter = orderedNodes.begin(); iter != orderedNodes.end(); ++iter)
+        {
+            auto node = *iter;
+            auto position = std::distance (orderedNodes.begin(), iter);
+
+            for (auto inputNode : node->getDirectInputNodes())
+            {
+                const auto inputPosition = std::distance (orderedNodes.begin(),
+                                                          std::find (orderedNodes.begin(), orderedNodes.end(), inputNode));
+
+                if (inputPosition > position)
+                    ++numCycles;
+            }
+        }
+
+        return numCycles > 0;
+    }
+
     /** Prepares a specific Node to be played and returns all the Nodes. */
-    static std::vector<Node*> prepareToPlay (Node* node, Node* oldNode, double sampleRate, int blockSize,
-                                             std::function<NodeBuffer (choc::buffer::Size)> allocateAudioBuffer = nullptr,
-                                             std::function<void (NodeBuffer&&)> deallocateAudioBuffer = nullptr)
+    static std::unique_ptr<NodeGraph> prepareToPlay (std::unique_ptr<Node> node, NodeGraph* oldGraph,
+                                                     double sampleRate, int blockSize,
+                                                     std::function<NodeBuffer (choc::buffer::Size)> allocateAudioBuffer = nullptr,
+                                                     std::function<void (NodeBuffer&&)> deallocateAudioBuffer = nullptr,
+                                                     bool nodeMemorySharingEnabled = false)
     {
         if (node == nullptr)
             return {};
-        
+
         // First give the Nodes a chance to transform
-        transformNodes (*node);
-        
-        // Next, initialise all the nodes, this will call prepareToPlay on them and also
-        // give them a chance to do things like balance latency
-        const PlaybackInitialisationInfo info { sampleRate, blockSize, *node, oldNode,
-                                                allocateAudioBuffer, deallocateAudioBuffer };
-        visitNodes (*node, [&] (Node& n) { n.initialise (info); }, false);
-        
-        // Then find all the nodes as it might have changed after initialisation
-        return tracktion::graph::getNodes (*node, tracktion::graph::VertexOrdering::postordering);
+        auto nodeGraph = createNodeGraph (std::move (node));
+        assert (! areThereAnyCycles (nodeGraph->orderedNodes));
+        jassert (areNodeIDsUnique (nodeGraph->orderedNodes, true));
+
+        // Next, initialise all the nodes, this will call prepareToPlay on them
+        const PlaybackInitialisationInfo info { sampleRate, blockSize,
+                                                *nodeGraph, oldGraph,
+                                                allocateAudioBuffer, deallocateAudioBuffer,
+                                                nodeMemorySharingEnabled };
+
+        for (auto n : nodeGraph->orderedNodes)
+            n->initialise (info);
+
+        return nodeGraph;
     }
 
     inline void reserveAudioBufferPool (Node* rootNode, const std::vector<Node*>& allNodes,
@@ -65,7 +121,7 @@ namespace node_player_utils
         // - Then multiply that by the number of threads that will be used (or the num leaf Nodes if that’s smaller)
         // - Add one for the root node so the ouput can be retained
         [[ maybe_unused ]] size_t maxNumChannels = 0, maxNumInputs = 0, numLeafNodes = 0;
-        
+
         // However, this algorithm is too pessimistic as it assumes there can be
         // numThreads * maxNumInputs which is unlikely to be true.
         // It's probably better to stack up numThreads maxNumInputs and use the min of that size and numThreads
@@ -76,12 +132,12 @@ namespace node_player_utils
             const auto props = n->getNodeProperties();
             maxNumInputs    = std::max (maxNumInputs, numInputs);
             maxNumChannels  = std::max (maxNumChannels, (size_t) props.numberOfChannels);
-            
+
             if (numInputs == 0)
                 ++numLeafNodes;
         }
-        
-        const size_t numBuffersRequired = std::min (allNodes.size(), 1 + numThreads);
+
+        const size_t numBuffersRequired = std::max ((size_t) 2, std::min (allNodes.size(), 1 + numThreads));
         audioBufferPool.reserve (numBuffersRequired, choc::buffer::Size::create (maxNumChannels, blockSize));
     }
 }

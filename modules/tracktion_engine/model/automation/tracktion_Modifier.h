@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -23,12 +23,12 @@ struct ModifierTimer
 //==============================================================================
 /**
     Bass class for parameter Modifiers.
-    
+
     Modifiers are capable of controlling automatable parameters by making assignments
     from Modifiers to AutomatableParameters.
     They work similarly to AutomationCurves but can be all kinds of modification such
     as LFOs, random and envelopes.
- 
+
     @see LFOModifier, EnvelopeFollowerModifier, RandomModifier
 */
 struct Modifier : public AutomatableEditItem,
@@ -42,7 +42,7 @@ struct Modifier : public AutomatableEditItem,
     /** Creates a Modifier for a given state. */
     Modifier (Edit&, const juce::ValueTree&);
     /** Destructor. */
-    ~Modifier();
+    ~Modifier() override;
 
     /** Removes this Modifier from its parent Track. */
     void remove();
@@ -72,7 +72,7 @@ struct Modifier : public AutomatableEditItem,
         preFX,  /**< The Modifier is processed before the plugn chain. */
         postFX  /**< The Modifier is processed after the plugn chain. */
     };
-    
+
     /** Should return the position in the plugin chain that this Modifier should be processed. */
     virtual ProcessingPosition getProcessingPosition()          { return ProcessingPosition::none; }
 
@@ -97,7 +97,7 @@ struct Modifier : public AutomatableEditItem,
     //==============================================================================
     /** The max number of seconds of modifier value history that is stored. */
     static constexpr TimeDuration maxHistoryTime = TimeDuration::fromSeconds (3.0);
-    
+
     /** Returns the edit time of the current value.
         @see getCurrentValue, getValueAt
         [[ audio_thread ]]
@@ -114,7 +114,7 @@ struct Modifier : public AutomatableEditItem,
         [[ message_thread ]]
     */
     std::vector<float> getValues (TimeDuration numSecondsBeforeNow) const;
-    
+
     //==============================================================================
     juce::ValueTree state;                  /**< Modifier internal state. */
     juce::CachedValue<juce::Colour> colour; /**< Colour property. */
@@ -125,15 +125,18 @@ struct Modifier : public AutomatableEditItem,
     /** Returns the sample rate the Modifier has been initialised with. */
     double getSampleRate() const                                { return sampleRate; }
 
+    /** @internal */
+    void selectableAboutToBeDeleted() override;
+
 protected:
     /** Subclasses can call this to update the edit time of the current value. */
     void setEditTime (TimePosition newEditTime)                 { lastEditTime = newEditTime; }
-    
+
 private:
     int initialiseCount = 0;
     double sampleRate = 44100.0;
-    TimePosition lastEditTime;
-    
+    std::atomic<TimePosition> lastEditTime { TimePosition() };
+
     class ValueFifo;
     std::unique_ptr<ValueFifo> valueFifo, messageThreadValueFifo;
     mutable choc::fifo::SingleReaderSingleWriterFIFO<std::pair<int, float>> valueFifoQueue;

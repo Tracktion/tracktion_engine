@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -319,12 +319,12 @@ void EnvelopeFollowerModifier::deinitialise()
 
 void EnvelopeFollowerModifier::applyToBuffer (const PluginRenderContext& pc)
 {
-    setEditTime (pc.editTime);
-    
+    setEditTime (pc.editTime.getStart());
+
     if (pc.destBuffer == nullptr)
         return;
 
-    updateParameterStreams (pc.editTime);
+    updateParameterStreams (pc.editTime.getStart());
 
     juce::AudioBuffer<float> ab (pc.destBuffer->getArrayOfWritePointers(),
                            pc.destBuffer->getNumChannels(),
@@ -373,7 +373,7 @@ void EnvelopeFollowerModifier::processBlock (const juce::AudioBuffer<float>& ab)
 
     const int numChannels = ab.getNumChannels();
     const int numSamples = ab.getNumSamples();
-    const float** samples = ab.getArrayOfReadPointers();
+    const float* const* samples = ab.getArrayOfReadPointers();
     float envelope = 0.0f;
 
     AudioScratchBuffer scratch (1, numSamples);

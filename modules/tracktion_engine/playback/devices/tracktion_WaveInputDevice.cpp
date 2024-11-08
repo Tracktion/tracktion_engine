@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -75,7 +75,7 @@ static juce::String expandPatterns (Edit& ed, const juce::String& s, Track* trac
     if (track != nullptr)
         trackName = juce::File::createLegalFileName (track->getName());
 
-    if (auto proj = ed.engine.getProjectManager().getProject (ed))
+    if (auto proj = getProjectForEdit (ed))
     {
         projDir = proj->getDirectoryForMedia (ProjectItem::Category::recorded).getFullPathName();
     }
@@ -205,6 +205,8 @@ struct RetrospectiveRecordBuffer
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RetrospectiveRecordBuffer)
 };
 
+
+//==============================================================================
 //==============================================================================
 class WaveInputDeviceInstance  : public InputDeviceInstance
 {
@@ -218,7 +220,12 @@ public:
 
     ~WaveInputDeviceInstance() override
     {
-        stop();
+        StopRecordingParameters params;
+        params.unloopedTimeToEndRecording = context.getUnloopedPosition();
+        params.isLooping = context.transport.looping;
+        params.markedRange = context.transport.getLoopRange();
+        prepareToStopRecording (params.targetsToStop);
+        stopRecording (params);
 
         auto& wi = getWaveInput();
 
@@ -233,27 +240,45 @@ public:
         return getWaveInput().mergeMode != 2 && InputDeviceInstance::isRecordingActive();
     }
 
-    bool isRecordingActive (const Track& t) const override
+    bool isRecordingActive (EditItemID targetID) const override
     {
-        return getWaveInput().mergeMode != 2 && InputDeviceInstance::isRecordingActive (t);
-    }
-    
-    bool shouldTrackContentsBeMuted() override
-    {
-        const juce::ScopedLock sl (contextLock);
-
-        return recordingContext != nullptr
-                && recordingContext->recordingWithPunch
-                && muteTrackNow
-                && getWaveInput().mergeMode == 1;
+        return getWaveInput().mergeMode != 2 && InputDeviceInstance::isRecordingActive (targetID);
     }
 
-    void closeFileWriter()
+    bool isRecordingQueuedToStop (EditItemID targetID) override
     {
-        const juce::ScopedLock sl (contextLock);
+        return getRecordStopper().isQueued (targetID);
+    }
 
-        if (recordingContext != nullptr)
-            closeFileWriter (*recordingContext);
+    bool shouldTrackContentsBeMuted (const Track& t) override
+    {
+        bool isTrackRecordingWithPunch = false, muteTrackNow = false,
+            muteTrackContentsWhilstRecording = false, isActivelyRecording = false;
+
+        {
+            const std::shared_lock sl (contextLock);
+
+            if (recordingContexts.empty())
+                return false;
+
+            if (auto recContext = getContextForID (t.itemID))
+            {
+                isTrackRecordingWithPunch = recContext->recordingWithPunch;
+                muteTrackNow = recContext->muteTargetNow;
+                muteTrackContentsWhilstRecording = recContext->muteTrackContentsWhilstRecording;
+                isActivelyRecording = recContext->hasHitThreshold;
+            }
+        }
+
+        if (muteTrackContentsWhilstRecording && isActivelyRecording)
+            return true;
+
+        if (isTrackRecordingWithPunch
+            && muteTrackNow
+            && getWaveInput().mergeMode == 1)
+           return true;
+
+        return false;
     }
 
     juce::AudioFormat* getFormatToUse() const
@@ -261,23 +286,21 @@ public:
         return edit.engine.getAudioFileFormatManager().getNamedFormat (getWaveInput().outputFormat);
     }
 
-    juce::Result getRecordingFile (juce::File& recordedFile, const juce::AudioFormat& format) const
+    static tl::expected<juce::File, juce::String> getDestinationRecordingFile (Edit& ed, EditItemID targetID,
+                                                                               const juce::AudioFormat& format, juce::String filenameMask)
     {
+        juce::File recordedFile;
         int take = 1;
+
+        auto track = findTrackForID (ed, targetID);
+
+        if (! track)
+            if (auto cs = findClipSlotForID (ed, targetID))
+                track = &cs->track;
 
         do
         {
-            auto firstActiveTarget = getTargetTracks().getFirst();
-            for (auto t : getTargetTracks())
-            {
-                if (activeTracks.contains (t))
-                {
-                    firstActiveTarget = t;
-                    break;
-                }
-            }
-
-            recordedFile = juce::File (expandPatterns (edit, getWaveInput().filenameMask, firstActiveTarget, take++)
+            recordedFile = juce::File (expandPatterns (ed, filenameMask, track, take++)
                                          + format.getFileExtensions()[0]);
         } while (recordedFile.exists());
 
@@ -285,325 +308,451 @@ public:
         {
             TRACKTION_LOG_ERROR ("Record fail: can't create parent directory: " + recordedFile.getFullPathName());
 
-            return juce::Result::fail (TRANS("The directory\nXZZX\ndoesn't exist")
-                                          .replace ("XZZX", recordedFile.getParentDirectory().getFullPathName()));
+            return TRANS("The directory\nXZZX\ndoesn't exist")
+                .replace ("XZZX", recordedFile.getParentDirectory().getFullPathName());
         }
 
         if (! recordedFile.getParentDirectory().hasWriteAccess())
         {
             TRACKTION_LOG_ERROR ("Record fail: directory is read-only: " + recordedFile.getFullPathName());
 
-            return juce::Result::fail (TRANS("The directory\nXZZX\n doesn't have write-access")
-                                        .replace ("XZZX", recordedFile.getParentDirectory().getFullPathName()));
+            return TRANS("The directory\nXZZX\n doesn't have write-access")
+                .replace ("XZZX", recordedFile.getParentDirectory().getFullPathName());
         }
 
         if (! recordedFile.deleteFile())
         {
             TRACKTION_LOG_ERROR ("Record fail: can't overwrite file: " + recordedFile.getFullPathName());
 
-            return juce::Result::fail (TRANS("Can't overwrite the existing file:") + "\n" + recordedFile.getFullPathName());
+            return TRANS("Can't overwrite the existing file:") + "\n" + recordedFile.getFullPathName();
         }
 
-        return juce::Result::ok();
+        return recordedFile;
     }
 
-    juce::String prepareToRecord (TimePosition playStart, TimePosition punchIn, double sr,
-                                  int /*blockSizeSamples*/, bool isLivePunch) override
+    tl::expected<std::unique_ptr<RecordingContext>, juce::String> prepareToRecordTarget (EditItemID targetID, TimeRange punchRange)
     {
         CRASH_TRACER
-
-        juce::String error;
+        TRACKTION_ASSERT_MESSAGE_THREAD
 
         JUCE_TRY
         {
-            closeFileWriter();
+            if (getContextForID (targetID))
+                return tl::unexpected (TRANS("Recording already in progress"));
 
-            if (auto proj = owner.engine.getProjectManager().getProject (edit))
+            if (auto proj = getProjectForEdit (edit))
                 if (proj->isReadOnly())
-                    return TRANS("The current project is read-only, so new clips can't be recorded into it!");
+                    return tl::unexpected (TRANS("The current project is read-only, so new clips can't be recorded into it!"));
 
             auto format = getFormatToUse();
-            juce::File recordedFile;
+            const auto res = getDestinationRecordingFile (edit, targetID, *format, getWaveInput().filenameMask);
 
-            auto res = getRecordingFile (recordedFile, *format);
+            if (! res)
+                return tl::unexpected (res.error());
 
-            if (! res.wasOk())
-                return res.getErrorMessage();
-
-            auto rc = std::make_unique<RecordingContext> (edit.engine, recordedFile);
-            rc->sampleRate = sr;
+            auto recordedFile = res.value();
+            auto rc = std::make_unique<WaveRecordingContext> (context, targetID, recordedFile);
+            rc->sampleRate = edit.engine.getDeviceManager().getSampleRate();
 
             juce::StringPairArray metadata;
-            AudioFileUtils::addBWAVStartToMetadata (metadata, (SampleCount) tracktion::toSamples (playStart, sr));
+            AudioFileUtils::addBWAVStartToMetadata (metadata, (SampleCount) tracktion::toSamples (punchRange.getStart(), rc->sampleRate));
             auto& wi = getWaveInput();
 
-            rc->fileWriter.reset (new AudioFileWriter (AudioFile (edit.engine, recordedFile), format,
-                                                       wi.isStereoPair() ? 2 : 1,
-                                                       sr, wi.bitDepth, metadata, 0));
+            rc->fileWriter = std::make_unique<AudioFileWriter> (AudioFile (edit.engine, recordedFile), format,
+                                                                wi.isStereoPair() ? 2 : 1,
+                                                                rc->sampleRate, wi.bitDepth, metadata, 0);
 
             if (rc->fileWriter->isOpen())
             {
                 CRASH_TRACER
-                auto endRecTime = punchIn + Edit::getMaximumEditTimeRange().getLength();
-                auto punchInTime = punchIn;
-
                 rc->firstRecCallback = true;
-                muteTrackNow = false;
 
                 const auto adjustSeconds = wi.getAdjustmentSeconds();
-                rc->adjustSamples = (int) tracktion::toSamples (adjustSeconds, sr);
-                rc->adjustSamples += context.getLatencySamples();
+                rc->adjustSamples = (int) tracktion::toSamples (adjustSeconds, rc->sampleRate);
 
-                if (! isLivePunch)
+                if (! owner.isTrackDevice())
+                    rc->adjustSamples += context.getLatencySamples();
+
+                rc->adjustDurationAtStart = TimeDuration::fromSamples (rc->adjustSamples, rc->sampleRate);
+
+                if (edit.recordingPunchInOut)
                 {
-                    rc->recordingWithPunch = edit.recordingPunchInOut;
+                    rc->recordingWithPunch = true;
 
-                    if (rc->recordingWithPunch)
+                    auto loopRange = context.transport.getLoopRange();
+                    auto muteStart = std::max (punchRange.getStart(), loopRange.getStart());
+                    auto muteEnd   = punchRange.getEnd();
+
+                    if (punchRange.getStart() < loopRange.getEnd() - 0.5s)
                     {
-                        auto loopRange = context.transport.getLoopRange();
-                        punchInTime    = std::max (punchInTime, loopRange.getStart() - 0.5s);
-                        auto muteStart = std::max (punchInTime, loopRange.getStart());
-                        auto muteEnd   = endRecTime;
-
-                        if (edit.getNumCountInBeats() > 0 && context.getLoopTimes().getStart() > loopRange.getStart())
-                            punchInTime = context.getLoopTimes().getStart();
-
-                        if (playStart < loopRange.getEnd() - 0.5s)
-                        {
-                            endRecTime = loopRange.getEnd() + adjustSeconds + 0.8s;
-                            muteEnd    = loopRange.getEnd();
-                        }
-
-                        rc->muteTimes = { muteStart, muteEnd };
+                        punchRange = punchRange.withEnd (punchRange.getEnd() + 0.8s);
+                        muteEnd = loopRange.getEnd();
                     }
-                    else if (context.isLooping())
-                    {
-                        punchInTime = context.getLoopTimes().getStart();
-                    }
+
+                    rc->muteTimes = { muteStart, muteEnd };
                 }
 
-                rc->punchTimes = { punchInTime, endRecTime };
+                rc->punchTimes = punchRange;
+                rc->recordingBlockRange = rc->punchTimes.withEnd (rc->punchTimes.getEnd() + adjustSeconds);
                 rc->hasHitThreshold = (wi.recordTriggerDb <= -50.0f);
 
                 if (edit.engine.getUIBehaviour().shouldGenerateLiveWaveformsWhenRecording())
                 {
                     if ((rc->thumbnail = edit.engine.getRecordingThumbnailManager().getThumbnailFor (recordedFile)))
                     {
-                        rc->thumbnail->reset (wi.isStereoPair() ? 2 : 1, sr);
-                        rc->thumbnail->punchInTime = punchInTime;
+                        rc->thumbnail->reset (wi.isStereoPair() ? 2 : 1, rc->sampleRate);
+                        rc->thumbnail->punchInTime = punchRange.getStart();
                     }
                 }
 
-                const juce::ScopedLock sl (contextLock);
-                recordingContext = std::move (rc);
+                return rc;
             }
             else
             {
                 TRACKTION_LOG_ERROR ("Record fail: couldn't write to file: " + recordedFile.getFullPathName());
 
-                return TRANS("Couldn't record!") + "\n\n"
-                        + TRANS("Couldn't create the file: XZZX").replace ("XZZX", recordedFile.getFullPathName());
+                return tl::unexpected (TRANS("Couldn't record!") + "\n\n"
+                        + TRANS("Couldn't create the file: XZZX").replace ("XZZX", recordedFile.getFullPathName()));
             }
         }
         JUCE_CATCH_EXCEPTION
 
-        return error;
+        return tl::unexpected (TRANS("Unable to start recording"));
     }
 
-    bool startRecording() override
+    std::vector<tl::expected<std::unique_ptr<RecordingContext>, juce::String>> prepareToRecord (RecordingParameters params) override
     {
-        const juce::ScopedLock sl (consumerLock);
-        // This is probably where we should set up our recording context
+        CRASH_TRACER
+        TRACKTION_ASSERT_MESSAGE_THREAD
+        assert (params.punchRange.getEnd() < TimePosition::fromSeconds (std::numeric_limits<double>::max()));
 
-        // We need to keep a list of tracks the are being recorded to
-        // here, since user may un-arm track to stop recording
-        activeTracks.clear();
+        std::vector<tl::expected<std::unique_ptr<RecordingContext>, juce::String>> results;
 
-        for (auto destTrack : getTargetTracks())
-            if (isRecordingActive (*destTrack))
-                activeTracks.add (destTrack);
+        if (params.targets.empty())
+            for (auto dest : destinations)
+                if (dest->recordEnabled)
+                    params.targets.push_back (dest->targetID);
 
-        return true;
+        for (auto target : params.targets)
+            results.emplace_back (prepareToRecordTarget (target, params.punchRange));
+
+        return results;
     }
 
-    TimePosition getPunchInTime() override
+    std::vector<std::unique_ptr<RecordingContext>> startRecording (std::vector<std::unique_ptr<RecordingContext>> newContexts) override
     {
-        const juce::ScopedLock sl (contextLock);
-        return recordingContext != nullptr ? recordingContext->punchTimes.getStart()
-                                           : edit.getTransport().getTimeWhenStarted();
+        TRACKTION_ASSERT_MESSAGE_THREAD
+        bool hasAddedContexts = false;
+
+        for (auto& recContext : newContexts)
+        {
+            if (auto midiContext = dynamic_cast<WaveRecordingContext*> (recContext.get()))
+            {
+                const auto targetID = midiContext->targetID;
+
+                {
+                    const std::unique_lock sl (contextLock);
+                    recordingContexts.push_back (std::unique_ptr<WaveRecordingContext> (midiContext));
+                }
+
+                hasAddedContexts = true;
+                recContext.release();
+                context.transport.callRecordingAboutToStartListeners (*this, targetID);
+            }
+        }
+
+        if (hasAddedContexts && ! edit.getTransport().isPlaying())
+            edit.getTransport().play (false);
+
+        // Remove now empty contents and return the rest
+        return std::move (erase_if_null (newContexts));
+    }
+
+    TimePosition getPunchInTime (EditItemID targetID) override
+    {
+        {
+            const std::shared_lock sl (contextLock);
+
+            for (auto& recContext : recordingContexts)
+                if (recContext->targetID == targetID)
+                    return recContext->punchTimes.getStart();
+        }
+
+        return edit.getTransport().getTimeWhenStarted();
+    }
+
+    bool isRecording (EditItemID targetID) override
+    {
+        return getContextForID (targetID) != nullptr;
     }
 
     bool isRecording() override
     {
+        const std::shared_lock sl (contextLock);
+        return ! recordingContexts.empty();
+    }
+
+    void prepareToStopRecording (std::vector<EditItemID> targetsToStop) override
+    {
         TRACKTION_ASSERT_MESSAGE_THREAD
-        return recordingContext != nullptr;
-    }
+        const std::shared_lock sl (contextLock);
 
-    Clip::Array stopRecording() override
-    {
-        CRASH_TRACER
-        const juce::ScopedLock sl (contextLock);
-
-        if (recordingContext == nullptr)
-            return {};
-
-        return context.stopRecording (*this,
-                                      { recordingContext->punchTimes.getStart(),
-                                        context.getUnloopedPosition() },
-                                      false);
-    }
-
-    void stop() override
-    {
+        for (auto& recContext : recordingContexts)
         {
-            const juce::ScopedLock sl (consumerLock);
-            // This is probably where we should destroy our recording context and apply the recording
-        }
+            if (! targetsToStop.empty())
+                if (! contains_v (targetsToStop, recContext->targetID))
+                    continue;
 
-        closeFileWriter();
-    }
-
-    void recordWasCancelled() override
-    {
-        std::unique_ptr<RecordingContext> rc;
-
-        {
-            const juce::ScopedLock sl (contextLock);
-            rc = std::move (recordingContext);
-        }
-
-        if (rc != nullptr)
-        {
-            auto f = rc->file;
-            closeFileWriter (*rc);
-            f.deleteFile();
+            recContext->stopRecording();
         }
     }
 
-    juce::File getRecordingFile() const override
+    tl::expected<Clip::Array, juce::String> stopRecording (StopRecordingParameters params) override
     {
-        const juce::ScopedLock sl (contextLock);
+        TRACKTION_ASSERT_MESSAGE_THREAD
+        // Reserve to avoid allocating whilst
+        const auto numContextsRecording = [this]
+                                          {
+                                              const std::shared_lock sl (contextLock);
+                                              return recordingContexts.size();
+                                          }();
 
-        if (recordingContext != nullptr)
-            return recordingContext->file;
+        std::vector<std::unique_ptr<WaveRecordingContext>> contextsToStop;
+        contextsToStop.reserve (numContextsRecording);
+
+        // Stop the relevant contexts
+        {
+            const std::unique_lock sl (contextLock);
+
+            for (auto& recContext : recordingContexts)
+            {
+                if (! params.targetsToStop.empty())
+                    if (! contains_v (params.targetsToStop, recContext->targetID))
+                        continue;
+
+                recContext->unloopedStopTime = params.unloopedTimeToEndRecording;
+                contextsToStop.push_back (std::move (recContext));
+            }
+
+            // Erase any now-empty contexts
+            erase_if_null (recordingContexts);
+            assert ((recordingContexts.size() + contextsToStop.size()) == numContextsRecording);
+        }
+
+        // Now apply those stop contexts whilst not holding the lock
+        Clip::Array clips;
+        juce::String error;
+
+        for (auto& recContext : contextsToStop)
+        {
+            const auto targetID = recContext->targetID;
+            auto stopCallback = std::move (recContext->stopCallback);
+            context.transport.callRecordingAboutToStopListeners (*this, targetID);
+            auto res = applyRecording (std::move (recContext),
+                                       params.unloopedTimeToEndRecording,
+                                       params.isLooping, params.markedRange,
+                                       params.discardRecordings);
+            context.transport.callRecordingFinishedListeners (*this, targetID,
+                                                              res.value_or (Clip::Array()));
+
+            if (stopCallback)
+                stopCallback (res);
+
+            res.map ([&] (auto c) { clips.addArray (std::move (c)); })
+               .map_error ([&] (auto err) { error = err; });
+        }
+
+        if (! error.isEmpty())
+            return tl::unexpected (error);
+
+        return clips;
+    }
+
+    void stopRecording (StopRecordingParameters params,
+                        std::function<void (tl::expected<Clip::Array, juce::String>)> callback) override
+    {
+        TRACKTION_ASSERT_MESSAGE_THREAD
+        // Reserve to avoid allocating whilst
+        const auto getNumContextsRecording = [this]
+                                             {
+                                                const std::shared_lock sl (contextLock);
+                                                return recordingContexts.size();
+                                             };
+
+        if (params.targetsToStop.empty())
+        {
+            params.targetsToStop.reserve (getNumContextsRecording());
+
+            const std::shared_lock sl (contextLock);
+
+            for (auto& recContext : recordingContexts)
+                params.targetsToStop.push_back (recContext->targetID);
+        }
+
+        // Set the punch out time for the contexts
+        {
+            const std::unique_lock sl (contextLock);
+
+            for (auto& recContext : recordingContexts)
+            {
+                if (! contains_v (params.targetsToStop, recContext->targetID))
+                    continue;
+
+                recContext->unloopedStopTime = params.unloopedTimeToEndRecording;
+
+                // Set the recordingBlockRange to the stop time plus the adjust time when recording started as this number
+                // of samples will have been dropped. To ensure the final file has the correct number of samples, we need
+                // to record this many samples past the "real" end
+                recContext->recordingBlockRange = recContext->recordingBlockRange.withEnd (recContext->unloopedStopTime
+                                                                                           + recContext->adjustDurationAtStart);
+
+                // Unlock whilst doing potentially allocating ops to avoid priority inversion
+                {
+                    contextLock.unlock();
+                    recContext->stopCallback = callback;
+                    recContext->stopParams = params;
+                    recContext->stopParams.targetsToStop = { recContext->targetID };
+                    contextLock.lock();
+                }
+            }
+        }
+
+        // Add the rec context to a timer list to poll if the recording can be stopped
+        for (auto targetID : params.targetsToStop)
+            getRecordStopper().addTargetToStop (targetID);
+    }
+
+    juce::File getRecordingFile (EditItemID targetID) const override
+    {
+        const std::shared_lock sl (contextLock);
+
+        if (auto rc = getContextForID (targetID))
+            return rc->file;
 
         return {};
     }
 
-    struct RecordingContext
+    struct WaveRecordingContext : public RecordingContext
     {
-        RecordingContext (Engine& e, const juce::File& f)
-            : engine (e), file (f), diskSpaceChecker (e, f),
-              threadInitialiser (e.getWaveInputRecordingThread())
+        WaveRecordingContext (EditPlaybackContext& epc, EditItemID targetID_, const juce::File& f)
+            : RecordingContext (targetID_),
+              editPlaybackContext (epc), file (f)
         {}
 
-        Engine& engine;
+        EditPlaybackContext& editPlaybackContext;
+        Engine& engine { editPlaybackContext.edit.engine };
         juce::File file;
         double sampleRate = 44100.0;
-        TimeRange punchTimes, muteTimes;
-        bool hasHitThreshold = false, firstRecCallback = false, recordingWithPunch = false;
+        TimeRange punchTimes;           /**< The Edit time range that the recorded clip should start/stop. */
+        TimeRange muteTimes;            /**< The Edit time range that the destination track should be muted for. */
+        TimeRange recordingBlockRange;  /**< The Edit time range that blocks should be recorded for.
+                                             This might be different to the punch range as it accounts for device and graph latency. */
+        TimePosition unloopedStopTime;  /**< When the reecording is stopped, this should be the end time. */
+        TimeDuration adjustDurationAtStart;
+        std::atomic<bool> hasHitThreshold { false }, isWaitingToClose { false };
+        bool firstRecCallback = false, recordingWithPunch = false;
         int adjustSamples = 0;
+        std::atomic<bool> muteTargetNow { false };
+        const bool muteTrackContentsWhilstRecording = engine.getEngineBehaviour().muteTrackContentsWhilstRecording();
 
+        std::mutex fileWriterLock;
         std::unique_ptr<AudioFileWriter> fileWriter;
-        DiskSpaceCheckTask diskSpaceChecker;
+
+        DiskSpaceCheckTask diskSpaceChecker { engine, file };
         RecordingThumbnailManager::Thumbnail::Ptr thumbnail;
-        WaveInputRecordingThread::ScopedInitialiser threadInitialiser;
+        WaveInputRecordingThread::ScopedInitialiser threadInitialiser { engine.getWaveInputRecordingThread() };
+        const detail::ScopedActiveRecordingDevice scopedActiveRecordingDevice { editPlaybackContext };
+
+        std::function<void (tl::expected<Clip::Array, juce::String>)> stopCallback;
+        StopRecordingParameters stopParams;
 
         void addBlockToRecord (const juce::AudioBuffer<float>& buffer, int start, int numSamples)
         {
+            if (isWaitingToClose.load (std::memory_order_acquire))
+                return;
+
+            std::scoped_lock sl (fileWriterLock);
+
             if (fileWriter != nullptr)
                 engine.getWaveInputRecordingThread().addBlockToRecord (*fileWriter, buffer,
                                                                        start, numSamples, thumbnail);
         }
+
+        void stopRecording()
+        {
+            assert (! isWaitingToClose.load (std::memory_order_acquire));
+            isWaitingToClose.store (true, std::memory_order_release);
+        }
+
+        /** Blocks until there are no more pending samples to be written to this context.
+            After the call, fileWriter will be nullptr and no more blocks should be added to this.
+        */
+        void closeFileWriter()
+        {
+            assert (isWaitingToClose);
+
+            CRASH_TRACER
+            auto extractedFileWriter = [this]
+            {
+                std::scoped_lock sl (fileWriterLock);
+                return std::move (fileWriter);
+            }();
+
+            if (extractedFileWriter)
+                engine.getWaveInputRecordingThread().waitForWriterToFinish (*extractedFileWriter);
+        }
     };
 
-    Clip::Array applyLastRecordingToEdit (TimeRange recordedRange,
-                                          bool isLooping, TimeRange loopRange,
-                                          bool discardRecordings,
-                                          SelectionManager* selectionManager) override
+    tl::expected<Clip::Array, juce::String> applyRecording (std::unique_ptr<WaveRecordingContext> rc,
+                                                            TimePosition unloopedEndTime,
+                                                            bool isLooping, TimeRange loopRange,
+                                                            bool discardRecordings)
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         CRASH_TRACER
-        
-        Clip::Array clips;
 
-        std::unique_ptr<RecordingContext> rc;
+        if (! rc || discardRecordings)
+            for (auto c : consumers)
+                c->discardRecordings (rc ? rc->targetID : EditItemID());
 
+        if (! rc)
+            return {};
+
+        rc->closeFileWriter();
+
+        // If we didn't get as far as adding any samples, delete the header of the file that will have been written
+        if (rc->punchTimes.getStart() >= context.getUnloopedPosition())
         {
-            const juce::ScopedLock sl (contextLock);
-            rc = std::move (recordingContext);
+            rc->file.deleteFile();
+            return {};
         }
 
-        if (rc != nullptr)
+        if (! rc->file.existsAsFile() || rc->file.getSize() == 0)
+            return {};
+
+        const AudioFile recordedFile (edit.engine, rc->file);
+        auto clipOwner = findClipOwnerForID (edit, rc->targetID);
+
+        if (discardRecordings || ! clipOwner)
         {
-            closeFileWriter (*rc);
-
-            if (! rc->file.existsAsFile() || rc->file.getSize() == 0)
-                return {};
-
-            const AudioFile recordedFile (edit.engine, rc->file);
-            auto recordingDestTracks = getTargetTracks();
-
-            if (discardRecordings || recordingDestTracks.size() == 0)
-            {
-                recordedFile.deleteFile();
-                return {};
-            }
-
-            bool firstTrack = true;
-            for (auto destTrack : recordingDestTracks)
-            {
-                if (activeTracks.contains (destTrack))
-                {
-                    AudioFile trackRecordedFile (edit.engine);
-                    if (firstTrack)
-                    {
-                        trackRecordedFile = recordedFile;
-                    }
-                    else
-                    {
-                        // If this audio input is recording to multiple tracks, make
-                        // a copy of the source audio for each additional track
-                        int take = 1;
-
-                        juce::File f;
-
-                        do
-                        {
-                            f = juce::File (expandPatterns (edit, getWaveInput().filenameMask, destTrack, take++)
-                                                + rc->file.getFileExtension());
-                        } while (f.exists());
-
-                        rc->file.copyFileTo (f);
-
-                        trackRecordedFile = AudioFile (edit.engine, f);
-                    }
-
-                    auto clipsCreated = applyLastRecording (*rc, trackRecordedFile, *destTrack,
-                                                            recordedRange, isLooping, loopRange.getEnd());
-
-                    if (selectionManager != nullptr && ! clipsCreated.isEmpty())
-                    {
-                        selectionManager->selectOnly (*clipsCreated.getLast());
-                        selectionManager->keepSelectedObjectsOnScreen();
-                    }
-                    
-                    clips.addArray (clipsCreated);
-
-                    firstTrack = false;
-                }
-            }
-
-            return clips;
+            recordedFile.deleteFile();
+            return {};
         }
 
-        return {};
+        // Never loop or punch record to slots
+        const bool isClipSlot = dynamic_cast<ClipSlot*> (clipOwner) != nullptr;
+        const bool wasPunchRecording = isClipSlot ? false : edit.recordingPunchInOut;
+        const bool wasLoopRecording = isClipSlot ? false : isLooping;
+
+        return applyLastRecording (*rc, recordedFile, *clipOwner,
+                                   { rc->punchTimes.getStart(), unloopedEndTime },
+                                   wasLoopRecording, wasPunchRecording, loopRange.getEnd());
     }
 
-    Clip::Array applyLastRecording (const RecordingContext& rc,
-                                    const AudioFile& recordedFile, AudioTrack& destTrack,
-                                    TimeRange recordedRange,
-                                    bool isLooping, TimePosition loopEnd)
+    tl::expected<Clip::Array, juce::String> applyLastRecording (const WaveRecordingContext& rc,
+                                                                const AudioFile& recordedFile, ClipOwner& destClipOwner,
+                                                                TimeRange recordedRange,
+                                                                bool isLooping, bool isPunching, TimePosition loopEnd)
     {
         CRASH_TRACER
         auto& engine = edit.engine;
@@ -612,7 +761,7 @@ public:
 
         auto recordedFileLength = TimeDuration::fromSeconds (recordedFile.getLength());
 
-        if (recordedFileLength <= 0.00001s)
+        if (recordedFileLength <= 1ms)
             return {};
 
         auto newClipLen = std::min (recordedFileLength,
@@ -627,46 +776,45 @@ public:
                 s = TRANS("The device \"XZZX\" \nnever reached the trigger threshold set for recording (THRX).")
                       .replace ("XZZX", getWaveInput().getName())
                       .replace ("THRX", gainToDbString (dbToGain (getWaveInput().recordTriggerDb)));
-            else if (edit.recordingPunchInOut && rc.punchTimes.getStart() >= recordedRange.getEnd())
+            else if (isPunching && rc.punchTimes.getStart() >= recordedRange.getEnd())
                 s = TRANS("The device \"XZZX\" \nnever got as far as the punch-in marker, so didn't start recording!")
                       .replace ("XZZX", getWaveInput().getName());
             else
                 s = TRANS("The device \"XZZX\" \nrecorded a zero-length file which won't be added to the edit")
                       .replace ("XZZX", getWaveInput().getName());
 
-            engine.getUIBehaviour().showWarningMessage (s);
-
             recordedFile.deleteFile();
-            return {};
+
+            return tl::unexpected (s);
         }
 
-        if (auto proj = engine.getProjectManager().getProject (edit))
+        if (auto proj = getProjectForEdit (edit))
         {
             if (auto projectItem = proj->createNewItem (recordedFile.getFile(),
                                                         ProjectItem::waveItemType(),
                                                         recordedFile.getFile().getFileNameWithoutExtension(),
                                                         {}, ProjectItem::Category::recorded, true))
             {
-                return applyLastRecording (rc, projectItem, recordedFile, destTrack,
-                                           recordedFileLength, newClipLen, isLooping, loopEnd);
+                return applyLastRecording (rc, projectItem, recordedFile, destClipOwner,
+                                           recordedFileLength, newClipLen, isLooping, isPunching, loopEnd);
             }
 
-            engine.getUIBehaviour().showWarningMessage (proj->isReadOnly() ? TRANS("Couldn't add the new recording to the project, because the project is read-only")
-                                                                           : TRANS("Couldn't add the new recording to the project!"));
+            return tl::unexpected (proj->isReadOnly() ? TRANS("Couldn't add the new recording to the project, because the project is read-only")
+                                                      : TRANS("Couldn't add the new recording to the project!"));
         }
         else
         {
-            return applyLastRecording (rc, nullptr, recordedFile, destTrack,
-                                       recordedFileLength, newClipLen, isLooping, loopEnd);
+            return applyLastRecording (rc, nullptr, recordedFile, destClipOwner,
+                                       recordedFileLength, newClipLen, isLooping, isPunching, loopEnd);
         }
 
         return {};
     }
 
-    Clip::Array applyLastRecording (const RecordingContext& rc, const ProjectItem::Ptr projectItem,
-                                    const AudioFile& recordedFile, AudioTrack& destTrack,
-                                    TimeDuration recordedFileLength, TimeDuration newClipLen,
-                                    bool isLooping, TimePosition loopEnd)
+    tl::expected<Clip::Array, juce::String> applyLastRecording (const WaveRecordingContext& rc, const ProjectItem::Ptr projectItem,
+                                                                const AudioFile& recordedFile, ClipOwner& destClipOwner,
+                                                                TimeDuration recordedFileLength, TimeDuration newClipLen,
+                                                                bool isLooping, bool isPunching, TimePosition loopEnd)
     {
         CRASH_TRACER
         jassert (projectItem == nullptr || projectItem->getID().isValid());
@@ -678,32 +826,26 @@ public:
         filesCreated.add (recordedFile.getFile());
 
         if (isLooping)
-        {
-            if (! splitRecordingIntoMultipleTakes (recordedFile, projectItem, recordedFileLength, extraTakes, filesCreated))
-            {
-                engine.getUIBehaviour().showWarningAlert (TRANS("Recording"),
-                                                          TRANS("Couldn't create audio files for multiple takes"));
-                return {};
-            }
-        }
+            if (! splitRecordingIntoMultipleTakes (context, recordedFile, projectItem, recordedFileLength, extraTakes, filesCreated))
+                return tl::unexpected (TRANS("Couldn't create audio files for multiple takes"));
 
         auto endPos = rc.punchTimes.getStart() + newClipLen;
 
-        if (edit.recordingPunchInOut || context.transport.looping)
+        if (isPunching || context.transport.looping)
             endPos = juce::jlimit (rc.punchTimes.getStart() + 0.5s, loopEnd, endPos);
 
         Clip::Ptr newClip;
         bool replaceOldClips = getWaveInput().mergeMode == 1;
         const auto loopRange = edit.getTransport().getLoopRange();
 
-        if (replaceOldClips && edit.recordingPunchInOut)
+        if (replaceOldClips && isPunching)
         {
             if (projectItem != nullptr)
-                newClip = destTrack.insertWaveClip (getNewClipName (destTrack), projectItem->getID(),
-                                                    { { loopRange.getStart(), endPos }, {} }, true);
+                newClip = insertWaveClip (destClipOwner, getNameForNewClip (destClipOwner), projectItem->getID(),
+                                          { { loopRange.getStart(), endPos }, {} }, DeleteExistingClips::yes);
             else
-                newClip = destTrack.insertWaveClip (getNewClipName (destTrack), recordedFile.getFile(),
-                                                    { { loopRange.getStart(), endPos }, {} }, true);
+                newClip = insertWaveClip (destClipOwner, getNameForNewClip (destClipOwner), recordedFile.getFile(),
+                                          { { loopRange.getStart(), endPos }, {} }, DeleteExistingClips::yes);
 
             if (newClip != nullptr)
                 newClip->setStart (rc.punchTimes.getStart(), false, false);
@@ -711,11 +853,13 @@ public:
         else
         {
             if (projectItem != nullptr)
-                newClip = destTrack.insertWaveClip (getNewClipName (destTrack), projectItem->getID(),
-                                                    { { rc.punchTimes.getStart(), endPos }, {} }, replaceOldClips);
+                newClip = insertWaveClip (destClipOwner, getNameForNewClip (destClipOwner), projectItem->getID(),
+                                          { { rc.punchTimes.getStart(), endPos }, {} },
+                                          replaceOldClips ? DeleteExistingClips::yes : DeleteExistingClips::no);
             else
-                newClip = destTrack.insertWaveClip (getNewClipName (destTrack), recordedFile.getFile(),
-                                                    { { rc.punchTimes.getStart(), endPos }, {} }, replaceOldClips);
+                newClip = insertWaveClip (destClipOwner, getNameForNewClip (destClipOwner), recordedFile.getFile(),
+                                         { { rc.punchTimes.getStart(), endPos }, {} },
+                                         replaceOldClips ? DeleteExistingClips::yes : DeleteExistingClips::no);
         }
 
         if (newClip == nullptr)
@@ -733,7 +877,7 @@ public:
 
         CRASH_TRACER
 
-        if (edit.recordingPunchInOut)
+        if (isPunching)
         {
             if (newClip->getPosition().getStart() < loopRange.getStart())
                 newClip->setStart (loopRange.getStart(), true, false);
@@ -768,12 +912,14 @@ public:
         return clips;
     }
 
-    bool splitRecordingIntoMultipleTakes (const AudioFile& recordedFile,
-                                          const ProjectItem::Ptr& projectItem,
-                                          TimeDuration recordedFileLength,
-                                          juce::ReferenceCountedArray<ProjectItem>& extraTakes,
-                                          juce::Array<juce::File>& filesCreated)
+    static bool splitRecordingIntoMultipleTakes (EditPlaybackContext& epc,
+                                                 const AudioFile& recordedFile,
+                                                 const ProjectItem::Ptr& projectItem,
+                                                 TimeDuration recordedFileLength,
+                                                 juce::ReferenceCountedArray<ProjectItem>& extraTakes,
+                                                 juce::Array<juce::File>& filesCreated)
     {
+        auto& edit = epc.edit;
         auto& afm = edit.engine.getAudioFileManager();
 
         // break the wave into separate takes..
@@ -781,7 +927,7 @@ public:
             extraTakes.add (projectItem);
 
         int take = 1;
-        auto loopLength = context.transport.getLoopRange().getLength();
+        auto loopLength = epc.transport.getLoopRange().getLength();
 
         for (;;)
         {
@@ -836,39 +982,22 @@ public:
 
             if (projectItem != nullptr)
                 projectItem->verifyLength();
-            
+
             return true;
         }
 
         return false;
     }
 
-    static bool trackContainsClipNamed (AudioTrack& targetTrack, const juce::String& name)
-    {
-        for (auto c : targetTrack.getClips())
-            if (c->getName().equalsIgnoreCase (name))
-                return true;
-
-        return false;
-    }
-
-    static juce::String getNewClipName (AudioTrack& targetTrack)
-    {
-        for (int index = 1;; ++index)
-        {
-            auto name = targetTrack.getName() + " " + TRANS("Recording") + " " + juce::String (index);
-
-            if (! trackContainsClipNamed (targetTrack, name))
-                return name;
-        }
-    }
-
-    juce::Array<Clip*> applyRetrospectiveRecord (SelectionManager* selectionManager) override
+    juce::Array<Clip*> applyRetrospectiveRecord (bool armedOnly) override
     {
         juce::Array<Clip*> clips;
-        
-        for (auto dstTrack : getTargetTracks())
+
+        for (auto dstTrack : getTargetTracks (*this))
         {
+            if (armedOnly && ! isRecordingActive (dstTrack->itemID))
+                continue;
+
             auto& wi = getWaveInput();
 
             auto recordBuffer = wi.getRetrospectiveRecordBuffer();
@@ -877,13 +1006,12 @@ public:
                 return nullptr;
 
             auto format = getFormatToUse();
-            juce::File recordedFile;
+            const auto res = getDestinationRecordingFile (edit, dstTrack->itemID, *format, getWaveInput().filenameMask);
 
-            auto res = getRecordingFile (recordedFile, *format);
+            if (! res)
+                return {};
 
-            if (res.failed())
-                return nullptr;
-
+            const auto recordedFile = res.value();
             juce::StringPairArray metadata;
 
             {
@@ -908,7 +1036,7 @@ public:
                 }
             }
 
-            auto proj = owner.engine.getProjectManager().getProject (edit);
+            auto proj = getProjectForEdit (edit);
 
             if (proj == nullptr)
             {
@@ -925,7 +1053,7 @@ public:
 
             jassert (projectItem->getID().isValid());
 
-            auto clipName = getNewClipName (*dstTrack);
+            auto clipName = getNameForNewClip (*dstTrack);
             TimePosition start;
             const auto recordedLength = TimeDuration::fromSeconds (AudioFile (dstTrack->edit.engine, recordedFile).getLength());
 
@@ -933,9 +1061,9 @@ public:
             {
                 const auto blockSizeSeconds = edit.engine.getDeviceManager().getBlockLength();
                 auto adjust = -wi.getAdjustmentSeconds() + blockSizeSeconds;
-                
+
                 adjust = adjust - TimeDuration::fromSamples (context.getLatencySamples(), edit.engine.getDeviceManager().getSampleRate());
- 
+
                 // TODO: Still not quite sure why the adjustment needs to be a block more with
                 // the tracktion_graph engine, this may need correcting in the future
                 if (context.getNodePlayHead() != nullptr)
@@ -981,33 +1109,38 @@ public:
 
             edit.engine.getAudioFileManager().forceFileUpdate (AudioFile (dstTrack->edit.engine, recordedFile));
 
-            if (selectionManager != nullptr)
+            if (dstTrack->playSlotClips.get())
             {
-                selectionManager->selectOnly (*newClip);
-                selectionManager->keepSelectedObjectsOnScreen();
+                if (auto slot = getFreeSlot (*dstTrack))
+                {
+                    newClip->setUsesProxy (false);
+                    newClip->setStart (0_tp, false, true);
+
+                    if (! newClip->isLooping())
+                        newClip->setLoopRangeBeats ({ 0_bp, newClip->getLengthInBeats() });
+
+                    newClip->removeFromParent();
+                    slot->setClip (newClip.get());
+                }
             }
-            
+
             clips.add (newClip.get());
         }
 
         return clips;
     }
 
-    bool isLivePlayEnabled (const Track& t) const override
+    void copyIncomingDataIntoBuffer (const float* const* allChannels, int numChannels, int numSamples)
     {
-        return owner.isEndToEndEnabled()
-                && (isRecordingEnabled (t) || edit.engine.getEngineBehaviour().monitorAudioInputsWithoutRecordEnable())
-                && InputDeviceInstance::isLivePlayEnabled (t);
-    }
-
-    void copyIncomingDataIntoBuffer (const float** allChannels, int numChannels, int numSamples)
-    {
-        if (numChannels == 0)
-            return;
-
         auto& wi = getWaveInput();
         auto& channelSet = wi.getChannelSet();
         inputBuffer.setSize (channelSet.size(), numSamples);
+
+        if (numChannels == 0)
+        {
+            inputBuffer.clear();
+            return;
+        }
 
         for (const auto& ci : wi.getChannels())
         {
@@ -1024,7 +1157,7 @@ public:
         }
     }
 
-    void acceptInputBuffer (const float** allChannels, int numChannels, int numSamples,
+    void acceptInputBuffer (const float* const* allChannels, int numChannels, int numSamples,
                             double streamTime, LevelMeasurer* measurerToUpdate,
                             RetrospectiveRecordBuffer* retrospectiveBuffer, bool addToRetrospective)
     {
@@ -1060,91 +1193,126 @@ public:
                                                                             (choc::buffer::FrameCount) numSamples));
         }
 
-        const juce::ScopedLock sl (contextLock);
+        // If we haven't actually started playing yet, don't record the block as we
+        // might get more than one block for the same position
+        if (! context.isPlaying())
+            return;
 
-        if (recordingContext != nullptr)
         {
-            auto blockStart = context.globalStreamTimeToEditTimeUnlooped (streamTime);
-            const TimeRange blockRange (blockStart, TimeDuration::fromSamples (numSamples, recordingContext->sampleRate));
+            const auto blockStart = context.globalStreamTimeToEditTimeUnlooped (streamTime);
+            const std::shared_lock sl (contextLock);
 
-            muteTrackNow = recordingContext->muteTimes.overlaps (blockRange);
-
-            if (recordingContext->punchTimes.overlaps (blockRange))
+            for (auto& recordingContext : recordingContexts)
             {
-                if (! recordingContext->hasHitThreshold)
-                {
-                    auto bufferLevelDb = gainToDb (inputBuffer.getMagnitude (0, numSamples));
-                    recordingContext->hasHitThreshold = bufferLevelDb > getWaveInput().recordTriggerDb;
+                const TimeRange blockRange (blockStart, TimeDuration::fromSamples (numSamples, recordingContext->sampleRate));
 
+                recordingContext->muteTargetNow = recordingContext->muteTimes.overlaps (blockRange);
+
+                if (recordingContext->recordingBlockRange.overlaps (blockRange))
+                {
                     if (! recordingContext->hasHitThreshold)
-                        return;
-
-                    recordingContext->punchTimes = recordingContext->punchTimes.withStart (blockRange.getStart());
-
-                    if (recordingContext->thumbnail != nullptr)
-                        recordingContext->thumbnail->punchInTime = blockRange.getStart();
-                }
-
-                if (recordingContext->firstRecCallback)
-                {
-                    recordingContext->firstRecCallback = false;
-
-                    auto timeDiff = blockRange.getStart() - recordingContext->punchTimes.getStart();
-                    recordingContext->adjustSamples -= (int) tracktion::toSamples (timeDiff, recordingContext->sampleRate);
-                }
-
-                const int adjustSamples = recordingContext->adjustSamples;
-
-                if (adjustSamples < 0)
-                {
-                    // add silence
-                    AudioScratchBuffer silence (inputBuffer.getNumChannels(), -adjustSamples);
-                    silence.buffer.clear();
-
-                    addBlockToRecord (silence.buffer, 0, -adjustSamples);
-
-                    recordingContext->adjustSamples = 0;
-                }
-                else if (adjustSamples > 0)
-                {
-                    // drop samples
-                    if (adjustSamples >= numSamples)
                     {
-                        recordingContext->adjustSamples -= numSamples;
+                        auto bufferLevelDb = gainToDb (inputBuffer.getMagnitude (0, numSamples));
+                        recordingContext->hasHitThreshold = bufferLevelDb > getWaveInput().recordTriggerDb;
+
+                        if (! recordingContext->hasHitThreshold)
+                            return;
+
+                        recordingContext->punchTimes = recordingContext->punchTimes.withStart (blockRange.getStart());
+
+                        if (recordingContext->thumbnail != nullptr)
+                            recordingContext->thumbnail->punchInTime = blockRange.getStart();
+                    }
+
+                    if (recordingContext->firstRecCallback)
+                    {
+                        recordingContext->firstRecCallback = false;
+
+                        auto timeDiff = blockRange.getStart() - recordingContext->recordingBlockRange.getStart();
+                        recordingContext->adjustSamples -= (int) tracktion::toSamples (timeDiff, recordingContext->sampleRate);
+                    }
+
+                    const int adjustSamples = recordingContext->adjustSamples;
+
+                    if (adjustSamples < 0)
+                    {
+                        // add silence
+                        AudioScratchBuffer silence (inputBuffer.getNumChannels(), -adjustSamples);
+                        silence.buffer.clear();
+
+                        recordingContext->addBlockToRecord (silence.buffer, 0, silence.buffer.getNumSamples());
+                        recordingContext->adjustSamples = 0;
+                    }
+                    else if (adjustSamples > 0)
+                    {
+                        // drop samples
+                        if (adjustSamples >= numSamples)
+                        {
+                            recordingContext->adjustSamples -= numSamples;
+                        }
+                        else
+                        {
+                            recordingContext->addBlockToRecord (inputBuffer, adjustSamples, numSamples - adjustSamples);
+                            recordingContext->adjustSamples = 0;
+                        }
                     }
                     else
                     {
-                        addBlockToRecord (inputBuffer, adjustSamples, numSamples - adjustSamples);
-                        recordingContext->adjustSamples = 0;
+                        recordingContext->addBlockToRecord (inputBuffer, 0, numSamples);
                     }
-                }
-                else
-                {
-                    addBlockToRecord (inputBuffer, 0, numSamples);
                 }
             }
         }
     }
 
 protected:
-    juce::CriticalSection contextLock;
-    std::unique_ptr<RecordingContext> recordingContext;
+    mutable std::shared_mutex contextLock;
+    std::vector<std::unique_ptr<WaveRecordingContext>> recordingContexts;
+    std::unique_ptr<RecordStopper> recordStopper;
 
-    volatile bool muteTrackNow = false;
     juce::AudioBuffer<float> inputBuffer;
 
-    void addBlockToRecord (const juce::AudioBuffer<float>& buffer, int start, int numSamples)
+    WaveRecordingContext* getContextForID (EditItemID targetID) const
     {
-        const juce::ScopedLock sl (contextLock);
-        recordingContext->addBlockToRecord (buffer, start, numSamples);
+        const std::shared_lock sl (contextLock);
+
+        for (auto& recContext : recordingContexts)
+            if (recContext->targetID == targetID)
+                return recContext.get();
+
+        return nullptr;
     }
 
-    static void closeFileWriter (RecordingContext& rc)
+    RecordStopper& getRecordStopper()
     {
-        CRASH_TRACER
+        TRACKTION_ASSERT_MESSAGE_THREAD
+        if (! recordStopper)
+            recordStopper = std::make_unique<RecordStopper> ([this] (auto targetID)
+                                                             {
+                                                                 const auto unloopedTimeNow = context.getUnloopedPosition();
 
-        if (auto localCopy = std::move (rc.fileWriter))
-            rc.engine.getWaveInputRecordingThread().waitForWriterToFinish (*localCopy);
+                                                                 const std::shared_lock sl (contextLock);
+
+                                                                 if (auto recContext = getContextForID (targetID))
+                                                                 {
+                                                                     if (unloopedTimeNow >= recContext->recordingBlockRange.getEnd())
+                                                                     {
+                                                                         auto stopParams = recContext->stopParams;
+                                                                         recContext->stopRecording();
+
+                                                                         // Temp unlock as stopRecording takes a unique lock
+                                                                         contextLock.unlock_shared();
+                                                                         auto res = stopRecording (stopParams);
+                                                                         contextLock.lock_shared();
+
+                                                                         return RecordStopper::HasFinished::yes;
+                                                                     }
+                                                                 }
+
+                                                                  return RecordStopper::HasFinished::no;
+                                                             });
+
+        return *recordStopper;
     }
 
     WaveInputDevice& getWaveInput() const noexcept    { return static_cast<WaveInputDevice&> (owner); }
@@ -1169,13 +1337,14 @@ protected:
 };
 
 //==============================================================================
-WaveInputDevice::WaveInputDevice (Engine& e, const juce::String& deviceName, const juce::String& devType,
-                                  const std::vector<ChannelIndex>& channels, DeviceType t)
-    : InputDevice (e, devType, deviceName),
-      deviceChannels (channels),
+WaveInputDevice::WaveInputDevice (Engine& e, const juce::String& devType,
+                                  const WaveDeviceDescription& desc, DeviceType t)
+    : InputDevice (e, devType, desc.name, "wavein_" + juce::String::toHexString (desc.name.hashCode())),
+      deviceChannels (desc.channels),
       deviceType (t),
-      channelSet (createChannelSet (channels))
+      channelSet (createChannelSet (desc.channels))
 {
+    enabled = desc.enabled;
     loadProps();
 }
 
@@ -1207,11 +1376,10 @@ juce::StringArray WaveInputDevice::getRecordFormatNames()
     return s;
 }
 
-
 InputDeviceInstance* WaveInputDevice::createInstance (EditPlaybackContext& ed)
 {
     if (! isTrackDevice() && retrospectiveBuffer == nullptr)
-        retrospectiveBuffer.reset (new RetrospectiveRecordBuffer (ed.edit.engine));
+        retrospectiveBuffer = std::make_unique<RetrospectiveRecordBuffer> (ed.edit.engine);
 
     return new WaveInputDeviceInstance (*this, ed);
 }
@@ -1257,7 +1425,7 @@ void WaveInputDevice::loadProps()
 {
     filenameMask = getDefaultMask();
     inputGainDb = 0.0f;
-    endToEndEnabled = false;
+    monitorMode = MonitorMode::automatic;
     outputFormat = engine.getAudioFileFormatManager().getDefaultFormat()->getFormatName();
 
     recordTriggerDb = -50.0f;
@@ -1271,7 +1439,8 @@ void WaveInputDevice::loadProps()
     {
         filenameMask = n->getStringAttribute ("filename", filenameMask);
         inputGainDb = (float) n->getDoubleAttribute ("gainDb", inputGainDb);
-        endToEndEnabled = n->getBoolAttribute ("etoe", endToEndEnabled);
+        monitorMode = magic_enum::enum_cast<MonitorMode> (n->getStringAttribute ("monitorMode").toStdString()).value_or (MonitorMode::automatic);
+
         outputFormat = n->getStringAttribute ("format", outputFormat);
         bitDepth = n->getIntAttribute ("bits", bitDepth);
 
@@ -1295,7 +1464,7 @@ void WaveInputDevice::saveProps()
 
     n.setAttribute ("filename", filenameMask);
     n.setAttribute ("gainDb", inputGainDb);
-    n.setAttribute ("etoe", endToEndEnabled);
+    n.setAttribute ("monitorMode", std::string (magic_enum::enum_name (monitorMode)));
     n.setAttribute ("format", outputFormat);
     n.setAttribute ("bits", bitDepth);
     n.setAttribute ("triggerDb", recordTriggerDb);
@@ -1337,20 +1506,9 @@ void WaveInputDevice::setStereoPair (bool stereo)
         dm.setDeviceInChannelStereo (deviceChannels[0].indexInDevice, stereo);
 }
 
-void WaveInputDevice::setEndToEnd (bool newEtoE)
+void WaveInputDevice::setRecordAdjustment (TimeDuration d)
 {
-    if (endToEndEnabled != newEtoE)
-    {
-        endToEndEnabled = newEtoE;
-        TransportControl::restartAllTransports (engine, false);
-        changed();
-        saveProps();
-    }
-}
-
-void WaveInputDevice::flipEndToEnd()
-{
-    setEndToEnd (! endToEndEnabled);
+    setRecordAdjustmentMs (d.inSeconds() * 1000.0);
 }
 
 void WaveInputDevice::setRecordAdjustmentMs (double ms)
@@ -1482,7 +1640,7 @@ void WaveInputDevice::removeInstance (WaveInputDeviceInstance* i)
 }
 
 //==============================================================================
-void WaveInputDevice::consumeNextAudioBlock (const float** allChannels, int numChannels, int numSamples, double streamTime)
+void WaveInputDevice::consumeNextAudioBlock (const float* const* allChannels, int numChannels, int numSamples, double streamTime)
 {
     if (enabled)
     {
@@ -1734,7 +1892,7 @@ void WaveInputRecordingThread::prepareToStart()
     flushAndStop();
     sleep (2);
     jassert (! isThreadRunning());
-    startThread (5);
+    startThread (juce::Thread::Priority::normal);
 }
 
 void WaveInputRecordingThread::flushAndStop()

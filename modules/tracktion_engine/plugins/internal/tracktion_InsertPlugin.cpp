@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -89,7 +89,13 @@ InsertPlugin::~InsertPlugin()
 //==============================================================================
 const char* InsertPlugin::xmlTypeName ("insert");
 
-juce::String InsertPlugin::getName()                                         { return name.get().isNotEmpty() ? name : TRANS("Insert Plugin"); }
+juce::ValueTree InsertPlugin::create()
+{
+    return createValueTree (IDs::PLUGIN,
+                            IDs::type, xmlTypeName);
+}
+
+juce::String InsertPlugin::getName() const                                   { return name.get().isNotEmpty() ? name : TRANS("Insert Plugin"); }
 juce::String InsertPlugin::getPluginType()                                   { return xmlTypeName; }
 juce::String InsertPlugin::getShortName (int)                                { return TRANS("Insert"); }
 double InsertPlugin::getLatencySeconds()                                     { return latencySeconds; }
@@ -101,73 +107,40 @@ bool InsertPlugin::needsConstantBufferSize()                                 { r
 
 void InsertPlugin::initialise (const PluginInitialisationInfo& info)
 {
-    {
-        const juce::ScopedLock sl (bufferLock);
-        sendBuffer.resize ({ 2u, (choc::buffer::FrameCount) info.blockSizeSamples });
-        sendBuffer.clear();
-
-        returnBuffer.resize ({ 2u, (choc::buffer::FrameCount) info.blockSizeSamples });
-        returnBuffer.clear();
-    }
+    updateDeviceTypes();
 
     initialiseWithoutStopping (info);
 }
 
 void InsertPlugin::initialiseWithoutStopping (const PluginInitialisationInfo& info)
 {
-    // This latency number is from trial and error, may need more testing
-    latencySeconds = manualAdjustMs / 1000.0 + (double)info.blockSizeSamples / info.sampleRate;
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    // This latency number is from trial and error, may need more testing.
+    // It should be accurate on well reporting devices though
+    int latency = static_cast<int> (timeToSample (manualAdjustMs / 1000.0, info.sampleRate));
+
+    if (auto device = engine.getDeviceManager().deviceManager.getCurrentAudioDevice())
+    {
+        if (sendDeviceType == audioDevice)
+            latency += device->getOutputLatencyInSamples();
+
+        if (returnDeviceType == audioDevice)
+            latency += device->getInputLatencyInSamples();
+    }
+
+    latency = std::max (0, latency);
+    latencyNumSamples = latency;
+    latencySeconds = TimeDuration::fromSamples (latency, info.sampleRate).inSeconds();
 }
 
 void InsertPlugin::deinitialise()
 {
-    const juce::ScopedLock sl (bufferLock);
-
-    sendBuffer = {};
-    returnBuffer = {};
-
-    sendMidiBuffer.clear();
-    returnMidiBuffer.clear();
 }
 
-void InsertPlugin::applyToBuffer (const PluginRenderContext& fc)
+void InsertPlugin::applyToBuffer (const PluginRenderContext&)
 {
     CRASH_TRACER
-    const juce::ScopedLock sl (bufferLock);
-
-    // Fill send buffer with data
-    if (sendDeviceType == audioDevice && fc.destBuffer != nullptr)
-    {
-        copyIntersection (sendBuffer, toBufferView (*fc.destBuffer)
-                                        .fromFrame ((choc::buffer::FrameCount) fc.bufferStartSample));
-    }
-    else if (sendDeviceType == midiDevice && fc.bufferForMidiMessages != nullptr)
-    {
-        sendMidiBuffer.clear();
-        sendMidiBuffer.mergeFromAndClear (*fc.bufferForMidiMessages);
-    }
-
-    // Clear the context buffers
-    if (fc.bufferForMidiMessages != nullptr)
-        fc.bufferForMidiMessages->clear();
-
-    if (fc.destBuffer != nullptr)
-        fc.destBuffer->clear (fc.bufferStartSample, fc.bufferNumSamples);
-
-    if (sendDeviceType == noDevice)
-        return;
-
-    // Copy the return buffer into the context
-    if (returnDeviceType == audioDevice && fc.destBuffer != nullptr)
-    {
-        copyIntersection (toBufferView (*fc.destBuffer)
-                            .fromFrame ((choc::buffer::FrameCount) fc.bufferStartSample),
-                          returnBuffer);
-    }
-    else if (returnDeviceType == midiDevice && fc.bufferForMidiMessages != nullptr)
-    {
-        fc.bufferForMidiMessages->mergeFromAndClear (returnMidiBuffer);
-    }
+    jassertfalse; // This shouldn't be called anymore, it's handled directly by the playback graph
 }
 
 juce::String InsertPlugin::getSelectableDescription()
@@ -230,38 +203,9 @@ void InsertPlugin::getPossibleDeviceNames (Engine& e,
 bool InsertPlugin::hasAudio() const       { return sendDeviceType == audioDevice  || returnDeviceType == audioDevice; }
 bool InsertPlugin::hasMidi() const        { return sendDeviceType == midiDevice   || returnDeviceType == midiDevice; }
 
-void InsertPlugin::fillSendBuffer (choc::buffer::ChannelArrayView<float>* destAudio, MidiMessageArray* destMidi)
+int InsertPlugin::getLatencyNumSamples() const
 {
-    CRASH_TRACER
-    const juce::ScopedLock sl (bufferLock);
-    
-    if (sendDeviceType == audioDevice)
-    {
-        if (destAudio != nullptr)
-            copyIntersection (*destAudio, sendBuffer);
-    }
-    else if (sendDeviceType == midiDevice)
-    {
-        if (destMidi != nullptr)
-            destMidi->mergeFromAndClear (sendMidiBuffer);
-    }
-}
-
-void InsertPlugin::fillReturnBuffer (choc::buffer::ChannelArrayView<float>* srcAudio, MidiMessageArray* srcMidi)
-{
-    CRASH_TRACER
-    const juce::ScopedLock sl (bufferLock);
-    
-    if (returnDeviceType == audioDevice)
-    {
-        if (srcAudio != nullptr)
-            copyIntersection (returnBuffer, *srcAudio);
-    }
-    else if (returnDeviceType == midiDevice)
-    {
-        if (srcMidi != nullptr)
-            returnMidiBuffer.mergeFrom (*srcMidi);
-    }
+    return latencyNumSamples.load (std::memory_order_acquire);
 }
 
 void InsertPlugin::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i)

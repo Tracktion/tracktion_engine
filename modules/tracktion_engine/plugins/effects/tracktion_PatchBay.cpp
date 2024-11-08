@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -52,7 +52,7 @@ struct PatchBayPlugin::WireList  : public ValueTreeObjectList<PatchBayPlugin::Wi
 //==============================================================================
 PatchBayPlugin::PatchBayPlugin (PluginCreationInfo info) : Plugin (info)
 {
-    list.reset (new WireList (*this, state));
+    list = std::make_unique<WireList> (*this, state);
 
     if (info.isNewPlugin)
         for (int i = 0; i < 2; ++i)
@@ -72,10 +72,11 @@ PatchBayPlugin::Wire* PatchBayPlugin::getWire (int index) const   { return list-
 void PatchBayPlugin::getChannelNames (juce::StringArray* ins,
                                       juce::StringArray* outs)
 {
+    if (baseClassNeedsInitialising())
+        cacheInputAndOutputPlugins();
+
     if (ins != nullptr)
     {
-        auto inputPlugin = findPluginThatFeedsIntoThis();
-
         if (inputPlugin != nullptr && ! recursionCheck)
         {
             juce::StringArray out;
@@ -92,8 +93,6 @@ void PatchBayPlugin::getChannelNames (juce::StringArray* ins,
 
     if (outs != nullptr)
     {
-        auto outputPlugin = findPluginThatThisFeedsInto();
-
         if (outputPlugin != nullptr && ! recursionCheck)
         {
             juce::StringArray in;
@@ -111,6 +110,7 @@ void PatchBayPlugin::getChannelNames (juce::StringArray* ins,
 
 void PatchBayPlugin::initialise (const PluginInitialisationInfo&)
 {
+    cacheInputAndOutputPlugins();
 }
 
 void PatchBayPlugin::deinitialise()
@@ -177,5 +177,12 @@ void PatchBayPlugin::breakConnection (int inputChannel, int outputChannel)
         }
     }
 }
+
+void PatchBayPlugin::cacheInputAndOutputPlugins()
+{
+    inputPlugin     = findPluginThatFeedsIntoThis().get();
+    outputPlugin    = findPluginThatThisFeedsInto().get();
+}
+
 
 }} // namespace tracktion { inline namespace engine

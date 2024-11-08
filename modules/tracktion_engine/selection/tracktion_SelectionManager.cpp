@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -89,8 +89,13 @@ Selectable::~Selectable()
 
     if (! hasNotifiedListenersOfDeletion)
     {
-        // must call notifyListenersOfDeletion() in the innermost subclass's destructor!
-        jassertfalse;
+       #if JUCE_DEBUG
+        if (! selectableListeners.isEmpty())
+        {
+            // must call notifyListenersOfDeletion() in the innermost subclass's destructor!
+            jassertfalse;
+        }
+       #endif
 
         notifyListenersOfDeletion();
     }
@@ -119,6 +124,16 @@ bool Selectable::isSelectableValid (const Selectable* s) noexcept
     return s != nullptr && updateTimerInstance->isValid (s);
 }
 
+void Selectable::addListener (SelectableListener* l)
+{
+    addSelectableListener (l);
+}
+
+void Selectable::removeListener (SelectableListener* l)
+{
+    removeSelectableListener (l);
+}
+
 void Selectable::addSelectableListener (SelectableListener* l)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
@@ -142,9 +157,7 @@ void Selectable::sendChangeCallbackToListenersIfNeeded()
 
     const juce::ScopedValueSetter<bool> svs (isCallingListeners, true);
 
-    WeakRef self (this);
-
-    selectableListeners.call ([self] (SelectableListener& l)
+    selectableListeners.call ([self = makeSafeRef (*this)] (SelectableListener& l)
                               {
                                   if (auto s = self.get())
                                       l.selectableObjectChanged (s);
@@ -180,15 +193,13 @@ void Selectable::notifyListenersOfDeletion()
         {
             CRASH_TRACER
 
-            WeakRef self (this);
-
             // Use a local copy in case any listeners get deleted during the callbacks
             juce::ListenerList<SelectableListener> copy;
 
             for (auto l : selectableListeners.getListeners())
                 copy.add (l);
 
-            copy.call ([self] (SelectableListener& l)
+            copy.call ([self = makeSafeRef (*this)] (SelectableListener& l)
                        {
                            if (auto s = self.get())
                            {
@@ -216,6 +227,20 @@ void Selectable::deselect()
 }
 
 //==============================================================================
+Selectable::Listener::Listener (Selectable& s)
+{
+    selectable = &s;
+    if (selectable)
+        selectable->addSelectableListener (this);
+}
+
+Selectable::Listener::~Listener()
+{
+    if (selectable)
+        selectable->removeSelectableListener (this);
+}
+
+//==============================================================================
 SelectableClass::SelectableClass() {}
 SelectableClass::~SelectableClass() {}
 
@@ -225,15 +250,32 @@ static juce::Array<SelectableClass::ClassInstanceBase*>& getAllSelectableClasses
     return classes;
 }
 
+static inline std::unordered_map<std::type_index, SelectableClass*>& getSelectableClassCache()
+{
+    static std::unordered_map<std::type_index, SelectableClass*> cache;
+    return cache;
+}
+
 SelectableClass::ClassInstanceBase::ClassInstanceBase()   { getAllSelectableClasses().add (this); }
 SelectableClass::ClassInstanceBase::~ClassInstanceBase()  { getAllSelectableClasses().removeAllInstancesOf (this); }
 
 SelectableClass* SelectableClass::findClassFor (const Selectable& s)
 {
    #if ! JUCE_DEBUG
+    auto& cache = getSelectableClassCache();
+    const std::type_index typeIndex (typeid (s));
+
+    if (auto found = cache.find (typeIndex); found != cache.end())
+        return found->second;
+
     for (auto cls : getAllSelectableClasses())
+    {
         if (auto c = cls->getClassForObject (&s))
+        {
+            cache[typeIndex] = c;
             return c;
+        }
+    }
    #else
     SelectableClass* result = nullptr;
 
@@ -282,7 +324,8 @@ juce::String SelectableClass::getDescriptionOfSelectedGroup (const SelectableLis
             .replace ("123", juce::String (selectedObjects.size()));
 }
 
-void SelectableClass::deleteSelected (const SelectableList&, bool) {}
+bool SelectableClass::canBeSelected (const Selectable&) { return true; }
+void SelectableClass::deleteSelected (const DeleteSelectedParams&) {}
 void SelectableClass::addClipboardEntriesFor (AddClipboardEntryParams&) {}
 
 bool SelectableClass::pasteClipboard (const SelectableList&, int)
@@ -358,7 +401,7 @@ SelectableClass* SelectionManager::getFirstSelectableClass() const
 
 void SelectionManager::clearList()
 {
-    for (auto s : selected.getAsWeakRefList())
+    for (auto s : makeSafeVector (selected))
         if (s != nullptr)
             s->removeSelectableListener (this);
 
@@ -409,13 +452,20 @@ void SelectionManager::deselectAll()
 
     if (selected.size() > 0)
     {
-        for (auto s : selected.getAsWeakRefList())
+        for (auto s : makeSafeVector (selected))
             if (s != nullptr)
                 s->selectionStatusChanged (false);
 
         clearList();
         selectionChanged();
     }
+}
+
+static bool canBeSelected (Selectable& newItem)
+{
+    if (auto newItemClass = SelectableClass::findClassFor (newItem))
+        return newItemClass->canBeSelected (newItem);
+    return true;
 }
 
 static bool canSelectAtTheSameTime (const SelectableList& selected, Selectable& newItem)
@@ -456,6 +506,9 @@ void SelectionManager::select (Selectable& s, bool addToCurrentSelection)
         return;
     }
 
+    if (! canBeSelected (s))
+        return;
+
     if (! selected.contains (&s))
     {
         addToCurrentSelection = addToCurrentSelection
@@ -477,8 +530,13 @@ void SelectionManager::select (Selectable& s, bool addToCurrentSelection)
     }
 }
 
-void SelectionManager::select (const SelectableList& list)
+void SelectionManager::select (const SelectableList& listSrc)
 {
+    SelectableList list;
+    for (auto s : listSrc)
+        if (Selectable::isSelectableValid (s) && canBeSelected (*s))
+            list.add (s);
+
     if (list != selected)
     {
         deselectAll();
@@ -590,7 +648,7 @@ void SelectionManager::deleteSelected()
 
     if (auto cls = getFirstSelectableClass())
         // use a local copy of the list, as it will change as things get deleted + deselected
-        cls->deleteSelected (SelectableList (selected), false);
+        cls->deleteSelected ({this, selected, false});
 }
 
 bool SelectionManager::cutSelected()
@@ -602,7 +660,7 @@ bool SelectionManager::cutSelected()
         if (cls->canCutSelected (selected) && copySelected())
         {
             // use a local copy of the list, as it will change as things get deleted + deselected
-            cls->deleteSelected (SelectableList (selected), true);
+            cls->deleteSelected ({this, selected, true});
             return true;
         }
     }
@@ -650,7 +708,7 @@ void SelectionManager::keepSelectedObjectsOnScreen()
 
 Edit* SelectionManager::getEdit() const
 {
-    return dynamic_cast<Edit*> (edit.get());
+    return edit.get();
 }
 
 SelectionManager* SelectionManager::findSelectionManager (const juce::Component* c)

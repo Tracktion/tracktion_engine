@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -11,8 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
-EditClip::EditClip (const juce::ValueTree& v, EditItemID clipID, ClipTrack& targetTrack, ProjectItemID sourceEditID)
-    : AudioClipBase (v, clipID, Type::edit, targetTrack),
+EditClip::EditClip (const juce::ValueTree& v, EditItemID clipID, ClipOwner& targetParent, ProjectItemID sourceEditID)
+    : AudioClipBase (v, clipID, Type::edit, targetParent),
       waveInfo (getAudioFile().getInfo())
 {
     renderOptions = RenderOptions::forEditClip (*this);

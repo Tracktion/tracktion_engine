@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -18,12 +18,11 @@ class ChordClip   : public Clip,
                     private juce::AsyncUpdater
 {
 public:
-    ChordClip (const juce::ValueTree&, EditItemID, ClipTrack& targetTrack);
+    ChordClip (const juce::ValueTree&, EditItemID, ClipOwner& targetParent);
     ~ChordClip() override;
 
     juce::String getSelectableDescription() override;
-    void setTrack (ClipTrack*) override;
-    bool canGoOnTrack (Track&) override;
+    bool canBeAddedTo (ClipOwner&) override;
     juce::Colour getColour() const override;
     juce::Colour getDefaultColour() const override;
     void initialise() override;

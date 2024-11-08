@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -25,14 +25,13 @@ public:
     static const char* xmlTypeName;
 
     bool canBeAddedToFolderTrack() override             { return true; }
-    juce::String getName() override                     { return textTitle.get().isNotEmpty() ? textTitle : TRANS("Text Plugin"); }
+    juce::String getName() const override               { return textTitle.get().isNotEmpty() ? textTitle : TRANS("Text Plugin"); }
     juce::String getPluginType() override               { return xmlTypeName; }
     void initialise (const PluginInitialisationInfo&) override {}
     void deinitialise() override                        {}
     void applyToBuffer (const PluginRenderContext&) override {}
     int getNumOutputChannelsGivenInputs (int numInputChannels) override     { return numInputChannels; }
     bool producesAudioWhenNoAudioInput() override       { return false; }
-    bool needsConstantBufferSize() override             { return false; }
     juce::String getSelectableDescription() override    { return TRANS("Text Plugin"); }
 
     juce::CachedValue<juce::String> textTitle, textBody;

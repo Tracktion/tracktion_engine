@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -11,36 +11,35 @@
 namespace tracktion { inline namespace engine
 {
 
+class InsertSendNode;
+
 //==============================================================================
 //==============================================================================
-/**
-    This is a bit confusing but is required to ensure the following set of
-    dependencies in the graph:
-        InsertSendNode   -> InsertPluginNode
-        InsertReturnNode ->
- 
-    Due to the way the graph is built, the InsertSendReturnDependencyNode feeds
-    in to the InsertPlugin's PluginNode and creates a dependency on the
-    InsertSendNode and InsertReturnNode to ensure they are processed first.
-*/
-class InsertSendReturnDependencyNode final  : public tracktion::graph::Node
+class InsertNode final : public tracktion::graph::Node
 {
 public:
-    InsertSendReturnDependencyNode (std::unique_ptr<Node>, InsertPlugin&);
+    InsertNode (std::unique_ptr<Node> input, InsertPlugin&, std::unique_ptr<Node> returnNode, SampleRateAndBlockSize);
+    ~InsertNode() override;
 
-    //==============================================================================
+    InsertPlugin& getInsert() const     { return owner; }
+    Node& getInputNode()                { return *input; }
+
+    TransformResult transform (Node&, const std::vector<Node*>&, TransformCache&) override;
     tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override;
-    bool transform (Node&) override;
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
     void process (ProcessContext&) override;
 
 private:
-    //==============================================================================
-    std::unique_ptr<Node> input;
-    Node* sendNode = nullptr, *returnNode = nullptr;
+    InsertPlugin& owner;
     Plugin::Ptr plugin;
+
+    std::unique_ptr<Node> input;
+    std::unique_ptr<Node> returnNode;
+    InsertSendNode* sendNode = nullptr;
+
+    bool isInitialised = false;
 };
 
 
@@ -55,9 +54,11 @@ class InsertSendNode final  : public tracktion::graph::Node
 public:
     InsertSendNode (InsertPlugin&);
 
-    InsertPlugin& getInsert() const     { return owner; }
-    
+    InsertPlugin& getInsert()           { return owner; }
+    int getLatencyAtInput();
+
     //==============================================================================
+    TransformResult transform (Node&, const std::vector<Node*>&, TransformCache&) override;
     tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override;
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
@@ -68,6 +69,7 @@ private:
     //==============================================================================
     InsertPlugin& owner;
     Plugin::Ptr plugin;
+    Node* input = nullptr;
 };
 
 }} // namespace tracktion { inline namespace engine

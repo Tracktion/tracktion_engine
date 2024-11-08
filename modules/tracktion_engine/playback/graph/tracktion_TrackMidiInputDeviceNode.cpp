@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -12,9 +12,12 @@
 namespace tracktion { inline namespace engine
 {
 
-TrackMidiInputDeviceNode::TrackMidiInputDeviceNode (MidiInputDevice& owner, std::unique_ptr<Node> inputNode, ProcessState& ps)
+TrackMidiInputDeviceNode::TrackMidiInputDeviceNode (MidiInputDevice& owner, std::unique_ptr<Node> inputNode, ProcessState& ps,
+                                                    bool copyInputsToOutputs_)
     : TracktionEngineNode (ps),
-      midiInputDevice (owner), input (std::move (inputNode)), copyInputsToOutputs (owner.isEndToEndEnabled())
+      midiInputDevice (owner),
+      input (std::move (inputNode)),
+      copyInputsToOutputs (copyInputsToOutputs_)
 {
     jassert (midiInputDevice.isTrackDevice());
 
@@ -55,7 +58,7 @@ void TrackMidiInputDeviceNode::process (ProcessContext& pc)
         setAudioOutput (input.get(), sourceBuffers.audio);
         pc.buffers.midi.copyFrom (sourceBuffers.midi);
     }
-    
+
     const double midiStreamTime = tracktion::graph::sampleToTime (getReferenceSampleRange().getStart(), getSampleRate())
                                    - midiInputDevice.getAdjustSecs();
 

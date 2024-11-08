@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -16,9 +16,9 @@ struct ParameterSetting
     ParameterSetting() noexcept;
     void clear() noexcept;
 
-    char label[32];
-    char valueDescription[32];
-    float value;
+    char label[32] = "";
+    char valueDescription[32] = "";
+    float value = 0.0f;
 };
 
 struct MarkerSetting
@@ -26,9 +26,17 @@ struct MarkerSetting
     MarkerSetting() noexcept;
     void clear() noexcept;
 
-    char label[32];
-    int number;
-    bool absolute;
+    char label[32] = "";
+    int number = 0;
+    bool absolute = false;
+};
+
+struct MidiID
+{
+    uint16_t    manufacturer    = 0;
+    uint16_t    family          = 0;
+    uint16_t    model           = 0;
+    uint32_t    version         = 0;
 };
 
 //==============================================================================
@@ -54,6 +62,10 @@ public:
     virtual void initialiseDevice ([[maybe_unused]] bool connect) {}
     virtual void shutDownDevice() {}
 
+    // Given the MidiID from MIDI Identity Request SysEx message, return
+    // true if the ID is for a device the control surface understands
+    virtual bool wantsDevice (const MidiID&) { return false; }
+
     // If the device communicates via OSC, then this tells the device the new settings
     virtual void updateOSCSettings (int /*oscInputPort*/, int /*oscOutputPort*/, juce::String /*oscOutputAddr*/) {}
 
@@ -76,19 +88,22 @@ public:
     // If you override this, you must call parent class if you use pick mode
     virtual void moveFader (int channelNum, float newSliderPos);
 
-    // tells the device to move the master faders, if it has them. If it just has one master
-    // fader, it can use the average of these levels.
+    // tells the device to move the master faders, if it has them.
     // slider pos is 0 to 1.0
-    virtual void moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos);
+    virtual void moveMasterLevelFader (float newPos);
 
     // tells the device to move a pan pot.
     // the channel number is the physical channel on the device, regardless of bank selection
     // pan is -1.0 to 1.0
     virtual void movePanPot ([[maybe_unused]] int channelNum, [[maybe_unused]] float newPan);
 
-    virtual void moveAux ([[maybe_unused]] int channel, [[maybe_unused]] const char* bus, [[maybe_unused]] float newPos);
+    // tells the device to move the master pan pot.
+    // pan is -1.0 to 1.0
+    virtual void moveMasterPanPot (float newPan);
 
-    virtual void clearAux (int) {}
+    virtual void moveAux ([[maybe_unused]] int channel, [[maybe_unused]] int auxNum, [[maybe_unused]] const char* bus, [[maybe_unused]] float newPos);
+
+    virtual void clearAux ([[maybe_unused]] int channel, [[maybe_unused]] int auxNum) {}
 
     // the channel number is the physical channel on the device, regardless of bank selection
     virtual void updateSoloAndMute ([[maybe_unused]] int channelNum, Track::MuteAndSoloLightState, [[maybe_unused]] bool isBright) {}
@@ -114,6 +129,17 @@ public:
     // the trackname array is the set of names for the tracks that now map onto the device's physical
     // fader channels, so if it has a display that can show track names, it should update this.
     virtual void faderBankChanged ([[maybe_unused]] int newStartChannelNumber, [[maybe_unused]] const juce::StringArray& trackNames) {}
+
+    // tells the device that a pad has changed colour
+    // colour 0: off
+    // colour 1 - 18: hue = (colour - 1) / 18
+    // state 0: solid
+    // state 1: blink
+    // state 2: pulse
+    virtual void padStateChanged ([[maybe_unused]] int channelNumber, [[maybe_unused]] int sceneNumber, [[maybe_unused]] int colourIdx, [[maybe_unused]] int state) {}
+
+    // Are any clips on the track playing.
+    virtual void clipsPlayingStateChanged ([[maybe_unused]] int channel, [[maybe_unused]] bool isPlaying) {}
 
     // if the device has per-channel level meters, this should update one of them.
     // the channel number is the physical channel on the device, regardless of bank selection
@@ -183,6 +209,7 @@ public:
     virtual bool showingPluginParams()                  { return false; }
     virtual bool showingMarkers()                       { return false; }
     virtual bool showingTracks()                        { return true;  }
+    virtual bool showingClipSlots()                     { return true;  }
 
     virtual void deleteController()                     {}
     virtual void pluginBypass (bool)                    {}
@@ -192,6 +219,9 @@ public:
 
     Edit* getEdit() const noexcept                      { return edit; }
     TransportControl* getTransport() const noexcept     { return edit != nullptr ? &edit->getTransport() : nullptr; }
+
+    virtual void currentSelectionManagerChanged (SelectionManager* sm)  { selectionManager = sm; }
+    SelectionManager* getSelectionManager()             { return selectionManager; }
 
     //==============================================================================
     /*
@@ -210,6 +240,7 @@ public:
     int getFaderBankOffset() const;
     int getAuxBankOffset() const;
     int getParamBankOffset() const;
+    int getClipSlotOffset() const;
 
     // sends a MIDI message to the device's back-channel
     void sendMidiCommandToController (int idx, const void* midiData, int numBytes);
@@ -232,10 +263,10 @@ public:
 
     // tells tracktion that the master fader has moved.
     void userMovedMasterLevelFader (float newLevel, bool delta = false);
-    void userMovedMasterPanPot (float newLevel);
+    void userMovedMasterPanPot (float newLevel, bool delta = false);
 
-    void userMovedAux (int channelNum, float newPosition);
-    void userPressedAux (int channelNum);
+    void userMovedAux (int channelNum, int auxNum, float newPosition, bool delta = false);
+    void userPressedAux (int channelNum, int auxNum);
     void userMovedQuickParam (float newLevel);
 
     // these tell tracktion about buttons being pressed
@@ -243,9 +274,13 @@ public:
     void userPressedSoloIsolate (int channelNum);
     void userPressedMute (int channelNum, bool muteVolumeControl);
     void userSelectedTrack (int channelNum);
+    void userSelectedOneTrack (int channelNum);
     void userSelectedClipInTrack (int channelNum);
     void userSelectedPluginInTrack (int channelNum);
     void userPressedRecEnable (int channelNum, bool enableEtoE);
+    void userLaunchedClip (int channelNum, int sceneNum, bool press);
+    void userStoppedClip (int channelNum, bool press);
+    void userLaunchedScene (int sceneNum, bool press);
     void userPressedPlay();
     void userPressedRecord();
     void userPressedStop();
@@ -319,6 +354,11 @@ public:
     // device what its new state is.
     void userChangedFaderBanks (int channelNumDelta);
 
+    // tells tracktion to move the pad bank up or down by the specified number of channels.
+    // After calling this, tracktion will call back the onPadStateChanged() method for each pad
+    // to tell the device what its new state is.
+    void userChangedPadBanks (int padDelta);
+
     // tells tracktion to move the cursor.
     //
     // amount < 0 means moving backwards, amount > 0 forwards
@@ -331,7 +371,7 @@ public:
     void userChangedRewindButton (bool isButtonDown);
     void userChangedFastForwardButton (bool isButtonDown);
 
-    void userMovedParameterControl (int parameter, float newValue);
+    void userMovedParameterControl (int parameter, float newValue, bool delta = false);
     void userPressedParameterControl (int paramNumber);
 
     void userChangedParameterBank (int deltaParams);
@@ -339,6 +379,8 @@ public:
     void userPressedGoToMarker (int marker);
 
     void userChangedAuxBank (int delta);
+    void userSetAuxBank (int num);
+
     void updateDeviceState();
 
     void redrawSelectedPlugin();
@@ -347,7 +389,7 @@ public:
     Edit* getEditIfOnEditScreen() const;
 
     //==============================================================================
-    /** These values need to be set by the subclass.. */
+    /** These values need to be set by the subclass. */
     juce::String deviceDescription;
 
     // The number of multiple similar devices can be connected to add additional tracks
@@ -379,10 +421,14 @@ public:
     int numberOfFaderChannels = 0;
     int numCharactersForTrackNames = 0;
 
+    // number of physical pads per channel
+    int numberOfTrackPads = 0;
+
     // is banking to the right allowed to show empty tracks
     bool allowBankingOffEnd = false;
 
     // number of labelled rotary dials that can control things like plugin parameters
+    bool wantsDummyParams = true;
     int numParameterControls = 0;
     int numCharactersForParameterLabels = 0;
 
@@ -394,23 +440,32 @@ public:
     // useful for non motorized faders, so the don't jump when adjusted
     bool pickUpMode = false;
 
+    // pad colors are limited to < 8
+    bool limitedPadColours = false;
+
     int numAuxes = 0;
     int numCharactersForAuxLabels = 0;
     bool wantsAuxBanks = false;
     bool followsTrackSelection = false;
+    AuxPosition auxMode = AuxPosition::byBus;
+
+    void setFollowsTrackSelection (bool f);
 
     Engine& engine;
     ExternalControllerManager& externalControllerManager;
     ExternalController* owner = nullptr;
+
+    std::set<std::pair<int, int>> recentlyPressedPads;
 
 private:
     enum ControlType
     {
         ctrlFader,
         ctrlMasterFader,
+        ctrlMasterPanPot,
         ctrlPan,
-        ctrlAux,
         ctrlParam,
+        ctrlAux,    // aux must be last because there can be several of them
     };
 
     struct PickUpInfo
@@ -421,6 +476,7 @@ private:
     };
 
     Edit* edit = nullptr;
+    SelectionManager* selectionManager = nullptr;
 
     void performIfNotSafeRecording (const std::function<void()>&);
 

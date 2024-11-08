@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -24,32 +24,34 @@ public:
           input (std::move (inputNode)),
           playHeadTime (playHeadTimeToUpdate)
     {
+        setOptimisations ({ ClearBuffers::no,
+                            AllocateAudioBuffer::no });
     }
-    
+
     tracktion::graph::NodeProperties getNodeProperties() override
     {
         auto props = input->getNodeProperties();
-        
-        constexpr size_t playHeadPositionNodeMagicHash = 0x706c617948656164;
-        
+
+        constexpr size_t playHeadPositionNodeMagicHash = size_t (0x706c617948656164);
+
         if (props.nodeID != 0)
             hash_combine (props.nodeID, playHeadPositionNodeMagicHash);
 
         return props;
     }
-    
+
     std::vector<tracktion::graph::Node*> getDirectInputNodes() override  { return { input.get() }; }
     bool isReadyToProcess() override                                    { return input->hasProcessed(); }
-        
+
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info) override
     {
-        latencyNumSamples = info.rootNode.getNodeProperties().latencyNumSamples;
-        
+        latencyNumSamples = info.nodeGraph.rootNode->getNodeProperties().latencyNumSamples;
+
         // Member variables have to be updated from the previous Node or if the graph gets
         // rebuilt during the countdown period, the playhead time will jump back
-        updateFromPreviousNode (info.rootNodeToReplace);
+        updateFromPreviousNode (info.nodeGraphToReplace);
     }
-    
+
     void process (ProcessContext& pc) override
     {
         // Copy the input buffers to the outputs
@@ -57,8 +59,7 @@ public:
         jassert (sourceBuffers.audio.getNumChannels() == pc.buffers.audio.getNumChannels());
 
         pc.buffers.midi.copyFrom (sourceBuffers.midi);
-        copy (pc.buffers.audio, sourceBuffers.audio);
-        
+        setAudioOutput (input.get(), sourceBuffers.audio);
         updatePlayHeadTime (pc.referenceSampleRange.getLength());
     }
 
@@ -74,19 +75,19 @@ private:
         int64_t numLatencySamplesToCountDown = 0;
         int64_t referencePositionOnJump = 0;
     };
-    
+
     std::shared_ptr<State> state { std::make_shared<State>() };
-    
+
     void updatePlayHeadTime (int64_t numSamples)
     {
         int64_t referenceSamplePosition = getReferenceSampleRange().getStart();
-        
+
         if (getPlayHeadState().didPlayheadJump() || updateReferencePositionOnJump)
         {
             state->numLatencySamplesToCountDown = latencyNumSamples;
             state->referencePositionOnJump = referenceSamplePosition;
         }
-        
+
         if (state->numLatencySamplesToCountDown > 0)
         {
             const int64_t numSamplesToDecrement = std::min (state->numLatencySamplesToCountDown, numSamples);
@@ -109,28 +110,13 @@ private:
         updateReferencePositionOnJump = false;
     }
 
-    void updateFromPreviousNode (Node* rootNodeToReplace)
+    void updateFromPreviousNode (NodeGraph* nodeGraphToReplace)
     {
-        if (rootNodeToReplace == nullptr)
-            return;
-        
-        auto nodeIDToLookFor = getNodeProperties().nodeID;
-        
-        if (nodeIDToLookFor == 0)
-            return;
-
-        auto visitor = [this, nodeIDToLookFor] (Node& node)
+        if (auto oldNode = findNodeWithIDIfNonZero<PlayHeadPositionNode> (nodeGraphToReplace, getNodeProperties().nodeID))
         {
-            if (auto other = dynamic_cast<PlayHeadPositionNode*> (&node))
-            {
-                if (other->getNodeProperties().nodeID == nodeIDToLookFor)
-                {
-                    state = other->state;
-                    updateReferencePositionOnJump = false;
-                }
-            }
-        };
-        visitNodes (*rootNodeToReplace, visitor, true);
+            state = oldNode->state;
+            updateReferencePositionOnJump = false;
+        }
     }
 };
 

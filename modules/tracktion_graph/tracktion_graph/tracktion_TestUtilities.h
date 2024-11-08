@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -12,6 +12,7 @@
 
 #include <numeric>
 #include <juce_audio_formats/juce_audio_formats.h>
+#include "../../tracktion_engine/audio_files/formats/tracktion_FloatAudioFileFormat.h"
 
 namespace tracktion { inline namespace graph
 {
@@ -19,6 +20,7 @@ namespace tracktion { inline namespace graph
 //==============================================================================
 namespace test_utilities
 {
+    //==============================================================================
     /** Creates a random MidiMessageSequence sequence. */
     static inline juce::MidiMessageSequence createRandomMidiMessageSequence (double durationSeconds, juce::Random r,
                                                                              juce::Range<double> noteLengthRange = { 0.1, 0.6 })
@@ -99,6 +101,20 @@ namespace test_utilities
                                                        [=] (auto, auto frame) { return std::sin ((float) (frame * phaseIncrement)); });
     }
 
+    static inline auto createSquareBuffer (int numChannels, int numFrames, double phaseIncrement)
+    {
+        return choc::buffer::createChannelArrayBuffer (numChannels, numFrames,
+                                                       [=] (auto, auto frame)
+                                                       {
+                                                           const auto sinValue = std::sin ((float) (frame * phaseIncrement));
+
+                                                           if (sinValue >= 0.0f) return 1.0f;
+                                                           if (sinValue < 0.0f) return -1.0f;
+
+                                                           return 0.0f;
+                                                       });
+    }
+
     /** Logs a MidiMessageSequence. */
     static inline void logMidiMessageSequence (juce::UnitTest& ut, const juce::MidiMessageSequence& seq)
     {
@@ -119,26 +135,70 @@ namespace test_utilities
        #endif
     }
 
-    /** Writes an audio buffer to a file. */
-    static inline void writeToFile (juce::File file, choc::buffer::ChannelArrayView<float> block, double sampleRate)
+    /** Removes any non-note event messages from a sequence. */
+    static inline juce::MidiMessageSequence stripNonNoteOnOffMessages (juce::MidiMessageSequence seq)
     {
-        if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (juce::WavAudioFormat().createWriterFor (file.createOutputStream().release(),
-                                                                                                            sampleRate,
-                                                                                                            block.getNumChannels(),
-                                                                                                            16, {}, 0)))
+        for (int i = seq.getNumEvents(); --i >= 0;)
+            if (! seq.getEventPointer (i)->message.isNoteOnOrOff())
+                seq.deleteEvent (i, false);
+
+        return seq;
+    }
+
+    /** Removes any meta-event messages from a sequence. */
+    static inline juce::MidiMessageSequence stripMetaEvents (juce::MidiMessageSequence seq)
+    {
+        for (int i = seq.getNumEvents(); --i >= 0;)
+            if (! seq.getEventPointer (i)->message.isMetaEvent())
+                seq.deleteEvent (i, false);
+
+        return seq;
+    }
+
+    /** Writes an audio buffer to a file. */
+    template<typename AudioFormatType>
+    void writeToFile (juce::File file, choc::buffer::ChannelArrayView<float> block, double sampleRate, int qualityOptionIndex)
+    {
+        AudioFormatType type;
+
+        if (auto writer = std::unique_ptr<juce::AudioFormatWriter> (type.createWriterFor (file.createOutputStream().release(),
+                                                                                          sampleRate,
+                                                                                          block.getNumChannels(),
+                                                                                          16, {}, qualityOptionIndex)))
         {
             writer->writeFromAudioSampleBuffer (toAudioBuffer (block), 0, (int) block.getNumFrames());
         }
+    }
+
+    /** Writes an audio buffer to a file. */
+    template<typename AudioFormatType>
+    std::unique_ptr<juce::TemporaryFile> writeToTemporaryFile (choc::buffer::ChannelArrayView<float> block, double sampleRate, int qualityOptionIndex = 0)
+    {
+        auto f = std::make_unique<juce::TemporaryFile> (AudioFormatType().getFileExtensions()[0]);
+        writeToFile<AudioFormatType> (f->getFile(), block, sampleRate, qualityOptionIndex);
+
+        return f;
     }
 
     //==============================================================================
     /** Returns the ammount of internal memory allocated for buffers. */
     static inline size_t getMemoryUsage (const std::vector<Node*>& nodes)
     {
-        return std::accumulate (nodes.begin(), nodes.end(), (size_t) 0,
-                                [] (size_t total, Node* n)
+        auto nodesWithInternalNodes = createNodeMap (nodes);
+        return std::accumulate (nodesWithInternalNodes.begin(), nodesWithInternalNodes.end(), (size_t) 0,
+                                [] (size_t total, auto& nodeAndID)
                                 {
-                                    return total + n->getAllocatedBytes();
+                                    return total + nodeAndID.node->getAllocatedBytes();
+                                });
+    }
+
+    /** Returns the ammount of internal memory allocated for buffers. */
+    static inline size_t getMemoryUsage (const NodeGraph& graph)
+    {
+        return std::accumulate (graph.sortedNodes.begin(), graph.sortedNodes.end(), (size_t) 0,
+                                [] (size_t total, auto& nodeAndID)
+                                {
+                                    return total + nodeAndID.node->getAllocatedBytes();
                                 });
     }
 
@@ -188,12 +248,12 @@ namespace test_utilities
             static void visitInputs (Node& n, int depth)
             {
                 logNode (n, depth);
-                
+
                 for (auto input : n.getDirectInputNodes())
                     visitInputs (*input, depth + 1);
             }
         };
-        
+
         Visitor::visitInputs (node, 0);
     }
 
@@ -207,16 +267,75 @@ namespace test_utilities
     //==============================================================================
     template<typename AudioFormatType>
     std::unique_ptr<juce::TemporaryFile> getSinFile (double sampleRate, double durationInSeconds,
-                                                     int numChannels = 1, float frequency = 220.0f)
+                                                     int numChannels = 1, float frequency = 220.0f,
+                                                     int qualityOptionIndex = -1)
     {
         auto buffer = createSineBuffer (numChannels, (int) (sampleRate * durationInSeconds),
                                         getPhaseIncrement (frequency, sampleRate));
 
         AudioFormatType format;
         auto f = std::make_unique<juce::TemporaryFile> (format.getFileExtensions()[0]);
-        writeToFile (f->getFile(), buffer, sampleRate);
+        writeToFile<AudioFormatType> (f->getFile(), buffer, sampleRate, qualityOptionIndex);
         return f;
     }
+
+    template<typename AudioFormatType>
+    std::unique_ptr<juce::TemporaryFile> getSquareFile (double sampleRate, double durationInSeconds,
+                                                        int numChannels = 1, float frequency = 220.0f,
+                                                        int qualityOptionIndex = -1)
+    {
+        auto buffer = createSquareBuffer (numChannels, (int) (sampleRate * durationInSeconds),
+                                          getPhaseIncrement (frequency, sampleRate));
+
+        AudioFormatType format;
+        auto f = std::make_unique<juce::TemporaryFile> (format.getFileExtensions()[0]);
+        writeToFile<AudioFormatType> (f->getFile(), buffer, sampleRate, qualityOptionIndex);
+        return f;
+    }
+
+    template<typename AudioFormatType>
+    std::unique_ptr<juce::TemporaryFile> getTimeEncodedFile (double sampleRate, TimeDuration duration,
+                                                             TimeDuration stepDuration,
+                                                             int numChannels = 1,
+                                                             int qualityOptionIndex = -1)
+    {
+        const auto stepNumFrames = toSamples (stepDuration, sampleRate);
+        const auto numSteps = duration / stepDuration;
+        const auto valPerStep = static_cast<float> (1.0 / numSteps);
+
+        auto buffer = choc::buffer::createChannelArrayBuffer (numChannels, toSamples (duration, sampleRate),
+                                                              [=] (auto, auto frame)
+                                                              {
+                                                                  const int stepNum = static_cast<int> (frame / stepNumFrames) + 1;
+                                                                  const float f = stepNum * valPerStep;
+
+                                                                  return f;
+                                                              });
+
+        AudioFormatType format;
+        auto f = std::make_unique<juce::TemporaryFile> (format.getFileExtensions()[0]);
+        writeToFile<AudioFormatType> (f->getFile(), buffer, sampleRate, qualityOptionIndex);
+
+        return f;
+    }
+
+    template<typename AudioFormatType>
+    std::unique_ptr<juce::TemporaryFile> getTransientFile (double sampleRate, TimeDuration duration,
+                                                           TimePosition transientPos, float transientVal,
+                                                           int numChannels = 1, int qualityOptionIndex = -1)
+    {
+        using namespace choc::buffer;
+        auto transientSample = toSamples (transientPos, sampleRate);
+        auto buffer = createChannelArrayBuffer (numChannels, toSamples (duration, sampleRate),
+                                                [=] (auto, auto frame) { return frame == transientSample ? transientVal : 0.0f; });
+
+        AudioFormatType format;
+        auto f = std::make_unique<juce::TemporaryFile> (format.getFileExtensions()[0]);
+        writeToFile<AudioFormatType> (f->getFile(), buffer, sampleRate, qualityOptionIndex);
+
+        return f;
+    }
+
 
     //==============================================================================
     /** Compares two MidiMessageSequences and expects them to be equal. */
@@ -259,6 +378,14 @@ namespace test_utilities
         }
 
         ut.expect (sequencesTheSame, "MIDI sequence contents not equal");
+
+        if (! sequencesTheSame)
+        {
+            ut.logMessage ("Actual:");
+            logMidiMessageSequence (ut, actual);
+            ut.logMessage ("Expected:");
+            logMidiMessageSequence (ut, expected);
+        }
     }
 
     /** Compares a MidiBuffer and a MidiMessageSequence and expects them to be equal. */
@@ -303,6 +430,55 @@ namespace test_utilities
         expectAudioBuffer (ut, trimmedBuffer, channel, mag, rms);
     }
 
+    static inline void expectAudioBuffer (juce::UnitTest& ut, const juce::AudioBuffer<float>& a, const juce::AudioBuffer<float>& b)
+    {
+        ut.expect (a.getNumChannels() == b.getNumChannels());
+        ut.expect (a.getNumSamples() == b.getNumSamples());
+
+        for (int channel = 0; channel < a.getNumChannels(); ++channel)
+        {
+            auto* aPtr = a.getReadPointer (channel);
+            auto* bPtr = b.getReadPointer (channel);
+
+            ut.expect (std::vector<float> (aPtr, aPtr + a.getNumSamples())
+                       == std::vector<float> (bPtr, bPtr + b.getNumSamples()));
+        }
+    }
+
+    inline bool buffersAreEqual (const juce::AudioBuffer<float>& a, const juce::AudioBuffer<float>& b, float absSampleTolerance = 0.0f)
+    {
+        if (a.getNumChannels() != b.getNumChannels())
+            return false;
+
+        if (a.getNumSamples() != b.getNumSamples())
+            return false;
+
+        const int numSamples = a.getNumSamples();
+
+        for (int channel = 0; channel < a.getNumChannels(); ++channel)
+        {
+            auto* aPtr = a.getReadPointer (channel);
+            auto* bPtr = b.getReadPointer (channel);
+
+            for (int sample = 0; sample < numSamples; ++sample)
+            {
+                const auto aSamp = *(aPtr + sample);
+                const auto bSamp = *(bPtr + sample);
+                const auto absDiff = std::abs (aSamp - bSamp);
+
+                if (absDiff > absSampleTolerance)
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    inline bool buffersAreEqual (const choc::buffer::ChannelArrayView<float>& a, const choc::buffer::ChannelArrayView<float>& b, float absSampleTolerance = 0.0f)
+    {
+        return buffersAreEqual (toAudioBuffer (a), toAudioBuffer (b), absSampleTolerance);
+    }
+
     /** Checks that there are no duplicate nodeIDs in a Node. */
     static inline void expectUniqueNodeIDs (juce::UnitTest& ut, Node& node, bool ignoreZeroIDs)
     {
@@ -311,6 +487,19 @@ namespace test_utilities
 
         if (! areUnique)
             visitNodes (node, [&] (Node& n) { ut.logMessage (juce::String (typeid (n).name()) + " - " + juce::String (n.getNodeProperties().nodeID)); }, false);
+    }
+
+    //==============================================================================
+    inline std::optional<std::pair<choc::buffer::FrameCount, float>> findFirstNonZeroSample (choc::buffer::MonoView<float> buffer)
+    {
+        auto size = buffer.getSize();
+        auto samples = buffer.getIterator (0);
+
+        for (decltype (size.numFrames) i = 0; i < size.numFrames; ++i)
+            if (auto s = *samples++; s > 0.0f)
+                return std::make_pair (i, s);
+
+        return {};
     }
 
     //==============================================================================
@@ -373,15 +562,15 @@ namespace test_utilities
             {
                 if (auto os = std::make_unique<juce::MemoryOutputStream> (audioOutputBlock, false))
                 {
-                    writer = std::unique_ptr<juce::AudioFormatWriter> (juce::WavAudioFormat().createWriterFor (os.release(),
-                                                                                                               ts.sampleRate, (uint32_t) numChannels, 16, {}, 0));
+                    writer = std::unique_ptr<juce::AudioFormatWriter> (FloatAudioFormat().createWriterFor (os.release(),
+                                                                                                           ts.sampleRate, (uint32_t) numChannels, 16, {}, 0));
                 }
                 else
                 {
                     jassertfalse;
                 }
             }
-            
+
             setPlayer (std::move (playerToUse));
         }
 
@@ -392,12 +581,17 @@ namespace test_utilities
                     .replace ("{numChannels}", juce::String (numChannels))
                     .replace ("{durationInSeconds}", juce::String (durationInSeconds)).toStdString();
         }
-        
+
+        const PerformanceMeasurement& getPerformanceMeasurement()
+        {
+            return performanceMeasurement;
+        }
+
         PerformanceMeasurement::Statistics getStatisticsAndReset()
         {
             return performanceMeasurement.getStatisticsAndReset();
         }
-        
+
         Node& getNode() const
         {
             return *player->getNode();
@@ -434,7 +628,7 @@ namespace test_utilities
             for (;;)
             {
                 const ScopedPerformanceMeasurement spm (performanceMeasurement);
-                
+
                 auto maxNumThisTime = testSetup.randomiseBlockSizes ? std::min (testSetup.random.nextInt ({ 1, testSetup.blockSize }), numSamplesToDo)
                                                                     : std::min (testSetup.blockSize, numSamplesToDo);
                 auto numThisTime = std::min (maxNumSamples, maxNumThisTime);
@@ -489,7 +683,7 @@ namespace test_utilities
                 // Then read it back in to the buffer
                 if (auto is = std::make_unique<juce::MemoryInputStream> (audioOutputBlock, false))
                 {
-                    if (auto reader = std::unique_ptr<juce::AudioFormatReader> (juce::WavAudioFormat().createReaderFor (is.release(), true)))
+                    if (auto reader = std::unique_ptr<juce::AudioFormatReader> (FloatAudioFormat().createReaderFor (is.release(), true)))
                     {
                         juce::AudioBuffer<float> tempBuffer (numChannels, (int) reader->lengthInSamples);
                         reader->read (&tempBuffer, 0, tempBuffer.getNumSamples(), 0, true, true);
@@ -517,7 +711,7 @@ namespace test_utilities
         int numSamplesToDo = 0;
         int numSamplesDone = 0;
         int numProcessMisses = 0;
-        
+
         PerformanceMeasurement performanceMeasurement { "TestProcess" , -1 };
     };
 

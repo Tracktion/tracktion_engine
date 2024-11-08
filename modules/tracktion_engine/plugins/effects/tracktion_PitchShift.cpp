@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -25,7 +25,7 @@ struct PitchShiftPlugin::Pimpl
         {
             mode = newMode;
             elastiqueOptions = newOptions;
-            timestretcher.reset (new TimeStretcher());
+            timestretcher = std::make_unique<TimeStretcher>();
         }
 
         if (! timestretcher->isInitialised())
@@ -52,7 +52,7 @@ struct PitchShiftPlugin::Pimpl
 
         latencySeconds = latencySamples / sr;
     }
-    
+
     void applyToBuffer (const PluginRenderContext& fc, float semis)
     {
         SCOPED_REALTIME_CHECK
@@ -113,8 +113,8 @@ struct PitchShiftPlugin::Pimpl
 
     AudioFifo inputFifo { 2, 2000 }, outputFifo { 2, 2000 };
 
-    double latencySeconds = 0.0;
-    int latencySamples = 0;
+    int latencySamples = 8192;
+    double latencySeconds = latencySamples / 44100.0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pimpl)
 };
@@ -122,7 +122,7 @@ struct PitchShiftPlugin::Pimpl
 //==============================================================================
 PitchShiftPlugin::PitchShiftPlugin (PluginCreationInfo info) : Plugin (info)
 {
-    pimpl.reset (new Pimpl (*this));
+    pimpl = std::make_unique<Pimpl> (*this);
 
     auto um = getUndoManager();
 
@@ -191,10 +191,7 @@ juce::String PitchShiftPlugin::getSelectableDescription()
 
 void PitchShiftPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    juce::CachedValue<float>* cvsFloat[]  = { &semitonesValue, nullptr };
-    juce::CachedValue<int>* cvsInt[]      = { &mode, nullptr };
-    copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
-    copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
+    copyPropertiesToCachedValues (v, semitonesValue, mode);
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();

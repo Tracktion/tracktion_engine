@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -45,17 +45,18 @@ public:
 
     /** Destructor. */
     ~PluginNode() override;
-    
+
     //==============================================================================
     Plugin& getPlugin()                                 { return *plugin; }
-    
+
     tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override   { return { input.get() }; }
     bool isReadyToProcess() override                    { return input->hasProcessed(); }
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     void prefetchBlock (juce::Range<int64_t>) override;
+    void preProcess (choc::buffer::FrameCount, juce::Range<int64_t>) override;
     void process (ProcessContext&) override;
-    
+
 private:
     //==============================================================================
     std::unique_ptr<Node> input;
@@ -64,7 +65,7 @@ private:
     const TrackMuteState* trackMuteState = nullptr;
     tracktion::graph::PlayHeadState& playHeadState;
     bool isRendering = false;
-    
+
     bool isInitialised = false;
     double sampleRate = 44100.0;
     int latencyNumSamples = 0, maxNumChannels = -1;
@@ -72,13 +73,15 @@ private:
     int subBlockSizeToUse = -1;
     bool balanceLatency = true, canProcessBypassed = false;
     TimeDuration automationAdjustmentTime;
-    
+
     std::shared_ptr<tracktion::graph::LatencyProcessor> latencyProcessor;
+    std::optional<NodeProperties> cachedNodeProperties;
+    bool isPrepared = false, canUseSourceBuffers = false;
 
     //==============================================================================
     void initialisePlugin (double sampleRateToUse, int blockSizeToUse);
-    PluginRenderContext getPluginRenderContext (TimePosition, juce::AudioBuffer<float>&);
-    void replaceLatencyProcessorIfPossible (Node*);
+    PluginRenderContext getPluginRenderContext (TimeRange, juce::AudioBuffer<float>&);
+    void replaceLatencyProcessorIfPossible (NodeGraph*);
 };
 
 }} // namespace tracktion { inline namespace engine

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -19,7 +19,7 @@
 
   ID:               tracktion_core
   vendor:           Tracktion Corporation
-  version:          1.0.0
+  version:          3.0.0
   name:             The Tracktion core object types
   description:      Classes for creating and processing time based applications
   website:          http://www.tracktion.com
@@ -37,11 +37,26 @@
 
 //==============================================================================
 //==============================================================================
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
 
 //==============================================================================
+#include "tracktion_TestConfig.h"
+
 #include "audio/tracktion_AudioReader.h"
 
+#include "threads/tracktion_MultipleWriterSeqLock.h"
+
+#include "utilities/tracktion_AlgorithmAdapters.h"
+#include "utilities/tracktion_CPU.h"
 #include "utilities/tracktion_Hash.h"
+#include "utilities/tracktion_Maths.h"
 #include "utilities/tracktion_Tempo.h"
 #include "utilities/tracktion_Time.h"
 #include "utilities/tracktion_TimeRange.h"
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
+#endif

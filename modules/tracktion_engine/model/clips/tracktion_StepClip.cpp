@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -49,14 +49,20 @@ struct StepClip::ChannelList  : public ValueTreeObjectList<StepClip::Channel>
 };
 
 //==============================================================================
-StepClip::StepClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTrack)
-    : Clip (v, targetTrack, id, Type::step)
+StepClip::StepClip (const juce::ValueTree& v, EditItemID id, ClipOwner& targetParent)
+    : Clip (v, targetParent, id, Type::step)
 {
     auto um = getUndoManager();
-    channelList.reset (new ChannelList (*this, state.getOrCreateChildWithName (IDs::CHANNELS, um)));
+    channelList = std::make_unique<ChannelList> (*this, state.getOrCreateChildWithName (IDs::CHANNELS, um));
     repeatSequence.referTo (state, IDs::repeatSequence, um);
     level->dbGain.referTo (state, IDs::volDb, um, 0.0f);
     level->mute.referTo (state, IDs::mute, um, false);
+
+    loopStartBeats.referTo (state, IDs::loopStartBeats, um, 0_bp);
+    loopLengthBeats.referTo (state, IDs::loopLengthBeats, um, 0_bd);
+    originalLength.referTo (state, IDs::originalLength, um, 0_bd);
+
+    useClipLaunchQuantisation.referTo (state, IDs::useClipLaunchQuantisation, um);
 
     if (getChannels().isEmpty())
     {
@@ -199,9 +205,9 @@ void StepClip::valueTreeChildOrderChanged (juce::ValueTree& p, int o, int n)
 }
 
 //==============================================================================
-bool StepClip::canGoOnTrack (Track& t)
+bool StepClip::canBeAddedTo (ClipOwner& co)
 {
-    return t.canContainMIDI();
+    return canContainMIDI (co);
 }
 
 juce::String StepClip::getSelectableDescription()
@@ -352,12 +358,12 @@ void StepClip::generateMidiSequenceForChannels (juce::MidiMessageSequence& resul
                     jassert (gate > 0.0);
 
                     auto start  = std::max (clipStartBeat, startBeat);
-                    auto end    = std::min (clipEndBeat - BeatDuration::fromBeats (0.0001), beatEnd);
+                    auto end    = std::min (clipEndBeat - 0.0001_bd, beatEnd);
 
                     double eventStart = start.inBeats();
                     double eventEnd = end.inBeats();
 
-                    if (end > (start + BeatDuration::fromBeats (0.0001)))
+                    if (end > (start + 0.0001_bd))
                     {
                         auto& c = *getChannels().getUnchecked (f);
 
@@ -441,6 +447,49 @@ void StepClip::generateMidiSequence (juce::MidiMessageSequence& result,
 
     result.sort();
     result.updateMatchedPairs();
+}
+
+juce::MidiMessageSequence StepClip::generateMidiSequence (MidiList::TimeBase timeBase, PatternInstance* instance)
+{
+    if (instance != nullptr && ! patternInstanceList.contains (instance))
+    {
+        jassertfalse;
+        return {};
+    }
+
+    juce::MidiMessageSequence result;
+    auto& tempoSequence = edit.tempoSequence;
+    const auto pos = getPosition();
+    const auto clipBeatRange = tempoSequence.toBeats (pos.time);
+
+    const bool repeatSeq = repeatSequence;
+    const auto starts = getBeatTimesOfPatternStarts();
+
+    for (int i = 0; i < starts.size(); ++i)
+    {
+        if (auto p = getPatternInstance (i, repeatSeq))
+        {
+            if (instance != nullptr && p.get() != instance)
+                continue;
+
+            auto startBeat = starts.getUnchecked (i);
+
+            generateMidiSequenceForChannels (result, timeBase == MidiList::TimeBase::seconds,
+                                             p->getPattern(), startBeat,
+                                             clipBeatRange.getStart(), clipBeatRange.getEnd(), tempoSequence);
+
+            if (instance != nullptr && timeBase != MidiList::TimeBase::beatsRaw)
+            {
+                result.addTimeToMessages (-tempoSequence.toTime (clipBeatRange.getStart() + toDuration (startBeat)).inSeconds());
+                break;
+            }
+        }
+    }
+
+    result.sort();
+    result.updateMatchedPairs();
+
+    return result;
 }
 
 //==============================================================================
@@ -670,6 +719,124 @@ void StepClip::setCell (int patternIndex, int channelIndex,
         if (juce::isPositiveAndBelow (noteIndex, p.getNumNotes()))
             p.setNote (channelIndex, noteIndex, value);
     }
+}
+
+//==============================================================================
+ClipPosition StepClip::getPosition() const
+{
+    const auto s = getClipSlot() != nullptr ? 0_tp : clipStart.get();
+    return { { s, s + length.get() }, offset.get() };
+}
+
+bool StepClip::canLoop() const
+{
+    return getClipSlot() != nullptr;
+}
+
+void StepClip::setNumberOfLoops (int num)
+{
+    if (! canLoop())
+        num = 0;
+
+    if (! isLooping())
+        originalLength = getLengthInBeats();
+
+    auto& ts = edit.tempoSequence;
+    auto pos = getPosition();
+    auto newStartBeat = BeatPosition::fromBeats (pos.getOffset().inSeconds() * ts.getBeatsPerSecondAt (pos.getStart()));
+    setLoopRangeBeats ({ newStartBeat, newStartBeat + originalLength.get() });
+
+    auto endTime = ts.toTime (getStartBeat() + originalLength.get() * num);
+    setLength (endTime - pos.getStart(), true);
+    setOffset ({});
+}
+
+void StepClip::disableLooping()
+{
+    if (! isLooping())
+        return;
+
+    auto pos = getPosition();
+
+    auto offsetB = loopStartBeats.get() + getOffsetInBeats();
+    auto lengthB = getLoopLengthBeats();
+
+    pos.time = pos.time.withEnd (std::min (getTimeOfRelativeBeat (lengthB), pos.getEnd()));
+    pos.offset = getTimeOfRelativeBeat (toDuration (offsetB)) - pos.getStart(); // TODO: is this correct? Needs testing..
+
+    setLoopRange ({});
+    setPosition (pos);
+}
+
+void StepClip::setLoopRangeBeats (BeatRange newRangeBeats)
+{
+    if (! canLoop())
+        return;
+
+    jassert (newRangeBeats.getStart() >= BeatPosition());
+
+    auto newStartBeat  = std::max (BeatPosition(), newRangeBeats.getStart());
+    auto newLengthBeat = std::max (BeatDuration(), newRangeBeats.getLength());
+
+    if (loopStartBeats != newStartBeat || loopLengthBeats != newLengthBeat)
+    {
+        Clip::setSpeedRatio (1.0);
+
+        if (! isLooping())
+            originalLength = getLengthInBeats();
+
+        loopStartBeats  = newStartBeat;
+        loopLengthBeats = newLengthBeat;
+    }
+}
+
+void StepClip::setLoopRange (TimeRange newRange)
+{
+    if (! canLoop())
+        return;
+
+    jassert (newRange.getStart() >= TimePosition());
+
+    auto& ts = edit.tempoSequence;
+    auto pos = getPosition();
+    auto newStartBeat = BeatPosition::fromBeats (newRange.getStart().inSeconds() * ts.getBeatsPerSecondAt (pos.getStart()));
+    auto newLengthBeats = ts.toBeats (pos.getStart() + newRange.getLength()) - ts.toBeats (pos.getStart());
+
+    setLoopRangeBeats ({ newStartBeat, newStartBeat + newLengthBeats });
+}
+
+TimePosition StepClip::getLoopStart() const
+{
+    return TimePosition::fromSeconds (loopStartBeats.get().inBeats() / edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart()));
+}
+
+TimeDuration StepClip::getLoopLength() const
+{
+    return TimeDuration::fromSeconds (loopLengthBeats.get().inBeats() / edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart()));
+}
+
+std::shared_ptr<LaunchHandle> StepClip::getLaunchHandle()
+{
+    if (! launchHandle)
+        launchHandle = std::make_shared<LaunchHandle>();
+
+    return launchHandle;
+}
+
+LaunchQuantisation* StepClip::getLaunchQuantisation()
+{
+    if (! launchQuantisation)
+        launchQuantisation = std::make_unique<LaunchQuantisation> (state, edit);
+
+    return launchQuantisation.get();
+}
+
+FollowActions* StepClip::getFollowActions()
+{
+    if (! followActions)
+        followActions = std::make_unique<FollowActions> (state.getOrCreateChildWithName (IDs::FOLLOWACTIONS, getUndoManager()), getUndoManager());
+
+    return followActions.get();
 }
 
 }} // namespace tracktion { inline namespace engine

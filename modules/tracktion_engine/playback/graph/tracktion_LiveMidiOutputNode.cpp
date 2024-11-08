@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -41,7 +41,11 @@ LiveMidiOutputNode::LiveMidiOutputNode (Clip& c, std::unique_ptr<tracktion::grap
 tracktion::graph::NodeProperties LiveMidiOutputNode::getNodeProperties()
 {
     auto props = input->getNodeProperties();
-    props.nodeID = 0;
+
+    constexpr size_t magicHash = 4059895422156500610; // "LiveMidiOutputNode"
+
+    if (props.nodeID != 0)
+        hash_combine (props.nodeID, magicHash);
 
     return props;
 }
@@ -67,7 +71,7 @@ void LiveMidiOutputNode::process (ProcessContext& pc)
     jassert (sourceBuffers.audio.getSize() == pc.buffers.audio.getSize());
 
     // If the source only outputs to this node, we can steal its data
-    if (numOutputNodes == 1)
+    if (input->numOutputNodes == 1)
         destMidiBlock.swapWith (sourceBuffers.midi);
     else
         destMidiBlock.copyFrom (sourceBuffers.midi);
@@ -75,16 +79,17 @@ void LiveMidiOutputNode::process (ProcessContext& pc)
     setAudioOutput (input.get(), sourceBuffers.audio);
 
     bool needToUpdate = false;
-    
+
+    if (sourceBuffers.midi.isNotEmpty())
     {
-        const juce::ScopedLock sl (lock);
+        const std::scoped_lock sl (mutex);
 
         for (auto& m : sourceBuffers.midi)
             pendingMessages.add (m);
 
         needToUpdate = ! pendingMessages.isEmpty();
     }
-    
+
     if (needToUpdate)
         triggerAsyncUpdate();
 }
@@ -93,7 +98,7 @@ void LiveMidiOutputNode::process (ProcessContext& pc)
 void LiveMidiOutputNode::handleAsyncUpdate()
 {
     {
-        const juce::ScopedLock sl (lock);
+        const std::scoped_lock sl (mutex);
         pendingMessages.swapWith (dispatchingMessages);
     }
 

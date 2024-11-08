@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -113,13 +113,19 @@ public:
         if (juce::JUCEApplicationBase::getInstance() != nullptr)
             juce::MouseCursor::showWaitCursor();
     }
-    
+
     /** Hides the wait cursor. */
     ~ScopedWaitCursor()
     {
         if (juce::JUCEApplicationBase::getInstance() != nullptr)
             juce::MouseCursor::hideWaitCursor();
     }
+};
+
+enum class AuxPosition
+{
+    byBus,
+    byPosition,
 };
 
 }} // namespace tracktion { inline namespace engine

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -55,7 +55,7 @@ struct WarpMarker
 /**
     A WarpTimeManager contains a list of WarpMarkers and some source material and
     maps times from a linear "view" time to a "wapred" source time.
-    
+
     Once created this can be used to generate an AudioSegmentList to play the
     source material back warped.
 */
@@ -73,17 +73,17 @@ public:
         The WarpMarker state will get added to the parentTree as a child.
     */
     WarpTimeManager (Edit&, const AudioFile& sourceFile, juce::ValueTree parentTree);
-    
+
     /** Destructor. */
     ~WarpTimeManager() override;
 
     //==============================================================================
     /** Sets a source fiel to warp. */
     void setSourceFile (const AudioFile&);
-    
+
     /** Returns the current source file. */
     AudioFile getSourceFile() const;
-    
+
     /** Returns the length of the source file. */
     TimeDuration getSourceLength() const;
 
@@ -103,13 +103,13 @@ public:
 
     /** Inserts a new WarpMarker. */
     int insertMarker (WarpMarker);
-    
+
     /** Removes a WarpMarker at a given index. */
     void removeMarker (int index);
-    
+
     /** Removes all WarpMarkers. */
     void removeAllMarkers();
-    
+
     /** Moves a WarpMarker at a given index to a new time. */
     TimePosition moveMarker (int index, TimePosition newWarpTime);
 
@@ -121,7 +121,7 @@ public:
     //==============================================================================
     /** Time region can be longer than the clip and the returned array will loop over the clip to match the length */
     juce::Array<TimeRange> getWarpTimeRegions (TimeRange overallTimeRegion) const;
-    
+
     /** Returns an array of transient times that have been detected from the source file.
         The bool here will be false if the detection job hasn't finished running yet so call it again peridically
         until it is true.
@@ -220,7 +220,7 @@ class WarpTimeFactory
 public:
     /** Constructs the WarpTimeFactory. */
     WarpTimeFactory() = default;
-    
+
     /** Destructor. */
     ~WarpTimeFactory()  { jassert (warpTimeManagers.isEmpty()); }
 

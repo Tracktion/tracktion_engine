@@ -1,11 +1,11 @@
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -51,10 +51,9 @@ struct ElementTypeAndOffset;
 #endif
 
 //==============================================================================
-/** An exception object which is thrown by the Type, Value and ValueView classes when various
-    runtime checks fail.
-    @see Type, Value, ValueView
-*/
+/// An exception object which is thrown by the Type, Value and ValueView classes when various
+/// runtime checks fail.
+/// @see Type, Value, ValueView
 struct Error  : public std::exception
 {
     Error (const char* desc) : description (desc) {}
@@ -64,24 +63,33 @@ struct Error  : public std::exception
 };
 
 
-/** Throws an error exception.
-    Note that the message string is taken as a raw pointer and not copied, so must be a string literal.
-    This is used by the Type, Value and ValueView classes.
-    @see Type, Value, ValueView
-*/
+/// Throws an error exception.
+/// Note that the message string is taken as a raw pointer and not copied, so must be a string literal.
+/// This is used by the Type, Value and ValueView classes.
+/// @see Type, Value, ValueView
 [[noreturn]] static void throwError (const char* errorMessage)     { throw Error (errorMessage); }
 
-/** Throws an Error with the given message if the condition argument is false.
-    Note that the message string is taken as a raw pointer and not copied, so must be a string literal.
-    This is used by the Type, Value and ValueView classes.
-*/
+/// Throws an Error with the given message if the condition argument is false.
+/// Note that the message string is taken as a raw pointer and not copied, so must be a string literal.
+/// This is used by the Type, Value and ValueView classes.
 static void check (bool condition, const char* errorMessage)       { if (! condition) throwError (errorMessage); }
 
-/** Used by some deserialisation methods in Type, Value and StringDictionary */
+/// Used by some deserialisation methods in Type, Value and StringDictionary
 struct InputData
 {
     const uint8_t* start;
     const uint8_t* end;
+};
+
+/// This helper class holds a chunk of data that is a serialised Value or ValueView, and has
+/// a handy method to turn it back into a Value object.
+struct SerialisedData
+{
+    std::vector<uint8_t> data;
+
+    Value deserialise() const;
+    InputData getInputData() const;
+    void write (const void*, size_t);
 };
 
 /** A custom allocator class which can be used to replace the normal heap allocator
@@ -199,6 +207,7 @@ public:
     bool operator!= (const Type&) const;
 
     //==============================================================================
+    static Type createVoid()            { return Type (MainType::void_); }
     static Type createInt32()           { return Type (MainType::int32); }
     static Type createInt64()           { return Type (MainType::int64); }
     static Type createFloat32()         { return Type (MainType::float32); }
@@ -424,6 +433,12 @@ public:
 */
 struct SimpleStringDictionary  : public StringDictionary
 {
+    SimpleStringDictionary() = default;
+    SimpleStringDictionary (const SimpleStringDictionary& other) : strings (other.strings) {}
+    SimpleStringDictionary (SimpleStringDictionary&& other)      : strings (std::move (other.strings)) {}
+    SimpleStringDictionary& operator= (const SimpleStringDictionary& other) { strings = other.strings; return *this; }
+    SimpleStringDictionary& operator= (SimpleStringDictionary&& other)      { strings = std::move (other.strings); return *this; }
+
     Handle getHandleForString (std::string_view) override;
     std::string_view getStringForHandle (Handle handle) const override;
 
@@ -509,6 +524,11 @@ public:
     /// returns the default value provided instead of throwing an Error.
     template <typename TargetType> TargetType getWithDefault (TargetType defaultValue) const;
 
+    /// A handy way to convert this value as a string where possible, or to return an empty
+    /// string (without throwing any errors) if not possible. The function is basically the
+    /// same as calling getWithDefault<std::string> ({})
+    std::string toString() const;
+
     /// Attempts to write a new value to the memory pointed to by this view, as long as the type
     /// provided exactly matches the value's type.
     template <typename PrimitiveType> void set (PrimitiveType newValue);
@@ -575,6 +595,14 @@ public:
     void visitObjectMembers (Visitor&&) const;
 
     //==============================================================================
+    /// Performs a comparison between two values, where only a bit-for-bit match is
+    /// considered to be true.
+    bool operator== (const ValueView&) const;
+    /// Performs a comparison between two values, where only a bit-for-bit match is
+    /// considered to be true.
+    bool operator!= (const ValueView&) const;
+
+    //==============================================================================
     /// Gets a pointer to the string dictionary that the view is using, or nullptr
     /// if it doesn't have one.
     StringDictionary* getDictionary() const     { return stringDictionary; }
@@ -606,6 +634,11 @@ public:
     template <typename OutputStream>
     void serialise (OutputStream&) const;
 
+    /// Returns an object containing a serialised representation of this value. This is a helper
+    /// function to make it easier to call serialise() without needing to use your own output
+    /// stream class.
+    SerialisedData serialise() const;
+
     /// Recreates a temporary ValueView from serialised data that was created by the
     /// ValueView::serialise() method.
     /// If a ValueView is successfully deserialised from the data, the handler functor will be
@@ -629,6 +662,7 @@ private:
     template <typename TargetType> TargetType readContentAs() const;
     template <typename TargetType> TargetType castToType (TargetType*) const;
     template <typename PrimitiveType> void setUnchecked (PrimitiveType);
+    void updateStringHandles (StringDictionary&, StringDictionary&);
 
     ValueView operator[] (const void*) const = delete;
     ValueView operator[] (bool) const = delete;
@@ -769,6 +803,11 @@ public:
     /// returns the default value provided instead of throwing an Error.
     template <typename TargetType> TargetType getWithDefault (TargetType defaultValue) const;
 
+    /// A handy way to convert this value as a string where possible, or to return an empty
+    /// string (without throwing any errors) if not possible. The function is basically the
+    /// same as calling getWithDefault<std::string> ({})
+    std::string toString() const;
+
     /// If this object is a vector, array or object, this returns the number of items it contains; otherwise
     /// it will throw an Error exception.
     uint32_t size() const                                               { return value.size(); }
@@ -789,6 +828,15 @@ public:
     /// will return a view onto a range of its elements.
     /// Throws an error exception if the object is not a vector or the range is invalid.
     ValueView getElementRange (uint32_t startIndex, uint32_t length) const      { return value.getElementRange (startIndex, length); }
+
+    //==============================================================================
+    /// Performs a comparison between two values, where only a bit-for-bit match is
+    /// considered to be true.
+    bool operator== (const ValueView& other) const                      { return value == other; }
+
+    /// Performs a comparison between two values, where only a bit-for-bit match is
+    /// considered to be true.
+    bool operator!= (const ValueView& other) const                      { return value != other; }
 
     //==============================================================================
     /// Iterating a Value is only valid for an array, vector or object.
@@ -861,6 +909,11 @@ public:
     template <typename OutputStream>
     void serialise (OutputStream&) const;
 
+    /// Returns an object containing a serialised representation of this value. This is a helper
+    /// function to make it easier to call serialise() without needing to use your own output
+    /// stream class.
+    SerialisedData serialise() const;
+
     /// Recreates a Value from serialised data that was created by the Value::serialise() method.
     /// Any errors while reading the data will cause an Error exception to be thrown.
     /// The InputData object will be left pointing to any remaining data after the value has been read.
@@ -929,6 +982,11 @@ static Value createArray (uint32_t numElements, const GetElementValue& getValueF
 /// location.
 template <typename GetElementValue>
 static Value createArray (uint32_t numArrayElements, uint32_t numVectorElements, const GetElementValue& getValueAt);
+
+/// Creates an array from an iterable container such as a std::vector. The container
+/// must contain either Values, or primitive elements which can be turned into Values.
+template <typename ContainerType>
+static Value createArray (const ContainerType&);
 
 /// Allocates a copy of a packed array of vector primitives.
 template <typename ElementType>
@@ -1302,10 +1360,17 @@ struct Type::ComplexArray
         {
             auto elementSize = g.elementType.getValueDataSize();
 
-            for (uint32_t i = 0; i < g.repetitions; ++i)
+            if (g.elementType.usesStrings())
             {
-                g.elementType.visitStringHandles (offset, visitor);
-                offset += elementSize;
+                for (uint32_t i = 0; i < g.repetitions; ++i)
+                {
+                    g.elementType.visitStringHandles (offset, visitor);
+                    offset += elementSize;
+                }
+            }
+            else
+            {
+                offset += elementSize * g.repetitions;
             }
         }
     }
@@ -1532,6 +1597,21 @@ inline void Type::modifyNumElements (uint32_t newNumElements)
         content.vector.numElements = newNumElements;
     else if (isType (MainType::primitiveArray))
         content.primitiveArray.numElements = newNumElements;
+    else if (isType (MainType::complexArray))
+    {
+        uint32_t previousElements = 0;
+
+        for (auto& group : content.complexArray->groups)
+        {
+            if (previousElements + group.repetitions >= newNumElements)
+            {
+                group.repetitions = newNumElements - previousElements;
+                break;
+            }
+
+            previousElements += group.repetitions;
+        }
+    }
     else
         throwError ("This type is not a uniform array or vector");
 }
@@ -1578,15 +1658,17 @@ inline int Type::getObjectMemberIndex (std::string_view name) const
 template <typename PrimitiveType>
 inline constexpr Type::MainType Type::selectMainType()
 {
-    if constexpr (std::is_same<const PrimitiveType, const int32_t>::value)       return MainType::int32;
-    if constexpr (std::is_same<const PrimitiveType, const int64_t>::value)       return MainType::int64;
-    if constexpr (std::is_same<const PrimitiveType, const float>::value)         return MainType::float32;
-    if constexpr (std::is_same<const PrimitiveType, const double>::value)        return MainType::float64;
-    if constexpr (std::is_same<const PrimitiveType, const bool>::value)          return MainType::boolean;
-    if constexpr (std::is_same<const PrimitiveType, const char* const>::value)   return MainType::string;
-    if constexpr (std::is_same<const PrimitiveType, const std::string>::value)   return MainType::string;
+    Type::MainType result = MainType::void_;
 
-    return MainType::void_;
+    if constexpr (std::is_same<const PrimitiveType, const int32_t>::value)          result = MainType::int32;
+    else if constexpr (std::is_same<const PrimitiveType, const int64_t>::value)     result = MainType::int64;
+    else if constexpr (std::is_same<const PrimitiveType, const float>::value)       result = MainType::float32;
+    else if constexpr (std::is_same<const PrimitiveType, const double>::value)      result = MainType::float64;
+    else if constexpr (std::is_same<const PrimitiveType, const bool>::value)        result = MainType::boolean;
+    else if constexpr (std::is_same<const PrimitiveType, const char* const>::value) result = MainType::string;
+    else if constexpr (std::is_same<const PrimitiveType, const std::string>::value) result = MainType::string;
+
+    return result;
 }
 
 template <typename PrimitiveType>
@@ -1664,8 +1746,6 @@ Type Type::createArrayOfVectors (uint32_t numArrayElements, uint32_t numVectorEl
 
 inline void Type::addArrayElements (Type elementType, uint32_t numElementsToAdd)
 {
-    check (! elementType.isVoid(), "Element type cannot be void");
-
     if (isType (MainType::primitiveArray))
     {
         if (elementType == content.primitiveArray.getElementType())
@@ -2175,6 +2255,8 @@ template <typename TargetType> TargetType ValueView::getWithDefault (TargetType 
     return castToType<TargetType> (std::addressof (defaultValue));
 }
 
+inline std::string ValueView::toString() const  { return getWithDefault<std::string> ({}); }
+
 template <typename PrimitiveType> void ValueView::setUnchecked (PrimitiveType v)
 {
     static_assert (isPrimitiveType<PrimitiveType>() || isStringType<PrimitiveType>(),
@@ -2289,6 +2371,7 @@ void ValueView::visitObjectMembers (Visitor&& visit) const
 
 struct ValueView::Iterator
 {
+    Iterator (const ValueView& v) : value (v), numElements (v.size()) {}
     Iterator (const Iterator&) = default;
     Iterator& operator= (const Iterator&) = default;
 
@@ -2299,10 +2382,29 @@ struct ValueView::Iterator
     bool operator!= (EndIterator) const     { return index != numElements; }
 
     ValueView value;
-    uint32_t index, numElements;
+    uint32_t index = 0, numElements;
 };
 
-inline ValueView::Iterator ValueView::begin() const   { return { *this, 0, size() }; }
+inline ValueView::Iterator ValueView::begin() const   { return ValueView::Iterator (*this); }
+
+//==============================================================================
+inline bool ValueView::operator== (const ValueView& other) const
+{
+    return type == other.type
+             && (isVoid() || std::memcmp (getRawData(), other.getRawData(), type.getValueDataSize()) == 0);
+}
+
+inline bool ValueView::operator!= (const ValueView& other) const { return ! operator== (other); }
+
+//==============================================================================
+inline Value SerialisedData::deserialise() const        { auto i = getInputData(); return Value::deserialise (i); }
+inline InputData SerialisedData::getInputData() const   { return { data.data(), data.data() + data.size() }; }
+
+inline void SerialisedData::write (const void* d, size_t num)
+{
+    auto src = static_cast<const uint8_t*> (d);
+    data.insert (data.end(), src, src + num);
+}
 
 //==============================================================================
 template <typename OutputStream>
@@ -2369,6 +2471,13 @@ void ValueView::serialise (OutputStream& output) const
     }
 }
 
+inline SerialisedData ValueView::serialise() const
+{
+    SerialisedData result;
+    serialise (result);
+    return result;
+}
+
 template <typename Handler>
 void ValueView::deserialise (InputData& input, Handler&& handleResult, Allocator* allocator)
 {
@@ -2409,50 +2518,28 @@ void ValueView::deserialise (InputData& input, Handler&& handleResult, Allocator
 }
 
 //==============================================================================
+inline void ValueView::updateStringHandles (StringDictionary& oldDic, StringDictionary& newDic)
+{
+    if (type.isType (Type::MainType::string, Type::MainType::object, Type::MainType::primitiveArray, Type::MainType::complexArray))
+    {
+        type.visitStringHandles (0, [&oldDic, &newDic, d = this->data] (size_t offset)
+        {
+            auto oldHandle = StringDictionary::Handle { readUnaligned<decltype(StringDictionary::Handle::handle)> (d + offset) };
+            writeUnaligned (d + offset, newDic.getHandleForString (oldDic.getStringForHandle (oldHandle)).handle);
+        });
+    }
+}
+
 inline void ValueView::setDictionary (StringDictionary* newDictionary)
 {
-    if (stringDictionary == newDictionary)
-        return;
-
-    auto oldDictionary = stringDictionary;
-    stringDictionary = newDictionary;
-
-    if (stringDictionary == nullptr || oldDictionary == nullptr || ! type.usesStrings())
-        return;
-
-    struct Importer
+    if (stringDictionary != newDictionary)
     {
-        const StringDictionary& oldDic;
+        auto oldDictionary = stringDictionary;
+        stringDictionary = newDictionary;
 
-        void importStrings (ValueView& v)
-        {
-            if (v.getType().usesStrings())
-            {
-                if (v.isString())
-                {
-                    auto oldHandle = StringDictionary::Handle { v.readContentAs<decltype (StringDictionary::Handle::handle)>() };
-                    v.setUnchecked (v.stringDictionary->getHandleForString (oldDic.getStringForHandle (oldHandle)));
-                }
-                else if (v.isArray())
-                {
-                    for (auto element : v)
-                        importStrings (element);
-                }
-                else if (v.isObject())
-                {
-                    auto numMembers = v.size();
-
-                    for (uint32_t i = 0; i < numMembers; ++i)
-                    {
-                        auto member = v[i];
-                        importStrings (member);
-                    }
-                }
-            }
-        }
-    };
-
-    Importer { *oldDictionary }.importStrings (*this);
+        if (oldDictionary != nullptr && newDictionary != nullptr)
+            updateStringHandles (*oldDictionary, *newDictionary);
+    }
 }
 
 //==============================================================================
@@ -2545,16 +2632,15 @@ inline Value& Value::operator= (const ValueView& source)
     packedData.resize (source.getType().getValueDataSize());
     value.type = source.type;
     value.data = packedData.data();
-    std::memcpy (value.data, source.getRawData(), getRawDataSize());
+
+    auto dataSize = getRawDataSize();
+    if (dataSize > 0)
+        std::memcpy (value.data, source.getRawData(), dataSize);
+
     dictionary.clear();
 
     if (auto sourceDictionary = source.getDictionary())
-    {
-        // this sequence forces an update of the string handles if needed
-        value.setDictionary (nullptr); // reset the dictionary pointer: doesn't change any handles.
-        value.setDictionary (sourceDictionary); // changing dictionary from nullptr, which also does nothing.
-        value.setDictionary (std::addressof (dictionary)); // now will update from the source dictionary to our own
-    }
+        value.updateStringHandles (*sourceDictionary, dictionary);
 
     return *this;
 }
@@ -2593,13 +2679,13 @@ inline Value createBool      (bool v)              { return Value (v); }
 inline Value createEmptyArray()                    { return Value (Type::createEmptyArray()); }
 
 template <typename ElementType>
-inline Value createVector (const ElementType* source, uint32_t numElements)
+Value createVector (const ElementType* source, uint32_t numElements)
 {
     return Value (Type::createVector<ElementType> (numElements), source, getTypeSize<ElementType>() * numElements);
 }
 
 template <typename GetElementValue>
-inline Value createVector (uint32_t numElements, const GetElementValue& getValueForIndex)
+Value createVector (uint32_t numElements, const GetElementValue& getValueForIndex)
 {
     using ElementType = decltype (getValueForIndex (0));
     static_assert (isPrimitiveType<ElementType>(), "The template type needs to be one of the supported primitive types");
@@ -2616,10 +2702,10 @@ inline Value createVector (uint32_t numElements, const GetElementValue& getValue
 }
 
 template <typename GetElementValue>
-inline Value createArray (uint32_t numElements, const GetElementValue& getValueForIndex)
+Value createArray (uint32_t numElements, const GetElementValue& getValueForIndex)
 {
     using ElementType = decltype (getValueForIndex (0));
-    static_assert (isPrimitiveType<ElementType>() || isValueType<ElementType>(),
+    static_assert (isPrimitiveType<ElementType>() || isValueType<ElementType>() || isStringType<ElementType>(),
                    "The functor needs to return either a supported primitive type, or a Value");
 
     if constexpr (isPrimitiveType<ElementType>())
@@ -2647,9 +2733,9 @@ inline Value createArray (uint32_t numElements, const GetElementValue& getValueF
 }
 
 template <typename GetElementValue>
-inline Value createArray (uint32_t numArrayElements, uint32_t numVectorElements, const GetElementValue& getValueAt)
+Value createArray (uint32_t numArrayElements, uint32_t numVectorElements, const GetElementValue& getValueAt)
 {
-    using ElementType = decltype (getValueAt (0, 0));
+    using ElementType = typename std::remove_const<typename std::remove_reference<decltype (getValueAt (0, 0))>::type>::type;
     static_assert (isPrimitiveType<ElementType>(), "The functor needs to return a supported primitive type");
 
     Value v (Type::createArray (Type::createVector<ElementType> (numVectorElements), numArrayElements));
@@ -2665,6 +2751,17 @@ inline Value createArray (uint32_t numArrayElements, uint32_t numVectorElements,
     }
 
     return v;
+}
+
+template <typename ContainerType>
+Value createArray (const ContainerType& container)
+{
+    using ElementType = typename std::remove_const<typename std::remove_reference<decltype (container[0])>::type>::type;
+    static_assert (isPrimitiveType<ElementType>() || isValueType<ElementType>() || isStringType<ElementType>(),
+                   "The container provided must have elements which can be converted to a Value");
+
+    return createArray (static_cast<uint32_t> (container.size()),
+                        [&] (uint32_t i) { return container[i]; });
 }
 
 template <typename ElementType>
@@ -2814,6 +2911,7 @@ void Value::setMember (std::string_view name, MemberType v)
 
 template <typename TargetType> TargetType Value::get() const                           { return value.get<TargetType>(); }
 template <typename TargetType> TargetType Value::getWithDefault (TargetType d) const   { return value.getWithDefault<TargetType> (std::forward<TargetType> (d)); }
+inline std::string Value::toString() const                                             { return value.toString(); }
 
 inline ValueView::Iterator Value::begin() const    { return value.begin(); }
 inline ValueView::EndIterator Value::end() const   { return {}; }
@@ -2833,6 +2931,13 @@ template <typename OutputStream> void Value::serialise (OutputStream& o) const
             o.write (dictionary.strings.data(), stringDataSize);
         }
     }
+}
+
+inline SerialisedData Value::serialise() const
+{
+    SerialisedData result;
+    serialise (result);
+    return result;
 }
 
 inline Value Value::deserialise (InputData& input)
@@ -3113,19 +3218,16 @@ inline SimpleStringDictionary::Handle SimpleStringDictionary::getHandleForString
         std::string_view sv (strings.data() + i);
 
         if (text == sv)
-            return { static_cast<decltype (Handle::handle)> (i + 1) };
+            return { static_cast<decltype(Handle::handle)> (i + 1) };
 
         i += sv.length();
     }
 
-    auto result = SimpleStringDictionary::Handle { static_cast<decltype (Handle::handle)> (strings.size() + 1) };
+    auto newHandle = static_cast<decltype(Handle::handle)> (strings.size() + 1);
     strings.reserve (strings.size() + text.length() + 1);
-
-    for (auto& c : text)
-        strings.push_back (c);
-
+    strings.insert (strings.end(), text.begin(), text.end());
     strings.push_back (0);
-    return result;
+    return { newHandle };
 }
 
 inline std::string_view SimpleStringDictionary::getStringForHandle (Handle handle) const

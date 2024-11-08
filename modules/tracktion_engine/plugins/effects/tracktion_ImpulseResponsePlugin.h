@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -63,13 +63,11 @@ public:
 
     //==============================================================================
     /** @internal */
-    juce::String getName() override;
+    juce::String getName() const override;
     /** @internal */
     juce::String getShortName (int /*suggestedLength*/) override;
     /** @internal */
     juce::String getPluginType() override;
-    /** @internal */
-    bool needsConstantBufferSize() override;
     /** @internal */
     juce::String getSelectableDescription() override;
 
@@ -106,13 +104,13 @@ private:
                               juce::dsp::Gain<float>> processorChain;
     juce::SmoothedValue<float> highFreqSmoother, lowFreqSmoother, gainSmoother, wetGainSmoother, dryGainSmoother, qSmoother;
 
-    struct WetDryGain { float wet, dry; };    
+    struct WetDryGain { float wet, dry; };
     static WetDryGain getWetDryLevels (float mix)
     {
         const float dry = 1.0f - (mix * mix);
         float temp = 1.0f - mix;
         const float wet = 1.0f - (temp * temp);
-        
+
         return { wet, dry };
     }
     void loadImpulseResponseFromState();

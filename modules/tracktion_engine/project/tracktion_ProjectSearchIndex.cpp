@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -259,7 +259,7 @@ struct FalseOperation  : public SearchOperation
 };
 
 //==============================================================================
-SearchOperation* createPluralOptions (juce::String s)
+inline SearchOperation* createPluralOptions (juce::String s)
 {
     SearchOperation* c = new WordMatchOperation (s);
 
@@ -328,7 +328,7 @@ SearchOperation* createPluralOptions (juce::String s)
     return c;
 }
 
-SearchOperation* multipleWordMatch (const juce::String& s)
+inline SearchOperation* multipleWordMatch (const juce::String& s)
 {
     juce::StringArray a;
     a.addTokens (s, false);
@@ -346,7 +346,7 @@ SearchOperation* multipleWordMatch (const juce::String& s)
     return c;
 }
 
-SearchOperation* createCondition (const juce::StringArray& words, int start, int length)
+inline SearchOperation* createCondition (const juce::StringArray& words, int start, int length)
 {
     if (length == 0)
         return {};

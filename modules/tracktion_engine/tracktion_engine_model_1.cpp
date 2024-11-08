@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -13,11 +13,21 @@
 #include <future>
 #include <chrono>
 
+#include "3rd_party/magic_enum/tracktion_magic_enum.hpp"
+
 using namespace std::literals;
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
 
 #include "../../modules/tracktion_graph/tracktion_graph.h"
 #include "../../modules/tracktion_core/utilities/tracktion_Benchmark.h"
+
 #include "tracktion_engine.h"
+
+#include "../../modules/tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
 
 #include "timestretch/tracktion_TempoDetect.h"
 #include "model/automation/modifiers/tracktion_ModifierInternal.h"
@@ -27,6 +37,7 @@ using namespace std::literals;
 #include "model/edit/tracktion_Edit.cpp"
 #include "model/edit/tracktion_Edit.test.cpp"
 #include "model/edit/tracktion_EditUtilities.cpp"
+#include "model/edit/tracktion_Scene.cpp"
 #include "model/edit/tracktion_SourceFileReference.cpp"
 #include "model/clips/tracktion_Clip.cpp"
 
@@ -53,14 +64,27 @@ using namespace std::literals;
 #include "model/clips/tracktion_WaveAudioClip.cpp"
 #include "model/clips/tracktion_ChordClip.cpp"
 #include "model/clips/tracktion_EditClip.cpp"
+#include "model/clips/tracktion_FollowActions.cpp"
+#include "model/clips/tracktion_FollowActions.test.cpp"
+#include "model/clips/tracktion_LauncherClipPlaybackHandle.cpp"
+#include "model/clips/tracktion_LauncherClipPlaybackHandle.test.cpp"
+#include "model/clips/tracktion_LaunchHandle.cpp"
+#include "model/clips/tracktion_LaunchHandle.test.cpp"
 #include "model/clips/tracktion_MarkerClip.cpp"
 #include "model/clips/tracktion_CollectionClip.cpp"
+#include "model/clips/tracktion_ContainerClip.cpp"
+#include "model/clips/tracktion_ContainerClip.test.cpp"
 #include "model/clips/tracktion_MidiClip.cpp"
 #include "model/clips/tracktion_MidiClip.test.cpp"
 #include "model/clips/tracktion_StepClipChannel.cpp"
 #include "model/clips/tracktion_StepClipPattern.cpp"
 #include "model/clips/tracktion_StepClip.cpp"
 #include "model/clips/tracktion_ClipEffects.cpp"
+#include "model/clips/tracktion_ClipOwner.cpp"
 #include "model/clips/tracktion_WarpTimeManager.cpp"
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
+#endif
 
 #endif

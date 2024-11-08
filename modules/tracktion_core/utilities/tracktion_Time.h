@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -82,10 +82,10 @@ private:
 inline namespace literals
 {
 /** Literal suffix to create a TimePosition. */
-[[ nodiscard ]] constexpr TimePosition operator"" _tp (long double seconds);
+[[ nodiscard ]] constexpr TimePosition operator""_tp (long double seconds);
 
 /** Literal suffix to create a TimeDuration. */
-[[ nodiscard ]] constexpr TimePosition operator"" _tp (unsigned long long seconds);
+[[ nodiscard ]] constexpr TimePosition operator""_tp (unsigned long long seconds);
 }
 
 
@@ -148,10 +148,10 @@ private:
 inline namespace literals
 {
 /** Literal suffix to create a TimeDuration. */
-[[ nodiscard ]] constexpr TimeDuration operator"" _td (long double seconds);
+[[ nodiscard ]] constexpr TimeDuration operator""_td (long double seconds);
 
 /** Literal suffix to create a TimeDuration. */
-[[ nodiscard ]] constexpr TimeDuration operator"" _td (unsigned long long seconds);
+[[ nodiscard ]] constexpr TimeDuration operator""_td (unsigned long long seconds);
 }
 
 //==============================================================================
@@ -291,10 +291,10 @@ private:
 inline namespace literals
 {
 /** Literal suffix to create a BeatPosition. */
-[[ nodiscard ]] constexpr BeatPosition operator"" _bp (long double beats);
+[[ nodiscard ]] constexpr BeatPosition operator""_bp (long double beats);
 
 /** Literal suffix to create a BeatPosition. */
-[[ nodiscard ]] constexpr BeatPosition operator"" _bp (unsigned long long beats);
+[[ nodiscard ]] constexpr BeatPosition operator""_bp (unsigned long long beats);
 }
 
 //==============================================================================
@@ -343,10 +343,10 @@ private:
 inline namespace literals
 {
 /** Literal suffix to create a BeatDuration. */
-[[ nodiscard ]] constexpr BeatDuration operator"" _bd (long double beats);
+[[ nodiscard ]] constexpr BeatDuration operator""_bd (long double beats);
 
 /** Literal suffix to create a BeatDuration. */
-[[ nodiscard ]] constexpr BeatDuration operator"" _bd (unsigned long long beats);
+[[ nodiscard ]] constexpr BeatDuration operator""_bd (unsigned long long beats);
 }
 
 //==============================================================================
@@ -488,12 +488,12 @@ inline TimePosition abs (TimePosition t)
 
 inline namespace literals
 {
-inline constexpr TimePosition operator"" _tp (long double seconds)
+inline constexpr TimePosition operator""_tp (long double seconds)
 {
     return TimePosition::fromSeconds (seconds);
 }
 
-inline constexpr TimePosition operator"" _tp (unsigned long long seconds)
+inline constexpr TimePosition operator""_tp (unsigned long long seconds)
 {
     return TimePosition::fromSeconds (seconds);
 }
@@ -554,12 +554,12 @@ inline TimeDuration abs (TimeDuration t)
 
 inline namespace literals
 {
-inline constexpr TimeDuration operator"" _td (long double seconds)
+inline constexpr TimeDuration operator""_td (long double seconds)
 {
     return TimeDuration::fromSeconds (seconds);
 }
 
-inline constexpr TimeDuration operator"" _td (unsigned long long seconds)
+inline constexpr TimeDuration operator""_td (unsigned long long seconds)
 {
     return TimeDuration::fromSeconds (seconds);
 }
@@ -682,12 +682,12 @@ inline BeatPosition abs (BeatPosition t)
 
 inline namespace literals
 {
-inline constexpr BeatPosition operator"" _bp (long double beats)
+inline constexpr BeatPosition operator""_bp (long double beats)
 {
     return BeatPosition::fromBeats (beats);
 }
 
-inline constexpr BeatPosition operator"" _bp (unsigned long long beats)
+inline constexpr BeatPosition operator""_bp (unsigned long long beats)
 {
     return BeatPosition::fromBeats (beats);
 }
@@ -731,12 +731,12 @@ inline BeatDuration abs (BeatDuration t)
 
 inline namespace literals
 {
-inline constexpr BeatDuration operator"" _bd (long double beats)
+inline constexpr BeatDuration operator""_bd (long double beats)
 {
     return BeatDuration::fromBeats (beats);
 }
 
-inline constexpr BeatDuration operator"" _bd (unsigned long long beats)
+inline constexpr BeatDuration operator""_bd (unsigned long long beats)
 {
     return BeatDuration::fromBeats (beats);
 }
@@ -836,4 +836,48 @@ inline juce::String& operator<< (juce::String& s, TimePosition p)  { return s <<
 inline juce::String& operator<< (juce::String& s, BeatDuration d)  { return s << juce::String (d.inBeats()); }
 inline juce::String& operator<< (juce::String& s, BeatPosition p)  { return s << juce::String (p.inBeats()); }
 
+inline std::ostream& operator<< (std::ostream& os, const TimeDuration& v) { os << v.inSeconds(); return os; }
+inline std::ostream& operator<< (std::ostream& os, const TimePosition& v) { os << v.inSeconds(); return os; }
+inline std::ostream& operator<< (std::ostream& os, const BeatDuration& v) { os << v.inBeats(); return os; }
+inline std::ostream& operator<< (std::ostream& os, const BeatPosition& v) { os << v.inBeats(); return os; }
+
 }} // namespace tracktion
+
+
+//==============================================================================
+//==============================================================================
+template<>
+struct std::hash<tracktion::TimePosition>
+{
+    std::size_t operator()(const tracktion::TimePosition t) const noexcept
+    {
+        return std::hash<double>{} (t.inSeconds());
+    }
+};
+
+template<>
+struct std::hash<tracktion::TimeDuration>
+{
+    std::size_t operator()(const tracktion::TimeDuration t) const noexcept
+    {
+        return std::hash<double>{} (t.inSeconds());
+    }
+};
+
+template<>
+struct std::hash<tracktion::BeatPosition>
+{
+    std::size_t operator()(const tracktion::BeatPosition t) const noexcept
+    {
+        return std::hash<double>{} (t.inBeats());
+    }
+};
+
+template<>
+struct std::hash<tracktion::BeatDuration>
+{
+    std::size_t operator()(const tracktion::BeatDuration t) const noexcept
+    {
+        return std::hash<double>{} (t.inBeats());
+    }
+};

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -19,7 +19,7 @@ class MidiClip  : public Clip
 public:
     //==============================================================================
     MidiClip() = delete;
-    MidiClip (const juce::ValueTree&, EditItemID, ClipTrack&);
+    MidiClip (const juce::ValueTree&, EditItemID, ClipOwner&);
     ~MidiClip() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<MidiClip>;
@@ -44,6 +44,18 @@ public:
 
     /** Retuns true if this clip can use a proxy sequence. */
     bool canUseProxy() const noexcept               { return proxyAllowed; }
+
+    //==============================================================================
+    /** @internal */
+    std::shared_ptr<LaunchHandle> getLaunchHandle() override;
+    /** @internal */
+    void setUsesGlobalLaunchQuatisation (bool useGlobal) override           { useClipLaunchQuantisation = ! useGlobal; }
+    /** @internal */
+    bool usesGlobalLaunchQuatisation() override                             { return ! useClipLaunchQuantisation; }
+    /** @internal */
+    LaunchQuantisation* getLaunchQuantisation() override;
+    /** @internal */
+    FollowActions* getFollowActions() override;
 
     //==============================================================================
     void scaleVerticallyToFit();
@@ -91,13 +103,13 @@ public:
                      BeatPosition maxEndBeat, juce::UndoManager&);
 
     //==============================================================================
-    float getVolumeDb() const                       { return level->dbGain; }
+    float getVolumeDb() const                       { return level->dbGain.get(); }
     void setVolumeDb (float v)                      { level->dbGain = juce::jlimit (-100.0f, 0.0f, v); }
 
     bool isSendingBankChanges() const noexcept      { return sendBankChange; }
     void setSendingBankChanges (bool sendBank);
 
-    bool isMuted() const override                   { return level->mute; }
+    bool isMuted() const override                   { return level->mute.get(); }
     void setMuted (bool m) override                 { level->mute = m; }
 
     LiveClipLevel getLiveClipLevel();
@@ -106,7 +118,7 @@ public:
     void initialise() override;
     bool isMidi() const override                    { return true; }
     void rescale (TimePosition pivotTimeInEdit, double factor) override;
-    bool canGoOnTrack (Track&) override;
+    bool canBeAddedTo (ClipOwner&) override;
     juce::String getSelectableDescription() override;
     juce::Colour getDefaultColour() const override;
 
@@ -171,6 +183,10 @@ private:
     //==============================================================================
     juce::OwnedArray<MidiList> channelSequence;
     std::shared_ptr<ClipLevel> level { std::make_shared<ClipLevel>() };
+    std::shared_ptr<LaunchHandle> launchHandle;
+    juce::CachedValue<bool> useClipLaunchQuantisation;
+    std::unique_ptr<LaunchQuantisation> launchQuantisation;
+    std::unique_ptr<FollowActions> followActions;
 
     juce::CachedValue<int> proxyAllowed, currentTake;
     juce::CachedValue<float> grooveStrength;
@@ -196,6 +212,20 @@ private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiClip)
 };
+
+
+//==============================================================================
+//==============================================================================
+/** Copies a zero-time origin based MIDI sequence in to a MidiClip.
+    This zill extend the start and end of the clip to fit the whole sequence.
+    @param MidiClip             The destination clip
+    @param MidiMessageSequence  The zero-based MIDI sequence
+    @param offsetToApply        An offset to apply to all MIDI message timestamps
+    @param NoteAutomationType   Whether to use standard MIDI or MPE
+*/
+void mergeInMidiSequence (MidiClip&, juce::MidiMessageSequence, TimeDuration offsetToApply,
+                          MidiList::NoteAutomationType);
+
 
 }} // namespace tracktion { inline namespace engine
 

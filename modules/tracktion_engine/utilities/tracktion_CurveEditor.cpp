@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -130,7 +130,11 @@ void CurveEditor::paint (juce::Graphics& g)
         g.setColour (getCurveNameTextBackgroundColour());
         auto text = getCurveName();
         g.setFont (13.0f);
+       #if JUCE_MAJOR_VERSION >= 8
+        auto tw = juce::GlyphArrangement::getStringWidthInt (g.getCurrentFont(), text);
+       #else
         auto tw = g.getCurrentFont().getStringWidth (text);
+       #endif
         auto tx = getCurveNameOffset() - (tw + 8);
         g.fillRect (tx, 0, tw + 6, 16);
 
@@ -146,10 +150,11 @@ void CurveEditor::paint (juce::Graphics& g)
     auto clipBounds = g.getClipBounds();
 
     {
+        const auto startX = std::max (0.0f, timeToX ({}));
         auto lastY = valueToY (getValueAt (leftTime));
 
         juce::Path curvePath;
-        curvePath.startNewSubPath (std::max (0.0f, timeToX ({})), lastY);
+        curvePath.startNewSubPath (startX, lastY);
         curvePath.preallocateSpace (numPoints * 5 + 1);
 
         if (numPoints > 0)
@@ -194,6 +199,18 @@ void CurveEditor::paint (juce::Graphics& g)
         }
 
         curvePath.lineTo ((float) getWidth(), lastY);
+
+        if (auto fillCol = getCurrentFillColour(); ! fillCol.isTransparent())
+        {
+            juce::Path fillPath (curvePath);
+            const auto y = getHeight() + 1.0f;
+            fillPath.lineTo ((float) getWidth(), y);
+            fillPath.lineTo (startX, y);
+            fillPath.closeSubPath();
+
+            g.setColour (fillCol);
+            g.fillPath (fillPath);
+        }
 
         g.setColour (getCurrentLineColour());
         g.strokePath (curvePath, juce::PathStrokeType (lineThickness));
@@ -296,6 +313,11 @@ bool CurveEditor::hitTest (int x, int y)
     return false;
 }
 
+void CurveEditor::visibilityChanged()
+{
+    updateLineThickness();
+}
+
 void CurveEditor::mouseDown (const juce::MouseEvent& e)
 {
     CRASH_TRACER
@@ -356,6 +378,11 @@ void CurveEditor::mouseDown (const juce::MouseEvent& e)
     {
         selectionManager.select (getItem(), e.mods.isShiftDown());
     }
+}
+
+juce::Colour CurveEditor::getCurrentFillColour()
+{
+    return juce::Colours::transparentWhite;
 }
 
 void CurveEditor::selectPoint (int pointIdx, bool addToSelection)
@@ -778,7 +805,8 @@ void CurveEditor::changeListenerCallback (juce::ChangeBroadcaster* cb)
         repaint();
     }
 
-    updateLineThickness();
+    if (isVisible())
+        updateLineThickness();
 }
 
 Edit& CurveEditor::getEdit() const

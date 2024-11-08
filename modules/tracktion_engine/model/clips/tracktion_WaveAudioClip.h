@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -19,8 +19,8 @@ class WaveAudioClip  : public AudioClipBase
 {
 public:
     /** Creates a WaveAudioClip from a given state. @see ClipTrack::insertWaveClip. */
-    WaveAudioClip (const juce::ValueTree&, EditItemID, ClipTrack&);
-    
+    WaveAudioClip (const juce::ValueTree&, EditItemID, ClipOwner&);
+
     /** Destructor. */
     ~WaveAudioClip() override;
 
@@ -29,7 +29,7 @@ public:
     //==============================================================================
     /** Adds a new take with the ProjectItemID as the source. */
     void addTake (ProjectItemID);
-    
+
     /** Adds a new take with the given file as the source. */
     void addTake (const juce::File&);
 
@@ -72,7 +72,7 @@ public:
     /** @internal */
     bool isMidi() const override                                { return false; }
     /** @internal */
-    bool usesSourceFile() override                              { return true; }
+    bool usesSourceFile() const override                        { return true; }
 
     /** @internal */
     TimeDuration getSourceLength() const override;

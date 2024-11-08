@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -11,7 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
-MarkerTrack::MarkerTrack (Edit& e, const juce::ValueTree& v)  : ClipTrack (e, v, 40, 13, 60)
+MarkerTrack::MarkerTrack (Edit& e, const juce::ValueTree& v)
+    : ClipTrack (e, v, false)
 {
 }
 
@@ -22,7 +23,7 @@ MarkerTrack::~MarkerTrack()
 
 bool MarkerTrack::isMarkerTrack() const                  { return true; }
 juce::String MarkerTrack::getSelectableDescription()     { return getName(); }
-juce::String MarkerTrack::getName()                      { return TRANS("Marker"); }
+juce::String MarkerTrack::getName() const                { return TRANS("Marker"); }
 bool MarkerTrack::canContainPlugin (Plugin*) const       { return false; }
 
 }} // namespace tracktion { inline namespace engine

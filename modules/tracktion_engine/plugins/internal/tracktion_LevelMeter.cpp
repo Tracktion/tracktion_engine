@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -40,6 +40,8 @@ void LevelMeterPlugin::initialise (const PluginInitialisationInfo& info)
 
 void LevelMeterPlugin::initialiseWithoutStopping (const PluginInitialisationInfo&)
 {
+    TRACKTION_ASSERT_MESSAGE_THREAD
+
     if (auto t = getOwnerTrack())
     {
         controllerTrack = t->getIndexInEditTrackList();
@@ -87,8 +89,7 @@ void LevelMeterPlugin::timerCallback()
 
 void LevelMeterPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    juce::CachedValue<bool>* cvsBool[] = { &showMidiActivity, nullptr };
-    copyPropertiesToNullTerminatedCachedValues (v, cvsBool);
+    copyPropertiesToCachedValues (v, showMidiActivity);
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();

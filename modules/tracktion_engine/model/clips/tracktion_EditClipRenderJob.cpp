@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -108,10 +108,8 @@ bool EditRenderJob::setUpRender()
                                               }
                                           });
         juce::ignoreUnused (contextUpdater);
-        auto edit = new Edit (*params.engine,
-                              loadEditFromProjectManager (params.engine->getProjectManager(), itemID),
-                              Edit::forRendering, &context, 1); // always use saved version!
-        editDeleter.setOwned (edit);
+
+        auto edit = loadEditForExamining (params.engine->getProjectManager(), itemID, Edit::EditRole::forRendering);
 
         // it's difficult to determine the marked region or selections at this point, so we'll ignore it,
         // assuming that this code will only be used for rendering entire EditClips, and not sections of edits.
@@ -120,14 +118,23 @@ bool EditRenderJob::setUpRender()
         jassert (! renderOptions.selectedTracks);
 
         params = renderOptions.getRenderParameters (*edit);
-        params.edit         = edit;
+        params.edit         = edit.get();
         params.destFile     = proxy.getFile();
         params.tracksToDo   = renderOptions.getTrackIndexes (*edit);
         params.category     = ProjectItem::Category::none;
+
+        editDeleter.setOwned (edit.release());
     }
 
     CRASH_TRACER
-    callBlocking ([this] { renderStatus = std::make_unique<Edit::ScopedRenderStatus> (*params.edit, false); });
+    try
+    {
+        callBlocking ([this] { renderStatus = std::make_unique<Edit::ScopedRenderStatus> (*params.edit, false); });
+    }
+    catch (std::runtime_error&)
+    {
+        return false;
+    }
 
     if (params.separateTracks)
         renderSeparateTracks();
@@ -184,7 +191,15 @@ EditRenderJob::RenderPass::~RenderPass()
     task = nullptr;
 
     if (owner.editDeleter.willDeleteObject())
-        callBlocking ([this] { Renderer::turnOffAllPlugins (*r.edit); });
+    {
+        try
+        {
+            callBlocking ([this] { Renderer::turnOffAllPlugins (*r.edit); });
+        }
+        catch (std::runtime_error&)
+        {
+        }
+    }
 
     // overwite with temp file
     if (! errorMessage.isEmpty() && owner.silenceOnBackup)
@@ -217,7 +232,7 @@ EditRenderJob::RenderPass::~RenderPass()
     {
         CRASH_TRACER
 
-        auto proj = owner.engine.getProjectManager().getProject (*r.edit);
+        auto proj = getProjectForEdit (*r.edit);
 
         if (proj == nullptr)
         {
@@ -273,12 +288,19 @@ bool EditRenderJob::RenderPass::initialise()
     jassert (task == nullptr);
     jassert (r.sampleRateForAudio > 7000);
 
-    callBlocking ([this]
-                  {
-                      Renderer::turnOffAllPlugins (*r.edit);
-                      r.edit->initialiseAllPlugins();
-                      r.edit->getTransport().stop (false, true);
-                  });
+    try
+    {
+        callBlocking ([this]
+                      {
+                          Renderer::turnOffAllPlugins (*r.edit);
+                          r.edit->initialiseAllPlugins();
+                          r.edit->getTransport().stop (false, true);
+                      });
+    }
+    catch (std::runtime_error&)
+    {
+        return false;
+    }
 
     if (r.tracksToDo.countNumberOfSetBits() > 0
         && r.destFile.hasWriteAccess()
@@ -299,11 +321,19 @@ bool EditRenderJob::RenderPass::initialise()
         cnp.forRendering = true;
         cnp.includePlugins = r.usePlugins;
         cnp.includeMasterPlugins = r.useMasterPlugins;
-        cnp.addAntiDenormalisationNoise = r.addAntiDenormalisationNoise;
         cnp.includeBypassedPlugins = false;
+        cnp.allowClipSlots = r.edit->engine.getEngineBehaviour().areClipSlotsEnabled();
 
         std::unique_ptr<tracktion::graph::Node> node;
-        callBlocking ([this, &node, &cnp] { node = createNodeForEdit (*r.edit, cnp); });
+
+        try
+        {
+            callBlocking ([this, &node, &cnp] { node = createNodeForEdit (*r.edit, cnp); });
+        }
+        catch (std::runtime_error&)
+        {
+            return false;
+        }
 
         if (node)
         {

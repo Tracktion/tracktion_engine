@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -70,8 +70,9 @@ namespace IDs
     DECLARE_ID (INPUTDEVICE)
     DECLARE_ID (INPUTDEVICEINSTANCE)
     DECLARE_ID (INPUTDEVICEDESTINATION)
+    DECLARE_ID (deviceID)
     DECLARE_ID (sourceTrack)
-    DECLARE_ID (targetTrack)
+    DECLARE_ID (targetID)
     DECLARE_ID (targetIndex)
     DECLARE_ID (armed)
     DECLARE_ID (ID3VORBISMETADATA)
@@ -457,6 +458,7 @@ namespace IDs
     DECLARE_ID (addRenderToLibrary)
     DECLARE_ID (reverseRender)
     DECLARE_ID (renderAddMetadata)
+    DECLARE_ID (addAcidMetadata)
     DECLARE_ID (height)
     DECLARE_ID (currentAutoParamPluginID)
     DECLARE_ID (currentAutoParamTag)
@@ -629,6 +631,7 @@ namespace IDs
     DECLARE_ID (chorusMix)
     DECLARE_ID (ARRANGERTRACK)
     DECLARE_ID (ARRANGERCLIP)
+    DECLARE_ID (CONTAINERCLIP)
     DECLARE_ID (apply)
     DECLARE_ID (oscType)
     DECLARE_ID (bandLimit)
@@ -640,6 +643,23 @@ namespace IDs
     DECLARE_ID (highPassMidiNoteNumber)
     DECLARE_ID (lowPassMidiNoteNumber)
     DECLARE_ID (proxyAllowed)
+    DECLARE_ID (resamplingQuality)
+    DECLARE_ID (CLIPLIST)
+    DECLARE_ID (defaultValue)
+
+    DECLARE_ID (SCENES)
+    DECLARE_ID (SCENE)
+    DECLARE_ID (CLIPSLOTS)
+    DECLARE_ID (CLIPSLOT)
+    DECLARE_ID (launchQuantisation)
+    DECLARE_ID (useClipLaunchQuantisation)
+    DECLARE_ID (playSlotClips)
+    DECLARE_ID (FOLLOWACTIONS)
+    DECLARE_ID (ACTION)
+    DECLARE_ID (weight)
+    DECLARE_ID (followActionDurationType)
+    DECLARE_ID (followActionBeats)
+    DECLARE_ID (followActionNumLoops)
 
     #undef DECLARE_ID
 }

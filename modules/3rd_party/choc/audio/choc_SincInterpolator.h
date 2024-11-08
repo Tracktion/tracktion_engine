@@ -1,11 +1,11 @@
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -84,14 +84,14 @@ void sincInterpolate (DestBufferOrView&& destBuffer, const SourceBufferOrView& s
             }
         }
 
-        static constexpr Sample sincWindowFunction (Sample position)
+        static Sample sincWindowFunction (Sample position)
         {
             return std::sin (position)
                     * (half + half * std::cos (position * (one / floatZeroCrossings)))
                     / position;
         }
 
-        static constexpr Sample getSincWindowLevelAt (Sample position)
+        static Sample getSincWindowLevelAt (Sample position)
         {
             if (position == Sample())
                 return one;

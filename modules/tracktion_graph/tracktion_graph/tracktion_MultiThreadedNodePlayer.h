@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -17,10 +17,10 @@ namespace tracktion { inline namespace graph
     Plays back a node with mutiple threads.
     This uses a simpler internal mechanism than the LockFreeMultiThreadedNodePlayer but uses spin locks
     do do so so isn't completely wait-free.
- 
+
     The thread pool uses a hybrid method of trying to keep processing threads spinning where possible but
     falling back to a condition variable if they spin for too long.
- 
+
     This is mainly here to compare performance with the LockFreeMultiThreadedNodePlayer.
     @see LockFreeMultiThreadedNodePlayer
 */
@@ -30,17 +30,17 @@ public:
     //==============================================================================
     /** Creates an empty MultiThreadedNodePlayer. */
     MultiThreadedNodePlayer();
-    
+
     /** Destructor. */
     ~MultiThreadedNodePlayer();
-    
+
     //==============================================================================
     /** Sets the number of threads to use for rendering.
         This can be 0 in which case only the process calling thread will be used for processing.
         N.B. this will pause processing whilst updating the threads so there will be a gap in the audio.
     */
     void setNumThreads (size_t);
-    
+
     /** Sets the Node to process. */
     void setNode (std::unique_ptr<Node>);
 
@@ -48,17 +48,21 @@ public:
     void setNode (std::unique_ptr<Node> newNode, double sampleRateToUse, int blockSizeToUse);
 
     /** Prepares the current Node to be played. */
-    void prepareToPlay (double sampleRateToUse, int blockSizeToUse, Node* oldNode = nullptr);
+    void prepareToPlay (double sampleRateToUse, int blockSizeToUse);
 
     /** Returns the current Node. */
     Node* getNode()
     {
-        return currentNode.load (std::memory_order_acquire);
+        if (auto cpn = currentPreparedNode.load (std::memory_order_acquire);
+            cpn != nullptr && cpn->graph != nullptr)
+           return cpn->graph->rootNode.get();
+
+        return nullptr;
     }
 
     /** Process a block of the Node. */
     int process (const Node::ProcessContext&);
-    
+
     /** Clears the current Node.
         Note that this shouldn't be called concurrently with setNode.
         If it's called concurrently with process, it will block until the current process call has finished.
@@ -82,13 +86,13 @@ private:
 
     class ThreadPool;
     std::unique_ptr<ThreadPool> threadPool;
-    
+
     struct PlaybackNode
     {
         PlaybackNode (Node& n)
             : node (n), numInputs (node.getDirectInputNodes().size())
         {}
-        
+
         Node& node;
         const size_t numInputs;
         std::vector<Node*> outputs;
@@ -98,29 +102,28 @@ private:
         std::atomic<bool> hasBeenDequeued { false };
        #endif
     };
-    
+
     struct PreparedNode
     {
-        std::unique_ptr<Node> rootNode;
-        std::vector<Node*> allNodes;
+        std::unique_ptr<NodeGraph> graph;
         std::vector<std::unique_ptr<PlaybackNode>> playbackNodes;
         choc::fifo::MultipleReaderMultipleWriterFIFO<Node*> nodesReadyToBeProcessed;
     };
-    
+
     RealTimeSpinLock preparedNodeMutex;
     std::unique_ptr<PreparedNode> preparedNode;
-    std::atomic<Node*> currentNode { nullptr };
+    std::atomic<PreparedNode*> currentPreparedNode { nullptr };
 
     std::atomic<size_t> numNodesQueued { 0 };
     RealTimeSpinLock clearNodesLock;
 
     //==============================================================================
-    std::atomic<double> sampleRate { 44100.0 };
-    int blockSize = 512;
-    
+    std::atomic<double> sampleRate { 0.0 };
+    int blockSize = 0;
+
     //==============================================================================
     /** Prepares a specific Node to be played and returns all the Nodes. */
-    std::vector<Node*> prepareToPlay (Node* node, Node* oldNode, double sampleRateToUse, int blockSizeToUse);
+    std::unique_ptr<NodeGraph> prepareToPlay (std::unique_ptr<Node>, NodeGraph* oldGraph, double sampleRateToUse, int blockSizeToUse);
 
     //==============================================================================
     void clearThreads();
@@ -128,8 +131,8 @@ private:
     static void pause();
 
     //==============================================================================
-    void setNewCurrentNode (std::unique_ptr<Node> newRoot, std::vector<Node*> newNodes);
-    
+    void setNewGraph (std::unique_ptr<NodeGraph>);
+
     //==============================================================================
     static void buildNodesOutputLists (std::vector<Node*>&, std::vector<std::unique_ptr<PlaybackNode>>&);
     void resetProcessQueue();

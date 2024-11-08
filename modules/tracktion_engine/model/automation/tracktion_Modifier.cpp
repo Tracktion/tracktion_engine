@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -19,64 +19,64 @@ public:
         : sampleRate (newSampleRate)
     {
         jassert (sampleRate > 0.0);
-        
+
         const auto numSamplesToStore = (size_t) tracktion::toSamples (maxNumSecondsToStore, newSampleRate);
         values = std::vector<float> (numSamplesToStore, 0.0f);
     }
-    
+
     void addValue (int numSamplesDelta, float value)
     {
         jassert ((size_t) numSamplesDelta < values.size());
-        
+
         const float delta = (value - lastValue) / numSamplesDelta;
         float alpha = lastValue;
-        
+
         while (--numSamplesDelta >= 0)
         {
             if (++headIndex == values.size())
                 headIndex = 0;
-                
+
             alpha += delta;
             values[headIndex] = alpha;
         }
-            
+
         lastValue = value;
     }
-    
+
     [[nodiscard]] float getValueAt (TimeDuration numSeconds) const
     {
         const size_t sampleDelta = (size_t) tracktion::toSamples (numSeconds, sampleRate);
-        
+
         if (sampleDelta > values.size())
             return {};
-        
+
         const int deltaIndex = int (headIndex) - int (sampleDelta);
         const size_t valueIndex = (size_t) juce::negativeAwareModulo (deltaIndex, (int) values.size());
-        
+
         return values[valueIndex];
     }
-    
+
     [[nodiscard]] std::vector<float> getValues (TimeDuration numSecondsBeforeNow) const
     {
         std::vector<float> v;
-        
+
         const auto numValues = std::min (values.size(),
                                          (size_t) tracktion::toSamples (numSecondsBeforeNow, sampleRate));
         v.reserve (numValues);
 
         int index = (int) headIndex;
-        
+
         for (int i = (int) numValues; --i >= 0;)
         {
             v.push_back (values[(size_t) index]);
-            
+
             if (--index < 0)
                 index = (int) values.size() - 1;
         }
 
         return v;
     }
-    
+
 private:
     double sampleRate = 0.0;
     float lastValue = 0.0;
@@ -142,7 +142,7 @@ void Modifier::baseClassInitialise (double newSampleRate, int blockSizeSamples)
         const auto numSecondsToStore = maxHistoryTime;
         valueFifo = std::make_unique<ValueFifo> (sampleRate, numSecondsToStore);
         messageThreadValueFifo = std::make_unique<ValueFifo> (sampleRate, numSecondsToStore);
-        
+
         const int numSamples = (int) tracktion::toSamples (numSecondsToStore, sampleRate);
         const int numBlocks = (numSamples / blockSizeSamples) * 2;
         valueFifoQueue.reset ((size_t) numBlocks);
@@ -172,16 +172,16 @@ void Modifier::baseClassApplyToBuffer (const PluginRenderContext& prc)
     jassert (valueFifo);
     const float v = getCurrentValue();
     valueFifo->addValue (prc.bufferNumSamples, getCurrentValue());
-    
+
     // Queue a value change up to be dispatched on the message thread
     const auto newV = std::make_pair (prc.bufferNumSamples, v);
-    
+
     if (valueFifoQueue.getFreeSlots() == 0)
     {
         std::remove_cv_t<decltype(newV)> temp;
         valueFifoQueue.pop (temp);
     }
-    
+
     valueFifoQueue.push (newV);
 }
 
@@ -195,7 +195,7 @@ float Modifier::getValueAt (TimeDuration numSecondsBeforeNow) const
 {
     if (valueFifo)
         return valueFifo->getValueAt (numSecondsBeforeNow);
-        
+
     return {};
 }
 
@@ -203,20 +203,28 @@ std::vector<float> Modifier::getValues (TimeDuration numSecondsBeforeNow) const
 {
     if (! messageThreadValueFifo)
         return {};
-    
+
     // Dispatch pending values
     for (;;)
     {
         std::pair<int, float> tmp;
-        
+
         if (! valueFifoQueue.pop (tmp))
             break;
-        
+
         messageThreadValueFifo->addValue (tmp.first, tmp.second);
     }
-    
+
     // Then return the array of samples
     return messageThreadValueFifo->getValues (numSecondsBeforeNow);
+}
+
+void Modifier::selectableAboutToBeDeleted()
+{
+    for (auto p : getAutomatableParameters())
+        p->detachFromCurrentValue();
+
+    deleteAutomatableParameters();
 }
 
 //==============================================================================

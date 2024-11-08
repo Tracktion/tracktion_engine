@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -25,7 +25,7 @@ public:
         : juce::UnitTest ("NodeVisting", "tracktion_graph")
     {
     }
-    
+
     void runTest() override
     {
         runVisitTests();
@@ -35,10 +35,10 @@ private:
     //==============================================================================
     /** Calls the visitor for any direct inputs to the node and then calls
         the visitor function on this node.
-        
+
         This method is not stateful so may end up calling nodes more than once and
         could be infinite if there are cycles in the graph.
-     
+
         @param Visitor has the signature @code void (Node&) @endcode
     */
     template<typename Visitor>
@@ -46,7 +46,7 @@ private:
     {
         for (auto n : node.getDirectInputNodes())
             visitInputs (*n, visitor);
-        
+
         visitor (node);
     }
 
@@ -56,7 +56,7 @@ private:
     {
         /* This test creates a graph in this topology and tests the visiting algorithms.
            Here E is an input to F.
-         
+
                     A
                    /|\
                   B C E
@@ -64,7 +64,7 @@ private:
                 D F G |
                   |___|
         */
-        
+
         auto d = makeNode<SinNode> (1.0f);
         auto D = d.get();
         auto f = makeNode<ReturnNode> (makeNode<SinNode> (2.0f), 1);
@@ -79,15 +79,15 @@ private:
         auto B = b.get();
         auto a = makeBaicSummingNode ({ b.release(), c.release(), e.release() });
         auto A = a.get();
-        
+
         // Prepare the topology
-        transformNodes (*A);
-        
+        auto nodeGraph = createNodeGraph (std::move (a));
+
         std::vector<Node*> allNodes { A, B, C, D, E, F, G };
 
         for (auto n : allNodes)
-            n->initialise ({ 44100.0, 512, *a });
-        
+            n->initialise ({ 44100.0, 512, *nodeGraph });
+
         auto trimEndNodes = [&] (std::vector<Node*> nodes)
         {
             nodes.erase (std::remove_if (nodes.begin(), nodes.end(),
@@ -100,21 +100,21 @@ private:
         beginTest ("Basic visting");
         {
             expectEquals<uint64_t> (allNodes.size(), 7);
-        
+
             std::vector<Node*> nodes;
             visitInputs (*A, [&] (auto& node)
             {
                 if (std::find (allNodes.begin(), allNodes.end(), &node) == allNodes.end())
                     return;
-                
+
                 std::cout << getNodeLetter (allNodes, &node) << "\n";
                 nodes.push_back (&node);
             });
-            
+
             // E will be visited twice in this example, once through the return and once directly
             expectNodeOrder (allNodes, nodes, { D, E, F, B, G, C, E, A });
         }
-        
+
         beginTest ("Visit nodes once");
         {
             std::vector<Node*> nodes;
@@ -122,15 +122,15 @@ private:
             {
                 if (std::find (allNodes.begin(), allNodes.end(), &node) == allNodes.end())
                     return;
-                
+
                 std::cout << getNodeLetter (allNodes, &node) << "\n";
                 nodes.push_back (&node);
             }, false);
-            
+
             expectNodeOrder (allNodes, nodes, { D, E, F, B, G, C, A });
             expectNodeOrder (allNodes, nodes, trimEndNodes (getNodes (*A, VertexOrdering::postordering)));
         }
-        
+
         beginTest ("Vist nodes with ordering");
         {
             expectNodeOrder (allNodes, trimEndNodes (getNodes (*A, VertexOrdering::preordering)),
@@ -147,24 +147,24 @@ private:
                              { G, F, D, E, C, B, A });
         }
     }
-    
+
     static std::string getNodeLetter (const std::vector<Node*>& nodes, Node* node)
     {
         auto found = std::find (nodes.begin(), nodes.end(), node);
-        
+
         if (found != nodes.end())
             return { 1, static_cast<char> (std::distance (nodes.begin(), found) + 65) };
-        
+
         return "-";
     }
-    
+
     void expectNodeOrder (const std::vector<Node*>& ascendingNodes,
                           const std::vector<Node*>& actual, const std::vector<Node*>& expected)
     {
         jassert (actual.size() == expected.size());
         auto areEqual = std::equal (actual.begin(), actual.end(), expected.begin(), expected.end());
         expect (areEqual, "Node order not equal");
-        
+
         if (! areEqual)
         {
             std::cout << "Expected:\tActual:\n";

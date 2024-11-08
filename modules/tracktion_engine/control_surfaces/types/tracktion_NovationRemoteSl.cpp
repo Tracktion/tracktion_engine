@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -328,7 +328,7 @@ void NovationRemoteSl::acceptMidiMessage (int, const juce::MidiMessage& m)
                 {
                     param[cn - 0x00].value = juce::jlimit (0.0f, 1.0f,
                                                            param[cn - 0x00].value + (m.getControllerValue() - 64) / 150.0f);
-                    
+
                     userMovedParameterControl (cn - 0x00, param[cn - 0x00].value);
                 }
             }
@@ -431,7 +431,7 @@ void NovationRemoteSl::acceptMidiMessage (int, const juce::MidiMessage& m)
 void NovationRemoteSl::moveFader (int channelNum, float newSliderPos)
 {
     ControlSurface::moveFader (channelNum, newSliderPos);
-    
+
     level[channelNum] = volumeFaderPositionToDB (newSliderPos);
 
     if (rightMode == rmVol)
@@ -441,7 +441,7 @@ void NovationRemoteSl::moveFader (int channelNum, float newSliderPos)
 void NovationRemoteSl::movePanPot (int channelNum, float newPan)
 {
     ControlSurface::movePanPot (channelNum, newPan);
-    
+
     pan[channelNum] = newPan;
 
     if (rightMode == rmPan)
@@ -488,7 +488,7 @@ void NovationRemoteSl::faderBankChanged (int, const juce::StringArray& newNames)
 void NovationRemoteSl::parameterChanged (int parameterNumber, const ParameterSetting& newValue)
 {
     ControlSurface::parameterChanged (parameterNumber, newValue);
-    
+
     param[parameterNumber] = newValue;
 
     if (leftMode == lmParam1 || leftMode == lmParam2)

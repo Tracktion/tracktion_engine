@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -22,7 +22,7 @@ public:
     bool isAutomationTrack() const override            { return true; }
     juce::String getSelectableDescription() override;
     bool canContainPlugin (Plugin*) const override     { return false; }
-    juce::String getName() override;
+    juce::String getName() const override;
 
     //==============================================================================
     using Ptr = juce::ReferenceCountedObjectPtr<AutomationTrack>;

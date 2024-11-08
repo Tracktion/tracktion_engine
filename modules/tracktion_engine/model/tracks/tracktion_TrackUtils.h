@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -17,30 +17,30 @@ namespace tracktion { inline namespace engine
 */
 struct TrackInsertPoint
 {
-    /** Creates an insertion point with a parent and preceeding track.
-        @param parent       The parent tracks should be nested in.
-                            nullptr means a top-level track
-        @param preceding    The track before the insertion point.
-                            nullptr means tracks should be inserted at the start of the list.
-    */
+    /// Creates an insertion point with a parent and preceeding track.
+    /// @param parent       The parent tracks should be nested in.
+    ///                     nullptr means a top-level track
+    /// @param preceding    The track before the insertion point.
+    ///                     nullptr means tracks should be inserted at the start of the list.
     TrackInsertPoint (Track* parent, Track* preceding);
 
-    /** Creates an insertion point with a parent and preceeding track.
-        @param parentTrackID    The ID of the parent tracks should be nested in.
-                                An invalid ID means a top-level track
-        @param precedingTrackID The ID of the track before the insertion point.
-                                An invalid ID means tracks should be inserted at the start of the list.
-    */
+    /// Creates an insertion point with a parent and preceeding track.
+    /// @param parentTrackID    The ID of the parent tracks should be nested in.
+    ///                         An invalid ID means a top-level track
+    /// @param precedingTrackID The ID of the track before the insertion point.
+    ///                         An invalid ID means tracks should be inserted at the start of the list.
     TrackInsertPoint (EditItemID parentTrackID, EditItemID precedingTrackID);
 
-    /** Creates an insertion point around a Track.
-        @param currentPos   The track to base insertion around.
-        @param insertBefore Whether new tracks should go before or after the currentPos.
-    */
+    /// Creates an insertion point around a Track.
+    /// @param currentPos   The track to base insertion around.
+    /// @param insertBefore Whether new tracks should go before or after the currentPos.
     TrackInsertPoint (Track& currentPos, bool insertBefore);
 
-    /** Creates an insertion point after a given Track state. */
+    /// Creates an insertion point after a given Track state.
     TrackInsertPoint (const juce::ValueTree&);
+
+    /// Returns an insertion point at the end of the tracks in the given edit.
+    static TrackInsertPoint getEndOfTracks (Edit&);
 
     EditItemID parentTrackID, precedingTrackID;
 };
@@ -58,6 +58,9 @@ struct TrackList    : public ValueTreeObjectList<Track>,
 
     /** Destructor. */
     ~TrackList() override;
+
+    /** Initialises the TrackList, building the child objects. */
+    void initialise();
 
     //==============================================================================
     /** Returns a Track for a given state. */
@@ -145,6 +148,10 @@ private:
 };
 
 //==============================================================================
+/// Returns the number of tracks from this tree recursively.
+int countNumTracks (const juce::ValueTree&);
+
+//==============================================================================
 /**
     Defines a time raneg sectin of a Track.
 */
@@ -194,7 +201,7 @@ struct TrackSection
                 TrackSection cs;
                 cs.range = c->getEditTimeRange();
                 cs.track = c->getTrack();
-                
+
                 if (cs.track != nullptr)
                     result.add (cs);
             }

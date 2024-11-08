@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -23,7 +23,7 @@ constexpr double sampleToTime (IntType samplePosition, double sampleRate)
 }
 
 /** Converts a time in seconds to a sample number. */
-constexpr int64_t timeToSample (double timeInSeconds, double sampleRate)
+constexpr int64_t timeToSample (std::floating_point auto timeInSeconds, double sampleRate)
 {
     return static_cast<int64_t> ((timeInSeconds * sampleRate) + 0.5);
 }
@@ -49,6 +49,65 @@ constexpr juce::Range<int64_t> timeToSample (RangeType timeInSeconds, double sam
 {
     return { timeToSample (timeInSeconds.getStart(), sampleRate),
              timeToSample (timeInSeconds.getEnd(), sampleRate) };
+}
+
+//==============================================================================
+//==============================================================================
+/** Attempts to find a Node of a given type with a specified ID.
+    This uses the sortedNodes vector so should be relatively quick (much quicker
+    than traversing from the root node.
+*/
+template<typename NodeType, typename Predicate>
+NodeType* findNode (NodeGraph& nodeGraph, Predicate pred)
+{
+    auto found = std::find_if (nodeGraph.sortedNodes.begin(),
+                               nodeGraph.sortedNodes.end(),
+                               [&pred] (auto nodeAndID)
+                               {
+                                   if (auto foundType = dynamic_cast<NodeType*> (nodeAndID.node))
+                                       if (pred (*foundType))
+                                           return true;
+
+                                   return false;
+                               });
+
+    if (found != nodeGraph.sortedNodes.end())
+        return dynamic_cast<NodeType*> (found->node);
+
+    return nullptr;
+}
+
+/** Attempts to find a Node of a given type with a specified ID.
+    This uses the sortedNodes vector so should be relatively quick (much quicker
+    than traversing from the root node.
+*/
+template<typename NodeType>
+NodeType* findNodeWithID (NodeGraph& nodeGraph, size_t nodeIDToLookFor)
+{
+    auto found = std::find_if (nodeGraph.sortedNodes.begin(),
+                               nodeGraph.sortedNodes.end(),
+                               [nodeIDToLookFor] (auto nodeAndID)
+                               {
+                                   return nodeAndID.id == nodeIDToLookFor
+                                       && dynamic_cast<NodeType*> (nodeAndID.node) != nullptr;
+                               });
+
+    if (found != nodeGraph.sortedNodes.end())
+        return dynamic_cast<NodeType*> (found->node);
+
+    return nullptr;
+}
+
+/** Attempts to find a Node of a given type with a specified ID.
+    This uses the sortedNodes vector so should be relatively quick (much quicker
+    than traversing from the root node.
+*/
+template<typename NodeType>
+NodeType* findNodeWithIDIfNonZero (NodeGraph* nodeGraph, size_t nodeIDToLookFor)
+{
+    return (nodeGraph == nullptr || nodeIDToLookFor == 0)
+                ? nullptr
+                : findNodeWithID<NodeType> (*nodeGraph, nodeIDToLookFor);
 }
 
 }}

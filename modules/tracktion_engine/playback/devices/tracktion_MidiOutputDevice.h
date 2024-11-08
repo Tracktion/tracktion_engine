@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -15,8 +15,11 @@ namespace tracktion { inline namespace engine
 class MidiOutputDevice   : public OutputDevice
 {
 public:
-    MidiOutputDevice (Engine&, const juce::String& name, int deviceIndex);
+    MidiOutputDevice (Engine&, juce::MidiDeviceInfo);
     ~MidiOutputDevice() override;
+
+    juce::String openDevice() override;
+    void closeDevice() override;
 
     void setEnabled (bool) override;
     bool isMidi() const override                        { return true; }
@@ -33,7 +36,11 @@ public:
 
     juce::String getNameForMidiNoteNumber (int note, int midiChannel, bool useSharp = true) const;
 
-    bool isConnectedToExternalController() const;
+    bool isConnectedToExternalController() const { return externalController != nullptr; }
+
+    /** sets the external controller messages are coming from */
+    void setExternalController (ExternalController*);
+    void removeExternalController (ExternalController*);
 
     //==============================================================================
     void updateMidiTC (Edit*);
@@ -47,6 +54,7 @@ public:
     void flipSendingTimecode();
 
     void setSendControllerMidiClock (bool b) noexcept   { sendControllerMidiClock = b; }
+    bool isSendingControllerMidiClock() const noexcept  { return sendControllerMidiClock; }
 
     //==============================================================================
     void fireMessage (const juce::MidiMessage&);
@@ -81,13 +89,12 @@ protected:
     void loadProps();
     void saveProps();
 
-    int deviceIndex = 0;
+    juce::MidiDeviceInfo deviceInfo;
     int preDelayMillisecs = 0, audioAdjustmentDelay = 0;
     std::unique_ptr<MidiTimecodeGenerator> timecodeGenerator;
     std::unique_ptr<MidiClockGenerator> midiClockGenerator;
     bool sendTimecode = false, sendMidiClock = false;
     bool playing = false;
-    bool firstSetEnabledCall = true;
     juce::String programNameSet;
 
     double sampleRate = 0;
@@ -95,8 +102,8 @@ protected:
     std::unique_ptr<juce::MidiOutput> outputDevice;
     bool sendingMMC = false;
     bool sendControllerMidiClock = false;
-    bool defaultMidiDevice = false;
     bool softDevice = false;
+    ExternalController* externalController = nullptr;
 
     juce::BigInteger midiNotesOn, channelsUsed;
     int sustain = 0;
@@ -104,9 +111,6 @@ protected:
     MidiMessageArray midiMessages;
 
     juce::CriticalSection noteOnLock;
-
-    juce::String openDevice() override;
-    void closeDevice() override;
 };
 
 //==============================================================================
@@ -115,7 +119,7 @@ class SoftwareMidiOutputDevice  : public MidiOutputDevice
 {
 public:
     SoftwareMidiOutputDevice (Engine& e, const juce::String& deviceName)
-        : MidiOutputDevice (e, deviceName, -1)
+       : MidiOutputDevice (e, { deviceName, juce::String() })
     {
         softDevice = true;
     }
@@ -149,7 +153,7 @@ private:
     std::unique_ptr<MidiClockGenerator> midiClockGenerator;
 
     double sampleRate = 0, audioAdjustmentDelay = 0;
-    bool playing = false, isDefaultMidiDevice = false, shouldSendMidiTimecode = false;
+    bool playing = false, shouldSendMidiTimecode = false;
 
     MidiMessageArray midiMessages;
 

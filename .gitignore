@@ -2,6 +2,7 @@
 [Tt]humbs.db
 
 #Visual Studio files
+.vs
 *.[Oo]bj
 *.aps
 *.pch
@@ -76,3 +77,5 @@ doxygen/doc
 **/3rd_party/rubberband
 **/cmake-build**
 **/.idea/**
+coverage.xml
+CoverageReport-*

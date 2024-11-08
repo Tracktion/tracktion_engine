@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -18,7 +18,7 @@ class StepClip   : public Clip,
                    public juce::ChangeBroadcaster
 {
 public:
-    StepClip (const juce::ValueTree&, EditItemID, ClipTrack&);
+    StepClip (const juce::ValueTree&, EditItemID, ClipOwner&);
     ~StepClip() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<StepClip>;
@@ -212,7 +212,7 @@ public:
     juce::Array<Pattern> getPatterns();
 
     //==============================================================================
-    float getVolumeDb() const                       { return level->dbGain; }
+    float getVolumeDb() const                       { return level->dbGain.get(); }
     void setVolumeDb (float v)                      { level->dbGain = juce::jlimit (-100.0f, 0.0f, v); }
 
     //==============================================================================
@@ -223,9 +223,18 @@ public:
         @param[in] convertToSeconds Leave the timestamps in beats, or convert them to seconds while generating
         @param[in] instance         Specific pattern to generate, nullptr for the whole clip
     */
-    void generateMidiSequence (juce::MidiMessageSequence&,
+    void generateMidiSequence (juce::MidiMessageSequence& result,
                                bool convertToSeconds = true,
                                PatternInstance* instance = nullptr);
+
+    /** Generate a MidiMessageSequence from either the entire clip or
+        one of its pattern instances.
+
+        @param[in] PatternInstance  Specific pattern to generate, nullptr for the whole clip
+        @param[in] TimeBase         The time base for the sequence
+        @returns result             Result sequence
+    */
+    juce::MidiMessageSequence generateMidiSequence (MidiList::TimeBase, PatternInstance* instance = nullptr);
 
     juce::Array<BeatPosition> getBeatTimesOfPatternStarts() const;
 
@@ -237,18 +246,56 @@ public:
     void resizeClipForPatternInstances();
 
     //==============================================================================
-    bool canGoOnTrack (Track&) override;
+    bool canBeAddedTo (ClipOwner&) override;
     juce::String getSelectableDescription() override;
     juce::Colour getDefaultColour() const override;
 
     bool isMidi() const override                        { return false; }
     bool beatBasedLooping() const override              { return true; }
-    bool isMuted() const override                       { return level->mute; }
+    bool isMuted() const override                       { return level->mute.get(); }
     void setMuted (bool m) override                     { level->mute = m; }
 
     LiveClipLevel getLiveClipLevel();
 
     juce::CachedValue<bool> repeatSequence;
+
+    //==============================================================================
+    /** StepClips can only loop if they're being used as launcher clips.
+        Arranger clips will automatically loop until their end time.
+    */
+    bool canLoop() const override;
+
+    /** @internal */
+    ClipPosition getPosition() const override;
+    /** @internal */
+    bool isLooping() const override                 { return canLoop() && loopLengthBeats > 0_bd; }
+    /** @internal */
+    void setNumberOfLoops (int) override;
+    /** @internal */
+    void disableLooping() override;
+    /** @internal */
+    void setLoopRange (TimeRange) override;
+    /** @internal */
+    void setLoopRangeBeats (BeatRange) override;
+    /** @internal */
+    BeatPosition getLoopStartBeats() const override       { return canLoop() ? loopStartBeats : 0_bp; }
+    /** @internal */
+    BeatDuration getLoopLengthBeats() const override      { return canLoop() ? loopLengthBeats : 0_bd; }
+    /** @internal */
+    TimePosition getLoopStart() const override;
+    /** @internal */
+    TimeDuration getLoopLength() const override;
+
+    /** @internal */
+    std::shared_ptr<LaunchHandle> getLaunchHandle() override;
+    /** @internal */
+    void setUsesGlobalLaunchQuatisation (bool useGlobal) override           { useClipLaunchQuantisation = ! useGlobal; }
+    /** @internal */
+    bool usesGlobalLaunchQuatisation() override                             { return ! useClipLaunchQuantisation; }
+    /** @internal */
+    LaunchQuantisation* getLaunchQuantisation() override;
+    /** @internal */
+    FollowActions* getFollowActions() override;
 
 private:
     void generateMidiSequenceForChannels (juce::MidiMessageSequence&, bool convertToSeconds,
@@ -260,6 +307,12 @@ private:
     std::unique_ptr<ChannelList> channelList;
     PatternArray patternInstanceList;
     std::shared_ptr<ClipLevel> level { std::make_shared<ClipLevel>() };
+    juce::CachedValue<BeatPosition> loopStartBeats;
+    juce::CachedValue<BeatDuration> loopLengthBeats, originalLength;
+    std::shared_ptr<LaunchHandle> launchHandle;
+    juce::CachedValue<bool> useClipLaunchQuantisation;
+    std::unique_ptr<LaunchQuantisation> launchQuantisation;
+    std::unique_ptr<FollowActions> followActions;
 
     const PatternInstance::Ptr getPatternInstance (int index, bool repeatSequence) const;
     void updatePatternList();

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -31,13 +31,13 @@ public:
 
     /** Creates an NodePlayer to process a Node. */
     MultiThreadedNodePlayer (std::unique_ptr<tracktion::graph::Node> node,
-                         ProcessState& processStateToUse,
-                         double sampleRate, int blockSize)
+                             ProcessState& processStateToUse,
+                             double sampleRate, int blockSize)
         : MultiThreadedNodePlayer (processStateToUse)
     {
         nodePlayer.setNode (std::move (node), sampleRate, blockSize);
     }
-    
+
     /** Sets the number of threads to use for rendering.
         This can be 0 in which case only the process calling thread will be used for processing.
         N.B. this will pause processing whilst updating the threads so there will be a gap in the audio.
@@ -61,7 +61,7 @@ public:
     {
         nodePlayer.setNode (std::move (newNode), sampleRateToUse, blockSizeToUse);
     }
-    
+
     void prepareToPlay (double sampleRateToUse, int blockSizeToUse)
     {
         nodePlayer.prepareToPlay (sampleRateToUse, blockSizeToUse);
@@ -74,10 +74,10 @@ public:
     {
         int numMisses = 0;
         playHeadState.playHead.setReferenceSampleRange (pc.referenceSampleRange);
-        
+
         // Check to see if the timeline needs to be processed in two halves due to looping
         const auto splitTimelineRange = referenceSampleRangeToSplitTimelineRange (playHeadState.playHead, pc.referenceSampleRange);
-        
+
         if (splitTimelineRange.isSplit)
         {
             const auto firstProportion = splitTimelineRange.timelineRange1.getLength() / (double) pc.referenceSampleRange.getLength();
@@ -118,22 +118,22 @@ public:
             processState.update (nodePlayer.getSampleRate(), pc.referenceSampleRange, ProcessState::UpdateContinuityFlags::yes);
             numMisses += nodePlayer.process (pc);
         }
-        
+
         return numMisses;
     }
-    
+
     /** Clears the Node currently playing. */
     void clearNode()
     {
         nodePlayer.clearNode();
     }
-    
+
     /** Returns the current sample rate. */
     double getSampleRate() const
     {
-        return nodePlayer.getSampleRate();        
+        return nodePlayer.getSampleRate();
     }
-    
+
 private:
     tracktion::graph::PlayHeadState& playHeadState;
     ProcessState& processState;

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#if ENGINE_UNIT_TESTS_LOOPINGMIDINODE
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_LOOPINGMIDINODE
 
 namespace tracktion { inline namespace engine
 {
@@ -19,10 +19,10 @@ class LoopingMidiNodeTests : public juce::UnitTest
 {
 public:
     LoopingMidiNodeTests()
-        : juce::UnitTest ("LoopingMidiNodeTests", "tracktion_graph")
+        : juce::UnitTest ("LoopingMidiNodeTests", "tracktion_engine")
     {
     }
-    
+
     void runTest() override
     {
         for (auto setup : tracktion::graph::test_utilities::getTestSetups (*this))
@@ -33,7 +33,20 @@ public:
                         .replace ("RND", setup.randomiseBlockSizes ? "Y" : "N"));
 
             runMidiTests (setup);
+
+            runStuckNotesTests (setup, true, 1);
+            runStuckNotesTests (setup, false, 1);
+
+            runStuckNotesTests (setup, true, 2);
+            runStuckNotesTests (setup, false, 2);
+
+            runOffsetTests (setup);
         }
+
+        runProgramChangeTests (false);
+        runProgramChangeTests (true);
+
+        runSequenceClippingTests();
     }
 
 private:
@@ -83,6 +96,280 @@ private:
         testMidiClip (*mc, ts);
     }
 
+    void runStuckNotesTests (test_utilities::TestSetup ts, bool usesProxy, int numLoopIterations)
+    {
+        beginTest ("Stuck notes");
+
+        // Create an empty edit
+        // Add a MIDI clip with 8 notes 1 beat each
+        // Render that clip and ensure there is no note after beat 8
+
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine);
+        auto mc = getAudioTracks (*edit)[0]->insertMIDIClip ({ 0_tp, 0_tp }, nullptr);
+        auto& sequence = mc->getSequence();
+
+        for (int i = 0; i < 8; ++i)
+            sequence.addNote (40 + i, BeatPosition::fromBeats (i), 1_bd, 127, 0, nullptr);
+
+        mc->setUsesProxy (usesProxy);
+        mc->setEnd (edit->tempoSequence.toTime (sequence.getLastBeatNumber()), true);
+
+        if (numLoopIterations > 0)
+            mc->setNumberOfLoops (numLoopIterations);
+
+        std::vector<juce::MidiMessage> noteEvents;
+        const auto renderedSequence = renderMidiClip (*mc, ts, { 0_tp, 100_tp });
+
+        for (auto meh : renderedSequence)
+        {
+            if (! meh->message.isNoteOnOrOff())
+                continue;
+
+            if (meh->message.isNoteOn())
+            {
+                const auto duration = meh->noteOffObject->message.getTimeStamp() - meh->message.getTimeStamp();
+                expectEquals (duration, 0.5); // duration of 1 beat
+            }
+
+            noteEvents.push_back (meh->message);
+        }
+
+        // Check we have the correct number of notes
+        expectEquals ((int) noteEvents.size(), 16 * numLoopIterations);
+
+        // Check the last note ends before the end of the clip
+        expectLessOrEqual (noteEvents.back().getTimeStamp(), mc->getPosition().getEnd().inSeconds());
+    }
+
+    void runProgramChangeTests (bool sendBankSelect)
+    {
+        const auto seqXml = R"(
+        <SEQUENCE ver="1" channelNumber="1">
+          <CONTROL b="0.0" type="4097" val="6784"/>
+          <CONTROL b="0.0" type="7" val="12800"/>
+          <CONTROL b="0.0" type="39" val="5376"/>
+          <CONTROL b="0.0" type="10" val="8192"/>
+          <CONTROL b="0.0" type="42" val="0"/>
+          <NOTE p="46" b="0.0" l="0.7139999999999986" v="100" c="0"/>
+          <NOTE p="47" b="1.186" l="0.7139999999999986" v="100" c="0"/>
+          <NOTE p="50" b="1.899999999999999" l="0.7680000000000007" v="90" c="0"/>
+          <NOTE p="53" b="2.667999999999999" l="1.536000000000001" v="110" c="0"/>
+          <NOTE p="58" b="3.204000000000001" l="0.7699999999999996" v="95" c="0"/>
+          <NOTE p="57" b="3.974" l="0.7519999999999989" v="100" c="0"/>
+          <NOTE p="56" b="4.726" l="0.75" v="100" c="0"/>
+          <NOTE p="57" b="5.476" l="0.7760000000000034" v="102" c="0"/>
+          <NOTE p="53" b="6.252" l="1.043999999999997" v="105" c="0"/>
+        </SEQUENCE>)";
+
+        beginTest ("Program/bank changes");
+
+        // Create a clip with the above sequence
+        // Render the output and ensure the CC messages are before the note events
+
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine);
+        auto mc = getAudioTracks (*edit)[0]->insertMIDIClip ({ 0_tp, 0_tp }, nullptr);
+        mc->setSendingBankChanges (sendBankSelect);
+
+        auto& sequence = mc->getSequence();
+        sequence.copyFrom (MidiList (juce::ValueTree::fromXml (seqXml), nullptr), nullptr);
+        mc->setEnd (edit->tempoSequence.toTime (sequence.getLastBeatNumber()), true);
+
+        for (auto timeBase : { MidiList::TimeBase::seconds, MidiList::TimeBase::beats, MidiList::TimeBase::beatsRaw })
+        {
+            bool hasFoundNoteEvents = false;
+            int numNonNoteEventsAferNoteEvents = 0, numCCEvents = 0, numPCEvents = 0, numNoteOnEvents = 0, numNoteOffEvents = 0;
+
+            const auto midiMessageSequence = sequence.exportToPlaybackMidiSequence (*mc, timeBase, false);
+
+            for (auto meh : midiMessageSequence)
+            {
+                if (meh->message.isNoteOnOrOff())
+                    hasFoundNoteEvents = true;
+
+                if (meh->message.isController())
+                {
+                    ++numCCEvents;
+
+                    if (hasFoundNoteEvents)
+                        ++numNonNoteEventsAferNoteEvents;
+                }
+                else if (meh->message.isProgramChange())
+                {
+                    ++numPCEvents;
+
+                    if (hasFoundNoteEvents)
+                        ++numNonNoteEventsAferNoteEvents;
+                }
+                else if (meh->message.isNoteOn())
+                {
+                    ++numNoteOnEvents;
+                }
+                else if (meh->message.isNoteOff())
+                {
+                    ++numNoteOffEvents;
+                }
+            }
+
+            expectEquals (numNoteOnEvents, numNoteOffEvents);
+            expectEquals (numNoteOnEvents, 9);
+            expectEquals (numCCEvents, 4 + (sendBankSelect ? 2 : 0));
+            expectEquals (numPCEvents, 1);
+            expectEquals (numNonNoteEventsAferNoteEvents, 0);
+
+            // Check round-trip import of sequence
+            {
+                MidiList importedList;
+                importedList.setMidiChannel (MidiChannel (1));
+                importedList.importMidiSequence (midiMessageSequence, nullptr, 0_tp, nullptr);
+
+                expectEquals (importedList.getNotes().size(), sequence.getNotes().size());
+                expectEquals (importedList.getControllerEvents().size(), sequence.getControllerEvents().size() + (sendBankSelect ? 2 : 0));
+                expectEquals (importedList.getSysexEvents().size(), sequence.getSysexEvents().size());
+            }
+        }
+    }
+
+    struct BytesAndTimeStamp
+    {
+        uint8_t bytes[3];
+        double timestamp;
+    };
+
+    void runSequenceClippingTests()
+    {
+        beginTest ("Clipping sequence to range");
+
+        {
+            BytesAndTimeStamp data[] = {
+                { { 0x90, 0x4e, 0x7c }, 12.0 },
+                { { 0x90, 0x42, 0x7c }, 12.0 },
+                { { 0x90, 0x49, 0x7c }, 12.0 },
+                { { 0x80, 0x42, 0x00 }, 12.4354 },
+                { { 0x80, 0x49, 0x00 }, 12.4578 },
+                { { 0x80, 0x4e, 0x00 }, 12.4764 },
+                { { 0x90, 0x4e, 0x7c }, 14.5 },
+                { { 0x90, 0x49, 0x7f }, 14.5 },
+                { { 0x90, 0x42, 0x7c }, 14.5 },
+                { { 0x80, 0x4e, 0x00 }, 14.9335 },
+                { { 0x80, 0x42, 0x00 }, 14.9519 },
+                { { 0x80, 0x49, 0x00 }, 14.9752 },
+                { { 0x90, 0x42, 0x7b }, 15.5 },
+                { { 0x80, 0x42, 0x00 }, 15.9744 },
+                { { 0x90, 0x4e, 0x7b }, 16.0 },
+                { { 0x90, 0x49, 0x7b }, 16.0 },
+                { { 0x80, 0x49, 0x00 }, 17.0 },
+                { { 0x80, 0x4e, 0x00 }, 17.0312 },
+                { { 0x90, 0x42, 0x7b }, 20.0 },
+                { { 0x80, 0x42, 0x00 }, 20.3751 },
+                { { 0x90, 0x49, 0x7b }, 22.0 },
+                { { 0x90, 0x42, 0x7a }, 22.0 },
+                { { 0x90, 0x4e, 0x7b }, 22.5 },
+                { { 0x80, 0x42, 0x00 }, 22.5101 },
+                { { 0x80, 0x49, 0x00 }, 22.5207 },
+                { { 0x80, 0x4e, 0x00 }, 23.0279 },
+                { { 0x90, 0x4e, 0x79 }, 24.0 },
+                { { 0x90, 0x42, 0x7a }, 24.0 },
+                { { 0x90, 0x49, 0x7a }, 24.0 },
+                { { 0x80, 0x49, 0x00 }, 24.1976 },
+                { { 0x80, 0x42, 0x00 }, 24.2033 },
+                { { 0x80, 0x4e, 0x00 }, 24.2284 } };
+
+            runSequenceClippingTest ({ std::begin (data), std::end (data) },
+                                     { 12.0, 24.0 }, static_cast<size_t> (26));
+        }
+
+        {
+            BytesAndTimeStamp data[] = {
+                { { 0x90, 0x4e, 0x7c }, 0.0 },
+                { { 0x90, 0x42, 0x7c }, 0.0 },
+                { { 0x90, 0x49, 0x7c }, 0.0 },
+                { { 0x80, 0x42, 0x00 }, 0.4354 },
+                { { 0x80, 0x49, 0x00 }, 0.4578 },
+                { { 0x80, 0x4e, 0x00 }, 0.4764 },
+                { { 0x90, 0x4e, 0x7c }, 2.5 },
+                { { 0x90, 0x49, 0x7f }, 2.5 },
+                { { 0x90, 0x42, 0x7c }, 2.5 },
+                { { 0x80, 0x4e, 0x00 }, 2.9335 },
+                { { 0x80, 0x42, 0x00 }, 2.9519 },
+                { { 0x80, 0x49, 0x00 }, 2.9752 },
+                { { 0x90, 0x42, 0x7b }, 3.5 },
+                { { 0x80, 0x42, 0x00 }, 3.9744 },
+                { { 0x90, 0x4e, 0x7b }, 4.0 },
+                { { 0x90, 0x49, 0x7b }, 4.0 },
+                { { 0x80, 0x49, 0x00 }, 5.0 },
+                { { 0x80, 0x4e, 0x00 }, 5.0312 },
+                { { 0x90, 0x42, 0x7b }, 8.0 },
+                { { 0x80, 0x42, 0x00 }, 8.3751 },
+                { { 0x90, 0x49, 0x7b }, 10.0 },
+                { { 0x90, 0x42, 0x7a }, 10.0 },
+                { { 0x90, 0x4e, 0x7b }, 10.5 },
+                { { 0x80, 0x42, 0x00 }, 10.5101 },
+                { { 0x80, 0x49, 0x00 }, 10.5207 },
+                { { 0x80, 0x4e, 0x00 }, 11.0279 },
+                { { 0x90, 0x4e, 0x79 }, 12.0 },
+                { { 0x90, 0x42, 0x7a }, 12.0 },
+                { { 0x90, 0x49, 0x7a }, 12.0 },
+                { { 0x80, 0x49, 0x00 }, 12.1976 },
+                { { 0x80, 0x42, 0x00 }, 12.2033 },
+                { { 0x80, 0x4e, 0x00 }, 12.2284 } };
+
+            runSequenceClippingTest ({ std::begin (data), std::end (data) },
+                                     { 0.0, 12.0 }, static_cast<size_t> (26));
+        }
+
+    }
+
+    void runSequenceClippingTest (std::vector<BytesAndTimeStamp> data, juce::Range<double> clipRange, size_t numEventsExpected)
+    {
+        choc::midi::Sequence seq;
+
+        for (auto d : data)
+            seq.events.push_back ({ d.timestamp, choc::midi::ShortMessage (d.bytes[0], d.bytes[1], d.bytes[2]) });
+
+        std::vector<std::pair<size_t, size_t>> noteOffMap;
+        MidiHelpers::createNoteOffMap (noteOffMap, seq);
+        MidiHelpers::clipSequenceToRange (seq, clipRange, noteOffMap);
+
+        expectEquals (seq.events.size(), numEventsExpected);
+
+        bool allEventsWithinRange = true;
+
+        for (auto e : seq)
+            if (! clipRange.contains (e.timeStamp))
+                allEventsWithinRange = false;
+
+        expect (allEventsWithinRange, "Not all events within the expected range");
+    }
+
+    void runOffsetTests (test_utilities::TestSetup ts)
+    {
+        beginTest ("MIDI clip with offset");
+
+        // - Create a MIDI clip at bar 2 of 1 bar
+        // - Add two notes, one beat each
+        // - Set the offset to 1.5 beats (so only half of one note should be visible)
+        // - Render the track which should only contain a single note
+
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine);
+        auto& tempoSeq = edit->tempoSequence;
+        auto mc = getAudioTracks (*edit)[0]->insertMIDIClip ({ tempoSeq.toTime (tempo::BarsAndBeats { 1 }),
+                                                               tempoSeq.toTime (tempo::BarsAndBeats { 2 }) },
+                                                             nullptr);
+        mc->setOffset (toDuration (tempoSeq.toTime (1.5_bp)));
+
+        auto& sequence = mc->getSequence();
+        sequence.addNote (49, 0_bp, 1_bd, 127, 0, nullptr);
+        sequence.addNote (50, 1_bp, 1_bd, 127, 0, nullptr);
+
+        auto seq = test_utilities::stripNonNoteOnOffMessages (renderMidiClip (*mc, ts, { 0_tp, mc->getPosition().getEnd() }));
+        expectEquals (seq.getNumEvents(), 2);
+
+        testMidiClip (*mc, ts);
+    }
+
     void testMidiClip (MidiClip& mc, test_utilities::TestSetup ts)
     {
         auto renderOpts = RenderOptions::forClipRender ({ &mc }, true);
@@ -104,7 +391,27 @@ private:
         params.destFile = t2.getFile();
         const auto seqWithoutProxyFile = Renderer::renderToFile ("non-proxy", params);
 
-        test_utilities::expectMidiMessageSequence (*this, getSeqFromFile (seqWithProxyFile), getSeqFromFile (seqWithProxyFile));
+        test_utilities::expectMidiMessageSequence (*this,
+                                                   test_utilities::stripMetaEvents (getSeqFromFile (seqWithoutProxyFile)),
+                                                   test_utilities::stripMetaEvents (getSeqFromFile (seqWithProxyFile)));
+    }
+
+    juce::MidiMessageSequence renderMidiClip (MidiClip& mc, test_utilities::TestSetup ts,
+                                              TimeRange rangeToRender)
+    {
+        auto renderOpts = RenderOptions::forClipRender ({ &mc }, true);
+        renderOpts->setFormat (RenderOptions::midi);
+        renderOpts->setIncludePlugins (false);
+        auto params = renderOpts->getRenderParameters (mc);
+        params.sampleRateForAudio = ts.sampleRate;
+        params.blockSizeForAudio = ts.blockSize;
+        params.time = rangeToRender;
+
+        juce::TemporaryFile t1;
+        params.destFile = t1.getFile();
+        const auto seqFile = Renderer::renderToFile ("proxy", params);
+
+        return getSeqFromFile (seqFile);
     }
 
     static juce::MidiMessageSequence getSeqFromFile (juce::File f)
@@ -117,6 +424,8 @@ private:
             if (! in.openedOk() || ! midiFile.readFrom (in))
                 return {};
         }
+
+        midiFile.convertTimestampTicksToSeconds();
 
         // Track 0 contains meta events from the tempo track etc.
         return *midiFile.getTrack (1);

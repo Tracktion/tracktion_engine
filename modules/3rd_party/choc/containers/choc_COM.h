@@ -1,11 +1,11 @@
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -22,6 +22,15 @@
 #include <atomic>
 #include <string>
 #include "../platform/choc_Assert.h"
+
+#ifdef __clang__
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wnon-virtual-dtor" // COM objects can't have a virtual destructor
+#elif __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wnon-virtual-dtor" // COM objects can't have a virtual destructor
+#endif
+
 
 /*
     The venerable Microsoft "COM" object system is clunky and awful in many ways.
@@ -52,8 +61,6 @@ namespace choc::com
 */
 struct Object
 {
-    virtual ~Object() = default;
-
     /// This must increment the object's ref-count.
     /// It returns the incremented number of references.
     virtual int addRef() noexcept = 0;
@@ -73,8 +80,11 @@ struct Object
 /// an atomic reference-count.
 /// The BaseClass template should be either Object or some other class that
 /// derives from Object, and this class will inherit from BaseClass.
+/// DerivedClass is the name of the class that you're implementing, and
+/// this is used to determine the type that will be deleted when the reference
+/// count becomes zero.
 /// When the object is initially created, its reference count is set to 1.
-template <typename BaseClass>
+template <typename BaseClass, typename DerivedClass>
 struct ObjectWithAtomicRefCount  : public BaseClass
 {
     ObjectWithAtomicRefCount() = default;
@@ -222,29 +232,29 @@ String* createRawString (std::string);
 //
 //==============================================================================
 
-template <typename BaseClass>
-int ObjectWithAtomicRefCount<BaseClass>::addRef() noexcept
+template <typename BaseClass, typename DerivedClass>
+int ObjectWithAtomicRefCount<BaseClass, DerivedClass>::addRef() noexcept
 {
     return ++referenceCount;
 }
 
-template <typename BaseClass>
-int ObjectWithAtomicRefCount<BaseClass>::release() noexcept
+template <typename BaseClass, typename DerivedClass>
+int ObjectWithAtomicRefCount<BaseClass, DerivedClass>::release() noexcept
 {
     auto count = --referenceCount;
 
     if (count > 0)
         return count;
 
-    delete this;
+    delete static_cast<DerivedClass*> (this);
 
     // A negative ref-count means that something has gone very wrong...
     CHOC_ASSERT (count == 0);
     return 0;
 }
 
-template <typename BaseClass>
-int ObjectWithAtomicRefCount<BaseClass>::getReferenceCount() const noexcept
+template <typename BaseClass, typename DerivedClass>
+int ObjectWithAtomicRefCount<BaseClass, DerivedClass>::getReferenceCount() const noexcept
 {
     return referenceCount.load();
 }
@@ -325,7 +335,7 @@ inline std::string_view toString (const Ptr<String>& s)
 
 inline String* createRawString (std::string stringToUse)
 {
-    struct StringHolder final  : public ObjectWithAtomicRefCount<String>
+    struct StringHolder final  : public ObjectWithAtomicRefCount<String, StringHolder>
     {
         StringHolder (std::string&& s)  : str (std::move (s)) {}
 
@@ -344,5 +354,11 @@ inline StringPtr createString (std::string stringToUse)
 }
 
 } // namespace choc::com
+
+#ifdef __clang__
+ #pragma clang diagnostic pop
+#elif __GNUC__
+ #pragma GCC diagnostic pop
+#endif
 
 #endif // CHOC_COM_HELPERS_HEADER_INCLUDED

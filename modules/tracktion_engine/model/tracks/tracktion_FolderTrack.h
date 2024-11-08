@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -27,17 +27,17 @@ public:
     void initialise() override;
 
     void sanityCheckName() override;
-    juce::String getName() override;
+    juce::String getName() const override;
 
     // not an index - values start from 1
-    int getFolderTrackNumber() noexcept;
+    int getFolderTrackNumber() const noexcept;
 
     //==============================================================================
     bool isSubmixFolder() const;
-    
+
     /** Returns the output if this track is a submix folder. */
     TrackOutput* getOutput() const noexcept;
-    
+
     juce::Array<Track*> getInputTracks() const override;
 
     //==============================================================================
@@ -86,6 +86,7 @@ private:
     juce::CachedValue<bool> muted, soloed, soloIsolated;
     bool dirtyClips = true;
 
+    std::mutex pluginMutex;
     juce::ReferenceCountedObjectPtr<VCAPlugin> vcaPlugin;
     juce::ReferenceCountedObjectPtr<VolumeAndPanPlugin> volumePlugin;
     AsyncCaller pluginUpdater;

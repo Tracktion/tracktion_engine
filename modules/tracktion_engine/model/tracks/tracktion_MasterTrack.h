@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -20,7 +20,7 @@ class MasterTrack   : public Track
 public:
     /** Create the MasterTrack for an Edit with a given state. */
     MasterTrack (Edit&, const juce::ValueTree&);
-    
+
     /** Destructor. */
     ~MasterTrack() override;
 
@@ -31,7 +31,7 @@ public:
     /** @internal */
     bool isMasterTrack() const override;
     /** @internal */
-    juce::String getName() override;
+    juce::String getName() const override;
     /** @internal */
     juce::String getSelectableDescription() override;
 

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -23,13 +23,14 @@ struct RackConnection
 
 
 //==============================================================================
-class RackType  : public Selectable,
+class RackType  : public EditItem,
+                  public Selectable,
                   public juce::ReferenceCountedObject,
                   public MacroParameterElement,
                   private juce::ValueTree::Listener
 {
 public:
-    RackType (const juce::ValueTree&, Edit&);
+    RackType (Edit&, const juce::ValueTree&);
     ~RackType() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<RackType>;
@@ -69,13 +70,15 @@ public:
     juce::Point<float> getPluginPosition (int index) const;
     void setPluginPosition (int index, juce::Point<float> pos);
 
+    void flushStateToValueTree();
+
     //==============================================================================
     juce::Array<const RackConnection*> getConnections() const noexcept;
 
-    void addConnection (EditItemID source, int sourcePin,
+    bool addConnection (EditItemID source, int sourcePin,
                         EditItemID dest, int destPin);
 
-    void removeConnection (EditItemID source, int sourcePin,
+    bool removeConnection (EditItemID source, int sourcePin,
                            EditItemID dest, int destPin);
 
     // check that this doesn't create loops, etc
@@ -91,6 +94,8 @@ public:
                                      EditItemID pluginID, int pinIndex);
 
     //==============================================================================
+    juce::String getName() const override               { return rackName; }
+
     juce::StringArray getInputNames() const;
     juce::StringArray getOutputNames() const;
 
@@ -137,11 +142,7 @@ public:
     void saveWindowPosition();
     void hideWindowForShutdown();
 
-    Edit& edit;
-
-    juce::ValueTree state;    // do not change the order of
-    const EditItemID rackID;  // these two members!
-
+    juce::ValueTree state;
     juce::CachedValue<juce::String> rackName;
 
 private:
@@ -203,7 +204,9 @@ public:
     RackType::Ptr findRackContaining (Plugin&) const;
     RackType::Ptr addRackTypeFrom (const juce::ValueTree&);
     RackType::Ptr addNewRack();
-    void removeRackType (const RackType::Ptr& type);
+    RackType::Ptr duplicateRack (EditItemID);
+    RackType::Ptr duplicateRack (RackType&);
+    void removeRackType (const RackType::Ptr&);
     void importRackFiles (const juce::Array<juce::File>&);
 
     const juce::Array<RackType*>& getTypes() const noexcept;

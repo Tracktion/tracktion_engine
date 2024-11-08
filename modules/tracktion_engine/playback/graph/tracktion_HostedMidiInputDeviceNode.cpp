@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -11,10 +11,10 @@
 namespace tracktion { inline namespace engine
 {
 
-HostedMidiInputDeviceNode::HostedMidiInputDeviceNode (InputDeviceInstance& idi, MidiInputDevice&, MidiMessageArray::MPESourceID msi,
-                                                      tracktion::graph::PlayHeadState&)
-    : instance (idi),
-      midiSourceID (msi)
+HostedMidiInputDeviceNode::HostedMidiInputDeviceNode (InputDeviceInstance& idi, MidiInputDevice&,
+                                                      tracktion::graph::PlayHeadState&, tracktion::ProcessState& ps)
+    : TracktionEngineNode (ps),
+      instance (idi)
 {
 }
 
@@ -54,20 +54,22 @@ void HostedMidiInputDeviceNode::process (ProcessContext& pc)
     for (auto m : incomingMessages)
         if (localTimeRange.contains (m.getTimeStamp()))
             destMidi.add (m);
-    
+
     // Subtract time from messages and trim any negative
     incomingMessages.addToTimestamps (-localTimeRange.getLength());
-    
+
     for (int i = incomingMessages.size(); --i >= 0;)
         if (incomingMessages[i].getTimeStamp() < 0.0)
             incomingMessages.remove (i);
 }
 
-void HostedMidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& message)
+void HostedMidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessage& message, MPESourceID sourceID)
 {
-    // Timestamps will be offsets form the next buffer in seconds
+    const auto globalStreamTime = instance.edit.engine.getDeviceManager().getCurrentStreamTime();
+
+    // Timestamps will have global stream times so convert these to buffer offsets
     const std::lock_guard<tracktion::graph::RealTimeSpinLock> lock (bufferMutex);
-    incomingMessages.addMidiMessage (message, midiSourceID);
+    incomingMessages.addMidiMessage (message, message.getTimeStamp() - globalStreamTime, sourceID);
 }
 
 }} // namespace tracktion { inline namespace engine

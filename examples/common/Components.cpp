@@ -11,19 +11,17 @@
 namespace te = tracktion;
 using namespace std::literals;
 
-static inline const char* getInternalPluginFormatName()     { return "TracktionInternal"; }
-
 //==============================================================================
 class PluginTreeBase
 {
 public:
     virtual ~PluginTreeBase() = default;
     virtual String getUniqueName() const = 0;
-    
+
     void addSubItem (PluginTreeBase* itm)   { subitems.add (itm);       }
     int getNumSubItems()                    { return subitems.size();   }
     PluginTreeBase* getSubItem (int idx)    { return subitems[idx];     }
-    
+
 private:
     OwnedArray<PluginTreeBase> subitems;
 };
@@ -36,7 +34,7 @@ public:
     PluginTreeItem (const String& uniqueId, const String& name, const String& xmlType, bool isSynth, bool isPlugin);
 
     te::Plugin::Ptr create (te::Edit&);
-    
+
     String getUniqueName() const override
     {
         if (desc.fileOrIdentifier.startsWith (te::RackType::getRackPresetPrefix()))
@@ -58,7 +56,7 @@ class PluginTreeGroup : public PluginTreeBase
 public:
     PluginTreeGroup (te::Edit&, KnownPluginList::PluginTree&, te::Plugin::Type);
     PluginTreeGroup (const String&);
-    
+
     String getUniqueName() const override           { return name; }
 
     String name;
@@ -71,21 +69,21 @@ private:
 };
 
 //==============================================================================
-PluginTreeItem::PluginTreeItem (const PluginDescription& d)
+PluginTreeItem::PluginTreeItem (const juce::PluginDescription& d)
     : desc (d), xmlType (te::ExternalPlugin::xmlTypeName), isPlugin (true)
 {
     jassert (xmlType.isNotEmpty());
 }
 
-PluginTreeItem::PluginTreeItem (const String& uniqueId, const String& name,
-                                const String& xmlType_, bool isSynth, bool isPlugin_)
+PluginTreeItem::PluginTreeItem (const juce::String& uniqueId, const juce::String& name,
+                                const juce::String& xmlType_, bool isSynth, bool isPlugin_)
     : xmlType (xmlType_), isPlugin (isPlugin_)
 {
     jassert (xmlType.isNotEmpty());
     desc.name = name;
     desc.fileOrIdentifier = uniqueId;
     desc.pluginFormatName = (uniqueId.endsWith ("_trkbuiltin") || xmlType == te::RackInstance::xmlTypeName)
-                                ? getInternalPluginFormatName() : String();
+                                ? juce::String (te::PluginManager::builtInPluginFormatName) : juce::String();
     desc.category = xmlType;
     desc.isInstrument = isSynth;
 }
@@ -238,7 +236,7 @@ public:
 };
 
 //==============================================================================
-te::Plugin::Ptr showMenuAndCreatePlugin (te::Edit& edit)
+inline te::Plugin::Ptr showMenuAndCreatePlugin (te::Edit& edit)
 {
     if (auto tree = EngineHelpers::createPluginTree (edit.engine))
     {
@@ -248,7 +246,7 @@ te::Plugin::Ptr showMenuAndCreatePlugin (te::Edit& edit)
         if (auto type = m.runMenu (root))
             return type->create (edit);
     }
-    
+
     return {};
 }
 
@@ -263,7 +261,7 @@ void ClipComponent::paint (Graphics& g)
     g.fillAll (clip->getColour().withAlpha (0.5f));
     g.setColour (Colours::black);
     g.drawRect (getLocalBounds());
-    
+
     if (editViewState.selectionManager.isSelected (clip.get()))
     {
         g.setColour (Colours::red);
@@ -286,7 +284,7 @@ AudioClipComponent::AudioClipComponent (EditViewState& evs, te::Clip::Ptr c)
 void AudioClipComponent::paint (Graphics& g)
 {
     ClipComponent::paint (g);
-    
+
     if (editViewState.drawWaveforms && thumbnail != nullptr)
         drawWaveform (g, *getWaveAudioClip(), *thumbnail, Colours::black.withAlpha (0.5f),
                       0, getWidth(), 0, getHeight(), 0);
@@ -301,36 +299,36 @@ void AudioClipComponent::drawWaveform (Graphics& g, te::AudioClipBase& c, te::Sm
         {
             auto t1 = editViewState.xToTime (l, p->getWidth());
             auto t2 = editViewState.xToTime (r, p->getWidth());
-            
+
             return { t1, t2 };
         }
-        
+
         return {};
     };
-    
+
     jassert (left <= right);
     const auto gain = c.getGain();
     const auto pan = thumb.getNumChannels() == 1 ? 0.0f : c.getPan();
-    
+
     const float pv = pan * gain;
     const float gainL = (gain - pv);
     const float gainR = (gain + pv);
-    
+
     const bool usesTimeStretchedProxy = c.usesTimeStretchedProxy();
-    
+
     const auto clipPos = c.getPosition();
     auto offset = clipPos.getOffset();
     auto speedRatio = c.getSpeedRatio();
-    
+
     g.setColour (colour);
-    
+
     if (usesTimeStretchedProxy)
     {
         const Rectangle<int> area (left + xOffset, y, right - left, h);
-        
+
         if (! thumb.isOutOfDate())
         {
-            drawChannels (g, thumb, area, false,
+            drawChannels (g, thumb, area,
                           getTimeRangeForDrawing (left, right),
                           c.isLeftChannelActive(), c.isRightChannelActive(),
                           gainL, gainR);
@@ -339,34 +337,34 @@ void AudioClipComponent::drawWaveform (Graphics& g, te::AudioClipBase& c, te::Sm
     else if (c.getLoopLength() == 0s)
     {
         auto region = getTimeRangeForDrawing (left, right);
-        
+
         auto t1 = (region.getStart() + offset) * speedRatio;
         auto t2 = (region.getEnd()   + offset) * speedRatio;
-        
+
         drawChannels (g, thumb,
                       { left + xOffset, y, right - left, h },
-                      false, { t1, t2 },
+                      { t1, t2 },
                       c.isLeftChannelActive(), c.isRightChannelActive(),
                       gainL, gainR);
     }
 }
 
-void AudioClipComponent::drawChannels (Graphics& g, te::SmartThumbnail& thumb, Rectangle<int> area, bool useHighRes,
+void AudioClipComponent::drawChannels (Graphics& g, te::SmartThumbnail& thumb, Rectangle<int> area,
                                        te::TimeRange time, bool useLeft, bool useRight,
                                        float leftGain, float rightGain)
 {
     if (useLeft && useRight && thumb.getNumChannels() > 1)
     {
-        thumb.drawChannel (g, area.removeFromTop (area.getHeight() / 2), useHighRes, time, 0, leftGain);
-        thumb.drawChannel (g, area, useHighRes, time, 1, rightGain);
+        thumb.drawChannel (g, area.removeFromTop (area.getHeight() / 2), time, 0, leftGain);
+        thumb.drawChannel (g, area, time, 1, rightGain);
     }
     else if (useLeft)
     {
-        thumb.drawChannel (g, area, useHighRes, time, 0, leftGain);
+        thumb.drawChannel (g, area, time, 0, leftGain);
     }
     else if (useRight)
     {
-        thumb.drawChannel (g, area, useHighRes, time, 1, rightGain);
+        thumb.drawChannel (g, area, time, 1, rightGain);
     }
 }
 
@@ -375,13 +373,13 @@ void AudioClipComponent::updateThumbnail()
     if (auto* wac = getWaveAudioClip())
     {
         te::AudioFile af (wac->getAudioFile());
-        
+
         if (af.getFile().existsAsFile() || (! wac->usesSourceFile()))
         {
             if (af.isValid())
             {
                 const te::AudioFile proxy ((wac->hasAnyTakes() && wac->isShowingTakes()) ? wac->getAudioFile() : wac->getPlaybackFile());
-                
+
                 if (thumbnail == nullptr)
                     thumbnail = std::make_unique<te::SmartThumbnail> (wac->edit.engine, proxy, *this, &wac->edit);
                 else
@@ -429,7 +427,7 @@ MidiClipComponent::MidiClipComponent (EditViewState& evs, te::Clip::Ptr c)
 void MidiClipComponent::paint (Graphics& g)
 {
     ClipComponent::paint (g);
-    
+
     if (auto mc = getMidiClip())
     {
         auto& seq = mc->getSequence();
@@ -437,17 +435,17 @@ void MidiClipComponent::paint (Graphics& g)
         {
             auto sBeat = mc->getStartBeat() + toDuration (n->getStartBeat());
             auto eBeat = mc->getStartBeat() + toDuration (n->getEndBeat());
-            
+
             auto s = editViewState.beatToTime (sBeat);
             auto e = editViewState.beatToTime (eBeat);
-            
+
             if (auto p = getParentComponent())
             {
                 auto t1 = (double) editViewState.timeToX (s, p->getWidth()) - getX();
                 auto t2 = (double) editViewState.timeToX (e, p->getWidth()) - getX();
-                
+
                 double y = (1.0 - double (n->getNoteNumber()) / 127.0) * getHeight();
-                
+
                 g.setColour (Colours::white.withAlpha (n->getVelocity() / 127.0f));
                 g.drawLine (float (t1), float (y), float (t2), float (y));
             }
@@ -469,10 +467,10 @@ void RecordingClipComponent::initialiseThumbnailAndPunchTime()
     {
         for (auto idi : at->edit.getEditInputDevices().getDevicesForTargetTrack (*at))
         {
-            punchInTime = idi->getPunchInTime();
-            
-            if (idi->getRecordingFile().exists())
-                thumbnail = at->edit.engine.getRecordingThumbnailManager().getThumbnailFor (idi->getRecordingFile());
+            punchInTime = idi->getPunchInTime (at->itemID);
+
+            if (idi->getRecordingFile (at->itemID).exists())
+                thumbnail = at->edit.engine.getRecordingThumbnailManager().getThumbnailFor (idi->getRecordingFile (at->itemID));
         }
     }
 }
@@ -482,7 +480,7 @@ void RecordingClipComponent::paint (Graphics& g)
     g.fillAll (Colours::red.withAlpha (0.5f));
     g.setColour (Colours::black);
     g.drawRect (getLocalBounds());
-    
+
     if (editViewState.drawWaveforms)
         drawThumbnail (g, Colours::black.withAlpha (0.5f));
 }
@@ -491,16 +489,16 @@ void RecordingClipComponent::drawThumbnail (Graphics& g, Colour waveformColour) 
 {
     if (thumbnail == nullptr)
         return;
-    
+
     Rectangle<int> bounds;
     tracktion::TimeRange times;
     getBoundsAndTime (bounds, times);
     auto w = bounds.getWidth();
-    
+
     if (w > 0 && w < 10000)
     {
         g.setColour (waveformColour);
-        thumbnail->thumb.drawChannels (g, bounds, w, times, 1.0f);
+        thumbnail->thumb->drawChannels (g, bounds, times.getStart().inSeconds(), times.getEnd().inSeconds(), 1.0f);
     }
 }
 
@@ -513,7 +511,7 @@ bool RecordingClipComponent::getBoundsAndTime (Rectangle<int>& bounds, tracktion
 
         return 0;
     };
-    
+
     auto xToEditTime = [this] (int x)
     {
         if (auto p = getParentComponent())
@@ -521,27 +519,27 @@ bool RecordingClipComponent::getBoundsAndTime (Rectangle<int>& bounds, tracktion
 
         return te::TimePosition();
     };
-    
+
     bool hasLooped = false;
     auto& edit = track->edit;
-    
+
     if (auto epc = edit.getTransport().getCurrentPlaybackContext())
     {
         auto localBounds = getLocalBounds();
-        
+
         auto timeStarted = thumbnail->punchInTime;
-        auto unloopedPos = timeStarted + te::TimeDuration::fromSeconds (thumbnail->thumb.getTotalLength());
-        
+        auto unloopedPos = timeStarted + te::TimeDuration::fromSeconds (thumbnail->thumb->getTotalLength());
+
         auto t1 = timeStarted;
         auto t2 = unloopedPos;
-        
+
         if (epc->isLooping() && t2 >= epc->getLoopTimes().getEnd())
         {
             hasLooped = true;
-            
+
             t1 = jmin (t1, epc->getLoopTimes().getStart());
             t2 = epc->getPosition();
-            
+
             t1 = jmax (editViewState.viewX1.get(), t1);
             t2 = jmin (editViewState.viewX2.get(), t2);
         }
@@ -549,24 +547,24 @@ bool RecordingClipComponent::getBoundsAndTime (Rectangle<int>& bounds, tracktion
         {
             const auto in  = thumbnail->punchInTime;
             const auto out = edit.getTransport().getLoopRange().getEnd();
-            
+
             t1 = jlimit (in, out, t1);
             t2 = jlimit (in, out, t2);
         }
-        
+
         bounds = localBounds.withX (jmax (localBounds.getX(), editTimeToX (t1)))
                  .withRight (jmin (localBounds.getRight(), editTimeToX (t2)));
-        
+
         auto loopRange = epc->getLoopTimes();
         const auto recordedTime = unloopedPos - toDuration (epc->getLoopTimes().getStart());
         const int numLoops = (int) (recordedTime / loopRange.getLength());
-        
+
         const tracktion::TimeRange editTimes (xToEditTime (bounds.getX()),
                                               xToEditTime (bounds.getRight()));
-        
+
         times = (editTimes + (loopRange.getLength() * numLoops)) - toDuration (timeStarted);
     }
-    
+
     return hasLooped;
 }
 
@@ -578,16 +576,16 @@ void RecordingClipComponent::timerCallback()
 void RecordingClipComponent::updatePosition()
 {
     auto& edit = track->edit;
-    
+
     if (auto epc = edit.getTransport().getCurrentPlaybackContext())
     {
         auto t1 = punchInTime >= 0s ? punchInTime : edit.getTransport().getTimeWhenStarted();
         auto t2 = jmax (t1, epc->getUnloopedPosition());
-        
+
         if (epc->isLooping())
         {
             auto loopTimes = epc->getLoopTimes();
-            
+
             if (t2 >= loopTimes.getEnd())
             {
                 t1 = jmin (t1, loopTimes.getStart());
@@ -599,24 +597,24 @@ void RecordingClipComponent::updatePosition()
             auto mr = edit.getTransport().getLoopRange();
             auto in  = mr.getStart();
             auto out = mr.getEnd();
-            
+
             t1 = jlimit (in, out, t1);
             t2 = jlimit (in, out, t2);
         }
-        
+
         t1 = jmax (t1, editViewState.viewX1.get());
         t2 = jmin (t2, editViewState.viewX2.get());
-    
+
         if (auto p = getParentComponent())
         {
             int x1 = editViewState.timeToX (t1, p->getWidth());
             int x2 = editViewState.timeToX (t2, p->getWidth());
-            
+
             setBounds (x1, 0, x2 - x1, p->getHeight());
             return;
         }
     }
-    
+
     setBounds ({});
 }
 
@@ -625,26 +623,26 @@ TrackHeaderComponent::TrackHeaderComponent (EditViewState& evs, te::Track::Ptr t
     : editViewState (evs), track (t)
 {
     Helpers::addAndMakeVisible (*this, { &trackName, &armButton, &muteButton, &soloButton, &inputButton });
-    
+
     armButton.setColour (TextButton::buttonOnColourId, Colours::red);
     muteButton.setColour (TextButton::buttonOnColourId, Colours::red);
     soloButton.setColour (TextButton::buttonOnColourId, Colours::green);
 
     trackName.setText (t->getName(), dontSendNotification);
-    
+
     if (auto at = dynamic_cast<te::AudioTrack*> (track.get()))
     {
         inputButton.onClick = [this, at]
         {
             PopupMenu m;
-            
+
             if (EngineHelpers::trackHasInput (*at))
             {
                 bool ticked = EngineHelpers::isInputMonitoringEnabled (*at);
                 m.addItem (1000, "Input Monitoring", true, ticked);
                 m.addSeparator();
             }
-            
+
             if (editViewState.showWaveDevices)
             {
                 int id = 1;
@@ -652,22 +650,22 @@ TrackHeaderComponent::TrackHeaderComponent (EditViewState& evs, te::Track::Ptr t
                 {
                     if (instance->getInputDevice().getDeviceType() == te::InputDevice::waveDevice)
                     {
-                        bool ticked = instance->getTargetTracks().getFirst() == at;
+                        bool ticked = instance->getTargets().getFirst() == at->itemID;
                         m.addItem (id++, instance->getInputDevice().getName(), true, ticked);
                     }
                 }
             }
-            
+
             if (editViewState.showMidiDevices)
             {
                 m.addSeparator();
-                
+
                 int id = 100;
                 for (auto instance : at->edit.getAllInputDevices())
                 {
                     if (instance->getInputDevice().getDeviceType() == te::InputDevice::physicalMidiDevice)
                     {
-                        bool ticked = instance->getTargetTracks().getFirst() == at;
+                        bool ticked = instance->getTargets().getFirst() == at->itemID;
                         m.addItem (id++, instance->getInputDevice().getName(), true, ticked);
                     }
                 }
@@ -687,7 +685,8 @@ TrackHeaderComponent::TrackHeaderComponent (EditViewState& evs, te::Track::Ptr t
                     if (instance->getInputDevice().getDeviceType() == te::InputDevice::physicalMidiDevice)
                     {
                         if (id == res)
-                            instance->setTargetTrack (*at, 0, true);
+                            [[ maybe_unused ]] auto result = instance->setTarget (at->itemID, true, &at->edit.getUndoManager(), 0);
+
                         id++;
                     }
                 }
@@ -700,7 +699,8 @@ TrackHeaderComponent::TrackHeaderComponent (EditViewState& evs, te::Track::Ptr t
                     if (instance->getInputDevice().getDeviceType() == te::InputDevice::waveDevice)
                     {
                         if (id == res)
-                            instance->setTargetTrack (*at, 0, true);
+                            [[ maybe_unused ]] auto result = instance->setTarget (at->itemID, true, &at->edit.getUndoManager(), 0);
+
                         id++;
                     }
                 }
@@ -713,7 +713,7 @@ TrackHeaderComponent::TrackHeaderComponent (EditViewState& evs, te::Track::Ptr t
         };
         muteButton.onClick = [at] { at->setMute (! at->isMuted (false)); };
         soloButton.onClick = [at] { at->setSolo (! at->isSolo (false)); };
-        
+
         armButton.setToggleState (EngineHelpers::isTrackArmed (*at), dontSendNotification);
     }
     else
@@ -722,11 +722,11 @@ TrackHeaderComponent::TrackHeaderComponent (EditViewState& evs, te::Track::Ptr t
         muteButton.setVisible (false);
         soloButton.setVisible (false);
     }
-    
+
     track->state.addListener (this);
     inputsState = track->edit.state.getChildWithName (te::IDs::INPUTDEVICES);
     inputsState.addListener (this);
-    
+
     valueTreePropertyChanged (track->state, te::IDs::mute);
     valueTreePropertyChanged (track->state, te::IDs::solo);
     valueTreePropertyChanged (inputsState, te::IDs::targetIndex);
@@ -762,7 +762,7 @@ void TrackHeaderComponent::paint (Graphics& g)
 {
     g.setColour (Colours::grey);
     g.fillRect (getLocalBounds().withTrimmedRight (2));
-    
+
     if (editViewState.selectionManager.isSelected (track.get()))
     {
         g.setColour (Colours::red);
@@ -779,7 +779,7 @@ void TrackHeaderComponent::resized()
 {
     auto r = getLocalBounds().reduced (4);
     trackName.setBounds (r.removeFromTop (r.getHeight() / 2));
-    
+
     int w = r.getHeight();
     inputButton.setBounds (r.removeFromLeft (w));
     r.removeFromLeft (2);
@@ -822,11 +822,11 @@ TrackFooterComponent::TrackFooterComponent (EditViewState& evs, te::Track::Ptr t
     : editViewState (evs), track (t)
 {
     addAndMakeVisible (addButton);
-    
+
     buildPlugins();
-    
+
     track->state.addListener (this);
-    
+
     addButton.onClick = [this]
     {
         if (auto plugin = showMenuAndCreatePlugin (track->edit))
@@ -860,7 +860,7 @@ void TrackFooterComponent::paint (Graphics& g)
 {
     g.setColour (Colours::grey);
     g.fillRect (getLocalBounds().withTrimmedLeft (2));
-    
+
     if (editViewState.selectionManager.isSelected (track.get()))
     {
         g.setColour (Colours::red);
@@ -877,10 +877,10 @@ void TrackFooterComponent::resized()
 {
     auto r = getLocalBounds().reduced (4);
     const int cx = 21;
-    
+
     addButton.setBounds (r.removeFromLeft (cx).withSizeKeepingCentre (cx, cx));
     r.removeFromLeft (6);
-    
+
     for (auto p : plugins)
     {
         p->setBounds (r.removeFromLeft (cx).withSizeKeepingCentre (cx, cx));
@@ -897,7 +897,7 @@ void TrackFooterComponent::handleAsyncUpdate()
 void TrackFooterComponent::buildPlugins()
 {
     plugins.clear();
-    
+
     for (auto plugin : track->pluginList)
     {
         auto p = new PluginComponent (editViewState, plugin);
@@ -913,7 +913,7 @@ TrackComponent::TrackComponent (EditViewState& evs, te::Track::Ptr t)
 {
     track->state.addListener (this);
     track->edit.getTransport().addChangeListener (this);
-    
+
     markAndUpdate (updateClips);
 }
 
@@ -926,11 +926,11 @@ TrackComponent::~TrackComponent()
 void TrackComponent::paint (Graphics& g)
 {
     g.fillAll (Colours::grey);
-    
+
     if (editViewState.selectionManager.isSelected (track.get()))
     {
         g.setColour (Colours::red);
-        
+
         auto rc = getLocalBounds();
         if (editViewState.showHeaders) rc = rc.withTrimmedLeft (-4);
         if (editViewState.showFooters) rc = rc.withTrimmedRight (-4);
@@ -999,7 +999,7 @@ void TrackComponent::resized()
         auto pos = c.getPosition();
         int x1 = editViewState.timeToX (pos.getStart(), getWidth());
         int x2 = editViewState.timeToX (pos.getEnd(), getWidth());
-        
+
         cc->setBounds (x1, 0, x2 - x1, getHeight());
     }
 }
@@ -1007,44 +1007,44 @@ void TrackComponent::resized()
 void TrackComponent::buildClips()
 {
     clips.clear();
-    
+
     if (auto ct = dynamic_cast<te::ClipTrack*> (track.get()))
     {
         for (auto c : ct->getClips())
         {
             ClipComponent* cc = nullptr;
-            
+
             if (dynamic_cast<te::WaveAudioClip*> (c))
                 cc = new AudioClipComponent (editViewState, c);
             else if (dynamic_cast<te::MidiClip*> (c))
                 cc = new MidiClipComponent (editViewState, c);
             else
                 cc = new ClipComponent (editViewState, c);
-            
+
             clips.add (cc);
             addAndMakeVisible (cc);
         }
     }
-    
+
     resized();
 }
 
 void TrackComponent::buildRecordClips()
 {
     bool needed = false;
-    
+
     if (track->edit.getTransport().isRecording())
     {
         for (auto in : track->edit.getAllInputDevices())
         {
-            if (in->isRecordingActive() && track == in->getTargetTracks().getFirst())
+            if (in->isRecordingActive() && track->itemID == in->getTargets().getFirst())
             {
                 needed = true;
                 break;
             }
         }
     }
-    
+
     if (needed)
     {
         recordingClip = std::make_unique<RecordingClipComponent> (track, editViewState);
@@ -1073,7 +1073,7 @@ bool PlayheadComponent::hitTest (int x, int)
 {
     if (std::abs (x - xPosition) <= 3)
         return true;
-    
+
     return false;
 }
 
@@ -1117,9 +1117,9 @@ EditComponent::EditComponent (te::Edit& e, te::SelectionManager& sm)
 {
     edit.state.addListener (this);
     editViewState.selectionManager.addChangeListener (this);
-    
+
     addAndMakeVisible (playhead);
-    
+
     markAndUpdate (updateTracks);
 }
 
@@ -1182,27 +1182,27 @@ void EditComponent::handleAsyncUpdate()
 void EditComponent::resized()
 {
     jassert (headers.size() == tracks.size());
-    
+
     const int trackHeight = 50, trackGap = 2;
     const int headerWidth = editViewState.showHeaders ? 150 : 0;
     const int footerWidth = editViewState.showFooters ? 150 : 0;
-    
+
     playhead.setBounds (getLocalBounds().withTrimmedLeft (headerWidth).withTrimmedRight (footerWidth));
-    
+
     int y = roundToInt (editViewState.viewY.get());
     for (int i = 0; i < jmin (headers.size(), tracks.size()); i++)
     {
         auto h = headers[i];
         auto t = tracks[i];
         auto f = footers[i];
-        
+
         h->setBounds (0, y, headerWidth, trackHeight);
         t->setBounds (headerWidth, y, getWidth() - headerWidth - footerWidth, trackHeight);
         f->setBounds (getWidth() - footerWidth, y, footerWidth, trackHeight);
-        
+
         y += trackHeight + trackGap;
     }
-    
+
     for (auto t : tracks)
         t->resized();
 }
@@ -1212,11 +1212,11 @@ void EditComponent::buildTracks()
     tracks.clear();
     headers.clear();
     footers.clear();
-    
+
     for (auto t : getAllTracks (edit))
     {
         TrackComponent* c = nullptr;
-        
+
         if (t->isMasterTrack())
         {
             if (editViewState.showMasterTrack)
@@ -1246,22 +1246,22 @@ void EditComponent::buildTracks()
         {
             c = new TrackComponent (editViewState, t);
         }
-        
+
         if (c != nullptr)
         {
             tracks.add (c);
             addAndMakeVisible (c);
-            
+
             auto h = new TrackHeaderComponent (editViewState, t);
             headers.add (h);
             addAndMakeVisible (h);
-            
+
             auto f = new TrackFooterComponent (editViewState, t);
             footers.add (f);
             addAndMakeVisible (f);
         }
     }
-    
+
     playhead.toFront (false);
     resized();
 }

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -151,6 +151,12 @@ LatencyPlugin::~LatencyPlugin()
     notifyListenersOfDeletion();
 }
 
+juce::ValueTree LatencyPlugin::create()
+{
+    return createValueTree (IDs::PLUGIN,
+                            IDs::type, xmlTypeName);
+}
+
 void LatencyPlugin::initialise (const PluginInitialisationInfo&)
 {
     jassert (sampleRate > 0.0);
@@ -181,7 +187,7 @@ void LatencyPlugin::applyToBuffer (const PluginRenderContext& rc)
     {
         const int numChannels = std::min (rc.destBuffer->getNumChannels(),
                                           juce::numElementsInArray (delayCompensator));
-        float** samples = rc.destBuffer->getArrayOfWritePointers();
+        float* const* samples = rc.destBuffer->getArrayOfWritePointers();
 
         for (int i = 0; i < numChannels; ++i)
         {

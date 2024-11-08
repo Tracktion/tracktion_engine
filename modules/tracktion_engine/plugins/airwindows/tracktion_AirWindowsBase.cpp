@@ -10,96 +10,217 @@
 namespace tracktion { inline namespace engine
 {
 
-#define __audioeffect__
-#define VstInt32                int32_t
-#define AudioEffect             AirWindowsBase
-#define AudioEffectX            AirWindowsBase
-#define audioMasterCallback     AirWindowsCallback*
-#define VstPlugCategory         int
-#define kPlugCategEffect        1
-#define kVstMaxProgNameLen      64
-#define kVstMaxParamStrLen      64
-#define kVstMaxProductStrLen    64
-#define kVstMaxVendorStrLen     64
-#define vst_strncpy             strncpy
-
-void float2string (float f, char* text, int len)
+//==============================================================================
+AirWindowsCallback::AirWindowsCallback (AirWindowsPlugin& o)
+: owner (o)
 {
-    int decimals = 0;
-    if (std::fabs (f) >= 10.0)
-        decimals = 1;
-    else if (std::fabs (f) > 1.0)
-        decimals = 2;
-    else
-        decimals = 3;
-
-    juce::String str (f, decimals);
-    str.copyToUTF8 (text, (size_t)len);
 }
 
-void int2string (float i, char* text, int len)
+double AirWindowsCallback::getSampleRate()
 {
-    juce::String str (i);
-    str.copyToUTF8 (text, (size_t)len);
-}
-
-void dB2string (float value, char* text, int maxLen)
-{
-    if (value <= 0)
-        vst_strncpy (text, "-oo", (size_t) maxLen);
-    else
-        float2string ((float)(20. * log10 (value)), text, maxLen);
+    return owner.sampleRate;
 }
 
 //==============================================================================
-class AirWindowsBase
+AirWindowsPlugin::AirWindowsPlugin (PluginCreationInfo info, std::unique_ptr<AirWindowsBase> base)
+    : Plugin (info), callback (*this), impl (std::move (base))
 {
-public:
-    //==============================================================================
-    AirWindowsBase (AirWindowsCallback* c, int prog, int param)
-        : numPrograms (prog), numParams (param), callback (c)
+    auto um = getUndoManager();
+
+    for (int i = 0; i < impl->getNumParameters(); i++)
     {
+        if (AirWindowsAutomatableParameter::getParamName (*this, i) == "Dry/Wet")
+            continue;
+
+        auto param = new AirWindowsAutomatableParameter (*this, i);
+
+        addAutomatableParameter (param);
+        parameters.add (param);
     }
 
-    virtual ~AirWindowsBase() = default;
+    restorePluginStateFromValueTree (state);
 
-    int getNumInputs()                  { return numInputs;     }
-    int getNumOutputs()                 { return numOutputs;    }
-    int getNumParameters()              { return numParams;     }
+    addAutomatableParameter (dryGain = new PluginWetDryAutomatableParam ("dry level", TRANS("Dry Level"), *this));
+    addAutomatableParameter (wetGain = new PluginWetDryAutomatableParam ("wet level", TRANS("Wet Level"), *this));
 
-    //==============================================================================
-    virtual bool getEffectName(char* name)                        = 0;
-    virtual VstPlugCategory getPlugCategory()                     = 0;
-    virtual bool getProductString(char* text)                     = 0;
-    virtual bool getVendorString(char* text)                      = 0;
-    virtual VstInt32 getVendorVersion()                           = 0;
-    virtual void processReplacing (float** inputs, float** outputs, VstInt32 sampleFrames) = 0;
-    virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames) = 0;
-    virtual void getProgramName(char *name)                       = 0;
-    virtual void setProgramName(char *name)                       = 0;
-    virtual VstInt32 getChunk (void** data, bool isPreset)                          { juce::ignoreUnused (data, isPreset); return 0; };
-    virtual VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset)        { juce::ignoreUnused (data, byteSize, isPreset); return 0; };
-    virtual float getParameter(VstInt32 index)                                      { juce::ignoreUnused (index); return 0; }
-    virtual void setParameter(VstInt32 index, float value)                          { juce::ignoreUnused (index, value); }
-    virtual void getParameterLabel(VstInt32 index, char *text)                      { juce::ignoreUnused (index, text); }
-    virtual void getParameterName(VstInt32 index, char *text)                       { juce::ignoreUnused (index, text); }
-    virtual void getParameterDisplay(VstInt32 index, char *text)                    { juce::ignoreUnused (index, text); }
-    virtual VstInt32 canDo(char *text)                            = 0;
+    dryValue.referTo (state, IDs::dry, um);
+    wetValue.referTo (state, IDs::wet, um, 1.0f);
 
-protected:
-    //==============================================================================
-    void setNumInputs (int numIn)       { numInputs = numIn;    }
-    void setNumOutputs (int numOut)     { numOutputs = numOut;  }
-    void setUniqueID (int)              {}
-    void canProcessReplacing()          {}
-    void canDoubleReplacing()           {}
-    void programsAreChunks (bool)       {}
+    dryGain->attachToCurrentValue (dryValue);
+    wetGain->attachToCurrentValue (wetValue);
+}
 
-    int numInputs = 0, numOutputs = 0, numPrograms = 0, numParams = 0;
+AirWindowsPlugin::~AirWindowsPlugin()
+{
+    dryGain->detachFromCurrentValue();
+    wetGain->detachFromCurrentValue();
+}
 
-    AirWindowsCallback* callback;
+void AirWindowsPlugin::setConversionRange (int paramIdx, juce::NormalisableRange<float> range)
+{
+    if (auto p = dynamic_cast<AirWindowsAutomatableParameter*> (parameters[paramIdx].get()))
+        p->setConversionRange (range);
+    else
+        jassertfalse;
+}
 
-    double getSampleRate()              { return callback->getSampleRate(); }
-};
+void AirWindowsPlugin::resetToDefault()
+{
+    for (auto p : parameters)
+        if (auto awp = dynamic_cast<AirWindowsAutomatableParameter*> (p))
+            awp->resetToDefault();
 
-}} // namespace tracktion { inline namespace engine
+    dryGain->setParameter (0.0f, juce::sendNotificationSync);
+    wetGain->setParameter (1.0f, juce::sendNotificationSync);
+}
+
+int AirWindowsPlugin::getNumOutputChannelsGivenInputs (int)
+{
+    return impl->getNumOutputs();
+}
+
+juce::String AirWindowsPlugin::getSelectableDescription()
+{
+    return getName() + " " + TRANS("Plugin");
+}
+
+void AirWindowsPlugin::initialise (const PluginInitialisationInfo& info)
+{
+    sampleRate = info.sampleRate;
+}
+
+void AirWindowsPlugin::deinitialise()
+{
+}
+
+void AirWindowsPlugin::applyToBuffer (const PluginRenderContext& fc)
+{
+    // We need to lock the processing while a preset is being loaded or the parameters
+    // will overwrite the plugin state before we can update the parameters from the
+    // plugin state
+    juce::ScopedLock sl (lock);
+
+    if (fc.destBuffer == nullptr)
+        return;
+
+    SCOPED_REALTIME_CHECK
+
+    for (auto p : parameters)
+        if (auto awp = dynamic_cast<AirWindowsAutomatableParameter*> (p))
+            impl->setParameter (awp->index, awp->getCurrentValue());
+
+    juce::AudioBuffer<float> asb (fc.destBuffer->getArrayOfWritePointers(), fc.destBuffer->getNumChannels(),
+                                  fc.bufferStartSample, fc.bufferNumSamples);
+
+    auto dry = dryGain->getCurrentValue();
+    auto wet = wetGain->getCurrentValue();
+
+    if (dry <= 0.00004f)
+    {
+        processBlock (asb);
+        zeroDenormalisedValuesIfNeeded (asb);
+
+        if (wet < 0.999f)
+            asb.applyGain (0, fc.bufferNumSamples, wet);
+    }
+    else
+    {
+        auto numChans = asb.getNumChannels();
+        AudioScratchBuffer dryAudio (numChans, fc.bufferNumSamples);
+
+        for (int i = 0; i < numChans; ++i)
+            dryAudio.buffer.copyFrom (i, 0, asb, i, 0, fc.bufferNumSamples);
+
+        processBlock (asb);
+        zeroDenormalisedValuesIfNeeded (asb);
+
+        if (wet < 0.999f)
+            asb.applyGain (0, fc.bufferNumSamples, wet);
+
+        for (int i = 0; i < numChans; ++i)
+            asb.addFrom (i, 0, dryAudio.buffer.getReadPointer (i), fc.bufferNumSamples, dry);
+    }
+}
+
+void AirWindowsPlugin::processBlock (juce::AudioBuffer<float>& buffer)
+{
+    auto numChans    = buffer.getNumChannels();
+    auto samps       = buffer.getNumSamples();
+    auto pluginChans = std::max (impl->getNumOutputs(), impl->getNumInputs());
+
+    if (pluginChans > numChans)
+    {
+        AudioScratchBuffer input (pluginChans, samps);
+        AudioScratchBuffer output (pluginChans, samps);
+
+        input.buffer.clear();
+        output.buffer.clear();
+
+        input.buffer.copyFrom (0, 0, buffer, 0, 0, samps);
+
+        impl->processReplacing ((float**)input.buffer.getArrayOfWritePointers(),
+                                (float**)output.buffer.getArrayOfWritePointers(),
+                                samps);
+
+        buffer.copyFrom (0, 0, output.buffer, 0, 0, samps);
+    }
+    else
+    {
+        AudioScratchBuffer output (numChans, samps);
+        output.buffer.clear();
+
+        impl->processReplacing ((float**)buffer.getArrayOfWritePointers(),
+                                (float**)output.buffer.getArrayOfWritePointers(),
+                                samps);
+
+        for (int i = 0; i < numChans; ++i)
+            buffer.copyFrom (i, 0, output.buffer, i, 0, samps);
+    }
+}
+
+void AirWindowsPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
+{
+    juce::ScopedLock sl (lock);
+
+    if (v.hasProperty (IDs::state))
+    {
+        juce::MemoryBlock data;
+
+        {
+            juce::MemoryOutputStream os (data, false);
+            juce::Base64::convertFromBase64 (os, v[IDs::state].toString());
+        }
+
+        impl->setChunk (data.getData(), int (data.getSize()), false);
+    }
+
+    copyPropertiesToCachedValues (v, wetValue, dryValue);
+
+    for (auto p : parameters)
+        if (auto awp = dynamic_cast<AirWindowsAutomatableParameter*> (p))
+            awp->refresh();
+}
+
+void AirWindowsPlugin::flushPluginStateToValueTree()
+{
+    auto* um = getUndoManager();
+
+    Plugin::flushPluginStateToValueTree();
+
+    void* data = nullptr;
+    int size = impl->getChunk (&data, false);
+
+    if (data != nullptr)
+    {
+        state.setProperty (IDs::state, juce::Base64::toBase64 (data, size_t (size)), um);
+
+        free (data);
+    }
+    else
+    {
+        state.removeProperty (IDs::state, um);
+    }
+}
+
+
+} }

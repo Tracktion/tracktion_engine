@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -25,21 +25,29 @@ public:
     //==============================================================================
     /** Creates a AuxSendNode to process an aux send. */
     AuxSendNode (std::unique_ptr<Node> inputNode, int busIDToUse,
-                 AuxSendPlugin&, tracktion::graph::PlayHeadState&, const TrackMuteState*);
+                 SampleRateAndBlockSize,
+                 AuxSendPlugin&, tracktion::graph::PlayHeadState&, const TrackMuteState*,
+                 bool processAuxSendsWhenTrackIsMuted);
+    ~AuxSendNode() override;
 
     //==============================================================================
+    NodeProperties getNodeProperties() override;
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     void process (ProcessContext&) override;
-    
+
 private:
     //==============================================================================
     tracktion::graph::PlayHeadState& playHeadState;
 
     Plugin::Ptr pluginPtr;
     AuxSendPlugin& sendPlugin;
-    
+
     double sampleRate = 44100.0;
     TimeDuration automationAdjustmentTime;
+
+    std::optional<NodeProperties> cachedNodeProperties;
+    bool isPrepared = false;
+    bool isInitialised = false;
 };
 
 }} // namespace tracktion { inline namespace engine

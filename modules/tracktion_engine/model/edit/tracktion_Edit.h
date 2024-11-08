@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -11,12 +11,14 @@
 namespace tracktion { inline namespace engine
 {
 
- class ClipEffect;
+class ClipEffect;
+
 //==============================================================================
 /**
     The Tracktion Edit class!
 
-    An Edit is the containing class for an arrangement that can be played back.
+    An Edit represents an arrangement that can be played, rendered, modified, etc.
+
     It contains all the per-session objects such as tracks, tempo sequences,
     pitches, input devices, Racks, master plugins etc. and any per-Edit management
     objects such as UndoManager, PluginCache etc.
@@ -26,10 +28,17 @@ namespace tracktion { inline namespace engine
 
     To create an Edit to you need construct one with an Edit::Options instance
     supplying at least the Engine to use, the ValueTree state and a ProjectItemID
-    to uniquely identify this Edit.
- 
+    to uniquely identify this Edit, or use some of the static helper methods that
+    return a `std::unique_ptr<Edit>`.
+
+    N.B. Constructing an Edit can throw an exception if it can't complete for some
+    reason e.g. if it's being constructed on the message thread which is blocked.
+    It's generally safer to use Edit::createEdit as this will catch the exception
+    and just return a nullptr.
+
     This is a high level overview of the Edit structure and the relevant objects.
     Note that this isn't an exhaustive list but should help you find the most relevant classes.
+
     - Edit
         - TempoSequence
             - TimeSigSetting[s]
@@ -83,38 +92,50 @@ public:
         std::atomic<float> progress  { 0.0f };  /**< Progress will be updated as the Edit loads. */
         std::atomic<bool> completed  { false }; /**< Set to true once the Edit has loaded. */
         std::atomic<bool> shouldExit { false }; /**< Can be set to true to cancel loading the Edit. */
+
+    private:
+        friend Edit;
+        std::atomic<int> totalNumTracks { 0 };
+        std::atomic<int> numTracksLoaded { 0 };
     };
 
     //==============================================================================
-    /** Determines how the Edit will be created */
+    /// Determines how the Edit will be created
     struct Options
     {
-        Engine& engine;                                                     /**< The Engine to use. */
-        juce::ValueTree editState;                                          /**< The Edit state. @see createEmptyEdit */
-        ProjectItemID editProjectItemID;                                    /**< The editProjectItemID, must be valid. */
+        Engine& engine;                                                         ///< The Engine to use.
+        juce::ValueTree editState;                                              ///< The Edit state. @see createEmptyEdit
+        ProjectItemID editProjectItemID;                                        ///< The editProjectItemID, must be valid.
 
-        EditRole role = forEditing;                                         /**< An optional role to open the Edit with. */
-        LoadContext* loadContext = nullptr;                                 /**< An optional context to be monitor for loading status. */
-        int numUndoLevelsToStore = Edit::getDefaultNumUndoLevels();         /**< The number of undo levels to use. */
+        EditRole role = forEditing;                                             ///< An optional role to open the Edit with.
+        LoadContext* loadContext = nullptr;                                     ///< An optional context to be monitor for loading status.
+        int numUndoLevelsToStore = Edit::getDefaultNumUndoLevels();             ///< The number of undo levels to use.
 
-        std::function<juce::File()> editFileRetriever;                      /**< An optional editFileRetriever to use. */
-        std::function<juce::File (const juce::String&)> filePathResolver;   /**< An optional filePathResolver to use. */
+        std::function<juce::File()> editFileRetriever = {};                     ///< An optional editFileRetriever to use.
+        std::function<juce::File (const juce::String&)> filePathResolver = {};  ///< An optional filePathResolver to use.
+
+        uint32_t numAudioTracks = 1;                                            ///< If non-zero, will ensure the edit has this many audio tracks
+
+        float defaultMasterVolumedB = -3.0f;                                    ///< The initial level for the edit's master volume
     };
 
-    /** Creates an Edit from a set of Options. */
+    /** Creates an Edit from a set of Options.
+        It's generally safer to call createEdit rather than construct an Edit
+        directly in case it throws an exception during construction.
+    */
     Edit (Options);
 
-    /** Legacy Edit constructor, will be deprecated soon, use the other consturctor that takes an Options. */
-    Edit (Engine&, juce::ValueTree, EditRole, LoadContext*, int numUndoLevelsToStore);
+    /// Creates a new, empty Edit with default options for a given role.
+    Edit (Engine&, EditRole);
 
-    /** Destructor. */
+    /// Destructor.
     ~Edit() override;
 
-    /** A reference to the Engine. */
+    /// A reference to the Engine.
     Engine& engine;
 
     //==============================================================================
-    /** Returns the name of the Edit if a ProjectItem can be found for it. */
+    /// Returns the name of the Edit if a ProjectItem can be found for it.
     juce::String getName();
 
     /** This callback can be set to return the file for this Edit.
@@ -143,7 +164,7 @@ public:
     //==============================================================================
     /** Returns the EditRole. */
     EditRole getEditRole() const noexcept   { return editRole; }
-    
+
     /** Returns true if this Edit should be played back (or false if it was just opened for inspection). */
     bool shouldPlay() const noexcept        { return (editRole & playDisabled) == 0; }
 
@@ -159,7 +180,7 @@ public:
     //==============================================================================
     /** The maximum length an Edit can be. */
     static constexpr double maximumLength = 48.0 * 60.0 * 60.0;
-    
+
     /** Returns the maximum length an Edit can be. */
     static TimeDuration getMaximumLength()          { return TimeDuration::fromSeconds (maximumLength); }
 
@@ -173,7 +194,7 @@ public:
     //==============================================================================
     /** Saves the plugin, automap and ARA states to the state ValueTree. */
     void flushState();
-    
+
     /** Saves the specified plugin state to the state ValueTree. */
     void flushPluginStateIfNeeded (Plugin&);
 
@@ -191,13 +212,17 @@ public:
     /** Returns true if the Edit's not yet fully loaded */
     bool isLoading() const                                              { return isLoadInProgress; }
 
+    //==============================================================================
+    /** Creates an Edit for the given options. */
+    static std::unique_ptr<Edit> createEdit (Options);
+
     /** Creates an Edit for previewing a file. */
     static std::unique_ptr<Edit> createEditForPreviewingFile (Engine&, const juce::File&, const Edit* editToMatch,
                                                               bool tryToMatchTempo, bool tryToMatchPitch, bool* couldMatchTempo,
                                                               juce::ValueTree midiPreviewPlugin,
                                                               juce::ValueTree midiDrumPreviewPlugin = {},
                                                               bool forceMidiToDrums = false,
-                                                              Edit* editToUpdate = {});
+                                                              std::unique_ptr<Edit> editToUpdate = {});
 
     /** Creates an Edit for previewing a preset. */
     static std::unique_ptr<Edit> createEditForPreviewingPreset (Engine& engine, juce::ValueTree, const Edit* editToMatch,
@@ -205,17 +230,23 @@ public:
                                                                 juce::ValueTree midiPreviewPlugin,
                                                                 juce::ValueTree midiDrumPreviewPlugin = {},
                                                                 bool forceMidiToDrums = false,
-                                                                Edit* editToUpdate = {});
+                                                                std::unique_ptr<Edit> editToUpdate = {});
 
     /** Creates an Edit for previewing a Clip. */
     static std::unique_ptr<Edit> createEditForPreviewingClip (Clip&);
 
     /** Creates an Edit with a single AudioTrack. */
-    static std::unique_ptr<Edit> createSingleTrackEdit (Engine&);
+    static std::unique_ptr<Edit> createSingleTrackEdit (Engine&, EditRole role = EditRole::forEditing);
+
+    /** Creates an Edit that loads a state, using the role Edit::forExamining */
+    static std::unique_ptr<Edit> createEditForExamining (Engine&, juce::ValueTree, EditRole role = EditRole::forExamining);
 
     //==============================================================================
     /** Quick way to find and iterate all Track[s] in the Edit. */
     EditItemCache<Track> trackCache;
+
+    /** Quick way to find and iterate all ClipSlot[s] in the Edit. */
+    EditItemCache<ClipSlot> clipSlotCache;
 
     /** Quick way to find and iterate all Clip[s] in the Edit. */
     EditItemCache<Clip> clipCache;
@@ -223,7 +254,7 @@ public:
     //==============================================================================
     /** Returns the EditInputDevices for the Edit. */
     EditInputDevices& getEditInputDevices() noexcept;
-    
+
     /** Returns an InputDeviceInstance for a global InputDevice. */
     InputDeviceInstance* getCurrentInstanceForInputDevice (InputDevice*) const;
 
@@ -252,7 +283,7 @@ public:
     /** Returns the AbletonLink object.
         Used to sync an Edit's playback with an AbletonLink session.
     */
-    AbletonLink& getAbletonLink() const noexcept                        { return *abletonLink; }
+    AbletonLink& getAbletonLink() const noexcept;
 
     //==============================================================================
     /**
@@ -264,7 +295,7 @@ public:
             @param shouldReallocateOnDestruction Re-attaches the Edit to the output when this goes out of scope
         */
         ScopedRenderStatus (Edit&, bool shouldReallocateOnDestruction);
-        
+
         /** Destructor.
             Re-allocates an EditPlaybackContext if this is the last object for this Edit.
         */
@@ -305,7 +336,7 @@ public:
     {
         /** Creates an UndoTransactionInhibitor for an Edit. */
         UndoTransactionInhibitor (Edit&);
-        
+
         /** Creates a copy of UndoTransactionInhibitor for an Edit. */
         UndoTransactionInhibitor (const UndoTransactionInhibitor&);
 
@@ -315,7 +346,7 @@ public:
         ~UndoTransactionInhibitor();
 
     private:
-        Edit::WeakRef edit;
+        SafeSelectable<Edit> edit;
     };
 
     /** Returns the default number of undo levels that should be used. */
@@ -344,7 +375,7 @@ public:
 
     //==============================================================================
     /** Inserts a new AudioTrack in the Edit. */
-    juce::ReferenceCountedObjectPtr<AudioTrack> insertNewAudioTrack (TrackInsertPoint, SelectionManager*);
+    juce::ReferenceCountedObjectPtr<AudioTrack> insertNewAudioTrack (TrackInsertPoint, SelectionManager*, bool addDefaultPlugins = true);
 
     /** Inserts a new FolderTrack in the Edit, optionally as a submix. */
     juce::ReferenceCountedObjectPtr<FolderTrack> insertNewFolderTrack (TrackInsertPoint, SelectionManager*, bool asSubmix);
@@ -370,6 +401,9 @@ public:
     /** Moves a track to a new position. */
     void moveTrack (Track::Ptr, TrackInsertPoint);
 
+    /** Copies a track to a new position. */
+    Track::Ptr copyTrack (Track::Ptr, TrackInsertPoint);
+
     /** Deletes a Track. */
     void deleteTrack (Track*);
 
@@ -388,9 +422,9 @@ public:
     /** Creates a ChordTrack if there isn't currently one. */
     void ensureChordTrack();
 
-    /** Creates a ChordTrack if there isn't currently one. */
+    /** Creates a MasterTrack if there isn't currently one. */
     void ensureMasterTrack();
-    
+
     /** Returns the global ArrangerTrack. */
     ArrangerTrack* getArrangerTrack() const;
 
@@ -422,6 +456,13 @@ public:
     void updateMuteSoloStatuses();
 
     //==============================================================================
+    /** Returns the global launch quantisation. */
+    LaunchQuantisation& getLaunchQuantisation();
+
+    /** Returns a list of Scenes in the Edit. */
+    SceneList& getSceneList();
+
+    //==============================================================================
     /** Returns a new EditItemID to use for a new EditItem. */
     EditItemID createNewItemID() const;
 
@@ -445,7 +486,7 @@ public:
         Not intended for public use as it will be called automatically by the TransportControl.
     */
     void sendStartStopMessageToPlugins();
-    
+
     /** Returns the master PluginList. */
     PluginList& getMasterPluginList() const noexcept            { return *masterPluginList; }
 
@@ -500,10 +541,15 @@ public:
     void setAuxBusName (int bus, const juce::String& name);
 
     //==============================================================================
-    /** Returns all automatiabel parameters in an Edit.
+    /** Returns all automatable parameters in an Edit.
         @param includeTrackParams Whether to include plugins on tracks and clips
     */
     juce::Array<AutomatableParameter*> getAllAutomatableParams (bool includeTrackParams) const;
+
+    /** Returns all automatable parameters in an Edit.
+        @param includeTrackParams Whether to include plugins on tracks and clips
+    */
+    void visitAllAutomatableParams (bool includeTrackParams, const std::function<void(AutomatableParameter&)>&) const;
 
     //==============================================================================
     /** Returns the currently set video file. */
@@ -578,10 +624,10 @@ public:
 
     //==============================================================================
     /** Returns the MidiInputDevice being used as the MIDI timecode source. */
-    MidiInputDevice* getCurrentMidiTimecodeSource() const;
+    std::shared_ptr<MidiInputDevice> getCurrentMidiTimecodeSource() const;
 
     /** Sets the MidiInputDevice being to be used as the MIDI timecode source. */
-    void setCurrentMidiTimecodeSource (MidiInputDevice* newDevice);
+    void setCurrentMidiTimecodeSource (std::shared_ptr<MidiInputDevice>);
 
     /** Toggles syncing to MIDI timecode.
         @see midiTimecodeSourceDeviceEnabled
@@ -604,10 +650,10 @@ public:
     void setMidiTimecodeIgnoringHours (bool shouldIgnore);
 
     /** Returns the MidiInputDevice being used as an MMC source. */
-    MidiInputDevice* getCurrentMidiMachineControlSource() const;
+    std::shared_ptr<MidiInputDevice> getCurrentMidiMachineControlSource() const;
 
     /** Sets the MidiInputDevice to be used as an MMC source. */
-    void setCurrentMidiMachineControlSource (MidiInputDevice*);
+    void setCurrentMidiMachineControlSource (std::shared_ptr<MidiInputDevice>);
 
     /** Returns the MidiInputDevice being used as an MMC destination. */
     MidiOutputDevice* getCurrentMidiMachineControlDest() const;
@@ -709,33 +755,40 @@ public:
 
     //==============================================================================
     /** Returns the ValueTree used as the Auotmap state.
-        You shouldn't normally need this as it's onyl called by the Automap system.
+        You shouldn't normally need this as it's only called by the Automap system.
         @see NovationAutomap
     */
-    juce::ValueTree getAutomapState() const             { return automapState; }
+    juce::ValueTree getAutomapState();
 
     //==============================================================================
-    /** Returns the MarkerManager. */
+    /// Returns the MarkerManager
     MarkerManager& getMarkerManager() const noexcept    { return *markerManager; }
 
+    /// Returns the ARA document handler
+    ARADocumentHolder& getARADocument();
+
     //==============================================================================
-    /** Calls an editFinishedLoading method on OwnerType once after the Edit has finished loading. */
+    /// Calls an editFinishedLoading method on OwnerType once after the Edit has finished loading.
     template<typename OwnerType>
-    struct LoadFinishedCallback   : public Timer
+    struct LoadFinishedCallback   : public juce::Timer
     {
-        LoadFinishedCallback (OwnerType& o, Edit& e)
-            : owner (o), edit (e)
+        LoadFinishedCallback (OwnerType& o, Edit& e) : owner (o), edit (e)
         {
             startTimer (10);
         }
 
+        ~LoadFinishedCallback() override
+        {
+            stopTimer();
+        }
+
         void timerCallback() override
         {
-            if (edit.isLoading())
-                return;
-
-            stopTimer();
-            owner.editFinishedLoading();
+            if (! edit.isLoading())
+            {
+                stopTimer();
+                owner.editFinishedLoading();
+            }
         }
 
         OwnerType& owner;
@@ -743,61 +796,57 @@ public:
     };
 
     //==============================================================================
-    /** Interface for classes that need to know about unused MIDI messages. */
+    /// Interface for classes that need to know about unused MIDI messages.
     struct WastedMidiMessagesListener
     {
-        /** Destructor. */
         virtual ~WastedMidiMessagesListener() = default;
 
-        /** Callback to be ntified when a MIDI message isn't used by a track because it
-            doesn't have a plugin which receives MIDI input on it.
-        */
+        /// Callback to be notified when a MIDI message isn't used by a track because it
+        /// doesn't have a plugin which receives MIDI input on it.
         virtual void warnOfWastedMidiMessages (InputDevice*, Track*) = 0;
     };
 
-    /** Add a WastedMidiMessagesListener to be notified of wasted MIDI messages. */
+    /// Add a WastedMidiMessagesListener to be notified of wasted MIDI messages.
     void addWastedMidiMessagesListener (WastedMidiMessagesListener*);
 
-    /** Removes a previously added WastedMidiMessagesListener. */
+    /// Removes a previously added WastedMidiMessagesListener.
     void removeWastedMidiMessagesListener (WastedMidiMessagesListener*);
-    
-    /** Triggers a callback to any registered WastedMidiMessagesListener[s]. */
+
+    /// Triggers a callback to any registered WastedMidiMessagesListener[s].
     void warnOfWastedMidiMessages (InputDevice*, Track*);
 
     //==============================================================================
-    /** Returns a previously set SharedLevelMeasurer. */
+    /// Returns a previously set SharedLevelMeasurer.
     SharedLevelMeasurer::Ptr getPreviewLevelMeasurer()          { return previewLevelMeasurer; }
 
-    /** Sets a SharedLevelMeasurer to use. */
+    /// Sets a SharedLevelMeasurer to use.
     void setPreviewLevelMeasurer (SharedLevelMeasurer::Ptr p)   { previewLevelMeasurer = p; }
 
     //==============================================================================
-    juce::CachedValue<juce::String> lastSignificantChange;  /**< The last time a change was made to the Edit. @see getTimeOfLastChange */
+    juce::CachedValue<juce::String> lastSignificantChange;  ///< The last time a change was made to the Edit. @see getTimeOfLastChange
 
-    juce::CachedValue<TimeDuration> masterFadeIn,   /**< The duration in seconds of the fade in. */
-                                    masterFadeOut,  /**< The duration in seconds of the fade out. */
-                                    timecodeOffset,       /**< The duration in seconds of the timecode offset. */
-                                    videoOffset;          /**< The duration in seconds of the video offset. */
+    juce::CachedValue<TimeDuration> masterFadeIn,      ///< The duration in seconds of the fade in.
+                                    masterFadeOut,     ///< The duration in seconds of the fade out.
+                                    timecodeOffset,    ///< The duration in seconds of the timecode offset.
+                                    videoOffset;       ///< The duration in seconds of the video offset.
 
-    juce::CachedValue<AudioFadeCurve::Type> masterFadeInType,   /**< The curve type of the fade in. */
-                                            masterFadeOutType;  /**< The curve type of the fade out. */
+    juce::CachedValue<AudioFadeCurve::Type> masterFadeInType,   ///< The curve type of the fade in.
+                                            masterFadeOutType;  ///< The curve type of the fade out.
 
-    juce::CachedValue<bool> midiTimecodeSourceDeviceEnabled,    /**< Whether a MIDI timecode source is enabled. */
-                            midiTimecodeIgnoringHours,          /**< Whether the MIDI timecode source ignores hours. */
-                            videoMuted,                         /**< Whether the video source is muted. */
-                            clickTrackEnabled,                  /**< Whether the click track is enabled. */
-                            clickTrackEmphasiseBars,            /**< Whether the click track should emphasise bars. */
-                            clickTrackRecordingOnly,            /**< Whether the click track should be audible only when recording. */
-                            recordingPunchInOut,                /**< Whether recoridng only happens within the in/out markers. */
-                            playInStopEnabled;                  /**< Whether the audio engine should run when playback is stopped. */
-    juce::CachedValue<float> clickTrackGain;        /**< The gain of the click track. */
-    juce::CachedValue<ProjectItemID> videoSource;   /**< The ProjectItemID of the video source. */
+    juce::CachedValue<bool> midiTimecodeSourceDeviceEnabled,    ///< Whether a MIDI timecode source is enabled.
+                            midiTimecodeIgnoringHours,          ///< Whether the MIDI timecode source ignores hours.
+                            videoMuted,                         ///< Whether the video source is muted.
+                            clickTrackEnabled,                  ///< Whether the click track is enabled.
+                            clickTrackEmphasiseBars,            ///< Whether the click track should emphasise bars.
+                            clickTrackRecordingOnly,            ///< Whether the click track should be audible only when recording.
+                            recordingPunchInOut,                ///< Whether recoridng only happens within the in/out markers.
+                            playInStopEnabled;                  ///< Whether the audio engine should run when playback is stopped.
 
-    juce::ValueTree state { IDs::EDIT };    /**< The ValueTree of the Edit state. */
-    juce::ValueTree inputDeviceState;   /**< The ValueTree of the input device states. */
+    juce::CachedValue<float> clickTrackGain;        ///< The gain of the click track.
+    juce::CachedValue<ProjectItemID> videoSource;   ///< The ProjectItemID of the video source.
 
-    /** Holds the ARA state. */
-    std::unique_ptr<ARADocumentHolder> araDocument;
+    juce::ValueTree state { IDs::EDIT };     ///< The ValueTree of the Edit state.
+    juce::ValueTree inputDeviceState;        ///< The ValueTree of the input device states.
 
 private:
     //==============================================================================
@@ -809,17 +858,19 @@ private:
     juce::CachedValue<juce::String> midiTimecodeSourceDevice, midiMachineControlSourceDevice, midiMachineControlDestDevice;
     juce::CachedValue<TimecodeDisplayFormat> timecodeFormat;
     juce::ValueTree auxBusses, controllerMappings, automapState;
+    std::unique_ptr<ParameterChangeHandler> parameterChangeHandler;
     std::unique_ptr<ParameterControlMappings> parameterControlMappings;
     std::unique_ptr<RackTypeList> rackTypes;
     std::unique_ptr<PluginList> masterPluginList;
+    std::unique_ptr<ARADocumentHolder> araDocumentHolder;
 
     // transient properties (i.e. stuff that doesn't get saved)
     struct MirroredPluginUpdateTimer;
     std::unique_ptr<MirroredPluginUpdateTimer> mirroredPluginUpdateTimer;
-    juce::ReferenceCountedObjectPtr<VolumeAndPanPlugin> masterVolumePlugin;
     std::unique_ptr<TransportControl> transportControl;
-    std::unique_ptr<AbletonLink> abletonLink;
     std::unique_ptr<AutomationRecordManager> automationRecordManager;
+    juce::ReferenceCountedObjectPtr<VolumeAndPanPlugin> masterVolumePlugin;
+    mutable std::unique_ptr<AbletonLink> abletonLink;
     std::unique_ptr<MarkerManager> markerManager;
     struct UndoTransactionTimer;
     std::unique_ptr<UndoTransactionTimer> undoTransactionTimer;
@@ -827,7 +878,6 @@ private:
     std::unique_ptr<PluginChangeTimer> pluginChangeTimer;
     struct FrozenTrackCallback;
     std::unique_ptr<FrozenTrackCallback> frozenTrackCallback;
-    std::unique_ptr<ParameterChangeHandler> parameterChangeHandler;
     std::unique_ptr<PluginCache> pluginCache;
     std::unique_ptr<TrackCompManager> trackCompManager;
     juce::Array<ModifierTimer*, juce::CriticalSection> modifierTimers;
@@ -851,11 +901,11 @@ private:
     std::atomic<TimePosition> clickMark1Time { TimePosition() }, clickMark2Time { TimePosition() };
     std::atomic<bool> isFullyConstructed { false };
     mutable std::atomic<uint64_t> nextID { 0 }; // 0 is used as flag to initialise the next ID count
-    
+
    #if JUCE_DEBUG
     mutable std::unordered_set<EditItemID> usedIDs;
    #endif
-    
+
     const EditRole editRole;
 
     struct TreeWatcher;
@@ -863,6 +913,9 @@ private:
 
     std::unique_ptr<TrackList> trackList;
     std::unique_ptr<EditInputDevices> editInputDevices;
+    std::unique_ptr<SceneList> sceneList;
+    std::unique_ptr<LaunchQuantisation> launchQuantisation;
+
 
     struct ChangedPluginsList;
     std::unique_ptr<ChangedPluginsList> changedPluginsList;
@@ -878,29 +931,27 @@ private:
 
     Track::Ptr createTrack (const juce::ValueTree&);
     Track::Ptr loadTrackFrom (juce::ValueTree&);
+    Track::Ptr loadedTrack (Track::Ptr);
     void updateTrackStatuses();
     void updateTrackStatusesAsync();
     void moveTrackInternal (Track::Ptr, TrackInsertPoint);
 
     //==============================================================================
-    void initialise();
+    void initialise (const Options&);
     void undoOrRedo (bool isUndo);
 
     //==============================================================================
     void initialiseTempoAndPitch();
     void initialiseTimecode (juce::ValueTree&);
     void initialiseTransport();
-    void initialiseMasterVolume();
+    void initialiseMasterVolume (const Options&);
     void initialiseVideo();
     void initialiseClickTrack();
-    void initialiseTracks();
+    void initialiseTracks (const Options&);
     void initialiseAudioDevices();
     void initialiseRacks();
-    void initialiseAuxBusses();
     void initialiseMasterPlugins();
-    void initialiseMetadata();
     void initialiseControllerMappings();
-    void initialiseAutomap();
     void initialiseARA();
     void removeZeroLengthClips();
     void loadTracks();
@@ -915,7 +966,10 @@ private:
     void needToUpdateFrozenTracks();
 
     void sanityCheckTrackNames();
-    void updateMirroredPlugins();
+
+    // This constructor has been deprecated - use the other constructor that takes an Options,
+    // or one of the static helper methods for creating an edit
+    Edit (Engine&, juce::ValueTree, EditRole, LoadContext*, int numUndoLevelsToStore);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Edit)
 };

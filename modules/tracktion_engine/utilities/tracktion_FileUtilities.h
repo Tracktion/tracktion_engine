@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -25,6 +25,10 @@ const char* const archiveFileSuffix = ".trkarch";
 const char* const soundFileWildCard = "*.wav;*.aiff;*.aif;*.ogg;*.mp3;*.flac;*.au;*.voc;*.caf;*.w64;*.rx2;*.rcy;*.rex;*.wfaf";
 const char* const soundFileAndMidiWildCard = "*.wav;*.aiff;*.aif;*.ogg;*.mp3;*.mid;*.midi;*.flac;*.au;*.voc;*.caf;*.w64;*.rx2;*.rcy;*.rex;*.wfaf";
 const char* const midiFileWildCard = "*.midi;*.mid";
+
+const char* const soundFileExtensions = "wav;aiff;aif;ogg;mp3;flac;au;voc;caf;w64;rx2;rcy;rex;wfaf";
+const char* const soundFileAndMidiExtensions = "wav;aiff;aif;ogg;mp3;flac;au;voc;caf;w64;rx2;rcy;rex;wfaf;midi;mid";
+const char* const midiFileExtensions = "midi;mid";
 
 const char* const keyMapWildCard = "*.tracktionkeys";
 const char* const keyMapSuffix = ".tracktionkeys";
@@ -58,11 +62,11 @@ struct FileDragList  : public juce::ReferenceCountedObject
 {
     enum PreferredLayout
     {
-        horizontal,
-        vertical,
+        sameTrack,
+        consecutiveTracks,
     };
 
-    PreferredLayout preferredLayout = horizontal;
+    PreferredLayout preferredLayout = sameTrack;
     juce::Array<juce::File> files;
 
     using Ptr = juce::ReferenceCountedObjectPtr<FileDragList>;

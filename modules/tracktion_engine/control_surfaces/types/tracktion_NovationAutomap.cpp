@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -57,13 +57,13 @@ public:
     virtual void select() = 0;
     virtual Selectable* getSelectableObject() = 0;
 
-    void paramChangedInt (AutomatableParameter* param)
+    void paramChangedInt (AutomatableParameter& param)
     {
         if (! inSetParamValue)
         {
             {
                 const juce::ScopedLock sl (dirtyParamLock);
-                dirtyParams.add (param);
+                dirtyParams.add (&param);
             }
 
             triggerAsyncUpdate();
@@ -243,8 +243,8 @@ public:
                 {
                     if (auto in = at->edit.getEditInputDevices().getInputInstance (*at, 0))
                     {
-                        auto t = dynamic_cast<AudioTrack*> (in->getTargetTracks().getFirst());
-                        const bool armed = t != nullptr ? in->isRecordingEnabled (*t) : false;
+                        auto t = dynamic_cast<AudioTrack*> (getTargetTracks (*in).getFirst());
+                        const bool armed = t != nullptr ? in->isRecordingEnabled (t->itemID) : false;
                         strcpy (valueTextOut, armed ? "On" : "Off");
                         return armed ? 1.0f : 0.0f;
                     }
@@ -317,8 +317,8 @@ public:
                 case Param::Arm:
                     if (at != nullptr)
                         if (auto in = at->edit.getEditInputDevices().getInputInstance (*at, 0))
-                            for (auto t : in->getTargetTracks())
-                                in->setRecordingEnabled (*t, value == 1.0f);
+                            for (auto t : getTargetTracks (*in))
+                                in->setRecordingEnabled (t->itemID, value == 1.0f);
 
                     break;
 
@@ -897,6 +897,9 @@ void NovationAutomap::currentEditChanged (Edit* e)
         if (selectionManager != nullptr)
             selectionManager->removeChangeListener (this);
 
+        if (auto oldEdit = getEdit())
+            oldEdit->getParameterChangeHandler().removeListener (*this);
+
         ControlSurface::currentEditChanged (e);
 
         if ((selectionManager = newSelectionManager) != nullptr)
@@ -917,6 +920,9 @@ void NovationAutomap::currentEditChanged (Edit* e)
             createAllPluginAutomaps();
             hostAutomap = std::make_unique<HostAutoMap> (*this);
             load (*edit);
+
+            if (edit->shouldPlay())
+                edit->getParameterChangeHandler().addListener (*this);
         }
     }
 }
@@ -939,13 +945,14 @@ void NovationAutomap::initialiseDevice (bool connect)
     }
 }
 
-void NovationAutomap::paramChanged (AutomatableParameter* param)
+
+void NovationAutomap::pluginParameterChanged (AutomatableParameter& param, bool /*isFollowingAutomation*/)
 {
     if (hostAutomap != nullptr)
         hostAutomap->paramChangedInt (param);
 
     for (auto map : pluginAutomap)
-        if (map->getSelectableObject() == param->getPlugin())
+        if (map->getSelectableObject() == param.getPlugin())
             map->paramChangedInt (param);
 }
 

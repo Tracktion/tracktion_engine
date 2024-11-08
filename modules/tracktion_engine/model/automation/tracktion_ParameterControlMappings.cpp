@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -49,10 +49,8 @@ static void removeAddAllCommandIfTooManyItems (juce::PopupMenu& menu)
 }
 
 //==============================================================================
-ParameterControlMappings::ParameterControlMappings (Edit& ed)
-    : edit (ed)
+ParameterControlMappings::ParameterControlMappings (Edit& ed) : edit (ed)
 {
-    loadFrom (juce::ValueTree());
 }
 
 ParameterControlMappings::~ParameterControlMappings()
@@ -215,10 +213,8 @@ void ParameterControlMappings::checkForDeletedParams()
 
             param = nullptr;
 
-            for (int i = allParams.size(); --i >= 0;)
+            for (auto* p : allParams)
             {
-                auto p = allParams.getUnchecked(i);
-
                 if (p->getFullName() == parameterFullNames[j])
                 {
                     jassert (p->getReferenceCount() > 0);
@@ -233,7 +229,7 @@ void ParameterControlMappings::checkForDeletedParams()
 }
 
 //==============================================================================
-void ParameterControlMappings::loadFrom (const juce::ValueTree& state)
+void ParameterControlMappings::loadFromEdit()
 {
     const juce::ScopedLock sl (lock);
 
@@ -242,9 +238,11 @@ void ParameterControlMappings::loadFrom (const juce::ValueTree& state)
     parameters.clear();
     parameterFullNames.clear();
 
-    if (state.hasType (IDs::CONTROLLERMAPPINGS))
+    auto state = edit.state.getChildWithName (IDs::CONTROLLERMAPPINGS);
+
+    if (state.isValid())
     {
-        auto allParams = edit.getAllAutomatableParams (true);
+        juce::Array<AutomatableParameter*> allParams;
 
         for (int j = 0; j < state.getNumChildren(); ++j)
         {
@@ -257,6 +255,9 @@ void ParameterControlMappings::loadFrom (const juce::ValueTree& state)
 
             if (id != 0)
             {
+                if (allParams.isEmpty())
+                    allParams = edit.getAllAutomatableParams (true);
+
                 for (auto* p : allParams)
                 {
                     if (p->getFullName() == paramName)
@@ -285,29 +286,40 @@ void ParameterControlMappings::loadFrom (const juce::ValueTree& state)
     }
 }
 
-void ParameterControlMappings::saveTo (juce::ValueTree& state)
+void ParameterControlMappings::saveToEdit()
 {
     const juce::ScopedLock sl (lock);
 
     checkForDeletedParams();
 
-    state.removeAllChildren (nullptr);
-    state.removeAllProperties (nullptr);
+    auto um = &edit.getUndoManager();
 
     if (controllerIDs.isEmpty())
-        return;
-
-    for (int i = 0; i < controllerIDs.size(); ++i)
     {
-        if (parameters[i] != nullptr && controllerIDs[i] != 0)
-        {
-            auto e = createValueTree (IDs::MAP,
-                                      IDs::id, controllerIDs[i],
-                                      IDs::channel, channelIDs[i],
-                                      IDs::param, parameters[i]->getFullName(),
-                                      IDs::pluginID, parameters[i]->getOwnerID());
+        auto state = edit.state.getChildWithName (IDs::CONTROLLERMAPPINGS);
 
-            state.addChild (e, -1, nullptr);
+        if (state.isValid())
+            edit.state.removeChild (state, um);
+    }
+    else
+    {
+        auto state = edit.state.getOrCreateChildWithName (IDs::CONTROLLERMAPPINGS, um);
+
+        state.removeAllChildren (um);
+        state.removeAllProperties (um);
+
+        for (int i = 0; i < controllerIDs.size(); ++i)
+        {
+            if (parameters[i] != nullptr && controllerIDs[i] != 0)
+            {
+                auto e = createValueTree (IDs::MAP,
+                                          IDs::id, controllerIDs[i],
+                                          IDs::channel, channelIDs[i],
+                                          IDs::param, parameters[i]->getFullName(),
+                                          IDs::pluginID, parameters[i]->getOwnerID());
+
+                state.addChild (e, -1, um);
+            }
         }
     }
 }
@@ -427,7 +439,7 @@ juce::PopupMenu ParameterControlMappings::buildMenu (juce::Array<ParameterAndInd
     }
 
     if (masterPluginsSubMenu.getNumItems())
-        m.addSubMenu ("master plugins", masterPluginsSubMenu);
+        m.addSubMenu (TRANS("Master Plugins"), masterPluginsSubMenu);
 
     // Build the menu for the rack parameters
     auto& rackTypes = edit.getRackList();
@@ -462,7 +474,7 @@ juce::PopupMenu ParameterControlMappings::buildMenu (juce::Array<ParameterAndInd
         }
 
         if (racksSubMenu.getNumItems())
-            m.addSubMenu ("rack filters", racksSubMenu);
+            m.addSubMenu (TRANS("Plugin Racks"), racksSubMenu);
     }
 
     // Build the menu for each track

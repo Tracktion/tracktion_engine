@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -33,7 +33,7 @@ public:
 private:
     //==============================================================================
     class MelodynePlayhead;
-    
+
     AudioClipBase& clip;
     tracktion::graph::PlayHead& playHead;
     LiveClipLevel clipLevel;
@@ -45,7 +45,7 @@ private:
     std::unique_ptr<MelodynePlayhead> playhead;
     bool isOfflineRender = false;
     std::atomic<bool> analysingContent { true };
-    
+
     //==============================================================================
     void updateAnalysingState();
     void timerCallback() override;

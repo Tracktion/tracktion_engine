@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -25,11 +25,10 @@ public:
     static const char* getPluginName()              { return NEEDS_TRANS("4-Band Equaliser"); }
     static const char* xmlTypeName;
 
-    juce::String getName() override                 { return TRANS("4-Band Equaliser"); }
+    juce::String getName() const override                 { return TRANS("4-Band Equaliser"); }
     juce::String getPluginType() override           { return xmlTypeName; }
     juce::String getShortName (int) override        { return "EQ"; }
     juce::String getTooltip() override;
-    bool needsConstantBufferSize() override         { return false; }
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, (int) EQ_CHANS); }
 

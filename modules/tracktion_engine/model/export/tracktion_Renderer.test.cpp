@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -8,10 +8,69 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
+#if TRACKTION_UNIT_TESTS
+
+#include "../../../3rd_party/doctest/tracktion_doctest.hpp"
+#include "../../utilities/tracktion_TestUtilities.h"
+#include "../../../tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
+
+namespace tracktion::inline engine
 {
 
-#if TRACKTION_UNIT_TESTS
+#if ENGINE_UNIT_TESTS_RENDERING
+
+TEST_SUITE("tracktion_engine")
+{
+    TEST_CASE ("Renderer single audio track")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine);
+
+        auto fileLength = 5_td;
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, fileLength.inSeconds());
+
+        auto track = getAudioTracks (*edit)[0];
+        insertWaveClip (*track, {}, sinFile->getFile(), { .time = { 0_tp, fileLength } },
+                        DeleteExistingClips::no);
+
+        juce::TemporaryFile destFile (".wav");
+        Renderer::Parameters params (*edit);
+        params.destFile = destFile.getFile();
+        params.time = params.time.withLength (fileLength);
+        params.audioFormat = engine.getAudioFileFormatManager().getWavFormat();
+        std::atomic<bool> callbackFinished { false };
+
+        auto thumbnail = std::make_shared<juce::AudioThumbnail> (256,
+                                                                 engine.getAudioFileFormatManager().readFormatManager,
+                                                                 engine.getAudioFileManager().getAudioThumbnailCache());
+
+        auto handle = EditRenderer::render (std::move (params),
+                                            [&callbackFinished, f = destFile.getFile()] (auto res)
+                                            {
+                                                CHECK (res);
+                                                CHECK (*res == f);
+                                                callbackFinished = true;
+                                            },
+                                            thumbnail);
+
+        test_utilities::runDispatchLoopUntilTrue (callbackFinished);
+
+        CHECK (callbackFinished);
+        CHECK_EQ (handle->getProgress(), 1.0f);
+        auto buffer = test_utilities::loadFileInToBuffer (engine, destFile.getFile());
+        CHECK_EQ (buffer->getNumSamples(), toSamples (fileLength, 44100.0));
+
+        // N.B. The samples/length on the thumbnail are quatised to the low-res rate so aren't accurate
+        CHECK (thumbnail->isFullyLoaded());
+        CHECK (thumbnail->getNumSamplesFinished() >= toSamples (fileLength, 44100.0));
+        CHECK (thumbnail->getTotalLength() >= fileLength.inSeconds());
+    }
+}
+
+#endif
+
+
+#if ENGINE_UNIT_TESTS_FREEZE
 
 //==============================================================================
 //==============================================================================
@@ -19,7 +78,7 @@ class TrackFreezeTests  : public juce::UnitTest
 {
 public:
     TrackFreezeTests()
-        : juce::UnitTest ("Track Freeze", "Tracktion:Longer")
+        : juce::UnitTest ("Track Freeze", "tracktion_engine")
     {
     }
 
@@ -97,4 +156,6 @@ static TrackFreezeTests trackFreezeTests;
 
 #endif
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
+
+#endif // TRACKTION_UNIT_TESTS

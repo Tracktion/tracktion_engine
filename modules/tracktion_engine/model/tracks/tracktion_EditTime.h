@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -43,6 +43,9 @@ struct EditTime
     /** Creates an EditTime from a BeatPosition. */
     EditTime (BeatPosition);
 
+    /** Returns true if the time is stored as beats, false if stored as a TimePosition. */
+    bool isBeats() const;
+
 private:
     friend TimePosition toTime (EditTime, const TempoSequence&);
     friend BeatPosition toBeats (EditTime, const TempoSequence&);
@@ -73,8 +76,23 @@ struct EditTimeRange
     /** Creates an EditTimeRange from a TimeRange. */
     EditTimeRange (TimeRange);
 
+    /** Creates an EditTimeRange from a TimeRange. */
+    EditTimeRange (TimePosition, TimePosition);
+
+    /** Creates an EditTimeRange from a TimeRange. */
+    EditTimeRange (TimePosition, TimeDuration);
+
     /** Creates an EditTimeRange from a BeatRange. */
     EditTimeRange (BeatRange);
+
+    /** Creates an EditTimeRange from a BeatRange. */
+    EditTimeRange (BeatPosition, BeatPosition);
+
+    /** Creates an EditTimeRange from a BeatRange. */
+    EditTimeRange (BeatPosition, BeatDuration);
+
+    /** Returns true if the time is stored as beats, false if stored as a TimePosition. */
+    bool isBeats() const;
 
 private:
     friend TimeRange toTime (EditTimeRange, const TempoSequence&);
@@ -99,15 +117,15 @@ BeatRange toBeats (EditTimeRange, const TempoSequence&);
 */
 struct ClipPosition
 {
-    TimeRange time;         /**< The TimeRange this ClipPosition occupies. */
-    TimeDuration offset;    /**< The offset this ClipPosition has.
-                                 Offset is a bit unintuitive as the position this
-                                 relates to in the source material will depend on
-                                 lots of factors including looping and any time-stretching.
-                                 It can generally be thought of as an offset from
-                                 either the start of the file or the loop start position,
-                                 scaled by any time-stretching.
-                            */
+    TimeRange time;             /**< The TimeRange this ClipPosition occupies. */
+    TimeDuration offset = {};   /**< The offset this ClipPosition has.
+                                     Offset is a bit unintuitive as the position this
+                                     relates to in the source material will depend on
+                                     lots of factors including looping and any time-stretching.
+                                     It can generally be thought of as an offset from
+                                     either the start of the file or the loop start position,
+                                     scaled by any time-stretching.
+                                */
 
     /** Returns the start time. */
     TimePosition getStart() const             { return time.getStart(); }
@@ -128,6 +146,12 @@ struct ClipPosition
     /** Returns a ClipPosition scaled around an anchor point. Useful for stretching a clip. */
     ClipPosition rescaled (TimePosition anchorTime, double factor) const;
 };
+
+/** Creates a ClipPosition from either a time or beat range. */
+ClipPosition createClipPosition (const TempoSequence&, TimeRange, TimeDuration offset = {});
+
+/** Creates a ClipPosition from either a time or beat range. */
+ClipPosition createClipPosition (const TempoSequence&, BeatRange, BeatDuration offset = {});
 
 
 //==============================================================================
@@ -193,6 +217,11 @@ inline EditTime::EditTime (BeatPosition bp)
 {
 }
 
+inline bool EditTime::isBeats() const
+{
+    return std::holds_alternative<BeatPosition> (position);
+}
+
 //==============================================================================
 inline TimePosition toTime (EditTime et, const TempoSequence& ts)
 {
@@ -220,6 +249,31 @@ inline EditTimeRange::EditTimeRange (TimeRange r)
 inline EditTimeRange::EditTimeRange (BeatRange r)
     : range (r)
 {
+}
+
+inline EditTimeRange::EditTimeRange (TimePosition start, TimePosition end)
+    : range (TimeRange (start, end))
+{
+}
+
+inline EditTimeRange::EditTimeRange (TimePosition start, TimeDuration length)
+    : range (TimeRange (start, length))
+{
+}
+
+inline EditTimeRange::EditTimeRange (BeatPosition start, BeatPosition end)
+    : range (BeatRange (start, end))
+{
+}
+
+inline EditTimeRange::EditTimeRange (BeatPosition start, BeatDuration length)
+    : range (BeatRange (start, length))
+{
+}
+
+inline bool EditTimeRange::isBeats() const
+{
+    return std::holds_alternative<BeatRange> (range);
 }
 
 //==============================================================================

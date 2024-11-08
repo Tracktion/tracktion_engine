@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -23,11 +23,19 @@ class TracktionNodePlayer
 {
 public:
     /** Creates an NodePlayer to process a Node. */
+    TracktionNodePlayer (ProcessState& processStateToUse)
+        : playHeadState (processStateToUse.playHeadState),
+          processState (processStateToUse)
+    {
+    }
+
+    /** Creates an NodePlayer to process a Node. */
     TracktionNodePlayer (ProcessState& processStateToUse,
-                         tracktion::graph::LockFreeMultiThreadedNodePlayer::ThreadPoolCreator poolCreator)
+                         tracktion::graph::LockFreeMultiThreadedNodePlayer::ThreadPoolCreator poolCreator,
+                         juce::AudioWorkgroup audioWorkgroup = {})
         : playHeadState (processStateToUse.playHeadState),
           processState (processStateToUse),
-          nodePlayer (std::move (poolCreator))
+          nodePlayer (std::move (poolCreator), std::move (audioWorkgroup))
     {
     }
 
@@ -40,7 +48,7 @@ public:
     {
         nodePlayer.setNode (std::move (node), sampleRate, blockSize);
     }
-    
+
     /** Sets the number of threads to use for rendering.
         This can be 0 in which case only the process calling thread will be used for processing.
         N.B. this will pause processing whilst updating the threads so there will be a gap in the audio.
@@ -64,7 +72,7 @@ public:
     {
         nodePlayer.setNode (std::move (newNode), sampleRateToUse, blockSizeToUse);
     }
-    
+
     void prepareToPlay (double sampleRateToUse, int blockSizeToUse)
     {
         nodePlayer.prepareToPlay (sampleRateToUse, blockSizeToUse);
@@ -95,25 +103,31 @@ public:
 
         return numMisses;
     }
-    
+
     /** Clears the Node currently playing. */
     void clearNode()
     {
         nodePlayer.clearNode();
     }
-    
+
     /** Returns the current sample rate. */
     double getSampleRate() const
     {
-        return nodePlayer.getSampleRate();        
+        return nodePlayer.getSampleRate();
     }
-    
+
     /** @internal */
     void enablePooledMemoryAllocations (bool enablePooledMemory)
     {
         nodePlayer.enablePooledMemoryAllocations (enablePooledMemory);
     }
-    
+
+    /* @internal. */
+    void enableNodeMemorySharing (bool enableNodeMemorySharing)
+    {
+        nodePlayer.enableNodeMemorySharing (enableNodeMemorySharing);
+    }
+
 private:
     tracktion::graph::PlayHeadState& playHeadState;
     ProcessState& processState;
@@ -152,14 +166,14 @@ private:
         processState.update (sampleRate, pc.referenceSampleRange, ProcessState::UpdateContinuityFlags::no);
         const auto timeRange = processState.editTimeRange;
 
-        if (processState.tempoPosition)
+        if (auto tempoPosition = processState.getTempoSequencePosition())
         {
             double startProportion = 0.0;
             auto lastEventPosition = timeRange.getStart();
 
             for (;;)
             {
-                const auto nextTempoChangePosition = processState.tempoPosition->getTimeOfNextChange();
+                const auto nextTempoChangePosition = tempoPosition->getTimeOfNextChange();
 
                 if (nextTempoChangePosition == lastEventPosition)
                     break;
@@ -205,6 +219,9 @@ private:
         const auto startSample  = (choc::buffer::FrameCount) std::llround (proportion.getStart() * pc.numSamples);
         const auto endSample    = (choc::buffer::FrameCount) std::llround (proportion.getEnd() * pc.numSamples);
         const choc::buffer::FrameRange sampleRange { startSample, endSample };
+
+        if (sampleRange.size() == 0)
+            return 0;
 
         auto destAudio = pc.buffers.audio.getFrameRange (sampleRange);
         scratchMidi.clear();

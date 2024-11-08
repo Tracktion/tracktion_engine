@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -54,7 +54,7 @@ public:
         {
             auto len = blockEnd - blockStart;
 
-            blockStart = tc != nullptr ? tc->getCurrentPosition() : 0.0;
+            blockStart = tc != nullptr ? tc->getPosition().inSeconds() : 0.0;
             blockEnd = blockStart + len;
         }
 
@@ -66,7 +66,7 @@ public:
 
             updateParts (blockStart);
             buffer.addMidiMessage (juce::MidiMessage::fullFrame (hours, minutes, seconds, frames, midiTCType),
-                                   0, MidiMessageArray::notMPE);
+                                   0, {});
             lastMessageSent = juce::Time::getMillisecondCounter();
         }
         else if (lastTime != blockStart)
@@ -81,7 +81,7 @@ public:
                 {
                     updateParts (blockStart);
                     buffer.addMidiMessage (juce::MidiMessage::fullFrame (hours, minutes, seconds, frames, midiTCType),
-                                           0, MidiMessageArray::notMPE);
+                                           0, {});
                     lastMessageSent = now;
                 }
             }
@@ -128,7 +128,7 @@ public:
                         }
 
                         buffer.addMidiMessage (juce::MidiMessage::quarterFrame (sequenceIndex, value),
-                                               t - blockStart, MidiMessageArray::notMPE);
+                                               t - blockStart, {});
                     }
 
                     sequenceNum++;
@@ -196,7 +196,7 @@ public:
             needsToSendPosition = true;
 
             if (! isPlaying)
-                buffer.addMidiMessage (juce::MidiMessage::midiStop(), 0, MidiMessageArray::notMPE);
+                buffer.addMidiMessage (juce::MidiMessage::midiStop(), 0, {});
         }
 
         if (isPlaying)
@@ -231,9 +231,9 @@ public:
                         buffer.addMidiMessage (juce::MidiMessage::songPositionPointer (num / 6), 0);
 
                         if (num == 0 || (tc != nullptr && tc->isRecording()))
-                            buffer.addMidiMessage (juce::MidiMessage::midiStart(), 0, MidiMessageArray::notMPE);
+                            buffer.addMidiMessage (juce::MidiMessage::midiStart(), 0, {});
                         else
-                            buffer.addMidiMessage (juce::MidiMessage::midiContinue(), 0, MidiMessageArray::notMPE);
+                            buffer.addMidiMessage (juce::MidiMessage::midiContinue(), 0, {});
 
                         needsToSendPosition = false;
                     }
@@ -242,7 +242,7 @@ public:
                 if (! needsToSendPosition)
                     buffer.addMidiMessage (juce::MidiMessage::midiClock(),
                                            (num - startNum) * timePerNum,
-                                           MidiMessageArray::notMPE);
+                                           {});
 
                 ++num;
             }
@@ -261,12 +261,12 @@ private:
 };
 
 //==============================================================================
-MidiOutputDevice::MidiOutputDevice (Engine& e, const juce::String& deviceName, int index)
-    : OutputDevice (e, TRANS("MIDI Output"), deviceName),
-      deviceIndex (index)
+MidiOutputDevice::MidiOutputDevice (Engine& e, juce::MidiDeviceInfo info)
+    : OutputDevice (e, NEEDS_TRANS("MIDI Output"), info.name, info.identifier),
+      deviceInfo (std::move (info))
 {
     enabled = true;
-	
+
     timecodeGenerator = std::make_unique<MidiTimecodeGenerator>();
     midiClockGenerator = std::make_unique<MidiClockGenerator>();
     programNameSet = getMidiProgramManager().getDefaultCustomName();
@@ -283,38 +283,11 @@ MidiOutputDevice::~MidiOutputDevice()
 
 void MidiOutputDevice::setEnabled (bool b)
 {
-    if (b != enabled || firstSetEnabledCall)
+    if (b != enabled)
     {
         enabled = b;
-        ScopedWaitCursor waitCursor;
-
-        if (b)
-        {
-            enabled = false;
-            saveProps();
-
-            DeadMansPedalMessage dmp (engine.getPropertyStorage(),
-                                      TRANS("The last time the app was started, the MIDI output device \"XZZX\" failed to "
-                                            "start properly, and has been disabled.").replace ("XZZX", getName())
-                                        + "\n\n" + TRANS("Use the settings panel to re-enable it."));
-
-            enabled = true;
-            auto error = openDevice();
-            enabled = error.isEmpty();
-
-            if (! enabled)
-                engine.getUIBehaviour().showWarningMessage (error);
-        }
-        else
-        {
-            closeDevice();
-        }
-
-        firstSetEnabledCall = false;
         saveProps();
-        engine.getDeviceManager().checkDefaultDevicesAreValid();
-
-        engine.getExternalControllerManager().midiInOutDevicesChanged();
+        engine.getDeviceManager().rescanMidiDeviceList();
     }
 }
 
@@ -328,8 +301,6 @@ juce::String MidiOutputDevice::prepareToPlay (Edit* edit, TimePosition)
     timecodeGenerator->update (edit);
     midiClockGenerator->reset (edit);
     sampleRate = engine.getDeviceManager().getSampleRate();
-
-    defaultMidiDevice = (engine.getDeviceManager().getDefaultMidiOutDevice() == this);
 
     return {};
 }
@@ -386,13 +357,16 @@ void MidiOutputDevice::setSendingMMC (bool b)
     sendingMMC = b;
 }
 
-bool MidiOutputDevice::isConnectedToExternalController() const
+void MidiOutputDevice::setExternalController (ExternalController* ec)
 {
-    for (auto* ec : engine.getExternalControllerManager().getControllers())
-        if (ec->isUsingMidiOutputDevice (this) && ec->isEnabled())
-            return true;
+    TRACKTION_LOG ("MIDI External controller assigned: " + getName());
+    externalController = ec;
+}
 
-    return false;
+void MidiOutputDevice::removeExternalController (ExternalController* ec)
+{
+    if (externalController == ec)
+        externalController = nullptr;
 }
 
 void MidiOutputDevice::loadProps()
@@ -437,19 +411,9 @@ juce::String MidiOutputDevice::openDevice()
         if (outputDevice == nullptr)
         {
             CRASH_TRACER
-            TRACKTION_LOG ("opening MIDI out device:" + getName());
+            TRACKTION_LOG ("opening MIDI out device: " + getDeviceID() + " (" + getName() + ")");
 
-            if (deviceIndex >= 0)
-            {
-                outputDevice = juce::MidiOutput::openDevice (juce::MidiOutput::getAvailableDevices()[deviceIndex].identifier);
-
-                if (outputDevice == nullptr)
-                {
-                    TRACKTION_LOG_ERROR ("Failed to open MIDI output " + getName());
-                    return TRANS("Couldn't open device");
-                }
-            }
-            else if (softDevice)
+            if (softDevice)
             {
                #if JUCE_MAC
                 outputDevice = juce::MidiOutput::createNewDevice (getName());
@@ -457,6 +421,16 @@ juce::String MidiOutputDevice::openDevice()
                 outputDevice.reset();
                 jassertfalse;
                #endif
+            }
+            else if (deviceInfo.identifier.isNotEmpty())
+            {
+                outputDevice = juce::MidiOutput::openDevice (deviceInfo.identifier);
+
+                if (outputDevice == nullptr)
+                {
+                    TRACKTION_LOG_ERROR ("Failed to open MIDI output " + getName());
+                    return TRANS("Couldn't open device");
+                }
             }
             else
             {
@@ -481,6 +455,9 @@ void MidiOutputDevice::closeDevice()
 
 void MidiOutputDevice::sendNoteOffMessages()
 {
+    if (isConnectedToExternalController())
+        return;
+
     if (outputDevice != nullptr)
     {
         const juce::ScopedLock sl (noteOnLock);
@@ -646,14 +623,11 @@ juce::String MidiOutputDeviceInstance::prepareToPlay (TimePosition, bool shouldS
     if (getMidiOutput().outputDevice == nullptr)
         return TRANS("Couldn't open the MIDI port");
 
-    stop();
-
     shouldSendMidiTimecode = shouldSendMidiTC;
     timecodeGenerator->update (&edit);
     midiClockGenerator->reset (&edit);
 
     sampleRate = edit.engine.getDeviceManager().getSampleRate();
-    isDefaultMidiDevice = (edit.engine.getDeviceManager().getDefaultMidiOutDevice() == &getMidiOutput());
 
     return {};
 }

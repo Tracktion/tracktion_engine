@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -16,8 +16,8 @@ namespace tracktion { inline namespace engine
 */
 struct ClipLevel
 {
-    juce::CachedValue<float> dbGain, pan;
-    juce::CachedValue<bool> mute;
+    juce::CachedValue<AtomicWrapper<float>> dbGain, pan;
+    juce::CachedValue<AtomicWrapper<bool>> mute;
 };
 
 //==============================================================================
@@ -34,10 +34,10 @@ struct LiveClipLevel
         : levels (std::move (l)) {}
 
     /** Returns the clip's absolute gain. */
-    float getGain() const noexcept              { return levels ? dbToGain (levels->dbGain) : 1.0f; }
+    float getGain() const noexcept              { return levels ? dbToGain (levels->dbGain.get()) : 1.0f; }
 
     /** Returns the clip's pan from -1.0 to 1.0. */
-    float getPan() const noexcept               { return levels ? levels->pan.get() : 0.0f; }
+    float getPan() const noexcept               { return levels ? static_cast<float> (levels->pan.get()) : 0.0f; }
 
     /** Returns true if the clip is muted. */
     bool isMute() const noexcept                { return levels && levels->mute.get(); }
@@ -71,11 +71,11 @@ class Clip   : public TrackItem,
 public:
     //==============================================================================
     /** Creates a clip of a given type from a ValueTree state.
-        Clip's have to have a parent ClipTrack and unique EditItemID @see Edit::createNewItemID
-        You would usually create a clip using ClipTrack::insertNewClip
+        Clip's have to have a parent ClipOwner and unique EditItemID @see Edit::createNewItemID
+        You would usually create a clip using ClipOwner::insertNewClip
     */
-    Clip (const juce::ValueTree&, ClipTrack&, EditItemID, Type);
-    
+    Clip (const juce::ValueTree&, ClipOwner&, EditItemID, Type);
+
     /** Destructor. */
     ~Clip() override;
 
@@ -94,7 +94,7 @@ public:
     /** Creates a clip for a given ValueTree representation.
         This may return a previously-existing clip with the same ID.
     */
-    static Ptr createClipForState (const juce::ValueTree&, ClipTrack& targetTrack);
+    static Ptr createClipForState (const juce::ValueTree&, ClipOwner& targetParent);
 
     /** Can be overridden to ensure any state (e.g. clip plugins) is flushed to the ValueTree ready for saving. */
     virtual void flushStateToValueTree();
@@ -112,18 +112,19 @@ public:
 
     //==============================================================================
     /** Returns the name of the clip. */
-    virtual juce::String getName() override             { return clipName; }
+    virtual juce::String getName() const override       { return clipName; }
     /** Sets a new name for a clip. */
     void setName (const juce::String& newName);
 
     /** Returns true if this is a MidiClip. */
-    virtual bool isMidi() const = 0;
-    /** Tests whether this clip can go on the given track. */
-    virtual bool canGoOnTrack (Track&) = 0;
+    [[ nodiscard ]] virtual bool isMidi() const = 0;
+
+    /** Tests whether this clip can go on the given parent. */
+    [[ nodiscard ]] virtual bool canBeAddedTo (ClipOwner&) = 0;
 
     //==============================================================================
     /** True if it references a source file - i.e. audio clips do, midi doesn't. */
-    virtual bool usesSourceFile()                       { return false; }
+    virtual bool usesSourceFile() const                 { return false; }
 
     /** Returns the SourceFileReference of the Clip. */
     SourceFileReference& getSourceFileReference()       { return sourceFileReference; }
@@ -135,21 +136,67 @@ public:
 
     //==============================================================================
     /** Returns an array of any ReferencedItem[s] e.g. audio files. */
-    juce::Array<ReferencedItem> getReferencedItems() override  { return {}; }
+    juce::Array<ReferencedItem> getReferencedItems() override;
 
     /** Should be implemented to change the underlying source to a new ProjectItemID. */
-    void reassignReferencedItem (const ReferencedItem&, ProjectItemID /*newID*/, double /*newStartTime*/) override {}
+    void reassignReferencedItem (const ReferencedItem&, ProjectItemID /*newID*/, double /*newStartTime*/) override;
+
+    //==============================================================================
+    /** Some clip types can be launched, if that's possible, this returns a handle to
+        trigger starting/stopping the clip.
+    */
+    virtual std::shared_ptr<LaunchHandle> getLaunchHandle()     { return {}; }
+
+    /** Some clip types can be launched, if that's possible, this sets whether the
+        clip's quantisation or the global quantisation should be used.
+        @see getLaunchQuantisation, Edit::getLaunchQuantisation
+    */
+    virtual void setUsesGlobalLaunchQuatisation (bool)          {}
+
+    /** Some clip types can be launched, if that's possible, this returns whether the
+        clip's quantisation or the global quantisation should be used.
+        @see getLaunchQuantisation, Edit::getLaunchQuantisation
+    */
+    virtual bool usesGlobalLaunchQuatisation()                  { return true; }
+
+    /** Some clip types can be launched, if that's possible, this returns a quantisation
+        that can be used for this clip.
+        N.B. This will always be the clip's LaunchQuantisation, to find out if you should use the Edit's
+        LaunchQuantisation, check usesGlobalLaunchQuatisation first
+    */
+    virtual LaunchQuantisation* getLaunchQuantisation()         { return {}; }
+
+    /** Some clip types can be launched, if that's possible, this can be used to determine the
+        action to perform after a clip has played.
+    */
+    virtual FollowActions* getFollowActions()                   { return {}; }
+
+    /** Defines the types of duration follow actions can use. */
+    enum class FollowActionDurationType
+    {
+        beats,  /**< A number of beats */
+        loops   /**< A number of loops */
+    };
+
+    /** The type of duration to use for when to trigger the follow action. */
+    juce::CachedValue<FollowActionDurationType> followActionDurationType;
+
+    /** Determines the time for which a launched clip will play before a follow action is taken. */
+    juce::CachedValue<BeatDuration> followActionBeats;
+
+    /** Determines the number of loops for which a launched clip will play before a follow action is taken. */
+    juce::CachedValue<double> followActionNumLoops;
 
     //==============================================================================
     /** Returns the ClipPosition on the parent Track. */
     ClipPosition getPosition() const override;
 
     /** Returns the beat number (with offset) at the given time */
-    BeatPosition getContentBeatAtTime (TimePosition time) const;
+    BeatPosition getContentBeatAtTime (TimePosition) const;
     /** Returns time of a beat number */
-    TimePosition getTimeOfContentBeat (BeatPosition beat) const;
+    TimePosition getTimeOfContentBeat (BeatPosition) const;
 
-    /** Returns the maximum lenght this clip can have. */
+    /** Returns the maximum length this clip can have. */
     virtual TimeDuration getMaximumLength()               { return toDuration (Edit::getMaximumEditEnd()); }
 
     /** Returns times for snapping to, relative to the Edit. Base class adds start and end time. */
@@ -239,18 +286,18 @@ public:
     /** Trims away any part of the clip that overlaps this region. */
     void trimAwayOverlap (TimeRange editRangeToTrim);
 
-    /** Removes this clip from the parent track. */
-    void removeFromParentTrack();
+    /** Removes this clip from the parent track or container clip. */
+    void removeFromParent();
 
-    /** Moves the clip to a new Track (if possible).
+    /** Moves the clip to a new parent (if possible).
         @returns true if the clip could be moved.
     */
-    bool moveToTrack (Track&);
+    bool moveTo (ClipOwner&);
 
     //==============================================================================
     /** Returns the speed ratio i.e. how quickly the clip plays back. */
     double getSpeedRatio() const noexcept           { return speedRatio; }
-    
+
     /** Sets a speed ratio i.e. how quickly the clip plays back. */
     virtual void setSpeedRatio (double);
 
@@ -281,10 +328,14 @@ public:
     juce::String getLinkGroupID() const             { return linkID; }
 
     //==============================================================================
-    /** Returns the parent ClipTrack this clip is on. */
-    ClipTrack* getClipTrack() const                 { return track; }
-    /** Returns the parent Track this clip is on. */
+    /** Returns the parent ClipOwner this clip is on. */
+    ClipOwner* getParent() const;
+    /** Returns the parent ClipTrack this clip is on (if any). */
+    ClipTrack* getClipTrack() const;
+    /** Returns the parent Track this clip is on (if any). */
     Track* getTrack() const override;
+    /** Returns the parent ClipSlot this clip is on (if any). */
+    ClipSlot* getClipSlot() const;
 
     //==============================================================================
     /** Returns the colour property of this clip. */
@@ -335,7 +386,7 @@ public:
     virtual void setShowingTakes (bool shouldShow)          { showingTakes = shouldShow; }
     /** Returns true if the clip is showing takes. */
     virtual bool isShowingTakes() const                     { return showingTakes;  }
-    
+
     /** Attempts to unpack the takes to new clips.
         @param toNewTracks  If true this will create new tracks for the new clips,
                             otherwise they'll be placed on existing tracks
@@ -388,6 +439,15 @@ public:
 
     juce::ValueTree state;                      /**< The ValueTree of the Clip state. */
     juce::CachedValue<juce::Colour> colour;     /**< The colour property. */
+    juce::CachedValue<bool> disabled;           /**< Whether the Clip is disabled or not.
+                                                     Changed to disabled clips won't rebuild the
+                                                     audio graph and they won't get added to
+                                                     playback graph. */
+
+    /** @internal.
+        Not intended for public use!
+    */
+    virtual void setParent (ClipOwner*);
 
 protected:
     friend class Track;
@@ -397,7 +457,7 @@ protected:
     bool isInitialised = false;
     bool cloneInProgress = false;
     juce::CachedValue<juce::String> clipName;
-    ClipTrack* track = nullptr;
+    ClipOwner* parent = nullptr;
     juce::CachedValue<TimePosition> clipStart;
     juce::CachedValue<TimeDuration> length, offset;
     juce::CachedValue<double> speedRatio;
@@ -415,25 +475,16 @@ protected:
     /** Sets a new source file for this clip. */
     void setCurrentSourceFile (const juce::File&);
 
-    /** Moves this clip to a new ClipTrack. */
-    virtual void setTrack (ClipTrack*);
-
     /** Returns the mark points relative to the start of the clip, rescaled to the current speed. */
     virtual juce::Array<TimePosition> getRescaledMarkPoints() const;
 
     /** @internal */
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
     /** @internal */
-    void valueTreeChildAdded (juce::ValueTree&, juce::ValueTree&) override {}
-    /** @internal */
-    void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override {}
-    /** @internal */
-    void valueTreeChildOrderChanged (juce::ValueTree&, int, int) override {}
-    /** @internal */
     void valueTreeParentChanged (juce::ValueTree&) override;
 
 private:
-    void updateParentTrack();
+    void updateParent();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Clip)
 };
@@ -447,14 +498,34 @@ namespace ClipConstants
     const double speedRatioMax = 20.0;  /**< Maximum speed ratio. */
 }
 
+namespace details
+{
+    Clip::FollowActionDurationType followActionDurationTypeFromString (juce::String);
+    juce::String toString (Clip::FollowActionDurationType);
+}
+
 }} // namespace tracktion { inline namespace engine
 
 namespace juce
 {
-    template <>
+    template<>
     struct VariantConverter<tracktion::engine::Clip::SyncType>
     {
         static tracktion::engine::Clip::SyncType fromVar (const var& v)   { return (tracktion::engine::Clip::SyncType) static_cast<int> (v); }
         static var toVar (tracktion::engine::Clip::SyncType v)            { return static_cast<int> (v); }
+    };
+
+    template<>
+    struct VariantConverter<tracktion::engine::Clip::FollowActionDurationType>
+    {
+        static tracktion::engine::Clip::FollowActionDurationType fromVar (const var& v)
+        {
+            return tracktion::engine::details::followActionDurationTypeFromString (v);
+        }
+
+        static var toVar (tracktion::engine::Clip::FollowActionDurationType v)
+        {
+            return tracktion::engine::details::toString (v);
+        }
     };
 }

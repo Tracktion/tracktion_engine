@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -78,9 +78,11 @@ void CustomControlSurface::init()
         needsOSCSocket              = false;
     }
     numberOfFaderChannels           = 8;
+    numberOfTrackPads               = 8;
     numCharactersForTrackNames      = needsOSCSocket ? 12 : 0;
     numParameterControls            = 18;
     numCharactersForParameterLabels = needsOSCSocket ? 12 : 0;
+    wantsDummyParams                = false;
     deletable                       = true;
     listeningOnRow                  = -1;
     pluginMoveMode                  = true;
@@ -182,8 +184,15 @@ juce::Array<ControlSurface*> CustomControlSurface::getCustomSurfaces (ExternalCo
     juce::Array<ControlSurface*> surfaces;
 
     if (auto n = ecm.engine.getPropertyStorage().getXmlProperty (SettingID::customMidiControllers))
+    {
         for (auto controllerXml : n->getChildIterator())
-            surfaces.add (new CustomControlSurface (ecm, *controllerXml));
+        {
+            if (controllerXml->hasTagName ("MIDICUSTOMCONTROLSURFACE"))
+                surfaces.add (new CustomControlSurface (ecm, *controllerXml));
+            else if (auto ccs = ecm.engine.getEngineBehaviour().getCustomControlSurfaceForXML (ecm, *controllerXml))
+                surfaces.add (ccs);
+        }
+    }
 
     return surfaces;
 }
@@ -214,6 +223,7 @@ juce::XmlElement* CustomControlSurface::createXml()
     element->setAttribute ("channels", numberOfFaderChannels);
     element->setAttribute ("parameters", numParameterControls);
     element->setAttribute ("pickUpMode", pickUpMode);
+    element->setAttribute ("followsSelection", followsTrackSelection);
 
     for (auto m : mappings)
     {
@@ -234,6 +244,7 @@ bool CustomControlSurface::loadFromXml (const juce::XmlElement& xml)
     numberOfFaderChannels       = xml.getIntAttribute ("channels", 8);
     numParameterControls        = xml.getIntAttribute ("parameters", 18);
     pickUpMode                  = xml.getBoolAttribute ("pickUpMode", false);
+    followsTrackSelection       = xml.getBoolAttribute ("followsSelection", false);
 
     mappings.clear();
 
@@ -399,82 +410,81 @@ void CustomControlSurface::oscMessageReceived (const juce::OSCMessage& m)
 {
     packetsIn++;
 
+    float val = 1.0f;
+
     if (m.size() >= 1)
     {
         auto arg = m[0];
-        float val = 0;
 
         if (arg.isFloat32())
             val = arg.getFloat32();
         else if (arg.isInt32())
             val = float (arg.getInt32());
-        else
-            return;
+    }
 
-        auto addr = m.getAddressPattern().toString();
+    auto addr = m.getAddressPattern().toString();
 
-        if (addr.endsWith ("/z"))
+    if (addr.endsWith ("/z"))
+    {
+        // Track control touches and releases
+        addr = addr.dropLastCharacters (2);
+        if (val != 0.0f)
         {
-            // Track control touches and releases
-            addr = addr.dropLastCharacters (2);
-            if (val != 0.0f)
-            {
-                oscControlTouched[addr] = true;
-                oscControlTapsWhileTouched[addr] = 0;
-            }
-            else
-            {
-                oscControlTouched[addr] = false;
-                oscControlTapsWhileTouched[addr] = 0;
-
-                auto itr = oscLastValue.find (addr);
-                if (itr != oscLastValue.end())
-                {
-                    if (oscSender)
-                    {
-                        try
-                        {
-                            juce::OSCMessage mo (addr);
-                            mo.addFloat32 (itr->second);
-
-                            if (oscSender->send (mo))
-                                packetsOut++;
-                        }
-                        catch ([[maybe_unused]] juce::OSCException& err)
-                        {
-                            DBG("OSC Error: " + err.description);
-                        }
-                    }
-
-                    oscLastValue.erase (itr);
-                }
-            }
+            oscControlTouched[addr] = true;
+            oscControlTapsWhileTouched[addr] = 0;
         }
         else
         {
-            // Track control values
-            lastControllerAddr = addr;
-            lastControllerValue = val;
+            oscControlTouched[addr] = false;
+            oscControlTapsWhileTouched[addr] = 0;
 
-            if (listeningOnRow >= 0)
-                triggerAsyncUpdate();
-
-            oscControlTapsWhileTouched[addr]++;
-            oscActiveAddr = addr;
-
-            if (getEdit() != nullptr)
+            auto itr = oscLastValue.find (addr);
+            if (itr != oscLastValue.end())
             {
-                for (auto* mapping : mappings)
+                if (oscSender)
                 {
-                    if (lastControllerAddr == mapping->addr)
+                    try
                     {
-                        for (auto* actionFunction : actionFunctionList)
+                        juce::OSCMessage mo (addr);
+                        mo.addFloat32 (itr->second);
+
+                        if (oscSender->send (mo))
+                            packetsOut++;
+                    }
+                    catch ([[maybe_unused]] juce::OSCException& err)
+                    {
+                        DBG("OSC Error: " + err.description);
+                    }
+                }
+
+                oscLastValue.erase (itr);
+            }
+        }
+    }
+    else
+    {
+        // Track control values
+        lastControllerAddr = addr;
+        lastControllerValue = val;
+
+        if (listeningOnRow >= 0)
+            triggerAsyncUpdate();
+
+        oscControlTapsWhileTouched[addr]++;
+        oscActiveAddr = addr;
+
+        if (getEdit() != nullptr)
+        {
+            for (auto* mapping : mappings)
+            {
+                if (lastControllerAddr == mapping->addr)
+                {
+                    for (auto* actionFunction : actionFunctionList)
+                    {
+                        if (actionFunction->id == mapping->function)
                         {
-                            if (actionFunction->id == mapping->function)
-                            {
-                                auto actionFunc = actionFunction->actionFunc;
-                                (this->*actionFunc) (lastControllerValue, actionFunction->param);
-                            }
+                            auto actionFunc = actionFunction->actionFunc;
+                            (this->*actionFunc) (lastControllerValue, actionFunction->param);
                         }
                     }
                 }
@@ -605,9 +615,50 @@ bool CustomControlSurface::isTextAction (ActionID id)
         case userAction18Id:
         case userAction19Id:
         case userAction20Id:
+        case clip1TrackId:
+        case clip2TrackId:
+        case clip3TrackId:
+        case clip4TrackId:
+        case clip5TrackId:
+        case clip6TrackId:
+        case clip7TrackId:
+        case clip8TrackId:
+        case stopClipsTrackId:
+        case sceneId:
+        case clipBankUp1Id:
+        case clipBankUp4Id:
+        case clipBankUp8Id:
+        case clipBankDown1Id:
+        case clipBankDown4Id:
+        case clipBankDown8Id:
+        case marker1Id:
+        case marker2Id:
+        case marker3Id:
+        case marker4Id:
+        case marker5Id:
+        case marker6Id:
+        case marker7Id:
+        case marker8Id:
         case none:
         default:
             return false;
+    }
+}
+
+void CustomControlSurface::timerCallback()
+{
+    stopTimer();
+
+    auto i = listeningOnRow;
+    while (i < mappings.size())
+    {
+        i++;
+        if (auto map = mappings[i]; map && ! map->isControllerAssigned())
+        {
+            setLearntParam (false);
+            listenToRow (i);
+            break;
+        }
     }
 }
 
@@ -633,7 +684,10 @@ void CustomControlSurface::acceptMidiMessage (int, const juce::MidiMessage& m)
     }
 
     if (listeningOnRow >= 0)
+    {
         triggerAsyncUpdate();
+        startTimer (666);
+    }
 
     if (auto ed = getEdit())
     {
@@ -676,16 +730,21 @@ void CustomControlSurface::moveFader (int faderIndex, float v)
     sendCommandToControllerForActionID (volTextTrackId + faderIndex, dbText);
 }
 
-void CustomControlSurface::moveMasterLevelFader (float newLeftSliderPos, float newRightSliderPos)
+void CustomControlSurface::moveMasterLevelFader (float newSliderPos)
 {
-    ControlSurface::moveMasterLevelFader (newLeftSliderPos, newRightSliderPos);
-    
-    const float panApproximation = ((newLeftSliderPos - newRightSliderPos) * 0.5f) + 0.5f;
-    sendCommandToControllerForActionID (masterPanId, panApproximation);
-    sendCommandToControllerForActionID (masterVolumeId, std::max (newLeftSliderPos, newRightSliderPos));
+    ControlSurface::moveMasterLevelFader (newSliderPos);
 
-    auto dbText = juce::Decibels::toString (volumeFaderPositionToDB (std::max (newLeftSliderPos, newRightSliderPos)));
+    sendCommandToControllerForActionID (masterVolumeId, newSliderPos);
+
+    auto dbText = juce::Decibels::toString (volumeFaderPositionToDB (newSliderPos));
     sendCommandToControllerForActionID (masterVolumeTextId, dbText);
+}
+
+void CustomControlSurface::moveMasterPanPot (float newPos)
+{
+    ControlSurface::moveMasterPanPot (newPos);
+
+    sendCommandToControllerForActionID (masterPanId, (newPos + 1.0f) / 2.0f);
 }
 
 void CustomControlSurface::movePanPot (int faderIndex, float v)
@@ -706,9 +765,9 @@ void CustomControlSurface::movePanPot (int faderIndex, float v)
     sendCommandToControllerForActionID (panTextTrackId + faderIndex, panText);
 }
 
-void CustomControlSurface::moveAux (int faderIndex, const char* bus, float v)
+void CustomControlSurface::moveAux (int faderIndex, int num, const char* bus, float v)
 {
-    ControlSurface::moveAux (faderIndex, bus, v);
+    ControlSurface::moveAux (faderIndex, num, bus, v);
 
     sendCommandToControllerForActionID (auxTrackId + faderIndex, v);
 
@@ -982,9 +1041,9 @@ void CustomControlSurface::showMappingsEditor (juce::DialogWindow::LaunchOptions
 
     listenToRow (-1);
     o.runModal();
+    setLearntParam (false);
     listenToRow (-1);
 
-    setLearntParam (false);
     manager->saveAllSettings (engine);
    #else
     juce::ignoreUnused (o);
@@ -1250,6 +1309,14 @@ void CustomControlSurface::loadFunctions()
     addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Add Marker"), addMarkerId, &CustomControlSurface::addMarker);
     addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Next Marker"), nextMarkerId, &CustomControlSurface::nextMarker);
     addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Previous Marker"), previousMarkerId, &CustomControlSurface::prevMarker);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Marker 1"), marker1Id, &CustomControlSurface::marker1);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Marker 2"), marker2Id, &CustomControlSurface::marker2);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Marker 3"), marker3Id, &CustomControlSurface::marker3);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Marker 4"), marker4Id, &CustomControlSurface::marker4);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Marker 5"), marker5Id, &CustomControlSurface::marker5);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Marker 6"), marker6Id, &CustomControlSurface::marker6);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Marker 7"), marker7Id, &CustomControlSurface::marker7);
+    addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Marker 8"), marker8Id, &CustomControlSurface::marker8);
     addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Nudge Left"), nudgeLeftId, &CustomControlSurface::nudgeLeft);
     addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Nudge Right"), nudgeRightId, &CustomControlSurface::nudgeRight);
     addFunction (transportSubMenu, *transportSubMenuSet, TRANS("Transport"), TRANS("Abort"), abortId, &CustomControlSurface::abort);
@@ -1301,6 +1368,33 @@ void CustomControlSurface::loadFunctions()
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Select"), selectTrackId, &CustomControlSurface::selectTrack);
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Aux"), auxTrackId, &CustomControlSurface::auxTrack);
     addTrackFunction (trackSubMenu, TRANS("Track"), TRANS("Aux Text"), auxTextTrackId, &CustomControlSurface::null);
+
+    juce::PopupMenu clipSubMenu;
+    juce::PopupMenu clipBankSubMenu;
+
+    if (engine.getEngineBehaviour().areClipSlotsEnabled())
+    {
+        addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #1"), clip1TrackId, &CustomControlSurface::launchClip1);
+        addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #2"), clip2TrackId, &CustomControlSurface::launchClip2);
+        addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #3"), clip3TrackId, &CustomControlSurface::launchClip3);
+        addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #4"), clip4TrackId, &CustomControlSurface::launchClip4);
+        addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #5"), clip5TrackId, &CustomControlSurface::launchClip5);
+        addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #6"), clip6TrackId, &CustomControlSurface::launchClip6);
+        addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #7"), clip7TrackId, &CustomControlSurface::launchClip7);
+        addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Clip #8"), clip8TrackId, &CustomControlSurface::launchClip8);
+        addTrackFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Stop Clips"), stopClipsTrackId, &CustomControlSurface::stopClips);
+        addSceneFunction (clipSubMenu, TRANS("Clip Launcher"), TRANS("Launch Scene"), sceneId, &CustomControlSurface::launchScene);
+
+        auto clipBankSubMenuSet = new juce::SortedSet<int>();
+        addAllCommandItem (clipBankSubMenu);
+        addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Up") + " 1", clipBankUp1Id, &CustomControlSurface::clipBankUp1);
+        addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Up") + " 4", clipBankUp4Id, &CustomControlSurface::clipBankUp4);
+        addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Up") + " 8", clipBankUp8Id, &CustomControlSurface::clipBankUp8);
+        addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Down") + " 1", clipBankDown1Id, &CustomControlSurface::clipBankDown1);
+        addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Down") + " 4", clipBankDown4Id, &CustomControlSurface::clipBankDown4);
+        addFunction (clipBankSubMenu, *clipBankSubMenuSet, TRANS("Switch Clip Launch bank"), TRANS("Down") + " 8", clipBankDown8Id, &CustomControlSurface::clipBankDown8);
+        commandGroups [nextCmdGroupIndex++] = clipBankSubMenuSet;
+    }
 
     juce::PopupMenu navigationSubMenu;
     auto navigationSubMenuSet = new juce::SortedSet<int>();
@@ -1361,6 +1455,13 @@ void CustomControlSurface::loadFunctions()
     contextMenu.addSubMenu (TRANS("Options"),           optionsSubMenu);
     contextMenu.addSubMenu (TRANS("Plugin"),            pluginSubMenu);
     contextMenu.addSubMenu (TRANS("Track"),             trackSubMenu);
+
+    if (engine.getEngineBehaviour().areClipSlotsEnabled())
+    {
+        contextMenu.addSubMenu (TRANS("Clip Launcher"),     clipSubMenu);
+        contextMenu.addSubMenu (TRANS("Clip Launcher Bank"),clipBankSubMenu);
+    }
+
     contextMenu.addSubMenu (TRANS("Navigation"),        navigationSubMenu);
     contextMenu.addSubMenu (TRANS("Switch fader bank"), bankSubMenu);
     contextMenu.addSubMenu (TRANS("Switch param bank"), paramBankSubMenu);
@@ -1469,7 +1570,40 @@ void CustomControlSurface::addTrackFunction (juce::PopupMenu& menu,
         subMenuSet->add (afi->id);
     }
 
-    menu.addSubMenu(name, subMenu);
+    menu.addSubMenu (name, subMenu);
+    commandGroups[nextCmdGroupIndex++] = subMenuSet;
+}
+
+void CustomControlSurface::addSceneFunction (juce::PopupMenu& menu,
+                                             const juce::String& group, const juce::String& name,
+                                             ActionID aid, ActionFunction actionFunc)
+{
+    if (isTextAction (aid) && ! needsOSCSocket)
+        return;
+
+    int id = (int) aid;
+
+    juce::PopupMenu subMenu;
+    addAllCommandItem (subMenu);
+
+    auto subMenuSet = new juce::SortedSet<int>();
+
+    for (int i = 0; i < 8; ++i)
+    {
+        ActionFunctionInfo* afi = new ActionFunctionInfo();
+
+        afi->name       = name + " " + TRANS("Scene") + " #" + juce::String (i + 1);
+        afi->group      = group;
+        afi->id         = id + i;
+        afi->actionFunc = actionFunc;
+        afi->param      = i;
+
+        actionFunctionList.add (afi);
+        subMenu.addItem (afi->id, TRANS("Scene") + " #" + juce::String (i + 1));
+        subMenuSet->add (afi->id);
+    }
+
+    menu.addSubMenu (name, subMenu);
     commandGroups[nextCmdGroupIndex++] = subMenuSet;
 }
 
@@ -1516,7 +1650,7 @@ void CustomControlSurface::rewind (float val, int)          { userChangedRewindB
 void CustomControlSurface::fastForward (float val, int)     { userChangedFastForwardButton (isValueNonZero (val)); }
 
 void CustomControlSurface::masterVolume (float val, int)    { userMovedMasterLevelFader (val); }
-void CustomControlSurface::masterPan (float val, int)       { userMovedMasterPanPot (val); }
+void CustomControlSurface::masterPan (float val, int)       { userMovedMasterPanPot (val * 2.0f - 1.0f); }
 
 void CustomControlSurface::quickParam (float val, int)      { userMovedQuickParam (val); }
 void CustomControlSurface::volTrack (float val, int param)  { userMovedFader (param, val); }
@@ -1528,9 +1662,26 @@ void CustomControlSurface::soloTrack (float val, int param) { if (shouldActOnVal
 void CustomControlSurface::armTrack (float val, int param)      { if (shouldActOnValue (val)) userPressedRecEnable (param, false); }
 void CustomControlSurface::selectTrack (float val, int param)   { if (shouldActOnValue (val)) userSelectedTrack (param); }
 
-void CustomControlSurface::auxTrack (float val, int param)              { userMovedAux (param, val); }
+void CustomControlSurface::auxTrack (float val, int param)              { userMovedAux (param, 0, val); }
 void CustomControlSurface::selectClipInTrack (float val, int param)     { if (shouldActOnValue (val)) userSelectedClipInTrack (param); }
 void CustomControlSurface::selectFilterInTrack (float val, int param)   { if (shouldActOnValue (val)) userSelectedPluginInTrack (param); }
+
+void CustomControlSurface::launchClip1 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 0, isValueNonZero (val)); }
+void CustomControlSurface::launchClip2 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 1, isValueNonZero (val)); }
+void CustomControlSurface::launchClip3 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 2, isValueNonZero (val)); }
+void CustomControlSurface::launchClip4 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 3, isValueNonZero (val)); }
+void CustomControlSurface::launchClip5 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 4, isValueNonZero (val)); }
+void CustomControlSurface::launchClip6 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 5, isValueNonZero (val)); }
+void CustomControlSurface::launchClip7 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 6, isValueNonZero (val)); }
+void CustomControlSurface::launchClip8 (float val, int param)   { if (shouldActOnValue (val)) userLaunchedClip (param, 7, isValueNonZero (val)); }
+void CustomControlSurface::stopClips (float val, int param)     { if (shouldActOnValue (val)) userStoppedClip (param, isValueNonZero (val)); }
+void CustomControlSurface::launchScene (float val, int param)   { if (shouldActOnValue (val)) userLaunchedScene (param, isValueNonZero (val)); }
+void CustomControlSurface::clipBankUp1 (float val, int)         { if (shouldActOnValue (val)) userChangedPadBanks (-1); }
+void CustomControlSurface::clipBankUp4 (float val, int)         { if (shouldActOnValue (val)) userChangedPadBanks (-4); }
+void CustomControlSurface::clipBankUp8 (float val, int)         { if (shouldActOnValue (val)) userChangedPadBanks (-8); }
+void CustomControlSurface::clipBankDown1 (float val, int)       { if (shouldActOnValue (val)) userChangedPadBanks (1); }
+void CustomControlSurface::clipBankDown4 (float val, int)       { if (shouldActOnValue (val)) userChangedPadBanks (4); }
+void CustomControlSurface::clipBankDown8 (float val, int)       { if (shouldActOnValue (val)) userChangedPadBanks (8); }
 
 void CustomControlSurface::markIn (float val, int)                  { if (shouldActOnValue (val)) userPressedMarkIn(); }
 void CustomControlSurface::markOut (float val, int)                 { if (shouldActOnValue (val)) userPressedMarkOut(); }
@@ -1619,6 +1770,15 @@ void CustomControlSurface::prevMarker (float val, int)  { if (shouldActOnValue (
 void CustomControlSurface::nextMarker (float val, int)  { if (shouldActOnValue (val)) userPressedNextMarker(); }
 void CustomControlSurface::nudgeLeft  (float val, int)  { if (shouldActOnValue (val)) userNudgedLeft(); }
 void CustomControlSurface::nudgeRight (float val, int)  { if (shouldActOnValue (val)) userNudgedRight(); }
+
+void CustomControlSurface::marker1 (float val, int) { if (shouldActOnValue (val)) userPressedGoToMarker (0); }
+void CustomControlSurface::marker2 (float val, int) { if (shouldActOnValue (val)) userPressedGoToMarker (1); }
+void CustomControlSurface::marker3 (float val, int) { if (shouldActOnValue (val)) userPressedGoToMarker (2); }
+void CustomControlSurface::marker4 (float val, int) { if (shouldActOnValue (val)) userPressedGoToMarker (3); }
+void CustomControlSurface::marker5 (float val, int) { if (shouldActOnValue (val)) userPressedGoToMarker (4); }
+void CustomControlSurface::marker6 (float val, int) { if (shouldActOnValue (val)) userPressedGoToMarker (5); }
+void CustomControlSurface::marker7 (float val, int) { if (shouldActOnValue (val)) userPressedGoToMarker (6); }
+void CustomControlSurface::marker8 (float val, int) { if (shouldActOnValue (val)) userPressedGoToMarker (7); }
 
 void CustomControlSurface::paramTrack (float val, int param)
 {

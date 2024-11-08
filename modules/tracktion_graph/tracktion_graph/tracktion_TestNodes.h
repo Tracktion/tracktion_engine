@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -26,49 +26,48 @@ public:
         : sequence (std::move (sequenceToPlay))
     {
     }
-    
+
     NodeProperties getNodeProperties() override
     {
         return { false, true, 0 };
     }
-    
+
     bool isReadyToProcess() override
     {
         return true;
     }
-    
+
     void prepareToPlay (const PlaybackInitialisationInfo& info) override
     {
         sampleRate = info.sampleRate;
     }
-    
+
     void process (ProcessContext& pc) override
     {
         const int numSamples = (int) pc.referenceSampleRange.getLength();
         const double blockDuration = numSamples / sampleRate;
         const auto timeRange = juce::Range<double>::withStartAndLength (lastTime, blockDuration);
-        
+
         for (int index = sequence.getNextIndexAtTime (timeRange.getStart()); index >= 0; ++index)
         {
             if (auto eventHolder = sequence.getEventPointer (index))
             {
                 auto time = sequence.getEventTime (index);
-                
+
                 if (! timeRange.contains (time))
                     break;
-                
-                pc.buffers.midi.addMidiMessage (eventHolder->message, time - timeRange.getStart(),
-                                                tracktion_engine::MidiMessageArray::notMPE);
+
+                pc.buffers.midi.addMidiMessage (eventHolder->message, time - timeRange.getStart(), {});
             }
             else
             {
                 break;
             }
         }
-        
+
         lastTime = timeRange.getEnd();
     }
-    
+
 private:
     juce::MidiMessageSequence sequence;
     double sampleRate = 0.0, lastTime = 0.0;
@@ -84,7 +83,7 @@ public:
         : numChannels (numChannelsToUse), nodeID (nodeIDToUse), frequency (frequencyToUse)
     {
     }
-    
+
     NodeProperties getNodeProperties() override
     {
         NodeProperties props;
@@ -92,15 +91,15 @@ public:
         props.hasMidi = false;
         props.numberOfChannels = numChannels;
         props.nodeID = nodeID;
-        
+
         return props;
     }
-    
+
     bool isReadyToProcess() override
     {
         return true;
     }
-    
+
     void prepareToPlay (const PlaybackInitialisationInfo& info) override
     {
         oscillator.reset (frequency, info.sampleRate);
@@ -110,7 +109,7 @@ public:
     {
         setAllFrames (pc.buffers.audio, [&] { return oscillator.getNext(); });
     }
-    
+
 private:
     const int numChannels;
     size_t nodeID = 0;
@@ -133,35 +132,35 @@ public:
         setOptimisations ({ ClearBuffers::no,
                             AllocateAudioBuffer::no });
     }
-    
+
     NodeProperties getNodeProperties() override
     {
         NodeProperties props;
         props.hasAudio = true;
         props.hasMidi = false;
         props.numberOfChannels = numChannels;
-        
+
         return props;
     }
-    
+
     bool isReadyToProcess() override
     {
         return true;
     }
-    
+
     void prepareToPlay (const PlaybackInitialisationInfo& info) override
     {
         audioBuffer.resize (choc::buffer::Size::create ((choc::buffer::ChannelCount) numChannels,
                                                         (choc::buffer::FrameCount) info.blockSize));
         audioBuffer.clear();
     }
-    
+
     void process (ProcessContext& pc) override
     {
         pc.buffers.midi.clear();
         setAudioOutput (nullptr, audioBuffer.getView().getStart (pc.buffers.audio.getNumFrames()));
     }
-    
+
 private:
     const int numChannels;
     choc::buffer::ChannelArrayBuffer<float> audioBuffer;
@@ -177,7 +176,7 @@ public:
         : nodes (std::move (inputs))
     {
     }
-    
+
     NodeProperties getNodeProperties() override
     {
         NodeProperties props;
@@ -195,11 +194,11 @@ public:
 
         return props;
     }
-    
+
     std::vector<Node*> getDirectInputNodes() override
     {
         std::vector<Node*> inputNodes;
-        
+
         for (auto& node : nodes)
             inputNodes.push_back (node.get());
 
@@ -211,7 +210,7 @@ public:
         for (auto& node : nodes)
             if (! node->hasProcessed())
                 return false;
-        
+
         return true;
     }
 
@@ -223,11 +222,11 @@ public:
         for (auto& node : nodes)
         {
             auto inputFromNode = node->getProcessedOutput();
-            
+
             if (auto numChannelsToAdd = std::min (inputFromNode.audio.getNumChannels(), numChannels))
                 add (pc.buffers.audio.getFirstChannels (numChannelsToAdd),
                      inputFromNode.audio.getFirstChannels (numChannelsToAdd));
-            
+
             pc.buffers.midi.mergeFrom (inputFromNode.midi);
         }
     }
@@ -241,10 +240,10 @@ private:
 static inline std::unique_ptr<BasicSummingNode> makeBaicSummingNode (std::initializer_list<Node*> nodes)
 {
     std::vector<std::unique_ptr<Node>> nodeVector;
-    
+
     for (auto node : nodes)
         nodeVector.push_back (std::unique_ptr<Node> (node));
-        
+
     return std::make_unique<BasicSummingNode> (std::move (nodeVector));
 }
 
@@ -261,12 +260,17 @@ public:
     {
         jassert (function);
     }
-    
+
     NodeProperties getNodeProperties() override
     {
-        return node->getNodeProperties();
+        auto props = node->getNodeProperties();
+
+        if (props.nodeID != 0)
+            hash_combine (props.nodeID, static_cast<size_t> (9437249422822785445ul)); // "FunctionNode"
+
+        return props;
     }
-    
+
     std::vector<Node*> getDirectInputNodes() override
     {
         return { node.get() };
@@ -276,7 +280,7 @@ public:
     {
         return node->hasProcessed();
     }
-    
+
     void process (ProcessContext& pc) override
     {
         auto inputBuffer = node->getProcessedOutput().audio;
@@ -294,7 +298,7 @@ public:
                 *destIter++ = function (*sourceIter++);
         }
     }
-    
+
 private:
     std::unique_ptr<Node> node;
     std::function<float (float)> function;
@@ -313,8 +317,8 @@ class GainNode final : public Node
 {
 public:
     /** Creates a GainNode that doesn't own its input. */
-    GainNode (Node* inputNode, std::function<float()> gainFunc)
-        : input (inputNode), gainFunction (std::move (gainFunc))
+    GainNode (Node* inputNode, std::function<float()> gainFunc, size_t nodeHashToUse = 0)
+        : input (inputNode), gainFunction (std::move (gainFunc)), nodeHash (nodeHashToUse)
     {
         assert (input != nullptr);
         assert (gainFunction);
@@ -322,9 +326,9 @@ public:
     }
 
     /** Creates a GainNode that owns its input. */
-    GainNode (std::unique_ptr<Node> inputNode, std::function<float()> gainFunc)
+    GainNode (std::unique_ptr<Node> inputNode, std::function<float()> gainFunc, size_t nodeHashToUse = 0)
         : ownedInput (std::move (inputNode)), input (ownedInput.get()),
-          gainFunction (std::move (gainFunc))
+          gainFunction (std::move (gainFunc)), nodeHash (nodeHashToUse)
     {
         assert (ownedInput != nullptr);
         assert (input != nullptr);
@@ -335,14 +339,18 @@ public:
     NodeProperties getNodeProperties() override
     {
         auto props = input->getNodeProperties();
-        constexpr size_t gainNodeMagicHash = 0x6761696e4e6f6465;
-        
+
+        if (nodeHash != 0)
+            hash_combine (props.nodeID, nodeHash);
+
+        constexpr size_t gainNodeMagicHash = size_t (0x6761696e4e6f6465);
+
         if (props.nodeID != 0)
             hash_combine (props.nodeID, gainNodeMagicHash);
-        
+
         return props;
     }
-    
+
     std::vector<Node*> getDirectInputNodes() override
     {
         return { input };
@@ -352,7 +360,7 @@ public:
     {
         return input->hasProcessed();
     }
-    
+
     void process (ProcessContext& pc) override
     {
         jassert (pc.buffers.audio.getNumChannels() == input->getProcessedOutput().audio.getNumChannels());
@@ -360,9 +368,9 @@ public:
         // Just pass out input on to our output
         copy (pc.buffers.audio, input->getProcessedOutput().audio);
         pc.buffers.midi.mergeFrom (input->getProcessedOutput().midi);
-        
+
         float gain = gainFunction();
-        
+
         if (gain == lastGain)
         {
             if (gain == 0.0f)
@@ -377,15 +385,16 @@ public:
             smoother.reset ((int) pc.buffers.audio.getNumFrames());
             applyGainPerFrame (pc.buffers.audio, [&] { return smoother.getNextValue(); });
         }
-        
+
         lastGain = gain;
     }
-    
+
 private:
     std::unique_ptr<Node> ownedInput;
     Node* input = nullptr;
     std::function<float()> gainFunction;
     float lastGain = 0.0f;
+    size_t nodeHash = 0;
 };
 
 //==============================================================================
@@ -401,28 +410,31 @@ public:
         setOptimisations ({ ClearBuffers::no,
                             AllocateAudioBuffer::no });
     }
-    
+
     int getBusID() const
     {
         return busID;
     }
-    
+
     std::function<float()> getGainFunction()
     {
         return gainFunction;
     }
-                                                
+
     NodeProperties getNodeProperties() override
     {
         auto props = input->getNodeProperties();
-        constexpr size_t sendNodeMagicHash = 0x73656e644e6f6465;
-        
+        constexpr size_t sendNodeMagicHash = size_t (0x73656e644e6f6465);
+
         if (props.nodeID != 0)
+        {
+            hash_combine (props.nodeID, busID);
             hash_combine (props.nodeID, sendNodeMagicHash);
-        
+        }
+
         return props;
     }
-    
+
     std::vector<Node*> getDirectInputNodes() override
     {
         return { input.get() };
@@ -432,7 +444,7 @@ public:
     {
         return input->hasProcessed();
     }
-    
+
     void process (ProcessContext& pc) override
     {
         auto source = input->getProcessedOutput();
@@ -443,12 +455,12 @@ public:
         setAudioOutput (input.get(), source.audio);
 
         // If the source only outputs to this node, we can steal its data
-        if (numOutputNodes == 1)
+        if (input->numOutputNodes == 1)
             pc.buffers.midi.swapWith (source.midi);
         else
             pc.buffers.midi.copyFrom (source.midi);
     }
-    
+
 private:
     std::unique_ptr<Node> input;
     const int busID;
@@ -489,17 +501,19 @@ public:
             props.hasMidi = props.hasMidi || nodeProps.hasMidi;
             props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);
             props.latencyNumSamples = std::max (props.latencyNumSamples, nodeProps.latencyNumSamples);
-            hash_combine (props.nodeID, nodeProps.nodeID);
+
+            if (props.nodeID != 0 || nodeProps.nodeID != 0)
+                hash_combine (props.nodeID, nodeProps.nodeID);
         }
-        
-        constexpr size_t returnNodeMagicHash = 0x72657475726e;
-        
+
+        constexpr size_t returnNodeMagicHash = size_t (0x72657475726e);
+
         if (props.nodeID != 0)
             hash_combine (props.nodeID, returnNodeMagicHash);
 
         return props;
     }
-    
+
     std::vector<Node*> getDirectInputNodes() override
     {
         if (! input)
@@ -507,23 +521,51 @@ public:
 
         return { input.get() };
     }
-    
-    bool transform (Node& rootNode) override
+
+    TransformResult transform (Node& rootNode, const std::vector<Node*>& postOrderedNodes, TransformCache& cache) override
     {
         if (! hasInitialised)
         {
-            findSendNodes (rootNode);
-            return true;
+            findSendNodes (rootNode, postOrderedNodes, cache);
+            return TransformResult::connectionsMade;
         }
-        
-        return false;
+
+        return TransformResult::none;
+    }
+
+    void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info) override
+    {
+        if (! input)
+            return;
+
+        if (! info.enableNodeMemorySharing)
+            return;
+
+        if (input->numOutputNodes > 1)
+            return;
+
+        const auto inputNumChannels = input->getNodeProperties().numberOfChannels;
+        const auto desiredNumChannels = getNodeProperties().numberOfChannels;
+
+        if (inputNumChannels >= desiredNumChannels)
+        {
+            canUseSourceBuffers = true;
+            setOptimisations ({ tracktion::graph::ClearBuffers::no,
+                                tracktion::graph::AllocateAudioBuffer::no });
+        }
     }
 
     bool isReadyToProcess() override
     {
         return ! input || input->hasProcessed();
     }
-    
+
+    void preProcess (choc::buffer::FrameCount, juce::Range<int64_t>) override
+    {
+        if (canUseSourceBuffers)
+            setBufferViewToUse (input.get(), input->getProcessedOutput().audio);
+    }
+
     void process (ProcessContext& pc) override
     {
         if (! input)
@@ -542,32 +584,46 @@ public:
         setAudioOutput (input.get(), source.audio);
         pc.buffers.midi.copyFrom (source.midi);
     }
-    
+
 private:
     std::unique_ptr<Node> input;
     const int busID;
-    bool hasInitialised = false;
-    
-    void findSendNodes (Node& rootNode)
+    bool hasInitialised = false, canUseSourceBuffers = false;
+
+    void findSendNodes (Node&, const std::vector<Node*>& postOrderedNodes, TransformCache& cache)
     {
         // This can only be initialised once as otherwise the latency nodes will get created again
         jassert (! hasInitialised);
-        
+
         if (hasInitialised)
             return;
-        
+
+        std::vector<SendNode*> allSends;
+
+        constexpr size_t cacheKey = 3399892065; // Random number
+
+        if (auto cachedVec = cache.getCachedProperty<std::vector<SendNode*>> (cacheKey))
+        {
+            allSends = *cachedVec;
+        }
+        else
+        {
+            for (auto n : postOrderedNodes)
+               if (auto send = dynamic_cast<SendNode*> (n))
+                   allSends.push_back (send);
+
+            cache.cacheProperty (cacheKey, allSends);
+        }
+
         std::vector<SendNode*> sends;
-        visitNodes (rootNode,
-                    [&] (Node& n)
-                    {
-                       if (auto send = dynamic_cast<SendNode*> (&n))
-                           if (send->getBusID() == busID)
-                               sends.push_back (send);
-                    }, true);
-        
+
+        for (auto send : allSends)
+            if (send->getBusID() == busID)
+                sends.push_back (send);
+
         // Remove any send nodes that feed back in to this
         std::vector<Node*> sendsToRemove;
-        
+
         for (auto send : sends)
         {
             visitNodes (*send,
@@ -577,7 +633,7 @@ private:
                                 sendsToRemove.push_back (send);
                         }, true);
         }
-        
+
         sends.erase (std::remove_if (sends.begin(), sends.end(),
                                      [&] (auto n) { return std::find (sendsToRemove.begin(), sendsToRemove.end(), n) != sendsToRemove.end(); }),
                      sends.end());
@@ -585,27 +641,28 @@ private:
         // Create a summing node if required
         if (sends.size() > 0)
         {
+            const auto returnNodeID = getNodeProperties().nodeID;
             std::vector<std::unique_ptr<Node>> ownedNodes;
 
             if (input)
                 ownedNodes.push_back (std::move (input));
-            
+
             // For each of the sends create a live gain node
             for (int i = (int) sends.size(); --i >= 0;)
             {
                 auto gainFunction = sends[(size_t) i]->getGainFunction();
-                
+
                 if (! gainFunction)
                     continue;
-                
-                ownedNodes.push_back (makeNode<GainNode> (std::move (sends[(size_t) i]), std::move (gainFunction)));
+
+                ownedNodes.push_back (makeNode<GainNode> (std::move (sends[(size_t) i]), std::move (gainFunction), returnNodeID));
 				sends.erase (std::find (sends.begin(), sends.end(), sends[(size_t) i]));
 			}
 
             auto node = makeNode<SummingNode> (std::move (ownedNodes), std::vector<Node*> (sends.begin(), sends.end()));
             input.swap (node);
         }
-        
+
         hasInitialised = true;
     }
 };
@@ -626,20 +683,20 @@ public:
     {
         jassert (input);
     }
-        
+
     NodeProperties getNodeProperties() override
     {
         NodeProperties props;
         props.hasAudio = ! channelMap.empty();
         props.hasMidi = passMIDI;
         props.numberOfChannels = 0;
-        
+
         const auto inputProps = input->getNodeProperties();
         props.latencyNumSamples = inputProps.latencyNumSamples;
-        
+
         props.nodeID = inputProps.nodeID;
         hash_combine (props.nodeID, passMIDI);
-        
+
         // Num channels is the max of destinations
         for (auto channel : channelMap)
         {
@@ -648,15 +705,15 @@ public:
 
             props.numberOfChannels = std::max (props.numberOfChannels, channel.second + 1);
         }
-        
-        constexpr size_t channelNodeMagicHash = 0x6368616e6e656c;
-        
+
+        constexpr size_t channelNodeMagicHash = size_t (0x6368616e6e656c);
+
         if (props.nodeID != 0)
             hash_combine (props.nodeID, channelNodeMagicHash);
 
         return props;
     }
-    
+
     std::vector<Node*> getDirectInputNodes() override
     {
         return { input.get() };
@@ -666,15 +723,15 @@ public:
     {
         return input->hasProcessed();
     }
-    
+
     void process (ProcessContext& pc) override
     {
         auto inputBuffers = input->getProcessedOutput();
-        
+
         // Pass on MIDI
         if (passMIDI)
             pc.buffers.midi.mergeFrom (inputBuffers.midi);
-        
+
         // Remap audio
         for (auto channel : channelMap)
             if (channel.first < (int) inputBuffers.audio.getNumChannels())
@@ -693,10 +750,10 @@ private:
 static inline std::vector<std::pair<int, int>> makeChannelMap (std::initializer_list<std::pair<int, int>> sourceDestChannelIndicies)
 {
     std::vector<std::pair<int, int>> map;
-    
+
     for (auto channelPair : sourceDestChannelIndicies)
         map.push_back (channelPair);
-    
+
     return map;
 }
 
@@ -711,16 +768,16 @@ public:
     {
         jassert (input);
     }
-        
+
     NodeProperties getNodeProperties() override
     {
-        constexpr size_t sinkNodeMagicHash = 0x95ab5e9dcd;
+        constexpr size_t sinkNodeMagicHash = size_t (0x95ab5e9dcd);
         auto props = input->getNodeProperties();
         hash_combine (props.nodeID, sinkNodeMagicHash);
-        
+
         return props;
     }
-    
+
     std::vector<Node*> getDirectInputNodes() override
     {
         return { input.get() };
@@ -730,7 +787,7 @@ public:
     {
         return input->hasProcessed();
     }
-    
+
     void process (ProcessContext&) override
     {
     }
@@ -762,10 +819,10 @@ public:
     {
         auto props = input->getNodeProperties();
         hash_combine (props.nodeID, nodeID);
-        
+
         return props;
     }
-    
+
     std::vector<tracktion::graph::Node*> getDirectInputNodes() override
     {
         return { input };
@@ -775,7 +832,7 @@ public:
     {
         return input->hasProcessed();
     }
-    
+
     void process (ProcessContext& pc) override
     {
         auto inputBuffers = input->getProcessedOutput();

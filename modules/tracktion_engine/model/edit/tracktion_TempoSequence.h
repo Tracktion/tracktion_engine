@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -257,7 +257,7 @@ struct EditTimecodeRemapperSnapshot
 private:
     struct ClipPos
     {
-        Selectable::WeakRef clip;
+        SafeSelectable<Clip> clip;
         BeatPosition startBeat, endBeat;
         BeatDuration contentStartBeat;
     };
@@ -271,6 +271,7 @@ private:
     juce::Array<ClipPos> clips;
     juce::Array<AutomationPos> automation;
     BeatRange loopPositionBeats;
+    BeatPosition startPositionBeats;
 };
 
 

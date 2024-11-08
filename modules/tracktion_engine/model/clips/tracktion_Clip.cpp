@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -12,13 +12,13 @@ namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
-Clip::Clip (const juce::ValueTree& v, ClipTrack& targetTrack, EditItemID id, Type t)
-    : TrackItem (targetTrack.edit, id, t),
-      state (v), track (&targetTrack),
+Clip::Clip (const juce::ValueTree& v, ClipOwner& targetParent, EditItemID id, Type t)
+    : TrackItem (targetParent.getClipOwnerEdit(), id, t),
+      state (v), parent (&targetParent),
       sourceFileReference (edit, state, IDs::source)
 {
     jassert (isClipState (state));
-    edit.clipCache.addItem (*this);
+    jassert (getParent() == &targetParent);
 
     auto um = getUndoManager();
     clipName.referTo (state, IDs::name, um);
@@ -26,21 +26,28 @@ Clip::Clip (const juce::ValueTree& v, ClipTrack& targetTrack, EditItemID id, Typ
     length.referTo (state, IDs::length, um);
     offset.referTo (state, IDs::offset, um);
     colour.referTo (state, IDs::colour, um);
+    disabled.referTo (state, IDs::disabled, um);
     speedRatio.referTo (state, IDs::speed, um, 1.0);
     syncType.referTo (state, IDs::sync, um);
     showingTakes.referTo (state, IDs::showingTakes, nullptr, false);
     groupID.referTo (state, IDs::groupID, um);
     linkID.referTo (state, IDs::linkID, um);
+    followActionDurationType.referTo (state, IDs::followActionDurationType, um);
+    followActionBeats.referTo (state, IDs::followActionBeats, um);
+    followActionNumLoops.referTo (state, IDs::followActionNumLoops, um, 1.0);
 
-    if (! (length >= TimeDuration() && length < TimeDuration::fromSeconds (1.0e10))) // reverse logic to check for NANs
+    convertPropertyToType<bool> (state, IDs::disabled);
+
+    if (! (length >= 0_td && length < 1.0e10s)) // reverse logic to check for NANs
     {
         jassertfalse;
-        length = TimeDuration();
+        length = 0_td;
     }
 
     state.addListener (this);
 
     updateLinkedClipsCaller.setFunction ([this] { updateLinkedClips(); });
+    edit.clipCache.addItem (*this);
 }
 
 Clip::~Clip()
@@ -51,7 +58,7 @@ Clip::~Clip()
 
 void Clip::initialise()
 {
-    jassert (track != nullptr);
+    jassert (parent != nullptr);
 
     const juce::ScopedValueSetter<bool> initialiser (isInitialised, false, true);
 
@@ -63,7 +70,7 @@ void Clip::initialise()
 
     Selectable::changed(); // call superclass so not to mark the edit as altered
 
-    if (track != nullptr)
+    if (auto track = getTrack())
     {
         if (auto f = track->getParentFolderTrack())
             f->setDirtyClips();
@@ -88,19 +95,21 @@ bool Clip::isClipState (const juce::ValueTree& v)
 bool Clip::isClipState (const juce::Identifier& i)
 {
     return i == IDs::AUDIOCLIP || i == IDs::MIDICLIP || i == IDs::MARKERCLIP
-        || i == IDs::STEPCLIP || i == IDs::CHORDCLIP || i == IDs::ARRANGERCLIP || i == IDs::EDITCLIP;
+        || i == IDs::STEPCLIP || i == IDs::CHORDCLIP || i == IDs::ARRANGERCLIP
+        || i == IDs::EDITCLIP || i == IDs::CONTAINERCLIP;
 }
 
 //==============================================================================
-static Clip::Ptr createNewEditClip (const juce::ValueTree& v, EditItemID newClipID, ClipTrack& targetTrack)
+static Clip::Ptr createNewEditClip (const juce::ValueTree& v, EditItemID newClipID, ClipOwner& targetParent)
 {
+    auto& edit = targetParent.getClipOwnerEdit();
     ProjectItemID sourceItemID (v.getProperty (IDs::source).toString());
-    auto sourceItem = targetTrack.edit.engine.getProjectManager().getProjectItem (sourceItemID);
+    auto sourceItem = edit.engine.getProjectManager().getProjectItem (sourceItemID);
     juce::String warning;
 
     if (sourceItem != nullptr && sourceItem->getLength() > 0.0)
     {
-        if (auto snapshot = EditSnapshot::getEditSnapshot (targetTrack.edit.engine, sourceItemID))
+        if (auto snapshot = EditSnapshot::getEditSnapshot (edit.engine, sourceItemID))
         {
             // check for recursion
             auto referencedEdits = snapshot->getNestedEditObjects();
@@ -117,13 +126,13 @@ static Clip::Ptr createNewEditClip (const juce::ValueTree& v, EditItemID newClip
 
     // If sourceItemID is invalid it means we're creating an empty EditClip
     if (warning.isEmpty() || ! sourceItemID.isValid())
-        return new EditClip (v, newClipID, targetTrack, sourceItemID);
+        return new EditClip (v, newClipID, targetParent, sourceItemID);
 
-    targetTrack.edit.engine.getUIBehaviour().showWarningAlert (TRANS("Can't Import Edit"), TRANS(warning));
+    edit.engine.getUIBehaviour().showWarningAlert (TRANS("Can't Import Edit"), TRANS(warning));
     return {};
 }
 
-static Clip::Ptr createNewClipObject (const juce::ValueTree& v, EditItemID newClipID, ClipTrack& targetTrack)
+static Clip::Ptr createNewClipObject (const juce::ValueTree& v, EditItemID newClipID, ClipOwner& targetParent)
 {
     auto type = v.getType();
 
@@ -134,24 +143,27 @@ static Clip::Ptr createNewClipObject (const juce::ValueTree& v, EditItemID newCl
         type = TrackItem::clipTypeToXMLType (TrackItem::stringToType (v.getProperty (IDs::type).toString()));
     }
 
-    if (type == IDs::AUDIOCLIP)     return new WaveAudioClip (v, newClipID, targetTrack);
-    if (type == IDs::MIDICLIP)      return new MidiClip (v, newClipID, targetTrack);
-    if (type == IDs::MARKERCLIP)    return new MarkerClip (v, newClipID, targetTrack);
-    if (type == IDs::STEPCLIP)      return new StepClip (v, newClipID, targetTrack);
-    if (type == IDs::CHORDCLIP)     return new ChordClip (v, newClipID, targetTrack);
-    if (type == IDs::ARRANGERCLIP)  return new ArrangerClip (v, newClipID, targetTrack);
-    if (type == IDs::EDITCLIP)      return createNewEditClip (v, newClipID, targetTrack);
+    if (type == IDs::AUDIOCLIP)     return new WaveAudioClip (v, newClipID, targetParent);
+    if (type == IDs::MIDICLIP)      return new MidiClip (v, newClipID, targetParent);
+    if (type == IDs::MARKERCLIP)    return new MarkerClip (v, newClipID, targetParent);
+    if (type == IDs::STEPCLIP)      return new StepClip (v, newClipID, targetParent);
+    if (type == IDs::CHORDCLIP)     return new ChordClip (v, newClipID, targetParent);
+    if (type == IDs::ARRANGERCLIP)  return new ArrangerClip (v, newClipID, targetParent);
+    if (type == IDs::CONTAINERCLIP) return new ContainerClip (v, newClipID, targetParent);
+    if (type == IDs::EDITCLIP)      return createNewEditClip (v, newClipID, targetParent);
 
     jassertfalse;
     return {};
 }
 
-Clip::Ptr Clip::createClipForState (const juce::ValueTree& v, ClipTrack& targetTrack)
+Clip::Ptr Clip::createClipForState (const juce::ValueTree& v, ClipOwner& targetParent)
 {
     jassert (Clip::isClipState (v));
-    jassert (TrackList::isTrack (v.getParent()));
+    jassert (TrackList::isTrack (v.getParent())
+             || v.getParent().hasType (IDs::CLIPLIST)
+             || v.getParent().hasType (IDs::CLIPSLOT));
 
-    auto& edit = targetTrack.edit;
+    auto& edit = targetParent.getClipOwnerEdit();
     auto newClipID = EditItemID::readOrCreateNewID (edit, v);
 
     Clip::Ptr c = edit.clipCache.findItem (newClipID);
@@ -159,7 +171,8 @@ Clip::Ptr Clip::createClipForState (const juce::ValueTree& v, ClipTrack& targetT
 
     if (c == nullptr)
     {
-        c = createNewClipObject (v, newClipID, targetTrack);
+        c = createNewClipObject (v, newClipID, targetParent);
+        jassert (c->getParent() == &targetParent); // If this is hit it means two clips share the same ID!
 
         if (c != nullptr)
         {
@@ -214,25 +227,46 @@ void Clip::setName (const juce::String& newName)
 }
 
 //==============================================================================
-void Clip::setTrack (ClipTrack* t)
+void Clip::setParent (ClipOwner* newParent)
 {
-    if (track != t)
-    {
-        if (track != nullptr)
-            if (auto f = track->getParentFolderTrack())
-                f->setDirtyClips();
+    if (parent == newParent)
+        return;
 
-        track = t;
+    if (auto track = getTrack())
+        if (auto f = track->getParentFolderTrack())
+            f->setDirtyClips();
 
-        if (track != nullptr)
-            if (auto f = track->getParentFolderTrack())
-                f->setDirtyClips();
-    }
+    parent = newParent;
+
+    if (auto track = getTrack())
+        if (auto f = track->getParentFolderTrack())
+            f->setDirtyClips();
+}
+
+ClipOwner* Clip::getParent() const
+{
+    return parent;
+}
+
+ClipTrack* Clip::getClipTrack() const
+{
+    return dynamic_cast<ClipTrack*> (getTrack());
 }
 
 Track* Clip::getTrack() const
 {
-    return track;
+    if (auto t = dynamic_cast<Track*> (parent))
+        return t;
+
+    if (auto cs = getClipSlot())
+        return &cs->track;
+
+    return nullptr;
+}
+
+ClipSlot* Clip::getClipSlot() const
+{
+    return dynamic_cast<ClipSlot*> (parent);
 }
 
 //==============================================================================
@@ -240,7 +274,7 @@ void Clip::changed()
 {
     Selectable::changed();
 
-    if (track != nullptr)
+    if (auto track = getTrack())
         track->setFrozen (false, Track::groupFreeze);
 
     if (! cloneInProgress && isLinked() && ! edit.isLoading())
@@ -257,9 +291,10 @@ void Clip::sourceMediaChanged()
 void Clip::setPosition (ClipPosition newPosition)
 {
     const auto maxEnd = Edit::getMaximumEditEnd();
-    newPosition.time = { juce::jlimit (TimePosition(), maxEnd, newPosition.time.getStart()),
-                         juce::jlimit (newPosition.time.getStart(), maxEnd, newPosition.time.getEnd()) };
-    newPosition.offset = juce::jmax (TimeDuration(), newPosition.offset);
+    const auto start = juce::jlimit (0_tp, maxEnd, newPosition.time.getStart());
+    newPosition.time = { start,
+                         juce::jlimit (start, maxEnd, newPosition.time.getEnd()) };
+    newPosition.offset = juce::jmax (0_td, newPosition.offset);
 
     clipStart = newPosition.time.getStart();
     length = newPosition.time.getLength();
@@ -302,7 +337,7 @@ void Clip::setEnd (TimePosition newEnd, bool preserveSync)
 void Clip::setOffset (TimeDuration newOffset)
 {
     auto pos = getPosition();
-    pos.offset = juce::jmax (TimeDuration(), newOffset);
+    pos.offset = juce::jmax (0_td, newOffset);
     setPosition (pos);
 }
 
@@ -342,7 +377,7 @@ TimePosition Clip::getSpottingPoint() const
 
     auto pos = getPosition();
 
-    return juce::jlimit (TimePosition(), toPosition (pos.time.getLength()),
+    return juce::jlimit (0_tp, toPosition (pos.time.getLength()),
                          marks.getFirst() - pos.offset);
 }
 
@@ -350,38 +385,42 @@ void Clip::trimAwayOverlap (TimeRange r)
 {
     auto pos = getPosition();
 
-    if (r.getEnd() > pos.time.getStart())
-    {
-        if (r.getEnd() < pos.time.getEnd())
-            setStart (r.getEnd(), true, false);
-        else if (pos.time.getStart() < r.getStart())
-            setEnd (r.getStart(), true);
-    }
+    if (! pos.time.intersects (r))
+        return;
+
+    if (r.getEnd() < pos.time.getEnd())
+        setStart (r.getEnd(), true, false);
+    else if (pos.time.getStart() < r.getStart())
+        setEnd (r.getStart(), true);
 }
 
-void Clip::removeFromParentTrack()
+void Clip::removeFromParent()
 {
     if (state.getParent().isValid())
         state.getParent().removeChild (state, getUndoManager());
 }
 
-bool Clip::moveToTrack (Track& newTrack)
+bool Clip::moveTo (ClipOwner& newParent)
 {
-    if (auto to = dynamic_cast<ClipTrack*> (&newTrack))
-    {
-        if (canGoOnTrack (*to))
-        {
-            if (track != to)
-            {
-                if (! to->isFrozen (Track::anyFreeze))
-                {
-                    Clip::Ptr refHolder (this);
-                    to->addClip (this);
-                }
-            }
+    if (parent == &newParent)
+        return false;
 
-            return true;
-        }
+    if (! canBeAddedTo (newParent))
+        return false;
+
+    if (auto to = dynamic_cast<ClipTrack*> (&newParent))
+    {
+        if (to->isFrozen (Track::anyFreeze))
+            return false;
+
+        Clip::Ptr refHolder (this);
+        to->addClip (this);
+        return true;
+    }
+    else if (auto cs = dynamic_cast<ClipSlot*> (&newParent))
+    {
+        Clip::Ptr refHolder (this);
+        cs->setClip (this);
     }
 
     return false;
@@ -447,7 +486,7 @@ void Clip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifi
     {
         if (id == IDs::start || id == IDs::length || id == IDs::offset)
         {
-            if (track != nullptr)
+            if (auto track = getTrack())
             {
                 if (auto f = track->getParentFolderTrack())
                     f->setDirtyClips();
@@ -467,15 +506,42 @@ void Clip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifi
         }
         else if (id == IDs::name)
         {
-            auto weakRef = getWeakRef();
             clipName.forceUpdateOfCachedValue();
-            changed();
 
-            juce::MessageManager::callAsync ([weakRef]
+            juce::MessageManager::callAsync ([weakRef = makeSafeRef (*this)]
             {
                 if (weakRef != nullptr)
                     SelectionManager::refreshAllPropertyPanels();
             });
+
+            changed();
+        }
+        else if (id == IDs::followActionDurationType)
+        {
+            changed();
+            propertiesChanged();
+        }
+        else if (id == IDs::followActionBeats)
+        {
+            if (! getUndoManager()->isPerformingUndoRedo())
+            {
+                followActionBeats.forceUpdateOfCachedValue();
+
+                if (followActionBeats.get() > 0_bd)
+                    if (auto fa = getFollowActions(); fa && fa->getActions().empty())
+                        fa->addAction();
+            }
+        }
+        else if (id == IDs::followActionNumLoops)
+        {
+            if (! getUndoManager()->isPerformingUndoRedo())
+            {
+                followActionNumLoops.forceUpdateOfCachedValue();
+
+                if (followActionNumLoops.get() > 0.0)
+                    if (auto fa = getFollowActions(); fa && fa->getActions().empty())
+                        fa->addAction();
+            }
         }
     }
 }
@@ -483,18 +549,22 @@ void Clip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifi
 void Clip::valueTreeParentChanged (juce::ValueTree& v)
 {
     if (v == state)
-        updateParentTrack();
+        updateParent();
 }
 
-void Clip::updateParentTrack()
+void Clip::updateParent()
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
-    auto parent = state.getParent();
+    auto parentState = state.getParent();
 
-    if (TrackList::isTrack (parent))
-        setTrack (dynamic_cast<ClipTrack*> (findTrackForID (edit, EditItemID::fromID (parent))));
+    if (TrackList::isTrack (parentState))
+        setParent (dynamic_cast<ClipTrack*> (findTrackForID (edit, EditItemID::fromID (parentState))));
+    else if (parentState.hasType (IDs::CLIPLIST) && parentState.getParent().hasType (IDs::CONTAINERCLIP))
+        setParent (dynamic_cast<ContainerClip*> (findClipForID (edit, EditItemID::fromID (parentState.getParent()))));
+    else if (parentState.hasType (IDs::CLIPSLOT))
+        setParent (dynamic_cast<ClipSlot*> (findClipSlotForID (edit, EditItemID::fromID (parentState))));
     else
-        setTrack ({});
+        setParent ({});
 }
 
 //==============================================================================
@@ -523,6 +593,16 @@ void Clip::updateLinkedClips()
             c->cloneFrom (this);
         }
     }
+}
+
+juce::Array<Exportable::ReferencedItem> Clip::getReferencedItems()
+{
+    return edit.engine.getEngineBehaviour().getReferencedItems (*this);
+}
+
+void Clip::reassignReferencedItem (const ReferencedItem& itm, ProjectItemID newID, double newStartTime)
+{
+    edit.engine.getEngineBehaviour().reassignReferencedItem (*this, itm, newID, newStartTime);
 }
 
 ClipPosition Clip::getPosition() const
@@ -575,4 +655,65 @@ void Clip::removeListener (Listener* l)
         edit.restartPlayback();
 }
 
+//==============================================================================
+namespace details
+{
+    Clip::FollowActionDurationType followActionDurationTypeFromString (juce::String s)
+    {
+        return magic_enum::enum_cast<Clip::FollowActionDurationType> (s.toRawUTF8()).value_or (Clip::FollowActionDurationType::beats);
+    }
+
+    juce::String toString (Clip::FollowActionDurationType t)
+    {
+        return std::string (magic_enum::enum_name (t));
+    }
+}
+
 }} // namespace tracktion { inline namespace engine
+
+//==============================================================================
+//==============================================================================
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_CLIPS
+
+namespace tracktion::inline engine
+{
+
+TEST_SUITE("tracktion_engine")
+{
+    TEST_CASE("Trim away overlap")
+    {
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine);
+
+        auto clip = getAudioTracks (*edit)[0]->insertMIDIClip ({ 4_tp, 8_tp }, nullptr);
+        auto positionBeforeTrim = clip->getPosition();
+
+        SUBCASE ("Overlap at start")
+        {
+            clip->trimAwayOverlap ({ 2_tp, 6_tp });
+            CHECK (clip->getPosition().time == TimeRange (6_tp, 8_tp));
+        }
+
+        SUBCASE ("Overlap at end")
+        {
+            clip->trimAwayOverlap ({ 6_tp, 10_tp });
+            CHECK (clip->getPosition().time == TimeRange (4_tp, 6_tp));
+        }
+
+        SUBCASE ("No overlap at start")
+        {
+            clip->trimAwayOverlap ({ 2_tp, 4_tp });
+            CHECK (clip->getPosition().time == positionBeforeTrim.time);
+        }
+
+        SUBCASE ("No overlap at end")
+        {
+            clip->trimAwayOverlap ({ 10_tp, 12_tp });
+            CHECK (clip->getPosition().time == positionBeforeTrim.time);
+        }
+    }
+}
+
+} // namespace tracktion::inline engine
+
+#endif

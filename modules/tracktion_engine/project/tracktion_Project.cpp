@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -373,24 +373,18 @@ void Project::redirectIDsFromProject (int oldProjId, int newProjId)
         {
             if (mo->isEdit())
             {
-                Edit ed (engine,
-                         loadEditFromProjectManager (projectManager, mo->getID()),
-                         Edit::forExamining, nullptr, 1);
+                auto ed = loadEditForExamining (projectManager, mo->getID());
 
-                for (auto exportable : Exportable::addAllExportables (ed))
+                for (auto exportable : Exportable::addAllExportables (*ed))
                 {
-                    int i = 0;
-
                     for (auto& item : exportable->getReferencedItems())
                     {
                          if (item.itemID.getProjectID() == oldProjId)
                              exportable->reassignReferencedItem (item, item.itemID.withNewProjectID (newProjId), 0.0);
-
-                        ++i;
                     }
                 }
 
-                EditFileOperations (ed).save (false, true, false);
+                EditFileOperations (*ed).save (false, true, false);
             }
         }
     }
@@ -474,7 +468,7 @@ juce::Array<ProjectItem::Ptr> Project::getAllProjectItems()
     {
         if (o.item == nullptr)
             loadProjectItem (o);
-        
+
         dest.add (o.item);
     }
 
@@ -793,12 +787,10 @@ juce::Array<ProjectItemID> Project::findOrphanItems()
         {
             if (mo->isEdit())
             {
-                Edit ed (engine,
-                         loadEditFromProjectManager (projectManager, mo->getID()),
-                         Edit::forExamining, nullptr, 1);
+                auto ed = loadEditForExamining (projectManager, mo->getID());
 
                 for (int i = unreffed.size(); --i >= 0;)
-                    if (referencesProjectItem (ed, unreffed.getReference(i)))
+                    if (referencesProjectItem (*ed, unreffed.getReference(i)))
                         unreffed.remove (i);
             }
         }

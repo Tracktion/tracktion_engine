@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -292,7 +292,7 @@ private:
     const CachedClipProperties& getCachedClipProperties() const
     {
         if (cachedClipProperties == nullptr)
-            cachedClipProperties.reset (new CachedClipProperties (*this));
+            cachedClipProperties = std::make_unique<CachedClipProperties> (*this);
 
         return *cachedClipProperties;
     }
@@ -346,7 +346,7 @@ struct VolumeEffect : public ClipEffect,
     VolumeEffect (const juce::ValueTree&, ClipEffects&);
     juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile& sourceFile, double sourceLength) override;
 
-    void initialise() override 
+    void initialise() override
     {
         if (plugin != nullptr)
             for (auto ap : plugin->getAutomatableParameters())
@@ -500,7 +500,7 @@ struct PluginEffect  : public ClipEffect,
 
     juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile&, double sourceLength) override;
 
-    void initialise() override 
+    void initialise() override
     {
         if (plugin != nullptr)
             for (auto ap : plugin->getAutomatableParameters())

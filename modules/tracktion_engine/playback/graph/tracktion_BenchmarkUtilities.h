@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -12,6 +12,9 @@
 
 #include "tracktion_EditNodeBuilder.h"
 #include "../../../tracktion_core/utilities/tracktion_Benchmark.h"
+#include "../../playback/graph/tracktion_TracktionEngineNode.h"
+#include "../../playback/graph/tracktion_TracktionNodePlayer.h"
+#include "../../playback/graph/tracktion_MultiThreadedNodePlayer.h"
 
 namespace tracktion { inline namespace engine
 {
@@ -25,6 +28,8 @@ namespace benchmark_utilities
 
     enum class PoolMemoryAllocations    { no, yes };
 
+    enum class ShareNodeMemory          { no, yes };
+
     struct BenchmarkOptions
     {
         Edit* edit = nullptr;
@@ -34,23 +39,27 @@ namespace benchmark_utilities
         LockFree isLockFree;
         tracktion::graph::ThreadPoolStrategy poolType;
         PoolMemoryAllocations poolMemoryAllocations = PoolMemoryAllocations::no;
+        ShareNodeMemory shareNodeMemory = ShareNodeMemory::no;
     };
 
     inline juce::String getDescription (const BenchmarkOptions& opts)
     {
         using namespace tracktion::graph;
-        auto s = test_utilities::getDescription (opts.testSetup)
+        auto s = graph::test_utilities::getDescription (opts.testSetup)
                     + juce::String (opts.isMultiThreaded == MultiThreaded::yes ? ", MT" : ", ST");
-        
+
         if (opts.isMultiThreaded == MultiThreaded::yes && opts.isLockFree == LockFree::yes)
             s << ", lock-free";
 
         if (opts.poolMemoryAllocations == PoolMemoryAllocations::yes)
             s << ", pooled-memory";
 
+        if (opts.shareNodeMemory == ShareNodeMemory::yes)
+            s << ", share-node-memory";
+
         if (opts.isMultiThreaded == MultiThreaded::yes)
-            s << ", " + test_utilities::getName (opts.poolType);
-        
+            s << ", " + graph::test_utilities::getName (opts.poolType);
+
         return s;
     }
 
@@ -76,7 +85,7 @@ namespace benchmark_utilities
 
         if (isMultiThreaded == MultiThreaded::no)
             testContext.getNodePlayer().setNumThreads (0);
-        
+
         testContext.setPlayHead (&playHeadState.playHead);
         playHeadState.playHead.playSyncedToRange ({});
         ut.expect (true);
@@ -87,7 +96,8 @@ namespace benchmark_utilities
             const auto sizeInBytes = tracktion::graph::test_utilities::getMemoryUsage (nodes);
 
             BenchmarkResult bmr { createBenchmarkDescription ("Node", (editName + ": memory use").toStdString(), description.toStdString()) };
-            bmr.duration = static_cast<double> (sizeInBytes);
+            bmr.totalSeconds = static_cast<double> (sizeInBytes);
+            bmr.totalCycles = static_cast<std::uint64_t> (sizeInBytes);
             BenchmarkList::getInstance().addResult (bmr);
 
             std::cout << "Num nodes: " << nodes.size() << "\n";
@@ -106,7 +116,7 @@ namespace benchmark_utilities
                                                                        stats));
 
         std::cout << sw.getDescription() << "\n";
-        std::cout << stats.toString() << "\n";
+        std::cout << stats.toString (testContext.getPerformanceMeasurement().getName()) << "\n";
         ut.expect (true);
 
         ut.beginTest (editName + " - destroying: " + description);
@@ -120,6 +130,7 @@ namespace benchmark_utilities
     inline void renderEdit (juce::UnitTest& ut, BenchmarkOptions opts)
     {
         assert (opts.edit != nullptr);
+        assert (opts.shareNodeMemory == ShareNodeMemory::no || opts.isLockFree == LockFree::yes); // Only supported in the lock-free player atm
         const auto description = getDescription (opts);
 
         tracktion::graph::PlayHead playHead;
@@ -136,22 +147,32 @@ namespace benchmark_utilities
         //===
         if (opts.isLockFree == LockFree::yes)
         {
-            tracktion::graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, opts.testSetup.sampleRate, opts.testSetup.blockSize,
-                                                                                                                                  tracktion::graph::getPoolCreatorFunction (opts.poolType)),
+            // N.B. Don't set the Node until after the pooled and shared options or they won't get picked up
+            tracktion::graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::unique_ptr<Node>(),
+                                                                                                                                   processState, opts.testSetup.sampleRate, opts.testSetup.blockSize,
+                                                                                                                                   tracktion::graph::getPoolCreatorFunction (opts.poolType)),
                                                                                            opts.testSetup, 2, opts.edit->getLength().inSeconds(), false);
-            
+
             if (opts.poolMemoryAllocations == PoolMemoryAllocations::yes)
                 testContext.getNodePlayer().enablePooledMemoryAllocations (true);
-                
+
+            if (opts.shareNodeMemory == ShareNodeMemory::yes)
+                testContext.getNodePlayer().enableNodeMemorySharing (true);
+
+            {
+                const ScopedBenchmark sb2 (createBenchmarkDescription ("Node", (opts.editName + ": setting node").toStdString(), description.toStdString()));
+                testContext.setNode(std::move(node));
+            }
+
             prepareRenderAndDestroy (ut, opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);
         }
         else
         {
-            tracktion::graph::test_utilities::TestProcess<MultiThreadedNodePlayer> testContext (std::make_unique<MultiThreadedNodePlayer> (std::move (node), processState, opts.testSetup.sampleRate, opts.testSetup.blockSize),
-                                                                                               opts.testSetup, 2, opts.edit->getLength().inSeconds(), false);
+            tracktion::graph::test_utilities::TestProcess<MultiThreadedNodePlayer> testContext (std::make_unique<engine::MultiThreadedNodePlayer> (std::move (node), processState, opts.testSetup.sampleRate, opts.testSetup.blockSize),
+                                                                                                opts.testSetup, 2, opts.edit->getLength().inSeconds(), false);
             prepareRenderAndDestroy (ut, opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);
         }
-        
+
         ut.beginTest (opts.editName + " - cleanup: " + description);
         // This is deliberately empty as RAII will take care of cleanup
         ut.expect (true);
@@ -173,22 +194,22 @@ namespace benchmark_utilities
     {
         std::unique_ptr<Edit> edit;
         juce::TemporaryFile tempArchiveFile, tempDir;
-        
+
         {
             const auto res = tempDir.getFile().createDirectory();
             jassert (res);
             ignoreUnused (res);
         }
-        
+
         {
             tempArchiveFile.getFile().replaceWithData (data, (size_t) size);
             TracktionArchiveFile archive (engine, tempArchiveFile.getFile());
-            
+
             juce::Array<juce::File> createdFiles;
             const auto res = archive.extractAll (tempDir.getFile(), createdFiles);
             jassert (res);
             juce::ignoreUnused (res);
-            
+
             for (const auto& f : createdFiles)
             {
                 if (isTracktionEditFile (f))
@@ -198,9 +219,9 @@ namespace benchmark_utilities
                 }
             }
         }
-        
+
         tempDir.getFile().deleteRecursively();
-        
+
         return edit;
     }
 
@@ -208,25 +229,22 @@ namespace benchmark_utilities
     inline std::unique_ptr<Edit> loadEditFromValueTree (Engine& engine, const juce::ValueTree& editState)
     {
         auto id = ProjectItemID::fromProperty (editState, IDs::projectID);
-        
+
         if (! id.isValid())
             id = ProjectItemID::createNewID (0);
-        
-        Edit::Options options =
+
+        return Edit::createEdit (Edit::Options
         {
             engine,
             editState,
             id,
-            
             Edit::forEditing,
             nullptr,
             Edit::getDefaultNumUndoLevels(),
-            
             {},
-            {}
-        };
-        
-        return std::make_unique<Edit> (options);
+            {},
+            0
+        });
     }
 
     /** Loads an Edit that was saved directly from the state to a GZip stream. */

@@ -1,0 +1,190 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 22,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "binary-dir",
+      "binaryDir": "cmake-build/${hostSystemName}/cmake-${presetName}",
+      "hidden": true
+    },
+    {
+      "name": "Debug",
+      "hidden": true,
+      "inherits": [ "binary-dir" ],
+       "cacheVariables": {
+           "CMAKE_BUILD_TYPE": "Debug"
+       }
+    },
+    {
+      "name": "RelWithDebInfo",
+      "hidden": true,
+      "inherits": [ "binary-dir" ],
+       "cacheVariables": {
+         "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+       }
+    },
+    {
+      "name": "Release",
+      "hidden": true,
+      "inherits": [ "binary-dir" ],
+       "cacheVariables": {
+         "CMAKE_BUILD_TYPE": "Release"
+       }
+    },
+    {
+      "name": "ninja",
+      "generator": "Ninja",
+      "inherits": [ "binary-dir" ],
+      "hidden": true
+    },
+    {
+      "name": "ninja-multi",
+      "generator": "Ninja Multi-Config",
+      "inherits": [ "binary-dir" ],
+      "hidden": false
+    },
+    {
+      "name": "ninja-multi-asan",
+      "generator": "Ninja Multi-Config",
+      "inherits": [ "binary-dir" ],
+      "hidden": false,
+      "cacheVariables": { "CMAKE_CXX_FLAGS": "-fsanitize=address,undefined -fsanitize-address-use-after-scope" }
+    },
+    {
+      "name": "ninja-multi-tsan",
+      "generator": "Ninja Multi-Config",
+      "inherits": [ "binary-dir" ],
+      "hidden": false,
+      "cacheVariables": { "CMAKE_CXX_FLAGS": "-fsanitize=thread" }
+    },
+    {
+      "name": "xcode",
+      "generator": "Xcode",
+      "inherits": [ "binary-dir" ],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "hidden": false
+    },
+    {
+      "name": "windows",
+      "architecture": "x64",
+      "inherits": [ "binary-dir" ],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
+      "hidden": false
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "ninja-Debug",
+      "configurePreset": "ninja-multi",
+      "configuration": "Debug"
+    },
+    {
+      "name": "ninja-RelWithDebInfo",
+      "configurePreset": "ninja-multi",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "ninja-Release",
+      "configurePreset": "ninja-multi",
+      "configuration": "Release"
+    },
+    {
+      "name": "ninja-Debug-asan",
+      "configurePreset": "ninja-multi-asan",
+      "configuration": "Debug"
+    },
+    {
+      "name": "ninja-Debug-tsan",
+      "configurePreset": "ninja-multi-tsan",
+      "configuration": "Debug"
+    },
+    {
+      "name": "ninja-RelWithDebInfo-asan",
+      "configurePreset": "ninja-multi-asan",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "ninja-RelWithDebInfo-tsan",
+      "configurePreset": "ninja-multi-tsan",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "ninja-Release-asan",
+      "configurePreset": "ninja-multi-asan",
+      "configuration": "Release"
+    },
+    {
+      "name": "ninja-Release-tsan",
+      "configurePreset": "ninja-multi-tsan",
+      "configuration": "Release"
+    },
+    {
+      "name": "xcode-Debug",
+      "configurePreset": "xcode",
+      "configuration": "Debug",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "xcode-RelWithDebInfo",
+      "configuration": "RelWithDebInfo",
+      "configurePreset": "xcode",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "xcode-Release",
+      "configuration": "Release",
+      "configurePreset": "xcode",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "xcode-asan-Debug",
+      "configuration": "Debug",
+      "nativeToolOptions": [ "-enableAddressSanitizer", "YES",  "-enableUndefinedBehaviorSanitizer", "YES" ],
+      "configurePreset": "xcode",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "xcode-tsan-Debug",
+      "configuration": "Debug",
+      "nativeToolOptions": [ "-enableThreadSanitizer", "YES", "-enableUndefinedBehaviorSanitizer", "YES" ],
+      "configurePreset": "xcode",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "xcode-asan-Release",
+      "configuration": "Release",
+      "nativeToolOptions": [ "-enableAddressSanitizer", "YES",  "-enableUndefinedBehaviorSanitizer", "YES" ],
+      "configurePreset": "xcode",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "xcode-tsan-Release",
+      "configuration": "Release",
+      "nativeToolOptions": [ "-enableThreadSanitizer", "YES", "-enableUndefinedBehaviorSanitizer", "YES" ],
+      "configurePreset": "xcode",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "windows-Debug",
+      "configuration": "Debug",
+      "configurePreset": "windows",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+    },
+    {
+      "name": "windows-RelWithDebInfo",
+      "configuration": "RelWithDebInfo",
+      "configurePreset": "windows",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+    },
+    {
+      "name": "windows-Release",
+      "configuration": "Release",
+      "configurePreset": "windows",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+    }
+  ]
+}

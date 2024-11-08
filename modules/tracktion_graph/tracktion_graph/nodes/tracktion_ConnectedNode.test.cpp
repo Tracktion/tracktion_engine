@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -26,7 +26,7 @@ public:
         : juce::UnitTest ("ConnectedNode", "tracktion_graph")
     {
     }
-    
+
     void runTest() override
     {
         for (auto ts : tracktion::graph::test_utilities::getTestSetups (*this))
@@ -42,13 +42,13 @@ private:
     {
         beginTest ("Two sin waves");
         {
-            auto sinNode1 = std::make_shared<SinNode> (220.0f);
-            auto sinNode2 = std::make_shared<SinNode> (220.0f);
+            auto sinNode1 = std::make_shared<SinNode> (220.0f, 1);
+            auto sinNode2 = std::make_shared<SinNode> (220.0f, 2);
             auto connectedNode = std::make_unique<ConnectedNode>();
-            
+
             connectedNode->addAudioConnection (sinNode1, { 0, 0 });
             connectedNode->addAudioConnection (sinNode2, { 0, 0 });
-            
+
             // Reduce by 0.5 to avoid clipping
             auto node = makeGainNode (std::move (connectedNode), 0.5f);
 
@@ -67,10 +67,10 @@ private:
             auto sinNode1 = std::make_shared<SinNode> ((float) sinFrequency);
             auto sinNode2 = std::make_shared<LatencyNode> (makeNode<SinNode> ((float) sinFrequency), numLatencySamples);
             auto connectedNode = std::make_unique<ConnectedNode>();
-            
+
             connectedNode->addAudioConnection (sinNode1, { 0, 0 });
             connectedNode->addAudioConnection (sinNode2, { 0, 0 });
-            
+
             // Reduce by 0.5 to avoid clipping
             auto node = makeGainNode (std::move (connectedNode), 0.5f);
 

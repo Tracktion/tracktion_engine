@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -64,7 +64,6 @@ void PhaserPlugin::applyToBuffer (const PluginRenderContext& fc)
     {
         float* b = fc.destBuffer->getWritePointer (chan, fc.bufferStartSample);
         swp = sweep;
-        swpFactor = sweepFactor;
 
         for (int i = fc.bufferNumSamples; --i >= 0;)
         {
@@ -117,8 +116,7 @@ juce::String PhaserPlugin::getSelectableDescription()
 
 void PhaserPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    juce::CachedValue<float>* cvsFloat[]  = { &depth, &rate, &feedbackGain, nullptr };
-    copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
+    copyPropertiesToCachedValues (v, depth, rate, feedbackGain);
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();

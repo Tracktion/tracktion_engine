@@ -1,12 +1,14 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
 
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
+
+#pragma once
 
 #include "../../tracktion_graph/utilities/tracktion_PerformanceMeasurement.h"
 
@@ -39,8 +41,9 @@ inline BenchmarkDescription createBenchmarkDescription (std::string category, st
 struct BenchmarkResult
 {
     BenchmarkDescription description;   /**< The BenchmarkDescription. */
-    double duration = 0.0, mean = 0.0, min = 0.0, max = 0.0, variance = 0.0;
-    int64_t ticksPerSecond = (int64_t) juce::Time::getHighResolutionTicksPerSecond();
+    double totalSeconds = 0.0, meanSeconds = 0.0, minSeconds = 0.0, maxSeconds = 0.0, varianceSeconds = 0.0;
+    uint64_t totalCycles = 0, meanCycles = 0, minCycles = 0, maxCycles = 0;
+    double varianceCycles = 0.0;
     juce::Time date { juce::Time::getCurrentTime() };
 };
 
@@ -49,8 +52,8 @@ inline BenchmarkResult createBenchmarkResult (BenchmarkDescription description,
                                               const tracktion::graph::PerformanceMeasurement::Statistics& stats)
 {
     return { description,
-             stats.totalSeconds, stats.meanSeconds, stats.minimumSeconds, stats.maximumSeconds,
-             stats.getVariance(), (int64_t) juce::Time::getHighResolutionTicksPerSecond() };
+             stats.totalSeconds, stats.meanSeconds, stats.minimumSeconds, stats.maximumSeconds, stats.getVarianceSeconds(),
+             stats.totalCycles, (uint64_t) stats.meanCycles, stats.minimumCycles, stats.maximumCycles, stats.getVarianceCycles() };
 }
 
 //==============================================================================
@@ -59,7 +62,7 @@ inline BenchmarkResult createBenchmarkResult (BenchmarkDescription description,
     To masure a benchmark, simply create one of these with a valid description
     then before the code you are measuring call start and stop afterwards.
     Once you've done that, call getResult() to return the duration the benchmark took to run.
- 
+
     To collect a set of BenchmarkResults see @BenchmarkList
 */
 class Benchmark
@@ -70,29 +73,28 @@ public:
         : description (std::move (desc))
     {
     }
-    
+
     /** Starts timing the benchmark. */
     void start()
     {
         measurement.start();
     }
-    
+
     /** Stops timing the benchmark. */
     void stop()
     {
         measurement.stop();
     }
-    
+
     /** Returns the timing results. */
     BenchmarkResult getResult() const
     {
         return createBenchmarkResult (description, measurement.getStatistics());
     }
-    
+
 private:
     BenchmarkDescription description;
     tracktion::graph::PerformanceMeasurement measurement { {}, -1, false };
-    const int64_t ticksPerSecond { (int64_t) juce::Time::getHighResolutionTicksPerSecond() };
 };
 
 //==============================================================================
@@ -100,7 +102,7 @@ private:
     Contans a list of BenchmarkResult[s].
     For easy use, this can be used as a singleton so results can easily be added
     to it from anywhere in your code.
-    
+
     Once you've finished benchmarking, you can get all the results to publish
     them to your database.
 */
@@ -109,14 +111,14 @@ class BenchmarkList
 public:
     /** Constructs a BenchmarkList. @see getInstance */
     BenchmarkList() = default;
-    
+
     /** Adds a result to the list. [[ thread_safe ]] */
     void addResult (BenchmarkResult r)
     {
         std::lock_guard lock (mutex);
         results.emplace_back (std::move (r));
     }
-    
+
     /** Returns all the results. [[ thread_safe ]] */
     std::vector<BenchmarkResult> getResults() const
     {
@@ -137,7 +139,7 @@ public:
         static BenchmarkList list;
         return list;
     }
-    
+
 private:
     mutable std::mutex mutex;
     std::vector<BenchmarkResult> results;
@@ -148,10 +150,10 @@ private:
     Helper class for measuring a benchmark and adding it to the singleton BenchmarkList list.
     @code
     {
-        ScopedBenchmark sb (getBenchmarkDescription ("Save random tree as XML"));
+        ScopedBenchmark sb (createBenchmarkDescription ("Save random tree as XML"));
         doSomeLongCalculation();
     }
- 
+
     publish (BenchmarkList::getInstance().getResults());
     @endcode
 */
@@ -163,17 +165,39 @@ struct ScopedBenchmark
     {
         benchmark.start();
     }
-    
+
     /** Stops the Benchmark and adds the result to the BenchmarkList. */
     ~ScopedBenchmark()
     {
         benchmark.stop();
         BenchmarkList::getInstance().addResult (benchmark.getResult());
     }
-    
+
 private:
     Benchmark benchmark;
 };
 
+//==============================================================================
+/**
+    Helper class for starting/stopping a benchmark measurement.
+*/
+struct ScopedMeasurement
+{
+    /** Constructs and starts a Benchmark. */
+    ScopedMeasurement (Benchmark& bm)
+        : benchmark (bm)
+    {
+        benchmark.start();
+    }
+
+    /** Stops the Benchmark. */
+    ~ScopedMeasurement()
+    {
+        benchmark.stop();
+    }
+
+private:
+    Benchmark& benchmark;
+};
 
 }} // namespace tracktion { inline namespace engine

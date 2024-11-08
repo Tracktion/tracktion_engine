@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -13,14 +13,6 @@ namespace tracktion { inline namespace engine
 
 namespace
 {
-    template<typename VarType>
-    inline void convertPropertyToType (juce::ValueTree& v, const juce::Identifier& id)
-    {
-        if (const auto* prop = v.getPropertyPointer (id))
-            if (prop->isString())
-                (*const_cast<juce::var*> (prop)) = static_cast<VarType> (*prop);
-    }
-
     void convertMidiPropertiesFromStrings (juce::ValueTree& midi)
     {
         if (midi.hasType (IDs::NOTE))
@@ -272,7 +264,7 @@ namespace NoteHelpers
     }
 }
 
-void addMidiNoteOnExpressionToSequence (juce::MidiMessageSequence& seq, const juce::ValueTree& state, int midiChannel, double noteOnTime) noexcept
+inline void addMidiNoteOnExpressionToSequence (juce::MidiMessageSequence& seq, const juce::ValueTree& state, int midiChannel, double noteOnTime) noexcept
 {
     using namespace NoteHelpers;
     jassert (state.hasType (IDs::NOTE));
@@ -553,8 +545,13 @@ private:
     void stopNote (MidiNote& note)
     {
         for (int ch = midiChannelBegin; ch < midiChannelEnd; ++ch)
+        {
             if (midiChannels[ch].notes.contains (&note))
-                return midiChannels[ch].notes.removeFirstMatchingValue (&note);
+            {
+                midiChannels[ch].notes.removeFirstMatchingValue (&note);
+                return;
+            }
+        }
 
         jassertfalse;
     }
@@ -712,12 +709,12 @@ BeatPosition MidiNote::getQuantisedEndBeat (const MidiClip* const c) const
 
 BeatDuration MidiNote::getQuantisedLengthBeats (const MidiClip& c) const
 {
-    return getQuantisedStartBeat (c) - getQuantisedEndBeat (c);
+    return getQuantisedEndBeat (c) - getQuantisedStartBeat (c);
 }
 
 BeatDuration MidiNote::getQuantisedLengthBeats (const MidiClip* const c) const
 {
-    return getQuantisedStartBeat (c) - getQuantisedEndBeat (c);
+    return getQuantisedEndBeat (c) - getQuantisedStartBeat (c);
 }
 
 //==============================================================================
@@ -993,7 +990,7 @@ void MidiControllerEvent::setMetadata (int m, juce::UndoManager* um)
     if (metadata != m)
     {
         state.setProperty (IDs::metadata, m, um);
-        m = metadata;
+        metadata = m;
     }
 }
 
@@ -1515,6 +1512,7 @@ MidiSysexEvent& MidiList::addSysExEvent (const juce::MidiMessage& message, BeatP
 {
     auto v = MidiSysexEvent::createSysexEvent (message, beat);
     state.addChild (v, -1, um);
+    sysexList->triggerSort();
 
     return *sysexList->getEventFor (v);
 }
@@ -1730,6 +1728,7 @@ bool MidiList::readSeparateTracksFromFile (const juce::File& f,
 
                         std::unique_ptr<MidiList> midiList (new MidiList());
                         midiList->setMidiChannel (midiChannel);
+                        midiList->setImportedFileName (f.getFileName());
                         midiList->importMidiSequence (channelSequence, nullptr, TimePosition(), nullptr);
 
                         if (! midiList->isEmpty())
@@ -1888,7 +1887,7 @@ juce::MidiMessageSequence MidiList::exportToPlaybackMidiSequence (MidiClip& clip
 juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const MidiList& list, MidiClip& clip, TimeBase timeBase, bool generateMPE)
 {
     juce::MidiMessageSequence destSequence;
-    
+
     auto& ts = clip.edit.tempoSequence;
     auto midiStartBeat = clip.getContentStartBeat();
     auto channelNumber = list.getMidiChannel().getChannelNumber();
@@ -1909,6 +1908,38 @@ juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const Mid
     if (grooveTemplate != nullptr && grooveTemplate->isEmpty())
         grooveTemplate = nullptr;
 
+    // Do controllers first in case they send and program or bank change messages
+    auto& controllerEvents = list.getControllerEvents();
+
+    {
+        // Add cumulative controller events that are off the start
+        juce::Array<int> doneControllers;
+
+        for (auto e : controllerEvents)
+        {
+            auto beat = e->getBeatPosition();
+
+            if (beat < firstNoteBeat)
+            {
+                if (! doneControllers.contains (e->getType()))
+                {
+                    addToSequence (destSequence, clip, timeBase, *e, channelNumber);
+                    doneControllers.add (e->getType());
+                }
+            }
+        }
+    }
+
+    // Add the real controller events:
+    for (auto e : controllerEvents)
+    {
+        auto beat = e->getBeatPosition();
+
+        if (beat >= firstNoteBeat && beat < lastNoteBeat)
+            addToSequence (destSequence, clip, timeBase, *e, channelNumber);
+    }
+
+    // Then the note events
     if (! generateMPE)
     {
         for (int i = 0; i < numNotes; ++i)
@@ -1960,36 +1991,6 @@ juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const Mid
         }
     }
 
-    auto& controllerEvents = list.getControllerEvents();
-
-    {
-        // Add cumulative controller events that are off the start
-        juce::Array<int> doneControllers;
-
-        for (auto e : controllerEvents)
-        {
-            auto beat = e->getBeatPosition();
-
-            if (beat < firstNoteBeat)
-            {
-                if (! doneControllers.contains (e->getType()))
-                {
-                    addToSequence (destSequence, clip, timeBase, *e, channelNumber);
-                    doneControllers.add (e->getType());
-                }
-            }
-        }
-    }
-
-    // Add the real controller events:
-    for (auto e : controllerEvents)
-    {
-        auto beat = e->getBeatPosition();
-
-        if (beat >= firstNoteBeat && beat < lastNoteBeat)
-            addToSequence (destSequence, clip, timeBase, *e, channelNumber);
-    }
-
     // Add the SysEx events:
     for (auto e : list.getSysexEvents())
     {
@@ -1998,7 +1999,7 @@ juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const Mid
         if (beat >= firstNoteBeat && beat < lastNoteBeat)
             addToSequence (destSequence, clip, timeBase, *e);
     }
-    
+
     return destSequence;
 }
 

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -36,6 +36,16 @@ struct ActiveNoteList
     {
         if (isValidIndex (channel, note))
             activeChannels[note] &= ~(1u << (channel - 1));
+    }
+
+    bool areAnyNotesActive() const noexcept
+    {
+        juce::uint16 result = 0;
+
+        for (auto a : activeChannels)
+            result |= a;
+
+        return result > 0;
     }
 
     template <typename Visitor>

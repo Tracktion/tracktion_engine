@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -29,7 +29,7 @@ class ClickGenerator
 public:
     //==============================================================================
     /** Creates a click generator for an Edit. */
-    ClickGenerator (Edit&, bool isMidi, TimePosition endTime);
+    ClickGenerator (Edit&, bool isMidi);
 
     /** Prepares a ClickGenerator to be played.
         Must be called before processBlock
@@ -41,14 +41,24 @@ public:
 
 private:
     const Edit& edit;
+    const EditPlaybackContext& context { *edit.getTransport().getCurrentPlaybackContext() };
     bool midi = false;
-    juce::Array<TimePosition> beatTimes;
-    juce::BigInteger loudBeats;
-    int currentBeat = 0;
+    const tempo::Sequence& sequence { edit.tempoSequence.getInternalSequence() };
+    tempo::Sequence::Position tempoPosition { sequence };
 
     double sampleRate = 44100.0;
     juce::AudioBuffer<float> bigClick, littleClick;
     int bigClickMidiNote = 37, littleClickMidiNote = 76;
+
+    //==============================================================================
+    bool isPlaying();
+    void trigger (juce::AudioBuffer<float>*);
+    void render (choc::buffer::ChannelArrayView<float>&);
+    void reset();
+    int samplesRemaining();
+
+    juce::AudioBuffer<float>* currentSample = nullptr;
+    int samplePos = -1;
 
     //==============================================================================
     bool isMutedAtTime (TimePosition) const;

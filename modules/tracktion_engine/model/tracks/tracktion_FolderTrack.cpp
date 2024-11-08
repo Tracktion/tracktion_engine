@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -12,7 +12,7 @@ namespace tracktion { inline namespace engine
 {
 
 FolderTrack::FolderTrack (Edit& ed, const juce::ValueTree& v)
-    : Track (ed, v, 50, 13, 2000)
+    : Track (ed, v, true)
 {
     soloed.referTo (state, IDs::solo, nullptr);
     muted.referTo (state, IDs::mute, nullptr);
@@ -60,7 +60,7 @@ void FolderTrack::sanityCheckName()
     }
 }
 
-juce::String FolderTrack::getName()
+juce::String FolderTrack::getName() const
 {
     auto n = Track::getName();
 
@@ -71,7 +71,7 @@ juce::String FolderTrack::getName()
     return n;
 }
 
-int FolderTrack::getFolderTrackNumber() noexcept
+int FolderTrack::getFolderTrackNumber() const noexcept
 {
     int result = 1;
 
@@ -102,7 +102,7 @@ TrackOutput* FolderTrack::getOutput() const noexcept
 {
     if (! isSubmixFolder())
         return nullptr;
-    
+
     for (auto t : getAllAudioSubTracks (true))
         if (auto at = dynamic_cast<AudioTrack*> (t))
             return &at->getOutput();
@@ -113,7 +113,7 @@ TrackOutput* FolderTrack::getOutput() const noexcept
 juce::Array<Track*> FolderTrack::getInputTracks() const
 {
     juce::Array<Track*> tracks;
-    
+
     for (auto track : getAllSubTracks (false))
     {
         if (dynamic_cast<AudioTrack*> (track) != nullptr)
@@ -123,7 +123,7 @@ juce::Array<Track*> FolderTrack::getInputTracks() const
             if (ft->isSubmixFolder())
                 tracks.add (track);
     }
-    
+
     return tracks;
 }
 
@@ -217,6 +217,8 @@ bool FolderTrack::isSoloIsolate (bool includeIndirectSolo) const
 
 float FolderTrack::getVcaDb (TimePosition time)
 {
+    const std::scoped_lock sl (pluginMutex);
+
     if (auto ptr = vcaPlugin)
         if (ptr->isEnabled())
             return ptr->updateAutomationStreamAndGetVolumeDb (time);
@@ -326,7 +328,7 @@ void FolderTrack::generateCollectionClips (SelectionManager& sm)
 
         for (auto clip : clips)
         {
-            const auto tolerance = TimeDuration::fromSeconds (0.000001);
+            const auto tolerance = 0.000001s;
             auto bounds = getClipExtendedBounds (*clip);
 
             if (bounds.getLength() > tolerance)
@@ -368,7 +370,7 @@ void FolderTrack::generateCollectionClips (SelectionManager& sm)
             {
                 auto bounds = getClipExtendedBounds (*c);
 
-                if (bounds.getLength() > TimeDuration::fromSeconds (0.000001))
+                if (bounds.getLength() > 0.000001s)
                 {
                     if (first)
                         totalRange = bounds;
@@ -455,7 +457,7 @@ bool FolderTrack::isFrozen (FreezeType t) const
     // Submix tracks can't be frozen as they can't contain clips
     if (isSubmixFolder())
         return false;
-    
+
     for (auto at : getAllAudioSubTracks (true))
         if (at->isFrozen (t))
             return true;
@@ -491,6 +493,7 @@ void FolderTrack::setSoloIsolate (bool b)   { soloIsolated = b; }
 
 void FolderTrack::updatePlugins()
 {
+    const std::scoped_lock sl (pluginMutex);
     vcaPlugin = pluginList.findFirstPluginOfType<VCAPlugin>();
     volumePlugin = pluginList.findFirstPluginOfType<VolumeAndPanPlugin>();
 }

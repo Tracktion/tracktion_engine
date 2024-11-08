@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -21,7 +21,7 @@ public:
     static const char* getPluginName()                  { return NEEDS_TRANS("Tone Generator"); }
     static const char* xmlTypeName;
 
-    juce::String getName() override                     { return TRANS(getPluginName()); }
+    juce::String getName() const override               { return TRANS(getPluginName()); }
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getShortName (int) override            { return getName(); }
     bool producesAudioWhenNoAudioInput() override       { return true; }
@@ -32,7 +32,6 @@ public:
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;
     juce::String getSelectableDescription() override    { return getName(); }
-    bool needsConstantBufferSize() override             { return false; }
 
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 

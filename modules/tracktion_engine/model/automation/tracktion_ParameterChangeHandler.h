@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -21,6 +21,17 @@ public:
     /** Creates a ParameterChangeHandler for a given Edit. */
     ParameterChangeHandler (Edit&);
 
+    //==============================================================================
+    struct Listener
+    {
+        virtual ~Listener() = default;
+        virtual void pluginParameterChanged (AutomatableParameter&, bool isFollowingAutomation) = 0;
+    };
+
+    void addListener (Listener&);
+    void removeListener (Listener&);
+
+    //==============================================================================
     /** Returns true if there is either a parameter or action waiting to be assigned. */
     bool isEventPending() const noexcept;
 
@@ -79,7 +90,9 @@ private:
     bool enabled = true;
     bool parameterLearnActive = false;
     AutomatableParameter::Ptr pendingParam;
-    juce::CriticalSection eventLock;
+    mutable std::mutex eventLock;
+    std::shared_mutex listenerListLock;
+    std::vector<Listener*> listeners;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ParameterChangeHandler)
 };

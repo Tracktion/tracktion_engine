@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -19,6 +19,17 @@ LevelMeasuringNode::LevelMeasuringNode (std::unique_ptr<tracktion::graph::Node> 
                         tracktion::graph::AllocateAudioBuffer::no });
 }
 
+tracktion::graph::NodeProperties LevelMeasuringNode::getNodeProperties()
+{
+    auto props = input->getNodeProperties();
+
+    if (props.nodeID != 0)
+        hash_combine (props.nodeID, static_cast<size_t> (8615130320210846551)); // "LevelMeasuringNode"
+
+    return props;
+}
+
+
 void LevelMeasuringNode::process (tracktion::graph::Node::ProcessContext& pc)
 {
     auto sourceBuffers = input->getProcessedOutput();
@@ -26,9 +37,9 @@ void LevelMeasuringNode::process (tracktion::graph::Node::ProcessContext& pc)
 
     // Just pass out input on to our output
     setAudioOutput (input.get(), sourceBuffers.audio);
-    
+
     // If the source only outputs to this node, we can steal its data
-    if (numOutputNodes == 1)
+    if (input->numOutputNodes == 1)
         pc.buffers.midi.swapWith (sourceBuffers.midi);
     else
         pc.buffers.midi.copyFrom (sourceBuffers.midi);

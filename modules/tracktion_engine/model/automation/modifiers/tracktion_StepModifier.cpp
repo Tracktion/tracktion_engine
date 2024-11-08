@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -209,7 +209,7 @@ void StepModifier::applyToBuffer (const PluginRenderContext& prc)
 {
     if (prc.bufferForMidiMessages == nullptr)
         return;
-    
+
     for (auto& m : *prc.bufferForMidiMessages)
         if (m.isNoteOn())
             stepModifierTimer->resync (prc.bufferNumSamples / getSampleRate());

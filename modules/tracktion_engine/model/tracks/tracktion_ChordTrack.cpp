@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -11,7 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
-ChordTrack::ChordTrack (Edit& ed, const juce::ValueTree& v)  : ClipTrack (ed, v, 20, 13, 60)
+ChordTrack::ChordTrack (Edit& ed, const juce::ValueTree& v)
+    : ClipTrack (ed, v, false)
 {
 }
 

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -13,6 +13,15 @@ namespace tracktion { inline namespace engine
 
 using SampleCount = int64_t;
 using SampleRange = juce::Range<SampleCount>;
+
+/** Specifies a number of resampling qualities that can be used. */
+enum class ResamplingQuality
+{
+    lagrange,   /**< Lagrange interpolation */
+    sincFast,   /**< Fast sinc interpolation provided by libsamplerate */
+    sincMedium, /**< Medium quality sinc interpolation provided by libsamplerate */
+    sincBest    /**< Best quality sinc interpolation provided by libsamplerate */
+};
 
 float dbToGain (float db) noexcept;
 float gainToDb (float gain) noexcept;
@@ -247,3 +256,42 @@ inline void clearChannels (juce::AudioBuffer<float>& buffer, int startChannel, i
 }
 
 }} // namespace tracktion { inline namespace engine
+
+namespace juce
+{
+    template <>
+    struct VariantConverter<tracktion::engine::ResamplingQuality>
+    {
+        static tracktion::engine::ResamplingQuality fromVar (const var& v)
+        {
+            const auto s = v.toString();
+
+            if (s == "lagrange")    return tracktion::engine::ResamplingQuality::lagrange;
+            if (s == "sincFast")    return tracktion::engine::ResamplingQuality::sincFast;
+            if (s == "sincMedium")  return tracktion::engine::ResamplingQuality::sincMedium;
+            if (s == "sincBest")    return tracktion::engine::ResamplingQuality::sincBest;
+
+            return tracktion::engine::ResamplingQuality::lagrange;
+        }
+
+        static var toVar (tracktion::engine::ResamplingQuality v)
+        {
+            if (v == tracktion::engine::ResamplingQuality::sincFast)    return "sincFast";
+            if (v == tracktion::engine::ResamplingQuality::sincMedium)  return "sincMedium";
+            if (v == tracktion::engine::ResamplingQuality::sincBest)    return "sincBest";
+
+            return "lagrange";
+        }
+    };
+}
+
+#ifndef DOXYGEN
+template<>
+struct std::hash<tracktion::engine::ResamplingQuality>
+{
+    size_t operator() (const tracktion::engine::ResamplingQuality& q) const noexcept
+    {
+        return static_cast<size_t> (q);
+    }
+};
+#endif

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -21,7 +21,7 @@ public:
     static const char* getPluginName()                  { return NEEDS_TRANS("Chorus"); }
     static const char* xmlTypeName;
 
-    juce::String getName() override                     { return TRANS("Chorus"); }
+    juce::String getName() const override               { return TRANS("Chorus"); }
     juce::String getPluginType() override               { return xmlTypeName; }
     juce::String getShortName (int) override            { return getName(); }
 
@@ -30,7 +30,6 @@ public:
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;
     juce::String getSelectableDescription() override    { return TRANS("Chorus Plugin"); }
-    bool needsConstantBufferSize() override             { return false; }
 
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 

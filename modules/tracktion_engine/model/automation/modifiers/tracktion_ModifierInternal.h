@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -103,98 +103,6 @@ namespace modifier
                  NEEDS_TRANS("Enabled") };
     }
 }
-
-//==============================================================================
-struct DiscreteLabelledParameter  : public AutomatableParameter
-{
-    DiscreteLabelledParameter (const juce::String& xmlTag,
-                               const juce::String& name,
-                               AutomatableEditItem& owner,
-                               juce::Range<float> valueRangeToUse,
-                               int numStatesToUse = 0,
-                               juce::StringArray labelsToUse = {})
-        : AutomatableParameter (xmlTag, name, owner, valueRangeToUse),
-          numStates (numStatesToUse), labels (labelsToUse)
-    {
-        jassert (labels.isEmpty() || labels.size() == numStates);
-    }
-
-    ~DiscreteLabelledParameter() override
-    {
-        notifyListenersOfDeletion();
-    }
-
-    bool isDiscrete() const override             { return numStates != 0; }
-    int getNumberOfStates() const override       { return numStates; }
-
-    float getValueForState (int i) const override
-    {
-        if (numStates == 0)
-            return 0.0;
-
-        return juce::jmap ((float) i, 0.0f, float (numStates - 1), valueRange.start, valueRange.end);
-    }
-
-    int getStateForValue (float value) const override
-    {
-        if (numStates == 0)
-            return 0;
-
-        return juce::roundToInt (juce::jmap (value, valueRange.start, valueRange.end, 0.0f, float (numStates - 1)));
-    }
-
-    bool hasLabels()  const override                   { return labels.size() > 0; }
-    juce::StringArray getAllLabels() const override    { return labels; }
-
-    juce::String getLabelForValue (float val) const override
-    {
-        const int s = getStateForValue (val);
-
-        return juce::isPositiveAndBelow (s, getNumberOfStates()) ? labels[s] : juce::String();
-    }
-
-    float snapToState (float val) const override
-    {
-        return getValueForState (juce::jlimit (0, getNumberOfStates() - 1, juce::roundToInt (val)));
-    }
-
-private:
-    const int numStates = 0;
-    const juce::StringArray labels;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DiscreteLabelledParameter)
-};
-
-//==============================================================================
-struct SuffixedParameter    : public AutomatableParameter
-{
-    SuffixedParameter (const juce::String& xmlTag, const juce::String& name,
-                       AutomatableEditItem& owner, juce::NormalisableRange<float> valueRangeToUse,
-                       juce::String suffixToUse = {})
-        : AutomatableParameter (xmlTag, name, owner, valueRangeToUse),
-          suffix (suffixToUse)
-    {
-    }
-
-    ~SuffixedParameter() override
-    {
-        notifyListenersOfDeletion();
-    }
-
-    juce::String valueToString (float value) override
-    {
-        if (valueRange.interval == 1.0f)
-            return juce::String (juce::roundToInt (value));
-
-        return AutomatableParameter::valueToString (value);
-    }
-
-    juce::String getLabel() override           { return suffix; }
-
-    const juce::String suffix;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SuffixedParameter)
-};
 
 //==============================================================================
 //==============================================================================

@@ -1,11 +1,11 @@
 //
 //    ██████ ██   ██  ██████   ██████
-//   ██      ██   ██ ██    ██ ██            ** Clean Header-Only Classes **
+//   ██      ██   ██ ██    ██ ██            ** Classy Header-Only Classes **
 //   ██      ███████ ██    ██ ██
 //   ██      ██   ██ ██    ██ ██           https://github.com/Tracktion/choc
 //    ██████ ██   ██  ██████   ██████
 //
-//   CHOC is (C)2021 Tracktion Corporation, and is offered under the terms of the ISC license:
+//   CHOC is (C)2022 Tracktion Corporation, and is offered under the terms of the ISC license:
 //
 //   Permission to use, copy, modify, and/or distribute this software for any purpose with or
 //   without fee is hereby granted, provided that the above copyright notice and this permission
@@ -20,11 +20,18 @@
 #define CHOC_JAVASCRIPT_HEADER_INCLUDED
 
 #include <stdexcept>
+#include <functional>
+#include <optional>
 #include "../containers/choc_Value.h"
 #include "../text/choc_JSON.h"
 
 /**
-    A simple javascript engine (currently using duktape internally)
+    Wrapper classes for encapsulating different javascript engines such as
+    Duktape and QuickJS.
+
+    Just use one of the context-creation functions such as
+    choc::javascript::createQuickJSContext() to create a context for running
+    javascript code.
 */
 namespace choc::javascript
 {
@@ -39,16 +46,16 @@ namespace choc::javascript
     /// function callback.
     struct ArgumentList
     {
-        const choc::value::Value* args;
-        size_t numArgs;
+        const choc::value::Value* args = nullptr;
+        size_t numArgs = 0;
 
         /// Returns the number of arguments
-        size_t size() const noexcept                                        { return numArgs; }
+        size_t size() const noexcept                                    { return numArgs; }
         /// Returns true if there are no arguments
-        bool empty() const noexcept                                         { return numArgs == 0; }
+        bool empty() const noexcept                                     { return numArgs == 0; }
 
         /// Returns an argument, or a nullptr if the index is out of range.
-        const choc::value::Value* operator[] (size_t index) const;
+        const choc::value::Value* operator[] (size_t index) const       { return index < numArgs ? args + index : nullptr; }
 
         /// Gets an argument as a primitive type (or a string).
         /// If the index is out of range or the object isn't a suitable type,
@@ -57,45 +64,92 @@ namespace choc::javascript
         PrimitiveType get (size_t argIndex, PrimitiveType defaultValue = {}) const;
 
         /// Standard iterator
-        const choc::value::Value* begin() const noexcept                    { return args; }
-        const choc::value::Value* end() const noexcept                      { return args + numArgs; }
+        const choc::value::Value* begin() const noexcept                { return args; }
+        const choc::value::Value* end() const noexcept                  { return args + numArgs; }
     };
 
     //==============================================================================
     /**
         An execution context which you use for running javascript code.
 
-        Couldn't be much simpler to use one of these: just create a Context, add any
-        native bindings that you need using registerFunction(), and then use evaluate()
-        or invoke() to execute code with it.
+        These are really simple to use: call one of the creation functions such
+        as choc::javascript::createQuickJSContext() which will give you a shared_ptr to
+        a context. Then you can add any native bindings that you need with
+        registerFunction(), and call evaluate() or invoke() to execute code or call
+        functions directly.
 
-        The context isn't thread safe, so it's up to the caller to handle thread
-        synchronisation issues.
+        These contexts are not thread-safe, so it's up to the caller to handle thread
+        synchronisation if using a single context from multiple threads.
+
+        They're also definitely not realtime-safe: any of the methods may allocate,
+        block, or make system calls.
     */
-    struct Context
+    class Context
     {
-        Context();
+    public:
+        /// To create a Context, use a function such as choc::javascript::createQuickJSContext();
+        Context() = default;
+        Context (Context&&);
+        Context& operator= (Context&&);
         ~Context();
 
-        /// Evaluates the given chunk of javascript.
-        /// If there are any parse errors, this will throw a choc::javascript::Error exception.
-        choc::value::Value evaluate (std::string_view javascriptCode);
+        /// Returns true if the context is valid.
+        operator bool() const                               { return pimpl != nullptr; }
 
-        /// Attempts to invoke a global function with no arguments.
-        /// Any parse errors will throw a choc::javascript::Error exception.
+        //==============================================================================
+        /// This callback is used by the run() method.
+        using CompletionHandler = std::function<void(const std::string& error,
+                                                     const choc::value::ValueView& result)>;
+
+        /// Executes some javascript asynchronously.
+        /// If a CompletionHandler callback is provided, it will be called asynchronously
+        /// with the return value and any errors that occurred. Note that if you want to execute
+        /// the script as a module, use runModule() instead.
+        void run (const std::string& javascriptCode,
+                  CompletionHandler handleResult = {});
+
+        /// When parsing modules, this function is expected to take a path to a module, and
+        /// to return the content of that module, or an empty optional if not found.
+        using ReadModuleContentFn = std::function<std::optional<std::string>(std::string_view)>;
+
+        /// This callback will asynchronously parse the script as a module, and will use the
+        /// ReadModuleContentFn functor to resolve any imported modules that it needs. If a
+        /// CompletionHandler callback is provided, it will be called asynchronously with the
+        /// return value and any errors that occurred.
+        /// NB: Not all engines support modules.
+        void runModule (const std::string& moduleCode,
+                        ReadModuleContentFn,
+                        CompletionHandler handleResult = {});
+
+        /// Evaluates a javascript expression synchronously, and returns the result.
+        /// If there are any parse errors, this will throw a choc::javascript::Error exception.
+        /// Note that if you want to execute the script as a module, use runModule() instead.
+        choc::value::Value evaluateExpression (const std::string& javascriptCode);
+
+        /// Attempts to synchronously invoke a global function with no arguments.
+        /// Any errors will throw a choc::javascript::Error exception.
+        /// None of the methods in this class are either thread-safe or realtime-safe, so you'll
+        /// need to organise your own locking if you're calling into a single Context from
+        /// multiple threads.
         choc::value::Value invoke (std::string_view functionName);
 
         /// Attempts to invoke a global function with the arguments provided.
         /// The arguments can be primitives, strings, choc::value::ValueView or
         /// choc::value::Value types.
-        /// Any parse errors will throw a choc::javascript::Error exception.
+        /// Any errors will throw a choc::javascript::Error exception.
+        /// None of the methods in this class are either thread-safe or realtime-safe, so you'll
+        /// need to organise your own locking if you're calling into a single Context from
+        /// multiple threads.
         template <typename... Args>
         choc::value::Value invoke (std::string_view functionName, Args&&... args);
 
         /// Attempts to invoke a global function with an array of arguments.
         /// The objects in the argument list can be primitives, strings, choc::value::ValueView
         /// or choc::value::Value types.
-        /// Any parse errors will throw a choc::javascript::Error exception.
+        /// Any errors will throw a choc::javascript::Error exception.
+        /// None of the methods in this class are either thread-safe or realtime-safe, so you'll
+        /// need to organise your own locking if you're calling into a single Context from
+        /// multiple threads.
         template <typename ArgList>
         choc::value::Value invokeWithArgList (std::string_view functionName, const ArgList& args);
 
@@ -103,20 +157,40 @@ namespace choc::javascript
         using NativeFunction = std::function<choc::value::Value(ArgumentList)>;
 
         /// Binds a lambda function to a global name so that javascript code can invoke it.
-        void registerFunction (std::string_view name, NativeFunction fn);
+        void registerFunction (const std::string& name, NativeFunction fn);
+
+        /// Pumps the message loop in an engine-specific way - may have no effect on some platforms.
+        void pumpMessageLoop();
+
+        //==============================================================================
+        /// @internal
+        struct Pimpl;
+        /// @internal
+        Context (std::unique_ptr<Pimpl>);
 
     private:
-        struct Pimpl;
         std::unique_ptr<Pimpl> pimpl;
-
-        void prepareForCall (std::string_view, size_t);
-        choc::value::Value performCall (size_t);
-        void addValueArgument (const choc::value::ValueView&);
-        void addDoubleArgument (double);
-        void addBoolArgument (bool);
-        void addStringArgument (std::string_view);
-        template <typename Type> void pushValue (const Type&);
     };
+
+    //==============================================================================
+    /// Creates a QuickJS-based context. If you call this, then you'll need to
+    /// include choc_javascript_QuickJS.h in one (and only one!) of your source files.
+    Context createQuickJSContext();
+
+    /// Creates a Duktape-based context. If you call this, then you'll need to
+    /// include choc_javascript_Duktape.h in one (and only one!) of your source files.
+    Context createDuktapeContext();
+
+    /// Creates a V8-based context. If you call this, then you'll need to
+    /// make sure that your project also has the V8 header folder in its
+    /// search path, and that you statically link the appropriate V8 libs.
+    Context createV8Context();
+
+    //==============================================================================
+    /// Sanitises a string to provide a version of it that is safe for use as a
+    /// javascript identifier. This involves removing/replacing any illegal
+    /// characters and modifying the string to avoid clashes with reserved words.
+    std::string makeSafeIdentifier (std::string name);
 }
 
 
@@ -134,46 +208,6 @@ namespace choc::javascript
 namespace choc::javascript
 {
 
-template <typename Type>
-void Context::pushValue (const Type& v)
-{
-    if constexpr (std::is_same<Type, choc::value::Value>::value)
-        addValueArgument (v.getView());
-    else if constexpr (std::is_same<Type, choc::value::ValueView>::value)
-        addValueArgument (v);
-    else if constexpr (std::is_same<Type, bool>::value)
-        addBoolArgument (v);
-    else if constexpr (std::is_integral<Type>::value || std::is_floating_point<Type>::value)
-        addDoubleArgument (static_cast<double> (v));
-    else
-        addStringArgument (std::string_view (v));
-}
-
-inline choc::value::Value Context::invoke (std::string_view functionName)
-{
-    prepareForCall (functionName, 0);
-    return performCall (0);
-}
-
-template <typename... Args>
-choc::value::Value Context::invoke (std::string_view functionName, Args&&... args)
-{
-    prepareForCall (functionName, sizeof...(args));
-    (pushValue (std::forward<Args> (args)), ...);
-    return performCall (sizeof...(args));
-}
-
-template <typename ArgList>
-choc::value::Value Context::invokeWithArgList (std::string_view functionName, const ArgList& args)
-{
-    prepareForCall (functionName, args.size());
-
-    for (auto& arg : args)
-        pushValue (arg);
-
-    return performCall (args.size());
-}
-
 template <typename PrimitiveType>
 PrimitiveType ArgumentList::get (size_t index, PrimitiveType defaultValue) const
 {
@@ -183,379 +217,148 @@ PrimitiveType ArgumentList::get (size_t index, PrimitiveType defaultValue) const
     return defaultValue;
 }
 
+struct Context::Pimpl
+{
+    Pimpl() = default;
+    virtual ~Pimpl() = default;
+
+    virtual void registerFunction (const std::string&, NativeFunction) = 0;
+    virtual choc::value::Value evaluateExpression (const std::string&) = 0;
+    virtual void run (const std::string&, ReadModuleContentFn*, CompletionHandler) = 0;
+    virtual void prepareForCall (std::string_view, uint32_t numArgs) = 0;
+    virtual choc::value::Value performCall() = 0;
+    virtual void pushObjectOrArray (const choc::value::ValueView&) = 0;
+    virtual void pushArg (std::string_view) = 0;
+    virtual void pushArg (int32_t) = 0;
+    virtual void pushArg (int64_t) = 0;
+    virtual void pushArg (uint32_t) = 0;
+    virtual void pushArg (double) = 0;
+    virtual void pushArg (bool) = 0;
+    virtual void pumpMessageLoop() = 0;
+
+    void pushArg (const std::string& v)   { pushArg (std::string_view (v)); }
+    void pushArg (const char* v)          { pushArg (std::string_view (v)); }
+    void pushArg (uint64_t v)             { pushArg (static_cast<int64_t> (v)); }
+    void pushArg (float v)                { pushArg (static_cast<double> (v)); }
+
+    void pushArg (const choc::value::ValueView& v)
+    {
+        if (v.isInt32())    return pushArg (v.getInt32());
+        if (v.isInt64())    return pushArg (v.getInt64());
+        if (v.isFloat32())  return pushArg (v.getFloat32());
+        if (v.isFloat64())  return pushArg (v.getFloat64());
+        if (v.isString())   return pushArg (v.getString());
+        if (v.isBool())     return pushArg (v.getBool());
+        if (v.isVoid())     throw Error ("Function arguments cannot be void!");
+
+        pushObjectOrArray (v);
+    }
+};
+
+inline Context::Context (std::unique_ptr<Pimpl> p) : pimpl (std::move (p)) {}
+inline Context::~Context() = default;
+inline Context::Context (Context&&) = default;
+inline Context& Context::operator= (Context&&) = default;
+
+inline choc::value::Value Context::invoke (std::string_view functionName)
+{
+    CHOC_ASSERT (pimpl != nullptr); // cannot call this on a moved-from context!
+    pimpl->prepareForCall (functionName, 0);
+    return pimpl->performCall();
+}
+
+template <typename... Args>
+choc::value::Value Context::invoke (std::string_view functionName, Args&&... args)
+{
+    CHOC_ASSERT (pimpl != nullptr); // cannot call this on a moved-from context!
+    pimpl->prepareForCall (functionName, sizeof...(args));
+    (pimpl->pushArg (std::forward<Args> (args)), ...);
+    return pimpl->performCall();
+}
+
+template <typename ArgList>
+choc::value::Value Context::invokeWithArgList (std::string_view functionName, const ArgList& args)
+{
+    CHOC_ASSERT (pimpl != nullptr); // cannot call this on a moved-from context!
+    pimpl->prepareForCall (functionName, static_cast<uint32_t> (args.size()));
+
+    for (auto& arg : args)
+        pimpl->pushArg (arg);
+
+    return pimpl->performCall();
+}
+
+inline void Context::registerFunction (const std::string& name, NativeFunction fn)
+{
+    CHOC_ASSERT (pimpl != nullptr); // cannot call this on a moved-from context!
+    pimpl->registerFunction (name, std::move (fn));
+}
+
+inline choc::value::Value Context::evaluateExpression (const std::string& javascriptCode)
+{
+    CHOC_ASSERT (pimpl != nullptr); // cannot call this on a moved-from context!
+    return pimpl->evaluateExpression (javascriptCode);
+}
+
+inline void Context::run (const std::string& javascriptCode, CompletionHandler handleResult)
+{
+    CHOC_ASSERT (pimpl != nullptr); // cannot call this on a moved-from context!
+    pimpl->run (javascriptCode, nullptr, std::move (handleResult));
+}
+
+inline void Context::runModule (const std::string& moduleCode, ReadModuleContentFn readModule, CompletionHandler handleResult)
+{
+    CHOC_ASSERT (pimpl != nullptr); // cannot call this on a moved-from context!
+    pimpl->run (moduleCode, std::addressof (readModule), std::move (handleResult));
+}
+
+inline void Context::pumpMessageLoop()
+{
+    CHOC_ASSERT (pimpl != nullptr); // cannot call this on a moved-from context!
+    pimpl->pumpMessageLoop();
+}
+
+inline std::string makeSafeIdentifier (std::string s)
+{
+    constexpr static std::string_view reservedWords[] =
+    {
+        "abstract", "arguments", "await", "boolean", "break", "byte", "case", "catch",
+        "char", "class", "const", "continue", "debugger", "default", "delete", "do",
+        "double", "else", "enum", "eval", "export", "extends", "false", "final",
+        "finally", "float", "for", "function", "goto", "if", "implements", "import",
+        "in", "instanceof", "int", "interface", "let", "long", "native", "new",
+        "null", "package", "private", "protected", "public", "return", "short", "static",
+        "super", "switch", "synchronized", "this", "throw", "throws", "transient", "true",
+        "try", "typeof", "var", "void", "volatile", "while", "with", "yield"
+    };
+
+    for (auto& c : s)
+        if (std::string_view (" ,./;:").find (c) != std::string_view::npos)
+            c = '_';
+
+    s.erase (std::remove_if (s.begin(), s.end(), [&] (char c)
+    {
+        return ! ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' || (c >= '0' && c <= '9'));
+    }), s.end());
+
+    if (s[0] >= '0' && s[0] <= '9') // Identifiers can't start with a digit
+        s = "_" + s;
+
+    for (auto keyword : reservedWords)
+        if (s == keyword)
+            return s + "_";
+
+    return s;
+}
+
 } // namespace choc::javascript
 
 #endif // CHOC_JAVASCRIPT_HEADER_INCLUDED
 
-//==============================================================================
-/// In order to avoid pulling in the whole of the dependencies, you should set this
-/// macro to 1 in one of your compile units
-#if CHOC_JAVASCRIPT_IMPLEMENTATION
-
-#include "../platform/choc_Platform.h"
-
-#if CHOC_WINDOWS
- #include <windows.h>
-#else
- #include <cmath>
- #include <climits>
- #include <ctime>
- #include <cstddef>
- #include <cstdarg>
- #include <cstring>
- #include <ctime>
+#ifdef CHOC_JAVASCRIPT_IMPLEMENTATION
+ // The way the javascript classes work has changed: instead of
+ // setting CHOC_JAVASCRIPT_IMPLEMENTATION in one of your source files, just
+ // include the actual engine that you want to use, e.g. choc_javascript_QuickJS.h
+ // in (only!) one of your source files, and use that to create instances of that engine.
+ #error "CHOC_JAVASCRIPT_IMPLEMENTATION is deprecated"
 #endif
-
-#include <csetjmp>
-
-#if CHOC_LINUX || CHOC_OSX
- #include <sys/time.h>
-#endif
-
-namespace choc::javascript
-{
-
-namespace duktape
-{
- using std::signbit;
- using std::fpclassify;
- using std::isnan;
- using std::isinf;
- using std::isfinite;
- #include "../platform/choc_DisableAllWarnings.h"
- #include "duktape/duktape.c.inc"
- #include "../platform/choc_ReenableAllWarnings.h"
-}
-
-//==============================================================================
-struct Context::Pimpl
-{
-    Pimpl() : context (duktape::duk_create_heap (nullptr, nullptr, nullptr, nullptr, fatalError))
-    {
-        CHOC_ASSERT (context != nullptr);
-    }
-
-    ~Pimpl()
-    {
-        duk_destroy_heap (context);
-    }
-
-    void reset()
-    {
-        while (duk_get_top (context))
-            duk_remove (context, duk_get_top_index (context));
-    }
-
-    static void fatalError (void*, const char* message)    { throw Error (message); }
-
-    void throwError()
-    {
-        std::string message = duk_safe_to_string (context, -1);
-        reset();
-        throw Error (message);
-    }
-
-    void evalString (std::string_view code)
-    {
-        if (duk_peval_lstring (context, code.data(), code.length()) != DUK_EXEC_SUCCESS)
-            throwError();
-    }
-
-    choc::value::Value evaluate (std::string_view javascriptCode)
-    {
-        evalString (javascriptCode);
-        auto result = readValue (context, -1);
-        duk_pop (context);
-        return result;
-    }
-
-    void prepareForCall (std::string_view functionName, size_t numArgs)
-    {
-        evalString (functionName);
-
-        if (! duk_is_function (context, -1))
-            throw Error ("No such function");
-
-        duk_require_stack_top (context, (duktape::duk_idx_t) numArgs);
-    }
-
-    choc::value::Value performCall (size_t numArgs)
-    {
-        if (duk_pcall (context, (duktape::duk_idx_t) numArgs) != DUK_EXEC_SUCCESS)
-            throwError();
-
-        auto returnValue = readValue (context, -1);
-        duk_pop (context);
-        return returnValue;
-    }
-
-    void registerFunction (std::string_view name, NativeFunction fn)
-    {
-        duk_push_global_object (context);
-
-        registeredFunctions.push_back (std::make_unique<RegisteredFunction> (std::move (fn), *this));
-        registeredFunctions.back()->pushToStack (context);
-
-        duk_put_prop_lstring (context, -2, name.data(), name.length());
-        duk_pop (context);
-    }
-
-    static constexpr const char* objectNameAttribute = "_objectName";
-
-    void pushValue (const choc::value::ValueView& v)    { pushValue (context, v); }
-    void pushValue (double value)                       { duk_push_number (context, value); }
-    void pushValue (bool value)                         { duk_push_boolean (context, value); }
-    void pushValue (std::string_view value)             { pushValue (context, value); }
-
-    static void pushValue (duktape::duk_context* ctx, std::string_view value)
-    {
-        if (choc::text::isValidCESU8 (value))
-            return (void) duk_push_lstring (ctx, value.data(), value.length());
-
-        auto cesu8 = choc::text::convertUTF8ToCESU8 (choc::text::UTF8Pointer (std::string (value).data()));
-        duk_push_lstring (ctx, cesu8.data(), cesu8.length());
-    }
-
-    static void pushValue (duktape::duk_context* ctx, const choc::value::ValueView& v)
-    {
-        if (v.isInt() || v.isFloat())   return duk_push_number (ctx, v.get<double>());
-        if (v.isBool())                 return duk_push_boolean (ctx, v.getBool());
-        if (v.isString())               return pushValue (ctx, v.getString());
-
-        if (v.isArray() || v.isVector())
-        {
-            auto arrayIndex = duk_push_array (ctx);
-            duktape::duk_uarridx_t elementIndex = 0;
-
-            for (const auto& element : v)
-            {
-                pushValue (ctx, element);
-                duk_put_prop_index (ctx, arrayIndex, elementIndex++);
-            }
-
-            return;
-        }
-
-        if (v.isObject())
-        {
-            auto objectIndex = duk_push_object (ctx);
-
-            auto className = v.getObjectClassName();
-
-            if (! className.empty())
-            {
-                duk_push_lstring (ctx, className.data(), className.length());
-                duk_put_prop_string (ctx, objectIndex, objectNameAttribute);
-            }
-
-            v.visitObjectMembers ([&] (std::string_view name, const choc::value::ValueView& value)
-            {
-                pushValue (ctx, value);
-                duk_put_prop_lstring (ctx, objectIndex, name.data(), name.length());
-            });
-
-            return;
-        }
-
-        CHOC_ASSERT (v.isVoid()); // types like vectors aren't currently supported
-        return duk_push_undefined (ctx);
-    }
-
-    static choc::value::Value readValue (duktape::duk_context* ctx, duktape::duk_idx_t index)
-    {
-        switch (duk_get_type (ctx, index))
-        {
-            case DUK_TYPE_NULL:      return {};
-            case DUK_TYPE_UNDEFINED: return {};
-            case DUK_TYPE_BOOLEAN:   return choc::value::createBool (static_cast<bool> (duk_get_boolean (ctx, index)));
-            case DUK_TYPE_NUMBER:    return choc::value::createFloat64 (duk_get_number (ctx, index));
-
-            case DUK_TYPE_STRING:
-            {
-                if (auto s = duk_get_string (ctx, index))
-                {
-                    choc::text::UTF8Pointer cesu8 (s);
-
-                    if (choc::text::containsSurrogatePairs (cesu8))
-                        return choc::value::createString (choc::text::convertSurrogatePairsToUTF8 (cesu8));
-
-                    return choc::value::createString (std::string_view (s));
-                }
-
-                return choc::value::createString ({});
-            }
-
-            case DUK_TYPE_OBJECT:
-            case DUK_TYPE_LIGHTFUNC:
-            {
-                if (duk_is_array (ctx, index))
-                {
-                    return choc::value::createArray (static_cast<uint32_t> (duk_get_length (ctx, index)),
-                                                     [&] (uint32_t i) -> choc::value::Value
-                    {
-                        duk_get_prop_index (ctx, index, static_cast<duktape::duk_uarridx_t> (i));
-                        auto element = readValue (ctx, -1);
-                        duk_pop (ctx);
-                        return element;
-                    });
-                }
-
-                if (duk_is_function (ctx, index) || duk_is_lightfunc (ctx, index))
-                    throw Error ("Cannot handle 'function' object type");
-
-                // Handle an object
-                duk_enum (ctx, index, DUK_ENUM_OWN_PROPERTIES_ONLY);
-
-                bool anyRemaining = duk_next (ctx, -1, 1);
-                std::string_view name;
-
-                // look for an object name attribute as the first field
-                if (anyRemaining
-                     && duk_get_type (ctx, -2) == static_cast<duktape::duk_int_t> (DUK_TYPE_STRING)
-                     && duk_to_string (ctx, -2) == std::string_view (objectNameAttribute))
-                {
-                    name = duk_to_string (ctx, -1);
-                    duk_pop_2 (ctx);
-                    anyRemaining = duk_next (ctx, -1, 1);
-                }
-
-                auto object = choc::value::createObject (name);
-
-                while (anyRemaining)
-                {
-                    object.addMember (duk_to_string (ctx, -2), readValue (ctx, -1));
-                    duk_pop_2 (ctx);
-                    anyRemaining = duk_next (ctx, -1, 1);
-                }
-
-                duk_pop (ctx);
-                return object;
-            }
-
-            case DUK_TYPE_NONE:
-            default:
-                CHOC_ASSERT (false);
-                return {};
-        }
-    }
-
-    struct RegisteredFunction
-    {
-        RegisteredFunction (NativeFunction&& f, Pimpl& p) : function (std::move (f)), owner (p) {}
-
-        NativeFunction function;
-        Pimpl& owner;
-
-        static duktape::duk_ret_t invoke (duktape::duk_context* ctx)
-        {
-            duk_push_current_function (ctx);
-            auto& fn = RegisteredFunction::get (ctx, -1);
-            duk_pop (ctx);
-
-            auto numArgs = duk_get_top (ctx);
-
-            if (numArgs <= 4)
-            {
-                choc::value::Value args[4];
-
-                for (decltype (numArgs) i = 0; i < numArgs; ++i)
-                    args[i] = readValue (ctx, i);
-
-                return fn.invokeWithArgs (ctx, args, (size_t) numArgs);
-            }
-
-            std::vector<choc::value::Value> args;
-            args.reserve ((size_t) numArgs);
-
-            for (decltype (numArgs) i = 0; i < numArgs; ++i)
-                args.push_back (readValue (ctx, i));
-
-            return fn.invokeWithArgs (ctx, args.data(), (size_t) numArgs);
-        }
-
-        duktape::duk_ret_t invokeWithArgs (duktape::duk_context* ctx, const choc::value::Value* args, size_t numArgs)
-        {
-            auto result = std::invoke (function, ArgumentList { args, numArgs });
-
-            if (result.isVoid())
-                return 0;
-
-            pushValue (ctx, result);
-            return 1;
-        }
-
-        static duktape::duk_ret_t destroy (duktape::duk_context* ctx)
-        {
-            duk_require_function (ctx, 0);
-            RegisteredFunction::get (ctx, 0).deregister();
-            duk_pop (ctx);
-            return 0;
-        }
-
-        void attachToObject (duktape::duk_context* ctx)
-        {
-            duk_push_pointer (ctx, (void*) this);
-            duk_put_prop_string (ctx, -2, DUK_HIDDEN_SYMBOL("registeredFn"));
-        }
-
-        void pushToStack (duktape::duk_context* ctx)
-        {
-            duk_push_c_function (ctx, RegisteredFunction::invoke, (duktape::duk_int_t) (-1));
-            attachToObject (ctx);
-            duk_push_c_function (ctx, RegisteredFunction::destroy, 1);
-            attachToObject (ctx);
-            duk_set_finalizer (ctx, -2);
-        }
-
-        void deregister()
-        {
-            auto oldEnd = owner.registeredFunctions.end();
-            auto newEnd = std::remove_if (owner.registeredFunctions.begin(), oldEnd,
-                                          [this] (auto& f) { return f.get() == this; });
-
-            if (newEnd != oldEnd)
-                owner.registeredFunctions.erase (newEnd, oldEnd);
-        }
-
-        static RegisteredFunction& get (duktape::duk_context* ctx, duktape::duk_idx_t index)
-        {
-            duk_get_prop_string (ctx, index, DUK_HIDDEN_SYMBOL("registeredFn"));
-            auto r = static_cast<RegisteredFunction*> (duk_get_pointer (ctx, -1));
-            CHOC_ASSERT (r != nullptr);
-            duk_pop (ctx);
-            return *r;
-        }
-    };
-
-    duktape::duk_context* context = nullptr;
-    std::vector<std::unique_ptr<RegisteredFunction>> registeredFunctions;
-};
-
-Context::Context()  : pimpl (std::make_unique<Pimpl>()) {}
-Context::~Context() = default;
-
-choc::value::Value Context::evaluate (std::string_view javascriptCode)
-{
-    return pimpl->evaluate (std::move (javascriptCode));
-}
-
-void Context::registerFunction (std::string_view name, NativeFunction fn)
-{
-    pimpl->registerFunction (std::move (name), std::move (fn));
-}
-
-const choc::value::Value* ArgumentList::operator[] (size_t index) const
-{
-    return index < numArgs ? args + index : nullptr;
-}
-
-void Context::prepareForCall (std::string_view name, size_t numArgs) { pimpl->prepareForCall (name, numArgs); }
-choc::value::Value Context::performCall (size_t numArgs)             { return pimpl->performCall (numArgs); }
-void Context::addValueArgument (const choc::value::ValueView& v)     { pimpl->pushValue (v); }
-void Context::addDoubleArgument (double v)                           { pimpl->pushValue (v); }
-void Context::addBoolArgument (bool v)                               { pimpl->pushValue (v); }
-void Context::addStringArgument (std::string_view v)                 { pimpl->pushValue (v); }
-
-} // namespace choc::javascript
-
-#endif // CHOC_JAVASCRIPT_IMPLEMENTATION

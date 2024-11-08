@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -43,6 +43,10 @@ using BeatRange = RangeType<BeatPosition>;
 /** Creates a TimeRange from a range of samples. */
 [[ nodiscard ]] TimeRange timeRangeFromSamples (juce::Range<int64_t> sampleRange, double sampleRate);
 
+/** Creates a TimeRange from a range of seconds. */
+template<typename SourceRangeType>
+[[ nodiscard ]] TimeRange timeRangeFromSeconds (SourceRangeType);
+
 //==============================================================================
 //==============================================================================
 /**
@@ -76,6 +80,9 @@ struct RangeType
 
     /** Creates a Range from a start position and duration. */
     RangeType (Position start, Duration);
+
+    /** Creates a Range from a duration and an end position. */
+    static RangeType endingAt (Position end, Duration);
 
     /** Returns the range that lies between two positions (in either order). */
     static RangeType between (Position, Position);
@@ -177,6 +184,10 @@ template<typename PositionType>
 template<typename PositionType>
 [[ nodiscard ]] RangeType<PositionType> operator- (const RangeType<PositionType>&, typename RangeType<PositionType>::Duration);
 
+//==============================================================================
+/** Adds an amount to the end of the range and returns a new range. */
+template<typename PositionType>
+[[ nodiscard ]] RangeType<PositionType> withEndExtended (RangeType<PositionType>&, typename RangeType<PositionType>::Duration);
 
 //==============================================================================
 //        _        _           _  _
@@ -207,6 +218,13 @@ inline TimeRange timeRangeFromSamples (juce::Range<int64_t> r, double sampleRate
              TimePosition::fromSamples (r.getEnd(), sampleRate) };
 }
 
+template<typename SourceRangeType>
+inline TimeRange timeRangeFromSeconds (SourceRangeType r)
+{
+    return { TimePosition::fromSeconds (r.getStart()),
+             TimePosition::fromSeconds (r.getEnd()) };
+}
+
 template<typename PositionType>
 inline RangeType<PositionType>::RangeType (Position s, Position e)
     : start (s), end (e)
@@ -219,6 +237,12 @@ inline RangeType<PositionType>::RangeType (Position s, Duration d)
     : start (s), end (s + d)
 {
     checkInvariants();
+}
+
+template<typename PositionType>
+inline RangeType<PositionType> RangeType<PositionType>::endingAt (Position e, Duration d)
+{
+    return RangeType (e - d, e);
 }
 
 template<typename PositionType>
@@ -352,6 +376,25 @@ inline RangeType<PositionType> operator+ (const RangeType<PositionType>& r, type
 template<typename PositionType>
 inline RangeType<PositionType> operator- (const RangeType<PositionType>& r, typename RangeType<PositionType>::Duration d)    { return RangeType<PositionType> (r.getStart() - d, r.getEnd() - d); }
 
+template<typename PositionType>
+inline RangeType<PositionType> withEndExtended (RangeType<PositionType>& r, typename RangeType<PositionType>::Duration d)
+{
+    return r.withEnd (r.getEnd() + d);
+}
+
+template<typename RangeType,
+         std::enable_if_t<std::is_same_v<TimeRange, RangeType>
+                          || std::is_same_v<BeatRange, RangeType>,
+                          bool> = true>
+std::string to_string (RangeType range)
+{
+    return std::to_string (toUnderlyingType (range.getStart())) + ", "
+            + std::to_string (toUnderlyingType (range.getEnd()));
+}
+
+inline std::ostream& operator<< (std::ostream& os, const TimeRange& r) { os << to_string (r); return os; }
+inline std::ostream& operator<< (std::ostream& os, const BeatRange& r) { os << to_string (r); return os; }
+
 }} // namespace tracktion
 
 
@@ -364,7 +407,8 @@ struct std::hash<tracktion::TimeRange>
     {
         std::size_t h1 = std::hash<double>{} (tr.getStart().inSeconds());
         std::size_t h2 = std::hash<double>{} (tr.getEnd().inSeconds());
-        return h1 ^ (h2 << 1); // or use boost::hash_combine
+
+        return tracktion::hash (h1, h2);
     }
 };
 
@@ -375,6 +419,7 @@ struct std::hash<tracktion::BeatRange>
     {
         std::size_t h1 = std::hash<double>{} (tr.getStart().inBeats());
         std::size_t h2 = std::hash<double>{} (tr.getEnd().inBeats());
-        return h1 ^ (h2 << 1); // or use boost::hash_combine
+
+        return tracktion::hash (h1, h2);
     }
 };

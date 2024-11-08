@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -81,12 +81,12 @@ static std::unique_ptr<MidiList> createLoopRangeDefinesSubsequentRepetitionsSequ
 }
 
 //==============================================================================
-MidiClip::MidiClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTrack)
-    : Clip (v, targetTrack, id, Type::midi)
+MidiClip::MidiClip (const juce::ValueTree& v, EditItemID id, ClipOwner& targetParent)
+    : Clip (v, targetParent, id, Type::midi)
 {
     auto um = getUndoManager();
 
-    quantisation.reset (new QuantisationType (state.getOrCreateChildWithName (IDs::QUANTISATION, um), um));
+    quantisation = std::make_unique<QuantisationType> (state.getOrCreateChildWithName (IDs::QUANTISATION, um), um);
 
     if (state.hasProperty (IDs::quantisation))
         quantisation->setType (state.getProperty (IDs::quantisation));
@@ -101,6 +101,8 @@ MidiClip::MidiClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTr
     loopStartBeats.referTo (state, IDs::loopStartBeats, um, BeatPosition());
     loopLengthBeats.referTo (state, IDs::loopLengthBeats, um, BeatDuration());
     originalLength.referTo (state, IDs::originalLength, um, BeatDuration());
+
+    useClipLaunchQuantisation.referTo (state, IDs::useClipLaunchQuantisation, um);
 
     proxyAllowed.referTo (state, IDs::proxyAllowed, um, true);
     currentTake.referTo (state, IDs::currentTake, um);
@@ -117,7 +119,7 @@ MidiClip::MidiClip (const juce::ValueTree& v, EditItemID id, ClipTrack& targetTr
     auto pgen = state.getChildWithName (IDs::PATTERNGENERATOR);
 
     if (pgen.isValid())
-        patternGenerator.reset (new PatternGenerator (*this, pgen));
+        patternGenerator = std::make_unique<PatternGenerator> (*this, pgen);
 }
 
 MidiClip::~MidiClip()
@@ -383,6 +385,31 @@ void MidiClip::setQuantisation (const QuantisationType& newType)
 {
     if (newType.getType (false) != quantisation->getType (false))
         *quantisation = newType;
+}
+
+//==============================================================================
+std::shared_ptr<LaunchHandle> MidiClip::getLaunchHandle()
+{
+    if (! launchHandle)
+        launchHandle = std::make_shared<LaunchHandle>();
+
+    return launchHandle;
+}
+
+LaunchQuantisation* MidiClip::getLaunchQuantisation()
+{
+    if (! launchQuantisation)
+        launchQuantisation = std::make_unique<LaunchQuantisation> (state, edit);
+
+    return launchQuantisation.get();
+}
+
+FollowActions* MidiClip::getFollowActions()
+{
+    if (! followActions)
+        followActions = std::make_unique<FollowActions> (state.getOrCreateChildWithName (IDs::FOLLOWACTIONS, getUndoManager()), getUndoManager());
+
+    return followActions.get();
 }
 
 //==============================================================================
@@ -652,9 +679,9 @@ void MidiClip::mergeInMidiSequence (juce::MidiMessageSequence& ms,
 }
 
 //==============================================================================
-bool MidiClip::canGoOnTrack (Track& t)
+bool MidiClip::canBeAddedTo (ClipOwner& co)
 {
-    return t.canContainMIDI();
+    return canContainMIDI (co);
 }
 
 AudioTrack* MidiClip::getAudioTrack() const
@@ -754,11 +781,11 @@ void MidiClip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Iden
     {
         if (id == IDs::mute)
         {
-            jassert (track != nullptr); // Should have been set by now..
+            jassert (parent != nullptr); // Should have been set by now..
 
-            if (track != nullptr)
-                if (auto parent = track->getParentFolderTrack())
-                    parent->setDirtyClips();
+            if (auto track = getTrack())
+                if (auto p = track->getParentFolderTrack())
+                    p->setDirtyClips();
 
             clearCachedLoopSequence();
         }
@@ -778,6 +805,10 @@ void MidiClip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Iden
                     sm->deselectAll();
 
             clearCachedLoopSequence();
+        }
+        else if (id == IDs::launchQuantisation || id == IDs::useClipLaunchQuantisation)
+        {
+            changed();
         }
         else
         {
@@ -810,7 +841,7 @@ void MidiClip::valueTreeChildAdded (juce::ValueTree& p, juce::ValueTree& c)
         channelSequence.add (new MidiList (c, getUndoManager()));
 
     if (c.hasType (IDs::PATTERNGENERATOR))
-        patternGenerator.reset (new PatternGenerator (*this, c));
+        patternGenerator = std::make_unique<PatternGenerator> (*this, c);
 }
 
 void MidiClip::valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree& c, int)
@@ -860,6 +891,27 @@ void MidiClip::pitchTempoTrackChanged()
 
     // for the midi editor to redraw
     state.sendPropertyChangeMessage (IDs::mute);
+}
+
+//==============================================================================
+//==============================================================================
+void mergeInMidiSequence (MidiClip& mc, juce::MidiMessageSequence ms, TimeDuration startTime,
+                          MidiList::NoteAutomationType automationType)
+{
+    ms.addTimeToMessages (startTime.inSeconds());
+
+    const auto start = TimePosition::fromSeconds (ms.getStartTime());
+    const auto end = TimePosition::fromSeconds (ms.getEndTime());
+
+    auto pos = mc.getPosition();
+
+    if (pos.getStart() > start)
+        mc.extendStart (std::max (0_tp, start - 0.1s));
+
+    if (pos.getEnd() < end)
+        mc.setEnd (end + 0.1s, true);
+
+    mc.mergeInMidiSequence (ms, automationType);
 }
 
 }} // namespace tracktion { inline namespace engine

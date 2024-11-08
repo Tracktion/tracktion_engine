@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -10,9 +10,7 @@
 
 #pragma once
 
-#if JUCE_INTEL
- #include <emmintrin.h>
-#endif
+#include "../../tracktion_core/utilities/tracktion_CPU.h"
 
 namespace tracktion { inline namespace graph
 {
@@ -34,24 +32,20 @@ public:
 
             for (int i = 0; i < 10; ++i)
             {
-                #if JUCE_INTEL
-                 _mm_pause();
-                #else
-                 __asm__ __volatile__ ("yield");
-                #endif
+                tracktion::core::pause();
 
                 if (try_lock())
                     return;
             }
         }
     }
-    
+
     /** Releases the lock, this should only be called after a successful call to try_lock or lock. */
     void unlock() noexcept
     {
         flag.clear (std::memory_order_release);
     }
-    
+
     /** Attempts to take the lock once, returning true if successful. */
     bool try_lock() noexcept
     {

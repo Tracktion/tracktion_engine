@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -10,6 +10,9 @@
 
 #if ! JUCE_PROJUCER_LIVE_BUILD
 
+#include "3rd_party/magic_enum/tracktion_magic_enum.hpp"
+
+#include <shared_mutex>
 
 #if TRACKTION_ENABLE_ABLETON_LINK
  #include <juce_core/system/juce_TargetPlatform.h>
@@ -42,14 +45,17 @@
       #pragma clang diagnostic push
       #pragma clang diagnostic ignored "-Wconversion"
       #pragma clang diagnostic ignored "-Wshadow"
+      #pragma clang diagnostic ignored "-Wdeprecated-declarations"
      #endif
 
      #if JUCE_ANDROID
       #include <ifaddrs.h>
      #endif
 
+    #include "../3rd_party/choc/platform/choc_DisableAllWarnings.h"
      #include <ableton/Link.hpp>
      #include <ableton/link/HostTimeFilter.hpp>
+    #include "../3rd_party/choc/platform/choc_ReenableAllWarnings.h"
 
      #if JUCE_ANDROID
       #include <ifaddrs.cpp>
@@ -93,9 +99,14 @@ extern "C"
 
 #define JUCE_CORE_INCLUDE_JNI_HELPERS 1 // Required for Ableton Link on Android
 
-#if TRACKTION_UNIT_TESTS
- #include <tracktion_core/tracktion_TestConfig.h>
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wfloat-equal"
 #endif
+
+//==============================================================================
+//==============================================================================
+#include <tracktion_core/tracktion_TestConfig.h>
 
 #include <tracktion_graph/tracktion_graph.h>
 
@@ -103,8 +114,54 @@ extern "C"
 #include <tracktion_graph/tracktion_graph/tracktion_TestNodes.h>
 #include <tracktion_graph/tracktion_graph/tracktion_PlayHead.h>
 
+//==============================================================================
+//==============================================================================
 #include "tracktion_engine.h"
 
+
+//==============================================================================
+//==============================================================================
+#undef VERSION
+#define PACKAGE ""
+#define VERSION "0.2.2"
+#define CPU_CLIPS_NEGATIVE 0
+#define CPU_CLIPS_POSITIVE 0
+
+#define ENABLE_SINC_BEST_CONVERTER
+#define ENABLE_SINC_MEDIUM_CONVERTER
+#define ENABLE_SINC_FAST_CONVERTER
+
+#include "../3rd_party/choc/platform/choc_DisableAllWarnings.h"
+
+#if __GNUC__
+ #pragma GCC diagnostic ignored "-Wpedantic"
+#endif
+
+namespace tracktion
+{
+    namespace src
+    {
+        #include "../3rd_party/libsamplerate/samplerate.h"
+        #include "../3rd_party/libsamplerate/src_linear.c"
+        #include "../3rd_party/libsamplerate/src_sinc.c"
+        #include "../3rd_party/libsamplerate/src_zoh.c"
+        #include "../3rd_party/libsamplerate/samplerate.c"
+    }
+}
+
+#undef PACKAGE
+#undef VERSION
+#undef CPU_CLIPS_NEGATIVE
+#undef CPU_CLIPS_POSITIVE
+
+#undef ENABLE_SINC_BEST_CONVERTER
+#undef ENABLE_SINC_MEDIUM_CONVERTER
+#undef ENABLE_SINC_FAST_CONVERTER
+
+#include "../3rd_party/choc/platform/choc_ReenableAllWarnings.h"
+#include "../3rd_party/crill/seqlock_object.h"
+
+//==============================================================================
 #if JUCE_LINUX || JUCE_WINDOWS
  #include <cstdarg>
 #endif
@@ -122,91 +179,78 @@ using namespace std::literals;
 #include "playback/graph/tracktion_BenchmarkUtilities.h"
 
 #include "playback/graph/tracktion_TrackMutingNode.h"
-
+#include "playback/graph/tracktion_ArrangerLauncherSwitchingNode.h"
 #include "playback/graph/tracktion_AuxSendNode.h"
-#include "playback/graph/tracktion_AuxSendNode.cpp"
-
 #include "playback/graph/tracktion_ClickNode.h"
-#include "playback/graph/tracktion_ClickNode.cpp"
-
 #include "playback/graph/tracktion_CombiningNode.h"
-#include "playback/graph/tracktion_CombiningNode.cpp"
-
+#include "playback/graph/tracktion_ContainerClipNode.h"
+#include "playback/graph/tracktion_DynamicOffsetNode.h"
 #include "playback/graph/tracktion_FadeInOutNode.h"
-#include "playback/graph/tracktion_FadeInOutNode.cpp"
-
 #include "playback/graph/tracktion_PluginNode.h"
-
 #include "playback/graph/tracktion_InsertSendNode.h"
-#include "playback/graph/tracktion_InsertReturnNode.h"
-#include "playback/graph/tracktion_InsertSendNode.cpp"
-#include "playback/graph/tracktion_InsertReturnNode.cpp"
-
 #include "playback/graph/tracktion_LevelMeasurerProcessingNode.h"
 #include "playback/graph/tracktion_LevelMeasuringNode.h"
-#include "playback/graph/tracktion_LevelMeasuringNode.cpp"
-
 #include "playback/graph/tracktion_LiveMidiInjectingNode.h"
-#include "playback/graph/tracktion_LiveMidiInjectingNode.cpp"
-
 #include "playback/graph/tracktion_LiveMidiOutputNode.h"
-#include "playback/graph/tracktion_LiveMidiOutputNode.cpp"
-
 #include "playback/graph/tracktion_LoopingMidiNode.h"
-#include "playback/graph/tracktion_LoopingMidiNode.cpp"
-#include "playback/graph/tracktion_LoopingMidiNode.test.cpp"
-
 #include "playback/graph/tracktion_MelodyneNode.h"
-#include "playback/graph/tracktion_MelodyneNode.cpp"
-
 #include "playback/graph/tracktion_MidiNode.h"
-#include "playback/graph/tracktion_MidiNode.cpp"
-
 #include "playback/graph/tracktion_MidiOutputDeviceInstanceInjectingNode.h"
-#include "playback/graph/tracktion_MidiOutputDeviceInstanceInjectingNode.cpp"
-
 #include "playback/graph/tracktion_WaveNode.h"
-#include "playback/graph/tracktion_WaveNode.cpp"
 
 #include "playback/graph/tracktion_PlayHeadPositionNode.h"
 #include "playback/graph/tracktion_ModifierNode.h"
 #include "playback/graph/tracktion_RackInstanceNode.h"
-#include "playback/graph/tracktion_RackInstanceNode.cpp"
 #include "playback/graph/tracktion_RackNode.h"
+#include "playback/graph/tracktion_RackReturnNode.h"
+
+#include "playback/graph/tracktion_TimedMutingNode.h"
+#include "playback/graph/tracktion_TimeStretchingWaveNode.h"
+#include "playback/graph/tracktion_TrackMidiInputDeviceNode.h"
+#include "playback/graph/tracktion_TrackWaveInputDeviceNode.h"
+#include "playback/graph/tracktion_SharedLevelMeasuringNode.h"
+#include "playback/graph/tracktion_SlotControlNode.h"
+#include "playback/graph/tracktion_SpeedRampWaveNode.h"
+#include "playback/graph/tracktion_MidiInputDeviceNode.h"
+#include "playback/graph/tracktion_HostedMidiInputDeviceNode.h"
+#include "playback/graph/tracktion_WaveInputDeviceNode.h"
+
+#include "playback/graph/tracktion_ArrangerLauncherSwitchingNode.cpp"
+#include "playback/graph/tracktion_AuxSendNode.cpp"
+#include "playback/graph/tracktion_ClickNode.cpp"
+#include "playback/graph/tracktion_CombiningNode.cpp"
+#include "playback/graph/tracktion_ContainerClipNode.cpp"
+#include "playback/graph/tracktion_DynamicOffsetNode.cpp"
+#include "playback/graph/tracktion_FadeInOutNode.cpp"
+#include "playback/graph/tracktion_InsertSendNode.cpp"
+#include "playback/graph/tracktion_LevelMeasuringNode.cpp"
+#include "playback/graph/tracktion_LiveMidiInjectingNode.cpp"
+#include "playback/graph/tracktion_LiveMidiOutputNode.cpp"
+#include "playback/graph/tracktion_LoopingMidiNode.cpp"
+#include "playback/graph/tracktion_LoopingMidiNode.test.cpp"
+#include "playback/graph/tracktion_MelodyneNode.cpp"
+#include "playback/graph/tracktion_MidiNode.cpp"
+#include "playback/graph/tracktion_MidiOutputDeviceInstanceInjectingNode.cpp"
+#include "playback/graph/tracktion_WaveNode.cpp"
+
+#include "playback/graph/tracktion_RackInstanceNode.cpp"
 #include "playback/graph/tracktion_RackNode.cpp"
 #include "playback/graph/tracktion_RackNode.test.cpp"
-#include "playback/graph/tracktion_RackReturnNode.h"
 #include "playback/graph/tracktion_RackReturnNode.cpp"
 #include "playback/graph/tracktion_PluginNode.cpp"
+#include "playback/graph/tracktion_PluginNodeBenchmarks.test.cpp"
 #include "playback/graph/tracktion_ModifierNode.cpp"
 
 #include "playback/graph/tracktion_TrackMutingNode.cpp"
-
-#include "playback/graph/tracktion_TimedMutingNode.h"
 #include "playback/graph/tracktion_TimedMutingNode.cpp"
-
-#include "playback/graph/tracktion_TimeStretchingWaveNode.h"
 #include "playback/graph/tracktion_TimeStretchingWaveNode.cpp"
-
-#include "playback/graph/tracktion_TrackMidiInputDeviceNode.h"
 #include "playback/graph/tracktion_TrackMidiInputDeviceNode.cpp"
-
-#include "playback/graph/tracktion_TrackWaveInputDeviceNode.h"
 #include "playback/graph/tracktion_TrackWaveInputDeviceNode.cpp"
-
-#include "playback/graph/tracktion_SharedLevelMeasuringNode.h"
 #include "playback/graph/tracktion_SharedLevelMeasuringNode.cpp"
-
-#include "playback/graph/tracktion_SpeedRampWaveNode.h"
+#include "playback/graph/tracktion_SlotControlNode.cpp"
 #include "playback/graph/tracktion_SpeedRampWaveNode.cpp"
-
-#include "playback/graph/tracktion_MidiInputDeviceNode.h"
 #include "playback/graph/tracktion_MidiInputDeviceNode.cpp"
-
-#include "playback/graph/tracktion_HostedMidiInputDeviceNode.h"
 #include "playback/graph/tracktion_HostedMidiInputDeviceNode.cpp"
-
-#include "playback/graph/tracktion_WaveInputDeviceNode.h"
 #include "playback/graph/tracktion_WaveInputDeviceNode.cpp"
 
 #include "playback/graph/tracktion_EditNodeBuilder.h"
@@ -252,6 +296,7 @@ using namespace std::literals;
 #include "playback/devices/tracktion_OutputDevice.cpp"
 #include "playback/devices/tracktion_WaveDeviceDescription.cpp"
 #include "playback/devices/tracktion_WaveInputDevice.cpp"
+#include "playback/devices/tracktion_WaveInputDevice.test.cpp"
 #include "playback/devices/tracktion_WaveOutputDevice.cpp"
 
 #include "playback/tracktion_HostedAudioDevice.cpp"
@@ -300,6 +345,10 @@ static inline void sprintf (char* dest, size_t maxLength, const char* format, ..
 
 #if TRACKTION_ENABLE_CONTROL_SURFACES
  #include "control_surfaces/types/tracktion_NovationAutomap.cpp"
+#endif
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
 #endif
 
 #endif

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -8,10 +8,12 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_PLUGINS
 
-#if TRACKTION_UNIT_TESTS
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+
+namespace tracktion::inline engine
+{
 
 //==============================================================================
 //==============================================================================
@@ -130,6 +132,6 @@ private:
 
 static InternalPluginTests internalPluginTests;
 
-#endif // TRACKTION_UNIT_TESTS
+} // namespace tracktion::inline engine
 
-}} // namespace tracktion { inline namespace engine
+#endif // TRACKTION_UNIT_TESTS

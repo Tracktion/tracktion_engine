@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -27,15 +27,15 @@ LoopInfo::LoopInfo (Engine& e, const juce::File& f)
         if (auto fin = f.createInputStream())
         {
             const std::unique_ptr<juce::AudioFormatReader> afr (af->createReaderFor (fin.release(), true));
-            init (afr.get(), af);
+            init (afr.get(), af, f);
         }
     }
 }
 
-LoopInfo::LoopInfo (Engine& e, const juce::AudioFormatReader* afr, const juce::AudioFormat* af)
+LoopInfo::LoopInfo (Engine& e, const juce::AudioFormatReader* afr, const juce::AudioFormat* af, const juce::File& f)
     : engine (e), state (IDs::LOOPINFO)
 {
-    init (afr, af);
+    init (afr, af, f);
 }
 
 LoopInfo::LoopInfo (Engine& e, const juce::ValueTree& v, juce::UndoManager* u)
@@ -65,6 +65,7 @@ void LoopInfo::setBpm (double newBpm, double currentBpm)
 {
     if (newBpm != currentBpm)
     {
+        jassert (getNumBeats() > 0);
         const double ratio = newBpm / currentBpm;
         setNumBeats (juce::jmax (1.0, getNumBeats() * ratio));
     }
@@ -84,7 +85,18 @@ void LoopInfo::setBpm (double newBpm, const AudioFileInfo& wi)
         return;
 
     const double currentBpm = getBpm (wi);
-    setBpm (newBpm, currentBpm);
+
+    // Set a dummy number of beats otherwise the ratio will be 0
+    if (currentBpm == 0)
+    {
+        const auto lengthMins = wi.getLengthInSeconds() / 60.0;
+        const auto numBeats = newBpm * lengthMins;
+        setNumBeats (numBeats);
+    }
+    else
+    {
+        setBpm (newBpm, currentBpm);
+    }
 }
 
 double LoopInfo::getBeatsPerSecond (const AudioFileInfo& wi) const
@@ -266,13 +278,15 @@ void LoopInfo::duplicateIfShared()
         auto parent = state.getParent();
         int index = -1;
 
+        auto stateCopy = state.createCopy();
+
         if (parent.isValid())
         {
             index = parent.indexOf (state);
             parent.removeChild (index, um);
         }
 
-        state = state.createCopy();
+        state = stateCopy;
 
         if (parent.isValid())
             parent.addChild (state, index, um);
@@ -289,7 +303,7 @@ static bool isSameFormat (const juce::AudioFormat* af1, const juce::AudioFormat*
                            && af1->getFormatName() == af2->getFormatName());
 }
 
-void LoopInfo::init (const juce::AudioFormatReader* afr, const juce::AudioFormat* af)
+void LoopInfo::init (const juce::AudioFormatReader* afr, const juce::AudioFormat* af, const juce::File& file)
 {
     if (afr == nullptr || af == nullptr)
         return;
@@ -350,6 +364,10 @@ void LoopInfo::init (const juce::AudioFormatReader* afr, const juce::AudioFormat
             const int rootNote = afr->metadataValues[juce::WavAudioFormat::acidRootSet] == "1"
                                     ? afr->metadataValues[juce::WavAudioFormat::acidRootNote].getIntValue() : -1;
             const double numBeats = afr->metadataValues[juce::WavAudioFormat::acidBeats].getDoubleValue();
+            
+            if (rootNote == -1)
+                if (auto smplNote = afr->metadataValues["MidiUnityNote"].getIntValue())
+                    setRootNote (smplNote);
 
             setRootNote (rootNote);
             setNumBeats (numBeats);
@@ -426,8 +444,143 @@ void LoopInfo::init (const juce::AudioFormatReader* afr, const juce::AudioFormat
         setNumBeats (afr->metadataValues[juce::WavAudioFormat::acidBeats].getDoubleValue());
         setProp (IDs::bpm, (numBeats * 60.0) / (afr->lengthInSamples / afr->sampleRate));
     }
+    else if (afr->metadataValues.containsKey ("MidiUnityNote"))
+    {
+        auto note = afr->metadataValues["MidiUnityNote"].getIntValue();
+        if (note > 0)
+            setRootNote (note);
+    }
+    
+    if (file != juce::File() && float (state.getProperty (IDs::bpm)) < 0.001f)
+        deduceTempo (file, *afr);
 
     initialiseMissingProps();
+}
+
+std::optional<float> LoopInfo::getCueTempo (const juce::StringPairArray& metadata)
+{
+    if (auto tempoStr = metadata["CueLabel0Text"]; tempoStr.isNotEmpty())
+        if (tempoStr.contains ("Tempo:"))
+            if (auto val = tempoStr.fromFirstOccurrenceOf ("Tempo: ", false, false).getFloatValue(); val >= 50 && val <= 250)
+                return val;
+
+    return {};
+}
+
+static juce::StringArray reverseTokens (juce::StringRef stringToTokenise, juce::StringRef breakCharacters, juce::StringRef quoteCharacters)
+{
+    auto tokens = juce::StringArray::fromTokens (stringToTokenise, breakCharacters, quoteCharacters);
+    std::reverse (tokens.strings.begin(), tokens.strings.end());
+    return tokens;
+}
+
+std::optional<float> LoopInfo::getFileNameTempo (const juce::String& rawName)
+{
+    auto name = rawName.replace (" ", "_").replace ("-", "_");
+
+    for (auto token : reverseTokens (name, "_", ""))
+    {
+        if (token.containsIgnoreCase ("bpm"))
+        {
+            token = token.replace ("bpm", "", true).trim();
+            
+            while (token.startsWith ("0"))
+                token = token.substring (1);
+            
+            auto val = token.getIntValue();
+            
+            if (val > 50 && val < 250 && juce::String (val) == token)
+                return float (val);
+        }
+    }
+    
+    for (auto token : reverseTokens (name, "_", ""))
+    {
+        auto val = token.getIntValue();
+        
+        while (token.startsWith ("0"))
+            token = token.substring (1);
+        
+        if (val > 50 && val < 250 && juce::String (val) == token)
+            return float (val);
+    }
+
+    return {};
+}
+
+std::optional<int> LoopInfo::getFileNameRootNote (const juce::String& rawName)
+{
+    auto name = rawName.replace (" ", "_").toLowerCase();
+
+    for (auto token : reverseTokens (name, "_", ""))
+    {
+        if (token.endsWith ("min")) token = token.dropLastCharacters (3);
+        else if (token.endsWith ("maj")) token = token.dropLastCharacters (3);
+        else if (token.endsWith ("m")) token = token.dropLastCharacters (1);
+
+        if (token == "a")   return 57;
+        if (token == "a#")  return 58;
+        if (token == "bb")  return 58;
+        if (token == "b")   return 59;
+        if (token == "c")   return 60;
+        if (token == "c#")  return 61;
+        if (token == "db")  return 61;
+        if (token == "d")   return 62;
+        if (token == "d#")  return 63;
+        if (token == "eb")  return 63;
+        if (token == "e")   return 64;
+        if (token == "f")   return 65;
+        if (token == "f#")  return 66;
+        if (token == "gb")  return 66;
+        if (token == "g")   return 67;
+        if (token == "g#")  return 68;
+        if (token == "ab")  return 68;
+    }
+
+    return {};
+}
+
+bool LoopInfo::deduceTempo (const juce::File& file, const juce::AudioFormatReader& afr)
+{
+    auto len = afr.lengthInSamples / afr.sampleRate;
+    if (len <= 1.0 && len > 60.0)
+        return false;
+
+    auto fn = file.getFileNameWithoutExtension();
+
+    auto tempo = getCueTempo (afr.metadataValues);
+    if (! tempo.has_value())
+        tempo = getFileNameTempo (fn);
+
+    if (! tempo.has_value())
+        return false;
+
+    auto beats = *tempo / 60 * len;
+    auto rem = std::fmod (beats, 4.0f);
+    if (rem < 0.0f || (rem > 0.1f && rem < 3.9f) || rem > 4.0f)
+        return false;
+
+    setNumBeats (beats);
+    setProp (IDs::oneShot, false);
+    setDenominator (4);
+    setNumerator (4);
+    setProp (IDs::bpm, (beats * 60.0) / (afr.lengthInSamples / afr.sampleRate));
+
+    if (auto root = getFileNameRootNote (fn))
+    {
+        setRootNote (*root);
+       #if LOG_DEDUCED_TEMPO
+        DBG(fn + juce::String::formatted (": %.1f bpm %.1f beats ", *tempo, beats) + juce::MidiMessage::getMidiNoteName (*root, true, false, 4));
+       #endif
+    }
+    else
+    {
+       #if LOG_DEDUCED_TEMPO
+        DBG(fn + juce::String::formatted (": %.1f bpm %.1f beats", *tempo, beats));
+       #endif
+    }
+
+    return true;
 }
 
 }} // namespace tracktion { inline namespace engine

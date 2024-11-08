@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -95,9 +95,10 @@ public:
     /** called when usersettings change, because that's where the grooves are kept. */
     void reload();
 
+    Engine& engine;
+
 private:
     //==============================================================================
-    Engine& engine;
     juce::OwnedArray<GrooveTemplate> knownGrooves;
     juce::Array<GrooveTemplate*> activeGrooves;
 

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -17,7 +17,6 @@ public:
     AutomationCurve();
     AutomationCurve (const juce::ValueTree& parent, const juce::ValueTree& state);
     AutomationCurve (const AutomationCurve&);
-    AutomationCurve& operator= (const AutomationCurve&);
     ~AutomationCurve();
 
     void setState (const juce::ValueTree&);

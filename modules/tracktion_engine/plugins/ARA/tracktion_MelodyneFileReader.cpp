@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -63,7 +63,7 @@ namespace tracktion { inline namespace engine
 
 using namespace ARA;
 
-struct ARAClipPlayer  : private SelectableListener
+struct ARAClipPlayer  : private Selectable::Listener
 {
     #include "tracktion_MelodyneInstanceFactory.h"
     #include "tracktion_ARAWrapperFunctions.h"
@@ -71,22 +71,19 @@ struct ARAClipPlayer  : private SelectableListener
 
     //==============================================================================
     ARAClipPlayer (Edit& ed, MelodyneFileReader& o, AudioClipBase& c)
-      : owner (o),
+      : Selectable::Listener (ed.tempoSequence), owner (o),
         clip (c),
         file (c.getAudioFile()),
         edit (ed)
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         jassert (file.getFile().existsAsFile());
-        edit.tempoSequence.addSelectableListener (this);
     }
 
     ~ARAClipPlayer()
     {
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
-
-        edit.tempoSequence.removeSelectableListener (this);
 
         contentAnalyserChecker = nullptr;
         modelUpdater = nullptr;
@@ -303,7 +300,7 @@ struct ARAClipPlayer  : private SelectableListener
 
                     if (!typesBeingAnalyzed.empty())
                         dci->requestAudioSourceContentAnalysis (dcRef, audioSourceRef, (ARASize)typesBeingAnalyzed.size(), typesBeingAnalyzed.data());
-                    
+
                     firstCall = false;
                 }
 
@@ -504,7 +501,7 @@ MelodyneFileReader::MelodyneFileReader (Edit& ed, AudioClipBase& clip)
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
 
-    player.reset (new ARAClipPlayer (ed, *this, clip));
+    player = std::make_unique<ARAClipPlayer> (ed, *this, clip);
 
     if (! player->initialise (nullptr))
         player = nullptr;
@@ -517,7 +514,7 @@ MelodyneFileReader::MelodyneFileReader (Edit& ed, AudioClipBase& clip, MelodyneF
 
     if (other.player != nullptr)
     {
-        player.reset (new ARAClipPlayer (ed, *this, clip));
+        player = std::make_unique<ARAClipPlayer> (ed, *this, clip);
 
         if (! player->initialise (other.player.get()))
             player = nullptr;
@@ -601,7 +598,7 @@ struct ARADocumentHolder::Pimpl
 
         if (araDocument != nullptr)
         {
-            araDocument->beginRestoringState (edit.araDocument->lastState);
+            araDocument->beginRestoringState (edit.getARADocument().lastState);
 
             visitAllTrackItems (edit, [] (TrackItem& i)
             {
@@ -638,7 +635,7 @@ ARADocumentHolder::Pimpl* ARADocumentHolder::getPimpl()
     if (pimpl == nullptr)
     {
         CRASH_TRACER
-        pimpl.reset (new Pimpl (edit));
+        pimpl = std::make_unique<Pimpl> (edit);
         callBlocking ([this]() { pimpl->initialise(); });
     }
 
@@ -656,9 +653,8 @@ void ARADocumentHolder::flushStateToValueTree()
 
 ARAClipPlayer::ARADocument* ARAClipPlayer::getDocument() const
 {
-    if (auto l = edit.araDocument.get())
-        if (auto p = l->getPimpl())
-            return p->araDocument.get();
+    if (auto p = edit.getARADocument().getPimpl())
+        return p->araDocument.get();
 
     return {};
 }

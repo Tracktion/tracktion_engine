@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -14,7 +14,7 @@ namespace tracktion { inline namespace engine
 //==============================================================================
 //==============================================================================
 /**
-    A Node that calls the listeners of an AudioTrack with any incomming MIDI.
+    A Node that calls the listeners of an AudioTrack with any incoming MIDI.
 */
 class LiveMidiOutputNode final : public tracktion::graph::Node,
                                  private juce::AsyncUpdater
@@ -39,7 +39,7 @@ private:
 
     std::unique_ptr<tracktion::graph::Node> input;
 
-    juce::CriticalSection lock;
+    RealTimeSpinLock mutex;
     MidiMessageArray pendingMessages, dispatchingMessages;
 
     //==============================================================================

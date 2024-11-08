@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -14,32 +14,71 @@ namespace tracktion { inline namespace engine
 {
 
 AuxSendNode::AuxSendNode (std::unique_ptr<Node> inputNode, int busIDToUse,
+                          SampleRateAndBlockSize info,
                           AuxSendPlugin& sourceSendPlugin, tracktion::graph::PlayHeadState& phs,
-                          const TrackMuteState* trackMuteState)
+                          const TrackMuteState* trackMuteState, bool processAuxSendsWhenTrackIsMuted)
     : SendNode (std::move (inputNode), busIDToUse,
-                [&sourceSendPlugin, trackMuteState]
+                [&sourceSendPlugin, trackMuteState, processAuxSendsWhenTrackIsMuted]
                 {
-                    if (trackMuteState
-                        && ! trackMuteState->shouldTrackBeAudible()
-                        && ! trackMuteState->shouldTrackContentsBeProcessed())
-                       return 0.0f;
+                    if (processAuxSendsWhenTrackIsMuted)
+                    {
+                        if (trackMuteState
+                            && ! trackMuteState->shouldTrackBeAudible()
+                            && ! trackMuteState->shouldTrackContentsBeProcessed())
+                           return 0.0f;
+                    }
+                    else
+                    {
+                        if (trackMuteState
+                            && (! trackMuteState->shouldTrackBeAudible()
+                                || ! trackMuteState->shouldTrackContentsBeProcessed()))
+                           return 0.0f;
+                    }
 
-                    return volumeFaderPositionToGain (sourceSendPlugin.gain->getCurrentValue());
+                    auto gain = volumeFaderPositionToGain (sourceSendPlugin.gain->getCurrentValue());
+                    if (sourceSendPlugin.invertPhase)
+                        gain *= -1.0f;
+
+                    return gain;
                }),
       playHeadState (phs),
       pluginPtr (sourceSendPlugin),
       sendPlugin (sourceSendPlugin)
 {
     jassert (pluginPtr != nullptr);
+
+    sendPlugin.baseClassInitialise ({ TimePosition(), info.sampleRate, info.blockSize });
+    isInitialised = true;
+}
+
+AuxSendNode::~AuxSendNode()
+{
+    if (isInitialised && ! sendPlugin.baseClassNeedsInitialising())
+        sendPlugin.baseClassDeinitialise();
 }
 
 //==============================================================================
+NodeProperties AuxSendNode::getNodeProperties()
+{
+    if (cachedNodeProperties)
+        return *cachedNodeProperties;
+
+    auto props = SendNode::getNodeProperties();
+
+    if (isPrepared)
+        cachedNodeProperties = props;
+
+    return props;
+}
+
 void AuxSendNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     sampleRate = info.sampleRate;
-    
+
     if (auto props = getNodeProperties(); props.latencyNumSamples > 0)
         automationAdjustmentTime = TimeDuration::fromSamples (-props.latencyNumSamples, sampleRate);
+
+    isPrepared = true;
 }
 
 void AuxSendNode::process (ProcessContext& pc)
@@ -51,7 +90,7 @@ void AuxSendNode::process (ProcessContext& pc)
         const auto editTime = TimePosition::fromSamples (editSamplePos, sampleRate) + automationAdjustmentTime;
         sendPlugin.updateParameterStreams (editTime);
     }
-    
+
     SendNode::process (pc);
 }
 

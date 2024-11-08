@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -15,29 +15,6 @@ namespace tracktion { inline namespace engine
 
 struct MidiMessageArray
 {
-    using MPESourceID = uint32_t;
-
-    static MPESourceID createUniqueMPESourceID() noexcept
-    {
-        static MPESourceID i = 0;
-        return ++i;
-    }
-
-    static constexpr MPESourceID notMPE = 0;
-
-    struct MidiMessageWithSource  : public juce::MidiMessage
-    {
-        MidiMessageWithSource (const juce::MidiMessage& m, MPESourceID source) : juce::MidiMessage (m), mpeSourceID (source) {}
-        MidiMessageWithSource (juce::MidiMessage&& m, MPESourceID source) : juce::MidiMessage (std::move (m)), mpeSourceID (source) {}
-
-        MidiMessageWithSource (const MidiMessageWithSource&) = default;
-        MidiMessageWithSource (MidiMessageWithSource&&) = default;
-        MidiMessageWithSource& operator= (const MidiMessageWithSource&) = default;
-        MidiMessageWithSource& operator= (MidiMessageWithSource&&) = default;
-
-        MPESourceID mpeSourceID = 0;
-    };
-
     bool isEmpty() const noexcept                                   { return messages.isEmpty(); }
     bool isNotEmpty() const noexcept                                { return ! messages.isEmpty(); }
 
@@ -126,7 +103,7 @@ struct MidiMessageArray
         for (auto& m : source)
             messages.add (m);
     }
-    
+
     void mergeFromWithOffset (const MidiMessageArray& source, double delta)
     {
         isAllNotesOff = isAllNotesOff || source.isAllNotesOff;
@@ -138,7 +115,7 @@ struct MidiMessageArray
 
         for (const auto& m : source)
         {
-            auto copy = MidiMessageWithSource (m);
+            auto copy = tracktion::engine::MidiMessageWithSource (m);
             copy.addToTimeStamp (delta);
             messages.add (std::move (copy));
         }
@@ -146,24 +123,27 @@ struct MidiMessageArray
 
     void mergeFromAndClear (MidiMessageArray& source)
     {
+        isAllNotesOff = isAllNotesOff || source.isAllNotesOff;
+
         if (isEmpty())
         {
             swapWith (source);
         }
         else
         {
-            isAllNotesOff = isAllNotesOff || source.isAllNotesOff;
             messages.ensureStorageAllocated (messages.size() + source.size());
 
             for (auto& m : source)
                 messages.add (std::move (m));
-
-            source.clear();
         }
+
+        source.clear();
     }
 
     void mergeFromAndClearWithOffset (MidiMessageArray& source, double delta)
     {
+        isAllNotesOff = isAllNotesOff || source.isAllNotesOff;
+
         if (isEmpty())
         {
             swapWith (source);
@@ -171,7 +151,6 @@ struct MidiMessageArray
         }
         else
         {
-            isAllNotesOff = isAllNotesOff || source.isAllNotesOff;
             messages.ensureStorageAllocated (messages.size() + source.size());
 
             for (auto& m : source)
@@ -179,9 +158,9 @@ struct MidiMessageArray
                 messages.add (std::move (m));
                 messages.getReference (messages.size() - 1).addToTimeStamp (delta);
             }
-
-            source.clear();
         }
+
+        source.clear();
     }
 
     void mergeFromAndClearWithOffsetAndLimit (MidiMessageArray& source, double delta, int numItemsToTake)
@@ -218,6 +197,13 @@ struct MidiMessageArray
                 messages.remove (i);
     }
 
+    /// Removes any notes that match the given predicate
+    template <typename Predicate>
+    void removeIf (Predicate&& pred)
+    {
+        messages.removeIf (pred);
+    }
+
     void addToTimestamps (double delta) noexcept
     {
         for (auto& m : messages)
@@ -238,7 +224,7 @@ struct MidiMessageArray
 
     void sortByTimestamp()
     {
-        std::stable_sort (messages.begin(), messages.end(), [] (const juce::MidiMessage& a, const juce::MidiMessage& b)
+        choc::sorting::stable_sort (messages.begin(), messages.end(), [] (const juce::MidiMessage& a, const juce::MidiMessage& b)
         {
             auto t1 = a.getTimeStamp();
             auto t2 = b.getTimeStamp();
@@ -259,9 +245,17 @@ struct MidiMessageArray
 
     bool isAllNotesOff = false;
 
-private:
 
-    juce::Array<MidiMessageWithSource> messages;
+    //==============================================================================
+   #if ! JUCE_GCC
+    using MidiMessageWithSource [[ deprecated("This type has moved into the parent namespace") ]] = tracktion::engine::MidiMessageWithSource;
+   #endif
+    using MPESourceID [[ deprecated("This type has moved into the parent namespace") ]] = tracktion::engine::MPESourceID;
+    [[ deprecated("This function has moved into the parent namespace") ]] static tracktion::engine::MPESourceID createUniqueMPESourceID() { return tracktion::engine::createUniqueMPESourceID(); }
+    [[ deprecated("Just use a default-constructed MPESourceID instead of this") ]] static constexpr tracktion::engine::MPESourceID notMPE = {};
+
+private:
+    juce::Array<tracktion::engine::MidiMessageWithSource> messages;
 };
 
 }} // namespace tracktion

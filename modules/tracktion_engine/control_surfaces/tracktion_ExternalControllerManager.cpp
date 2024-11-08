@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -11,19 +11,95 @@
 namespace tracktion { inline namespace engine
 {
 
+bool ColourArea::contains (ClipSlot& clipSlot) const
+{
+    auto t1 = firstTrack.getIndexInEditTrackList();
+    auto t2 = lastTrack.getIndexInEditTrackList();
+
+    auto t = clipSlot.track.getIndexInEditTrackList();
+    auto s = clipSlot.getIndex();
+
+    if (t >= t1 && t <= t2 && s >= firstScene && s <= lastScene)
+        return true;
+
+    return false;
+}
+
+bool ColourArea::isLeft (ClipSlot& clipSlot) const
+{
+    auto t1 = firstTrack.getIndexInEditTrackList();
+
+    auto t = clipSlot.track.getIndexInEditTrackList();
+    auto s = clipSlot.getIndex();
+
+    if (t == t1 && s >= firstScene && s <= lastScene)
+        return true;
+
+    return false;
+}
+
+bool ColourArea::isRight (ClipSlot& clipSlot) const
+{
+    auto t2 = lastTrack.getIndexInEditTrackList();
+
+    auto t = clipSlot.track.getIndexInEditTrackList();
+    auto s = clipSlot.getIndex();
+
+    if (t == t2 && s >= firstScene && s <= lastScene)
+        return true;
+
+    return false;
+}
+
+bool ColourArea::isTop (ClipSlot& clipSlot) const
+{
+    auto t1 = firstTrack.getIndexInEditTrackList();
+    auto t2 = lastTrack.getIndexInEditTrackList();
+
+    auto t = clipSlot.track.getIndexInEditTrackList();
+    auto s = clipSlot.getIndex();
+
+    if (t >= t1 && t <= t2 && s == firstScene)
+        return true;
+
+    return false;
+}
+
+bool ColourArea::isBottom (ClipSlot& clipSlot) const
+{
+    auto t1 = firstTrack.getIndexInEditTrackList();
+    auto t2 = lastTrack.getIndexInEditTrackList();
+
+    auto t = clipSlot.track.getIndexInEditTrackList();
+    auto s = clipSlot.getIndex();
+
+    if (t >= t1 && t <= t2 && s == lastScene)
+        return true;
+
+    return false;
+}
+
 struct ExternalControllerManager::EditTreeWatcher   : private juce::ValueTree::Listener,
                                                       private juce::Timer,
-                                                      private juce::AsyncUpdater
+                                                      private juce::AsyncUpdater,
+                                                      private SceneWatcher::Listener
 {
     EditTreeWatcher (ExternalControllerManager& o, Edit& e) : owner (o), edit (e)
     {
         edit.state.addListener (this);
+        edit.getSceneList().sceneWatcher.addListener (this);
         startTimer (40);
     }
 
     ~EditTreeWatcher() override
     {
         edit.state.removeListener (this);
+        edit.getSceneList().sceneWatcher.removeListener (this);
+    }
+
+    void slotUpdated (int, int) override
+    {
+        updatePads.set (true);
     }
 
 private:
@@ -33,19 +109,30 @@ private:
 
     juce::Array<juce::ValueTree, juce::CriticalSection> pluginsToUpdate;
     juce::Atomic<int> updateAux;
+    juce::Atomic<bool> updatePads;
 
     void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& i) override
     {
-        if (v.hasType (IDs::PLUGIN))
+        if (v.hasType (IDs::MARKERCLIP))
+        {
+            triggerAsyncUpdate();
+        }
+        else if (Clip::isClipState (v))
+        {
+            if (i == IDs::colour)
+                updatePads.set (true);
+        }
+        else if (v.hasType (IDs::PLUGIN))
         {
             if (i == IDs::volume || i == IDs::pan)
                 pluginsToUpdate.addIfNotAlreadyThere (v);
             else if (i == IDs::auxSendSliderPos && v.getProperty (IDs::type) == AuxSendPlugin::xmlTypeName)
                 updateAux.set (1);
         }
-        else if (v.hasType (IDs::MARKERCLIP))
+        else if (v.hasType (IDs::TRACK))
         {
-            triggerAsyncUpdate();
+            if (i == IDs::name)
+                owner.updateDeviceState();
         }
     }
 
@@ -95,18 +182,35 @@ private:
 
         if (updateAux.compareAndSetBool (0, 1))
             owner.auxSendLevelsChanged();
+
+        if (updatePads.compareAndSetBool (false, true))
+            owner.updatePadColours();
     }
 
     void handleAsyncUpdate() override
     {
         owner.updateMarkers();
     }
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(EditTreeWatcher)
 };
 
 //==============================================================================
 ExternalControllerManager::ExternalControllerManager (Engine& e) : engine (e)
 {
-    blinkTimer.reset (new BlinkTimer (*this));
+    blinkTimer = std::make_unique<BlinkTimer> (*this);
+    masterLevelsTimer.setCallback ([this]
+    {
+        if (currentEdit == nullptr)
+            return;
+
+        auto ctx = currentEdit->getCurrentPlaybackContext();
+        if (ctx == nullptr)
+            return;
+
+        auto l = ctx->masterLevels.getLevelCache();
+        masterLevelsChanged (dbToGain (l.first), dbToGain (l.second));
+    });
 }
 
 ExternalControllerManager::~ExternalControllerManager()
@@ -208,8 +312,13 @@ void ExternalControllerManager::setCurrentEdit (Edit* newEdit, SelectionManager*
 
         if (currentEdit != nullptr)
         {
+            masterLevelsTimer.startTimer (1000 / 50);
             currentEdit->getTransport().addChangeListener (this);
             editTreeWatcher = std::make_unique<EditTreeWatcher> (*this, *currentEdit);
+        }
+        else
+        {
+            masterLevelsTimer.stopTimer();
         }
     }
 
@@ -225,6 +334,7 @@ void ExternalControllerManager::setCurrentEdit (Edit* newEdit, SelectionManager*
     }
 
     FOR_EACH_ACTIVE_DEVICE (currentEditChanged (currentEdit));
+    FOR_EACH_ACTIVE_DEVICE (currentSelectionManagerChanged (currentSelectionManager));
 }
 
 bool ExternalControllerManager::isAttachedToEdit (const Edit* ed) const noexcept
@@ -360,6 +470,7 @@ void ExternalControllerManager::updateTrackRecordLights()   { FOR_EACH_ACTIVE_DE
 void ExternalControllerManager::updatePunchLights()         { FOR_EACH_ACTIVE_DEVICE (updatePunchLights()); }
 void ExternalControllerManager::updateScrollLights()        { FOR_EACH_ACTIVE_DEVICE (updateScrollLights()); }
 void ExternalControllerManager::updateUndoLights()          { FOR_EACH_ACTIVE_DEVICE (updateUndoLights()); }
+void ExternalControllerManager::updatePadColours()          { FOR_EACH_ACTIVE_DEVICE (updatePadColours()); }
 
 void ExternalControllerManager::changeListenerCallback (ChangeBroadcaster* source)
 {
@@ -369,6 +480,7 @@ void ExternalControllerManager::changeListenerCallback (ChangeBroadcaster* sourc
     {
         playStateChanged (tc->isPlaying());
         recordStateChanged (tc->isRecording());
+        updatePadColours();
     }
     else if (currentSelectionManager != nullptr)
     {
@@ -437,6 +549,17 @@ void ExternalControllerManager::BlinkTimer::timerCallback()
     ecm.blinkNow();
 }
 
+juce::Array<ExternalController*> ExternalControllerManager::getActiveDevices() const
+{
+    juce::Array<ExternalController*> activeDevices;
+
+    for (auto d : devices)
+        if (d->isEnabled())
+            activeDevices.add (d);
+
+    return activeDevices;
+}
+
 void ExternalControllerManager::blinkNow()
 {
     updateMuteSoloLights (true);
@@ -444,36 +567,43 @@ void ExternalControllerManager::blinkNow()
 
 void ExternalControllerManager::updateMuteSoloLights (bool onlyUpdateFlashingLights)
 {
-    if (currentEdit != nullptr)
+    if (currentEdit == nullptr)
+        return;
+
+    const auto activeDevices = getActiveDevices();
+
+    if (activeDevices.isEmpty())
+        return;
+
+    int i = 0;
+    const bool isBright = blinkTimer->isBright;
+    bool anySolo = false;
+
+    currentEdit->visitAllTracksRecursive ([&, this] (Track& t)
     {
-        int i = 0;
-        const bool isBright = blinkTimer->isBright;
-        bool anySolo = false;
+        if (t.isSolo (false))
+            anySolo = true;
 
-        currentEdit->visitAllTracksRecursive ([&, this] (Track& t)
+        auto mappedChan = mapTrackNumToChannelNum (i);
+
+        if (mappedChan >= 0)
         {
-            if (t.isSolo (false))
-                anySolo = true;
+            const auto flags = t.getMuteAndSoloLightState();
 
-            auto mappedChan = mapTrackNumToChannelNum (i);
-
-            if (mappedChan >= 0)
+            if ((flags & (Track::soloFlashing | Track::muteFlashing)) != 0
+                 || ! onlyUpdateFlashingLights)
             {
-                const auto flags = t.getMuteAndSoloLightState();
-
-                if ((flags & (Track::soloFlashing | Track::muteFlashing)) != 0
-                     || ! onlyUpdateFlashingLights)
-                {
-                    FOR_EACH_ACTIVE_DEVICE (updateSoloAndMute (mappedChan, flags, isBright));
-                }
+                for (auto d : activeDevices)
+                    d->updateSoloAndMute (mappedChan, flags, isBright);
             }
+        }
 
-            ++i;
-            return true;
-        });
+        ++i;
+        return true;
+    });
 
-        FOR_EACH_ACTIVE_DEVICE (soloCountChanged (blinkTimer->isBright && anySolo));
-    }
+    for (auto d : activeDevices)
+        d->soloCountChanged (blinkTimer->isBright && anySolo);
 }
 
 //==============================================================================
@@ -513,12 +643,8 @@ void ExternalControllerManager::updateVolumePlugin (VolumeAndPanPlugin& vp)
     {
         if (vp.edit.getMasterVolumePlugin().get() == &vp)
         {
-            float left, right;
-            getGainsFromVolumeFaderPositionAndPan (vp.getSliderPos(), vp.getPan(), getDefaultPanLaw(), left, right);
-            left  = gainToVolumeFaderPosition (left);
-            right = gainToVolumeFaderPosition (right);
-
-            FOR_EACH_ACTIVE_DEVICE (moveMasterFaders (left, right));
+            FOR_EACH_ACTIVE_DEVICE (moveMasterFader (vp.getSliderPos()));
+            FOR_EACH_ACTIVE_DEVICE (moveMasterPanPot (vp.getPan()));
         }
     }
 }
@@ -545,10 +671,16 @@ void ExternalControllerManager::updateVCAPlugin (VCAPlugin& vca)
     }
 }
 
-void ExternalControllerManager::moveMasterFaders (float newLeftPos, float newRightPos)
+void ExternalControllerManager::moveMasterFader (float newPos)
 {
     CRASH_TRACER
-    FOR_EACH_ACTIVE_DEVICE (moveMasterFaders (newLeftPos, newRightPos));
+    FOR_EACH_ACTIVE_DEVICE (moveMasterFader (newPos));
+}
+
+void ExternalControllerManager::moveMasterPanPot (float newPan)
+{
+    CRASH_TRACER
+    FOR_EACH_ACTIVE_DEVICE (moveMasterPanPot (newPan));
 }
 
 void ExternalControllerManager::soloCountChanged (bool anySoloTracks)
@@ -578,8 +710,21 @@ void ExternalControllerManager::automationModeChanged (bool isReading, bool isWr
 void ExternalControllerManager::channelLevelChanged (int channel, float l, float r)
 {
     CRASH_TRACER
-    const int cn = mapTrackNumToChannelNum (channel);
-    FOR_EACH_ACTIVE_DEVICE (channelLevelChanged (cn, l, r));
+    // This is an optimisation that avoids calling mapTrackNumToChannelNum if there are no enabled/active devices
+    std::optional<int> channelNum;
+
+    if (currentEdit == nullptr)
+        return;
+
+    auto getChannelNum = [&]
+    {
+        if (! channelNum)
+            channelNum = mapTrackNumToChannelNum (channel);
+
+        return *channelNum;
+    };
+
+    FOR_EACH_ACTIVE_DEVICE (channelLevelChanged (getChannelNum(), l, r));
 }
 
 void ExternalControllerManager::masterLevelsChanged (float leftLevel, float rightLevel)
@@ -687,16 +832,16 @@ void ExternalControllerManager::userMovedMasterFader (Edit* ed, float newLevel, 
     }
 }
 
-void ExternalControllerManager::userMovedMasterPanPot (Edit* ed, float newLevel)
+void ExternalControllerManager::userMovedMasterPanPot (Edit* ed, float newPos, bool delta)
 {
     if (ed != nullptr)
-        ed->setMasterPanPos (newLevel);
+        ed->setMasterPanPos (delta ? ed->getMasterPanParameter()->getCurrentValue() + newPos : newPos);
 }
 
 void ExternalControllerManager::userMovedPanPot (int channelNum, float newPan, bool delta)
 {
     auto track = getChannelTrack (channelNum);
-    
+
     if (auto t = dynamic_cast<AudioTrack*> (track))
     {
         if (auto vp = t->getVolumePlugin())
@@ -709,11 +854,11 @@ void ExternalControllerManager::userMovedPanPot (int channelNum, float newPan, b
     }
 }
 
-void ExternalControllerManager::userMovedAux (int channelNum, int auxNum, float newPosition)
+void ExternalControllerManager::userMovedAux (int channelNum, int auxNum, AuxPosition ap, float newPosition, bool delta)
 {
     if (auto t = dynamic_cast<AudioTrack*> (getChannelTrack (channelNum)))
-        if (auto aux = t->getAuxSendPlugin (auxNum))
-            aux->setGainDb (volumeFaderPositionToDB (newPosition));
+        if (auto aux = t->getAuxSendPlugin (auxNum, ap))
+            aux->setGainDb (volumeFaderPositionToDB (delta ? decibelsToVolumeFaderPosition (aux->getGainDb()) + newPosition : newPosition));
 }
 
 void ExternalControllerManager::userPressedAux (int channelNum, int auxNum)
@@ -721,6 +866,35 @@ void ExternalControllerManager::userPressedAux (int channelNum, int auxNum)
     if (auto t = dynamic_cast<AudioTrack*> (getChannelTrack (channelNum)))
         if (auto aux = t->getAuxSendPlugin (auxNum))
             aux->setMute (! aux->isMute());
+}
+
+void ExternalControllerManager::userLaunchedClip (int channelNum, int sceneNum, bool press)
+{
+    if (launchClip && currentEdit)
+        if (auto t = getChannelTrack (channelNum))
+            launchClip (*currentEdit, *t, sceneNum, press);
+}
+
+void ExternalControllerManager::userStoppedClip (int channelNum, bool press)
+{
+    if (stopClip && currentEdit)
+    {
+        if (channelNum >= 0)
+        {
+            auto t = getChannelTrack (channelNum);
+            stopClip (*currentEdit, t, press);
+        }
+        else
+        {
+            stopClip (*currentEdit, nullptr, press);
+        }
+    }
+}
+
+void ExternalControllerManager::userLaunchedScene (int sceneNum, bool press)
+{
+    if (launchScene && currentEdit)
+        launchScene (*currentEdit, sceneNum, press);
 }
 
 void ExternalControllerManager::userMovedQuickParam (float newLevel)
@@ -773,6 +947,16 @@ void ExternalControllerManager::userSelectedTrack (int channelNum)
         }
     }
 }
+
+void ExternalControllerManager::userSelectedOneTrack (int channelNum)
+{
+    if (auto t = getChannelTrack (channelNum))
+    {
+        if (currentSelectionManager != nullptr)
+            currentSelectionManager->selectOnly (t);
+    }
+}
+
 
 void ExternalControllerManager::userSelectedClipInTrack (int channelNum)
 {
@@ -841,32 +1025,33 @@ Track* ExternalControllerManager::getChannelTrack (int index) const
 
 int ExternalControllerManager::mapTrackNumToChannelNum (int index) const
 {
-    int result = -1;
+    if (currentEdit == nullptr || index < 0)
+        return -1;
 
-    if (currentEdit != nullptr && isVisibleOnControlSurface)
+    if (mapEditTrackNumToControlSurfaceChannelNum)
+        return mapEditTrackNumToControlSurfaceChannelNum (*currentEdit, index);
+
+    if (! isVisibleOnControlSurface)
+        return -1;
+
+    int result = -1, i = 0, trackNum = 0;
+
+    currentEdit->visitAllTracksRecursive ([&] (Track& t)
     {
-        if (index >= 0)
+        if (isVisibleOnControlSurface (t))
         {
-            int i = 0, trackNum = 0;
-
-            currentEdit->visitAllTracksRecursive ([&] (Track& t)
+            if (i == index)
             {
-                if (isVisibleOnControlSurface (t))
-                {
-                    if (i == index)
-                    {
-                        result = trackNum;
-                        return false;
-                    }
+                result = trackNum;
+                return false;
+            }
 
-                    ++trackNum;
-                }
-
-                ++i;
-                return true;
-            });
+            ++trackNum;
         }
-    }
+
+        ++i;
+        return true;
+    });
 
     return result;
 }
@@ -885,14 +1070,34 @@ bool ExternalControllerManager::shouldTrackBeColoured (int channelNum)
     return false;
 }
 
+std::vector<ColourArea> ExternalControllerManager::ExternalControllerManager::getColouredArea (const Edit& e)
+{
+    std::vector<ColourArea> areas;
+
+    for (auto device : devices)
+        if (device->isEnabled())
+            if (auto area = device->getColouredArea (e); area.has_value())
+                areas.push_back (*area);
+
+    return areas;
+}
+
 juce::Colour ExternalControllerManager::getTrackColour (int channelNum)
 {
     juce::Colour c;
 
-    if (! devices.isEmpty())
+    if (devices.isEmpty())
+        return c;
+
+    auto activeDevices = getActiveDevices();
+
+    if (activeDevices.isEmpty())
+        return {};
     {
         auto cn = mapTrackNumToChannelNum (channelNum);
-        FOR_EACH_ACTIVE_DEVICE (getTrackColour (cn, c));
+
+        for (auto d : activeDevices)
+            d->getTrackColour (cn, c);
     }
 
     return c;
@@ -904,11 +1109,18 @@ void ExternalControllerManager::repaintTrack (int channelNum)
         t->changed();
 }
 
+void ExternalControllerManager::repaintSlots (int channelNum)
+{
+    if (auto t = getChannelTrack (channelNum))
+        t->changed();
+}
+
 bool ExternalControllerManager::shouldPluginBeColoured (Plugin* plugin)
 {
-    for (auto* d : devices)
-        if (d->shouldPluginBeColoured (plugin))
-            return true;
+    for (auto d : devices)
+        if (d->isEnabled())
+            if (d->shouldPluginBeColoured (plugin))
+                return true;
 
     return false;
 }
@@ -930,7 +1142,7 @@ int ExternalControllerManager::getXTCount (const juce::String& desc)
 {
     if (desc == "Mackie Control Universal")
         return engine.getPropertyStorage().getProperty (SettingID::xtCount);
-    
+
     return engine.getPropertyStorage().getPropertyItem (SettingID::xtCount, desc);
 }
 

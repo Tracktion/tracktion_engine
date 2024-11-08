@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -63,7 +63,7 @@ static juce::String chordSymbol (const juce::String& name)
     return name.substring (1);
 }
 
-juce::String fixLegacyChordNames (const juce::String& oldName)
+inline juce::String fixLegacyChordNames (const juce::String& oldName)
 {
     if (chordNameHasSymbol (oldName, "maj"))        return chordNote (oldName) + Chord (Chord::majorTriad).getSymbol();
     if (chordNameHasSymbol (oldName, "min"))        return chordNote (oldName) + Chord (Chord::minorTriad).getSymbol();
@@ -1293,7 +1293,7 @@ BeatDuration PatternGenerator::getFlattenedChordProgression (juce::OwnedArray<Pr
             }
 
             BeatDuration amountToDrop;
-            
+
             if (cc->getStartBeat() < pos)
                 amountToDrop = pos - cc->getStartBeat();
 
@@ -1490,8 +1490,7 @@ void PatternGenerator::generatePattern()
     if (auto mc = getMidiClip())
     {
         if (auto at = mc->getAudioTrack())
-            at->injectLiveMidiMessage (juce::MidiMessage::allNotesOff (mc->getMidiChannel().getChannelNumber()),
-                                       MidiMessageArray::notMPE);
+            at->injectLiveMidiMessage (juce::MidiMessage::allNotesOff (mc->getMidiChannel().getChannelNumber()), {});
 
         switch (mode)
         {
@@ -2126,7 +2125,7 @@ HashCode PatternGenerator::hashNotes (MidiList& sequence, int version)
               ^ static_cast<HashCode> (note->getVelocity() * 3083);
 
         if (version > 1)
-            hash *= 7;
+            hash = static_cast<HashCode> (core::hash (static_cast<size_t> (hash), 7));
     }
 
     return hash;

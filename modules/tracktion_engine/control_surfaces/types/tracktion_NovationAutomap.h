@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -16,7 +16,8 @@ namespace tracktion { inline namespace engine
 class AutoMap;
 
 class NovationAutomap  : public ControlSurface,
-                         private juce::ChangeListener
+                         private juce::ChangeListener,
+                         private ParameterChangeHandler::Listener
 {
 public:
     NovationAutomap (ExternalControllerManager&);
@@ -25,7 +26,7 @@ public:
     void changeListenerCallback (juce::ChangeBroadcaster*) override;
     void currentEditChanged (Edit*) override;
 
-    void paramChanged (AutomatableParameter*);
+    void pluginParameterChanged (AutomatableParameter&, bool isFollowingAutomation) override;
 
     void initialiseDevice (bool connect) override;
     void updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState, bool isBright) override;

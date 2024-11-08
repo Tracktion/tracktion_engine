@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Tacktion Engine Support
+    url: https://forum.juce.com/c/tracktion-engine/27
+    about: Please use the JUCE forum to ask questions with the tracktion_engine category.

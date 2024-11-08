@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -10,7 +10,7 @@
 
 #pragma once
 
-#if TRACKTION_BENCHMARKS
+#if TRACKTION_BENCHMARKS && ENGINE_BENCHMARKS_RACKS
 
 #include "tracktion_BenchmarkUtilities.h"
 
@@ -29,25 +29,26 @@ public:
         : juce::UnitTest ("Rack Benchmarks", "tracktion_benchmarks")
     {
     }
-    
+
     void runTest() override
     {
         using namespace benchmark_utilities;
-        using namespace tracktion::graph;
-        test_utilities::TestSetup ts;
+        using namespace tracktion::graph::test_utilities;
+        TestSetup ts;
         ts.sampleRate = 96000.0;
         ts.blockSize = 128;
 
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
 
         runRackMixBusTest (engine, ts);
+        runMultipleSerialRacksBenchmark (engine);
     }
-    
-    void runRackMixBusTest (Engine& engine, test_utilities::TestSetup ts)
+
+    void runRackMixBusTest (Engine& engine, graph::test_utilities::TestSetup ts)
     {
         using namespace benchmark_utilities;
         using namespace tracktion::graph;
-        
+
         static constexpr unsigned char RackMixBus_zip[] =
         { 120,156,237,157,207,115,220,70,118,199,135,146,70,178,189,187,149,181,55,169,178,47,217,57,165,188,135,213,162,127,162,145,67,74,20,73,123,89,22,127,132,164,180,155,75,92,35,114,36,77,76,114,88,195,161,108,237,41,247,61,228,156,115,170,146,75,170,82,
         251,39,236,63,144,63,98,255,133,252,3,105,204,47,14,56,141,158,238,198,107,160,199,108,86,89,38,103,128,7,60,244,123,15,141,47,240,193,219,217,222,61,105,109,180,187,87,87,175,122,195,235,254,224,178,181,241,89,251,119,221,247,189,55,131,225,69,7,161,
@@ -183,8 +184,8 @@ public:
         const auto editName = "RackMixBus";
         auto edit = openEditFromZipData (engine, RackMixBus_zip, sizeof (RackMixBus_zip));
         const double fileLength = 20.0;
-        auto sinFile = test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, fileLength, 2);
-        
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, fileLength, 2);
+
         beginTest ("Load Edit");
         {
             expect (edit != nullptr);
@@ -192,7 +193,7 @@ public:
             // Put the content on the first 8 audio tracks
             auto audioTracks = getAudioTracks (*edit);
             expectGreaterOrEqual (audioTracks.size(), 8);
-            
+
             for (int i = 0; i < 8; ++i)
                 audioTracks[i]->insertMIDIClip (TimeRange (0.0s, TimeDuration::fromSeconds (fileLength)), nullptr);
 
@@ -206,7 +207,7 @@ public:
         // Then multi threaded with different strategies
         renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::no, ThreadPoolStrategy::lightweightSemaphore });
 
-        for (auto strategy : test_utilities::getThreadPoolStrategies())
+        for (auto strategy : graph::test_utilities::getThreadPoolStrategies())
             renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, strategy });
 
         // Directly compare not-pooled
@@ -230,8 +231,130 @@ public:
             for (int blockSize : { 128, 256, 512, 1024, 2048 })
             {
                 ts.blockSize = blockSize;
+                renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::no, LockFree::yes, ThreadPoolStrategy::conditionVariable });
+                renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::no, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::no, ShareNodeMemory::yes });
                 renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::no });
                 renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::yes });
+                renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::no, ShareNodeMemory::yes });
+            }
+        }
+    }
+
+    void runMultipleSerialRacksBenchmark (Engine& engine)
+    {
+        static auto big_mess_rack = R"rack(
+            <RACK id="1001" name="Big Mess">
+                <PLUGININSTANCE x="0.514056206" y="0.141891897">
+                  <PLUGIN id="1002" type="chorus" enabled="1" depthMs="20" speedHz="1.02258062"
+                          width="1" mix="1">
+                    <MODIFIERASSIGNMENTS/>
+                  </PLUGIN>
+                </PLUGININSTANCE>
+                <PLUGININSTANCE x="0.357429713" y="0.418918908">
+                  <PLUGIN id="1003" type="reverb" enabled="1" roomSize="1" damp="1" wet="0.333333343"
+                          dry="0" width="1" mode="0">
+                    <MODIFIERASSIGNMENTS/>
+                  </PLUGIN>
+                </PLUGININSTANCE>
+                <PLUGININSTANCE x="0.202811241" y="0.405405402">
+                  <PLUGIN id="1004" type="lowpass" enabled="1" frequency="584" mode="lowpass">
+                    <MODIFIERASSIGNMENTS/>
+                  </PLUGIN>
+                </PLUGININSTANCE>
+                <PLUGININSTANCE x="0.514056206" y="0.42567569">
+                  <PLUGIN id="1005" type="phaser" enabled="1" depth="0.100000001" rate="1.01258063"
+                          feedback="0.947419345">
+                    <MODIFIERASSIGNMENTS/>
+                  </PLUGIN>
+                </PLUGININSTANCE>
+                <PLUGININSTANCE x="0.198795184" y="0.804054081">
+                  <PLUGIN id="1006" type="lowpass" enabled="1" frequency="8359" mode="highpass">
+                    <MODIFIERASSIGNMENTS/>
+                  </PLUGIN>
+                </PLUGININSTANCE>
+                <PLUGININSTANCE x="0.361445785" y="0.82432431">
+                  <PLUGIN id="1007" type="chorus" enabled="1" depthMs="20" speedHz="2.51290321"
+                          width="1" mix="1">
+                    <MODIFIERASSIGNMENTS/>
+                  </PLUGIN>
+                </PLUGININSTANCE>
+                <PLUGININSTANCE x="0.536144555" y="0.831081092">
+                  <PLUGIN id="1008" type="reverb" enabled="1" roomSize="1" damp="1" wet="0.333333343"
+                          dry="0" width="1" mode="0">
+                    <MODIFIERASSIGNMENTS/>
+                  </PLUGIN>
+                </PLUGININSTANCE>
+                <PLUGININSTANCE x="0.151315793" y="0.0675675645">
+                  <PLUGIN id="1009" type="text" title="Read Me" body="Great for: Nothing!&#10;&#10;Creates a big noisy mess out of the track.">
+                    <MODIFIERASSIGNMENTS/>
+                  </PLUGIN>
+                </PLUGININSTANCE>
+                <CONNECTION src="1002" srcPin="0" dst="0" dstPin="0"/>
+                <CONNECTION src="1002" srcPin="1" dst="0" dstPin="1"/>
+                <CONNECTION src="1002" srcPin="2" dst="0" dstPin="2"/>
+                <CONNECTION src="1003" srcPin="1" dst="1002" dstPin="1"/>
+                <CONNECTION src="1003" srcPin="2" dst="1002" dstPin="2"/>
+                <CONNECTION src="1004" srcPin="1" dst="1003" dstPin="1"/>
+                <CONNECTION src="1004" srcPin="2" dst="1003" dstPin="2"/>
+                <CONNECTION src="0" srcPin="1" dst="1004" dstPin="1"/>
+                <CONNECTION src="0" srcPin="2" dst="1004" dstPin="2"/>
+                <CONNECTION src="1003" srcPin="1" dst="1005" dstPin="1"/>
+                <CONNECTION src="1003" srcPin="2" dst="1005" dstPin="2"/>
+                <CONNECTION src="1005" srcPin="1" dst="0" dstPin="1"/>
+                <CONNECTION src="1005" srcPin="2" dst="0" dstPin="2"/>
+                <CONNECTION src="0" srcPin="1" dst="1006" dstPin="1"/>
+                <CONNECTION src="0" srcPin="2" dst="1006" dstPin="2"/>
+                <CONNECTION src="1006" srcPin="1" dst="1007" dstPin="1"/>
+                <CONNECTION src="1006" srcPin="2" dst="1007" dstPin="2"/>
+                <CONNECTION src="1007" srcPin="1" dst="1008" dstPin="1"/>
+                <CONNECTION src="1007" srcPin="2" dst="1008" dstPin="2"/>
+                <CONNECTION src="1008" srcPin="1" dst="0" dstPin="1"/>
+                <CONNECTION src="1008" srcPin="2" dst="0" dstPin="2"/>
+                <INPUT name="midi input" midi="0"/>
+                <INPUT name="input 1 (left)" midi="0"/>
+                <INPUT name="input 2 (right)" midi="0"/>
+                <OUTPUT name="midi output" midi="0"/>
+                <OUTPUT name="output 1 (left)" midi="0"/>
+                <OUTPUT name="output 2 (right)" midi="0"/>
+              </RACK>
+            )rack";
+
+        auto edit = test_utilities::createTestEdit (engine);
+        auto at = getAudioTracks (*edit)[0];
+        at->getLevelMeterPlugin()->deleteFromParent();
+        at->getVolumePlugin()->deleteFromParent();
+        auto& pl = at->pluginList;
+
+        {
+            auto xml = juce::parseXML (big_mess_rack);
+            assert (xml);
+
+            for (int i = 0; i < 10; ++i)
+            {
+                auto rackState = juce::ValueTree::fromXml (*xml);
+                EditItemID::remapIDs (rackState, nullptr, *edit, nullptr);
+
+                auto rackType = edit->getRackList().addRackTypeFrom (rackState);
+                pl.insertPlugin (RackInstance::create (*rackType), -1);
+            }
+        }
+
+        {
+            tracktion::graph::PlayHead playHead;
+            tracktion::graph::PlayHeadState playHeadState { playHead };
+            ProcessState processState { playHeadState, edit->tempoSequence };
+            CreateNodeParams cnp { processState };
+
+            std::unique_ptr<tracktion::graph::Node> editNode;
+
+            {
+                const ScopedBenchmark sb (createBenchmarkDescription ("Node", "Serial Racks", "Create Edit Node for 10 Racks on a track"));
+                editNode = createNodeForEdit (*edit, cnp);
+            }
+
+            {
+                const ScopedBenchmark sb (createBenchmarkDescription ("Node", "Serial Racks", "Build NodeGraph for 10 Racks on a track"));
+                [[ maybe_unused ]] auto graph = createNodeGraph (std::move (editNode));
             }
         }
     }

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -11,7 +11,7 @@
 namespace tracktion { inline namespace engine
 {
 
-void dumpSegments (const juce::Array<AudioSegmentList::Segment>& segments)
+inline void dumpSegments (const juce::Array<AudioSegmentList::Segment>& segments)
 {
 
     DBG ("******************************************");
@@ -412,8 +412,11 @@ static juce::Array<SampleCount> findSyncSamples (const LoopInfo& loopInfo, Sampl
 
     if (numLoopPoints == 0)
     {
-        for (int i = 0; i < loopInfo.getNumBeats(); ++i)
-            syncSamples.add ((SampleCount) (range.getLength() / (double) loopInfo.getNumBeats() * i + range.getStart() + 0.5));
+        const auto numBeats = (int) std::ceil (loopInfo.getNumBeats());
+        syncSamples.ensureStorageAllocated (numBeats);
+
+        for (int i = 0; i < numBeats; ++i)
+            syncSamples.add ((SampleCount) (range.getLength() / (double) numBeats * i + range.getStart() + 0.5));
     }
     else
     {

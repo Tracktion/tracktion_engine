@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -149,22 +149,31 @@ juce::ValueTree VolumeAndPanPlugin::create()
 const char* VolumeAndPanPlugin::xmlTypeName = "volume";
 
 //==============================================================================
-void VolumeAndPanPlugin::initialise (const PluginInitialisationInfo&)
+void VolumeAndPanPlugin::initialise (const PluginInitialisationInfo& info)
 {
     refreshVCATrack();
-    auto sliderPos = getSliderPos();
-    getGainsFromVolumeFaderPositionAndPan (sliderPos, getPan(), getPanLaw(), lastGainL, lastGainR);
-    lastGainS = volumeFaderPositionToGain (sliderPos);
+
+    setSmoothedValueTargets (info.startTime, true);
+
+    smoothedGainL.reset (info.sampleRate, smoothingRampTimeSeconds);
+    smoothedGainR.reset (info.sampleRate, smoothingRampTimeSeconds);
+    smoothedGain.reset (info.sampleRate, smoothingRampTimeSeconds);
 }
 
 void VolumeAndPanPlugin::initialiseWithoutStopping (const PluginInitialisationInfo&)
 {
+    TRACKTION_ASSERT_MESSAGE_THREAD
     refreshVCATrack();
 }
 
 void VolumeAndPanPlugin::deinitialise()
 {
-    vcaTrack = nullptr;
+    juce::ReferenceCountedObjectPtr<AudioTrack> deleter;
+
+    {
+        const std::scoped_lock sl (vcaTrackLock);
+        std::swap (vcaTrack, deleter);
+    }
 }
 
 //==============================================================================
@@ -186,42 +195,73 @@ static float getParentVcaDb (Track& track, TimePosition time)
     return volumeFaderPositionToDB (decibelsToVolumeFaderPosition (0) + posOffset);
 }
 
+float VolumeAndPanPlugin::getVCAPosDelta (TimePosition time)
+{
+    const std::scoped_lock sl (vcaTrackLock);
+
+    if (vcaTrack != nullptr)
+        return decibelsToVolumeFaderPosition (getParentVcaDb (*vcaTrack, time))
+                 - decibelsToVolumeFaderPosition (0.0f);
+
+    return {};
+}
+
+void VolumeAndPanPlugin::setSmoothedValueTargets (TimePosition time, bool updateGain)
+{
+    auto sliderPos = getSliderPos() + getVCAPosDelta (time);
+
+    float gainL, gainR;
+    getGainsFromVolumeFaderPositionAndPan (sliderPos, getPan(), getPanLaw(), gainL, gainR);
+
+    if (polarity)
+    {
+        gainL = -gainL;
+        gainR = -gainR;
+    }
+
+    smoothedGainL.setTargetValue (gainL);
+    smoothedGainR.setTargetValue (gainR);
+
+    if (updateGain)
+    {
+        auto gain = volumeFaderPositionToGain (sliderPos);
+
+        if (polarity)
+            gain = -gain;
+
+        smoothedGain.setTargetValue (gain);
+    }
+}
+
 void VolumeAndPanPlugin::applyToBuffer (const PluginRenderContext& fc)
 {
     if (isEnabled())
     {
         SCOPED_REALTIME_CHECK
 
-        if (fc.destBuffer != nullptr)
+        if (auto buffer = fc.destBuffer)
         {
-            const int numChansIn = fc.destBuffer->getNumChannels();
-            const float vcaPosDelta = vcaTrack != nullptr
-                                    ? decibelsToVolumeFaderPosition (getParentVcaDb (*vcaTrack, fc.editTime))
-                                        - decibelsToVolumeFaderPosition (0.0f)
-                                    : 0.0f;
+            const auto numChansIn = buffer->getNumChannels();
 
-            float lgain, rgain;
-            getGainsFromVolumeFaderPositionAndPan (getSliderPos() + vcaPosDelta, getPan(), getPanLaw(), lgain, rgain);
-            lgain *= (polarity ? -1 : 1);
-            rgain *= (polarity ? -1 : 1);
+            setSmoothedValueTargets (fc.editTime.getStart(), numChansIn > 2);
 
-            fc.destBuffer->applyGainRamp (0, fc.bufferStartSample, fc.bufferNumSamples, lastGainL, lgain);
+            smoothedGainL.applyGain (buffer->getWritePointer (0, fc.bufferStartSample), fc.bufferNumSamples);
 
             if (numChansIn > 1)
-                fc.destBuffer->applyGainRamp (1, fc.bufferStartSample, fc.bufferNumSamples, lastGainR, rgain);
-
-            lastGainL = lgain;
-            lastGainR = rgain;
-
-            // If the number of channels is greater than two, just apply volume
-            if (numChansIn > 2)
             {
-                const float gain = volumeFaderPositionToGain (getSliderPos() + vcaPosDelta) * (polarity ? -1 : 1);
+                smoothedGainR.applyGain (buffer->getWritePointer (1, fc.bufferStartSample), fc.bufferNumSamples);
 
-                for (int i = 2; i < numChansIn; ++i)
-                    fc.destBuffer->applyGainRamp (i, fc.bufferStartSample, fc.bufferNumSamples, lastGainS, gain);
+                // If the number of channels is greater than two, apply volume to the rest
+                if (numChansIn > 2)
+                {
+                    auto originalGain = smoothedGain;
 
-                lastGainS = gain;
+                    for (int i = 2; i < numChansIn; ++i)
+                    {
+                        smoothedGain = originalGain;
+                        smoothedGain.applyGain (buffer->getWritePointer (i, fc.bufferStartSample), fc.bufferNumSamples);
+                    }
+                }
             }
         }
 
@@ -232,7 +272,12 @@ void VolumeAndPanPlugin::applyToBuffer (const PluginRenderContext& fc)
 
 void VolumeAndPanPlugin::refreshVCATrack()
 {
-    vcaTrack = ignoreVca ? nullptr : dynamic_cast<AudioTrack*> (getOwnerTrack());
+    juce::ReferenceCountedObjectPtr<AudioTrack> newVcaTrack (ignoreVca ? nullptr : dynamic_cast<AudioTrack*> (getOwnerTrack()));
+
+    {
+        const std::scoped_lock sl (vcaTrackLock);
+        std::swap (vcaTrack, newVcaTrack);
+    }
 }
 
 float VolumeAndPanPlugin::getVolumeDb() const
@@ -294,13 +339,7 @@ void VolumeAndPanPlugin::muteOrUnmute()
 
 void VolumeAndPanPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    juce::CachedValue<float>* cvsFloat[]  = { &volume, &pan, nullptr };
-    juce::CachedValue<int>* cvsInt[]      = { &panLaw, nullptr };
-    juce::CachedValue<bool>* cvsBool[]    = { &applyToMidi, &ignoreVca, &polarity, nullptr };
-
-    copyPropertiesToNullTerminatedCachedValues (v, cvsFloat);
-    copyPropertiesToNullTerminatedCachedValues (v, cvsInt);
-    copyPropertiesToNullTerminatedCachedValues (v, cvsBool);
+    copyPropertiesToCachedValues (v, volume, pan, panLaw, applyToMidi, ignoreVca, polarity);
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();

@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -18,7 +18,7 @@ class AutomatableEditItem  : public EditItem
 {
 public:
     AutomatableEditItem (Edit&, const juce::ValueTree&);
-    virtual ~AutomatableEditItem();
+    ~AutomatableEditItem() override;
 
     //==============================================================================
     virtual void flushPluginStateToValueTree();
@@ -29,6 +29,7 @@ public:
     int getNumAutomatableParameters() const;
     AutomatableParameter::Ptr getAutomatableParameter (int index) const     { return automatableParams[index]; }
     AutomatableParameter::Ptr getAutomatableParameterByID (const juce::String& paramID) const;
+    void visitAllAutomatableParams (const std::function<void(AutomatableParameter&)>& visit) const;
 
     void deleteParameter (AutomatableParameter*);
     void deleteAutomatableParameters();
@@ -90,7 +91,7 @@ protected:
     void restoreChangedParametersFromState();
 
 private:
-    juce::CriticalSection activeParameterLock;
+    RealTimeSpinLock activeParameterLock;
     juce::ReferenceCountedArray<AutomatableParameter> automatableParams, activeParameters;
     mutable AutomatableParameterTree parameterTree;
 
@@ -113,6 +114,7 @@ private:
     //==============================================================================
     juce::ReferenceCountedArray<AutomatableParameter> getFlattenedParameterTree (AutomatableParameterTree::TreeNode&) const;
 
+    JUCE_DECLARE_WEAK_REFERENCEABLE (AutomatableEditItem)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutomatableEditItem)
 };
 

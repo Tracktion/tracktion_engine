@@ -1,6 +1,6 @@
 /*
     ,--.                     ,--.     ,--.  ,--.
-  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2018
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
   '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
     |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
     `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
@@ -27,9 +27,10 @@ public:
 
     std::vector<Node*> getDirectInputNodes() override;
     tracktion::graph::NodeProperties getNodeProperties() override;
-    bool transform (Node&) override;
+    TransformResult transform (Node&, const std::vector<Node*>&, TransformCache&) override;
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
     bool isReadyToProcess() override;
+    void preProcess (choc::buffer::FrameCount, juce::Range<int64_t>) override;
     void process (ProcessContext&) override;
 
 private:
@@ -38,7 +39,7 @@ private:
     Node* dryInput = nullptr;
     std::function<float()> wetGainFunction, dryGainFunction;
     float lastWetGain = 0.0f, lastDryGain = 0.0f;
-    bool hasTransformed = false;
+    bool hasTransformed = false, canUseWetSourceBuffers = false;
 };
 
 }} // namespace tracktion { inline namespace engine
