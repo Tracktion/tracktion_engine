@@ -426,6 +426,7 @@ namespace tracktion { inline namespace engine
 #include "utilities/tracktion_CurveEditor.h"
 #include "utilities/tracktion_Envelope.h"
 #include "utilities/tracktion_Oscillators.h"
+#include "utilities/tracktion_ScreenSaverDefeater.h"
 
 #include "project/tracktion_ProjectItemID.h"
 
