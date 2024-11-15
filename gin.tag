@@ -5562,6 +5562,14 @@
     <namespace>tracktion::engine</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_ScreenSaverDefeater.h</name>
+    <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/utilities/</path>
+    <filename>tracktion__ScreenSaverDefeater_8h.html</filename>
+    <class kind="struct">tracktion::engine::ScreenSaverDefeater</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_Selectable.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_engine/selection/</path>
     <filename>tracktion__Selectable_8h.html</filename>
@@ -68279,6 +68287,24 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tracktion::engine::ScreenSaverDefeater</name>
+    <filename>structtracktion_1_1engine_1_1ScreenSaverDefeater.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>ScreenSaverDefeater</name>
+      <anchorfile>structtracktion_1_1engine_1_1ScreenSaverDefeater.html</anchorfile>
+      <anchor>a3e21366e487335ebffeb4a38a1121a30</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ScreenSaverDefeater</name>
+      <anchorfile>structtracktion_1_1engine_1_1ScreenSaverDefeater.html</anchorfile>
+      <anchor>a39bfd217734e426d8187c00f241cc043</anchor>
+      <arglist>()</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion::engine::AudioFadeCurve::SCurve</name>
     <filename>structtracktion_1_1engine_1_1AudioFadeCurve_1_1SCurve.html</filename>
     <member kind="function" static="yes">
@@ -87298,6 +87324,7 @@
     <class kind="class">tracktion::PropertyStorage</class>
     <class kind="class">tracktion::SafeScopedListener</class>
     <class kind="class">tracktion::ScopedListener</class>
+    <class kind="struct">tracktion::ScreenSaverDefeater</class>
     <class kind="struct">tracktion::HertzTag</class>
     <class kind="class">tracktion::SharedTimer</class>
     <class kind="struct">tracktion::Spline</class>
@@ -87742,6 +87769,7 @@
     <class kind="class">tracktion::engine::PropertyStorage</class>
     <class kind="class">tracktion::engine::SafeScopedListener</class>
     <class kind="class">tracktion::engine::ScopedListener</class>
+    <class kind="struct">tracktion::engine::ScreenSaverDefeater</class>
     <class kind="struct">tracktion::engine::HertzTag</class>
     <class kind="class">tracktion::engine::SharedTimer</class>
     <class kind="struct">tracktion::engine::Spline</class>
