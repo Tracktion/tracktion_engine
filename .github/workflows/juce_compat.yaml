@@ -46,7 +46,7 @@ jobs:
         run: |
           cd modules/juce
           git config pull.rebase false # merge changes
-          git pull origin develop
+          git pull --allow-unrelated-histories origin develop
 
       # Generate build files
       - name: "Build all"
