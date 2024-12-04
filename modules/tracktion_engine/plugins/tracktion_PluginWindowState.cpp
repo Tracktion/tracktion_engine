@@ -126,6 +126,15 @@ void PluginWindowState::showWindow()
         }();
 
         juce::WeakReference<juce::Component> oldFocus (juce::Component::getCurrentlyFocusedComponent());
+
+        if (oldFocus == nullptr)
+        {
+            for (int i = juce::ComponentPeer::getNumPeers(); --i >= 0;)
+                if (auto peer = juce::ComponentPeer::getPeer(i))
+                    if (peer->isFocused())
+                        oldFocus = std::addressof (peer->getComponent());
+        }
+
         pluginWindow = engine.getUIBehaviour().createPluginWindow (*this);
 
         if (oldFocus != nullptr)
