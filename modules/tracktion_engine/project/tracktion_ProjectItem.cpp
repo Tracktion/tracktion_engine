@@ -465,6 +465,9 @@ const juce::String& ProjectItem::getName() const
 
 void ProjectItem::setName (const juce::String& n, SetNameMode mode)
 {
+    if (n.isEmpty())
+        return;
+
     if (objectName != n)
     {
         if (auto pp = getProject())
