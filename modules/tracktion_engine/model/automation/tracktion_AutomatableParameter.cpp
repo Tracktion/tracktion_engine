@@ -1039,6 +1039,8 @@ void AutomatableParameter::setParameterValue (float value, bool isFollowingCurve
 
     if (currentValue != value)
     {
+        currentValue = value;
+
         parameterChanged (value, isFollowingCurve);
 
         auto& ed = getEdit();
@@ -1047,14 +1049,12 @@ void AutomatableParameter::setParameterValue (float value, bool isFollowingCurve
         {
             ed.getParameterChangeHandler().parameterChanged (*this, true);
 
-            currentValue = value;
-
             if (attachedValue != nullptr)
                 attachedValue->triggerAsyncUpdate();
         }
         else
         {
-            if (! getEdit().isLoading())
+            if (! ed.isLoading())
                 jassert (juce::MessageManager::getInstance()->currentThreadHasLockedMessageManager());
 
             curveHasChanged();
@@ -1085,8 +1085,6 @@ void AutomatableParameter::setParameterValue (float value, bool isFollowingCurve
                     }
                 }
             }
-
-            currentValue = value;
 
             if (attachedValue != nullptr)
             {
