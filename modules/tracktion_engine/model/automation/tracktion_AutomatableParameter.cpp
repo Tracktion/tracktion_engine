@@ -1037,7 +1037,9 @@ void AutomatableParameter::setParameterValue (float value, bool isFollowingCurve
     if (currentModifierValue != 0.0f)
         value = snapToState (getValueRange().clipValue (value + currentModifierValue));
 
-    if (currentValue != value)
+    auto oldValue = currentValue.load();
+
+    if (oldValue != value)
     {
         currentValue = value;
 
@@ -1073,7 +1075,7 @@ void AutomatableParameter::setParameterValue (float value, bool isFollowingCurve
                         if (! isRecording)
                         {
                             isRecording = true;
-                            arm.postFirstAutomationChange (*this, currentValue);
+                            arm.postFirstAutomationChange (*this, oldValue);
                         }
 
                         arm.postAutomationChange (*this, time, value);
