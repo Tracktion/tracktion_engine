@@ -56,7 +56,7 @@ template<typename T>
 void hash_combine (size_t& seed, const T& v)
 {
     static_assert (! std::is_pointer_v<T>, "Using a pointer here is almost certainly incorrect as it will change on each run");
-    seed ^= std::hash<T>()(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    seed ^= std::hash<T>()(v) + 0x9e3779b9 + (seed * 65537u) + (seed / 3u);
 }
 
 /** Hashes a range with a default seed and returns the new hash value. */
