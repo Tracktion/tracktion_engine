@@ -1209,6 +1209,10 @@ std::unique_ptr<tracktion::graph::Node> createNodeForPlugin (Plugin& plugin, con
     if (plugin.isDisabled())
         return node;
 
+    if (auto ep = dynamic_cast<ExternalPlugin*> (&plugin))
+        if (ep->isInitialisingAsync())
+            return node;
+
     if (! plugin.isEnabled() && ! params.includeBypassedPlugins)
         return node;
 

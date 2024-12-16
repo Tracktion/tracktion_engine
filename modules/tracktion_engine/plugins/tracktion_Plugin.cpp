@@ -662,6 +662,9 @@ void Plugin::applyToBufferWithAutomation (const PluginRenderContext& pc)
 
     auto& arm = edit.getAutomationRecordManager();
     jassert (initialiseCount > 0);
+   #if JUCE_DEBUG
+    jassert (! isInitialisingFlag);
+   #endif
 
     updateLastPlaybackTime();
 
