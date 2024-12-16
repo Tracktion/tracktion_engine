@@ -163,8 +163,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a66a312b5427eea68590258148b3a5448"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#a66a312b5427eea68590258148b3a5448">initialiseWithoutStopping</a> (const <a class="el" href="structtracktion_1_1engine_1_1PluginInitialisationInfo.html">PluginInitialisationInfo</a> &amp;)</td></tr>
 <tr class="memdesc:a66a312b5427eea68590258148b3a5448"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tells the plugin that the audio graph has changed but the plugin isn't being re-initialised - i.e.  <a href="classtracktion_1_1engine_1_1Plugin.html#a66a312b5427eea68590258148b3a5448">More...</a><br /></td></tr>
 <tr class="separator:a66a312b5427eea68590258148b3a5448"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af33005d1295549668e60fd84cc884b6f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#af33005d1295549668e60fd84cc884b6f">isInitialising</a> () const</td></tr>
-<tr class="separator:af33005d1295549668e60fd84cc884b6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a121a2b64061669af085dcfd5bc9dcbde"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#a121a2b64061669af085dcfd5bc9dcbde">deinitialise</a> ()=0</td></tr>
 <tr class="memdesc:a121a2b64061669af085dcfd5bc9dcbde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after play stops to release resources.  <a href="classtracktion_1_1engine_1_1Plugin.html#a121a2b64061669af085dcfd5bc9dcbde">More...</a><br /></td></tr>
 <tr class="separator:a121a2b64061669af085dcfd5bc9dcbde"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -326,6 +324,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1ed2cab419b1bb5ca263d1866b6d1f3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02745635df0732fc79c636c530dc910d"><td class="memItemLeft" align="right" valign="top">juce::UndoManager *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#a02745635df0732fc79c636c530dc910d">getUndoManager</a> () const noexcept</td></tr>
 <tr class="separator:a02745635df0732fc79c636c530dc910d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af33005d1295549668e60fd84cc884b6f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Plugin.html#af33005d1295549668e60fd84cc884b6f">isInitialising</a> () const</td></tr>
+<tr class="separator:af33005d1295549668e60fd84cc884b6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtracktion_1_1engine_1_1Selectable"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtracktion_1_1engine_1_1Selectable')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtracktion_1_1engine_1_1Selectable.html">tracktion::engine::Selectable</a></td></tr>
 <tr class="memitem:a0f19e52c11e58207cb93d78353223ebe inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Selectable.html#a0f19e52c11e58207cb93d78353223ebe">Selectable</a> ()</td></tr>
 <tr class="separator:a0f19e52c11e58207cb93d78353223ebe inherit pub_methods_classtracktion_1_1engine_1_1Selectable"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1156,23 +1156,6 @@ Protected Attributes</h2></td></tr>
 <p>it's being re-used, maybe by being moved to a different track, etc. This can be called concurrently whilst the plugin is being processed so implementations of it must be thread safe. [[ message_thread ]] </p>
 
 <p>Reimplemented in <a class="el" href="classtracktion_1_1engine_1_1VolumeAndPanPlugin.html#abeabc8116fd18e5efa8d4587d30114ed">tracktion::engine::VolumeAndPanPlugin</a>, <a class="el" href="classtracktion_1_1engine_1_1LevelMeterPlugin.html#a4c0c7920bfbc19f99415d7f4d09f2151">tracktion::engine::LevelMeterPlugin</a>, <a class="el" href="classtracktion_1_1engine_1_1InsertPlugin.html#a6c352408a067501bed84b90870839c54">tracktion::engine::InsertPlugin</a>, and <a class="el" href="classtracktion_1_1engine_1_1AuxSendPlugin.html#a5129da916251649efc6fe54cdce11d3a">tracktion::engine::AuxSendPlugin</a>.</p>
-
-</div>
-</div>
-<a id="af33005d1295549668e60fd84cc884b6f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af33005d1295549668e60fd84cc884b6f">&#9670;&nbsp;</a></span>isInitialising()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool tracktion::engine::Plugin::isInitialising </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
 
 </div>
 </div>
@@ -3100,6 +3083,23 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="af33005d1295549668e60fd84cc884b6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af33005d1295549668e60fd84cc884b6f">&#9670;&nbsp;</a></span>isInitialising()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::Plugin::isInitialising </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a77129a7c4210d20e4c5ae2eaab6336c0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a77129a7c4210d20e4c5ae2eaab6336c0">&#9670;&nbsp;</a></span>valueTreePropertyChanged()</h2>
 
@@ -3589,7 +3589,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Dec 16 2024 15:30:39 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Mon Dec 16 2024 15:47:30 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

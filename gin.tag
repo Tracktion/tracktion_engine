@@ -57067,13 +57067,6 @@
       <anchor>a66a312b5427eea68590258148b3a5448</anchor>
       <arglist>(const PluginInitialisationInfo &amp;)</arglist>
     </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isInitialising</name>
-      <anchorfile>classtracktion_1_1engine_1_1Plugin.html</anchorfile>
-      <anchor>af33005d1295549668e60fd84cc884b6f</anchor>
-      <arglist>() const</arglist>
-    </member>
     <member kind="function" virtualness="pure">
       <type>virtual void</type>
       <name>deinitialise</name>
@@ -57570,6 +57563,13 @@
       <anchorfile>classtracktion_1_1engine_1_1Plugin.html</anchorfile>
       <anchor>a02745635df0732fc79c636c530dc910d</anchor>
       <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isInitialising</name>
+      <anchorfile>classtracktion_1_1engine_1_1Plugin.html</anchorfile>
+      <anchor>af33005d1295549668e60fd84cc884b6f</anchor>
+      <arglist>() const</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static bool</type>
