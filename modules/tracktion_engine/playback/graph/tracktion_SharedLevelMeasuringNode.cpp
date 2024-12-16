@@ -28,7 +28,13 @@ std::vector<tracktion::graph::Node*> SharedLevelMeasuringNode::getDirectInputNod
 
 tracktion::graph::NodeProperties SharedLevelMeasuringNode::getNodeProperties()
 {
-    return input->getNodeProperties();
+    auto props = input->getNodeProperties();
+    constexpr size_t magicHash = size_t (13643619798122305856ul); // "SharedLevelMeasuringNode"
+
+    if (props.nodeID != 0)
+        hash_combine (props.nodeID, magicHash);
+
+    return props;
 }
 
 void SharedLevelMeasuringNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)

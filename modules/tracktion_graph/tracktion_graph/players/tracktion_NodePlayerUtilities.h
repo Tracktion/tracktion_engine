@@ -40,8 +40,19 @@ namespace node_player_utils
         {
             DBG("-- Duplicate Node IDs:");
 
+            auto getNodeTypeStrings = [&nodes] (auto id)
+            {
+                std::string idStrings;
+
+                for (auto n : nodes)
+                    if (n->getNodeProperties().nodeID == id)
+                        idStrings += std::string (typeid (*n).name()) += ", ";
+
+                return idStrings;
+            };
+
             for (auto id : std::span<size_t> (uniqueEnd, nodeIDs.end()))
-                DBG("\t" << id);
+                DBG("\t" << id << ": " << getNodeTypeStrings (id));
         }
        #endif
 
