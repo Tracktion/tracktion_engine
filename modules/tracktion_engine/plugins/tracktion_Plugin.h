@@ -182,8 +182,6 @@ public:
     */
     virtual void initialiseWithoutStopping (const PluginInitialisationInfo&)  {}
 
-    bool isInitialising() const             { return isInitialisingFlag; }
-
     /** Called after play stops to release resources.
         Don't call this directly or the initialise count will become out of sync.
         @see baseClassDeinitialise
@@ -409,6 +407,10 @@ public:
     juce::ValueTree state;
 
     juce::UndoManager* getUndoManager() const noexcept;
+
+    //==============================================================================
+    /** @internal */
+    bool isInitialising() const             { return isInitialisingFlag; }
 
 protected:
     //==============================================================================

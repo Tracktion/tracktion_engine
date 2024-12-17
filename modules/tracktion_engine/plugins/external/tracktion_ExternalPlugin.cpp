@@ -545,6 +545,98 @@ namespace
 }
 
 //==============================================================================
+struct ExternalPlugin::MPEChannelRemapper
+{
+    static constexpr int lowChannel = 2, highChannel = 16;
+
+    void reset() noexcept
+    {
+        for (auto& s : sourceAndChannel)
+            s = {};
+    }
+
+    void clearChannel (int channel) noexcept
+    {
+        sourceAndChannel[channel] = {};
+    }
+
+    void remapMidiChannelIfNeeded (MidiMessageWithSource& m) noexcept
+    {
+        auto channel = m.getChannel();
+
+        if (channel < lowChannel || channel > highChannel)
+            return;
+
+        auto sourceAndChannelID = (((uint32_t) m.mpeSourceID << 5) | (uint32_t) (channel - 1));
+
+        if ((*m.getRawData() & 0xf0) != 0xf0)
+        {
+            ++counter;
+
+            if (applyRemapIfExisting (channel, sourceAndChannelID, m))
+                return;
+
+            for (int chan = lowChannel; chan <= highChannel; ++chan)
+                if (applyRemapIfExisting (chan, sourceAndChannelID, m))
+                    return;
+
+            if (sourceAndChannel[channel] == 0)
+            {
+                lastUsed[channel] = counter;
+                sourceAndChannel[channel] = sourceAndChannelID;
+                return;
+            }
+
+            auto chan = getBestChanToReuse();
+            sourceAndChannel[chan] = sourceAndChannelID;
+            lastUsed[chan] = counter;
+            m.setChannel (chan);
+        }
+    }
+
+    uint32_t sourceAndChannel[17] = {};
+    uint32_t lastUsed[17] = {};
+    uint32_t counter = 0;
+
+    int getBestChanToReuse() const noexcept
+    {
+        for (int chan = lowChannel; chan <= highChannel; ++chan)
+            if (sourceAndChannel[chan] == 0)
+                return chan;
+
+        auto bestChan = lowChannel;
+        auto bestLastUse = counter;
+
+        for (int chan = lowChannel; chan <= highChannel; ++chan)
+        {
+            if (lastUsed[chan] < bestLastUse)
+            {
+                bestLastUse = lastUsed[chan];
+                bestChan = chan;
+            }
+        }
+
+        return bestChan;
+    }
+
+    bool applyRemapIfExisting (int channel, uint32_t sourceAndChannelID, MidiMessageWithSource& m) noexcept
+    {
+        if (sourceAndChannel[channel] == sourceAndChannelID)
+        {
+            if (m.isNoteOff() || m.isAllNotesOff() || m.isResetAllControllers())
+                sourceAndChannel[channel] = 0;
+            else
+                lastUsed[channel] = counter;
+
+            m.setChannel (channel);
+            return true;
+        }
+
+        return false;
+    }
+};
+
+//==============================================================================
 ExternalPlugin::ExternalPlugin (PluginCreationInfo info)  : Plugin (info)
 {
     CRASH_TRACER
@@ -1033,98 +1125,6 @@ void ExternalPlugin::updateFromMirroredPluginIfNeeded (Plugin& changedPlugin)
         }
     }
 }
-
-//==============================================================================
-struct ExternalPlugin::MPEChannelRemapper
-{
-    static constexpr int lowChannel = 2, highChannel = 16;
-
-    void reset() noexcept
-    {
-        for (auto& s : sourceAndChannel)
-            s = {};
-    }
-
-    void clearChannel (int channel) noexcept
-    {
-        sourceAndChannel[channel] = {};
-    }
-
-    void remapMidiChannelIfNeeded (MidiMessageWithSource& m) noexcept
-    {
-        auto channel = m.getChannel();
-
-        if (channel < lowChannel || channel > highChannel)
-            return;
-
-        auto sourceAndChannelID = (((uint32_t) m.mpeSourceID << 5) | (uint32_t) (channel - 1));
-
-        if ((*m.getRawData() & 0xf0) != 0xf0)
-        {
-            ++counter;
-
-            if (applyRemapIfExisting (channel, sourceAndChannelID, m))
-                return;
-
-            for (int chan = lowChannel; chan <= highChannel; ++chan)
-                if (applyRemapIfExisting (chan, sourceAndChannelID, m))
-                    return;
-
-            if (sourceAndChannel[channel] == 0)
-            {
-                lastUsed[channel] = counter;
-                sourceAndChannel[channel] = sourceAndChannelID;
-                return;
-            }
-
-            auto chan = getBestChanToReuse();
-            sourceAndChannel[chan] = sourceAndChannelID;
-            lastUsed[chan] = counter;
-            m.setChannel (chan);
-        }
-    }
-
-    uint32_t sourceAndChannel[17] = {};
-    uint32_t lastUsed[17] = {};
-    uint32_t counter = 0;
-
-    int getBestChanToReuse() const noexcept
-    {
-        for (int chan = lowChannel; chan <= highChannel; ++chan)
-            if (sourceAndChannel[chan] == 0)
-                return chan;
-
-        auto bestChan = lowChannel;
-        auto bestLastUse = counter;
-
-        for (int chan = lowChannel; chan <= highChannel; ++chan)
-        {
-            if (lastUsed[chan] < bestLastUse)
-            {
-                bestLastUse = lastUsed[chan];
-                bestChan = chan;
-            }
-        }
-
-        return bestChan;
-    }
-
-    bool applyRemapIfExisting (int channel, uint32_t sourceAndChannelID, MidiMessageWithSource& m) noexcept
-    {
-        if (sourceAndChannel[channel] == sourceAndChannelID)
-        {
-            if (m.isNoteOff() || m.isAllNotesOff() || m.isResetAllControllers())
-                sourceAndChannel[channel] = 0;
-            else
-                lastUsed[channel] = counter;
-
-            m.setChannel (channel);
-            return true;
-        }
-
-        return false;
-    }
-};
 
 //==============================================================================
 void ExternalPlugin::initialise (const PluginInitialisationInfo& info)

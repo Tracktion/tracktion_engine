@@ -675,7 +675,6 @@ private:
     TransportControl& transport;
 };
 
-
 //==============================================================================
 static juce::Array<TransportControl*, juce::CriticalSection> activeTransportControls;
 
@@ -871,33 +870,6 @@ void TransportControl::forceOrphanFreezeAndProxyFilesPurge()
 {
     fileFlushTimer->forcePurge = true;
 }
-
-//==============================================================================
-static int numScreenSaverDefeaters = 0;
-
-struct TransportControl::ScreenSaverDefeater
-{
-    ScreenSaverDefeater()
-    {
-        if (juce::Desktop::getInstance().isHeadless())
-            return;
-
-        TRACKTION_ASSERT_MESSAGE_THREAD
-        ++numScreenSaverDefeaters;
-        juce::Desktop::setScreenSaverEnabled (numScreenSaverDefeaters == 0);
-    }
-
-    ~ScreenSaverDefeater()
-    {
-        if (juce::Desktop::getInstance().isHeadless())
-            return;
-
-        TRACKTION_ASSERT_MESSAGE_THREAD
-        --numScreenSaverDefeaters;
-        jassert (numScreenSaverDefeaters >= 0);
-        juce::Desktop::setScreenSaverEnabled (numScreenSaverDefeaters == 0);
-    }
-};
 
 //==============================================================================
 void TransportControl::play (bool justSendMMCIfEnabled)

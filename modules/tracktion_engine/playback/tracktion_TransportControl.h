@@ -407,7 +407,6 @@ private:
     bool isStopInProgress = false;
     bool recordingIsStoppingFlag = false;
 
-    struct ScreenSaverDefeater;
     std::unique_ptr<ScreenSaverDefeater> screenSaverDefeater;
 
     struct PlayingFlag

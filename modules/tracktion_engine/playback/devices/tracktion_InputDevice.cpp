@@ -290,6 +290,9 @@ void InputDeviceInstance::handleDestinationChange (EditItemID targetID, bool tra
 
 void InputDeviceInstance::updateRecordingStatus()
 {
+    // The below loop won't be called when the last destination has been removed but we need to make sure we rebuild the graph
+    bool restartPlayback = destinations.isEmpty();
+
     for (auto dest : destinations)
     {
         auto targetID = dest->targetID;
@@ -317,13 +320,16 @@ void InputDeviceInstance::updateRecordingStatus()
 
         // This logic rebuilds the audio graph if the monitor state changes as it's a static node-type in the graph
         if (destinationsChanged || (! wasRecording && wasLivePlayActive != isLivePlayActive))
-            edit.restartPlayback();
+            restartPlayback = true;
 
         wasLivePlayActive = isLivePlayActive;
 
         if (! wasRecording && isRecordingEnabled (targetID))
             prepareAndPunchRecord (*this, targetID);
     }
+
+    if (restartPlayback)
+        edit.restartPlayback();
 
     changedTargetTrackIDs.clear();
     destinationsChanged = false;

@@ -1318,5 +1318,4 @@ InputDeviceInstance::Destination* assignTrackAsInput (AudioTrack& destTrack, con
     return res ? *res : nullptr;
 }
 
-
 }} // namespace tracktion { inline namespace engine

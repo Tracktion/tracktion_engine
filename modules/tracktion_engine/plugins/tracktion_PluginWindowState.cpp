@@ -59,6 +59,12 @@ void PluginWindowState::showWindowExplicitly()
     showWindow();
 }
 
+void PluginWindowState::showWindowIfTemporarilyHidden()
+{
+    if (temporarilyHidden && ! isWindowShowing())
+        showWindowExplicitly();
+}
+
 void PluginWindowState::closeWindowExplicitly()
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
@@ -68,6 +74,19 @@ void PluginWindowState::closeWindowExplicitly()
         wasExplicitlyClosed = true;
         deleteWindow();
         stopTimer();
+    }
+}
+
+void PluginWindowState::hideWindowTemporarily()
+{
+    if (isWindowShowing())
+    {
+        closeWindowExplicitly();
+        temporarilyHidden = true;
+    }
+    else
+    {
+        temporarilyHidden = false;
     }
 }
 
@@ -107,6 +126,15 @@ void PluginWindowState::showWindow()
         }();
 
         juce::WeakReference<juce::Component> oldFocus (juce::Component::getCurrentlyFocusedComponent());
+
+        if (oldFocus == nullptr)
+        {
+            for (int i = juce::ComponentPeer::getNumPeers(); --i >= 0;)
+                if (auto peer = juce::ComponentPeer::getPeer(i))
+                    if (peer->isFocused())
+                        oldFocus = std::addressof (peer->getComponent());
+        }
+
         pluginWindow = engine.getUIBehaviour().createPluginWindow (*this);
 
         if (oldFocus != nullptr)
@@ -119,6 +147,55 @@ void PluginWindowState::showWindow()
         pluginWindow->setVisible (true);
         pluginWindow->toFront (false);
     }
+}
+
+std::vector<PluginWindowState*> PluginWindowState::getAllWindows (Edit& ed)
+{
+    std::vector<PluginWindowState*> windows;
+
+    for (auto p : getAllPlugins (ed, true))
+    {
+        if (auto w = p->windowState.get())
+            windows.push_back (w);
+
+        if (auto rf = dynamic_cast<RackInstance*> (p))
+            if (auto rft = rf->type)
+                for (auto ws : rft->getWindowStates())
+                    windows.push_back (ws);
+    }
+
+    return windows;
+}
+
+uint32_t PluginWindowState::getNumOpenWindows (Edit& ed)
+{
+    uint32_t openWindows = 0;
+
+    for (auto w : getAllWindows (ed))
+        if (w->isWindowShowing())
+            ++openWindows;
+
+    return openWindows;
+}
+
+void PluginWindowState::showAllTemporarilyHiddenWindows (Edit& ed)
+{
+    for (auto w : getAllWindows (ed))
+        w->showWindowIfTemporarilyHidden();
+}
+
+void PluginWindowState::hideAllWindowsTemporarily (Edit& ed)
+{
+    for (auto w : getAllWindows (ed))
+        w->hideWindowTemporarily();
+}
+
+void PluginWindowState::showOrHideAllWindows (Edit& ed)
+{
+    if (getNumOpenWindows (ed) == 0)
+        showAllTemporarilyHiddenWindows (ed);
+    else
+        hideAllWindowsTemporarily (ed);
 }
 
 void PluginWindowState::pluginClicked (const juce::MouseEvent& e)

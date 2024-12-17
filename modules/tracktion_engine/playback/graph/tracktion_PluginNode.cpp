@@ -275,7 +275,7 @@ void PluginNode::process (ProcessContext& pc)
 //==============================================================================
 void PluginNode::initialisePlugin (double sampleRateToUse, int blockSizeToUse)
 {
-    plugin->baseClassInitialise ({ TimePosition(), sampleRateToUse, blockSizeToUse });
+    plugin->baseClassInitialise ({ 0_tp, sampleRateToUse, blockSizeToUse });
     isInitialised = true;
 
     sampleRate = sampleRateToUse;

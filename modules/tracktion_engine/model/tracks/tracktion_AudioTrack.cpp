@@ -118,19 +118,19 @@ AudioTrack::AudioTrack (Edit& ed, const juce::ValueTree& v)
 
     updateMidiNoteMapCache();
 
-    WaveDeviceDescription desc;
-    desc.name = itemID.toString();
-    desc.channels = { ChannelIndex (0, juce::AudioChannelSet::left),
-                      ChannelIndex (1, juce::AudioChannelSet::right) };
-
-    callBlocking ([this, desc]
+    callBlocking ([this, itemIDString = itemID.toString()]
     {
+        WaveDeviceDescription desc;
+        desc.name = itemIDString;
+        desc.channels = { ChannelIndex (0, juce::AudioChannelSet::left),
+                          ChannelIndex (1, juce::AudioChannelSet::right) };
+
         waveInputDevice = std::make_unique<WaveInputDevice> (edit.engine, TRANS("Track Wave Input"),
                                                              desc, InputDevice::trackWaveDevice);
 
-        midiInputDevice = std::make_unique<VirtualMidiInputDevice> (edit.engine, itemID.toString(),
+        midiInputDevice = std::make_unique<VirtualMidiInputDevice> (edit.engine, itemIDString,
                                                                     InputDevice::trackMidiDevice,
-                                                                    "TrkMIDI_" + itemID.toString(),
+                                                                    "TrkMIDI_" + itemIDString,
                                                                     false);
 
         auto& eid = edit.getEditInputDevices();

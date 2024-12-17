@@ -561,6 +561,12 @@ void RackType::setPluginPosition (int index, juce::Point<float> pos)
     }
 }
 
+void RackType::flushStateToValueTree()
+{
+    for (auto& plugin : getPlugins())
+        plugin->flushPluginStateToValueTree();
+}
+
 //==============================================================================
 juce::Array<EditItemID> RackType::getPluginsWhichTakeInputFrom (EditItemID sourceId) const
 {
@@ -806,6 +812,9 @@ static bool connectionIsValid (juce::ValueTree& rack, EditItemID srcID,
 
 void RackType::removeBrokenConnections (juce::ValueTree& rack, juce::UndoManager* um)
 {
+    if (um && um->isPerformingUndoRedo())
+        return;
+
     for (int i = rack.getNumChildren(); --i >= 0;)
     {
         auto c = rack.getChild (i);
@@ -1375,14 +1384,18 @@ RackType::Ptr RackTypeList::addRackTypeFrom (const juce::ValueTree& rackType)
     return type;
 }
 
+RackType::Ptr RackTypeList::duplicateRack (RackType& rackType)
+{
+    rackType.flushStateToValueTree();
+    auto newState = rackType.state.createCopy();
+    EditItemID::remapIDs (newState, nullptr, edit);
+    return addRackTypeFrom (newState);
+}
+
 RackType::Ptr RackTypeList::duplicateRack (EditItemID rackID)
 {
     if (auto source = getRackTypeForID (rackID))
-    {
-        auto newState = source->state.createCopy();
-        EditItemID::remapIDs (newState, nullptr, edit);
-        return addRackTypeFrom (newState);
-    }
+        return duplicateRack (*source);
 
     return {};
 }
