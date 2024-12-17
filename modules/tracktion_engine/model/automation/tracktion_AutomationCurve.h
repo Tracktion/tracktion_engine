@@ -26,6 +26,10 @@ public:
     AutomatableParameter* getOwnerParameter() const noexcept        { return ownerParam; }
 
     //==============================================================================
+    /** If set to true, this curve is disabled, having no effect on the AutomatableParameter. */
+    juce::CachedValue<AtomicWrapper<bool>> bypass;
+
+    //==============================================================================
     struct AutomationPoint
     {
         AutomationPoint() noexcept = default;

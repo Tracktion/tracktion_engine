@@ -55,6 +55,25 @@ public:
     void punchOut (bool toEnd);
 
     //==============================================================================
+    /**
+        Listener interface for notifications of properties changing.
+    */
+    struct Listener
+    {
+        /** Destructor. */
+        virtual ~Listener() = default;
+
+        /** Called when automation read or write enable/disable changes. */
+        virtual void automationModeChanged() {}
+    };
+
+    /** Adds a listener. */
+    void addListener (Listener*);
+
+    /** Removes a listener. */
+    void removeListener (Listener*);
+
+    //==============================================================================
     /** Set the 'glide' or crossfade length it'll use to patch the data back into
         the edit.
     */
@@ -68,6 +87,7 @@ private:
     AutomationRecordManager (const AutomationRecordManager&) = delete;
 
     std::unique_ptr<AutomationRecordManagerBase> pimpl;
+    juce::ListenerList<Listener> listeners;
 
     friend class AutomatableParameter;
     void postFirstAutomationChange (AutomatableParameter&, float originalValue);

@@ -14,6 +14,7 @@ namespace tracktion { inline namespace engine
 AutomationCurve::AutomationCurve()
     : state (IDs::AUTOMATIONCURVE)
 {
+    bypass.referTo (state, IDs::bypass, nullptr);
 }
 
 AutomationCurve::AutomationCurve (const juce::ValueTree& p, const juce::ValueTree& v)
@@ -21,11 +22,14 @@ AutomationCurve::AutomationCurve (const juce::ValueTree& p, const juce::ValueTre
 {
     if (! state.isValid())
         state = juce::ValueTree (IDs::AUTOMATIONCURVE);
+
+    bypass.referTo (state, IDs::bypass, nullptr);
 }
 
 AutomationCurve::AutomationCurve (const AutomationCurve& o)
     : parentState (o.parentState), state (o.state), ownerParam (o.ownerParam)
 {
+    bypass.referTo (state, IDs::bypass, nullptr);
 }
 
 AutomationCurve::~AutomationCurve()
@@ -37,6 +41,7 @@ void AutomationCurve::setState (const juce::ValueTree& v)
     state = v;
     jassert (state.hasType (IDs::AUTOMATIONCURVE));
     jassert (state.getParent() == parentState);
+    bypass.referTo (state, IDs::bypass, nullptr);
 }
 
 void AutomationCurve::setParentState (const juce::ValueTree& v)

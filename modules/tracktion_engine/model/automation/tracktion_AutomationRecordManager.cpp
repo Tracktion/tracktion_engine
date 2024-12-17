@@ -531,10 +531,18 @@ namespace tracktion::inline engine
             void postFirstAutomationChange (AutomatableParameter& param, float originalValue) override
             {
                 TRACKTION_ASSERT_MESSAGE_THREAD
-                if (getAutomationMode (param) == AutomationMode::read)
+                auto mode = getAutomationMode (param);
+
+                if (mode == AutomationMode::read)
                 {
                     param.resetRecordingStatus();
                     return;
+                }
+                else if (mode == AutomationMode::touch
+                         || mode == AutomationMode::latch)
+                {
+                    if (param.getCurve().bypass.get())
+                        param.getCurve().bypass = false;
                 }
 
                 flushTimer.startTimerHz (10);
@@ -891,7 +899,11 @@ namespace tracktion::inline engine
 
     void AutomationRecordManager::setReadingAutomation (bool b)
     {
+        auto old = isReadingAutomation();
         pimpl->setReadingAutomation (b);
+
+        if (old != b)
+            listeners.call (&Listener::automationModeChanged);
     }
 
     bool AutomationRecordManager::isWritingAutomation() const noexcept
@@ -901,7 +913,11 @@ namespace tracktion::inline engine
 
     void AutomationRecordManager::setWritingAutomation (bool b)
     {
+        auto old = isWritingAutomation();
         pimpl->setWritingAutomation (b);
+
+        if (old != b)
+            listeners.call (&Listener::automationModeChanged);
     }
 
     void AutomationRecordManager::toggleWriteAutomationMode()
@@ -925,6 +941,17 @@ namespace tracktion::inline engine
     void AutomationRecordManager::punchOut (bool toEnd)
     {
         pimpl->punchOut (toEnd);
+    }
+
+    //==============================================================================
+    void AutomationRecordManager::addListener (Listener* l)
+    {
+        listeners.add (l);
+    }
+
+    void AutomationRecordManager::removeListener (Listener* l)
+    {
+        listeners.remove (l);
     }
 
     //==============================================================================
