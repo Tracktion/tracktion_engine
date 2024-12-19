@@ -757,9 +757,7 @@ namespace tracktion::inline engine
                 auto& parameter = *curve.getOwnerParameter();
 
                 // Remove all events in this range
-                // N.B. If the parameter is discrete, don't remove the extra previous point added to nudge the time forward
-                curve.removePointsInRegion (parameter.isDiscrete() ? time.withStart (time.getStart() + 1us)
-                                                                   : time);
+                curve.removePointsInRegion (time.withStart (time.getStart() + 1us));
 
                 // Iterate all the changes and add them to the curve
                 for (auto change : changes)

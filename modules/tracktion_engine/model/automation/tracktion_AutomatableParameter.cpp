@@ -1029,6 +1029,9 @@ juce::String AutomatableParameter::getFullName() const
 //==============================================================================
 void AutomatableParameter::resetRecordingStatus()
 {
+    if (! isRecording)
+        return;
+
     isRecording = false;
     listeners.call (&Listener::recordingStatusChanged, *this);
 }
