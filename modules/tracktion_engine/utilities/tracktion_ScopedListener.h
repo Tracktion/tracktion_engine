@@ -68,12 +68,18 @@ public:
         ScopedListenerImpl (BroadcasterType& broadcaster_, ListenerType& listener_)
             : broadcaster (broadcaster_), listener (listener_)
         {
-            broadcaster.addListener (&listener);
+            if constexpr (requires { broadcaster.addListener (listener); })
+                broadcaster.addListener (listener);
+            else
+                broadcaster.addListener (&listener);
         }
 
         ~ScopedListenerImpl()
         {
-            broadcaster.removeListener (&listener);
+            if constexpr (requires { broadcaster.removeListener (listener); })
+                broadcaster.removeListener (listener);
+            else
+                broadcaster.removeListener (&listener);
         }
 
     private:
