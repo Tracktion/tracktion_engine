@@ -1122,6 +1122,7 @@ void AutomatableParameter::setParameter (float value, juce::NotificationType nt)
         jassert (nt != juce::sendNotificationAsync); // Async notifications not yet supported
         TRACKTION_ASSERT_MESSAGE_THREAD
         listeners.call (&Listener::parameterChanged, *this, currentValue);
+        getEdit().getParameterChangeHandler().parameterChanged (*this, false);
 
         if (attachedValue != nullptr)
         {
@@ -1229,7 +1230,6 @@ void AutomatableParameter::curveHasChanged()
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
     curveSource->triggerAsyncCurveUpdate();
-    getEdit().getParameterChangeHandler().parameterChanged (*this, false);
     listeners.call (&Listener::curveHasChanged, *this);
 }
 
