@@ -76,6 +76,7 @@ public:
     juce::MouseCursor getMouseCursor() override;
 
     void setTimes (TimePosition leftTime, TimePosition rightTime);
+    TimeRange getTimes() const;
 
     float timeToX (TimePosition) const;
     TimePosition xToTime (double x) const;
