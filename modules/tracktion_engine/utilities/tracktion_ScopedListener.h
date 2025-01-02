@@ -70,6 +70,8 @@ public:
         {
             if constexpr (requires { broadcaster.addListener (listener); })
                 broadcaster.addListener (listener);
+            else if constexpr (requires { broadcaster.addChangeListener (&listener); })
+                broadcaster.addChangeListener (&listener);
             else
                 broadcaster.addListener (&listener);
         }
@@ -78,6 +80,8 @@ public:
         {
             if constexpr (requires { broadcaster.removeListener (listener); })
                 broadcaster.removeListener (listener);
+            else if constexpr (requires { broadcaster.removeChangeListener (&listener); })
+                broadcaster.removeChangeListener (&listener);
             else
                 broadcaster.removeListener (&listener);
         }
