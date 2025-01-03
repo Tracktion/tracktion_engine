@@ -1597,13 +1597,17 @@ juce::String ExternalPlugin::getProgramName (int index)
 
 bool ExternalPlugin::hasNameForMidiNoteNumber (int note, int midiChannel, juce::String& name)
 {
-    ignoreUnused (note, midiChannel, name);
-   #if TRACKTION_JUCE
     if (takesMidiInput())
+    {
         if (auto pi = getAudioPluginInstance())
-            return pi->hasNameForMidiNoteNumber (note, midiChannel, name);
-   #endif
-
+        {
+            if (auto n = pi->getNameForMidiNoteNumber (note, midiChannel))
+            {
+                name = *n;
+                return true;
+            }
+        }
+    }
     return false;
 }
 
