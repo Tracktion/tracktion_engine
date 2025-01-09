@@ -53,5 +53,5 @@ jobs:
         id: generate
         shell: bash
         run: |
-          cmake -B ${{ env.BUILD_DIR }} ${{ matrix.generator }} -DJUCE_CPM_DEVELOP
+          cmake -B ${{ env.BUILD_DIR }} ${{ matrix.generator }} -DJUCE_CPM_DEVELOP=1
           cmake --build ./${{ env.BUILD_DIR }} --config ${{ env.BUILD_CONFIG }} --parallel --target DemoRunner EngineInPluginDemo_common TestRunner Benchmarks
