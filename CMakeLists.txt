@@ -11,7 +11,13 @@ project(tracktion
         HOMEPAGE_URL "https://github.com/Tracktion/tracktion_engine"
 )
 
-add_subdirectory(modules/juce)
+if (JUCE_CPM_DEVELOP)
+    include(cmake/CPM.cmake)
+    CPMAddPackage("gh:juce-framework/JUCE#develop")
+else()
+    add_subdirectory(modules/juce)
+endif()
+
 add_subdirectory(modules)
 
 enable_testing()
