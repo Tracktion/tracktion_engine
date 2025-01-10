@@ -111,6 +111,10 @@ bool EditRenderJob::setUpRender()
         auto edit = loadEditForExamining (params.engine->getProjectManager(), itemID,
                                           Edit::EditRole::forRendering, &context);
 
+        // If the load was cancelled becuase the thread was cancelled we need to bail out
+        if (! edit)
+            return false;
+
         // it's difficult to determine the marked region or selections at this point, so we'll ignore it,
         // assuming that this code will only be used for rendering entire EditClips, and not sections of edits.
         jassert (! renderOptions.markedRegion);
