@@ -33,13 +33,26 @@ namespace node_player_utils
                                            [] (auto nID) { return nID == 0; }),
                            nodeIDs.end());
 
-        auto uniqueEnd = std::unique (nodeIDs.begin(), nodeIDs.end());
+        auto duplicateIDs = [] (auto input)
+                            {
+                                std::vector<size_t> duplicates;
+                                std::unordered_set<size_t> seen;
+                                seen.reserve (input.size());
+
+                                for (auto num : input)
+                                {
+                                    if (seen.find (num) != seen.end())
+                                        duplicates.push_back (num);
+                                    else
+                                        seen.insert (num);
+                                }
+
+                                return duplicates;
+                            } (nodeIDs);
 
        #if JUCE_DEBUG
-        if (uniqueEnd != nodeIDs.end())
+        if (! duplicateIDs.empty())
         {
-            DBG("-- Duplicate Node IDs:");
-
             auto getNodeTypeStrings = [&nodes] (auto id)
             {
                 std::string idStrings;
@@ -51,12 +64,12 @@ namespace node_player_utils
                 return idStrings;
             };
 
-            for (auto id : std::span<size_t> (uniqueEnd, nodeIDs.end()))
+            for (auto id : duplicateIDs)
                 DBG("\t" << id << ": " << getNodeTypeStrings (id));
         }
        #endif
 
-        return uniqueEnd == nodeIDs.end();
+        return duplicateIDs.empty();
     }
 
     /** Returns true if all the nodes in the graph have a unique nodeID. */
