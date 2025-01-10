@@ -107,9 +107,9 @@ bool EditRenderJob::setUpRender()
                                                   juce::Thread::sleep (100);
                                               }
                                           });
-        juce::ignoreUnused (contextUpdater);
 
-        auto edit = loadEditForExamining (params.engine->getProjectManager(), itemID, Edit::EditRole::forRendering);
+        auto edit = loadEditForExamining (params.engine->getProjectManager(), itemID,
+                                          Edit::EditRole::forRendering, &context);
 
         // it's difficult to determine the marked region or selections at this point, so we'll ignore it,
         // assuming that this code will only be used for rendering entire EditClips, and not sections of edits.

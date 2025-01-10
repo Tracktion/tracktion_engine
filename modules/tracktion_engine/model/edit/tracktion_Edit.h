@@ -239,7 +239,7 @@ public:
     static std::unique_ptr<Edit> createSingleTrackEdit (Engine&, EditRole role = EditRole::forEditing);
 
     /** Creates an Edit that loads a state, using the role Edit::forExamining */
-    static std::unique_ptr<Edit> createEditForExamining (Engine&, juce::ValueTree, EditRole role = EditRole::forExamining);
+    static std::unique_ptr<Edit> createEditForExamining (Engine&, juce::ValueTree, EditRole role = EditRole::forExamining, LoadContext* = nullptr);
 
     //==============================================================================
     /** Quick way to find and iterate all Track[s] in the Edit. */

@@ -61,7 +61,8 @@ juce::ValueTree loadEditFromProjectManager (ProjectManager&, ProjectItemID);
 
 /** Uses the ProjectManager to find an Edit file and open it. */
 std::unique_ptr<Edit> loadEditForExamining (ProjectManager&, ProjectItemID, 
-                                            Edit::EditRole role = Edit::EditRole::forExamining);
+                                            Edit::EditRole role = Edit::EditRole::forExamining,
+                                            Edit::LoadContext* = nullptr);
 
 /** Legacy, will be deprecated soon. Use version that returns an edit.
     Loads a ValueTree from a file to load an Edit.
