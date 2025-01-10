@@ -160,7 +160,7 @@ namespace test_utilities
         std::atomic<bool> callbackFinished { false };
 
         auto handle = EditRenderer::render (std::move (params),
-                                            [&callbackFinished, f = destFile->getFile()] (auto res)
+                                            [&callbackFinished, f = destFile->getFile()] ([[maybe_unused]] auto res)
                                             {
                                                 assert (res);
                                                 assert (*res == f);
