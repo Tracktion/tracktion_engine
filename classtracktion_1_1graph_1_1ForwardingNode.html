@@ -84,10 +84,10 @@ Inheritance diagram for tracktion::graph::ForwardingNode:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ade2a0d3f113d7b7c5fa5f89eecf181ee"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1ForwardingNode.html#ade2a0d3f113d7b7c5fa5f89eecf181ee">ForwardingNode</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">tracktion::graph::Node</a> *inputNode)</td></tr>
-<tr class="separator:ade2a0d3f113d7b7c5fa5f89eecf181ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab7e7f908f7017874d5fdff61f611be2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1ForwardingNode.html#aab7e7f908f7017874d5fdff61f611be2">ForwardingNode</a> (std::shared_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">tracktion::graph::Node</a> &gt; inputNode)</td></tr>
-<tr class="separator:aab7e7f908f7017874d5fdff61f611be2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad573be5353844d0d50512c997f9448d2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1ForwardingNode.html#ad573be5353844d0d50512c997f9448d2">ForwardingNode</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">tracktion::graph::Node</a> *inputNode, std::optional&lt; size_t &gt; nodeIDToUse={})</td></tr>
+<tr class="separator:ad573be5353844d0d50512c997f9448d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab022a78b44c211993ff57878c0bbfc3a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1ForwardingNode.html#ab022a78b44c211993ff57878c0bbfc3a">ForwardingNode</a> (std::shared_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">tracktion::graph::Node</a> &gt; inputNode, std::optional&lt; size_t &gt; nodeIDToUse={})</td></tr>
+<tr class="separator:ab022a78b44c211993ff57878c0bbfc3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5697a45086760d819e5ce5d0d981998"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1graph_1_1NodeProperties.html">tracktion::graph::NodeProperties</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1ForwardingNode.html#aa5697a45086760d819e5ce5d0d981998">getNodeProperties</a> () override</td></tr>
 <tr class="memdesc:aa5697a45086760d819e5ce5d0d981998"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the properties of the node.  <a href="classtracktion_1_1graph_1_1ForwardingNode.html#aa5697a45086760d819e5ce5d0d981998">More...</a><br /></td></tr>
 <tr class="separator:aa5697a45086760d819e5ce5d0d981998"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -167,8 +167,8 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Takes a non-owning input node and simply forwards its outputs on. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ade2a0d3f113d7b7c5fa5f89eecf181ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ade2a0d3f113d7b7c5fa5f89eecf181ee">&#9670;&nbsp;</a></span>ForwardingNode() <span class="overload">[1/2]</span></h2>
+<a id="ad573be5353844d0d50512c997f9448d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad573be5353844d0d50512c997f9448d2">&#9670;&nbsp;</a></span>ForwardingNode() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -177,16 +177,26 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">tracktion::graph::ForwardingNode::ForwardingNode </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtracktion_1_1graph_1_1Node.html">tracktion::graph::Node</a> *&#160;</td>
-          <td class="paramname"><em>inputNode</em></td><td>)</td>
+          <td class="paramname"><em>inputNode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::optional&lt; size_t &gt;&#160;</td>
+          <td class="paramname"><em>nodeIDToUse</em> = <code>{}</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="aab7e7f908f7017874d5fdff61f611be2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab7e7f908f7017874d5fdff61f611be2">&#9670;&nbsp;</a></span>ForwardingNode() <span class="overload">[2/2]</span></h2>
+<a id="ab022a78b44c211993ff57878c0bbfc3a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab022a78b44c211993ff57878c0bbfc3a">&#9670;&nbsp;</a></span>ForwardingNode() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -195,8 +205,18 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">tracktion::graph::ForwardingNode::ForwardingNode </td>
           <td>(</td>
           <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">tracktion::graph::Node</a> &gt;&#160;</td>
-          <td class="paramname"><em>inputNode</em></td><td>)</td>
+          <td class="paramname"><em>inputNode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">std::optional&lt; size_t &gt;&#160;</td>
+          <td class="paramname"><em>nodeIDToUse</em> = <code>{}</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -231,6 +251,8 @@ Additional Inherited Members</h2></td></tr>
 <p>This should not be called until after initialise. </p>
 
 <p>Implements <a class="el" href="classtracktion_1_1graph_1_1Node.html#a2291fdfb7d1ce385e30ae52d9f2fdfc0">tracktion::graph::Node</a>.</p>
+
+<p class="reference">References <a class="el" href="classtracktion_1_1graph_1_1Node.html#a2291fdfb7d1ce385e30ae52d9f2fdfc0">tracktion::graph::Node::getNodeProperties()</a>.</p>
 
 </div>
 </div>
@@ -291,6 +313,8 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classtracktion_1_1graph_1_1Node.html#a3d69e6a5785ba2ae876b349f4fc7aae3">tracktion::graph::Node</a>.</p>
 
+<p class="reference">References <a class="el" href="classtracktion_1_1graph_1_1Node.html#ae62f7e160525644535c445701c446b73">tracktion::graph::Node::hasProcessed()</a>.</p>
+
 </div>
 </div>
 <a id="a3d080daea7ab2825faf050aced38257b"></a>
@@ -322,7 +346,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classtracktion_1_1graph_1_1Node.html#a60ae77583768afb8a381ce174bd2e8de">tracktion::graph::Node</a>.</p>
 
-<p class="reference">References <a class="el" href="structtracktion_1_1graph_1_1Node_1_1AudioAndMidiBuffer.html#a91fc332ab1679601b24dbd8c3014ddfb">tracktion::graph::Node::AudioAndMidiBuffer::audio</a>, <a class="el" href="structtracktion_1_1graph_1_1Node_1_1ProcessContext.html#a66575a91fe1882b64c737e54a605da72">tracktion::graph::Node::ProcessContext::buffers</a>, <a class="el" href="namespacetracktion_1_1engine_1_1AppFunctions.html#a1a5187c6f2ed5dd86cf91647b8071a0f">tracktion::engine::AppFunctions::copy()</a>, and <a class="el" href="structtracktion_1_1graph_1_1Node_1_1AudioAndMidiBuffer.html#a647f129f99b88eba23ee946c71e24511">tracktion::graph::Node::AudioAndMidiBuffer::midi</a>.</p>
+<p class="reference">References <a class="el" href="structtracktion_1_1graph_1_1Node_1_1AudioAndMidiBuffer.html#a91fc332ab1679601b24dbd8c3014ddfb">tracktion::graph::Node::AudioAndMidiBuffer::audio</a>, <a class="el" href="structtracktion_1_1graph_1_1Node_1_1ProcessContext.html#a66575a91fe1882b64c737e54a605da72">tracktion::graph::Node::ProcessContext::buffers</a>, <a class="el" href="namespacetracktion_1_1engine_1_1AppFunctions.html#a1a5187c6f2ed5dd86cf91647b8071a0f">tracktion::engine::AppFunctions::copy()</a>, <a class="el" href="classtracktion_1_1graph_1_1Node.html#adc67998aa3b75e41bc7b89e1ebf94d50">tracktion::graph::Node::getProcessedOutput()</a>, and <a class="el" href="structtracktion_1_1graph_1_1Node_1_1AudioAndMidiBuffer.html#a647f129f99b88eba23ee946c71e24511">tracktion::graph::Node::AudioAndMidiBuffer::midi</a>.</p>
 
 </div>
 </div>
@@ -332,7 +356,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jan 9 2025 14:22:48 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Jan 10 2025 20:33:57 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

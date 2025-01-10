@@ -192,6 +192,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae445e0beb05415b401dc426e2909094d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d2f713637760ca1e3b1308bd93ae705"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditClip.html#a8d2f713637760ca1e3b1308bd93ae705">setTracksToRender</a> (const juce::Array&lt; <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a> &gt; &amp;trackIDs)</td></tr>
 <tr class="separator:a8d2f713637760ca1e3b1308bd93ae705"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec043a5bbf51f6247ce8134a52fe1145"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditClip.html#aec043a5bbf51f6247ce8134a52fe1145">requiresRenderingSource</a> () const override</td></tr>
+<tr class="memdesc:aec043a5bbf51f6247ce8134a52fe1145"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subclasses can override this to indicate that they need to render their source file, irrespective of their canUseProxy property.  <a href="classtracktion_1_1engine_1_1EditClip.html#aec043a5bbf51f6247ce8134a52fe1145">More...</a><br /></td></tr>
+<tr class="separator:aec043a5bbf51f6247ce8134a52fe1145"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89107cdb1e4b3ceda2090794135de448"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EditClip.html#a89107cdb1e4b3ceda2090794135de448">needsRender</a> () const override</td></tr>
 <tr class="memdesc:a89107cdb1e4b3ceda2090794135de448"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subclasses should override this to return true if they need the rest of the render callbacks.  <a href="classtracktion_1_1engine_1_1EditClip.html#a89107cdb1e4b3ceda2090794135de448">More...</a><br /></td></tr>
 <tr class="separator:a89107cdb1e4b3ceda2090794135de448"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1511,6 +1514,35 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="aec043a5bbf51f6247ce8134a52fe1145"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec043a5bbf51f6247ce8134a52fe1145">&#9670;&nbsp;</a></span>requiresRenderingSource()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::EditClip::requiresRenderingSource </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Subclasses can override this to indicate that they need to render their source file, irrespective of their canUseProxy property. </p>
+
+<p>Reimplemented from <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a68a16d5bc998561f768c4f3970809ccf">tracktion::engine::AudioClipBase</a>.</p>
+
+</div>
+</div>
 <a id="a89107cdb1e4b3ceda2090794135de448"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a89107cdb1e4b3ceda2090794135de448">&#9670;&nbsp;</a></span>needsRender()</h2>
 
@@ -1951,7 +1983,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jan 9 2025 14:22:47 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Jan 10 2025 20:33:56 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

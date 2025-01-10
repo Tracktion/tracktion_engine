@@ -81,8 +81,8 @@ Inheritance diagram for tracktion::graph::SendNode:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac9ef4834a1c09d475cb9f2592eb97d5b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1SendNode.html#ac9ef4834a1c09d475cb9f2592eb97d5b">SendNode</a> (std::unique_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &gt; inputNode, int busIDToUse, std::function&lt; float()&gt; getGainFunc=nullptr)</td></tr>
-<tr class="separator:ac9ef4834a1c09d475cb9f2592eb97d5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32db714d52beb2dd4194de05c3b934bd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1SendNode.html#a32db714d52beb2dd4194de05c3b934bd">SendNode</a> (std::unique_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &gt; inputNode, int busIDToUse, std::function&lt; float()&gt; getGainFunc=nullptr, std::optional&lt; size_t &gt; extraHashToUse_={})</td></tr>
+<tr class="separator:a32db714d52beb2dd4194de05c3b934bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aafb2fe8683abcb2642a9f73eb29993dc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1SendNode.html#aafb2fe8683abcb2642a9f73eb29993dc">getBusID</a> () const</td></tr>
 <tr class="separator:aafb2fe8683abcb2642a9f73eb29993dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e31e69974ced98e1615d5b4be9e1f75"><td class="memItemLeft" align="right" valign="top">std::function&lt; float()&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1SendNode.html#a3e31e69974ced98e1615d5b4be9e1f75">getGainFunction</a> ()</td></tr>
@@ -164,8 +164,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:af2be088d7f4fcc191028c33b29c3c10d inherit pro_methods_classtracktion_1_1graph_1_1Node"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ac9ef4834a1c09d475cb9f2592eb97d5b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac9ef4834a1c09d475cb9f2592eb97d5b">&#9670;&nbsp;</a></span>SendNode()</h2>
+<a id="a32db714d52beb2dd4194de05c3b934bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32db714d52beb2dd4194de05c3b934bd">&#9670;&nbsp;</a></span>SendNode()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -186,7 +186,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::function&lt; float()&gt;&#160;</td>
-          <td class="paramname"><em>getGainFunc</em> = <code>nullptr</code>&#160;</td>
+          <td class="paramname"><em>getGainFunc</em> = <code>nullptr</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::optional&lt; size_t &gt;&#160;</td>
+          <td class="paramname"><em>extraHashToUse_</em> = <code>{}</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -195,8 +201,6 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="namespacetracktion_1_1graph.html#a963afb16027e92506362c8076ba7d33da7fa3b767c460b54a2be4d49030b349c7">tracktion::graph::no</a>, and <a class="el" href="classtracktion_1_1graph_1_1Node.html#abc14ebc574707335389982cf4dbd9285">tracktion::graph::Node::setOptimisations()</a>.</p>
 
 </div>
 </div>
@@ -363,7 +367,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jan 9 2025 14:22:48 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri Jan 10 2025 20:33:57 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

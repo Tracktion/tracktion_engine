@@ -2412,8 +2412,8 @@
       <type>std::unique_ptr&lt; Edit &gt;</type>
       <name>loadEditForExamining</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ae31a86857c0dd8ae6d531ee4712dbb53</anchor>
-      <arglist>(ProjectManager &amp;, ProjectItemID, Edit::EditRole role=Edit::EditRole::forExamining)</arglist>
+      <anchor>ae74463414739c799122c00d3f0bff74f</anchor>
+      <arglist>(ProjectManager &amp;, ProjectItemID, Edit::EditRole role=Edit::EditRole::forExamining, Edit::LoadContext *=nullptr)</arglist>
     </member>
     <member kind="function">
       <type>juce::ValueTree</type>
@@ -5952,6 +5952,7 @@
     <name>tracktion_TestNodes.h</name>
     <path>/home/runner/work/tracktion_engine/tracktion_engine/doxygen/build/tracktion_graph/tracktion_graph/</path>
     <filename>tracktion__TestNodes_8h.html</filename>
+    <class kind="class">tracktion::graph::ForwardingNode</class>
     <class kind="class">tracktion::graph::MidiNode</class>
     <class kind="class">tracktion::graph::SinNode</class>
     <class kind="class">tracktion::graph::SilentNode</class>
@@ -5962,7 +5963,6 @@
     <class kind="class">tracktion::graph::ReturnNode</class>
     <class kind="class">tracktion::graph::ChannelRemappingNode</class>
     <class kind="class">tracktion::graph::SinkNode</class>
-    <class kind="class">tracktion::graph::ForwardingNode</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::graph</namespace>
   </compound>
@@ -9263,6 +9263,13 @@
       <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
       <anchor>a235484bc7a42afd8ec9b421442d3efc0</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>requiresRenderingSource</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
+      <anchor>a68a16d5bc998561f768c4f3970809ccf</anchor>
+      <arglist>() const</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual bool</type>
@@ -30069,8 +30076,8 @@
       <type>static std::unique_ptr&lt; Edit &gt;</type>
       <name>createEditForExamining</name>
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
-      <anchor>af540bbb41eda737d3c19e185d15bb5aa</anchor>
-      <arglist>(Engine &amp;, juce::ValueTree, EditRole role=EditRole::forExamining)</arglist>
+      <anchor>aba84e6bdb844aa380f92c8c013463720</anchor>
+      <arglist>(Engine &amp;, juce::ValueTree, EditRole role=EditRole::forExamining, LoadContext *=nullptr)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static int</type>
@@ -30406,6 +30413,13 @@
       <anchorfile>classtracktion_1_1engine_1_1EditClip.html</anchorfile>
       <anchor>a8d2f713637760ca1e3b1308bd93ae705</anchor>
       <arglist>(const juce::Array&lt; EditItemID &gt; &amp;trackIDs)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>requiresRenderingSource</name>
+      <anchorfile>classtracktion_1_1engine_1_1EditClip.html</anchorfile>
+      <anchor>aec043a5bbf51f6247ce8134a52fe1145</anchor>
+      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -37179,15 +37193,15 @@
       <type></type>
       <name>ForwardingNode</name>
       <anchorfile>classtracktion_1_1graph_1_1ForwardingNode.html</anchorfile>
-      <anchor>ade2a0d3f113d7b7c5fa5f89eecf181ee</anchor>
-      <arglist>(tracktion::graph::Node *inputNode)</arglist>
+      <anchor>ad573be5353844d0d50512c997f9448d2</anchor>
+      <arglist>(tracktion::graph::Node *inputNode, std::optional&lt; size_t &gt; nodeIDToUse={})</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>ForwardingNode</name>
       <anchorfile>classtracktion_1_1graph_1_1ForwardingNode.html</anchorfile>
-      <anchor>aab7e7f908f7017874d5fdff61f611be2</anchor>
-      <arglist>(std::shared_ptr&lt; tracktion::graph::Node &gt; inputNode)</arglist>
+      <anchor>ab022a78b44c211993ff57878c0bbfc3a</anchor>
+      <arglist>(std::shared_ptr&lt; tracktion::graph::Node &gt; inputNode, std::optional&lt; size_t &gt; nodeIDToUse={})</arglist>
     </member>
     <member kind="function">
       <type>tracktion::graph::NodeProperties</type>
@@ -64571,8 +64585,8 @@
       <type></type>
       <name>ReturnNode</name>
       <anchorfile>classtracktion_1_1graph_1_1ReturnNode.html</anchorfile>
-      <anchor>a1707cef98379e7f86ae4c2f5a7900fc2</anchor>
-      <arglist>(int busIDToUse)</arglist>
+      <anchor>ae75eba7b1f08b14873b28782d1a9a7f5</anchor>
+      <arglist>(int busIDToUse, std::optional&lt; size_t &gt; extraHashToUse={})</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -69836,8 +69850,8 @@
       <type></type>
       <name>SendNode</name>
       <anchorfile>classtracktion_1_1graph_1_1SendNode.html</anchorfile>
-      <anchor>ac9ef4834a1c09d475cb9f2592eb97d5b</anchor>
-      <arglist>(std::unique_ptr&lt; Node &gt; inputNode, int busIDToUse, std::function&lt; float()&gt; getGainFunc=nullptr)</arglist>
+      <anchor>a32db714d52beb2dd4194de05c3b934bd</anchor>
+      <arglist>(std::unique_ptr&lt; Node &gt; inputNode, int busIDToUse, std::function&lt; float()&gt; getGainFunc=nullptr, std::optional&lt; size_t &gt; extraHashToUse_={})</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -87355,6 +87369,7 @@
     <class kind="class">tracktion::NodePlayer</class>
     <class kind="struct">tracktion::SplitTimelineRange</class>
     <class kind="class">tracktion::PlayHeadState</class>
+    <class kind="class">tracktion::ForwardingNode</class>
     <class kind="class">tracktion::SinNode</class>
     <class kind="class">tracktion::SilentNode</class>
     <class kind="class">tracktion::BasicSummingNode</class>
@@ -87364,7 +87379,6 @@
     <class kind="class">tracktion::ReturnNode</class>
     <class kind="class">tracktion::ChannelRemappingNode</class>
     <class kind="class">tracktion::SinkNode</class>
-    <class kind="class">tracktion::ForwardingNode</class>
     <class kind="class">tracktion::AudioBufferPool</class>
     <class kind="class">tracktion::AudioBufferStack</class>
     <class kind="struct">tracktion::LatencyProcessor</class>
@@ -88469,8 +88483,8 @@
       <type>std::unique_ptr&lt; Edit &gt;</type>
       <name>loadEditForExamining</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ae31a86857c0dd8ae6d531ee4712dbb53</anchor>
-      <arglist>(ProjectManager &amp;, ProjectItemID, Edit::EditRole role=Edit::EditRole::forExamining)</arglist>
+      <anchor>ae74463414739c799122c00d3f0bff74f</anchor>
+      <arglist>(ProjectManager &amp;, ProjectItemID, Edit::EditRole role=Edit::EditRole::forExamining, Edit::LoadContext *=nullptr)</arglist>
     </member>
     <member kind="function">
       <type>juce::ValueTree</type>
@@ -91102,6 +91116,7 @@
     <class kind="struct">tracktion::graph::SplitTimelineRange</class>
     <class kind="class">tracktion::graph::PlayHead</class>
     <class kind="class">tracktion::graph::PlayHeadState</class>
+    <class kind="class">tracktion::graph::ForwardingNode</class>
     <class kind="class">tracktion::graph::MidiNode</class>
     <class kind="class">tracktion::graph::SinNode</class>
     <class kind="class">tracktion::graph::SilentNode</class>
@@ -91112,7 +91127,6 @@
     <class kind="class">tracktion::graph::ReturnNode</class>
     <class kind="class">tracktion::graph::ChannelRemappingNode</class>
     <class kind="class">tracktion::graph::SinkNode</class>
-    <class kind="class">tracktion::graph::ForwardingNode</class>
     <class kind="class">tracktion::graph::AudioBufferPool</class>
     <class kind="class">tracktion::graph::AudioBufferStack</class>
     <class kind="class">tracktion::graph::AudioFifo</class>
