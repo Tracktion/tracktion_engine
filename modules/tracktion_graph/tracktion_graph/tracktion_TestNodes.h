@@ -15,6 +15,63 @@ namespace tracktion { inline namespace graph
 
 //==============================================================================
 //==============================================================================
+/** Takes a non-owning input node and simply forwards its outputs on. */
+class ForwardingNode final  : public tracktion::graph::Node
+{
+public:
+    ForwardingNode (tracktion::graph::Node* inputNode,
+                    std::optional<size_t> nodeIDToUse = {})
+        : input (inputNode)
+    {
+        if (nodeIDToUse)
+            nodeID = *nodeIDToUse;
+
+        jassert (input);
+    }
+
+    ForwardingNode (std::shared_ptr<tracktion::graph::Node> inputNode,
+                    std::optional<size_t> nodeIDToUse = {})
+        : ForwardingNode (inputNode.get(), nodeIDToUse)
+    {
+        nodePtr = std::move (inputNode);
+    }
+
+    tracktion::graph::NodeProperties getNodeProperties() override
+    {
+        auto props = input->getNodeProperties();
+        hash_combine (props.nodeID, nodeID);
+
+        if (props.nodeID != 0)
+            hash_combine (props.nodeID, static_cast<size_t> (10553084373558490035ul)); // "ForwardingNode"
+
+        return props;
+    }
+
+    std::vector<tracktion::graph::Node*> getDirectInputNodes() override
+    {
+        return { input };
+    }
+
+    bool isReadyToProcess() override
+    {
+        return input->hasProcessed();
+    }
+
+    void process (ProcessContext& pc) override
+    {
+        auto inputBuffers = input->getProcessedOutput();
+        copy (pc.buffers.audio, inputBuffers.audio);
+        pc.buffers.midi.copyFrom (inputBuffers.midi);
+    }
+
+private:
+    tracktion::graph::Node* input;
+    std::shared_ptr<tracktion::graph::Node> nodePtr;
+    size_t nodeID { (size_t) juce::Random::getSystemRandom().nextInt() };
+};
+
+//==============================================================================
+//==============================================================================
 /**
     Plays back a MIDI sequence.
     This simply plays it back from start to finish with no notation of a playhead.
@@ -403,9 +460,11 @@ class SendNode  : public Node
 {
 public:
     SendNode (std::unique_ptr<Node> inputNode, int busIDToUse,
-              std::function<float()> getGainFunc = nullptr)
+              std::function<float()> getGainFunc = nullptr,
+              std::optional<size_t> extraHashToUse_ = {})
         : input (std::move (inputNode)), busID (busIDToUse),
-          gainFunction (std::move (getGainFunc))
+          gainFunction (std::move (getGainFunc)),
+          extraHashToUse (extraHashToUse_)
     {
         setOptimisations ({ ClearBuffers::no,
                             AllocateAudioBuffer::no });
@@ -430,6 +489,9 @@ public:
         {
             hash_combine (props.nodeID, busID);
             hash_combine (props.nodeID, sendNodeMagicHash);
+
+            if (extraHashToUse)
+                hash_combine (props.nodeID, *extraHashToUse);
         }
 
         return props;
@@ -465,6 +527,7 @@ private:
     std::unique_ptr<Node> input;
     const int busID;
     std::function<float()> gainFunction;
+    std::optional<size_t> extraHashToUse;
 };
 
 
@@ -473,8 +536,8 @@ private:
 class ReturnNode final  : public Node
 {
 public:
-    ReturnNode (int busIDToUse)
-        : busID (busIDToUse)
+    ReturnNode (int busIDToUse, std::optional<size_t> extraHashToUse = {})
+        : extraHash (extraHashToUse), busID (busIDToUse)
     {
         setOptimisations ({ ClearBuffers::no,
                             AllocateAudioBuffer::yes });
@@ -510,6 +573,9 @@ public:
 
         if (props.nodeID != 0)
             hash_combine (props.nodeID, returnNodeMagicHash);
+
+        if (extraHash)
+            hash_combine (props.nodeID, *extraHash);
 
         return props;
     }
@@ -587,6 +653,7 @@ public:
 
 private:
     std::unique_ptr<Node> input;
+    std::optional<size_t> extraHash;
     const int busID;
     bool hasInitialised = false, canUseSourceBuffers = false;
 
@@ -659,8 +726,16 @@ private:
 				sends.erase (std::find (sends.begin(), sends.end(), sends[(size_t) i]));
 			}
 
-            auto node = makeNode<SummingNode> (std::move (ownedNodes), std::vector<Node*> (sends.begin(), sends.end()));
-            input.swap (node);
+            if (ownedNodes.empty() && sends.size() == 1)
+            {
+                auto node = makeNode<ForwardingNode> (sends[0], returnNodeID);
+                input.swap (node);
+            }
+            else
+            {
+                auto node = makeNode<SummingNode> (std::move (ownedNodes), std::vector<Node*> (sends.begin(), sends.end()));
+                input.swap (node);
+            }
         }
 
         hasInitialised = true;
@@ -796,54 +871,5 @@ private:
     std::unique_ptr<Node> input;
 };
 
-
-//==============================================================================
-//==============================================================================
-/** Takes a non-owning input node and simply forwards its outputs on. */
-class ForwardingNode final  : public tracktion::graph::Node
-{
-public:
-    ForwardingNode (tracktion::graph::Node* inputNode)
-        : input (inputNode)
-    {
-        jassert (input);
-    }
-
-    ForwardingNode (std::shared_ptr<tracktion::graph::Node> inputNode)
-        : ForwardingNode (inputNode.get())
-    {
-        nodePtr = std::move (inputNode);
-    }
-
-    tracktion::graph::NodeProperties getNodeProperties() override
-    {
-        auto props = input->getNodeProperties();
-        hash_combine (props.nodeID, nodeID);
-
-        return props;
-    }
-
-    std::vector<tracktion::graph::Node*> getDirectInputNodes() override
-    {
-        return { input };
-    }
-
-    bool isReadyToProcess() override
-    {
-        return input->hasProcessed();
-    }
-
-    void process (ProcessContext& pc) override
-    {
-        auto inputBuffers = input->getProcessedOutput();
-        copy (pc.buffers.audio, inputBuffers.audio);
-        pc.buffers.midi.copyFrom (inputBuffers.midi);
-    }
-
-private:
-    tracktion::graph::Node* input;
-    std::shared_ptr<tracktion::graph::Node> nodePtr;
-    const size_t nodeID { (size_t) juce::Random::getSystemRandom().nextInt() };
-};
 
 }}

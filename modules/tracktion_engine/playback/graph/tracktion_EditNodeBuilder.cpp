@@ -1190,7 +1190,8 @@ std::unique_ptr<tracktion::graph::Node> createSidechainInputNodeForPlugin (Plugi
     if (! isUnityChannelMap (directChannelMap))
         directInput = makeNode<ChannelRemappingNode> (std::move (directInput), directChannelMap, true);
 
-    auto sidechainInput = makeNode<ReturnNode> (getSidechainBusID (sidechainSourceID));
+    auto sidechainInput = makeNode<ReturnNode> (getSidechainBusID (sidechainSourceID),
+                                                std::make_optional (static_cast<size_t> (plugin.itemID.getRawID())));
     sidechainInput = makeNode<ChannelRemappingNode> (std::move (sidechainInput), std::move (sidechainChannelMap), false);
 
     if (directChannelMap.empty())
