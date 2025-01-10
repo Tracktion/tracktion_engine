@@ -289,6 +289,10 @@ Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
 
                     clipState.setProperty (IDs::length, newLength.inSeconds(), nullptr);
                 }
+                else if (clipState.hasType (IDs::EDITCLIP))
+                {
+                    clipState.setProperty (IDs::autoTempo, true, nullptr);
+                }
 
                 auto loopSate = loopInfo.state;
 

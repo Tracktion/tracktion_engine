@@ -47,7 +47,7 @@ void EditClip::initialise()
 {
     AudioClipBase::initialise();
 
-    if (waveInfo.sampleRate <= 0 || waveInfo.lengthInSamples <= 0)
+    if (waveInfo.hashCode == 0)
         updateWaveInfo();
 
     if (! renderEnabled)
@@ -205,12 +205,12 @@ void EditClip::sourceMediaChanged()
     }
 
     updateReferencedEdits();
-    updateWaveInfo();
     generateHash();
 
     if (! invalidSource)
         updateSourceFile();
 
+    updateWaveInfo();
     changed();
 
     if (isInitialised)
@@ -220,7 +220,6 @@ void EditClip::sourceMediaChanged()
 void EditClip::changed()
 {
     // update the hash in case the source has changed and we need to re-generate the render inside AudioClipBase
-    updateWaveInfo();
     generateHash();
     AudioClipBase::changed();
 }
