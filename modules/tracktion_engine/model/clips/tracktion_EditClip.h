@@ -57,6 +57,7 @@ public:
     void setTracksToRender (const juce::Array<EditItemID>& trackIDs);
 
     //==============================================================================
+    bool requiresRenderingSource() const override;
     bool needsRender() const override;
     RenderManager::Job::Ptr getRenderJob (const AudioFile& destFile) override;
     void renderComplete() override;

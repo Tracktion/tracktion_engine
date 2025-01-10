@@ -90,6 +90,11 @@ void EditClip::setLoopDefaults()
 }
 
 //==============================================================================
+bool EditClip::requiresRenderingSource() const
+{
+    return true;
+}
+
 bool EditClip::needsRender() const
 {
     if (! renderEnabled || editSnapshot == nullptr)
@@ -215,6 +220,7 @@ void EditClip::sourceMediaChanged()
 void EditClip::changed()
 {
     // update the hash in case the source has changed and we need to re-generate the render inside AudioClipBase
+    updateWaveInfo();
     generateHash();
     AudioClipBase::changed();
 }
@@ -268,6 +274,7 @@ void EditClip::updateWaveInfo()
     jassert ((! needsRender()) || getSourceLength() > 0s);
     const auto sourceLength = getSourceLength() == 0s ? 5.0 : getSourceLength().inSeconds();
 
+    waveInfo = getAudioFile().getInfo();
     waveInfo.bitsPerSample      = renderOptions->getBitDepth();
     waveInfo.sampleRate         = renderOptions->getSampleRate();
     waveInfo.numChannels        = renderOptions->getStereo() ? 2 : 1;
@@ -377,6 +384,9 @@ void EditClip::updateLoopInfoBasedOnSource (bool updateLength)
         loopInfo.setDenominator (timeSigDenom);
     }
 
+    if (pitch >= 0)
+        loopInfo.setRootNote (pitch);
+
     // if these haven't been set then match them to the new edit
     auto& ts = edit.tempoSequence;
     auto clipPos = getPosition();
@@ -389,6 +399,9 @@ void EditClip::updateLoopInfoBasedOnSource (bool updateLength)
 
     if (loopInfo.getNumBeats() == 0)
         loopInfo.setNumBeats (length.get().inSeconds() * (ts.getTempoAt (clipPos.getStart()).getBpm() / 60.0));
+
+    if (loopInfo.getRootNote() < 0)
+        loopInfo.setRootNote (pitch);
 
     // also need to adjust clip length
     if (updateLength)
@@ -414,9 +427,6 @@ void EditClip::updateLoopInfoBasedOnSource (bool updateLength)
             setAutoTempo (true);
         }
     }
-
-    if (updateLength && pitch > 0)
-        loopInfo.setRootNote (pitch);
 }
 
 double EditClip::getCurrentStretchRatio() const

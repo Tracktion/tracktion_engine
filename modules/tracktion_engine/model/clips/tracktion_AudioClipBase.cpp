@@ -2265,7 +2265,7 @@ void AudioClipBase::jobFinished (RenderManager::Job& job, bool completedOk)
 //==============================================================================
 void AudioClipBase::createNewProxyAsync()
 {
-    if (canUseProxy())
+    if (canUseProxy() || requiresRenderingSource())
         startTimer (600);
 }
 

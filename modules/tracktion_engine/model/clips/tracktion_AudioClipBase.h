@@ -91,6 +91,11 @@ public:
     */
     void updateSourceFile();
 
+    /** Subclasses can override this to indicate that they need to render their source file, irrespective
+        of their canUseProxy property.
+    */
+    virtual bool requiresRenderingSource() const        { return false; }
+
     /** Subclasses should override this to return true if they need the rest of the render callbacks. */
     virtual bool needsRender() const                    { return false; }
 
