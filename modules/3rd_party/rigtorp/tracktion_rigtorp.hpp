@@ -11,11 +11,22 @@
 
 
 #include "../choc/platform/choc_DisableAllWarnings.h"
+
+#if __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Winterference-size"
+#endif
+
  #if __has_include(<MPMCQueue.h>)
   #include <MPMCQueue.h>
  #else
   #include "MPMCQueue.h"
  #endif
+
+#if __GNUC__
+ #pragma GCC diagnostic pop
+#endif
+
 #include "../choc/platform/choc_ReenableAllWarnings.h"
 
 #include "../choc/text/choc_OpenSourceLicenseList.h"
