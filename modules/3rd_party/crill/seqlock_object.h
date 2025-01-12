@@ -6,8 +6,9 @@
 #ifndef CRILL_SEQLOCK_OBJECT_H
 #define CRILL_SEQLOCK_OBJECT_H
 
-#include <cstring>
+#include <array>
 #include <atomic>
+#include "bytewise_atomic_memcpy.h"
 
 namespace crill {
 
@@ -51,22 +52,16 @@ public:
     // Non-blocking guarantees: wait-free.
     bool try_load(T& t) const noexcept
     {
-        std::size_t buffer[buffer_size];
-
         std::size_t seq1 = seq.load(std::memory_order_acquire);
         if (seq1 % 2 != 0)
             return false;
 
-        for (std::size_t i = 0; i < buffer_size; ++i)
-            buffer[i] = data[i].load(std::memory_order_relaxed);
-
-        std::atomic_thread_fence(std::memory_order_acquire);
+        crill::atomic_load_per_byte_memcpy(&t, &data, sizeof(data), std::memory_order_acquire);
 
         std::size_t seq2 = seq.load(std::memory_order_relaxed);
         if (seq1 != seq2)
             return false;
 
-        std::memcpy(&t, buffer, sizeof(T));
         return true;
     }
 
@@ -74,28 +69,18 @@ public:
     // Non-blocking guarantees: wait-free.
     void store(T t) noexcept
     {
-        std::size_t buffer[buffer_size];
-        if constexpr (sizeof(T) % sizeof(std::size_t) != 0)
-            buffer[buffer_size - 1] = 0;
-
-        std::memcpy(&buffer, &t, sizeof(T));
-
+        // Note: load + store usually has better performance characteristics than fetch_add(1)
         std::size_t old_seq = seq.load(std::memory_order_relaxed);
         seq.store(old_seq + 1, std::memory_order_relaxed);
 
-        std::atomic_thread_fence(std::memory_order_release);
-
-        for (std::size_t i = 0; i < buffer_size; ++i)
-            data[i].store(buffer[i], std::memory_order_relaxed);
+        crill::atomic_store_per_byte_memcpy(&data, &t, sizeof(data), std::memory_order_release);
 
         seq.store(old_seq + 2, std::memory_order_release);
     }
 
 private:
-    static constexpr std::size_t buffer_size = (sizeof(T) + sizeof(std::size_t) - 1) / sizeof(std::size_t);
-    std::atomic<std::size_t> data[buffer_size];
+    char data[sizeof(T)];
     std::atomic<std::size_t> seq = 0;
-
     static_assert(decltype(seq)::is_always_lock_free);
 };
 
