@@ -1,5 +1,7 @@
 <map id="tracktion::engine::FadeInOutNode" name="tracktion::engine::FadeInOutNode">
-<area shape="rect" id="node1" title="A Node that fades in and out given time regions." alt="" coords="296,39,436,80"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1TracktionEngineNode.html" title="Base class for Nodes that provides information about the current process call." alt="" coords="47,5,206,47"/>
-<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html" title=" " alt="" coords="5,71,248,112"/>
+<area shape="rect" id="Node000001" title="A Node that fades in and out given time regions." alt="" coords="296,37,436,77"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1TracktionEngineNode.html" title="Base class for Nodes that provides information about the current process call." alt="" coords="47,5,206,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="220,35,296,45,295,51,219,40"/>
+<area shape="rect" id="Node000003" href="$classtracktion_1_1engine_1_1DynamicallyOffsettableNodeBase.html" title=" " alt="" coords="5,69,248,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="261,69,295,64,296,69,262,74"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="tracktion::engine::BufferedFileReaderWrapper" name="tracktion::engine::BufferedFileReaderWrapper">
-<area shape="rect" id="node1" title=" " alt="" coords="5,95,207,136"/>
-<area shape="rect" id="node2" href="$structtracktion_1_1engine_1_1FallbackReader.html" title=" " alt="" coords="36,5,176,47"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,93,207,133"/>
+<area shape="rect" id="Node000002" href="$structtracktion_1_1engine_1_1FallbackReader.html" title=" " alt="" coords="36,5,176,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,59,109,93,103,93,103,59"/>
 </map>

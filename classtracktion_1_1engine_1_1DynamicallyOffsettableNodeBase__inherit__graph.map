@@ -1,7 +1,11 @@
 <map id="tracktion::engine::DynamicallyOffsettableNodeBase" name="tracktion::engine::DynamicallyOffsettableNodeBase">
-<area shape="rect" id="node1" title=" " alt="" coords="5,104,248,145"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1DynamicOffsetNode.html" title=" " alt="" coords="297,5,450,47"/>
-<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1FadeInOutNode.html" title="A Node that fades in and out given time regions." alt="" coords="303,71,443,112"/>
-<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1LoopingMidiNode.html" title="A Node that plays MIDI data from a MidiMessageSequence, at a specific MIDI channel." alt="" coords="303,136,443,177"/>
-<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1WaveNodeRealTime.html" title="An Node that plays back a wave file." alt="" coords="296,201,451,243"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,101,248,141"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1DynamicOffsetNode.html" title=" " alt="" coords="297,5,450,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="191,94,320,43,322,48,193,99"/>
+<area shape="rect" id="Node000003" href="$classtracktion_1_1engine_1_1FadeInOutNode.html" title="A Node that fades in and out given time regions." alt="" coords="303,69,443,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="261,101,303,96,303,101,262,106"/>
+<area shape="rect" id="Node000004" href="$classtracktion_1_1engine_1_1LoopingMidiNode.html" title="A Node that plays MIDI data from a MidiMessageSequence, at a specific MIDI channel." alt="" coords="303,133,443,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="262,136,303,142,303,147,261,142"/>
+<area shape="rect" id="Node000005" href="$classtracktion_1_1engine_1_1WaveNodeRealTime.html" title="An Node that plays back a wave file." alt="" coords="296,197,451,237"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="193,144,322,195,320,200,191,149"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="tracktion::engine::Project" name="tracktion::engine::Project">
-<area shape="rect" id="node1" title="A tracktion project." alt="" coords="5,95,145,136"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,5,145,47"/>
+<area shape="rect" id="Node000001" title="A tracktion project." alt="" coords="5,93,145,133"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,5,145,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,59,78,93,73,93,73,59"/>
 </map>

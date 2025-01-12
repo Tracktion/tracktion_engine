@@ -1,4 +1,5 @@
 <map id="tracktion::engine::StepClip::PatternInstance" name="tracktion::engine::StepClip::PatternInstance">
-<area shape="rect" id="node1" title=" " alt="" coords="5,95,191,136"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="28,5,168,47"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,93,191,133"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="28,5,168,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,59,101,93,95,93,95,59"/>
 </map>

@@ -1,8 +1,13 @@
 <map id="tracktion::engine::RenderManager::Job::Listener" name="tracktion::engine::RenderManager::Job::Listener">
-<area shape="rect" id="node1" title=" " alt="" coords="5,97,167,153"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1AudioClipBase.html" title="Base class for Clips that produce some kind of audio e.g." alt="" coords="217,71,357,112"/>
-<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1WarpTimeManager.html" title="A WarpTimeManager contains a list of WarpMarkers and some source material and maps times from a linea..." alt="" coords="215,136,360,177"/>
-<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1ContainerClip.html" title="A clip that can contain multiple other clips and mix their output together." alt="" coords="408,5,548,47"/>
-<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1EditClip.html" title="This is the main source of an Edit clip and is responsible for managing its properties." alt="" coords="408,71,548,112"/>
-<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1WaveAudioClip.html" title="An audio clip that uses an audio file as its source." alt="" coords="408,136,548,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,94,167,149"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1AudioClipBase.html" title="Base class for Clips that produce some kind of audio e.g." alt="" coords="217,69,357,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="180,104,217,98,218,103,181,109"/>
+<area shape="rect" id="Node000006" href="$classtracktion_1_1engine_1_1WarpTimeManager.html" title="A WarpTimeManager contains a list of WarpMarkers and some source material and maps times from a linea..." alt="" coords="215,133,360,173"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="181,134,214,139,214,144,180,139"/>
+<area shape="rect" id="Node000003" href="$classtracktion_1_1engine_1_1ContainerClip.html" title="A clip that can contain multiple other clips and mix their output together." alt="" coords="408,5,548,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="360,62,417,43,419,48,361,67"/>
+<area shape="rect" id="Node000004" href="$classtracktion_1_1engine_1_1EditClip.html" title="This is the main source of an Edit clip and is responsible for managing its properties." alt="" coords="408,69,548,109"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="371,87,408,87,408,92,371,92"/>
+<area shape="rect" id="Node000005" href="$classtracktion_1_1engine_1_1WaveAudioClip.html" title="An audio clip that uses an audio file as its source." alt="" coords="408,133,548,173"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="361,111,419,131,417,136,360,116"/>
 </map>

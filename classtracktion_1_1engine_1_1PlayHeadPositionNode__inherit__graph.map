@@ -1,5 +1,7 @@
 <map id="tracktion::engine::PlayHeadPositionNode" name="tracktion::engine::PlayHeadPositionNode">
-<area shape="rect" id="node1" title="A Node that calculates a position to show visually what time is currently being processed by the grap..." alt="" coords="97,95,267,136"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="5,13,172,39"/>
-<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1TracktionEngineNode.html" title="Base class for Nodes that provides information about the current process call." alt="" coords="196,5,355,47"/>
+<area shape="rect" id="Node000001" title="A Node that calculates a position to show visually what time is currently being processed by the grap..." alt="" coords="97,93,267,133"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="5,13,172,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,45,163,91,160,95,110,49"/>
+<area shape="rect" id="Node000003" href="$classtracktion_1_1engine_1_1TracktionEngineNode.html" title="Base class for Nodes that provides information about the current process call." alt="" coords="196,5,355,45"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="246,57,204,95,201,91,243,53"/>
 </map>

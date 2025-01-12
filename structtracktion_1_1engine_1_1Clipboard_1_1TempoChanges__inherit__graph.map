@@ -1,4 +1,5 @@
 <map id="tracktion::engine::Clipboard::TempoChanges" name="tracktion::engine::Clipboard::TempoChanges">
-<area shape="rect" id="node1" title=" " alt="" coords="5,95,196,136"/>
-<area shape="rect" id="node2" href="$structtracktion_1_1engine_1_1Clipboard_1_1ContentType.html" title=" " alt="" coords="14,5,187,47"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,93,196,133"/>
+<area shape="rect" id="Node000002" href="$structtracktion_1_1engine_1_1Clipboard_1_1ContentType.html" title=" " alt="" coords="14,5,187,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,59,103,93,98,93,98,59"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="tracktion::graph::ForwardingNode" name="tracktion::graph::ForwardingNode">
-<area shape="rect" id="node1" title="Takes a non&#45;owning input node and simply forwards its outputs on." alt="" coords="5,80,244,107"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="41,5,208,32"/>
+<area shape="rect" id="Node000001" title="Takes a non&#45;owning input node and simply forwards its outputs on." alt="" coords="5,79,244,104"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="41,5,208,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,44,127,79,122,79,122,44"/>
 </map>

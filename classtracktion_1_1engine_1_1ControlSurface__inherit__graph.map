@@ -1,13 +1,23 @@
 <map id="tracktion::engine::ControlSurface" name="tracktion::engine::ControlSurface">
-<area shape="rect" id="node1" title="Base class for types of control surface." alt="" coords="193,201,333,243"/>
-<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1AlphaTrackControlSurface.html" title=" " alt="" coords="381,5,571,47"/>
-<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1CustomControlSurface.html" title=" " alt="" coords="392,71,560,112"/>
-<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1MackieC4.html" title=" " alt="" coords="406,136,546,177"/>
-<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1MackieMCU.html" title=" " alt="" coords="406,201,546,243"/>
-<area shape="rect" id="node8" href="$classtracktion_1_1engine_1_1MackieXT.html" title=" " alt="" coords="406,267,546,308"/>
-<area shape="rect" id="node9" href="$classtracktion_1_1engine_1_1NovationRemoteSl.html" title=" " alt="" coords="404,332,548,373"/>
-<area shape="rect" id="node11" href="$classtracktion_1_1engine_1_1TranzportControlSurface.html" title=" " alt="" coords="387,397,565,439"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,201,145,243"/>
-<area shape="rect" id="node7" href="$classtracktion_1_1engine_1_1IconProG2.html" title=" " alt="" coords="622,201,762,243"/>
-<area shape="rect" id="node10" href="$classtracktion_1_1engine_1_1RemoteSLCompact.html" title=" " alt="" coords="619,332,765,373"/>
+<area shape="rect" id="Node000001" title="Base class for types of control surface." alt="" coords="193,197,333,237"/>
+<area shape="rect" id="Node000003" href="$classtracktion_1_1engine_1_1AlphaTrackControlSurface.html" title=" " alt="" coords="381,5,571,45"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="278,183,319,119,347,85,380,55,400,43,403,48,383,59,351,88,323,122,283,186"/>
+<area shape="rect" id="Node000004" href="$classtracktion_1_1engine_1_1CustomControlSurface.html" title=" " alt="" coords="392,69,560,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="293,185,333,151,380,119,405,107,408,112,383,124,336,155,296,190"/>
+<area shape="rect" id="Node000005" href="$classtracktion_1_1engine_1_1MackieC4.html" title=" " alt="" coords="406,133,546,173"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="343,191,408,171,410,176,344,196"/>
+<area shape="rect" id="Node000006" href="$classtracktion_1_1engine_1_1MackieMCU.html" title=" " alt="" coords="406,197,546,237"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="347,215,406,215,406,220,347,220"/>
+<area shape="rect" id="Node000008" href="$classtracktion_1_1engine_1_1MackieXT.html" title=" " alt="" coords="406,261,546,301"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="344,239,410,259,408,264,343,244"/>
+<area shape="rect" id="Node000009" href="$classtracktion_1_1engine_1_1NovationRemoteSl.html" title=" " alt="" coords="404,325,548,365"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="296,245,336,279,383,311,408,323,405,328,380,316,333,283,293,249"/>
+<area shape="rect" id="Node000011" href="$classtracktion_1_1engine_1_1TranzportControlSurface.html" title=" " alt="" coords="387,389,565,429"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="283,248,323,313,351,346,383,375,403,387,400,392,380,379,347,350,319,316,278,251"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,197,145,237"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,215,193,215,193,220,159,220"/>
+<area shape="rect" id="Node000007" href="$classtracktion_1_1engine_1_1IconProG2.html" title=" " alt="" coords="622,197,762,237"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="560,215,622,215,622,220,560,220"/>
+<area shape="rect" id="Node000010" href="$classtracktion_1_1engine_1_1RemoteSLCompact.html" title=" " alt="" coords="619,325,765,365"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="562,343,618,343,618,348,562,348"/>
 </map>

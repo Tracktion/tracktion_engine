@@ -1,6 +1,9 @@
 <map id="tracktion::engine::CurveEditor" name="tracktion::engine::CurveEditor">
-<area shape="rect" id="node1" title=" " alt="" coords="323,71,463,112"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1SelectableListener.html" title=" " alt="" coords="69,5,211,47"/>
-<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1MouseHoverDetector.html" title=" " alt="" coords="60,71,220,112"/>
-<area shape="rect" id="node4" href="$structtracktion_1_1engine_1_1TransparentToMouseInTrackItemComp.html" title=" " alt="" coords="5,136,275,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="323,69,463,109"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1SelectableListener.html" title=" " alt="" coords="69,5,211,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="225,42,275,55,323,67,322,73,274,60,224,48"/>
+<area shape="rect" id="Node000003" href="$classtracktion_1_1engine_1_1MouseHoverDetector.html" title=" " alt="" coords="60,69,220,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="234,87,322,87,322,92,234,92"/>
+<area shape="rect" id="Node000004" href="$structtracktion_1_1engine_1_1TransparentToMouseInTrackItemComp.html" title=" " alt="" coords="5,133,275,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="239,127,274,119,322,106,323,111,275,124,241,133"/>
 </map>

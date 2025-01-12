@@ -1,9 +1,15 @@
 <map id="tracktion::engine::StepModifier" name="tracktion::engine::StepModifier">
-<area shape="rect" id="node1" title=" " alt="" coords="653,104,793,145"/>
-<area shape="rect" id="node2" href="$structtracktion_1_1engine_1_1Modifier.html" title="Bass class for parameter Modifiers." alt="" coords="440,71,580,112"/>
-<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1AutomatableEditItem.html" title="Base class for elements that have some kind of automatable parameters." alt="" coords="199,5,361,47"/>
-<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,5,145,47"/>
-<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="210,71,350,112"/>
-<area shape="rect" id="node6" href="$structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierSource.html" title="Base class for things that can be used to modify parameters." alt="" coords="193,137,367,193"/>
-<area shape="rect" id="node7" href="$structtracktion_1_1engine_1_1ValueTreeAllEventListener.html" title=" " alt="" coords="415,136,605,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="653,101,793,141"/>
+<area shape="rect" id="Node000002" href="$structtracktion_1_1engine_1_1Modifier.html" title="Bass class for parameter Modifiers." alt="" coords="440,69,580,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="594,99,654,108,653,114,593,104"/>
+<area shape="rect" id="Node000003" href="$classtracktion_1_1engine_1_1AutomatableEditItem.html" title="Base class for elements that have some kind of automatable parameters." alt="" coords="199,5,361,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="366,46,441,67,439,73,365,52"/>
+<area shape="rect" id="Node000004" href="$classtracktion_1_1engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,5,145,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="159,23,199,23,199,28,159,28"/>
+<area shape="rect" id="Node000005" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="210,69,350,109"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="364,87,440,87,440,92,364,92"/>
+<area shape="rect" id="Node000006" href="$structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierSource.html" title="Base class for things that can be used to modify parameters." alt="" coords="193,134,367,189"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="379,127,444,107,446,112,381,133"/>
+<area shape="rect" id="Node000007" href="$structtracktion_1_1engine_1_1ValueTreeAllEventListener.html" title=" " alt="" coords="415,133,605,173"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="619,134,653,129,653,134,620,140"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="tracktion::engine::ExportJob" name="tracktion::engine::ExportJob">
-<area shape="rect" id="node1" title=" " alt="" coords="36,95,176,136"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1ThreadPoolJobWithProgress.html" title=" " alt="" coords="5,5,207,47"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="36,93,176,133"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1ThreadPoolJobWithProgress.html" title=" " alt="" coords="5,5,207,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,59,109,93,103,93,103,59"/>
 </map>

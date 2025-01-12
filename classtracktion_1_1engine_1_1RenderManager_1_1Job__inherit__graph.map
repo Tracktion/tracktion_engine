@@ -1,7 +1,11 @@
 <map id="tracktion::engine::RenderManager::Job" name="tracktion::engine::RenderManager::Job">
-<area shape="rect" id="node1" title="The base class that all generator jobs derive from." alt="" coords="255,71,408,112"/>
-<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1EditRenderJob.html" title=" " alt="" coords="463,5,603,47"/>
-<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1ReverseRenderJob.html" title=" " alt="" coords="463,71,604,112"/>
-<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1WarpTimeRenderJob.html" title=" " alt="" coords="456,136,611,177"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1ThreadPoolJobWithProgress.html" title=" " alt="" coords="5,71,207,112"/>
+<area shape="rect" id="Node000001" title="The base class that all generator jobs derive from." alt="" coords="255,69,408,109"/>
+<area shape="rect" id="Node000003" href="$classtracktion_1_1engine_1_1EditRenderJob.html" title=" " alt="" coords="463,5,603,45"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="407,63,469,43,471,48,409,68"/>
+<area shape="rect" id="Node000004" href="$classtracktion_1_1engine_1_1ReverseRenderJob.html" title=" " alt="" coords="463,69,604,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="422,87,462,87,462,92,422,92"/>
+<area shape="rect" id="Node000005" href="$classtracktion_1_1engine_1_1WarpTimeRenderJob.html" title=" " alt="" coords="456,133,611,173"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="409,111,471,131,469,136,407,116"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1ThreadPoolJobWithProgress.html" title=" " alt="" coords="5,69,207,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="220,87,255,87,255,92,220,92"/>
 </map>

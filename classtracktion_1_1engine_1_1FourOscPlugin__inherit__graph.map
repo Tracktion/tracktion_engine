@@ -1,11 +1,19 @@
 <map id="tracktion::engine::FourOscPlugin" name="tracktion::engine::FourOscPlugin">
-<area shape="rect" id="node1" title=" " alt="" coords="644,169,784,211"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1Plugin.html" title=" " alt="" coords="444,136,584,177"/>
-<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="219,5,359,47"/>
-<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1Exportable.html" title="An interface for objects within an edit that can be exported." alt="" coords="219,71,359,112"/>
-<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1AutomatableEditItem.html" title="Base class for elements that have some kind of automatable parameters." alt="" coords="208,136,369,177"/>
-<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,136,145,177"/>
-<area shape="rect" id="node7" href="$classtracktion_1_1engine_1_1MacroParameterElement.html" title="Base class for elements which can contain macro parameters." alt="" coords="197,201,380,243"/>
-<area shape="rect" id="node8" href="$structtracktion_1_1engine_1_1ValueTreeAllEventListener.html" title=" " alt="" coords="193,267,384,308"/>
-<area shape="rect" id="node9" href="$structtracktion_1_1engine_1_1LevelMeasurer_1_1Client.html" title=" " alt="" coords="432,201,596,243"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="644,165,784,205"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1Plugin.html" title=" " alt="" coords="444,133,584,173"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="598,164,644,172,643,177,597,169"/>
+<area shape="rect" id="Node000003" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="219,5,359,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="371,48,385,55,445,93,492,131,489,135,442,97,383,60,369,53"/>
+<area shape="rect" id="Node000004" href="$classtracktion_1_1engine_1_1Exportable.html" title="An interface for objects within an edit that can be exported." alt="" coords="219,69,359,109"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="373,110,445,131,443,136,371,115"/>
+<area shape="rect" id="Node000005" href="$classtracktion_1_1engine_1_1AutomatableEditItem.html" title="Base class for elements that have some kind of automatable parameters." alt="" coords="208,133,369,173"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="384,151,444,151,444,156,384,156"/>
+<area shape="rect" id="Node000006" href="$classtracktion_1_1engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,133,145,173"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="159,151,208,151,208,156,159,156"/>
+<area shape="rect" id="Node000007" href="$classtracktion_1_1engine_1_1MacroParameterElement.html" title="Base class for elements which can contain macro parameters." alt="" coords="197,197,380,237"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="373,191,443,171,445,176,374,196"/>
+<area shape="rect" id="Node000008" href="$structtracktion_1_1engine_1_1ValueTreeAllEventListener.html" title=" " alt="" coords="193,261,384,301"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="374,253,382,247,398,232,406,216,414,200,430,183,450,171,453,176,434,187,419,203,411,219,402,235,386,251,377,257"/>
+<area shape="rect" id="Node000009" href="$structtracktion_1_1engine_1_1LevelMeasurer_1_1Client.html" title=" " alt="" coords="432,197,596,237"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="609,199,643,194,644,199,610,205"/>
 </map>

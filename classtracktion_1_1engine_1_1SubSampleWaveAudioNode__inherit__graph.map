@@ -1,4 +1,5 @@
 <map id="tracktion::engine::SubSampleWaveAudioNode" name="tracktion::engine::SubSampleWaveAudioNode">
-<area shape="rect" id="node1" title=" " alt="" coords="5,95,208,136"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1AudioNode.html" title="Base class for nodes in an audio playback graph." alt="" coords="37,5,177,47"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,93,208,133"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1AudioNode.html" title="Base class for nodes in an audio playback graph." alt="" coords="37,5,177,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,59,109,93,104,93,104,59"/>
 </map>

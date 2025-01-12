@@ -1,11 +1,19 @@
 <map id="tracktion::engine::AutomatableParameter::ModifierSource" name="tracktion::engine::AutomatableParameter::ModifierSource">
-<area shape="rect" id="node1" title="Base class for things that can be used to modify parameters." alt="" coords="5,130,179,186"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1MacroParameter.html" title="A MacroParameter is an AutomatableParameter which is a collection of Mappings." alt="" coords="227,104,367,145"/>
-<area shape="rect" id="node3" href="$structtracktion_1_1engine_1_1Modifier.html" title="Bass class for parameter Modifiers." alt="" coords="227,169,367,211"/>
-<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1BreakpointOscillatorModifier.html" title=" " alt="" coords="415,5,623,47"/>
-<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1EnvelopeFollowerModifier.html" title=" " alt="" coords="423,71,614,112"/>
-<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1LFOModifier.html" title=" " alt="" coords="449,136,589,177"/>
-<area shape="rect" id="node7" href="$classtracktion_1_1engine_1_1MIDITrackerModifier.html" title=" " alt="" coords="443,201,594,243"/>
-<area shape="rect" id="node8" href="$classtracktion_1_1engine_1_1RandomModifier.html" title=" " alt="" coords="449,267,589,308"/>
-<area shape="rect" id="node9" href="$classtracktion_1_1engine_1_1StepModifier.html" title=" " alt="" coords="449,332,589,373"/>
+<area shape="rect" id="Node000001" title="Base class for things that can be used to modify parameters." alt="" coords="5,126,179,181"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1MacroParameter.html" title="A MacroParameter is an AutomatableParameter which is a collection of Mappings." alt="" coords="227,101,367,141"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,135,226,130,226,135,193,140"/>
+<area shape="rect" id="Node000003" href="$structtracktion_1_1engine_1_1Modifier.html" title="Bass class for parameter Modifiers." alt="" coords="227,165,367,205"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="193,166,226,172,226,177,192,172"/>
+<area shape="rect" id="Node000004" href="$classtracktion_1_1engine_1_1BreakpointOscillatorModifier.html" title=" " alt="" coords="415,5,623,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="360,155,365,152,381,128,387,104,394,79,413,55,431,43,434,48,416,59,399,82,392,105,386,130,369,155,364,159"/>
+<area shape="rect" id="Node000005" href="$classtracktion_1_1engine_1_1EnvelopeFollowerModifier.html" title=" " alt="" coords="423,69,614,109"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="354,157,365,151,389,135,413,119,443,107,445,112,416,124,392,139,368,156,357,162"/>
+<area shape="rect" id="Node000006" href="$classtracktion_1_1engine_1_1LFOModifier.html" title=" " alt="" coords="449,133,589,173"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="380,171,448,161,449,166,381,176"/>
+<area shape="rect" id="Node000007" href="$classtracktion_1_1engine_1_1MIDITrackerModifier.html" title=" " alt="" coords="443,197,594,237"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="381,195,443,204,443,209,380,200"/>
+<area shape="rect" id="Node000008" href="$classtracktion_1_1engine_1_1RandomModifier.html" title=" " alt="" coords="449,261,589,301"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="343,210,416,247,449,259,447,264,414,252,341,215"/>
+<area shape="rect" id="Node000009" href="$classtracktion_1_1engine_1_1StepModifier.html" title=" " alt="" coords="449,325,589,365"/>
+<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="321,215,362,265,388,290,416,311,449,327,447,332,413,316,384,294,358,268,317,219"/>
 </map>

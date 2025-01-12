@@ -1,6 +1,9 @@
 <map id="tracktion::engine::ClipSlot" name="tracktion::engine::ClipSlot">
-<area shape="rect" id="node1" title="Represents a slot on a track that a Clip can live in to be played as a launched clip." alt="" coords="193,71,333,112"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,5,145,47"/>
-<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,71,145,112"/>
-<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips." alt="" coords="5,136,145,177"/>
+<area shape="rect" id="Node000001" title="Represents a slot on a track that a Clip can live in to be played as a launched clip." alt="" coords="193,69,333,109"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,5,145,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,47,205,67,203,72,147,52"/>
+<area shape="rect" id="Node000003" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,69,145,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="159,87,193,87,193,92,159,92"/>
+<area shape="rect" id="Node000004" href="$classtracktion_1_1engine_1_1ClipOwner.html" title="Base class for items that can contain clips." alt="" coords="5,133,145,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="147,126,203,107,205,112,148,131"/>
 </map>

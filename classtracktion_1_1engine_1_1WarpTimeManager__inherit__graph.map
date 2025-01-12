@@ -1,4 +1,5 @@
 <map id="tracktion::engine::WarpTimeManager" name="tracktion::engine::WarpTimeManager">
-<area shape="rect" id="node1" title="A WarpTimeManager contains a list of WarpMarkers and some source material and maps times from a linea..." alt="" coords="13,109,159,151"/>
-<area shape="rect" id="node2" href="$structtracktion_1_1engine_1_1RenderManager_1_1Job_1_1Listener.html" title=" " alt="" coords="5,5,167,61"/>
+<area shape="rect" id="Node000001" title="A WarpTimeManager contains a list of WarpMarkers and some source material and maps times from a linea..." alt="" coords="13,108,159,148"/>
+<area shape="rect" id="Node000002" href="$structtracktion_1_1engine_1_1RenderManager_1_1Job_1_1Listener.html" title=" " alt="" coords="5,5,167,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,74,89,108,83,108,83,74"/>
 </map>

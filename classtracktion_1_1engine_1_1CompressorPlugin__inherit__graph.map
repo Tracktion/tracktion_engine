@@ -1,10 +1,17 @@
 <map id="tracktion::engine::CompressorPlugin" name="tracktion::engine::CompressorPlugin">
-<area shape="rect" id="node1" title=" " alt="" coords="620,136,760,177"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1Plugin.html" title=" " alt="" coords="432,136,572,177"/>
-<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="219,5,359,47"/>
-<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1Exportable.html" title="An interface for objects within an edit that can be exported." alt="" coords="219,71,359,112"/>
-<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1AutomatableEditItem.html" title="Base class for elements that have some kind of automatable parameters." alt="" coords="208,136,369,177"/>
-<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,136,145,177"/>
-<area shape="rect" id="node7" href="$classtracktion_1_1engine_1_1MacroParameterElement.html" title="Base class for elements which can contain macro parameters." alt="" coords="197,201,380,243"/>
-<area shape="rect" id="node8" href="$structtracktion_1_1engine_1_1ValueTreeAllEventListener.html" title=" " alt="" coords="193,267,384,308"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="620,133,760,173"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1Plugin.html" title=" " alt="" coords="432,133,572,173"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="586,151,620,151,620,156,586,156"/>
+<area shape="rect" id="Node000003" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="219,5,359,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="372,48,385,55,440,93,483,131,479,135,437,97,383,60,370,53"/>
+<area shape="rect" id="Node000004" href="$classtracktion_1_1engine_1_1Exportable.html" title="An interface for objects within an edit that can be exported." alt="" coords="219,69,359,109"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="370,111,436,131,434,136,369,116"/>
+<area shape="rect" id="Node000005" href="$classtracktion_1_1engine_1_1AutomatableEditItem.html" title="Base class for elements that have some kind of automatable parameters." alt="" coords="208,133,369,173"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="383,151,432,151,432,156,383,156"/>
+<area shape="rect" id="Node000006" href="$classtracktion_1_1engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,133,145,173"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="159,151,208,151,208,156,159,156"/>
+<area shape="rect" id="Node000007" href="$classtracktion_1_1engine_1_1MacroParameterElement.html" title="Base class for elements which can contain macro parameters." alt="" coords="197,197,380,237"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="369,191,434,171,436,176,370,196"/>
+<area shape="rect" id="Node000008" href="$structtracktion_1_1engine_1_1ValueTreeAllEventListener.html" title=" " alt="" coords="193,261,384,301"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="370,253,383,247,437,209,479,172,483,175,440,214,385,252,372,258"/>
 </map>

@@ -1,7 +1,11 @@
 <map id="tracktion::engine::MidiInputDevice" name="tracktion::engine::MidiInputDevice">
-<area shape="rect" id="node1" title=" " alt="" coords="381,39,521,80"/>
-<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1PhysicalMidiInputDevice.html" title=" " alt="" coords="569,5,752,47"/>
-<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1VirtualMidiInputDevice.html" title=" " alt="" coords="575,71,746,112"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1InputDevice.html" title="Represents an input device." alt="" coords="193,39,333,80"/>
-<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,39,145,80"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="381,37,521,77"/>
+<area shape="rect" id="Node000004" href="$classtracktion_1_1engine_1_1PhysicalMidiInputDevice.html" title=" " alt="" coords="569,5,752,45"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="535,42,569,37,570,42,535,47"/>
+<area shape="rect" id="Node000005" href="$classtracktion_1_1engine_1_1VirtualMidiInputDevice.html" title=" " alt="" coords="575,69,746,109"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="535,67,575,74,575,79,535,73"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1InputDevice.html" title="Represents an input device." alt="" coords="193,37,333,77"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="347,55,381,55,381,60,347,60"/>
+<area shape="rect" id="Node000003" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,37,145,77"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="159,55,193,55,193,60,159,60"/>
 </map>

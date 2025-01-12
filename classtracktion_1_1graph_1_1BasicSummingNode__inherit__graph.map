@@ -1,4 +1,5 @@
 <map id="tracktion::graph::BasicSummingNode" name="tracktion::graph::BasicSummingNode">
-<area shape="rect" id="node1" title=" " alt="" coords="5,80,269,107"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="54,5,221,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,79,269,104"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="54,5,221,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,44,140,79,135,79,135,44"/>
 </map>

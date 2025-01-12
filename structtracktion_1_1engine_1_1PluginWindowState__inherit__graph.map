@@ -1,5 +1,7 @@
 <map id="tracktion::engine::PluginWindowState" name="tracktion::engine::PluginWindowState">
-<area shape="rect" id="node1" title=" " alt="" coords="105,5,253,47"/>
-<area shape="rect" id="node2" href="$structtracktion_1_1engine_1_1Plugin_1_1WindowState.html" title=" " alt="" coords="5,95,161,136"/>
-<area shape="rect" id="node3" href="$structtracktion_1_1engine_1_1RackType_1_1WindowState.html" title=" " alt="" coords="186,95,365,136"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="105,5,253,45"/>
+<area shape="rect" id="Node000002" href="$structtracktion_1_1engine_1_1Plugin_1_1WindowState.html" title=" " alt="" coords="5,93,161,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,57,106,95,103,91,146,53"/>
+<area shape="rect" id="Node000003" href="$structtracktion_1_1engine_1_1RackType_1_1WindowState.html" title=" " alt="" coords="186,93,365,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="213,53,256,91,252,95,209,57"/>
 </map>

@@ -1,10 +1,17 @@
 <map id="tracktion::engine::ClipOwner" name="tracktion::engine::ClipOwner">
-<area shape="rect" id="node1" title="Base class for items that can contain clips." alt="" coords="5,104,145,145"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1ClipSlot.html" title="Represents a slot on a track that a Clip can live in to be played as a launched clip." alt="" coords="193,39,333,80"/>
-<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1ClipTrack.html" title=" " alt="" coords="193,104,333,145"/>
-<area shape="rect" id="node8" href="$classtracktion_1_1engine_1_1ContainerClip.html" title="A clip that can contain multiple other clips and mix their output together." alt="" coords="193,169,333,211"/>
-<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1ArrangerTrack.html" title="A track similar to the MarkerTrack but can be used to move sections of an Edit around." alt="" coords="381,5,521,47"/>
-<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1AudioTrack.html" title=" " alt="" coords="381,71,521,112"/>
-<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1ChordTrack.html" title=" " alt="" coords="381,136,521,177"/>
-<area shape="rect" id="node7" href="$classtracktion_1_1engine_1_1MarkerTrack.html" title=" " alt="" coords="381,201,521,243"/>
+<area shape="rect" id="Node000001" title="Base class for items that can contain clips." alt="" coords="5,101,145,141"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1ClipSlot.html" title="Represents a slot on a track that a Clip can live in to be played as a launched clip." alt="" coords="193,37,333,77"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,94,203,75,205,80,148,99"/>
+<area shape="rect" id="Node000003" href="$classtracktion_1_1engine_1_1ClipTrack.html" title=" " alt="" coords="193,101,333,141"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="159,119,193,119,193,124,159,124"/>
+<area shape="rect" id="Node000008" href="$classtracktion_1_1engine_1_1ContainerClip.html" title="A clip that can contain multiple other clips and mix their output together." alt="" coords="193,165,333,205"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="148,143,205,163,203,168,147,148"/>
+<area shape="rect" id="Node000004" href="$classtracktion_1_1engine_1_1ArrangerTrack.html" title="A track similar to the MarkerTrack but can be used to move sections of an Edit around." alt="" coords="381,5,521,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="321,93,332,87,380,55,403,43,406,48,383,60,335,92,324,98"/>
+<area shape="rect" id="Node000005" href="$classtracktion_1_1engine_1_1AudioTrack.html" title=" " alt="" coords="381,69,521,109"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="346,105,380,99,381,104,347,110"/>
+<area shape="rect" id="Node000006" href="$classtracktion_1_1engine_1_1ChordTrack.html" title=" " alt="" coords="381,133,521,173"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="347,133,381,139,380,144,346,138"/>
+<area shape="rect" id="Node000007" href="$classtracktion_1_1engine_1_1MarkerTrack.html" title=" " alt="" coords="381,197,521,237"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="324,145,335,151,383,183,406,195,403,200,380,188,332,156,321,150"/>
 </map>

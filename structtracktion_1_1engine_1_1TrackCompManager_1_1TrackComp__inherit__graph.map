@@ -1,5 +1,7 @@
 <map id="tracktion::engine::TrackCompManager::TrackComp" name="tracktion::engine::TrackCompManager::TrackComp">
-<area shape="rect" id="node1" title=" " alt="" coords="204,43,435,84"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="11,5,151,47"/>
-<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1ValueTreeObjectList.html" title=" " alt="" coords="5,71,156,127"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="204,41,435,81"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="11,5,151,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,35,204,41,203,47,164,41"/>
+<area shape="rect" id="Node000003" href="$classtracktion_1_1engine_1_1ValueTreeObjectList.html" title=" " alt="" coords="5,70,156,125"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="169,81,203,76,204,81,170,87"/>
 </map>

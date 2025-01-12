@@ -1,4 +1,5 @@
 <map id="tracktion::engine::MIDITrackerModifier::Assignment" name="tracktion::engine::MIDITrackerModifier::Assignment">
-<area shape="rect" id="node1" title=" " alt="" coords="17,109,167,165"/>
-<area shape="rect" id="node2" href="$structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierAssignment.html" title="Connects a modifier source to an AutomatableParameter." alt="" coords="5,5,179,61"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="17,108,167,163"/>
+<area shape="rect" id="Node000002" href="$structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierAssignment.html" title="Connects a modifier source to an AutomatableParameter." alt="" coords="5,5,179,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,74,95,108,89,108,89,74"/>
 </map>

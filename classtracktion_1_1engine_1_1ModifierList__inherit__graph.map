@@ -1,4 +1,5 @@
 <map id="tracktion::engine::ModifierList" name="tracktion::engine::ModifierList">
-<area shape="rect" id="node1" title="Holds a list of Modifiers that have been added to a Track." alt="" coords="11,109,151,151"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1ValueTreeObjectList.html" title=" " alt="" coords="5,5,156,61"/>
+<area shape="rect" id="Node000001" title="Holds a list of Modifiers that have been added to a Track." alt="" coords="11,108,151,148"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1ValueTreeObjectList.html" title=" " alt="" coords="5,5,156,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,74,83,108,78,108,78,74"/>
 </map>

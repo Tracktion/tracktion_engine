@@ -1,8 +1,13 @@
 <map id="tracktion::engine::AutomatableParameter" name="tracktion::engine::AutomatableParameter">
-<area shape="rect" id="node1" title=" " alt="" coords="193,104,367,145"/>
-<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html" title=" " alt="" coords="415,5,665,47"/>
-<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1ExternalAutomatableParameter.html" title=" " alt="" coords="427,71,653,112"/>
-<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1MacroParameter.html" title="A MacroParameter is an AutomatableParameter which is a collection of Mappings." alt="" coords="470,136,610,177"/>
-<area shape="rect" id="node6" href="$structtracktion_1_1engine_1_1PluginWetDryAutomatableParam.html" title="specialised AutomatableParameter for wet/dry." alt="" coords="423,201,657,243"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,104,145,145"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="193,101,367,141"/>
+<area shape="rect" id="Node000003" href="$classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html" title=" " alt="" coords="415,5,665,45"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="329,93,414,55,451,43,453,48,416,60,332,97"/>
+<area shape="rect" id="Node000004" href="$classtracktion_1_1engine_1_1ExternalAutomatableParameter.html" title=" " alt="" coords="427,69,653,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="380,106,426,101,427,106,381,112"/>
+<area shape="rect" id="Node000005" href="$classtracktion_1_1engine_1_1MacroParameter.html" title="A MacroParameter is an AutomatableParameter which is a collection of Mappings." alt="" coords="470,133,610,173"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="381,131,470,142,469,147,380,136"/>
+<area shape="rect" id="Node000006" href="$structtracktion_1_1engine_1_1PluginWetDryAutomatableParam.html" title="specialised AutomatableParameter for wet/dry." alt="" coords="423,197,657,237"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="332,145,416,183,453,195,451,200,414,188,329,150"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,101,145,141"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,119,193,119,193,124,159,124"/>
 </map>

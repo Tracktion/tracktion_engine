@@ -1,4 +1,5 @@
 <map id="tracktion::engine::LevelMeasurer::Client" name="tracktion::engine::LevelMeasurer::Client">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,169,47"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1FourOscPlugin.html" title=" " alt="" coords="17,95,157,136"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,169,45"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1FourOscPlugin.html" title=" " alt="" coords="17,93,157,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,59,90,93,85,93,85,59"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="tracktion::engine::RandomModifier::Assignment" name="tracktion::engine::RandomModifier::Assignment">
-<area shape="rect" id="node1" title=" " alt="" coords="5,109,220,151"/>
-<area shape="rect" id="node2" href="$structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierAssignment.html" title="Connects a modifier source to an AutomatableParameter." alt="" coords="26,5,199,61"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,108,220,148"/>
+<area shape="rect" id="Node000002" href="$structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierAssignment.html" title="Connects a modifier source to an AutomatableParameter." alt="" coords="26,5,199,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,74,115,108,110,108,110,74"/>
 </map>

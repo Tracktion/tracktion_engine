@@ -1,12 +1,21 @@
 <map id="tracktion::engine::AudioClipBase" name="tracktion::engine::AudioClipBase">
-<area shape="rect" id="node1" title="Base class for Clips that produce some kind of audio e.g." alt="" coords="595,103,735,144"/>
-<area shape="rect" id="node8" href="$classtracktion_1_1engine_1_1ContainerClip.html" title="A clip that can contain multiple other clips and mix their output together." alt="" coords="783,37,923,79"/>
-<area shape="rect" id="node9" href="$classtracktion_1_1engine_1_1EditClip.html" title="This is the main source of an Edit clip and is responsible for managing its properties." alt="" coords="783,103,923,144"/>
-<area shape="rect" id="node10" href="$classtracktion_1_1engine_1_1WaveAudioClip.html" title="An audio clip that uses an audio file as its source." alt="" coords="783,168,923,209"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1Clip.html" title="A clip in an edit." alt="" coords="381,77,547,103"/>
-<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g." alt="" coords="193,37,333,79"/>
-<area shape="rect" id="node4" href="$classtracktion_1_1engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,5,145,47"/>
-<area shape="rect" id="node5" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,71,145,112"/>
-<area shape="rect" id="node6" href="$classtracktion_1_1engine_1_1Exportable.html" title="An interface for objects within an edit that can be exported." alt="" coords="193,103,333,144"/>
-<area shape="rect" id="node7" href="$structtracktion_1_1engine_1_1RenderManager_1_1Job_1_1Listener.html" title=" " alt="" coords="383,127,545,183"/>
+<area shape="rect" id="Node000001" title="Base class for Clips that produce some kind of audio e.g." alt="" coords="595,101,735,141"/>
+<area shape="rect" id="Node000008" href="$classtracktion_1_1engine_1_1ContainerClip.html" title="A clip that can contain multiple other clips and mix their output together." alt="" coords="783,37,923,77"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="736,94,793,75,794,80,738,99"/>
+<area shape="rect" id="Node000009" href="$classtracktion_1_1engine_1_1EditClip.html" title="This is the main source of an Edit clip and is responsible for managing its properties." alt="" coords="783,101,923,141"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="749,119,782,119,782,124,749,124"/>
+<area shape="rect" id="Node000010" href="$classtracktion_1_1engine_1_1WaveAudioClip.html" title="An audio clip that uses an audio file as its source." alt="" coords="783,165,923,205"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="738,143,794,163,793,168,736,148"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1Clip.html" title="A clip in an edit." alt="" coords="381,77,547,102"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="558,102,595,108,594,113,557,107"/>
+<area shape="rect" id="Node000003" href="$classtracktion_1_1engine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g." alt="" coords="193,37,333,77"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="347,68,385,74,384,79,346,73"/>
+<area shape="rect" id="Node000004" href="$classtracktion_1_1engine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,5,145,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="159,37,193,43,192,48,158,42"/>
+<area shape="rect" id="Node000005" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,69,145,109"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="158,73,192,67,193,72,159,78"/>
+<area shape="rect" id="Node000006" href="$classtracktion_1_1engine_1_1Exportable.html" title="An interface for objects within an edit that can be exported." alt="" coords="193,101,333,141"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="346,105,384,99,385,105,347,111"/>
+<area shape="rect" id="Node000007" href="$structtracktion_1_1engine_1_1RenderManager_1_1Job_1_1Listener.html" title=" " alt="" coords="383,126,545,181"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="558,136,594,130,595,135,559,141"/>
 </map>

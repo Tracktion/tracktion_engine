@@ -1,4 +1,5 @@
 <map id="tracktion::engine::MessageThreadCallback" name="tracktion::engine::MessageThreadCallback">
-<area shape="rect" id="node1" title="Calls a function on the message thread checking a calling thread for an exit signal." alt="" coords="5,5,187,47"/>
-<area shape="rect" id="node2" href="$structtracktion_1_1engine_1_1BlockingFunction.html" title=" " alt="" coords="26,95,166,136"/>
+<area shape="rect" id="Node000001" title="Calls a function on the message thread checking a calling thread for an exit signal." alt="" coords="5,5,187,45"/>
+<area shape="rect" id="Node000002" href="$structtracktion_1_1engine_1_1BlockingFunction.html" title=" " alt="" coords="26,93,166,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,59,99,93,93,93,93,59"/>
 </map>

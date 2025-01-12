@@ -1,5 +1,7 @@
 <map id="tracktion::engine::VSTXML::Base" name="tracktion::engine::VSTXML::Base">
-<area shape="rect" id="node1" title=" " alt="" coords="87,5,227,47"/>
-<area shape="rect" id="node2" href="$structtracktion_1_1engine_1_1VSTXML_1_1Group.html" title=" " alt="" coords="5,95,145,136"/>
-<area shape="rect" id="node3" href="$structtracktion_1_1engine_1_1VSTXML_1_1Param.html" title=" " alt="" coords="169,95,309,136"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="87,5,227,45"/>
+<area shape="rect" id="Node000002" href="$structtracktion_1_1engine_1_1VSTXML_1_1Group.html" title=" " alt="" coords="5,93,145,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,57,95,95,91,91,127,54"/>
+<area shape="rect" id="Node000003" href="$structtracktion_1_1engine_1_1VSTXML_1_1Param.html" title=" " alt="" coords="169,93,309,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="187,54,223,91,219,95,183,57"/>
 </map>

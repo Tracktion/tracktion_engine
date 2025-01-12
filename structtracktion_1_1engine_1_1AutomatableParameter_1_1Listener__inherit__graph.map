@@ -1,5 +1,7 @@
 <map id="tracktion::engine::AutomatableParameter::Listener" name="tracktion::engine::AutomatableParameter::Listener">
-<area shape="rect" id="node1" title=" " alt="" coords="70,5,243,61"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1ExternalController.html" title="Acts as a holder for a ControlSurface object." alt="" coords="5,109,145,151"/>
-<area shape="rect" id="node3" href="$structtracktion_1_1engine_1_1PluginEffect.html" title=" " alt="" coords="169,109,309,151"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="70,5,243,60"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1ExternalController.html" title="Acts as a holder for a ControlSurface object." alt="" coords="5,108,145,148"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,72,94,110,90,106,122,69"/>
+<area shape="rect" id="Node000003" href="$structtracktion_1_1engine_1_1PluginEffect.html" title=" " alt="" coords="169,108,309,148"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="191,69,225,106,221,110,187,72"/>
 </map>

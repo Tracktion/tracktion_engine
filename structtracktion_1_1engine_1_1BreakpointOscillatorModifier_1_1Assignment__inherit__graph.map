@@ -1,4 +1,5 @@
 <map id="tracktion::engine::BreakpointOscillatorModifier::Assignment" name="tracktion::engine::BreakpointOscillatorModifier::Assignment">
-<area shape="rect" id="node1" title=" " alt="" coords="5,109,213,165"/>
-<area shape="rect" id="node2" href="$structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierAssignment.html" title="Connects a modifier source to an AutomatableParameter." alt="" coords="23,5,196,61"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,108,213,163"/>
+<area shape="rect" id="Node000002" href="$structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierAssignment.html" title="Connects a modifier source to an AutomatableParameter." alt="" coords="23,5,196,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,74,112,108,107,108,107,74"/>
 </map>

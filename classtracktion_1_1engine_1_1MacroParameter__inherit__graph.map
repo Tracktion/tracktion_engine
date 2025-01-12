@@ -1,6 +1,9 @@
 <map id="tracktion::engine::MacroParameter" name="tracktion::engine::MacroParameter">
-<area shape="rect" id="node1" title="A MacroParameter is an AutomatableParameter which is a collection of Mappings." alt="" coords="415,43,555,84"/>
-<area shape="rect" id="node2" href="$classtracktion_1_1engine_1_1AutomatableParameter.html" title=" " alt="" coords="193,5,367,47"/>
-<area shape="rect" id="node3" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,5,145,47"/>
-<area shape="rect" id="node4" href="$structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierSource.html" title="Base class for things that can be used to modify parameters." alt="" coords="193,71,367,127"/>
+<area shape="rect" id="Node000001" title="A MacroParameter is an AutomatableParameter which is a collection of Mappings." alt="" coords="415,41,555,81"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1engine_1_1AutomatableParameter.html" title=" " alt="" coords="193,5,367,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="381,40,415,46,414,52,380,46"/>
+<area shape="rect" id="Node000003" href="$classtracktion_1_1engine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,5,145,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="159,23,193,23,193,28,159,28"/>
+<area shape="rect" id="Node000004" href="$structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierSource.html" title="Base class for things that can be used to modify parameters." alt="" coords="193,70,367,125"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="380,77,414,71,415,76,381,82"/>
 </map>
