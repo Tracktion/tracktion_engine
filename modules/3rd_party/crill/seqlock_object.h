@@ -74,7 +74,7 @@ public:
     // Non-blocking guarantees: wait-free.
     void store(T t) noexcept
     {
-        std::size_t buffer[buffer_size];
+        std::size_t buffer[buffer_size] = {}; // zero initialise to work around a bug in gcc 13.3
         if constexpr (sizeof(T) % sizeof(std::size_t) != 0)
             buffer[buffer_size - 1] = 0;
 
