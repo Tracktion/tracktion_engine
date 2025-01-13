@@ -1242,6 +1242,9 @@ struct PluginUnloadInhibitor    : private juce::Timer
     {
         for (int i = jobs.size(); --i >= 0;)
         {
+            if (jobs[i] == nullptr)
+                continue;
+            
             if (jobs[i]->progress >= 1.0f)
                 jobs.remove (i);
             else
