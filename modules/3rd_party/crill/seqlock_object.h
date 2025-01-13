@@ -9,6 +9,11 @@
 #include <cstring>
 #include <atomic>
 
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wuninitialized"
+#endif
+
 namespace crill {
 
 // A portable C++ implementation of a seqlock inspired by Hans Boehm's paper
@@ -75,6 +80,7 @@ public:
     void store(T t) noexcept
     {
         std::size_t buffer[buffer_size];
+
         if constexpr (sizeof(T) % sizeof(std::size_t) != 0)
             buffer[buffer_size - 1] = 0;
 
@@ -100,5 +106,9 @@ private:
 };
 
 } // namespace crill
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
+#endif
 
 #endif //CRILL_SEQLOCK_OBJECT_H
