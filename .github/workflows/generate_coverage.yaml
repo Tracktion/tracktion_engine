@@ -62,7 +62,7 @@ jobs:
           cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
           cmake --build ./build --target coverage --config RelWithDebInfo --parallel
           build/coverage_artefacts/RelWithDebInfo/coverage
-          lcov --capture --directory "build" --output-file coverage.info \
+          lcov --capture --directory "build" --output-file coverage.info --rc geninfo_unexecuted_blocks=1 \
             --exclude "tests/coverage/*" \
             --exclude "examples/common/*" \
             --exclude "tests/coverage/coverage.h" \
