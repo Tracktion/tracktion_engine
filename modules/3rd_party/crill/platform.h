@@ -6,12 +6,11 @@
 #ifndef CRILL_PLATFORM_H
 #define CRILL_PLATFORM_H
 
-// Macros to query target hardware architecture
 #if defined (__arm__)
   #define CRILL_ARM 1
   #define CRILL_32BIT 1
   #define CRILL_ARM_32BIT 1
-#elif defined (__arm64__)
+#elif defined (__arm64__) || defined (__aarch64__)
   #define CRILL_ARM 1
   #define CRILL_64BIT 1
   #define CRILL_ARM_64BIT 1
@@ -24,15 +23,5 @@
   #define CRILL_64BIT 1
   #define CRILL_INTEL_64BIT 1
 #endif
-
-// Macros to query current compiler
-#if defined(__clang__)
-  #define CRILL_CLANG 1
-#elif defined(__GNUC__) || defined(__GNUG__)
-  #define CRILL_GCC 1
-#elif defined(_MSC_VER)
-  #define CRILL_MSVC 1
-#endif
-
 
 #endif //CRILL_PLATFORM_H
