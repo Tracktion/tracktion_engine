@@ -74,7 +74,14 @@ public:
     // Non-blocking guarantees: wait-free.
     void store(T t) noexcept
     {
+       #ifdef __clang__
+        std::size_t buffer[buffer_size];
+       #elifdef __GNUC__ >= 13
         std::size_t buffer[buffer_size] = {}; // zero initialise to work around a bug in gcc 13.3
+       #else
+        std::size_t buffer[buffer_size];
+       #endif
+
         if constexpr (sizeof(T) % sizeof(std::size_t) != 0)
             buffer[buffer_size - 1] = 0;
 
