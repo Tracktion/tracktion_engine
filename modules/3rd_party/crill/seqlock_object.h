@@ -76,7 +76,7 @@ public:
     {
        #ifdef __clang__
         std::size_t buffer[buffer_size];
-       #elifdef __GNUC__ >= 13
+       #elif defined(__GNUC__)
         std::size_t buffer[buffer_size] = {}; // zero initialise to work around a bug in gcc 13.3
        #else
         std::size_t buffer[buffer_size];
