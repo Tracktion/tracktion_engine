@@ -277,7 +277,13 @@ inline bool callBlocking (std::function<void()> f)
     bf.triggerAndWaitForCallback();
 
     if (! bf.hasFinished())
-        throw std::runtime_error ("Blocking function unable to complete");
+    {
+        std::string err ("Blocking function unable to complete");
+       #if JUCE_DEBUG
+        err += ("\n" + juce::SystemStats::getStackBacktrace().toStdString());
+       #endif
+        throw std::runtime_error (std::move (err));
+    }
 
     return true;
 }

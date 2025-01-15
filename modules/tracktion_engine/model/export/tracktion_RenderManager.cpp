@@ -41,34 +41,40 @@ juce::ThreadPoolJob::JobStatus RenderManager::Job::runJob()
 
     juce::FloatVectorOperations::disableDenormalisedNumberSupport();
 
-    if (! (isInitialised || shouldExit()))
+    try
     {
-        proxy.deleteFile();
-        isInitialised = true;
+        if (! (isInitialised || shouldExit()))
+        {
+            proxy.deleteFile();
+            isInitialised = true;
 
-        if (setUpRender())
-            return jobNeedsRunningAgain;
-    }
-    else
-    {
-        if (! (shouldExit() || renderNextBlock()))
-            return jobNeedsRunningAgain;
-    }
+            if (setUpRender())
+                return jobNeedsRunningAgain;
+        }
+        else
+        {
+            if (! (shouldExit() || renderNextBlock()))
+                return jobNeedsRunningAgain;
+        }
 
-    const bool completedOk = completeRender();
+        const bool completedOk = completeRender();
 
-    if (! proxy.isNull() && completedOk)
-        callBlocking ([this]
-                      {
+        if (! proxy.isNull() && completedOk)
+            callBlocking ([this]
+                          {
                           engine.getAudioFileManager().validateFile (proxy, true);
-                          jassert (isMidiFile (proxy.getFile()) || proxy.isValid());
-                      });
+                          jassert (isMidiFile (proxy.getFile()) || proxy.isValid()); });
 
+        const juce::ScopedLock sl (finishedLock);
 
-    const juce::ScopedLock sl (finishedLock);
-
-    if (! hasFinished)
-        sendCompletionMessages (completedOk && (! shouldExit()));
+        if (! hasFinished)
+            sendCompletionMessages (completedOk && (! shouldExit()));
+    }
+    catch ([[ maybe_unused ]] std::runtime_error& e)
+    {
+        DBG(e.what());
+        jassertfalse;
+    }
 
     return jobHasFinished;
 }
