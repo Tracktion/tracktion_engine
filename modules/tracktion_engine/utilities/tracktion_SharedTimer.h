@@ -47,8 +47,10 @@ public:
 
     void addListener (Listener* l)
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
-        listeners.add (l);
+        {
+            const std::scoped_lock lock (mutex);
+            listeners.add (l);
+        }
 
         if (! isTimerRunning())
             startTimerHz (frequencyHz);
@@ -56,8 +58,10 @@ public:
 
     void removeListener (Listener* l)
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
-        listeners.remove (l);
+        {
+            const std::scoped_lock lock (mutex);
+            listeners.remove (l);
+        }
 
         if (listeners.isEmpty())
             stopTimer();
@@ -67,10 +71,12 @@ private:
     //==============================================================================
     int frequencyHz;
     juce::ListenerList<Listener> listeners;
+    std::mutex mutex;
 
     //==============================================================================
     void timerCallback() override
     {
+        const std::scoped_lock lock (mutex);
         listeners.call (&Listener::sharedTimerCallback);
     }
 
