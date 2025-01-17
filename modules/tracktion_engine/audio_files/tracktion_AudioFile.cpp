@@ -229,7 +229,7 @@ AudioProxyGenerator::GeneratorJob::GeneratorJob (const AudioFile& p)
 AudioProxyGenerator::GeneratorJob::~GeneratorJob()
 {
     prepareForJobDeletion();
-    callBlocking ([this] { proxy.engine->getAudioFileManager().validateFile (proxy, false); });
+    callBlockingCatching ([this] { proxy.engine->getAudioFileManager().validateFile (proxy, false); });
 }
 
 juce::ThreadPoolJob::JobStatus AudioProxyGenerator::GeneratorJob::runJob()

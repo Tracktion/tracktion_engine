@@ -94,6 +94,7 @@ void PluginList::initialise (const juce::ValueTree& v)
 
     state = v;
     list = std::make_unique<ObjectList> (*this, state);
+    // Exception will be caught by the Edit constructor
     callBlocking ([this] { list->rebuildObjects(); });
 }
 

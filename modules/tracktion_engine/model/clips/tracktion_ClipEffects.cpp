@@ -390,8 +390,17 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
     bool setUpRender() override
     {
         CRASH_TRACER
-        callBlocking ([this] { createAndPrepareRenderContext(); });
-        return true;
+        try
+        {
+            callBlocking ([this] { createAndPrepareRenderContext(); });
+            return true;
+        }
+        catch (std::runtime_error& err)
+        {
+            TRACKTION_LOG_ERROR (err.what());
+        }
+
+        return false;
     }
 
     bool renderNextBlock() override
@@ -1259,18 +1268,18 @@ struct PluginUnloadInhibitor    : private juce::Timer
 
     void load()
     {
-        callBlocking ([this]() { plugin->setProcessingEnabled (true); callback(); });
+        callBlockingCatching ([this] { plugin->setProcessingEnabled (true); callback(); });
     }
 
     void unload()
     {
-        callBlocking ([this]() { plugin->setProcessingEnabled (false); callback(); });
+        callBlockingCatching ([this] { plugin->setProcessingEnabled (false); callback(); });
     }
 
     int count = 0;
     Plugin::Ptr plugin;
     juce::ReferenceCountedArray<AudioNodeRenderJob> jobs;
-    std::function<void(void)> callback;
+    std::function<void()> callback;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginUnloadInhibitor)
 };
@@ -1294,6 +1303,7 @@ PluginEffect::PluginEffect (const juce::ValueTree& v, ClipEffects& o)
     if (pluginState.isValid())
     {
         pluginState.setProperty (IDs::process, false, nullptr); // always restore plugin to non-processing state on load
+        // Exception will be caught by Edit constructor
         callBlocking ([this, pluginState]() { plugin = edit.getPluginCache().getOrCreatePluginFor (pluginState); });
     }
 
@@ -1753,11 +1763,11 @@ struct AggregateJob  : public RenderManager::Job
                 afm.releaseFile (currentJob->destination);
 
                 if (! currentJob->destination.isNull())
-                    callBlocking ([&afm, fileToValidate = currentJob->destination]
-                                  {
-                                      afm.validateFile (fileToValidate, true);
-                                      jassert (fileToValidate.isValid());
-                                  });
+                    callBlockingCatching ([&afm, fileToValidate = currentJob->destination]
+                                          {
+                                              afm.validateFile (fileToValidate, true);
+                                              jassert (fileToValidate.isValid());
+                                          });
 
                 lastFile = currentJob->destination.getFile();
                 currentJob = nullptr;

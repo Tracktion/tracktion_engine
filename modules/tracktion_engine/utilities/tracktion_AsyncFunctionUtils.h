@@ -288,5 +288,19 @@ inline bool callBlocking (std::function<void()> f)
     return true;
 }
 
+/** The same as callBlocking expect the exception is caught and ignored.
+    Use this when failue is ok.
+*/
+inline bool callBlockingCatching (std::function<void()> f) noexcept
+{
+    try
+    {
+        return callBlocking (std::move (f));
+    }
+    catch (std::runtime_error&)
+    {
+        return false;
+    }
+}
 
 }} // namespace tracktion { inline namespace engine
