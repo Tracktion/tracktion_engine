@@ -79203,6 +79203,13 @@
       <arglist>(std::function&lt; void()&gt; f)</arglist>
     </member>
     <member kind="function">
+      <type>bool</type>
+      <name>callBlockingCatching</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>afff8af1bdf04577bf81f9a3ed1bb71c1</anchor>
+      <arglist>(std::function&lt; void()&gt; f) noexcept</arglist>
+    </member>
+    <member kind="function">
       <type>float</type>
       <name>dbToGain</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
