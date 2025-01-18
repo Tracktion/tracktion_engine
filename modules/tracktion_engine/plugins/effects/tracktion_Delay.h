@@ -74,9 +74,9 @@ public:
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 
     juce::CachedValue<float> feedbackValue, mixValue;
-    juce::CachedValue<int> lengthMs;
+    juce::CachedValue<int> lengthMsValue;
 
-    AutomatableParameter::Ptr feedbackDb, mixProportion;
+    AutomatableParameter::Ptr feedbackDb, mixProportion, lengthMs;
 
     static float getMinDelayFeedbackDb() noexcept       { return -30.0f; }
 
