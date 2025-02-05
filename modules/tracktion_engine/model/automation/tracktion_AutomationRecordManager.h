@@ -8,16 +8,20 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
+namespace tracktion::inline engine
 {
 
+/** @internal */
+class AutomationRecordManagerBase;
+
+//==============================================================================
+//==============================================================================
 /** Stores automation data as it's being read in, and writes it back to the
     edit when recording finishes.
 
     Also looks after some global automation settings.
 */
-class AutomationRecordManager   : public juce::ChangeBroadcaster,
-                                  private juce::ChangeListener
+class AutomationRecordManager
 {
 public:
     //==============================================================================
@@ -28,22 +32,19 @@ public:
     /** Toggles automation playback
         Matches the auto play button on the transport controls.
     */
-    bool isReadingAutomation() const noexcept    { return readingAutomation; }
+    bool isReadingAutomation() const noexcept;
     void setReadingAutomation (bool);
 
     /** Toggles automation recording
         Matches the auto rec button on the transport controls.
     */
-    bool isWritingAutomation() const noexcept    { return writingAutomation; }
+    bool isWritingAutomation() const noexcept;
     void setWritingAutomation (bool);
 
     /** flips the write mode, first punching out if it needs to. */
     void toggleWriteAutomationMode();
 
     //==============================================================================
-    // Called by the transportcontrol
-    void playStartedOrStopped();
-
     // True if some parameter data has been recorded since play began.
     bool isRecordingAutomation() const;
 
@@ -52,6 +53,25 @@ public:
 
     // if we're recording, stop and write the data back to the edit.
     void punchOut (bool toEnd);
+
+    //==============================================================================
+    /**
+        Listener interface for notifications of properties changing.
+    */
+    struct Listener
+    {
+        /** Destructor. */
+        virtual ~Listener() = default;
+
+        /** Called when automation read or write enable/disable changes. */
+        virtual void automationModeChanged() {}
+    };
+
+    /** Adds a listener. */
+    void addListener (Listener*);
+
+    /** Removes a listener. */
+    void removeListener (Listener*);
 
     //==============================================================================
     /** Set the 'glide' or crossfade length it'll use to patch the data back into
@@ -64,44 +84,15 @@ public:
 
 private:
     //==============================================================================
-    AutomationRecordManager (const AutomationRecordManager&);
+    AutomationRecordManager (const AutomationRecordManager&) = delete;
 
-    struct AutomationParamData
-    {
-        AutomationParamData (AutomatableParameter& p, float value)
-            : parameter (p), originalValue (value)
-        {
-        }
-
-        struct Change
-        {
-            inline Change (TimePosition t, float v) noexcept
-                : time (t), value (v) {}
-
-            TimePosition time;
-            float value;
-        };
-
-        AutomatableParameter& parameter;
-        juce::Array<Change> changes;
-        float originalValue;
-    };
-
-    Edit& edit;
-    juce::CriticalSection lock;
-    juce::OwnedArray<AutomationParamData> recordedParams;
-    bool writingAutomation = false;
-    juce::CachedValue<bool> readingAutomation;
-    bool wasPlaying = false;
+    std::unique_ptr<AutomationRecordManagerBase> pimpl;
+    juce::ListenerList<Listener> listeners;
 
     friend class AutomatableParameter;
     void postFirstAutomationChange (AutomatableParameter&, float originalValue);
     void postAutomationChange (AutomatableParameter&, TimePosition time, float value);
     void parameterBeingDeleted (AutomatableParameter&);
-
-    void applyChangesToParameter (AutomationParamData*, TimePosition endTime, bool toEnd);
-
-    void changeListenerCallback (juce::ChangeBroadcaster*);
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -229,7 +229,7 @@ public:
 
     bool isEnabledAt (TimePosition) override
     {
-        return true;
+        return isEnabled();
     }
 
     void setPosition (TimePosition time) override
@@ -247,7 +247,7 @@ public:
 
     bool isEnabled() override
     {
-        return true;
+        return ! curve.bypass.get();
     }
 
     float getCurrentValue() override
@@ -840,7 +840,9 @@ void AutomatableParameter::updateFromAutomationSources (TimePosition time)
 
     const float newBaseValue = [this, time]
                                {
-                                   if (curveSource->isActive())
+                                   if (curveSource->isActive()
+                                       && curveSource->isEnabledAt (time)
+                                       && ! isCurrentlyRecording())
                                    {
                                        curveSource->setPosition (time);
                                        return curveSource->getCurrentValue();
@@ -867,6 +869,9 @@ void AutomatableParameter::valueTreePropertyChanged (juce::ValueTree& v, const j
 {
     if (v == getCurve().state || v.isAChildOf (getCurve().state))
     {
+        if (i == IDs::bypass)
+            changed();
+
         curveHasChanged();
     }
     else if (attachedValue != nullptr && attachedValue->updateIfMatches (v, i))
@@ -1024,7 +1029,11 @@ juce::String AutomatableParameter::getFullName() const
 //==============================================================================
 void AutomatableParameter::resetRecordingStatus()
 {
+    if (! isRecording)
+        return;
+
     isRecording = false;
+    listeners.call (&Listener::recordingStatusChanged, *this);
 }
 
 //==============================================================================
@@ -1076,6 +1085,7 @@ void AutomatableParameter::setParameterValue (float value, bool isFollowingCurve
                         {
                             isRecording = true;
                             arm.postFirstAutomationChange (*this, oldValue);
+                            listeners.call (&Listener::recordingStatusChanged, *this);
                         }
 
                         arm.postAutomationChange (*this, time, value);
@@ -1112,6 +1122,7 @@ void AutomatableParameter::setParameter (float value, juce::NotificationType nt)
         jassert (nt != juce::sendNotificationAsync); // Async notifications not yet supported
         TRACKTION_ASSERT_MESSAGE_THREAD
         listeners.call (&Listener::parameterChanged, *this, currentValue);
+        getEdit().getParameterChangeHandler().parameterChanged (*this, false);
 
         if (attachedValue != nullptr)
         {
@@ -1163,7 +1174,7 @@ void AutomatableParameter::updateToFollowCurve (TimePosition time)
 
     const float newBaseValue = [this, time]
                                {
-                                   if (hasAutomationPoints() && ! isRecording)
+                                   if (hasAutomationPoints() && ! isRecording && curveSource->isEnabledAt (time))
                                        return curveSource->getValueAt (time);
 
                                    return currentParameterValue.load();
@@ -1219,11 +1230,18 @@ void AutomatableParameter::curveHasChanged()
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
     curveSource->triggerAsyncCurveUpdate();
-    getEdit().getParameterChangeHandler().parameterChanged (*this, false);
     listeners.call (&Listener::curveHasChanged, *this);
 }
 
 //==============================================================================
+AutomationMode getAutomationMode (const AutomatableParameter& ap)
+{
+    if (auto t = ap.getTrack())
+        return t->automationMode;
+
+    return AutomationMode::read;
+}
+
 AutomatableParameter::ModifierSource* getSourceForAssignment (const AutomatableParameter::ModifierAssignment& ass)
 {
     for (auto modifier : getAllModifierSources (ass.edit))

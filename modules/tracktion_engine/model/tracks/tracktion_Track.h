@@ -388,6 +388,8 @@ public:
     juce::ValueTree state;  /**< The state of this Track. */
     PluginList pluginList;  /**< The Track's PluginList. */
 
+    juce::CachedValue<AutomationMode> automationMode;   ///< The automation mode for parameters on this track to use
+
 protected:
     /** @internal */
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;

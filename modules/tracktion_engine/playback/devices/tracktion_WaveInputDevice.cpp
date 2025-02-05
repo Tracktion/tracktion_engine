@@ -802,13 +802,9 @@ public:
             return tl::unexpected (proj->isReadOnly() ? TRANS("Couldn't add the new recording to the project, because the project is read-only")
                                                       : TRANS("Couldn't add the new recording to the project!"));
         }
-        else
-        {
-            return applyLastRecording (rc, nullptr, recordedFile, destClipOwner,
-                                       recordedFileLength, newClipLen, isLooping, isPunching, loopEnd);
-        }
 
-        return {};
+        return applyLastRecording (rc, nullptr, recordedFile, destClipOwner,
+                                    recordedFileLength, newClipLen, isLooping, isPunching, loopEnd);
     }
 
     tl::expected<Clip::Array, juce::String> applyLastRecording (const WaveRecordingContext& rc, const ProjectItem::Ptr projectItem,

@@ -25,6 +25,8 @@ Track::Track (Edit& ed, const juce::ValueTree& v, bool hasModifierList)
     currentAutoParamPlugin.referTo (state, IDs::currentAutoParamPluginID, um, EditItemID());
     currentAutoParamID.referTo (state, IDs::currentAutoParamTag, um, {});
 
+    automationMode.referTo (state, IDs::automationMode, um, {});
+
     if (hasModifierList)
         modifierList = std::make_unique<ModifierList> (edit, state.getOrCreateChildWithName (IDs::MODIFIERS, um));
 
@@ -563,6 +565,10 @@ void Track::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier
         {
             changed();
             triggerAsyncUpdate();
+        }
+        else if (i == IDs::automationMode)
+        {
+            changed();
         }
         else if (i == IDs::imageIdOrData)
         {

@@ -747,6 +747,11 @@ void CurveEditor::setTimes (TimePosition l, TimePosition r)
     rightTime = r;
 }
 
+TimeRange CurveEditor::getTimes() const
+{
+    return { leftTime, rightTime };
+}
+
 float CurveEditor::timeToX (TimePosition t) const
 {
     return (float) (getWidth() * ((t - leftTime) / (rightTime - leftTime)));
