@@ -457,13 +457,20 @@
     <namespace>tracktion::engine</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_AutomationMode.h</name>
+    <path>build/tracktion_engine/model/automation/</path>
+    <filename>tracktion__AutomationMode_8h.html</filename>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::AutomationMode &gt;</class>
+    <namespace>engine</namespace>
+    <namespace>juce</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_AutomationRecordManager.h</name>
     <path>build/tracktion_engine/model/automation/</path>
     <filename>tracktion__AutomationRecordManager_8h.html</filename>
-    <class kind="class">tracktion::engine::AutomationRecordManager</class>
-    <class kind="struct">tracktion::engine::AutomationRecordManager::AutomationParamData::Change</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::engine</namespace>
+    <class kind="class">engine::AutomationRecordManager</class>
+    <class kind="struct">engine::AutomationRecordManager::Listener</class>
+    <namespace>engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_MacroParameter.h</name>
@@ -5189,6 +5196,13 @@
       <arglist>(const AtomicWrapper &amp;other) noexcept</arglist>
     </member>
     <member kind="function">
+      <type>AtomicWrapper &amp;</type>
+      <name>operator=</name>
+      <anchorfile>structtracktion_1_1engine_1_1AtomicWrapper.html</anchorfile>
+      <anchor>a7337c10adf98391832a3f9ce3ef2f5f5</anchor>
+      <arglist>(const Type &amp;other) noexcept</arglist>
+    </member>
+    <member kind="function">
       <type>bool</type>
       <name>operator==</name>
       <anchorfile>structtracktion_1_1engine_1_1AtomicWrapper.html</anchorfile>
@@ -5201,6 +5215,20 @@
       <anchorfile>structtracktion_1_1engine_1_1AtomicWrapper.html</anchorfile>
       <anchor>a89586c70ac2231af84d26c02514eebe7</anchor>
       <arglist>(const AtomicWrapper &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>structtracktion_1_1engine_1_1AtomicWrapper.html</anchorfile>
+      <anchor>a2a81427ecf3a9f0ec54ab9cce83d3437</anchor>
+      <arglist>(const Type &amp;other) const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>structtracktion_1_1engine_1_1AtomicWrapper.html</anchorfile>
+      <anchor>aa58bc278c165aa841b317c4a0ce4840d</anchor>
+      <arglist>(const Type &amp;other) const noexcept</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -10672,6 +10700,13 @@
       <arglist>(const juce::ValueTree &amp;)</arglist>
     </member>
     <member kind="variable">
+      <type>juce::CachedValue&lt; AtomicWrapper&lt; bool &gt; &gt;</type>
+      <name>bypass</name>
+      <anchorfile>classtracktion_1_1engine_1_1AutomationCurve.html</anchorfile>
+      <anchor>aa701e9ea4e92580e21be0711b045ddf2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
       <type>juce::ValueTree</type>
       <name>parentState</name>
       <anchorfile>classtracktion_1_1engine_1_1AutomationCurve.html</anchorfile>
@@ -10953,110 +10988,118 @@
     </member>
   </compound>
   <compound kind="class">
-    <name>tracktion::engine::AutomationRecordManager</name>
-    <filename>classtracktion_1_1engine_1_1AutomationRecordManager.html</filename>
+    <name>engine::AutomationRecordManager</name>
+    <filename>classengine_1_1AutomationRecordManager.html</filename>
+    <class kind="struct">engine::AutomationRecordManager::Listener</class>
     <member kind="function">
       <type></type>
       <name>AutomationRecordManager</name>
-      <anchorfile>classtracktion_1_1engine_1_1AutomationRecordManager.html</anchorfile>
-      <anchor>acf24d2c1b1288ce19400d1b2742ddf68</anchor>
+      <anchorfile>classengine_1_1AutomationRecordManager.html</anchorfile>
+      <anchor>a76b6db384d6b286929147085bfbd2d61</anchor>
       <arglist>(Edit &amp;)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>~AutomationRecordManager</name>
-      <anchorfile>classtracktion_1_1engine_1_1AutomationRecordManager.html</anchorfile>
-      <anchor>ae7070fcb0504d025da44609ca66d6383</anchor>
+      <anchorfile>classengine_1_1AutomationRecordManager.html</anchorfile>
+      <anchor>af00c036a79917b835470afa4662797e1</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>isReadingAutomation</name>
-      <anchorfile>classtracktion_1_1engine_1_1AutomationRecordManager.html</anchorfile>
-      <anchor>aee6b4337b69bd65808ac4c2451902b94</anchor>
+      <anchorfile>classengine_1_1AutomationRecordManager.html</anchorfile>
+      <anchor>ab0c7767f83ff12ae4d39c8067d0d0a83</anchor>
       <arglist>() const noexcept</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>setReadingAutomation</name>
-      <anchorfile>classtracktion_1_1engine_1_1AutomationRecordManager.html</anchorfile>
-      <anchor>af4b85b8578207ced9a30e22496a735f2</anchor>
+      <anchorfile>classengine_1_1AutomationRecordManager.html</anchorfile>
+      <anchor>ab07adedf264a31be1431599abf1cfaee</anchor>
       <arglist>(bool)</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>isWritingAutomation</name>
-      <anchorfile>classtracktion_1_1engine_1_1AutomationRecordManager.html</anchorfile>
-      <anchor>a5f76ee8d8ebc74e4e75b400c512f8299</anchor>
+      <anchorfile>classengine_1_1AutomationRecordManager.html</anchorfile>
+      <anchor>a3420d7c745b629cb0c89618bbf506464</anchor>
       <arglist>() const noexcept</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>setWritingAutomation</name>
-      <anchorfile>classtracktion_1_1engine_1_1AutomationRecordManager.html</anchorfile>
-      <anchor>a060a5f4c26fbad51f3a399753173fd02</anchor>
+      <anchorfile>classengine_1_1AutomationRecordManager.html</anchorfile>
+      <anchor>a684e6eb8c946b2ef14e8a1aadf0fe787</anchor>
       <arglist>(bool)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>toggleWriteAutomationMode</name>
-      <anchorfile>classtracktion_1_1engine_1_1AutomationRecordManager.html</anchorfile>
-      <anchor>a7394ea8a563b5d7cba862c7fd32ae0fd</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>playStartedOrStopped</name>
-      <anchorfile>classtracktion_1_1engine_1_1AutomationRecordManager.html</anchorfile>
-      <anchor>a6f10c136fc35c3952dd1e5a44f6e859b</anchor>
+      <anchorfile>classengine_1_1AutomationRecordManager.html</anchorfile>
+      <anchor>ad1ecef1cc8d70678af513b60f1d89c74</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>isRecordingAutomation</name>
-      <anchorfile>classtracktion_1_1engine_1_1AutomationRecordManager.html</anchorfile>
-      <anchor>a13d24f38e94415ceff3c9381de987734</anchor>
+      <anchorfile>classengine_1_1AutomationRecordManager.html</anchorfile>
+      <anchor>a54b106e469c061587cf9e58984d8a313</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
       <name>isParameterRecording</name>
-      <anchorfile>classtracktion_1_1engine_1_1AutomationRecordManager.html</anchorfile>
-      <anchor>a47ae2c673c8e4d6eb2ccdb69983be43a</anchor>
+      <anchorfile>classengine_1_1AutomationRecordManager.html</anchorfile>
+      <anchor>a78daa7c9b5a59d8c8e1836d1e9a394b1</anchor>
       <arglist>(AutomatableParameter *) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>punchOut</name>
-      <anchorfile>classtracktion_1_1engine_1_1AutomationRecordManager.html</anchorfile>
-      <anchor>a616d84153ca64f66db929c4f233e1711</anchor>
+      <anchorfile>classengine_1_1AutomationRecordManager.html</anchorfile>
+      <anchor>a6fb661ee470914ca575654f8d77d81a6</anchor>
       <arglist>(bool toEnd)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>addListener</name>
+      <anchorfile>classengine_1_1AutomationRecordManager.html</anchorfile>
+      <anchor>a214dd213800c773e0a07a0ffb26189a3</anchor>
+      <arglist>(Listener *)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>removeListener</name>
+      <anchorfile>classengine_1_1AutomationRecordManager.html</anchorfile>
+      <anchor>a70a6972256b75ae57652229843a6fd40</anchor>
+      <arglist>(Listener *)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static TimeDuration</type>
       <name>getGlideSeconds</name>
-      <anchorfile>classtracktion_1_1engine_1_1AutomationRecordManager.html</anchorfile>
-      <anchor>a1fb74434c8005a8d324b65926b62bf54</anchor>
+      <anchorfile>classengine_1_1AutomationRecordManager.html</anchorfile>
+      <anchor>a5d4c90d922f592156834882d3db7451d</anchor>
       <arglist>(Engine &amp;)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static void</type>
       <name>setGlideSeconds</name>
-      <anchorfile>classtracktion_1_1engine_1_1AutomationRecordManager.html</anchorfile>
-      <anchor>a0755006502d2a1255e6a6d7bee3322ec</anchor>
+      <anchorfile>classengine_1_1AutomationRecordManager.html</anchorfile>
+      <anchor>a72a137a7e3181420b98cbab56bc0223f</anchor>
       <arglist>(Engine &amp;, TimeDuration)</arglist>
     </member>
     <member kind="variable">
       <type>Engine &amp;</type>
       <name>engine</name>
-      <anchorfile>classtracktion_1_1engine_1_1AutomationRecordManager.html</anchorfile>
-      <anchor>a3e9bd7594d48e7d55e22219bc3e9dc0c</anchor>
+      <anchorfile>classengine_1_1AutomationRecordManager.html</anchorfile>
+      <anchor>a3159c1f9ba30894bc8e0c2cc0126af98</anchor>
       <arglist></arglist>
     </member>
     <member kind="friend" protection="private">
       <type>friend class</type>
       <name>AutomatableParameter</name>
-      <anchorfile>classtracktion_1_1engine_1_1AutomationRecordManager.html</anchorfile>
+      <anchorfile>classengine_1_1AutomationRecordManager.html</anchorfile>
       <anchor>ab28b5abc6c53acca6ad4abc28e0e4e52</anchor>
       <arglist></arglist>
     </member>
@@ -12716,31 +12759,6 @@
       <name>probabilities</name>
       <anchorfile>structtracktion_1_1engine_1_1StepClip_1_1Pattern_1_1CachedPattern.html</anchorfile>
       <anchor>a53ce0be64463f3b5c9f11a64c6c48276</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion::engine::AutomationRecordManager::AutomationParamData::Change</name>
-    <filename>structtracktion_1_1engine_1_1AutomationRecordManager_1_1AutomationParamData_1_1Change.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>Change</name>
-      <anchorfile>structtracktion_1_1engine_1_1AutomationRecordManager_1_1AutomationParamData_1_1Change.html</anchorfile>
-      <anchor>a86ebe1b443ed06dacfbcff4b2a231abd</anchor>
-      <arglist>(TimePosition t, float v) noexcept</arglist>
-    </member>
-    <member kind="variable">
-      <type>TimePosition</type>
-      <name>time</name>
-      <anchorfile>structtracktion_1_1engine_1_1AutomationRecordManager_1_1AutomationParamData_1_1Change.html</anchorfile>
-      <anchor>ae5d2a13b85755a734fbf177a03fe5f13</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>float</type>
-      <name>value</name>
-      <anchorfile>structtracktion_1_1engine_1_1AutomationRecordManager_1_1AutomationParamData_1_1Change.html</anchorfile>
-      <anchor>a9eeef22e4a7858ab3bf8104428db7044</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -19868,6 +19886,13 @@
       <anchorfile>classtracktion_1_1engine_1_1CurveEditor.html</anchorfile>
       <anchor>af3e22362c04cbcc9e08f59db7623ce3e</anchor>
       <arglist>(TimePosition leftTime, TimePosition rightTime)</arglist>
+    </member>
+    <member kind="function">
+      <type>TimeRange</type>
+      <name>getTimes</name>
+      <anchorfile>classtracktion_1_1engine_1_1CurveEditor.html</anchorfile>
+      <anchor>ac27be104b0d84d52b7865d145bdf6cf3</anchor>
+      <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>float</type>
@@ -29234,6 +29259,13 @@
       <anchor>a6f36bc705b9d8a253b33e4756b4163dd</anchor>
       <arglist>(ExternalControllerManager &amp;, const juce::XmlElement &amp;)</arglist>
     </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual bool</type>
+      <name>enableExperimentalAutomation</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a81ac5c33038df49027b71d03e85e87d5</anchor>
+      <arglist>()</arglist>
+    </member>
   </compound>
   <compound kind="struct">
     <name>tracktion::engine::VSTXML::Entry</name>
@@ -38071,6 +38103,24 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>engine::AutomationRecordManager::Listener</name>
+    <filename>structengine_1_1AutomationRecordManager_1_1Listener.html</filename>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~Listener</name>
+      <anchorfile>structengine_1_1AutomationRecordManager_1_1Listener.html</anchorfile>
+      <anchor>aa6b3ee03c032dc531acb296f7855dc15</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>automationModeChanged</name>
+      <anchorfile>structengine_1_1AutomationRecordManager_1_1Listener.html</anchorfile>
+      <anchor>a67a8d1ea9fba9768d38a39128da69dd5</anchor>
+      <arglist>()</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion::engine::AbletonLink::Listener</name>
     <filename>structtracktion_1_1engine_1_1AbletonLink_1_1Listener.html</filename>
     <member kind="function" virtualness="virtual">
@@ -38177,6 +38227,13 @@
       <name>parameterChangeGestureEnd</name>
       <anchorfile>structtracktion_1_1engine_1_1AutomatableParameter_1_1Listener.html</anchorfile>
       <anchor>ab4403cb8697ee213e42e10e7b892fc13</anchor>
+      <arglist>(AutomatableParameter &amp;)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>recordingStatusChanged</name>
+      <anchorfile>structtracktion_1_1engine_1_1AutomatableParameter_1_1Listener.html</anchorfile>
+      <anchor>a18998bab434489902ae5c6dcf6ba26fe</anchor>
       <arglist>(AutomatableParameter &amp;)</arglist>
     </member>
   </compound>
@@ -70266,6 +70323,13 @@
       <anchor>a1a3cda8870d74d0de49d8d8de071015c</anchor>
       <arglist></arglist>
     </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; AutomationMode &gt;</type>
+      <name>automationMode</name>
+      <anchorfile>classtracktion_1_1engine_1_1Track.html</anchorfile>
+      <anchor>ad2a3d461a6a78084f05d6cc15aa293d3</anchor>
+      <arglist></arglist>
+    </member>
     <member kind="variable" static="yes">
       <type>static const int</type>
       <name>minTrackHeightForDetail</name>
@@ -73732,6 +73796,24 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>juce::VariantConverter&lt; tracktion::engine::AutomationMode &gt;</name>
+    <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1AutomationMode_01_4.html</filename>
+    <member kind="function" static="yes">
+      <type>static tracktion::engine::AutomationMode</type>
+      <name>fromVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1AutomationMode_01_4.html</anchorfile>
+      <anchor>a1386fc0d898106ff715a403d83e87753</anchor>
+      <arglist>(const var &amp;v)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static var</type>
+      <name>toVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1AutomationMode_01_4.html</anchorfile>
+      <anchor>ae9c3a28051a1cd7d8b5b681e06aa7c85</anchor>
+      <arglist>(tracktion::engine::AutomationMode v)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>juce::VariantConverter&lt; tracktion::engine::Chord::ChordType &gt;</name>
     <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1Chord_1_1ChordType_01_4.html</filename>
     <member kind="function" static="yes">
@@ -76530,6 +76612,7 @@
     <name>engine</name>
     <filename>namespaceengine.html</filename>
     <namespace>engine::render_utils</namespace>
+    <class kind="class">engine::AutomationRecordManager</class>
     <class kind="struct">engine::DiscreteLabelledParameter</class>
     <class kind="class">engine::EditLoader</class>
     <class kind="class">engine::EditRenderer</class>
@@ -76540,6 +76623,17 @@
     <class kind="class">engine::Renderer</class>
     <class kind="struct">engine::ScopedThreadExitStatusEnabler</class>
     <class kind="struct">engine::SuffixedParameter</class>
+    <member kind="enumeration">
+      <type></type>
+      <name>AutomationMode</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a1b643dd7cc9311de9546793693324120</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespaceengine.html" anchor="a1b643dd7cc9311de9546793693324120aecae13117d6f0584c25a9da6c8f8415e">read</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a1b643dd7cc9311de9546793693324120ab96ba508e3690f5168e4b0e68b15b178">touch</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a1b643dd7cc9311de9546793693324120a42f3c93a0b1ca287d5456f3fc3200366">latch</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a1b643dd7cc9311de9546793693324120aefb2a684e4afb7d55e6147fbe5a332ee">write</enumvalue>
+    </member>
     <member kind="enumeration">
       <type></type>
       <name>FollowAction</name>
@@ -76573,6 +76667,20 @@
       <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea78949abcd4a4661279003b1afc897489">otherGroupFirst</enumvalue>
       <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddeae9d9a48525e3046f3f5e6efcf13f5133">otherGroupLast</enumvalue>
       <enumvalue file="namespaceengine.html" anchor="a8adf9568644e9fd569d34ea8751bfddea07e4a5758b30294d27a92b0b096a5aaa">otherGroupAny</enumvalue>
+    </member>
+    <member kind="function">
+      <type>std::optional&lt; AutomationMode &gt;</type>
+      <name>automationModeFromString</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>aa605fdfbcf7a6f3707cffad1df85806d</anchor>
+      <arglist>(juce::String)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>toString</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>ad09e20e4633339586d0643b13d598d0d</anchor>
+      <arglist>(AutomationMode)</arglist>
     </member>
     <member kind="function">
       <type>std::optional&lt; FollowAction &gt;</type>
@@ -76648,6 +76756,7 @@
     <class kind="struct">juce::VariantConverter&lt; tracktion::core::TimeDuration &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::core::TimePosition &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::AudioFadeCurve::Type &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::AutomationMode &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::Chord::ChordType &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::Clip::FollowActionDurationType &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::Clip::SyncType &gt;</class>
@@ -76734,7 +76843,6 @@
     <class kind="class">tracktion::AutomationCurve</class>
     <class kind="class">tracktion::AutomationDragDropTarget</class>
     <class kind="struct">tracktion::AutomationIterator</class>
-    <class kind="class">tracktion::AutomationRecordManager</class>
     <class kind="class">tracktion::AutomationTrack</class>
     <class kind="class">tracktion::AuxReturnPlugin</class>
     <class kind="class">tracktion::AuxSendNode</class>
@@ -77177,7 +77285,6 @@
     <class kind="class">tracktion::engine::AutomationCurve</class>
     <class kind="class">tracktion::engine::AutomationDragDropTarget</class>
     <class kind="struct">tracktion::engine::AutomationIterator</class>
-    <class kind="class">tracktion::engine::AutomationRecordManager</class>
     <class kind="class">tracktion::engine::AutomationTrack</class>
     <class kind="class">tracktion::engine::AuxReturnPlugin</class>
     <class kind="class">tracktion::engine::AuxSendNode</class>
@@ -77829,6 +77936,13 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>a10afef341643dd17bc1e543c3fcb11a7</anchor>
       <arglist>(const juce::Array&lt; MidiNote * &gt; &amp;notes)</arglist>
+    </member>
+    <member kind="function">
+      <type>AutomationMode</type>
+      <name>getAutomationMode</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a87bd2daeb8535f3dd908463c25ed3c29</anchor>
+      <arglist>(const AutomatableParameter &amp;)</arglist>
     </member>
     <member kind="function">
       <type>juce::ReferenceCountedArray&lt; AssignmentType &gt;</type>
@@ -81349,9 +81463,9 @@
     <namespace>tracktion::engine::ClipConstants</namespace>
     <namespace>tracktion::engine::details</namespace>
     <namespace>juce</namespace>
+    <namespace>graph</namespace>
     <namespace>engine</namespace>
     <namespace>engine::render_utils</namespace>
-    <namespace>graph</namespace>
     <class kind="class">tracktion::engine::BreakpointOscillatorModifier</class>
     <class kind="struct">tracktion::engine::BreakpointOscillatorModifier::Assignment</class>
     <class kind="struct">tracktion::engine::BreakpointOscillatorModifier::Stage</class>
@@ -81379,8 +81493,9 @@
     <class kind="struct">tracktion::engine::AutomatableParameterTree::TreeNode</class>
     <class kind="class">tracktion::engine::AutomationCurve</class>
     <class kind="struct">tracktion::engine::AutomationCurve::AutomationPoint</class>
-    <class kind="class">tracktion::engine::AutomationRecordManager</class>
-    <class kind="struct">tracktion::engine::AutomationRecordManager::AutomationParamData::Change</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::AutomationMode &gt;</class>
+    <class kind="class">engine::AutomationRecordManager</class>
+    <class kind="struct">engine::AutomationRecordManager::Listener</class>
     <class kind="class">tracktion::engine::MacroParameter</class>
     <class kind="struct">tracktion::engine::MacroParameter::Assignment</class>
     <class kind="class">tracktion::engine::MacroParameterList</class>

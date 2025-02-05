@@ -226,8 +226,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a21500b7bc015d0790a98bb4bc3a5a4d5" id="r_a21500b7bc015d0790a98bb4bc3a5a4d5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1ParameterControlMappings.html">ParameterControlMappings</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Edit.html#a21500b7bc015d0790a98bb4bc3a5a4d5">getParameterControlMappings</a> () noexcept</td></tr>
 <tr class="memdesc:a21500b7bc015d0790a98bb4bc3a5a4d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classtracktion_1_1engine_1_1ParameterControlMappings.html" title="Controls the set of midi-controller-to-parameter mappings.">ParameterControlMappings</a> for the <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <br /></td></tr>
 <tr class="separator:a21500b7bc015d0790a98bb4bc3a5a4d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73c3d5ab6a8a9800cd93156c5ee15092" id="r_a73c3d5ab6a8a9800cd93156c5ee15092"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1AutomationRecordManager.html">AutomationRecordManager</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Edit.html#a73c3d5ab6a8a9800cd93156c5ee15092">getAutomationRecordManager</a> () noexcept</td></tr>
-<tr class="memdesc:a73c3d5ab6a8a9800cd93156c5ee15092"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classtracktion_1_1engine_1_1AutomationRecordManager.html" title="Stores automation data as it&#39;s being read in, and writes it back to the edit when recording finishes.">AutomationRecordManager</a> for the <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <br /></td></tr>
+<tr class="memitem:a73c3d5ab6a8a9800cd93156c5ee15092" id="r_a73c3d5ab6a8a9800cd93156c5ee15092"><td class="memItemLeft" align="right" valign="top">AutomationRecordManager &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Edit.html#a73c3d5ab6a8a9800cd93156c5ee15092">getAutomationRecordManager</a> () noexcept</td></tr>
+<tr class="memdesc:a73c3d5ab6a8a9800cd93156c5ee15092"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the AutomationRecordManager for the <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <br /></td></tr>
 <tr class="separator:a73c3d5ab6a8a9800cd93156c5ee15092"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d22abcfd5638e1cadd4beb7de77062b" id="r_a6d22abcfd5638e1cadd4beb7de77062b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1AbletonLink.html">AbletonLink</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Edit.html#a6d22abcfd5638e1cadd4beb7de77062b">getAbletonLink</a> () const noexcept</td></tr>
 <tr class="memdesc:a6d22abcfd5638e1cadd4beb7de77062b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classtracktion_1_1engine_1_1AbletonLink.html" title="Manages an Ableton Link session connecting an Edit with a number of networked peers,...">AbletonLink</a> object.  <br /></td></tr>
@@ -796,7 +796,7 @@ Static Public Attributes</h2></td></tr>
 <li><a class="el" href="classtracktion_1_1engine_1_1TransportControl.html" title="Controls the transport of an Edit&#39;s playback.">TransportControl</a></li>
 <li><a class="el" href="classtracktion_1_1engine_1_1ParameterChangeHandler.html" title="Manages a set of AutomatableParameters for an Edit and notifies controllers and registered listeners ...">ParameterChangeHandler</a></li>
 <li><a class="el" href="classtracktion_1_1engine_1_1ParameterControlMappings.html" title="Controls the set of midi-controller-to-parameter mappings.">ParameterControlMappings</a></li>
-<li><a class="el" href="classtracktion_1_1engine_1_1AutomationRecordManager.html" title="Stores automation data as it&#39;s being read in, and writes it back to the edit when recording finishes.">AutomationRecordManager</a></li>
+<li>AutomationRecordManager</li>
 <li>juce::UndoManager</li>
 </ul>
 </li>
@@ -1855,7 +1855,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1AutomationRecordManager.html">AutomationRecordManager</a> &amp; tracktion::engine::Edit::getAutomationRecordManager </td>
+          <td class="memname">AutomationRecordManager &amp; tracktion::engine::Edit::getAutomationRecordManager </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1868,7 +1868,7 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the <a class="el" href="classtracktion_1_1engine_1_1AutomationRecordManager.html" title="Stores automation data as it&#39;s being read in, and writes it back to the edit when recording finishes.">AutomationRecordManager</a> for the <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>. </p>
+<p>Returns the AutomationRecordManager for the <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>. </p>
 <p>Used to change automation read/write modes and start/stop automation recording. </p>
 
 </div>
@@ -5065,7 +5065,7 @@ Static Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 5 2025 15:02:34 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Wed Feb 5 2025 15:51:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

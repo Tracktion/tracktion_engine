@@ -13,5 +13,6 @@ var searchData=
   ['wavetriangle_10',['waveTriangle',['../classtracktion_1_1engine_1_1LFOModifier.html#ae6e128e7deb6362c9a896ffc1176b777a86b05fed9fdf6209247b0ba9986f0bad',1,'tracktion::engine::LFOModifier']]],
   ['whole_11',['Whole',['../classtracktion_1_1engine_1_1Scale.html#a440c2752d50115f83ba28784b4e317e5af9a47b2a3d4adcf17e56753ca6ba1348',1,'tracktion::engine::Scale']]],
   ['wholehalf_12',['WholeHalf',['../classtracktion_1_1engine_1_1Scale.html#a440c2752d50115f83ba28784b4e317e5a15ecea2f0ccd3bc4f4fc19e56afd4a45',1,'tracktion::engine::Scale']]],
-  ['windowsdoubleclick_13',['windowsDoubleClick',['../namespacetracktion_1_1engine.html#aef0092bdbd8a28c3968f7f81912f815eae044eeed17ec4bc3c3258fe518fa6460',1,'tracktion::engine']]]
+  ['windowsdoubleclick_13',['windowsDoubleClick',['../namespacetracktion_1_1engine.html#aef0092bdbd8a28c3968f7f81912f815eae044eeed17ec4bc3c3258fe518fa6460',1,'tracktion::engine']]],
+  ['write_14',['write',['../namespaceengine.html#a1b643dd7cc9311de9546793693324120aefb2a684e4afb7d55e6147fbe5a332ee',1,'engine']]]
 ];

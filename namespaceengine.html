@@ -85,6 +85,9 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AutomationRecordManager.html">AutomationRecordManager</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores automation data as it's being read in, and writes it back to the edit when recording finishes.  <a href="classengine_1_1AutomationRecordManager.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1DiscreteLabelledParameter.html">DiscreteLabelledParameter</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1EditLoader.html">EditLoader</a></td></tr>
@@ -115,6 +118,13 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
+<tr class="memitem:a1b643dd7cc9311de9546793693324120" id="r_a1b643dd7cc9311de9546793693324120"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#a1b643dd7cc9311de9546793693324120">AutomationMode</a> { <a class="el" href="namespaceengine.html#a1b643dd7cc9311de9546793693324120aecae13117d6f0584c25a9da6c8f8415e">read</a>
+, <a class="el" href="namespaceengine.html#a1b643dd7cc9311de9546793693324120ab96ba508e3690f5168e4b0e68b15b178">touch</a>
+, <a class="el" href="namespaceengine.html#a1b643dd7cc9311de9546793693324120a42f3c93a0b1ca287d5456f3fc3200366">latch</a>
+, <a class="el" href="namespaceengine.html#a1b643dd7cc9311de9546793693324120aefb2a684e4afb7d55e6147fbe5a332ee">write</a>
+ }</td></tr>
+<tr class="memdesc:a1b643dd7cc9311de9546793693324120"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines the behaviour of writing automation.  <a href="namespaceengine.html#a1b643dd7cc9311de9546793693324120">More...</a><br /></td></tr>
+<tr class="separator:a1b643dd7cc9311de9546793693324120"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8adf9568644e9fd569d34ea8751bfdde" id="r_a8adf9568644e9fd569d34ea8751bfdde"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#a8adf9568644e9fd569d34ea8751bfdde">FollowAction</a> { <br />
 &#160;&#160;<a class="el" href="namespaceengine.html#a8adf9568644e9fd569d34ea8751bfddea334c4a4c42fdb79d7ebc3e73b517e6f8">none</a>
 , <a class="el" href="namespaceengine.html#a8adf9568644e9fd569d34ea8751bfddeac456cb28eeacbc581b046d213222b66f">globalStop</a>
@@ -156,6 +166,12 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:aa605fdfbcf7a6f3707cffad1df85806d" id="r_aa605fdfbcf7a6f3707cffad1df85806d"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="namespaceengine.html#a1b643dd7cc9311de9546793693324120">AutomationMode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#aa605fdfbcf7a6f3707cffad1df85806d">automationModeFromString</a> (juce::String)</td></tr>
+<tr class="memdesc:aa605fdfbcf7a6f3707cffad1df85806d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an AutomationMode from a string.  <br /></td></tr>
+<tr class="separator:aa605fdfbcf7a6f3707cffad1df85806d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad09e20e4633339586d0643b13d598d0d" id="r_ad09e20e4633339586d0643b13d598d0d"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#ad09e20e4633339586d0643b13d598d0d">toString</a> (<a class="el" href="namespaceengine.html#a1b643dd7cc9311de9546793693324120">AutomationMode</a>)</td></tr>
+<tr class="memdesc:ad09e20e4633339586d0643b13d598d0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an AutomationMode to string.  <br /></td></tr>
+<tr class="separator:ad09e20e4633339586d0643b13d598d0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f54a0717d4b1c60ed024986cdce6a13" id="r_a6f54a0717d4b1c60ed024986cdce6a13"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="namespaceengine.html#a8adf9568644e9fd569d34ea8751bfdde">FollowAction</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#a6f54a0717d4b1c60ed024986cdce6a13">followActionFromChoice</a> (juce::String)</td></tr>
 <tr class="memdesc:a6f54a0717d4b1c60ed024986cdce6a13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a FollowAction choice to a FollowAction if possible.  <br /></td></tr>
 <tr class="separator:a6f54a0717d4b1c60ed024986cdce6a13"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -183,6 +199,40 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"></div><h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="a1b643dd7cc9311de9546793693324120" name="a1b643dd7cc9311de9546793693324120"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b643dd7cc9311de9546793693324120">&#9670;&#160;</a></span>AutomationMode</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="namespaceengine.html#a1b643dd7cc9311de9546793693324120">engine::AutomationMode</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Determines the behaviour of writing automation. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a1b643dd7cc9311de9546793693324120aecae13117d6f0584c25a9da6c8f8415e" name="a1b643dd7cc9311de9546793693324120aecae13117d6f0584c25a9da6c8f8415e"></a>read&#160;</td><td class="fielddoc"><p>No writing. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a1b643dd7cc9311de9546793693324120ab96ba508e3690f5168e4b0e68b15b178" name="a1b643dd7cc9311de9546793693324120ab96ba508e3690f5168e4b0e68b15b178"></a>touch&#160;</td><td class="fielddoc"><p>Start writing on first event, punch out on gesture end. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a1b643dd7cc9311de9546793693324120a42f3c93a0b1ca287d5456f3fc3200366" name="a1b643dd7cc9311de9546793693324120a42f3c93a0b1ca287d5456f3fc3200366"></a>latch&#160;</td><td class="fielddoc"><p>Start writing on first event, punch out on play stop. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a1b643dd7cc9311de9546793693324120aefb2a684e4afb7d55e6147fbe5a332ee" name="a1b643dd7cc9311de9546793693324120aefb2a684e4afb7d55e6147fbe5a332ee"></a>write&#160;</td><td class="fielddoc"><p>Start writing on play start, punch out on gesture end. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
 <a id="a8adf9568644e9fd569d34ea8751bfdde" name="a8adf9568644e9fd569d34ea8751bfdde"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8adf9568644e9fd569d34ea8751bfdde">&#9670;&#160;</a></span>FollowAction</h2>
 
@@ -237,6 +287,54 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="aa605fdfbcf7a6f3707cffad1df85806d" name="aa605fdfbcf7a6f3707cffad1df85806d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa605fdfbcf7a6f3707cffad1df85806d">&#9670;&#160;</a></span>automationModeFromString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::optional&lt; <a class="el" href="namespaceengine.html#a1b643dd7cc9311de9546793693324120">AutomationMode</a> &gt; engine::automationModeFromString </td>
+          <td>(</td>
+          <td class="paramtype">juce::String&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Converts an AutomationMode from a string. </p>
+
+<p class="reference">References <a class="el" href="namespaceengine.html#aa605fdfbcf7a6f3707cffad1df85806d">automationModeFromString()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="namespaceengine.html#aa605fdfbcf7a6f3707cffad1df85806d">automationModeFromString()</a>.</p>
+
+</div>
+</div>
+<a id="ad09e20e4633339586d0643b13d598d0d" name="ad09e20e4633339586d0643b13d598d0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad09e20e4633339586d0643b13d598d0d">&#9670;&#160;</a></span>toString() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::String engine::toString </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceengine.html#a1b643dd7cc9311de9546793693324120">AutomationMode</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Converts an AutomationMode to string. </p>
+
+<p class="reference">References <a class="el" href="namespaceengine.html#ad09e20e4633339586d0643b13d598d0d">toString()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="namespaceengine.html#ad09e20e4633339586d0643b13d598d0d">toString()</a>, and <a class="el" href="namespaceengine.html#a9dd1960b5f512aec90454c3e72bb60a9">toString()</a>.</p>
+
+</div>
+</div>
 <a id="a6f54a0717d4b1c60ed024986cdce6a13" name="a6f54a0717d4b1c60ed024986cdce6a13"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6f54a0717d4b1c60ed024986cdce6a13">&#9670;&#160;</a></span>followActionFromChoice()</h2>
 
@@ -286,7 +384,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a9dd1960b5f512aec90454c3e72bb60a9" name="a9dd1960b5f512aec90454c3e72bb60a9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9dd1960b5f512aec90454c3e72bb60a9">&#9670;&#160;</a></span>toString()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9dd1960b5f512aec90454c3e72bb60a9">&#9670;&#160;</a></span>toString() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -302,6 +400,8 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Converts a FollowAction to a string if possible. </p>
+
+<p class="reference">References <a class="el" href="namespaceengine.html#ad09e20e4633339586d0643b13d598d0d">toString()</a>.</p>
 
 </div>
 </div>
@@ -438,7 +538,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 5 2025 15:02:33 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Wed Feb 5 2025 15:51:21 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

@@ -27,5 +27,6 @@ var searchData=
   ['buffersamples_24',['bufferSamples',['../structtracktion_1_1engine_1_1DelayBufferBase.html#a452e70609c19d3ef121dae057ce1b6f1',1,'tracktion::engine::DelayBufferBase']]],
   ['bufferstartsample_25',['bufferstartsample',['../structtracktion_1_1engine_1_1AudioRenderContext.html#a51aff9a454a26544836803677fcdb104',1,'tracktion::engine::AudioRenderContext::bufferStartSample'],['../structtracktion_1_1engine_1_1PluginRenderContext.html#a7e5fbba186efc4d4032ed54b05e1a0fc',1,'tracktion::engine::PluginRenderContext::bufferStartSample']]],
   ['builtinpluginformatname_26',['builtInPluginFormatName',['../classtracktion_1_1engine_1_1PluginManager.html#a04fb9fb8314465442fe4dd68d7bc1feb',1,'tracktion::engine::PluginManager']]],
-  ['busnumber_27',['busnumber',['../classtracktion_1_1engine_1_1AuxReturnPlugin.html#a0dbb70e738d7092b566bcffa0ee1997b',1,'tracktion::engine::AuxReturnPlugin::busNumber'],['../classtracktion_1_1engine_1_1AuxSendPlugin.html#a04e7e0c6266c0f3114cbf33c7d5e5f37',1,'tracktion::engine::AuxSendPlugin::busNumber']]]
+  ['busnumber_27',['busnumber',['../classtracktion_1_1engine_1_1AuxReturnPlugin.html#a0dbb70e738d7092b566bcffa0ee1997b',1,'tracktion::engine::AuxReturnPlugin::busNumber'],['../classtracktion_1_1engine_1_1AuxSendPlugin.html#a04e7e0c6266c0f3114cbf33c7d5e5f37',1,'tracktion::engine::AuxSendPlugin::busNumber']]],
+  ['bypass_28',['bypass',['../classtracktion_1_1engine_1_1AutomationCurve.html#aa701e9ea4e92580e21be0711b045ddf2',1,'tracktion::engine::AutomationCurve']]]
 ];
