@@ -19,7 +19,7 @@
 
   ID:               tracktion_graph
   vendor:           Tracktion Corporation
-  version:          3.0.0
+  version:          3.1.0
   name:             The Tracktion graph audio engine
   description:      Classes for creating and processing audio graphs
   website:          http://www.tracktion.com
