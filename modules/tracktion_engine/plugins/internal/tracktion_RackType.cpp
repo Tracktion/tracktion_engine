@@ -46,6 +46,7 @@ struct RackType::RackPluginList  : public ValueTreeObjectList<RackType::PluginIn
         : ValueTreeObjectList<PluginInfo> (parentTree), type (t)
     {
         CRASH_TRACER
+        // Exception will be caught by the Edit constructor
         callBlocking ([this] { this->rebuildObjects(); });
     }
 
@@ -151,6 +152,7 @@ struct RackType::WindowStateList  : public ValueTreeObjectList<WindowState>
         : ValueTreeObjectList<WindowState> (t.state), type (t)
     {
         CRASH_TRACER
+        // Exception will be caught by the Edit constructor
         callBlocking ([this] { this->rebuildObjects(); });
     }
 

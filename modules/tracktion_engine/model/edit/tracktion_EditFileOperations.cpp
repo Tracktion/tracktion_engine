@@ -433,9 +433,9 @@ juce::ValueTree loadEditFromProjectManager (ProjectManager& pm, ProjectItemID it
     return {};
 }
 
-std::unique_ptr<Edit> loadEditForExamining (ProjectManager& pm, ProjectItemID itemID, Edit::EditRole role)
+std::unique_ptr<Edit> loadEditForExamining (ProjectManager& pm, ProjectItemID itemID, Edit::EditRole role, Edit::LoadContext* loadContext)
 {
-    return Edit::createEditForExamining (pm.engine, loadEditFromProjectManager (pm, itemID), role);
+    return Edit::createEditForExamining (pm.engine, loadEditFromProjectManager (pm, itemID), role, loadContext);
 }
 
 juce::ValueTree loadEditFromFile (Engine& e, const juce::File& f, ProjectItemID itemID)

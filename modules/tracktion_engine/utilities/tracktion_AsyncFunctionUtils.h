@@ -277,10 +277,30 @@ inline bool callBlocking (std::function<void()> f)
     bf.triggerAndWaitForCallback();
 
     if (! bf.hasFinished())
-        throw std::runtime_error ("Blocking function unable to complete");
+    {
+        std::string err ("Blocking function unable to complete");
+       #if JUCE_DEBUG
+        err += ("\n" + juce::SystemStats::getStackBacktrace().toStdString());
+       #endif
+        throw std::runtime_error (std::move (err));
+    }
 
     return true;
 }
 
+/** The same as callBlocking expect the exception is caught and ignored.
+    Use this when failue is ok.
+*/
+inline bool callBlockingCatching (std::function<void()> f) noexcept
+{
+    try
+    {
+        return callBlocking (std::move (f));
+    }
+    catch (std::runtime_error&)
+    {
+        return false;
+    }
+}
 
 }} // namespace tracktion { inline namespace engine

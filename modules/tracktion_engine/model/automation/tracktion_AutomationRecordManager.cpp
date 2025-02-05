@@ -70,6 +70,7 @@ namespace tracktion::inline engine
                     }
                     else
                     {
+                        // Exception will be caught by the Edit constructor
                         callBlocking ([this] { edit.getTransport().addChangeListener (this); });
                     }
                 }

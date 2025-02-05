@@ -268,12 +268,19 @@ bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
 
     if (! nodeRenderContext)
     {
-        callBlocking ([&, this] { nodeRenderContext = std::make_unique<NodeRenderContext> (*this, r,
-                                                                                           std::move (graphNode),
-                                                                                           std::move (playHead),
-                                                                                           std::move (playHeadState),
-                                                                                           std::move (processState),
-                                                                                           sourceToUpdate); });
+        try
+        {
+            callBlocking ([&, this]
+                          { nodeRenderContext = std::make_unique<NodeRenderContext> (*this, r,
+                                                                                     std::move (graphNode), 
+                                                                                     std::move (playHead), 
+                                                                                     std::move (playHeadState), 
+                                                                                     std::move (processState), 
+                                                                                     sourceToUpdate); });
+        }
+        catch (...)
+        {
+        }
 
         if (! nodeRenderContext)
         {

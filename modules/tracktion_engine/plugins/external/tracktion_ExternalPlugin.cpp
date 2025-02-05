@@ -1089,7 +1089,7 @@ void ExternalPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
         chunk.fromBase64Encoding (s);
 
         if (chunk.getSize() > 0)
-            callBlocking ([&pi, &chunk] { pi->setStateInformation (chunk.getData(), (int) chunk.getSize()); });
+            callBlockingCatching ([&pi, &chunk] { pi->setStateInformation (chunk.getData(), (int) chunk.getSize()); });
     }
 }
 
@@ -1597,13 +1597,17 @@ juce::String ExternalPlugin::getProgramName (int index)
 
 bool ExternalPlugin::hasNameForMidiNoteNumber (int note, int midiChannel, juce::String& name)
 {
-    ignoreUnused (note, midiChannel, name);
-   #if TRACKTION_JUCE
     if (takesMidiInput())
+    {
         if (auto pi = getAudioPluginInstance())
-            return pi->hasNameForMidiNoteNumber (note, midiChannel, name);
-   #endif
-
+        {
+            if (auto n = pi->getNameForMidiNoteNumber (note, midiChannel))
+            {
+                name = *n;
+                return true;
+            }
+        }
+    }
     return false;
 }
 

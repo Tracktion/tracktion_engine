@@ -233,6 +233,7 @@ ModifierList::ModifierList (Edit& e, const juce::ValueTree& parentTree)
       edit (e), state (parent)
 {
     jassert (parent.hasType (IDs::MODIFIERS));
+    // Exception will be caught by Edit constructor
     callBlocking ([this] { rebuildObjects(); });
 }
 

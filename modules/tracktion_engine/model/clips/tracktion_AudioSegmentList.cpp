@@ -138,7 +138,7 @@ std::unique_ptr<AudioSegmentList> AudioSegmentList::create (AudioClipBase& acb, 
                           wtm.getWarpEndMarkerTime());
 
         juce::Array<TimeRange> warpTimeRegions;
-        callBlocking ([&] { warpTimeRegions = wtm.getWarpTimeRegions (region); });
+        callBlockingCatching ([&] { warpTimeRegions = wtm.getWarpTimeRegions (region); });
         auto position = warpTimeRegions.size() > 0 ? warpTimeRegions.getUnchecked (0).getStart() : TimePosition();
 
         for (auto warpRegion : warpTimeRegions)

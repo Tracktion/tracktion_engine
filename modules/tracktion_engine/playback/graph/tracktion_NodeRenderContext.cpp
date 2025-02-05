@@ -163,10 +163,17 @@ NodeRenderContext::~NodeRenderContext()
     if (writer != nullptr)
         writer->closeForWriting();
 
-    callBlocking ([this] { nodePlayer.reset(); });
+    try
+    {
+        callBlocking ([this] { nodePlayer.reset(); });
 
-    if (needsToNormaliseAndTrim)
-        owner.performNormalisingAndTrimming (originalParams, r);
+        if (needsToNormaliseAndTrim)
+            owner.performNormalisingAndTrimming (originalParams, r);
+    }
+    catch (std::runtime_error& err)
+    {
+        TRACKTION_LOG_ERROR (err.what());
+    }
 }
 
 bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)

@@ -120,15 +120,12 @@ namespace test_utilities
         std::unique_ptr<juce::TemporaryFile> file;
     };
 
-    inline BufferAndSampleRate renderToAudioBuffer (Edit& edit)
+    inline BufferAndSampleRate loadBufferAndSampleRate (std::unique_ptr<juce::TemporaryFile> audioFile)
     {
-        auto tf = std::make_unique<juce::TemporaryFile> (".wav");
-        Renderer::renderToFile (edit, tf->getFile(), false);
-
         juce::AudioFormatManager manager;
-        manager.registerFormat (new juce::WavAudioFormat(), true);
+        manager.registerBasicFormats();
 
-        if (auto reader = std::unique_ptr<juce::AudioFormatReader> (manager.createReaderFor (tf->getFile())))
+        if (auto reader = std::unique_ptr<juce::AudioFormatReader> (manager.createReaderFor (audioFile->getFile())))
         {
             juce::AudioBuffer<float> buffer (static_cast<int> (reader->numChannels),
                                              static_cast<int> (reader->lengthInSamples));
@@ -136,11 +133,43 @@ namespace test_utilities
             if (reader->read (&buffer, 0, buffer.getNumSamples(),
                               0, true, buffer.getNumChannels() > 1))
             {
-                return { buffer, reader->sampleRate, std::move (tf) };
+                return { buffer, reader->sampleRate, std::move (audioFile) };
             }
         }
 
         return {};
+    }
+
+    inline BufferAndSampleRate renderToAudioBuffer (Edit& edit)
+    {
+        auto tf = std::make_unique<juce::TemporaryFile> (".wav");
+        Renderer::renderToFile (edit, tf->getFile(), false);
+
+        return loadBufferAndSampleRate (std::move (tf));
+    }
+
+    inline BufferAndSampleRate renderToAudioBufferDispatchingMessageThread (Edit& edit, std::optional<TimeRange> timeRange = {})
+    {
+        std::promise<BufferAndSampleRate> promise;
+
+        auto destFile = std::make_unique<juce::TemporaryFile> (".wav");
+        Renderer::Parameters params (edit);
+        params.destFile = destFile->getFile();
+        params.time = timeRange.value_or (TimeRange (0_tp, edit.getLength()));
+        params.audioFormat = edit.engine.getAudioFileFormatManager().getWavFormat();
+        std::atomic<bool> callbackFinished { false };
+
+        auto handle = EditRenderer::render (std::move (params),
+                                            [&callbackFinished, f = destFile->getFile()] ([[maybe_unused]] auto res)
+                                            {
+                                                assert (res);
+                                                assert (*res == f);
+                                                callbackFinished = true;
+                                            });
+
+        test_utilities::runDispatchLoopUntilTrue (callbackFinished);
+
+        return loadBufferAndSampleRate (std::move (destFile));
     }
 
     inline void expectPeak (juce::UnitTest& ut, const BufferAndSampleRate& data, TimeRange tr, float expectedPeak)
@@ -159,6 +188,14 @@ namespace test_utilities
                                                                static_cast<int> (sampleRange.getStart()),
                                                                static_cast<int> (sampleRange.getLength())),
                                       expectedRMS, 0.01f);
+    }
+
+    inline float getRMSLevel (const BufferAndSampleRate& data, TimeRange tr, int channel)
+    {
+        const auto sampleRange = toSamples (tr, data.sampleRate);
+        return data.buffer.getRMSLevel (channel,
+                                        static_cast<int> (sampleRange.getStart()),
+                                        static_cast<int> (sampleRange.getLength()));
     }
 
     //==============================================================================

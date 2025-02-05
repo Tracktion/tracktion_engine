@@ -3319,7 +3319,7 @@ std::unique_ptr<Edit> Edit::createSingleTrackEdit (Engine& e, EditRole roleToUse
     return std::make_unique<Edit> (e, roleToUse);
 }
 
-std::unique_ptr<Edit> Edit::createEditForExamining (Engine& e, juce::ValueTree editState, EditRole roleToUse)
+std::unique_ptr<Edit> Edit::createEditForExamining (Engine& e, juce::ValueTree editState, EditRole roleToUse, LoadContext* loadContextToUse)
 {
     return createEdit (Options
     {
@@ -3327,7 +3327,7 @@ std::unique_ptr<Edit> Edit::createEditForExamining (Engine& e, juce::ValueTree e
         editState,
         ProjectItemID::fromProperty (editState, IDs::projectID),
         roleToUse,
-        nullptr,
+        loadContextToUse,
         1, // undo levels
         {},
         {},

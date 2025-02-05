@@ -299,6 +299,7 @@ void AudioClipBase::initialise()
             setCurrentSourceFile (audioFile.getFile());
     }
 
+    // Exception will be caught by Edit constructor
     if (! edit.getUndoManager().isPerformingUndoRedo())
         callBlocking ([this] { setLoopDefaults(); });
 }
@@ -2265,7 +2266,7 @@ void AudioClipBase::jobFinished (RenderManager::Job& job, bool completedOk)
 //==============================================================================
 void AudioClipBase::createNewProxyAsync()
 {
-    if (canUseProxy())
+    if (canUseProxy() || requiresRenderingSource())
         startTimer (600);
 }
 

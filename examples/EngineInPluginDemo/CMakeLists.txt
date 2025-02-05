@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.15)
 
 set (TARGET_NAME EngineInPluginDemo)
 
+set_directory_properties(PROPERTIES
+    JUCE_COMPANY_WEBSITE "https://tracktion.com")
+
 if (DEFINED PROJECT_NAME)
     message ("Adding ${TARGET_NAME} to the ${PROJECT_NAME} project")
 else()

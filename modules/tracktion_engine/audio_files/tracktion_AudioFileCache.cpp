@@ -705,7 +705,7 @@ void AudioFileCache::purgeOldFiles()
 
     const juce::ScopedWriteLock sl (fileListLock);
 
-    for (auto f :  activeFiles)
+    for (auto f : activeFiles)
         f->purgeOrphanReaders();
 
     for (int i = activeFiles.size(); --i >= 0;)

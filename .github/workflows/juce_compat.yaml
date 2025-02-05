@@ -39,19 +39,19 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_15.3.app
 
       - uses: actions/checkout@v4
-        with:
-          submodules: true
+      #   with:
+      #     submodules: true
 
-      - name: Update juce to tip
-        run: |
-          cd modules/juce
-          git config pull.rebase false # merge changes
-          git pull origin develop
+      # - name: Update juce to tip
+      #   run: |
+      #     cd modules/juce
+      #     git config pull.rebase false # merge changes
+      #     git pull origin develop
 
       # Generate build files
       - name: "Build all"
         id: generate
         shell: bash
         run: |
-          cmake -B ${{ env.BUILD_DIR }} ${{ matrix.generator }}
+          cmake -B ${{ env.BUILD_DIR }} ${{ matrix.generator }} -DJUCE_CPM_DEVELOP=1
           cmake --build ./${{ env.BUILD_DIR }} --config ${{ env.BUILD_CONFIG }} --parallel --target DemoRunner EngineInPluginDemo_common TestRunner Benchmarks
