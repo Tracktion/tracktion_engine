@@ -10316,6 +10316,13 @@
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
+      <type>int</type>
+      <name>gestureCount</name>
+      <anchorfile>classtracktion_1_1engine_1_1AutomatableParameter.html</anchorfile>
+      <anchor>af03461afa1eaa78fb3e78fe28e7da71f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
       <type>juce::ValueTree</type>
       <name>modifiersState</name>
       <anchorfile>classtracktion_1_1engine_1_1AutomatableParameter.html</anchorfile>
