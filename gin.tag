@@ -63065,6 +63065,20 @@
       <anchor>a53124427801d116f117bf8fbccdc2a51</anchor>
       <arglist>(const SelectableList &amp;)=0</arglist>
     </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>panGestureBegin</name>
+      <anchorfile>classtracktion_1_1engine_1_1SelectableClassWithPan.html</anchorfile>
+      <anchor>aebe04e9c159a263980590c4330107930</anchor>
+      <arglist>(const SelectableList &amp;)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>panGestureEnd</name>
+      <anchorfile>classtracktion_1_1engine_1_1SelectableClassWithPan.html</anchorfile>
+      <anchor>ab63a8f249cce2cbc7cbecfc70c06e80b</anchor>
+      <arglist>(const SelectableList &amp;)=0</arglist>
+    </member>
   </compound>
   <compound kind="class">
     <name>tracktion::engine::SelectableClassWithVolume</name>
@@ -63095,6 +63109,20 @@
       <name>resetVolume</name>
       <anchorfile>classtracktion_1_1engine_1_1SelectableClassWithVolume.html</anchorfile>
       <anchor>a4a32674bc34148c99fc1145d10e9bbab</anchor>
+      <arglist>(const SelectableList &amp;)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>volumeGestureBegin</name>
+      <anchorfile>classtracktion_1_1engine_1_1SelectableClassWithVolume.html</anchorfile>
+      <anchor>abe06d2096930bdf607a47fba41ee486e</anchor>
+      <arglist>(const SelectableList &amp;)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>volumeGestureEnd</name>
+      <anchorfile>classtracktion_1_1engine_1_1SelectableClassWithVolume.html</anchorfile>
+      <anchor>ac2ad37302442b0950307e54c9cfc0ca0</anchor>
       <arglist>(const SelectableList &amp;)=0</arglist>
     </member>
   </compound>
