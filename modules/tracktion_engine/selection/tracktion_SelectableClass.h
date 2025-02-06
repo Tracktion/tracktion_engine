@@ -148,6 +148,8 @@ public:
     virtual void setVolumeDB (const SelectableList&, float dB, SelectionManager*) = 0;
     virtual float getVolumeDB (const SelectableList&) = 0;
     virtual void resetVolume (const SelectableList&) = 0;
+    virtual void volumeGestureBegin (const SelectableList&) = 0;
+    virtual void volumeGestureEnd (const SelectableList&) = 0;
 };
 
 //==============================================================================
@@ -159,6 +161,8 @@ public:
     virtual void setPan (const SelectableList&, float pan, SelectionManager*) = 0;
     virtual float getPan (const SelectableList&) = 0;
     virtual void resetPan (const SelectableList&) = 0;
+    virtual void panGestureBegin (const SelectableList&) = 0;
+    virtual void panGestureEnd (const SelectableList&) = 0;
 };
 
 }} // namespace tracktion { inline namespace engine
