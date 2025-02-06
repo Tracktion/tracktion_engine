@@ -85,18 +85,6 @@ public:
         }
     }
 
-    void beginParameterChangeGesture() override
-    {
-        if (auto p = getParam())
-            p->beginChangeGesture();
-    }
-
-    void endParameterChangeGesture() override
-    {
-        if (auto p = getParam())
-            p->endChangeGesture();
-    }
-
     juce::String valueToString (float value) override
     {
         if (auto p = getParam())

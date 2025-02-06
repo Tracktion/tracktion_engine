@@ -75,9 +75,6 @@ public:
     std::function<juce::String(float)> valueToStringFunction;
     std::function<float(const juce::String&)> stringToValueFunction;
 
-    virtual void beginParameterChangeGesture() {}
-    virtual void endParameterChangeGesture() {}
-
     // should be called to change a parameter when a user is actively moving it
     void setParameter (float value, juce::NotificationType);
     void setNormalisedParameter (float value, juce::NotificationType);
