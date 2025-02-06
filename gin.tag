@@ -9839,20 +9839,6 @@
       <anchor>a60fd8396c77c50fb96f5891d5f698cd9</anchor>
       <arglist>()</arglist>
     </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>beginParameterChangeGesture</name>
-      <anchorfile>classtracktion_1_1engine_1_1AutomatableParameter.html</anchorfile>
-      <anchor>a97835602c3c5e4eb776f76dc5116a4d0</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>endParameterChangeGesture</name>
-      <anchorfile>classtracktion_1_1engine_1_1AutomatableParameter.html</anchorfile>
-      <anchor>a05864c95e4da3306c0b951d56929f23e</anchor>
-      <arglist>()</arglist>
-    </member>
     <member kind="function">
       <type>void</type>
       <name>setParameter</name>
@@ -30185,20 +30171,6 @@
       <anchorfile>classtracktion_1_1engine_1_1ExternalAutomatableParameter.html</anchorfile>
       <anchor>aebb8668d84b50ab11091b21931cdfb82</anchor>
       <arglist>(float newValue, bool byAutomation) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>beginParameterChangeGesture</name>
-      <anchorfile>classtracktion_1_1engine_1_1ExternalAutomatableParameter.html</anchorfile>
-      <anchor>ad1766a4dd010b51844397a8425d1d54a</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>endParameterChangeGesture</name>
-      <anchorfile>classtracktion_1_1engine_1_1ExternalAutomatableParameter.html</anchorfile>
-      <anchor>a479829dbe7a3ab68209460e38078cea4</anchor>
-      <arglist>() override</arglist>
     </member>
     <member kind="function">
       <type>juce::String</type>
@@ -76668,6 +76640,15 @@
       <enumvalue file="namespaceengine.html" anchor="a1b643dd7cc9311de9546793693324120ab96ba508e3690f5168e4b0e68b15b178">touch</enumvalue>
       <enumvalue file="namespaceengine.html" anchor="a1b643dd7cc9311de9546793693324120a42f3c93a0b1ca287d5456f3fc3200366">latch</enumvalue>
       <enumvalue file="namespaceengine.html" anchor="a1b643dd7cc9311de9546793693324120aefb2a684e4afb7d55e6147fbe5a332ee">write</enumvalue>
+    </member>
+    <member kind="enumeration">
+      <type></type>
+      <name>AutomationTrigger</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>adbd4046935de78895707c8f8277c8470</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespaceengine.html" anchor="adbd4046935de78895707c8f8277c8470ab96ba508e3690f5168e4b0e68b15b178">touch</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="adbd4046935de78895707c8f8277c8470a2063c1608d6e0baf80249c42e2be5804">value</enumvalue>
     </member>
     <member kind="enumeration">
       <type></type>

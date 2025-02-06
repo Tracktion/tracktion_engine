@@ -6,6 +6,7 @@ var searchData=
   ['assignmentmode_3',['AssignmentMode',['../classtracktion_1_1engine_1_1MackieMCU.html#a0e58216781c18fa51696cf62fcbce1c5',1,'tracktion::engine::MackieMCU']]],
   ['automationlocked_4',['AutomationLocked',['../structtracktion_1_1engine_1_1Clipboard_1_1Clips.html#a3d43d0f73e39eeceb028964fe2c625ea',1,'tracktion::engine::Clipboard::Clips']]],
   ['automationmode_5',['AutomationMode',['../namespaceengine.html#a1b643dd7cc9311de9546793693324120',1,'engine']]],
-  ['autopitchmode_6',['AutoPitchMode',['../classtracktion_1_1engine_1_1AudioClipBase.html#ae58fcb2433dfaf2e5d543089c64f3bbf',1,'tracktion::engine::AudioClipBase']]],
-  ['auxposition_7',['auxposition',['../namespacetracktion_1_1engine.html#a9e8ea43658d2da6652d441bb65cdca4d',1,'tracktion::AuxPosition'],['../namespacetracktion_1_1engine.html#a9e8ea43658d2da6652d441bb65cdca4d',1,'tracktion::engine::AuxPosition']]]
+  ['automationtrigger_6',['AutomationTrigger',['../namespaceengine.html#adbd4046935de78895707c8f8277c8470',1,'engine']]],
+  ['autopitchmode_7',['AutoPitchMode',['../classtracktion_1_1engine_1_1AudioClipBase.html#ae58fcb2433dfaf2e5d543089c64f3bbf',1,'tracktion::engine::AudioClipBase']]],
+  ['auxposition_8',['auxposition',['../namespacetracktion_1_1engine.html#a9e8ea43658d2da6652d441bb65cdca4d',1,'tracktion::AuxPosition'],['../namespacetracktion_1_1engine.html#a9e8ea43658d2da6652d441bb65cdca4d',1,'tracktion::engine::AuxPosition']]]
 ];
