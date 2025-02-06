@@ -1195,12 +1195,18 @@ void AutomatableParameter::updateToFollowCurve (TimePosition time)
 
 void AutomatableParameter::parameterChangeGestureBegin()
 {
+    jassert(gestureCount == 0);
+    gestureCount++;
+
     TRACKTION_ASSERT_MESSAGE_THREAD
     listeners.call (&Listener::parameterChangeGestureBegin, *this);
 }
 
 void AutomatableParameter::parameterChangeGestureEnd()
 {
+    gestureCount--;
+    jassert(gestureCount == 0);
+
     TRACKTION_ASSERT_MESSAGE_THREAD
     listeners.call (&Listener::parameterChangeGestureEnd, *this);
 }

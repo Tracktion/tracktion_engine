@@ -246,6 +246,7 @@ protected:
     std::atomic<bool> isRecording { false };
     bool updateParametersRecursionCheck = false;
     AsyncCaller parameterChangedCaller { [this] { listeners.call (&Listener::currentValueChanged, *this); } };
+    int gestureCount = 0;
 
     juce::ValueTree modifiersState;
     struct AutomationSourceList;
