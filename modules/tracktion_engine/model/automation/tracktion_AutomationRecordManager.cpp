@@ -31,7 +31,7 @@ namespace tracktion::inline engine
         virtual void punchOut (bool toEnd) = 0;
 
         //==============================================================================
-        virtual void postFirstAutomationChange (AutomatableParameter&, float originalValue) = 0;
+        virtual void postFirstAutomationChange (AutomatableParameter&, float originalValue, AutomationTrigger) = 0;
         virtual void postAutomationChange (AutomatableParameter&, TimePosition time, float value) = 0;
         virtual void parameterBeingDeleted (AutomatableParameter&) = 0;
     };
@@ -200,7 +200,7 @@ namespace tracktion::inline engine
             juce::CachedValue<bool> readingAutomation;
             bool wasPlaying = false;
 
-            void postFirstAutomationChange (AutomatableParameter& param, float originalValue) override
+            void postFirstAutomationChange (AutomatableParameter& param, float originalValue, AutomationTrigger) override
             {
                 TRACKTION_ASSERT_MESSAGE_THREAD
                 auto entry = std::make_unique<AutomationParamData> (param, originalValue);
@@ -482,15 +482,21 @@ namespace tracktion::inline engine
             //==============================================================================
             AutomationRecordManager (const AutomationRecordManager&) = delete;
 
-            struct AutomationParamData : public AutomatableParameter::Listener
+            struct AutomationParamData : public AutomatableParameter::Listener, juce::Timer
             {
-                AutomationParamData (AutomationRecordManager& o, AutomatableParameter& p, float value)
-                    : owner (o), parameter (p), originalValue (value)
+                AutomationParamData (AutomationRecordManager& o, AutomatableParameter& p, float value, AutomationTrigger t)
+                    : owner (o), parameter (p), originalValue (value), trigger (t)
                 {
                     if (auto& tc = p.getEdit().getTransport(); tc.looping)
                         valueAtLoopEnd = p.getCurve().getValueAt (tc.getLoopRange().getEnd());
 
                     parameter.addListener (this);
+                }
+
+                void changed()
+                {
+                    if (trigger == AutomationTrigger::value)
+                        startTimer (2000);
                 }
 
                 struct Change
@@ -507,6 +513,7 @@ namespace tracktion::inline engine
                 const AutomationMode mode = getAutomationMode (parameter);
                 juce::Array<Change> changes;
                 float originalValue;
+                AutomationTrigger trigger;
                 std::optional<Change> lastChangeFlushed;
                 std::optional<float> valueAtLoopEnd;
                 const TimeDuration glideTime = tracktion::AutomationRecordManager::getGlideSeconds (parameter.getEngine());
@@ -520,6 +527,12 @@ namespace tracktion::inline engine
                 {
                     owner.parameterChangeGestureEnd (parameter);
                 }
+
+                void timerCallback() override
+                {
+                    stopTimer();
+                    owner.parameterChangeGestureEnd (parameter);
+                }
             };
 
             Edit& edit;
@@ -529,7 +542,7 @@ namespace tracktion::inline engine
             bool wasPlaying = false;
             LambdaTimer flushTimer { [this] { flushAutomation(); } };
 
-            void postFirstAutomationChange (AutomatableParameter& param, float originalValue) override
+            void postFirstAutomationChange (AutomatableParameter& param, float originalValue, AutomationTrigger trigger) override
             {
                 TRACKTION_ASSERT_MESSAGE_THREAD
                 auto mode = getAutomationMode (param);
@@ -548,7 +561,8 @@ namespace tracktion::inline engine
 
                 flushTimer.startTimerHz (10);
 
-                auto entry = std::make_unique<AutomationParamData> (*this, param, originalValue);
+                auto entry = std::make_unique<AutomationParamData> (*this, param, originalValue, trigger);
+                entry->changed();
 
                 const juce::ScopedLock sl (lock);
                 recordedParams.add (entry.release());
@@ -564,6 +578,7 @@ namespace tracktion::inline engine
                     if (&p->parameter == &param)
                     {
                         p->changes.add (AutomationParamData::Change (time, value));
+                        p->changed();
                         break;
                     }
                 }
@@ -965,9 +980,9 @@ namespace tracktion::inline engine
     }
 
     //==============================================================================
-    void AutomationRecordManager::postFirstAutomationChange (AutomatableParameter& param, float originalValue)
+    void AutomationRecordManager::postFirstAutomationChange (AutomatableParameter& param, float originalValue, AutomationTrigger trigger)
     {
-        pimpl->postFirstAutomationChange (param, originalValue);
+        pimpl->postFirstAutomationChange (param, originalValue, trigger);
     }
 
     void AutomationRecordManager::postAutomationChange (AutomatableParameter& param, TimePosition time, float value)

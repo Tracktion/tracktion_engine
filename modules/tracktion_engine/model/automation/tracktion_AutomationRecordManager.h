@@ -16,6 +16,14 @@ class AutomationRecordManagerBase;
 
 //==============================================================================
 //==============================================================================
+enum class AutomationTrigger
+{
+    touch,
+    value,
+};
+
+//==============================================================================
+//==============================================================================
 /** Stores automation data as it's being read in, and writes it back to the
     edit when recording finishes.
 
@@ -90,7 +98,7 @@ private:
     juce::ListenerList<Listener> listeners;
 
     friend class AutomatableParameter;
-    void postFirstAutomationChange (AutomatableParameter&, float originalValue);
+    void postFirstAutomationChange (AutomatableParameter&, float originalValue, AutomationTrigger);
     void postAutomationChange (AutomatableParameter&, TimePosition time, float value);
     void parameterBeingDeleted (AutomatableParameter&);
 };

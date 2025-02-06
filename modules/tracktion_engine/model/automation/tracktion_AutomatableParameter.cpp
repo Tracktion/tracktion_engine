@@ -1084,7 +1084,7 @@ void AutomatableParameter::setParameterValue (float value, bool isFollowingCurve
                         if (! isRecording)
                         {
                             isRecording = true;
-                            arm.postFirstAutomationChange (*this, oldValue);
+                            arm.postFirstAutomationChange (*this, oldValue, AutomationTrigger::value);
                             listeners.call (&Listener::recordingStatusChanged, *this);
                         }
 
@@ -1200,6 +1200,31 @@ void AutomatableParameter::parameterChangeGestureBegin()
 
     TRACKTION_ASSERT_MESSAGE_THREAD
     listeners.call (&Listener::parameterChangeGestureBegin, *this);
+
+    auto& ed = getEdit();
+
+    if (auto epc = ed.getTransport().getCurrentPlaybackContext())
+    {
+        if (! epc->isDragging())
+        {
+            auto& arm = ed.getAutomationRecordManager();
+
+            if (epc->isPlaying() && arm.isWritingAutomation())
+            {
+                auto time = epc->getPosition();
+                auto value = currentValue.load();
+
+                if (! isRecording)
+                {
+                    isRecording = true;
+                    arm.postFirstAutomationChange (*this, value, AutomationTrigger::touch);
+                    listeners.call (&Listener::recordingStatusChanged, *this);
+                }
+
+                arm.postAutomationChange (*this, time, value);
+            }
+        }
+    }
 }
 
 void AutomatableParameter::parameterChangeGestureEnd()
