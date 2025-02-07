@@ -157,6 +157,12 @@ public:
 
     //==============================================================================
     // these are called back by the controller to make the app respond
+    void userTouchedFader (int channelNum, bool touch);
+    void userTouchedPanPot (int channelNum, bool touch);
+    void userTouchedMasterLevelFader (bool touch);
+    void userTouchedMasterPanPot (bool touch);
+    void userTouchedAux (int channelNum, int auxNum, AuxPosition ap, bool touch);
+    void userTouchedQuickParam (bool touch);
     void userMovedFader (int channelNum, float newSliderPos, bool delta);
     void userMovedMasterFader (Edit*, float newLevel, bool delta);
     void userMovedMasterPanPot (Edit*, float newLevel, bool delta);

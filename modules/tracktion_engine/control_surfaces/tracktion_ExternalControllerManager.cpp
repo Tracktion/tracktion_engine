@@ -797,6 +797,77 @@ void ExternalControllerManager::auxSendLevelsChanged()
 }
 
 //==============================================================================
+inline void gesture (AutomatableParameter::Ptr p, bool touch)
+{
+    if (touch)
+        p->parameterChangeGestureBegin();
+    else
+        p->parameterChangeGestureEnd();
+}
+
+void ExternalControllerManager::userTouchedFader (int channelNum, bool touch)
+{
+    auto track = getChannelTrack (channelNum);
+
+    if (auto at = dynamic_cast<AudioTrack*> (track))
+    {
+        if (auto vp = at->getVolumePlugin())
+            gesture (vp->volParam, touch);
+    }
+
+    if (auto ft = dynamic_cast<FolderTrack*> (track))
+    {
+        if (auto vca = ft->getVCAPlugin())
+            gesture (vca->volParam, touch);
+        else if (auto vp = ft->getVolumePlugin())
+            gesture (vp->volParam, touch);
+    }
+}
+
+void ExternalControllerManager::userTouchedPanPot (int channelNum, bool touch)
+{
+    auto track = getChannelTrack (channelNum);
+
+    if (auto at = dynamic_cast<AudioTrack*> (track))
+    {
+        if (auto vp = at->getVolumePlugin())
+            gesture (vp->panParam, touch);
+    }
+
+    if (auto ft = dynamic_cast<FolderTrack*> (track))
+    {
+        if (auto vp = ft->getVolumePlugin())
+            gesture (vp->panParam, touch);
+    }
+}
+
+void ExternalControllerManager::userTouchedMasterLevelFader (bool touch)
+{
+    if (currentEdit != nullptr && isVisibleOnControlSurface)
+        gesture (currentEdit->getMasterSliderPosParameter(), touch);
+}
+
+void ExternalControllerManager::userTouchedMasterPanPot (bool touch)
+{
+    if (currentEdit != nullptr && isVisibleOnControlSurface)
+        gesture (currentEdit->getMasterPanParameter(), touch);
+}
+
+void ExternalControllerManager::userTouchedAux (int channelNum, int auxNum, AuxPosition ap, bool touch)
+{
+    if (auto t = dynamic_cast<AudioTrack*> (getChannelTrack (channelNum)))
+        if (auto aux = t->getAuxSendPlugin (auxNum, ap))
+            gesture (aux->gain, touch);
+}
+
+void ExternalControllerManager::userTouchedQuickParam (bool touch)
+{
+    if (currentSelectionManager != nullptr)
+        if (auto f = currentSelectionManager->getFirstItemOfType<Plugin>())
+            if (auto param = f->getQuickControlParameter())
+                gesture (param, touch);
+}
+
 void ExternalControllerManager::userMovedFader (int channelNum, float newSliderPos, bool delta)
 {
     CRASH_TRACER

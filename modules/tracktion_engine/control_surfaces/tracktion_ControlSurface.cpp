@@ -109,6 +109,48 @@ void ControlSurface::performIfNotSafeRecording (const std::function<void()>& f)
     f();
 }
 
+void ControlSurface::userTouchedFader (int channelNum, bool touch)
+{
+    RETURN_IF_SAFE_RECORDING
+    externalControllerManager.userTouchedFader (owner->channelStart + channelNum, touch);
+}
+
+void ControlSurface::userTouchedPanPot (int channelNum, bool touch)
+{
+    RETURN_IF_SAFE_RECORDING
+    externalControllerManager.userTouchedPanPot (owner->channelStart + channelNum, touch);
+}
+
+void ControlSurface::userTouchedMasterLevelFader (bool touch)
+{
+    RETURN_IF_SAFE_RECORDING
+    externalControllerManager.userTouchedMasterLevelFader (touch);
+}
+
+void ControlSurface::userTouchedMasterPanPot (bool touch)
+{
+    RETURN_IF_SAFE_RECORDING
+    externalControllerManager.userTouchedMasterPanPot (touch);
+}
+
+void ControlSurface::userTouchedAux (int channelNum, int auxNum, bool touch)
+{
+    RETURN_IF_SAFE_RECORDING
+    externalControllerManager.userTouchedAux (owner->channelStart + channelNum, auxNum, auxMode, touch);
+}
+
+void ControlSurface::userTouchedQuickParam (bool touch)
+{
+    RETURN_IF_SAFE_RECORDING
+    externalControllerManager.userTouchedQuickParam (touch);
+}
+
+void ControlSurface::userTouchedParameterControl (int parameter, bool touch)
+{
+    RETURN_IF_SAFE_RECORDING
+    owner->userMovedParameterControl (parameter, touch);
+}
+
 void ControlSurface::userMovedFader (int channelNum, float newSliderPos, bool delta)
 {
     RETURN_IF_SAFE_RECORDING

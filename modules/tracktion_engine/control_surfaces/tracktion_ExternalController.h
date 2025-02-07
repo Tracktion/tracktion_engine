@@ -230,6 +230,7 @@ private:
 
     void userMovedParameterControl (int paramNumber, float newValue, bool delta);
     void userPressedParameterControl (int paramNumber);
+    void userMovedParameterControl (int parameter, bool touch);
     void userPressedGoToMarker (int marker);
 
     Plugin* getCurrentPlugin() const;

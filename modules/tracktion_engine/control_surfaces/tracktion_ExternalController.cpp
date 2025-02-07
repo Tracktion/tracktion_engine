@@ -762,6 +762,17 @@ void ExternalController::userPressedParameterControl (int paramNumber)
         p->midiControllerPressed();
 }
 
+void ExternalController::userMovedParameterControl (int paramNumber, bool touch)
+{
+    if (auto p = currentParams[paramNumber])
+    {
+        if (touch)
+            p->parameterChangeGestureBegin();
+        else
+            p->parameterChangeGestureEnd();
+    }
+}
+
 void ExternalController::userPressedGoToMarker (int marker)
 {
     if (auto tc = getTransport())

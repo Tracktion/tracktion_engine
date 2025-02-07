@@ -254,20 +254,26 @@ public:
     // range 0 to 1.0 or -1.0 to 1.0
     // delta false means absolute position, otherwise adjust by delta
     void userMovedFader (int channelNum, float newFaderPosition, bool delta = false);
+    void userTouchedFader (int channelNum, bool touch);
 
     // tells tracktion that the user has moved a pan pot
     // the channel number is the physical channel on the device, regardless of bank selection
     // range -1.0 to 1.0
     // delta false means absolute position, otherwise adjust by delta
     void userMovedPanPot (int channelNum, float newPanPosition, bool delta = false);
+    void userTouchedPanPot (int channelNum, bool touch);
 
     // tells tracktion that the master fader has moved.
     void userMovedMasterLevelFader (float newLevel, bool delta = false);
     void userMovedMasterPanPot (float newLevel, bool delta = false);
+    void userTouchedMasterLevelFader (bool touch);
+    void userTouchedMasterPanPot (bool touch);
 
+    void userTouchedAux (int channelNum, int auxNum, bool touch);
     void userMovedAux (int channelNum, int auxNum, float newPosition, bool delta = false);
     void userPressedAux (int channelNum, int auxNum);
     void userMovedQuickParam (float newLevel);
+    void userTouchedQuickParam (bool touch);
 
     // these tell tracktion about buttons being pressed
     void userPressedSolo (int channelNum);
@@ -373,6 +379,7 @@ public:
 
     void userMovedParameterControl (int parameter, float newValue, bool delta = false);
     void userPressedParameterControl (int paramNumber);
+    void userTouchedParameterControl (int parameter, bool touch);
 
     void userChangedParameterBank (int deltaParams);
     void userChangedMarkerBank (int deltaMarkers);
