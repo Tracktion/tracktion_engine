@@ -18552,10 +18552,24 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>userTouchedFader</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a42db29d7d2020edfb07034bd82e16e5e</anchor>
+      <arglist>(int channelNum, bool touch)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>userMovedPanPot</name>
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
       <anchor>a3cc543c1814d1bc395ca3817d16cc79e</anchor>
       <arglist>(int channelNum, float newPanPosition, bool delta=false)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userTouchedPanPot</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a1d3bff535bbb3ca899a725d1cde23afd</anchor>
+      <arglist>(int channelNum, bool touch)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -18570,6 +18584,27 @@
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
       <anchor>a1890174812c4d0270c68334c2e3a4bd6</anchor>
       <arglist>(float newLevel, bool delta=false)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userTouchedMasterLevelFader</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>aea3812c63449fa231c96396d29a0713d</anchor>
+      <arglist>(bool touch)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userTouchedMasterPanPot</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>aba470822c65eb3ac22938e2f3cd2626e</anchor>
+      <arglist>(bool touch)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userTouchedAux</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>ac55b0ef97a14fec0c58aa06c04890916</anchor>
+      <arglist>(int channelNum, int auxNum, bool touch)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -18591,6 +18626,13 @@
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
       <anchor>adb263ff25fba959b4dae8bb6bd977626</anchor>
       <arglist>(float newLevel)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userTouchedQuickParam</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>a4df723c40b30a72b0da7d5eb1d5cccf0</anchor>
+      <arglist>(bool touch)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -19165,6 +19207,13 @@
       <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
       <anchor>ab7b48622b0c531f58e16fb1555cacf73</anchor>
       <arglist>(int paramNumber)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userTouchedParameterControl</name>
+      <anchorfile>classtracktion_1_1engine_1_1ControlSurface.html</anchorfile>
+      <anchor>ad71c5975cfe15dacc1f84bfda225ce8f</anchor>
+      <arglist>(int parameter, bool touch)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -31486,6 +31535,48 @@
       <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
       <anchor>afec03a2073acc21f3afef0c19ce3ba2f</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userTouchedFader</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
+      <anchor>ae795c82f8d6ac62d1d7a6bb19f3b4fab</anchor>
+      <arglist>(int channelNum, bool touch)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userTouchedPanPot</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
+      <anchor>aa804a9a0247e7062bc5073b221f00a3a</anchor>
+      <arglist>(int channelNum, bool touch)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userTouchedMasterLevelFader</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
+      <anchor>a3431d0a2ff43c90a51f7814cb62a2eed</anchor>
+      <arglist>(bool touch)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userTouchedMasterPanPot</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
+      <anchor>a9a7d80dd3497bfb4d11c0ffa596e4972</anchor>
+      <arglist>(bool touch)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userTouchedAux</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
+      <anchor>a218f8b157b0ab383e5ea003ca157db57</anchor>
+      <arglist>(int channelNum, int auxNum, AuxPosition ap, bool touch)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>userTouchedQuickParam</name>
+      <anchorfile>classtracktion_1_1engine_1_1ExternalControllerManager.html</anchorfile>
+      <anchor>a068d81b2443c894cf816e84dab6aa642</anchor>
+      <arglist>(bool touch)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
