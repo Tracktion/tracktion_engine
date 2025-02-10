@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
+namespace tracktion::inline engine
 {
 
 class AutomationCurve
@@ -17,13 +17,15 @@ public:
     AutomationCurve();
     AutomationCurve (const juce::ValueTree& parent, const juce::ValueTree& state);
     AutomationCurve (const AutomationCurve&);
-    ~AutomationCurve();
 
     void setState (const juce::ValueTree&);
     void setParentState (const juce::ValueTree&);
-    void setOwnerParameter (AutomatableParameter*);
 
-    AutomatableParameter* getOwnerParameter() const noexcept        { return ownerParam; }
+    /** Sets the paramID to store in the state. */
+    void setParameterID (juce::String);
+
+    /** Returns the parameter ID set or an empty string. */
+    juce::String getParameterID() const;
 
     //==============================================================================
     /** If set to true, this curve is disabled, having no effect on the AutomatableParameter. */
@@ -52,59 +54,52 @@ public:
     //==============================================================================
     int getNumPoints() const noexcept;
     TimeDuration getLength() const;
-    juce::Range<float> getValueLimits() const;
 
     AutomationPoint getPoint (int index) const noexcept;
     TimePosition getPointTime (int index) const noexcept;
     float getPointValue (int index) const noexcept;
     float getPointCurve (int index) const noexcept;
 
-    CurvePoint getBezierHandle (int index) const noexcept;
+    CurvePoint getBezierHandle (int index, TempoSequence&) const noexcept;
     CurvePoint getBezierPoint (int index) const noexcept;
     void getBezierEnds (int index, double& x1, float& y1, double& x2, float& y2) const noexcept;
 
-    float getValueAt (TimePosition) const;
+    float getValueAt (const AutomatableParameter&, TimePosition) const;
 
     int indexBefore (TimePosition) const;
     int nextIndexAfter (TimePosition) const;
 
     // returns the index of the next index after this point, xToYRatio is 1 scren unit in value / 1 screen unit in time
-    int getNearestPoint (TimePosition&, float& v, double xToYRatio) const;
+    //ddd int getNearestPoint (TimePosition&, float& v, double xToYRatio) const;
 
     int countPointsInRegion (TimeRange) const;
 
     //==============================================================================
-    void clear();
+    void clear (juce::UndoManager*);
 
     // returns index of new point
-    int addPoint (TimePosition, float value, float curve);
-    void removePoint (int index);
-    void removePointsInRegion (TimeRange);
-    void removeRegionAndCloseGap (TimeRange);
-    void removeRedundantPoints (TimeRange);
+    int addPoint (TimePosition, float value, float curve, juce::UndoManager*);
+    void removePoint (int index, juce::UndoManager*);
+    void removePointsInRegion (TimeRange, juce::UndoManager*);
+    void removeRegionAndCloseGap (AutomatableParameter&, TimeRange, juce::UndoManager*);
+    void removeRedundantPoints (TimeRange, juce::UndoManager*);
 
     juce::Array<AutomationPoint> getPointsInRegion (TimeRange) const;
 
     // returns the new index of the point, which may have changed
-    int movePoint (int index, TimePosition, float newValue, bool removeInterveningPoints);
+    int movePoint (AutomatableParameter&, int index, TimePosition, float newValue,
+                   bool removeInterveningPoints, juce::UndoManager*);
 
-    void setPointTime (int index, TimePosition);
-    void setPointValue (int index, float newValue);
-    void setCurveValue (int index, float newCurve);
+    void setPointTime (int index, TimePosition, juce::UndoManager*);
+    void setPointValue (int index, float newValue, juce::UndoManager*);
+    void setCurveValue (int index, float newCurve, juce::UndoManager*);
 
     //==============================================================================
-    void mergeOtherCurve (const AutomationCurve& source,
-                          TimeRange destRange,
-                          TimePosition sourceStartTime,
-                          TimeDuration fadeLength,
-                          bool leaveOpenAtStart,
-                          bool leaveOpenEnded);
-
-    void simplify (TimeRange, double minTimeDifference, float minValueDifference);
-    void rescaleAllTimes (double factor);
-    void addToAllTimes (TimeDuration delta);
-    void rescaleValues (float factor, TimeRange);
-    void addToValues (float valueDelta, TimeRange);
+    void simplify (TimeRange, double minTimeDifference, float minValueDifference, juce::UndoManager*);
+    void rescaleAllTimes (double factor, juce::UndoManager*);
+    void addToAllTimes (TimeDuration delta, juce::UndoManager*);
+    void rescaleValues (float factor, TimeRange, juce::Range<float> valueRange, juce::UndoManager*);
+    void addToValues (float valueDelta, TimeRange, juce::Range<float> valueRange, juce::UndoManager*);
 
     static double getBezierXfromT (double t, double x1, double xb, double x2);
     static float getBezierYFromX (double t, double x1, float y1, double xb, float yb, double x2, float y2);
@@ -114,17 +109,32 @@ public:
     juce::ValueTree parentState, state;
 
 private:
-    AutomatableParameter* ownerParam = nullptr;
-
-    juce::UndoManager* getUndoManager() const;
-    void addPointAtIndex (int index, TimePosition, float v, float c);
-    void checkParenthoodStatus();
+    void addPointAtIndex (int index, TimePosition, float v, float c, juce::UndoManager*);
+    void checkParenthoodStatus (juce::UndoManager*);
 
     JUCE_LEAK_DETECTOR (AutomationCurve)
 };
 
 //==============================================================================
 /** Removes points from the curve to simplfy it and returns the number of points removed. */
-int simplify (AutomationCurve&, int strength, TimeRange);
+int simplify (AutomationCurve&, int strength,
+              TimeRange, juce::Range<float> valueRange,
+              juce::UndoManager*);
 
-}} // namespace tracktion { inline namespace engine
+struct ParameterAndCurve
+{
+    AutomatableParameter& param;
+    AutomationCurve& curve;
+};
+
+void mergeCurve (const ParameterAndCurve source,
+                 TimePosition sourceStartTime,
+                 ParameterAndCurve dest,
+                 TimeRange destRange,
+                 TimeDuration fadeLength,
+                 bool leaveOpenAtStart,
+                 bool leaveOpenEnded);
+
+
+
+} // namespace tracktion::inline engine

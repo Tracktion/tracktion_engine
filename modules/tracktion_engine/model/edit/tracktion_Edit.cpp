@@ -949,10 +949,10 @@ void Edit::initialiseMasterVolume (const Options& options)
         const float masterVolumeFaderPos = gainToVolumeFaderPosition (volGain);
         const float masterPan = (rightGain - volGain) / volGain;
 
-        getMasterSliderPosParameter()->getCurve().clear();
+        getMasterSliderPosParameter()->getCurve().clear (um);
         getMasterSliderPosParameter()->setParameter (masterVolumeFaderPos, juce::dontSendNotification);
 
-        getMasterPanParameter()->getCurve().clear();
+        getMasterPanParameter()->getCurve().clear (um);
         getMasterPanParameter()->setParameter (masterPan, juce::dontSendNotification);
     }
 }

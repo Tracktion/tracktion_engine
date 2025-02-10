@@ -814,11 +814,12 @@ void AudioClipBase::copyFadeToAutomation (bool useFadeIn, bool removeClipFade)
     }
 
     AutomationCurve curve;
-    curve.setOwnerParameter (param.get());
+    curve.setParameterID (param->paramID);
+    auto um = getUndoManager();
 
     auto curveType = useFadeIn ? getFadeInType() : getFadeOutType();
-    auto startValue = useFadeIn ? 0.0f : oldCurve.getValueAt (fadeTime.getStart());
-    auto endValue   = useFadeIn ? oldCurve.getValueAt (fadeTime.getEnd()) : 0.0f;
+    auto startValue = useFadeIn ? 0.0f : oldCurve.getValueAt (*param, fadeTime.getStart());
+    auto endValue   = useFadeIn ? oldCurve.getValueAt (*param, fadeTime.getEnd()) : 0.0f;
     auto valueLimits = juce::Range<float>::between (startValue, endValue);
 
     switch (curveType)
@@ -837,7 +838,7 @@ void AudioClipBase::copyFadeToAutomation (bool useFadeIn, bool removeClipFade)
 
                 auto volCurveGain = AudioFadeCurve::alphaToGainForType (curveType, alpha);
                 auto value = valueLimits.getStart() + (volCurveGain * valueLimits.getLength());
-                curve.addPoint (time, (float) value, 0.0f);
+                curve.addPoint (time, (float) value, 0.0f, um);
             }
 
             break;
@@ -846,17 +847,19 @@ void AudioClipBase::copyFadeToAutomation (bool useFadeIn, bool removeClipFade)
         case AudioFadeCurve::linear:
         default:
         {
-            curve.addPoint (TimePosition(), useFadeIn ? valueLimits.getStart() : valueLimits.getLength(), 0.0f);
-            curve.addPoint (toPosition (fadeTime.getLength()), useFadeIn ? valueLimits.getLength() : valueLimits.getStart(), 0.0f);
+            curve.addPoint (TimePosition(), useFadeIn ? valueLimits.getStart() : valueLimits.getLength(), 0.0f, um);
+            curve.addPoint (toPosition (fadeTime.getLength()), useFadeIn ? valueLimits.getLength() : valueLimits.getStart(), 0.0f, um);
             break;
         }
     }
 
-    oldCurve.mergeOtherCurve (curve, fadeTime, TimePosition(), TimeDuration(), true, true);
+    mergeCurve ({ *param , curve }, 0_tp,
+                { *param, oldCurve }, fadeTime, 0_td,
+                true, true);
 
     // also need to remove the point just before the first one we added
     if (useFadeIn && (oldCurve.countPointsInRegion ({ {}, fadeTime.getStart() + (fadeTime.getLength() * 0.09) }) == 2))
-        oldCurve.removePoint (0);
+        oldCurve.removePoint (0, um);
 
     if (removeClipFade)
     {

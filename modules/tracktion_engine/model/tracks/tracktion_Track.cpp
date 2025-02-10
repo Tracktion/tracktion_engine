@@ -447,6 +447,8 @@ bool Track::isAChildOf (const Track& t) const
 void Track::insertSpaceIntoTrack (TimePosition time, TimeDuration amountOfSpace)
 {
     // shift up any automation curves too..
+    auto um = getUndoManager_p (*this);
+
     for (auto p : pluginList)
     {
         for (int j = p->getNumAutomatableParameters(); --j >= 0;)
@@ -454,19 +456,20 @@ void Track::insertSpaceIntoTrack (TimePosition time, TimeDuration amountOfSpace)
             if (auto param = p->getAutomatableParameter (j))
             {
                 auto& curve = param->getCurve();
-                auto valueAtInsertionTime = curve.getValueAt (time);
+                auto valueAtInsertionTime = curve.getValueAt (*param, time);
 
                 for (int k = curve.getNumPoints(); --k >= 0;)
                     if (curve.getPointTime (k) >= time)
-                        curve.movePoint (k,
+                        curve.movePoint (*param, k,
                                          curve.getPointTime (k) + amountOfSpace,
-                                         curve.getPointValue (k), false);
+                                         curve.getPointValue (k), false,
+                                         um);
 
-                if (! juce::approximatelyEqual (valueAtInsertionTime, curve.getValueAt (time)))
-                    curve.addPoint (time, valueAtInsertionTime, 0.0f);
+                if (! juce::approximatelyEqual (valueAtInsertionTime, curve.getValueAt (*param, time)))
+                    curve.addPoint (time, valueAtInsertionTime, 0.0f, um);
 
-                if (! juce::approximatelyEqual (valueAtInsertionTime, curve.getValueAt (time + amountOfSpace)))
-                    curve.addPoint (time + amountOfSpace, valueAtInsertionTime, 0.0f);
+                if (! juce::approximatelyEqual (valueAtInsertionTime, curve.getValueAt (*param, time + amountOfSpace)))
+                    curve.addPoint (time + amountOfSpace, valueAtInsertionTime, 0.0f, um);
             }
         }
     }

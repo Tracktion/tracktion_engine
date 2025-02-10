@@ -767,6 +767,7 @@ void EditTimecodeRemapperSnapshot::savePreChangeState (Edit& ed)
 
 void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
 {
+    auto um = &ed.getUndoManager();
     auto& transport = ed.getTransport();
     auto& tempoSequence = ed.tempoSequence;
     tempoSequence.updateTempoData();
@@ -812,7 +813,7 @@ void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
 
     for (auto& a : automation)
         for (int i = a.beats.size(); --i >= 0;)
-            a.curve.setPointTime (i, tempoSequence.toTime (a.beats.getUnchecked (i)));
+            a.curve.setPointTime (i, tempoSequence.toTime (a.beats.getUnchecked (i)), um);
 }
 
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_TEMPO_SEQUENCE

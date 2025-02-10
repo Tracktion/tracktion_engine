@@ -284,6 +284,7 @@ public:
         const float modifierOffset = 0.2f;
 
         // 1. create a new edit and add rack with a macro parameter
+        beginTest ("Rack with macro parameter");
         {
             editFile.deleteFile();
 
@@ -297,6 +298,7 @@ public:
             // Add macro parameter
             const auto macroParameter = rackType->getMacroParameterListForWriting().createMacroParameter();
             macroParameter->setNormalisedParameter (macroParameterValue, juce::NotificationType::sendNotification);
+            expectWithinAbsoluteError (macroParameter->getCurve().getValueAt (*macroParameter, -1s), macroParameterValue, 0.001f);
 
             auto volumeAndPan = dynamic_cast<VolumeAndPanPlugin*> (volumePlugin.get());
             auto volParam = volumeAndPan->volParam;
@@ -326,9 +328,18 @@ public:
         }
 
         // 2. Load previously saved edit and check the parameter value
+        beginTest ("Loading saved Rack with macro parameter");
         {
             auto edit = loadEditFromFile (engine, editFile);
             auto rackType = edit->getRackList().getRackType (0);
+
+            auto mpl = rackType->getMacroParameterList();
+            expect (mpl != nullptr);
+            expectEquals (mpl->getMacroParameters().size(), 1);
+            const auto macroParameter = mpl->getMacroParameters()[0];
+            expect (macroParameter != nullptr);
+            expectWithinAbsoluteError (macroParameter->getCurve().getValueAt (*macroParameter, -1s), macroParameterValue, 0.001f);
+
             auto volumeAndPan = dynamic_cast<VolumeAndPanPlugin*> (rackType->getPlugins().getFirst());
             auto volParam = volumeAndPan->volParam;
 
@@ -361,23 +372,24 @@ TEST_SUITE ("tracktion_engine")
     {
         auto& engine = *Engine::getEngines()[0];
         auto edit = engine::test_utilities::createTestEdit (engine, 1);
+        auto& ts = edit->tempoSequence;
         auto volParam = getAudioTracks(*edit)[0]->getVolumePlugin()->volParam;
         auto& volCurve = volParam->getCurve();
 
         // Add point with curve=1 to give a square shape
-        volCurve.addPoint (0_tp, 1.0f, 1.0f);
-        CHECK_EQ (volCurve.getValueAt (0_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (5_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (10_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (15_tp), 1.0f);
+        volCurve.addPoint (0_tp, 1.0f, 1.0f, nullptr);
+        CHECK_EQ (volCurve.getValueAt (*volParam, 0_tp), 1.0f);
+        CHECK_EQ (volCurve.getValueAt (*volParam, 5_tp), 1.0f);
+        CHECK_EQ (volCurve.getValueAt (*volParam, 10_tp), 1.0f);
+        CHECK_EQ (volCurve.getValueAt (*volParam, 15_tp), 1.0f);
 
-        volCurve.addPoint (10_tp, 0.0f, 1.0f);
-        CHECK_EQ (volCurve.getValueAt (0_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (5_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (9.9_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (10_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (10.1_tp), 0.0f);
-        CHECK_EQ (volCurve.getValueAt (15_tp), 0.0f);
+        volCurve.addPoint (10_tp, 0.0f, 1.0f, nullptr);
+        CHECK_EQ (volCurve.getValueAt (*volParam, 0_tp), 1.0f);
+        CHECK_EQ (volCurve.getValueAt (*volParam, 5_tp), 1.0f);
+        CHECK_EQ (volCurve.getValueAt (*volParam, 9.9_tp), 1.0f);
+        CHECK_EQ (volCurve.getValueAt (*volParam, 10_tp), 1.0f);
+        CHECK_EQ (volCurve.getValueAt (*volParam, 10.1_tp), 0.0f);
+        CHECK_EQ (volCurve.getValueAt (*volParam, 15_tp), 0.0f);
 
         // Now check the same with an automation iterator
         {

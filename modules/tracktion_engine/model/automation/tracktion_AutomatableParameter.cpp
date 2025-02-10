@@ -177,7 +177,7 @@ public:
                                              updateInterpolatedPoints();
                                          });
 
-        curve.setOwnerParameter (&ap);
+        curve.setParameterID (ap.paramID);
     }
 
     void triggerAsyncCurveUpdate()
@@ -224,7 +224,7 @@ public:
     float getValueAt (TimePosition time) override
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
-        return curve.getValueAt (time);
+        return curve.getValueAt (parameter, time);
     }
 
     bool isEnabledAt (TimePosition) override
@@ -306,7 +306,7 @@ struct MacroSource : public AutomationModifierSource
     float getValueAt (TimePosition time) override
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
-        auto macroValue = macro->getCurve().getValueAt (time);
+        auto macroValue = macro->getCurve().getValueAt (*macro, time);
         const auto range = juce::Range<float>::between (assignment->inputStart.get(), assignment->inputEnd.get());
         return AutomationScaleHelpers::mapValue (AutomationScaleHelpers::remapInputValue (macroValue, range),
                                                  assignment->offset, assignment->value, assignment->curve);
@@ -1093,7 +1093,7 @@ void AutomatableParameter::setParameterValue (float value, bool isFollowingCurve
                     else
                     {
                         if (numPoints == 1)
-                            curve.movePoint (0, curve.getPointTime (0), value, false);
+                            curve.movePoint (*this, 0, curve.getPointTime (0), value, false, &ed.getUndoManager());
                     }
                 }
             }
@@ -1362,7 +1362,7 @@ void AutomationIterator::interpolate (const AutomatableParameter& param)
     auto lastTime = curve.getPointTime (curve.getNumPoints() - 1) + TimeDuration::fromSeconds (1.0);
     TimePosition t1;
     auto t2 = curve.getPointTime (0);
-    float v1 = curve.getValueAt (TimePosition());
+    float v1 = curve.getValueAt (param, 0s);
     float v2 = v1;
     float vp = v2;
     float c  = 0;

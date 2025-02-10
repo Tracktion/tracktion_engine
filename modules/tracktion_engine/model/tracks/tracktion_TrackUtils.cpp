@@ -380,7 +380,7 @@ void moveAutomation (const juce::Array<TrackAutomationSection>& origSections, Ti
                     ap.param = param;
                     ap.curve.setState (param->getCurve().state);
                     ap.curve.setParentState (param->getCurve().parentState);
-                    ap.curve.setOwnerParameter (param->getCurve().getOwnerParameter());
+                    ap.curve.setParameterID (param->getCurve().getParameterID());
 
                     section.activeParameters.add (ap);
                 }
@@ -402,35 +402,36 @@ void moveAutomation (const juce::Array<TrackAutomationSection>& origSections, Ti
             {
                 auto param = activeParam.param;
                 auto& curve = param->getCurve();
-                constexpr auto tolerance = TimeDuration::fromSeconds (0.0001);
+                auto* um = &param->getEdit().getUndoManager();
+                constexpr auto tolerance = 0.0001_td;
 
-                auto startValue = curve.getValueAt (sectionTime.getStart() - tolerance);
-                auto endValue   = curve.getValueAt (sectionTime.getEnd()   + tolerance);
+                auto startValue = curve.getValueAt (*param, sectionTime.getStart() - tolerance);
+                auto endValue   = curve.getValueAt (*param, sectionTime.getEnd()   + tolerance);
 
                 auto idx = curve.indexBefore (sectionTime.getEnd() + tolerance);
                 auto endCurve = (idx == -1) ? 0.0f : curve.getPointCurve(idx);
 
-                curve.removePointsInRegion (sectionTime.expanded (tolerance));
+                curve.removePointsInRegion (sectionTime.expanded (tolerance), um);
 
                 if (std::abs (startValue - endValue) < 0.0001f)
                 {
-                    curve.addPoint (sectionTime.getStart(), startValue, 0.0f);
-                    curve.addPoint (sectionTime.getEnd(), endValue, endCurve);
+                    curve.addPoint (sectionTime.getStart(), startValue, 0.0f, um);
+                    curve.addPoint (sectionTime.getEnd(), endValue, endCurve, um);
                 }
                 else if (startValue > endValue)
                 {
-                    curve.addPoint (sectionTime.getStart(), startValue, 0.0f);
-                    curve.addPoint (sectionTime.getStart(), endValue, 0.0f);
-                    curve.addPoint (sectionTime.getEnd(), endValue, endCurve);
+                    curve.addPoint (sectionTime.getStart(), startValue, 0.0f, um);
+                    curve.addPoint (sectionTime.getStart(), endValue, 0.0f, um);
+                    curve.addPoint (sectionTime.getEnd(), endValue, endCurve, um);
                 }
                 else
                 {
-                    curve.addPoint (sectionTime.getStart(), startValue, 0.0f);
-                    curve.addPoint (sectionTime.getEnd(), startValue, 0.0f);
-                    curve.addPoint (sectionTime.getEnd(), endValue, endCurve);
+                    curve.addPoint (sectionTime.getStart(), startValue, 0.0f, um);
+                    curve.addPoint (sectionTime.getEnd(), startValue, 0.0f, um);
+                    curve.addPoint (sectionTime.getEnd(), endValue, endCurve, um);
                 }
 
-                curve.removeRedundantPoints (sectionTime.expanded (tolerance));
+                curve.removeRedundantPoints (sectionTime.expanded (tolerance), um);
             }
         }
     }
@@ -445,6 +446,7 @@ void moveAutomation (const juce::Array<TrackAutomationSection>& origSections, Ti
             if (auto dstCurve = (section.src == section.dst) ? &activeParam.param->getCurve()
                                                              : getDestCurve (*section.dst, activeParam.param))
             {
+                auto param = activeParam.param;
                 constexpr auto errorMargin = TimeDuration::fromSeconds (0.0001);
 
                 auto start    = sectionTime.getStart();
@@ -453,6 +455,8 @@ void moveAutomation (const juce::Array<TrackAutomationSection>& origSections, Ti
                 auto newEnd   = end   + offset;
 
                 auto& srcCurve = activeParam.curve;
+                auto& ts = param->getEdit().tempoSequence;
+                auto* um = ts.getUndoManager();
 
                 auto idx1 = srcCurve.indexBefore (newEnd + errorMargin);
                 auto endCurve = idx1 < 0 ? 0 : srcCurve.getPointCurve (idx1);
@@ -460,11 +464,11 @@ void moveAutomation (const juce::Array<TrackAutomationSection>& origSections, Ti
                 auto idx2 = srcCurve.indexBefore (start - errorMargin);
                 auto startCurve = idx2 < 0 ? 0 : srcCurve.getPointCurve (idx2);
 
-                auto srcStartVal = srcCurve.getValueAt (start - errorMargin);
-                auto srcEndVal   = srcCurve.getValueAt (end   + errorMargin);
+                auto srcStartVal = srcCurve.getValueAt (*param, start - errorMargin);
+                auto srcEndVal   = srcCurve.getValueAt (*param, end   + errorMargin);
 
-                auto dstStartVal = dstCurve->getValueAt (newStart - errorMargin);
-                auto dstEndVal   = dstCurve->getValueAt (newEnd   + errorMargin);
+                auto dstStartVal = dstCurve->getValueAt (*param, newStart - errorMargin);
+                auto dstEndVal   = dstCurve->getValueAt (*param, newEnd   + errorMargin);
 
                 TimeRange totalRegionWithMargin  (newStart - errorMargin, newEnd   + errorMargin);
                 TimeRange startWithMargin        (newStart - errorMargin, newStart + errorMargin);
@@ -480,30 +484,30 @@ void moveAutomation (const juce::Array<TrackAutomationSection>& origSections, Ti
                         origPoints.add (pt);
                 }
 
-                dstCurve->removePointsInRegion (totalRegionWithMargin);
+                dstCurve->removePointsInRegion (totalRegionWithMargin, um);
 
                 for (const auto& pt : origPoints)
-                    dstCurve->addPoint (pt.time + offset, pt.value, pt.curve);
+                    dstCurve->addPoint (pt.time + offset, pt.value, pt.curve, um);
 
                 auto startPoints = dstCurve->getPointsInRegion (startWithMargin);
                 auto endPoints   = dstCurve->getPointsInRegion (endWithMargin);
 
-                dstCurve->removePointsInRegion (startWithMargin);
-                dstCurve->removePointsInRegion (endWithMargin);
+                dstCurve->removePointsInRegion (startWithMargin, um);
+                dstCurve->removePointsInRegion (endWithMargin, um);
 
-                dstCurve->addPoint (newStart, dstStartVal, startCurve);
-                dstCurve->addPoint (newStart, srcStartVal, startCurve);
+                dstCurve->addPoint (newStart, dstStartVal, startCurve, um);
+                dstCurve->addPoint (newStart, srcStartVal, startCurve, um);
 
                 for (auto& point : startPoints)
-                    dstCurve->addPoint (newStart, point.value, point.curve);
+                    dstCurve->addPoint (newStart, point.value, point.curve, um);
 
                 for (auto& point : endPoints)
-                    dstCurve->addPoint (newEnd, point.value, point.curve);
+                    dstCurve->addPoint (newEnd, point.value, point.curve, um);
 
-                dstCurve->addPoint (newEnd, srcEndVal, endCurve);
-                dstCurve->addPoint (newEnd, dstEndVal, endCurve);
+                dstCurve->addPoint (newEnd, srcEndVal, endCurve, um);
+                dstCurve->addPoint (newEnd, dstEndVal, endCurve, um);
 
-                dstCurve->removeRedundantPoints (totalRegionWithMargin);
+                dstCurve->removeRedundantPoints (totalRegionWithMargin, um);
             }
         }
     }

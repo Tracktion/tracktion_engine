@@ -306,6 +306,31 @@ bool isRecording (EditPlaybackContext&);
 /** Creates an InputDeviceInstance::Destination on the destinationTrack from the sourceTrack if possible. */
 InputDeviceInstance::Destination* assignTrackAsInput (AudioTrack& destinationTrack, const AudioTrack& sourceTrack, InputDevice::DeviceType);
 
+//==============================================================================
+// Lookup
+//==============================================================================
+/** Returns a reference to the Edit if accessible by the given object. */
+template<typename Type>
+    requires (std::is_same_v<Type, Edit>
+              || requires (Type t) { t.edit; }
+              || requires (Type t) { t.getEdit(); })
+Edit& getEdit (Type& type)
+{
+    if constexpr (std::is_same_v<Type, Edit>)
+        return type;
+    else if constexpr (requires { type.edit; })
+        return type.edit;
+    else if constexpr (requires { type.getEdit(); })
+        return type.getEdit();
+}
+
+
+TempoSequence& getTempoSequence (auto& type)        { return getEdit (type).tempoSequence; }
+
+juce::UndoManager& getUndoManager (auto& type)      { return getEdit (type).getUndoManager(); }
+
+juce::UndoManager* getUndoManager_p (auto& type)    { return &getUndoManager (type); }
+
 
 //==============================================================================
 /** @internal */
