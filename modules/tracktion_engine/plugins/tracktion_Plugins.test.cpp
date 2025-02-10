@@ -372,7 +372,6 @@ TEST_SUITE ("tracktion_engine")
     {
         auto& engine = *Engine::getEngines()[0];
         auto edit = engine::test_utilities::createTestEdit (engine, 1);
-        auto& ts = edit->tempoSequence;
         auto volParam = getAudioTracks(*edit)[0]->getVolumePlugin()->volParam;
         auto& volCurve = volParam->getCurve();
 
