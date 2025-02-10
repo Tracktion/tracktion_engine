@@ -1270,6 +1270,11 @@ AutomationMode getAutomationMode (const AutomatableParameter& ap)
     if (auto t = ap.getTrack())
         return t->automationMode;
 
+    auto& e = ap.getEdit();
+    if (&ap == e.getMasterSliderPosParameter().get() || &ap == e.getMasterPanParameter().get())
+        if (auto t = e.getMasterTrack())
+            return t->automationMode;
+
     return AutomationMode::read;
 }
 

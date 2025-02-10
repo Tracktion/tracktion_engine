@@ -1885,7 +1885,7 @@ void ExternalPlugin::buildParameterTree() const
     if (auto p1 = getAutomatableParameter (0))
         paramTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (p1));
 
-    if (auto p2 = getAutomatableParameter (0))
+    if (auto p2 = getAutomatableParameter (1))
         paramTree.rootNode->addSubNode (new AutomatableParameterTree::TreeNode (p2));
 
     juce::SortedSet<int> paramsInTree;
