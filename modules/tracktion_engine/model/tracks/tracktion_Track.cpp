@@ -447,7 +447,7 @@ bool Track::isAChildOf (const Track& t) const
 void Track::insertSpaceIntoTrack (TimePosition time, TimeDuration amountOfSpace)
 {
     // shift up any automation curves too..
-    auto um = getUndoManager_p (*this);
+    auto um = getUndoManager_p (edit);
 
     for (auto p : pluginList)
     {
