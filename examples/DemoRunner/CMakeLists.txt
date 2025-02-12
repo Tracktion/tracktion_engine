@@ -17,8 +17,12 @@ if (MSVC)
 endif()
 
 # If we are compiling for macOS we want to target OS versions down to 10.13
-if (APPLE)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+message ("-- building for macOS")
     set (CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE INTERNAL "")
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "iOS")
+    set (CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET "17.0" CACHE INTERNAL "")
+    set (CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "Apple Development" CACHE INTERNAL "")
 endif()
 
 # Adds all the module sources so they appear correctly in the IDE
@@ -32,7 +36,14 @@ else()
     MESSAGE(STATUS "Not building with VST2")
 endif()
 
-juce_add_pip (${TARGET_NAME}.h)
+#juce_add_pip (${TARGET_NAME}.h)
+juce_add_gui_app(${TARGET_NAME}
+    BUNDLE_ID "com.tracktion.DemoRunner"
+    MICROPHONE_PERMISSION_ENABLED TRUE
+    MICROPHONE_PERMISSION_TEXT "Audio recording"
+    REQUIRES_FULL_SCREEN TRUE
+    STATUS_BAR_HIDDEN TRUE
+    PLUGINHOST_AU TRUE)
 
 juce_generate_juce_header(${TARGET_NAME})
 
@@ -51,6 +62,7 @@ set_target_properties(${TARGET_NAME} PROPERTIES
 
 set(SourceFiles
     ${TARGET_NAME}.h
+    ${TARGET_NAME}.cpp
     demos/AbletonLinkDemo.h
     demos/ContainerClipDemo.h
     demos/DistortionEffectDemo.h
