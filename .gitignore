@@ -76,6 +76,7 @@ bin
 doxygen/doc
 **/3rd_party/rubberband
 **/cmake-build**
+**/cmake-ios**
 **/.idea/**
 coverage.xml
 CoverageReport-*

@@ -106,6 +106,7 @@ struct DemoTypeBase
 #include "demos/PluginDemo.h"
 #include "demos/RecordingDemo.h"
 #include "demos/StepSequencerDemo.h"
+#include "demos/SimplePluginDemo.h"
 #include "demos/ClipLauncherDemo.h"
 
 
@@ -136,7 +137,8 @@ public:
             auto v = new PluginListComponent (engine.getPluginManager().pluginFormatManager,
                                               engine.getPluginManager().knownPluginList,
                                               engine.getTemporaryFileManager().getTempFile ("PluginScanDeadMansPedal"),
-                                              std::addressof (engine.getPropertyStorage().getPropertiesFile()));
+                                              std::addressof (engine.getPropertyStorage().getPropertiesFile()),
+                                              true);
             v->setSize (800, 600);
             o.content.setOwned (v);
             o.launchAsync();
