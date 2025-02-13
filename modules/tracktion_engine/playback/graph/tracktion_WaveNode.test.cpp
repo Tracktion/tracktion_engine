@@ -8,7 +8,10 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+#include <tracktion_engine/testing/tracktion_EnginePlayer.h>
+
+namespace tracktion::inline engine
 {
 
 #if GRAPH_UNIT_TESTS_WAVENODE
@@ -412,4 +415,60 @@ static WaveNodeTests waveNodeTests;
 
 #endif
 
-}} // namespace tracktion { inline namespace engine
+// Currently only works with RubberBand
+#if ENGINE_UNIT_TESTS_WAVENODE_READAHEAD && TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
+TEST_SUITE("tracktion_engine")
+{
+    TEST_CASE ("Playback single audio clip using read-ahead")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        assert (engine.getEngineBehaviour().enableReadAheadForTimeStretchNodes()
+            && "This test only works with this mode");
+        test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512, .inputChannels = 0, .outputChannels = 1,
+                                                       .inputNames = {}, .outputNames = {} });
+
+        auto edit = engine::test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+        auto& tc = edit->getTransport();
+        auto squareFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0);
+        auto squareBuffer = *engine::test_utilities::loadFileInToBuffer (engine, squareFile->getFile());
+
+        AudioFile af (engine, squareFile->getFile());
+        auto clip = insertWaveClip (*getAudioTracks (*edit)[0], {}, af.getFile(), { { 0_tp, 5_tp } }, DeleteExistingClips::no);
+        clip->setUsesProxy (false);
+        clip->setAutoTempo (true);
+
+        auto testWithRatio = [&] (double ratio)
+                             {
+                                 const auto audioFileInfo = clip->getAudioFile().getInfo();
+                                 const auto originalBPM = clip->getLoopInfo().getBpm (audioFileInfo);
+                                 clip->getLoopInfo().setBpm (originalBPM * ratio, audioFileInfo);
+
+                                 tc.play (false);
+
+                                 test_utilities::waitForFileToBeMapped (af);
+
+                                 player.process (static_cast<int> (af.getLengthInSamples()));
+                                 auto output = player.getOutput();
+
+                                 CHECK_EQ (output.getNumFrames(), af.getLengthInSamples());
+                             };
+
+        SUBCASE ("ratio 1.0")
+        {
+            testWithRatio (1.0);
+        }
+
+        SUBCASE ("ratio 2.0")
+        {
+            testWithRatio (2.0);
+        }
+
+        SUBCASE ("ratio 0.5")
+        {
+            testWithRatio (0.5);
+        }
+    }
+}
+#endif
+
+} // namespace tracktion::inline engine

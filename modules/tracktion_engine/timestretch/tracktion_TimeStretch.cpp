@@ -748,7 +748,13 @@ struct RubberBandStretcher  : public TimeStretcher::Stretcher
 
     int getFramesNeeded() const override
     {
-        return (int) rubberBandStretcher.getSamplesRequired();
+        // This number of frames required for the first block of output samples was found by
+        // trial and error because getSamplesRequired() doesn't seem to return enough for the
+        // first block.
+        // The x6 was found to be ok to process at time ratios of 0.5 - 2.0
+        const int numFramesRequired = static_cast<int> (rubberBandStretcher.getSamplesRequired());
+        return numSamplesToDrop > 0 ? std::min (numFramesRequired * 6, getMaxFramesNeeded())
+                                    : numFramesRequired;
     }
 
     int getMaxFramesNeeded() const override
@@ -776,7 +782,7 @@ struct RubberBandStretcher  : public TimeStretcher::Stretcher
         }
 
         if (numAvailable > 0)
-            return (int) rubberBandStretcher.retrieve (outChannels, (size_t) numAvailable);
+            return (int) rubberBandStretcher.retrieve (outChannels, (size_t) std::min (numAvailable, samplesPerOutputBuffer));
 
         return 0;
     }

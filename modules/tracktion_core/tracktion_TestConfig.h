@@ -53,6 +53,7 @@
 #define ENGINE_UNIT_TESTS_TEMPO_SEQUENCE                1
 #define ENGINE_UNIT_TESTS_QUANTISATION_TYPE             1
 #define ENGINE_UNIT_TESTS_WAVE_INPUT_DEVICE             1
+#define ENGINE_UNIT_TESTS_WAVENODE_READAHEAD            1
 
 // Defined in tracktion_graph
 #define GRAPH_UNIT_TESTS_PLAYHEAD                       1

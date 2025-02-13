@@ -122,7 +122,8 @@ void ReadAheadTimeStretcher::initialise (double sourceSampleRate, int samplesPer
         return;
 
     processThread->addInstance (this);
-    inputFifo.setSize (numChannels, getMaxFramesNeeded());
+    inputFifo.setSize (numChannels, getMaxFramesNeeded() + 1);
+    assert (inputFifo.getFreeSpace() >= getMaxFramesNeeded());
     outputFifo.setSize (numChannels, samplesPerBlock * numBlocksToReadAhead);
 }
 
