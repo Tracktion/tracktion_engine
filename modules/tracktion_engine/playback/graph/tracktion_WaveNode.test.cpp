@@ -8,8 +8,10 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
-#include <tracktion_engine/testing/tracktion_EnginePlayer.h>
+#if TRACKTION_UNIT_TESTS
+ #include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+ #include <tracktion_engine/testing/tracktion_EnginePlayer.h>
+#endif
 
 namespace tracktion::inline engine
 {
