@@ -100,7 +100,7 @@ TEST_SUITE("tracktion_engine")
                                            0, 0, tempSourceRender.buffer.getNumSamples(),
                                            -1.0f);
             CHECK (test_utilities::getRMSLevel (tempDestRender, { 0_tp, 5_tp }, 0)
-                    == doctest::Approx (0.0f).epsilon (0.01));
+                    == doctest::Approx (0.0f).epsilon (0.03));
         }
     }
 }

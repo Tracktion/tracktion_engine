@@ -113,7 +113,9 @@ private:
         const auto sourceBuffer = createSinBuffer (sampleRate, numChannels, sourcePitch);
         const auto resultBuffer = processBuffer (stretcher, sourceBuffer, blockSize, stretchRatio,
                                                  mode == tracktion::engine::TimeStretcher::elastiquePro
-                                                 || mode == tracktion::engine::TimeStretcher::elastiqueDirectPro);
+                                                 || mode == tracktion::engine::TimeStretcher::elastiqueDirectPro
+                                                 || mode == tracktion::engine::TimeStretcher::rubberbandMelodic
+                                                 || mode == tracktion::engine::TimeStretcher::rubberbandPercussive);
 
        #if TIMESTRETCHER_WRITE_WRITE_TEST_FILES
         writeToFile (juce::File::getSpecialLocation (juce::File::userDesktopDirectory).getChildFile ("original.wav"), sourceBuffer, sampleRate);
