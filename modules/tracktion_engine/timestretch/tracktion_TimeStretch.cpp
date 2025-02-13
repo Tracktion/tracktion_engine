@@ -719,8 +719,8 @@ struct RubberBandStretcher  : public TimeStretcher::Stretcher
         if (numSamplesToDrop == -1)
         {
             // This is the first speed and pitch change so set up the padding and dropping
-            numSamplesToDrop = int (rubberBandStretcher.getLatency());
-            int numSamplesToPad = juce::roundToInt (numSamplesToDrop * pitch);
+            numSamplesToDrop = int (rubberBandStretcher.getStartDelay());
+            int numSamplesToPad = static_cast<size_t> (rubberBandStretcher.getPreferredStartPad());
 
             if (numSamplesToPad > 0)
             {
