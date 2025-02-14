@@ -13,8 +13,8 @@ namespace tracktion { inline namespace engine
 {
 
 RackInstanceNode::RackInstanceNode (RackInstance::Ptr ri, std::unique_ptr<Node> inputNode, ChannelMap channelMapToUse,
-                                    ProcessState& processState)
-    : TracktionEngineNode (processState),
+                                    ProcessState& ps)
+    : TracktionEngineNode (ps),
       plugin (std::move (ri)), input (std::move (inputNode)), channelMap (std::move (channelMapToUse))
 {
     assert (plugin);
