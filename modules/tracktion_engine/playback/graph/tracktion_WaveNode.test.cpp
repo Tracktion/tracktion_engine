@@ -9,9 +9,8 @@
 */
 
 #if TRACKTION_UNIT_TESTS
- #include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
- #include <tracktion_engine/testing/tracktion_EnginePlayer.h>
-#endif
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+#include <tracktion_engine/testing/tracktion_EnginePlayer.h>
 
 namespace tracktion::inline engine
 {
@@ -474,3 +473,5 @@ TEST_SUITE("tracktion_engine")
 #endif
 
 } // namespace tracktion::inline engine
+
+#endif //TRACKTION_UNIT_TESTS
