@@ -54,7 +54,7 @@ TEST_SUITE("tracktion_engine")
 
         test_utilities::BufferAndSampleRate tempSourceRender;
 
-        // Sing file must outlive everything!
+        // Sin file must outlive everything!
         auto fileLength = 5_td;
         auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, fileLength.inSeconds());
 

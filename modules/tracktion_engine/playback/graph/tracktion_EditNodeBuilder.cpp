@@ -1235,7 +1235,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForPlugin (Plugin& plugin, con
     return node;
 }
 
-std::unique_ptr<tracktion::graph::Node> createNodeForRackInstance (RackInstance& rackInstance, std::unique_ptr<Node> node)
+std::unique_ptr<tracktion::graph::Node> createNodeForRackInstance (RackInstance& rackInstance, std::unique_ptr<Node> node,
+                                                                   ProcessState& processState)
 {
     jassert (node != nullptr);
 
@@ -1253,7 +1254,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForRackInstance (RackInstance&
     RackInstanceNode::ChannelMap sendChannelMap;
     sendChannelMap[0] = { 0, rackInstance.leftInputGoesTo - 1, rackInstance.leftInDb };
     sendChannelMap[1] = { 1, rackInstance.rightInputGoesTo - 1, rackInstance.rightInDb };
-    node = makeNode<RackInstanceNode> (std::move (node), std::move (sendChannelMap));
+    node = makeNode<RackInstanceNode> (rackInstance, std::move (node), std::move (sendChannelMap), processState);
     node = makeNode<SendNode> (std::move (node), rackInputID);
     node = makeNode<ReturnNode> (makeNode<SinkNode> (std::move (node)), rackOutputID);
 
@@ -1261,7 +1262,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForRackInstance (RackInstance&
     RackInstanceNode::ChannelMap returnChannelMap;
     returnChannelMap[0] = { rackInstance.leftOutputComesFrom - 1, 0, rackInstance.leftOutDb };
     returnChannelMap[1] = { rackInstance.rightOutputComesFrom - 1, 1, rackInstance.rightOutDb };
-    node = makeNode<RackInstanceNode> (std::move (node), std::move (returnChannelMap));
+    node = makeNode<RackInstanceNode> (rackInstance, std::move (node), std::move (returnChannelMap), processState);
 
     return makeNode<RackReturnNode> (std::move (node),
                                      [wetGain = rackInstance.wetGain] { return wetGain->getCurrentValue(); },
@@ -1297,7 +1298,7 @@ std::unique_ptr<tracktion::graph::Node> createPluginNodeForList (PluginList& lis
         }
         else if (auto rackInstance = dynamic_cast<RackInstance*> (p))
         {
-            node = createNodeForRackInstance (*rackInstance, std::move (node));
+            node = createNodeForRackInstance (*rackInstance, std::move (node), params.processState);
         }
         else if (auto insertPlugin = dynamic_cast<InsertPlugin*> (p))
         {
