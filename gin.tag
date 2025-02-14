@@ -57205,6 +57205,13 @@
       <anchor>a7933458ffdc09160dee8ae5e678c3073a7a5bd1cc4c110e8c699879efcc559b5a</anchor>
       <arglist></arglist>
     </member>
+    <member kind="typedef">
+      <type>juce::ReferenceCountedObjectPtr&lt; RackInstance &gt;</type>
+      <name>Ptr</name>
+      <anchorfile>classtracktion_1_1engine_1_1RackInstance.html</anchorfile>
+      <anchor>aae1f9d8a06b703a17d05bdc54873936b</anchor>
+      <arglist></arglist>
+    </member>
     <member kind="enumvalue">
       <name>left</name>
       <anchorfile>classtracktion_1_1engine_1_1RackInstance.html</anchorfile>
@@ -57593,6 +57600,7 @@
     <name>tracktion::engine::RackInstanceNode</name>
     <filename>classtracktion_1_1engine_1_1RackInstanceNode.html</filename>
     <base>tracktion::graph::Node</base>
+    <base>tracktion::engine::TracktionEngineNode</base>
     <member kind="typedef">
       <type>std::array&lt; std::tuple&lt; int, int, AutomatableParameter::Ptr &gt;, 2 &gt;</type>
       <name>ChannelMap</name>
@@ -57604,8 +57612,8 @@
       <type></type>
       <name>RackInstanceNode</name>
       <anchorfile>classtracktion_1_1engine_1_1RackInstanceNode.html</anchorfile>
-      <anchor>a88e5c40d85915be2e8408fbaf7c0789f</anchor>
-      <arglist>(std::unique_ptr&lt; Node &gt;, ChannelMap channelMap)</arglist>
+      <anchor>a0d246f325c8a06a3c35d41bd0405bf36</anchor>
+      <arglist>(RackInstance::Ptr, std::unique_ptr&lt; Node &gt;, ChannelMap channelMap, ProcessState &amp;)</arglist>
     </member>
     <member kind="function">
       <type>std::vector&lt; Node * &gt;</type>
@@ -57634,6 +57642,13 @@
       <anchorfile>classtracktion_1_1engine_1_1RackInstanceNode.html</anchorfile>
       <anchor>ac0b94591fc96ce23d94043c28272ea36</anchor>
       <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prefetchBlock</name>
+      <anchorfile>classtracktion_1_1engine_1_1RackInstanceNode.html</anchorfile>
+      <anchor>a13be3aff07a9b764aabc714338efe499</anchor>
+      <arglist>(juce::Range&lt; int64_t &gt;) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>

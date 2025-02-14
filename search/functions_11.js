@@ -2,7 +2,7 @@ var searchData=
 [
   ['rackconnection_0',['RackConnection',['../structtracktion_1_1engine_1_1RackConnection.html#a17ab622e5c0ed26ff3441c84cdd9130b',1,'tracktion::engine::RackConnection']]],
   ['rackinstance_1',['RackInstance',['../classtracktion_1_1engine_1_1RackInstance.html#a09134eed503e65e7751a9d0dbf0d0a60',1,'tracktion::engine::RackInstance']]],
-  ['rackinstancenode_2',['RackInstanceNode',['../classtracktion_1_1engine_1_1RackInstanceNode.html#a88e5c40d85915be2e8408fbaf7c0789f',1,'tracktion::engine::RackInstanceNode']]],
+  ['rackinstancenode_2',['RackInstanceNode',['../classtracktion_1_1engine_1_1RackInstanceNode.html#a0d246f325c8a06a3c35d41bd0405bf36',1,'tracktion::engine::RackInstanceNode']]],
   ['racknodeplayer_3',['racknodeplayer',['../classtracktion_1_1engine_1_1RackNodePlayer.html#af79a53b17baa3cdb610ebccb247775e9',1,'tracktion::engine::RackNodePlayer::RackNodePlayer(std::unique_ptr&lt; tracktion::graph::Node &gt; nodeToProcess)'],['../classtracktion_1_1engine_1_1RackNodePlayer.html#a884bec01b940a5d95206e9432b54ec21',1,'tracktion::engine::RackNodePlayer::RackNodePlayer(std::unique_ptr&lt; tracktion::graph::Node &gt; nodeToProcess, double sampleRateToUse, int blockSizeToUse)']]],
   ['rackreturnnode_4',['RackReturnNode',['../classtracktion_1_1engine_1_1RackReturnNode.html#ab083e15d8aa545187f9994644d0e936d',1,'tracktion::engine::RackReturnNode']]],
   ['racktype_5',['RackType',['../classtracktion_1_1engine_1_1RackType.html#a4576ca1940392c92b69cf54a7de2fac2',1,'tracktion::engine::RackType']]],

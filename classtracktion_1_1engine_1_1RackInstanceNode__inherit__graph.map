@@ -1,5 +1,7 @@
 <map id="tracktion::engine::RackInstanceNode" name="tracktion::engine::RackInstanceNode">
-<area shape="rect" id="Node000001" title="Sends an input Node to a Rack bus handling the channel mapping and channel gain levels." alt="" coords="17,79,160,119"/>
-<area shape="rect" id="Node000002" href="$classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="5,5,172,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,44,91,79,86,79,86,44"/>
+<area shape="rect" id="Node000001" title="Sends an input Node to a Rack bus handling the channel mapping and channel gain levels." alt="" coords="111,93,253,133"/>
+<area shape="rect" id="Node000002" href="$classtracktion_1_1graph_1_1Node.html" title="Main graph Node processor class." alt="" coords="5,13,172,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,45,163,91,160,95,110,49"/>
+<area shape="rect" id="Node000003" href="$classtracktion_1_1engine_1_1TracktionEngineNode.html" title="Base class for Nodes that provides information about the current process call." alt="" coords="196,5,355,45"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="246,57,204,95,201,91,243,53"/>
 </map>
