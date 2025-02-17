@@ -42,6 +42,7 @@
 #define ENGINE_UNIT_TESTS_PLAYBACK                      1
 #define ENGINE_UNIT_TESTS_PLUGINS                       1
 #define ENGINE_UNIT_TESTS_PDC                           1
+#define ENGINE_UNIT_TESTS_RACKINSTANCE                  1
 #define ENGINE_UNIT_TESTS_RECORDING                     1
 #define ENGINE_UNIT_TESTS_RENDERING                     1
 #define ENGINE_UNIT_TESTS_TIMESTRETCHER                 1
@@ -53,6 +54,7 @@
 #define ENGINE_UNIT_TESTS_TEMPO_SEQUENCE                1
 #define ENGINE_UNIT_TESTS_QUANTISATION_TYPE             1
 #define ENGINE_UNIT_TESTS_WAVE_INPUT_DEVICE             1
+#define ENGINE_UNIT_TESTS_WAVENODE_READAHEAD            1
 
 // Defined in tracktion_graph
 #define GRAPH_UNIT_TESTS_PLAYHEAD                       1

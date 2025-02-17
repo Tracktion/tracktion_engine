@@ -12,9 +12,12 @@
 namespace tracktion { inline namespace engine
 {
 
-RackInstanceNode::RackInstanceNode (std::unique_ptr<Node> inputNode, ChannelMap channelMapToUse)
-    : input (std::move (inputNode)), channelMap (std::move (channelMapToUse))
+RackInstanceNode::RackInstanceNode (RackInstance::Ptr ri, std::unique_ptr<Node> inputNode, ChannelMap channelMapToUse,
+                                    ProcessState& ps)
+    : TracktionEngineNode (ps),
+      plugin (std::move (ri)), input (std::move (inputNode)), channelMap (std::move (channelMapToUse))
 {
+    assert (plugin);
     assert (input);
 
     for (auto& chan : channelMap)
@@ -52,8 +55,13 @@ void RackInstanceNode::prepareToPlay (const tracktion::graph::PlaybackInitialisa
     if (input->numOutputNodes > 1)
         return;
 
+    auto props = getNodeProperties();
+
+    if (props.latencyNumSamples > 0)
+        automationAdjustmentTime = TimeDuration::fromSamples (-props.latencyNumSamples, info.sampleRate);
+
     const auto inputNumChannels = input->getNodeProperties().numberOfChannels;
-    const auto desiredNumChannels = getNodeProperties().numberOfChannels;
+    const auto desiredNumChannels = props.numberOfChannels;
 
     if (info.enableNodeMemorySharing && inputNumChannels >= desiredNumChannels)
     {
@@ -72,6 +80,12 @@ void RackInstanceNode::preProcess (choc::buffer::FrameCount, juce::Range<int64_t
 {
     if (canUseSourceBuffers)
         setBufferViewToUse (input.get(), input->getProcessedOutput().audio);
+}
+
+void RackInstanceNode::prefetchBlock (juce::Range<int64_t>)
+{
+    // This updates automation for the RackInstance gains etc.
+    plugin->prepareForNextBlock (getEditTimeRange().getStart() + automationAdjustmentTime);
 }
 
 void RackInstanceNode::process (ProcessContext& pc)

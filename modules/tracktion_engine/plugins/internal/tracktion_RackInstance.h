@@ -17,6 +17,8 @@ public:
     RackInstance (PluginCreationInfo);
     ~RackInstance() override;
 
+    using Ptr = juce::ReferenceCountedObjectPtr<RackInstance>;
+
     static juce::ValueTree create (RackType&);
 
     //==============================================================================

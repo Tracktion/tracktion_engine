@@ -10,9 +10,9 @@
 
 #pragma once
 
-#include "../common/Utilities.h"
+#include "../../common/Utilities.h"
 #include "DistortionEffectDemo.h"
-#include "../common/PlaybackDemoAudio.h"
+#include "../../common/PlaybackDemoAudio.h"
 
 using namespace tracktion_engine;
 

@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include "../common/Utilities.h"
-#include "../common/Components.h"
+#include "../../common/Utilities.h"
+#include "../../common/Components.h"
 
 //==============================================================================
 class RecordingDemo  : public Component,

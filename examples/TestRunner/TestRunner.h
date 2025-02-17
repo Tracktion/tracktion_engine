@@ -87,6 +87,11 @@ public:
     {
         return false;
     }
+
+    bool enableReadAheadForTimeStretchNodes() override
+    {
+        return true;
+    }
 };
 
 

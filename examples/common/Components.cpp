@@ -198,15 +198,22 @@ class PluginMenu : public PopupMenu
 public:
     PluginMenu() = default;
 
-    PluginMenu (PluginTreeGroup& node)
+    PluginMenu (PluginTreeGroup& node, std::function<void (PluginTreeItem*)> callback = nullptr)
     {
         for (int i = 0; i < node.getNumSubItems(); ++i)
             if (auto subNode = dynamic_cast<PluginTreeGroup*> (node.getSubItem (i)))
-                addSubMenu (subNode->name, PluginMenu (*subNode), true);
+                addSubMenu (subNode->name, PluginMenu (*subNode, callback), true);
 
         for (int i = 0; i < node.getNumSubItems(); ++i)
+        {
             if (auto subType = dynamic_cast<PluginTreeItem*> (node.getSubItem (i)))
-                addItem (subType->getUniqueName().hashCode(), subType->desc.name, true, false);
+            {
+                if (callback)
+                    addItem (subType->desc.name, [subType, callback] { callback (subType); });
+                else
+                    addItem (subType->getUniqueName().hashCode(), subType->desc.name, true, false);
+            }
+        }
     }
 
     static PluginTreeItem* findType (PluginTreeGroup& node, int hash)
@@ -249,6 +256,28 @@ inline te::Plugin::Ptr showMenuAndCreatePlugin (te::Edit& edit)
 
     return {};
 }
+
+inline void showMenuAndCreatePluginAsync (te::Track::Ptr destTrack, int index,
+                                          std::function<void (te::Plugin::Ptr)> onInserted)
+{
+    if (auto tree = std::shared_ptr<juce::KnownPluginList::PluginTree> (EngineHelpers::createPluginTree (destTrack->edit.engine)))
+    {
+        auto root = std::make_shared<PluginTreeGroup> (destTrack->edit, *tree, te::Plugin::Type::allPlugins);
+        PluginMenu m (*root,
+                      [tree, root, destTrack, index, onInserted] (PluginTreeItem* selectedItem)
+                      {
+                          if (auto newPlugin = selectedItem->create (destTrack->edit))
+                          {
+                              destTrack->pluginList.insertPlugin (newPlugin, index, nullptr);
+
+                              if (onInserted)
+                                  onInserted (newPlugin);
+                          }
+                      });
+        m.showMenuAsync({});
+    }
+}
+
 
 //==============================================================================
 ClipComponent::ClipComponent (EditViewState& evs, te::Clip::Ptr c)

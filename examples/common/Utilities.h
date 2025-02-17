@@ -272,6 +272,12 @@ namespace EngineHelpers
         return {};
     }
 
+    inline void removeFXPlugins (te::AudioTrack& track)
+    {
+        for (auto p : track.pluginList.getPlugins())
+            if (p != track.getVolumePlugin() && p != track.getLevelMeterPlugin())
+                p->removeFromParent();
+    }
 }
 
 //==============================================================================

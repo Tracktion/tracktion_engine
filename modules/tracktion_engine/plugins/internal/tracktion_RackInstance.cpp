@@ -302,9 +302,6 @@ void RackInstance::deinitialise()
 void RackInstance::updateAutomatableParamPosition (TimePosition time)
 {
     Plugin::updateAutomatableParamPosition (time);
-
-    if (type != nullptr)
-        type->updateAutomatableParamPositions (time);
 }
 
 double RackInstance::getLatencySeconds()
@@ -312,8 +309,12 @@ double RackInstance::getLatencySeconds()
     return 0.0;
 }
 
-void RackInstance::prepareForNextBlock (TimePosition)
+void RackInstance::prepareForNextBlock (TimePosition time)
 {
+    // Racks aren't processed as normal plugins so just update the automation here
+    if (isAutomationNeeded()
+        && (edit.getAutomationRecordManager().isReadingAutomation()))
+       updateParameterStreams (time);
 }
 
 void RackInstance::applyToBuffer (const PluginRenderContext&)

@@ -10,9 +10,9 @@
 
 #pragma once
 
-#include "../common/Utilities.h"
-#include "../common/Components.h"
-#include "../common/PluginWindow.h"
+#include "../../common/Utilities.h"
+#include "../../common/Components.h"
+#include "../../common/PluginWindow.h"
 
 //==============================================================================
 class MidiRecordingDemo  : public Component,
