@@ -21,14 +21,19 @@ DelayPlugin::DelayPlugin (PluginCreationInfo info) : Plugin (info)
                               [] (float value)              { return juce::String (juce::roundToInt (value * 100.0f)) + "% wet"; },
                               [] (const juce::String& s)    { return s.getFloatValue() / 100.0f; });
 
+    lengthMs = addParam ("length", TRANS("Length"), { 0.0f, 1000.0f },
+                         [] (float value)              { return juce::String (value, 1) + " ms"; },
+                         [] (const juce::String& s)    { return s.getFloatValue(); });
+
     auto um = getUndoManager();
 
     feedbackValue.referTo (state, IDs::feedback, um, -6.0f);
     mixValue.referTo (state, IDs::mix, um, 0.3f);
-    lengthMs.referTo (state, IDs::length, um, 150);
+    lengthMsValue.referTo (state, IDs::length, um, 150);
 
     feedbackDb->attachToCurrentValue (feedbackValue);
     mixProportion->attachToCurrentValue (mixValue);
+    lengthMs->attachToCurrentValue (lengthMsValue);
 }
 
 DelayPlugin::~DelayPlugin()
@@ -37,13 +42,14 @@ DelayPlugin::~DelayPlugin()
 
     feedbackDb->detachFromCurrentValue();
     mixProportion->detachFromCurrentValue();
+    lengthMs->detachFromCurrentValue();
 }
 
 const char* DelayPlugin::xmlTypeName = "delay";
 
 void DelayPlugin::initialise (const PluginInitialisationInfo& info)
 {
-    const int lengthInSamples = (int) (lengthMs * info.sampleRate / 1000.0);
+    const int lengthInSamples = (int) (lengthMsValue * info.sampleRate / 1000.0);
     delayBuffer.ensureMaxBufferSize (lengthInSamples);
     delayBuffer.clearBuffer();
 }
@@ -70,7 +76,7 @@ void DelayPlugin::applyToBuffer (const PluginRenderContext& fc)
 
     const AudioFadeCurve::CrossfadeLevels wetDry (mixProportion->getCurrentValue());
 
-    const int lengthInSamples = (int) (lengthMs * sampleRate / 1000.0);
+    const int lengthInSamples = (int) (lengthMsValue * sampleRate / 1000.0);
     delayBuffer.ensureMaxBufferSize (lengthInSamples);
 
     const int offset = delayBuffer.bufferPos;
@@ -101,7 +107,7 @@ void DelayPlugin::applyToBuffer (const PluginRenderContext& fc)
 
 void DelayPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
 {
-    copyPropertiesToCachedValues (v, feedbackValue, mixValue, lengthMs);
+    copyPropertiesToCachedValues (v, feedbackValue, mixValue, lengthMsValue);
 
     for (auto p : getAutomatableParameters())
         p->updateFromAttachedValue();
