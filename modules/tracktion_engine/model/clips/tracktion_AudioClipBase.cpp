@@ -813,7 +813,7 @@ void AudioClipBase::copyFadeToAutomation (bool useFadeIn, bool removeClipFade)
             return;
     }
 
-    AutomationCurve curve;
+    AutomationCurve curve (edit, AutomationCurve::TimeBase::time);
     curve.setParameterID (param->paramID);
     auto um = getUndoManager();
 
@@ -853,8 +853,9 @@ void AudioClipBase::copyFadeToAutomation (bool useFadeIn, bool removeClipFade)
         }
     }
 
-    mergeCurve ({ *param , curve }, 0_tp,
-                { *param, oldCurve }, fadeTime, 0_td,
+    mergeCurve (oldCurve, fadeTime,
+                curve, 0_tp,
+                *param, 0_td,
                 true, true);
 
     // also need to remove the point just before the first one we added

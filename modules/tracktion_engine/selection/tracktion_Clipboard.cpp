@@ -655,6 +655,7 @@ void Clipboard::Clips::addAutomation (const juce::Array<TrackSection>& trackSect
         return;
 
     auto& edit = trackSections.getFirst().track->edit;
+    auto& ts = edit.tempoSequence;
     auto allTracks = getAllTracks (edit);
     auto firstTrackIndex = edit.engine.getEngineBehaviour().getEditLimits().maxNumTracks;
     auto overallStartTime = TimePosition::fromSeconds (Edit::maximumLength);
@@ -681,7 +682,7 @@ void Clipboard::Clips::addAutomation (const juce::Array<TrackSection>& trackSect
                     section.trackOffset = std::max (0, allTracks.indexOf (trackSection.track) - firstTrackIndex);
                     section.valueRange = param->getValueRange();
 
-                    const auto endTolerence = TimeDuration::fromSeconds (0.0001);
+                    const auto endTolerence = 0.0001_td;
                     auto intersection = trackSection.range.getIntersectionWith (range);
                     auto reducedIntersection = intersection.reduced (endTolerence);
                     auto clippedStart = intersection.getStart();
@@ -691,7 +692,7 @@ void Clipboard::Clips::addAutomation (const juce::Array<TrackSection>& trackSect
                     {
                         auto pt = param->getCurve().getPoint (l);
 
-                        if (reducedIntersection.containsInclusive (pt.time))
+                        if (reducedIntersection.containsInclusive (toTime (pt.time, ts)))
                             section.points.push_back ({ pt.time, pt.value, pt.curve });
                     }
 
@@ -702,15 +703,15 @@ void Clipboard::Clips::addAutomation (const juce::Array<TrackSection>& trackSect
                     }
                     else
                     {
-                        if (section.points[0].time > clippedStart + endTolerence)
+                        if (toTime (section.points[0].time, ts) > clippedStart + endTolerence)
                             section.points.insert (section.points.begin(), { clippedStart + endTolerence, param->getCurve().getValueAt (*param, clippedStart + endTolerence), 0.0f });
 
-                        if (section.points[section.points.size() - 1].time < clippedEnd - endTolerence)
+                        if (toTime (section.points[section.points.size() - 1].time, ts) < clippedEnd - endTolerence)
                             section.points.push_back ({ clippedEnd - endTolerence, param->getCurve().getValueAt (*param, clippedEnd - endTolerence), 0.0f });
                     }
 
                     for (auto& p : section.points)
-                        p.time = p.time - TimeDuration::fromSeconds (overallStartTime.inSeconds());
+                        p.time = toTime (p.time, ts) - TimeDuration::fromSeconds (overallStartTime.inSeconds());
 
                     std::sort (section.points.begin(), section.points.end());
                     automationCurves.push_back (std::move (section));
@@ -769,7 +770,8 @@ static void fixClipTimes (juce::ValueTree& state, const Clipboard::Clips::ClipIn
 static bool pastePointsToCurve (const std::vector<AutomationCurve::AutomationPoint>& points, juce::Range<float> sourceValueRange,
                                 AutomatableParameter& targetParameter, AutomationCurve& targetCurve, TimeRange targetRange)
 {
-    AutomationCurve newCurve;
+    auto& edit = targetParameter.getEdit();
+    AutomationCurve newCurve (edit, targetCurve.timeBase);
     newCurve.setParameterID (targetCurve.getParameterID());
 
     const auto targetValueRange = targetParameter.getValueRange();
@@ -794,9 +796,9 @@ static bool pastePointsToCurve (const std::vector<AutomationCurve::AutomationPoi
         else
             newCurve.rescaleAllTimes (targetRange.getLength() / newCurve.getLength(), um);
 
-        // N.B. source and dest parameters are deliberatly the same
-        mergeCurve ({ targetParameter, newCurve }, 0_tp,
-                    { targetParameter, targetCurve }, targetRange, 0_td,
+        mergeCurve (targetCurve, targetRange,
+                    newCurve, 0_tp,
+                    targetParameter, 0_td,
                     false, false);
 
         return true;
@@ -1646,17 +1648,19 @@ Clipboard::AutomationPoints::AutomationPoints (AutomatableParameter& param, cons
 {
     bool pointAtStart = false;
     bool pointAtEnd = false;
+    auto& ts = getTempoSequence (param);
 
     for (int i = 0; i < curve.getNumPoints(); ++i)
     {
         auto p = curve.getPoint (i);
+        auto time = toTime (p.time, ts);
 
-        if (p.time == range.getStart())  pointAtStart = true;
-        if (p.time == range.getEnd())    pointAtEnd = true;
+        if (time == range.getStart())  pointAtStart = true;
+        if (time == range.getEnd())    pointAtEnd = true;
 
-        if (range.containsInclusive (p.time))
+        if (range.containsInclusive (time))
         {
-            p.time = p.time - TimeDuration::fromSeconds (range.getStart().inSeconds());
+            time = time - TimeDuration::fromSeconds (range.getStart().inSeconds());
             points.push_back (p);
         }
     }

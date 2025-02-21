@@ -240,11 +240,11 @@ namespace tracktion::inline engine
             {
                 CRASH_TRACER
                 juce::OwnedArray<AutomationCurve> newCurves;
-                auto& ts = parameter->parameter.getEdit().tempoSequence;
+                auto& ts = edit.tempoSequence;
                 auto um = &ts.edit.getUndoManager();
 
                 {
-                    auto curve = std::make_unique<AutomationCurve>();
+                    auto curve = std::make_unique<AutomationCurve> (edit, AutomationCurve::TimeBase::time);
                     curve->setParameterID (parameter->parameter.paramID);
 
                     for (int i = 0; i < parameter->changes.size(); ++i)
@@ -257,7 +257,7 @@ namespace tracktion::inline engine
                             if (curve->getNumPoints() > 0)
                             {
                                 newCurves.add (curve.release());
-                                curve = std::make_unique<AutomationCurve>();
+                                curve = std::make_unique<AutomationCurve> (edit, AutomationCurve::TimeBase::time);
                                 curve->setParameterID (parameter->parameter.paramID);
                             }
                         }
@@ -295,29 +295,30 @@ namespace tracktion::inline engine
 
                 for (int i = 0; i < newCurves.size(); ++i)
                 {
-                    auto& curve = *newCurves.getUnchecked (i);
+                    auto& sourceCurve = *newCurves.getUnchecked (i);
 
-                    if (curve.getNumPoints() > 0)
+                    if (sourceCurve.getNumPoints() > 0)
                     {
-                        auto startTime = curve.getPointTime (0);
+                        auto startTime = sourceCurve.getPointTime (0);
                         auto endTime = end;
 
                         if (i < newCurves.size() - 1)
-                            endTime = curve.getPointTime (curve.getNumPoints() - 1);
+                            endTime = sourceCurve.getPointTime (sourceCurve.getNumPoints() - 1);
 
                         // if the curve is empty, set the parameter so that the bits outside the new curve
                         // are set to the levels they were at when we started recording..
                         if (parameter->parameter.getCurve().getNumPoints() == 0)
                             parameter->parameter.setParameter (parameter->originalValue, juce::sendNotification);
 
-                        auto& c = parameter->parameter.getCurve();
+                        auto& destCurve = parameter->parameter.getCurve();
                         TimeRange curveRange (startTime, endTime + glideLength);
-                        mergeCurve ({ parameter->parameter, curve }, startTime,
-                                    { parameter->parameter, c }, curveRange, glideLength,
+                        mergeCurve (destCurve, curveRange,
+                                    sourceCurve, startTime,
+                                    parameter->parameter, glideLength,
                                     false, toEnd);
 
                         if (engine.getPropertyStorage().getProperty (SettingID::simplifyAfterRecording, true))
-                            c.simplify (curveRange.expanded (TimeDuration::fromSeconds (0.001)), 0.01, 0.002f, um);
+                            destCurve.simplify (curveRange.expanded (TimeDuration::fromSeconds (0.001)), 0.01, 0.002f, um);
                     }
                 }
             }
@@ -792,11 +793,11 @@ namespace tracktion::inline engine
             {
                 CRASH_TRACER
                 juce::OwnedArray<AutomationCurve> newCurves;
-                auto& ts = parameter->parameter.getEdit().tempoSequence;
+                auto& ts = edit.tempoSequence;
                 auto um = &ts.edit.getUndoManager();
 
                 {
-                    auto curve = std::make_unique<AutomationCurve>();
+                    auto curve = std::make_unique<AutomationCurve> (edit, AutomationCurve::TimeBase::time);
                     curve->setParameterID (parameter->parameter.paramID);
 
                     for (int i = 0; i < parameter->changes.size(); ++i)
@@ -809,7 +810,7 @@ namespace tracktion::inline engine
                             if (curve->getNumPoints() > 0)
                             {
                                 newCurves.add (curve.release());
-                                curve = std::make_unique<AutomationCurve>();
+                                curve = std::make_unique<AutomationCurve> (edit, AutomationCurve::TimeBase::time);
                                 curve->setParameterID (parameter->parameter.paramID);
                             }
                         }
@@ -847,29 +848,30 @@ namespace tracktion::inline engine
 
                 for (int i = 0; i < newCurves.size(); ++i)
                 {
-                    auto& curve = *newCurves.getUnchecked (i);
+                    auto& sourceCurve = *newCurves.getUnchecked (i);
 
-                    if (curve.getNumPoints() > 0)
+                    if (sourceCurve.getNumPoints() > 0)
                     {
-                        auto startTime = curve.getPointTime (0);
+                        auto startTime = sourceCurve.getPointTime (0);
                         auto endTime = end;
 
                         if (i < newCurves.size() - 1)
-                            endTime = curve.getPointTime (curve.getNumPoints() - 1);
+                            endTime = sourceCurve.getPointTime (sourceCurve.getNumPoints() - 1);
 
                         // if the curve is empty, set the parameter so that the bits outside the new curve
                         // are set to the levels they were at when we started recording..
                         if (parameter->parameter.getCurve().getNumPoints() == 0)
                             parameter->parameter.setParameter (parameter->originalValue, juce::sendNotification);
 
-                        auto& c = parameter->parameter.getCurve();
+                        auto& destCurve = parameter->parameter.getCurve();
                         TimeRange curveRange (startTime, endTime + glideLength);
-                        mergeCurve ({ parameter->parameter, curve }, startTime,
-                                    { parameter->parameter, c }, curveRange, glideLength,
+                        mergeCurve (destCurve, curveRange,
+                                    sourceCurve, startTime,
+                                    parameter->parameter, glideLength,
                                     false, toEnd);
 
                         if (engine.getPropertyStorage().getProperty (SettingID::simplifyAfterRecording, true))
-                            c.simplify (curveRange.expanded (TimeDuration::fromSeconds (0.001)), 0.01, 0.002f, um);
+                            destCurve.simplify (curveRange.expanded (0.001_td), 0.01, 0.002f, um);
                     }
                 }
             }

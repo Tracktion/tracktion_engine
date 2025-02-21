@@ -11,14 +11,15 @@
 namespace tracktion::inline engine
 {
 
-AutomationCurve::AutomationCurve()
-    : state (IDs::AUTOMATIONCURVE)
+AutomationCurve::AutomationCurve (Edit& e, TimeBase tb)
+    : edit (e), timeBase (tb), state (IDs::AUTOMATIONCURVE)
 {
     bypass.referTo (state, IDs::bypass, nullptr);
 }
 
-AutomationCurve::AutomationCurve (const juce::ValueTree& p, const juce::ValueTree& v)
-    : parentState (p), state (v)
+AutomationCurve::AutomationCurve (Edit& e, TimeBase tb,
+                                  const juce::ValueTree& p, const juce::ValueTree& v)
+    : edit (e), timeBase (tb), parentState (p), state (v)
 {
     if (! state.isValid())
         state = juce::ValueTree (IDs::AUTOMATIONCURVE);
@@ -27,7 +28,8 @@ AutomationCurve::AutomationCurve (const juce::ValueTree& p, const juce::ValueTre
 }
 
 AutomationCurve::AutomationCurve (const AutomationCurve& o)
-    : parentState (o.parentState), state (o.state)
+    : edit (o.edit), timeBase (o.timeBase),
+      parentState (o.parentState), state (o.state)
 {
     bypass.referTo (state, IDs::bypass, nullptr);
 }
@@ -61,6 +63,19 @@ int AutomationCurve::getNumPoints() const noexcept
     return state.getNumChildren();
 }
 
+EditDuration AutomationCurve::getDuration() const noexcept
+{
+    if (timeBase == TimeBase::time)
+        return TimeDuration::fromSeconds (toUnderlying (getPointPosition (getNumPoints() - 1)));
+
+    return BeatDuration::fromBeats (toUnderlying (getPointPosition (getNumPoints() - 1)));
+}
+
+EditPosition AutomationCurve::getPointPosition (int index) const noexcept
+{
+    return getPosition (state.getChild (index));
+}
+
 AutomationCurve::AutomationPoint AutomationCurve::getPoint (int index) const noexcept
 {
     assert (index >= 0);
@@ -70,7 +85,7 @@ AutomationCurve::AutomationPoint AutomationCurve::getPoint (int index) const noe
     //ddd if (! child.isValid() && ownerParam != nullptr)
     //     return AutomationPoint ({}, ownerParam->getCurrentValue(), 0);
 
-    return AutomationPoint (TimePosition::fromSeconds (static_cast<double> (child.getProperty (IDs::t))),
+    return AutomationPoint (getPosition (child),
                             child.getProperty (IDs::v),
                             child.getProperty (IDs::c));
 }
@@ -95,6 +110,15 @@ float AutomationCurve::getPointCurve (int index) const noexcept
     return state.getChild (index).getProperty (IDs::c);
 }
 
+int AutomationCurve::indexBefore (EditPosition p) const
+{
+    for (int i = getNumPoints(); --i >= 0;)
+        if (lessThanOrEqualTo (getPointPosition (i), p, edit.tempoSequence))
+            return i;
+
+    return -1;
+}
+
 int AutomationCurve::indexBefore (TimePosition t) const
 {
     for (int i = getNumPoints(); --i >= 0;)
@@ -102,6 +126,17 @@ int AutomationCurve::indexBefore (TimePosition t) const
             return i;
 
     return -1;
+}
+
+int AutomationCurve::nextIndexAfter (EditPosition p) const
+{
+    auto num = getNumPoints();
+
+    for (int i = 0; i < num; ++i)
+        if (greater (getPointPosition (i), p, edit.tempoSequence))
+            return i;
+
+    return num;
 }
 
 int AutomationCurve::nextIndexAfter (TimePosition t) const
@@ -121,6 +156,59 @@ TimeDuration AutomationCurve::getLength() const
 }
 
 //==============================================================================
+float AutomationCurve::getValueAt (const AutomatableParameter& param, EditPosition editPos) const
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    const auto index = nextIndexAfter (editPos);
+    const auto time = toUnderlying (editPos);
+
+    auto numPoints = getNumPoints();
+
+    if (index <= 0)
+        return numPoints > 0 ? getPointValue (0)
+                             : param.getCurrentBaseValue();
+
+    if (index >= numPoints)
+        return getPointValue (numPoints - 1);
+
+    auto p1 = state.getChild (index - 1);
+    auto p2 = state.getChild (index);
+
+    const double time1 = p1.getProperty (IDs::t);
+    const float curve1 = p1.getProperty (IDs::c);
+    const float value1 = p1.getProperty (IDs::v);
+
+    const double time2 = p2.getProperty (IDs::t);
+    const float value2 = p2.getProperty (IDs::v);
+
+    auto& ts = getTempoSequence (param);
+
+    if (curve1 == 0.0f)
+    {
+        auto alpha = (float) ((time - time1) / (time2 - time1));
+        return value1 + alpha * (value2 - value1);
+    }
+
+    if (curve1 >= -0.5f && curve1 <= 0.5f)
+    {
+        auto bezierPoint = getBezierPoint (index - 1);
+        return static_cast<float> (getBezierYFromX (time, time1, value1, toTime (bezierPoint.time, ts).inSeconds(), bezierPoint.value, time2, value2));
+    }
+
+    double x1, x2;
+    float y1, y2;
+    getBezierEnds (index - 1, x1, y1, x2, y2);
+
+    if (time >= time1 && time <= x1)
+        return value1;
+
+    if (time >= x2 && time <= time2)
+        return value2;
+
+    auto bezierPoint = getBezierPoint (index - 1);
+    return static_cast<float> (getBezierYFromX (time, x1, y1, toTime (bezierPoint.time, ts).inSeconds(), bezierPoint.value, x2, y2));
+}
+
 float AutomationCurve::getValueAt (const AutomatableParameter& param, TimePosition timePos) const
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
@@ -157,7 +245,7 @@ float AutomationCurve::getValueAt (const AutomatableParameter& param, TimePositi
     if (curve1 >= -0.5f && curve1 <= 0.5f)
     {
         auto bezierPoint = getBezierPoint (index - 1);
-        return getBezierYFromX (time, time1, value1, toTime (bezierPoint.time, ts).inSeconds(), bezierPoint.value, time2, value2);
+        return static_cast<float> (static_cast<float> (getBezierYFromX (time, time1, value1, toTime (bezierPoint.time, ts).inSeconds(), bezierPoint.value, time2, value2)));
     }
 
     double x1, x2;
@@ -171,7 +259,7 @@ float AutomationCurve::getValueAt (const AutomatableParameter& param, TimePositi
         return value2;
 
     auto bezierPoint = getBezierPoint (index - 1);
-    return getBezierYFromX (time, x1, y1, toTime (bezierPoint.time, ts).inSeconds(), bezierPoint.value, x2, y2);
+    return static_cast<float> (getBezierYFromX (time, x1, y1, toTime (bezierPoint.time, ts).inSeconds(), bezierPoint.value, x2, y2));
 }
 
 static double getDistanceFromLine (double& x, double& y,
@@ -199,84 +287,40 @@ static double getDistanceFromLine (double& x, double& y,
     return dist;
 }
 
-//ddd int AutomationCurve::getNearestPoint (TimePosition& t, float& v, double xToYRatio) const
-// {
-//     auto numPoints = getNumPoints();
-//
-//     if (numPoints > 1)
-//     {
-//         if (t <= getPointTime (0))
-//         {
-//             v = getPointValue (0);
-//             return 0;
-//         }
-//
-//         if (t >= getPointTime (numPoints - 1))
-//         {
-//             v = getPointValue (numPoints - 1);
-//             return numPoints;
-//         }
-//
-//         double bestDist = 1e10;
-//         auto bestTime = t;
-//         double bestValue = v;
-//         int nextIndex = 0;
-//
-//         for (int i = 0; i < numPoints - 1; ++i)
-//         {
-//             auto p1 = state.getChild (i);
-//             auto p2 = state.getChild (i + 1);
-//
-//             const auto time1 = TimePosition::fromSeconds (static_cast<double> (p1.getProperty (IDs::t)));
-//             const float value1 = p1.getProperty (IDs::v);
-//
-//             const auto time2 = TimePosition::fromSeconds (static_cast<double> (p2.getProperty (IDs::t)));
-//             const float value2 = p2.getProperty (IDs::v);
-//
-//             auto x = t.inSeconds();
-//             auto y = xToYRatio * v;
-//
-//             auto dist = getDistanceFromLine (x, y,
-//                                              time1.inSeconds(), xToYRatio * value1,
-//                                              time2.inSeconds(), xToYRatio * value2);
-//             y /= xToYRatio;
-//
-//             if (dist < bestDist)
-//             {
-//                 bestDist = dist;
-//                 bestTime = TimePosition::fromSeconds (x);
-//                 bestValue = y;
-//                 nextIndex = i + 1;
-//             }
-//         }
-//
-//         t = bestTime;
-//         v = (float) bestValue;
-//
-//         return nextIndex;
-//     }
-//
-//     if (numPoints > 0)
-//     {
-//         v = getPointValue (0);
-//         return t > getPointTime (0) ? 1 : 0;
-//     }
-//
-//     if (ownerParam != nullptr)
-//         v = ownerParam->getCurrentValue();
-//     else
-//         v = 0.0f;
-//
-//     return 0;
-// }
 
 //==============================================================================
 juce::ValueTree AutomationCurve::AutomationPoint::toValueTree() const
 {
     return createValueTree (IDs::POINT,
-                            IDs::t, time.inSeconds(),
+                            IDs::t, toUnderlying (time),
                             IDs::v, value,
                             IDs::c, curve);
+}
+
+int AutomationCurve::addPoint (EditPosition pos, float value, float curve, juce::UndoManager* um)
+{
+    auto& ts = edit.tempoSequence;
+    int i = 0;
+
+    if (timeBase == TimeBase::beats)
+    {
+        auto beats = toBeats (pos, ts);
+
+        for (i = getNumPoints(); --i >= 0;)
+            if (toBeats (getPointPosition (i), ts) <= beats)
+                break;
+    }
+    else
+    {
+        auto time = toTime (pos, ts);
+
+        for (i = getNumPoints(); --i >= 0;)
+            if (toTime (getPointPosition (i), ts) <= time)
+                break;
+    }
+
+    addPointAtIndex (++i, pos, value, curve, um);
+    return i;
 }
 
 int AutomationCurve::addPoint (TimePosition time, float value, float curve, juce::UndoManager* um)
@@ -288,6 +332,26 @@ int AutomationCurve::addPoint (TimePosition time, float value, float curve, juce
 
     addPointAtIndex (++i, time, value, curve, um);
     return i;
+}
+
+EditPosition AutomationCurve::createPosition (double rawPos) const
+{
+    if (timeBase == TimeBase::time)
+        return TimePosition::fromSeconds (rawPos);
+
+    return BeatPosition::fromBeats (rawPos);
+}
+
+EditPosition AutomationCurve::getPosition (const juce::ValueTree& pointState) const
+{
+    assert (pointState.hasType (IDs::POINT));
+    return createPosition (static_cast<double> (pointState[IDs::t]));
+}
+
+void AutomationCurve::addPointAtIndex (int index, EditPosition pos, float value, float curve, juce::UndoManager* um)
+{
+    state.addChild (AutomationPoint (pos, value, curve).toValueTree(), index, um);
+    checkParenthoodStatus (um);
 }
 
 void AutomationCurve::addPointAtIndex (int index, TimePosition time, float value, float curve, juce::UndoManager* um)
@@ -318,9 +382,89 @@ void AutomationCurve::checkParenthoodStatus (juce::UndoManager* um)
     }
 }
 
+void AutomationCurve::setPointPosition (int index, EditPosition pos, juce::UndoManager* um)
+{
+    auto& ts = edit.tempoSequence;
+    state.getChild (index).setProperty (IDs::t,
+                                        timeBase == TimeBase::beats ? toBeats (pos, ts).inBeats()
+                                                                    : toTime (pos, ts).inSeconds(),
+                                        um);
+}
+
 void AutomationCurve::setPointTime  (int index, TimePosition newTime, juce::UndoManager* um)    { state.getChild (index).setProperty (IDs::t, newTime.inSeconds(),  um); }
 void AutomationCurve::setPointValue (int index, float newValue, juce::UndoManager* um)          { state.getChild (index).setProperty (IDs::v, newValue, um); }
 void AutomationCurve::setCurveValue (int index, float newCurve, juce::UndoManager* um)          { state.getChild (index).setProperty (IDs::c, newCurve, um); }
+
+int AutomationCurve::movePoint (AutomatableParameter& param, int index,
+                                EditPosition newPos, float newValue, bool removeInterveningPoints, juce::UndoManager* um)
+{
+    assert (&param.getEdit() == &edit);
+    auto& ts = edit.tempoSequence;
+
+    if (juce::isPositiveAndBelow (index, getNumPoints()))
+    {
+        if (removeInterveningPoints)
+        {
+            auto oldPos = getPointPosition (index);
+            const bool movingPointBack = less (newPos, oldPos, ts);
+
+            auto t1 = minus (min (newPos, oldPos, ts), 0.00001_td, ts);
+            auto t2 = plus (max (newPos, oldPos, ts), 0.00001_td, ts);
+
+            for (int i = getNumPoints(); --i >= 0;)
+            {
+                auto t = getPointPosition (i);
+
+                if (less (t, t1, ts))
+                    break;
+
+                // If points lay at the same time, don't remove them
+                if (equals (t, oldPos, ts))
+                {
+                    if (movingPointBack)
+                    {
+                        if (index < i)
+                            break;
+                    }
+                    else
+                    {
+                        if (index > i)
+                            break;
+                    }
+                }
+
+                if (less (t, t2, ts) && i != index)
+                {
+                    if (i < index)
+                        --index;
+
+                    removePoint (i, um);
+                }
+            }
+        }
+
+        if (index > 0)
+            newPos = max (getPointPosition (index - 1), newPos, ts);
+        else
+            newPos = max (0_tp, newPos, ts);
+
+        if (index < getNumPoints() - 1)
+            newPos = min (newPos, getPointPosition (index + 1), ts);
+
+        newValue = param.getValueRange().clipValue (param.snapToState (newValue));
+
+        auto v = state.getChild (index);
+
+        v.setProperty (IDs::t, toUnderlying (newPos), um);
+        v.setProperty (IDs::v, newValue, um);
+    }
+    else
+    {
+        jassertfalse;
+    }
+
+    return index;
+}
 
 int AutomationCurve::movePoint (AutomatableParameter& param, int index, TimePosition newTime, float newValue, bool removeInterveningPoints, juce::UndoManager* um)
 {
@@ -412,6 +556,121 @@ juce::Array<AutomationCurve::AutomationPoint> AutomationCurve::getPointsInRegion
     return results;
 }
 
+juce::Array<AutomationCurve::AutomationPoint> AutomationCurve::getPointsInRegion (EditTimeRange range) const
+{
+    juce::Array<AutomationPoint> results;
+    auto numPoints = getNumPoints();
+    auto& ts = edit.tempoSequence;
+
+    for (int i = 0; i < numPoints; ++i)
+    {
+        auto v = state.getChild (i);
+        auto t = getPosition (v);
+
+        if (contains (range, t, ts))
+            results.add (AutomationPoint (t, v.getProperty (IDs::v), v.getProperty (IDs::c)));
+    }
+
+    return results;
+}
+
+void AutomationCurve::removePoints (EditTimeRange range, juce::UndoManager* um)
+{
+    auto& ts = edit.tempoSequence;
+
+    for (int i = getNumPoints(); --i >= 0;)
+    {
+        auto t = getPointPosition (i);
+
+        if (less (t, range.getStart(), ts))
+            break;
+
+        if (less (t, range.getEnd(), ts))
+            removePoint (i, um);
+    }
+}
+
+void AutomationCurve::removePointsAndCloseGap (AutomatableParameter& param, EditTimeRange range, juce::UndoManager* um)
+{
+    auto valAtStart = getValueAt (param, range.getStart());
+    auto valAtEnd   = getValueAt (param, range.getEnd());
+    auto& ts = edit.tempoSequence;
+
+    if (getNumPoints() == 0)
+        return;
+
+    for (int i = getNumPoints(); --i >= 0;)
+    {
+        auto t = getPointPosition (i);
+
+        if (greaterThanOrEqualTo (t, range.getStart(), ts)
+            && lessThanOrEqualTo (t, range.getEnd(), ts))
+           removePoint (i, um);
+    }
+
+    for (int i = 0; i < getNumPoints(); ++i)
+    {
+        auto t = getPointPosition (i);
+
+        if (greaterThanOrEqualTo (t, range.getEnd(), ts))
+            movePoint (param, i, minus (t, range.getLength(), ts), getPointValue (i), false, um);
+    }
+
+    if (getValueAt (param, range.getStart()) != valAtStart)
+        addPoint (range.getStart(), valAtStart, 0.0f, um);
+
+    if (valAtStart != valAtEnd)
+        addPoint (range.getStart(), valAtEnd, 0.0f, um);
+}
+
+void AutomationCurve::removeRedundantPoints (EditTimeRange range, juce::UndoManager* um)
+{
+    constexpr auto threshold = 0.0001;
+    auto& ts = edit.tempoSequence;
+
+    for (int i = getNumPoints(); --i >= 0;)
+    {
+        auto t = getPointPosition (i);
+
+        if (! contains (range, t, ts))
+            continue;
+
+        auto v = getPointValue (i);
+
+        bool sameLeft  = i <= 0                  || std::abs (getPointValue (i - 1) - v) < threshold;
+        bool sameRight = i >= getNumPoints() - 1 || std::abs (getPointValue (i + 1) - v) < threshold;
+
+        // if points to left and right have same value
+        if (sameLeft && sameRight)
+        {
+            removePoint (i, um);
+            continue;
+        }
+
+        // if point to right is exact same
+        if (i < getNumPoints() - 1
+              && std::abs (getPointValue (i + 1) - v) < threshold
+              && std::abs (toUnderlying (minus (getPointPosition (i + 1), t, ts))) < threshold)
+        {
+            removePoint (i, um);
+            continue;
+        }
+
+        // if points to left and right are at same time
+        if (i > 0
+             && i < getNumPoints() - 1
+             && std::abs (toUnderlying (minus (getPointPosition (i - 1), t, ts))) < threshold
+             && std::abs (toUnderlying (minus (getPointPosition (i + 1), t, ts))) < threshold)
+        {
+            removePoint (i, um);
+            continue;
+        }
+
+        if (getNumPoints() <= 1)
+            break;
+    }
+}
+
 void AutomationCurve::removePointsInRegion (TimeRange range, juce::UndoManager* um)
 {
     for (int i = getNumPoints(); --i >= 0;)
@@ -429,6 +688,7 @@ void AutomationCurve::removePointsInRegion (TimeRange range, juce::UndoManager* 
 void AutomationCurve::removeRedundantPoints (TimeRange range, juce::UndoManager* um)
 {
     constexpr auto threshold = 0.0001;
+    auto& ts = edit.tempoSequence;
 
     for (int i = getNumPoints(); --i >= 0;)
     {
@@ -452,7 +712,7 @@ void AutomationCurve::removeRedundantPoints (TimeRange range, juce::UndoManager*
         // if point to right is exact same
         if (i < getNumPoints() - 1
               && std::abs (getPointValue (i + 1) - v) < threshold
-              && std::abs ((getPointTime (i + 1) - t).inSeconds()) < threshold)
+              && std::abs (toUnderlying (minus (getPointPosition (i + 1), t, ts))) < threshold)
         {
             removePoint (i, um);
             continue;
@@ -461,8 +721,8 @@ void AutomationCurve::removeRedundantPoints (TimeRange range, juce::UndoManager*
         // if points to left and right are at same time
         if (i > 0
              && i < getNumPoints() - 1
-             && std::abs ((getPointTime (i - 1) - t).inSeconds()) < threshold
-             && std::abs ((getPointTime (i + 1) - t).inSeconds()) < threshold)
+             && std::abs (toUnderlying (minus (getPointPosition (i - 1), t, ts))) < threshold
+             && std::abs (toUnderlying (minus (getPointPosition (i + 1), t, ts))) < threshold)
         {
             removePoint (i, um);
             continue;
@@ -504,18 +764,19 @@ void AutomationCurve::removeRegionAndCloseGap (AutomatableParameter& param, Time
         addPoint (range.getStart(), valAtEnd, 0.0f, um);
 }
 
-int AutomationCurve::countPointsInRegion (TimeRange range) const
+int AutomationCurve::countPointsInRegion (EditTimeRange range) const
 {
     int num = 0;
+    auto& ts = edit.tempoSequence;
 
     for (int i = getNumPoints(); --i >= 0;)
     {
-        auto t = getPointTime(i);
+        auto t = getPointPosition (i);
 
-        if (t < range.getStart())
+        if (less (t, range.getStart(), ts))
             break;
 
-        if (t < range.getEnd())
+        if (less (t, range.getEnd(), ts))
             ++num;
     }
 
@@ -589,21 +850,26 @@ int AutomationCurve::countPointsInRegion (TimeRange range) const
 //     }
 // }
 
-void AutomationCurve::simplify (TimeRange range, double minTimeDifference, float minValueDifference, juce::UndoManager* um)
+void AutomationCurve::simplify (EditTimeRange editRange, EditDuration minDifference, float minValueDifference, juce::UndoManager* um)
 {
+    assert (editRange.isBeats() == std::holds_alternative<BeatDuration> (minDifference));
+
+    auto range = toUnderlying (editRange);
+    auto minTimeDifference = toUnderlying (minDifference);
+
     auto minDist = std::sqrt (minTimeDifference * minTimeDifference
                                 + minValueDifference * minValueDifference);
 
     for (int i = 1; i < getNumPoints(); ++i)
     {
-        auto time2 = getPointTime (i);
+        auto time2 = toUnderlying (getPointPosition (i));
 
         if (range.contains (time2))
         {
-            auto time1 = getPointTime (i - 1);
+            auto time1 = toUnderlying (getPointPosition (i - 1));
 
             // look for points too close together
-            if (std::abs ((time1 - time2).inSeconds()) < minTimeDifference
+            if (std::abs ((time1 - time2)) < minTimeDifference
                  && std::abs (getPointValue (i - 1) - getPointValue (i)) < minValueDifference)
             {
                 removePoint (i, um);
@@ -614,11 +880,11 @@ void AutomationCurve::simplify (TimeRange range, double minTimeDifference, float
                 // see if three points are in-line
                 if (i < getNumPoints() - 1)
                 {
-                    double x = time2.inSeconds();
+                    double x = time2;
                     double y = getPointValue (i);
 
-                    auto dist = getDistanceFromLine (x, y, time1.inSeconds(), getPointValue (i - 1),
-                                                     getPointTime (i + 1).inSeconds(), getPointValue (i + 1));
+                    auto dist = getDistanceFromLine (x, y, time1, getPointValue (i - 1),
+                                                     toUnderlying (getPointPosition (i + 1)), getPointValue (i + 1));
 
                     if (dist < minDist)
                     {
@@ -629,6 +895,31 @@ void AutomationCurve::simplify (TimeRange range, double minTimeDifference, float
             }
         }
     }
+}
+
+void AutomationCurve::simplify (TimeRange range, double minTimeDifference, float minValueDifference, juce::UndoManager* um)
+{
+    simplify (range, TimeDuration::fromSeconds (minTimeDifference), minValueDifference, um);
+}
+
+void AutomationCurve::rescaleValues (float factor, EditTimeRange range, juce::Range<float> limits, juce::UndoManager* um)
+{
+    auto& ts = edit.tempoSequence;
+
+    if (factor != 1.0f)
+        for (int i = getNumPoints(); --i >= 0;)
+            if (contains (range, getPointPosition (i), ts))
+                setPointValue (i, juce::jlimit (limits.getStart(), limits.getEnd(), getPointValue (i) * factor), um);
+}
+
+void AutomationCurve::addToValues (float valueDelta, EditTimeRange range, juce::Range<float> limits, juce::UndoManager* um)
+{
+    auto& ts = edit.tempoSequence;
+
+    if (valueDelta != 0)
+        for (int i = getNumPoints(); --i >= 0;)
+            if (contains (range, getPointPosition (i), ts))
+                setPointValue (i, juce::jlimit (limits.getStart(), limits.getEnd(), getPointValue (i) + valueDelta), um);
 }
 
 void AutomationCurve::addToAllTimes (TimeDuration delta, juce::UndoManager* um)
@@ -663,102 +954,39 @@ void AutomationCurve::addToValues (float valueDelta, TimeRange range, juce::Rang
 
 CurvePoint AutomationCurve::getBezierPoint (int index) const noexcept
 {
-    auto x1 = getPointTime  (index);
+    auto x1 = toUnderlying (getPointPosition (index));
     auto y1 = getPointValue (index);
-    auto x2 = getPointTime  (index + 1);
+    auto x2 = toUnderlying (getPointPosition  (index + 1));
     auto y2 = getPointValue (index + 1);
     auto c  = juce::jlimit (-1.0f, 1.0f, getPointCurve (index) * 2.0f);
 
-    if (y2 > y1)
-    {
-        auto run  = x2 - x1;
-        auto rise = y2 - y1;
+    auto [x, y] = core::getBezierPoint (x1, y1, x2, y2, c);
 
-        auto xc = x1 + run / 2;
-        auto yc = y1 + rise / 2;
-
-        auto x = xc - run / 2 * -c;
-        auto y = yc + rise / 2 * -c;
-
-        return { x, y };
-    }
-
-    auto run  = x2 - x1;
-    auto rise = y1 - y2;
-
-    auto xc = x1 + run / 2;
-    auto yc = y2 + rise / 2;
-
-    auto x = xc - run / 2 * -c;
-    auto y = yc - rise / 2 * -c;
-
-    return { x, y };
+    return { createPosition (x), static_cast<float> (y) };
 }
 
-double AutomationCurve::getBezierXfromT (double t, double x1, double xb, double x2)
+CurvePoint AutomationCurve::getBezierHandle (int index) const noexcept
 {
-    // test for straight lines and bail out
-    if (x1 == x2)
-        return (x1 + x2) / 2.0 * t + x1;
-
-    return (std::pow (1.0 - t, 2.0) * x1) + 2 * t * (1 - t) * xb + std::pow (t, 2.0) * x2;
-}
-
-float AutomationCurve::getBezierYFromX (double x, double x1, float y1, double xb, float yb, double x2, float y2)
-{
-    // test for straight lines and bail out
-    if (x1 == x2 || y1 == y2)
-        return y1;
-
-    // ok, we have a bezier curve with one control point,
-    // we know x, we need to find y
-
-    // flip the bezier equation around so its an quadratic equation
-    auto a = x1 - 2 * xb + x2;
-    auto b = -2 * x1 + 2 * xb;
-    auto c = x1 - x;
-
-    // solve for t, [0..1]
-    double t;
-
-    if (a == 0.0f)
-    {
-        t = -c / b;
-    }
-    else
-    {
-        t = (-b + std::sqrt (b * b - 4 * a * c)) / (2 * a);
-
-        if (t < 0.0f || t > 1.0f)
-            t = (-b - std::sqrt (b * b - 4 * a * c)) / (2 * a);
-    }
-
-    // find y using the t we just found
-    return (float) ((std::pow (1 - t, 2) * y1) + 2 * t * (1 - t) * yb + std::pow (t, 2) * y2);
-}
-
-CurvePoint AutomationCurve::getBezierHandle (int index, TempoSequence& tempoSequence) const noexcept
-{
-    auto x1 = getPointTime (index).inSeconds();
+    auto x1 = toUnderlying (getPointPosition (index));
     auto y1 = getPointValue (index);
     auto c  = getPointCurve (index);
 
-    auto x2 = getPointTime (index + 1).inSeconds();
+    auto x2 = toUnderlying (getPointTime (index + 1));
     auto y2 = getPointValue (index + 1);
 
     if (x1 == x2 || y1 == y2)
-        return { TimePosition::fromSeconds ((x1 + x2) / 2), (y1 + y2) / 2 };
+        return { createPosition ((x1 + x2) / 2), (y1 + y2) / 2 };
 
     if (c == 0.0f)
-        return { TimePosition::fromSeconds ((x1 + x2) / 2), (y1 + y2) / 2 };
+        return { createPosition ((x1 + x2) / 2), (y1 + y2) / 2 };
 
     if (c >= -0.5 && c <= 0.5)
     {
         auto bp = getBezierPoint (index);
-        auto x = getBezierXfromT (0.5, x1, toTime (bp.time, tempoSequence).inSeconds(), x2);
-        auto y = getBezierYFromX (x, x1, y1, toTime (bp.time, tempoSequence).inSeconds(), bp.value, x2, y2);
+        auto x = getBezierXfromT (0.5, x1, toUnderlying (bp.time), x2);
+        auto y = getBezierYFromX (x, x1, y1, toUnderlying (bp.time), bp.value, x2, y2);
 
-        return { TimePosition::fromSeconds (x), y };
+        return { createPosition (x), static_cast<float> (y) };
     }
 
     if (c > -1.0 && c < 1.0)
@@ -769,46 +997,31 @@ CurvePoint AutomationCurve::getBezierHandle (int index, TempoSequence& tempoSequ
 
         auto bp = getBezierPoint (index);
 
-        auto x = getBezierXfromT (0.5, x1end, toTime (bp.time, tempoSequence).inSeconds(), x2end);
-        auto y = getBezierYFromX (x, x1end, y1end, toTime (bp.time, tempoSequence).inSeconds(), bp.value, x2end, y2end);
-        return { TimePosition::fromSeconds (x), y };
+        auto x = getBezierXfromT (0.5, x1end, toUnderlying (bp.time), x2end);
+        auto y = getBezierYFromX (x, x1end, y1end, toUnderlying (bp.time), bp.value, x2end, y2end);
+        return { createPosition (x), static_cast<float> (y) };
     }
 
     double x1end, x2end;
     float y1end, y2end;
     getBezierEnds (index, x1end, y1end, x2end, y2end);
-    return { TimePosition::fromSeconds (x1end), y1end };
+    return { createPosition (x1end), y1end };
 }
 
 void AutomationCurve::getBezierEnds (int index, double& x1out, float& y1out, double& x2out, float& y2out) const noexcept
 {
-    auto x1 = getPointTime (index).inSeconds();
+    auto x1 = toUnderlying (getPointPosition (index));
     auto y1 = getPointValue (index);
     auto c  = getPointCurve (index);
 
-    auto x2 = getPointTime (index + 1).inSeconds();
+    auto x2 = toUnderlying (getPointPosition (index + 1));
     auto y2 = getPointValue (index + 1);
 
-    auto minic = (std::abs (c) - 0.5f) * 2.0f;
-    auto run   = (minic) * (x2 - x1);
-    auto rise  = (minic) * ((y2 > y1) ? (y2 - y1) : (y1 - y2));
-
-    if (c > 0.0f)
-    {
-        x1out = x1 + run;
-        y1out = y1;
-
-        x2out = x2;
-        y2out = (y1 < y2) ? (y2 - rise) : (y2 + rise);
-    }
-    else
-    {
-        x1out = x1;
-        y1out = (y1 < y2) ? (y1 + rise) : (y1 - rise);
-
-        x2out = x2 - run;
-        y2out = y2;
-    }
+    auto ends = core::getBezierEnds (x1, static_cast<double> (y1), x2, static_cast<double> (y2), static_cast<double> (c));
+    x1out = ends.x1;
+    y1out = static_cast<float> (ends.y1);
+    x2out = ends.x2;
+    y2out = static_cast<float> (ends.y2);
 }
 
 void AutomationCurve::removeAllAutomationCurvesRecursively (const juce::ValueTree& v)
@@ -825,7 +1038,7 @@ void AutomationCurve::removeAllAutomationCurvesRecursively (const juce::ValueTre
 
 //==============================================================================
 int simplify (AutomationCurve& curve, int strength,
-              TimeRange time, juce::Range<float> valueRange,
+              EditTimeRange time, juce::Range<float> valueRange,
               juce::UndoManager* um)
 {
     jassert (juce::isPositiveAndNotGreaterThan (strength, 2));
@@ -848,46 +1061,47 @@ int simplify (AutomationCurve& curve, int strength,
     vd *= range;
 
     auto numPointsBefore = curve.getNumPoints();
-    curve.simplify (time, td, vd, um);
+    curve.simplify (time, TimeDuration::fromSeconds (td), vd, um);
     auto numPointsAfter = curve.getNumPoints();
 
     return numPointsBefore - numPointsAfter;
 }
 
-void mergeCurve (const ParameterAndCurve source,
-                 TimePosition sourceStartTime,
-                 ParameterAndCurve dest,
+void mergeCurve (AutomationCurve& dest,
                  TimeRange destRange,
+                 const AutomationCurve& source,
+                 TimePosition sourceStartTime,
+                 AutomatableParameter& param,
                  TimeDuration fadeLength,
                  bool leaveOpenAtStart,
                  bool leaveOpenEnded)
 {
-    auto um = getUndoManager_p (dest.param);
+    auto um = getUndoManager_p (param);
     auto sourceEndTime = sourceStartTime + destRange.getLength();
-    auto dstValueAtStart = dest.curve.getValueAt (dest.param, destRange.getStart());
-    auto dstValueAtEnd   = dest.curve.getValueAt (dest.param, destRange.getEnd());
+    auto dstValueAtStart = dest.getValueAt (param, destRange.getStart());
+    auto dstValueAtEnd   = dest.getValueAt (param, destRange.getEnd());
 
-    auto srcValueAtStart = source.curve.getValueAt (source.param, sourceStartTime);
-    auto srcValueAtEnd = source.curve.getValueAt (source.param, sourceEndTime);
+    auto srcValueAtStart = source.getValueAt (param, sourceStartTime);
+    auto srcValueAtEnd = source.getValueAt (param, sourceEndTime);
 
-    dest.curve.removePointsInRegion (destRange, um);
+    dest.removePointsInRegion (destRange, um);
 
     if (fadeLength == TimeDuration() && dstValueAtStart != srcValueAtStart)
-        dest.curve.addPoint (destRange.getStart(), dstValueAtStart, 0.0f, um);
+        dest.addPoint (destRange.getStart(), dstValueAtStart, 0.0f, um);
 
     if (! leaveOpenAtStart)
-        dest.curve.addPoint (destRange.getStart(), srcValueAtStart, 0.0f, um);
+        dest.addPoint (destRange.getStart(), srcValueAtStart, 0.0f, um);
 
     bool pointsInFadeZoneStart = false, pointsInFadeZoneEnd = false;
 
-    for (int i = 0; i < source.curve.getNumPoints(); ++i)
+    for (int i = 0; i < source.getNumPoints(); ++i)
     {
-        auto t = source.curve.getPointTime (i) + (destRange.getStart() - sourceStartTime);
+        auto t = source.getPointTime (i) + (destRange.getStart() - sourceStartTime);
 
         if (t >= destRange.getStart() && t <= destRange.getEnd())
         {
-            auto v = source.curve.getPointValue (i);
-            auto c = source.curve.getPointCurve (i);
+            auto v = source.getPointValue (i);
+            auto c = source.getPointCurve (i);
 
             // see if this point is in a fade zone..
             if (t <= destRange.getStart() + fadeLength)
@@ -905,19 +1119,19 @@ void mergeCurve (const ParameterAndCurve source,
                     v = (float) (v + (dstValueAtEnd - v) * 1.0 - ((destRange.getEnd() - t) / fadeLength));
             }
 
-            dest.curve.addPoint (t, v, c, um);
+            dest.addPoint (t, v, c, um);
         }
     }
 
     if (fadeLength > 0_td && ! pointsInFadeZoneStart)
-        dest.curve.addPoint (destRange.getStart() + fadeLength - TimeDuration::fromSeconds (0.0001), dstValueAtStart, 0.0f, um);
+        dest.addPoint (destRange.getStart() + fadeLength - 0.0001_td, dstValueAtStart, 0.0f, um);
 
     if (! leaveOpenEnded)
     {
         if (! pointsInFadeZoneEnd)
-            dest.curve.addPoint (destRange.getEnd() - fadeLength, srcValueAtEnd, 0.0f, um);
+            dest.addPoint (destRange.getEnd() - fadeLength, srcValueAtEnd, 0.0f, um);
 
-        dest.curve.addPoint (destRange.getEnd(), dstValueAtEnd, 0.0f, um);
+        dest.addPoint (destRange.getEnd(), dstValueAtEnd, 0.0f, um);
     }
 }
 

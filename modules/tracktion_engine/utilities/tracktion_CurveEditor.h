@@ -21,9 +21,9 @@ struct TransparentToMouseInTrackItemComp {};
 struct CurvePoint
 {
     CurvePoint() = default;
-    CurvePoint (EditTime t, float val) : time (t), value (val) {}
+    CurvePoint (EditPosition t, float val) : time (t), value (val) {}
 
-    EditTime time;
+    EditPosition time;
     float value = 0;
 };
 

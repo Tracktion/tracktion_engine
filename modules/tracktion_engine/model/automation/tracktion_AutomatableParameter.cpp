@@ -41,7 +41,7 @@ namespace AutomationScaleHelpers
             return ((end - start) * value) + start;
 
         auto control = getQuadraticBezierControlPoint (start, end, curve);
-        return (float) AutomationCurve::getBezierXfromT (value, start, control, end);
+        return (float) getBezierXfromT (value, start, control, end);
     }
 
     inline float mapValue (float inputVal, float offset, float value, float curve) noexcept
@@ -169,7 +169,8 @@ public:
     AutomationCurveSource (AutomatableParameter& ap)
         : AutomationSource (getState (ap)),
           parameter (ap),
-          curve (ap.parentState, state)
+          curve (ap.getEdit(), AutomationCurve::TimeBase::time,
+                 ap.parentState, state)
     {
         deferredUpdateTimer.setCallback ([this]
                                          {
@@ -1335,6 +1336,7 @@ AutomationIterator::AutomationIterator (const AutomatableParameter& p)
 void AutomationIterator::copy (const AutomatableParameter& param)
 {
     const auto& curve = param.getCurve();
+    auto& ts = getTempoSequence (param);
 
     jassert (curve.getNumPoints() > 0);
 
@@ -1343,7 +1345,7 @@ void AutomationIterator::copy (const AutomatableParameter& param)
         auto src = curve.getPoint (i);
 
         AutoPoint dst;
-        dst.time = src.time;
+        dst.time = toTime (src.time, ts);
         dst.value = src.value;
         dst.curve = src.curve;
 
@@ -1415,7 +1417,7 @@ void AutomationIterator::interpolate (const AutomatableParameter& param)
             }
             else if (c >= -0.5 && c <= 0.5)
             {
-                v = AutomationCurve::getBezierYFromX (t.inSeconds(), t1.inSeconds(), v1, toTime (bp.time, param.getEdit().tempoSequence).inSeconds(), bp.value, t2.inSeconds(), v2);
+                v = static_cast<float> (getBezierYFromX (t.inSeconds(), t1.inSeconds(), v1, toTime (bp.time, param.getEdit().tempoSequence).inSeconds(), bp.value, t2.inSeconds(), v2));
             }
             else
             {
@@ -1424,7 +1426,7 @@ void AutomationIterator::interpolate (const AutomatableParameter& param)
                 else if (t >= TimePosition::fromSeconds (x2end) && t <= t2)
                     v = v2;
                 else
-                    v = AutomationCurve::getBezierYFromX (t.inSeconds(), x1end, y1end, toTime (bp.time, param.getEdit().tempoSequence).inSeconds(), bp.value, x2end, y2end);
+                    v = static_cast<float> (getBezierYFromX (t.inSeconds(), x1end, y1end, toTime (bp.time, param.getEdit().tempoSequence).inSeconds(), bp.value, x2end, y2end));
             }
         }
 

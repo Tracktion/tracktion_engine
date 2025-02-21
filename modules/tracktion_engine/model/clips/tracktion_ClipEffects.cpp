@@ -51,7 +51,7 @@ static inline HashCode hashPlugin (const juce::ValueTree& effectState, Plugin& p
                 for (int i = 0; i < ac.getNumPoints(); ++i)
                 {
                     const auto p = ac.getPoint (i);
-                    auto pointH = juce::String (p.time.inSeconds()) + juce::String (p.value) + juce::String (p.curve);
+                    auto pointH = juce::String (toUnderlying (p.time)) + juce::String (p.value) + juce::String (p.curve);
                     h = (juce::String (h) + pointH).hashCode64();
                 }
             }

@@ -70,6 +70,39 @@ inline void getBezierEnds (const double x1, const double y1, const double x2, co
     }
 }
 
+struct BezierEnds
+{
+    double x1, y1, x2, y2;
+};
+
+inline BezierEnds getBezierEnds (const double x1, const double y1, const double x2, const double y2, const double c) noexcept
+{
+    BezierEnds ends;
+
+    auto minic = (std::abs (c) - 0.5f) * 2.0f;
+    auto run   = minic * (x2 - x1);
+    auto rise  = minic * ((y2 > y1) ? (y2 - y1) : (y1 - y2));
+
+    if (c > 0)
+    {
+        ends.x1 = x1 + run;
+        ends.y1 = (float) y1;
+
+        ends.x2 = x2;
+        ends.y2 = (float) (y1 < y2 ? (y2 - rise) : (y2 + rise));
+    }
+    else
+    {
+        ends.x1 = x1;
+        ends.y1 = (float) (y1 < y2 ? (y1 + rise) : (y1 - rise));
+
+        ends.x2 = x2 - run;
+        ends.y2 = (float) y2;
+    }
+
+    return ends;
+}
+
 inline double getBezierYFromX (double x, double x1, double y1, double xb, double yb, double x2, double y2) noexcept
 {
     // test for straight lines and bail out
@@ -108,6 +141,15 @@ inline double getBezierYFromX (double x, double x1, double y1, double xb, double
     // find y using the t we just found
     auto y = (std::pow (1 - t, 2) * y1) + 2 * t * (1 - t) * yb + std::pow (t, 2) * y2;
     return y;
+}
+
+inline double getBezierXfromT (double t, double x1, double xb, double x2)
+{
+    // test for straight lines and bail out
+    if (x1 == x2)
+        return (x1 + x2) / 2.0 * t + x1;
+
+    return (std::pow (1.0 - t, 2.0) * x1) + 2 * t * (1 - t) * xb + std::pow (t, 2.0) * x2;
 }
 
 }}

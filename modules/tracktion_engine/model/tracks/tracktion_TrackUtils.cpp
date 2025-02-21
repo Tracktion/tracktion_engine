@@ -282,6 +282,13 @@ int countNumTracks (const juce::ValueTree& v)
 }
 
 //==============================================================================
+TrackAutomationSection::ActiveParameters::ActiveParameters (AutomatableParameter& p)
+    : param (p)
+{
+}
+
+
+//==============================================================================
 TrackAutomationSection::TrackAutomationSection (TrackItem& c)
     : position (c.getPosition().time),
       src (c.getTrack()),
@@ -376,8 +383,7 @@ void moveAutomation (const juce::Array<TrackAutomationSection>& origSections, Ti
 
                 if (param->getCurve().getNumPoints() > 0)
                 {
-                    TrackAutomationSection::ActiveParameters ap;
-                    ap.param = param;
+                    TrackAutomationSection::ActiveParameters ap (*param);
                     ap.curve.setState (param->getCurve().state);
                     ap.curve.setParentState (param->getCurve().parentState);
                     ap.curve.setParameterID (param->getCurve().getParameterID());
@@ -447,7 +453,7 @@ void moveAutomation (const juce::Array<TrackAutomationSection>& origSections, Ti
                                                              : getDestCurve (*section.dst, activeParam.param))
             {
                 auto param = activeParam.param;
-                constexpr auto errorMargin = TimeDuration::fromSeconds (0.0001);
+                constexpr auto errorMargin = 0.0001_td;
 
                 auto start    = sectionTime.getStart();
                 auto end      = sectionTime.getEnd();
@@ -479,15 +485,16 @@ void moveAutomation (const juce::Array<TrackAutomationSection>& origSections, Ti
                 for (int i = 0; i < srcCurve.getNumPoints(); ++i)
                 {
                     auto pt = srcCurve.getPoint (i);
+                    auto ptTime = toTime (pt.time, ts);
 
-                    if (pt.time >= start - errorMargin && pt.time <= sectionTime.getEnd() + errorMargin)
+                    if (ptTime >= start - errorMargin && ptTime <= sectionTime.getEnd() + errorMargin)
                         origPoints.add (pt);
                 }
 
                 dstCurve->removePointsInRegion (totalRegionWithMargin, um);
 
                 for (const auto& pt : origPoints)
-                    dstCurve->addPoint (pt.time + offset, pt.value, pt.curve, um);
+                    dstCurve->addPoint (toTime (pt.time, ts) + offset, pt.value, pt.curve, um);
 
                 auto startPoints = dstCurve->getPointsInRegion (startWithMargin);
                 auto endPoints   = dstCurve->getPointsInRegion (endWithMargin);
