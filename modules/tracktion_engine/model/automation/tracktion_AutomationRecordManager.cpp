@@ -262,9 +262,9 @@ namespace tracktion::inline engine
                             }
                         }
 
-                        const float oldVal = (i == 0) ? (parameter->parameter.getCurve().getNumPoints() > 0 ? parameter->parameter.getCurve().getValueAt (parameter->parameter, change.time)
+                        const float oldVal = (i == 0) ? (parameter->parameter.getCurve().getNumPoints() > 0 ? parameter->parameter.getCurve().getValueAt (change.time, parameter->parameter.getCurrentBaseValue())
                                                                                                             : parameter->originalValue)
-                                                      : curve->getValueAt (parameter->parameter, change.time);
+                                                      : curve->getValueAt (change.time, parameter->parameter.getCurrentBaseValue());
 
                         const float newVal = parameter->parameter.snapToState (change.value);
 
@@ -492,7 +492,7 @@ namespace tracktion::inline engine
                     : owner (o), parameter (p), originalValue (value), trigger (t)
                 {
                     if (auto& tc = p.getEdit().getTransport(); tc.looping)
-                        valueAtLoopEnd = p.getCurve().getValueAt (parameter, tc.getLoopRange().getEnd());
+                        valueAtLoopEnd = p.getCurve().getValueAt (tc.getLoopRange().getEnd(), parameter.getCurrentBaseValue());
 
                     parameter.addListener (this);
                 }
@@ -622,7 +622,7 @@ namespace tracktion::inline engine
                 if (autoParamData.glideTime != 0_td)
                 {
                     const TimeRange glideRange (autoParamData.lastChangeFlushed->time, autoParamData.glideTime);
-                    const auto valueAtGlideEnd = curve.getValueAt (param, glideRange.getEnd());
+                    const auto valueAtGlideEnd = curve.getValueAt (glideRange.getEnd(), param.getCurrentBaseValue());
                     curve.removePointsInRegion (glideRange.withStart (glideRange.getStart() + 1us), um);
                     curve.addPoint (glideRange.getEnd(), valueAtGlideEnd, param.isDiscrete() ? 1.0f : 0.0f, um);
                 }
@@ -738,7 +738,7 @@ namespace tracktion::inline engine
                                                                              : changesLoopEnd.back();
                         changesLoopEnd.emplace_back (timeRangeLoopEnd.getEnd(), endChangeLoopEnd.value);
                         changesLoopEnd.emplace_back (timeRangeLoopEnd.getEnd(), paramData->valueAtLoopEnd ? *paramData->valueAtLoopEnd
-                                                                                                          : curve.getValueAt (paramData->parameter, timeRangeLoopEnd.getEnd() + 1us));
+                                                                                                          : curve.getValueAt (timeRangeLoopEnd.getEnd() + 1us, paramData->parameter.getCurrentBaseValue()));
                         // Extend end so that points at the loop end are cleared
                         flushSection (paramData->parameter, curve, withEndExtended (timeRangeLoopEnd, TimeDuration (1us)), changesLoopEnd);
                         paramData->timeRangeCovered.addRange ({ timeRangeLoopEnd.getStart(), timeRangeLoopEnd.getEnd() });
@@ -815,9 +815,9 @@ namespace tracktion::inline engine
                             }
                         }
 
-                        const float oldVal = (i == 0) ? (parameter->parameter.getCurve().getNumPoints() > 0 ? parameter->parameter.getCurve().getValueAt (parameter->parameter, change.time)
+                        const float oldVal = (i == 0) ? (parameter->parameter.getCurve().getNumPoints() > 0 ? parameter->parameter.getCurve().getValueAt (change.time, parameter->parameter.getCurrentBaseValue())
                                                                                                             : parameter->originalValue)
-                                                      : curve->getValueAt (parameter->parameter, change.time);
+                                                      : curve->getValueAt (change.time, parameter->parameter.getCurrentBaseValue());
 
                         const float newVal = parameter->parameter.snapToState (change.value);
 

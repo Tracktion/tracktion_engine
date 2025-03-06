@@ -97,6 +97,26 @@ struct AutomationSource  : public juce::ReferenceCountedObject
     /** Should return the current value of the source. */
     virtual float getCurrentValue() = 0;
 
+    /** Is called by the message thread to modify the automation value.
+        By default, most modifier types just add to the modValue but some types
+        can overwrite the base or scale the mod etc.
+    */
+    virtual void processValueAt (TimePosition t, [[maybe_unused]] float& baseValue, float& modValue)
+    {
+        modValue += getValueAt (t);
+    }
+
+    /** Is called during processing to modify the automation value.
+        By default, most modifier types just add to the modValue but some types
+        can overwrite the base or scale the mod etc.
+    */
+    virtual void processValue ([[maybe_unused]] float& baseValue, float& modValue)
+    {
+        float currentModValue = getCurrentValue();
+        jassert (! std::isnan (currentModValue));
+        modValue += currentModValue;
+    }
+
     juce::ValueTree state;
 };
 
@@ -225,7 +245,7 @@ public:
     float getValueAt (TimePosition time) override
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
-        return curve.getValueAt (parameter, time);
+        return curve.getValueAt (time, parameter.getCurrentBaseValue());
     }
 
     bool isEnabledAt (TimePosition) override
@@ -307,7 +327,7 @@ struct MacroSource : public AutomationModifierSource
     float getValueAt (TimePosition time) override
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
-        auto macroValue = macro->getCurve().getValueAt (*macro, time);
+        auto macroValue = macro->getCurve().getValueAt (time, macro->getCurrentBaseValue());
         const auto range = juce::Range<float>::between (assignment->inputStart.get(), assignment->inputEnd.get());
         return AutomationScaleHelpers::mapValue (AutomationScaleHelpers::remapInputValue (macroValue, range),
                                                  assignment->offset, assignment->value, assignment->curve);
@@ -348,6 +368,146 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MacroSource)
 };
+
+//==============================================================================
+class AutomationCurveModifierSource : public AutomationModifierSource
+{
+public:
+    AutomationCurveModifierSource (AutomatableParameter& parameter_,
+                                   AutomationCurveModifier::Assignment::Ptr curveAssignment,
+                                   AutomationCurveModifier& acm)
+        : AutomationModifierSource (std::move (curveAssignment)),
+          curveModifier (acm),
+          parameter (parameter_),
+          curve (acm.getCurve())
+    {
+        deferredUpdateTimer.setCallback ([this]
+                                         {
+                                             deferredUpdateTimer.stopTimer();
+                                             updateInterpolatedPoints();
+                                         });
+    }
+
+    void triggerAsyncCurveUpdate()
+    {
+        if (! curveModifier.edit.isLoading())
+            deferredUpdateTimer.startTimer (10);
+    }
+
+    void updateInterpolatedPoints()
+    {
+        jassert (! curveModifier.edit.isLoading());
+        CRASH_TRACER
+        TRACKTION_ASSERT_MESSAGE_THREAD
+
+        std::unique_ptr<AutomationIterator> newStream;
+
+        if (curve.getNumPoints() > 0)
+        {
+            auto s = std::make_unique<AutomationIterator> (parameter.getEdit(), curve, parameter.getValueRange());
+
+            if (! s->isEmpty())
+                newStream = std::move (s);
+        }
+
+        {
+            const juce::ScopedLock sl (parameterStreamLock);
+            automationActive.store (newStream != nullptr, std::memory_order_relaxed);
+            parameterStream = std::move (newStream);
+
+            if (! parameterStream)
+                parameter.updateToFollowCurve (lastTime);
+
+            lastTime = -1.0s;
+        }
+
+        auto& ts = getTempoSequence (parameter);
+        auto curvePos = curveModifier.getPosition();
+        curveStart.store (toTime (curvePos.curveStart, ts), std::memory_order_release);
+        curveClipRange.store (toTime (curvePos.clipRange, ts));
+
+        parameter.automatableEditElement.updateActiveParameters();
+    }
+
+    bool isActive() const noexcept
+    {
+        return automationActive.load (std::memory_order_relaxed);
+    }
+
+    float getValueAt (TimePosition time) override
+    {
+        TRACKTION_ASSERT_MESSAGE_THREAD
+        return curve.getValueAt (time - toDuration (curveStart.load (std::memory_order_acquire)), parameter.getCurrentBaseValue());
+    }
+
+    bool isEnabledAt (TimePosition t) override
+    {
+        return curveClipRange.load().contains (t);
+    }
+
+    void setPosition (TimePosition time) override
+    {
+        if (! curveModifier.edit.getAutomationRecordManager().isReadingAutomation())
+            if (auto plugin = parameter.getPlugin())
+                if (! plugin->isClipEffectPlugin())
+                    return;
+
+        const juce::ScopedLock sl (parameterStreamLock);
+
+        if (lastTime.exchange (time) != time)
+        {
+            enabledAtCurrentStreamTime.store (curveClipRange.load().contains (time), std::memory_order_release);
+            parameterStream->setPosition (time - toDuration (curveStart.load (std::memory_order_acquire)));
+        }
+    }
+
+    bool isEnabled() override
+    {
+        return ! curve.bypass.get()
+            && enabledAtCurrentStreamTime.load (std::memory_order_acquire);
+    }
+
+    float getCurrentValue() override
+    {
+        const juce::ScopedLock sl (parameterStreamLock);
+        return parameterStream->getCurrentValue();
+    }
+
+    void processValueAt (TimePosition t, float& baseValue, float&) override
+    {
+        //ddd Just implement absolute for now
+        baseValue = getValueAt (t);
+        jassert (! std::isnan (baseValue));
+    }
+
+    void processValue (float& baseValue, float&) override
+    {
+        //ddd Just implement absolute for now
+        baseValue = getCurrentValue();
+        jassert (! std::isnan (baseValue));
+    }
+
+    AutomatableParameter::ModifierSource* getModifierSource() override
+    {
+        return &curveModifier;
+    }
+
+    AutomationCurveModifier& curveModifier;
+    AutomatableParameter& parameter;
+    AutomationCurve& curve;
+
+private:
+    LambdaTimer deferredUpdateTimer;
+    juce::CriticalSection parameterStreamLock;
+    std::unique_ptr<AutomationIterator> parameterStream;
+    std::atomic<bool> automationActive { false }, enabledAtCurrentStreamTime { false };
+    std::atomic<TimePosition> lastTime { -1.0s };
+    std::atomic<TimePosition> curveStart { 0s };
+    crill::seqlock_object<TimeRange> curveClipRange;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutomationCurveModifierSource)
+};
+
 
 //==============================================================================
 struct AutomatableParameter::AutomationSourceList  : private ValueTreeObjectList<AutomationModifierSource, juce::CriticalSection>
@@ -441,7 +601,7 @@ private:
     {
         if (v.hasType (IDs::LFO) || v.hasType (IDs::BREAKPOINTOSCILLATOR) || v.hasType (IDs::MACRO)
             || v.hasType (IDs::STEP) || v.hasType (IDs::ENVELOPEFOLLOWER) || v.hasType (IDs::RANDOM)
-            || v.hasType (IDs::MIDITRACKER))
+            || v.hasType (IDs::MIDITRACKER) || v.hasType (IDs::AUTOMATIONCURVE))
         {
             // Old LFOs will have a paramID field that is a name. We'll convert it when we create the ModifierAutomationSource
             const auto isLegacyLFO = [&, this] { return v.hasType (IDs::LFO) && v[IDs::paramID].toString() == parameter.paramName; };
@@ -487,6 +647,13 @@ private:
                 return nullptr;
 
             as = new MacroSource (new MacroParameter::Assignment (v, *macro), *macro);
+        }
+        else if (auto curveModifier = getAutomationCurveModifierForID (parameter.getEdit(), EditItemID::fromProperty (v, IDs::source)))
+        {
+            auto assignedParam = getParameter (*curveModifier);
+            assert (assignedParam);
+            assert (&parameter == assignedParam);
+            as = new AutomationCurveModifierSource (*assignedParam, new AutomationCurveModifier::Assignment (*curveModifier, v), *curveModifier);
         }
         else
         {
@@ -731,6 +898,11 @@ AutomatableParameter::ModifierAssignment::Ptr AutomatableParameter::addModifier 
         v = createValueTree (IDs::MACRO,
                              IDs::source, macro->paramID);
     }
+    else if (auto automationCurveModifier = dynamic_cast<AutomationCurveModifier*> (&source))
+    {
+        v = createValueTree (IDs::AUTOMATIONCURVE,
+                             IDs::source, automationCurveModifier->itemID);
+    }
     else
     {
         jassertfalse;
@@ -816,6 +988,13 @@ std::optional<float> AutomatableParameter::getDefaultValue() const
 void AutomatableParameter::updateStream()
 {
     curveSource->updateInterpolatedPoints();
+
+    getAutomationSourceList()
+        .visitSources ([] (AutomationSource& m)
+                       {
+                           if (auto curveModSource = dynamic_cast<AutomationCurveModifierSource*> (&m))
+                               curveModSource->updateInterpolatedPoints();
+                       });
 }
 
 void AutomatableParameter::updateFromAutomationSources (TimePosition time)
@@ -824,33 +1003,29 @@ void AutomatableParameter::updateFromAutomationSources (TimePosition time)
         return;
 
     const juce::ScopedValueSetter<bool> svs (updateParametersRecursionCheck, true);
+
     float newModifierValue = 0.0f;
+    float newBaseValue = [this, time]
+                         {
+                             if (curveSource->isActive()
+                                 && curveSource->isEnabledAt (time)
+                                 && ! isCurrentlyRecording())
+                             {
+                                 curveSource->setPosition (time);
+                                 return curveSource->getCurrentValue();
+                             }
+
+                             return currentParameterValue.load();
+                         }();
 
     getAutomationSourceList()
-        .visitSources ([&newModifierValue, time] (AutomationSource& m) mutable
+        .visitSources ([&newBaseValue, &newModifierValue, time] (AutomationSource& m) mutable
                        {
                            m.setPosition (time);
 
                            if (m.isEnabled())
-                           {
-                               float currentModValue = m.getCurrentValue();
-                               jassert (! std::isnan (currentModValue));
-                               newModifierValue += currentModValue;
-                           }
+                               m.processValue (newBaseValue, newModifierValue);
                        });
-
-    const float newBaseValue = [this, time]
-                               {
-                                   if (curveSource->isActive()
-                                       && curveSource->isEnabledAt (time)
-                                       && ! isCurrentlyRecording())
-                                   {
-                                       curveSource->setPosition (time);
-                                       return curveSource->getCurrentValue();
-                                   }
-
-                                   return currentParameterValue.load();
-                               }();
 
     if (newModifierValue != 0.0f)
     {
@@ -1161,25 +1336,23 @@ void AutomatableParameter::updateToFollowCurve (TimePosition time)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     float newModifierValue = 0.0f;
+    float newBaseValue = [this, time]
+                         {
+                             if (hasAutomationPoints() && ! isRecording && curveSource->isEnabledAt (time))
+                                 return curveSource->getValueAt (time);
+
+                             return currentParameterValue.load();
+                         }();
 
     getAutomationSourceList()
-        .visitSources ([&newModifierValue, time] (AutomationModifierSource& m) mutable
+        .visitSources ([&newBaseValue, &newModifierValue, time] (AutomationModifierSource& m) mutable
                        {
-                           if (m.isEnabledAt (time))
-                           {
-                               const float sourceModValue = m.getValueAt (time);
-                               jassert (! std::isnan (sourceModValue));
-                               newModifierValue += sourceModValue;
-                           }
+                           if (! m.isEnabledAt (time))
+                               return;
+
+                           m.processValueAt (time, newBaseValue, newModifierValue);
+                           jassert (! std::isnan (newModifierValue));
                        });
-
-    const float newBaseValue = [this, time]
-                               {
-                                   if (hasAutomationPoints() && ! isRecording && curveSource->isEnabledAt (time))
-                                       return curveSource->getValueAt (time);
-
-                                   return currentParameterValue.load();
-                               }();
 
     if (newModifierValue != 0.0f)
     {
@@ -1323,20 +1496,25 @@ AutomatableParameter* getParameter (AutomatableParameter::ModifierAssignment& as
 }
 
 //==============================================================================
-AutomationIterator::AutomationIterator (const AutomatableParameter& p)
+AutomationIterator::AutomationIterator (Edit& edit, const AutomationCurve& curve, juce::Range<float> valueRange)
 {
-    hiRes = ! p.automatableEditElement.edit.engine.getEngineBehaviour().interpolateAutomation();
+    hiRes = ! edit.engine.getEngineBehaviour().interpolateAutomation();
 
     if (hiRes)
-        copy (p);
+        copy (edit, curve, valueRange);
     else
-        interpolate (p);
+        interpolate (edit, curve, valueRange);
 }
 
-void AutomationIterator::copy (const AutomatableParameter& param)
+AutomationIterator::AutomationIterator (const AutomatableParameter& param)
+    : AutomationIterator (param.getEdit(), param.getCurve(), param.getValueRange())
 {
-    const auto& curve = param.getCurve();
-    auto& ts = getTempoSequence (param);
+
+}
+
+void AutomationIterator::copy (Edit& edit, const AutomationCurve& curve, juce::Range<float>)
+{
+    auto& ts = getTempoSequence (edit);
 
     jassert (curve.getNumPoints() > 0);
 
@@ -1353,14 +1531,13 @@ void AutomationIterator::copy (const AutomatableParameter& param)
     }
 }
 
-void AutomationIterator::interpolate (const AutomatableParameter& param)
+void AutomationIterator::interpolate (Edit& edit, const AutomationCurve& curve, juce::Range<float> valueRange)
 {
-    const auto& curve = param.getCurve();
-
     jassert (curve.getNumPoints() > 0);
 
+    auto& ts = edit.tempoSequence;
     const auto timeDelta        = TimeDuration::fromSeconds (1.0 / 100.0);
-    const double minValueDelta  = (param.getValueRange().getLength()) / 256.0;
+    const double minValueDelta  = (valueRange.getLength()) / 256.0;
 
     int curveIndex = 0;
     int lastCurveIndex = -1;
@@ -1369,7 +1546,7 @@ void AutomationIterator::interpolate (const AutomatableParameter& param)
     auto lastTime = curve.getPointTime (curve.getNumPoints() - 1) + TimeDuration::fromSeconds (1.0);
     TimePosition t1;
     auto t2 = curve.getPointTime (0);
-    float v1 = curve.getValueAt (param, 0s);
+    float v1 = curve.getValueAt (0s, valueRange.getStart());
     float v2 = v1;
     float vp = v2;
     float c  = 0;
@@ -1417,7 +1594,7 @@ void AutomationIterator::interpolate (const AutomatableParameter& param)
             }
             else if (c >= -0.5 && c <= 0.5)
             {
-                v = static_cast<float> (getBezierYFromX (t.inSeconds(), t1.inSeconds(), v1, toTime (bp.time, param.getEdit().tempoSequence).inSeconds(), bp.value, t2.inSeconds(), v2));
+                v = static_cast<float> (getBezierYFromX (t.inSeconds(), t1.inSeconds(), v1, toTime (bp.time, ts).inSeconds(), bp.value, t2.inSeconds(), v2));
             }
             else
             {
@@ -1426,7 +1603,7 @@ void AutomationIterator::interpolate (const AutomatableParameter& param)
                 else if (t >= TimePosition::fromSeconds (x2end) && t <= t2)
                     v = v2;
                 else
-                    v = static_cast<float> (getBezierYFromX (t.inSeconds(), x1end, y1end, toTime (bp.time, param.getEdit().tempoSequence).inSeconds(), bp.value, x2end, y2end));
+                    v = static_cast<float> (getBezierYFromX (t.inSeconds(), x1end, y1end, toTime (bp.time, ts).inSeconds(), bp.value, x2end, y2end));
             }
         }
 

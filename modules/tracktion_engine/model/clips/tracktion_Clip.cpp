@@ -44,6 +44,8 @@ Clip::Clip (const juce::ValueTree& v, ClipOwner& targetParent, EditItemID id, Ty
         length = 0_td;
     }
 
+    getAutomationCurveList (false);
+
     state.addListener (this);
 
     updateLinkedClipsCaller.setFunction ([this] { updateLinkedClips(); });
@@ -546,6 +548,13 @@ void Clip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifi
     }
 }
 
+void Clip::valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree& c, int)
+{
+    if (p == state)
+        if (c.hasType (IDs::AUTOMATIONCURVES))
+            automationCurveList.reset();
+}
+
 void Clip::valueTreeParentChanged (juce::ValueTree& v)
 {
     if (v == state)
@@ -637,6 +646,25 @@ juce::Colour Clip::getColour() const
 {
     return colour.get();
 }
+
+//==============================================================================
+AutomationCurveList* Clip::getAutomationCurveList (bool createIfNoItems)
+{
+    if (! matchesAnyOf (type, { Type::wave, Type::midi, Type::edit, Type::step }))
+        return nullptr;
+
+    if (! automationCurveList)
+    {
+        auto curvesParentState = state.getOrCreateChildWithName (IDs::AUTOMATIONCURVES, getUndoManager());
+
+        if (curvesParentState.getNumChildren() > 0 || createIfNoItems)
+            automationCurveList = std::make_unique<AutomationCurveList> (edit, curvesParentState,
+                                                                         [c = SafeSelectable<Clip> (this)] { return CurvePosition { c->getContentStartBeat(), c->getEditBeatRange() }; });
+    }
+
+    return automationCurveList.get();
+}
+
 
 //==============================================================================
 void Clip::addListener (Listener* l)

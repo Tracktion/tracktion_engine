@@ -1107,8 +1107,9 @@ void deleteAutomation (const SelectableList& selectedClips)
 
                     if (curve.countPointsInRegion (section.range.expanded (0.0001s)))
                     {
-                        auto start = curve.getValueAt (*param, section.range.getStart());
-                        auto end   = curve.getValueAt (*param, section.range.getEnd());
+                        auto defaultValue = param->getCurrentBaseValue();
+                        auto start = curve.getValueAt (section.range.getStart(), defaultValue);
+                        auto end   = curve.getValueAt (section.range.getEnd(), defaultValue);
 
                         curve.removePointsInRegion (section.range.expanded (0.0001s), um);
                         curve.addPoint (section.range.getStart(), start, 1.0f, um);

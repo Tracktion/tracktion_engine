@@ -696,18 +696,20 @@ void Clipboard::Clips::addAutomation (const juce::Array<TrackSection>& trackSect
                             section.points.push_back ({ pt.time, pt.value, pt.curve });
                     }
 
+                    auto defaultValue = param->getCurrentBaseValue();
+
                     if (section.points.empty())
                     {
-                        section.points.push_back ({ clippedStart, param->getCurve().getValueAt (*param, clippedStart), 1.0f });
-                        section.points.push_back ({ clippedEnd, param->getCurve().getValueAt (*param, clippedEnd), 0.0f });
+                        section.points.push_back ({ clippedStart, param->getCurve().getValueAt (clippedStart, defaultValue), 1.0f });
+                        section.points.push_back ({ clippedEnd, param->getCurve().getValueAt (clippedEnd, defaultValue), 0.0f });
                     }
                     else
                     {
                         if (toTime (section.points[0].time, ts) > clippedStart + endTolerence)
-                            section.points.insert (section.points.begin(), { clippedStart + endTolerence, param->getCurve().getValueAt (*param, clippedStart + endTolerence), 0.0f });
+                            section.points.insert (section.points.begin(), { clippedStart + endTolerence, param->getCurve().getValueAt (clippedStart + endTolerence, defaultValue), 0.0f });
 
                         if (toTime (section.points[section.points.size() - 1].time, ts) < clippedEnd - endTolerence)
-                            section.points.push_back ({ clippedEnd - endTolerence, param->getCurve().getValueAt (*param, clippedEnd - endTolerence), 0.0f });
+                            section.points.push_back ({ clippedEnd - endTolerence, param->getCurve().getValueAt (clippedEnd - endTolerence, defaultValue), 0.0f });
                     }
 
                     for (auto& p : section.points)
@@ -1665,11 +1667,13 @@ Clipboard::AutomationPoints::AutomationPoints (AutomatableParameter& param, cons
         }
     }
 
+    auto defaultValue = param.getCurrentBaseValue();
+
     if (! pointAtStart)
-        points.insert (points.begin(), AutomationCurve::AutomationPoint (0_tp, curve.getValueAt (param, range.getStart()), 0));
+        points.insert (points.begin(), AutomationCurve::AutomationPoint (0_tp, curve.getValueAt (range.getStart(), defaultValue), 0));
 
     if (! pointAtEnd)
-        points.push_back (AutomationCurve::AutomationPoint (TimePosition::fromSeconds (range.getLength().inSeconds()), curve.getValueAt (param, range.getEnd()), 0));
+        points.push_back (AutomationCurve::AutomationPoint (TimePosition::fromSeconds (range.getLength().inSeconds()), curve.getValueAt (range.getEnd(), defaultValue), 0));
 }
 
 Clipboard::AutomationPoints::~AutomationPoints() {}

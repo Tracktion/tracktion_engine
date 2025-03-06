@@ -251,6 +251,12 @@ public:
     /** Quick way to find and iterate all Clip[s] in the Edit. */
     EditItemCache<Clip> clipCache;
 
+    /** Quick way to find and iterate all AutomatableEditItem[s] in the Edit. */
+    EditItemCache<AutomatableEditItem> automatableEditItemCache;
+
+    /** Quick way to find and iterate all AutomationCurveModifier[s] in the Edit. */
+    EditItemCache<AutomationCurveModifier> automationCurveModifierEditItemCache;
+
     //==============================================================================
     /** Returns the EditInputDevices for the Edit. */
     EditInputDevices& getEditInputDevices() noexcept;

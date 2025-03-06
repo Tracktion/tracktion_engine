@@ -456,7 +456,8 @@ void Track::insertSpaceIntoTrack (TimePosition time, TimeDuration amountOfSpace)
             if (auto param = p->getAutomatableParameter (j))
             {
                 auto& curve = param->getCurve();
-                auto valueAtInsertionTime = curve.getValueAt (*param, time);
+                auto defaultValue = param->getCurrentBaseValue();
+                auto valueAtInsertionTime = curve.getValueAt (time, defaultValue);
 
                 for (int k = curve.getNumPoints(); --k >= 0;)
                     if (curve.getPointTime (k) >= time)
@@ -465,10 +466,10 @@ void Track::insertSpaceIntoTrack (TimePosition time, TimeDuration amountOfSpace)
                                          curve.getPointValue (k), false,
                                          um);
 
-                if (! juce::approximatelyEqual (valueAtInsertionTime, curve.getValueAt (*param, time)))
+                if (! juce::approximatelyEqual (valueAtInsertionTime, curve.getValueAt (time, defaultValue)))
                     curve.addPoint (time, valueAtInsertionTime, 0.0f, um);
 
-                if (! juce::approximatelyEqual (valueAtInsertionTime, curve.getValueAt (*param, time + amountOfSpace)))
+                if (! juce::approximatelyEqual (valueAtInsertionTime, curve.getValueAt (time + amountOfSpace, defaultValue)))
                     curve.addPoint (time + amountOfSpace, valueAtInsertionTime, 0.0f, um);
             }
         }

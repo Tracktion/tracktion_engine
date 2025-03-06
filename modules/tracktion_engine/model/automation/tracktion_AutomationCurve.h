@@ -75,7 +75,7 @@ public:
     CurvePoint getBezierPoint (int index) const noexcept;
     void getBezierEnds (int index, double& x1, float& y1, double& x2, float& y2) const noexcept;
 
-    float getValueAt (const AutomatableParameter&, EditPosition) const;
+    float getValueAt (EditPosition, float defaultValue) const;
 
     int indexBefore (EditPosition) const;
     int nextIndexAfter (EditPosition) const;
@@ -120,7 +120,7 @@ public:
     //==============================================================================
     // Deprecated Time based functions, prefer the generic ones above
     TimePosition getPointTime (int index) const noexcept;
-    float getValueAt (const AutomatableParameter&, TimePosition) const;
+    float getValueAt (TimePosition, float defaultValue) const;
     int indexBefore (TimePosition) const;
     TimeDuration getLength() const;
     int nextIndexAfter (TimePosition) const;

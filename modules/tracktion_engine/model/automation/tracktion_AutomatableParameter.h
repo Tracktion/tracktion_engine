@@ -399,6 +399,7 @@ public:
 // A pre-rendered set of interpolated points along a curve, with a cursor which moves through it.
 struct AutomationIterator
 {
+    AutomationIterator (Edit&, const AutomationCurve&, juce::Range<float> valueRange);
     AutomationIterator (const AutomatableParameter&);
 
     bool isEmpty() const noexcept               { return points.size() <= 1; }
@@ -407,8 +408,8 @@ struct AutomationIterator
     float getCurrentValue() noexcept            { return currentValue; }
 
 private:
-    void interpolate (const AutomatableParameter&);
-    void copy (const AutomatableParameter&);
+    void interpolate (Edit&, const AutomationCurve&, juce::Range<float> valueRange);
+    void copy (Edit&, const AutomationCurve&, juce::Range<float> valueRange);
     int updateIndex (TimePosition newTime);
 
     void setPositionHiRes (TimePosition newTime) noexcept;

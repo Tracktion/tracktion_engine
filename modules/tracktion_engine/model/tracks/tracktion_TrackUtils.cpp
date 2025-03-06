@@ -411,8 +411,9 @@ void moveAutomation (const juce::Array<TrackAutomationSection>& origSections, Ti
                 auto* um = &param->getEdit().getUndoManager();
                 constexpr auto tolerance = 0.0001_td;
 
-                auto startValue = curve.getValueAt (*param, sectionTime.getStart() - tolerance);
-                auto endValue   = curve.getValueAt (*param, sectionTime.getEnd()   + tolerance);
+                auto defaultValue = param->getCurrentBaseValue();
+                auto startValue = curve.getValueAt (sectionTime.getStart() - tolerance, defaultValue);
+                auto endValue   = curve.getValueAt (sectionTime.getEnd()   + tolerance, defaultValue);
 
                 auto idx = curve.indexBefore (sectionTime.getEnd() + tolerance);
                 auto endCurve = (idx == -1) ? 0.0f : curve.getPointCurve(idx);
@@ -469,12 +470,13 @@ void moveAutomation (const juce::Array<TrackAutomationSection>& origSections, Ti
 
                 auto idx2 = srcCurve.indexBefore (start - errorMargin);
                 auto startCurve = idx2 < 0 ? 0 : srcCurve.getPointCurve (idx2);
+                auto defaultValue = param->getCurrentBaseValue();
 
-                auto srcStartVal = srcCurve.getValueAt (*param, start - errorMargin);
-                auto srcEndVal   = srcCurve.getValueAt (*param, end   + errorMargin);
+                auto srcStartVal = srcCurve.getValueAt (start - errorMargin, defaultValue);
+                auto srcEndVal   = srcCurve.getValueAt (end   + errorMargin, defaultValue);
 
-                auto dstStartVal = dstCurve->getValueAt (*param, newStart - errorMargin);
-                auto dstEndVal   = dstCurve->getValueAt (*param, newEnd   + errorMargin);
+                auto dstStartVal = dstCurve->getValueAt (newStart - errorMargin, defaultValue);
+                auto dstEndVal   = dstCurve->getValueAt (newEnd   + errorMargin, defaultValue);
 
                 TimeRange totalRegionWithMargin  (newStart - errorMargin, newEnd   + errorMargin);
                 TimeRange startWithMargin        (newStart - errorMargin, newStart + errorMargin);

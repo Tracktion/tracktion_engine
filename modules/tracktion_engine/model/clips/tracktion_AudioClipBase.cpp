@@ -817,9 +817,10 @@ void AudioClipBase::copyFadeToAutomation (bool useFadeIn, bool removeClipFade)
     curve.setParameterID (param->paramID);
     auto um = getUndoManager();
 
+    auto defaultValue = param->getCurrentBaseValue();
     auto curveType = useFadeIn ? getFadeInType() : getFadeOutType();
-    auto startValue = useFadeIn ? 0.0f : oldCurve.getValueAt (*param, fadeTime.getStart());
-    auto endValue   = useFadeIn ? oldCurve.getValueAt (*param, fadeTime.getEnd()) : 0.0f;
+    auto startValue = useFadeIn ? 0.0f : oldCurve.getValueAt (fadeTime.getStart(), defaultValue);
+    auto endValue   = useFadeIn ? oldCurve.getValueAt (fadeTime.getEnd(), defaultValue) : 0.0f;
     auto valueLimits = juce::Range<float>::between (startValue, endValue);
 
     switch (curveType)
