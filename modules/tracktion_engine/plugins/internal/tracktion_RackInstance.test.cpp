@@ -48,8 +48,8 @@ TEST_SUITE("tracktion_engine")
         // It shouldn't be needed in the future.
         juce::MessageManager::getInstance()->runDispatchLoopUntil (1000);
 
-        CHECK (wetCurve.getValueAt (*wetGain, 2_tp) == doctest::Approx (1.0f));
-        CHECK (wetCurve.getValueAt (*wetGain, 3_tp) == doctest::Approx (0.0f));
+        CHECK (getValueAt (*wetGain, 2_tp) == doctest::Approx (1.0f));
+        CHECK (getValueAt (*wetGain, 3_tp) == doctest::Approx (0.0f));
 
         // Render clip
         {
@@ -69,7 +69,7 @@ TEST_SUITE("tracktion_engine")
 
             auto volParam = volPanPlugin->volParam;
             auto& volCurve = volParam->getCurve();
-            volCurve.addPoint (2.5_tp, volCurve.getValueAt (*volParam, 0_tp), 0.0, um);
+            volCurve.addPoint (2.5_tp, getValueAt (*volParam, 0_tp), 0.0, um);
             volCurve.addPoint (2.5_tp, 0.0f, 0.0, um);
 
             auto render = test_utilities::renderToAudioBuffer (*edit);

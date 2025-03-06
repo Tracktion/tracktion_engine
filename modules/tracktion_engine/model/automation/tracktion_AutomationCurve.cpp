@@ -1067,4 +1067,14 @@ void mergeCurve (AutomationCurve& dest,
     }
 }
 
+float getValueAt (AutomatableParameter& param, EditPosition p)
+{
+    return param.getCurve().getValueAt (p, param.getCurrentBaseValue());
+}
+
+float getValueAt (AutomatableParameter& param, TimePosition p)
+{
+    return param.getCurve().getValueAt (p, param.getCurrentBaseValue());
+}
+
 } // namespace tracktion::inline engine

@@ -162,5 +162,11 @@ void mergeCurve (AutomationCurve& dest,
                  bool leaveOpenEnded);
 
 
+//==============================================================================
+/** Returns the value of a parameter's curve at the given position. */
+float getValueAt (AutomatableParameter&, EditPosition);
+
+/** Returns the value of a parameter's curve at the given position. */
+float getValueAt (AutomatableParameter&, TimePosition);
 
 } // namespace tracktion::inline engine

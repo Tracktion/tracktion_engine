@@ -298,7 +298,7 @@ public:
             // Add macro parameter
             const auto macroParameter = rackType->getMacroParameterListForWriting().createMacroParameter();
             macroParameter->setNormalisedParameter (macroParameterValue, juce::NotificationType::sendNotification);
-            expectWithinAbsoluteError (macroParameter->getCurve().getValueAt (*macroParameter, -1s), macroParameterValue, 0.001f);
+            expectWithinAbsoluteError (getValueAt (*macroParameter, -1s), macroParameterValue, 0.001f);
 
             auto volumeAndPan = dynamic_cast<VolumeAndPanPlugin*> (volumePlugin.get());
             auto volParam = volumeAndPan->volParam;
@@ -338,7 +338,7 @@ public:
             expectEquals (mpl->getMacroParameters().size(), 1);
             const auto macroParameter = mpl->getMacroParameters()[0];
             expect (macroParameter != nullptr);
-            expectWithinAbsoluteError (macroParameter->getCurve().getValueAt (*macroParameter, -1s), macroParameterValue, 0.001f);
+            expectWithinAbsoluteError (getValueAt (*macroParameter, -1s), macroParameterValue, 0.001f);
 
             auto volumeAndPan = dynamic_cast<VolumeAndPanPlugin*> (rackType->getPlugins().getFirst());
             auto volParam = volumeAndPan->volParam;
@@ -377,18 +377,18 @@ TEST_SUITE ("tracktion_engine")
 
         // Add point with curve=1 to give a square shape
         volCurve.addPoint (0_tp, 1.0f, 1.0f, nullptr);
-        CHECK_EQ (volCurve.getValueAt (*volParam, 0_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (*volParam, 5_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (*volParam, 10_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (*volParam, 15_tp), 1.0f);
+        CHECK_EQ (getValueAt (*volParam, 0_tp), 1.0f);
+        CHECK_EQ (getValueAt (*volParam, 5_tp), 1.0f);
+        CHECK_EQ (getValueAt (*volParam, 10_tp), 1.0f);
+        CHECK_EQ (getValueAt (*volParam, 15_tp), 1.0f);
 
         volCurve.addPoint (10_tp, 0.0f, 1.0f, nullptr);
-        CHECK_EQ (volCurve.getValueAt (*volParam, 0_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (*volParam, 5_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (*volParam, 9.9_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (*volParam, 10_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (*volParam, 10.1_tp), 0.0f);
-        CHECK_EQ (volCurve.getValueAt (*volParam, 15_tp), 0.0f);
+        CHECK_EQ (getValueAt (*volParam, 0_tp), 1.0f);
+        CHECK_EQ (getValueAt (*volParam, 5_tp), 1.0f);
+        CHECK_EQ (getValueAt (*volParam, 9.9_tp), 1.0f);
+        CHECK_EQ (getValueAt (*volParam, 10_tp), 1.0f);
+        CHECK_EQ (getValueAt (*volParam, 10.1_tp), 0.0f);
+        CHECK_EQ (getValueAt (*volParam, 15_tp), 0.0f);
 
         // Now check the same with an automation iterator
         {
