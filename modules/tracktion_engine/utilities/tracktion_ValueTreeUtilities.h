@@ -373,6 +373,34 @@ struct ValueTreeAllEventListener  : public juce::ValueTree::Listener
     void valueTreeRedirected (juce::ValueTree&) override                                { valueTreeChanged(); }
 };
 
+//==============================================================================
+class LambdaValueTreeAllEventListener   : private ValueTreeAllEventListener
+{
+public:
+    LambdaValueTreeAllEventListener (const juce::ValueTree& v)
+        : LambdaValueTreeAllEventListener (v, {})
+    {}
+
+    LambdaValueTreeAllEventListener (const juce::ValueTree& v, std::function<void()> callback)
+        : onValueTreeChanged (std::move (callback)), state (v)
+    {
+        state.addListener (this);
+    }
+
+    std::function<void()> onValueTreeChanged;
+
+private:
+    juce::ValueTree state;
+
+    void valueTreeChanged() override
+    {
+        if (onValueTreeChanged)
+            onValueTreeChanged();
+    }
+};
+
+
+//==============================================================================
 template<typename Type>
 struct ValueTreeComparator
 {

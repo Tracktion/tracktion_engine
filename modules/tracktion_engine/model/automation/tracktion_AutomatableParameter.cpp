@@ -370,7 +370,8 @@ private:
 };
 
 //==============================================================================
-class AutomationCurveModifierSource : public AutomationModifierSource
+class AutomationCurveModifierSource : public AutomationModifierSource,
+                                      public SelectableListener
 {
 public:
     AutomationCurveModifierSource (AutomatableParameter& parameter_,
@@ -497,6 +498,7 @@ public:
     AutomationCurve& curve;
 
 private:
+    SafeScopedListener curveModifierListener { makeSafeRef (curveModifier), *this };
     LambdaTimer deferredUpdateTimer;
     juce::CriticalSection parameterStreamLock;
     std::unique_ptr<AutomationIterator> parameterStream;
@@ -504,6 +506,14 @@ private:
     std::atomic<TimePosition> lastTime { -1.0s };
     std::atomic<TimePosition> curveStart { 0s };
     crill::seqlock_object<TimeRange> curveClipRange;
+
+    void selectableObjectChanged (Selectable*) override
+    {
+        updateInterpolatedPoints();
+    }
+
+    void selectableObjectAboutToBeDeleted (Selectable*) override
+    {}
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutomationCurveModifierSource)
 };

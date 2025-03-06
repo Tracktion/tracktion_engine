@@ -494,6 +494,10 @@ void Clip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifi
                     f->setDirtyClips();
 
                 changed();
+
+                if (auto curveList = getAutomationCurveList (false))
+                    for (auto curve : curveList->getItems())
+                        curve->changed();
             }
         }
         else if (id == IDs::source)

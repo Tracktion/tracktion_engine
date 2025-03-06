@@ -30,6 +30,7 @@ AutomationCurveModifier::AutomationCurveModifier (Edit& e,
 
 AutomationCurveModifier::~AutomationCurveModifier()
 {
+    Selectable::notifyListenersOfDeletion();
     edit.automationCurveModifierEditItemCache.removeItem (*this);
 }
 

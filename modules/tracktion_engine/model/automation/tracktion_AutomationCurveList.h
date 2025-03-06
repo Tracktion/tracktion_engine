@@ -91,7 +91,7 @@ public:
 private:
     AutomationCurve curve;
     std::function<CurvePosition()> getPositionDelegate;
-    //ddd listen to changes in curve and update AutomationIterator
+    LambdaValueTreeAllEventListener stateListener { state, [this] { changed(); } };
 };
 
 AutomatableParameter::Ptr getParameter (const AutomationCurveModifier&);
