@@ -1542,7 +1542,19 @@ AutomationIterator::AutomationIterator (Edit& edit, const AutomationCurve& curve
 AutomationIterator::AutomationIterator (const AutomatableParameter& param)
     : AutomationIterator (param.getEdit(), param.getCurve(), param.getValueRange())
 {
+}
 
+AutomationIterator::AutomationIterator (Edit& edit, const AutomationCurve& curve, juce::Range<float> valueRange, Mode mode)
+{
+    switch (mode)
+    {
+        case Mode::lerp:
+            interpolate (edit, curve, valueRange);
+            break;
+        case Mode::accurate:
+            copy (edit, curve, valueRange);
+            break;
+    };
 }
 
 void AutomationIterator::copy (Edit& edit, const AutomationCurve& curve, juce::Range<float>)

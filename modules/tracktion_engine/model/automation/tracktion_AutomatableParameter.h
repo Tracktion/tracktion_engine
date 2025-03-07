@@ -407,6 +407,17 @@ struct AutomationIterator
     void setPosition (TimePosition) noexcept;
     float getCurrentValue() noexcept            { return currentValue; }
 
+    //==============================================================================
+    /** @internal */
+    enum class Mode
+    {
+        lerp,
+        accurate
+    };
+
+    /** @internal */
+    AutomationIterator (Edit&, const AutomationCurve&, juce::Range<float> valueRange, Mode);
+
 private:
     void interpolate (Edit&, const AutomationCurve&, juce::Range<float> valueRange);
     void copy (Edit&, const AutomationCurve&, juce::Range<float> valueRange);
