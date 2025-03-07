@@ -11,6 +11,21 @@
 namespace tracktion::inline engine
 {
 
+//==============================================================================
+//==============================================================================
+juce::String toString (CurveModifierType cmt)
+{
+    return std::string (magic_enum::enum_name (cmt));
+}
+
+std::optional<CurveModifierType> curveModifierTypeFromString (juce::String s)
+{
+    return magic_enum::enum_cast<CurveModifierType> (s.toStdString());
+}
+
+
+//==============================================================================
+//==============================================================================
 AutomationCurveModifier::AutomationCurveModifier (Edit& e,
                                                   const juce::ValueTree& v,
                                                   AutomatableParameterID destID_,
@@ -24,6 +39,8 @@ AutomationCurveModifier::AutomationCurveModifier (Edit& e,
     curve.setParentState (v);
     curve.setState (state.getOrCreateChildWithName (IDs::AUTOMATIONCURVE, &edit.getUndoManager()));
     curve.setParameterID (destID.paramID);
+
+    type.referTo (state, IDs::type, &edit.getUndoManager());
 
     edit.automationCurveModifierEditItemCache.addItem (*this);
 }

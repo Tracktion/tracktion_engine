@@ -427,6 +427,8 @@ public:
         curveStart.store (toTime (curvePos.curveStart, ts), std::memory_order_release);
         curveClipRange.store (toTime (curvePos.clipRange, ts));
 
+        type.store (curveModifier.type, std::memory_order_release);
+
         parameter.automatableEditElement.updateActiveParameters();
     }
 
@@ -474,18 +476,16 @@ public:
         return parameterStream->getCurrentValue();
     }
 
-    void processValueAt (TimePosition t, float& baseValue, float&) override
+    void processValueAt (TimePosition t, float& baseValue, float& modValue) override
     {
-        //ddd Just implement absolute for now
-        baseValue = getValueAt (t);
-        jassert (! std::isnan (baseValue));
+        auto curveValue = getValueAt (t);
+        processValue (parameter, type.load (std::memory_order_acquire), curveValue, baseValue, modValue);
     }
 
-    void processValue (float& baseValue, float&) override
+    void processValue (float& baseValue, float& modValue) override
     {
-        //ddd Just implement absolute for now
-        baseValue = getCurrentValue();
-        jassert (! std::isnan (baseValue));
+        auto curveValue = getCurrentValue();
+        processValue (parameter, type.load (std::memory_order_acquire), curveValue, baseValue, modValue);
     }
 
     AutomatableParameter::ModifierSource* getModifierSource() override
@@ -503,9 +503,32 @@ private:
     juce::CriticalSection parameterStreamLock;
     std::unique_ptr<AutomationIterator> parameterStream;
     std::atomic<bool> automationActive { false }, enabledAtCurrentStreamTime { false };
+    std::atomic<CurveModifierType> type { CurveModifierType::absolute };
     std::atomic<TimePosition> lastTime { -1.0s };
     std::atomic<TimePosition> curveStart { 0s };
     crill::seqlock_object<TimeRange> curveClipRange;
+
+    static void processValue (AutomatableParameter& param, CurveModifierType modType, float curveValue, float& baseValue, float& modValue)
+    {
+        using enum CurveModifierType;
+        jassert (! std::isnan (curveValue));
+
+        switch (modType)
+        {
+            case absolute:
+                baseValue = curveValue;
+                break;
+            case relative:
+                modValue += (param.valueRange.convertTo0to1 (curveValue) - 1.0f);
+                break;
+            case scale:
+                auto normalisedBase = param.valueRange.convertTo0to1 (baseValue);
+                auto targetNormalisedValue = (normalisedBase + modValue)
+                                              * param.valueRange.convertTo0to1 (curveValue);
+                modValue = targetNormalisedValue - normalisedBase;
+                break;
+        }
+    }
 
     void selectableObjectChanged (Selectable*) override
     {

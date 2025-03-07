@@ -55,9 +55,6 @@ enum class FollowAction
 };
 
 //==============================================================================
-/** Converts a FollowAction choice to a FollowAction if possible. */
-std::optional<FollowAction> followActionFromChoice (juce::String);
-
 /** Converts a string to a FollowAction if possible. */
 std::optional<FollowAction> followActionFromString (juce::String);
 

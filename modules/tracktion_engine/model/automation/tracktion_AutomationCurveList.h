@@ -11,6 +11,8 @@
 namespace tracktion::inline engine
 {
 
+//==============================================================================
+//==============================================================================
 /** Contains the ID of an AutomatableEditItem and the paramID. */
 struct AutomatableParameterID
 {
@@ -18,6 +20,9 @@ struct AutomatableParameterID
     juce::String paramID;
 };
 
+
+//==============================================================================
+//==============================================================================
 enum class CurveModifierType
 {
     absolute,
@@ -25,12 +30,24 @@ enum class CurveModifierType
     scale       // multiplicative
 };
 
+/** Converts a CurveModifierType to a string if possible. */
+juce::String toString (CurveModifierType);
+
+/** Converts a string to a CurveModifierType if possible. */
+std::optional<CurveModifierType> curveModifierTypeFromString (juce::String);
+
+
+//==============================================================================
+//==============================================================================
 struct CurvePosition
 {
     EditPosition curveStart;
     EditTimeRange clipRange;
 };
 
+
+//==============================================================================
+//==============================================================================
 class AutomationCurveModifier : public juce::ReferenceCountedObject,
                                 public EditItem,
                                 public Selectable,
@@ -50,11 +67,6 @@ public:
 
     /** Returns the curve. */
     AutomationCurve& getCurve();
-    // - absolute/relative(additive)/scale(multiplicative)
-    // - linked
-    // - start/length
-    // - looped
-    // - loop start/length
 
     /** Returns the position this curve occupies. */
     CurvePosition getPosition() const;
@@ -67,6 +79,15 @@ public:
 
     /** The ID of the AutomatableParameter this curve is modifying. */
     const AutomatableParameterID destID;
+
+    /** Determines the behaviour of this Modifier. */
+    juce::CachedValue<CurveModifierType> type;
+
+    // @todo:
+    // - linked
+    // - start/length
+    // - looped
+    // - loop start/length
 
     //==============================================================================
     /** @internal */
@@ -133,3 +154,24 @@ private:
 };
 
 } // namespace tracktion::inline engine
+
+
+//==============================================================================
+//==============================================================================
+namespace juce
+{
+    template<>
+    struct VariantConverter<tracktion::engine::CurveModifierType>
+    {
+        static tracktion::engine::CurveModifierType fromVar (const var& v)
+        {
+            using namespace tracktion::engine;
+            return curveModifierTypeFromString (v.toString()).value_or (CurveModifierType::absolute);
+        }
+
+        static var toVar (tracktion::engine::CurveModifierType v)
+        {
+            return toString (v);
+        }
+    };
+}
