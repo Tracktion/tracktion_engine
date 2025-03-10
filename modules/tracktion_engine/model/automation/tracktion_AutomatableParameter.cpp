@@ -1552,6 +1552,7 @@ AutomationIterator::AutomationIterator (Edit& edit, const AutomationCurve& curve
             interpolate (edit, curve, valueRange);
             break;
         case Mode::accurate:
+            hiRes = true;
             copy (edit, curve, valueRange);
             break;
     };

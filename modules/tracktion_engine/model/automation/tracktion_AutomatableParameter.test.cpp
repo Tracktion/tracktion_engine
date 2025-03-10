@@ -46,7 +46,7 @@ public:
         AutomationCurve extremeCurvedCurve (*edit, AutomationCurve::TimeBase::time);
         AutomationCurve mixedCurve (*edit, AutomationCurve::TimeBase::time);
 
-        auto nextCurveVal           = [&r] { return r.nextFloat() * 0.5f - 1.0f; };
+        auto nextCurveVal           = [&r] { return r.nextFloat() - 0.5f; };
         auto nextExtremeCurveVal    = [&r] { return r.nextFloat() * 0.5f + 0.5f * (r.nextBool() ? 1.0f : -1.0f); };
 
         auto iterate = [end] (auto& iterator, auto& pb)
