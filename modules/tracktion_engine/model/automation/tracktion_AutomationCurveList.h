@@ -129,12 +129,27 @@ private:
     LambdaValueTreeAllEventListener stateListener { state, [this] { changed(); } };
 };
 
+/** Contains the base and modifier values if they are active. */
+struct BaseAndModValue
+{
+    std::optional<float> baseValue;
+    std::optional<float> modValue;
+};
+
+/** Returns the base and modifier values this AutomationCurveModifier will apply at the given position.
+    N.B. The position is relative to the start of the curve, not the Edit.
+    @see AutomationCurveModifier::getPosition()
+    [[ message_thread ]]
+*/
+[[nodiscard]] BaseAndModValue getValuesAt (AutomationCurveModifier&, AutomatableParameter&, EditPosition);
+
+
 //==============================================================================
 /** Returns the destination parameter this curve is controlling. */
-AutomatableParameter::Ptr getParameter (const AutomationCurveModifier&);
+[[nodiscard]] AutomatableParameter::Ptr getParameter (const AutomationCurveModifier&);
 
 /** Returns the AutomationCurveModifier with the given EditItemID. */
-AutomationCurveModifier::Ptr getAutomationCurveModifierForID (Edit&, EditItemID);
+[[nodiscard]] AutomationCurveModifier::Ptr getAutomationCurveModifierForID (Edit&, EditItemID);
 
 
 //==============================================================================
@@ -169,6 +184,23 @@ private:
     std::unique_ptr<List> list;
     juce::ListenerList<Listener> listeners;
 };
+
+
+//==============================================================================
+//        _        _           _  _
+//     __| |  ___ | |_   __ _ (_)| | ___
+//    / _` | / _ \| __| / _` || || |/ __|
+//   | (_| ||  __/| |_ | (_| || || |\__ \ _  _  _
+//    \__,_| \___| \__| \__,_||_||_||___/(_)(_)(_)
+//
+//   Code beyond this point is implementation detail...
+//
+//==============================================================================
+
+namespace detail
+{
+    void processValue (AutomatableParameter&, CurveModifierType, float curveValue, float& baseValue, float& modValue);
+}
 
 } // namespace tracktion::inline engine
 

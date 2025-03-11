@@ -122,6 +122,129 @@ bool AutomationCurveModifier::Assignment::isForModifierSource (const ModifierSou
 
 //==============================================================================
 //==============================================================================
+namespace
+{
+    float getDefaultValue (AutomatableParameter& param, CurveModifierType type)
+    {
+        using enum CurveModifierType;
+        switch (type)
+        {
+            case absolute:  return param.getCurrentBaseValue();
+            case relative:  return 0.0f;
+            case scale:     return 1.0f;
+        };
+
+        unreachable();
+    }
+
+    // Returns the base value
+    [[nodiscard]] float processAbsoluteValue (AutomatableParameter& param, float curveValue)
+    {
+        jassert (! std::isnan (curveValue));
+        assert (curveValue >= param.valueRange.start);
+        assert (curveValue <= param.valueRange.end);
+
+        return curveValue;
+    }
+
+    // Returns the mod value
+    [[nodiscard]] float processRelativeValue (float curveValue, std::optional<float> modValue)
+    {
+        assert (curveValue >= -0.5f);
+        assert (curveValue <= 0.5f);
+
+        if (! modValue)
+            modValue = 0.0f;
+
+        return *modValue + curveValue;
+    }
+
+    [[nodiscard]] BaseAndModValue processScaleValue (AutomatableParameter& param, float curveValue, BaseAndModValue values)
+    {
+        assert (values.baseValue);
+        assert (curveValue >= 0.0f);
+        assert (curveValue <= 1.0f);
+
+        if (! values.baseValue)
+            values.baseValue = getDefaultValue (param, CurveModifierType::absolute);
+
+        if (! values.modValue)
+            values.modValue = 0.0f;
+
+        auto normalisedBase = param.valueRange.convertTo0to1 (values.baseValue.value());
+        auto targetNormalisedValue = (normalisedBase + values.modValue.value()) * curveValue;
+        values.modValue = targetNormalisedValue - normalisedBase;
+
+        return values;
+    }
+}
+
+BaseAndModValue getValuesAt (AutomationCurveModifier& acm, AutomatableParameter& param, EditPosition pos)
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    BaseAndModValue values;
+
+    using enum CurveModifierType;
+
+    for (auto type : { absolute, relative, scale })
+    {
+        auto curveInfo = acm.getCurve (type);
+
+        if (curveInfo.curve.getNumPoints() == 0)
+            continue;
+
+        auto curveValue = curveInfo.curve.getValueAt (pos, getDefaultValue (param, curveInfo.type));
+
+        if (type == absolute)
+        {
+            values.baseValue = processAbsoluteValue (param, curveValue);
+        }
+        else if (type == relative)
+        {
+            values.modValue = processRelativeValue (curveValue, values.modValue);
+        }
+        else if (type == scale)
+        {
+            values = processScaleValue (param, curveValue, values);
+        }
+    }
+
+    return values;
+}
+
+namespace detail
+{
+    void processValue (AutomatableParameter& param, CurveModifierType modType, float curveValue, float& baseValue, float& modValue)
+    {
+        using enum CurveModifierType;
+        jassert (! std::isnan (curveValue));
+
+        switch (modType)
+        {
+            case absolute:
+                assert (curveValue >= param.valueRange.start);
+                assert (curveValue <= param.valueRange.end);
+                baseValue = curveValue;
+            break;
+            case relative:
+                assert (curveValue >= -0.5f);
+                assert (curveValue <= 0.5f);
+                modValue += curveValue;
+            break;
+            case scale:
+                assert (curveValue >= 0.0f);
+                assert (curveValue <= 1.0f);
+                auto normalisedBase = param.valueRange.convertTo0to1 (baseValue);
+                auto targetNormalisedValue = (normalisedBase + modValue) * curveValue;
+                modValue = targetNormalisedValue - normalisedBase;
+            break;
+        }
+    }
+}
+
+
+//==============================================================================
+//==============================================================================
 AutomatableParameter::Ptr getParameter (const AutomationCurveModifier& acm)
 {
     if (auto foundItem = acm.edit.automatableEditItemCache.findItem (acm.destID.automatableEditItemID))

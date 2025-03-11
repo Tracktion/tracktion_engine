@@ -469,8 +469,13 @@ public:
 
     void processValueAt (TimePosition t, float& baseValue, float& modValue) override
     {
-        for (auto& curve : curves)
-            curve.processValueAt (t, baseValue, modValue);
+        auto values = getValuesAt (curveModifier, parameter, t);
+
+        if (values.baseValue)
+            baseValue = *values.baseValue;
+
+        if (values.modValue)
+            modValue = *values.modValue;
     }
 
     void processValue (float& baseValue, float& modValue) override
@@ -554,55 +559,10 @@ private:
             }
         }
 
-        void processValueAt (TimePosition time, float& baseValue, float& modValue)
-        {
-            auto getDefaultValue = [this]
-            {
-                using enum CurveModifierType;
-                switch (curveInfo.type)
-                {
-                    case absolute:  return parameter.getCurrentBaseValue();
-                    case relative:  return 0.0f;
-                    case scale:     return 1.0f;
-                };
-            };
-
-            if (isActive())
-                processValue (parameter, curveInfo.type, curveInfo.curve.getValueAt (time, getDefaultValue()),
-                              baseValue, modValue);
-        }
-
         void processValue (float& baseValue, float& modValue)
         {
             if (isActive())
-                processValue (parameter, curveInfo.type, getCurrentValue(), baseValue, modValue);
-        }
-
-        static void processValue (AutomatableParameter& param, CurveModifierType modType, float curveValue, float& baseValue, float& modValue)
-        {
-            using enum CurveModifierType;
-            jassert (! std::isnan (curveValue));
-
-            switch (modType)
-            {
-                case absolute:
-                    assert (curveValue >= param.valueRange.start);
-                    assert (curveValue <= param.valueRange.end);
-                    baseValue = curveValue;
-                    break;
-                case relative:
-                    assert (curveValue >= -0.5f);
-                    assert (curveValue <= 0.5f);
-                    modValue += curveValue;
-                    break;
-                case scale:
-                    assert (curveValue >= 0.0f);
-                    assert (curveValue <= 1.0f);
-                    auto normalisedBase = param.valueRange.convertTo0to1 (baseValue);
-                    auto targetNormalisedValue = (normalisedBase + modValue) * curveValue;
-                    modValue = targetNormalisedValue - normalisedBase;
-                    break;
-            }
+                detail::processValue (parameter, curveInfo.type, getCurrentValue(), baseValue, modValue);
         }
     };
 
