@@ -379,8 +379,7 @@ public:
                                    AutomationCurveModifier& acm)
         : AutomationModifierSource (std::move (curveAssignment)),
           curveModifier (acm),
-          parameter (parameter_),
-          curve (acm.getCurve())
+          parameter (parameter_)
     {
         deferredUpdateTimer.setCallback ([this]
                                          {
@@ -401,46 +400,35 @@ public:
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
 
-        std::unique_ptr<AutomationIterator> newStream;
+        for (auto& curve : curves)
+            curve.updateCachedIterator();
 
-        if (curve.getNumPoints() > 0)
-        {
-            auto s = std::make_unique<AutomationIterator> (parameter.getEdit(), curve, parameter.getValueRange());
+        if (! isActive())
+            parameter.updateToFollowCurve (lastTime);
 
-            if (! s->isEmpty())
-                newStream = std::move (s);
-        }
-
-        {
-            const juce::ScopedLock sl (parameterStreamLock);
-            automationActive.store (newStream != nullptr, std::memory_order_relaxed);
-            parameterStream = std::move (newStream);
-
-            if (! parameterStream)
-                parameter.updateToFollowCurve (lastTime);
-
-            lastTime = -1.0s;
-        }
+        lastTime = -1.0s;
 
         auto& ts = getTempoSequence (parameter);
         auto curvePos = curveModifier.getPosition();
         curveStart.store (toTime (curvePos.curveStart, ts), std::memory_order_release);
         curveClipRange.store (toTime (curvePos.clipRange, ts));
 
-        type.store (curveModifier.type, std::memory_order_release);
-
         parameter.automatableEditElement.updateActiveParameters();
     }
 
     bool isActive() const noexcept
     {
-        return automationActive.load (std::memory_order_relaxed);
+        for (auto& curve : curves)
+            if (curve.isActive())
+                return true;
+
+        return false;
     }
 
-    float getValueAt (TimePosition time) override
+    float getValueAt (TimePosition) override
     {
-        TRACKTION_ASSERT_MESSAGE_THREAD
-        return curve.getValueAt (time - toDuration (curveStart.load (std::memory_order_acquire)), parameter.getCurrentBaseValue());
+        assert(false && "Shouldn't be called for a modifier type");
+        return 0.0f;
     }
 
     bool isEnabledAt (TimePosition t) override
@@ -450,42 +438,45 @@ public:
 
     void setPosition (TimePosition time) override
     {
-        if (! curveModifier.edit.getAutomationRecordManager().isReadingAutomation())
-            if (auto plugin = parameter.getPlugin())
-                if (! plugin->isClipEffectPlugin())
-                    return;
-
-        const juce::ScopedLock sl (parameterStreamLock);
-
         if (lastTime.exchange (time) != time)
         {
             enabledAtCurrentStreamTime.store (curveClipRange.load().contains (time), std::memory_order_release);
-            parameterStream->setPosition (time - toDuration (curveStart.load (std::memory_order_acquire)));
+
+            auto position = time - toDuration (curveStart.load (std::memory_order_acquire));
+
+            for (auto& curve : curves)
+                curve.setPosition (position);
         }
     }
 
     bool isEnabled() override
     {
-        return ! curve.bypass.get()
-            && enabledAtCurrentStreamTime.load (std::memory_order_acquire);
+        if (! enabledAtCurrentStreamTime.load (std::memory_order_acquire))
+            return false;
+
+        for (auto& curve : curves)
+            if (! curve.curveInfo.curve.bypass.get())
+                return true;
+
+        return false;
     }
 
     float getCurrentValue() override
     {
-        const juce::ScopedLock sl (parameterStreamLock);
-        return parameterStream->getCurrentValue();
+        assert(false && "Shouldn't be called for a modifier type");
+        return 0.0f;
     }
 
     void processValueAt (TimePosition t, float& baseValue, float& modValue) override
     {
-        auto curveValue = getValueAt (t);
-        processValue (parameter, type.load (std::memory_order_acquire), curveValue, baseValue, modValue);
+        for (auto& curve : curves)
+            curve.processValueAt (t, baseValue, modValue);
     }
 
     void processValue (float& baseValue, float& modValue) override
     {
-        auto curveValue = getCurrentValue();
-        processValue (parameter, type.load (std::memory_order_acquire), curveValue, baseValue, modValue);
+        for (auto& curve : curves)
+            curve.processValue (baseValue, modValue);
     }
 
     AutomatableParameter::ModifierSource* getModifierSource() override
@@ -495,40 +486,129 @@ public:
 
     AutomationCurveModifier& curveModifier;
     AutomatableParameter& parameter;
-    AutomationCurve& curve;
 
 private:
     SafeScopedListener curveModifierListener { makeSafeRef (curveModifier), *this };
     LambdaTimer deferredUpdateTimer;
-    juce::CriticalSection parameterStreamLock;
-    std::unique_ptr<AutomationIterator> parameterStream;
-    std::atomic<bool> automationActive { false }, enabledAtCurrentStreamTime { false };
-    std::atomic<CurveModifierType> type { CurveModifierType::absolute };
+    std::atomic<bool> enabledAtCurrentStreamTime { false };
     std::atomic<TimePosition> lastTime { -1.0s };
     std::atomic<TimePosition> curveStart { 0s };
     crill::seqlock_object<TimeRange> curveClipRange;
 
-    static void processValue (AutomatableParameter& param, CurveModifierType modType, float curveValue, float& baseValue, float& modValue)
+    struct CurveWrapper
     {
-        using enum CurveModifierType;
-        jassert (! std::isnan (curveValue));
-
-        switch (modType)
+        CurveWrapper (AutomatableParameter& parameter_,
+                      AutomationCurveModifier::CurveInfo info)
+            : parameter (parameter_), curveInfo (info)
         {
-            case absolute:
-                baseValue = curveValue;
-                break;
-            case relative:
-                modValue += (param.valueRange.convertTo0to1 (curveValue) - 1.0f);
-                break;
-            case scale:
-                auto normalisedBase = param.valueRange.convertTo0to1 (baseValue);
-                auto targetNormalisedValue = (normalisedBase + modValue)
-                                              * param.valueRange.convertTo0to1 (curveValue);
-                modValue = targetNormalisedValue - normalisedBase;
-                break;
         }
-    }
+
+        AutomatableParameter& parameter;
+        AutomationCurveModifier::CurveInfo curveInfo;
+        std::unique_ptr<AutomationIterator> parameterStream;
+        juce::CriticalSection parameterStreamLock;
+        std::atomic<bool> automationActive { false };
+
+        bool isActive() const
+        {
+            return automationActive.load (std::memory_order_relaxed);
+        }
+
+        void setPosition (TimePosition time)
+        {
+            const juce::ScopedLock sl (parameterStreamLock);
+
+            if (parameterStream)
+                parameterStream->setPosition (time);
+        }
+
+        float getCurrentValue()
+        {
+            const juce::ScopedLock sl (parameterStreamLock);
+
+            if (parameterStream)
+                return parameterStream->getCurrentValue();
+
+            return 0.0f;
+        }
+
+        void updateCachedIterator()
+        {
+            CRASH_TRACER
+            TRACKTION_ASSERT_MESSAGE_THREAD
+
+            std::unique_ptr<AutomationIterator> newStream;
+
+            if (curveInfo.curve.getNumPoints() > 0)
+            {
+                auto s = std::make_unique<AutomationIterator> (curveInfo.curve.edit, curveInfo.curve, curveInfo.limits);
+
+                if (! s->isEmpty())
+                    newStream = std::move (s);
+            }
+
+            {
+                const juce::ScopedLock sl (parameterStreamLock);
+                automationActive.store (newStream != nullptr, std::memory_order_relaxed);
+                parameterStream = std::move (newStream);
+            }
+        }
+
+        void processValueAt (TimePosition time, float& baseValue, float& modValue)
+        {
+            auto getDefaultValue = [this]
+            {
+                using enum CurveModifierType;
+                switch (curveInfo.type)
+                {
+                    case absolute:  return parameter.getCurrentBaseValue();
+                    case relative:  return 0.0f;
+                    case scale:     return 1.0f;
+                };
+            };
+
+            if (isActive())
+                processValue (parameter, curveInfo.type, curveInfo.curve.getValueAt (time, getDefaultValue()),
+                              baseValue, modValue);
+        }
+
+        void processValue (float& baseValue, float& modValue)
+        {
+            if (isActive())
+                processValue (parameter, curveInfo.type, getCurrentValue(), baseValue, modValue);
+        }
+
+        static void processValue (AutomatableParameter& param, CurveModifierType modType, float curveValue, float& baseValue, float& modValue)
+        {
+            using enum CurveModifierType;
+            jassert (! std::isnan (curveValue));
+
+            switch (modType)
+            {
+                case absolute:
+                    assert (curveValue >= param.valueRange.start);
+                    assert (curveValue <= param.valueRange.end);
+                    baseValue = curveValue;
+                    break;
+                case relative:
+                    assert (curveValue >= -0.5f);
+                    assert (curveValue <= 0.5f);
+                    modValue += curveValue;
+                    break;
+                case scale:
+                    assert (curveValue >= 0.0f);
+                    assert (curveValue <= 1.0f);
+                    auto normalisedBase = param.valueRange.convertTo0to1 (baseValue);
+                    auto targetNormalisedValue = (normalisedBase + modValue) * curveValue;
+                    modValue = targetNormalisedValue - normalisedBase;
+                    break;
+            }
+        }
+    };
+
+    std::array<CurveWrapper, 3> curves { CurveWrapper { parameter, curveModifier.getCurve (CurveModifierType::absolute) },
+                                         CurveWrapper { parameter, curveModifier.getCurve (CurveModifierType::relative) },
+                                         CurveWrapper { parameter, curveModifier.getCurve (CurveModifierType::scale) } };
 
     void selectableObjectChanged (Selectable*) override
     {
@@ -686,7 +766,9 @@ private:
             auto assignedParam = getParameter (*curveModifier);
             assert (assignedParam);
             assert (&parameter == assignedParam);
-            as = new AutomationCurveModifierSource (*assignedParam, new AutomationCurveModifier::Assignment (*curveModifier, v), *curveModifier);
+            as = new AutomationCurveModifierSource (*assignedParam,
+                                                    new AutomationCurveModifier::Assignment (*curveModifier, v),
+                                                    *curveModifier);
         }
         else
         {

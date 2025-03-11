@@ -657,4 +657,23 @@ inline void renamePropertyRecursive (juce::ValueTree& tree,
         renamePropertyRecursive (child, oldName, newName, um);
 }
 
+/** Looks for a chile with the given name and property,
+   if one doesn't exist, creates it.
+*/
+inline juce::ValueTree getOrCreateChildWithTypeAndProperty (juce::ValueTree& tree,
+                                                            const juce::Identifier& type,
+                                                            const juce::Identifier& property,
+                                                            const juce::var& propertyValue,
+                                                            juce::UndoManager* undoManager)
+{
+    for (auto v : tree)
+        if (v.hasType (type) && v.hasProperty (property) && v[property] == propertyValue)
+            return v;
+
+    juce::ValueTree newTree { type, {{ property, propertyValue }} };
+    tree.appendChild (newTree, undoManager);
+
+    return newTree;
+}
+
 }} // namespace tracktion { inline namespace engine

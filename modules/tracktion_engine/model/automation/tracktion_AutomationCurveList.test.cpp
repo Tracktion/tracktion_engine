@@ -59,7 +59,7 @@ TEST_SUITE("tracktion_engine")
             CHECK(curveMod);
             CHECK_EQ(curveList->getItems().size(), 1);
 
-            auto& curve = curveMod->getCurve();
+            auto& curve = curveMod->getCurve (CurveModifierType::absolute).curve;
             curve.addPoint (2.5_bp, 1.0f, 0.0, nullptr);
             curve.addPoint (2.5_bp, 0.0f, 0.0, nullptr); // Sharp square from 1-0 at 2.5b
             CHECK(volParam->isAutomationActive());

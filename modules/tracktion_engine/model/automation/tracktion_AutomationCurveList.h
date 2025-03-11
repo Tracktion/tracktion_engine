@@ -23,9 +23,10 @@ struct AutomatableParameterID
 
 //==============================================================================
 //==============================================================================
+/** Determines the behaviour of a curve. */
 enum class CurveModifierType
 {
-    absolute,
+    absolute,   // overwrites
     relative,   // additive
     scale       // multiplicative
 };
@@ -39,10 +40,11 @@ std::optional<CurveModifierType> curveModifierTypeFromString (juce::String);
 
 //==============================================================================
 //==============================================================================
+/** A position of a curve in an Edit. */
 struct CurvePosition
 {
-    EditPosition curveStart;
-    EditTimeRange clipRange;
+    EditPosition curveStart;    /**< The start position of the curve in the Edit (similar to an offset). */
+    EditTimeRange clipRange;    /**< The valid range of the curve, it will be disabled outside this. */
 };
 
 
@@ -54,6 +56,7 @@ class AutomationCurveModifier : public juce::ReferenceCountedObject,
                                 public AutomatableParameter::ModifierSource
 {
 public:
+    //==============================================================================
     AutomationCurveModifier (Edit&,
                              const juce::ValueTree&,
                              AutomatableParameterID destID,
@@ -65,23 +68,31 @@ public:
     using Ptr = juce::ReferenceCountedObjectPtr<AutomationCurveModifier>;
     using Array = juce::ReferenceCountedArray<AutomationCurveModifier>;
 
-    /** Returns the curve. */
-    AutomationCurve& getCurve();
+    //==============================================================================
+    /** Holds the curve and limits of a curve type. */
+    struct CurveInfo
+    {
+        CurveModifierType type;     /*< The type of curve. */
+        AutomationCurve& curve;     /*< The actual curve. */
+        juce::Range<float> limits;  /*< The limits of this curve. */
+    };
 
+    /** Returns the CurveInfo for a given curve type. */
+    CurveInfo getCurve (CurveModifierType);
+
+    //==============================================================================
     /** Returns the position this curve occupies. */
     CurvePosition getPosition() const;
 
     /** Remove/deletes this curve from its parent list. */
     void remove();
 
+    //==============================================================================
     /** @internal */
     juce::ValueTree state;
 
     /** The ID of the AutomatableParameter this curve is modifying. */
     const AutomatableParameterID destID;
-
-    /** Determines the behaviour of this Modifier. */
-    juce::CachedValue<CurveModifierType> type;
 
     // @todo:
     // - linked
@@ -110,13 +121,19 @@ public:
     };
 
 private:
-    AutomationCurve curve;
+    AutomationCurve absoluteCurve { edit, AutomationCurve::TimeBase::beats };
+    AutomationCurve relativeCurve { edit, AutomationCurve::TimeBase::beats };
+    AutomationCurve scaleCurve { edit, AutomationCurve::TimeBase::beats };
+
     std::function<CurvePosition()> getPositionDelegate;
     LambdaValueTreeAllEventListener stateListener { state, [this] { changed(); } };
 };
 
+//==============================================================================
+/** Returns the destination parameter this curve is controlling. */
 AutomatableParameter::Ptr getParameter (const AutomationCurveModifier&);
 
+/** Returns the AutomationCurveModifier with the given EditItemID. */
 AutomationCurveModifier::Ptr getAutomationCurveModifierForID (Edit&, EditItemID);
 
 

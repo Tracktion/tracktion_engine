@@ -33,14 +33,26 @@ AutomationCurveModifier::AutomationCurveModifier (Edit& e,
     : EditItem (e, v),
       state (v),
       destID (std::move (destID_)),
-      curve (edit, AutomationCurve::TimeBase::beats),
       getPositionDelegate (std::move (getPositionDelegate_))
 {
-    curve.setParentState (v);
-    curve.setState (state.getOrCreateChildWithName (IDs::AUTOMATIONCURVE, &edit.getUndoManager()));
-    curve.setParameterID (destID.paramID);
+    using enum CurveModifierType;
+    using CAT = std::pair<AutomationCurve*, CurveModifierType>;
+    for (auto curveAndType : { CAT{ &absoluteCurve, absolute },
+                               CAT{ &relativeCurve, relative},
+                               CAT{ &scaleCurve, scale } })
+    {
+        auto& curve = *curveAndType.first;
+        curve.setParentState (state);
 
-    type.referTo (state, IDs::type, &edit.getUndoManager());
+        auto curveState = getOrCreateChildWithTypeAndProperty (state,
+                                                               IDs::AUTOMATIONCURVE,
+                                                               IDs::type,
+                                                               toString (curveAndType.second),
+                                                               &edit.getUndoManager());
+        curve.setState (curveState);
+
+        curve.setParameterID (destID.paramID);
+    }
 
     edit.automationCurveModifierEditItemCache.addItem (*this);
 }
@@ -51,9 +63,26 @@ AutomationCurveModifier::~AutomationCurveModifier()
     edit.automationCurveModifierEditItemCache.removeItem (*this);
 }
 
-AutomationCurve& AutomationCurveModifier::getCurve()
+AutomationCurveModifier::CurveInfo AutomationCurveModifier::getCurve (CurveModifierType type)
 {
-    return curve;
+    auto getParameterLimits = [this]
+    {
+        if (auto param = getParameter (*this))
+            return param->getValueRange();
+
+        return juce::Range<float>();
+    };
+
+    using enum CurveModifierType;
+    switch (type)
+    {
+        case absolute:  return { type, absoluteCurve, getParameterLimits() };
+        case relative:  return { type, relativeCurve, { -0.5f, 0.5f } };
+        case scale:     return { type, scaleCurve,    { 0.0f, 1.0f } };
+    }
+
+    assert(false);
+    unreachable();
 }
 
 CurvePosition AutomationCurveModifier::getPosition() const
