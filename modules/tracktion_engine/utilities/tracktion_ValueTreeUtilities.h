@@ -399,6 +399,49 @@ private:
     }
 };
 
+//==============================================================================
+class ValueTreePropertyChangedListener : private juce::ValueTree::Listener
+{
+public:
+    ValueTreePropertyChangedListener (const juce::ValueTree& v, std::vector<juce::Identifier> propertiesToListenTo)
+        : ValueTreePropertyChangedListener (v, std::move (propertiesToListenTo), {})
+    {
+    }
+
+    ValueTreePropertyChangedListener (const juce::ValueTree& v, std::vector<juce::Identifier> propertiesToListenTo,
+                                     std::function<void (const juce::Identifier&)> callback)
+        : onPropertyChanged (std::move (callback)),
+          state (v), properties (std::move (propertiesToListenTo))
+    {
+        state.addListener (this);
+    }
+
+    ValueTreePropertyChangedListener (ValueTreePropertyChangedListener&& o)
+        : onPropertyChanged (std::move (o.onPropertyChanged)),
+          state (std::move (o.state)), properties (std::move (o.properties))
+    {
+        state.addListener (this);
+    }
+
+    std::function<void (const juce::Identifier&)> onPropertyChanged;
+
+private:
+    juce::ValueTree state;
+    std::vector<juce::Identifier> properties;
+
+    void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& id) override
+    {
+        if (v != state)
+            return;
+
+        if (! contains_v (properties, id))
+            return;
+
+        if (onPropertyChanged)
+            onPropertyChanged (id);
+    }
+};
+
 
 //==============================================================================
 template<typename Type>
