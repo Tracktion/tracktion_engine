@@ -95,6 +95,18 @@ void AutomationCurveModifier::remove()
     state.getParent().removeChild (state, &edit.getUndoManager());
 }
 
+//==============================================================================
+void AutomationCurveModifier::addListener (Listener& l)
+{
+    listeners.add (&l);
+}
+
+void AutomationCurveModifier::removeListener (Listener& l)
+{
+    listeners.remove (&l);
+}
+
+//==============================================================================
 juce::String AutomationCurveModifier::getName() const
 {
     return TRANS("Automation Curve Modifier");
@@ -104,6 +116,13 @@ juce::String AutomationCurveModifier::getSelectableDescription()
 {
     return getName();
 }
+
+//==============================================================================
+void AutomationCurveModifier::callPositionChangedListeners()
+{
+    listeners.call (&Listener::positionChanged);
+}
+
 
 //==============================================================================
 AutomationCurveModifier::Assignment::Assignment (AutomationCurveModifier& acm, const juce::ValueTree& v)
@@ -119,6 +138,7 @@ bool AutomationCurveModifier::Assignment::isForModifierSource (const ModifierSou
 
     return true;
 }
+
 
 //==============================================================================
 //==============================================================================
@@ -161,7 +181,6 @@ namespace
 
     [[nodiscard]] BaseAndModValue processScaleValue (AutomatableParameter& param, float curveValue, BaseAndModValue values)
     {
-        assert (values.baseValue);
         assert (curveValue >= 0.0f);
         assert (curveValue <= 1.0f);
 
@@ -179,7 +198,20 @@ namespace
     }
 }
 
-BaseAndModValue getValuesAt (AutomationCurveModifier& acm, AutomatableParameter& param, EditPosition pos)
+BaseAndModValue getValuesAtEditPosition (AutomationCurveModifier& acm, AutomatableParameter& param, EditPosition editPos)
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    auto& ts = getTempoSequence (acm);
+    auto acmPos = acm.getPosition();
+
+    if (! contains (acmPos.clipRange, editPos, ts))
+        return {};
+
+    auto curvePos = toPosition (minus (editPos, acmPos.curveStart, ts));
+    return getValuesAtCurvePosition (acm, param, curvePos);
+}
+
+BaseAndModValue getValuesAtCurvePosition (AutomationCurveModifier& acm, AutomatableParameter& param, EditPosition pos)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     BaseAndModValue values;
@@ -267,14 +299,22 @@ class AutomationCurveList::List : private ValueTreeObjectList<AutomationCurveMod
 {
 public:
     List (AutomationCurveList& o, Edit& e,
-                         std::function<CurvePosition()> getPositionDelegate_,
-                         const juce::ValueTree& parent_)
+          ValueTreePropertyChangedListener positionChangedCallback_,
+          std::function<CurvePosition()> getPositionDelegate_,
+          const juce::ValueTree& parent_)
         : ValueTreeObjectList<AutomationCurveModifier> (parent_),
           curveList (o), edit (e),
+          positionChangedCallback (std::move (positionChangedCallback_)),
           getPositionDelegate (std::move (getPositionDelegate_))
     {
         assert (parent.hasType (IDs::AUTOMATIONCURVES));
         rebuildObjects();
+
+        positionChangedCallback.onPropertyChanged = [this] (auto)
+        {
+            for (auto object : objects)
+                object->callPositionChangedListeners();
+        };
     }
 
     ~List() override
@@ -304,6 +344,7 @@ public:
 private:
     AutomationCurveList& curveList;
     Edit& edit;
+    ValueTreePropertyChangedListener positionChangedCallback;
     std::function<CurvePosition()> getPositionDelegate;
 
     //==============================================================================
@@ -358,9 +399,13 @@ private:
 //==============================================================================
 //==============================================================================
 AutomationCurveList::AutomationCurveList (Edit& e, const juce::ValueTree& parentTree,
+                                          ValueTreePropertyChangedListener sourcePropertyChangeListener,
                                           std::function<CurvePosition()> getPositionDelegate)
 {
-    list = std::make_unique<List> (*this, e, std::move (getPositionDelegate), parentTree);
+    list = std::make_unique<List> (*this, e,
+                                   std::move (sourcePropertyChangeListener),
+                                   std::move (getPositionDelegate),
+                                   parentTree);
 }
 
 AutomationCurveList::~AutomationCurveList()

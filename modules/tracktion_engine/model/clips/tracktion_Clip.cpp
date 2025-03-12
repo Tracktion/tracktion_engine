@@ -662,8 +662,18 @@ AutomationCurveList* Clip::getAutomationCurveList (bool createIfNoItems)
         auto curvesParentState = state.getOrCreateChildWithName (IDs::AUTOMATIONCURVES, getUndoManager());
 
         if (curvesParentState.getNumChildren() > 0 || createIfNoItems)
+        {
+            ValueTreePropertyChangedListener positionCallback (state, { IDs::start, IDs::length, IDs::offset });
             automationCurveList = std::make_unique<AutomationCurveList> (edit, curvesParentState,
-                                                                         [c = SafeSelectable<Clip> (this)] { return CurvePosition { c->getContentStartBeat(), c->getEditBeatRange() }; });
+                                                                         std::move (positionCallback),
+                                                                         [c = SafeSelectable<Clip> (this)]
+                                                                         {
+                                                                             if (! c)
+                                                                                 return CurvePosition { 0_bp, BeatRange{} };
+
+                                                                             return CurvePosition { c->getContentStartBeat(), c->getEditBeatRange() };
+                                                                         });
+        }
     }
 
     return automationCurveList.get();

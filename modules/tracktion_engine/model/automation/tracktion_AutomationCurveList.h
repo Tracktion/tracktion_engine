@@ -53,7 +53,8 @@ struct CurvePosition
 class AutomationCurveModifier : public juce::ReferenceCountedObject,
                                 public EditItem,
                                 public Selectable,
-                                public AutomatableParameter::ModifierSource
+                                public AutomatableParameter::ModifierSource,
+                                private juce::ValueTree::Listener
 {
 public:
     //==============================================================================
@@ -81,7 +82,11 @@ public:
     CurveInfo getCurve (CurveModifierType);
 
     //==============================================================================
-    /** Returns the position this curve occupies. */
+    /** Returns the position this curve occupies.
+        N.B. This is dynamic and is usually determined by an owning clip position or
+        launched clip start time. If you're drawing the curve, you should use the raw
+        times of the curve points.
+    */
     CurvePosition getPosition() const;
 
     /** Remove/deletes this curve from its parent list. */
@@ -99,6 +104,30 @@ public:
     // - start/length
     // - looped
     // - loop start/length
+
+    //==============================================================================
+    /** Listener interface.
+        N.B. Callbacks happen synchronously so you shouldn't block for long.
+    */
+    struct Listener
+    {
+        /** Destructor. */
+        virtual ~Listener() = default;
+
+        /** Called when something that affects the CurvePosition has changed so any
+            cached iterators etc. will need to be refreshed.
+        */
+        virtual void positionChanged() = 0;
+
+        /** Called when one of the points on one of the curves changes. */
+        virtual void curveChanged() = 0;
+    };
+
+    /** Adds a listener. */
+    void addListener (Listener&);
+
+    /** Removes a previously added listener. */
+    void removeListener (Listener&);
 
     //==============================================================================
     /** @internal */
@@ -120,13 +149,18 @@ public:
         const EditItemID automationCurveModifierID;
     };
 
+    //==============================================================================
+    /** @internal */
+    void callPositionChangedListeners();
+
 private:
     AutomationCurve absoluteCurve { edit, AutomationCurve::TimeBase::beats };
     AutomationCurve relativeCurve { edit, AutomationCurve::TimeBase::beats };
     AutomationCurve scaleCurve { edit, AutomationCurve::TimeBase::beats };
 
     std::function<CurvePosition()> getPositionDelegate;
-    LambdaValueTreeAllEventListener stateListener { state, [this] { changed(); } };
+    LambdaValueTreeAllEventListener stateListener { state, [this] { changed(); listeners.call (&Listener::curveChanged);  } };
+    juce::ListenerList<Listener> listeners;
 };
 
 /** Contains the base and modifier values if they are active. */
@@ -137,12 +171,15 @@ struct BaseAndModValue
 };
 
 /** Returns the base and modifier values this AutomationCurveModifier will apply at the given position.
-    N.B. The position is relative to the start of the curve, not the Edit.
+    N.B. The position is relative to the the Edit, this internally applies any CurvePosition.
     @see AutomationCurveModifier::getPosition()
     [[ message_thread ]]
 */
-[[nodiscard]] BaseAndModValue getValuesAt (AutomationCurveModifier&, AutomatableParameter&, EditPosition);
+[[nodiscard]] BaseAndModValue getValuesAtEditPosition (AutomationCurveModifier&, AutomatableParameter&, EditPosition);
 
+[[nodiscard]] BaseAndModValue getValuesAtCurvePosition (AutomationCurveModifier&, AutomatableParameter&, EditPosition);
+
+//ddd [[nodiscard]] BaseAndModValue getValuesAtCurvePositionUnlooped (AutomationCurveModifier&, AutomatableParameter&, EditPosition);
 
 //==============================================================================
 /** Returns the destination parameter this curve is controlling. */
@@ -158,6 +195,7 @@ class AutomationCurveList
 {
 public:
     AutomationCurveList (Edit&, const juce::ValueTree&,
+                         ValueTreePropertyChangedListener,
                          std::function<CurvePosition()> getPositionDelegate);
     ~AutomationCurveList();
 

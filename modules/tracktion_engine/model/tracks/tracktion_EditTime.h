@@ -11,6 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
+struct EditPosition;
+
 /** Converts a TimePosition to a BeatPosition given a TempoSequence. */
 BeatPosition toBeats (TimePosition, const TempoSequence&);
 
@@ -34,6 +36,11 @@ TimeRange toTime (BeatRange, const TempoSequence&);
     position as well. So most of the time you'd specify this as an EditRange.
 */
 using EditDuration = std::variant<TimeDuration, BeatDuration>;
+
+/** Returns the raw value of beats or seconds, only really useful for
+    comparing two EditDurations with the same time base.
+*/
+EditPosition toPosition (EditDuration);
 
 /** Returns the raw value of beats or seconds, only really useful for
     comparing two EditDurations with the same time base.
@@ -407,6 +414,16 @@ namespace tracktion { inline namespace engine {
 //   Code beyond this point is implementation detail...
 //
 //==============================================================================
+
+inline EditPosition toPosition (EditDuration duration)
+{
+    // N.B. std::get unavailable prior to macOS 10.14
+    if (const auto tp = std::get_if<TimeDuration> (&duration))
+        return TimePosition::fromSeconds (tp->inSeconds());
+
+    assert (std::holds_alternative<BeatDuration> (duration));
+    return BeatPosition::fromBeats (std::get<BeatDuration> (duration).inBeats());
+}
 
 inline double toUnderlying (EditDuration duration)
 {

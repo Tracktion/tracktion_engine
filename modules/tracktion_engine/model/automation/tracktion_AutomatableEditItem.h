@@ -76,6 +76,9 @@ public:
     juce::ValueTree elementState;
     juce::CachedValue<bool> remapOnTempoChange;
 
+    /** @internal. */
+    void updateStreamIterators();
+
 protected:
     virtual void buildParameterTree() const;
 

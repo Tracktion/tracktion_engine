@@ -163,6 +163,12 @@ void AutomatableEditItem::resetRecordingStatus()
         p->resetRecordingStatus();
 }
 
+void AutomatableEditItem::updateStreamIterators()
+{
+    for (auto p : automatableParams)
+        p->updateStream();
+}
+
 //==============================================================================
 void AutomatableEditItem::buildParameterTree() const
 {

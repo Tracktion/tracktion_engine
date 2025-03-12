@@ -195,46 +195,22 @@ public:
         deferredUpdateTimer.setCallback ([this]
                                          {
                                              deferredUpdateTimer.stopTimer();
-                                             updateInterpolatedPoints();
+                                             updateIterator();
                                          });
 
         curve.setParameterID (ap.paramID);
     }
 
-    void triggerAsyncCurveUpdate()
+    void triggerAsyncIteratorUpdate()
     {
         if (! parameter.getEdit().isLoading())
             deferredUpdateTimer.startTimer (10);
     }
 
-    void updateInterpolatedPoints()
+    void updateIteratorIfNeeded()
     {
-        jassert (! parameter.getEdit().isLoading());
-        CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
-
-        std::unique_ptr<AutomationIterator> newStream;
-
-        if (curve.getNumPoints() > 0)
-        {
-            auto s = std::make_unique<AutomationIterator> (parameter);
-
-            if (! s->isEmpty())
-                newStream = std::move (s);
-        }
-
-        {
-            const juce::ScopedLock sl (parameterStreamLock);
-            automationActive.store (newStream != nullptr, std::memory_order_relaxed);
-            parameterStream = std::move (newStream);
-
-            if (! parameterStream)
-                parameter.updateToFollowCurve (lastTime);
-
-            lastTime = -1.0s;
-        }
-
-        parameter.automatableEditElement.updateActiveParameters();
+        if (deferredUpdateTimer.isTimerRunning())
+            deferredUpdateTimer.timerCallback();
     }
 
     bool isActive() const noexcept
@@ -286,6 +262,36 @@ private:
     std::unique_ptr<AutomationIterator> parameterStream;
     std::atomic<bool> automationActive { false };
     std::atomic<TimePosition> lastTime { TimePosition::fromSeconds (-1.0) };
+
+    void updateIterator()
+    {
+        jassert (! parameter.getEdit().isLoading());
+        CRASH_TRACER
+        TRACKTION_ASSERT_MESSAGE_THREAD
+
+        std::unique_ptr<AutomationIterator> newStream;
+
+        if (curve.getNumPoints() > 0)
+        {
+            auto s = std::make_unique<AutomationIterator> (parameter);
+
+            if (! s->isEmpty())
+                newStream = std::move (s);
+        }
+
+        {
+            const juce::ScopedLock sl (parameterStreamLock);
+            automationActive.store (newStream != nullptr, std::memory_order_relaxed);
+            parameterStream = std::move (newStream);
+
+            if (! parameterStream)
+                parameter.updateToFollowCurve (lastTime);
+
+            lastTime = -1.0s;
+        }
+
+        parameter.automatableEditElement.updateActiveParameters();
+    }
 
     static juce::ValueTree getState (AutomatableParameter& ap)
     {
@@ -371,6 +377,7 @@ private:
 
 //==============================================================================
 class AutomationCurveModifierSource : public AutomationModifierSource,
+                                      public AutomationCurveModifier::Listener,
                                       public SelectableListener
 {
 public:
@@ -384,36 +391,21 @@ public:
         deferredUpdateTimer.setCallback ([this]
                                          {
                                              deferredUpdateTimer.stopTimer();
-                                             updateInterpolatedPoints();
+                                             updateIterator();
                                          });
+        triggerAsyncIteratorUpdate();
     }
 
-    void triggerAsyncCurveUpdate()
+    void triggerAsyncIteratorUpdate()
     {
         if (! curveModifier.edit.isLoading())
             deferredUpdateTimer.startTimer (10);
     }
 
-    void updateInterpolatedPoints()
+    void updateIteratorIfNeeded()
     {
-        jassert (! curveModifier.edit.isLoading());
-        CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
-
-        for (auto& curve : curves)
-            curve.updateCachedIterator();
-
-        if (! isActive())
-            parameter.updateToFollowCurve (lastTime);
-
-        lastTime = -1.0s;
-
-        auto& ts = getTempoSequence (parameter);
-        auto curvePos = curveModifier.getPosition();
-        curveStart.store (toTime (curvePos.curveStart, ts), std::memory_order_release);
-        curveClipRange.store (toTime (curvePos.clipRange, ts));
-
-        parameter.automatableEditElement.updateActiveParameters();
+        if (deferredUpdateTimer.isTimerRunning())
+            deferredUpdateTimer.timerCallback();
     }
 
     bool isActive() const noexcept
@@ -469,7 +461,7 @@ public:
 
     void processValueAt (TimePosition t, float& baseValue, float& modValue) override
     {
-        auto values = getValuesAt (curveModifier, parameter, t);
+        auto values = getValuesAtEditPosition (curveModifier, parameter, t);
 
         if (values.baseValue)
             baseValue = *values.baseValue;
@@ -494,6 +486,7 @@ public:
 
 private:
     SafeScopedListener curveModifierListener { makeSafeRef (curveModifier), *this };
+    SafeScopedListener curveSelectableListener { makeSafeRef<Selectable> (curveModifier), *this };
     LambdaTimer deferredUpdateTimer;
     std::atomic<bool> enabledAtCurrentStreamTime { false };
     std::atomic<TimePosition> lastTime { -1.0s };
@@ -570,9 +563,41 @@ private:
                                          CurveWrapper { parameter, curveModifier.getCurve (CurveModifierType::relative) },
                                          CurveWrapper { parameter, curveModifier.getCurve (CurveModifierType::scale) } };
 
+    void updateIterator()
+    {
+        jassert (! curveModifier.edit.isLoading());
+        CRASH_TRACER
+        TRACKTION_ASSERT_MESSAGE_THREAD
+
+        for (auto& curve : curves)
+            curve.updateCachedIterator();
+
+        if (! isActive())
+            parameter.updateToFollowCurve (lastTime);
+
+        lastTime = -1.0s;
+
+        auto& ts = getTempoSequence (parameter);
+        auto curvePos = curveModifier.getPosition();
+        curveStart.store (toTime (curvePos.curveStart, ts), std::memory_order_release);
+        curveClipRange.store (toTime (curvePos.clipRange, ts));
+
+        parameter.automatableEditElement.updateActiveParameters();
+    }
+
+    void positionChanged() override
+    {
+        triggerAsyncIteratorUpdate();
+    }
+
+    void curveChanged() override
+    {
+        triggerAsyncIteratorUpdate();
+    }
+
     void selectableObjectChanged (Selectable*) override
     {
-        updateInterpolatedPoints();
+        deferredUpdateTimer.timerCallback();
     }
 
     void selectableObjectAboutToBeDeleted (Selectable*) override
@@ -595,7 +620,7 @@ struct AutomatableParameter::AutomationSourceList  : private ValueTreeObjectList
         updateCachedSources();
 
         if (isActive())
-            parameter.curveSource->triggerAsyncCurveUpdate();
+            parameter.curveSource->triggerAsyncIteratorUpdate();
     }
 
     ~AutomationSourceList() override
@@ -769,7 +794,7 @@ private:
 
         notifySource (as);
 
-        parameter.curveSource->triggerAsyncCurveUpdate();
+        parameter.curveSource->triggerAsyncIteratorUpdate();
     }
 };
 
@@ -1062,13 +1087,14 @@ std::optional<float> AutomatableParameter::getDefaultValue() const
 
 void AutomatableParameter::updateStream()
 {
-    curveSource->updateInterpolatedPoints();
+    //ddd should be able to check if isActive here
+    curveSource->updateIteratorIfNeeded();
 
     getAutomationSourceList()
         .visitSources ([] (AutomationSource& m)
                        {
                            if (auto curveModSource = dynamic_cast<AutomationCurveModifierSource*> (&m))
-                               curveModSource->updateInterpolatedPoints();
+                               curveModSource->updateIteratorIfNeeded();
                        });
 }
 
@@ -1509,7 +1535,7 @@ void AutomatableParameter::curveHasChanged()
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
-    curveSource->triggerAsyncCurveUpdate();
+    curveSource->triggerAsyncIteratorUpdate();
     listeners.call (&Listener::curveHasChanged, *this);
 }
 
@@ -1631,10 +1657,10 @@ void AutomationIterator::interpolate (Edit& edit, const AutomationCurve& curve, 
     int lastCurveIndex = -1;
     TimePosition t;
     float lastValue = 1.0e10;
-    auto lastTime = curve.getPointTime (curve.getNumPoints() - 1) + TimeDuration::fromSeconds (1.0);
+    auto lastTime = toTime (curve.getPointPosition (curve.getNumPoints() - 1), ts) + TimeDuration::fromSeconds (1.0);
     TimePosition t1;
-    auto t2 = curve.getPointTime (0);
-    float v1 = curve.getValueAt (0s, valueRange.getStart());
+    auto t2 = toTime (curve.getPointPosition (0), ts);
+    float v1 = curve.getValueAt (EditPosition (0s), valueRange.getStart());
     float v2 = v1;
     float vp = v2;
     float c  = 0;
@@ -1668,7 +1694,7 @@ void AutomationIterator::interpolate (Edit& edit, const AutomationCurve& curve, 
                     curve.getBezierEnds (curveIndex, x1end, y1end, x2end, y2end);
             }
 
-            t2 = curve.getPointTime (++curveIndex);
+            t2 = toTime (curve.getPointPosition (++curveIndex), ts);
             v2 = curve.getPointValue (curveIndex);
         }
 

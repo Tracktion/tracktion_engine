@@ -89,6 +89,7 @@ AutomationCurve::AutomationPoint AutomationCurve::getPoint (int index) const noe
 
 TimePosition AutomationCurve::getPointTime (int index) const noexcept
 {
+    assert (timeBase == TimeBase::time);
     return TimePosition::fromSeconds (static_cast<double> (state.getChild (index).getProperty (IDs::t)));
 }
 

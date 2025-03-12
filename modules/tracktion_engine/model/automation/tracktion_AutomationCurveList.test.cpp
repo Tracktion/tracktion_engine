@@ -33,6 +33,7 @@ namespace tracktion::inline engine
                                            DeleteExistingClips::no);
 
             context->volPlugin = context->track->getVolumePlugin();
+            context->volPlugin->smoothingRampTimeSeconds = 0.0;
             context->volParam = context->volPlugin->volParam;
             context->volPlugin->setSliderPos (0.0f);
 
@@ -80,7 +81,14 @@ TEST_SUITE("tracktion_engine")
             curve.addPoint (2.5_bp, 0.0f, 0.0, nullptr); // Sharp square from 1-0 at 2.5b
             CHECK(context->volParam->isAutomationActive());
 
-            context->volParam->updateStream(); //ddd shouldn't need this!
+            CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 0_bp).baseValue == 1.0f);
+            CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 1_bp).baseValue == 1.0f);
+            CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 2_bp).baseValue == 1.0f);
+            CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 3_bp).baseValue == 0.0f);
+            CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 4_bp).baseValue == 0.0f);
+            CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 4.99_bp).baseValue == 0.0f);
+            CHECK (! getValuesAtEditPosition (*curveMod, *context->volParam, 5_bp).baseValue);
+            CHECK (! getValuesAtEditPosition (*curveMod, *context->volParam, 6_bp).baseValue);
 
             auto tempSourceRender = test_utilities::renderToAudioBuffer (*context->edit);
             CHECK (test_utilities::getRMSLevel (tempSourceRender, { 0_tp, 2_tp }, 0)
@@ -93,8 +101,16 @@ TEST_SUITE("tracktion_engine")
         {
             context->clip->setStart (1s, false, true);
 
-            auto volParam = context->track->getVolumePlugin()->volParam;
-            volParam->updateStream(); //ddd shouldn't need this!
+            auto curveMod = context->clip->getAutomationCurveList (false)->getItems()[0];
+            CHECK (! getValuesAtEditPosition (*curveMod, *context->volParam, 0_bp).baseValue);
+            CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 1_bp).baseValue == 1.0f);
+            CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 2_bp).baseValue == 1.0f);
+            CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 3_bp).baseValue == 1.0f);
+            CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 4_bp).baseValue == 0.0f);
+            CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 5_bp).baseValue == 0.0f);
+            CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 5.99_bp).baseValue == 0.0f);
+            CHECK (! getValuesAtEditPosition (*curveMod, *context->volParam, 6_bp).baseValue);
+            CHECK (! getValuesAtEditPosition (*curveMod, *context->volParam, 7_bp).baseValue);
 
             // Curve should move with clip
             auto tempSourceRender = test_utilities::renderToAudioBuffer (*context->edit);
@@ -102,7 +118,7 @@ TEST_SUITE("tracktion_engine")
                     == doctest::Approx (0.0f)); // No clip, should use default automation value
             CHECK (test_utilities::getRMSLevel (tempSourceRender, { 1_tp, 3_tp }, 0)
                     == doctest::Approx (1.0f).epsilon (0.01f)); // Full vol
-            CHECK (test_utilities::getRMSLevel (tempSourceRender, { 4_tp, 5_tp }, 0)
+            CHECK (test_utilities::getRMSLevel (tempSourceRender, { 4_tp, 6_tp }, 0)
                     == doctest::Approx (0.0f)); // No vol
         }
 
@@ -162,8 +178,6 @@ TEST_SUITE("tracktion_engine")
         curve.addPoint (2.5_bp, 0.25f, 0.0, nullptr); // Sharp square from 0-0.25 at 2.5b
         CHECK(context->volParam->isAutomationActive());
 
-        context->volParam->updateStream(); //ddd shouldn't need this!
-
         auto tempSourceRender = test_utilities::renderToAudioBuffer (*context->edit);
         CHECK (test_utilities::getRMSLevel (tempSourceRender, { 0_tp, 2_tp }, 0)
                 == doctest::Approx (0.0f)); // First no vol
@@ -193,8 +207,6 @@ TEST_SUITE("tracktion_engine")
         curve.addPoint (2.5_bp, 0.1f, 0.0, nullptr); // Sharp square from 1-0.1 at 2.5b
         CHECK(context->volParam->isAutomationActive());
 
-        context->volParam->updateStream(); //ddd shouldn't need this!
-
         auto tempSourceRender = test_utilities::renderToAudioBuffer (*context->edit);
         CHECK (test_utilities::getRMSLevel (tempSourceRender, { 0_tp, 2_tp }, 0)
                 == doctest::Approx (1.0f).epsilon (0.001f)); // First full vol
@@ -202,6 +214,55 @@ TEST_SUITE("tracktion_engine")
         auto expectedGain = volumeFaderPositionToGain (0.1f * decibelsToVolumeFaderPosition (0.0f));
         CHECK (test_utilities::getRMSLevel (tempSourceRender, { 3_tp, 5_tp }, 0)
                 == doctest::Approx (expectedGain).epsilon (0.001f)); // Last 2s 10%
+    }
+
+    TEST_CASE("AutomationCurveList: tempo & offset")
+    {
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto context = AutomationCurveListTestContext::create (engine);
+        auto& ts = context->edit->tempoSequence;
+        ts.getTempo (0)->setBpm (120.0);
+        CHECK (context->clip->getLengthInBeats().inBeats() == doctest::Approx (10));
+
+        context->clip->setStart (ts.toTime (2_bp), true, false);
+        CHECK (context->clip->getOffsetInBeats().inBeats() == doctest::Approx (2));
+        CHECK (context->clip->getLengthInBeats().inBeats() == doctest::Approx (8));
+
+        auto curveList = context->clip->getAutomationCurveList (true);
+        CHECK(curveList);
+
+        CHECK(! context->volParam->isAutomationActive());
+        auto curveMod = curveList->addCurve (*context->volParam);
+        CHECK(curveMod);
+        CHECK_EQ(curveList->getItems().size(), 1);
+
+        context->volPlugin->setVolumeDb (0.0f);
+
+        auto& curve = curveMod->getCurve (CurveModifierType::absolute).curve;
+        curve.addPoint (5_bp, 1.0f, 0.0, nullptr);
+        curve.addPoint (5_bp, 0.0f, 0.0, nullptr); // Sharp square from 1-0 at 5b
+        CHECK(context->volParam->isAutomationActive());
+
+        CHECK (! getValuesAtEditPosition (*curveMod, *context->volParam, 0_bp).baseValue);
+        CHECK (! getValuesAtEditPosition (*curveMod, *context->volParam, 1_bp).baseValue);
+        CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 2_bp).baseValue == 1.0f);
+        CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 3_bp).baseValue == 1.0f);
+        CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 4_bp).baseValue == 1.0f);
+        CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 5_bp).baseValue == 0.0f);
+        CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 6_bp).baseValue == 0.0f);
+        CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 7_bp).baseValue == 0.0f);
+        CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 8_bp).baseValue == 0.0f);
+        CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 9_bp).baseValue == 0.0f);
+        CHECK (! getValuesAtEditPosition (*curveMod, *context->volParam, 10_bp).baseValue);
+        CHECK (! getValuesAtEditPosition (*curveMod, *context->volParam, 11_bp).baseValue);
+
+        auto tempSourceRender = test_utilities::renderToAudioBuffer (*context->edit);
+        CHECK (test_utilities::getRMSLevel (tempSourceRender, ts.toTime ({ 0_bp, 2_bp }), 0)
+                == doctest::Approx (0.0f).epsilon (0.001f)); // First 2b none
+        CHECK (test_utilities::getRMSLevel (tempSourceRender, ts.toTime ({ 2_bp, 4.5_bp }), 0)
+                == doctest::Approx (1.0f).epsilon (0.001f)); // Up to half full vol
+        CHECK (test_utilities::getRMSLevel (tempSourceRender, ts.toTime ({ 5.5_bp, 9_bp }), 0)
+                == doctest::Approx (0.0).epsilon (0.001f)); // After half, none
     }
 }
 
