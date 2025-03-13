@@ -304,10 +304,7 @@ public:
             auto volParam = volumeAndPan->volParam;
             volParam->setNormalisedParameter (0.0f, juce::NotificationType::sendNotification);
             volParam->addModifier (*macroParameter, modifierValue, modifierOffset, 0.5f);
-
-            // Run the dispatch loop so the ValueTree properties attached to the parameter are updated. (Otherwise the assertions below will fail)
-            // This happens implicitly in the real application.
-            juce::MessageManager::getInstance()->runDispatchLoopUntil (1000);
+            expect (volParam->isAutomationActive());
 
             expectWithinAbsoluteError (volParam->getCurrentValue(),
                                        0.35f,
@@ -342,12 +339,13 @@ public:
 
             auto volumeAndPan = dynamic_cast<VolumeAndPanPlugin*> (rackType->getPlugins().getFirst());
             auto volParam = volumeAndPan->volParam;
+            expect (volParam->isAutomationActive());
 
             expectWithinAbsoluteError (volParam->getCurrentBaseValue(),
                                        volParam->valueRange.convertFrom0to1 (0.0f),
                                        0.001f);
             expectWithinAbsoluteError (volParam->getCurrentValue(),
-                                       volParam->valueRange.convertFrom0to1(modifierOffset + modifierValue * macroParameterValue),
+                                       volParam->valueRange.convertFrom0to1 (modifierOffset + modifierValue * macroParameterValue),
                                        0.001f);
             expectWithinAbsoluteError (volParam->getCurrentModifierValue(),
                                        volParam->valueRange.convertFrom0to1 (modifierOffset + modifierValue * macroParameterValue) - volParam->getCurrentBaseValue(),

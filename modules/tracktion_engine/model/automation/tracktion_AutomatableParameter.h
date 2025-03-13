@@ -226,6 +226,15 @@ public:
     void addListener (Listener* l)              { listeners.add (l); }
     void removeListener (Listener* l)           { listeners.remove (l); }
 
+    /** @internal */
+    struct ScopedActiveParameter
+    {
+        ScopedActiveParameter (const AutomatableParameter&);
+        ~ScopedActiveParameter();
+
+        const AutomatableParameter& parameter;
+    };
+
 protected:
     struct AttachedValue;
     struct AttachedFloatValue;
@@ -240,6 +249,7 @@ protected:
     MacroParameterList* macroOwner = nullptr;
     std::unique_ptr<AutomationCurveSource> curveSource;
     std::atomic<float> currentValue { 0.0f }, currentParameterValue { 0.0f },  currentBaseValue { 0.0f }, currentModifierValue { 0.0f };
+    mutable std::atomic<int> numActiveAutomationSources { 0 };
     std::atomic<bool> isRecording { false };
     bool updateParametersRecursionCheck = false;
     AsyncCaller parameterChangedCaller { [this] { listeners.call (&Listener::currentValueChanged, *this); } };

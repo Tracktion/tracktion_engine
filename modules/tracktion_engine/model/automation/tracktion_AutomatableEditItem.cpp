@@ -108,7 +108,6 @@ AutomatableParameterTree& AutomatableEditItem::getParameterTree() const
         sendListChangeMessage();
     }
 
-
     return parameterTree;
 }
 
@@ -130,6 +129,11 @@ juce::ReferenceCountedArray<AutomatableParameter> AutomatableEditItem::getFlatte
 }
 
 //==============================================================================
+bool AutomatableEditItem::isAutomationNeeded() const noexcept
+{
+    return numActiveParameters.load (std::memory_order_acquire) > 0;
+}
+
 void AutomatableEditItem::setAutomatableParamPosition (TimePosition time)
 {
     if (setIfDifferent (lastTime, time))
@@ -144,6 +148,9 @@ bool AutomatableEditItem::isBeingActivelyPlayed() const
 
 void AutomatableEditItem::updateAutomatableParamPosition (TimePosition time)
 {
+    if (! isAutomationNeeded())
+        return;
+
     for (auto p : automatableParams)
         if (p->isAutomationActive())
             p->updateToFollowCurve (time);

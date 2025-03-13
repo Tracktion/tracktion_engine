@@ -199,6 +199,12 @@ public:
                                          });
 
         curve.setParameterID (ap.paramID);
+
+        if (curve.getNumPoints() > 0)
+        {
+            scopedActiveParameter = std::make_unique<AutomatableParameter::ScopedActiveParameter> (parameter);
+            triggerAsyncIteratorUpdate();
+        }
     }
 
     void triggerAsyncIteratorUpdate()
@@ -262,12 +268,16 @@ private:
     std::unique_ptr<AutomationIterator> parameterStream;
     std::atomic<bool> automationActive { false };
     std::atomic<TimePosition> lastTime { TimePosition::fromSeconds (-1.0) };
+    std::unique_ptr<AutomatableParameter::ScopedActiveParameter> scopedActiveParameter;
 
     void updateIterator()
     {
-        jassert (! parameter.getEdit().isLoading());
+        auto editLoading = parameter.getEdit().isLoading();
+
         CRASH_TRACER
-        TRACKTION_ASSERT_MESSAGE_THREAD
+
+        if (! editLoading)
+            TRACKTION_ASSERT_MESSAGE_THREAD
 
         std::unique_ptr<AutomationIterator> newStream;
 
@@ -284,13 +294,21 @@ private:
             automationActive.store (newStream != nullptr, std::memory_order_relaxed);
             parameterStream = std::move (newStream);
 
-            if (! parameterStream)
-                parameter.updateToFollowCurve (lastTime);
+            if (parameterStream)
+            {
+                auto activeParam = std::make_unique<AutomatableParameter::ScopedActiveParameter> (parameter);
+                std::swap (scopedActiveParameter, activeParam);
+            }
+            else
+            {
+                scopedActiveParameter.reset();
+
+                if (! editLoading)
+                    parameter.updateToFollowCurve (lastTime);
+            }
 
             lastTime = -1.0s;
         }
-
-        parameter.automatableEditElement.updateActiveParameters();
     }
 
     static juce::ValueTree getState (AutomatableParameter& ap)
@@ -581,8 +599,6 @@ private:
         auto curvePos = curveModifier.getPosition();
         curveStart.store (toTime (curvePos.curveStart, ts), std::memory_order_release);
         curveClipRange.store (toTime (curvePos.clipRange, ts));
-
-        parameter.automatableEditElement.updateActiveParameters();
     }
 
     void positionChanged() override
@@ -628,6 +644,15 @@ struct AutomatableParameter::AutomationSourceList  : private ValueTreeObjectList
         freeObjects();
     }
 
+    static bool hasAutomationSources (const juce::ValueTree& stateToCheck)
+    {
+        for (auto v : stateToCheck)
+            if (isAutomationSourceType (v))
+                return true;
+
+        return false;
+    }
+
     bool isActive() const
     {
         auto num = numSources.load (std::memory_order_acquire);
@@ -668,6 +693,7 @@ struct AutomatableParameter::AutomationSourceList  : private ValueTreeObjectList
 private:
     const AutomatableParameter& parameter;
     std::atomic<int> numSources { 0 };
+    std::stack<AutomatableParameter::ScopedActiveParameter> activeParameters;
 
     // This caching mechanism is to avoid locking on the audio thread and keeps a reference
     // counted copy of the objects for the visit method to use in a lock free way
@@ -695,11 +721,16 @@ private:
         }
     }
 
+    static bool isAutomationSourceType (const juce::ValueTree& v)
+    {
+        return v.hasType (IDs::LFO) || v.hasType (IDs::BREAKPOINTOSCILLATOR) || v.hasType (IDs::MACRO)
+            || v.hasType (IDs::STEP) || v.hasType (IDs::ENVELOPEFOLLOWER) || v.hasType (IDs::RANDOM)
+            || v.hasType (IDs::MIDITRACKER) || v.hasType (IDs::AUTOMATIONCURVE);
+    }
+
     bool isSuitableType (const juce::ValueTree& v) const override
     {
-        if (v.hasType (IDs::LFO) || v.hasType (IDs::BREAKPOINTOSCILLATOR) || v.hasType (IDs::MACRO)
-            || v.hasType (IDs::STEP) || v.hasType (IDs::ENVELOPEFOLLOWER) || v.hasType (IDs::RANDOM)
-            || v.hasType (IDs::MIDITRACKER) || v.hasType (IDs::AUTOMATIONCURVE))
+        if (isAutomationSourceType (v))
         {
             // Old LFOs will have a paramID field that is a name. We'll convert it when we create the ModifierAutomationSource
             const auto isLegacyLFO = [&, this] { return v.hasType (IDs::LFO) && v[IDs::paramID].toString() == parameter.paramName; };
@@ -761,6 +792,7 @@ private:
         }
 
         as->incReferenceCount();
+        activeParameters.emplace (parameter);
         ++numSources;
 
         return as.get();
@@ -768,6 +800,7 @@ private:
 
     void deleteObject (AutomationModifierSource* as) override
     {
+        activeParameters.pop();
         --numSources;
         as->decReferenceCount();
     }
@@ -794,7 +827,11 @@ private:
 
         notifySource (as);
 
+        // Force an update of the base/modifier values for the current time for this parameter
+        // as modifiers have been added.
+        // Do this synchronously as this is after Edit construction
         parameter.curveSource->triggerAsyncIteratorUpdate();
+        parameter.curveSource->updateIteratorIfNeeded();
     }
 };
 
@@ -945,6 +982,7 @@ AutomatableParameter::AutomatableParameter (const juce::String& paramID_,
     }
 
     modifiersState = parentState.getOrCreateChildWithName (IDs::MODIFIERASSIGNMENTS, &owner.edit.getUndoManager());
+
     curveSource = std::make_unique<AutomationCurveSource> (*this);
 
     valueToStringFunction = [] (float value)              { return juce::String (value, 3); };
@@ -1074,7 +1112,7 @@ juce::Array<AutomatableParameter::ModifierSource*> AutomatableParameter::getModi
 //==============================================================================
 bool AutomatableParameter::isAutomationActive() const
 {
-    return curveSource->isActive() || getAutomationSourceList().isActive();
+    return numActiveAutomationSources.load (std::memory_order_acquire) > 0;
 }
 
 std::optional<float> AutomatableParameter::getDefaultValue() const
@@ -1087,15 +1125,15 @@ std::optional<float> AutomatableParameter::getDefaultValue() const
 
 void AutomatableParameter::updateStream()
 {
-    //ddd should be able to check if isActive here
     curveSource->updateIteratorIfNeeded();
 
-    getAutomationSourceList()
-        .visitSources ([] (AutomationSource& m)
-                       {
-                           if (auto curveModSource = dynamic_cast<AutomationCurveModifierSource*> (&m))
-                               curveModSource->updateIteratorIfNeeded();
-                       });
+    if (automationSourceList || AutomationSourceList::hasAutomationSources (modifiersState))
+        getAutomationSourceList()
+            .visitSources ([] (AutomationSource& m)
+                           {
+                               if (auto curveModSource = dynamic_cast<AutomationCurveModifierSource*> (&m))
+                                   curveModSource->updateIteratorIfNeeded();
+                           });
 }
 
 void AutomatableParameter::updateFromAutomationSources (TimePosition time)
@@ -1538,6 +1576,35 @@ void AutomatableParameter::curveHasChanged()
     curveSource->triggerAsyncIteratorUpdate();
     listeners.call (&Listener::curveHasChanged, *this);
 }
+
+//==============================================================================
+AutomatableParameter::ScopedActiveParameter::ScopedActiveParameter (const AutomatableParameter& p)
+    : parameter (p)
+{
+    assert (parameter.numActiveAutomationSources >= 0);
+    ++parameter.numActiveAutomationSources;
+
+    assert (parameter.automatableEditElement.numActiveParameters >= 0);
+
+    // First increment so update the active list
+    // N.B. This should really add this parameter from a list rather than refresh it
+    if (parameter.automatableEditElement.numActiveParameters.fetch_add (1) == 0)
+        parameter.automatableEditElement.updateActiveParameters();
+}
+
+AutomatableParameter::ScopedActiveParameter::~ScopedActiveParameter()
+{
+    // Last decrement so update the active list
+    // N.B. This should really remove this parameter from a list rather than refresh it
+    if (parameter.automatableEditElement.numActiveParameters.fetch_sub (1) == 1)
+        parameter.automatableEditElement.updateActiveParameters();
+
+    assert (parameter.automatableEditElement.numActiveParameters >= 0);
+
+    --parameter.numActiveAutomationSources;
+    assert (parameter.numActiveAutomationSources >= 0);
+}
+
 
 //==============================================================================
 AutomationMode getAutomationMode (const AutomatableParameter& ap)
