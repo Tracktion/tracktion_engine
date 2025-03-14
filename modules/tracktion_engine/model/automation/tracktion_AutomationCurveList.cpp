@@ -158,7 +158,7 @@ namespace
     }
 
     // Returns the base value
-    [[nodiscard]] float processAbsoluteValue (AutomatableParameter& param, float curveValue)
+    [[nodiscard]] float processAbsoluteValue ([[maybe_unused]] AutomatableParameter& param, float curveValue)
     {
         jassert (! std::isnan (curveValue));
         assert (curveValue >= param.valueRange.start);
