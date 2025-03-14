@@ -239,6 +239,12 @@ void AutomatableEditItem::updateActiveParameters()
     lastTime = -1.0s;
 }
 
+bool AutomatableEditItem::isActiveParameter (AutomatableParameter& p)
+{
+    const std::scoped_lock sl (activeParameterLock);
+    return activeParameters.contains (p);
+}
+
 void AutomatableEditItem::saveChangedParametersToState()
 {
     juce::MemoryOutputStream stream;

@@ -82,6 +82,8 @@ public:
 
     /** @internal. */
     void updateStreamIterators();
+    /** @internal. Testing only. */
+    bool isActiveParameter (AutomatableParameter&);
 
 protected:
     virtual void buildParameterTree() const;

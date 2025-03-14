@@ -201,14 +201,21 @@ public:
         curve.setParameterID (ap.paramID);
 
         if (curve.getNumPoints() > 0)
-        {
-            scopedActiveParameter = std::make_unique<AutomatableParameter::ScopedActiveParameter> (parameter);
             triggerAsyncIteratorUpdate();
-        }
     }
 
     void triggerAsyncIteratorUpdate()
     {
+        if (int numPoints = curve.getNumPoints();
+            numPoints > 0 && ! scopedActiveParameter)
+        {
+            scopedActiveParameter = std::make_unique<AutomatableParameter::ScopedActiveParameter> (parameter);
+        }
+        else if (numPoints == 0 && scopedActiveParameter)
+        {
+            scopedActiveParameter.reset();
+        }
+
         if (! parameter.getEdit().isLoading())
             deferredUpdateTimer.startTimer (10);
     }
@@ -1207,6 +1214,8 @@ void AutomatableParameter::valueTreeChildAdded (juce::ValueTree& parent, juce::V
 {
     if (parent == getCurve().state || parent == modifiersState)
         curveHasChanged();
+    else if (parent == getCurve().parentState)
+        curveHasChanged();
     else if (parent == parentState && newChild[IDs::name] == paramID)
         getCurve().setState (newChild);
 }
@@ -1214,6 +1223,8 @@ void AutomatableParameter::valueTreeChildAdded (juce::ValueTree& parent, juce::V
 void AutomatableParameter::valueTreeChildRemoved (juce::ValueTree& parent, juce::ValueTree&, int)
 {
     if (parent == getCurve().state || parent == modifiersState)
+        curveHasChanged();
+    else if (parent == getCurve().parentState)
         curveHasChanged();
 }
 
@@ -1581,6 +1592,7 @@ void AutomatableParameter::curveHasChanged()
 AutomatableParameter::ScopedActiveParameter::ScopedActiveParameter (const AutomatableParameter& p)
     : parameter (p)
 {
+    // Must increment this before the AutomatableEditElement
     assert (parameter.numActiveAutomationSources >= 0);
     ++parameter.numActiveAutomationSources;
 
@@ -1594,15 +1606,16 @@ AutomatableParameter::ScopedActiveParameter::ScopedActiveParameter (const Automa
 
 AutomatableParameter::ScopedActiveParameter::~ScopedActiveParameter()
 {
+    // Must decrement this before the AutomatableEditElement
+    --parameter.numActiveAutomationSources;
+    assert (parameter.numActiveAutomationSources >= 0);
+
     // Last decrement so update the active list
     // N.B. This should really remove this parameter from a list rather than refresh it
     if (parameter.automatableEditElement.numActiveParameters.fetch_sub (1) == 1)
         parameter.automatableEditElement.updateActiveParameters();
 
     assert (parameter.automatableEditElement.numActiveParameters >= 0);
-
-    --parameter.numActiveAutomationSources;
-    assert (parameter.numActiveAutomationSources >= 0);
 }
 
 

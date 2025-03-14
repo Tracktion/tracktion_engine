@@ -400,6 +400,87 @@ TEST_SUITE ("tracktion_engine")
             CHECK_EQ (setAndGet (15_tp), 0.0f);
         }
     }
+
+    TEST_CASE ("Automation active")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = engine::test_utilities::createTestEdit (engine, 1);
+        auto track = getAudioTracks(*edit)[0];
+        auto volPlugin = track->getVolumePlugin();
+        auto volParam = volPlugin->volParam;
+        CHECK(! volPlugin->isAutomationNeeded());
+        CHECK(! volParam->isAutomationActive());
+        CHECK(! volPlugin->isActiveParameter (*volParam));
+
+        auto& volCurve = volParam->getCurve();
+
+        SUBCASE("AutomationCurve")
+        {
+            volCurve.addPoint (0_tp, 1.0f, 0.0f, nullptr);
+            CHECK(volParam->isAutomationActive());
+            CHECK(volPlugin->isAutomationNeeded());
+            CHECK(volPlugin->isActiveParameter (*volParam));
+
+            volCurve.removePoint (0, nullptr);
+            CHECK(! volParam->isAutomationActive());
+            CHECK(! volPlugin->isAutomationNeeded());
+            CHECK(! volPlugin->isActiveParameter (*volParam));
+        }
+
+        SUBCASE("Macro")
+        {
+            auto& macroList = volPlugin->getMacroParameterListForWriting();
+            auto macroParam = macroList.createMacroParameter();
+            auto assignment = volParam->addModifier (*macroParam);
+            CHECK(volParam->isAutomationActive());
+            CHECK(volPlugin->isAutomationNeeded());
+            CHECK(volPlugin->isActiveParameter (*volParam));
+            CHECK(! macroParam->isAutomationActive());
+            CHECK(! macroList.isAutomationNeeded());
+
+            auto& macroParamCurve = macroParam->getCurve();
+            macroParamCurve.addPoint (0_tp, 1.0f, 0.0f, nullptr);
+            CHECK(macroParam->isAutomationActive());
+            CHECK(macroList.isAutomationNeeded());
+
+            volParam->removeModifier (*assignment);
+            CHECK(! volParam->isAutomationActive());
+            CHECK(! volPlugin->isAutomationNeeded());
+            CHECK(! volPlugin->isActiveParameter (*volParam));
+            CHECK(macroParam->isAutomationActive());
+            CHECK(macroList.isAutomationNeeded());
+        }
+
+        SUBCASE("Modifier")
+        {
+            auto modifierList = track->getModifierList();
+            auto lfo = modifierList->insertModifier (juce::ValueTree (IDs::LFO), 0, nullptr);
+            volParam->addModifier (*lfo);
+            CHECK(volParam->isAutomationActive());
+            CHECK(volPlugin->isAutomationNeeded());
+            CHECK(volPlugin->isActiveParameter (*volParam));
+
+            volParam->removeModifier (*lfo);
+            CHECK(! volParam->isAutomationActive());
+            CHECK(! volPlugin->isAutomationNeeded());
+            CHECK(! volPlugin->isActiveParameter (*volParam));
+        }
+
+        SUBCASE("AutomationCurveSource")
+        {
+            auto clip = insertMIDIClip (*track, {}, { 0_tp, 4_tp });
+            auto curveList = clip->getAutomationCurveList (true);
+            auto curve = curveList->addCurve (*volParam);
+            CHECK(volParam->isAutomationActive());
+            CHECK(volPlugin->isAutomationNeeded());
+            CHECK(volPlugin->isActiveParameter (*volParam));
+
+            curve->remove();
+            CHECK(! volParam->isAutomationActive());
+            CHECK(! volPlugin->isAutomationNeeded());
+            CHECK(! volPlugin->isActiveParameter (*volParam));
+        }
+    }
 }
 #endif
 
