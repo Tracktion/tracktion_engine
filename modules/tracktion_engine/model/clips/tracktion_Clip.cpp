@@ -671,6 +671,15 @@ AutomationCurveList* Clip::getAutomationCurveList (bool createIfNoItems)
                                                                              if (! c)
                                                                                  return CurvePosition { 0_bp, BeatRange{} };
 
+                                                                             if (c->getClipSlot())
+                                                                             {
+                                                                                  if (auto lh = c->getLaunchHandle())
+                                                                                      if (auto playedRange = lh->getPlayedRange())
+                                                                                          return CurvePosition { playedRange->getStart() - c->getOffsetInBeats(), *playedRange };
+
+                                                                                 return CurvePosition { 0_bp, BeatRange{} };
+                                                                             }
+
                                                                              return CurvePosition { c->getContentStartBeat(), c->getEditBeatRange() };
                                                                          });
         }

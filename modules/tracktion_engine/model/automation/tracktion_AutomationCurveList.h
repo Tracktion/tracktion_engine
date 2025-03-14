@@ -86,6 +86,10 @@ public:
         N.B. This is dynamic and is usually determined by an owning clip position or
         launched clip start time. If you're drawing the curve, you should use the raw
         times of the curve points.
+
+        In linked mode, this generally relates to the clip's position.
+        In unlinked/free mode the loop and start/length and loop start/length
+        determine the curve's position.
     */
     CurvePosition getPosition() const;
 

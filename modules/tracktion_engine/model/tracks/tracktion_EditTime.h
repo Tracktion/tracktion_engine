@@ -15,16 +15,20 @@ struct EditPosition;
 
 /** Converts a TimePosition to a BeatPosition given a TempoSequence. */
 BeatPosition toBeats (TimePosition, const TempoSequence&);
+BeatPosition toBeats (TimePosition, const tempo::Sequence&);
 
 /** Converts a BeatPosition to a TimePosition given a TempoSequence. */
 TimePosition toTime (BeatPosition, const TempoSequence&);
+TimePosition toTime (BeatPosition, const tempo::Sequence&);
 
 //==============================================================================
 /** Converts a TimeRange to a BeatRange given a TempoSequence. */
 BeatRange toBeats (TimeRange, const TempoSequence&);
+BeatRange toBeats (TimeRange, const tempo::Sequence&);
 
 /** Converts a BeatRange to a TimeRange given a TempoSequence. */
 TimeRange toTime (BeatRange, const TempoSequence&);
+TimeRange toTime (BeatRange, const tempo::Sequence&);
 
 
 //==============================================================================
@@ -70,6 +74,8 @@ struct EditPosition
 private:
     friend TimePosition toTime (EditPosition, const TempoSequence&);
     friend BeatPosition toBeats (EditPosition, const TempoSequence&);
+    friend TimePosition toTime (EditPosition, const tempo::Sequence&);
+    friend BeatPosition toBeats (EditPosition, const tempo::Sequence&);
     friend double toUnderlying (EditPosition);
 
     std::variant<TimePosition, BeatPosition> position;
@@ -302,6 +308,8 @@ struct EditTimeRange
 private:
     friend TimeRange toTime (EditTimeRange, const TempoSequence&);
     friend BeatRange toBeats (EditTimeRange, const TempoSequence&);
+    friend TimeRange toTime (EditTimeRange, const tempo::Sequence&);
+    friend BeatRange toBeats (EditTimeRange, const tempo::Sequence&);
 
     std::variant<TimeRange, BeatRange> range;
 };
@@ -476,6 +484,23 @@ inline BeatPosition toBeats (EditPosition et, const TempoSequence& ts)
     return tracktion::engine::toBeats (*std::get_if<TimePosition> (&et.position), ts);
 }
 
+inline TimePosition toTime (EditPosition et, const tempo::Sequence& ts)
+{
+    // N.B. std::get unavailable prior to macOS 10.14
+    if (const auto tp = std::get_if<TimePosition> (&et.position))
+        return *tp;
+
+    return tracktion::engine::toTime (*std::get_if<BeatPosition> (&et.position), ts);
+}
+
+inline BeatPosition toBeats (EditPosition et, const tempo::Sequence& ts)
+{
+    if (const auto bp = std::get_if<BeatPosition> (&et.position))
+        return *bp;
+
+    return tracktion::engine::toBeats (*std::get_if<TimePosition> (&et.position), ts);
+}
+
 inline double toUnderlying (EditPosition et)
 {
     // N.B. std::get unavailable prior to macOS 10.14
@@ -579,6 +604,24 @@ inline BeatRange toBeats (EditTimeRange r, const TempoSequence& ts)
 
     return tracktion::engine::toBeats (*std::get_if<TimeRange> (&r.range), ts);
 }
+
+inline TimeRange toTime (EditTimeRange r, const tempo::Sequence& ts)
+{
+    // N.B. std::get unavailable prior to macOS 10.14
+    if (const auto tr = std::get_if<TimeRange> (&r.range))
+        return *tr;
+
+    return tracktion::engine::toTime (*std::get_if<BeatRange> (&r.range), ts);
+}
+
+inline BeatRange toBeats (EditTimeRange r, const tempo::Sequence& ts)
+{
+    if (const auto br = std::get_if<BeatRange> (&r.range))
+        return *br;
+
+    return tracktion::engine::toBeats (*std::get_if<TimeRange> (&r.range), ts);
+}
+
 
 //==============================================================================
 inline ClipPosition ClipPosition::rescaled (TimePosition anchorTime, double factor) const

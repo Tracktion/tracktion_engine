@@ -450,20 +450,23 @@ public:
 
     bool isEnabledAt (TimePosition t) override
     {
-        return curveClipRange.load().contains (t);
+        auto& ts = getTempoSequence (curveModifier);
+        auto curveClipRange = toTime (curveModifier.getPosition().clipRange, ts);
+        return curveClipRange.contains (t);
     }
 
     void setPosition (TimePosition time) override
     {
-        if (lastTime.exchange (time) != time)
-        {
-            enabledAtCurrentStreamTime.store (curveClipRange.load().contains (time), std::memory_order_release);
+        if (lastTime.exchange (time) == time)
+            return;
 
-            auto position = time - toDuration (curveStart.load (std::memory_order_acquire));
+        auto& ts = getTempoSequence (curveModifier).getInternalSequence();
+        auto curvePosition = curveModifier.getPosition();
+        enabledAtCurrentStreamTime.store (toTime (curvePosition.clipRange, ts).contains (time));
+        auto position = time - toDuration (toTime (curvePosition.curveStart, ts));
 
-            for (auto& curve : curves)
-                curve.setPosition (position);
-        }
+        for (auto& curve : curves)
+            curve.setPosition (position);
     }
 
     bool isEnabled() override
@@ -515,8 +518,6 @@ private:
     LambdaTimer deferredUpdateTimer;
     std::atomic<bool> enabledAtCurrentStreamTime { false };
     std::atomic<TimePosition> lastTime { -1.0s };
-    std::atomic<TimePosition> curveStart { 0s };
-    crill::seqlock_object<TimeRange> curveClipRange;
 
     struct CurveWrapper
     {
@@ -601,11 +602,6 @@ private:
             parameter.updateToFollowCurve (lastTime);
 
         lastTime = -1.0s;
-
-        auto& ts = getTempoSequence (parameter);
-        auto curvePos = curveModifier.getPosition();
-        curveStart.store (toTime (curvePos.curveStart, ts), std::memory_order_release);
-        curveClipRange.store (toTime (curvePos.clipRange, ts));
     }
 
     void positionChanged() override
