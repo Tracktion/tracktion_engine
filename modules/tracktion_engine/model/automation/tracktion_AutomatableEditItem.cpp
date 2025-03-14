@@ -234,7 +234,6 @@ void AutomatableEditItem::updateActiveParameters()
     {
         const std::scoped_lock sl (activeParameterLock);
         activeParameters.swapWith (nowActiveParams);
-        automationActive.store (! activeParameters.isEmpty(), std::memory_order_relaxed);
     }
 
     lastTime = -1.0s;
