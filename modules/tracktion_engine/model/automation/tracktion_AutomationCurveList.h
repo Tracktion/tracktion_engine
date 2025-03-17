@@ -64,6 +64,19 @@ struct CurvePosition
     EditTimeRange clipRange;    /**< The valid range of the curve, it will be disabled outside this. */
 };
 
+//==============================================================================
+/** Holds a playhead for an AutomationCurveModifier type.
+    This it automatically updated by the playback graph so UI should only read from it.
+*/
+struct AutomationCurvePlayhead
+{
+    /** Returns the last played position relative to the AutomationCurve if active. */
+    std::optional<EditPosition> getPosition() const;
+
+private:
+    friend class AutomationCurveModifierSource;
+    crill::seqlock_object<std::optional<EditPosition>> position;
+};
 
 //==============================================================================
 //==============================================================================
@@ -104,9 +117,9 @@ public:
     /** Holds the curve and limits of a curve type. */
     struct CurveInfo
     {
-        CurveModifierType type;     /*< The type of curve. */
-        AutomationCurve& curve;     /*< The actual curve. */
-        juce::Range<float> limits;  /*< The limits of this curve. */
+        CurveModifierType type;     /**< The type of curve. */
+        AutomationCurve& curve;     /**< The actual curve. */
+        juce::Range<float> limits;  /**< The limits of this curve. */
     };
 
     /** Returns the CurveInfo for a given curve type. */
@@ -129,6 +142,10 @@ public:
 
     /** The ID of the AutomatableParameter this curve is modifying. */
     const AutomatableParameterID destID;
+
+    //==============================================================================
+    /** Returns a playhead for the automation curve. */
+    std::shared_ptr<AutomationCurvePlayhead> getPlayhead (CurveModifierType);
 
     //==============================================================================
     /** Listener interface.
@@ -187,6 +204,7 @@ private:
     AutomationCurve relativeCurve { edit, AutomationCurve::TimeBase::beats };
     AutomationCurve scaleCurve { edit, AutomationCurve::TimeBase::beats };
     std::array<CurveTiming, 3> curveTimings;
+    std::array<std::shared_ptr<AutomationCurvePlayhead>, 3> playheads;
 
     std::function<CurvePosition()> getPositionDelegate;
     LambdaValueTreeAllEventListener stateListener { state, [this] { changed(); listeners.call (&Listener::curveChanged);  } };

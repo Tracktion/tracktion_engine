@@ -533,6 +533,7 @@ private:
         AutomationCurveModifier& curveModifier;
         AutomatableParameter& parameter;
         AutomationCurveModifier::CurveInfo curveInfo;
+        std::shared_ptr<AutomationCurvePlayhead> playhead { curveModifier.getPlayhead (curveInfo.type) };
         std::unique_ptr<AutomationIterator> parameterStream;
         juce::CriticalSection parameterStreamLock;
         std::atomic<bool> automationActive { false };
@@ -549,7 +550,7 @@ private:
             if (parameterStream)
             {
                 auto modifiedPos = editPositionToCurvePosition (curveModifier, curveInfo.type, editTime);
-                //ddd Update playhead pos here
+                playhead->position.store (modifiedPos);
 
                 if (modifiedPos)
                 {

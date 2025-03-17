@@ -23,6 +23,12 @@ std::optional<CurveModifierType> curveModifierTypeFromString (juce::String s)
     return magic_enum::enum_cast<CurveModifierType> (s.toStdString());
 }
 
+//==============================================================================
+//==============================================================================
+std::optional<EditPosition> AutomationCurvePlayhead::getPosition() const
+{
+    return position.load();
+}
 
 //==============================================================================
 //==============================================================================
@@ -109,6 +115,17 @@ CurvePosition AutomationCurveModifier::getPosition() const
 void AutomationCurveModifier::remove()
 {
     state.getParent().removeChild (state, &edit.getUndoManager());
+}
+
+//==============================================================================
+std::shared_ptr<AutomationCurvePlayhead> AutomationCurveModifier::getPlayhead (CurveModifierType type)
+{
+    auto& playhead = playheads[static_cast<size_t> (type)];
+
+    if (! playhead)
+        playhead = std::make_shared<AutomationCurvePlayhead>();
+
+    return playhead;
 }
 
 //==============================================================================
