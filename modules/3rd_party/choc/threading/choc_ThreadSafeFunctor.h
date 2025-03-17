@@ -139,7 +139,7 @@ template <typename FunctionType>
 ThreadSafeFunctor<FunctionType>::operator bool() const
 {
     std::scoped_lock l (callback->lock);
-    return callback->fn;
+    return callback->fn != nullptr;
 }
 
 template <typename FunctionType>

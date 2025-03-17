@@ -21,6 +21,7 @@
 
 #include <cstring>
 #include <memory>
+#include <string_view>
 
 namespace choc::hash
 {

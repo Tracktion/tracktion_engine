@@ -26,6 +26,9 @@
       - CHOC_LINUX
       - CHOC_OSX
       - CHOC_IOS
+      - CHOC_BSD
+      - CHOC_POSIX
+      - CHOC_EMSCRIPTEN
     ...based on the current operating system.
 
     It also declares a string literal macro CHOC_OPERATING_SYSTEM_NAME

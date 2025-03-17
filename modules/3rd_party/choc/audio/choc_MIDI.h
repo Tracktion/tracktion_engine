@@ -360,8 +360,8 @@ template <typename StorageType>
 template <typename OtherStorage>
 bool Message<StorageType>::operator== (const Message<OtherStorage>& other) const
 {
-    auto len1 = midiData.size();
-    auto len2 = other.data.size();
+    auto len1 = size();
+    auto len2 = other.size();
     return len1 == len2 && memcmp (data(), other.data(), len1) == 0;
 }
 
