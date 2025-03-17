@@ -244,6 +244,6 @@ var searchData=
   ['usessourcefile_241',['usessourcefile',['../classtracktion_1_1engine_1_1Clip.html#a756f5a8136b751a9edcd0e0992852de7',1,'tracktion::engine::Clip::usesSourceFile()'],['../classtracktion_1_1engine_1_1EditClip.html#a4d3adaacb0dafa9c14d39360a7b57eb3',1,'tracktion::engine::EditClip::usesSourceFile()'],['../classtracktion_1_1engine_1_1WaveAudioClip.html#a4c16255d149ecba1cbf2a4e6197ca0f1',1,'tracktion::engine::WaveAudioClip::usesSourceFile()']]],
   ['usestimestretchedproxy_242',['usesTimeStretchedProxy',['../classtracktion_1_1engine_1_1AudioClipBase.html#ab186a864771552c86727ce7e8edf7365',1,'tracktion::engine::AudioClipBase']]],
   ['usetimeslice_243',['useTimeSlice',['../classtracktion_1_1engine_1_1BufferedAudioReader.html#a64c0f720c18c46382a9221ce0f3b56d6',1,'tracktion::engine::BufferedAudioReader']]],
-  ['utilities_244',['utilities',['../group__tracktion__engine-utilities.html',1,'utilities'],['../group__tracktion__graph-utilities.html',1,'utilities']]],
+  ['utilities_244',['utilities',['../group__tracktion__graph-utilities.html',1,'utilities'],['../group__tracktion__engine-utilities.html',1,'utilities']]],
   ['utility_245',['utility',['../classtracktion_1_1engine_1_1AirWindowsPlugin.html#a018c2cfe196308b4575b753fe7ec1253ab98dbec9231f0798714ca31f387b066e',1,'tracktion::engine::AirWindowsPlugin']]]
 ];

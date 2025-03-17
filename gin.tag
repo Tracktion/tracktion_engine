@@ -82130,6 +82130,15 @@
     <subgroup>tracktion_engine-utilities</subgroup>
   </compound>
   <compound kind="group">
+    <name>tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph.html</filename>
+    <subgroup>tracktion_graph-3rd_party</subgroup>
+    <subgroup>tracktion_graph-docs</subgroup>
+    <subgroup>tracktion_graph-tracktion_graph</subgroup>
+    <subgroup>tracktion_graph-utilities</subgroup>
+  </compound>
+  <compound kind="group">
     <name>tracktion_graph-tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph-tracktion__graph.html</filename>
@@ -82179,13 +82188,29 @@
     <class kind="struct">tracktion::graph::test_utilities::TestProcess</class>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph.html</filename>
-    <subgroup>tracktion_graph-3rd_party</subgroup>
-    <subgroup>tracktion_graph-docs</subgroup>
-    <subgroup>tracktion_graph-tracktion_graph</subgroup>
-    <subgroup>tracktion_graph-utilities</subgroup>
+    <name>tracktion_graph-utilities</name>
+    <title>utilities</title>
+    <filename>group__tracktion__graph-utilities.html</filename>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::graph</namespace>
+    <namespace>tracktion::engine</namespace>
+    <namespace>moodycamel</namespace>
+    <namespace>moodycamel::details</namespace>
+    <class kind="class">tracktion::graph::AudioBufferPool</class>
+    <class kind="class">tracktion::graph::AudioBufferStack</class>
+    <class kind="class">tracktion::graph::AudioFifo</class>
+    <class kind="struct">tracktion::graph::LatencyProcessor</class>
+    <class kind="class">tracktion::graph::LockFreeObject</class>
+    <class kind="class">tracktion::graph::LockFreeObject::ScopedRealTimeAccess</class>
+    <class kind="struct">tracktion::engine::MidiMessageArray</class>
+    <class kind="struct">tracktion::engine::MidiMessageWithSource</class>
+    <class kind="struct">tracktion::graph::ScopedSignpost</class>
+    <class kind="class">tracktion::graph::PerformanceMeasurement</class>
+    <class kind="struct">tracktion::graph::PerformanceMeasurement::Statistics</class>
+    <class kind="class">tracktion::graph::ScopedPerformanceMeasurement</class>
+    <class kind="class">tracktion::graph::RealTimeSpinLock</class>
+    <class kind="class">tracktion::graph::Semaphore</class>
+    <class kind="class">tracktion::graph::LightweightSemaphore</class>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-utilities</name>
@@ -82272,30 +82297,5 @@
     <class kind="struct">tracktion::engine::ValueTreeAllEventListener</class>
     <class kind="struct">tracktion::engine::ValueTreeComparator</class>
     <class kind="class">tracktion::engine::ReferenceCountedValueTree</class>
-  </compound>
-  <compound kind="group">
-    <name>tracktion_graph-utilities</name>
-    <title>utilities</title>
-    <filename>group__tracktion__graph-utilities.html</filename>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::graph</namespace>
-    <namespace>tracktion::engine</namespace>
-    <namespace>moodycamel</namespace>
-    <namespace>moodycamel::details</namespace>
-    <class kind="class">tracktion::graph::AudioBufferPool</class>
-    <class kind="class">tracktion::graph::AudioBufferStack</class>
-    <class kind="class">tracktion::graph::AudioFifo</class>
-    <class kind="struct">tracktion::graph::LatencyProcessor</class>
-    <class kind="class">tracktion::graph::LockFreeObject</class>
-    <class kind="class">tracktion::graph::LockFreeObject::ScopedRealTimeAccess</class>
-    <class kind="struct">tracktion::engine::MidiMessageArray</class>
-    <class kind="struct">tracktion::engine::MidiMessageWithSource</class>
-    <class kind="struct">tracktion::graph::ScopedSignpost</class>
-    <class kind="class">tracktion::graph::PerformanceMeasurement</class>
-    <class kind="struct">tracktion::graph::PerformanceMeasurement::Statistics</class>
-    <class kind="class">tracktion::graph::ScopedPerformanceMeasurement</class>
-    <class kind="class">tracktion::graph::RealTimeSpinLock</class>
-    <class kind="class">tracktion::graph::Semaphore</class>
-    <class kind="class">tracktion::graph::LightweightSemaphore</class>
   </compound>
 </tagfile>
