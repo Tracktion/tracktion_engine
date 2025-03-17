@@ -264,6 +264,117 @@ TEST_SUITE("tracktion_engine")
         CHECK (test_utilities::getRMSLevel (tempSourceRender, ts.toTime ({ 5.5_bp, 9_bp }), 0)
                 == doctest::Approx (0.0).epsilon (0.001f)); // After half, none
     }
+
+    TEST_CASE("AutomationCurveList: unlinked")
+    {
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto context = AutomationCurveListTestContext::create (engine);
+
+        auto curveList = context->clip->getAutomationCurveList (true);
+        auto curveMod = curveList->addCurve (*context->volParam);
+
+        auto& curve = curveMod->getCurve (CurveModifierType::absolute).curve;
+        curve.addPoint (2.5_bp, 1.0f, 0.0, nullptr);
+        curve.addPoint (2.5_bp, 0.0f, 0.0, nullptr); // Sharp square from 1-0 at 2.5b
+
+        auto& timing = curveMod->getCurveTiming (CurveModifierType::absolute);
+        timing.unlinked = true;
+        CHECK (timing.unlinked.get());
+
+        CHECK_EQ (timing.start.get(), 0_bp);
+        CHECK_EQ (timing.length.get(), 0_bd);
+        CHECK(! timing.looping.get());
+        CHECK_EQ (timing.loopStart.get(), 0_bp);
+        CHECK_EQ (timing.loopLength.get(), 0_bd);
+        //ddd init length and loop length when unlinked is enabled
+
+
+        SUBCASE("Unlooped")
+        {
+            CHECK (! timing.looping.get());
+            timing.length = 4_bd;
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 0_bp);
+                CHECK (! v.modValue);
+                CHECK (v.baseValue.value() == doctest::Approx (1.0f));
+            }
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 2.5_bp);
+                CHECK (! v.modValue);
+                CHECK (v.baseValue.value() == doctest::Approx (0.0f));
+            }
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 4_bp);
+                CHECK (! v.modValue);
+                CHECK (! v.baseValue);
+            }
+
+            timing.start = 2_bp;
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 0_bp);
+                CHECK (! v.modValue);
+                CHECK (v.baseValue.value() == doctest::Approx (1.0f));
+            }
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 0.5_bp);
+                CHECK (! v.modValue);
+                CHECK (v.baseValue.value() == doctest::Approx (0.0f));
+            }
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 3_bp);
+                CHECK (! v.modValue);
+                CHECK (v.baseValue.value() == doctest::Approx (0.0f));
+            }
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 5_bp);
+                CHECK (! v.modValue);
+                CHECK (! v.baseValue);
+            }
+
+            context->clip->setStart (1_tp, true, false);
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 0_bp);
+                CHECK (! v.modValue);
+                CHECK (! v.baseValue);
+            }
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 1_bp);
+                CHECK (! v.modValue);
+                CHECK (v.baseValue.value() == doctest::Approx (1.0f));
+            }
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 1.5_bp);
+                CHECK (! v.modValue);
+                CHECK (v.baseValue.value() == doctest::Approx (0.0f));
+            }
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 5_bp);
+                CHECK (! v.modValue);
+                CHECK (! v.baseValue);
+            }
+        }
+
+        SUBCASE("Looping")
+        {
+
+        }
+
+        SUBCASE("Looping & start offset")
+        {
+
+        }
+    }
 }
 
 } // namespace tracktion::inline engine

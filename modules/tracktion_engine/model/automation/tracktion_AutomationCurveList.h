@@ -13,6 +13,23 @@ namespace tracktion::inline engine
 
 //==============================================================================
 //==============================================================================
+template<int minBeats>
+struct MinBeatConstrainer
+{
+    template<typename T>
+    static BeatDuration constrain (const T& v)
+    {
+        return std::max (v, BeatDuration::fromBeats (minBeats));
+    }
+
+    static BeatDuration constrain (const juce::var& v)
+    {
+        return constrain (juce::VariantConverter<BeatDuration>::fromVar (v));
+    }
+};
+
+//==============================================================================
+//==============================================================================
 /** Contains the ID of an AutomatableEditItem and the paramID. */
 struct AutomatableParameterID
 {
@@ -70,6 +87,20 @@ public:
     using Array = juce::ReferenceCountedArray<AutomationCurveModifier>;
 
     //==============================================================================
+    /** Holds the timing properties of a curve. */
+    struct CurveTiming
+    {
+        juce::CachedValue<AtomicWrapper<bool>> unlinked;
+        juce::CachedValue<AtomicWrapper<BeatPosition>> start;
+        juce::CachedValue<AtomicWrapper<BeatDuration, MinBeatConstrainer<1>>> length;
+
+        juce::CachedValue<AtomicWrapper<bool>> looping;
+        juce::CachedValue<AtomicWrapper<BeatPosition>> loopStart;
+        juce::CachedValue<AtomicWrapper<BeatDuration, MinBeatConstrainer<1>>> loopLength;
+    };
+
+    CurveTiming& getCurveTiming (CurveModifierType);
+
     /** Holds the curve and limits of a curve type. */
     struct CurveInfo
     {
@@ -96,18 +127,8 @@ public:
     /** Remove/deletes this curve from its parent list. */
     void remove();
 
-    //==============================================================================
-    /** @internal */
-    juce::ValueTree state;
-
     /** The ID of the AutomatableParameter this curve is modifying. */
     const AutomatableParameterID destID;
-
-    // @todo:
-    // - linked
-    // - start/length
-    // - looped
-    // - loop start/length
 
     //==============================================================================
     /** Listener interface.
@@ -157,10 +178,15 @@ public:
     /** @internal */
     void callPositionChangedListeners();
 
+    //==============================================================================
+    /** @internal */
+    juce::ValueTree state;
+
 private:
     AutomationCurve absoluteCurve { edit, AutomationCurve::TimeBase::beats };
     AutomationCurve relativeCurve { edit, AutomationCurve::TimeBase::beats };
     AutomationCurve scaleCurve { edit, AutomationCurve::TimeBase::beats };
+    std::array<CurveTiming, 3> curveTimings;
 
     std::function<CurvePosition()> getPositionDelegate;
     LambdaValueTreeAllEventListener stateListener { state, [this] { changed(); listeners.call (&Listener::curveChanged);  } };
@@ -174,16 +200,45 @@ struct BaseAndModValue
     std::optional<float> modValue;
 };
 
+//==============================================================================
 /** Returns the base and modifier values this AutomationCurveModifier will apply at the given position.
-    N.B. The position is relative to the the Edit, this internally applies any CurvePosition.
+    N.B. The position is relative to the the Edit, this internally applies any CurvePosition/CurveTiming.
     @see AutomationCurveModifier::getPosition()
     [[ message_thread ]]
 */
 [[nodiscard]] BaseAndModValue getValuesAtEditPosition (AutomationCurveModifier&, AutomatableParameter&, EditPosition);
 
+/** Returns the base and modifier values this AutomationCurveModifier will apply at the given position.
+    N.B. The position is relative to the the AutomationCurveModifier, this
+    internally applies any curve timing such as start/end and looping.
+    [[ message_thread ]]
+*/
 [[nodiscard]] BaseAndModValue getValuesAtCurvePosition (AutomationCurveModifier&, AutomatableParameter&, EditPosition);
 
-//ddd [[nodiscard]] BaseAndModValue getValuesAtCurvePositionUnlooped (AutomationCurveModifier&, AutomatableParameter&, EditPosition);
+/** Similar to getValuesAtCurvePosition but doesn't apply the looping which can be useful when drawing the curves.
+    [[ message_thread ]]
+*/
+[[nodiscard]] BaseAndModValue getValuesAtCurvePositionUnlooped (AutomationCurveModifier&, AutomatableParameter&, EditPosition);
+
+//==============================================================================
+/** Takes a position relative to the AutomationCurveModifier and applies the
+    CurveTiming to it, giving a final position relative to the AutomationCurve.
+    This effectively applies either the looping or start/length clipping.
+    If the curve is in linked mode, this just returns the position unchanged.
+
+    You shouldn't normally need to use this, it's mainly for the playback graph.
+    [[thread_safe]]
+*/
+[[nodiscard]] std::optional<EditPosition> applyTimingToCurvePosition (AutomationCurveModifier&, CurveModifierType, EditPosition);
+
+/** Converts a position relative to the Edit  and applies the
+    CurvePosition and CurveTiming to it, giving a final position relative to
+    the AutomationCurve.
+
+    You shouldn't normally need to use this, it's mainly for the playback graph.
+    [[thread_safe]]
+*/
+[[nodiscard]] std::optional<EditPosition> editPositionToCurvePosition (AutomationCurveModifier&, CurveModifierType, EditPosition);
 
 //==============================================================================
 /** Returns the destination parameter this curve is controlling. */

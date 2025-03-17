@@ -184,6 +184,14 @@ inline EditPosition max (const EditPosition& lhs, const EditPosition& rhs, const
     return TimePosition::fromSeconds (std::max (toUnderlying (lhs), rhsTime.inSeconds()));
 }
 
+inline EditDuration toDuration (const EditPosition& p)
+{
+    if (p.isBeats())
+        return BeatDuration::fromBeats (toUnderlying (p));
+
+    return TimeDuration::fromSeconds (toUnderlying (p));
+}
+
 //==============================================================================
 //==============================================================================
 class EditPositionWithTempoSequence

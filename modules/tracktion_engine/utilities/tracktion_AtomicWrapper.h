@@ -112,3 +112,25 @@ private:
 };
 
 }} // namespace tracktion { inline namespace engine
+
+
+//==============================================================================
+//        _        _           _  _
+//     __| |  ___ | |_   __ _ (_)| | ___
+//    / _` | / _ \| __| / _` || || |/ __|
+//   | (_| ||  __/| |_ | (_| || || |\__ \ _  _  _
+//    \__,_| \___| \__| \__,_||_||_||___/(_)(_)(_)
+//
+//   Code beyond this point is implementation detail...
+//
+//==============================================================================
+
+namespace juce
+{
+    template<typename T, typename C>
+    struct VariantConverter<tracktion::AtomicWrapper<T, C>>
+    {
+        static T fromVar (const var& v) { return VariantConverter<T>::fromVar (v); }
+        static var toVar (T v)          { return VariantConverter<T>::toVar (v); }
+    };
+}

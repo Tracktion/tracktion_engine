@@ -455,18 +455,18 @@ public:
         return curveClipRange.contains (t);
     }
 
-    void setPosition (TimePosition time) override
+    void setPosition (TimePosition editTime) override
     {
-        if (lastTime.exchange (time) == time)
+        if (lastTime.exchange (editTime) == editTime)
             return;
 
-        auto& ts = getTempoSequence (curveModifier).getInternalSequence();
-        auto curvePosition = curveModifier.getPosition();
-        enabledAtCurrentStreamTime.store (toTime (curvePosition.clipRange, ts).contains (time));
-        auto position = time - toDuration (toTime (curvePosition.curveStart, ts));
+        bool anyEnabled = false;
 
         for (auto& curve : curves)
-            curve.setPosition (position);
+            if (curve.setPosition (editTime))
+                anyEnabled = true;
+
+        enabledAtCurrentStreamTime.store (anyEnabled);
     }
 
     bool isEnabled() override
@@ -521,12 +521,16 @@ private:
 
     struct CurveWrapper
     {
-        CurveWrapper (AutomatableParameter& parameter_,
+        CurveWrapper (AutomationCurveModifier& curveModifier_,
+                      AutomatableParameter& parameter_,
                       AutomationCurveModifier::CurveInfo info)
-            : parameter (parameter_), curveInfo (info)
+            : curveModifier (curveModifier_),
+              parameter (parameter_),
+              curveInfo (info)
         {
         }
 
+        AutomationCurveModifier& curveModifier;
         AutomatableParameter& parameter;
         AutomationCurveModifier::CurveInfo curveInfo;
         std::unique_ptr<AutomationIterator> parameterStream;
@@ -538,12 +542,24 @@ private:
             return automationActive.load (std::memory_order_relaxed);
         }
 
-        void setPosition (TimePosition time)
+        bool setPosition (TimePosition editTime)
         {
             const juce::ScopedLock sl (parameterStreamLock);
 
             if (parameterStream)
-                parameterStream->setPosition (time);
+            {
+                auto modifiedPos = editPositionToCurvePosition (curveModifier, curveInfo.type, editTime);
+                //ddd Update playhead pos here
+
+                if (modifiedPos)
+                {
+                    parameterStream->setPosition (toTime (*modifiedPos,
+                                                  getTempoSequence (curveModifier).getInternalSequence()));
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         float getCurrentValue()
@@ -585,9 +601,9 @@ private:
         }
     };
 
-    std::array<CurveWrapper, 3> curves { CurveWrapper { parameter, curveModifier.getCurve (CurveModifierType::absolute) },
-                                         CurveWrapper { parameter, curveModifier.getCurve (CurveModifierType::relative) },
-                                         CurveWrapper { parameter, curveModifier.getCurve (CurveModifierType::scale) } };
+    std::array<CurveWrapper, 3> curves { CurveWrapper { curveModifier, parameter, curveModifier.getCurve (CurveModifierType::absolute) },
+                                         CurveWrapper { curveModifier, parameter, curveModifier.getCurve (CurveModifierType::relative) },
+                                         CurveWrapper { curveModifier, parameter, curveModifier.getCurve (CurveModifierType::scale) } };
 
     void updateIterator()
     {
