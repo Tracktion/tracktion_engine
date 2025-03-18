@@ -103,13 +103,13 @@ public:
     /** Holds the timing properties of a curve. */
     struct CurveTiming
     {
-        juce::CachedValue<AtomicWrapper<bool>> unlinked;
-        juce::CachedValue<AtomicWrapper<BeatPosition>> start;
-        juce::CachedValue<AtomicWrapper<BeatDuration, MinBeatConstrainer<1>>> length;
+        juce::CachedValue<AtomicWrapperRelaxed<bool>> unlinked;
+        juce::CachedValue<AtomicWrapperRelaxed<BeatPosition>> start;
+        juce::CachedValue<AtomicWrapperRelaxed<BeatDuration, MinBeatConstrainer<1>>> length;
 
-        juce::CachedValue<AtomicWrapper<bool>> looping;
-        juce::CachedValue<AtomicWrapper<BeatPosition>> loopStart;
-        juce::CachedValue<AtomicWrapper<BeatDuration, MinBeatConstrainer<1>>> loopLength;
+        juce::CachedValue<AtomicWrapperRelaxed<bool>> looping;
+        juce::CachedValue<AtomicWrapperRelaxed<BeatPosition>> loopStart;
+        juce::CachedValue<AtomicWrapperRelaxed<BeatDuration, MinBeatConstrainer<1>>> loopLength;
     };
 
     /** Returns the timing properties for a curve type. */

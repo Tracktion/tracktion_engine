@@ -41,8 +41,8 @@ public:
 
 private:
     const tempo::Sequence& tempoSequence;
-    juce::CachedValue<AtomicWrapper<TimePosition>> start;
-    juce::CachedValue<AtomicWrapper<TimeDuration>> length, offset;
+    juce::CachedValue<AtomicWrapperRelaxed<TimePosition>> start;
+    juce::CachedValue<AtomicWrapperRelaxed<TimeDuration>> length, offset;
 };
 
 
