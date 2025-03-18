@@ -621,11 +621,6 @@ private:
         lastTime = -1.0s;
     }
 
-    void positionChanged() override
-    {
-        triggerAsyncIteratorUpdate();
-    }
-
     void curveChanged() override
     {
         triggerAsyncIteratorUpdate();

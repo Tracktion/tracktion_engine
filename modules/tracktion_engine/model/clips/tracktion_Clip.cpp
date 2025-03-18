@@ -11,6 +11,41 @@
 namespace tracktion { inline namespace engine
 {
 
+class ThreadSafeClipPosition
+{
+public:
+    ThreadSafeClipPosition (Clip& c)
+        : tempoSequence (c.edit.tempoSequence.getInternalSequence())
+    {
+        start.referTo (c.state, IDs::start, nullptr);
+        length.referTo (c.state, IDs::length, nullptr);
+        offset.referTo (c.state, IDs::offset, nullptr);
+    }
+
+    BeatRange getEditBeatRange() const
+    {
+        auto startPos = start.get();
+        return toBeats (TimeRange (startPos, startPos + length.get()), tempoSequence);
+    }
+
+    BeatDuration getOffsetInBeats() const
+    {
+        return BeatDuration::fromBeats (TimeDuration (offset.get()).inSeconds()
+                                        * tempoSequence.getBeatsPerSecondAt (start.get()).v);
+    }
+
+    BeatPosition getContentStartBeat() const
+    {
+        return toBeats (start.get() - offset.get(), tempoSequence);
+    }
+
+private:
+    const tempo::Sequence& tempoSequence;
+    juce::CachedValue<AtomicWrapper<TimePosition>> start;
+    juce::CachedValue<AtomicWrapper<TimeDuration>> length, offset;
+};
+
+
 //==============================================================================
 Clip::Clip (const juce::ValueTree& v, ClipOwner& targetParent, EditItemID id, Type t)
     : TrackItem (targetParent.getClipOwnerEdit(), id, t),
@@ -239,6 +274,10 @@ void Clip::setParent (ClipOwner* newParent)
             f->setDirtyClips();
 
     parent = newParent;
+
+    if (auto automation = getAutomationCurveList (false))
+        for (auto curve : automation->getItems())
+            curve->setPositionDelegate (getAutomationCurveListPositionDelegate());
 
     if (auto track = getTrack())
         if (auto f = track->getParentFolderTrack())
@@ -580,6 +619,27 @@ void Clip::updateParent()
         setParent ({});
 }
 
+std::function<CurvePosition()> Clip::getAutomationCurveListPositionDelegate()
+{
+    if (! edit.isLoading())
+        TRACKTION_ASSERT_MESSAGE_THREAD
+
+    auto clipPosition = std::make_shared<ThreadSafeClipPosition> (*this);
+    std::shared_ptr<LaunchHandle> clipLauncherHandle;
+
+    if (getClipSlot())
+        clipLauncherHandle = getLaunchHandle();
+
+    return [position = std::move (clipPosition), handle = std::move (clipLauncherHandle)]
+           {
+               if (handle)
+                   if (auto playedRange = handle->getPlayedRange())
+                       return CurvePosition { playedRange->getStart() - position->getOffsetInBeats(), *playedRange };
+
+               return CurvePosition { position->getContentStartBeat(), position->getEditBeatRange() };
+           };
+}
+
 //==============================================================================
 void Clip::cloneFrom (Clip* c)
 {
@@ -662,27 +722,7 @@ AutomationCurveList* Clip::getAutomationCurveList (bool createIfNoItems)
         auto curvesParentState = state.getOrCreateChildWithName (IDs::AUTOMATIONCURVES, getUndoManager());
 
         if (curvesParentState.getNumChildren() > 0 || createIfNoItems)
-        {
-            ValueTreePropertyChangedListener positionCallback (state, { IDs::start, IDs::length, IDs::offset });
-            automationCurveList = std::make_unique<AutomationCurveList> (edit, curvesParentState,
-                                                                         std::move (positionCallback),
-                                                                         [c = SafeSelectable<Clip> (this)]
-                                                                         {
-                                                                             if (! c)
-                                                                                 return CurvePosition { 0_bp, BeatRange{} };
-
-                                                                             if (c->getClipSlot())
-                                                                             {
-                                                                                  if (auto lh = c->getLaunchHandle())
-                                                                                      if (auto playedRange = lh->getPlayedRange())
-                                                                                          return CurvePosition { playedRange->getStart() - c->getOffsetInBeats(), *playedRange };
-
-                                                                                 return CurvePosition { 0_bp, BeatRange{} };
-                                                                             }
-
-                                                                             return CurvePosition { c->getContentStartBeat(), c->getEditBeatRange() };
-                                                                         });
-        }
+            automationCurveList = std::make_unique<AutomationCurveList> (edit, curvesParentState, getAutomationCurveListPositionDelegate());
     }
 
     return automationCurveList.get();

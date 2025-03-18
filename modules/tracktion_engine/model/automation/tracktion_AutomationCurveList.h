@@ -157,11 +157,6 @@ public:
         /** Destructor. */
         virtual ~Listener() = default;
 
-        /** Called when something that affects the CurvePosition has changed so any
-            cached iterators etc. will need to be refreshed.
-        */
-        virtual void positionChanged() = 0;
-
         /** Called when one of the points on one of the curves changes. */
         virtual void curveChanged() = 0;
     };
@@ -180,6 +175,10 @@ public:
 
     //==============================================================================
     /** @internal */
+    void setPositionDelegate (std::function<CurvePosition()>);
+
+    //==============================================================================
+    /** @internal */
     class Assignment  : public AutomatableParameter::ModifierAssignment
     {
     public:
@@ -194,10 +193,6 @@ public:
 
     //==============================================================================
     /** @internal */
-    void callPositionChangedListeners();
-
-    //==============================================================================
-    /** @internal */
     juce::ValueTree state;
 
 private:
@@ -209,7 +204,9 @@ private:
     juce::Range<float> absoluteLimits;
     bool updateLimits = true;
 
+    mutable RealTimeSpinLock positionDelegateMutex;
     std::function<CurvePosition()> getPositionDelegate;
+
     LambdaValueTreeAllEventListener stateListener { state, [this] { changed(); listeners.call (&Listener::curveChanged);  } };
     juce::ListenerList<Listener> listeners;
 };
@@ -275,7 +272,6 @@ class AutomationCurveList
 {
 public:
     AutomationCurveList (Edit&, const juce::ValueTree&,
-                         ValueTreePropertyChangedListener,
                          std::function<CurvePosition()> getPositionDelegate);
     ~AutomationCurveList();
 

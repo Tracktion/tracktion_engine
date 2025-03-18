@@ -110,6 +110,7 @@ AutomationCurveModifier::CurveInfo AutomationCurveModifier::getCurve (CurveModif
 
 CurvePosition AutomationCurveModifier::getPosition() const
 {
+    const std::scoped_lock sl (positionDelegateMutex);
     return getPositionDelegate();
 }
 
@@ -152,9 +153,11 @@ juce::String AutomationCurveModifier::getSelectableDescription()
 }
 
 //==============================================================================
-void AutomationCurveModifier::callPositionChangedListeners()
+void AutomationCurveModifier::setPositionDelegate (std::function<CurvePosition()> newDelegate)
 {
-    listeners.call (&Listener::positionChanged);
+    assert (newDelegate);
+    const std::scoped_lock sl (positionDelegateMutex);
+    getPositionDelegate = std::move (newDelegate);
 }
 
 
@@ -471,22 +474,14 @@ class AutomationCurveList::List : private ValueTreeObjectList<AutomationCurveMod
 {
 public:
     List (AutomationCurveList& o, Edit& e,
-          ValueTreePropertyChangedListener positionChangedCallback_,
           std::function<CurvePosition()> getPositionDelegate_,
           const juce::ValueTree& parent_)
         : ValueTreeObjectList<AutomationCurveModifier> (parent_),
           curveList (o), edit (e),
-          positionChangedCallback (std::move (positionChangedCallback_)),
           getPositionDelegate (std::move (getPositionDelegate_))
     {
         assert (parent.hasType (IDs::AUTOMATIONCURVES));
         rebuildObjects();
-
-        positionChangedCallback.onPropertyChanged = [this] (auto)
-        {
-            for (auto object : objects)
-                object->callPositionChangedListeners();
-        };
     }
 
     ~List() override
@@ -520,7 +515,6 @@ public:
 private:
     AutomationCurveList& curveList;
     Edit& edit;
-    ValueTreePropertyChangedListener positionChangedCallback;
     std::function<CurvePosition()> getPositionDelegate;
 
     //==============================================================================
@@ -575,11 +569,9 @@ private:
 //==============================================================================
 //==============================================================================
 AutomationCurveList::AutomationCurveList (Edit& e, const juce::ValueTree& parentTree,
-                                          ValueTreePropertyChangedListener sourcePropertyChangeListener,
                                           std::function<CurvePosition()> getPositionDelegate)
 {
     list = std::make_unique<List> (*this, e,
-                                   std::move (sourcePropertyChangeListener),
                                    std::move (getPositionDelegate),
                                    parentTree);
 }
