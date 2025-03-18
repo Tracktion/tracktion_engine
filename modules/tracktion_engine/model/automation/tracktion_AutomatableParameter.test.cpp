@@ -38,7 +38,6 @@ public:
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
         auto edit = Edit::createSingleTrackEdit (engine);
         auto r = getRandom();
-        juce::Range<float> valueRange (0.0f, 1.0f);
         constexpr auto end = 180_tp;
 
         AutomationCurve straightCurve (*edit, AutomationCurve::TimeBase::time);
@@ -86,38 +85,20 @@ public:
                 }
 
                 {
-                    auto lerp = [&]
-                    {
-                        ScopedBenchmark sb (getDescription ("Create time-based 3min curve with 90 points, c=0, lerp"));
-                        return AutomationIterator (*edit, straightCurve, valueRange, AutomationIterator::Mode::lerp);
-                    }();
-
-                    {
-                        PublishingBenchmark pb (getDescription ("Iterate time-based 3min curve with 90 points 3ms interval, c=0, lerp"));
-                        iterate (lerp, pb);
-                    }
-
-                    {
-                        PublishingBenchmark pb (getDescription ("Random access time-based 3min curve with 90 points 10'000 positions, c=0, lerp"));
-                        randomAccess (lerp, pb);
-                    }
-                }
-
-                {
-                    auto accu = [&]
+                    auto iter = [&]
                     {
                         ScopedBenchmark sb (getDescription ("Create time-based 3min curve with 90 points, c=0, accurate"));
-                        return AutomationIterator (*edit, straightCurve, valueRange, AutomationIterator::Mode::accurate);
+                        return AutomationIterator (*edit, straightCurve);
                     }();
 
                     {
                         PublishingBenchmark pb (getDescription ("Iterate time-based 3min curve with 90 points 3ms interval, c=0, accurate"));
-                        iterate (accu, pb);
+                        iterate (iter, pb);
                     }
 
                     {
                         PublishingBenchmark pb (getDescription ("Random access time-based 3min curve with 90 points 10'000 positions, c=0, accurate"));
-                        randomAccess (accu, pb);
+                        randomAccess (iter, pb);
                     }
                 }
             }
@@ -132,38 +113,20 @@ public:
                 }
 
                 {
-                    auto lerp = [&]
-                    {
-                        ScopedBenchmark sb (getDescription ("Create time-based 3min curve with 90 points, c=0.5, lerp"));
-                        return AutomationIterator (*edit, curvedCurve, valueRange, AutomationIterator::Mode::lerp);
-                    }();
-
-                    {
-                        PublishingBenchmark pb (getDescription ("Iterate time-based 3min curve with 90 points 3ms interval, c=0.5, lerp"));
-                        iterate (lerp, pb);
-                    }
-
-                    {
-                        PublishingBenchmark pb (getDescription ("Random access time-based 3min curve with 90 points 10'000 positions, c=0.5, lerp"));
-                        randomAccess (lerp, pb);
-                    }
-                }
-
-                {
-                    auto accu = [&]
+                    auto iter = [&]
                     {
                         ScopedBenchmark sb (getDescription ("Create time-based 3min curve with 90 points, c=0.5, accurate"));
-                        return AutomationIterator (*edit, curvedCurve, valueRange, AutomationIterator::Mode::accurate);
+                        return AutomationIterator (*edit, curvedCurve);
                     }();
 
                     {
                         PublishingBenchmark pb (getDescription ("Iterate time-based 3min curve with 90 points 3ms interval, c=0.5, accurate"));
-                        iterate (accu, pb);
+                        iterate (iter, pb);
                     }
 
                     {
                         PublishingBenchmark pb (getDescription ("Random access time-based 3min curve with 90 points 10'000 positions, c=0.5, accurate"));
-                        randomAccess (accu, pb);
+                        randomAccess (iter, pb);
                     }
                 }
             }
@@ -178,38 +141,20 @@ public:
                 }
 
                 {
-                    auto lerp = [&]
-                    {
-                        ScopedBenchmark sb (getDescription ("Create time-based 3min curve with 90 points, c=1.0, lerp"));
-                        return AutomationIterator (*edit, extremeCurvedCurve, valueRange, AutomationIterator::Mode::lerp);
-                    }();
-
-                    {
-                        PublishingBenchmark pb (getDescription ("Iterate time-based 3min curve with 90 points 3ms interval, c=1.0, lerp"));
-                        iterate (lerp, pb);
-                    }
-
-                    {
-                        PublishingBenchmark pb (getDescription ("Random access time-based 3min curve with 90 points 10'000 positions, c=1.0, lerp"));
-                        randomAccess (lerp, pb);
-                    }
-                }
-
-                {
-                    auto accu = [&]
+                    auto iter = [&]
                     {
                         ScopedBenchmark sb (getDescription ("Create time-based 3min curve with 90 points, c=1.0, accurate"));
-                        return AutomationIterator (*edit, extremeCurvedCurve, valueRange, AutomationIterator::Mode::accurate);
+                        return AutomationIterator (*edit, extremeCurvedCurve);
                     }();
 
                     {
                         PublishingBenchmark pb (getDescription ("Iterate time-based 3min curve with 90 points 3ms interval, c=1.0, accurate"));
-                        iterate (accu, pb);
+                        iterate (iter, pb);
                     }
 
                     {
                         PublishingBenchmark pb (getDescription ("Random access time-based 3min curve with 90 points 10'000 positions, c=1.0, accurate"));
-                        randomAccess (accu, pb);
+                        randomAccess (iter, pb);
                     }
                 }
             }
@@ -230,38 +175,20 @@ public:
                 }
 
                 {
-                    auto lerp = [&]
-                    {
-                        ScopedBenchmark sb (getDescription ("Create time-based 3min curve with 90 points, c=mixed, lerp"));
-                        return AutomationIterator (*edit, mixedCurve, valueRange, AutomationIterator::Mode::lerp);
-                    }();
-
-                    {
-                        PublishingBenchmark pb (getDescription ("Iterate time-based 3min curve with 90 points 3ms interval, c=mixed, lerp"));
-                        iterate (lerp, pb);
-                    }
-
-                    {
-                        PublishingBenchmark pb (getDescription ("Random access time-based 3min curve with 90 points 10'000 positions, c=mixed, lerp"));
-                        randomAccess (lerp, pb);
-                    }
-                }
-
-                {
-                    auto accu = [&]
+                    auto iter = [&]
                     {
                         ScopedBenchmark sb (getDescription ("Create time-based 3min curve with 90 points, c=mixed, accurate"));
-                        return AutomationIterator (*edit, mixedCurve, valueRange, AutomationIterator::Mode::accurate);
+                        return AutomationIterator (*edit, mixedCurve);
                     }();
 
                     {
                         PublishingBenchmark pb (getDescription ("Iterate time-based 3min curve with 90 points 3ms interval, c=mixed, accurate"));
-                        iterate (accu, pb);
+                        iterate (iter, pb);
                     }
 
                     {
                         PublishingBenchmark pb (getDescription ("Random access time-based 3min curve with 90 points 10'000 positions, c=mixed, accurate"));
-                        randomAccess (accu, pb);
+                        randomAccess (iter, pb);
                     }
                 }
             }
