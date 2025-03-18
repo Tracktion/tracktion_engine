@@ -71,6 +71,10 @@ AutomationCurveModifier::AutomationCurveModifier (Edit& e,
         timing.loopLength.referTo (curveState, IDs::loopLength, um);
     }
 
+    auto limitsString = v[IDs::absoluteLimits].toString();
+    absoluteLimits = juce::Range<float> (limitsString.upToFirstOccurrenceOf (" ", false, false).getFloatValue(),
+                                         limitsString.fromFirstOccurrenceOf (" ", false, false).getFloatValue());
+
     edit.automationCurveModifierEditItemCache.addItem (*this);
 }
 
@@ -87,18 +91,15 @@ AutomationCurveModifier::CurveTiming& AutomationCurveModifier::getCurveTiming (C
 
 AutomationCurveModifier::CurveInfo AutomationCurveModifier::getCurve (CurveModifierType type)
 {
-    auto getParameterLimits = [this]
-    {
+    // Update the limits if this is the first time we've seen the parameter
+    if (std::exchange (updateLimits, false))
         if (auto param = getParameter (*this))
-            return param->getValueRange();
-
-        return juce::Range<float>();
-    };
+            absoluteLimits = param->getValueRange();
 
     using enum CurveModifierType;
     switch (type)
     {
-        case absolute:  return { type, absoluteCurve, getParameterLimits() };
+        case absolute:  return { type, absoluteCurve, absoluteLimits };
         case relative:  return { type, relativeCurve, { -0.5f, 0.5f } };
         case scale:     return { type, scaleCurve,    { 0.0f, 1.0f } };
     }
@@ -500,10 +501,14 @@ public:
 
     AutomationCurveModifier::Ptr addCurve (const AutomatableParameter& destParam)
     {
+        auto limits = destParam.getValueRange();
+        auto limitsString  = juce::String (limits.getStart()) + " " + juce::String (limits.getEnd());
+
         juce::ValueTree v (IDs::AUTOMATIONCURVEMODIFIER,
                            {
                                { IDs::source, destParam.automatableEditElement.itemID.toString() },
-                               { IDs::paramID, destParam.paramID }
+                               { IDs::paramID, destParam.paramID },
+                               { IDs::absoluteLimits, limitsString }
                            } );
         parent.appendChild (v, &edit.getUndoManager());
         auto added = objects.getLast();

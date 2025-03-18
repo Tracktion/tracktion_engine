@@ -112,6 +112,7 @@ public:
         juce::CachedValue<AtomicWrapper<BeatDuration, MinBeatConstrainer<1>>> loopLength;
     };
 
+    /** Returns the timing properties for a curve type. */
     CurveTiming& getCurveTiming (CurveModifierType);
 
     /** Holds the curve and limits of a curve type. */
@@ -205,6 +206,8 @@ private:
     AutomationCurve scaleCurve { edit, AutomationCurve::TimeBase::beats };
     std::array<CurveTiming, 3> curveTimings;
     std::array<std::shared_ptr<AutomationCurvePlayhead>, 3> playheads;
+    juce::Range<float> absoluteLimits;
+    bool updateLimits = true;
 
     std::function<CurvePosition()> getPositionDelegate;
     LambdaValueTreeAllEventListener stateListener { state, [this] { changed(); listeners.call (&Listener::curveChanged);  } };

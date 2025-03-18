@@ -653,6 +653,7 @@ namespace IDs
     DECLARE_ID (CLIPLIST)
     DECLARE_ID (defaultValue)
     DECLARE_ID (unlinked)
+    DECLARE_ID (absoluteLimits)
 
     DECLARE_ID (SCENES)
     DECLARE_ID (SCENE)
