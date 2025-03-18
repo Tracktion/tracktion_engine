@@ -582,7 +582,7 @@ private:
 
             if (curveInfo.curve.getNumPoints() > 0)
             {
-                auto s = std::make_unique<AutomationIterator> (curveInfo.curve.edit, curveInfo.curve, curveInfo.limits);
+                auto s = std::make_unique<AutomationIterator> (curveInfo.curve.edit, curveInfo.curve);
 
                 if (! s->isEmpty())
                     newStream = std::move (s);
@@ -1685,47 +1685,20 @@ AutomatableParameter* getParameter (AutomatableParameter::ModifierAssignment& as
 }
 
 //==============================================================================
-AutomationIterator::AutomationIterator (Edit& edit, const AutomationCurve& curve, juce::Range<float> valueRange)
+AutomationIterator::AutomationIterator (Edit& edit, const AutomationCurve& curve)
+    : tempoSequence (edit.tempoSequence.getInternalSequence()),
+      timeBase (curve.timeBase)
 {
-    hiRes = ! edit.engine.getEngineBehaviour().interpolateAutomation();
+    const int numPoints = curve.getNumPoints();
+    jassert (numPoints > 0);
 
-    if (hiRes)
-        copy (edit, curve, valueRange);
-    else
-        interpolate (edit, curve, valueRange);
-}
-
-AutomationIterator::AutomationIterator (const AutomatableParameter& param)
-    : AutomationIterator (param.getEdit(), param.getCurve(), param.getValueRange())
-{
-}
-
-AutomationIterator::AutomationIterator (Edit& edit, const AutomationCurve& curve, juce::Range<float> valueRange, Mode mode)
-{
-    switch (mode)
-    {
-        case Mode::lerp:
-            interpolate (edit, curve, valueRange);
-            break;
-        case Mode::accurate:
-            hiRes = true;
-            copy (edit, curve, valueRange);
-            break;
-    };
-}
-
-void AutomationIterator::copy (Edit& edit, const AutomationCurve& curve, juce::Range<float>)
-{
-    auto& ts = getTempoSequence (edit);
-
-    jassert (curve.getNumPoints() > 0);
-
-    for (int i = 0; i < curve.getNumPoints(); i++)
+    for (int i = 0; i < numPoints; i++)
     {
         auto src = curve.getPoint (i);
+        assert (src.time.isBeats() == (timeBase == AutomationCurve::TimeBase::beats));
 
         AutoPoint dst;
-        dst.time = toTime (src.time, ts);
+        dst.time = toUnderlying (src.time);
         dst.value = src.value;
         dst.curve = src.curve;
 
@@ -1733,121 +1706,26 @@ void AutomationIterator::copy (Edit& edit, const AutomationCurve& curve, juce::R
     }
 }
 
-void AutomationIterator::interpolate (Edit& edit, const AutomationCurve& curve, juce::Range<float> valueRange)
+AutomationIterator::AutomationIterator (const AutomatableParameter& param)
+    : AutomationIterator (param.getEdit(), param.getCurve())
 {
-    jassert (curve.getNumPoints() > 0);
-
-    auto& ts = edit.tempoSequence;
-    const auto timeDelta        = TimeDuration::fromSeconds (1.0 / 100.0);
-    const double minValueDelta  = (valueRange.getLength()) / 256.0;
-
-    int curveIndex = 0;
-    int lastCurveIndex = -1;
-    TimePosition t;
-    float lastValue = 1.0e10;
-    auto lastTime = toTime (curve.getPointPosition (curve.getNumPoints() - 1), ts) + TimeDuration::fromSeconds (1.0);
-    TimePosition t1;
-    auto t2 = toTime (curve.getPointPosition (0), ts);
-    float v1 = curve.getValueAt (EditPosition (0s), valueRange.getStart());
-    float v2 = v1;
-    float vp = v2;
-    float c  = 0;
-    CurvePoint bp;
-    double x1end = 0;
-    double x2end = 0;
-    float y1end = 0;
-    float y2end = 0;
-
-    while (t < lastTime)
-    {
-        while (t >= t2)
-        {
-            if (curveIndex >= curve.getNumPoints() - 1)
-            {
-                t1 = t2;
-                v1 = v2;
-                t2 = lastTime;
-                break;
-            }
-
-            t1 = t2;
-            v1 = v2;
-            c  = curve.getPointCurve (curveIndex);
-
-            if (c != 0.0f)
-            {
-                bp = curve.getBezierPoint (curveIndex);
-
-                if (c < -0.5 || c > 0.5)
-                    curve.getBezierEnds (curveIndex, x1end, y1end, x2end, y2end);
-            }
-
-            t2 = toTime (curve.getPointPosition (++curveIndex), ts);
-            v2 = curve.getPointValue (curveIndex);
-        }
-
-        float v = v2;
-
-        if (t2 != t1)
-        {
-            if (c == 0.0f)
-            {
-                v = v1 + (v2 - v1) * (float) ((t - t1) / (t2 - t1));
-            }
-            else if (c >= -0.5 && c <= 0.5)
-            {
-                v = static_cast<float> (getBezierYFromX (t.inSeconds(), t1.inSeconds(), v1, toTime (bp.time, ts).inSeconds(), bp.value, t2.inSeconds(), v2));
-            }
-            else
-            {
-                if (t >= t1 && t <= TimePosition::fromSeconds (x1end))
-                    v = v1;
-                else if (t >= TimePosition::fromSeconds (x2end) && t <= t2)
-                    v = v2;
-                else
-                    v = static_cast<float> (getBezierYFromX (t.inSeconds(), x1end, y1end, toTime (bp.time, ts).inSeconds(), bp.value, x2end, y2end));
-            }
-        }
-
-        if (std::abs (v - lastValue) >= minValueDelta || curveIndex != lastCurveIndex)
-        {
-            jassert (t >= t1 && t <= t2);
-
-            AutoPoint point;
-            point.time = t;
-            point.value = v;
-
-            jassert (points.isEmpty() || points.getLast().time <= t);
-
-            if (points.size() >= 1 && t - points[points.size() - 1].time > timeDelta * 10)
-                points.add ({t - timeDelta, vp});
-
-            points.add (point);
-
-            lastValue = v;
-            lastCurveIndex = curveIndex;
-        }
-
-        vp = v;
-        t = t + timeDelta;
-    }
 }
 
-void AutomationIterator::setPosition (TimePosition newTime) noexcept
-{
-    if (hiRes)
-        setPositionHiRes (newTime);
-    else
-        setPositionInterpolated (newTime);
-}
-
-void AutomationIterator::setPositionHiRes (TimePosition newTime) noexcept
+void AutomationIterator::setPosition (EditPosition newTime) noexcept
 {
     jassert (points.size() > 0);
 
-    auto newIndex = updateIndex (newTime);
+    const double newPostion = [this, &newTime]
+                              {
+                                  if (timeBase == AutomationCurve::TimeBase::time)
+                                      return toTime (newTime, tempoSequence).inSeconds();
 
-    if (newTime < points[0].time)
+                                  return toBeats (newTime, tempoSequence).inBeats();
+                              }();
+
+    auto newIndex = updateIndex (newPostion);
+
+    if (newPostion < points[0].time)
     {
         currentIndex = newIndex;
         currentValue = points.getReference (0).value;
@@ -1864,7 +1742,7 @@ void AutomationIterator::setPositionHiRes (TimePosition newTime) noexcept
     const auto& p1 = points.getReference (newIndex);
     const auto& p2 = points.getReference (newIndex + 1);
 
-    const auto t = newTime;
+    const auto t = newPostion;
 
     const auto t1 = p1.time;
     const auto t2 = p2.time;
@@ -1884,83 +1762,56 @@ void AutomationIterator::setPositionHiRes (TimePosition newTime) noexcept
         }
         else if (c >= -0.5 && c <= 0.5)
         {
-            auto bp = getBezierPoint (p1.time.inSeconds(), p1.value, p2.time.inSeconds(), p2.value, p1.curve);
-            v = float (getBezierYFromX (t.inSeconds(), t1.inSeconds(), v1, bp.first, bp.second, t2.inSeconds(), v2));
+            auto bp = getBezierPoint (p1.time, p1.value, p2.time, p2.value, p1.curve);
+            v = float (getBezierYFromX (t, t1, v1, bp.first, bp.second, t2, v2));
         }
         else
         {
             double x1end = 0, x2end = 0;
             double y1end = 0, y2end = 0;
 
-            auto bp = getBezierPoint (p1.time.inSeconds(), p1.value, p2.time.inSeconds(), p2.value, p1.curve);
-            getBezierEnds (p1.time.inSeconds(), p1.value,
-                           p2.time.inSeconds(), p2.value,
+            auto bp = getBezierPoint (p1.time, p1.value, p2.time, p2.value, p1.curve);
+            getBezierEnds (p1.time, p1.value,
+                           p2.time, p2.value,
                            p1.curve,
                            x1end, y1end, x2end, y2end);
 
-            if (t >= t1 && t <= TimePosition::fromSeconds (x1end))
+            if (t >= t1 && t <= x1end)
                 v = v1;
-            else if (t >= TimePosition::fromSeconds (x2end) && t <= t2)
+            else if (t >= x2end && t <= t2)
                 v = v2;
             else
-                v = float (getBezierYFromX (t.inSeconds(), x1end, y1end, bp.first, bp.second, x2end, y2end));
+                v = float (getBezierYFromX (t, x1end, y1end, bp.first, bp.second, x2end, y2end));
         }
     }
+
     currentIndex = newIndex;
     currentValue = v;
 }
 
-void AutomationIterator::setPositionInterpolated (TimePosition newTime) noexcept
-{
-    jassert (points.size() > 0);
-
-    auto newIndex = updateIndex (newTime);
-
-    if (currentIndex != newIndex)
-    {
-        jassert (juce::isPositiveAndBelow (newIndex, points.size()));
-        currentIndex = newIndex;
-        currentValue = points.getReference (newIndex).value;
-    }
-
-    if (newTime >= points[0].time && newIndex < points.size() - 1)
-    {
-        const auto& p1 = points.getReference (newIndex);
-        const auto& p2 = points.getReference (newIndex + 1);
-
-        const auto t = newTime.inSeconds();
-
-        const auto t1 = p1.time.inSeconds();
-        const auto t2 = p2.time.inSeconds();
-
-        const auto v1 = p1.value;
-        const auto v2 = p2.value;
-
-        currentValue = std::lerp (v1, v2, float ((t - t1) / (t2 - t1)));
-    }
-}
-
-int AutomationIterator::updateIndex (TimePosition newTime)
+int AutomationIterator::updateIndex (double newPosition)
 {
     auto newIndex = currentIndex;
 
     if (! juce::isPositiveAndBelow (newIndex, points.size()))
         newIndex = 0;
 
-    if (newIndex > 0 && points.getReference (newIndex).time >= newTime)
+    if (newIndex > 0 && points.getReference (newIndex).time >= newPosition)
     {
         --newIndex;
 
-        while (newIndex > 0 && points.getReference (newIndex).time >= newTime)
+        while (newIndex > 0 && points.getReference (newIndex).time >= newPosition)
             --newIndex;
     }
     else
     {
-        while (newIndex < points.size() - 1 && points.getReference (newIndex + 1).time < newTime)
+        while (newIndex < points.size() - 1 && points.getReference (newIndex + 1).time < newPosition)
             ++newIndex;
     }
+
     return newIndex;
 }
+
 
 //==============================================================================
 const char* AutomationDragDropTarget::automatableDragString = "automatableParamDrag";

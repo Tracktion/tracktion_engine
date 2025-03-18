@@ -66,10 +66,14 @@ TEST_SUITE("tracktion_engine")
         // Internal plugin automation
         {
             rackInstance->wetGain->getCurve().clear (um);
+            rackInstance->wetGain->setParameter (1.0f, juce::dontSendNotification);
 
             auto volParam = volPanPlugin->volParam;
             auto& volCurve = volParam->getCurve();
-            volCurve.addPoint (2.5_tp, getValueAt (*volParam, 0_tp), 0.0, um);
+
+            auto firstVal = getValueAt (*volParam, 0_tp);
+            CHECK (firstVal == doctest::Approx (decibelsToVolumeFaderPosition (0.0f)));
+            volCurve.addPoint (2.5_tp, firstVal, 0.0, um);
             volCurve.addPoint (2.5_tp, 0.0f, 0.0, um);
 
             auto render = test_utilities::renderToAudioBuffer (*edit);

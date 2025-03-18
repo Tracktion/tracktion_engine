@@ -406,47 +406,34 @@ public:
 
 
 //==============================================================================
-// A pre-rendered set of interpolated points along a curve, with a cursor which moves through it.
+/**
+    A cache of automation points, with a cursor which moves through it.
+*/
 struct AutomationIterator
 {
-    AutomationIterator (Edit&, const AutomationCurve&, juce::Range<float> valueRange);
+    AutomationIterator (Edit&, const AutomationCurve&);
     AutomationIterator (const AutomatableParameter&);
 
     bool isEmpty() const noexcept               { return points.size() <= 1; }
 
-    void setPosition (TimePosition) noexcept;
+    void setPosition (EditPosition) noexcept;
     float getCurrentValue() noexcept            { return currentValue; }
 
-    //==============================================================================
-    /** @internal */
-    enum class Mode
-    {
-        lerp,
-        accurate
-    };
-
-    /** @internal */
-    AutomationIterator (Edit&, const AutomationCurve&, juce::Range<float> valueRange, Mode);
-
 private:
-    void interpolate (Edit&, const AutomationCurve&, juce::Range<float> valueRange);
-    void copy (Edit&, const AutomationCurve&, juce::Range<float> valueRange);
-    int updateIndex (TimePosition newTime);
-
-    void setPositionHiRes (TimePosition newTime) noexcept;
-    void setPositionInterpolated (TimePosition newTime) noexcept;
+    int updateIndex (double position);
 
     struct AutoPoint
     {
-        TimePosition time = 0_tp;
+        double time = 0.0; // Could be time or beats depending on the curve's timeBase
         float value = 0.0f;
         float curve = 0.0f;
     };
 
+    const tempo::Sequence& tempoSequence;
     juce::Array<AutoPoint> points;
     int currentIndex = -1;
     float currentValue = 0.0f;
-    bool hiRes = false;
+    const AutomationCurve::TimeBase timeBase;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutomationIterator)
 };
