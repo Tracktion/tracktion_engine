@@ -512,6 +512,11 @@ public:
         return added;
     }
 
+    void removeCurve (int idx)
+    {
+        parent.removeChild (idx, &edit.getUndoManager());
+    }
+
 private:
     AutomationCurveList& curveList;
     Edit& edit;
@@ -588,6 +593,11 @@ std::vector<AutomationCurveModifier::Ptr> AutomationCurveList::getItems()
 AutomationCurveModifier::Ptr AutomationCurveList::addCurve (const AutomatableParameter& destParam)
 {
     return list->addCurve (destParam);
+}
+
+void AutomationCurveList::removeCurve (int idx)
+{
+    list->removeCurve (idx);
 }
 
 void AutomationCurveList::addListener (Listener& l)

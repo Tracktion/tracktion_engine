@@ -279,6 +279,8 @@ public:
 
     AutomationCurveModifier::Ptr addCurve (const AutomatableParameter& destParam);
 
+    void removeCurve (int idx);
+
     //==============================================================================
     struct Listener
     {
