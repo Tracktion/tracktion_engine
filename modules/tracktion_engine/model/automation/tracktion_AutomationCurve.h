@@ -73,6 +73,8 @@ public:
 
     CurvePoint getBezierHandle (int index) const noexcept;
     CurvePoint getBezierPoint (int index) const noexcept;
+    std::pair<CurvePoint,CurvePoint> getBezierEnds (int index) const;
+
     void getBezierEnds (int index, double& x1, float& y1, double& x2, float& y2) const noexcept;
 
     float getValueAt (EditPosition, float defaultValue) const;

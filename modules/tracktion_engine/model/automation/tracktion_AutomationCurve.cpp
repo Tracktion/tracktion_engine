@@ -189,7 +189,7 @@ float AutomationCurve::getValueAt (EditPosition editPos, float defaultValue) con
     if (curve1 >= -0.5f && curve1 <= 0.5f)
     {
         auto bezierPoint = getBezierPoint (index - 1);
-        return static_cast<float> (getBezierYFromX (time, time1, value1, toTime (bezierPoint.time, ts).inSeconds(), bezierPoint.value, time2, value2));
+        return static_cast<float> (getBezierYFromX (time, time1, value1, toUnderlying (bezierPoint.time), bezierPoint.value, time2, value2));
     }
 
     double x1, x2;
@@ -203,7 +203,7 @@ float AutomationCurve::getValueAt (EditPosition editPos, float defaultValue) con
         return value2;
 
     auto bezierPoint = getBezierPoint (index - 1);
-    return static_cast<float> (getBezierYFromX (time, x1, y1, toTime (bezierPoint.time, ts).inSeconds(), bezierPoint.value, x2, y2));
+    return static_cast<float> (getBezierYFromX (time, x1, y1, toUnderlying (bezierPoint.time), bezierPoint.value, x2, y2));
 }
 
 float AutomationCurve::getValueAt (TimePosition timePos, float defaultValue) const
@@ -945,6 +945,22 @@ CurvePoint AutomationCurve::getBezierHandle (int index) const noexcept
     float y1end, y2end;
     getBezierEnds (index, x1end, y1end, x2end, y2end);
     return { createPosition (x1end), y1end };
+}
+
+std::pair<CurvePoint,CurvePoint> AutomationCurve::getBezierEnds (int index) const
+{
+    auto x1 = 0.0;
+    auto x2 = 0.0;
+    auto y1 = 0.0f;
+    auto y2 = 0.0f;
+
+    getBezierEnds (index, x1, y1, x2, y2);
+
+    return
+    {
+        { createPosition (x1), y1 },
+        { createPosition (x2), y2 }
+    };
 }
 
 void AutomationCurve::getBezierEnds (int index, double& x1out, float& y1out, double& x2out, float& y2out) const noexcept

@@ -107,6 +107,7 @@ public:
     virtual CurvePoint getBezierPoint (int idx) = 0;
     virtual int nextIndexAfter (TimePosition) = 0;
     virtual void getBezierEnds (int index, double& x1out, float& y1out, double& x2out, float& y2out) = 0;
+    virtual std::pair<CurvePoint, CurvePoint> getBezierEnds (int index) = 0;
     virtual int movePoint (int index, TimePosition newTime, float newValue, bool removeInterveningPoints) = 0;
     virtual void setValueWhenNoPoints (float value) = 0;
     virtual CurveEditorPoint* createPoint (int idx) = 0;

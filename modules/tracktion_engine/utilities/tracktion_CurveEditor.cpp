@@ -186,12 +186,10 @@ void CurveEditor::paint (juce::Graphics& g)
                     }
                     else
                     {
-                        double lineX1, lineX2;
-                        float lineY1, lineY2;
-                        getBezierEnds (index, lineX1, lineY1, lineX2, lineY2);
+                        auto [e1, e2] = getBezierEnds (index);
 
-                        curvePath.lineTo (getPosition ({ TimePosition::fromSeconds (lineX1), lineY1 }));
-                        curvePath.quadraticTo (bp, getPosition ({ TimePosition::fromSeconds (lineX2), lineY2 }));
+                        curvePath.lineTo (getPosition (e1));
+                        curvePath.quadraticTo (bp, getPosition (e2));
                         curvePath.lineTo (p2);
                     }
                 }
