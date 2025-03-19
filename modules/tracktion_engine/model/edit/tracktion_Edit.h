@@ -114,8 +114,8 @@ public:
         LoadContext* loadContext = nullptr;                          ///< An optional context to be monitor for loading status.
         int numUndoLevelsToStore = Edit::getDefaultNumUndoLevels();  ///< The number of undo levels to use.
 
-        EditFileRetriever editFileRetriever;                         ///< An optional editFileRetriever to use.
-        FilePathResolver filePathResolver;                           ///< An optional filePathResolver to use.
+        EditFileRetriever editFileRetriever = {};                    ///< An optional editFileRetriever to use.
+        FilePathResolver filePathResolver = {};                      ///< An optional filePathResolver to use.
 
         uint32_t numAudioTracks = 1;                                 ///< If non-zero, will ensure the edit has this many audio tracks
 
