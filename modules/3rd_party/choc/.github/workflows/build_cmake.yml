@@ -38,7 +38,7 @@ jobs:
             cc: "gcc", cxx: "g++",
             generators: "Unix Makefiles",
             exe: "./choc_tests",
-            install_packages: "sudo apt-get update; sudo apt-get -y install libgtk-3-dev libwebkit2gtk-4.0-dev"
+            install_packages: "sudo apt-get update; sudo apt-get -y install libgtk-3-dev libwebkit2gtk-4.1-dev"
           }
         - {
             name: "macOS Latest Clang",

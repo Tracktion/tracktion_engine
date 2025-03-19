@@ -173,10 +173,12 @@ private:
 #define BOOST_STATIC_STRING_STANDALONE 1
 #include "../platform/choc_DisableAllWarnings.h"
 
-// Sorry, but you'll need boost::beast, boost::asio and a whole bag of
-// their seemingly pointless dependencies on your include path..
-#include <boost/beast.hpp>
-#include <boost/asio.hpp>
+#if __has_include(<boost/beast.hpp>) && __has_include(<boost/asio.hpp>)
+ #include <boost/beast.hpp>
+ #include <boost/asio.hpp>
+#else
+ #error "The choc HTTPServer class requires boost::beast, boost::asio and their dependencies to be available on your include path"
+#endif
 
 #include "../platform/choc_ReenableAllWarnings.h"
 

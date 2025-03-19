@@ -30,7 +30,7 @@
   #pragma intrinsic (_BitScanReverse64)
  #endif
 
- #ifdef _M_X64
+ #if defined (_M_X64) && ! defined (_M_ARM64EC)
   #pragma intrinsic (_umul128)
   #define CHOC_HAS_UMUL128 1
  #endif
@@ -100,7 +100,14 @@ inline Int128 multiply128 (uint64_t a, uint64_t b)
     result.low = _umul128 (a, b, &result.high);
     return result;
    #elif __LP64__
+    #if __GNUC__
+     #pragma GCC diagnostic push
+     #pragma GCC diagnostic ignored "-Wpedantic"
+    #endif
     auto total = static_cast<unsigned __int128> (a) * static_cast<unsigned __int128> (b);
+    #if __GNUC__
+     #pragma GCC diagnostic pop
+    #endif
     return { static_cast<uint64_t> (total >> 64), static_cast<uint64_t> (total) };
    #else
     uint64_t a0 = static_cast<uint32_t> (a), a1 = a >> 32,
