@@ -19,6 +19,17 @@
 #ifndef CHOC_PLATFORM_DETECT_HEADER_INCLUDED
 #define CHOC_PLATFORM_DETECT_HEADER_INCLUDED
 
+/**
+    This can be used to check the version of the choc library.
+
+    When you're working on large projects that may contain more than one copy
+    of the choc library, it's a good idea to use this to make sure that all of
+    those copies are the same version of the code, otherwise you can run into
+    some very nasty bugs.
+*/
+#define CHOC_VERSION 0x10000
+
+
 /*
     These conditionals declare the macros
       - CHOC_WINDOWS
