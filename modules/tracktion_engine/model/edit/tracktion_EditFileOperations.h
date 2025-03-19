@@ -49,9 +49,13 @@ private:
 };
 
 //==============================================================================
-/** Loads an edit from file, ready for playback / editing */
+/** Loads an edit from a file, ready for playback / editing */
 std::unique_ptr<Edit> loadEditFromFile (Engine&, const juce::File&,
                                         Edit::EditRole role = Edit::EditRole::forEditing);
+
+/** Loads an edit from a ValueTree, ready for playback / editing */
+std::unique_ptr<Edit> loadEditFromState (Engine&, const juce::ValueTree&,
+                                         Edit::EditRole role = Edit::EditRole::forEditing);
 
 /** Creates a new edit for a file, ready for playback / editing */
 std::unique_ptr<Edit> createEmptyEdit (Engine&, const juce::File&);
@@ -60,7 +64,7 @@ std::unique_ptr<Edit> createEmptyEdit (Engine&, const juce::File&);
 juce::ValueTree loadEditFromProjectManager (ProjectManager&, ProjectItemID);
 
 /** Uses the ProjectManager to find an Edit file and open it. */
-std::unique_ptr<Edit> loadEditForExamining (ProjectManager&, ProjectItemID, 
+std::unique_ptr<Edit> loadEditForExamining (ProjectManager&, ProjectItemID,
                                             Edit::EditRole role = Edit::EditRole::forExamining,
                                             Edit::LoadContext* = nullptr);
 
