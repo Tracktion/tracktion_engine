@@ -178,8 +178,6 @@ float AutomationCurve::getValueAt (EditPosition editPos, float defaultValue) con
     const double time2 = p2.getProperty (IDs::t);
     const float value2 = p2.getProperty (IDs::v);
 
-    auto& ts = getTempoSequence (edit);
-
     if (curve1 == 0.0f)
     {
         auto alpha = (float) ((time - time1) / (time2 - time1));
