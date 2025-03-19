@@ -89,8 +89,9 @@ AutomationCurve::AutomationPoint AutomationCurve::getPoint (int index) const noe
 
 TimePosition AutomationCurve::getPointTime (int index) const noexcept
 {
-    assert (timeBase == TimeBase::time);
-    return TimePosition::fromSeconds (static_cast<double> (state.getChild (index).getProperty (IDs::t)));
+    auto pointState = state.getChild (index);
+    auto pos = createPosition (static_cast<double> (pointState[IDs::t]));
+    return toTime (pos, edit.tempoSequence);
 }
 
 float AutomationCurve::getPointValue (int index) const noexcept
@@ -387,7 +388,12 @@ void AutomationCurve::setPointPosition (int index, EditPosition pos, juce::UndoM
                                         um);
 }
 
-void AutomationCurve::setPointTime  (int index, TimePosition newTime, juce::UndoManager* um)    { state.getChild (index).setProperty (IDs::t, newTime.inSeconds(),  um); }
+void AutomationCurve::setPointTime  (int index, TimePosition newTime, juce::UndoManager* um)
+{
+    assert (timeBase == TimeBase::time);
+    state.getChild (index).setProperty (IDs::t, newTime.inSeconds(),  um);
+}
+
 void AutomationCurve::setPointValue (int index, float newValue, juce::UndoManager* um)          { state.getChild (index).setProperty (IDs::v, newValue, um); }
 void AutomationCurve::setCurveValue (int index, float newCurve, juce::UndoManager* um)          { state.getChild (index).setProperty (IDs::c, newCurve, um); }
 
@@ -518,6 +524,7 @@ int AutomationCurve::movePoint (AutomatableParameter& param, int index, TimePosi
 
         auto v = state.getChild (index);
 
+        assert (timeBase == TimeBase::time);
         v.setProperty (IDs::t, newTime.inSeconds(), um);
         v.setProperty (IDs::v, newValue, um);
     }
@@ -543,6 +550,7 @@ juce::Array<AutomationCurve::AutomationPoint> AutomationCurve::getPointsInRegion
     for (int i = 0; i < numPoints; ++i)
     {
         auto v = state.getChild (i);
+        assert (timeBase == TimeBase::time);
         auto t = TimePosition::fromSeconds (static_cast<double> (v.getProperty (IDs::t)));
 
         if (range.contains (t))
@@ -902,7 +910,7 @@ CurvePoint AutomationCurve::getBezierHandle (int index) const noexcept
     auto y1 = getPointValue (index);
     auto c  = getPointCurve (index);
 
-    auto x2 = toUnderlying (getPointTime (index + 1));
+    auto x2 = toUnderlying (getPointPosition (index + 1));
     auto y2 = getPointValue (index + 1);
 
     if (x1 == x2 || y1 == y2)

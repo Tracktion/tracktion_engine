@@ -127,6 +127,8 @@ public:
 
     void selectPoint (int pointIdx, bool addToSelection);
 
+    virtual EditPosition toEditPosition (const TimePosition& t);
+
 protected:
     void updatePointUnderMouse (juce::Point<float>);
     virtual void showBubbleForPointUnderMouse() = 0;

@@ -101,6 +101,11 @@ CurveEditor::~CurveEditor()
     deleteAllChildren();
 }
 
+EditPosition CurveEditor::toEditPosition (const TimePosition& t)
+{
+    return EditPosition (t);
+}
+
 void CurveEditor::updateLineThickness()
 {
     auto newthickness = (isMouseOverOrDragging() || isCurveSelected || areAnyPointsSelected())
