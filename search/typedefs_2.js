@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hashcode_0',['hashcode',['../namespacetracktion_1_1engine.html#a134d0029d7c5db278db98865a49c1b84',1,'tracktion::HashCode'],['../namespacetracktion_1_1engine.html#a134d0029d7c5db278db98865a49c1b84',1,'tracktion::engine::HashCode']]]
+  ['editfileretriever_0',['EditFileRetriever',['../classtracktion_1_1engine_1_1Edit.html#a06f3d6634e75e513e382232f0df7a3cf',1,'tracktion::engine::Edit']]]
 ];

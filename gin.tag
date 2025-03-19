@@ -25011,6 +25011,20 @@
       <enumvalue file="classtracktion_1_1engine_1_1Edit.html" anchor="a5ecd9cc3e9357f31269f6cbc7ca79c4ca0564a247242718dbf102a64c845e8516">twoBeat</enumvalue>
       <enumvalue file="classtracktion_1_1engine_1_1Edit.html" anchor="a5ecd9cc3e9357f31269f6cbc7ca79c4ca304659151ad21517e875f879b072e528">oneBeat</enumvalue>
     </member>
+    <member kind="typedef">
+      <type>std::function&lt; juce::File()&gt;</type>
+      <name>EditFileRetriever</name>
+      <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
+      <anchor>a06f3d6634e75e513e382232f0df7a3cf</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>std::function&lt; juce::File(const juce::String &amp;)&gt;</type>
+      <name>FilePathResolver</name>
+      <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
+      <anchor>ab2772c65a556a43a8661b40731ae1616</anchor>
+      <arglist></arglist>
+    </member>
     <member kind="enumvalue">
       <name>playDisabled</name>
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
@@ -26125,17 +26139,17 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>std::function&lt; juce::File()&gt;</type>
+      <type>EditFileRetriever</type>
       <name>editFileRetriever</name>
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
-      <anchor>a239497b91484221c8d4b2118ca648197</anchor>
+      <anchor>a3ccca4c93ee3a2757daebf0812f70db4</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>std::function&lt; juce::File(const juce::String &amp;)&gt;</type>
+      <type>FilePathResolver</type>
       <name>filePathResolver</name>
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
-      <anchor>ae8a37a1004bd5bf2233e4a61cbc0265b</anchor>
+      <anchor>a06591ab957b418cec2cf86dbccff2a67</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -48575,17 +48589,17 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>std::function&lt; juce::File()&gt;</type>
+      <type>EditFileRetriever</type>
       <name>editFileRetriever</name>
       <anchorfile>structtracktion_1_1engine_1_1Edit_1_1Options.html</anchorfile>
-      <anchor>afb8791863b0fcbc228947729e03b1f7a</anchor>
+      <anchor>a8083a0cdf542b1621be9b79f9f7064d4</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>std::function&lt; juce::File(const juce::String &amp;)&gt;</type>
+      <type>FilePathResolver</type>
       <name>filePathResolver</name>
       <anchorfile>structtracktion_1_1engine_1_1Edit_1_1Options.html</anchorfile>
-      <anchor>aba963059fdf366f6bae655acd0e6f1fc</anchor>
+      <anchor>a4eb78094298e54a542d154fc2f21a156</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -78429,6 +78443,13 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>aca1f2007b110edce9db4570fb3d3548d</anchor>
       <arglist>(Engine &amp;, const juce::File &amp;, Edit::EditRole role=Edit::EditRole::forEditing)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::unique_ptr&lt; Edit &gt;</type>
+      <name>loadEditFromState</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aecec464e993ad6e9d02e85ce10fe3f86</anchor>
+      <arglist>(Engine &amp;, const juce::ValueTree &amp;, Edit::EditRole role=Edit::EditRole::forEditing)</arglist>
     </member>
     <member kind="function">
       <type>std::unique_ptr&lt; Edit &gt;</type>

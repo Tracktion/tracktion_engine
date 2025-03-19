@@ -1513,8 +1513,11 @@ Functions</h2></td></tr>
 <tr class="memdesc:ab8f56799a4714693459f833ae271131b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies a zero-time origin based MIDI sequence in to a <a class="el" href="classtracktion_1_1engine_1_1MidiClip.html">MidiClip</a>.  <br /></td></tr>
 <tr class="separator:ab8f56799a4714693459f833ae271131b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca1f2007b110edce9db4570fb3d3548d" id="r_aca1f2007b110edce9db4570fb3d3548d"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#aca1f2007b110edce9db4570fb3d3548d">loadEditFromFile</a> (<a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;, <a class="el" href="classtracktion_1_1engine_1_1Edit.html#a474ef5984345c5b32ffa52ecff59321a">Edit::EditRole</a> role=<a class="el" href="classtracktion_1_1engine_1_1Edit.html#a474ef5984345c5b32ffa52ecff59321aaaaff7f83b31d8adaed273b6a8dd7f92d">Edit::EditRole::forEditing</a>)</td></tr>
-<tr class="memdesc:aca1f2007b110edce9db4570fb3d3548d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads an edit from file, ready for playback / editing.  <br /></td></tr>
+<tr class="memdesc:aca1f2007b110edce9db4570fb3d3548d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads an edit from a file, ready for playback / editing.  <br /></td></tr>
 <tr class="separator:aca1f2007b110edce9db4570fb3d3548d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecec464e993ad6e9d02e85ce10fe3f86" id="r_aecec464e993ad6e9d02e85ce10fe3f86"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#aecec464e993ad6e9d02e85ce10fe3f86">loadEditFromState</a> (<a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;, const juce::ValueTree &amp;, <a class="el" href="classtracktion_1_1engine_1_1Edit.html#a474ef5984345c5b32ffa52ecff59321a">Edit::EditRole</a> role=<a class="el" href="classtracktion_1_1engine_1_1Edit.html#a474ef5984345c5b32ffa52ecff59321aaaaff7f83b31d8adaed273b6a8dd7f92d">Edit::EditRole::forEditing</a>)</td></tr>
+<tr class="memdesc:aecec464e993ad6e9d02e85ce10fe3f86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads an edit from a ValueTree, ready for playback / editing.  <br /></td></tr>
+<tr class="separator:aecec464e993ad6e9d02e85ce10fe3f86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad1f4202e0c125df0bdc592cce7b2a231" id="r_ad1f4202e0c125df0bdc592cce7b2a231"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#ad1f4202e0c125df0bdc592cce7b2a231">createEmptyEdit</a> (<a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;)</td></tr>
 <tr class="memdesc:ad1f4202e0c125df0bdc592cce7b2a231"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new edit for a file, ready for playback / editing.  <br /></td></tr>
 <tr class="separator:ad1f4202e0c125df0bdc592cce7b2a231"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -4041,9 +4044,45 @@ template&lt;typename ClipType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Loads an edit from file, ready for playback / editing. </p>
+<p>Loads an edit from a file, ready for playback / editing. </p>
 
 <p class="reference">Referenced by <a class="el" href="namespacetracktion_1_1engine_1_1benchmark__utilities.html#a096b3442d3f2a6eecdb41a28b5fc1016">tracktion::engine::benchmark_utilities::openEditfromArchiveData()</a>.</p>
+
+</div>
+</div>
+<a id="aecec464e993ad6e9d02e85ce10fe3f86" name="aecec464e993ad6e9d02e85ce10fe3f86"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aecec464e993ad6e9d02e85ce10fe3f86">&#9670;&#160;</a></span>loadEditFromState()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &gt; tracktion::engine::loadEditFromState </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1Engine.html">Engine</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::ValueTree &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1Edit.html#a474ef5984345c5b32ffa52ecff59321a">Edit::EditRole</a>&#160;</td>
+          <td class="paramname"><em>role</em> = <code><a class="el" href="classtracktion_1_1engine_1_1Edit.html#a474ef5984345c5b32ffa52ecff59321aaaaff7f83b31d8adaed273b6a8dd7f92d">Edit::EditRole::forEditing</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Loads an edit from a ValueTree, ready for playback / editing. </p>
 
 </div>
 </div>
@@ -9694,7 +9733,7 @@ template&lt;typename... Properties&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Mar 18 2025 10:16:21 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Wed Mar 19 2025 13:51:57 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

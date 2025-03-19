@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['samplecount_0',['samplecount',['../namespacetracktion_1_1engine.html#a85052134975073481bd9888cbc71f3c4',1,'tracktion::SampleCount'],['../namespacetracktion_1_1engine.html#a85052134975073481bd9888cbc71f3c4',1,'tracktion::engine::SampleCount']]],
-  ['samplerange_1',['samplerange',['../namespacetracktion_1_1engine.html#a8944ee32cc6ed4eb531572d627f9538f',1,'tracktion::SampleRange'],['../namespacetracktion_1_1engine.html#a8944ee32cc6ed4eb531572d627f9538f',1,'tracktion::engine::SampleRange']]],
-  ['scopedlocktype_2',['scopedlocktype',['../structtracktion_1_1engine_1_1SelectableList.html#aa0e5fa7a2aa62bd2db3d6103e2234a38',1,'tracktion::engine::SelectableList::ScopedLockType'],['../classtracktion_1_1engine_1_1ValueTreeObjectList.html#a8da8a7eeddfc212e9d275380b655c4e7',1,'tracktion::engine::ValueTreeObjectList::ScopedLockType']]]
+  ['midimessagewithsource_0',['MidiMessageWithSource',['../structtracktion_1_1engine_1_1MidiMessageArray.html#a09c500d204b93ed9142c2d091ec1d478',1,'tracktion::engine::MidiMessageArray']]],
+  ['mpesourceid_1',['mpesourceid',['../structtracktion_1_1engine_1_1MidiMessageArray.html#a73e5a7d5c52059c42446e68b987adadd',1,'tracktion::engine::MidiMessageArray::MPESourceID'],['../namespacetracktion_1_1engine.html#a48992ea02a0d6d6f423dcb9111351598',1,'tracktion::MPESourceID'],['../namespacetracktion_1_1engine.html#a48992ea02a0d6d6f423dcb9111351598',1,'tracktion::engine::MPESourceID']]]
 ];

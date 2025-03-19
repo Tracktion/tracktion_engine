@@ -105,12 +105,12 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a9344b80e94e54ae73e9c0f56a0b336aa" id="r_a9344b80e94e54ae73e9c0f56a0b336aa"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1Edit_1_1Options.html#a9344b80e94e54ae73e9c0f56a0b336aa">numUndoLevelsToStore</a> = <a class="el" href="classtracktion_1_1engine_1_1Edit.html#ae2262e12e8136006b6b060dfcc970ee6">Edit::getDefaultNumUndoLevels</a>()</td></tr>
 <tr class="memdesc:a9344b80e94e54ae73e9c0f56a0b336aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of undo levels to use.  <br /></td></tr>
 <tr class="separator:a9344b80e94e54ae73e9c0f56a0b336aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb8791863b0fcbc228947729e03b1f7a" id="r_afb8791863b0fcbc228947729e03b1f7a"><td class="memItemLeft" align="right" valign="top">std::function&lt; juce::File()&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1Edit_1_1Options.html#afb8791863b0fcbc228947729e03b1f7a">editFileRetriever</a> = {}</td></tr>
-<tr class="memdesc:afb8791863b0fcbc228947729e03b1f7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">An optional editFileRetriever to use.  <br /></td></tr>
-<tr class="separator:afb8791863b0fcbc228947729e03b1f7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba963059fdf366f6bae655acd0e6f1fc" id="r_aba963059fdf366f6bae655acd0e6f1fc"><td class="memItemLeft" align="right" valign="top">std::function&lt; juce::File(const juce::String &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1Edit_1_1Options.html#aba963059fdf366f6bae655acd0e6f1fc">filePathResolver</a> = {}</td></tr>
-<tr class="memdesc:aba963059fdf366f6bae655acd0e6f1fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">An optional filePathResolver to use.  <br /></td></tr>
-<tr class="separator:aba963059fdf366f6bae655acd0e6f1fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8083a0cdf542b1621be9b79f9f7064d4" id="r_a8083a0cdf542b1621be9b79f9f7064d4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Edit.html#a06f3d6634e75e513e382232f0df7a3cf">EditFileRetriever</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1Edit_1_1Options.html#a8083a0cdf542b1621be9b79f9f7064d4">editFileRetriever</a></td></tr>
+<tr class="memdesc:a8083a0cdf542b1621be9b79f9f7064d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">An optional editFileRetriever to use.  <br /></td></tr>
+<tr class="separator:a8083a0cdf542b1621be9b79f9f7064d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4eb78094298e54a542d154fc2f21a156" id="r_a4eb78094298e54a542d154fc2f21a156"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Edit.html#ab2772c65a556a43a8661b40731ae1616">FilePathResolver</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1Edit_1_1Options.html#a4eb78094298e54a542d154fc2f21a156">filePathResolver</a></td></tr>
+<tr class="memdesc:a4eb78094298e54a542d154fc2f21a156"><td class="mdescLeft">&#160;</td><td class="mdescRight">An optional filePathResolver to use.  <br /></td></tr>
+<tr class="separator:a4eb78094298e54a542d154fc2f21a156"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf180cf9fef0648df9d52f36094e25b5" id="r_abf180cf9fef0648df9d52f36094e25b5"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1Edit_1_1Options.html#abf180cf9fef0648df9d52f36094e25b5">numAudioTracks</a> = 1</td></tr>
 <tr class="memdesc:abf180cf9fef0648df9d52f36094e25b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">If non-zero, will ensure the edit has this many audio tracks.  <br /></td></tr>
 <tr class="separator:abf180cf9fef0648df9d52f36094e25b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -218,14 +218,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="afb8791863b0fcbc228947729e03b1f7a" name="afb8791863b0fcbc228947729e03b1f7a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afb8791863b0fcbc228947729e03b1f7a">&#9670;&#160;</a></span>editFileRetriever</h2>
+<a id="a8083a0cdf542b1621be9b79f9f7064d4" name="a8083a0cdf542b1621be9b79f9f7064d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8083a0cdf542b1621be9b79f9f7064d4">&#9670;&#160;</a></span>editFileRetriever</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::function&lt;juce::File()&gt; tracktion::engine::Edit::Options::editFileRetriever = {}</td>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1Edit.html#a06f3d6634e75e513e382232f0df7a3cf">EditFileRetriever</a> tracktion::engine::Edit::Options::editFileRetriever</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -234,14 +234,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aba963059fdf366f6bae655acd0e6f1fc" name="aba963059fdf366f6bae655acd0e6f1fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba963059fdf366f6bae655acd0e6f1fc">&#9670;&#160;</a></span>filePathResolver</h2>
+<a id="a4eb78094298e54a542d154fc2f21a156" name="a4eb78094298e54a542d154fc2f21a156"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4eb78094298e54a542d154fc2f21a156">&#9670;&#160;</a></span>filePathResolver</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::function&lt;juce::File (const juce::String&amp;)&gt; tracktion::engine::Edit::Options::filePathResolver = {}</td>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1Edit.html#ab2772c65a556a43a8661b40731ae1616">FilePathResolver</a> tracktion::engine::Edit::Options::filePathResolver</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -288,7 +288,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Mar 18 2025 10:16:21 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Wed Mar 19 2025 13:51:58 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
