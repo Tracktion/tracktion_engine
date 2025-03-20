@@ -767,12 +767,12 @@ TimePosition CurveEditor::xToTime (double x) const
 
 float CurveEditor::valueToY (float val) const
 {
-    return 1.0f + (1.0f - (val - parameterMinValue) / parameterRange) * (getHeight() - 2);
+    return 1.0f + (1.0f - (val - getParameterMinValue()) / getParameterRange()) * (getHeight() - 2);
 }
 
 float CurveEditor::yToValue (double y) const
 {
-    return (float) ((1.0 - (y - 1) / (getHeight() - 2)) * parameterRange + parameterMinValue);
+    return (float) ((1.0 - (y - 1) / (getHeight() - 2)) * getParameterRange() + getParameterMinValue());
 }
 
 juce::Point<float> CurveEditor::getPosition (CurvePoint p) const

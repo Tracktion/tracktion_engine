@@ -138,6 +138,9 @@ protected:
     virtual void nonRealTimeDragStart() {}
     virtual void nonRealTimeDragEnd()   {}
 
+    virtual float getParameterMinValue() const = 0;
+    virtual float getParameterRange() const = 0;
+
     bool isPointSelected (int idx);
     bool areAnyPointsSelected();
     CurveEditorPoint* getSelectedPoint (int);
@@ -147,7 +150,6 @@ protected:
     Edit& edit;
     juce::UndoManager& undoManager;
     SelectionManager& selectionManager;
-    float parameterMinValue = 0, parameterRange = 1.0f;
     TimePosition leftTime, rightTime;
     int firstIndexOnScreen = 0;
     int pointUnderMouse = -1, pointBeingMoved = -1;
