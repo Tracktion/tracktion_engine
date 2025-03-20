@@ -395,10 +395,8 @@ void AutomationCurve::setPointTime  (int index, TimePosition newTime, juce::Undo
 void AutomationCurve::setPointValue (int index, float newValue, juce::UndoManager* um)          { state.getChild (index).setProperty (IDs::v, newValue, um); }
 void AutomationCurve::setCurveValue (int index, float newCurve, juce::UndoManager* um)          { state.getChild (index).setProperty (IDs::c, newCurve, um); }
 
-int AutomationCurve::movePoint (AutomatableParameter& param, int index,
-                                EditPosition newPos, float newValue, bool removeInterveningPoints, juce::UndoManager* um)
+int AutomationCurve::movePoint (int index, EditPosition newPos, float newValue, std::optional<juce::Range<float>> valueLimits, bool removeInterveningPoints, juce::UndoManager* um)
 {
-    assert (&param.getEdit() == &edit);
     auto& ts = edit.tempoSequence;
 
     if (juce::isPositiveAndBelow (index, getNumPoints()))
@@ -451,7 +449,8 @@ int AutomationCurve::movePoint (AutomatableParameter& param, int index,
         if (index < getNumPoints() - 1)
             newPos = min (newPos, getPointPosition (index + 1), ts);
 
-        newValue = param.getValueRange().clipValue (param.snapToState (newValue));
+        if (valueLimits.has_value())
+            newValue = valueLimits->clipValue (newValue);
 
         auto v = state.getChild (index);
 
@@ -616,7 +615,7 @@ void AutomationCurve::removePointsAndCloseGap (AutomatableParameter& param, Edit
         auto t = getPointPosition (i);
 
         if (greaterThanOrEqualTo (t, range.getEnd(), ts))
-            movePoint (param, i, minus (t, range.getLength(), ts), getPointValue (i), false, um);
+            movePoint (i, minus (t, range.getLength(), ts), getPointValue (i), {}, false, um);
     }
 
     if (getValueAt (range.getStart(), defaultValue) != valAtStart)

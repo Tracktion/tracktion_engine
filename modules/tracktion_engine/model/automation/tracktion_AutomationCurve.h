@@ -95,7 +95,7 @@ public:
     juce::Array<AutomationPoint> getPointsInRegion (EditTimeRange) const;
 
     // returns the new index of the point, which may have changed
-    int movePoint (AutomatableParameter&, int index, EditPosition, float newValue,
+    int movePoint (int index, EditPosition, float newValue, std::optional<juce::Range<float>> valueLimits,
                    bool removeInterveningPoints, juce::UndoManager*);
 
     void setPointPosition (int index, EditPosition, juce::UndoManager*);
