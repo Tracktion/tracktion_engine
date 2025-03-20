@@ -43,10 +43,8 @@ TEST_SUITE("tracktion_engine")
         auto& wetCurve = wetGain->getCurve();
         wetCurve.addPoint (2.5_tp, 1.0f, 0.0, um);
         wetCurve.addPoint (2.5_tp, 0.0f, 0.0, um);
-
-        // This allows time for the active automation to update.
-        // It shouldn't be needed in the future.
-        juce::MessageManager::getInstance()->runDispatchLoopUntil (1000);
+        CHECK(wetGain->isAutomationActive());
+        CHECK(rackInstance->isAutomationNeeded());
 
         CHECK (getValueAt (*wetGain, 2_tp) == doctest::Approx (1.0f));
         CHECK (getValueAt (*wetGain, 3_tp) == doctest::Approx (0.0f));

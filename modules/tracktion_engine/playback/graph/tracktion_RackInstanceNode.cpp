@@ -13,7 +13,7 @@ namespace tracktion { inline namespace engine
 {
 
 RackInstanceNode::RackInstanceNode (RackInstance::Ptr ri, std::unique_ptr<Node> inputNode, ChannelMap channelMapToUse,
-                                    ProcessState& ps)
+                                    ProcessState& ps, SampleRateAndBlockSize info)
     : TracktionEngineNode (ps),
       plugin (std::move (ri)), input (std::move (inputNode)), channelMap (std::move (channelMapToUse))
 {
@@ -30,6 +30,14 @@ RackInstanceNode::RackInstanceNode (RackInstance::Ptr ri, std::unique_ptr<Node> 
     for (size_t chan = 0; chan < 2; ++chan)
         lastGain[chan] = dbToGain (std::get<2> (channelMap[chan])->getCurrentValue());
 
+    plugin->baseClassInitialise ({ TimePosition(), info.sampleRate, info.blockSize });
+    isInitialised = true;
+}
+
+RackInstanceNode::~RackInstanceNode()
+{
+    if (isInitialised && ! plugin->baseClassNeedsInitialising())
+        plugin->baseClassDeinitialise();
 }
 
 std::vector<tracktion::graph::Node*> RackInstanceNode::getDirectInputNodes()

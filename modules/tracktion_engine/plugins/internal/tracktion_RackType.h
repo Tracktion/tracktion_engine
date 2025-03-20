@@ -164,13 +164,9 @@ private:
     mutable std::unique_ptr<ModifierList> modifierList;
 
     juce::Array<RackInstance*> activeRackInstances;
-    int numberOfInstancesInEdit = 0;
-
-    std::atomic<int> numActiveInstances { 0 };
 
     //==============================================================================
     bool arePluginsConnectedIndirectly (EditItemID src, EditItemID dest, int depth = 0) const;
-    void countInstancesInEdit();
 
     void removeAllInputsAndOutputs();
     void addDefaultInputs();
