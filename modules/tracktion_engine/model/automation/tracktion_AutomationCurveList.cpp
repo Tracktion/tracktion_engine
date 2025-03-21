@@ -469,6 +469,94 @@ AutomationCurveModifier::Ptr getAutomationCurveModifierForID (Edit& edit, EditIt
 }
 
 //==============================================================================
+namespace detail
+{
+    inline bool areEquivalentPlugins (Plugin& p1, Plugin& p2)
+    {
+        auto et1 = dynamic_cast<ExternalPlugin*> (&p1);
+        auto et2 = dynamic_cast<ExternalPlugin*> (&p2);
+
+        if (! (et1 || et2))
+            return typeid (p1) == typeid (p2);
+
+        assert (et1 && et2);
+        return et1->desc.isDuplicateOf (et2->desc);
+    }
+}
+
+void updateRelativeDestinationOrRemove (AutomationCurveList& list, AutomationCurveModifier& curve, Clip& clip)
+{
+    assert (contains_v (list.getItems(), &curve));
+
+    juce::ErasedScopeGuard oldCurveRemover ([&curve] { curve.remove(); });
+    auto oldParam = getParameter (curve);
+
+    if (! oldParam)
+        return;
+
+    // Clip
+    // Rack
+    // Master
+    // Folder
+    // Track
+    auto oldPlugin = oldParam->getPlugin();
+    auto oldPluginList = oldPlugin->getOwnerList();
+
+    if (! oldPlugin)
+        return;
+
+    auto oldTrack = oldPlugin->getOwnerTrack();
+
+    // If the plugin is on the clip or a RackType, keep it
+    if (! oldTrack)
+    {
+        if (oldPlugin->getOwnerClip() == &clip
+            || oldPlugin->getOwnerRackType())
+           oldCurveRemover.release();
+
+        return;
+    }
+
+    // Keep connection to master plugins or folder tracks
+    if (dynamic_cast<MasterTrack*> (oldTrack) != nullptr
+        || dynamic_cast<FolderTrack*> (oldTrack) != nullptr)
+    {
+        jassert (&dynamic_cast<MasterTrack*> (oldTrack)->pluginList == oldPluginList);
+        oldCurveRemover.release();
+        return;
+    }
+
+    // Curve was on a plugin on a track so look for an appropriate replacement
+    if (auto newTrack = clip.getTrack(); newTrack)
+    {
+        for (auto newPlugin : newTrack->pluginList)
+        {
+            if (! detail::areEquivalentPlugins (*oldPlugin, *newPlugin))
+                continue;
+
+            // Copy the properties from the old state to the newly created curve, updating the plugin ID
+            if (auto newParam = newPlugin->getAutomatableParameterByID (curve.destID.paramID))
+            {
+                auto stateCopy = curve.state.createCopy();
+                stateCopy.setProperty (IDs::source, newPlugin->itemID, nullptr);
+
+                auto newCurve = list.addCurve (*newParam);
+                copyValueTree (newCurve->state, stateCopy, getUndoManager_p (curve));
+
+                // Reset curves to point to the new states
+                using enum CurveModifierType;
+
+                for (auto type : { absolute, relative, scale })
+                    newCurve->getCurve (type).curve
+                        .setState (newCurve->state.getChildWithProperty (IDs::type, toString (type)));
+
+                return;
+            }
+        }
+    }
+}
+
+//==============================================================================
 //==============================================================================
 class AutomationCurveList::List : private ValueTreeObjectList<AutomationCurveModifier>
 {

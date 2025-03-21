@@ -375,6 +375,76 @@ TEST_SUITE("tracktion_engine")
 
         }
     }
+
+    TEST_CASE("AutomationCurveList: Move/copy clip")
+    {
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto context = AutomationCurveListTestContext::create (engine);
+
+        {
+            auto curveList = context->clip->getAutomationCurveList (true);
+            auto curveMod = curveList->addCurve (*context->volParam);
+
+            auto& curve = curveMod->getCurve (CurveModifierType::absolute).curve;
+            curve.addPoint (2.5_bp, 1.0f, 0.0, nullptr);
+            curve.addPoint (2.5_bp, 0.0f, 0.0, nullptr); // Sharp square from 1-0 at 2.5b
+        }
+
+        context->edit->ensureNumberOfAudioTracks (2);
+        auto audioTracks = getAudioTracks (*context->edit);
+        auto at1 = audioTracks[0];
+        auto at2 = audioTracks[1];
+
+        SUBCASE("Move clip to second track")
+        {
+            context->clip->moveTo (*at2);
+
+            {
+                auto volPlug1 = at1->getVolumePlugin();
+                auto volParam1 = volPlug1->volParam;
+                CHECK (! volPlug1->isAutomationNeeded());
+                CHECK (! volParam1->isAutomationActive());
+                CHECK (volParam1->getModifiers().isEmpty());
+            }
+
+            auto curveList = context->clip->getAutomationCurveList (true);
+            CHECK (curveList->getItems().size() == 1);
+
+            auto curveMod = curveList->getItems().front();
+            CHECK (curveMod);
+
+            auto& absCurve = curveMod->getCurve (CurveModifierType::absolute).curve;
+            CHECK_EQ (absCurve.getNumPoints(), 2);
+
+            auto volPlug2 = at2->getVolumePlugin();
+            auto volParam2 = volPlug2->volParam;
+            CHECK (volParam2->isAutomationActive());
+            CHECK (! volParam2->getModifiers().isEmpty());
+
+            auto& ts = context->edit->tempoSequence;
+            volParam2->updateToFollowCurve (ts.toTime (0_bp));
+            CHECK (volParam2->getCurrentValue() == doctest::Approx (1.0f));
+            volParam2->updateToFollowCurve (ts.toTime (2_bp));
+            CHECK (volParam2->getCurrentValue() == doctest::Approx (1.0f));
+            volParam2->updateToFollowCurve (ts.toTime (4_bp));
+            CHECK (volParam2->getCurrentValue() == doctest::Approx (0.0f));
+        }
+
+        SUBCASE("Move clip to second track with no corresponding plugin")
+        {
+            at2->getVolumePlugin()->deleteFromParent();
+            context->clip->moveTo (*at2);
+            CHECK (context->clip->getAutomationCurveList (true)->getItems().empty());
+
+            {
+                auto volPlug1 = at1->getVolumePlugin();
+                auto volParam1 = volPlug1->volParam;
+                CHECK (! volPlug1->isAutomationNeeded());
+                CHECK (! volParam1->isAutomationActive());
+                CHECK (volParam1->getModifiers().isEmpty());
+            }
+        }
+    }
 }
 
 } // namespace tracktion::inline engine

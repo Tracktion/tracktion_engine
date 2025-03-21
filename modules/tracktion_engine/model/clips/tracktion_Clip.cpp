@@ -275,9 +275,18 @@ void Clip::setParent (ClipOwner* newParent)
 
     parent = newParent;
 
-    if (auto automation = getAutomationCurveList (false))
-        for (auto curve : automation->getItems())
-            curve->setPositionDelegate (getAutomationCurveListPositionDelegate());
+    // Parent is set to nullptr on Edit destruction so we don't want to remove curves in that case
+    if (parent)
+    {
+        if (auto automation = getAutomationCurveList (false))
+        {
+            for (auto curve : automation->getItems())
+            {
+                updateRelativeDestinationOrRemove (*automation, *curve, *this);
+                curve->setPositionDelegate (getAutomationCurveListPositionDelegate());
+            }
+        }
+    }
 
     if (auto track = getTrack())
         if (auto f = track->getParentFolderTrack())

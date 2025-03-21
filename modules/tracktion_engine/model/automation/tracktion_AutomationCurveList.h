@@ -301,6 +301,9 @@ private:
     juce::ListenerList<Listener> listeners;
 };
 
+//==============================================================================
+void updateRelativeDestinationOrRemove (AutomationCurveList&, AutomationCurveModifier&, Clip& newParent);
+
 
 //==============================================================================
 //        _        _           _  _
