@@ -500,7 +500,6 @@ void updateRelativeDestinationOrRemove (AutomationCurveList& list, AutomationCur
     // Folder
     // Track
     auto oldPlugin = oldParam->getPlugin();
-    auto oldPluginList = oldPlugin->getOwnerList();
 
     if (! oldPlugin)
         return;
