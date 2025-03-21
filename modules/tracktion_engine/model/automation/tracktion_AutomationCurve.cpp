@@ -444,7 +444,7 @@ int AutomationCurve::movePoint (int index, EditPosition newPos, float newValue, 
         if (index > 0)
             newPos = max (getPointPosition (index - 1), newPos, ts);
         else
-            newPos = max (0_tp, newPos, ts);
+            newPos = max (newPos.isBeats() ? EditPosition (0_bp) : EditPosition (0_tp), newPos, ts);
 
         if (index < getNumPoints() - 1)
             newPos = min (newPos, getPointPosition (index + 1), ts);

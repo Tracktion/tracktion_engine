@@ -129,6 +129,7 @@ public:
     void selectPoint (int pointIdx, bool addToSelection);
 
     virtual EditPosition toEditPosition (const TimePosition& t);
+    virtual juce::Range<float> getParameterRange() const = 0;
 
 protected:
     void updatePointUnderMouse (juce::Point<float>);
@@ -137,9 +138,6 @@ protected:
 
     virtual void nonRealTimeDragStart() {}
     virtual void nonRealTimeDragEnd()   {}
-
-    virtual float getParameterMinValue() const = 0;
-    virtual float getParameterRange() const = 0;
 
     bool isPointSelected (int idx);
     bool areAnyPointsSelected();
