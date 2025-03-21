@@ -85,7 +85,7 @@ void synchroniseEditPosition (Edit& edit, const juce::AudioPlayHead::CurrentPosi
         }
         else
         {
-            transport.setPosition (toPosition (timeOffset));
+            epc->postPosition (toPosition (timeOffset));
 
             if (epc->isPlaying())
                 epc->stop();
