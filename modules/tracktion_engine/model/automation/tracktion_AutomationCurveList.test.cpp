@@ -503,7 +503,7 @@ TEST_SUITE("tracktion_engine")
                 EditItemID::remapIDs (stateCopy, nullptr, *context->edit);
                 auto newTrackID = EditItemID::fromID (stateCopy);
                 auto newTrack = context->edit->insertTrack (TrackInsertPoint::getEndOfTracks (*context->edit), stateCopy, nullptr);
-                CHECK (newTrack);
+                CHECK (newTrack->itemID == newTrackID);
 
                 at2 = dynamic_cast<AudioTrack*> (newTrack.get());
                 CHECK (at2);
