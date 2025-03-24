@@ -453,6 +453,9 @@ public:
     */
     virtual void setParent (ClipOwner*);
 
+    /** @internal. */
+    void updateAutomationCurveListDestinations();
+
 protected:
     friend class Track;
     friend class ClipTrack;

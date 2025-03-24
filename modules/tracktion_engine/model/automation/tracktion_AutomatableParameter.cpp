@@ -1077,24 +1077,30 @@ AutomatableParameter::ModifierAssignment::Ptr AutomatableParameter::addModifier 
     return as->assignment;
 }
 
-void AutomatableParameter::removeModifier (ModifierAssignment& assignment)
+bool AutomatableParameter::removeModifier (ModifierAssignment& assignment)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
 
     if (auto existing = getAutomationSourceList().getSourceFor (assignment))
+    {
         existing->state.getParent().removeChild (existing->state, &getEdit().getUndoManager());
-    else
-        jassertfalse;
+        return true;
+    }
+
+    return false;
 }
 
-void AutomatableParameter::removeModifier (ModifierSource& source)
+bool AutomatableParameter::removeModifier (ModifierSource& source)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
 
     if (auto existing = getAutomationSourceList().getSourceFor (source))
+    {
         existing->state.getParent().removeChild (existing->state, &getEdit().getUndoManager());
-    else
-        jassertfalse;
+        return true;
+    }
+
+    return false;
 }
 
 bool AutomatableParameter::hasActiveModifierAssignments() const

@@ -276,21 +276,27 @@ void Clip::setParent (ClipOwner* newParent)
     parent = newParent;
 
     // Parent is set to nullptr on Edit destruction so we don't want to remove curves in that case
+    // N.B. In some cases this is called from the ClipOwner::ClipList::newObjectAdded
+    // but if it's an existing clip being moved, it won't have a valid parent at that
+    // time so this call here catches that at a slightly later time
     if (parent)
-    {
-        if (auto automation = getAutomationCurveList (false))
-        {
-            for (auto curve : automation->getItems())
-            {
-                updateRelativeDestinationOrRemove (*automation, *curve, *this);
-                curve->setPositionDelegate (getAutomationCurveListPositionDelegate());
-            }
-        }
-    }
+        updateAutomationCurveListDestinations();
 
     if (auto track = getTrack())
         if (auto f = track->getParentFolderTrack())
             f->setDirtyClips();
+}
+
+void Clip::updateAutomationCurveListDestinations()
+{
+    if (auto automation = getAutomationCurveList (false))
+    {
+        for (auto curve : automation->getItems())
+        {
+            updateRelativeDestinationOrRemove (*automation, *curve, *this);
+            curve->setPositionDelegate (getAutomationCurveListPositionDelegate());
+        }
+    }
 }
 
 ClipOwner* Clip::getParent() const

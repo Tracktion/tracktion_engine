@@ -215,6 +215,19 @@ void TrackList::newObjectAdded (Track* t)
     if (edit.isLoading())
         return;
 
+    // Update parameters once track has been fully created
+    {
+        auto cursorPos = edit.transportControl->getPosition();
+
+        for (auto ap : t->getAllAutomatableParams())
+        {
+            ap->updateStream();
+
+            if (ap->isAutomationActive())
+                ap->updateFromAutomationSources (cursorPos);
+        }
+    }
+
     triggerAsyncUpdate();
     t->refreshCurrentAutoParam();
 

@@ -444,6 +444,102 @@ TEST_SUITE("tracktion_engine")
                 CHECK (volParam1->getModifiers().isEmpty());
             }
         }
+
+        SUBCASE ("Duplicate clip to second track")
+        {
+            auto stateCopy = context->clip->state.createCopy();
+            EditItemID::remapIDs (stateCopy, nullptr, *context->edit);
+            auto newClipID = EditItemID::fromID (stateCopy);
+            CHECK (newClipID != EditItemID::fromID (context->clip->state));
+            CHECK (findClipForID (*context->edit, newClipID) == nullptr);
+            CHECK (context->edit->clipCache.findItem (newClipID) == nullptr);
+
+            CHECK (! at2->state.getChildWithProperty (IDs::id, newClipID.toVar()).isValid());
+            at2->state.appendChild (stateCopy, getUndoManager_p (*at2));
+            auto newClip = at2->findClipForID (newClipID);
+            CHECK (newClip);
+
+            {
+                // Check track 1 is the same
+                auto volPlug1 = at1->getVolumePlugin();
+                auto volParam1 = volPlug1->volParam;
+                CHECK (volPlug1->isAutomationNeeded());
+                CHECK (volParam1->isAutomationActive());
+                CHECK (! volParam1->getModifiers().isEmpty());
+            }
+
+            auto curveList = context->clip->getAutomationCurveList (true);
+            CHECK (curveList->getItems().size() == 1);
+
+            auto curveMod = curveList->getItems().front();
+            CHECK (curveMod);
+
+            auto& absCurve = curveMod->getCurve (CurveModifierType::absolute).curve;
+            CHECK_EQ (absCurve.getNumPoints(), 2);
+
+            auto volPlug2 = at2->getVolumePlugin();
+            auto volParam2 = volPlug2->volParam;
+            CHECK (volParam2->isAutomationActive());
+            CHECK (! volParam2->getModifiers().isEmpty());
+
+            auto& ts = context->edit->tempoSequence;
+            volParam2->updateToFollowCurve (ts.toTime (0_bp));
+            CHECK (volParam2->getCurrentValue() == doctest::Approx (1.0f));
+            volParam2->updateToFollowCurve (ts.toTime (2_bp));
+            CHECK (volParam2->getCurrentValue() == doctest::Approx (1.0f));
+            volParam2->updateToFollowCurve (ts.toTime (4_bp));
+            CHECK (volParam2->getCurrentValue() == doctest::Approx (0.0f));
+        }
+
+        SUBCASE ("Duplicate track")
+        {
+
+            {
+                // Delete the old track 2
+                context->edit->deleteTrack (at2);
+
+                // Duplicate track 1 to track 2
+                auto stateCopy = context->track->state.createCopy();
+                EditItemID::remapIDs (stateCopy, nullptr, *context->edit);
+                auto newTrackID = EditItemID::fromID (stateCopy);
+                auto newTrack = context->edit->insertTrack (TrackInsertPoint::getEndOfTracks (*context->edit), stateCopy, nullptr);
+                CHECK (newTrack);
+
+                at2 = dynamic_cast<AudioTrack*> (newTrack.get());
+                CHECK (at2);
+            }
+
+            {
+                // Check track 1 is the same
+                auto volPlug1 = at1->getVolumePlugin();
+                auto volParam1 = volPlug1->volParam;
+                CHECK (volPlug1->isAutomationNeeded());
+                CHECK (volParam1->isAutomationActive());
+                CHECK (! volParam1->getModifiers().isEmpty());
+            }
+
+            auto curveList = context->clip->getAutomationCurveList (true);
+            CHECK (curveList->getItems().size() == 1);
+
+            auto curveMod = curveList->getItems().front();
+            CHECK (curveMod);
+
+            auto& absCurve = curveMod->getCurve (CurveModifierType::absolute).curve;
+            CHECK_EQ (absCurve.getNumPoints(), 2);
+
+            auto volPlug2 = at2->getVolumePlugin();
+            auto volParam2 = volPlug2->volParam;
+            CHECK (volParam2->isAutomationActive());
+            CHECK (! volParam2->getModifiers().isEmpty());
+
+            auto& ts = context->edit->tempoSequence;
+            volParam2->updateToFollowCurve (ts.toTime (0_bp));
+            CHECK (volParam2->getCurrentValue() == doctest::Approx (1.0f));
+            volParam2->updateToFollowCurve (ts.toTime (2_bp));
+            CHECK (volParam2->getCurrentValue() == doctest::Approx (1.0f));
+            volParam2->updateToFollowCurve (ts.toTime (4_bp));
+            CHECK (volParam2->getCurrentValue() == doctest::Approx (0.0f));
+        }
     }
 }
 

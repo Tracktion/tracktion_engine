@@ -123,11 +123,15 @@ public:
     */
     ModifierAssignment::Ptr addModifier (ModifierSource&, float value = 1.0f, float offset = 0.0f, float curve = 0.5f);
 
-    /** Removes an assignment. N.B. the passed in assignment is likely to be deleted after this call. */
-    void removeModifier (ModifierAssignment&);
+    /** Removes an assignment. N.B. the passed in assignment is likely to be deleted after this call.
+        @returns true if the ModifierAssignment was removed
+    */
+    bool removeModifier (ModifierAssignment&);
 
-    /** Removes assignments for a ModifierSource. */
-    void removeModifier (ModifierSource&);
+    /** Removes assignments for a ModifierSource.
+        @returns true if the ModifierSource was removed
+    */
+    bool removeModifier (ModifierSource&);
 
     /** Returns true if any ModifierSources are currently in use by assignments. */
     bool hasActiveModifierAssignments() const;
