@@ -1620,8 +1620,8 @@ void AutomationDragDropTarget::itemDropped (const SourceDetails& dragSourceDetai
     if (auto c = dynamic_cast<juce::Component*> (this))
         c->repaint();
 
-    juce::WeakReference<juce::Component> sourceCompRef (dragSourceDetails.sourceComponent);
-    juce::WeakReference<juce::Component> thisRef (dynamic_cast<juce::Component*> (this));
+    auto sourceCompRef = dragSourceDetails.sourceComponent;
+    auto thisRef = makeWeakRef (dynamic_cast<juce::Component*> (this));
 
     if (auto source = dynamic_cast<ParameterisableDragDropSource*> (sourceCompRef.get()))
     {

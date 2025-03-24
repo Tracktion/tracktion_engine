@@ -578,7 +578,7 @@ void SmartThumbnail::releaseFile()
 {
     clear();
     thumbnailIsInvalid = true;
-    juce::MessageManager::callAsync ([ref = juce::WeakReference<SmartThumbnail> (this), this]() mutable
+    juce::MessageManager::callAsync ([ref = makeWeakRef (*this), this]() mutable
                                      {
                                          if (ref != nullptr)
                                              startTimer (400);
@@ -926,7 +926,7 @@ void AudioFileManager::callListenersOnMessageThread (const AudioFile& file)
     if (juce::MessageManager::existsAndIsCurrentThread())
         callListeners (file);
     else
-        juce::MessageManager::callAsync ([file, eng = Engine::WeakRef (&engine)]
+        juce::MessageManager::callAsync ([file, eng = makeWeakRef (engine)]
                                          {
                                              if (eng != nullptr)
                                                  eng->getAudioFileManager().callListeners (file);

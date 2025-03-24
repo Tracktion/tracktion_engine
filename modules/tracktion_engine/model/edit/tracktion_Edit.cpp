@@ -26,7 +26,7 @@ struct Edit::UndoTransactionTimer   : private juce::Timer,
     {
         // Add the change listener asyncronously to avoid messages coming in
         // from the Edit initialisation phase
-        juce::MessageManager::callAsync ([ref = juce::WeakReference<UndoTransactionTimer> (this)]
+        juce::MessageManager::callAsync ([ref = makeWeakRef (*this)]
                                          {
                                              if (ref != nullptr)
                                                  ref->edit.getUndoManager().addChangeListener (ref.get());
