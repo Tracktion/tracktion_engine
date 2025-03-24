@@ -79453,6 +79453,20 @@
       <arglist>(const Iterable &amp;selectables) -&gt; std::vector&lt; SafeSelectable&lt; typename std::remove_reference&lt; decltype(*selectables[0])&gt;::type &gt; &gt;</arglist>
     </member>
     <member kind="function">
+      <type>juce::WeakReference&lt; WeakReferenceable &gt;</type>
+      <name>makeWeakRef</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ace058f3a55323be077956a8dc7236789</anchor>
+      <arglist>(WeakReferenceable &amp;object)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::WeakReference&lt; WeakReferenceable &gt;</type>
+      <name>makeWeakRef</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a42772e61afee117729ed50afd030b8ac</anchor>
+      <arglist>(WeakReferenceable *object)</arglist>
+    </member>
+    <member kind="function">
       <type>bool</type>
       <name>callBlocking</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>

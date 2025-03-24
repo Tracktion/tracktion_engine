@@ -2073,6 +2073,14 @@ Functions</h2></td></tr>
 <tr class="memitem:a0de8a5d25c2322a18d3b4766b0900063"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a0de8a5d25c2322a18d3b4766b0900063">makeSafeVector</a> (const Iterable &amp;selectables) -&gt; std::vector&lt; <a class="el" href="classtracktion_1_1engine_1_1SafeSelectable.html">SafeSelectable</a>&lt; typename std::remove_reference&lt; decltype(*selectables[0])&gt;::type &gt; &gt;</td></tr>
 <tr class="memdesc:a0de8a5d25c2322a18d3b4766b0900063"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a std::vector&lt;SafeSelectable&lt;Something&gt;&gt; for a given juce::Array of selectable objects.  <br /></td></tr>
 <tr class="separator:a0de8a5d25c2322a18d3b4766b0900063"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace058f3a55323be077956a8dc7236789" id="r_ace058f3a55323be077956a8dc7236789"><td class="memTemplParams" colspan="2">template&lt;typename WeakReferenceable &gt; </td></tr>
+<tr class="memitem:ace058f3a55323be077956a8dc7236789"><td class="memTemplItemLeft" align="right" valign="top">juce::WeakReference&lt; WeakReferenceable &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#ace058f3a55323be077956a8dc7236789">makeWeakRef</a> (WeakReferenceable &amp;object)</td></tr>
+<tr class="memdesc:ace058f3a55323be077956a8dc7236789"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a juce::WeakReference for an object.  <br /></td></tr>
+<tr class="separator:ace058f3a55323be077956a8dc7236789"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42772e61afee117729ed50afd030b8ac" id="r_a42772e61afee117729ed50afd030b8ac"><td class="memTemplParams" colspan="2">template&lt;typename WeakReferenceable &gt; </td></tr>
+<tr class="memitem:a42772e61afee117729ed50afd030b8ac"><td class="memTemplItemLeft" align="right" valign="top">juce::WeakReference&lt; WeakReferenceable &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a42772e61afee117729ed50afd030b8ac">makeWeakRef</a> (WeakReferenceable *object)</td></tr>
+<tr class="memdesc:a42772e61afee117729ed50afd030b8ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a juce::WeakReference for an object pointer (which may be null)  <br /></td></tr>
+<tr class="separator:a42772e61afee117729ed50afd030b8ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0292b1e3fc9926303224136c8acba0fc" id="r_a0292b1e3fc9926303224136c8acba0fc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a0292b1e3fc9926303224136c8acba0fc">callBlocking</a> (std::function&lt; void()&gt; f)</td></tr>
 <tr class="memdesc:a0292b1e3fc9926303224136c8acba0fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls a function on the message thread by posting a message and then waiting for it to be delivered.  <br /></td></tr>
 <tr class="separator:a0292b1e3fc9926303224136c8acba0fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2413,7 +2421,7 @@ Variables</h2></td></tr>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Mar 21 2025 17:18:28 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Mar 24 2025 14:22:27 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
