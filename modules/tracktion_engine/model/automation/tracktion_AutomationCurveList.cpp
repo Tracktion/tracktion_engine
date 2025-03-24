@@ -520,7 +520,7 @@ void updateRelativeDestinationOrRemove (AutomationCurveList& list, AutomationCur
     if (dynamic_cast<MasterTrack*> (oldTrack) != nullptr
         || dynamic_cast<FolderTrack*> (oldTrack) != nullptr)
     {
-        jassert (&dynamic_cast<MasterTrack*> (oldTrack)->pluginList == oldPluginList);
+        jassert (&dynamic_cast<MasterTrack*> (oldTrack)->pluginList == oldPlugin->getOwnerList());
         oldCurveRemover.release();
         return;
     }
