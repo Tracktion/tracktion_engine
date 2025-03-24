@@ -692,9 +692,16 @@ Edit::~Edit()
         af->hideWindowForShutdown();
 
     for (auto at : getTracksOfType<AudioTrack> (*this, true))
+    {
         for (auto c : at->getClips())
+        {
             if (auto acb = dynamic_cast<AudioClipBase*> (c))
+            {
+                acb->flushStateToValueTree();
                 acb->hideMelodyneWindow();
+            }
+        }
+    }
 
     engine.getActiveEdits().edits.removeFirstMatchingValue (this);
     masterReference.clear();

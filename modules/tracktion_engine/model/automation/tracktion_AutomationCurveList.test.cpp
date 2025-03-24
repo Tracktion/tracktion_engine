@@ -541,6 +541,93 @@ TEST_SUITE("tracktion_engine")
             CHECK (volParam2->getCurrentValue() == doctest::Approx (0.0f));
         }
     }
+
+    TEST_CASE ("AutomationCurveList: Clip plugin")
+    {
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto context = AutomationCurveListTestContext::create (engine);
+
+        context->edit->ensureNumberOfAudioTracks (2);
+        auto audioTracks = getAudioTracks (*context->edit);
+        auto at1 = audioTracks[0];
+        auto at2 = audioTracks[1];
+
+        auto checkTrackVolParamsArentActive = [at1, at2]
+        {
+            for (auto at : { at1, at2 })
+            {
+                auto volPlug = at->getVolumePlugin();
+                auto volParam = volPlug->volParam;
+                CHECK (! volPlug->isAutomationNeeded());
+                CHECK (! volParam->isAutomationActive());
+                CHECK (volParam->getModifiers().isEmpty());
+            }
+        };
+
+        checkTrackVolParamsArentActive();
+
+        auto plugin = context->clip->getPluginList()->insertPlugin (VolumeAndPanPlugin::create(), 0);
+        context->volPlugin = dynamic_cast<VolumeAndPanPlugin*> (plugin.get());
+        context->volParam = context->volPlugin->volParam;
+
+        checkTrackVolParamsArentActive();
+
+        {
+            auto curveList = context->clip->getAutomationCurveList (true);
+            auto curveMod = curveList->addCurve (*context->volParam);
+
+            auto& curve = curveMod->getCurve (CurveModifierType::absolute).curve;
+            curve.addPoint (2.5_bp, 1.0f, 0.0, nullptr);
+            curve.addPoint (2.5_bp, 0.0f, 0.0, nullptr); // Sharp square from 1-0 at 2.5b
+        }
+
+        checkTrackVolParamsArentActive();
+
+        SUBCASE("Duplicate clip to second track")
+        {
+            auto stateCopy = context->clip->state.createCopy();
+            EditItemID::remapIDs (stateCopy, nullptr, *context->edit);
+            auto newClipID = EditItemID::fromID (stateCopy);
+            CHECK (newClipID != EditItemID::fromID (context->clip->state));
+            CHECK (findClipForID (*context->edit, newClipID) == nullptr);
+            CHECK (context->edit->clipCache.findItem (newClipID) == nullptr);
+
+            CHECK (! at2->state.getChildWithProperty (IDs::id, newClipID.toVar()).isValid());
+            at2->state.appendChild (stateCopy, getUndoManager_p (*at2));
+            auto newClip = at2->findClipForID (newClipID);
+            CHECK (newClip);
+
+            // Nothing should be connected to the track plugins
+            checkTrackVolParamsArentActive();
+
+            // Clip on track 1 and 2 should have the same properties though
+            for (auto clip : { at1->getClips()[0], at2->getClips()[0] })
+            {
+                auto volPlug = clip->getPluginList()->getPluginsOfType<VolumeAndPanPlugin>()[0];
+                auto volParam = volPlug->volParam;
+                CHECK (volPlug->isAutomationNeeded());
+                CHECK (volParam->isAutomationActive());
+                CHECK (! volParam->getModifiers().isEmpty());
+
+                auto curveList = clip->getAutomationCurveList (true);
+                CHECK (curveList->getItems().size() == 1);
+
+                auto curveMod = curveList->getItems().front();
+                CHECK (curveMod);
+
+                auto& absCurve = curveMod->getCurve (CurveModifierType::absolute).curve;
+                CHECK_EQ (absCurve.getNumPoints(), 2);
+
+                auto& ts = context->edit->tempoSequence;
+                volParam->updateToFollowCurve (ts.toTime (0_bp));
+                CHECK (volParam->getCurrentValue() == doctest::Approx (1.0f));
+                volParam->updateToFollowCurve (ts.toTime (2_bp));
+                CHECK (volParam->getCurrentValue() == doctest::Approx (1.0f));
+                volParam->updateToFollowCurve (ts.toTime (4_bp));
+                CHECK (volParam->getCurrentValue() == doctest::Approx (0.0f));
+            }
+        }
+    }
 }
 
 } // namespace tracktion::inline engine

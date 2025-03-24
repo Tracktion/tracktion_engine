@@ -482,6 +482,30 @@ namespace detail
         assert (et1 && et2);
         return et1->desc.isDuplicateOf (et2->desc);
     }
+
+    bool copyModifierCurveStateToNewPlugin (AutomationCurveList& list, AutomationCurveModifier& curveMod, Plugin& newPlugin)
+    {
+        // Copy the properties from the old state to the newly created curve, updating the plugin ID
+        if (auto newParam = newPlugin.getAutomatableParameterByID (curveMod.destID.paramID))
+        {
+            auto stateCopy = curveMod.state.createCopy();
+            stateCopy.setProperty (IDs::source, newPlugin.itemID, nullptr);
+
+            auto newCurve = list.addCurve (*newParam);
+            copyValueTree (newCurve->state, stateCopy, getUndoManager_p (curveMod));
+
+            // Reset curves to point to the new states
+            using enum CurveModifierType;
+
+            for (auto type : { absolute, relative, scale })
+                newCurve->getCurve (type).curve
+                    .setState (newCurve->state.getChildWithProperty (IDs::type, toString (type)));
+
+            return true;
+        }
+
+        return false;
+    }
 }
 
 void updateRelativeDestinationOrRemove (AutomationCurveList& list, AutomationCurveModifier& curve, Clip& clip)
@@ -504,17 +528,24 @@ void updateRelativeDestinationOrRemove (AutomationCurveList& list, AutomationCur
     if (! oldPlugin)
         return;
 
-    auto oldTrack = oldPlugin->getOwnerTrack();
+    // If the curve is targeted to a plugin on a different clip,
+    // update it to the new one if possible
+    if (auto oldClip = oldPlugin->getOwnerClip())
+        if (auto pluginList = clip.getPluginList())
+            for (auto newPlugin : *pluginList)
+                if (detail::areEquivalentPlugins (*oldPlugin, *newPlugin))
+                    if (detail::copyModifierCurveStateToNewPlugin (list, curve, *newPlugin))
+                        return;
 
-    // If the plugin is on the clip or a RackType, keep it
-    if (! oldTrack)
+    // If the plugin is on the same clip or on a RackType, keep it
+    if (oldPlugin->getOwnerClip() == &clip
+        || oldPlugin->getOwnerRackType())
     {
-        if (oldPlugin->getOwnerClip() == &clip
-            || oldPlugin->getOwnerRackType())
-           oldCurveRemover.release();
-
+        oldCurveRemover.release();
         return;
     }
+
+    auto oldTrack = oldPlugin->getOwnerTrack();
 
     // Keep connection to master plugins or folder tracks
     if (dynamic_cast<MasterTrack*> (oldTrack) != nullptr
@@ -527,32 +558,10 @@ void updateRelativeDestinationOrRemove (AutomationCurveList& list, AutomationCur
 
     // Curve was on a plugin on a track so look for an appropriate replacement
     if (auto newTrack = clip.getTrack(); newTrack)
-    {
         for (auto newPlugin : newTrack->pluginList)
-        {
-            if (! detail::areEquivalentPlugins (*oldPlugin, *newPlugin))
-                continue;
-
-            // Copy the properties from the old state to the newly created curve, updating the plugin ID
-            if (auto newParam = newPlugin->getAutomatableParameterByID (curve.destID.paramID))
-            {
-                auto stateCopy = curve.state.createCopy();
-                stateCopy.setProperty (IDs::source, newPlugin->itemID, nullptr);
-
-                auto newCurve = list.addCurve (*newParam);
-                copyValueTree (newCurve->state, stateCopy, getUndoManager_p (curve));
-
-                // Reset curves to point to the new states
-                using enum CurveModifierType;
-
-                for (auto type : { absolute, relative, scale })
-                    newCurve->getCurve (type).curve
-                        .setState (newCurve->state.getChildWithProperty (IDs::type, toString (type)));
-
-                return;
-            }
-        }
-    }
+            if (detail::areEquivalentPlugins (*oldPlugin, *newPlugin))
+                if (detail::copyModifierCurveStateToNewPlugin (list, curve, *newPlugin))
+                    return;
 }
 
 //==============================================================================
