@@ -530,7 +530,7 @@ void updateRelativeDestinationOrRemove (AutomationCurveList& list, AutomationCur
 
     // If the curve is targeted to a plugin on a different clip,
     // update it to the new one if possible
-    if (auto oldClip = oldPlugin->getOwnerClip())
+    if (oldPlugin->getOwnerClip() != nullptr)
         if (auto pluginList = clip.getPluginList())
             for (auto newPlugin : *pluginList)
                 if (detail::areEquivalentPlugins (*oldPlugin, *newPlugin))
