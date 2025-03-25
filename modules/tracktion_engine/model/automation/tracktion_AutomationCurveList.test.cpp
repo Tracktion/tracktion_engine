@@ -885,17 +885,7 @@ TEST_SUITE("tracktion_engine")
             auto audioTracks = getAudioTracks (*context->edit);
             auto at2 = audioTracks[1];
 
-            // Configure track 1
-            {
-                auto curveList = context->clip->getAutomationCurveList (true);
-                auto curveMod = curveList->addCurve (*context->volParam);
-
-                auto& curve = curveMod->getCurve (CurveModifierType::absolute).curve;
-                curve.addPoint (2.5_bp, 1.0f, 0.0, nullptr);
-                curve.addPoint (2.5_bp, 0.0f, 0.0, nullptr); // Sharp square from 1-0 at 2.5b
-            }
-
-            // Configure track 2
+            // Configure track 2 first or we'll be copying the track vol plugin assignment as well
             {
                 auto stateCopy = context->clip->state.createCopy();
                 EditItemID::remapIDs (stateCopy, nullptr, *context->edit);
@@ -914,7 +904,27 @@ TEST_SUITE("tracktion_engine")
                 curve.addPoint (2.5_bp, 0.0f, 0.0, nullptr); // Sharp square from 1-0 at 2.5b
             }
 
+            // Configure track 1
+            {
+                auto curveList = context->clip->getAutomationCurveList (true);
+                auto curveMod = curveList->addCurve (*context->volParam);
+                CHECK (getParameter (*curveMod) == context->volParam);
+
+                auto& curve = curveMod->getCurve (CurveModifierType::absolute).curve;
+                curve.addPoint (2.5_bp, 1.0f, 0.0, nullptr);
+                curve.addPoint (2.5_bp, 0.0f, 0.0, nullptr); // Sharp square from 1-0 at 2.5b
+            }
+
             checkTrackVolParams (*context->edit, true);
+
+            {
+                auto clip = at2->getClips()[0];
+                auto curveList = clip->getAutomationCurveList (false);
+                CHECK(curveList->getItems().size() == 1);
+                auto curveMod = curveList->getItems()[0];
+                auto clipVolPlugin = clip->getPluginList()->getPluginsOfType<VolumeAndPanPlugin>().getFirst();
+                CHECK (getParameter (*curveMod).get() == clipVolPlugin->volParam);
+            }
 
             oldEditState = context->edit->state.createCopy();
         }
@@ -925,8 +935,29 @@ TEST_SUITE("tracktion_engine")
             checkTrackVolParams (*loadedEdit, true);
 
             auto ats = getAudioTracks (*loadedEdit);
-            ats[0]->getClips()[0]->getAutomationCurveList (false)->removeCurve (0);
-            ats[1]->getClips()[0]->getAutomationCurveList (false)->removeCurve (0);
+
+            {
+                auto clip = ats[0]->getClips()[0];
+                auto curveList = clip->getAutomationCurveList (false);
+                CHECK(curveList->getItems().size() == 1);
+                auto curveMod = curveList->getItems()[0];
+                auto trackVolPlugin = ats[0]->pluginList.getPluginsOfType<VolumeAndPanPlugin>().getFirst();
+                CHECK (getParameter (*curveMod).get() == trackVolPlugin->volParam);
+
+                curveList->removeCurve (0);
+            }
+
+            {
+                auto clip = ats[1]->getClips()[0];
+                auto curveList = clip->getAutomationCurveList (false);
+                CHECK(curveList->getItems().size() == 1);
+                auto curveMod = curveList->getItems()[0];
+                auto clipVolPlugin = clip->getPluginList()->getPluginsOfType<VolumeAndPanPlugin>().getFirst();
+                CHECK (getParameter (*curveMod).get() == clipVolPlugin->volParam);
+
+                curveList->removeCurve (0);
+            }
+
             checkTrackVolParams (*loadedEdit, false);
         }
     }
