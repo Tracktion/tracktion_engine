@@ -483,7 +483,7 @@ namespace detail
         return et1->desc.isDuplicateOf (et2->desc);
     }
 
-    bool copyModifierCurveStateToNewPlugin (AutomationCurveList& list, AutomationCurveModifier& curveMod, Plugin& newPlugin)
+    inline bool copyModifierCurveStateToNewPlugin (AutomationCurveList& list, AutomationCurveModifier& curveMod, Plugin& newPlugin)
     {
         // Copy the properties from the old state to the newly created curve, updating the plugin ID
         if (auto newParam = newPlugin.getAutomatableParameterByID (curveMod.destID.paramID))

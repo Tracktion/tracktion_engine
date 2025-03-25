@@ -452,8 +452,14 @@ void Clip::trimAwayOverlap (TimeRange r)
 
 void Clip::removeFromParent()
 {
-    if (state.getParent().isValid())
-        state.getParent().removeChild (state, getUndoManager());
+    if (! state.getParent().isValid())
+        return;
+
+    if (auto automation = getAutomationCurveList (false))
+        for (auto curve : automation->getItems())
+            curve->remove();
+
+    state.getParent().removeChild (state, getUndoManager());
 }
 
 bool Clip::moveTo (ClipOwner& newParent)

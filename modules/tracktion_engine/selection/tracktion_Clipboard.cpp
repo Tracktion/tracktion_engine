@@ -1221,6 +1221,11 @@ bool Clipboard::Tracks::pasteIntoEdit (const EditPastingOptions& options) const
                 if (dynamic_cast<MacroParameter::Assignment*> (ass.get()) != nullptr)
                     continue;
 
+                // AutomationCurveModifier reassignment is done during updateRelativeDestinationOrRemove so
+                // we need to make sure we don't remove these
+                if (dynamic_cast<AutomationCurveModifier::Assignment*> (ass.get()) != nullptr)
+                    continue;
+
                 const auto oldID = EditItemID::fromProperty (ass->state, IDs::source);
                 const auto newID = remappedIDs[oldID];
 

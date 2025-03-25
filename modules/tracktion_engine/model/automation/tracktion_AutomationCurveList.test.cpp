@@ -12,6 +12,7 @@
 
 #include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
 #include <tracktion_engine/utilities/tracktion_TestUtilities.h>
+#include <tracktion_engine/playback/graph/tracktion_BenchmarkUtilities.h>
 #include <tracktion_graph/tracktion_graph/tracktion_TestUtilities.h>
 
 namespace tracktion::inline engine
@@ -493,7 +494,6 @@ TEST_SUITE("tracktion_engine")
 
         SUBCASE ("Duplicate track")
         {
-
             {
                 // Delete the old track 2
                 context->edit->deleteTrack (at2);
@@ -539,6 +539,232 @@ TEST_SUITE("tracktion_engine")
             CHECK (volParam2->getCurrentValue() == doctest::Approx (1.0f));
             volParam2->updateToFollowCurve (ts.toTime (4_bp));
             CHECK (volParam2->getCurrentValue() == doctest::Approx (0.0f));
+        }
+    }
+
+    TEST_CASE("AutomationCurveList: Clipboard")
+    {
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto context = AutomationCurveListTestContext::create (engine);
+
+        {
+            auto curveList = context->clip->getAutomationCurveList (true);
+            auto curveMod = curveList->addCurve (*context->volParam);
+
+            auto& curve = curveMod->getCurve (CurveModifierType::absolute).curve;
+            curve.addPoint (2.5_bp, 1.0f, 0.0, nullptr);
+            curve.addPoint (2.5_bp, 0.0f, 0.0, nullptr); // Sharp square from 1-0 at 2.5b
+        }
+
+        context->edit->ensureNumberOfAudioTracks (2);
+        auto audioTracks = getAudioTracks (*context->edit);
+        auto at1 = audioTracks[0];
+        auto at2 = audioTracks[1];
+
+        {
+            auto volPlug = at1->getVolumePlugin();
+            auto volParam = volPlug->volParam;
+            CHECK (volPlug->isAutomationNeeded());
+            CHECK (volParam->isAutomationActive());
+            CHECK (! volParam->getModifiers().isEmpty());
+
+            auto curveMod = at1->getClips()[0]->getAutomationCurveList (false)->getItems()[0];
+            CHECK (getParameter (*curveMod) == volParam);
+        }
+
+        SUBCASE("Cut/paste clip to second track")
+        {
+            {
+                Clipboard::Clips content;
+                content.addClip (0, context->clip->state);
+
+                context->clip->removeFromParent();
+
+                EditInsertPoint insertPoint (*context->edit);
+                insertPoint.setNextInsertPoint (at2, {});
+                CHECK(content.pasteIntoEdit (*context->edit, insertPoint, nullptr));
+
+                context->clip = dynamic_cast<WaveAudioClip*> (at2->getClips()[0]);
+                CHECK(context->clip);
+            }
+
+            {
+                auto volPlug1 = at1->getVolumePlugin();
+                auto volParam1 = volPlug1->volParam;
+                CHECK (! volPlug1->isAutomationNeeded());
+                CHECK (! volParam1->isAutomationActive());
+                CHECK (volParam1->getModifiers().isEmpty());
+            }
+
+            auto curveList = context->clip->getAutomationCurveList (true);
+            CHECK (curveList->getItems().size() == 1);
+
+            auto curveMod = curveList->getItems().front();
+            CHECK (curveMod);
+
+            auto& absCurve = curveMod->getCurve (CurveModifierType::absolute).curve;
+            CHECK_EQ (absCurve.getNumPoints(), 2);
+
+            auto volPlug2 = at2->getVolumePlugin();
+            auto volParam2 = volPlug2->volParam;
+            CHECK (volParam2->isAutomationActive());
+            CHECK (! volParam2->getModifiers().isEmpty());
+
+            auto& ts = context->edit->tempoSequence;
+            volParam2->updateToFollowCurve (ts.toTime (0_bp));
+            CHECK (volParam2->getCurrentValue() == doctest::Approx (1.0f));
+            volParam2->updateToFollowCurve (ts.toTime (2_bp));
+            CHECK (volParam2->getCurrentValue() == doctest::Approx (1.0f));
+            volParam2->updateToFollowCurve (ts.toTime (4_bp));
+            CHECK (volParam2->getCurrentValue() == doctest::Approx (0.0f));
+        }
+
+        SUBCASE("Copy/paste clip to second track")
+        {
+            {
+                Clipboard::Clips content;
+                content.addClip (0, context->clip->state);
+
+                EditInsertPoint insertPoint (*context->edit);
+                insertPoint.setNextInsertPoint (at2, {});
+                CHECK(content.pasteIntoEdit (*context->edit, insertPoint, nullptr));
+            }
+
+            for (auto at : { at1, at2 })
+            {
+                auto volPlug = at->getVolumePlugin();
+                auto volParam = volPlug->volParam;
+                CHECK (volPlug->isAutomationNeeded());
+                CHECK (volParam->isAutomationActive());
+                CHECK (! volParam->getModifiers().isEmpty());
+
+                auto curveMod = at->getClips()[0]->getAutomationCurveList (false)->getItems()[0];
+                CHECK (getParameter (*curveMod) == volParam);
+            }
+
+            // Delete first clip, vol should be inactive
+            {
+                context->clip->removeFromParent();
+
+                auto volPlug = at1->getVolumePlugin();
+                auto volParam = volPlug->volParam;
+                CHECK (! volPlug->isAutomationNeeded());
+                CHECK (! volParam->isAutomationActive());
+                CHECK (volParam->getModifiers().isEmpty());
+            }
+
+            // Second vol should still be active
+            {
+                auto volPlug = at2->getVolumePlugin();
+                auto volParam = volPlug->volParam;
+                CHECK (volPlug->isAutomationNeeded());
+                CHECK (volParam->isAutomationActive());
+                CHECK (! volParam->getModifiers().isEmpty());
+            }
+        }
+
+        SUBCASE("Copy/paste clip to same track")
+        {
+            {
+                Clipboard::Clips content;
+                content.addClip (0, context->clip->state);
+
+                EditInsertPoint insertPoint (*context->edit);
+                insertPoint.setNextInsertPoint (at1, context->clip->getEditTimeRange().getEnd());
+                CHECK(content.pasteIntoEdit (*context->edit, insertPoint, nullptr));
+            }
+
+            {
+                auto volPlug = at1->getVolumePlugin();
+                auto volParam = volPlug->volParam;
+                CHECK (volPlug->isAutomationNeeded());
+                CHECK (volParam->isAutomationActive());
+                CHECK (! volParam->getModifiers().isEmpty());
+
+                {
+                    auto clips = at1->getClips();
+                    auto curveMod1 = clips[0]->getAutomationCurveList (false)->getItems()[0];
+                    CHECK (getParameter (*curveMod1) == volParam);
+                    auto curveMod2 = clips[1]->getAutomationCurveList (false)->getItems()[0];
+                    CHECK (getParameter (*curveMod2) == volParam);
+                }
+            }
+
+            auto& ts = context->edit->tempoSequence;
+            context->volParam->updateToFollowCurve (ts.toTime (0_bp));
+            CHECK (context->volParam->getCurrentValue() == doctest::Approx (1.0f));
+            context->volParam->updateToFollowCurve (ts.toTime (2_bp));
+            CHECK (context->volParam->getCurrentValue() == doctest::Approx (1.0f));
+            context->volParam->updateToFollowCurve (ts.toTime (4_bp));
+            CHECK (context->volParam->getCurrentValue() == doctest::Approx (0.0f));
+
+            // This should use the second clip's curve
+            context->volParam->updateToFollowCurve (ts.toTime (0_bp + 5_bd));
+            CHECK (context->volParam->getCurrentValue() == doctest::Approx (1.0f));
+            context->volParam->updateToFollowCurve (ts.toTime (2_bp + 5_bd));
+            CHECK (context->volParam->getCurrentValue() == doctest::Approx (1.0f));
+            context->volParam->updateToFollowCurve (ts.toTime (4_bp + 5_bd));
+            CHECK (context->volParam->getCurrentValue() == doctest::Approx (0.0f));
+        }
+
+        SUBCASE("Copy/paste clip to second track with no corresponding plugin")
+        {
+            at2->getVolumePlugin()->deleteFromParent();
+
+            {
+                Clipboard::Clips content;
+                content.addClip (0, context->clip->state);
+
+                EditInsertPoint insertPoint (*context->edit);
+                insertPoint.setNextInsertPoint (at2, {});
+                CHECK(content.pasteIntoEdit (*context->edit, insertPoint, nullptr));
+
+                context->clip = dynamic_cast<WaveAudioClip*> (at2->getClips()[0]);
+                CHECK(context->clip);
+            }
+
+            CHECK (context->clip->getAutomationCurveList (true)->getItems().empty());
+
+            {
+                auto volPlug = at1->getVolumePlugin();
+                auto volParam = volPlug->volParam;
+                CHECK (volPlug->isAutomationNeeded());
+                CHECK (volParam->isAutomationActive());
+                CHECK (! volParam->getModifiers().isEmpty());
+            }
+        }
+
+        SUBCASE ("Copy/paste track")
+        {
+            {
+                // Delete the old track 2
+                context->edit->deleteTrack (at2);
+
+                // Duplicate track 1 to track 2
+                Clipboard::Tracks content;
+                content.tracks.push_back (at1->state.createCopy());
+
+                EditInsertPoint insertPoint (*context->edit);
+                insertPoint.setNextInsertPoint (at1, {});
+
+                content.pasteIntoEdit (*context->edit, insertPoint, nullptr);
+
+                at2 = dynamic_cast<AudioTrack*> (getAudioTracks (*context->edit)[1]);
+                CHECK (at2);
+                CHECK (at1 != at2);
+            }
+
+            for (auto at : { at1, at2 })
+            {
+                auto volPlug = at->getVolumePlugin();
+                auto volParam = volPlug->volParam;
+                CHECK (volPlug->isAutomationNeeded());
+                CHECK (volParam->isAutomationActive());
+                CHECK (! volParam->getModifiers().isEmpty());
+
+                auto curveMod = at->getClips()[0]->getAutomationCurveList (false)->getItems()[0];
+                CHECK (getParameter (*curveMod) == volParam);
+            }
         }
     }
 
@@ -626,6 +852,82 @@ TEST_SUITE("tracktion_engine")
                 volParam->updateToFollowCurve (ts.toTime (4_bp));
                 CHECK (volParam->getCurrentValue() == doctest::Approx (0.0f));
             }
+        }
+    }
+
+    TEST_CASE ("AutomationCurveList: Save and reload Edit")
+    {
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+
+        auto checkTrackVolParams = [] (Edit& edit, bool shouldBeActive)
+        {
+            auto ats = getAudioTracks (edit);
+            auto track1VolPlugin = ats[0]->getVolumePlugin();
+            auto clipVolPlugin = ats[1]->getClips()[0]->getPluginList()->getPluginsOfType<VolumeAndPanPlugin>()[0];
+
+            for (auto volPlug : { track1VolPlugin, clipVolPlugin })
+            {
+                auto volParam = volPlug->volParam;
+                CHECK_EQ (volPlug->isAutomationNeeded(), shouldBeActive);
+                CHECK_EQ (volParam->isAutomationActive(), shouldBeActive);
+                CHECK_NE (volParam->getModifiers().isEmpty(), shouldBeActive);
+            }
+        };
+
+        juce::ValueTree oldEditState;
+
+        // Original Edit
+        // Track 1 clip automating track volume
+        // Track 2 clip automating clip vol plugin
+        {
+            auto context = AutomationCurveListTestContext::create (engine);
+            context->edit->ensureNumberOfAudioTracks (2);
+            auto audioTracks = getAudioTracks (*context->edit);
+            auto at2 = audioTracks[1];
+
+            // Configure track 1
+            {
+                auto curveList = context->clip->getAutomationCurveList (true);
+                auto curveMod = curveList->addCurve (*context->volParam);
+
+                auto& curve = curveMod->getCurve (CurveModifierType::absolute).curve;
+                curve.addPoint (2.5_bp, 1.0f, 0.0, nullptr);
+                curve.addPoint (2.5_bp, 0.0f, 0.0, nullptr); // Sharp square from 1-0 at 2.5b
+            }
+
+            // Configure track 2
+            {
+                auto stateCopy = context->clip->state.createCopy();
+                EditItemID::remapIDs (stateCopy, nullptr, *context->edit);
+                auto newClipID = EditItemID::fromID (stateCopy);
+                at2->state.appendChild (stateCopy, getUndoManager_p (*at2));
+                auto newClip = at2->findClipForID (newClipID);
+
+                auto plugin = newClip->getPluginList()->insertPlugin (VolumeAndPanPlugin::create(), 0);
+                auto clipVolPlugin = newClip->getPluginList()->getPluginsOfType<VolumeAndPanPlugin>().getFirst();
+
+                auto curveList = newClip->getAutomationCurveList (true);
+                auto curveMod = curveList->addCurve (*clipVolPlugin->volParam);
+
+                auto& curve = curveMod->getCurve (CurveModifierType::absolute).curve;
+                curve.addPoint (2.5_bp, 1.0f, 0.0, nullptr);
+                curve.addPoint (2.5_bp, 0.0f, 0.0, nullptr); // Sharp square from 1-0 at 2.5b
+            }
+
+            checkTrackVolParams (*context->edit, true);
+
+            oldEditState = context->edit->state.createCopy();
+        }
+
+        // Reload Edit
+        {
+            auto loadedEdit = benchmark_utilities::loadEditFromValueTree (engine, oldEditState);
+            checkTrackVolParams (*loadedEdit, true);
+
+            auto ats = getAudioTracks (edit);
+            ats[0]->getClips()[0]->getAutomationCurveList (false)->removeCurve (0);
+            ats[1]->getClips()[0]->getAutomationCurveList (false)->removeCurve (0);
+            checkTrackVolParams (*loadedEdit, false);
         }
     }
 }
