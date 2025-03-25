@@ -22,7 +22,7 @@
 /**
     This can be used to check the version of the choc library.
 
-    This should match the value in the VERSION file.
+    This should match the value in the VERSION.txt file.
 
     When you're working on large projects that may contain more than one copy
     of the choc library, it's a good idea to use this to make sure that all of
