@@ -924,7 +924,7 @@ TEST_SUITE("tracktion_engine")
             auto loadedEdit = benchmark_utilities::loadEditFromValueTree (engine, oldEditState);
             checkTrackVolParams (*loadedEdit, true);
 
-            auto ats = getAudioTracks (edit);
+            auto ats = getAudioTracks (*loadedEdit);
             ats[0]->getClips()[0]->getAutomationCurveList (false)->removeCurve (0);
             ats[1]->getClips()[0]->getAutomationCurveList (false)->removeCurve (0);
             checkTrackVolParams (*loadedEdit, false);
