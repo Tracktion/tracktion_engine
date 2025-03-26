@@ -270,6 +270,7 @@ TEST_SUITE("tracktion_engine")
     {
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
         auto context = AutomationCurveListTestContext::create (engine);
+        auto& ts = context->edit->tempoSequence;
 
         auto curveList = context->clip->getAutomationCurveList (true);
         auto curveMod = curveList->addCurve (*context->volParam);
@@ -368,12 +369,63 @@ TEST_SUITE("tracktion_engine")
 
         SUBCASE("Looping")
         {
+            timing.looping = true;
 
-        }
+            timing.loopStart = 1_bp;
+            timing.loopLength = 3_bd;
 
-        SUBCASE("Looping & start offset")
-        {
+            context->clip->setEnd (toTime (6_bp, ts), false);
 
+            {
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 0_bp).baseValue.value()
+                        == doctest::Approx (1.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 1_bp).baseValue.value()
+                        == doctest::Approx (1.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 2_bp).baseValue.value()
+                        == doctest::Approx (1.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 3_bp).baseValue.value()
+                        == doctest::Approx (0.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 3.99_bp).baseValue.value()
+                        == doctest::Approx (0.0f));
+
+                // End of loop, not inclusive so loops round to start
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 4_bp).baseValue.value()
+                        == doctest::Approx (1.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 5_bp).baseValue.value()
+                        == doctest::Approx (1.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 5.99_bp).baseValue.value()
+                        == doctest::Approx (0.0f));
+
+                // End of clip so no value
+                CHECK (! getValuesAtEditPosition (*curveMod, *context->volParam, 6_bp).baseValue.has_value());
+            }
+
+            // Change start position
+            timing.start  = 1_bp;
+
+            {
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 0_bp).baseValue.value()
+                        == doctest::Approx (1.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 1_bp).baseValue.value()
+                        == doctest::Approx (1.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 2_bp).baseValue.value()
+                        == doctest::Approx (0.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 2.99_bp).baseValue.value()
+                        == doctest::Approx (0.0f));
+
+                // End of loop, not inclusive so loops round to start
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 3_bp).baseValue.value()
+                        == doctest::Approx (1.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 4_bp).baseValue.value()
+                        == doctest::Approx (1.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 4.99_bp).baseValue.value()
+                        == doctest::Approx (0.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 5_bp).baseValue.value()
+                        == doctest::Approx (0.0f));
+
+                // End of clip so no value
+                CHECK (! getValuesAtEditPosition (*curveMod, *context->volParam, 6_bp).baseValue.has_value());
+            }
         }
     }
 
