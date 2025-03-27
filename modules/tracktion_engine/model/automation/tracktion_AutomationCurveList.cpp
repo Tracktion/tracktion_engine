@@ -550,11 +550,10 @@ namespace detail
         auto et1 = dynamic_cast<ExternalPlugin*> (&p1);
         auto et2 = dynamic_cast<ExternalPlugin*> (&p2);
 
-        if (! (et1 || et2))
-            return typeid (p1) == typeid (p2);
+        if (et1 && et2)
+            return et1->desc.isDuplicateOf (et2->desc);
 
-        assert (et1 && et2);
-        return et1->desc.isDuplicateOf (et2->desc);
+        return typeid (p1) == typeid (p2);
     }
 
     inline bool copyModifierCurveStateToNewPlugin (AutomationCurveList& list, AutomationCurveModifier& curveMod, Plugin& newPlugin)

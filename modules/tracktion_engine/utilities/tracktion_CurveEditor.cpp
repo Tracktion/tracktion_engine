@@ -172,7 +172,7 @@ void CurveEditor::paint (juce::Graphics& g)
     auto clipBounds = g.getClipBounds();
 
     {
-        const auto startX = std::max (0.0f, timeToX ({}));
+        const auto startX = std::max (0.0f, timeToX (fromUnderlying (0.0f)));
         auto lastY = valueToY (getValueAt (leftTime));
 
         juce::Path curvePath;
@@ -695,7 +695,7 @@ void CurveEditor::updatePointUnderMouse (juce::Point<float> pos)
     if (getItem() == nullptr || pointBeingMoved >= 0)
         return;
 
-    pos.x = std::max (timeToX ({}), pos.x);
+    pos.x = std::max (timeToX (fromUnderlying (0.0f)), pos.x);
 
     const auto captureRadius = pointRadius * pointRadius;
     int point = -1;
@@ -802,7 +802,7 @@ float CurveEditor::yToValue (double y) const
 
 juce::Point<float> CurveEditor::getPosition (CurvePoint p) const
 {
-    return { timeToX (toTime (p.time, edit.tempoSequence)), valueToY (p.value) };
+    return { timeToX (p.time), valueToY (p.value) };
 }
 
 juce::Point<float> CurveEditor::getPosition (int index)
