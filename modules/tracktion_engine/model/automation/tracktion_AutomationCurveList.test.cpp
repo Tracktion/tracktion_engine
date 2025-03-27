@@ -283,13 +283,17 @@ TEST_SUITE("tracktion_engine")
         timing.unlinked = true;
         CHECK (timing.unlinked.get());
 
+        timing.start = 0_bp;
+        timing.length = 0_bd;
+        timing.looping = false;
+        timing.loopStart = 0_bp;
+        timing.loopLength = 0_bd;
+
         CHECK_EQ (timing.start.get(), 0_bp);
-        CHECK_EQ (timing.length.get(), 0_bd);
+        CHECK_EQ (timing.length.get(), 1_bd);   // Min length applied
         CHECK(! timing.looping.get());
         CHECK_EQ (timing.loopStart.get(), 0_bp);
-        CHECK_EQ (timing.loopLength.get(), 0_bd);
-        //ddd init length and loop length when unlinked is enabled
-
+        CHECK_EQ (timing.loopLength.get(), 1_bd);   // Min loop length applied
 
         SUBCASE("Unlooped")
         {
@@ -425,6 +429,190 @@ TEST_SUITE("tracktion_engine")
 
                 // End of clip so no value
                 CHECK (! getValuesAtEditPosition (*curveMod, *context->volParam, 6_bp).baseValue.has_value());
+            }
+        }
+
+        SUBCASE("Init timing from clip properties")
+        {
+            auto& clip = *context->clip;
+            CHECK (context->edit->tempoSequence.getTempoAt (0_tp).bpm.get() == doctest::Approx (60.0f));
+            clip.setStart (10_tp, false, true); // Should be ignored
+            clip.setOffset (2_td);
+            clip.setLength (6_td, true);
+            clip.setLoopRangeBeats ({ 1_bp, 4_bd });
+
+            CHECK (clip.getEditBeatRange().getLength() == 6_bd);
+            CHECK (clip.getOffsetInBeats() == 2_bd);
+            CHECK (clip.isLooping());
+            CHECK (clip.getLoopRangeBeats() == BeatRange (1_bp, 4_bd));
+
+            CHECK (timing.unlinked.get());
+            timing.unlinked = false;
+
+            CHECK_EQ (timing.start.get(), 2_bp);
+            CHECK_EQ (timing.length.get(), 6_bd);
+            CHECK(timing.looping.get());
+            CHECK_EQ (timing.loopStart.get(), 1_bp);
+            CHECK_EQ (timing.loopLength.get(), 4_bd);
+        }
+    }
+
+    TEST_CASE("AutomationCurveList: linked")
+    {
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto context = AutomationCurveListTestContext::create (engine);
+
+        auto curveList = context->clip->getAutomationCurveList (true);
+        auto curveMod = curveList->addCurve (*context->volParam);
+
+        auto& curve = curveMod->getCurve (CurveModifierType::absolute).curve;
+        curve.addPoint (2.5_bp, 1.0f, 0.0, nullptr);
+        curve.addPoint (2.5_bp, 0.0f, 0.0, nullptr); // Sharp square from 1-0 at 2.5b
+
+        auto& timing = curveMod->getCurveTiming (CurveModifierType::absolute);
+        timing.unlinked = false;
+        CHECK (! timing.unlinked.get());
+
+        auto& clip = *context->clip;
+        clip.setOffset (2_td);
+        clip.setLength (4_td, true);
+        clip.setLoopRangeBeats ({});
+
+        SUBCASE("Unlooped")
+        {
+            CHECK (! clip.isLooping());
+            CHECK (clip.getEditBeatRange().getLength() == 4_bd);
+            CHECK (clip.getOffsetInBeats() == 2_bd);
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 0_bp);
+                CHECK (v.baseValue.value() == doctest::Approx (1.0f));
+            }
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 0.5_bp);
+                CHECK (v.baseValue.value() == doctest::Approx (0.0f));
+            }
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 3_bp);
+                CHECK (v.baseValue.value() == doctest::Approx (0.0f));
+            }
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 5_bp);
+                CHECK (! v.baseValue);
+            }
+
+            context->clip->setStart (1_tp, false, true);
+            CHECK (context->clip->getOffsetInBeats() == 2_bd);
+            CHECK (clip.getEditBeatRange().getLength() == 4_bd);
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 0_bp);
+                CHECK (! v.baseValue);
+            }
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 1_bp);
+                CHECK (v.baseValue.value() == doctest::Approx (1.0f));
+            }
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 1.49_bp);
+                CHECK (v.baseValue.value() == doctest::Approx (1.0f));
+            }
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 1.5_bp);
+                CHECK (v.baseValue.value() == doctest::Approx (0.0f));
+            }
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 2_bp);
+                CHECK (v.baseValue.value() == doctest::Approx (0.0f));
+            }
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 4.99_bp);
+                CHECK (v.baseValue.value() == doctest::Approx (0.0f));
+            }
+
+            {
+                auto v = getValuesAtEditPosition (*curveMod, *context->volParam, 5_bp);
+                CHECK (! v.baseValue);
+            }
+        }
+
+        SUBCASE("Looping")
+        {
+            clip.setOffset (0_td);
+            clip.setLength (6_td, true);
+            clip.setLoopRangeBeats ({ 1_bp, 3_bd });
+
+            CHECK (clip.isLooping());
+            CHECK (clip.getEditBeatRange().getStart() == 0_bp);
+            CHECK (clip.getEditBeatRange().getLength() == 6_bd);
+            CHECK (clip.getOffsetInBeats() == 0_bd);
+
+            {
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 0_bp).baseValue.value()
+                       == doctest::Approx (1.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 1_bp).baseValue.value()
+                       == doctest::Approx (1.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 2_bp).baseValue.value()
+                       == doctest::Approx (1.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 3_bp).baseValue.value()
+                       == doctest::Approx (0.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 3.99_bp).baseValue.value()
+                       == doctest::Approx (0.0f));
+
+                // End of loop, not inclusive so loops round to start
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 4_bp).baseValue.value()
+                       == doctest::Approx (1.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 5_bp).baseValue.value()
+                       == doctest::Approx (1.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 5.99_bp).baseValue.value()
+                       == doctest::Approx (0.0f));
+
+                // End of clip so no value
+                CHECK (! getValuesAtEditPosition (*curveMod, *context->volParam, 6_bp).baseValue.has_value());
+            }
+
+            // Change start position
+            clip.setStart (1_tp, true, true);
+
+            CHECK (clip.isLooping());
+            CHECK (clip.getEditBeatRange().getStart() == 1_bp);
+            CHECK (clip.getEditBeatRange().getLength() == 6_bd);
+            CHECK (clip.getOffsetInBeats() == 1_bd);
+
+            {
+                CHECK (! getValuesAtEditPosition (*curveMod, *context->volParam, 0_bp).baseValue.has_value());
+
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 1_bp).baseValue.value()
+                       == doctest::Approx (1.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 2_bp).baseValue.value()
+                       == doctest::Approx (1.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 2.49_bp).baseValue.value()
+                       == doctest::Approx (1.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 2.5_bp).baseValue.value()
+                       == doctest::Approx (0.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 3_bp).baseValue.value()
+                       == doctest::Approx (0.0f));
+
+                // End of loop, not inclusive so loops round to start
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 4_bp).baseValue.value()
+                       == doctest::Approx (1.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 5_bp).baseValue.value()
+                       == doctest::Approx (1.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 5.49_bp).baseValue.value()
+                       == doctest::Approx (1.0f));
+                CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 6_bp).baseValue.value()
+                       == doctest::Approx (0.0f));
+
+                // End of clip so no value
+                CHECK (! getValuesAtEditPosition (*curveMod, *context->volParam, 7_bp).baseValue.has_value());
             }
         }
     }

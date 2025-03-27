@@ -35,11 +35,13 @@ std::optional<EditPosition> AutomationCurvePlayhead::getPosition() const
 AutomationCurveModifier::AutomationCurveModifier (Edit& e,
                                                   const juce::ValueTree& v,
                                                   AutomatableParameterID destID_,
-                                                  std::function<CurvePosition()> getPositionDelegate_)
+                                                  std::function<CurvePosition()> getPositionDelegate_,
+                                                  std::function<ClipPositionInfo()> getClipPositionDelegate_)
     : EditItem (e, v),
       destID (std::move (destID_)),
       state (v),
-      getPositionDelegate (std::move (getPositionDelegate_))
+      getPositionDelegate (std::move (getPositionDelegate_)),
+      getClipPositionDelegate (std::move (getClipPositionDelegate_))
 {
     auto um = &edit.getUndoManager();
 
@@ -74,6 +76,18 @@ AutomationCurveModifier::AutomationCurveModifier (Edit& e,
     auto limitsString = v[IDs::absoluteLimits].toString();
     absoluteLimits = juce::Range<float> (limitsString.upToFirstOccurrenceOf (" ", false, false).getFloatValue(),
                                          limitsString.fromFirstOccurrenceOf (" ", false, false).getFloatValue());
+
+    stateListener.onValueTreeChanged = [this]
+    {
+        changed();
+        listeners.call (&Listener::curveChanged);
+    };
+
+    stateListener.onPropertyChanged = [this] (auto& changedTree, auto& id)
+    {
+        if (id == IDs::unlinked)
+            curveUnlinkedStateChanged (changedTree);
+    };
 
     edit.automationCurveModifierEditItemCache.addItem (*this);
 }
@@ -112,6 +126,11 @@ CurvePosition AutomationCurveModifier::getPosition() const
 {
     const std::scoped_lock sl (positionDelegateMutex);
     return getPositionDelegate();
+}
+
+ClipPositionInfo AutomationCurveModifier::getClipPositionInfo() const
+{
+    return getClipPositionDelegate();
 }
 
 void AutomationCurveModifier::remove()
@@ -158,6 +177,42 @@ void AutomationCurveModifier::setPositionDelegate (std::function<CurvePosition()
     assert (newDelegate);
     const std::scoped_lock sl (positionDelegateMutex);
     getPositionDelegate = std::move (newDelegate);
+}
+
+//==============================================================================
+void AutomationCurveModifier::curveUnlinkedStateChanged (juce::ValueTree& v)
+{
+    using enum CurveModifierType;
+
+    for (auto type : { absolute, relative, scale })
+    {
+        auto& timing = getCurveTiming (type);
+
+        if (v != timing.unlinked.getValueTree())
+            continue;
+
+        timing.unlinked.forceUpdateOfCachedValue();
+
+        if (timing.unlinked.get())
+            return;
+
+        // Copy properties from clip
+        auto clipInfo = getClipPositionDelegate();
+
+        timing.start = toPosition (clipInfo.position.offset);
+        timing.length = clipInfo.position.position.getLength();
+
+        if (clipInfo.loopRange)
+        {
+            timing.looping = true;
+            timing.loopStart = clipInfo.loopRange->getStart();
+            timing.loopLength = clipInfo.loopRange->getLength();
+        }
+        else
+        {
+            timing.looping = false;
+        }
+    }
 }
 
 
@@ -258,9 +313,9 @@ BaseAndModValue getValuesAtEditPosition (AutomationCurveModifier& acm, Automatab
         if (! contains (acmPos.clipRange, editPos, ts))
             continue;
 
-        if (curveTiming.unlinked.get())
-            curvePos = minus (editPos, toDuration (acmPos.clipRange.getStart()), ts);
-        else
+        curvePos = minus (editPos, toDuration (acmPos.clipRange.getStart()), ts);
+
+        if (! curveTiming.unlinked.get())
             curvePos = minus (editPos, toDuration (acmPos.curveStart), ts);
 
         if (auto adjustedPos = applyTimingToCurvePosition (acm, type, curvePos))
@@ -390,6 +445,25 @@ std::optional<EditPosition> applyTimingToCurvePosition (AutomationCurveModifier&
 
             if (posBeats >= end)
                 return std::nullopt;
+        }
+
+        curvePos = posBeats;
+    }
+    else if (auto clipPosInfo = acm.getClipPositionInfo(); clipPosInfo.loopRange)
+    {
+        // Use clip looping
+        auto loopStart = clipPosInfo.loopRange->getStart();
+
+        auto posBeats = toBeats (curvePos, getTempoSequence (acm));
+
+        if (posBeats > loopStart)
+        {
+            auto posRelToLoopStart = posBeats - loopStart;
+            auto moduloPosRelToLoopStart = std::fmod (toUnderlying (posRelToLoopStart),
+                                                      toUnderlying (clipPosInfo.loopRange->getLength()));
+
+            posBeats = BeatPosition::fromBeats (moduloPosRelToLoopStart)
+                        + toDuration (loopStart);
         }
 
         curvePos = posBeats;
@@ -571,12 +645,17 @@ class AutomationCurveList::List : private ValueTreeObjectList<AutomationCurveMod
 public:
     List (AutomationCurveList& o, Edit& e,
           std::function<CurvePosition()> getPositionDelegate_,
+          std::function<ClipPositionInfo()> getClipPositionDelegate_,
           const juce::ValueTree& parent_)
         : ValueTreeObjectList<AutomationCurveModifier> (parent_),
           curveList (o), edit (e),
-          getPositionDelegate (std::move (getPositionDelegate_))
+          getPositionDelegate (std::move (getPositionDelegate_)),
+          getClipPositionDelegate (std::move (getClipPositionDelegate_))
     {
         assert (parent.hasType (IDs::AUTOMATIONCURVES));
+        assert (getPositionDelegate);
+        assert (getClipPositionDelegate);
+
         rebuildObjects();
     }
 
@@ -617,6 +696,7 @@ private:
     AutomationCurveList& curveList;
     Edit& edit;
     std::function<CurvePosition()> getPositionDelegate;
+    std::function<ClipPositionInfo()> getClipPositionDelegate;
 
     //==============================================================================
     bool isSuitableType (const juce::ValueTree& v) const override
@@ -632,7 +712,7 @@ private:
         auto paramID = v[IDs::paramID].toString();
         auto destID = AutomatableParameterID { automatableEditItemID, paramID };
 
-        auto newCurveMod = new AutomationCurveModifier (edit, v, destID, getPositionDelegate);
+        auto newCurveMod = new AutomationCurveModifier (edit, v, destID, getPositionDelegate, getClipPositionDelegate);
         newCurveMod->incReferenceCount();
 
         return newCurveMod;
@@ -670,10 +750,12 @@ private:
 //==============================================================================
 //==============================================================================
 AutomationCurveList::AutomationCurveList (Edit& e, const juce::ValueTree& parentTree,
-                                          std::function<CurvePosition()> getPositionDelegate)
+                                          std::function<CurvePosition()> getPositionDelegate,
+                                          std::function<ClipPositionInfo()> getClipPositionDelegate)
 {
     list = std::make_unique<List> (*this, e,
                                    std::move (getPositionDelegate),
+                                   std::move (getClipPositionDelegate),
                                    parentTree);
 }
 

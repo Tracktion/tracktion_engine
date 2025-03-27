@@ -64,6 +64,13 @@ struct CurvePosition
     EditTimeRange clipRange;    /**< The valid range of the curve, it will be disabled outside this. */
 };
 
+/** Holds information about the position of a clip. */
+struct ClipPositionInfo
+{
+    ClipPositionBeats position;         /**< The position in beats. */
+    std::optional<BeatRange> loopRange; /**< If the clip is looping, the start/length of the loop range. */
+};
+
 //==============================================================================
 /** Holds a playhead for an AutomationCurveModifier type.
     This it automatically updated by the playback graph so UI should only read from it.
@@ -91,7 +98,8 @@ public:
     AutomationCurveModifier (Edit&,
                              const juce::ValueTree&,
                              AutomatableParameterID destID,
-                             std::function<CurvePosition()> getPositionDelegate);
+                             std::function<CurvePosition()> getCurvePositionDelegate,
+                             std::function<ClipPositionInfo()> getClipPositionDelegate);
 
     /** Destructor. */
     ~AutomationCurveModifier() override;
@@ -137,6 +145,8 @@ public:
         determine the curve's position.
     */
     CurvePosition getPosition() const;
+
+    ClipPositionInfo getClipPositionInfo() const;
 
     /** Remove/deletes this curve from its parent list. */
     void remove();
@@ -206,9 +216,12 @@ private:
 
     mutable RealTimeSpinLock positionDelegateMutex;
     std::function<CurvePosition()> getPositionDelegate;
+    std::function<ClipPositionInfo()> getClipPositionDelegate;
 
-    LambdaValueTreeAllEventListener stateListener { state, [this] { changed(); listeners.call (&Listener::curveChanged);  } };
+    LambdaValueTreeAllEventListener stateListener { state };
     juce::ListenerList<Listener> listeners;
+
+    void curveUnlinkedStateChanged (juce::ValueTree&);
 };
 
 /** Contains the base and modifier values if they are active. */
@@ -272,7 +285,8 @@ class AutomationCurveList
 {
 public:
     AutomationCurveList (Edit&, const juce::ValueTree&,
-                         std::function<CurvePosition()> getPositionDelegate);
+                         std::function<CurvePosition()> getPositionDelegate,
+                         std::function<ClipPositionInfo()> getClipPositionDelegate);
     ~AutomationCurveList();
 
     std::vector<AutomationCurveModifier::Ptr> getItems();

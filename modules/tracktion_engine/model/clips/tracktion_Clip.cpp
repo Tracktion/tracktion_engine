@@ -17,9 +17,14 @@ public:
     ThreadSafeClipPosition (Clip& c)
         : tempoSequence (c.edit.tempoSequence.getInternalSequence())
     {
+        assert (! c.isLooping() || c.beatBasedLooping());
+
         start.referTo (c.state, IDs::start, nullptr);
         length.referTo (c.state, IDs::length, nullptr);
         offset.referTo (c.state, IDs::offset, nullptr);
+
+        loopStart.referTo (c.state, IDs::loopStartBeats, nullptr);
+        loopLength.referTo (c.state, IDs::loopLengthBeats, nullptr);
     }
 
     BeatRange getEditBeatRange() const
@@ -39,10 +44,24 @@ public:
         return toBeats (start.get() - offset.get(), tempoSequence);
     }
 
+    std::optional<BeatRange> getLoopRange() const
+    {
+        BeatRange loopRange { loopStart.get(), loopLength.get() };
+
+        if (loopRange.getLength() > 0_bd)
+            return loopRange;
+
+        return std::nullopt;
+    }
+
 private:
     const tempo::Sequence& tempoSequence;
+
     juce::CachedValue<AtomicWrapperRelaxed<TimePosition>> start;
     juce::CachedValue<AtomicWrapperRelaxed<TimeDuration>> length, offset;
+
+    juce::CachedValue<AtomicWrapperRelaxed<BeatPosition>> loopStart;
+    juce::CachedValue<AtomicWrapperRelaxed<BeatDuration>> loopLength;
 };
 
 
@@ -294,7 +313,7 @@ void Clip::updateAutomationCurveListDestinations()
         for (auto curve : automation->getItems())
         {
             updateRelativeDestinationOrRemove (*automation, *curve, *this);
-            curve->setPositionDelegate (getAutomationCurveListPositionDelegate());
+            curve->setPositionDelegate (getAutomationCurveListDelegates().first);
         }
     }
 }
@@ -640,7 +659,7 @@ void Clip::updateParent()
         setParent ({});
 }
 
-std::function<CurvePosition()> Clip::getAutomationCurveListPositionDelegate()
+std::pair<std::function<CurvePosition()>, std::function<ClipPositionInfo()>> Clip::getAutomationCurveListDelegates()
 {
     if (! edit.isLoading())
         TRACKTION_ASSERT_MESSAGE_THREAD
@@ -651,14 +670,26 @@ std::function<CurvePosition()> Clip::getAutomationCurveListPositionDelegate()
     if (getClipSlot())
         clipLauncherHandle = getLaunchHandle();
 
-    return [position = std::move (clipPosition), handle = std::move (clipLauncherHandle)]
-           {
-               if (handle)
-                   if (auto playedRange = handle->getPlayedRange())
-                       return CurvePosition { playedRange->getStart() - position->getOffsetInBeats(), *playedRange };
+    std::function<CurvePosition()> curvePos =
+        [position = clipPosition, handle = std::move (clipLauncherHandle)]
+        {
+            if (handle)
+                if (auto playedRange = handle->getPlayedRange())
+                    return CurvePosition { playedRange->getStart() - position->getOffsetInBeats(), *playedRange };
 
-               return CurvePosition { position->getContentStartBeat(), position->getEditBeatRange() };
-           };
+            return CurvePosition { position->getContentStartBeat(), position->getEditBeatRange() };
+        };
+
+    std::function<ClipPositionInfo()> posInfo =
+        [position = clipPosition]
+        {
+            return ClipPositionInfo {
+                       .position = { position->getEditBeatRange(), position->getOffsetInBeats() },
+                       .loopRange = position->getLoopRange()
+                   };
+        };
+
+    return { curvePos, posInfo };
 }
 
 //==============================================================================
@@ -743,7 +774,12 @@ AutomationCurveList* Clip::getAutomationCurveList (bool createIfNoItems)
         auto curvesParentState = state.getOrCreateChildWithName (IDs::AUTOMATIONCURVES, getUndoManager());
 
         if (curvesParentState.getNumChildren() > 0 || createIfNoItems)
-            automationCurveList = std::make_unique<AutomationCurveList> (edit, curvesParentState, getAutomationCurveListPositionDelegate());
+        {
+            auto delegates = getAutomationCurveListDelegates();
+            automationCurveList = std::make_unique<AutomationCurveList> (edit, curvesParentState,
+                                                                         std::move (delegates.first),
+                                                                         std::move (delegates.second));
+        }
     }
 
     return automationCurveList.get();

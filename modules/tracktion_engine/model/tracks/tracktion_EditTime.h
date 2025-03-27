@@ -382,6 +382,14 @@ ClipPosition createClipPosition (const TempoSequence&, TimeRange, TimeDuration o
 /** Creates a ClipPosition from either a time or beat range. */
 ClipPosition createClipPosition (const TempoSequence&, BeatRange, BeatDuration offset = {});
 
+/** Represents the position of a clip on a timeline.
+*/
+struct ClipPositionBeats
+{
+    BeatRange position;         /**< The BeatRange this ClipPosition occupies. */
+    BeatDuration offset = {};   /**< The offset this ClipPosition has. */
+};
+
 
 //==============================================================================
 //==============================================================================

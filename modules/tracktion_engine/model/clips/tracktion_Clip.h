@@ -495,7 +495,7 @@ protected:
 
 private:
     void updateParent();
-    std::function<CurvePosition()> getAutomationCurveListPositionDelegate();
+    std::pair<std::function<CurvePosition()>, std::function<ClipPositionInfo()>> getAutomationCurveListDelegates();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Clip)
 };

@@ -388,6 +388,7 @@ public:
     }
 
     std::function<void()> onValueTreeChanged;
+    std::function<void (juce::ValueTree&, const juce::Identifier&)> onPropertyChanged;
 
 private:
     juce::ValueTree state;
@@ -396,6 +397,14 @@ private:
     {
         if (onValueTreeChanged)
             onValueTreeChanged();
+    }
+
+    void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& id) override
+    {
+        if (onPropertyChanged)
+            onPropertyChanged (v, id);
+
+        valueTreeChanged();
     }
 };
 
