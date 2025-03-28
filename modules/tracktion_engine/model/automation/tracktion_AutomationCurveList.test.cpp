@@ -50,6 +50,15 @@ namespace tracktion::inline engine
         AutomatableParameter::Ptr volParam;
     };
 
+    void checkVolAutomationViaModifierActiveState (AudioTrack& at, bool shouldBeActive)
+    {
+        auto volPlug = at.getVolumePlugin();
+        auto volParam = volPlug->volParam;
+        CHECK_EQ (volPlug->isAutomationNeeded(), shouldBeActive);
+        CHECK_EQ (volParam->isAutomationActive(), shouldBeActive);
+        CHECK_NE (volParam->getModifiers().isEmpty(), shouldBeActive);
+    }
+
 TEST_SUITE("tracktion_engine")
 {
     TEST_CASE("AutomationCurveList: absolute")
@@ -669,6 +678,28 @@ TEST_SUITE("tracktion_engine")
             CHECK (volParam2->getCurrentValue() == doctest::Approx (1.0f));
             volParam2->updateToFollowCurve (ts.toTime (4_bp));
             CHECK (volParam2->getCurrentValue() == doctest::Approx (0.0f));
+        }
+
+        SUBCASE("Move clip and undo")
+        {
+            // Avoid trying to undo anything before this test
+            context->edit->getUndoManager().beginNewTransaction();
+
+            context->clip->moveTo (*at2);
+            checkVolAutomationViaModifierActiveState (*at1, false);
+            checkVolAutomationViaModifierActiveState (*at2, true);
+
+            context->edit->getUndoManager().undo();
+            checkVolAutomationViaModifierActiveState (*at1, true);
+            checkVolAutomationViaModifierActiveState (*at2, false);
+
+            context->clip->moveTo (*at2);
+            checkVolAutomationViaModifierActiveState (*at1, false);
+            checkVolAutomationViaModifierActiveState (*at2, true);
+
+            context->edit->getUndoManager().undoCurrentTransactionOnly();
+            checkVolAutomationViaModifierActiveState (*at1, true);
+            checkVolAutomationViaModifierActiveState (*at2, false);
         }
 
         SUBCASE("Move clip to second track with no corresponding plugin")

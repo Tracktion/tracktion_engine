@@ -583,6 +583,9 @@ namespace detail
 
 void updateRelativeDestinationOrRemove (AutomationCurveList& list, AutomationCurveModifier& curve, Clip& clip)
 {
+    if (getUndoManager (clip).isPerformingUndoRedo())
+        return;
+
     assert (contains_v (list.getItems(), &curve));
 
     juce::ErasedScopeGuard oldCurveRemover ([&curve] { curve.remove(); });
@@ -725,16 +728,18 @@ private:
 
     void newObjectAdded (AutomationCurveModifier* e) override
     {
-        if (auto param = getParameter (*e))
-            param->addModifier (*e);
+        if (! edit.getUndoManager().isPerformingUndoRedo())
+            if (auto param = getParameter (*e))
+                param->addModifier (*e);
 
         curveList.listeners.call (&AutomationCurveList::Listener::itemsChanged);
     }
 
     void objectRemoved (AutomationCurveModifier* e) override
     {
-        if (auto param = getParameter (*e))
-            param->removeModifier (*e);
+        if (! edit.getUndoManager().isPerformingUndoRedo())
+            if (auto param = getParameter (*e))
+                param->removeModifier (*e);
 
         curveList.listeners.call (&AutomationCurveList::Listener::itemsChanged);
     }
