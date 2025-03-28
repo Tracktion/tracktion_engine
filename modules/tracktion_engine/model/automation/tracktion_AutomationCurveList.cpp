@@ -583,7 +583,7 @@ namespace detail
 
 void updateRelativeDestinationOrRemove (AutomationCurveList& list, AutomationCurveModifier& curve, Clip& clip)
 {
-    if (getUndoManager (clip).isPerformingUndoRedo())
+    if (getUndoManager (curve).isPerformingUndoRedo())
         return;
 
     assert (contains_v (list.getItems(), &curve));

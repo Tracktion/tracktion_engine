@@ -50,7 +50,7 @@ namespace tracktion::inline engine
         AutomatableParameter::Ptr volParam;
     };
 
-    void checkVolAutomationViaModifierActiveState (AudioTrack& at, bool shouldBeActive)
+    inline void checkVolAutomationViaModifierActiveState (AudioTrack& at, bool shouldBeActive)
     {
         auto volPlug = at.getVolumePlugin();
         auto volParam = volPlug->volParam;
