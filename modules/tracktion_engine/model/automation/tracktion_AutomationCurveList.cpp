@@ -61,8 +61,6 @@ AutomationCurveModifier::AutomationCurveModifier (Edit& e,
                                                                um);
         curve.setState (curveState);
 
-        curve.setParameterID (destID.paramID);
-
         auto& timing = curveTimings[static_cast<size_t> (curveAndType.second)];
         timing.unlinked.referTo (curveState, IDs::unlinked, um);
         timing.start.referTo (curveState, IDs::start, um);
