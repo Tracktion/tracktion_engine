@@ -220,7 +220,7 @@ void CurveEditor::paint (juce::Graphics& g)
 
         curvePath.lineTo ((float) getWidth(), lastY);
 
-        if (auto fillCol = getCurrentFillColour(); ! fillCol.isTransparent())
+        if (auto fillCol = getCurrentFillColour(); ! fillCol.isTransparent() && fillPath())
         {
             juce::Path fillPath (curvePath);
             const auto y = getHeight() + 1.0f;

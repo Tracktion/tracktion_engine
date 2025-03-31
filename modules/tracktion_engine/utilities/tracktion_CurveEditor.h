@@ -132,6 +132,7 @@ public:
     virtual juce::Range<float> getParameterRange() const = 0;
 
 protected:
+    virtual bool fillPath() const { return true; }
     virtual bool isBeats() const { return false; }
     EditPosition fromUnderlying (double u);
     void updatePointUnderMouse (juce::Point<float>);
