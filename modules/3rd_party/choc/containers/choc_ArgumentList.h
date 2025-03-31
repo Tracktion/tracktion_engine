@@ -383,6 +383,11 @@ inline std::vector<std::filesystem::path> ArgumentList::getAllAsExistingFiles()
 
 inline std::filesystem::path ArgumentList::getAbsolutePath (const std::filesystem::path& path)
 {
+    auto s = path.string();
+
+    if (s.length() >= 2 && s[0] == '"' && s.back() == '"')
+        return getAbsolutePath (s.substr (1, s.length() - 2));
+
     return path.is_absolute() ? path : std::filesystem::current_path() / path;
 }
 

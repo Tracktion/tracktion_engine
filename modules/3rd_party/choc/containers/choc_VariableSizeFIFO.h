@@ -158,6 +158,12 @@ inline void VariableSizeFIFO::reset (uint32_t totalFIFOSizeBytes)
     writePos = 0;
     capacity = std::max (totalFIFOSizeBytes, headerSize + 4);
     buffer.clear();
+
+   #if __GNUC__
+    buffer.reserve (capacity + 1u); // this is a workaround for a bug in some GCC versions
+                                    // that causes a spurious warning when inlining the resize()..
+   #endif
+
     buffer.resize (capacity + 1u);
 }
 
