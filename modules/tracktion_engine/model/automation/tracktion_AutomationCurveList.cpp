@@ -606,7 +606,7 @@ namespace detail
     }
 }
 
-void updateRelativeDestinationOrRemove (AutomationCurveList& list, AutomationCurveModifier& curve, Clip& clip)
+void updateRelativeDestinationOrRemove ([[maybe_unused]] AutomationCurveList& list, AutomationCurveModifier& curve, Clip& clip)
 {
     if (getUndoManager (curve).isPerformingUndoRedo())
         return;
