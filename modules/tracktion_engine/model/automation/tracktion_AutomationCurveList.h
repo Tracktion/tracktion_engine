@@ -35,6 +35,11 @@ struct AutomatableParameterID
 {
     EditItemID automatableEditItemID;
     juce::String paramID;
+
+    bool operator== (const AutomatableParameterID& other) const
+    {
+        return automatableEditItemID == other.automatableEditItemID && paramID == other.paramID;
+    }
 };
 
 
