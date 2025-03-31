@@ -38,8 +38,8 @@ AutomationCurveModifier::AutomationCurveModifier (Edit& e,
                                                   std::function<CurvePosition()> getPositionDelegate_,
                                                   std::function<ClipPositionInfo()> getClipPositionDelegate_)
     : EditItem (e, v),
-      destID (std::move (destID_)),
       state (v),
+      destID (std::move (destID_)),
       getPositionDelegate (std::move (getPositionDelegate_)),
       getClipPositionDelegate (std::move (getClipPositionDelegate_))
 {
@@ -84,7 +84,25 @@ AutomationCurveModifier::AutomationCurveModifier (Edit& e,
     stateListener.onPropertyChanged = [this] (auto& changedTree, auto& id)
     {
         if (id == IDs::unlinked)
+        {
             curveUnlinkedStateChanged (changedTree);
+        }
+        else if (id == IDs::source)
+        {
+            if (! getUndoManager (edit).isPerformingUndoRedo())
+                if (auto oldParam = getParameter (*this))
+                    oldParam->removeModifier (*this);
+
+            destID.automatableEditItemID = EditItemID::fromProperty (changedTree, IDs::source);
+
+            if (! getUndoManager (edit).isPerformingUndoRedo())
+                if (auto oldParam = getParameter (*this))
+                    oldParam->addModifier (*this);
+        }
+        else if (id == IDs::paramID)
+        {
+            destID.paramID = changedTree[IDs::paramID].toString();
+        }
     };
 
     edit.automationCurveModifierEditItemCache.addItem (*this);
@@ -94,6 +112,37 @@ AutomationCurveModifier::~AutomationCurveModifier()
 {
     Selectable::notifyListenersOfDeletion();
     edit.automationCurveModifierEditItemCache.removeItem (*this);
+}
+
+AutomatableParameterID AutomationCurveModifier::getDestID() const
+{
+    return destID;
+}
+
+bool AutomationCurveModifier::setDestination (AutomatableEditItem& newDest)
+{
+    if (! newDest.getAutomatableParameterByID (destID.paramID))
+        return false;
+
+    auto um = getUndoManager_p (edit);
+    newDest.itemID.setProperty (state, IDs::source, um);
+
+    // If the destination has been set but not added by the property change listener,
+    // it's probably from a copy/paste or move operation where the destination
+    // hasn't changed so add the modifier here
+    if (! getUndoManager (edit).isPerformingUndoRedo())
+    {
+        if (auto param = getParameter (*this))
+        {
+            for (auto mod : param->getModifiers())
+                if (mod == this)
+                    return true;
+
+            param->addModifier (*this);
+        }
+    }
+
+    return true;
 }
 
 AutomationCurveModifier::CurveTiming& AutomationCurveModifier::getCurveTiming (CurveModifierType type)
@@ -526,8 +575,10 @@ namespace detail
 //==============================================================================
 AutomatableParameter::Ptr getParameter (const AutomationCurveModifier& acm)
 {
-    if (auto foundItem = acm.edit.automatableEditItemCache.findItem (acm.destID.automatableEditItemID))
-        return foundItem->getAutomatableParameterByID (acm.destID.paramID);
+    auto destID = acm.getDestID();
+
+    if (auto foundItem = acm.edit.automatableEditItemCache.findItem (destID.automatableEditItemID))
+        return foundItem->getAutomatableParameterByID (destID.paramID);
 
     return nullptr;
 }
@@ -553,30 +604,6 @@ namespace detail
 
         return typeid (p1) == typeid (p2);
     }
-
-    inline bool copyModifierCurveStateToNewPlugin (AutomationCurveList& list, AutomationCurveModifier& curveMod, Plugin& newPlugin)
-    {
-        // Copy the properties from the old state to the newly created curve, updating the plugin ID
-        if (auto newParam = newPlugin.getAutomatableParameterByID (curveMod.destID.paramID))
-        {
-            auto stateCopy = curveMod.state.createCopy();
-            stateCopy.setProperty (IDs::source, newPlugin.itemID, nullptr);
-
-            auto newCurve = list.addCurve (*newParam);
-            copyValueTree (newCurve->state, stateCopy, getUndoManager_p (curveMod));
-
-            // Reset curves to point to the new states
-            using enum CurveModifierType;
-
-            for (auto type : { absolute, relative, scale })
-                newCurve->getCurve (type).curve
-                    .setState (newCurve->state.getChildWithProperty (IDs::type, toString (type)));
-
-            return true;
-        }
-
-        return false;
-    }
 }
 
 void updateRelativeDestinationOrRemove (AutomationCurveList& list, AutomationCurveModifier& curve, Clip& clip)
@@ -585,8 +612,6 @@ void updateRelativeDestinationOrRemove (AutomationCurveList& list, AutomationCur
         return;
 
     assert (contains_v (list.getItems(), &curve));
-
-    juce::ErasedScopeGuard oldCurveRemover ([&curve] { curve.remove(); });
     auto oldParam = getParameter (curve);
 
     if (! oldParam)
@@ -600,7 +625,11 @@ void updateRelativeDestinationOrRemove (AutomationCurveList& list, AutomationCur
     auto oldPlugin = oldParam->getPlugin();
 
     if (! oldPlugin)
+    {
+        // Old plugin doesn't exist anymore so we can't copy from it, so remove the curve
+        curve.remove();
         return;
+    }
 
     // If the curve is targeted to a plugin on a different clip,
     // update it to the new one if possible
@@ -608,14 +637,13 @@ void updateRelativeDestinationOrRemove (AutomationCurveList& list, AutomationCur
         if (auto pluginList = clip.getPluginList())
             for (auto newPlugin : *pluginList)
                 if (detail::areEquivalentPlugins (*oldPlugin, *newPlugin))
-                    if (detail::copyModifierCurveStateToNewPlugin (list, curve, *newPlugin))
+                    if (curve.setDestination (*newPlugin))
                         return;
 
     // If the plugin is on the same clip or on a RackType, keep it
     if (oldPlugin->getOwnerClip() == &clip
         || oldPlugin->getOwnerRackType())
     {
-        oldCurveRemover.release();
         return;
     }
 
@@ -626,7 +654,6 @@ void updateRelativeDestinationOrRemove (AutomationCurveList& list, AutomationCur
         || dynamic_cast<FolderTrack*> (oldTrack) != nullptr)
     {
         jassert (&dynamic_cast<MasterTrack*> (oldTrack)->pluginList == oldPlugin->getOwnerList());
-        oldCurveRemover.release();
         return;
     }
 
@@ -634,8 +661,11 @@ void updateRelativeDestinationOrRemove (AutomationCurveList& list, AutomationCur
     if (auto newTrack = clip.getTrack(); newTrack)
         for (auto newPlugin : newTrack->pluginList)
             if (detail::areEquivalentPlugins (*oldPlugin, *newPlugin))
-                if (detail::copyModifierCurveStateToNewPlugin (list, curve, *newPlugin))
+                if (curve.setDestination (*newPlugin))
                     return;
+
+    // No corresponding parameter so remove the curve
+    curve.remove();
 }
 
 //==============================================================================

@@ -107,6 +107,17 @@ public:
     using Ptr = juce::ReferenceCountedObjectPtr<AutomationCurveModifier>;
     using Array = juce::ReferenceCountedArray<AutomationCurveModifier>;
 
+    /** The ID of the AutomatableParameter this curve is modifying. */
+    AutomatableParameterID getDestID() const;
+
+    /** Re-assigns this to a new destination.
+        The paramID has to be the same (as curve ranges etc. won't apply otherwise).
+        N.B. There are limitations to what parameters can be assigned to (such as if
+        they're on the same track etc.) so this returns false if the assignment
+        couldn't be made.
+    */
+    bool setDestination (AutomatableEditItem&);
+
     //==============================================================================
     /** Holds the timing properties of a curve. */
     struct CurveTiming
@@ -150,9 +161,6 @@ public:
 
     /** Remove/deletes this curve from its parent list. */
     void remove();
-
-    /** The ID of the AutomatableParameter this curve is modifying. */
-    const AutomatableParameterID destID;
 
     //==============================================================================
     /** Returns a playhead for the automation curve. */
@@ -206,6 +214,8 @@ public:
     juce::ValueTree state;
 
 private:
+    AutomatableParameterID destID;
+
     AutomationCurve absoluteCurve { edit, AutomationCurve::TimeBase::beats };
     AutomationCurve relativeCurve { edit, AutomationCurve::TimeBase::beats };
     AutomationCurve scaleCurve { edit, AutomationCurve::TimeBase::beats };
