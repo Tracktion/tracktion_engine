@@ -682,9 +682,16 @@ TEST_SUITE("tracktion_engine")
 
         SUBCASE("Move clip and undo")
         {
+            auto getCurveID = [&]
+                              {
+                                  auto curveList = context->clip->getAutomationCurveList (true);
+                                  return curveList->getItems().front()->itemID;
+                              };
+
             // Avoid trying to undo anything before this test
             context->edit->getUndoManager().beginNewTransaction();
 
+            const auto originalID = getCurveID();
             context->clip->moveTo (*at2);
             checkVolAutomationViaModifierActiveState (*at1, false);
             checkVolAutomationViaModifierActiveState (*at2, true);
@@ -692,6 +699,7 @@ TEST_SUITE("tracktion_engine")
             context->edit->getUndoManager().undo();
             checkVolAutomationViaModifierActiveState (*at1, true);
             checkVolAutomationViaModifierActiveState (*at2, false);
+            CHECK_EQ (originalID, getCurveID());
 
             context->clip->moveTo (*at2);
             checkVolAutomationViaModifierActiveState (*at1, false);
@@ -700,6 +708,17 @@ TEST_SUITE("tracktion_engine")
             context->edit->getUndoManager().undoCurrentTransactionOnly();
             checkVolAutomationViaModifierActiveState (*at1, true);
             checkVolAutomationViaModifierActiveState (*at2, false);
+            CHECK_EQ (originalID, getCurveID());
+
+            // Move to second track, back to first and then undo (so ends up back on the first track)
+            context->clip->moveTo (*at2);
+            context->clip->moveTo (*at1);
+            checkVolAutomationViaModifierActiveState (*at1, true);
+            checkVolAutomationViaModifierActiveState (*at2, false);
+            context->edit->getUndoManager().undoCurrentTransactionOnly();
+            checkVolAutomationViaModifierActiveState (*at1, true);
+            checkVolAutomationViaModifierActiveState (*at2, false);
+            CHECK_EQ (originalID, getCurveID());
         }
 
         SUBCASE("Move clip to second track with no corresponding plugin")
