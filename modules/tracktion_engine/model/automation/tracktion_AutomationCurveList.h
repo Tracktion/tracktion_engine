@@ -333,6 +333,7 @@ private:
 //==============================================================================
 void updateRelativeDestinationOrRemove (AutomationCurveList&, AutomationCurveModifier&, Clip& newParent);
 
+void assignNewIDsToAutomationCurveModifiers (Edit&, juce::ValueTree&);
 
 //==============================================================================
 //        _        _           _  _

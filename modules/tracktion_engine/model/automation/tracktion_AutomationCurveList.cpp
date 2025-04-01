@@ -668,6 +668,17 @@ void updateRelativeDestinationOrRemove ([[maybe_unused]] AutomationCurveList& li
     curve.remove();
 }
 
+void assignNewIDsToAutomationCurveModifiers (Edit& edit, juce::ValueTree& state)
+{
+    for (auto v : state)
+    {
+        assignNewIDsToAutomationCurveModifiers (edit, v);
+
+        if (v.hasType (IDs::AUTOMATIONCURVEMODIFIER))
+            edit.createNewItemID().writeID (v, nullptr);
+    }
+}
+
 //==============================================================================
 //==============================================================================
 class AutomationCurveList::List : private ValueTreeObjectList<AutomationCurveModifier>

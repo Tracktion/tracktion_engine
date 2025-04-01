@@ -665,6 +665,7 @@ Clip* split (Clip& clip, const TimePosition time)
     {
         auto newClipState = clip.state.createCopy();
         edit.createNewItemID().writeID (newClipState, nullptr);
+        assignNewIDsToAutomationCurveModifiers (clip.edit, newClipState);
 
         if (auto newClip = insertClipWithState (*parent, newClipState))
         {

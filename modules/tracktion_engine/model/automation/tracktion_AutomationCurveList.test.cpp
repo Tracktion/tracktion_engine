@@ -680,6 +680,18 @@ TEST_SUITE("tracktion_engine")
             CHECK (volParam2->getCurrentValue() == doctest::Approx (0.0f));
         }
 
+        SUBCASE("Split clip")
+        {
+            context->edit->getUndoManager().beginNewTransaction();
+
+            auto newClips = splitClips ({ context->clip.get() }, 2_tp);
+            CHECK_EQ (newClips.size(), 1);
+            CHECK_EQ (context->track->getClips().size(), 2);
+
+            context->edit->getUndoManager().undo();
+            CHECK_EQ (context->track->getClips().size(), 1);
+        }
+
         SUBCASE("Move clip and undo")
         {
             auto getCurveID = [&]
