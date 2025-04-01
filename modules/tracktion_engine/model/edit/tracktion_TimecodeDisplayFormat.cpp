@@ -686,9 +686,9 @@ TimecodeSnapType TimecodeDisplayFormat::getBestSnapType (const TempoSetting& tem
     {
         TimecodeSnapType snap (type, i);
         auto res = snap.getApproxIntervalTime (tempo, isTripletOverride);
-        auto t = res / onScreenTimePerPixel.inSeconds();
+        auto pixels = res.inSeconds() / onScreenTimePerPixel.inSeconds();
 
-        if (t > 12s)
+        if (pixels > 12)
             return snap;
     }
 

@@ -23,8 +23,11 @@ struct BeatDuration;
 //==============================================================================
 //==============================================================================
 /**
-    Represents a position in real-life time.
-    E.g. A position on a timeline.
+    Represents a time, in seconds.
+
+    This is generally used to represent an absolute position within an Edit.
+    To represent a time between two points on an Edit's timeline, use a TimeDuration.
+    To represent a time in beats, use a BeatPosition.
 */
 struct TimePosition
 {
@@ -92,8 +95,12 @@ inline namespace literals
 //==============================================================================
 //==============================================================================
 /**
-    Represents a duration in real-life time.
-    E.g. The time between two points on a timeline.
+    Represents a duration in seconds.
+
+    This is generally used to represent the time between two
+    points on an Edit's timeline.
+    To represent an absolute position within an Edit, use a TimePosition.
+    To represent a duration in beats, use a BeatDuration.
 */
 struct TimeDuration
 {
@@ -246,10 +253,11 @@ template<typename Type>
 //==============================================================================
 /**
     Represents a position in beats.
-    E.g. A beat position on a timeline.
+    This is generally used to represent an absolute position within an Edit,
+    measured in terms of the number of beats from the Edit origin.
 
-    The time duration of a beat depends on musical information such
-    as tempo and time signature.
+    To represent a distance between two points, use a BeatDuration.
+    To work with times in seconds, use TimePosition and TimeDuration.
 */
 struct BeatPosition
 {
@@ -300,11 +308,13 @@ inline namespace literals
 //==============================================================================
 //==============================================================================
 /**
-    Represents a duration in beats.
-    E.g. The time between two beat positions on a timeline.
+    Represents a time difference as a number of beats.
 
-    The time duration of a beat depends on musical information such
-    as tempo and time signature.
+    This is generally used to represent the number of beats between two points
+    on an Edit's timeline.
+
+    To represent an absolute position within an Edit, use a BeatPosition.
+    To work with times in seconds, use TimePosition and TimeDuration.
 */
 struct BeatDuration
 {
