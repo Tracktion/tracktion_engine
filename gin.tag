@@ -68685,6 +68685,13 @@
       <anchor>ad719dce19efdc0462935a3d99d74ef38</anchor>
       <arglist>() const noexcept</arglist>
     </member>
+    <member kind="function">
+      <type>TimecodeSnapType</type>
+      <name>getCurrentSnapType</name>
+      <anchorfile>structtracktion_1_1engine_1_1TimecodeDisplayIterator.html</anchorfile>
+      <anchor>a929f07f3de9f5e67b9e832a4fa948c73</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
   </compound>
   <compound kind="class">
     <name>tracktion::engine::TimecodeDuration</name>

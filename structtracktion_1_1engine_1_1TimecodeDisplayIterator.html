@@ -90,7 +90,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af3eaa6a32ff271e385581e166b0f4822" id="r_af3eaa6a32ff271e385581e166b0f4822"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TimecodeDisplayIterator.html#af3eaa6a32ff271e385581e166b0f4822">TimecodeDisplayIterator</a> (const <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;, TimePosition, <a class="el" href="structtracktion_1_1engine_1_1TimecodeSnapType.html">TimecodeSnapType</a> minSnapTypeToUse, bool isTripletOverride)</td></tr>
 <tr class="separator:af3eaa6a32ff271e385581e166b0f4822"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa429e82fefdc3bdda8ef69802267ae8f" id="r_aa429e82fefdc3bdda8ef69802267ae8f"><td class="memItemLeft" align="right" valign="top">TimePosition&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TimecodeDisplayIterator.html#aa429e82fefdc3bdda8ef69802267ae8f">next</a> ()</td></tr>
-<tr class="memdesc:aa429e82fefdc3bdda8ef69802267ae8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the next time.  <br /></td></tr>
+<tr class="memdesc:aa429e82fefdc3bdda8ef69802267ae8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the next time.  <br /></td></tr>
 <tr class="separator:aa429e82fefdc3bdda8ef69802267ae8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abaa7f63b68c9a714db26c2439cf8d08f" id="r_abaa7f63b68c9a714db26c2439cf8d08f"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TimecodeDisplayIterator.html#abaa7f63b68c9a714db26c2439cf8d08f">getTimecodeAsString</a> () const</td></tr>
 <tr class="separator:abaa7f63b68c9a714db26c2439cf8d08f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -100,7 +100,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a69a796d67d577000f12472c479657f53" id="r_a69a796d67d577000f12472c479657f53"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TimecodeDisplayIterator.html#a69a796d67d577000f12472c479657f53">getMinimumResolutionLevel</a> () const noexcept</td></tr>
 <tr class="separator:a69a796d67d577000f12472c479657f53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad719dce19efdc0462935a3d99d74ef38" id="r_ad719dce19efdc0462935a3d99d74ef38"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TimecodeDisplayIterator.html#ad719dce19efdc0462935a3d99d74ef38">isOneBarOrGreater</a> () const noexcept</td></tr>
+<tr class="memdesc:ad719dce19efdc0462935a3d99d74ef38"><td class="mdescLeft">&#160;</td><td class="mdescRight">true if the current resolution is at least bar level  <br /></td></tr>
 <tr class="separator:ad719dce19efdc0462935a3d99d74ef38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a929f07f3de9f5e67b9e832a4fa948c73" id="r_a929f07f3de9f5e67b9e832a4fa948c73"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1TimecodeSnapType.html">TimecodeSnapType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1TimecodeDisplayIterator.html#a929f07f3de9f5e67b9e832a4fa948c73">getCurrentSnapType</a> () const noexcept</td></tr>
+<tr class="separator:a929f07f3de9f5e67b9e832a4fa948c73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Iterates along a timeline for drawing things like the ticks on the timebar. </p>
@@ -161,7 +164,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>returns the next time. </p>
+<p>Returns the next time. </p>
 
 </div>
 </div>
@@ -257,7 +260,32 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="namespacetracktion_1_1engine.html#a106acf13adac6f34b462a0c4de6e4fe3a77c84d786e6839a25295c0e73b3342c9">tracktion::engine::barsBeats</a>, <a class="el" href="namespacetracktion_1_1engine.html#a106acf13adac6f34b462a0c4de6e4fe3aa2dc2407a46ee1b7331225183f4b34c0">tracktion::engine::fps24</a>, <a class="el" href="namespacetracktion_1_1engine.html#a106acf13adac6f34b462a0c4de6e4fe3a745ffcdd19b34f7d8d4028a0380f7808">tracktion::engine::fps25</a>, <a class="el" href="namespacetracktion_1_1engine.html#a106acf13adac6f34b462a0c4de6e4fe3a51b0fa64094004b47e32034da78f7a75">tracktion::engine::fps30</a>, <a class="el" href="namespacetracktion_1_1engine.html#a106acf13adac6f34b462a0c4de6e4fe3a89e893579b272eb562aa17cb401ac7b7">tracktion::engine::millisecs</a>, and <a class="el" href="structtracktion_1_1engine_1_1TimecodeDisplayFormat.html#a6f007a0802edcb5fe7f67d5ce3292e57">tracktion::engine::TimecodeDisplayFormat::type</a>.</p>
+<p>true if the current resolution is at least bar level </p>
+
+</div>
+</div>
+<a id="a929f07f3de9f5e67b9e832a4fa948c73" name="a929f07f3de9f5e67b9e832a4fa948c73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a929f07f3de9f5e67b9e832a4fa948c73">&#9670;&#160;</a></span>getCurrentSnapType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1TimecodeSnapType.html">TimecodeSnapType</a> tracktion::engine::TimecodeDisplayIterator::getCurrentSnapType </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -267,7 +295,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Mar 25 2025 18:09:30 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Apr 1 2025 09:59:46 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
