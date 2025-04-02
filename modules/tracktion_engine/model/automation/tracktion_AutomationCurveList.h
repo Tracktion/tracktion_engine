@@ -33,6 +33,9 @@ struct MinBeatConstrainer
 /** Contains the ID of an AutomatableEditItem and the paramID. */
 struct AutomatableParameterID
 {
+    AutomatableParameterID() = default;
+    AutomatableParameterID (EditItemID a, juce::String p) : automatableEditItemID (a), paramID (p) {}
+    
     EditItemID automatableEditItemID;
     juce::String paramID;
 
