@@ -143,6 +143,19 @@ TEST_SUITE("tracktion_engine")
             context->edit = Edit::createEdit ({ engine, editState, pid });
             context->track = getAudioTracks (*context->edit)[0];
             context->clip = dynamic_cast<WaveAudioClip*> (context->track->getClips()[0]);
+            context->volPlugin = context->track->getVolumePlugin();
+            context->volParam = context->volPlugin->volParam;
+
+            auto curveMod = context->clip->getAutomationCurveList (false)->getItems()[0];
+            CHECK (! getValuesAtEditPosition (*curveMod, *context->volParam, 0_bp).baseValue);
+            CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 1_bp).baseValue == 1.0f);
+            CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 2_bp).baseValue == 1.0f);
+            CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 3_bp).baseValue == 1.0f);
+            CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 4_bp).baseValue == 0.0f);
+            CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 5_bp).baseValue == 0.0f);
+            CHECK (getValuesAtEditPosition (*curveMod, *context->volParam, 5.99_bp).baseValue == 0.0f);
+            CHECK (! getValuesAtEditPosition (*curveMod, *context->volParam, 6_bp).baseValue);
+            CHECK (! getValuesAtEditPosition (*curveMod, *context->volParam, 7_bp).baseValue);
 
             auto tempSourceRender = test_utilities::renderToAudioBuffer (*context->edit);
             CHECK (test_utilities::getRMSLevel (tempSourceRender, { 0_tp, 1_tp }, 0)
@@ -841,6 +854,24 @@ TEST_SUITE("tracktion_engine")
             CHECK (volParam2->getCurrentValue() == doctest::Approx (1.0f));
             volParam2->updateToFollowCurve (ts.toTime (4_bp));
             CHECK (volParam2->getCurrentValue() == doctest::Approx (0.0f));
+        }
+
+        SUBCASE("Copy plugin to next track")
+        {
+            context->edit->getUndoManager().beginNewTransaction();
+            CHECK_EQ (context->volParam->getAssignments().size(), 1);
+
+            auto newState = context->volPlugin->state.createCopy();
+            EditItemID::remapIDs (newState, nullptr, *context->edit);
+            auto newPlugin = context->edit->getPluginCache().getOrCreatePluginFor (newState);
+            auto newVolPlugin = dynamic_cast<VolumeAndPanPlugin*> (newPlugin.get());
+
+            at2->pluginList.insertPlugin (newPlugin, 0, {});
+
+            CHECK_EQ (newVolPlugin->volParam->getAssignments().size(), 0);
+
+            context->edit->getUndoManager().undo();
+            CHECK (newVolPlugin->getOwnerTrack() == nullptr);
         }
     }
 

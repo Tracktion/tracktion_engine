@@ -338,6 +338,8 @@ void updateRelativeDestinationOrRemove (AutomationCurveList&, AutomationCurveMod
 
 void assignNewIDsToAutomationCurveModifiers (Edit&, juce::ValueTree&);
 
+void removeInvalidAutomationCurveModifiers (juce::ValueTree&, const AutomatableParameter&);
+
 //==============================================================================
 //        _        _           _  _
 //     __| |  ___ | |_   __ _ (_)| | ___

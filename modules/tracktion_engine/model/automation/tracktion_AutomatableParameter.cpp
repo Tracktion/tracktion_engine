@@ -647,6 +647,10 @@ struct AutomatableParameter::AutomationSourceList  : private ValueTreeObjectList
     {
         jassert (! ap.getEdit().isLoading()); // This can't be created before the Edit has loaded
                                               // or it won't be able to find the sources
+
+        if (! getUndoManager (parameter).isPerformingUndoRedo())
+            removeInvalidAutomationCurveModifiers (parent, parameter);
+
         rebuildObjects();
         updateCachedSources();
 

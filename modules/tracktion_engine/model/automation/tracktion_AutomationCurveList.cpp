@@ -670,12 +670,44 @@ void updateRelativeDestinationOrRemove ([[maybe_unused]] AutomationCurveList& li
 
 void assignNewIDsToAutomationCurveModifiers (Edit& edit, juce::ValueTree& state)
 {
+    if (state.hasType (IDs::AUTOMATIONCURVE))
+        return;
+
     for (auto v : state)
     {
         assignNewIDsToAutomationCurveModifiers (edit, v);
 
         if (v.hasType (IDs::AUTOMATIONCURVEMODIFIER))
             edit.createNewItemID().writeID (v, nullptr);
+    }
+}
+
+void removeInvalidAutomationCurveModifiers (juce::ValueTree& state, const AutomatableParameter& parameter)
+{
+    assert (state.hasType (IDs::MODIFIERASSIGNMENTS));
+
+    for (int i = state.getNumChildren(); --i >= 0;)
+    {
+        auto v = state.getChild (i);
+
+        if (auto curveModifier = getAutomationCurveModifierForID (parameter.getEdit(), EditItemID::fromProperty (v, IDs::source)))
+        {
+            // Only remove curves relevant to this parameter or the below code won't be valid
+            if (curveModifier->getDestID().paramID != parameter.paramID)
+                continue;
+
+            auto assignedParam = getParameter (*curveModifier);
+
+            // Could be an ExternalPlugin that failed to load?
+            // Leave alone for now
+            if (! assignedParam)
+                continue;
+
+            if (&parameter == assignedParam)
+                continue;
+
+            state.removeChild (v, nullptr);
+        }
     }
 }
 
