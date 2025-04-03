@@ -543,7 +543,7 @@ var searchData=
   ['getlengthinseconds_540',['getLengthInSeconds',['../structtracktion_1_1engine_1_1AudioFileInfo.html#a76596b4919821b882465a5aae671a5f9',1,'tracktion::engine::AudioFileInfo']]],
   ['getlengthseconds_541',['getLengthSeconds',['../classtracktion_1_1engine_1_1MidiNote.html#a4d92d51cd3e472e58aba0f41e86b3969',1,'tracktion::engine::MidiNote']]],
   ['getlevel_542',['getlevel',['../structtracktion_1_1engine_1_1TimecodeSnapType.html#ac1b9f457c1d17e151be06fd576a13ab7',1,'tracktion::engine::TimecodeSnapType::getLevel()'],['../classtracktion_1_1engine_1_1FourOscPlugin.html#afc5cf1b84fa322290b2646f66bd562b1',1,'tracktion::engine::FourOscPlugin::getLevel()']]],
-  ['getlevelcache_543',['getLevelCache',['../classtracktion_1_1engine_1_1LevelMeasurer.html#ae2eed1c8de3873e9926f0dbce1b6b674',1,'tracktion::engine::LevelMeasurer']]],
+  ['getlevelcache_543',['getLevelCache',['../classtracktion_1_1engine_1_1LevelMeasurer.html#a4eeb3a9a72d62db0989506363485fe98',1,'tracktion::engine::LevelMeasurer']]],
   ['getleveldescription_544',['getLevelDescription',['../classtracktion_1_1engine_1_1MidiControllerEvent.html#aeb4351d2631adbdb92565f09af0d6490',1,'tracktion::engine::MidiControllerEvent']]],
   ['getlevelmeterplugin_545',['getLevelMeterPlugin',['../classtracktion_1_1engine_1_1AudioTrack.html#a628bafc7af22de4297bc018cb8738870',1,'tracktion::engine::AudioTrack']]],
   ['getlevelmetersettings_546',['getLevelMeterSettings',['../classtracktion_1_1engine_1_1EngineBehaviour.html#af7308deba6f8c9a4567c2bb8e0d1f58a',1,'tracktion::engine::EngineBehaviour']]],

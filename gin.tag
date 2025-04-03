@@ -37260,8 +37260,8 @@
       <type>std::pair&lt; float, float &gt;</type>
       <name>getLevelCache</name>
       <anchorfile>classtracktion_1_1engine_1_1LevelMeasurer.html</anchorfile>
-      <anchor>ae2eed1c8de3873e9926f0dbce1b6b674</anchor>
-      <arglist>() const noexcept</arglist>
+      <anchor>a4eeb3a9a72d62db0989506363485fe98</anchor>
+      <arglist>() const</arglist>
     </member>
   </compound>
   <compound kind="class">
