@@ -92,7 +92,7 @@ public:
     void removeClient (Client&);
 
     void setLevelCache (float dBL, float dBR) noexcept      { levelCacheL = dBL; levelCacheR = dBR; }
-    std::pair<float, float> getLevelCache() const noexcept  { return { levelCacheL, levelCacheR }; }
+    std::pair<float, float> getLevelCache() const           { return { levelCacheL, levelCacheR }; }
 
 private:
     Mode mode = peakMode;
