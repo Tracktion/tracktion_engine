@@ -95,6 +95,13 @@ private:
 
 //==============================================================================
 //==============================================================================
+/**
+    An AutomationCurveModifier contains three curves to control automation:
+    absolute, relative and scale.
+    The first sets the base value of a parameter and the latter two the modifier value.
+    Each curve has independent timing information so complex patterns can be set
+    up with multiple curves looping at different intervals.
+*/
 class AutomationCurveModifier : public juce::ReferenceCountedObject,
                                 public EditItem,
                                 public Selectable,
@@ -103,6 +110,10 @@ class AutomationCurveModifier : public juce::ReferenceCountedObject,
 {
 public:
     //==============================================================================
+    /** Constructs an AutomationCurveModifier for a given state and destination.
+        Don't construct one of these directly use AutomationCurveList::addCurve
+        @see AutomationCurveList for a detailed description of the delegates.
+    */
     AutomationCurveModifier (Edit&,
                              const juce::ValueTree&,
                              AutomatableParameterID destID,
@@ -165,6 +176,9 @@ public:
     */
     CurvePosition getPosition() const;
 
+    /** Returns the position info of the owning clip. I.e. the offset and loop properties.
+        These are used in "linked" mode to determine how the curve playhead loops.
+    */
     ClipPositionInfo getClipPositionInfo() const;
 
     /** Remove/deletes this curve from its parent list. */
@@ -299,21 +313,39 @@ struct BaseAndModValue
 
 //==============================================================================
 //==============================================================================
+/**
+    Manages a list of AutomationCurveModifiers which can be used to control the
+    values and modifiers of AutomatableParameters.
+*/
 class AutomationCurveList
 {
 public:
+    /** Constructs an AutomationCurveList for the given state.
+        Two delegates should be provided which will be passes to the AutomationCurveModifiers.
+        These should be real-time and thread-safe as they're called by multiple threads,
+        including the audio thread.
+        The CurvePosition should return where in the Edit this curve should be started at
+        The ClipPositionInfo should return the clip's offset and loop range (if looping)
+    */
     AutomationCurveList (Edit&, const juce::ValueTree&,
                          std::function<CurvePosition()> getPositionDelegate,
                          std::function<ClipPositionInfo()> getClipPositionDelegate);
+    /** Destructor. */
     ~AutomationCurveList();
 
+    /** Returns the list of AutomationCurveModifiers. */
     std::vector<AutomationCurveModifier::Ptr> getItems();
 
+    /** Adds a new curve modifier assigned to destParam. */
     AutomationCurveModifier::Ptr addCurve (const AutomatableParameter& destParam);
 
+    /** Removes the curve at the given index. */
     void removeCurve (int idx);
 
     //==============================================================================
+    /**
+        Listener interface.
+    */
     struct Listener
     {
         virtual ~Listener() = default;
@@ -324,7 +356,10 @@ public:
         virtual void itemsChanged() = 0;
     };
 
+    /** Adds a Listener. */
     void addListener (Listener&);
+
+    /** Removes a Listener. */
     void removeListener (Listener&);
 
 private:
@@ -334,10 +369,21 @@ private:
 };
 
 //==============================================================================
+/** Looks at the destinations on the given AutomationCurveModifier and tries to
+    re-assign parameters to corresponding parameters via the newParent Clip.
+    You shouldn't need to call this manually, it's done in several key places internally.
+*/
 void updateRelativeDestinationOrRemove (AutomationCurveList&, AutomationCurveModifier&, Clip& newParent);
 
+/** Iterates over the given tree and gives new IDs to any AutomationCurveModifier states.
+    You shouldn't need to call this manually, it's done automatically when clips are split.
+    @see split
+*/
 void assignNewIDsToAutomationCurveModifiers (Edit&, juce::ValueTree&);
 
+/** Removes any assignments in the given state if they don't have the given parameter as the destination.
+    You shouldn't need to call this manually, it's used internally to clean up after copy/paste operations etc..
+*/
 void removeInvalidAutomationCurveModifiers (juce::ValueTree&, const AutomatableParameter&);
 
 //==============================================================================
