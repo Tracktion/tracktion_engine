@@ -278,9 +278,6 @@ using namespace std::literals;
 #include "playback/audionodes/tracktion_AudioNode.h"
 #include "playback/audionodes/tracktion_CombiningAudioNode.h"
 #include "playback/audionodes/tracktion_WaveAudioNode.h"
-#include "playback/audionodes/tracktion_TrackCompAudioNode.h"
-#include "playback/audionodes/tracktion_SpeedRampAudioNode.h"
-#include "playback/audionodes/tracktion_PluginAudioNode.h"
 #include "playback/audionodes/tracktion_FadeInOutAudioNode.h"
 
 #include "playback/audionodes/tracktion_AudioNode.cpp"
