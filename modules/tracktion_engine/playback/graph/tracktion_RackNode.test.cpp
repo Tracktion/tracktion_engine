@@ -606,7 +606,6 @@ private:
             volPlugin->volParam->addModifier (*modifier, -0.193f);
 
             edit->updateModifierTimers ({}, 0);
-            volPlugin->updateActiveParameters();
             volPlugin->volParam->updateToFollowCurve ({}); // Force an update of the param value for testing
 
             // Process Rack

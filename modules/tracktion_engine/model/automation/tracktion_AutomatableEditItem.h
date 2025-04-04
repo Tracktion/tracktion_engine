@@ -70,9 +70,6 @@ public:
     */
     void updateParameterStreams (TimePosition);
 
-    /** Iterates all the parameters to find out which ones need to be automated. */
-    void updateActiveParameters();
-
     /** Marks the end of an automation recording stream. Call this when play stops or starts. */
     void resetRecordingStatus();
 
@@ -82,6 +79,10 @@ public:
 
     /** @internal. */
     void updateStreamIterators();
+    /** @internal. */
+    void addActiveParameter (const AutomatableParameter&);
+    /** @internal. */
+    void removeActiveParameter (const AutomatableParameter&);
     /** @internal. Testing only. */
     bool isActiveParameter (AutomatableParameter&);
 
@@ -101,7 +102,7 @@ protected:
 
 private:
     RealTimeSpinLock activeParameterLock;
-    juce::ReferenceCountedArray<AutomatableParameter> automatableParams, activeParameters;
+    juce::ReferenceCountedArray<AutomatableParameter> automatableParams, activeParameters, activeParameters2;
     mutable AutomatableParameterTree parameterTree;
 
     mutable bool parameterTreeBuilt = false;

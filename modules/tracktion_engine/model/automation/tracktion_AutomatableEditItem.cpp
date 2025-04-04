@@ -176,6 +176,73 @@ void AutomatableEditItem::updateStreamIterators()
         p->updateStream();
 }
 
+void AutomatableEditItem::addActiveParameter (const AutomatableParameter& p)
+{
+    if (auto param = automatableParams[automatableParams.indexOf (&p)])
+    {
+        // This confusing order is to avoid allocating whilst the lock is held
+        juce::ReferenceCountedArray<AutomatableParameter> newParams;
+        int numParams = 0;
+
+         {
+            const std::scoped_lock sl (activeParameterLock);
+
+            if (activeParameters.contains (param))
+                return;
+
+            numParams = activeParameters.size() + 1;
+        }
+
+        newParams.ensureStorageAllocated (numParams);
+
+        {
+            const std::scoped_lock sl (activeParameterLock);
+            newParams = activeParameters;
+        }
+
+        newParams.add (param);
+
+        const std::scoped_lock sl (activeParameterLock);
+        std::swap (activeParameters, newParams);
+    }
+
+    lastTime = -1.0s;
+}
+
+void AutomatableEditItem::removeActiveParameter (const AutomatableParameter& p)
+{
+    if (auto param = automatableParams[automatableParams.indexOf (&p)])
+    {
+        // This confusing order is to avoid removing whilst the lock is held,
+        // juce::ReferenceCountedArray can free when that happens
+        juce::ReferenceCountedArray<AutomatableParameter> nowActiveParams;
+        int numParams = 0;
+
+        {
+            const std::scoped_lock sl (activeParameterLock);
+
+            if (! activeParameters.contains (param))
+                return;
+
+            numParams = activeParameters.size() - 1;
+        }
+
+        nowActiveParams.ensureStorageAllocated (numParams);
+
+        {
+            const std::scoped_lock sl (activeParameterLock);
+            nowActiveParams = activeParameters;
+        }
+
+        nowActiveParams.removeObject (param);
+
+        const std::scoped_lock sl (activeParameterLock);
+        std::swap (activeParameters, nowActiveParams);
+    }
+
+    lastTime = -1.0s;
+}
+
 //==============================================================================
 void AutomatableEditItem::buildParameterTree() const
 {
@@ -220,23 +287,6 @@ juce::ReferenceCountedArray<AutomatableParameter> AutomatableEditItem::getFlatte
     }
 
     return params;
-}
-
-void AutomatableEditItem::updateActiveParameters()
-{
-    CRASH_TRACER
-    juce::ReferenceCountedArray<AutomatableParameter> nowActiveParams;
-
-    for (auto ap : automatableParams)
-        if (ap->isAutomationActive())
-            nowActiveParams.add (ap);
-
-    {
-        const std::scoped_lock sl (activeParameterLock);
-        activeParameters.swapWith (nowActiveParams);
-    }
-
-    lastTime = -1.0s;
 }
 
 bool AutomatableEditItem::isActiveParameter (AutomatableParameter& p)

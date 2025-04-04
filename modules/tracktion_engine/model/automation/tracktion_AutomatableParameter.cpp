@@ -1619,7 +1619,7 @@ AutomatableParameter::ScopedActiveParameter::ScopedActiveParameter (const Automa
     // First increment so update the active list
     // N.B. This should really add this parameter from a list rather than refresh it
     if (parameter.automatableEditElement.numActiveParameters.fetch_add (1) == 0)
-        parameter.automatableEditElement.updateActiveParameters();
+        parameter.automatableEditElement.addActiveParameter (parameter);
 }
 
 AutomatableParameter::ScopedActiveParameter::~ScopedActiveParameter()
@@ -1631,7 +1631,7 @@ AutomatableParameter::ScopedActiveParameter::~ScopedActiveParameter()
     // Last decrement so update the active list
     // N.B. This should really remove this parameter from a list rather than refresh it
     if (parameter.automatableEditElement.numActiveParameters.fetch_sub (1) == 1)
-        parameter.automatableEditElement.updateActiveParameters();
+        parameter.automatableEditElement.removeActiveParameter (parameter);
 
     assert (parameter.automatableEditElement.numActiveParameters >= 0);
 }
