@@ -65322,6 +65322,13 @@
       <arglist>(const AudioFile &amp;, TimeRange editTime, TimeDuration offset, TimeRange loopSection, LiveClipLevel, double speedRatio, const juce::AudioChannelSet &amp;sourceChannelsToUse, const juce::AudioChannelSet &amp;destChannelsToFill, ProcessState &amp;, EditItemID, bool isOfflineRender, SpeedFadeDescription)</arglist>
     </member>
     <member kind="function">
+      <type></type>
+      <name>~SpeedRampWaveNode</name>
+      <anchorfile>classtracktion_1_1engine_1_1SpeedRampWaveNode.html</anchorfile>
+      <anchor>a051b1e448029405d369c1b1b6b7b690e</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
       <type>tracktion::graph::NodeProperties</type>
       <name>getNodeProperties</name>
       <anchorfile>classtracktion_1_1engine_1_1SpeedRampWaveNode.html</anchorfile>
