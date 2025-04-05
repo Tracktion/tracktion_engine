@@ -65,6 +65,13 @@ namespace fade_utils
                                                        (float) alpha2);
             }
         }
+        else if (clearExtraSamples && editTime.getStart() <= fadeIn.getStart())
+        {
+            auto startSamp = std::min (numSamples, timeToSample (numSamples, editTime, fadeIn.getStart()));
+
+            if (startSamp > 0)
+                audio.getStart ((choc::buffer::FrameCount) startSamp).clear();
+        }
 
         if (editTime.overlaps (fadeOut) && fadeOut.getLength() > 0s)
         {
@@ -86,7 +93,7 @@ namespace fade_utils
                 alpha2 = 1.0;
 
                 if (clearExtraSamples && endSamp < numSamples)
-                    audio.getEnd ((choc::buffer::FrameCount) endSamp);
+                    audio.fromFrame ((choc::buffer::FrameCount) endSamp).clear();
             }
             else
             {
@@ -103,6 +110,13 @@ namespace fade_utils
                                                        juce::jlimit (0.0f, 1.0f, (float) (1.0 - alpha1)),
                                                        juce::jlimit (0.0f, 1.0f, (float) (1.0 - alpha2)));
             }
+        }
+        else if (clearExtraSamples && editTime.getEnd() >= fadeOut.getEnd())
+        {
+            auto endSamp = std::max (0, timeToSample (numSamples, editTime, fadeOut.getEnd()));
+
+            if (endSamp < numSamples)
+                audio.fromFrame ((choc::buffer::FrameCount) endSamp).clear();
         }
     }
 }
