@@ -558,13 +558,7 @@ private:
             if (! writer->isOpen())
                 return false;
 
-            std::vector<float*> channels;
-            channels.resize (source.getNumChannels());
-
-            for (choc::buffer::ChannelCount i = 0; i < source.getNumChannels(); ++i)
-                channels[i] = source.getChannel(i).data.data;
-
-            juce::AudioBuffer<float> buffer (channels.data(), (int) source.getNumChannels(), (int) source.getNumFrames());
+            juce::AudioBuffer<float> buffer (source.data.channels, (int) source.getNumChannels(), (int) source.getNumFrames());
             return writer->appendBuffer (buffer, buffer.getNumSamples());
         }
 

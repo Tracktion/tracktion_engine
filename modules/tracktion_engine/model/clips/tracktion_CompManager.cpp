@@ -8,10 +8,11 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#include "../../playback/audionodes/tracktion_AudioNode.h"
-#include "../../playback/audionodes/tracktion_WaveAudioNode.h"
-#include "../../playback/audionodes/tracktion_FadeInOutAudioNode.h"
-#include "../../playback/audionodes/tracktion_CombiningAudioNode.h"
+#include "../../playback/graph/tracktion_TracktionEngineNode.h"
+#include "../../playback/graph/tracktion_TracktionNodePlayer.h"
+#include "../../playback/graph/tracktion_WaveNode.h"
+#include "../../playback/graph/tracktion_FadeInOutNode.h"
+#include "../../playback/graph/tracktion_CombiningNode.h"
 
 
 namespace tracktion { inline namespace engine
@@ -1006,22 +1007,26 @@ WaveCompManager::CompRenderContext* WaveCompManager::createRenderContext() const
                                   getSourceTimeMultiplier(), getOffset(), getMaxCompLength(), xFadeMs / 1000.0);
 }
 
-bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& writer,
+bool WaveCompManager::renderTake (CompRenderContext& context, Edit& edit, AudioFileWriter& writer,
                                   juce::ThreadPoolJob& job, std::atomic<float>& progress)
 {
     CRASH_TRACER
 
-    // first build the audio graph of the comp
-    CombiningAudioNode compNode;
     const int blockSize = 32768;
-    juce::Range<double> takeRange (0.0, context.maxLength);
-    auto crossfadeLength = context.crossfadeLength;
+    auto totalRange = TimeRange (0s, TimeDuration::fromSeconds (context.maxLength));
+    auto crossfadeLength = TimeDuration::fromSeconds (context.crossfadeLength);
     auto halfCrossfade = crossfadeLength / 2.0;
 
     auto numSegments = context.takeTree.getNumChildren();
     auto timeRatio = context.sourceTimeMultiplier;
     auto offset = context.offset / timeRatio;
     double startTime = 0.0;
+
+    tracktion::graph::PlayHead playHead;
+    tracktion::graph::PlayHeadState playHeadState { playHead };
+    ProcessState processState { playHeadState, edit.tempoSequence };
+
+    auto combiningNode = std::make_unique<CombiningNode> (EditItemID(), processState);
 
     for (int i = 0; i < numSegments; ++i)
     {
@@ -1037,25 +1042,30 @@ bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& w
             const ProjectItemID takeID (context.takesIDs[takeIndex]);
             jassert (takeID.isValid());
 
-            const AudioFile takeFile (context.engine, context.engine.getProjectManager().findSourceFile (takeID));
-            AudioNode* node = new WaveAudioNode (takeFile, takeRange, 0.0, {}, {},
-                                                 1.0, juce::AudioChannelSet::stereo());
+            auto takeFile = AudioFile (context.engine, context.engine.getProjectManager().findSourceFile (takeID));
 
-            auto segmentTimes = juce::Range<double> (startTime, endTime).expanded (halfCrossfade) + offset;
-            juce::Range<double> fadeIn, fadeOut;
+            auto node = tracktion::graph::makeNode<WaveNode> (takeFile, totalRange, TimeDuration(), TimeRange(), LiveClipLevel(), 1.0,
+                                                              juce::AudioChannelSet::canonicalChannelSet (takeFile.getInfo().numChannels),
+                                                              juce::AudioChannelSet::stereo(),
+                                                              processState,
+                                                              EditItemID(), true);
+
+            auto segmentRange = TimeRange (TimePosition::fromSeconds (startTime),
+                                           TimePosition::fromSeconds (endTime)).expanded (halfCrossfade) + TimeDuration::fromSeconds (offset);
+
+            TimeRange fadeIn, fadeOut;
 
             if (i != 0)
-                fadeIn = { segmentTimes.getStart(), segmentTimes.getStart() + crossfadeLength };
+                fadeIn = TimeRange (segmentRange.getStart(), crossfadeLength);
 
             if (i != (numSegments - 1))
-                fadeOut = { segmentTimes.getEnd() - crossfadeLength, segmentTimes.getEnd() };
+                fadeOut = TimeRange::endingAt (segmentRange.getEnd(), crossfadeLength);
 
             if (! (fadeIn.isEmpty() && fadeOut.isEmpty()))
-                node = new FadeInOutAudioNode (node, fadeIn, fadeOut, AudioFadeCurve::convex, AudioFadeCurve::convex);
+                node = tracktion::graph::makeNode<FadeInOutNode> (std::move (node), processState, fadeIn, fadeOut,
+                                                                  AudioFadeCurve::convex, AudioFadeCurve::convex, true);
 
-            compNode.addInput ({ std::max (0.0, segmentTimes.getStart()),
-                                 std::min (segmentTimes.getEnd(), context.maxLength) },
-                               node);
+            combiningNode->addInput (std::move (node), segmentRange.getIntersectionWith (totalRange));
         }
 
         startTime = endTime;
@@ -1064,82 +1074,64 @@ bool WaveCompManager::renderTake (CompRenderContext& context, AudioFileWriter& w
     if (job.shouldExit())
         return false;
 
-    {
-        AudioNodeProperties props;
-        compNode.getAudioNodeProperties (props);
-    }
+    auto sampleRate = writer.getSampleRate();
+    auto nodePlayer = std::make_unique<TracktionNodePlayer> (std::move (combiningNode), processState, sampleRate, blockSize,
+                                                             getPoolCreatorFunction (ThreadPoolStrategy::realTime));
 
-    PlayHead localPlayhead;
+    nodePlayer->setNumThreads (0);
+    nodePlayer->prepareToPlay (sampleRate, (int) blockSize);
 
-    {
-        juce::Array<AudioNode*> allNodes;
-        allNodes.add (&compNode);
-
-        PlaybackInitialisationInfo info =
-        {
-            takeRange.getStart(),
-            writer.getSampleRate(),
-            blockSize,
-            &allNodes,
-            localPlayhead
-        };
-
-        compNode.prepareAudioNodeToPlay (info);
-    }
-
-    // now prepare the render context
-    juce::AudioBuffer<float> renderingBuffer (writer.getNumChannels(), blockSize + 256);
-    auto renderingBufferChannels = juce::AudioChannelSet::canonicalChannelSet (renderingBuffer.getNumChannels());
-
-    AudioRenderContext rc (localPlayhead, takeRange,
-                           &renderingBuffer, renderingBufferChannels, 0, blockSize,
-                           nullptr, 0.0,
-                           AudioRenderContext::playheadJumped, true);
-
-    localPlayhead.setPosition (takeRange.getStart());
-    localPlayhead.playLockedToEngine ({ takeRange.getStart(), Edit::maximumLength });
+    auto audioBuffer = choc::buffer::ChannelArrayBuffer<float> ((choc::buffer::ChannelCount) writer.getNumChannels(),
+                                                                (choc::buffer::FrameCount) blockSize + 256);
+    MidiMessageArray midiBuffer;
 
     if (job.shouldExit())
         return false;
 
     // now perform the render
-    auto streamTime = takeRange.getStart();
-    auto blockLength = blockSize / writer.getSampleRate();
-    SampleCount samplesToWrite = juce::roundToInt (takeRange.getLength() * writer.getSampleRate());
+    const SampleCount totalSamples = juce::roundToInt (totalRange.getLength().inSeconds() * writer.getSampleRate());
+    SampleCount samplesDone = 0;
+
+    playHead.playSyncedToRange ({ 0, totalSamples });
 
     for (;;)
     {
-        auto blockEnd = std::min (streamTime + blockLength, takeRange.getEnd());
-        rc.streamTime = { streamTime, blockEnd };
+        auto samplesToDo = (choc::buffer::FrameCount) std::min ((SampleCount) blockSize, (SampleCount) (totalSamples - samplesDone));
 
-        auto numSamplesDone = (int) std::min (samplesToWrite, (SampleCount) blockSize);
-        samplesToWrite -= numSamplesDone;
+        if (samplesToDo <= 0)
+            break;
 
-        rc.bufferNumSamples = numSamplesDone;
-
-        if (numSamplesDone > 0)
+        tracktion::graph::Node::ProcessContext pc
         {
-            compNode.prepareForNextBlock (rc);
-            compNode.renderOver (rc);
-        }
+            samplesToDo,
+            juce::Range<int64_t> (samplesDone, samplesDone + samplesToDo),
 
-        rc.continuity = AudioRenderContext::contiguous;
-        streamTime = blockEnd;
+            {
+                audioBuffer.getStart (samplesToDo),
+                midiBuffer
+            }
+        };
 
-        auto prog = (float) ((streamTime - takeRange.getStart()) / takeRange.getLength()) * 0.9f;
-        progress = juce::jlimit (0.0f, 0.9f, prog);
+        pc.buffers.audio.clear();
+        pc.buffers.midi.clear();
 
-        if (job.shouldExit())
+        auto misses = nodePlayer->process (pc);
+        jassert (misses == 0);
+
+        samplesDone += samplesToDo;
+        progress = juce::jlimit (0.0f, 0.9f, (float) (0.9 * samplesDone / (double) totalSamples));
+
+        if (job.shouldExit() || ! writer.isOpen())
             return false;
 
-        // NB buffer gets trashed by this call
-        if (numSamplesDone <= 0 || ! writer.isOpen()
-            || ! writer.appendBuffer (renderingBuffer, numSamplesDone))
+        juce::AudioBuffer<float> buffer (pc.buffers.audio.data.channels,
+                                         (int) pc.buffers.audio.getNumChannels(),
+                                         (int) pc.buffers.audio.getNumFrames());
+
+        if (! writer.appendBuffer (buffer, buffer.getNumSamples()))
             break;
     }
 
-    // complete render
-    localPlayhead.stop();
     writer.closeForWriting();
     progress = 1.0f;
 
@@ -1153,7 +1145,7 @@ public:
     using Ptr = juce::ReferenceCountedObjectPtr<GeneratorJob>;
 
     CompGeneratorJob (WaveAudioClip& wc, const AudioFile& comp)
-        : GeneratorJob (comp), engine (wc.edit.engine), clipID (wc.itemID),
+        : GeneratorJob (comp), engine (wc.edit.engine), edit (wc.edit),
           context (wc.getCompManager().createRenderContext())
     {
         setName (TRANS("Creating Comp") + ": " + wc.getName());
@@ -1161,7 +1153,7 @@ public:
 
 private:
     Engine& engine;
-    EditItemID clipID;
+    Edit& edit;
     std::unique_ptr<WaveCompManager::CompRenderContext> context;
 
     bool render() override
@@ -1220,7 +1212,7 @@ private:
 
         return writer.isOpen()
                 && context != nullptr
-                && WaveCompManager::renderTake (*context, writer, *this, progress);
+                && WaveCompManager::renderTake (*context, edit, writer, *this, progress);
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CompGeneratorJob)
