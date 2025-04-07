@@ -1116,7 +1116,7 @@ bool WaveCompManager::renderTake (CompRenderContext& context, Edit& edit, AudioF
         pc.buffers.midi.clear();
 
         auto misses = nodePlayer->process (pc);
-        jassert (misses == 0);
+        jassert (misses == 0); (void) misses;
 
         samplesDone += samplesToDo;
         progress = juce::jlimit (0.0f, 0.9f, (float) (0.9 * samplesDone / (double) totalSamples));

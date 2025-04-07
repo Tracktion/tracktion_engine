@@ -496,7 +496,7 @@ private:
 
             processStateToUse.playHeadState.playHead.playSyncedToRange ({ 0, totalSamples });
 
-            nodePlayer = std::make_unique<TracktionNodePlayer> (std::move (nodeToUse), processStateToUse, sampleRate, blockSize,
+            nodePlayer = std::make_unique<TracktionNodePlayer> (std::move (nodeToUse), processStateToUse, sampleRate, (int) blockSize,
                                                                 getPoolCreatorFunction (ThreadPoolStrategy::realTime));
 
             nodePlayer->setNumThreads (0);
@@ -527,7 +527,7 @@ private:
                 pc.buffers.midi.clear();
 
                 auto misses = nodePlayer->process (pc);
-                jassert (misses == 0);
+                jassert (misses == 0); (void) misses;
 
                 samplesDone += samplesToDo;
             }
@@ -553,12 +553,12 @@ private:
             return juce::ThreadPoolJob::jobNeedsRunningAgain;
         }
 
-        bool writeChocBufferToAudioFormatWriter (const choc::buffer::ChannelArrayView<float>& source)
+        bool writeChocBufferToAudioFormatWriter (const choc::buffer::ChannelArrayView<float>& bufferToWrite)
         {
             if (! writer->isOpen())
                 return false;
 
-            juce::AudioBuffer<float> buffer (source.data.channels, (int) source.getNumChannels(), (int) source.getNumFrames());
+            juce::AudioBuffer<float> buffer (bufferToWrite.data.channels, (int) bufferToWrite.getNumChannels(), (int) bufferToWrite.getNumFrames());
             return writer->appendBuffer (buffer, buffer.getNumSamples());
         }
 
@@ -724,9 +724,8 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> VolumeEffect::c
     auto waveNode = job->createWaveNodeForFile (sourceFile, timeRange);
 
     job->initialise (std::make_unique<PluginNode> (std::move (waveNode), plugin,
-                                                   sourceInfo.sampleRate, job->blockSize, nullptr,
-                                                   job->processState,
-                                                   true, false, -1));
+                                                   sourceInfo.sampleRate, (int) job->blockSize, nullptr,
+                                                   job->processState, true, false, -1));
     return job;
 }
 
@@ -1175,9 +1174,8 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> PitchShiftEffec
     // Use 1.0 second of preroll to be safe. We can't ask the plugin since it
     // may not be initialized yet
     job->initialise (std::make_unique<PluginNode> (std::move (node), plugin,
-                                                   sourceFile.getInfo().sampleRate, job->blockSize, nullptr,
-                                                   job->processState,
-                                                   true, false, -1),
+                                                   sourceFile.getInfo().sampleRate, (int) job->blockSize, nullptr,
+                                                   job->processState, true, false, -1),
                      1.0);
 
     return job;
@@ -1401,9 +1399,8 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> PluginEffect::c
         plugin->setProcessingEnabled (true);
 
         n = std::make_unique<PluginNode> (std::move (n), plugin,
-                                          job->processState.sampleRate, job->blockSize, nullptr,
-                                          job->processState,
-                                          true, false, -1);
+                                          job->processState.sampleRate, (int) job->blockSize, nullptr,
+                                          job->processState, true, false, -1);
     }
 
     if (pluginUnloadInhibitor != nullptr)

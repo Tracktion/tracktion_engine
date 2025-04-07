@@ -275,16 +275,6 @@ using namespace std::literals;
 #include "playback/tracktion_TransportControl.cpp"
 #include "playback/tracktion_AbletonLink.cpp"
 
-#include "playback/audionodes/tracktion_AudioNode.h"
-#include "playback/audionodes/tracktion_CombiningAudioNode.h"
-#include "playback/audionodes/tracktion_WaveAudioNode.h"
-#include "playback/audionodes/tracktion_FadeInOutAudioNode.h"
-
-#include "playback/audionodes/tracktion_AudioNode.cpp"
-#include "playback/audionodes/tracktion_FadeInOutAudioNode.cpp"
-#include "playback/audionodes/tracktion_WaveAudioNode.cpp"
-#include "playback/audionodes/tracktion_CombiningAudioNode.cpp"
-
 #include "playback/devices/tracktion_InputDevice.cpp"
 #include "playback/devices/tracktion_MidiInputDevice.cpp"
 #include "playback/devices/tracktion_PhysicalMidiInputDevice.cpp"
