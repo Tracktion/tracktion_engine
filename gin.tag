@@ -65325,8 +65325,8 @@
       <type></type>
       <name>~SpeedRampWaveNode</name>
       <anchorfile>classtracktion_1_1engine_1_1SpeedRampWaveNode.html</anchorfile>
-      <anchor>a051b1e448029405d369c1b1b6b7b690e</anchor>
-      <arglist>()</arglist>
+      <anchor>a227e1155305a57947a430bb42e34efcd</anchor>
+      <arglist>() override</arglist>
     </member>
     <member kind="function">
       <type>tracktion::graph::NodeProperties</type>

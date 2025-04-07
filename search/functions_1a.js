@@ -265,7 +265,7 @@ var searchData=
   ['_7esemaphore_262',['~Semaphore',['../classtracktion_1_1graph_1_1Semaphore.html#a8fc31c4283f1c0288ca73bcd58d7bb7b',1,'tracktion::graph::Semaphore']]],
   ['_7esmartthumbnail_263',['~SmartThumbnail',['../classtracktion_1_1engine_1_1SmartThumbnail.html#aa6bf543c2ddab6852a0334fbfcaf21c6',1,'tracktion::engine::SmartThumbnail']]],
   ['_7esourcefilereference_264',['~SourceFileReference',['../classtracktion_1_1engine_1_1SourceFileReference.html#a85810732ec9cac276abf8ea4bb2d2729',1,'tracktion::engine::SourceFileReference']]],
-  ['_7espeedrampwavenode_265',['~SpeedRampWaveNode',['../classtracktion_1_1engine_1_1SpeedRampWaveNode.html#a051b1e448029405d369c1b1b6b7b690e',1,'tracktion::engine::SpeedRampWaveNode']]],
+  ['_7espeedrampwavenode_265',['~SpeedRampWaveNode',['../classtracktion_1_1engine_1_1SpeedRampWaveNode.html#a227e1155305a57947a430bb42e34efcd',1,'tracktion::engine::SpeedRampWaveNode']]],
   ['_7estepclip_266',['~StepClip',['../classtracktion_1_1engine_1_1StepClip.html#a7f0f5367a28a96904d0eea4b03d37c95',1,'tracktion::engine::StepClip']]],
   ['_7estepmodifier_267',['~StepModifier',['../classtracktion_1_1engine_1_1StepModifier.html#a5fb18ebd6314c86ef02e6f213dc87518',1,'tracktion::engine::StepModifier']]],
   ['_7estepvolumeeffect_268',['~StepVolumeEffect',['../structtracktion_1_1engine_1_1StepVolumeEffect.html#afff468bf17e815999de7da1e28f82006',1,'tracktion::engine::StepVolumeEffect']]],
