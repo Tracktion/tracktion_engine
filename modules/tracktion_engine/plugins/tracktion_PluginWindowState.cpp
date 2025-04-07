@@ -125,7 +125,7 @@ void PluginWindowState::showWindow()
             return trimmedDisplays;
         }();
 
-        juce::WeakReference<juce::Component> oldFocus (juce::Component::getCurrentlyFocusedComponent());
+        auto oldFocus = makeWeakRef (juce::Component::getCurrentlyFocusedComponent());
 
         if (oldFocus == nullptr)
         {

@@ -31,6 +31,12 @@ namespace test_utilities
 
         return true;
     }
+   #else
+    inline bool runDispatchLoopUntilTrue (const std::atomic<bool>&)
+    {
+        assert(false && "This test is not supported on this platform yet");
+        return true;
+    }
    #endif
 
     //==============================================================================

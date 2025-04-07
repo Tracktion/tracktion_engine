@@ -114,7 +114,7 @@ InputDeviceInstance::~InputDeviceInstance()
 
 juce::Array<EditItemID> InputDeviceInstance::getTargets() const
 {
-    juce::WeakReference<InputDeviceInstance> ref (const_cast<InputDeviceInstance*> (this));
+    auto ref = makeWeakRef (*const_cast<InputDeviceInstance*> (this));
     trackDeviceEnabler.handleUpdateNowIfNeeded();
 
     if (ref.wasObjectDeleted())

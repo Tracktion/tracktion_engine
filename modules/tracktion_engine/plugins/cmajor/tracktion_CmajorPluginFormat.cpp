@@ -52,6 +52,8 @@ cmaj::CacheDatabaseInterface::Ptr createCompilerCache (tracktion::Engine& engine
 
 std::unique_ptr<juce::AudioPluginFormat> createCmajorPatchPluginFormat (tracktion::Engine& engine)
 {
+    TRACKTION_LOG ("Cmajor plugin format enabled");
+
     jassert (getCmajorPatchPluginFormatName() == cmaj::plugin::JUCEPluginFormat::pluginFormatName);
 
     auto onPatchChange = [&engine] (cmaj::plugin::SinglePatchJITPlugin& plugin)

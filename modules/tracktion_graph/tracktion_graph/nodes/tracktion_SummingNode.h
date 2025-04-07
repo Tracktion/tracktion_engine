@@ -159,12 +159,10 @@ private:
             auto t1 = a.getTimeStamp();
             auto t2 = b.getTimeStamp();
 
-            if (t1 == t2)
-            {
-                if (a.isNoteOff() && b.isNoteOn()) return true;
-                if (a.isNoteOn() && b.isNoteOff()) return false;
-            }
-            return t1 < t2;
+            if (t1 < t2) return true;
+            if (t2 < t1) return false;
+
+            return a.isNoteOff() && ! b.isNoteOff();
         });
     }
 

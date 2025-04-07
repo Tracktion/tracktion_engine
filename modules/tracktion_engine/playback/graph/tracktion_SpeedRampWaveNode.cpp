@@ -55,6 +55,8 @@ SpeedRampWaveNode::SpeedRampWaveNode (const AudioFile& af,
             || (! speedFadeDescription.outTimeRange.isEmpty()));
 }
 
+SpeedRampWaveNode::~SpeedRampWaveNode() = default;
+
 tracktion::graph::NodeProperties SpeedRampWaveNode::getNodeProperties()
 {
     tracktion::graph::NodeProperties props;

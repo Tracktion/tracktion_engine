@@ -123,7 +123,7 @@ public:
 
     juce::AudioIODevice* createDevice (const juce::String&, const juce::String&) override
     {
-        auto device = new HostedAudioDevice (audioIf, [ptr = juce::WeakReference<HostedAudioDeviceType> (this)] (HostedAudioDevice* d)
+        auto device = new HostedAudioDevice (audioIf, [ptr = makeWeakRef (*this)] (HostedAudioDevice* d)
                                                       {
                                                           if (ptr != nullptr)
                                                               ptr->devices.removeFirstMatchingValue (d);

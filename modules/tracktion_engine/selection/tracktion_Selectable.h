@@ -327,6 +327,21 @@ auto makeSafeVector (const Iterable& selectables) -> std::vector<SafeSelectable<
     return v;
 }
 
+/** Creates a juce::WeakReference for an object */
+template <typename WeakReferenceable>
+juce::WeakReference<WeakReferenceable> makeWeakRef (WeakReferenceable& object)
+{
+    return juce::WeakReference<WeakReferenceable> (std::addressof (object));
+}
+
+/** Creates a juce::WeakReference for an object pointer (which may be null) */
+template <typename WeakReferenceable>
+juce::WeakReference<WeakReferenceable> makeWeakRef (WeakReferenceable* object)
+{
+    return juce::WeakReference<WeakReferenceable> (object);
+}
+
+
 //==============================================================================
 //==============================================================================
 /**

@@ -166,17 +166,19 @@ struct TimecodeDisplayIterator
                              TimecodeSnapType minSnapTypeToUse,
                              bool isTripletOverride);
 
-    /** returns the next time. */
+    /// Returns the next time.
     TimePosition next();
 
     juce::String getTimecodeAsString() const;
 
-    /** the resolution level of the timecode that the current interval is at */
+    /// the resolution level of the timecode that the current interval is at
     int getCurrentResolutionLevel() const noexcept  { return currentSnapType.getLevel(); }
     int getMinimumResolutionLevel() const noexcept  { return minSnapType.getLevel(); }
 
-    // true if the current resolution is at least bar level
+    /// true if the current resolution is at least bar level
     bool isOneBarOrGreater() const noexcept;
+
+    TimecodeSnapType getCurrentSnapType() const noexcept    { return currentSnapType; }
 
 private:
     const TempoSequence& sequence;

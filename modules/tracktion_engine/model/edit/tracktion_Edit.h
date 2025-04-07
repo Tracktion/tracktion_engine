@@ -99,24 +99,27 @@ public:
         std::atomic<int> numTracksLoaded { 0 };
     };
 
+    using EditFileRetriever = std::function<juce::File()>;
+    using FilePathResolver = std::function<juce::File(const juce::String&)>;
+
     //==============================================================================
     /// Determines how the Edit will be created
     struct Options
     {
-        Engine& engine;                                                         ///< The Engine to use.
-        juce::ValueTree editState;                                              ///< The Edit state. @see createEmptyEdit
-        ProjectItemID editProjectItemID;                                        ///< The editProjectItemID, must be valid.
+        Engine& engine;                                              ///< The Engine to use.
+        juce::ValueTree editState;                                   ///< The Edit state. @see createEmptyEdit
+        ProjectItemID editProjectItemID;                             ///< The editProjectItemID, must be valid.
 
-        EditRole role = forEditing;                                             ///< An optional role to open the Edit with.
-        LoadContext* loadContext = nullptr;                                     ///< An optional context to be monitor for loading status.
-        int numUndoLevelsToStore = Edit::getDefaultNumUndoLevels();             ///< The number of undo levels to use.
+        EditRole role = forEditing;                                  ///< An optional role to open the Edit with.
+        LoadContext* loadContext = nullptr;                          ///< An optional context to be monitor for loading status.
+        int numUndoLevelsToStore = Edit::getDefaultNumUndoLevels();  ///< The number of undo levels to use.
 
-        std::function<juce::File()> editFileRetriever = {};                     ///< An optional editFileRetriever to use.
-        std::function<juce::File (const juce::String&)> filePathResolver = {};  ///< An optional filePathResolver to use.
+        EditFileRetriever editFileRetriever = {};                    ///< An optional editFileRetriever to use.
+        FilePathResolver filePathResolver = {};                      ///< An optional filePathResolver to use.
 
-        uint32_t numAudioTracks = 1;                                            ///< If non-zero, will ensure the edit has this many audio tracks
+        uint32_t numAudioTracks = 1;                                 ///< If non-zero, will ensure the edit has this many audio tracks
 
-        float defaultMasterVolumedB = -3.0f;                                    ///< The initial level for the edit's master volume
+        float defaultMasterVolumedB = -3.0f;                         ///< The initial level for the edit's master volume
     };
 
     /** Creates an Edit from a set of Options.
@@ -142,7 +145,7 @@ public:
         By default this uses ProjectManager to find a matching file for the Edit's
         ProjectItemID but this can be overriden for custom behaviour.
     */
-    std::function<juce::File()> editFileRetriever;
+    EditFileRetriever editFileRetriever;
 
     /** This callback can be set to resolve file paths.
         By default:
@@ -153,7 +156,7 @@ public:
         You can set a custom resolver here in case the Edit is
         in memory or the files directory is different to the Edit file's location.
     */
-    std::function<juce::File (const juce::String&)> filePathResolver;
+    FilePathResolver filePathResolver;
 
     /** Sets the ProjectItemID of the Edit, this is also stored in the state. */
     void setProjectItemID (ProjectItemID);

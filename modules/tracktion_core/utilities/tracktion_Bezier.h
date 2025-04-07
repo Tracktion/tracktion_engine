@@ -17,7 +17,7 @@ namespace tracktion { inline namespace core
 {
 
 inline std::pair<double /*x*/, double /*y*/> getBezierPoint (double x1, double y1, double x2, double y2,
-                                                             double c) noexcept
+                                                             double c)
 {
     if (y2 > y1)
     {
