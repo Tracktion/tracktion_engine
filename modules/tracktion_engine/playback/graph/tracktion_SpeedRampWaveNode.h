@@ -55,7 +55,7 @@ public:
                        bool isOfflineRender,
                        SpeedFadeDescription);
 
-    ~SpeedRampWaveNode();
+    ~SpeedRampWaveNode() override;
 
     //==============================================================================
     tracktion::graph::NodeProperties getNodeProperties() override;
