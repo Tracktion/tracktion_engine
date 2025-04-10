@@ -199,6 +199,9 @@ public:
 
         /** Called when one of the points on one of the curves changes. */
         virtual void curveChanged() = 0;
+
+        /** Called when one of the curves CurveTiming::unlinked properties changes. */
+        virtual void unlinkedStateChanged (CurveModifierType) {}
     };
 
     /** Adds a listener. */

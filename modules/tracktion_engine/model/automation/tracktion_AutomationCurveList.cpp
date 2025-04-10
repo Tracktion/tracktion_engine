@@ -239,6 +239,7 @@ void AutomationCurveModifier::curveUnlinkedStateChanged (juce::ValueTree& v)
             continue;
 
         timing.unlinked.forceUpdateOfCachedValue();
+        juce::ErasedScopeGuard listenerCaller ([this, type] { listeners.call (&Listener::unlinkedStateChanged, type); });
 
         if (timing.unlinked.get())
             return;

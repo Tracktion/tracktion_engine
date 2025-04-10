@@ -74,6 +74,7 @@ public:
         requires WeakReferenceable<BroadcasterType>
     void reset (BroadcasterType b, ListenerType& l)
     {
+        reset();
         pimpl = std::make_any<std::shared_ptr<SafeScopedListenerImpl<BroadcasterType, ListenerType>>>
                     (std::make_shared<SafeScopedListenerImpl<BroadcasterType, ListenerType>> (std::move (b), l));
     }
