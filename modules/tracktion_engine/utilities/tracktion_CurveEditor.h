@@ -126,6 +126,9 @@ public:
     virtual juce::Colour getCurveNameTextBackgroundColour() const = 0;
     virtual juce::Colour getPointOutlineColour() const = 0;
 
+    virtual float getLineThickness (bool mouseOverOrDragging, bool curveOrPointsSelected) const;
+    virtual void drawLine (juce::Graphics&, juce::Path, float lineThickness);
+
     void selectPoint (int pointIdx, bool addToSelection);
 
     virtual EditPosition toEditPosition (const TimePosition& t);

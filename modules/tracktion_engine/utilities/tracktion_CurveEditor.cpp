@@ -115,6 +115,7 @@ EditPosition CurveEditor::fromUnderlying (double u)
 {
     if (isBeats())
         return BeatPosition::fromBeats (u);
+
     return TimePosition::fromSeconds (u);
 }
 
@@ -125,14 +126,8 @@ EditPosition CurveEditor::toEditPosition (const TimePosition& t)
 
 void CurveEditor::updateLineThickness()
 {
-    auto newthickness = (isMouseOverOrDragging() || isCurveSelected || areAnyPointsSelected())
-                          ? 2.0f : 1.0f;
-
-    if (lineThickness != newthickness)
-    {
-        lineThickness = newthickness;
+    if (setIfDifferent (lineThickness, getLineThickness (isMouseOverOrDragging(), isCurveSelected || areAnyPointsSelected())))
         repaint();
-    }
 }
 
 void CurveEditor::paint (juce::Graphics& g)
@@ -233,7 +228,7 @@ void CurveEditor::paint (juce::Graphics& g)
         }
 
         g.setColour (getCurrentLineColour());
-        g.strokePath (curvePath, juce::PathStrokeType (lineThickness));
+        drawLine (g, curvePath, lineThickness);
     }
 
     // draw the points along the line - the points, the add point and the curve point
@@ -403,6 +398,16 @@ void CurveEditor::mouseDown (const juce::MouseEvent& e)
 juce::Colour CurveEditor::getCurrentFillColour()
 {
     return juce::Colours::transparentWhite;
+}
+
+float CurveEditor::getLineThickness (bool mouseOverOrDragging, bool curveOrPointsSelected) const
+{
+    return mouseOverOrDragging || curveOrPointsSelected ? 2.0f : 1.0f;
+}
+
+void CurveEditor::drawLine (juce::Graphics& g, juce::Path curvePath, float lineThicknessToUse)
+{
+    g.strokePath (curvePath, juce::PathStrokeType (lineThicknessToUse));
 }
 
 void CurveEditor::selectPoint (int pointIdx, bool addToSelection)
