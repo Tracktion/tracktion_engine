@@ -259,6 +259,7 @@ private:
     void curveUnlinkedStateChanged (juce::ValueTree&);
 };
 
+//==============================================================================
 /** Contains the base and modifier values if they are active. */
 struct BaseAndModValue
 {
@@ -266,7 +267,6 @@ struct BaseAndModValue
     std::optional<float> modValue;
 };
 
-//==============================================================================
 /** Returns the base and modifier values this AutomationCurveModifier will apply at the given position.
     N.B. The position is relative to the the Edit, this internally applies any CurvePosition/CurveTiming.
     @see AutomationCurveModifier::getPosition()
@@ -305,6 +305,9 @@ struct BaseAndModValue
     [[thread_safe]]
 */
 [[nodiscard]] std::optional<EditPosition> editPositionToCurvePosition (AutomationCurveModifier&, CurveModifierType, EditPosition);
+
+/** Returns the default value used if there is no curve for the given type. */
+[[nodiscard]] float getDefaultValue (AutomatableParameter&, CurveModifierType);
 
 //==============================================================================
 /** Returns the destination parameter this curve is controlling. */

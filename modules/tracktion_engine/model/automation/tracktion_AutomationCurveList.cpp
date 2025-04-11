@@ -284,19 +284,6 @@ bool AutomationCurveModifier::Assignment::isForModifierSource (const ModifierSou
 //==============================================================================
 namespace
 {
-    float getDefaultValue (AutomatableParameter& param, CurveModifierType type)
-    {
-        using enum CurveModifierType;
-        switch (type)
-        {
-            case absolute:  return param.getCurrentBaseValue();
-            case relative:  return 0.0f;
-            case scale:     return 1.0f;
-        };
-
-        unreachable();
-    }
-
     // Returns the base value
     [[nodiscard]] float processAbsoluteValue ([[maybe_unused]] AutomatableParameter& param, float curveValue)
     {
@@ -338,6 +325,19 @@ namespace
     }
 }
 
+float getDefaultValue (AutomatableParameter& param, CurveModifierType type)
+{
+    using enum CurveModifierType;
+    switch (type)
+    {
+        case absolute:  return param.getCurrentBaseValue();
+        case relative:  return 0.0f;
+        case scale:     return 1.0f;
+    };
+
+    unreachable();
+}
+
 BaseAndModValue getValuesAtEditPosition (AutomationCurveModifier& acm, AutomatableParameter& param, EditPosition editPos)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
@@ -361,9 +361,9 @@ BaseAndModValue getValuesAtEditPosition (AutomationCurveModifier& acm, Automatab
         if (! contains (acmPos.clipRange, editPos, ts))
             continue;
 
-        curvePos = minus (editPos, toDuration (acmPos.clipRange.getStart()), ts);
-
-        if (! curveTiming.unlinked.get())
+        if (curveTiming.unlinked.get())
+            curvePos = minus (editPos, toDuration (acmPos.clipRange.getStart()), ts);
+        else
             curvePos = minus (editPos, toDuration (acmPos.curveStart), ts);
 
         if (auto adjustedPos = applyTimingToCurvePosition (acm, type, curvePos))
@@ -464,12 +464,13 @@ BaseAndModValue getValuesAtCurvePositionUnlooped (AutomationCurveModifier& acm, 
 std::optional<EditPosition> applyTimingToCurvePosition (AutomationCurveModifier& acm, CurveModifierType type, EditPosition curvePos)
 {
     auto& timing = acm.getCurveTiming (type);
+    auto& ts = getTempoSequence (acm).getInternalSequence();
 
     // Unlinked means timing starts from the start of the curve, ignoring the clip
     if (timing.unlinked.get())
     {
         // Apply start offset first
-        auto posBeats = toBeats (curvePos, getTempoSequence (acm))
+        auto posBeats = toBeats (curvePos, ts)
                             + toDuration (timing.start.get());
 
         if (timing.looping.get())
@@ -502,7 +503,7 @@ std::optional<EditPosition> applyTimingToCurvePosition (AutomationCurveModifier&
         // Use clip looping
         auto loopStart = clipPosInfo.loopRange->getStart();
 
-        auto posBeats = toBeats (curvePos, getTempoSequence (acm));
+        auto posBeats = toBeats (curvePos, ts);
 
         if (posBeats > loopStart)
         {
@@ -529,16 +530,11 @@ std::optional<EditPosition> editPositionToCurvePosition (AutomationCurveModifier
     if (! toBeats (curvePosition.clipRange, ts).contains (editBeatPos))
         return std::nullopt;
 
-    auto& timing = acm.getCurveTiming (type);
+    auto posRelativeToCurvePosition = acm.getCurveTiming (type).unlinked.get()
+            ? editBeatPos - toDuration (toBeats (curvePosition.clipRange.getStart(), ts))
+            : editBeatPos - toDuration (toBeats (curvePosition.curveStart, ts));
 
-    if (timing.unlinked.get())
-    {
-        auto posRelativeToCurvePosition = editBeatPos - toDuration (toBeats (curvePosition.clipRange.getStart(), ts));
-        return applyTimingToCurvePosition (acm, type, posRelativeToCurvePosition);
-    }
-
-    auto posRelativeToCurveModifierStart = editBeatPos - toDuration (toBeats (curvePosition.curveStart, ts));
-    return posRelativeToCurveModifierStart;
+    return applyTimingToCurvePosition (acm, type, posRelativeToCurvePosition);
 }
 
 namespace detail
