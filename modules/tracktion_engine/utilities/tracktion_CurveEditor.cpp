@@ -267,6 +267,27 @@ void CurveEditor::paint (juce::Graphics& g)
                 fills.addWithoutMerging (r.reduced (1.0f));
         }
 
+        if (getDrawPointInsertionIndicator() && pointUnderMouse < 0)
+        {
+            auto mods = juce::ModifierKeys::getCurrentModifiers();
+            auto mousePos = getMouseXYRelative().toFloat();
+            auto t = snapTime (xToTime (mousePos.x), mods);
+            auto value = getValueAt (t);
+
+            if (juce::Point<float> (mousePos.x, valueToY (value)).getDistanceFrom (mousePos) < 8.0f)
+            {
+                auto pos = getPosition ({ t, value });
+                juce::Rectangle<float> r (pos.x - pointRadius,
+                                          pos.y - pointRadius,
+                                          pointRadius * 2,
+                                          pointRadius * 2);
+                r = r.reduced (2);
+
+                if (r.getX() <= clipBounds.getRight())
+                    rects.addWithoutMerging (r);
+            }
+        }
+
         g.setColour (getPointOutlineColour());
         g.fillRectList (rects);
 
@@ -662,6 +683,9 @@ void CurveEditor::mouseMove (const juce::MouseEvent& e)
 
     updatePointUnderMouse (e.position);
     updateLineThickness();
+
+    if (getDrawPointInsertionIndicator())
+        repaint();
 }
 
 void CurveEditor::mouseEnter (const juce::MouseEvent& e)
@@ -783,6 +807,17 @@ EditTimeRange CurveEditor::getTimes() const
         return { toBeats (leftTime, ts), toBeats (rightTime, ts) };
 
     return { toTime (leftTime, ts), toTime (rightTime, ts) };
+}
+
+bool CurveEditor::getDrawPointInsertionIndicator() const
+{
+    return drawPointInsertionIndicator;
+}
+
+void CurveEditor::setDrawPointInsertionIndicator (bool shouldDraw)
+{
+    if (setIfDifferent (drawPointInsertionIndicator, shouldDraw))
+        repaint();
 }
 
 float CurveEditor::timeToX (EditPosition t) const

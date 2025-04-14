@@ -78,6 +78,9 @@ public:
     void setTimes (EditPosition leftTime, EditPosition rightTime);
     EditTimeRange getTimes() const;
 
+    bool getDrawPointInsertionIndicator() const;
+    void setDrawPointInsertionIndicator (bool);
+
     virtual float timeToX (EditPosition) const;
     virtual EditPosition xToTime (double x) const;
     float valueToY (float val) const;
@@ -167,6 +170,7 @@ protected:
     bool realTimeDrag = true;
     float defaultCurve = 0;
     float lineThickness = 1.0f;
+    bool drawPointInsertionIndicator = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CurveEditor)
 };
