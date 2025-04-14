@@ -164,6 +164,7 @@ juce::PropertiesFile& PropertyStorage::getPropertiesFile()
     if (propertiesFile == nullptr)
     {
         auto file = getAppPrefsFolder().getChildFile ("Settings.xml");
+        TRACKTION_LOG ("Settings file: " + file.getFullPathName());
 
         juce::PropertiesFile::Options options;
         options.millisecondsBeforeSaving = 2000;
