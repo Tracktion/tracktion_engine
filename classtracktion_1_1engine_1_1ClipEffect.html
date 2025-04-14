@@ -123,9 +123,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:abac5fb68d4f39e7702975db7b9e82d83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f402545ddcf06ee65e0037b4dcf0767" id="r_a4f402545ddcf06ee65e0037b4dcf0767"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1ClipEffect.html#a68a4d5b963dfd7e9e1f7d1f62ccb9d51">EffectType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ClipEffect.html#a4f402545ddcf06ee65e0037b4dcf0767">getType</a> () const</td></tr>
 <tr class="separator:a4f402545ddcf06ee65e0037b4dcf0767"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd3309f792d75d01cc292e5ea66a8ea9" id="r_acd3309f792d75d01cc292e5ea66a8ea9"><td class="memItemLeft" align="right" valign="top">virtual juce::ReferenceCountedObjectPtr&lt; ClipEffectRenderJob &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ClipEffect.html#acd3309f792d75d01cc292e5ea66a8ea9">createRenderJob</a> (const <a class="el" href="classtracktion_1_1engine_1_1AudioFile.html">AudioFile</a> &amp;sourceFile, double sourceLength)=0</td></tr>
-<tr class="memdesc:acd3309f792d75d01cc292e5ea66a8ea9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subclasses should return a job that can render the source.  <br /></td></tr>
-<tr class="separator:acd3309f792d75d01cc292e5ea66a8ea9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1210a0dd42e85c21f02e267d3502dec6" id="r_a1210a0dd42e85c21f02e267d3502dec6"><td class="memItemLeft" align="right" valign="top">virtual juce::ReferenceCountedObjectPtr&lt; ClipEffectRenderJob &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ClipEffect.html#a1210a0dd42e85c21f02e267d3502dec6">createRenderJob</a> (const <a class="el" href="classtracktion_1_1engine_1_1AudioFile.html">AudioFile</a> &amp;sourceFile, TimeDuration sourceLength)=0</td></tr>
+<tr class="memdesc:a1210a0dd42e85c21f02e267d3502dec6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subclasses should return a job that can render the source.  <br /></td></tr>
+<tr class="separator:a1210a0dd42e85c21f02e267d3502dec6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff58238de0cadd1396b3353d40758205" id="r_aff58238de0cadd1396b3353d40758205"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ClipEffect.html#aff58238de0cadd1396b3353d40758205">hasProperties</a> ()</td></tr>
 <tr class="memdesc:aff58238de0cadd1396b3353d40758205"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true here to show a properties button in the editor and enable the propertiesButtonPressed callback.  <br /></td></tr>
 <tr class="separator:aff58238de0cadd1396b3353d40758205"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -469,8 +469,8 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="acd3309f792d75d01cc292e5ea66a8ea9" name="acd3309f792d75d01cc292e5ea66a8ea9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acd3309f792d75d01cc292e5ea66a8ea9">&#9670;&#160;</a></span>createRenderJob()</h2>
+<a id="a1210a0dd42e85c21f02e267d3502dec6" name="a1210a0dd42e85c21f02e267d3502dec6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1210a0dd42e85c21f02e267d3502dec6">&#9670;&#160;</a></span>createRenderJob()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -487,7 +487,7 @@ Protected Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double&#160;</td>
+          <td class="paramtype">TimeDuration&#160;</td>
           <td class="paramname"><em>sourceLength</em>&#160;</td>
         </tr>
         <tr>
@@ -506,7 +506,7 @@ Protected Member Functions</h2></td></tr>
 <p>Subclasses should return a job that can render the source. </p>
 <p>N.B. because the sourceFile may not be valid at the time of job creation you should use the sourceLength parameter to determine how to build the render node. </p>
 
-<p>Implemented in <a class="el" href="structtracktion_1_1engine_1_1WarpTimeEffect.html#a2b6e64e14130d4eb5c018be8001c928e">tracktion::engine::WarpTimeEffect</a>, <a class="el" href="structtracktion_1_1engine_1_1PluginEffect.html#a0d75c58eb2deb62f53f3cc84787eff3e">tracktion::engine::PluginEffect</a>, <a class="el" href="structtracktion_1_1engine_1_1MakeMonoEffect.html#a13eee8f97ccbf6a53381cf85a3462466">tracktion::engine::MakeMonoEffect</a>, <a class="el" href="structtracktion_1_1engine_1_1ReverseEffect.html#a7827b5d1c6bdab994a275c6da47cf375">tracktion::engine::ReverseEffect</a>, <a class="el" href="structtracktion_1_1engine_1_1InvertEffect.html#acfe3faaf3eacbf77d8da5e68613e3086">tracktion::engine::InvertEffect</a>, <a class="el" href="structtracktion_1_1engine_1_1VolumeEffect.html#a7941d23cec7004d9bf548a181e41c1b4">tracktion::engine::VolumeEffect</a>, <a class="el" href="structtracktion_1_1engine_1_1FadeInOutEffect.html#ae2f5c4488b801946e2c53efb39078c90">tracktion::engine::FadeInOutEffect</a>, <a class="el" href="structtracktion_1_1engine_1_1StepVolumeEffect.html#aea70c42f2dc861a2bb05a5951555dc23">tracktion::engine::StepVolumeEffect</a>, <a class="el" href="structtracktion_1_1engine_1_1PitchShiftEffect.html#ac450573948f1f30692c0d0a2c1147cc8">tracktion::engine::PitchShiftEffect</a>, and <a class="el" href="structtracktion_1_1engine_1_1NormaliseEffect.html#ad4455bb824de2be62e1207a196635f4d">tracktion::engine::NormaliseEffect</a>.</p>
+<p>Implemented in <a class="el" href="structtracktion_1_1engine_1_1WarpTimeEffect.html#abc42d0818d09803af2050a0c2bc197b9">tracktion::engine::WarpTimeEffect</a>, <a class="el" href="structtracktion_1_1engine_1_1PluginEffect.html#abd891e2277f69a7ff299216b02df8bc1">tracktion::engine::PluginEffect</a>, <a class="el" href="structtracktion_1_1engine_1_1MakeMonoEffect.html#a8ce9ce183e110749355d95456bc84d9f">tracktion::engine::MakeMonoEffect</a>, <a class="el" href="structtracktion_1_1engine_1_1ReverseEffect.html#a61393fb054d27353215a1b16e8c7a87a">tracktion::engine::ReverseEffect</a>, <a class="el" href="structtracktion_1_1engine_1_1InvertEffect.html#ae075da81ed69fa3312c9d90a9099d0b9">tracktion::engine::InvertEffect</a>, <a class="el" href="structtracktion_1_1engine_1_1VolumeEffect.html#a4229d01c926861492a594db62ce46560">tracktion::engine::VolumeEffect</a>, <a class="el" href="structtracktion_1_1engine_1_1FadeInOutEffect.html#abf50280089711c30810337b96a554af8">tracktion::engine::FadeInOutEffect</a>, <a class="el" href="structtracktion_1_1engine_1_1StepVolumeEffect.html#a4c9790b9ee10c8c90f0dae452d160482">tracktion::engine::StepVolumeEffect</a>, <a class="el" href="structtracktion_1_1engine_1_1PitchShiftEffect.html#a8c7a12bd26a293fbab25672b9bbd7438">tracktion::engine::PitchShiftEffect</a>, and <a class="el" href="structtracktion_1_1engine_1_1NormaliseEffect.html#a67e2f3931d1bd8a761f38256dc280e1c">tracktion::engine::NormaliseEffect</a>.</p>
 
 </div>
 </div>
@@ -834,7 +834,7 @@ Protected Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 14 2025 08:50:48 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Apr 14 2025 09:41:16 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

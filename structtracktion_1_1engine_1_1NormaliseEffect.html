@@ -94,9 +94,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1d8cfa7c6c98d309e7230c4c11f59772"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a438b40631fef79f679f99f4546808076" id="r_a438b40631fef79f679f99f4546808076"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1NormaliseEffect.html#a438b40631fef79f679f99f4546808076">~NormaliseEffect</a> () override</td></tr>
 <tr class="separator:a438b40631fef79f679f99f4546808076"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4455bb824de2be62e1207a196635f4d" id="r_ad4455bb824de2be62e1207a196635f4d"><td class="memItemLeft" align="right" valign="top">juce::ReferenceCountedObjectPtr&lt; ClipEffectRenderJob &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1NormaliseEffect.html#ad4455bb824de2be62e1207a196635f4d">createRenderJob</a> (const <a class="el" href="classtracktion_1_1engine_1_1AudioFile.html">AudioFile</a> &amp;sourceFile, double sourceLength) override</td></tr>
-<tr class="memdesc:ad4455bb824de2be62e1207a196635f4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subclasses should return a job that can render the source.  <br /></td></tr>
-<tr class="separator:ad4455bb824de2be62e1207a196635f4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67e2f3931d1bd8a761f38256dc280e1c" id="r_a67e2f3931d1bd8a761f38256dc280e1c"><td class="memItemLeft" align="right" valign="top">juce::ReferenceCountedObjectPtr&lt; ClipEffectRenderJob &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1NormaliseEffect.html#a67e2f3931d1bd8a761f38256dc280e1c">createRenderJob</a> (const <a class="el" href="classtracktion_1_1engine_1_1AudioFile.html">AudioFile</a> &amp;sourceFile, TimeDuration sourceLength) override</td></tr>
+<tr class="memdesc:a67e2f3931d1bd8a761f38256dc280e1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subclasses should return a job that can render the source.  <br /></td></tr>
+<tr class="separator:a67e2f3931d1bd8a761f38256dc280e1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a175a42626d9a4e724b5d594a9ca9e271" id="r_a175a42626d9a4e724b5d594a9ca9e271"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1NormaliseEffect.html#a175a42626d9a4e724b5d594a9ca9e271">hasProperties</a> () override</td></tr>
 <tr class="memdesc:a175a42626d9a4e724b5d594a9ca9e271"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return true here to show a properties button in the editor and enable the propertiesButtonPressed callback.  <br /></td></tr>
 <tr class="separator:a175a42626d9a4e724b5d594a9ca9e271"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -297,8 +297,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ad4455bb824de2be62e1207a196635f4d" name="ad4455bb824de2be62e1207a196635f4d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad4455bb824de2be62e1207a196635f4d">&#9670;&#160;</a></span>createRenderJob()</h2>
+<a id="a67e2f3931d1bd8a761f38256dc280e1c" name="a67e2f3931d1bd8a761f38256dc280e1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67e2f3931d1bd8a761f38256dc280e1c">&#9670;&#160;</a></span>createRenderJob()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -315,7 +315,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double&#160;</td>
+          <td class="paramtype">TimeDuration&#160;</td>
           <td class="paramname"><em>sourceLength</em>&#160;</td>
         </tr>
         <tr>
@@ -334,7 +334,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Subclasses should return a job that can render the source. </p>
 <p>N.B. because the sourceFile may not be valid at the time of job creation you should use the sourceLength parameter to determine how to build the render node. </p>
 
-<p>Implements <a class="el" href="classtracktion_1_1engine_1_1ClipEffect.html#acd3309f792d75d01cc292e5ea66a8ea9">tracktion::engine::ClipEffect</a>.</p>
+<p>Implements <a class="el" href="classtracktion_1_1engine_1_1ClipEffect.html#a1210a0dd42e85c21f02e267d3502dec6">tracktion::engine::ClipEffect</a>.</p>
 
 </div>
 </div>
@@ -445,7 +445,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 14 2025 08:50:49 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Apr 14 2025 09:41:16 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

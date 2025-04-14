@@ -63,7 +63,7 @@ var searchData=
   ['midibackchannelname_60',['midiBackChannelName',['../classtracktion_1_1engine_1_1ControlSurface.html#a253b642ae15a43335783a6897c480b41',1,'tracktion::engine::ControlSurface']]],
   ['midibanks_61',['midiBanks',['../structtracktion_1_1engine_1_1MidiProgramManager_1_1MidiProgramSet.html#a46c8881f910ea71d4c358b854d68f97b',1,'tracktion::engine::MidiProgramManager::MidiProgramSet']]],
   ['midibuffer_62',['midiBuffer',['../classtracktion_1_1engine_1_1WaveOutputDeviceInstance.html#a06e523d1954c22e750e0b6174e05d738',1,'tracktion::engine::WaveOutputDeviceInstance']]],
-  ['midibufferoffset_63',['midibufferoffset',['../structtracktion_1_1engine_1_1PluginRenderContext.html#a81523f751a35f998fb1bd2654d230465',1,'tracktion::engine::PluginRenderContext::midiBufferOffset'],['../structtracktion_1_1engine_1_1AudioRenderContext.html#adc3742b1f42c9abfed53c1f4437b48f2',1,'tracktion::engine::AudioRenderContext::midiBufferOffset']]],
+  ['midibufferoffset_63',['midiBufferOffset',['../structtracktion_1_1engine_1_1PluginRenderContext.html#a81523f751a35f998fb1bd2654d230465',1,'tracktion::engine::PluginRenderContext']]],
   ['midichannelname_64',['midiChannelName',['../classtracktion_1_1engine_1_1ControlSurface.html#a3d9798b42208c0509cfa07b5f09d6e07',1,'tracktion::engine::ControlSurface']]],
   ['midiclockgenerator_65',['midiClockGenerator',['../classtracktion_1_1engine_1_1MidiOutputDevice.html#a5ec7833373b287346756739d6a5cfc06',1,'tracktion::engine::MidiOutputDevice']]],
   ['mididispatcher_66',['midiDispatcher',['../classtracktion_1_1engine_1_1EditPlaybackContext.html#a327379e624f40758439342dfb668dbd1',1,'tracktion::engine::EditPlaybackContext']]],

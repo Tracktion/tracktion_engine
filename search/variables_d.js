@@ -36,7 +36,7 @@ var searchData=
   ['numaudiotracks_33',['numAudioTracks',['../structtracktion_1_1engine_1_1Edit_1_1Options.html#abf180cf9fef0648df9d52f36094e25b5',1,'tracktion::engine::Edit::Options']]],
   ['numauxes_34',['numAuxes',['../classtracktion_1_1engine_1_1ControlSurface.html#a515336458e4ae27cdb6ce8ea801f8c5f',1,'tracktion::engine::ControlSurface']]],
   ['number_35',['number',['../structtracktion_1_1engine_1_1MarkerSetting.html#a312a605c2aebf71fb86890f49ba6e489',1,'tracktion::engine::MarkerSetting']]],
-  ['numberofchannels_36',['numberofchannels',['../structtracktion_1_1graph_1_1NodeProperties.html#af59904ea90ee1cb608538b22354ce03b',1,'tracktion::graph::NodeProperties::numberOfChannels'],['../structtracktion_1_1engine_1_1AudioNodeProperties.html#aea17a27c9578e6e4549220633e57525e',1,'tracktion::engine::AudioNodeProperties::numberOfChannels']]],
+  ['numberofchannels_36',['numberOfChannels',['../structtracktion_1_1graph_1_1NodeProperties.html#af59904ea90ee1cb608538b22354ce03b',1,'tracktion::graph::NodeProperties']]],
   ['numberoffaderchannels_37',['numberOfFaderChannels',['../classtracktion_1_1engine_1_1ControlSurface.html#a55dca27ac36bfa09c499131bce917591',1,'tracktion::engine::ControlSurface']]],
   ['numberofstates_38',['numberOfStates',['../structtracktion_1_1engine_1_1VSTXML_1_1Param.html#a897c6cf432a7db0a36006a5510fcc6a1',1,'tracktion::engine::VSTXML::Param']]],
   ['numberoftrackpads_39',['numberOfTrackPads',['../classtracktion_1_1engine_1_1ControlSurface.html#a71ec443070a65f734e8719a3a5866c99',1,'tracktion::engine::ControlSurface']]],
@@ -55,7 +55,7 @@ var searchData=
   ['numprocessmisses_52',['numProcessMisses',['../structtracktion_1_1graph_1_1test__utilities_1_1TestContext.html#a09f67c85a7e2e662442ec65174aac343',1,'tracktion::graph::test_utilities::TestContext']]],
   ['numprograms_53',['numPrograms',['../classtracktion_1_1engine_1_1AirWindowsBase.html#ad2bd90787b3a8dd80f690f7e2cee1b08',1,'tracktion::engine::AirWindowsBase']]],
   ['numruns_54',['numRuns',['../structtracktion_1_1graph_1_1PerformanceMeasurement_1_1Statistics.html#a650d60f8b45be65687713b3115a0f996',1,'tracktion::graph::PerformanceMeasurement::Statistics']]],
-  ['numsamples_55',['numsamples',['../structtracktion_1_1graph_1_1Node_1_1ProcessContext.html#a6df650ea9dc5f5430e9791e6b0ec4ffa',1,'tracktion::graph::Node::ProcessContext::numSamples'],['../structtracktion_1_1engine_1_1ProcessState.html#a6045591bb372c1807d327c0b03801690',1,'tracktion::engine::ProcessState::numSamples']]],
+  ['numsamples_55',['numsamples',['../structtracktion_1_1engine_1_1ProcessState.html#a6045591bb372c1807d327c0b03801690',1,'tracktion::engine::ProcessState::numSamples'],['../structtracktion_1_1graph_1_1Node_1_1ProcessContext.html#a6df650ea9dc5f5430e9791e6b0ec4ffa',1,'tracktion::graph::Node::ProcessContext::numSamples']]],
   ['numsteps_56',['numSteps',['../classtracktion_1_1engine_1_1StepModifier.html#aa48ac97647b5d93a4cf84e7f4d1d449e',1,'tracktion::engine::StepModifier']]],
   ['numstepsparam_57',['numStepsParam',['../classtracktion_1_1engine_1_1StepModifier.html#a3d3ce96c0bd9013ad59f9532ca39efed',1,'tracktion::engine::StepModifier']]],
   ['numundolevelstostore_58',['numUndoLevelsToStore',['../structtracktion_1_1engine_1_1Edit_1_1Options.html#a9344b80e94e54ae73e9c0f56a0b336aa',1,'tracktion::engine::Edit::Options']]]

@@ -1163,112 +1163,6 @@
     <namespace>tracktion::engine</namespace>
   </compound>
   <compound kind="file">
-    <name>tracktion_AudioNode.h</name>
-    <path>build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__AudioNode_8h.html</filename>
-    <includes id="tracktion__engine_2playback_2audionodes_2tracktion__PlayHead_8h" name="tracktion_engine/playback/audionodes/tracktion_PlayHead.h" local="yes" import="no" module="no" objc="no">tracktion_PlayHead.h</includes>
-    <includes id="tracktion__EditTimeRange_8h" name="tracktion_EditTimeRange.h" local="yes" import="no" module="no" objc="no">tracktion_EditTimeRange.h</includes>
-    <class kind="struct">tracktion::engine::AudioNodeProperties</class>
-    <class kind="struct">tracktion::engine::PlaybackInitialisationInfo</class>
-    <class kind="struct">tracktion::engine::CreateAudioNodeParams</class>
-    <class kind="struct">tracktion::engine::AudioRenderContext</class>
-    <class kind="class">tracktion::engine::AudioNode</class>
-    <class kind="class">tracktion::engine::SingleInputAudioNode</class>
-    <class kind="struct">tracktion::engine::MuteAudioNode</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::engine</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_CombiningAudioNode.h</name>
-    <path>build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__CombiningAudioNode_8h.html</filename>
-    <includes id="tracktion__AudioNode_8h" name="tracktion_AudioNode.h" local="yes" import="no" module="no" objc="no">tracktion_AudioNode.h</includes>
-    <class kind="class">tracktion::engine::CombiningAudioNode</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::engine</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_EditTimeRange.h</name>
-    <path>build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__EditTimeRange_8h.html</filename>
-    <class kind="struct">tracktion::engine::legacy::EditTimeRange</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::engine</namespace>
-    <namespace>tracktion::engine::legacy</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_FadeInOutAudioNode.h</name>
-    <path>build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__FadeInOutAudioNode_8h.html</filename>
-    <class kind="class">tracktion::engine::FadeInOutAudioNode</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::engine</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_engine/playback/audionodes/tracktion_PlayHead.h</name>
-    <path>build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__engine_2playback_2audionodes_2tracktion__PlayHead_8h.html</filename>
-    <includes id="tracktion__EditTimeRange_8h" name="tracktion_EditTimeRange.h" local="yes" import="no" module="no" objc="no">tracktion_EditTimeRange.h</includes>
-    <class kind="class">tracktion::engine::PlayHead</class>
-    <class kind="struct">tracktion::engine::PlayHead::EditTimeWindow</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::engine</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_graph/tracktion_graph/tracktion_PlayHead.h</name>
-    <path>build/tracktion_graph/tracktion_graph/</path>
-    <filename>tracktion__graph_2tracktion__graph_2tracktion__PlayHead_8h.html</filename>
-    <class kind="struct">tracktion::graph::SplitTimelineRange</class>
-    <class kind="class">tracktion::graph::PlayHead</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::graph</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_PluginAudioNode.h</name>
-    <path>build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__PluginAudioNode_8h.html</filename>
-    <includes id="tracktion__AudioNode_8h" name="tracktion_AudioNode.h" local="yes" import="no" module="no" objc="no">tracktion_AudioNode.h</includes>
-    <class kind="class">tracktion::engine::PluginAudioNode</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::engine</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_SpeedRampAudioNode.h</name>
-    <path>build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__SpeedRampAudioNode_8h.html</filename>
-    <class kind="class">tracktion::engine::SubSampleWaveAudioNode</class>
-    <class kind="class">tracktion::engine::SpeedRampAudioNode</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::engine</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_TimedMutingAudioNode.h</name>
-    <path>build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__TimedMutingAudioNode_8h.html</filename>
-    <includes id="tracktion__AudioNode_8h" name="tracktion_AudioNode.h" local="yes" import="no" module="no" objc="no">tracktion_AudioNode.h</includes>
-    <class kind="class">tracktion::engine::TimedMutingAudioNode</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::engine</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_TrackCompAudioNode.h</name>
-    <path>build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__TrackCompAudioNode_8h.html</filename>
-    <includes id="tracktion__TimedMutingAudioNode_8h" name="tracktion_TimedMutingAudioNode.h" local="yes" import="no" module="no" objc="no">tracktion_TimedMutingAudioNode.h</includes>
-    <includes id="tracktion__FadeInOutAudioNode_8h" name="tracktion_FadeInOutAudioNode.h" local="yes" import="no" module="no" objc="no">tracktion_FadeInOutAudioNode.h</includes>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::engine</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_WaveAudioNode.h</name>
-    <path>build/tracktion_engine/playback/audionodes/</path>
-    <filename>tracktion__WaveAudioNode_8h.html</filename>
-    <includes id="tracktion__AudioNode_8h" name="tracktion_AudioNode.h" local="yes" import="no" module="no" objc="no">tracktion_AudioNode.h</includes>
-    <class kind="class">tracktion::engine::WaveAudioNode</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::engine</namespace>
-  </compound>
-  <compound kind="file">
     <name>tracktion_InputDevice.h</name>
     <path>build/tracktion_engine/playback/devices/</path>
     <filename>tracktion__InputDevice_8h.html</filename>
@@ -2945,6 +2839,15 @@
     <name>tracktion_NodePlayerThreadPools.h</name>
     <path>build/tracktion_graph/tracktion_graph/</path>
     <filename>tracktion__NodePlayerThreadPools_8h.html</filename>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::graph</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_PlayHead.h</name>
+    <path>build/tracktion_graph/tracktion_graph/</path>
+    <filename>tracktion__PlayHead_8h.html</filename>
+    <class kind="struct">tracktion::graph::SplitTimelineRange</class>
+    <class kind="class">tracktion::graph::PlayHead</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::graph</namespace>
   </compound>
@@ -8229,147 +8132,6 @@
     </member>
   </compound>
   <compound kind="class">
-    <name>tracktion::engine::AudioNode</name>
-    <filename>classtracktion_1_1engine_1_1AudioNode.html</filename>
-    <member kind="typedef">
-      <type>std::function&lt; void(AudioNode &amp;)&gt;</type>
-      <name>VisitorFn</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioNode.html</anchorfile>
-      <anchor>a52c19135ada560f55f79654428c89dff</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AudioNode</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioNode.html</anchorfile>
-      <anchor>a9c2a6673e7429ac3420a2f60f30094b6</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual</type>
-      <name>~AudioNode</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioNode.html</anchorfile>
-      <anchor>a7933c647c5a68f89405dd59f70611122</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>getAudioNodeProperties</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioNode.html</anchorfile>
-      <anchor>a0de60f376aeb8a304efd1aa41c31d951</anchor>
-      <arglist>(AudioNodeProperties &amp;)=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>prepareAudioNodeToPlay</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioNode.html</anchorfile>
-      <anchor>aa9c01ef3c279c114e400df5669a23bd2</anchor>
-      <arglist>(const PlaybackInitialisationInfo &amp;)=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual bool</type>
-      <name>purgeSubNodes</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioNode.html</anchorfile>
-      <anchor>a44c1ca2b7ba63a8f29c2166adc0b2e60</anchor>
-      <arglist>(bool keepAudio, bool keepMidi)=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>releaseAudioNodeResources</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioNode.html</anchorfile>
-      <anchor>a4148912f8931e49b09ceec46a4d29838</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>visitNodes</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioNode.html</anchorfile>
-      <anchor>a579daf2892779594e253733139a76cf6</anchor>
-      <arglist>(const VisitorFn &amp;)=0</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual juce::ReferenceCountedObjectPtr&lt; Plugin &gt;</type>
-      <name>getPlugin</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioNode.html</anchorfile>
-      <anchor>a990d1c7b9c87542e62a96d9eb42f955e</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>prepareForNextBlock</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioNode.html</anchorfile>
-      <anchor>a046be169e999676a3c83df7046ad4da0</anchor>
-      <arglist>(const AudioRenderContext &amp;)</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual bool</type>
-      <name>isReadyToRender</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioNode.html</anchorfile>
-      <anchor>a0bcc82583a8cf797423e2b40ee299eb5</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>renderOver</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioNode.html</anchorfile>
-      <anchor>a439d0c0695c021e5308a71a926f956a6</anchor>
-      <arglist>(const AudioRenderContext &amp;)=0</arglist>
-    </member>
-    <member kind="function" virtualness="pure">
-      <type>virtual void</type>
-      <name>renderAdding</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioNode.html</anchorfile>
-      <anchor>ad0e96fe6ffc138aa54c2a5de0191a760</anchor>
-      <arglist>(const AudioRenderContext &amp;)=0</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>callRenderAdding</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioNode.html</anchorfile>
-      <anchor>a4f89992b04917375210333a3bbf0cafc</anchor>
-      <arglist>(const AudioRenderContext &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>callRenderOver</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioNode.html</anchorfile>
-      <anchor>a6b82225987c4292c9dee4850ea06253c</anchor>
-      <arglist>(const AudioRenderContext &amp;)</arglist>
-    </member>
-    <member kind="function" static="yes">
-      <type>static void</type>
-      <name>invokeSplitRender</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioNode.html</anchorfile>
-      <anchor>a8c46c312a79e968af389589efb24a0bb</anchor>
-      <arglist>(const AudioRenderContext &amp;rc, CallbackType &amp;target)</arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion::engine::AudioNodeProperties</name>
-    <filename>structtracktion_1_1engine_1_1AudioNodeProperties.html</filename>
-    <member kind="variable">
-      <type>bool</type>
-      <name>hasAudio</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioNodeProperties.html</anchorfile>
-      <anchor>afc92747608cfb3799b0145ea2124d568</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>hasMidi</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioNodeProperties.html</anchorfile>
-      <anchor>a52c1b5eb681413d57ad0095a548e952e</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>numberOfChannels</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioNodeProperties.html</anchorfile>
-      <anchor>aea17a27c9578e6e4549220633e57525e</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="class">
     <name>tracktion::engine::AudioProxyGenerator</name>
     <filename>classtracktion_1_1engine_1_1AudioProxyGenerator.html</filename>
     <class kind="struct">tracktion::engine::AudioProxyGenerator::GeneratorJob</class>
@@ -8414,240 +8176,6 @@
       <anchorfile>classtracktion_1_1engine_1_1AudioProxyGenerator.html</anchorfile>
       <anchor>a771f3b5dfb8ec86311c0bda1afa3d3cf</anchor>
       <arglist>(GeneratorJob *)</arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion::engine::AudioRenderContext</name>
-    <filename>structtracktion_1_1engine_1_1AudioRenderContext.html</filename>
-    <member kind="enumeration">
-      <type></type>
-      <name>ContinuityFlags</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>af677a61efc8ba15458a11a3170aa6b78</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="enumvalue">
-      <name>contiguous</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>af677a61efc8ba15458a11a3170aa6b78af32c8b33106c90c712a633c2065e17aa</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="enumvalue">
-      <name>playheadJumped</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>af677a61efc8ba15458a11a3170aa6b78acb0d6b4e1401630a8be774b1d9fb8e39</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="enumvalue">
-      <name>lastBlockBeforeLoop</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>af677a61efc8ba15458a11a3170aa6b78ae04a0d0c5db76cc5bc2b919aaef9be8e</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="enumvalue">
-      <name>firstBlockOfLoop</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>af677a61efc8ba15458a11a3170aa6b78ad800987ce912fe0392ff379d105968e9</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="enumvalue">
-      <name>contiguous</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>af677a61efc8ba15458a11a3170aa6b78af32c8b33106c90c712a633c2065e17aa</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="enumvalue">
-      <name>playheadJumped</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>af677a61efc8ba15458a11a3170aa6b78acb0d6b4e1401630a8be774b1d9fb8e39</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="enumvalue">
-      <name>lastBlockBeforeLoop</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>af677a61efc8ba15458a11a3170aa6b78ae04a0d0c5db76cc5bc2b919aaef9be8e</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="enumvalue">
-      <name>firstBlockOfLoop</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>af677a61efc8ba15458a11a3170aa6b78ad800987ce912fe0392ff379d105968e9</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AudioRenderContext</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>a8ac438b0d41b5c048a66d5ee7a7972b3</anchor>
-      <arglist>(PlayHead &amp;ph, legacy::EditTimeRange stream, juce::AudioBuffer&lt; float &gt; *buffer, const juce::AudioChannelSet &amp;bufferChannels, int bufferStart, int bufferSize, MidiMessageArray *midiBuffer, double midiOffset, int continuityFlags, bool rendering) noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AudioRenderContext</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>a4c8a9c0aaee67f0d916f89fe31cb9636</anchor>
-      <arglist>(const AudioRenderContext &amp;)=default</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>AudioRenderContext</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>a6dbea7e3fd9196904f69ed019f5aa911</anchor>
-      <arglist>(AudioRenderContext &amp;&amp;)=default</arglist>
-    </member>
-    <member kind="function">
-      <type>AudioRenderContext &amp;</type>
-      <name>operator=</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>aa17757f778eb6a8328280242f9978a1f</anchor>
-      <arglist>(const AudioRenderContext &amp;)=delete</arglist>
-    </member>
-    <member kind="function">
-      <type>AudioRenderContext &amp;</type>
-      <name>operator=</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>a2dc8a78f7d693064b30e018b241d5f7b</anchor>
-      <arglist>(AudioRenderContext &amp;&amp;)=delete</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isContiguousWithPreviousBlock</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>ae6fe68bc98a082dbbbb4ba3c3f3341a7</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isFirstBlockOfLoop</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>a25f06a30f1794ad665561f12ffc2312c</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isLastBlockOfLoop</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>a19ea93082f902f2a4d403b12e84e1c93</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>didPlayheadJump</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>a64b1858058382c6324b52a42a1a11b98</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>PlayHead::EditTimeWindow</type>
-      <name>getEditTime</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>ae593c36791cca5b37d48ebd42b0aa717</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clearAudioBuffer</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>ac50cce276a8d7b98412bf05c1e2bd5a2</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clearMidiBuffer</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>ae682d980484d65f4163ee526171db4e5</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clearAll</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>a515c5d171ca9ae5c2db071d6a0fa5a4d</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>addAntiDenormalisationNoise</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>a235685543068606bd7752085f62bd20f</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>sanityCheck</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>a690ae9b7fb7b3fab8bfefb30f8b90c25</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="variable">
-      <type>PlayHead &amp;</type>
-      <name>playhead</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>a7645886316a69163fbfb1b5a2f57b6f7</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>legacy::EditTimeRange</type>
-      <name>streamTime</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>afc57dcdb5976ba618d4f882d89c653c0</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::AudioBuffer&lt; float &gt; *</type>
-      <name>destBuffer</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>abd66885778db6bc7f808fc3f2290bd67</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>juce::AudioChannelSet</type>
-      <name>destBufferChannels</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>a11649583b9538391f817f3d3a24d607f</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>bufferStartSample</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>a51aff9a454a26544836803677fcdb104</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>bufferNumSamples</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>a1b4c139fd64b62b5850eaa8f0c2b2e83</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>MidiMessageArray *</type>
-      <name>bufferForMidiMessages</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>a23bb34b74ec1e6b8a6f5c35577b9f8e0</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>double</type>
-      <name>midiBufferOffset</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>adc3742b1f42c9abfed53c1f4437b48f2</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>continuity</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>aec1dbcecdbc6e4d1974c39db4a0f2bbf</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>isRendering</name>
-      <anchorfile>structtracktion_1_1engine_1_1AudioRenderContext.html</anchorfile>
-      <anchor>a1b4071e85822ce67260fb5087a29b22e</anchor>
-      <arglist></arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -15045,8 +14573,8 @@
       <type>virtual juce::ReferenceCountedObjectPtr&lt; ClipEffectRenderJob &gt;</type>
       <name>createRenderJob</name>
       <anchorfile>classtracktion_1_1engine_1_1ClipEffect.html</anchorfile>
-      <anchor>acd3309f792d75d01cc292e5ea66a8ea9</anchor>
-      <arglist>(const AudioFile &amp;sourceFile, double sourceLength)=0</arglist>
+      <anchor>a1210a0dd42e85c21f02e267d3502dec6</anchor>
+      <arglist>(const AudioFile &amp;sourceFile, TimeDuration sourceLength)=0</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual bool</type>
@@ -16562,109 +16090,6 @@
       <anchorfile>structtracktion_1_1engine_1_1ColourArea.html</anchorfile>
       <anchor>af0460d4a9dac72cf3e63d4236aab092b</anchor>
       <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="class">
-    <name>tracktion::engine::CombiningAudioNode</name>
-    <filename>classtracktion_1_1engine_1_1CombiningAudioNode.html</filename>
-    <base>tracktion::engine::AudioNode</base>
-    <member kind="function">
-      <type></type>
-      <name>CombiningAudioNode</name>
-      <anchorfile>classtracktion_1_1engine_1_1CombiningAudioNode.html</anchorfile>
-      <anchor>add0987a76d90e1d8aeb8bebcaabe941a</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>~CombiningAudioNode</name>
-      <anchorfile>classtracktion_1_1engine_1_1CombiningAudioNode.html</anchorfile>
-      <anchor>a2c2168339e66a6af46dad61333004cd3</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>addInput</name>
-      <anchorfile>classtracktion_1_1engine_1_1CombiningAudioNode.html</anchorfile>
-      <anchor>a22ee48c44457d488f927e249899d116d</anchor>
-      <arglist>(legacy::EditTimeRange time, AudioNode *inputNode)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>clear</name>
-      <anchorfile>classtracktion_1_1engine_1_1CombiningAudioNode.html</anchorfile>
-      <anchor>ae8f9618655913bf9354b4a9b1f696df7</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>getAudioNodeProperties</name>
-      <anchorfile>classtracktion_1_1engine_1_1CombiningAudioNode.html</anchorfile>
-      <anchor>af852ba3064cd7d1ef3e41fdafb77e077</anchor>
-      <arglist>(AudioNodeProperties &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>visitNodes</name>
-      <anchorfile>classtracktion_1_1engine_1_1CombiningAudioNode.html</anchorfile>
-      <anchor>a48ba08554805f29466ef56227e720b55</anchor>
-      <arglist>(const VisitorFn &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>purgeSubNodes</name>
-      <anchorfile>classtracktion_1_1engine_1_1CombiningAudioNode.html</anchorfile>
-      <anchor>a205ba7bcc14366a25d8623f88fcf01c0</anchor>
-      <arglist>(bool keepAudio, bool keepMidi) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>prepareAudioNodeToPlay</name>
-      <anchorfile>classtracktion_1_1engine_1_1CombiningAudioNode.html</anchorfile>
-      <anchor>a7296261ed2257f2ef95a72e6d274f5f3</anchor>
-      <arglist>(const PlaybackInitialisationInfo &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isReadyToRender</name>
-      <anchorfile>classtracktion_1_1engine_1_1CombiningAudioNode.html</anchorfile>
-      <anchor>aaf418565c25b5bb56b0cf890a555afd1</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>releaseAudioNodeResources</name>
-      <anchorfile>classtracktion_1_1engine_1_1CombiningAudioNode.html</anchorfile>
-      <anchor>acc9285f9ec33992b3e5f36834ba2c46f</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderOver</name>
-      <anchorfile>classtracktion_1_1engine_1_1CombiningAudioNode.html</anchorfile>
-      <anchor>a077335b1e1d15ae49e82fb0ed0719e3e</anchor>
-      <arglist>(const AudioRenderContext &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderAdding</name>
-      <anchorfile>classtracktion_1_1engine_1_1CombiningAudioNode.html</anchorfile>
-      <anchor>a97e3ed1fa84369270eb165b84be39e98</anchor>
-      <arglist>(const AudioRenderContext &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>prepareForNextBlock</name>
-      <anchorfile>classtracktion_1_1engine_1_1CombiningAudioNode.html</anchorfile>
-      <anchor>a31ca43334a9a64b12581075f1999c444</anchor>
-      <arglist>(const AudioRenderContext &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderSection</name>
-      <anchorfile>classtracktion_1_1engine_1_1CombiningAudioNode.html</anchorfile>
-      <anchor>ad4f2b8cb2bc6f761dbb0cc8cfea27729</anchor>
-      <arglist>(const AudioRenderContext &amp;, legacy::EditTimeRange)</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -19650,52 +19075,6 @@
       <anchorfile>structtracktion_1_1engine_1_1CrashStackTracer.html</anchorfile>
       <anchor>a5b6f148cb6c2ddf30b606d6dcb5a9245</anchor>
       <arglist>(juce::Thread::ThreadID)</arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion::engine::CreateAudioNodeParams</name>
-    <filename>structtracktion_1_1engine_1_1CreateAudioNodeParams.html</filename>
-    <member kind="variable">
-      <type>const juce::Array&lt; Clip * &gt; *</type>
-      <name>allowedClips</name>
-      <anchorfile>structtracktion_1_1engine_1_1CreateAudioNodeParams.html</anchorfile>
-      <anchor>abc1ac718bccfb587a6a493afe526a183</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>const juce::BigInteger *</type>
-      <name>allowedTracks</name>
-      <anchorfile>structtracktion_1_1engine_1_1CreateAudioNodeParams.html</anchorfile>
-      <anchor>a0d772020aa393bca19aca667a8769e26</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>AudioNode *</type>
-      <name>audioNodeToBeReplaced</name>
-      <anchorfile>structtracktion_1_1engine_1_1CreateAudioNodeParams.html</anchorfile>
-      <anchor>a6ce34f5a8597617f35fcc594a141be96</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>forRendering</name>
-      <anchorfile>structtracktion_1_1engine_1_1CreateAudioNodeParams.html</anchorfile>
-      <anchor>a49be204a84449f882ce084f63f3cfba0</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>includePlugins</name>
-      <anchorfile>structtracktion_1_1engine_1_1CreateAudioNodeParams.html</anchorfile>
-      <anchor>a340fd492514d88948bbe8431c852410e</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>addAntiDenormalisationNoise</name>
-      <anchorfile>structtracktion_1_1engine_1_1CreateAudioNodeParams.html</anchorfile>
-      <anchor>a86865c576e9c3119bba3df6bd7a0e317</anchor>
-      <arglist></arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -28349,294 +27728,6 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion::engine::legacy::EditTimeRange</name>
-    <filename>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>EditTimeRange</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>aebbbcdb741cbb8e11179e4897e8f41f7</anchor>
-      <arglist>()=default</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>EditTimeRange</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a97cb58a6a60ecde34d2bcf2a0570f6f4</anchor>
-      <arglist>(const EditTimeRange &amp;)=default</arglist>
-    </member>
-    <member kind="function">
-      <type>EditTimeRange &amp;</type>
-      <name>operator=</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a13e4081a102d53b2f0d20af62300c7e2</anchor>
-      <arglist>(const EditTimeRange &amp;)=default</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>EditTimeRange</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>ac7dd92bc81f0d60304e6ac430b14e076</anchor>
-      <arglist>(double start, double end)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>EditTimeRange</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a151ad93e2bfd1b6f30d5e3f95dcedd3c</anchor>
-      <arglist>(juce::Range&lt; double &gt; timeRange)</arglist>
-    </member>
-    <member kind="function">
-      <type>double</type>
-      <name>getStart</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a8e34444fbedac9f0a58eea592ac70e2e</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>double</type>
-      <name>getEnd</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>aac2c2a6fa47bf84982f40462948e93f4</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>double</type>
-      <name>getLength</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a65be9b814612439f6d7be59719444020</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>double</type>
-      <name>getCentre</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a5dfb137b0b86bcc901e7ef04a8cd47f7</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>double</type>
-      <name>clipValue</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a61e98d644cfec372783806d65add871f</anchor>
-      <arglist>(double value) const</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isEmpty</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a065c87fb4443996997d216f6b60cd1d8</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>operator==</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a1d96e051ce41cb3af9fb8a4faffb96a2</anchor>
-      <arglist>(const EditTimeRange &amp;other) const</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>operator!=</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a2354380a1a7b4f7e2e955c95df004ac1</anchor>
-      <arglist>(const EditTimeRange &amp;other) const</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>overlaps</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a0947d3caabd1515befe56412ab8956a5</anchor>
-      <arglist>(const EditTimeRange &amp;other) const</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>contains</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a852930618abc073e0e07fe889a647fa1</anchor>
-      <arglist>(const EditTimeRange &amp;other) const</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>contains</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a61049321f7a1dd8a4ce7f601b100a3c3</anchor>
-      <arglist>(double time) const</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>containsInclusive</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a031e71195beb239a6f1cfe48ca4566a8</anchor>
-      <arglist>(double time) const</arglist>
-    </member>
-    <member kind="function">
-      <type>EditTimeRange</type>
-      <name>getUnionWith</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>ac6c6f3ac6bfba3f015f8133351cdc398</anchor>
-      <arglist>(EditTimeRange other) const</arglist>
-    </member>
-    <member kind="function">
-      <type>EditTimeRange</type>
-      <name>getIntersectionWith</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>abbee6a29fe2a23b23548d423db5aeeb6</anchor>
-      <arglist>(EditTimeRange other) const</arglist>
-    </member>
-    <member kind="function">
-      <type>EditTimeRange</type>
-      <name>rescaled</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a5d0398c36426d7e57f5aad0a2e39e29e</anchor>
-      <arglist>(double anchorTime, double factor) const</arglist>
-    </member>
-    <member kind="function">
-      <type>EditTimeRange</type>
-      <name>constrainRange</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a099455e5bb9108e68855a85aeec68b45</anchor>
-      <arglist>(EditTimeRange rangeToConstrain) const</arglist>
-    </member>
-    <member kind="function">
-      <type>EditTimeRange</type>
-      <name>expanded</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a431f99e8bd114b67c6ea6fac56462cd9</anchor>
-      <arglist>(double amount) const</arglist>
-    </member>
-    <member kind="function">
-      <type>EditTimeRange</type>
-      <name>reduced</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a17428d9e8ce61de89068119024d902e8</anchor>
-      <arglist>(double amount) const</arglist>
-    </member>
-    <member kind="function">
-      <type>EditTimeRange</type>
-      <name>movedToStartAt</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a31f3452a3cfaac5350cd7bf8a44e9cd1</anchor>
-      <arglist>(double newStart) const</arglist>
-    </member>
-    <member kind="function">
-      <type>EditTimeRange</type>
-      <name>movedToEndAt</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>ac7472a1165ff4e42834fc3c7da4fb12e</anchor>
-      <arglist>(double newEnd) const</arglist>
-    </member>
-    <member kind="function">
-      <type>EditTimeRange</type>
-      <name>withStart</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>aeb5d62b62d10081a842f15f3ee452ca7</anchor>
-      <arglist>(double newStart) const</arglist>
-    </member>
-    <member kind="function">
-      <type>EditTimeRange</type>
-      <name>withEnd</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a64adbdd92f2cc65318d2dc7eb2fe46a5</anchor>
-      <arglist>(double newEnd) const</arglist>
-    </member>
-    <member kind="function">
-      <type>EditTimeRange</type>
-      <name>withLength</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>af2ca457cfffe0c9178066d92c8fe85f0</anchor>
-      <arglist>(double newLength) const</arglist>
-    </member>
-    <member kind="function">
-      <type>EditTimeRange</type>
-      <name>operator+</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a92d523bb84bf28585abe6c1807f9699c</anchor>
-      <arglist>(double amount) const</arglist>
-    </member>
-    <member kind="function">
-      <type>EditTimeRange</type>
-      <name>operator-</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>acf1a80ae1909cc9d2d72c62ccb351f2c</anchor>
-      <arglist>(double amount) const</arglist>
-    </member>
-    <member kind="function" static="yes">
-      <type>static EditTimeRange</type>
-      <name>between</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a675a6961cba0b3ac80cfd94c922ff262</anchor>
-      <arglist>(double time1, double time2)</arglist>
-    </member>
-    <member kind="function" static="yes">
-      <type>static EditTimeRange</type>
-      <name>withStartAndLength</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>aa664b59537da5b8667075a296539964b</anchor>
-      <arglist>(double time1, double length)</arglist>
-    </member>
-    <member kind="function" static="yes">
-      <type>static EditTimeRange</type>
-      <name>emptyRange</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a0233ee24ffe765f267ecd02b8f435792</anchor>
-      <arglist>(double start)</arglist>
-    </member>
-    <member kind="variable">
-      <type>double</type>
-      <name>start</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>aaf60a342034473e454bd0e9aa4b66f31</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>double</type>
-      <name>end</name>
-      <anchorfile>structtracktion_1_1engine_1_1legacy_1_1EditTimeRange.html</anchorfile>
-      <anchor>a4f8cab3820645ad1092b103165b6b710</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>tracktion::engine::PlayHead::EditTimeWindow</name>
-    <filename>structtracktion_1_1engine_1_1PlayHead_1_1EditTimeWindow.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>EditTimeWindow</name>
-      <anchorfile>structtracktion_1_1engine_1_1PlayHead_1_1EditTimeWindow.html</anchorfile>
-      <anchor>a4bb8243a5c24ca9ecb15e8954f482b8e</anchor>
-      <arglist>(legacy::EditTimeRange range1)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>EditTimeWindow</name>
-      <anchorfile>structtracktion_1_1engine_1_1PlayHead_1_1EditTimeWindow.html</anchorfile>
-      <anchor>ab0cac0f24e350e7326dbd10534e1e89b</anchor>
-      <arglist>(legacy::EditTimeRange range1, legacy::EditTimeRange range2)</arglist>
-    </member>
-    <member kind="variable">
-      <type>legacy::EditTimeRange</type>
-      <name>editRange1</name>
-      <anchorfile>structtracktion_1_1engine_1_1PlayHead_1_1EditTimeWindow.html</anchorfile>
-      <anchor>a10e878224462008310a5629cb732f7d9</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>legacy::EditTimeRange</type>
-      <name>editRange2</name>
-      <anchorfile>structtracktion_1_1engine_1_1PlayHead_1_1EditTimeWindow.html</anchorfile>
-      <anchor>a1eb072c0118281d2b0234197a3a31a59</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>bool</type>
-      <name>isSplit</name>
-      <anchorfile>structtracktion_1_1engine_1_1PlayHead_1_1EditTimeWindow.html</anchorfile>
-      <anchor>a4acd13474cfa9fcfd8e488cfa6f1e8ff</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
     <name>tracktion::engine::TimeStretcher::ElastiqueProOptions</name>
     <filename>structtracktion_1_1engine_1_1TimeStretcher_1_1ElastiqueProOptions.html</filename>
     <member kind="function">
@@ -32358,53 +31449,6 @@
       <arglist></arglist>
     </member>
   </compound>
-  <compound kind="class">
-    <name>tracktion::engine::FadeInOutAudioNode</name>
-    <filename>classtracktion_1_1engine_1_1FadeInOutAudioNode.html</filename>
-    <base>tracktion::engine::SingleInputAudioNode</base>
-    <member kind="function">
-      <type></type>
-      <name>FadeInOutAudioNode</name>
-      <anchorfile>classtracktion_1_1engine_1_1FadeInOutAudioNode.html</anchorfile>
-      <anchor>a137de73578dbe4934cc33bae83fcd061</anchor>
-      <arglist>(AudioNode *input, legacy::EditTimeRange fadeIn, legacy::EditTimeRange fadeOut, AudioFadeCurve::Type fadeInType, AudioFadeCurve::Type fadeOutType, bool clearSamplesOutsideFade=true)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>~FadeInOutAudioNode</name>
-      <anchorfile>classtracktion_1_1engine_1_1FadeInOutAudioNode.html</anchorfile>
-      <anchor>a9b038b5652a94015db0896dba3fef209</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderOver</name>
-      <anchorfile>classtracktion_1_1engine_1_1FadeInOutAudioNode.html</anchorfile>
-      <anchor>aab51f493a63ef46600b712f828151753</anchor>
-      <arglist>(const AudioRenderContext &amp;rc) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderAdding</name>
-      <anchorfile>classtracktion_1_1engine_1_1FadeInOutAudioNode.html</anchorfile>
-      <anchor>a6eea6e46af6d453575239b2ee6582df2</anchor>
-      <arglist>(const AudioRenderContext &amp;rc) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderSection</name>
-      <anchorfile>classtracktion_1_1engine_1_1FadeInOutAudioNode.html</anchorfile>
-      <anchor>a64831d46f3a4a411ad0ffce2765c0323</anchor>
-      <arglist>(const AudioRenderContext &amp;, legacy::EditTimeRange)</arglist>
-    </member>
-    <member kind="function" static="yes">
-      <type>static AudioNode *</type>
-      <name>createForEdit</name>
-      <anchorfile>classtracktion_1_1engine_1_1FadeInOutAudioNode.html</anchorfile>
-      <anchor>a6815cfd4d25cd604833c073518524579</anchor>
-      <arglist>(Edit &amp;, AudioNode *input)</arglist>
-    </member>
-  </compound>
   <compound kind="struct">
     <name>tracktion::engine::FadeInOutEffect</name>
     <filename>structtracktion_1_1engine_1_1FadeInOutEffect.html</filename>
@@ -32434,8 +31478,8 @@
       <type>juce::ReferenceCountedObjectPtr&lt; ClipEffectRenderJob &gt;</type>
       <name>createRenderJob</name>
       <anchorfile>structtracktion_1_1engine_1_1FadeInOutEffect.html</anchorfile>
-      <anchor>ae2f5c4488b801946e2c53efb39078c90</anchor>
-      <arglist>(const AudioFile &amp;sourceFile, double sourceLength) override</arglist>
+      <anchor>abf50280089711c30810337b96a554af8</anchor>
+      <arglist>(const AudioFile &amp;sourceFile, TimeDuration sourceLength) override</arglist>
     </member>
     <member kind="variable">
       <type>juce::CachedValue&lt; TimeDuration &gt;</type>
@@ -36214,8 +35258,8 @@
       <type>juce::ReferenceCountedObjectPtr&lt; ClipEffect::ClipEffectRenderJob &gt;</type>
       <name>createRenderJob</name>
       <anchorfile>structtracktion_1_1engine_1_1InvertEffect.html</anchorfile>
-      <anchor>acfe3faaf3eacbf77d8da5e68613e3086</anchor>
-      <arglist>(const AudioFile &amp;, double sourceLength) override</arglist>
+      <anchor>ae075da81ed69fa3312c9d90a9099d0b9</anchor>
+      <arglist>(const AudioFile &amp;, TimeDuration sourceLength) override</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -40963,8 +40007,8 @@
       <type>juce::ReferenceCountedObjectPtr&lt; ClipEffectRenderJob &gt;</type>
       <name>createRenderJob</name>
       <anchorfile>structtracktion_1_1engine_1_1MakeMonoEffect.html</anchorfile>
-      <anchor>a13eee8f97ccbf6a53381cf85a3462466</anchor>
-      <arglist>(const AudioFile &amp;, double sourceLength) override</arglist>
+      <anchor>a8ce9ce183e110749355d95456bc84d9f</anchor>
+      <arglist>(const AudioFile &amp;, TimeDuration sourceLength) override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -47746,32 +46790,6 @@
       <arglist></arglist>
     </member>
   </compound>
-  <compound kind="struct">
-    <name>tracktion::engine::MuteAudioNode</name>
-    <filename>structtracktion_1_1engine_1_1MuteAudioNode.html</filename>
-    <base>tracktion::engine::SingleInputAudioNode</base>
-    <member kind="function">
-      <type></type>
-      <name>MuteAudioNode</name>
-      <anchorfile>structtracktion_1_1engine_1_1MuteAudioNode.html</anchorfile>
-      <anchor>a7c1e8462c28ee9feabb2fcb16d7d0cfb</anchor>
-      <arglist>(AudioNode *source)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderOver</name>
-      <anchorfile>structtracktion_1_1engine_1_1MuteAudioNode.html</anchorfile>
-      <anchor>a9af8adf24d7f2023d0d01cb848ee0ebe</anchor>
-      <arglist>(const AudioRenderContext &amp;rc) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderAdding</name>
-      <anchorfile>structtracktion_1_1engine_1_1MuteAudioNode.html</anchorfile>
-      <anchor>a85a661e6203c96534b428c5236cbdcde</anchor>
-      <arglist>(const AudioRenderContext &amp;rc) override</arglist>
-    </member>
-  </compound>
   <compound kind="class">
     <name>tracktion::graph::Node</name>
     <filename>classtracktion_1_1graph_1_1Node.html</filename>
@@ -48295,8 +47313,8 @@
       <type>juce::ReferenceCountedObjectPtr&lt; ClipEffectRenderJob &gt;</type>
       <name>createRenderJob</name>
       <anchorfile>structtracktion_1_1engine_1_1NormaliseEffect.html</anchorfile>
-      <anchor>ad4455bb824de2be62e1207a196635f4d</anchor>
-      <arglist>(const AudioFile &amp;sourceFile, double sourceLength) override</arglist>
+      <anchor>a67e2f3931d1bd8a761f38256dc280e1c</anchor>
+      <arglist>(const AudioFile &amp;sourceFile, TimeDuration sourceLength) override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -51715,8 +50733,8 @@
       <type>juce::ReferenceCountedObjectPtr&lt; ClipEffectRenderJob &gt;</type>
       <name>createRenderJob</name>
       <anchorfile>structtracktion_1_1engine_1_1PitchShiftEffect.html</anchorfile>
-      <anchor>ac450573948f1f30692c0d0a2c1147cc8</anchor>
-      <arglist>(const AudioFile &amp;sourceFile, double sourceLength) override</arglist>
+      <anchor>a8c7a12bd26a293fbab25672b9bbd7438</anchor>
+      <arglist>(const AudioFile &amp;sourceFile, TimeDuration sourceLength) override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -51953,45 +50971,6 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>tracktion::engine::PlaybackInitialisationInfo</name>
-    <filename>structtracktion_1_1engine_1_1PlaybackInitialisationInfo.html</filename>
-    <member kind="variable">
-      <type>double</type>
-      <name>startTime</name>
-      <anchorfile>structtracktion_1_1engine_1_1PlaybackInitialisationInfo.html</anchorfile>
-      <anchor>aa396348c8a238c2d3e14c1191fc1f945</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>double</type>
-      <name>sampleRate</name>
-      <anchorfile>structtracktion_1_1engine_1_1PlaybackInitialisationInfo.html</anchorfile>
-      <anchor>ae50a936154b8acf9e4c09471b59365b8</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>int</type>
-      <name>blockSizeSamples</name>
-      <anchorfile>structtracktion_1_1engine_1_1PlaybackInitialisationInfo.html</anchorfile>
-      <anchor>a7c4cde4c1717f0c0bff00f9fbf6b34a1</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>const juce::Array&lt; AudioNode * &gt; *</type>
-      <name>rootNodes</name>
-      <anchorfile>structtracktion_1_1engine_1_1PlaybackInitialisationInfo.html</anchorfile>
-      <anchor>a50f874d312553cdfd850a0294ebdd420</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>PlayHead &amp;</type>
-      <name>playhead</name>
-      <anchorfile>structtracktion_1_1engine_1_1PlaybackInitialisationInfo.html</anchorfile>
-      <anchor>aae3c538c5cb5e8a2e953afceb6495f0f</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
     <name>tracktion::graph::PlaybackInitialisationInfo</name>
     <filename>structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html</filename>
     <member kind="variable">
@@ -52148,186 +51127,6 @@
       <anchorfile>classPlaybackRegionWrapper.html</anchorfile>
       <anchor>acac88f1add1c57527866ba8c4bfd99cd</anchor>
       <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="class">
-    <name>tracktion::engine::PlayHead</name>
-    <filename>classtracktion_1_1engine_1_1PlayHead.html</filename>
-    <class kind="struct">tracktion::engine::PlayHead::EditTimeWindow</class>
-    <member kind="function">
-      <type></type>
-      <name>PlayHead</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>a8904338bd58e44d82380d3879b96616b</anchor>
-      <arglist>()=default</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>setPosition</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>a30d9cf0385daed3bcd19eee25a936106</anchor>
-      <arglist>(double newTime)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>play</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>ae019a8710a4b8fa7ad49b86a0b1aab4f</anchor>
-      <arglist>(legacy::EditTimeRange rangeToPlay, bool looped)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>play</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>af9a68b19225f67e81aecf0a246ef3a56</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>playLockedToEngine</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>a20e2eebb1a7347d97b3e8b479d408ac1</anchor>
-      <arglist>(legacy::EditTimeRange rangeToPlay)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>stop</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>a92dea7a1acac5c46a74c28aaaf76e17e</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>setUserIsDragging</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>a5383ad71929205660a6324c025634c85</anchor>
-      <arglist>(bool b)</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isUserDragging</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>a7eb4712608fd3075e2b7e8790a466cc4</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>juce::Time</type>
-      <name>getLastUserInteractionTime</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>a24dc760800e9321e1ef8800bfa72929d</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>double</type>
-      <name>streamTimeToSourceTime</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>a676937b3d8ec6db38dbe104b045de57e</anchor>
-      <arglist>(double streamTime) const</arglist>
-    </member>
-    <member kind="function">
-      <type>double</type>
-      <name>streamTimeToSourceTimeUnlooped</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>a8cc1e4ec25a0be7185719f30c594e4d1</anchor>
-      <arglist>(double streamTime) const</arglist>
-    </member>
-    <member kind="function">
-      <type>EditTimeWindow</type>
-      <name>streamTimeToEditWindow</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>a0127840a6b85353106cb8219ba659f5c</anchor>
-      <arglist>(legacy::EditTimeRange streamTime) const</arglist>
-    </member>
-    <member kind="function">
-      <type>double</type>
-      <name>getPosition</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>ae7747574de9ec6e23b307b7592b9ae2c</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>double</type>
-      <name>getUnloopedPosition</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>acc4440b4bebce5de55ed5e54324bfd64</anchor>
-      <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>overridePosition</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>ad84f62e4cdfad7dd53fe8144aa18f2e3</anchor>
-      <arglist>(double newTime)</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isPlaying</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>a4d381dfa7fc16ee1bc363af8e73a54d3</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isStopped</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>a41b2f7d7267f1ee878a7100e9fefee49</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isLooping</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>afd4560a1c7e57adc8b966e362e8ed451</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isRollingIntoLoop</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>a1139d53dc791fe9857221387ba0beff5</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>legacy::EditTimeRange</type>
-      <name>getLoopTimes</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>a9c5779cacae887b2cbccd01a9d55bb24</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>setLoopTimes</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>a125f1fa8ad5c2a41c60e7e01604b4a9a</anchor>
-      <arglist>(bool loop, legacy::EditTimeRange times)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>setRollInToLoop</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>a05b7ec7a32edf8c0dbfc2c37e2ad21b3</anchor>
-      <arglist>(double t)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>deviceManagerPositionUpdate</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>a3d94f8501b8ac7453c7470cfc32146e7</anchor>
-      <arglist>(double newTime, double newTimeEnd)</arglist>
-    </member>
-    <member kind="function" static="yes">
-      <type>static double</type>
-      <name>linearTimeToLoopTime</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>a8f0b2d725043e33a9c980009fae5815b</anchor>
-      <arglist>(double time, legacy::EditTimeRange loop)</arglist>
-    </member>
-    <member kind="function" static="yes">
-      <type>static double</type>
-      <name>linearTimeToLoopTime</name>
-      <anchorfile>classtracktion_1_1engine_1_1PlayHead.html</anchorfile>
-      <anchor>a10fabed8168ced91a80ced31dccc88a9</anchor>
-      <arglist>(double time, double loopStart, double loopLen)</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -53501,165 +52300,6 @@
     </member>
   </compound>
   <compound kind="class">
-    <name>tracktion::engine::PluginAudioNode</name>
-    <filename>classtracktion_1_1engine_1_1PluginAudioNode.html</filename>
-    <base>tracktion::engine::AudioNode</base>
-    <member kind="function">
-      <type></type>
-      <name>PluginAudioNode</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>a1a9064575f25a04f110bf95f51aacd91</anchor>
-      <arglist>(const Plugin::Ptr &amp;p, AudioNode *in, bool denormalisationNoise)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>~PluginAudioNode</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>a1866bbdc9389d3084fbe5194947a1ff5</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>getAudioNodeProperties</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>a9b568bb21f15ca51bb201e4bb75834c7</anchor>
-      <arglist>(AudioNodeProperties &amp;info) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>visitNodes</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>af506c2102c68496e08852a0177ec9de1</anchor>
-      <arglist>(const VisitorFn &amp;v) override</arglist>
-    </member>
-    <member kind="function">
-      <type>Plugin::Ptr</type>
-      <name>getPlugin</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>a3f4e6f52404bcb9647eec91890247e77</anchor>
-      <arglist>() const override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>purgeSubNodes</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>ac42ebe3abe92d5cb921497155e08ea52</anchor>
-      <arglist>(bool keepAudio, bool keepMidi) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>prepareAudioNodeToPlay</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>a846628dc3789ab372fd3ebbc4af23ddf</anchor>
-      <arglist>(const PlaybackInitialisationInfo &amp;info) override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isReadyToRender</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>a626e9bac860790716428225420fe9646</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>double</type>
-      <name>getLatencySeconds</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>af8900924d68fca9ab202719a21011a97</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>releaseAudioNodeResources</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>a92a2e9d6153af6cc395891b473b761d7</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderAdding</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>aa6f4d9f747aee9765f0f4f6283d7bad7</anchor>
-      <arglist>(const AudioRenderContext &amp;rc) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderOver</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>a4b8d8de038be6a28be1301f1ecd538cc</anchor>
-      <arglist>(const AudioRenderContext &amp;rc) override</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
-      <name>renderPlugin</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>a7d74dc8f41ac243770a33f21e6462ad5</anchor>
-      <arglist>(const AudioRenderContext &amp;rc)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>prepareForNextBlock</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>adcef4e57044c0e236a46934d37d60aa6</anchor>
-      <arglist>(const AudioRenderContext &amp;rc) override</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>PluginRenderContext</type>
-      <name>createPluginRenderContext</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>a1e1a4762beeeded93b1dd0d225bf169e</anchor>
-      <arglist>(const AudioRenderContext &amp;rc)</arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>Plugin::Ptr</type>
-      <name>plugin</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>a0da0b296ac73b8c02f9eebcfe7e56b05</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>std::unique_ptr&lt; AudioNode &gt;</type>
-      <name>input</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>a14b3d957d51ec65fdfa44aaf4fbaa65e</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>bool</type>
-      <name>hasAudioInput</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>ad3b07884d812324d8e49c265d12a1f39</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>bool</type>
-      <name>hasMidiInput</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>a29a4fce6e9b1e33c446b70efff880a6b</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>bool</type>
-      <name>applyAntiDenormalisationNoise</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>ab8d49fb2a400df11d3e2fd09864665ae</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>bool</type>
-      <name>hasInitialised</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>a622585d65387e24cfe1f5ae6cbe2bc99</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>double</type>
-      <name>latencySeconds</name>
-      <anchorfile>classtracktion_1_1engine_1_1PluginAudioNode.html</anchorfile>
-      <anchor>a127f20267d378feed6183d14c2d68859</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="class">
     <name>tracktion::engine::PluginCache</name>
     <filename>classtracktion_1_1engine_1_1PluginCache.html</filename>
     <member kind="function">
@@ -53862,8 +52502,8 @@
       <type>juce::ReferenceCountedObjectPtr&lt; ClipEffectRenderJob &gt;</type>
       <name>createRenderJob</name>
       <anchorfile>structtracktion_1_1engine_1_1PluginEffect.html</anchorfile>
-      <anchor>a0d75c58eb2deb62f53f3cc84787eff3e</anchor>
-      <arglist>(const AudioFile &amp;, double sourceLength) override</arglist>
+      <anchor>abd891e2277f69a7ff299216b02df8bc1</anchor>
+      <arglist>(const AudioFile &amp;, TimeDuration sourceLength) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -60692,8 +59332,8 @@
       <type>juce::ReferenceCountedObjectPtr&lt; ClipEffectRenderJob &gt;</type>
       <name>createRenderJob</name>
       <anchorfile>structtracktion_1_1engine_1_1ReverseEffect.html</anchorfile>
-      <anchor>a7827b5d1c6bdab994a275c6da47cf375</anchor>
-      <arglist>(const AudioFile &amp;, double sourceLength) override</arglist>
+      <anchor>a61393fb054d27353215a1b16e8c7a87a</anchor>
+      <arglist>(const AudioFile &amp;, TimeDuration sourceLength) override</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -64610,95 +63250,6 @@
     </member>
   </compound>
   <compound kind="class">
-    <name>tracktion::engine::SingleInputAudioNode</name>
-    <filename>classtracktion_1_1engine_1_1SingleInputAudioNode.html</filename>
-    <base>tracktion::engine::AudioNode</base>
-    <member kind="function">
-      <type></type>
-      <name>SingleInputAudioNode</name>
-      <anchorfile>classtracktion_1_1engine_1_1SingleInputAudioNode.html</anchorfile>
-      <anchor>abd919b0ad86953c94eac609938b75876</anchor>
-      <arglist>(AudioNode *input)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>getAudioNodeProperties</name>
-      <anchorfile>classtracktion_1_1engine_1_1SingleInputAudioNode.html</anchorfile>
-      <anchor>a1551fc624b29b1c12a9197da89efe123</anchor>
-      <arglist>(AudioNodeProperties &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>visitNodes</name>
-      <anchorfile>classtracktion_1_1engine_1_1SingleInputAudioNode.html</anchorfile>
-      <anchor>a08b328930e55b4f3b859bbd82cb00ebb</anchor>
-      <arglist>(const VisitorFn &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>prepareAudioNodeToPlay</name>
-      <anchorfile>classtracktion_1_1engine_1_1SingleInputAudioNode.html</anchorfile>
-      <anchor>a8b938e8a295a0f19c02a7a552d81e325</anchor>
-      <arglist>(const PlaybackInitialisationInfo &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>juce::ReferenceCountedObjectPtr&lt; Plugin &gt;</type>
-      <name>getPlugin</name>
-      <anchorfile>classtracktion_1_1engine_1_1SingleInputAudioNode.html</anchorfile>
-      <anchor>a97970a646e123674af090749e0e2670d</anchor>
-      <arglist>() const override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isReadyToRender</name>
-      <anchorfile>classtracktion_1_1engine_1_1SingleInputAudioNode.html</anchorfile>
-      <anchor>ab39c87c3c10ac33afbe5e075c5b9374d</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>purgeSubNodes</name>
-      <anchorfile>classtracktion_1_1engine_1_1SingleInputAudioNode.html</anchorfile>
-      <anchor>afe16ace5db1ebb919ea51993d1794fe0</anchor>
-      <arglist>(bool keepAudio, bool keepMidi) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>releaseAudioNodeResources</name>
-      <anchorfile>classtracktion_1_1engine_1_1SingleInputAudioNode.html</anchorfile>
-      <anchor>ae03587b3d09a5d75935374273182ca3b</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>prepareForNextBlock</name>
-      <anchorfile>classtracktion_1_1engine_1_1SingleInputAudioNode.html</anchorfile>
-      <anchor>adf0f7f04f9af9b69cd86203b5bcf861a</anchor>
-      <arglist>(const AudioRenderContext &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderOver</name>
-      <anchorfile>classtracktion_1_1engine_1_1SingleInputAudioNode.html</anchorfile>
-      <anchor>af3cf7a391311da52d91075371535620e</anchor>
-      <arglist>(const AudioRenderContext &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderAdding</name>
-      <anchorfile>classtracktion_1_1engine_1_1SingleInputAudioNode.html</anchorfile>
-      <anchor>a497d7fe29489170cc03f1b9f231ceecd</anchor>
-      <arglist>(const AudioRenderContext &amp;) override</arglist>
-    </member>
-    <member kind="variable">
-      <type>const std::unique_ptr&lt; AudioNode &gt;</type>
-      <name>input</name>
-      <anchorfile>classtracktion_1_1engine_1_1SingleInputAudioNode.html</anchorfile>
-      <anchor>a778a058d4644bfcc61d39252705af76b</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="class">
     <name>tracktion::graph::SinkNode</name>
     <filename>classtracktion_1_1graph_1_1SinkNode.html</filename>
     <base>tracktion::graph::Node</base>
@@ -65274,39 +63825,6 @@
       <anchorfile>structtracktion_1_1engine_1_1SpeedFadeDescription.html</anchorfile>
       <anchor>a276c8eea0169772c11a97573f73bd9fe</anchor>
       <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="class">
-    <name>tracktion::engine::SpeedRampAudioNode</name>
-    <filename>classtracktion_1_1engine_1_1SpeedRampAudioNode.html</filename>
-    <base>tracktion::engine::SingleInputAudioNode</base>
-    <member kind="function">
-      <type></type>
-      <name>SpeedRampAudioNode</name>
-      <anchorfile>classtracktion_1_1engine_1_1SpeedRampAudioNode.html</anchorfile>
-      <anchor>a184154df8783003b8ec10c8016b42387</anchor>
-      <arglist>(AudioNode *source, legacy::EditTimeRange in, legacy::EditTimeRange out, AudioFadeCurve::Type fadeInType_, AudioFadeCurve::Type fadeOutType_)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderOver</name>
-      <anchorfile>classtracktion_1_1engine_1_1SpeedRampAudioNode.html</anchorfile>
-      <anchor>a8626d3c2457de4484b94d682acea8658</anchor>
-      <arglist>(const AudioRenderContext &amp;rc) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderAdding</name>
-      <anchorfile>classtracktion_1_1engine_1_1SpeedRampAudioNode.html</anchorfile>
-      <anchor>a30565c9aa72fb64cb141334bf8110d1b</anchor>
-      <arglist>(const AudioRenderContext &amp;rc) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderSection</name>
-      <anchorfile>classtracktion_1_1engine_1_1SpeedRampAudioNode.html</anchorfile>
-      <anchor>a52144396f95fe2623c558a4ec3f8170a</anchor>
-      <arglist>(const AudioRenderContext &amp;rc, legacy::EditTimeRange editTime)</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -66468,8 +64986,8 @@
       <type>juce::ReferenceCountedObjectPtr&lt; ClipEffectRenderJob &gt;</type>
       <name>createRenderJob</name>
       <anchorfile>structtracktion_1_1engine_1_1StepVolumeEffect.html</anchorfile>
-      <anchor>aea70c42f2dc861a2bb05a5951555dc23</anchor>
-      <arglist>(const AudioFile &amp;sourceFile, double sourceLength) override</arglist>
+      <anchor>a4c9790b9ee10c8c90f0dae452d160482</anchor>
+      <arglist>(const AudioFile &amp;sourceFile, TimeDuration sourceLength) override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -66590,95 +65108,6 @@
       <anchorfile>structtracktion_1_1engine_1_1StopwatchTimer.html</anchorfile>
       <anchor>a422da223b72a0bf884b024638f40a6ad</anchor>
       <arglist>() const noexcept</arglist>
-    </member>
-  </compound>
-  <compound kind="class">
-    <name>tracktion::engine::SubSampleWaveAudioNode</name>
-    <filename>classtracktion_1_1engine_1_1SubSampleWaveAudioNode.html</filename>
-    <base>tracktion::engine::AudioNode</base>
-    <member kind="function">
-      <type></type>
-      <name>SubSampleWaveAudioNode</name>
-      <anchorfile>classtracktion_1_1engine_1_1SubSampleWaveAudioNode.html</anchorfile>
-      <anchor>acb7b20149565724f1f34065537c14849</anchor>
-      <arglist>(Engine &amp;e, const AudioFile &amp;af, legacy::EditTimeRange editTime, double off, legacy::EditTimeRange loop, LiveClipLevel level, double speed, const juce::AudioChannelSet &amp;channels)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>getAudioNodeProperties</name>
-      <anchorfile>classtracktion_1_1engine_1_1SubSampleWaveAudioNode.html</anchorfile>
-      <anchor>a9b576c9697480aaca5a78a7c0c092971</anchor>
-      <arglist>(AudioNodeProperties &amp;info) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>visitNodes</name>
-      <anchorfile>classtracktion_1_1engine_1_1SubSampleWaveAudioNode.html</anchorfile>
-      <anchor>a124c01df98e1c5b556b121f9e600aefd</anchor>
-      <arglist>(const VisitorFn &amp;v) override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>purgeSubNodes</name>
-      <anchorfile>classtracktion_1_1engine_1_1SubSampleWaveAudioNode.html</anchorfile>
-      <anchor>a8dc24da54b1bd4e73a74a02663a2b7c0</anchor>
-      <arglist>(bool keepAudio, bool) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>prepareAudioNodeToPlay</name>
-      <anchorfile>classtracktion_1_1engine_1_1SubSampleWaveAudioNode.html</anchorfile>
-      <anchor>a9ccdc3e559a72b1b5aa917cb22489243</anchor>
-      <arglist>(const PlaybackInitialisationInfo &amp;info) override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isReadyToRender</name>
-      <anchorfile>classtracktion_1_1engine_1_1SubSampleWaveAudioNode.html</anchorfile>
-      <anchor>a268926cdbe3c0b15503599ac327fe275</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>releaseAudioNodeResources</name>
-      <anchorfile>classtracktion_1_1engine_1_1SubSampleWaveAudioNode.html</anchorfile>
-      <anchor>ae4a613745937b9f6bcbf01a8e59ab7d5</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderOver</name>
-      <anchorfile>classtracktion_1_1engine_1_1SubSampleWaveAudioNode.html</anchorfile>
-      <anchor>a4062791c47aee33d69c8a4856d8c559b</anchor>
-      <arglist>(const AudioRenderContext &amp;rc) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderAdding</name>
-      <anchorfile>classtracktion_1_1engine_1_1SubSampleWaveAudioNode.html</anchorfile>
-      <anchor>afc1125db41cc3aebce84b0edaaacb4aa</anchor>
-      <arglist>(const AudioRenderContext &amp;rc) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>prepareForNextBlock</name>
-      <anchorfile>classtracktion_1_1engine_1_1SubSampleWaveAudioNode.html</anchorfile>
-      <anchor>a60d0925415f270b3a01bc58c38723404</anchor>
-      <arglist>(const AudioRenderContext &amp;rc) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderSection</name>
-      <anchorfile>classtracktion_1_1engine_1_1SubSampleWaveAudioNode.html</anchorfile>
-      <anchor>a091e3e332450114131ce04f2f634a704</anchor>
-      <arglist>(const AudioRenderContext &amp;rc, legacy::EditTimeRange editTime)</arglist>
-    </member>
-    <member kind="variable">
-      <type>Engine &amp;</type>
-      <name>engine</name>
-      <anchorfile>classtracktion_1_1engine_1_1SubSampleWaveAudioNode.html</anchorfile>
-      <anchor>a9ce15e5cb6e7d3ae9f09da339144e95e</anchor>
-      <arglist></arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -68902,39 +67331,6 @@
       <anchorfile>structtracktion_1_1engine_1_1TimecodeSnapType.html</anchorfile>
       <anchor>a12175e6b5b5b966d46ea3a3d340856bb</anchor>
       <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="class">
-    <name>tracktion::engine::TimedMutingAudioNode</name>
-    <filename>classtracktion_1_1engine_1_1TimedMutingAudioNode.html</filename>
-    <base>tracktion::engine::SingleInputAudioNode</base>
-    <member kind="function">
-      <type></type>
-      <name>TimedMutingAudioNode</name>
-      <anchorfile>classtracktion_1_1engine_1_1TimedMutingAudioNode.html</anchorfile>
-      <anchor>ae834cfca48794e44161e3bb7a3f40cec</anchor>
-      <arglist>(AudioNode *inp, const juce::Array&lt; legacy::EditTimeRange &gt; &amp;muteTimes_)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderSection</name>
-      <anchorfile>classtracktion_1_1engine_1_1TimedMutingAudioNode.html</anchorfile>
-      <anchor>ad87a8382ca268f85e27073fee40297a9</anchor>
-      <arglist>(const AudioRenderContext &amp;rc, legacy::EditTimeRange editTime)</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderOver</name>
-      <anchorfile>classtracktion_1_1engine_1_1TimedMutingAudioNode.html</anchorfile>
-      <anchor>a7e83698e4735def050a29d599c214949</anchor>
-      <arglist>(const AudioRenderContext &amp;rc) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderAdding</name>
-      <anchorfile>classtracktion_1_1engine_1_1TimedMutingAudioNode.html</anchorfile>
-      <anchor>ac92748a0ceb5a50bc0c84ad477ebd2c2</anchor>
-      <arglist>(const AudioRenderContext &amp;rc) override</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -74819,8 +73215,8 @@
       <type>juce::ReferenceCountedObjectPtr&lt; ClipEffectRenderJob &gt;</type>
       <name>createRenderJob</name>
       <anchorfile>structtracktion_1_1engine_1_1VolumeEffect.html</anchorfile>
-      <anchor>a7941d23cec7004d9bf548a181e41c1b4</anchor>
-      <arglist>(const AudioFile &amp;sourceFile, double sourceLength) override</arglist>
+      <anchor>a4229d01c926861492a594db62ce46560</anchor>
+      <arglist>(const AudioFile &amp;sourceFile, TimeDuration sourceLength) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -75032,8 +73428,8 @@
       <type>juce::ReferenceCountedObjectPtr&lt; ClipEffectRenderJob &gt;</type>
       <name>createRenderJob</name>
       <anchorfile>structtracktion_1_1engine_1_1WarpTimeEffect.html</anchorfile>
-      <anchor>a2b6e64e14130d4eb5c018be8001c928e</anchor>
-      <arglist>(const AudioFile &amp;, double sourceLength) override</arglist>
+      <anchor>abc42d0818d09803af2050a0c2bc197b9</anchor>
+      <arglist>(const AudioFile &amp;, TimeDuration sourceLength) override</arglist>
     </member>
     <member kind="function">
       <type>HashCode</type>
@@ -75585,95 +73981,6 @@
     </member>
   </compound>
   <compound kind="class">
-    <name>tracktion::engine::WaveAudioNode</name>
-    <filename>classtracktion_1_1engine_1_1WaveAudioNode.html</filename>
-    <base>tracktion::engine::AudioNode</base>
-    <member kind="function">
-      <type></type>
-      <name>WaveAudioNode</name>
-      <anchorfile>classtracktion_1_1engine_1_1WaveAudioNode.html</anchorfile>
-      <anchor>aac6a2b678843c9282dd9a33df3bd1359</anchor>
-      <arglist>(const AudioFile &amp;file, legacy::EditTimeRange editTime, double offset, legacy::EditTimeRange loopSection, LiveClipLevel level, double speedRatio, const juce::AudioChannelSet &amp;channelsToUse)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>~WaveAudioNode</name>
-      <anchorfile>classtracktion_1_1engine_1_1WaveAudioNode.html</anchorfile>
-      <anchor>a491d9b72936dc427b09a4e119afef55b</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>getAudioNodeProperties</name>
-      <anchorfile>classtracktion_1_1engine_1_1WaveAudioNode.html</anchorfile>
-      <anchor>a0baa2b0427f28ff10095d0be5594aeeb</anchor>
-      <arglist>(AudioNodeProperties &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>visitNodes</name>
-      <anchorfile>classtracktion_1_1engine_1_1WaveAudioNode.html</anchorfile>
-      <anchor>adf9aafb2e0de0e2f87006d6388a2b93c</anchor>
-      <arglist>(const VisitorFn &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>purgeSubNodes</name>
-      <anchorfile>classtracktion_1_1engine_1_1WaveAudioNode.html</anchorfile>
-      <anchor>a5996bc549db02c031f856c404f2beb71</anchor>
-      <arglist>(bool keepAudio, bool keepMidi) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>prepareAudioNodeToPlay</name>
-      <anchorfile>classtracktion_1_1engine_1_1WaveAudioNode.html</anchorfile>
-      <anchor>ad0181ed82d0537c6f83c1b0cb319c699</anchor>
-      <arglist>(const PlaybackInitialisationInfo &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isReadyToRender</name>
-      <anchorfile>classtracktion_1_1engine_1_1WaveAudioNode.html</anchorfile>
-      <anchor>a2f8080b4d1c8151a1e17102923600349</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>releaseAudioNodeResources</name>
-      <anchorfile>classtracktion_1_1engine_1_1WaveAudioNode.html</anchorfile>
-      <anchor>ac0513df2e7589976ae1188e7395c0669</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderOver</name>
-      <anchorfile>classtracktion_1_1engine_1_1WaveAudioNode.html</anchorfile>
-      <anchor>a8fb67857386ccbd2e92a1eff4f5ad31b</anchor>
-      <arglist>(const AudioRenderContext &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderAdding</name>
-      <anchorfile>classtracktion_1_1engine_1_1WaveAudioNode.html</anchorfile>
-      <anchor>ab0844fb99587626574a2983be3800467</anchor>
-      <arglist>(const AudioRenderContext &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>prepareForNextBlock</name>
-      <anchorfile>classtracktion_1_1engine_1_1WaveAudioNode.html</anchorfile>
-      <anchor>a20a48cd2db947bcdcd91e3dc12cb94d3</anchor>
-      <arglist>(const AudioRenderContext &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>renderSection</name>
-      <anchorfile>classtracktion_1_1engine_1_1WaveAudioNode.html</anchorfile>
-      <anchor>a0c4a02def28560212fcf29ba9920579f</anchor>
-      <arglist>(const AudioRenderContext &amp;, legacy::EditTimeRange editTime)</arglist>
-    </member>
-  </compound>
-  <compound kind="class">
     <name>tracktion::engine::WaveCompManager</name>
     <filename>classtracktion_1_1engine_1_1WaveCompManager.html</filename>
     <base>tracktion::engine::CompManager</base>
@@ -75814,8 +74121,8 @@
       <type>static bool</type>
       <name>renderTake</name>
       <anchorfile>classtracktion_1_1engine_1_1WaveCompManager.html</anchorfile>
-      <anchor>a97134e39ac986cd5478f403a43704a60</anchor>
-      <arglist>(CompRenderContext &amp;, AudioFileWriter &amp;, juce::ThreadPoolJob &amp;, std::atomic&lt; float &gt; &amp;progress)</arglist>
+      <anchor>afda06c49f9fa4a7817146924f6260046</anchor>
+      <arglist>(CompRenderContext &amp;, Edit &amp;, AudioFileWriter &amp;, juce::ThreadPoolJob &amp;, std::atomic&lt; float &gt; &amp;progress)</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -76942,7 +75249,6 @@
     <namespace>tracktion::engine</namespace>
     <namespace>tracktion::graph</namespace>
     <namespace>tracktion::IDs</namespace>
-    <namespace>tracktion::legacy</namespace>
     <namespace>tracktion::MidiNodeHelpers</namespace>
     <namespace>tracktion::modifier</namespace>
     <namespace>tracktion::ModifierCommon</namespace>
@@ -76980,10 +75286,7 @@
     <class kind="struct">tracktion::AudioFileUtils</class>
     <class kind="class">tracktion::AudioFileWriter</class>
     <class kind="class">tracktion::AudioMidiFifo</class>
-    <class kind="class">tracktion::AudioNode</class>
-    <class kind="struct">tracktion::AudioNodeProperties</class>
     <class kind="class">tracktion::AudioProxyGenerator</class>
-    <class kind="struct">tracktion::AudioRenderContext</class>
     <class kind="class">tracktion::AudioScratchBuffer</class>
     <class kind="class">tracktion::AudioSegmentList</class>
     <class kind="class">tracktion::AudioTrack</class>
@@ -77029,7 +75332,6 @@
     <class kind="class">tracktion::ClipTrack</class>
     <class kind="class">tracktion::CollectionClip</class>
     <class kind="struct">tracktion::ColourArea</class>
-    <class kind="class">tracktion::CombiningAudioNode</class>
     <class kind="class">tracktion::CombiningNode</class>
     <class kind="class">tracktion::CompFactory</class>
     <class kind="class">tracktion::CompManager</class>
@@ -77040,7 +75342,6 @@
     <class kind="class">tracktion::ContainerClipNode</class>
     <class kind="class">tracktion::ControlSurface</class>
     <class kind="struct">tracktion::CrashStackTracer</class>
-    <class kind="struct">tracktion::CreateAudioNodeParams</class>
     <class kind="struct">tracktion::CreateNodeParams</class>
     <class kind="class">tracktion::CurveEditor</class>
     <class kind="class">tracktion::CurveEditorPoint</class>
@@ -77084,7 +75385,6 @@
     <class kind="class">tracktion::ExternalControllerManager</class>
     <class kind="class">tracktion::ExternalPlayheadSynchroniser</class>
     <class kind="class">tracktion::ExternalPlugin</class>
-    <class kind="class">tracktion::FadeInOutAudioNode</class>
     <class kind="struct">tracktion::FadeInOutEffect</class>
     <class kind="class">tracktion::FadeInOutNode</class>
     <class kind="struct">tracktion::FallbackReader</class>
@@ -77184,7 +75484,6 @@
     <class kind="struct">tracktion::MPEStartTrimmer</class>
     <class kind="class">tracktion::MultiThreadedNodePlayer</class>
     <class kind="class">tracktion::MultiVoiceOscillator</class>
-    <class kind="struct">tracktion::MuteAudioNode</class>
     <class kind="class">tracktion::Node</class>
     <class kind="struct">tracktion::NodeAndID</class>
     <class kind="struct">tracktion::NodeBuffer</class>
@@ -77218,7 +75517,6 @@
     <class kind="class">tracktion::PlayHeadPositionNode</class>
     <class kind="class">tracktion::PlayHeadState</class>
     <class kind="class">tracktion::Plugin</class>
-    <class kind="class">tracktion::PluginAudioNode</class>
     <class kind="class">tracktion::PluginCache</class>
     <class kind="struct">tracktion::PluginComponent</class>
     <class kind="struct">tracktion::PluginCreationInfo</class>
@@ -77293,7 +75591,6 @@
     <class kind="class">tracktion::SilentNode</class>
     <class kind="class">tracktion::SimpleLFO</class>
     <class kind="class">tracktion::SimpleNodePlayer</class>
-    <class kind="class">tracktion::SingleInputAudioNode</class>
     <class kind="class">tracktion::SinkNode</class>
     <class kind="class">tracktion::SinNode</class>
     <class kind="class">tracktion::SlotControlNode</class>
@@ -77302,7 +75599,6 @@
     <class kind="struct">tracktion::SortedValueTreeObjectList</class>
     <class kind="class">tracktion::SourceFileReference</class>
     <class kind="struct">tracktion::SpeedFadeDescription</class>
-    <class kind="class">tracktion::SpeedRampAudioNode</class>
     <class kind="class">tracktion::SpeedRampWaveNode</class>
     <class kind="struct">tracktion::Spline</class>
     <class kind="struct">tracktion::SplitTimelineRange</class>
@@ -77310,7 +75606,6 @@
     <class kind="class">tracktion::StepModifier</class>
     <class kind="struct">tracktion::StepVolumeEffect</class>
     <class kind="struct">tracktion::StopwatchTimer</class>
-    <class kind="class">tracktion::SubSampleWaveAudioNode</class>
     <class kind="class">tracktion::SummingNode</class>
     <class kind="struct">tracktion::SyncPoint</class>
     <class kind="struct">tracktion::SyncRange</class>
@@ -77325,7 +75620,6 @@
     <class kind="struct">tracktion::TimecodeDisplayIterator</class>
     <class kind="class">tracktion::TimecodeDuration</class>
     <class kind="struct">tracktion::TimecodeSnapType</class>
-    <class kind="class">tracktion::TimedMutingAudioNode</class>
     <class kind="class">tracktion::TimedMutingNode</class>
     <class kind="class">tracktion::TimeSigSetting</class>
     <class kind="class">tracktion::TimeStretcher</class>
@@ -77367,7 +75661,6 @@
     <class kind="class">tracktion::WarpTimeManager</class>
     <class kind="class">tracktion::WarpTimeRenderJob</class>
     <class kind="class">tracktion::WaveAudioClip</class>
-    <class kind="class">tracktion::WaveAudioNode</class>
     <class kind="class">tracktion::WaveCompManager</class>
     <class kind="struct">tracktion::WaveDeviceDescription</class>
     <class kind="class">tracktion::WaveInputDevice</class>
@@ -77388,7 +75681,6 @@
     <namespace>tracktion::engine::detail</namespace>
     <namespace>tracktion::engine::details</namespace>
     <namespace>tracktion::engine::IDs</namespace>
-    <namespace>tracktion::engine::legacy</namespace>
     <namespace>tracktion::engine::MidiNodeHelpers</namespace>
     <namespace>tracktion::engine::modifier</namespace>
     <namespace>tracktion::engine::ModifierCommon</namespace>
@@ -77422,10 +75714,7 @@
     <class kind="struct">tracktion::engine::AudioFileUtils</class>
     <class kind="class">tracktion::engine::AudioFileWriter</class>
     <class kind="class">tracktion::engine::AudioMidiFifo</class>
-    <class kind="class">tracktion::engine::AudioNode</class>
-    <class kind="struct">tracktion::engine::AudioNodeProperties</class>
     <class kind="class">tracktion::engine::AudioProxyGenerator</class>
-    <class kind="struct">tracktion::engine::AudioRenderContext</class>
     <class kind="class">tracktion::engine::AudioScratchBuffer</class>
     <class kind="class">tracktion::engine::AudioSegmentList</class>
     <class kind="class">tracktion::engine::AudioTrack</class>
@@ -77468,7 +75757,6 @@
     <class kind="class">tracktion::engine::ClipTrack</class>
     <class kind="class">tracktion::engine::CollectionClip</class>
     <class kind="struct">tracktion::engine::ColourArea</class>
-    <class kind="class">tracktion::engine::CombiningAudioNode</class>
     <class kind="class">tracktion::engine::CombiningNode</class>
     <class kind="class">tracktion::engine::CompFactory</class>
     <class kind="class">tracktion::engine::CompManager</class>
@@ -77478,7 +75766,6 @@
     <class kind="class">tracktion::engine::ContainerClipNode</class>
     <class kind="class">tracktion::engine::ControlSurface</class>
     <class kind="struct">tracktion::engine::CrashStackTracer</class>
-    <class kind="struct">tracktion::engine::CreateAudioNodeParams</class>
     <class kind="struct">tracktion::engine::CreateNodeParams</class>
     <class kind="class">tracktion::engine::CurveEditor</class>
     <class kind="class">tracktion::engine::CurveEditorPoint</class>
@@ -77522,7 +75809,6 @@
     <class kind="class">tracktion::engine::ExternalControllerManager</class>
     <class kind="class">tracktion::engine::ExternalPlayheadSynchroniser</class>
     <class kind="class">tracktion::engine::ExternalPlugin</class>
-    <class kind="class">tracktion::engine::FadeInOutAudioNode</class>
     <class kind="struct">tracktion::engine::FadeInOutEffect</class>
     <class kind="class">tracktion::engine::FadeInOutNode</class>
     <class kind="struct">tracktion::engine::FallbackReader</class>
@@ -77614,7 +75900,6 @@
     <class kind="struct">tracktion::engine::MPEStartTrimmer</class>
     <class kind="class">tracktion::engine::MultiThreadedNodePlayer</class>
     <class kind="class">tracktion::engine::MultiVoiceOscillator</class>
-    <class kind="struct">tracktion::engine::MuteAudioNode</class>
     <class kind="class">tracktion::engine::NodeRenderContext</class>
     <class kind="struct">tracktion::engine::NormaliseEffect</class>
     <class kind="class">tracktion::engine::NovationRemoteSl</class>
@@ -77635,11 +75920,8 @@
     <class kind="class">tracktion::engine::PitchSetting</class>
     <class kind="struct">tracktion::engine::PitchShiftEffect</class>
     <class kind="class">tracktion::engine::PitchShiftPlugin</class>
-    <class kind="struct">tracktion::engine::PlaybackInitialisationInfo</class>
-    <class kind="class">tracktion::engine::PlayHead</class>
     <class kind="class">tracktion::engine::PlayHeadPositionNode</class>
     <class kind="class">tracktion::engine::Plugin</class>
-    <class kind="class">tracktion::engine::PluginAudioNode</class>
     <class kind="class">tracktion::engine::PluginCache</class>
     <class kind="struct">tracktion::engine::PluginComponent</class>
     <class kind="struct">tracktion::engine::PluginCreationInfo</class>
@@ -77706,21 +75988,18 @@
     <class kind="class">tracktion::engine::SharedLevelMeasuringNode</class>
     <class kind="class">tracktion::engine::SharedTimer</class>
     <class kind="class">tracktion::engine::SimpleLFO</class>
-    <class kind="class">tracktion::engine::SingleInputAudioNode</class>
     <class kind="class">tracktion::engine::SlotControlNode</class>
     <class kind="class">tracktion::engine::SmartThumbnail</class>
     <class kind="class">tracktion::engine::SoftwareMidiOutputDevice</class>
     <class kind="struct">tracktion::engine::SortedValueTreeObjectList</class>
     <class kind="class">tracktion::engine::SourceFileReference</class>
     <class kind="struct">tracktion::engine::SpeedFadeDescription</class>
-    <class kind="class">tracktion::engine::SpeedRampAudioNode</class>
     <class kind="class">tracktion::engine::SpeedRampWaveNode</class>
     <class kind="struct">tracktion::engine::Spline</class>
     <class kind="class">tracktion::engine::StepClip</class>
     <class kind="class">tracktion::engine::StepModifier</class>
     <class kind="struct">tracktion::engine::StepVolumeEffect</class>
     <class kind="struct">tracktion::engine::StopwatchTimer</class>
-    <class kind="class">tracktion::engine::SubSampleWaveAudioNode</class>
     <class kind="struct">tracktion::engine::SyncPoint</class>
     <class kind="struct">tracktion::engine::SyncRange</class>
     <class kind="class">tracktion::engine::TempoDetect</class>
@@ -77734,7 +76013,6 @@
     <class kind="struct">tracktion::engine::TimecodeDisplayIterator</class>
     <class kind="class">tracktion::engine::TimecodeDuration</class>
     <class kind="struct">tracktion::engine::TimecodeSnapType</class>
-    <class kind="class">tracktion::engine::TimedMutingAudioNode</class>
     <class kind="class">tracktion::engine::TimedMutingNode</class>
     <class kind="class">tracktion::engine::TimeSigSetting</class>
     <class kind="class">tracktion::engine::TimeStretcher</class>
@@ -77775,7 +76053,6 @@
     <class kind="class">tracktion::engine::WarpTimeManager</class>
     <class kind="class">tracktion::engine::WarpTimeRenderJob</class>
     <class kind="class">tracktion::engine::WaveAudioClip</class>
-    <class kind="class">tracktion::engine::WaveAudioNode</class>
     <class kind="class">tracktion::engine::WaveCompManager</class>
     <class kind="struct">tracktion::engine::WaveDeviceDescription</class>
     <class kind="class">tracktion::engine::WaveInputDevice</class>
@@ -79157,41 +77434,6 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>ab45ad0d328dc7d71bc055f042604c528</anchor>
       <arglist>(const ArrayType &amp;items)</arglist>
-    </member>
-    <member kind="function">
-      <type>TimeRange</type>
-      <name>toTimeRange</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a9036be9d384990705b8e9ea7af9b75ad</anchor>
-      <arglist>(legacy::EditTimeRange r)</arglist>
-    </member>
-    <member kind="function">
-      <type>legacy::EditTimeRange</type>
-      <name>toEditTimeRange</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>ae758e56a7e1a7ce32da92d3eb320a869</anchor>
-      <arglist>(TimeRange r)</arglist>
-    </member>
-    <member kind="function">
-      <type>AudioNode *</type>
-      <name>createTrackCompAudioNode</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a124e6985e441d913d4db31eee710a046</anchor>
-      <arglist>(AudioNode *input, const juce::Array&lt; legacy::EditTimeRange &gt; &amp;muteTimes, const juce::Array&lt; legacy::EditTimeRange &gt; &amp;nonMuteTimes, double crossfadeTime)</arglist>
-    </member>
-    <member kind="function">
-      <type>AudioNode *</type>
-      <name>createTrackCompAudioNode</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a7bb2e8f6445fc2e42f8dc6f21f41ed9b</anchor>
-      <arglist>(AudioNode *input, const juce::Array&lt; TimeRange &gt; &amp;muteTimes, const juce::Array&lt; TimeRange &gt; &amp;nonMuteTimes, TimeDuration crossfadeTime)</arglist>
-    </member>
-    <member kind="function">
-      <type>AudioNode *</type>
-      <name>createAudioNode</name>
-      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a644da1f5630ba62a753a940a17ec20c4</anchor>
-      <arglist>(TrackCompManager::TrackComp &amp;trackComp, Track &amp;t, AudioNode *input)</arglist>
     </member>
     <member kind="function">
       <type>juce::Array&lt; std::pair&lt; AudioTrack *, int &gt; &gt;</type>
@@ -80759,11 +79001,6 @@
     <filename>namespacetracktion_1_1engine_1_1IDs.html</filename>
   </compound>
   <compound kind="namespace">
-    <name>tracktion::engine::legacy</name>
-    <filename>namespacetracktion_1_1engine_1_1legacy.html</filename>
-    <class kind="struct">tracktion::engine::legacy::EditTimeRange</class>
-  </compound>
-  <compound kind="namespace">
     <name>tracktion::engine::MidiNodeHelpers</name>
     <filename>namespacetracktion_1_1engine_1_1MidiNodeHelpers.html</filename>
     <member kind="function">
@@ -81848,29 +80085,11 @@
     <filename>group__tracktion__engine-playback.html</filename>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
-    <namespace>tracktion::engine::legacy</namespace>
     <namespace>tracktion::engine::benchmark_utilities</namespace>
     <namespace>tracktion::engine::Click</namespace>
     <namespace>tracktion::engine::MidiNodeHelpers</namespace>
     <namespace>tracktion::engine::RackNodeBuilder</namespace>
     <namespace>tracktion::engine::detail</namespace>
-    <class kind="struct">tracktion::engine::AudioNodeProperties</class>
-    <class kind="struct">tracktion::engine::PlaybackInitialisationInfo</class>
-    <class kind="struct">tracktion::engine::CreateAudioNodeParams</class>
-    <class kind="struct">tracktion::engine::AudioRenderContext</class>
-    <class kind="class">tracktion::engine::AudioNode</class>
-    <class kind="class">tracktion::engine::SingleInputAudioNode</class>
-    <class kind="struct">tracktion::engine::MuteAudioNode</class>
-    <class kind="class">tracktion::engine::CombiningAudioNode</class>
-    <class kind="struct">tracktion::engine::legacy::EditTimeRange</class>
-    <class kind="class">tracktion::engine::FadeInOutAudioNode</class>
-    <class kind="class">tracktion::engine::PlayHead</class>
-    <class kind="struct">tracktion::engine::PlayHead::EditTimeWindow</class>
-    <class kind="class">tracktion::engine::PluginAudioNode</class>
-    <class kind="class">tracktion::engine::SubSampleWaveAudioNode</class>
-    <class kind="class">tracktion::engine::SpeedRampAudioNode</class>
-    <class kind="class">tracktion::engine::TimedMutingAudioNode</class>
-    <class kind="class">tracktion::engine::WaveAudioNode</class>
     <class kind="class">tracktion::engine::InputDevice</class>
     <class kind="class">tracktion::engine::InputDeviceInstance</class>
     <class kind="struct">tracktion::engine::InputDeviceInstance::RecordingParameters</class>

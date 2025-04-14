@@ -91,9 +91,9 @@ Inheritance diagram for tracktion::engine::ReverseEffect:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a557be39f66c104b4b7777312290205a8" id="r_a557be39f66c104b4b7777312290205a8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ReverseEffect.html#a557be39f66c104b4b7777312290205a8">ReverseEffect</a> (const juce::ValueTree &amp;, <a class="el" href="classtracktion_1_1engine_1_1ClipEffects.html">ClipEffects</a> &amp;)</td></tr>
 <tr class="separator:a557be39f66c104b4b7777312290205a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7827b5d1c6bdab994a275c6da47cf375" id="r_a7827b5d1c6bdab994a275c6da47cf375"><td class="memItemLeft" align="right" valign="top">juce::ReferenceCountedObjectPtr&lt; ClipEffectRenderJob &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ReverseEffect.html#a7827b5d1c6bdab994a275c6da47cf375">createRenderJob</a> (const <a class="el" href="classtracktion_1_1engine_1_1AudioFile.html">AudioFile</a> &amp;, double sourceLength) override</td></tr>
-<tr class="memdesc:a7827b5d1c6bdab994a275c6da47cf375"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subclasses should return a job that can render the source.  <br /></td></tr>
-<tr class="separator:a7827b5d1c6bdab994a275c6da47cf375"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61393fb054d27353215a1b16e8c7a87a" id="r_a61393fb054d27353215a1b16e8c7a87a"><td class="memItemLeft" align="right" valign="top">juce::ReferenceCountedObjectPtr&lt; ClipEffectRenderJob &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ReverseEffect.html#a61393fb054d27353215a1b16e8c7a87a">createRenderJob</a> (const <a class="el" href="classtracktion_1_1engine_1_1AudioFile.html">AudioFile</a> &amp;, TimeDuration sourceLength) override</td></tr>
+<tr class="memdesc:a61393fb054d27353215a1b16e8c7a87a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subclasses should return a job that can render the source.  <br /></td></tr>
+<tr class="separator:a61393fb054d27353215a1b16e8c7a87a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtracktion_1_1engine_1_1ClipEffect"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtracktion_1_1engine_1_1ClipEffect')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtracktion_1_1engine_1_1ClipEffect.html">tracktion::engine::ClipEffect</a></td></tr>
 <tr class="memitem:a561139017492055419f19be94d40cebc inherit pub_methods_classtracktion_1_1engine_1_1ClipEffect" id="r_a561139017492055419f19be94d40cebc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ClipEffect.html#a561139017492055419f19be94d40cebc">initialise</a> ()</td></tr>
 <tr class="separator:a561139017492055419f19be94d40cebc inherit pub_methods_classtracktion_1_1engine_1_1ClipEffect"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -216,8 +216,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a7827b5d1c6bdab994a275c6da47cf375" name="a7827b5d1c6bdab994a275c6da47cf375"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7827b5d1c6bdab994a275c6da47cf375">&#9670;&#160;</a></span>createRenderJob()</h2>
+<a id="a61393fb054d27353215a1b16e8c7a87a" name="a61393fb054d27353215a1b16e8c7a87a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61393fb054d27353215a1b16e8c7a87a">&#9670;&#160;</a></span>createRenderJob()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -234,7 +234,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double&#160;</td>
+          <td class="paramtype">TimeDuration&#160;</td>
           <td class="paramname"><em>sourceLength</em>&#160;</td>
         </tr>
         <tr>
@@ -253,7 +253,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Subclasses should return a job that can render the source. </p>
 <p>N.B. because the sourceFile may not be valid at the time of job creation you should use the sourceLength parameter to determine how to build the render node. </p>
 
-<p>Implements <a class="el" href="classtracktion_1_1engine_1_1ClipEffect.html#acd3309f792d75d01cc292e5ea66a8ea9">tracktion::engine::ClipEffect</a>.</p>
+<p>Implements <a class="el" href="classtracktion_1_1engine_1_1ClipEffect.html#a1210a0dd42e85c21f02e267d3502dec6">tracktion::engine::ClipEffect</a>.</p>
 
 </div>
 </div>
@@ -263,7 +263,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 14 2025 08:50:49 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Apr 14 2025 09:41:16 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
