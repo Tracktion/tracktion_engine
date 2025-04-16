@@ -1192,6 +1192,7 @@ TEST_SUITE("tracktion_engine")
     {
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
         auto context = AutomationCurveListTestContext::create (engine);
+        auto um = &context->edit->getUndoManager();
 
         // Create curve
         auto curveList = context->clip->getAutomationCurveList (true);
@@ -1205,9 +1206,14 @@ TEST_SUITE("tracktion_engine")
         checkVolAutomationViaModifierActiveState (*context->track, true);
 
         // Remove all points and check assignment is gone
-        curve.clear (&context->edit->getUndoManager());
+        um->beginNewTransaction();
+        curve.clear (um);
         checkVolAutomationViaModifierActiveState (*context->track, false);
         CHECK (context->volParam->getAssignments().isEmpty());
+
+        um->undoCurrentTransactionOnly();
+        CHECK (! context->volParam->getAssignments().isEmpty());
+        checkVolAutomationViaModifierActiveState (*context->track, true);
     }
 
     TEST_CASE ("AutomationCurveList: Save and reload Edit")
