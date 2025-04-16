@@ -148,6 +148,8 @@ protected:
     virtual void nonRealTimeDragStart() {}
     virtual void nonRealTimeDragEnd()   {}
 
+    virtual bool canSelectItem() const { return true; }
+
     bool isPointSelected (int idx);
     bool areAnyPointsSelected();
     CurveEditorPoint* getSelectedPoint (int);

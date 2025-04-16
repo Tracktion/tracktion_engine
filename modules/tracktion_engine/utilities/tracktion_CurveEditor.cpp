@@ -267,27 +267,6 @@ void CurveEditor::paint (juce::Graphics& g)
                 fills.addWithoutMerging (r.reduced (1.0f));
         }
 
-        if (getDrawPointInsertionIndicator() && pointUnderMouse < 0)
-        {
-            auto mods = juce::ModifierKeys::getCurrentModifiers();
-            auto mousePos = getMouseXYRelative().toFloat();
-            auto t = snapTime (xToTime (mousePos.x), mods);
-            auto value = getValueAt (t);
-
-            if (juce::Point<float> (mousePos.x, valueToY (value)).getDistanceFrom (mousePos) < 8.0f)
-            {
-                auto pos = getPosition ({ t, value });
-                juce::Rectangle<float> r (pos.x - pointRadius,
-                                          pos.y - pointRadius,
-                                          pointRadius * 2,
-                                          pointRadius * 2);
-                r = r.reduced (2);
-
-                if (r.getX() <= clipBounds.getRight())
-                    rects.addWithoutMerging (r);
-            }
-        }
-
         g.setColour (getPointOutlineColour());
         g.fillRectList (rects);
 
@@ -318,6 +297,33 @@ void CurveEditor::paint (juce::Graphics& g)
             {
                 g.setColour (backgroundColour);
                 g.fillEllipse (r.reduced (1.0f));
+            }
+        }
+
+        if (getDrawPointInsertionIndicator() && pointUnderMouse < 0)
+        {
+            auto mods = juce::ModifierKeys::getCurrentModifiers();
+            auto mousePos = getMouseXYRelative().toFloat();
+            auto t = snapTime (xToTime (mousePos.x), mods);
+            auto value = getValueAt (t);
+
+            if (juce::Point<float> (mousePos.x, valueToY (value)).getDistanceFrom (mousePos) < 8.0f)
+            {
+                auto pos = getPosition ({ t, value });
+                juce::Rectangle<float> r (pos.x - pointRadius,
+                                          pos.y - pointRadius,
+                                          pointRadius * 2,
+                                          pointRadius * 2);
+                r = r.reduced (2);
+
+                if (r.getX() <= clipBounds.getRight())
+                {
+                    g.setColour (getCurrentLineColour());
+                    g.fillRect (r);
+
+                    g.setColour (backgroundColour);
+                    g.fillRect (r.reduced (1));
+                }
             }
         }
     }
@@ -410,7 +416,7 @@ void CurveEditor::mouseDown (const juce::MouseEvent& e)
         selectionManager.deselectAll();
         selectPoint (curveUnderMouse, false);
     }
-    else
+    else if (canSelectItem())
     {
         selectionManager.select (getItem(), e.mods.isShiftDown());
     }
