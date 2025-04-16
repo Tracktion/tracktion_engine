@@ -389,6 +389,8 @@ public:
 
     std::function<void()> onValueTreeChanged;
     std::function<void (juce::ValueTree&, const juce::Identifier&)> onPropertyChanged;
+    std::function<void (juce::ValueTree&, juce::ValueTree&)> onChildAdded;
+    std::function<void (juce::ValueTree&, juce::ValueTree&, int)> onChildRemoved;
 
 private:
     juce::ValueTree state;
@@ -403,6 +405,22 @@ private:
     {
         if (onPropertyChanged)
             onPropertyChanged (v, id);
+
+        valueTreeChanged();
+    }
+
+    void valueTreeChildAdded (juce::ValueTree& p, juce::ValueTree& c) override
+    {
+        if (onChildAdded)
+            onChildAdded (p, c);
+
+        valueTreeChanged();
+    }
+
+    void valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree& c, int i) override
+    {
+        if (onChildRemoved)
+            onChildRemoved (p, c, i);
 
         valueTreeChanged();
     }

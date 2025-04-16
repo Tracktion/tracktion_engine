@@ -256,7 +256,9 @@ private:
     LambdaValueTreeAllEventListener stateListener { state };
     juce::ListenerList<Listener> listeners;
 
+    bool hasAnyPoints() const;
     void curveUnlinkedStateChanged (juce::ValueTree&);
+    void updateModifierAssignment();
 };
 
 //==============================================================================

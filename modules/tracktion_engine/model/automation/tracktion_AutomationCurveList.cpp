@@ -105,6 +105,18 @@ AutomationCurveModifier::AutomationCurveModifier (Edit& e,
         }
     };
 
+    stateListener.onChildAdded = [this] (auto&, auto& child)
+    {
+        if (child.hasType (IDs::POINT))
+            updateModifierAssignment();
+    };
+
+    stateListener.onChildRemoved = [this] (auto&, auto& child, int)
+    {
+        if (child.hasType (IDs::POINT))
+            updateModifierAssignment();
+    };
+
     edit.automationCurveModifierEditItemCache.addItem (*this);
 }
 
@@ -227,6 +239,15 @@ void AutomationCurveModifier::setPositionDelegate (std::function<CurvePosition()
 }
 
 //==============================================================================
+bool AutomationCurveModifier::hasAnyPoints() const
+{
+    for (auto c : { &absoluteCurve, &relativeCurve, &scaleCurve })
+        if (c->getNumPoints() > 0)
+            return true;
+
+    return false;
+}
+
 void AutomationCurveModifier::curveUnlinkedStateChanged (juce::ValueTree& v)
 {
     using enum CurveModifierType;
@@ -260,6 +281,20 @@ void AutomationCurveModifier::curveUnlinkedStateChanged (juce::ValueTree& v)
         {
             timing.looping = false;
         }
+    }
+}
+
+void AutomationCurveModifier::updateModifierAssignment()
+{
+    if (edit.getUndoManager().isPerformingUndoRedo())
+        return;
+
+    if (auto param = getParameter (*this))
+    {
+        if (hasAnyPoints())
+            param->addModifier (*this);
+        else
+            param->removeModifier (*this);
     }
 }
 

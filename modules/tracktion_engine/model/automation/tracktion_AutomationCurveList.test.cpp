@@ -1188,6 +1188,28 @@ TEST_SUITE("tracktion_engine")
         }
     }
 
+    TEST_CASE ("AutomationCurveList: Deleting points")
+    {
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto context = AutomationCurveListTestContext::create (engine);
+
+        // Create curve
+        auto curveList = context->clip->getAutomationCurveList (true);
+        auto curveMod = curveList->addCurve (*context->volParam);
+
+        auto& curve = curveMod->getCurve (CurveModifierType::absolute).curve;
+        curve.addPoint (2.5_bp, 1.0f, 0.0, nullptr);
+        curve.addPoint (2.5_bp, 0.0f, 0.0, nullptr); // Sharp square from 1-0 at 2.5b
+
+        CHECK (! context->volParam->getAssignments().isEmpty());
+        checkVolAutomationViaModifierActiveState (*context->track, true);
+
+        // Remove all points and check assignment is gone
+        curve.clear (&context->edit->getUndoManager());
+        checkVolAutomationViaModifierActiveState (*context->track, false);
+        CHECK (context->volParam->getAssignments().isEmpty());
+    }
+
     TEST_CASE ("AutomationCurveList: Save and reload Edit")
     {
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
