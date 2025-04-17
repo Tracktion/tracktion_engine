@@ -1028,7 +1028,7 @@ public:
             generator->setTime (0.0);
         }
 
-        return exhausted();
+        return !exhausted();
     }
 
     bool exhausted() override
@@ -1267,7 +1267,10 @@ public:
                                              midiSourceID,
                                              0.0,
                                              isPlaying);
-            shouldCreateMessagesForTime = true;
+            
+            // Only create messages at clip start, otherwise use the existing note state
+            // This prevents notes from retriggering when the step clip content is modified during playback
+            shouldCreateMessagesForTime = blockStartBeatRelativeToClip <= 0.00001_bd;
         }
 
         if (shouldCreateMessagesForTime)
