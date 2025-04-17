@@ -843,7 +843,10 @@ float CurveEditor::valueToY (float val) const
 
 float CurveEditor::yToValue (double y) const
 {
-    return (float) ((1.0 - (y - 1) / (getHeight() - 2)) * getParameterRange().getLength() + getParameterRange().getStart());
+    // 1px border at top/bottom
+    auto validYRange = getLocalBounds().reduced (0, 1).toDouble().getVerticalRange();
+    auto yProp = 1.0 - juce::NormalisableRange (validYRange).convertTo0to1 (validYRange.clipValue (y));
+    return juce::NormalisableRange (getParameterRange()).convertFrom0to1 (static_cast<float> (yProp));
 }
 
 juce::Point<float> CurveEditor::getPosition (CurvePoint p) const
