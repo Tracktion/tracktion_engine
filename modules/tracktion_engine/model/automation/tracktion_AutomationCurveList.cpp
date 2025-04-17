@@ -107,13 +107,13 @@ AutomationCurveModifier::AutomationCurveModifier (Edit& e,
 
     stateListener.onChildAdded = [this] (auto&, auto& child)
     {
-        if (child.hasType (IDs::POINT))
+        if (child.hasType (IDs::POINT) || child.hasType (IDs::AUTOMATIONCURVE))
             updateModifierAssignment();
     };
 
     stateListener.onChildRemoved = [this] (auto&, auto& child, int)
     {
-        if (child.hasType (IDs::POINT))
+        if (child.hasType (IDs::POINT) || child.hasType (IDs::AUTOMATIONCURVE))
             updateModifierAssignment();
     };
 

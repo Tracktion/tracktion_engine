@@ -37,6 +37,7 @@ namespace tracktion::inline engine
             context->volPlugin->smoothingRampTimeSeconds = 0.0;
             context->volParam = context->volPlugin->volParam;
             context->volPlugin->setSliderPos (0.0f);
+            context->panParam = context->volPlugin->panParam;
 
             return context;
         }
@@ -47,7 +48,7 @@ namespace tracktion::inline engine
         WaveAudioClip::Ptr clip;
 
         VolumeAndPanPlugin::Ptr volPlugin;
-        AutomatableParameter::Ptr volParam;
+        AutomatableParameter::Ptr volParam, panParam;
     };
 
     inline void checkVolAutomationViaModifierActiveState (AudioTrack& at, bool shouldBeActive)
@@ -1321,6 +1322,60 @@ TEST_SUITE("tracktion_engine")
 
             checkTrackVolParams (*loadedEdit, false);
         }
+    }
+
+    TEST_CASE ("AutomationCurveList: Multiple params of the same plugin")
+    {
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto context = AutomationCurveListTestContext::create (engine);
+        auto um = &context->edit->getUndoManager();
+
+        AutomationCurve *volCurve = nullptr, *panCurve = nullptr;
+
+        // Create curve
+        auto curveList = context->clip->getAutomationCurveList (true);
+
+        {
+            auto curveMod = curveList->addCurve (*context->volParam);
+
+            auto& curve = curveMod->getCurve (CurveModifierType::absolute).curve;
+            curve.addPoint (2.5_bp, 1.0f, 0.0, nullptr);
+            curve.addPoint (2.5_bp, 0.0f, 0.0, nullptr); // Sharp square from 1-0 at 2.5b
+            volCurve = &curve;
+        }
+
+        {
+            auto curveMod = curveList->addCurve (*context->panParam);
+
+            auto& curve = curveMod->getCurve (CurveModifierType::absolute).curve;
+            curve.addPoint (2.5_bp, 1.0f, 0.0, nullptr);
+            curve.addPoint (2.5_bp, 0.0f, 0.0, nullptr); // Sharp square from 1-0 at 2.5b
+            panCurve = &curve;
+        }
+
+
+        CHECK (context->volPlugin->isActiveParameter (*context->volParam));
+        CHECK (context->volPlugin->isActiveParameter (*context->panParam));
+
+        CHECK (! context->volParam->getAssignments().isEmpty());
+        CHECK (! context->panParam->getAssignments().isEmpty());
+
+        // Remove all points and check assignment is gone
+        um->beginNewTransaction();
+        volCurve->clear (um);
+        panCurve->clear (um);
+        CHECK (! context->volPlugin->isActiveParameter (*context->volParam));
+        CHECK (! context->volPlugin->isActiveParameter (*context->panParam));
+
+        CHECK (context->volParam->getAssignments().isEmpty());
+        CHECK (context->panParam->getAssignments().isEmpty());
+
+        um->undoCurrentTransactionOnly();
+        CHECK (context->volPlugin->isActiveParameter (*context->volParam));
+        CHECK (context->volPlugin->isActiveParameter (*context->panParam));
+
+        CHECK (! context->volParam->getAssignments().isEmpty());
+        CHECK (! context->panParam->getAssignments().isEmpty());
     }
 }
 

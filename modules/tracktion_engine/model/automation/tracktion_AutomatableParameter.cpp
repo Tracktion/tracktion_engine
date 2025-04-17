@@ -1612,27 +1612,25 @@ AutomatableParameter::ScopedActiveParameter::ScopedActiveParameter (const Automa
 {
     // Must increment this before the AutomatableEditElement
     assert (parameter.numActiveAutomationSources >= 0);
-    ++parameter.numActiveAutomationSources;
+
+    // First increment so add the parameter to the active list
+    if (parameter.numActiveAutomationSources.fetch_add (1) == 0)
+        parameter.automatableEditElement.addActiveParameter (parameter);
 
     assert (parameter.automatableEditElement.numActiveParameters >= 0);
-
-    // First increment so update the active list
-    // N.B. This should really add this parameter from a list rather than refresh it
-    if (parameter.automatableEditElement.numActiveParameters.fetch_add (1) == 0)
-        parameter.automatableEditElement.addActiveParameter (parameter);
+    ++parameter.automatableEditElement.numActiveParameters;
 }
 
 AutomatableParameter::ScopedActiveParameter::~ScopedActiveParameter()
 {
-    // Must decrement this before the AutomatableEditElement
-    --parameter.numActiveAutomationSources;
     assert (parameter.numActiveAutomationSources >= 0);
 
+    // Must decrement this before the AutomatableEditElement
     // Last decrement so update the active list
-    // N.B. This should really remove this parameter from a list rather than refresh it
-    if (parameter.automatableEditElement.numActiveParameters.fetch_sub (1) == 1)
+    if (parameter.numActiveAutomationSources.fetch_sub (1) == 1)
         parameter.automatableEditElement.removeActiveParameter (parameter);
 
+    --parameter.automatableEditElement.numActiveParameters;
     assert (parameter.automatableEditElement.numActiveParameters >= 0);
 }
 
