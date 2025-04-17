@@ -311,7 +311,7 @@ bool AutomationCurveModifier::Assignment::isForModifierSource (const ModifierSou
     if (auto curveModifier = dynamic_cast<const AutomationCurveModifier*> (&ms))
         return curveModifier->itemID == automationCurveModifierID;
 
-    return true;
+    return false;
 }
 
 
