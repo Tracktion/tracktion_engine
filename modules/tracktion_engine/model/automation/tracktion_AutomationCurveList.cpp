@@ -11,6 +11,26 @@
 namespace tracktion::inline engine
 {
 
+namespace detail
+{
+    inline Clip* getClip (const AutomationCurveModifier& acm)
+    {
+        for (auto v = acm.state.getParent(); v.isValid(); v = v.getParent())
+            if (Clip::isClipState (v))
+                return findClipForState (acm.edit, v);
+
+        return {};
+    }
+
+    inline juce::String getClipName (const AutomationCurveModifier& acm)
+    {
+        if (auto clip = getClip (acm))
+            return clip->getName();
+
+        return {};
+    }
+}
+
 //==============================================================================
 //==============================================================================
 juce::String toString (CurveModifierType cmt)
@@ -222,7 +242,7 @@ void AutomationCurveModifier::removeListener (Listener& l)
 //==============================================================================
 juce::String AutomationCurveModifier::getName() const
 {
-    return TRANS("Automation Curve Modifier");
+    return detail::getClipName (*this) + ": " + TRANS("Automation Curve Modifier");
 }
 
 juce::String AutomationCurveModifier::getSelectableDescription()
