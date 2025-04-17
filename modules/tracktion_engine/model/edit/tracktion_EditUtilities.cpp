@@ -1131,6 +1131,11 @@ juce::Array<AutomatableParameter::ModifierSource*> getAllModifierSources (const 
     for (auto mpe : getAllMacroParameterElements (edit))
         sources.addArray (mpe->getMacroParameters());
 
+    edit.automationCurveModifierEditItemCache.visitItems ([&sources] (auto acm)
+                                                          {
+                                                             sources.add (acm);
+                                                          });
+
     return sources;
 }
 
