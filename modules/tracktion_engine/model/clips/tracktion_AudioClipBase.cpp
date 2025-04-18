@@ -856,7 +856,7 @@ void AudioClipBase::copyFadeToAutomation (bool useFadeIn, bool removeClipFade)
 
     mergeCurve (oldCurve, fadeTime,
                 curve, 0_tp,
-                *param, 0_td,
+                param->getCurrentBaseValue(), 0_td,
                 true, true);
 
     // also need to remove the point just before the first one we added

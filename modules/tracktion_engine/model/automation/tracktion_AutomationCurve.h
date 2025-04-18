@@ -98,14 +98,11 @@ public:
     int movePoint (int index, EditPosition, float newValue, std::optional<juce::Range<float>> valueLimits,
                    bool removeInterveningPoints, juce::UndoManager*);
 
-    void setPointPosition (int index, EditPosition, juce::UndoManager*);
-    void setPointTime (int index, TimePosition, juce::UndoManager*);
     void setPointValue (int index, float newValue, juce::UndoManager*);
     void setCurveValue (int index, float newCurve, juce::UndoManager*);
 
     //==============================================================================
-    void rescaleAllTimes (double factor, juce::UndoManager*);
-    void addToAllTimes (TimeDuration delta, juce::UndoManager*);
+    void rescaleAllPositions (double factor, juce::UndoManager*);
     void rescaleValues (float factor, EditTimeRange, juce::Range<float> valueRange, juce::UndoManager*);
     void addToValues (float valueDelta, EditTimeRange, juce::Range<float> valueRange, juce::UndoManager*);
 
@@ -138,9 +135,13 @@ public:
                    bool removeInterveningPoints, juce::UndoManager*);
     void simplify (TimeRange, double minTimeDifference, float minValueDifference, juce::UndoManager*);
 
+    /** @internal */
+    void setPointPosition (int index, EditPosition, juce::UndoManager*);
+
 private:
     EditPosition createPosition (double) const;
     EditPosition getPosition (const juce::ValueTree&) const;
+    void setPointTime (int index, TimePosition, juce::UndoManager*);
     void addPointAtIndex (int index, EditPosition, float v, float c, juce::UndoManager*);
     void addPointAtIndex (int index, TimePosition, float v, float c, juce::UndoManager*);
     void checkParenthoodStatus (juce::UndoManager*);
@@ -155,14 +156,13 @@ int simplify (AutomationCurve&, int strength,
               juce::UndoManager*);
 
 void mergeCurve (AutomationCurve& dest,
-                 TimeRange destRange,
+                 EditTimeRange destRange,
                  const AutomationCurve& source,
-                 TimePosition sourceStartTime,
-                 AutomatableParameter&,
-                 TimeDuration fadeLength,
+                 EditPosition sourceStartTime,
+                 float defaultValue,
+                 EditDuration fadeLength,
                  bool leaveOpenAtStart,
                  bool leaveOpenEnded);
-
 
 //==============================================================================
 /** Returns the value of a parameter's curve at the given position. */
@@ -170,5 +170,8 @@ float getValueAt (AutomatableParameter&, EditPosition);
 
 /** Returns the value of a parameter's curve at the given position. */
 float getValueAt (AutomatableParameter&, TimePosition);
+
+/** Returns the range the curve occupies. */
+EditTimeRange getFullRange (const AutomationCurve&);
 
 } // namespace tracktion::inline engine

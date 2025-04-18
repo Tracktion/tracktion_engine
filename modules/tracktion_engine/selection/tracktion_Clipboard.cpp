@@ -770,15 +770,14 @@ static void fixClipTimes (juce::ValueTree& state, const Clipboard::Clips::ClipIn
 }
 
 static bool pastePointsToCurve (const std::vector<AutomationCurve::AutomationPoint>& points, juce::Range<float> sourceValueRange,
-                                AutomatableParameter& targetParameter, AutomationCurve& targetCurve, TimeRange targetRange)
+                                AutomationCurve& targetCurve, juce::Range<float> targetValueRange,  float defaultValue,
+                                std::optional<EditTimeRange> targetRange)
 {
-    auto& edit = targetParameter.getEdit();
-    AutomationCurve newCurve (edit, targetCurve.timeBase);
+    AutomationCurve newCurve (targetCurve.edit, targetCurve.timeBase);
     newCurve.setParameterID (targetCurve.getParameterID());
 
-    const auto targetValueRange = targetParameter.getValueRange();
     jassert (! targetValueRange.isEmpty());
-    auto um = getUndoManager_p (targetParameter);
+    auto um = getUndoManager_p (targetCurve.edit);
 
     for (auto p : points)
     {
@@ -793,20 +792,28 @@ static bool pastePointsToCurve (const std::vector<AutomationCurve::AutomationPoi
 
     if (newCurve.getLength() > 0_td)
     {
-        if (targetRange.isEmpty())
-            targetRange = targetRange.withLength (newCurve.getLength());
+        if (targetRange)
+            newCurve.rescaleAllPositions (toUnderlying (targetRange->getLength()) / toUnderlying (newCurve.getLength()), um);
         else
-            newCurve.rescaleAllTimes (targetRange.getLength() / newCurve.getLength(), um);
+            targetRange = getFullRange (newCurve);
 
-        mergeCurve (targetCurve, targetRange,
+        mergeCurve (targetCurve, *targetRange,
                     newCurve, 0_tp,
-                    targetParameter, 0_td,
+                    defaultValue, 0_td,
                     false, false);
 
         return true;
     }
 
     return false;
+}
+
+static bool pastePointsToCurve (const std::vector<AutomationCurve::AutomationPoint>& points, juce::Range<float> sourceValueRange,
+                                AutomatableParameter& targetParameter, AutomationCurve& targetCurve, TimeRange targetRange)
+{
+    return pastePointsToCurve (points, sourceValueRange,
+                               targetCurve, targetParameter.getValueRange(),  targetParameter.getCurrentBaseValue(),
+                               targetRange);
 }
 
 bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
@@ -1651,34 +1658,37 @@ static ClipboardTempoTests clipboardTempoTests;
 //==============================================================================
 //==============================================================================
 Clipboard::AutomationPoints::AutomationPoints (AutomatableParameter& param, const AutomationCurve& curve, TimeRange range)
-    : valueRange (param.getValueRange())
+    : AutomationPoints (curve, param.getValueRange(), range, param.getCurrentBaseValue())
+{
+}
+
+Clipboard::AutomationPoints::AutomationPoints (const AutomationCurve& curve, juce::Range<float> limits, EditTimeRange range, float defaultValue)
+    : valueRange (limits)
 {
     bool pointAtStart = false;
     bool pointAtEnd = false;
-    auto& ts = getTempoSequence (param);
+    auto& ts = getTempoSequence (curve.edit);
 
     for (int i = 0; i < curve.getNumPoints(); ++i)
     {
         auto p = curve.getPoint (i);
-        auto time = toTime (p.time, ts);
+        auto pos = p.time;
 
-        if (time == range.getStart())  pointAtStart = true;
-        if (time == range.getEnd())    pointAtEnd = true;
+        if (equals (pos, range.getStart(), ts)) pointAtStart = true;
+        if (equals (pos, range.getEnd(), ts))   pointAtEnd = true;
 
-        if (range.containsInclusive (time))
+        if (containsInclusive (range, pos, ts))
         {
-            time = time - TimeDuration::fromSeconds (range.getStart().inSeconds());
+            pos = minus (pos, toDuration (range.getStart()), ts);
             points.push_back (p);
         }
     }
-
-    auto defaultValue = param.getCurrentBaseValue();
 
     if (! pointAtStart)
         points.insert (points.begin(), AutomationCurve::AutomationPoint (0_tp, curve.getValueAt (range.getStart(), defaultValue), 0));
 
     if (! pointAtEnd)
-        points.push_back (AutomationCurve::AutomationPoint (TimePosition::fromSeconds (range.getLength().inSeconds()), curve.getValueAt (range.getEnd(), defaultValue), 0));
+        points.push_back (AutomationCurve::AutomationPoint (toPosition (range.getLength()), curve.getValueAt (range.getEnd(), defaultValue), 0));
 }
 
 Clipboard::AutomationPoints::~AutomationPoints() {}
@@ -1687,6 +1697,14 @@ bool Clipboard::AutomationPoints::pasteIntoEdit (const EditPastingOptions&) cons
 {
     jassertfalse; // TODO: what to do here?
     return false;
+}
+
+bool Clipboard::AutomationPoints::pasteAutomationCurve (AutomationCurve& targetCurve, juce::Range<float> targetValueRange, float targetDefaultValue,
+                                                        std::optional<EditTimeRange> targetRange) const
+{
+    return pastePointsToCurve (points, valueRange,
+                               targetCurve, targetValueRange, targetDefaultValue,
+                               targetRange);
 }
 
 bool Clipboard::AutomationPoints::pasteAutomationCurve (AutomatableParameter& param, AutomationCurve& targetCurve, TimeRange targetRange) const

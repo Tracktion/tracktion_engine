@@ -314,7 +314,7 @@ namespace tracktion::inline engine
                         TimeRange curveRange (startTime, endTime + glideLength);
                         mergeCurve (destCurve, curveRange,
                                     sourceCurve, startTime,
-                                    parameter->parameter, glideLength,
+                                    parameter->parameter.getCurrentBaseValue(), glideLength,
                                     false, toEnd);
 
                         if (engine.getPropertyStorage().getProperty (SettingID::simplifyAfterRecording, true))
@@ -867,7 +867,7 @@ namespace tracktion::inline engine
                         TimeRange curveRange (startTime, endTime + glideLength);
                         mergeCurve (destCurve, curveRange,
                                     sourceCurve, startTime,
-                                    parameter->parameter, glideLength,
+                                    parameter->parameter.getCurrentBaseValue(), glideLength,
                                     false, toEnd);
 
                         if (engine.getPropertyStorage().getProperty (SettingID::simplifyAfterRecording, true))

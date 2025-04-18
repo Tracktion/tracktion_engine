@@ -161,12 +161,15 @@ public:
 
     struct AutomationPoints  : public ContentType
     {
+        AutomationPoints (const AutomationCurve&, juce::Range<float>, EditTimeRange, float defaultValue);
         AutomationPoints (AutomatableParameter&, const AutomationCurve&, TimeRange);
         ~AutomationPoints() override;
 
         using ContentType::pasteIntoEdit;
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
+        bool pasteAutomationCurve (AutomationCurve& targetCurve, juce::Range<float> targetValueRange, float targetDefaultValue,
+                                   std::optional<EditTimeRange> targetRange) const;
         bool pasteAutomationCurve (AutomatableParameter&, AutomationCurve&, TimeRange targetRange) const;
 
         std::vector<AutomationCurve::AutomationPoint> points;

@@ -51,6 +51,13 @@ EditPosition toPosition (EditDuration);
 */
 double toUnderlying (EditDuration);
 
+/** Returns true if the duration is 0 beats or seconds. */
+bool isZero (EditDuration);
+
+/** Returns true if the duration is greater than zero beats or seconds. */
+bool isGreaterThanZero (EditDuration);
+
+
 //==============================================================================
 //==============================================================================
 /**
@@ -330,6 +337,9 @@ juce::Range<double> toUnderlying (EditTimeRange);
 /** Returns true if the given position is contained within the given range. */
 bool contains (EditTimeRange, EditPosition, const TempoSequence&);
 
+/** Returns true if the given position is contained within the given closed range. */
+bool containsInclusive (EditTimeRange, EditPosition, const TempoSequence&);
+
 /** Converts an EditTimeRange to a TimeRange.
     N.B. This may be a slow operation if this was created using a BeatRange.
 */
@@ -457,6 +467,16 @@ inline double toUnderlying (EditDuration duration)
 
     assert (std::holds_alternative<BeatDuration> (duration));
     return std::get<BeatDuration> (duration).inBeats();
+}
+
+inline bool isZero (EditDuration duration)
+{
+    return toUnderlying (duration) == 0.0;
+}
+
+inline bool isGreaterThanZero (EditDuration duration)
+{
+    return toUnderlying (duration) > 0.0;
 }
 
 
@@ -602,6 +622,12 @@ inline bool contains (EditTimeRange r, EditPosition pos, const TempoSequence& ts
 {
     return greaterThanOrEqualTo (pos, r.getStart(), ts)
         && less (pos, r.getEnd(), ts);
+}
+
+inline bool containsInclusive (EditTimeRange r, EditPosition pos, const TempoSequence& ts)
+{
+    return greaterThanOrEqualTo (pos, r.getStart(), ts)
+        && lessThanOrEqualTo (pos, r.getEnd(), ts);
 }
 
 inline TimeRange toTime (EditTimeRange r, const TempoSequence& ts)

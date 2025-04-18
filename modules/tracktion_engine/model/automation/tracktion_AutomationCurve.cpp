@@ -858,18 +858,13 @@ void AutomationCurve::addToValues (float valueDelta, EditTimeRange range, juce::
                 setPointValue (i, juce::jlimit (limits.getStart(), limits.getEnd(), getPointValue (i) + valueDelta), um);
 }
 
-void AutomationCurve::addToAllTimes (TimeDuration delta, juce::UndoManager* um)
+void AutomationCurve::rescaleAllPositions (double factor, juce::UndoManager* um)
 {
-    if (delta != TimeDuration())
+    if (factor != 1.0)
         for (int i = getNumPoints(); --i >= 0;)
-            setPointTime (i, getPointTime (i) + delta, um);
-}
-
-void AutomationCurve::rescaleAllTimes (double factor, juce::UndoManager* um)
-{
-    if (factor != 1.0f)
-        for (int i = getNumPoints(); --i >= 0;)
-            setPointTime (i, TimePosition::fromSeconds (getPointTime (i).inSeconds() * factor), um);
+            state.getChild (i).setProperty (IDs::t,
+                                            toUnderlying (getPointPosition (i)) * factor,
+                                            um);
 }
 
 void AutomationCurve::rescaleValues (float factor, TimeRange range, juce::Range<float> limits, juce::UndoManager* um)
@@ -1020,17 +1015,17 @@ int simplify (AutomationCurve& curve, int strength,
 }
 
 void mergeCurve (AutomationCurve& dest,
-                 TimeRange destRange,
+                 EditTimeRange destRange,
                  const AutomationCurve& source,
-                 TimePosition sourceStartTime,
-                 AutomatableParameter& param,
-                 TimeDuration fadeLength,
+                 EditPosition sourceStartTime,
+                 float defaultValue,
+                 EditDuration fadeLength,
                  bool leaveOpenAtStart,
                  bool leaveOpenEnded)
 {
-    auto um = getUndoManager_p (param);
-    auto sourceEndTime = sourceStartTime + destRange.getLength();
-    auto defaultValue = param.getCurrentBaseValue();
+    auto um = getUndoManager_p (dest.edit);
+    auto& ts = getTempoSequence (dest.edit);
+    auto sourceEndTime = plus (sourceStartTime, destRange.getLength(), ts);
 
     auto dstValueAtStart = dest.getValueAt (destRange.getStart(), defaultValue);
     auto dstValueAtEnd   = dest.getValueAt (destRange.getEnd(), defaultValue);
@@ -1038,9 +1033,9 @@ void mergeCurve (AutomationCurve& dest,
     auto srcValueAtStart = source.getValueAt (sourceStartTime, defaultValue);
     auto srcValueAtEnd = source.getValueAt (sourceEndTime, defaultValue);
 
-    dest.removePointsInRegion (destRange, um);
+    dest.removePoints (destRange, um);
 
-    if (fadeLength == TimeDuration() && dstValueAtStart != srcValueAtStart)
+    if (isZero (fadeLength) && dstValueAtStart != srcValueAtStart)
         dest.addPoint (destRange.getStart(), dstValueAtStart, 0.0f, um);
 
     if (! leaveOpenAtStart)
@@ -1050,40 +1045,62 @@ void mergeCurve (AutomationCurve& dest,
 
     for (int i = 0; i < source.getNumPoints(); ++i)
     {
-        auto t = source.getPointTime (i) + (destRange.getStart() - sourceStartTime);
+        auto t = plus (source.getPointTime (i),
+                       (minus (destRange.getStart(), sourceStartTime, ts)),
+                       ts);
 
-        if (t >= destRange.getStart() && t <= destRange.getEnd())
+        if (greaterThanOrEqualTo (t, destRange.getStart(), ts)
+            && lessThanOrEqualTo (t, destRange.getEnd(), ts))
         {
             auto v = source.getPointValue (i);
             auto c = source.getPointCurve (i);
 
             // see if this point is in a fade zone..
-            if (t <= destRange.getStart() + fadeLength)
+            if (auto fadeInRange = plus (destRange.getStart(), fadeLength, ts);
+                lessThanOrEqualTo (t, fadeInRange, ts))
             {
                 pointsInFadeZoneStart = true;
 
-                if (fadeLength > TimeDuration())
-                    v = (float) (dstValueAtStart + (v - dstValueAtStart) * ((t - destRange.getStart()) / fadeLength));
+                if (isGreaterThanZero (fadeLength))
+                {
+                    const auto distance = minus (t, destRange.getStart(), ts);
+                    const double length = std::holds_alternative<TimeDuration> (distance)
+                                            ? toUnderlying (toTime (fadeInRange, ts))
+                                            : toUnderlying (toBeats (fadeInRange, ts));
+                    auto scale = toUnderlying (distance) / length;
+                    v = (float) (dstValueAtStart + (v - dstValueAtStart) * scale);
+                }
             }
-            else if (t >= destRange.getEnd() - fadeLength)
+            else if (auto fadeOutRange = minus (destRange.getEnd(), fadeLength, ts);
+                     greaterThanOrEqualTo (t, fadeOutRange, ts))
             {
                 pointsInFadeZoneEnd = true;
 
-                if (fadeLength > TimeDuration())
-                    v = (float) (v + (dstValueAtEnd - v) * 1.0 - ((destRange.getEnd() - t) / fadeLength));
+                if (isGreaterThanZero (fadeLength))
+                {
+                    const auto distance = minus (destRange.getEnd(), t, ts);
+                    const double length = std::holds_alternative<TimeDuration> (distance)
+                                            ? toUnderlying (toTime (fadeInRange, ts))
+                                            : toUnderlying (toBeats (fadeInRange, ts));
+                    auto scale = toUnderlying (distance) / length;
+                    v = (float) (v + (dstValueAtEnd - v) * (1.0 - scale));
+                }
             }
 
             dest.addPoint (t, v, c, um);
         }
     }
 
-    if (fadeLength > 0_td && ! pointsInFadeZoneStart)
-        dest.addPoint (destRange.getStart() + fadeLength - 0.0001_td, dstValueAtStart, 0.0f, um);
+    if (isGreaterThanZero (fadeLength) && ! pointsInFadeZoneStart)
+    {
+        auto newPos = plus (destRange.getStart(), fadeLength, ts);
+        dest.addPoint (minus (newPos, 0.0001_td, ts), dstValueAtStart, 0.0f, um);
+    }
 
     if (! leaveOpenEnded)
     {
         if (! pointsInFadeZoneEnd)
-            dest.addPoint (destRange.getEnd() - fadeLength, srcValueAtEnd, 0.0f, um);
+            dest.addPoint (minus (destRange.getEnd(), fadeLength, ts), srcValueAtEnd, 0.0f, um);
 
         dest.addPoint (destRange.getEnd(), dstValueAtEnd, 0.0f, um);
     }
@@ -1097,6 +1114,14 @@ float getValueAt (AutomatableParameter& param, EditPosition p)
 float getValueAt (AutomatableParameter& param, TimePosition p)
 {
     return param.getCurve().getValueAt (p, param.getCurrentBaseValue());
+}
+
+EditTimeRange getFullRange (const AutomationCurve& curve)
+{
+    if (curve.timeBase == AutomationCurve::TimeBase::beats)
+        return { 0_bp, BeatDuration::fromBeats (toUnderlying (curve.getDuration())) };
+
+    return { 0_tp, TimeDuration::fromSeconds (toUnderlying (curve.getDuration())) };
 }
 
 } // namespace tracktion::inline engine
