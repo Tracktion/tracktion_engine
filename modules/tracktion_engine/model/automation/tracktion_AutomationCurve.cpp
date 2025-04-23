@@ -361,7 +361,7 @@ void AutomationCurve::addPointAtIndex (int index, EditPosition pos, float value,
 
 void AutomationCurve::addPointAtIndex (int index, TimePosition time, float value, float curve, juce::UndoManager* um)
 {
-    addPointAtIndex (index, time, value, curve, um);
+    addPointAtIndex (index, EditPosition (time), value, curve, um);
 }
 
 void AutomationCurve::removePoint (int index, juce::UndoManager* um)
