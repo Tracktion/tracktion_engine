@@ -343,16 +343,25 @@ EditPosition AutomationCurve::getPosition (const juce::ValueTree& pointState) co
     return createPosition (static_cast<double> (pointState[IDs::t]));
 }
 
+EditPosition AutomationCurve::convertPositionToBase (EditPosition pos) const
+{
+    auto& ts = getTempoSequence (edit);
+
+    if (timeBase == TimeBase::beats)
+        return toBeats (pos, ts);
+
+    return toTime (pos, ts);
+}
+
 void AutomationCurve::addPointAtIndex (int index, EditPosition pos, float value, float curve, juce::UndoManager* um)
 {
-    state.addChild (AutomationPoint (pos, value, curve).toValueTree(), index, um);
+    state.addChild (AutomationPoint (convertPositionToBase (pos), value, curve).toValueTree(), index, um);
     checkParenthoodStatus (um);
 }
 
 void AutomationCurve::addPointAtIndex (int index, TimePosition time, float value, float curve, juce::UndoManager* um)
 {
-    state.addChild (AutomationPoint (time, value, curve).toValueTree(), index, um);
-    checkParenthoodStatus (um);
+    addPointAtIndex (index, time, value, curve, um);
 }
 
 void AutomationCurve::removePoint (int index, juce::UndoManager* um)
@@ -1045,7 +1054,7 @@ void mergeCurve (AutomationCurve& dest,
 
     for (int i = 0; i < source.getNumPoints(); ++i)
     {
-        auto t = plus (source.getPointTime (i),
+        auto t = plus (source.getPointPosition (i),
                        (minus (destRange.getStart(), sourceStartTime, ts)),
                        ts);
 

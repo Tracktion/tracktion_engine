@@ -778,6 +778,7 @@ static bool pastePointsToCurve (const std::vector<AutomationCurve::AutomationPoi
 
     jassert (! targetValueRange.isEmpty());
     auto um = getUndoManager_p (targetCurve.edit);
+    auto& ts = getTempoSequence (targetCurve.edit);
 
     for (auto p : points)
     {
@@ -793,9 +794,16 @@ static bool pastePointsToCurve (const std::vector<AutomationCurve::AutomationPoi
     if (newCurve.getLength() > 0_td)
     {
         if (targetRange)
-            newCurve.rescaleAllPositions (toUnderlying (targetRange->getLength()) / toUnderlying (newCurve.getLength()), um);
+        {
+            if (isGreaterThanZero (targetRange->getLength()))
+                newCurve.rescaleAllPositions (toUnderlying (targetRange->getLength()) / toUnderlying (newCurve.getLength()), um);
+            else
+                targetRange = EditTimeRange (toTime (*targetRange, ts).getStart(), newCurve.getLength());
+        }
         else
+        {
             targetRange = getFullRange (newCurve);
+        }
 
         mergeCurve (targetCurve, *targetRange,
                     newCurve, 0_tp,
@@ -1679,7 +1687,7 @@ Clipboard::AutomationPoints::AutomationPoints (const AutomationCurve& curve, juc
 
         if (containsInclusive (range, pos, ts))
         {
-            pos = minus (pos, toDuration (range.getStart()), ts);
+            p.time = minus (pos, toDuration (range.getStart()), ts);
             points.push_back (p);
         }
     }

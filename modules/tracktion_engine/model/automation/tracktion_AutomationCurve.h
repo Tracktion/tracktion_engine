@@ -141,6 +141,7 @@ public:
 private:
     EditPosition createPosition (double) const;
     EditPosition getPosition (const juce::ValueTree&) const;
+    EditPosition convertPositionToBase (EditPosition) const;
     void setPointTime (int index, TimePosition, juce::UndoManager*);
     void addPointAtIndex (int index, EditPosition, float v, float c, juce::UndoManager*);
     void addPointAtIndex (int index, TimePosition, float v, float c, juce::UndoManager*);
