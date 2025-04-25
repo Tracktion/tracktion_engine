@@ -1703,7 +1703,6 @@ Clipboard::AutomationPoints::~AutomationPoints() {}
 
 bool Clipboard::AutomationPoints::pasteIntoEdit (const EditPastingOptions&) const
 {
-    jassertfalse; // TODO: what to do here?
     return false;
 }
 
