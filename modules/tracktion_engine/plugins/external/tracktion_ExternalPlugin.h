@@ -187,8 +187,6 @@ private:
     void processPluginBlock (juce::AudioPluginInstance&, const PluginRenderContext&, bool processedBypass);
 
     std::unique_ptr<juce::PluginDescription> findMatchingPlugin() const;
-    std::unique_ptr<juce::PluginDescription> findDescForUID (int uid, int deprecatedUid) const;
-    std::unique_ptr<juce::PluginDescription> findDescForFileOrID (const juce::String&) const;
 
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
 
