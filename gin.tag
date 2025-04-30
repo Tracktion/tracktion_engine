@@ -38,22 +38,6 @@
     <filename>tracktion__RexFileFormat_8h.html</filename>
   </compound>
   <compound kind="file">
-    <name>tracktion_engine/audio_files/tracktion_AudioFifo.h</name>
-    <path>build/tracktion_engine/audio_files/</path>
-    <filename>tracktion__engine_2audio__files_2tracktion__AudioFifo_8h.html</filename>
-    <class kind="class">tracktion::engine::AudioFifo</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::engine</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_graph/utilities/tracktion_AudioFifo.h</name>
-    <path>build/tracktion_graph/utilities/</path>
-    <filename>tracktion__graph_2utilities_2tracktion__AudioFifo_8h.html</filename>
-    <class kind="class">tracktion::graph::AudioFifo</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::graph</namespace>
-  </compound>
-  <compound kind="file">
     <name>tracktion_AudioFile.h</name>
     <path>build/tracktion_engine/audio_files/</path>
     <filename>tracktion__AudioFile_8h.html</filename>
@@ -1442,22 +1426,6 @@
     <namespace>tracktion::engine</namespace>
   </compound>
   <compound kind="file">
-    <name>tracktion_engine/playback/graph/tracktion_MultiThreadedNodePlayer.h</name>
-    <path>build/tracktion_engine/playback/graph/</path>
-    <filename>tracktion__engine_2playback_2graph_2tracktion__MultiThreadedNodePlayer_8h.html</filename>
-    <class kind="class">tracktion::engine::MultiThreadedNodePlayer</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::engine</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_graph/tracktion_graph/tracktion_MultiThreadedNodePlayer.h</name>
-    <path>build/tracktion_graph/tracktion_graph/</path>
-    <filename>tracktion__graph_2tracktion__graph_2tracktion__MultiThreadedNodePlayer_8h.html</filename>
-    <class kind="class">tracktion::graph::MultiThreadedNodePlayer</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::graph</namespace>
-  </compound>
-  <compound kind="file">
     <name>tracktion_NodeRenderContext.h</name>
     <path>build/tracktion_engine/playback/graph/</path>
     <filename>tracktion__NodeRenderContext_8h.html</filename>
@@ -2690,40 +2658,6 @@
     <namespace>tracktion::engine</namespace>
   </compound>
   <compound kind="file">
-    <name>tracktion_engine/utilities/tracktion_TestUtilities.h</name>
-    <path>build/tracktion_engine/utilities/</path>
-    <filename>tracktion__engine_2utilities_2tracktion__TestUtilities_8h.html</filename>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::engine</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_graph/tracktion_graph/tracktion_TestUtilities.h</name>
-    <path>build/tracktion_graph/tracktion_graph/</path>
-    <filename>tracktion__graph_2tracktion__graph_2tracktion__TestUtilities_8h.html</filename>
-    <includes id="tracktion__FloatAudioFileFormat_8h" name="tracktion_FloatAudioFileFormat.h" local="yes" import="no" module="no" objc="no">../../tracktion_engine/audio_files/formats/tracktion_FloatAudioFileFormat.h</includes>
-    <class kind="struct">tracktion::graph::test_utilities::SineOscillator</class>
-    <class kind="struct">tracktion::graph::test_utilities::TestSetup</class>
-    <class kind="struct">tracktion::graph::test_utilities::TestContext</class>
-    <class kind="struct">tracktion::graph::test_utilities::TestProcess</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::graph</namespace>
-    <namespace>tracktion::graph::test_utilities</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_engine/utilities/tracktion_Threads.h</name>
-    <path>build/tracktion_engine/utilities/</path>
-    <filename>tracktion__engine_2utilities_2tracktion__Threads_8h.html</filename>
-    <class kind="struct">engine::ScopedThreadExitStatusEnabler</class>
-    <namespace>engine</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_graph/utilities/tracktion_Threads.h</name>
-    <path>build/tracktion_graph/utilities/</path>
-    <filename>tracktion__graph_2utilities_2tracktion__Threads_8h.html</filename>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::graph</namespace>
-  </compound>
-  <compound kind="file">
     <name>tracktion_Types.h</name>
     <path>build/tracktion_engine/utilities/</path>
     <filename>tracktion__Types_8h.html</filename>
@@ -2808,6 +2742,22 @@
     <namespace>tracktion::graph</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_engine/playback/graph/tracktion_MultiThreadedNodePlayer.h</name>
+    <path>build/tracktion_engine/playback/graph/</path>
+    <filename>tracktion__engine_2playback_2graph_2tracktion__MultiThreadedNodePlayer_8h.html</filename>
+    <class kind="class">tracktion::engine::MultiThreadedNodePlayer</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_graph/tracktion_graph/tracktion_MultiThreadedNodePlayer.h</name>
+    <path>build/tracktion_graph/tracktion_graph/</path>
+    <filename>tracktion__graph_2tracktion__graph_2tracktion__MultiThreadedNodePlayer_8h.html</filename>
+    <class kind="class">tracktion::graph::MultiThreadedNodePlayer</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::graph</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_Node.h</name>
     <path>build/tracktion_graph/tracktion_graph/</path>
     <filename>tracktion__Node_8h.html</filename>
@@ -2878,6 +2828,26 @@
     <namespace>tracktion::graph</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_engine/utilities/tracktion_TestUtilities.h</name>
+    <path>build/tracktion_engine/utilities/</path>
+    <filename>tracktion__engine_2utilities_2tracktion__TestUtilities_8h.html</filename>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_graph/tracktion_graph/tracktion_TestUtilities.h</name>
+    <path>build/tracktion_graph/tracktion_graph/</path>
+    <filename>tracktion__graph_2tracktion__graph_2tracktion__TestUtilities_8h.html</filename>
+    <includes id="tracktion__FloatAudioFileFormat_8h" name="tracktion_FloatAudioFileFormat.h" local="yes" import="no" module="no" objc="no">../../tracktion_engine/audio_files/formats/tracktion_FloatAudioFileFormat.h</includes>
+    <class kind="struct">tracktion::graph::test_utilities::SineOscillator</class>
+    <class kind="struct">tracktion::graph::test_utilities::TestSetup</class>
+    <class kind="struct">tracktion::graph::test_utilities::TestContext</class>
+    <class kind="struct">tracktion::graph::test_utilities::TestProcess</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::graph</namespace>
+    <namespace>tracktion::graph::test_utilities</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_Utility.h</name>
     <path>build/tracktion_graph/tracktion_graph/</path>
     <filename>tracktion__Utility_8h.html</filename>
@@ -2897,6 +2867,22 @@
     <path>build/tracktion_graph/utilities/</path>
     <filename>tracktion__AudioBufferStack_8h.html</filename>
     <class kind="class">tracktion::graph::AudioBufferStack</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::graph</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_engine/audio_files/tracktion_AudioFifo.h</name>
+    <path>build/tracktion_engine/audio_files/</path>
+    <filename>tracktion__engine_2audio__files_2tracktion__AudioFifo_8h.html</filename>
+    <class kind="class">tracktion::engine::AudioFifo</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_graph/utilities/tracktion_AudioFifo.h</name>
+    <path>build/tracktion_graph/utilities/</path>
+    <filename>tracktion__graph_2utilities_2tracktion__AudioFifo_8h.html</filename>
+    <class kind="class">tracktion::graph::AudioFifo</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::graph</namespace>
   </compound>
@@ -2967,6 +2953,20 @@
     <class kind="class">tracktion::graph::LightweightSemaphore</class>
     <namespace>moodycamel</namespace>
     <namespace>moodycamel::details</namespace>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::graph</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_engine/utilities/tracktion_Threads.h</name>
+    <path>build/tracktion_engine/utilities/</path>
+    <filename>tracktion__engine_2utilities_2tracktion__Threads_8h.html</filename>
+    <class kind="struct">engine::ScopedThreadExitStatusEnabler</class>
+    <namespace>engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_graph/utilities/tracktion_Threads.h</name>
+    <path>build/tracktion_graph/utilities/</path>
+    <filename>tracktion__graph_2utilities_2tracktion__Threads_8h.html</filename>
     <namespace>tracktion</namespace>
     <namespace>tracktion::graph</namespace>
   </compound>
@@ -79757,14 +79757,14 @@
     </member>
   </compound>
   <compound kind="group">
-    <name>tracktion_engine-3rd_party</name>
-    <title>3rd_party</title>
-    <filename>group__tracktion__engine-3rd__party.html</filename>
-  </compound>
-  <compound kind="group">
     <name>tracktion_graph-3rd_party</name>
     <title>3rd_party</title>
     <filename>group__tracktion__graph-3rd__party.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_engine-3rd_party</name>
+    <title>3rd_party</title>
+    <filename>group__tracktion__engine-3rd__party.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-audio_files</name>
@@ -80398,15 +80398,6 @@
     <subgroup>tracktion_engine-utilities</subgroup>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph.html</filename>
-    <subgroup>tracktion_graph-3rd_party</subgroup>
-    <subgroup>tracktion_graph-docs</subgroup>
-    <subgroup>tracktion_graph-tracktion_graph</subgroup>
-    <subgroup>tracktion_graph-utilities</subgroup>
-  </compound>
-  <compound kind="group">
     <name>tracktion_graph-tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph-tracktion__graph.html</filename>
@@ -80456,29 +80447,13 @@
     <class kind="struct">tracktion::graph::test_utilities::TestProcess</class>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph-utilities</name>
-    <title>utilities</title>
-    <filename>group__tracktion__graph-utilities.html</filename>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::graph</namespace>
-    <namespace>tracktion::engine</namespace>
-    <namespace>moodycamel</namespace>
-    <namespace>moodycamel::details</namespace>
-    <class kind="class">tracktion::graph::AudioBufferPool</class>
-    <class kind="class">tracktion::graph::AudioBufferStack</class>
-    <class kind="class">tracktion::graph::AudioFifo</class>
-    <class kind="struct">tracktion::graph::LatencyProcessor</class>
-    <class kind="class">tracktion::graph::LockFreeObject</class>
-    <class kind="class">tracktion::graph::LockFreeObject::ScopedRealTimeAccess</class>
-    <class kind="struct">tracktion::engine::MidiMessageArray</class>
-    <class kind="struct">tracktion::engine::MidiMessageWithSource</class>
-    <class kind="struct">tracktion::graph::ScopedSignpost</class>
-    <class kind="class">tracktion::graph::PerformanceMeasurement</class>
-    <class kind="struct">tracktion::graph::PerformanceMeasurement::Statistics</class>
-    <class kind="class">tracktion::graph::ScopedPerformanceMeasurement</class>
-    <class kind="class">tracktion::graph::RealTimeSpinLock</class>
-    <class kind="class">tracktion::graph::Semaphore</class>
-    <class kind="class">tracktion::graph::LightweightSemaphore</class>
+    <name>tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph.html</filename>
+    <subgroup>tracktion_graph-3rd_party</subgroup>
+    <subgroup>tracktion_graph-docs</subgroup>
+    <subgroup>tracktion_graph-tracktion_graph</subgroup>
+    <subgroup>tracktion_graph-utilities</subgroup>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-utilities</name>
@@ -80565,5 +80540,30 @@
     <class kind="struct">tracktion::engine::ValueTreeAllEventListener</class>
     <class kind="struct">tracktion::engine::ValueTreeComparator</class>
     <class kind="class">tracktion::engine::ReferenceCountedValueTree</class>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_graph-utilities</name>
+    <title>utilities</title>
+    <filename>group__tracktion__graph-utilities.html</filename>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::graph</namespace>
+    <namespace>tracktion::engine</namespace>
+    <namespace>moodycamel</namespace>
+    <namespace>moodycamel::details</namespace>
+    <class kind="class">tracktion::graph::AudioBufferPool</class>
+    <class kind="class">tracktion::graph::AudioBufferStack</class>
+    <class kind="class">tracktion::graph::AudioFifo</class>
+    <class kind="struct">tracktion::graph::LatencyProcessor</class>
+    <class kind="class">tracktion::graph::LockFreeObject</class>
+    <class kind="class">tracktion::graph::LockFreeObject::ScopedRealTimeAccess</class>
+    <class kind="struct">tracktion::engine::MidiMessageArray</class>
+    <class kind="struct">tracktion::engine::MidiMessageWithSource</class>
+    <class kind="struct">tracktion::graph::ScopedSignpost</class>
+    <class kind="class">tracktion::graph::PerformanceMeasurement</class>
+    <class kind="struct">tracktion::graph::PerformanceMeasurement::Statistics</class>
+    <class kind="class">tracktion::graph::ScopedPerformanceMeasurement</class>
+    <class kind="class">tracktion::graph::RealTimeSpinLock</class>
+    <class kind="class">tracktion::graph::Semaphore</class>
+    <class kind="class">tracktion::graph::LightweightSemaphore</class>
   </compound>
 </tagfile>
