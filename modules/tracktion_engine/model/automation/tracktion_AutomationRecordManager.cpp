@@ -486,7 +486,8 @@ namespace tracktion::inline engine
             //==============================================================================
             AutomationRecordManager (const AutomationRecordManager&) = delete;
 
-            struct AutomationParamData : public AutomatableParameter::Listener, juce::Timer
+            struct AutomationParamData : public AutomatableParameter::Listener,
+                                         public juce::Timer
             {
                 AutomationParamData (AutomationRecordManager& o, AutomatableParameter& p, float value, AutomationTrigger t)
                     : owner (o), parameter (p), originalValue (value), trigger (t)
@@ -525,6 +526,8 @@ namespace tracktion::inline engine
 
             private:
                 const ScopedListener listener { parameter, *this};
+                const TransportControl::ReallocationInhibitor reallocationInhibitor { owner.edit.getTransport() };
+
                 void curveHasChanged (AutomatableParameter&) override {}
 
                 void parameterChangeGestureEnd (AutomatableParameter&) override
@@ -671,7 +674,7 @@ namespace tracktion::inline engine
                                     break;
                                 case touch:
                                     punchOut (param, false);
-                                break;
+                                    break;
                                 case latch:
                                     break;
                                 case write:
