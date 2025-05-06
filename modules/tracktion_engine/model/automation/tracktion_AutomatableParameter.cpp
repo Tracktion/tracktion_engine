@@ -348,6 +348,10 @@ struct MacroSource : public AutomationModifierSource
           macro (&macroParameter)
     {
         jassert (state.hasType (IDs::MACRO) && state.hasProperty (IDs::source));
+
+        // This is called here to ensure the AutomationSourceList isn't created
+        // on the audio thread during a later setPosition call
+        macro->hasActiveModifierAssignments();
     }
 
     AutomatableParameter::ModifierSource* getModifierSource() override
