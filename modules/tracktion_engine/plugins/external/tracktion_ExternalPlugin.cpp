@@ -1199,9 +1199,7 @@ void ExternalPlugin::setEnabled (bool shouldEnable)
 
     if (wasEnabled != isEnabled())
     {
-        if (auto pi = getAudioPluginInstance())
-            pi->reset();
-
+        reset();
         propertiesChanged();
     }
 }
