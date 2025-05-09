@@ -102,7 +102,7 @@ protected:
 
 private:
     RealTimeSpinLock activeParameterLock;
-    juce::ReferenceCountedArray<AutomatableParameter> automatableParams, activeParameters, activeParameters2;
+    juce::ReferenceCountedArray<AutomatableParameter> automatableParams, activeParameters;
     mutable AutomatableParameterTree parameterTree;
 
     mutable bool parameterTreeBuilt = false;

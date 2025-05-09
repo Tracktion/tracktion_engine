@@ -265,6 +265,10 @@ void AutomatableEditItem::addAutomatableParameter (const AutomatableParameter::P
 {
     jassert (param != nullptr);
     automatableParams.add (param);
+
+    if (param->isAutomationActive())
+        addActiveParameter (*param);
+
     rebuildParameterTree();
 }
 
