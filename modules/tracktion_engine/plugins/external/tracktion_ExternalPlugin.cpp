@@ -1194,9 +1194,10 @@ void ExternalPlugin::reset()
 
 void ExternalPlugin::setEnabled (bool shouldEnable)
 {
+    bool wasEnabled = isEnabled();
     Plugin::setEnabled (shouldEnable);
 
-    if (shouldEnable != isEnabled())
+    if (wasEnabled != isEnabled())
     {
         if (auto pi = getAudioPluginInstance())
             pi->reset();
