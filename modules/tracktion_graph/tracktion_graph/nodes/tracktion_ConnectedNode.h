@@ -66,7 +66,7 @@ public:
     //==============================================================================
     NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override;
-    TransformResult transform (Node&, const std::vector<Node*>&, TransformCache&) override;
+    TransformResult transform (TransformOptions&) override;
     bool isReadyToProcess() override;
     void prepareToPlay (const PlaybackInitialisationInfo&) override;
     void process (ProcessContext&) override;
@@ -206,8 +206,11 @@ inline std::vector<Node*> ConnectedNode::getDirectInputNodes()
     return inputs;
 }
 
-inline TransformResult ConnectedNode::transform (Node&, const std::vector<Node*>&, TransformCache&)
+inline TransformResult ConnectedNode::transform (TransformOptions& options)
 {
+    if (options.disableLatencyCompensation)
+        return TransformResult::none;
+
     return createLatencyNodes() ? TransformResult::connectionsMade
                                 : TransformResult::none;
 }

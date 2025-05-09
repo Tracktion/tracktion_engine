@@ -24,7 +24,7 @@ public:
     InsertPlugin& getInsert() const     { return owner; }
     Node& getInputNode()                { return *input; }
 
-    TransformResult transform (Node&, const std::vector<Node*>&, TransformCache&) override;
+    TransformResult transform (TransformOptions&) override;
     tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override;
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;
@@ -58,7 +58,7 @@ public:
     int getLatencyAtInput();
 
     //==============================================================================
-    TransformResult transform (Node&, const std::vector<Node*>&, TransformCache&) override;
+    TransformResult transform (TransformOptions&) override;
     tracktion::graph::NodeProperties getNodeProperties() override;
     std::vector<Node*> getDirectInputNodes() override;
     void prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&) override;

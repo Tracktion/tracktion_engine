@@ -81,7 +81,7 @@ private:
         auto A = a.get();
 
         // Prepare the topology
-        auto nodeGraph = createNodeGraph (std::move (a));
+        auto nodeGraph = createNodeGraph (std::move (a), false);
 
         std::vector<Node*> allNodes { A, B, C, D, E, F, G };
 

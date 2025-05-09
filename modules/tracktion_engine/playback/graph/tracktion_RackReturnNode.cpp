@@ -53,7 +53,7 @@ tracktion::graph::NodeProperties RackReturnNode::getNodeProperties()
     return props;
 }
 
-TransformResult RackReturnNode::transform (Node&, const std::vector<Node*>&, TransformCache&)
+TransformResult RackReturnNode::transform (TransformOptions& options)
 {
     if (hasTransformed)
         return TransformResult::none;
@@ -63,7 +63,7 @@ TransformResult RackReturnNode::transform (Node&, const std::vector<Node*>&, Tra
     auto dryProps = dryInput->getNodeProperties();
     assert (dryProps.latencyNumSamples <= wetProps.latencyNumSamples);
 
-    if (wetProps.latencyNumSamples > dryProps.latencyNumSamples)
+    if (wetProps.latencyNumSamples > dryProps.latencyNumSamples && ! options.disableLatencyCompensation)
     {
         const int numLatencySamples = wetProps.latencyNumSamples - dryProps.latencyNumSamples;
         dryLatencyNode = tracktion::graph::makeNode<tracktion::graph::LatencyNode> (dryInput, numLatencySamples);

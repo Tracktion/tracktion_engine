@@ -257,12 +257,15 @@ public:
     /* @internal. */
     void enableNodeMemorySharing (bool shouldBeEnabled);
 
+    /// Enables or disables latency compensation - it is enabled by default.
+    void setLatencyCompensationEnabled (bool);
+
 private:
     //==============================================================================
     std::atomic<size_t> numThreadsToUse { std::max ((size_t) 0, (size_t) std::thread::hardware_concurrency() - 1) };
     juce::Range<int64_t> referenceSampleRange;
     choc::buffer::FrameCount numSamplesToProcess = 0;
-    std::atomic<bool> threadsShouldExit { false }, useMemoryPool { false };
+    std::atomic<bool> threadsShouldExit { false }, useMemoryPool { false }, disableLatencyComp { false };
 
     RealTimeSpinLock processMutex;
     std::unique_ptr<ThreadPool> threadPool;
@@ -284,7 +287,8 @@ private:
     /** Prepares a specific Node to be played and returns all the Nodes. */
     std::unique_ptr<NodeGraph> prepareToPlay (std::unique_ptr<Node>, NodeGraph* oldGraph,
                                               double sampleRateToUse, int blockSizeToUse,
-                                              bool useCurrentAudioBufferPool);
+                                              bool useCurrentAudioBufferPool,
+                                              bool disableLatencyCompensation);
 
     //==============================================================================
     void clearThreads();

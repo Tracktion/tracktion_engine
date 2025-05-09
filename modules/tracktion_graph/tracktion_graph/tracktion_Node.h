@@ -129,7 +129,8 @@ struct NodeGraph
 
 
 /** Transforms a Node and then returns a NodeGraph of it ready to be initialised. */
-std::unique_ptr<NodeGraph> createNodeGraph (std::unique_ptr<Node>);
+std::unique_ptr<NodeGraph> createNodeGraph (std::unique_ptr<Node>,
+                                            bool disableLatencyCompensation);
 
 
 //==============================================================================
@@ -254,24 +255,30 @@ public:
     AudioAndMidiBuffer getProcessedOutput();
 
     //==============================================================================
+    struct TransformOptions
+    {
+        Node& rootNode;
+
+        /// This is an ordered list obtained from visiting all the Nodes and can be
+        /// used for quicker introspection of the graph.
+        const std::vector<Node*>& postOrderedNodes;
+
+        /// A cache which can be used to speed up operations during the transform stage.
+        TransformCache& cache;
+
+        bool disableLatencyCompensation = false;
+    };
+
     /** Called after construction to give the node a chance to modify its topology.
         This should return true if any changes were made to the topology as this
         indicates that the method may need to be called again after other nodes have
         had their toplogy changed.
 
-        @param postOrderedNodes This is an ordered list obtained from visiting all
-                                the Nodes and can be used for quicker introspection
-                                of the graph
-        @param TransformCache   A cache which can be used to speed up operations
-                                during the transform stage.
-
         @return TransformResult The type of transformation that has taken place.
                                 If connections have been made AND nodes deleted,
                                 return nodesDeleted
     */
-    virtual TransformResult transform (Node& /*rootNode*/,
-                                       const std::vector<Node*>& /*postOrderedNodes*/,
-                                       TransformCache&)
+    virtual TransformResult transform (TransformOptions&)
     {
         return TransformResult::none;
     }
@@ -427,7 +434,7 @@ static inline std::vector<Node*> getNodes (Node&, VertexOrdering);
     repeatedly for Node until they all return false indicating no topological
     changes have been made.
 */
-static inline std::vector<Node*> transformNodes (Node& rootNode)
+static inline std::vector<Node*> transformNodes (Node& rootNode, bool disableLatencyCompensation)
 {
     for (;;)
     {
@@ -438,7 +445,8 @@ static inline std::vector<Node*> transformNodes (Node& rootNode)
 
         for (auto node : allNodes)
         {
-            const auto res = node->transform (rootNode, allNodes, cache);
+            Node::TransformOptions options { rootNode, allNodes, cache, disableLatencyCompensation };
+            const auto res = node->transform (options);
 
             if (res == TransformResult::none)
                 continue;
@@ -768,10 +776,11 @@ inline std::vector<NodeAndID> createNodeMap (const std::vector<Node*>& nodes)
     return nodeMap;
 }
 
-inline std::unique_ptr<NodeGraph> createNodeGraph (std::unique_ptr<Node> rootNode)
+inline std::unique_ptr<NodeGraph> createNodeGraph (std::unique_ptr<Node> rootNode,
+                                                   bool disableLatencyCompensation)
 {
     assert (rootNode != nullptr);
-    auto orderedNodes = transformNodes (*rootNode);
+    auto orderedNodes = transformNodes (*rootNode, disableLatencyCompensation);
     auto sortedNodes = createNodeMap (orderedNodes);
 
     // Iterate all nodes, for each input, increment the dest Node output count

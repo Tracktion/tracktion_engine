@@ -166,303 +166,304 @@ private:
 
 //==============================================================================
 //==============================================================================
- struct EditPlaybackContext::NodePlaybackContext
- {
-     NodePlaybackContext (EditPlaybackContext& epc, size_t numThreads, size_t maxNumThreadsToUse)
-         : editPlaybackContext (epc),
-           player (processState,
-                   getPoolCreatorFunction (static_cast<tracktion::graph::ThreadPoolStrategy> (getThreadPoolStrategy())),
-                   EditPlaybackContextInternal::getAudioWorkgroupIfEnabled (tempoSequence.edit.engine)),
-           maxNumThreads (maxNumThreadsToUse)
-     {
-         processState.onContinuityUpdated = [this]
-             {
-                 const auto syncRange = processState.getSyncRange();
-                 const auto editTime = syncRange.start.time;
-                 editPlaybackContext.edit.updateModifierTimers (editTime, static_cast<int> (getNumSamples (syncRange)));
-                 editPlaybackContext.midiDispatcher.masterTimeUpdate (editTime);
+struct EditPlaybackContext::NodePlaybackContext
+{
+    NodePlaybackContext (EditPlaybackContext& epc, size_t numThreads, size_t maxNumThreadsToUse)
+        : editPlaybackContext (epc),
+          player (processState,
+                  getPoolCreatorFunction (static_cast<tracktion::graph::ThreadPoolStrategy> (getThreadPoolStrategy())),
+                  EditPlaybackContextInternal::getAudioWorkgroupIfEnabled (tempoSequence.edit.engine)),
+          maxNumThreads (maxNumThreadsToUse)
+    {
+        processState.onContinuityUpdated = [this]
+            {
+                const auto syncRange = processState.getSyncRange();
+                const auto editTime = syncRange.start.time;
+                editPlaybackContext.edit.updateModifierTimers (editTime, static_cast<int> (getNumSamples (syncRange)));
+                editPlaybackContext.midiDispatcher.masterTimeUpdate (editTime);
 
-                #if TRACKTION_ENABLE_ABLETON_LINK
-                 editPlaybackContext.edit.getAbletonLink().syncronise (editTime);
-                #endif
-             };
+               #if TRACKTION_ENABLE_ABLETON_LINK
+                editPlaybackContext.edit.getAbletonLink().syncronise (editTime);
+               #endif
+            };
 
-         setNumThreads (numThreads);
-         player.enablePooledMemoryAllocations (EditPlaybackContextInternal::getPooledMemoryFlag());
-         player.enableNodeMemorySharing (EditPlaybackContextInternal::getNodeMemorySharingFlag());
-     }
+        setNumThreads (numThreads);
+        player.enablePooledMemoryAllocations (EditPlaybackContextInternal::getPooledMemoryFlag());
+        player.enableNodeMemorySharing (EditPlaybackContextInternal::getNodeMemorySharingFlag());
+    }
 
-     void setNumThreads (size_t numThreads)
-     {
-         CRASH_TRACER
-         player.setNumThreads (std::min (numThreads, maxNumThreads));
-     }
+    void setNumThreads (size_t numThreads)
+    {
+        CRASH_TRACER
+        player.setNumThreads (std::min (numThreads, maxNumThreads));
+    }
 
-     void setNode (std::unique_ptr<Node> node, double sampleRate, int blockSize)
-     {
-         jassert (sampleRate > 0.0);
-         jassert (blockSize > 0);
-         blockSize = juce::roundToInt (blockSize * (1.0 + (10.0 * 0.01))); // max speed comp
-         player.setNode (std::move (node), sampleRate, blockSize);
+    void setNode (std::unique_ptr<Node> node, double sampleRate, int blockSize)
+    {
+        jassert (sampleRate > 0.0);
+        jassert (blockSize > 0);
+        blockSize = juce::roundToInt (blockSize * (1.0 + (10.0 * 0.01))); // max speed comp
+        player.setLatencyCompensationEnabled (editPlaybackContext.edit.isLatencyCompensationEnabled());
+        player.setNode (std::move (node), sampleRate, blockSize);
 
-         if (auto currentNode = player.getNode())
-             latencySamples = currentNode->getNodeProperties().latencyNumSamples;
-     }
+        if (auto currentNode = player.getNode())
+            latencySamples = currentNode->getNodeProperties().latencyNumSamples;
+    }
 
-     void clearNode()
-     {
-         player.clearNode();
-     }
+    void clearNode()
+    {
+        player.clearNode();
+    }
 
-     int getLatencySamples() const
-     {
-         return latencySamples;
-     }
+    int getLatencySamples() const
+    {
+        return latencySamples;
+    }
 
-     void postPlay()
-     {
-         playPending.store (true, std::memory_order_release);
-     }
+    void postPlay()
+    {
+        playPending.store (true, std::memory_order_release);
+    }
 
-     bool isPlayPending() const
-     {
-         return playPending.load (std::memory_order_acquire);
-     }
+    bool isPlayPending() const
+    {
+        return playPending.load (std::memory_order_acquire);
+    }
 
-     void postPosition (TimePosition positionToJumpTo, std::optional<TimePosition> whenToJump)
-     {
-         pendingPosition.store (positionToJumpTo.inSeconds(), std::memory_order_release);
+    void postPosition (TimePosition positionToJumpTo, std::optional<TimePosition> whenToJump)
+    {
+        pendingPosition.store (positionToJumpTo.inSeconds(), std::memory_order_release);
 
-         if (whenToJump)
-         {
-             pendingPositionJumpTime.store (whenToJump->inSeconds(), std::memory_order_release);
-             pendingPositionJumpTimeValid.store (true, std::memory_order_release);
-         }
-         else
-         {
-             pendingPositionJumpTimeValid.store (false, std::memory_order_release);
-         }
+        if (whenToJump)
+        {
+            pendingPositionJumpTime.store (whenToJump->inSeconds(), std::memory_order_release);
+            pendingPositionJumpTimeValid.store (true, std::memory_order_release);
+        }
+        else
+        {
+            pendingPositionJumpTimeValid.store (false, std::memory_order_release);
+        }
 
-         pendingRollInToLoop.store (false, std::memory_order_release);
-         positionUpdatePending = true;
-     }
+        pendingRollInToLoop.store (false, std::memory_order_release);
+        positionUpdatePending = true;
+    }
 
-     std::optional<TimePosition> getPendingPositionChange() const
-     {
-         if (! positionUpdatePending.load (std::memory_order_relaxed))
-             return {};
+    std::optional<TimePosition> getPendingPositionChange() const
+    {
+        if (! positionUpdatePending.load (std::memory_order_relaxed))
+            return {};
 
-         return TimePosition::fromSeconds (pendingPosition.load (std::memory_order_relaxed));
-     }
+        return TimePosition::fromSeconds (pendingPosition.load (std::memory_order_relaxed));
+    }
 
-     void postRollInToLoop (double newPosition)
-     {
-         pendingPosition.store (newPosition, std::memory_order_release);
-         pendingRollInToLoop.store (true, std::memory_order_release);
-         positionUpdatePending = true;
-     }
+    void postRollInToLoop (double newPosition)
+    {
+        pendingPosition.store (newPosition, std::memory_order_release);
+        pendingRollInToLoop.store (true, std::memory_order_release);
+        positionUpdatePending = true;
+    }
 
-     void setSpeedCompensation (double plusOrMinus)
-     {
-         speedCompensation = juce::jlimit (-10.0, 10.0, plusOrMinus);
-     }
+    void setSpeedCompensation (double plusOrMinus)
+    {
+        speedCompensation = juce::jlimit (-10.0, 10.0, plusOrMinus);
+    }
 
-     void setTempoAdjustment (double plusOrMinusProportion)
-     {
-         blockLengthScaleFactor = 1.0 + std::clamp (plusOrMinusProportion, -0.5, 0.5);
-     }
+    void setTempoAdjustment (double plusOrMinusProportion)
+    {
+        blockLengthScaleFactor = 1.0 + std::clamp (plusOrMinusProportion, -0.5, 0.5);
+    }
 
-     void checkForTempoSequenceChanges()
-     {
-         const auto& internalSequence = tempoSequence.getInternalSequence();
+    void checkForTempoSequenceChanges()
+    {
+        const auto& internalSequence = tempoSequence.getInternalSequence();
 
-         if (internalSequence.hash() == tempoState.hash)
-             return;
+        if (internalSequence.hash() == tempoState.hash)
+            return;
 
-         const auto lastPositionRemapped = internalSequence.toTime (tempoState.lastBeatPosition);
-         const auto lastSampleRemapped = toSamples (lastPositionRemapped, getSampleRate());
-         playHead.overridePosition (lastSampleRemapped);
-     }
+        const auto lastPositionRemapped = internalSequence.toTime (tempoState.lastBeatPosition);
+        const auto lastSampleRemapped = toSamples (lastPositionRemapped, getSampleRate());
+        playHead.overridePosition (lastSampleRemapped);
+    }
 
-     void nextBlockStarted()
-     {
-         // Dispatch pending play
-         if (playPending.exchange (false, std::memory_order_acquire))
-             playHead.play();
-     }
+    void nextBlockStarted()
+    {
+        // Dispatch pending play
+        if (playPending.exchange (false, std::memory_order_acquire))
+            playHead.play();
+    }
 
-     void updateReferenceSampleRange (int numSamples)
-     {
-         if (speedCompensation != 0.0)
-             numSamples = juce::roundToInt (numSamples * (1.0 + (speedCompensation * 0.01)));
+    void updateReferenceSampleRange (int numSamples)
+    {
+        if (speedCompensation != 0.0)
+            numSamples = juce::roundToInt (numSamples * (1.0 + (speedCompensation * 0.01)));
 
-         double sampleDuration = static_cast<double> (numSamples);
+        double sampleDuration = static_cast<double> (numSamples);
 
-         if (blockLengthScaleFactor != 1.0)
-             sampleDuration *= blockLengthScaleFactor;
+        if (blockLengthScaleFactor != 1.0)
+            sampleDuration *= blockLengthScaleFactor;
 
-         referenceStreamRange = juce::Range<double>::withStartAndLength (referenceStreamRange.getEnd(), sampleDuration);
-         playHead.setReferenceSampleRange (getReferenceSampleRange());
-         numSamplesToProcess = static_cast<choc::buffer::FrameCount> (numSamples);
-         processState.setPlaybackSpeedRatio (blockLengthScaleFactor);
+        referenceStreamRange = juce::Range<double>::withStartAndLength (referenceStreamRange.getEnd(), sampleDuration);
+        playHead.setReferenceSampleRange (getReferenceSampleRange());
+        numSamplesToProcess = static_cast<choc::buffer::FrameCount> (numSamples);
+        processState.setPlaybackSpeedRatio (blockLengthScaleFactor);
 
-         // This needs to be called after the playhead reference range has been set above
-         checkForTempoSequenceChanges();
-     }
+        // This needs to be called after the playhead reference range has been set above
+        checkForTempoSequenceChanges();
+    }
 
-     void resyncToReferenceSampleRange (juce::Range<int64_t> newReferenceSampleRange)
-     {
-         const double sampleRate = getSampleRate();
-         const auto currentPos = tracktion::graph::sampleToTime (playHead.getPosition(), sampleRate);
-         referenceStreamRange = juce::Range<double> (static_cast<double> (newReferenceSampleRange.getStart()),
-                                                     static_cast<double> (newReferenceSampleRange.getEnd()));
-         playHead.setReferenceSampleRange (getReferenceSampleRange());
-         playHead.setPosition (tracktion::graph::timeToSample (currentPos, sampleRate));
-     }
+    void resyncToReferenceSampleRange (juce::Range<int64_t> newReferenceSampleRange)
+    {
+        const double sampleRate = getSampleRate();
+        const auto currentPos = tracktion::graph::sampleToTime (playHead.getPosition(), sampleRate);
+        referenceStreamRange = juce::Range<double> (static_cast<double> (newReferenceSampleRange.getStart()),
+                                                    static_cast<double> (newReferenceSampleRange.getEnd()));
+        playHead.setReferenceSampleRange (getReferenceSampleRange());
+        playHead.setPosition (tracktion::graph::timeToSample (currentPos, sampleRate));
+    }
 
-     void process (float* const* allChannels, int numChannels, int destNumSamples)
-     {
-         const auto referenceSampleRange = getReferenceSampleRange();         // Distpatch pending positions
+    void process (float* const* allChannels, int numChannels, int destNumSamples)
+    {
+        const auto referenceSampleRange = getReferenceSampleRange();         // Distpatch pending positions
 
-         if (positionUpdatePending.load (std::memory_order_acquire))
-         {
-             const double sampleRate = getSampleRate();
-             bool shouldPerformPositionChange = true;
+        if (positionUpdatePending.load (std::memory_order_acquire))
+        {
+            const double sampleRate = getSampleRate();
+            bool shouldPerformPositionChange = true;
 
-             if (pendingPositionJumpTimeValid)
-             {
-                 const auto currentTimeSeconds = sampleToTime (juce::Range<int64_t>::withStartAndLength (playHead.getPosition(), referenceSampleRange.getLength()), sampleRate);
-                 const auto jumpTimeSeconds = pendingPositionJumpTime.load (std::memory_order_acquire);
+            if (pendingPositionJumpTimeValid)
+            {
+                const auto currentTimeSeconds = sampleToTime (juce::Range<int64_t>::withStartAndLength (playHead.getPosition(), referenceSampleRange.getLength()), sampleRate);
+                const auto jumpTimeSeconds = pendingPositionJumpTime.load (std::memory_order_acquire);
 
-                 // Check if loop end time is in this block and if it is, cancel the jump
-                 const bool loopEndIsInThisBlock = playHead.isLooping()
-                    && currentTimeSeconds.contains (sampleToTime (playHead.getLoopRange().getEnd(), sampleRate));
+                // Check if loop end time is in this block and if it is, cancel the jump
+                const bool loopEndIsInThisBlock = playHead.isLooping()
+                                                    && currentTimeSeconds.contains (sampleToTime (playHead.getLoopRange().getEnd(), sampleRate));
 
-                 if (loopEndIsInThisBlock)
-                 {
-                     pendingPositionJumpTimeValid = false;
-                     pendingPositionJumpTime = 0.0;
+                if (loopEndIsInThisBlock)
+                {
+                    pendingPositionJumpTimeValid = false;
+                    pendingPositionJumpTime = 0.0;
 
-                     pendingPosition = 0.0;
-                     positionUpdatePending = false;
+                    pendingPosition = 0.0;
+                    positionUpdatePending = false;
 
-                     shouldPerformPositionChange = false;
-                 }
+                    shouldPerformPositionChange = false;
+                }
 
-                 if (currentTimeSeconds.contains (jumpTimeSeconds))
-                 {
-                     pendingPositionJumpTimeValid = false;
-                     pendingPositionJumpTime = 0.0;
-                 }
-                 else
-                 {
-                     shouldPerformPositionChange = false;
-                 }
-             }
+                if (currentTimeSeconds.contains (jumpTimeSeconds))
+                {
+                    pendingPositionJumpTimeValid = false;
+                    pendingPositionJumpTime = 0.0;
+                }
+                else
+                {
+                    shouldPerformPositionChange = false;
+                }
+            }
 
-             if (shouldPerformPositionChange)
-             {
-                 if (positionUpdatePending.exchange (false))
-                 {
-                     const auto samplePos = timeToSample (pendingPosition.load (std::memory_order_acquire), sampleRate);
+            if (shouldPerformPositionChange)
+            {
+                if (positionUpdatePending.exchange (false))
+                {
+                    const auto samplePos = timeToSample (pendingPosition.load (std::memory_order_acquire), sampleRate);
 
-                     if (pendingRollInToLoop.load (std::memory_order_acquire))
-                         playHead.setRollInToLoop (samplePos);
-                     else
-                         playHead.setPosition (samplePos);
-                 }
-             }
-         }
+                    if (pendingRollInToLoop.load (std::memory_order_acquire))
+                        playHead.setRollInToLoop (samplePos);
+                    else
+                        playHead.setPosition (samplePos);
+                }
+            }
+        }
 
-         scratchMidiBuffer.clear();
+        scratchMidiBuffer.clear();
 
-         if (isUsingInterpolator || destNumSamples != (int) numSamplesToProcess)
-         {
-             // Initialise interpolators
-             isUsingInterpolator = true;
-             ensureNumInterpolators (numChannels);
+        if (isUsingInterpolator || destNumSamples != (int) numSamplesToProcess)
+        {
+            // Initialise interpolators
+            isUsingInterpolator = true;
+            ensureNumInterpolators (numChannels);
 
-             // Process required num samples
-             scratchAudioBuffer.setSize (numChannels, (int) numSamplesToProcess, false, false, true);
-             scratchAudioBuffer.clear();
+            // Process required num samples
+            scratchAudioBuffer.setSize (numChannels, (int) numSamplesToProcess, false, false, true);
+            scratchAudioBuffer.clear();
 
-             tracktion::graph::Node::ProcessContext pc { numSamplesToProcess, referenceSampleRange, { tracktion::graph::toBufferView (scratchAudioBuffer), scratchMidiBuffer } };
-             player.process (pc);
+            tracktion::graph::Node::ProcessContext pc { numSamplesToProcess, referenceSampleRange, { tracktion::graph::toBufferView (scratchAudioBuffer), scratchMidiBuffer } };
+            player.process (pc);
 
-             // Then resample them to the dest num samples
-             const double ratio = numSamplesToProcess / (double) destNumSamples;
+            // Then resample them to the dest num samples
+            const double ratio = numSamplesToProcess / (double) destNumSamples;
 
-             for (int channel = 0; channel < numChannels; ++channel)
-             {
-                 const auto src = scratchAudioBuffer.getReadPointer (channel);
-                 const auto dest = allChannels[channel];
+            for (int channel = 0; channel < numChannels; ++channel)
+            {
+                const auto src = scratchAudioBuffer.getReadPointer (channel);
+                const auto dest = allChannels[channel];
 
-                 interpolators[(size_t) channel]->processAdding (ratio, src, dest, destNumSamples, 1.0f);
-             }
-         }
-         else
-         {
-             auto audioView = choc::buffer::createChannelArrayView (allChannels,
-                                                                    (choc::buffer::ChannelCount) numChannels,
-                                                                    numSamplesToProcess);
-             tracktion::graph::Node::ProcessContext pc { numSamplesToProcess, referenceSampleRange, { audioView, scratchMidiBuffer } };
-             player.process (pc);
-         }
+                interpolators[(size_t) channel]->processAdding (ratio, src, dest, destNumSamples, 1.0f);
+            }
+        }
+        else
+        {
+            auto audioView = choc::buffer::createChannelArrayView (allChannels,
+                                                                   (choc::buffer::ChannelCount) numChannels,
+                                                                   numSamplesToProcess);
+            tracktion::graph::Node::ProcessContext pc { numSamplesToProcess, referenceSampleRange, { audioView, scratchMidiBuffer } };
+            player.process (pc);
+        }
 
-         tempoState = { tempoSequence.getInternalSequence().hash(),
-                        processState.editBeatRange.getEnd() };
-     }
+        tempoState = { tempoSequence.getInternalSequence().hash(),
+                       processState.editBeatRange.getEnd() };
+    }
 
-     double getSampleRate() const
-     {
-         return player.getSampleRate();
-     }
+    double getSampleRate() const
+    {
+        return player.getSampleRate();
+    }
 
-     SyncPoint getSyncPoint() const
-     {
-         return processState.getSyncPoint();
-     }
+    SyncPoint getSyncPoint() const
+    {
+        return processState.getSyncPoint();
+    }
 
-     EditPlaybackContext& editPlaybackContext;
-     const TempoSequence& tempoSequence { editPlaybackContext.edit.tempoSequence };
-     tracktion::graph::PlayHead playHead;
-     tracktion::graph::PlayHeadState playHeadState { playHead };
-     ProcessState processState { playHeadState, tempoSequence };
+    EditPlaybackContext& editPlaybackContext;
+    const TempoSequence& tempoSequence { editPlaybackContext.edit.tempoSequence };
+    tracktion::graph::PlayHead playHead;
+    tracktion::graph::PlayHeadState playHeadState { playHead };
+    ProcessState processState { playHeadState, tempoSequence };
 
- private:
-     juce::AudioBuffer<float> scratchAudioBuffer;
-     MidiMessageArray scratchMidiBuffer;
-     TracktionNodePlayer player;
-     const size_t maxNumThreads;
+private:
+    juce::AudioBuffer<float> scratchAudioBuffer;
+    MidiMessageArray scratchMidiBuffer;
+    TracktionNodePlayer player;
+    const size_t maxNumThreads;
 
-     int latencySamples = 0;
-     choc::buffer::FrameCount numSamplesToProcess = 0;
-     juce::Range<double> referenceStreamRange;
-     std::atomic<double> pendingPosition { 0.0 }, pendingPositionJumpTime { 0.0 };
-     std::atomic<bool> positionUpdatePending { false }, pendingRollInToLoop { false }, pendingPositionJumpTimeValid { false }, playPending { false };
-     double speedCompensation = 0.0, blockLengthScaleFactor = 1.0;
-     std::vector<std::unique_ptr<juce::LagrangeInterpolator>> interpolators;
-     bool isUsingInterpolator = false;
+    int latencySamples = 0;
+    choc::buffer::FrameCount numSamplesToProcess = 0;
+    juce::Range<double> referenceStreamRange;
+    std::atomic<double> pendingPosition { 0.0 }, pendingPositionJumpTime { 0.0 };
+    std::atomic<bool> positionUpdatePending { false }, pendingRollInToLoop { false }, pendingPositionJumpTimeValid { false }, playPending { false };
+    double speedCompensation = 0.0, blockLengthScaleFactor = 1.0;
+    std::vector<std::unique_ptr<juce::LagrangeInterpolator>> interpolators;
+    bool isUsingInterpolator = false;
 
-     struct TempoState
-     {
-         size_t hash = 0;
-         BeatPosition lastBeatPosition;
-     };
+    struct TempoState
+    {
+        size_t hash = 0;
+        BeatPosition lastBeatPosition;
+    };
 
-     TempoState tempoState;
+    TempoState tempoState;
 
-     juce::Range<int64_t> getReferenceSampleRange() const
-     {
-         return { static_cast<int64_t> (std::llround (referenceStreamRange.getStart())),
-                  static_cast<int64_t> (std::llround (referenceStreamRange.getEnd())) };
-     }
+    juce::Range<int64_t> getReferenceSampleRange() const
+    {
+        return { static_cast<int64_t> (std::llround (referenceStreamRange.getStart())),
+                 static_cast<int64_t> (std::llround (referenceStreamRange.getEnd())) };
+    }
 
-     void ensureNumInterpolators (int numRequired)
-     {
-         for (size_t i = interpolators.size(); i < (size_t) numRequired; ++i)
-             interpolators.push_back (std::make_unique<juce::LagrangeInterpolator>());
-     }
+    void ensureNumInterpolators (int numRequired)
+    {
+        for (size_t i = interpolators.size(); i < (size_t) numRequired; ++i)
+            interpolators.push_back (std::make_unique<juce::LagrangeInterpolator>());
+    }
 };
 
 //==============================================================================

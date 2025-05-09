@@ -2366,6 +2366,15 @@ void Edit::setLowLatencyDisabledPlugins (const juce::Array<EditItemID>& newPlugi
     lowLatencyDisabledPlugins = newPlugins;
 }
 
+void Edit::setLatencyCompensationEnabled (bool enabled)
+{
+    if (enabled != latencyCompensationEnabled)
+    {
+        latencyCompensationEnabled = enabled;
+        restartPlayback();
+    }
+}
+
 //==============================================================================
 void Edit::initialiseAllPlugins()
 {

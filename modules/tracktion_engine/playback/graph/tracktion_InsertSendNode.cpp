@@ -32,12 +32,12 @@ InsertNode::~InsertNode()
         plugin->baseClassDeinitialise();
 }
 
-TransformResult InsertNode::transform (Node&, const std::vector<Node*>& postOrderedNodes, TransformCache&)
+TransformResult InsertNode::transform (TransformOptions& options)
 {
     if (sendNode)
         return TransformResult::none;
 
-    for (auto n : postOrderedNodes)
+    for (auto n : options.postOrderedNodes)
     {
         if (auto in = dynamic_cast<InsertSendNode*> (n))
         {
@@ -132,12 +132,12 @@ std::vector<tracktion::graph::Node*> InsertSendNode::getDirectInputNodes()
     return {};
 }
 
-TransformResult InsertSendNode::transform (Node&, const std::vector<Node*>& postOrderedNodes, TransformCache&)
+TransformResult InsertSendNode::transform (TransformOptions& options)
 {
     if (input)
         return TransformResult::none;
 
-    for (auto n : postOrderedNodes)
+    for (auto n : options.postOrderedNodes)
     {
         if (auto in = dynamic_cast<InsertNode*> (n))
         {

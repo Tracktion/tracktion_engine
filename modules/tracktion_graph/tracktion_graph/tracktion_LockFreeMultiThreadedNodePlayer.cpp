@@ -55,7 +55,8 @@ void LockFreeMultiThreadedNodePlayer::setNode (std::unique_ptr<Node> newNode, do
     // The prepare and set the new Node, passing in the old graph
     postNewGraph (prepareToPlay (std::move (newNode), lastGraphPosted,
                                  sampleRateToUse, blockSizeToUse,
-                                 useMemoryPool));
+                                 useMemoryPool,
+                                 disableLatencyComp));
 }
 
 void LockFreeMultiThreadedNodePlayer::prepareToPlay (double sampleRateToUse, int blockSizeToUse)
@@ -78,7 +79,8 @@ void LockFreeMultiThreadedNodePlayer::prepareToPlay (double sampleRateToUse, int
     // Don't pass in the old graph here as we're stealing the root from it
     postNewGraph (prepareToPlay (currentGraph != nullptr ? std::move (currentGraph->rootNode) : std::unique_ptr<Node>(), nullptr,
                                  sampleRateToUse, blockSizeToUse,
-                                 useMemoryPool));
+                                 useMemoryPool,
+                                 disableLatencyComp));
 }
 
 int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
@@ -178,12 +180,18 @@ void LockFreeMultiThreadedNodePlayer::enableNodeMemorySharing (bool shouldBeEnab
         prepareToPlay (sampleRate, blockSize);
 }
 
+void LockFreeMultiThreadedNodePlayer::setLatencyCompensationEnabled (bool shouldEnable)
+{
+    if (disableLatencyComp.exchange (! shouldEnable) != ! shouldEnable)
+        prepareToPlay (sampleRate, blockSize);
+}
 
 //==============================================================================
 //==============================================================================
 std::unique_ptr<NodeGraph> LockFreeMultiThreadedNodePlayer::prepareToPlay (std::unique_ptr<Node> node, NodeGraph* oldGraph,
                                                                            double sampleRateToUse, int blockSizeToUse,
-                                                                           bool useCurrentAudioBufferPool)
+                                                                           bool useCurrentAudioBufferPool,
+                                                                           bool disableLatencyCompensation)
 {
     createThreads();
 
@@ -191,9 +199,14 @@ std::unique_ptr<NodeGraph> LockFreeMultiThreadedNodePlayer::prepareToPlay (std::
     blockSize.store (blockSizeToUse, std::memory_order_release);;
 
     if (! useCurrentAudioBufferPool)
-        return node_player_utils::prepareToPlay (std::move (node), oldGraph, sampleRateToUse, blockSizeToUse, nullptr, nullptr, nodeMemorySharingEnabled);
+        return node_player_utils::prepareToPlay (std::move (node), oldGraph,
+                                                 sampleRateToUse, blockSizeToUse,
+                                                 nullptr, nullptr,
+                                                 nodeMemorySharingEnabled,
+                                                 disableLatencyCompensation);
 
-    return node_player_utils::prepareToPlay (std::move (node), oldGraph, sampleRateToUse, blockSizeToUse,
+    return node_player_utils::prepareToPlay (std::move (node), oldGraph,
+                                             sampleRateToUse, blockSizeToUse,
                                              [this] (auto s) -> NodeBuffer
                                              {
                                                 auto data = lastAudioBufferPoolPosted->allocate (s);
@@ -203,7 +216,8 @@ std::unique_ptr<NodeGraph> LockFreeMultiThreadedNodePlayer::prepareToPlay (std::
                                              {
                                                 lastAudioBufferPoolPosted->release (std::move (b.data));
                                              },
-                                             nodeMemorySharingEnabled);
+                                             nodeMemorySharingEnabled,
+                                             disableLatencyCompensation);
 }
 
 //==============================================================================

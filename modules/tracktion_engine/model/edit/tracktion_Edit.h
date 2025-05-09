@@ -529,6 +529,11 @@ public:
     /** Returns the current set of diabled plugins. */
     juce::Array<EditItemID> getLowLatencyDisabledPlugins()      { return lowLatencyDisabledPlugins; }
 
+    /** Can be used to disable latency compensation when playing (it is enabled by default) */
+    void setLatencyCompensationEnabled (bool enabled);
+
+    bool isLatencyCompensationEnabled() const noexcept          { return latencyCompensationEnabled; }
+
     //==============================================================================
     /** Returns the RackTypeList which contains all the RackTypes for the Edit. */
     RackTypeList& getRackList() const noexcept                  { jassert (rackTypes != nullptr); return *rackTypes; }
@@ -892,6 +897,7 @@ private:
     bool shouldRestartPlayback = false;
     bool blinkBright = false;
     bool lowLatencyMonitoring = false;
+    bool latencyCompensationEnabled = true;
     bool hasChanged = false;
     bool ignoreLeftViewLimit;
     LoadContext* loadContext = nullptr;
