@@ -242,7 +242,7 @@ void AutomationCurveModifier::removeListener (Listener& l)
 //==============================================================================
 juce::String AutomationCurveModifier::getName() const
 {
-    return detail::getClipName (*this) + ": " + TRANS("Automation Curve Modifier");
+    return TRANS("Clip Automation") + ": " + detail::getClipName (*this);
 }
 
 juce::String AutomationCurveModifier::getSelectableDescription()
