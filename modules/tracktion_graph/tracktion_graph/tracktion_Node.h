@@ -16,9 +16,9 @@
     //==============================================================================
     Aims:
     - Separate graph structure from processing and any model
-    - Ensure nodes can be processed multi-threaded which scales independantly of graph complexity
+    - Ensure nodes can be processed multi-threaded which scales independently of graph complexity
     - Processing can happen in any sized block (up to the maximum prepared for)
-    - Process calls will only ever get the number of channels to fill that they report
+    - Process calls will only ever get the number of channels to fill what they report
     - Process calls will always provide empty buffers so nodes can simply "add" in to them. (Measure performance here)
     - Processing in float or double
 
