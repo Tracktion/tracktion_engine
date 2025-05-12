@@ -216,8 +216,7 @@ public:
             scopedActiveParameter.reset();
         }
 
-        if (! parameter.getEdit().isLoading())
-            deferredUpdateTimer.startTimer (10);
+        deferredUpdateTimer.startTimer (10);
     }
 
     void updateIteratorIfNeeded()

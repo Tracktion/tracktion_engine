@@ -427,6 +427,25 @@ TEST_SUITE ("tracktion_engine")
             CHECK(! volPlugin->isActiveParameter (*volParam));
         }
 
+        SUBCASE("AutomationCurve after Edit load")
+        {
+            volCurve.addPoint (0_tp, 1.0f, 0.0f, nullptr);
+            CHECK(volParam->isAutomationActive());
+            CHECK(volPlugin->isAutomationNeeded());
+            CHECK(volPlugin->isActiveParameter (*volParam));
+
+            auto editState = edit->state.createCopy();
+            edit.reset();
+
+            auto newEdit = loadEditFromState (engine, editState);
+            auto newTrack = getAudioTracks(*newEdit)[0];
+            auto newVolPlugin = newTrack->getVolumePlugin();
+            auto newVolParam = newVolPlugin->volParam;
+            CHECK(newVolParam->isAutomationActive());
+            CHECK(newVolPlugin->isAutomationNeeded());
+            CHECK(newVolPlugin->isActiveParameter (*newVolParam));
+        }
+
         SUBCASE("Macro")
         {
             auto& macroList = volPlugin->getMacroParameterListForWriting();
