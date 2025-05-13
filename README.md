@@ -22,14 +22,15 @@ Now time to build the examples! You may run into an error with being unable to f
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
 ```
-And then cd into the tests directory to generate the examples:
+First cd into the musiclingo directory, wherever you have stored it, and then cd into the tests directory to generate the examples:
 ```
 cd tests
 ./generate_examples
 ```
-And to actually build (the below snippet removes any existing build in case you've messed up and need to restart, and then builds; also, make sure you update the path to the correct musiclingo folder when it's contained):
+And to actually build (the below snippet cds out of tests and into examples/DemoRunner, removes any existing build in case you've messed up and need to restart, and then builds):
 ```
-cd musiclingo/examples/DemoRunner
+cd ..
+cd examples/DemoRunner
 rm -rf build
 mkdir build && cd build
 cmake .. -G Xcode
@@ -41,7 +42,7 @@ open DemoRunner.xcodeproj
 
 
 IN XCODE:
-Make sure you have version 15.1 or later. You should be able to just run and have it say build successful and have the basic GUI pop up. (Make sure the scheme is DemoRunner and target is My Mac or something similar, which should be the default.)
+Make sure you have version 15.1 or later. Make sure the scheme is DemoRunner (the default may say DemoRunner Binary Data) and target is My Mac, which should be the default. You should be able to just run and have it say build successful and have the basic GUI pop up. 
 
 
 
