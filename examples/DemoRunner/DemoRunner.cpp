@@ -46,6 +46,7 @@ private:
             centreWithSize (getWidth(), getHeight());
            #endif
 
+
             setVisible (true);
         }
 
