@@ -1,3 +1,46 @@
+Musiclingo set-up steps (on macOS)
+
+CLONING:
+```
+git clone --recurse-submodules https://github.com/lavinialei2/musiclingo.git
+```
+There will be an error about being unable to clone the subrepo juce, so clone that separately with
+```
+git clone https://github.com/juce-framework/JUCE.git
+```
+Then once this repo is cloned, drag and drop it into musiclingo/modules (and you'll be prompted with are you sure you want to replace this other folder with the same name, and say yes because the current juce is empty).
+
+
+BUILDING:
+If you don't have cmake already, install using brew:
+```
+brew install cmake
+```
+Now time to build the examples! You may run into an error with being unable to find CC or CXX compiler when running the cmake command, but you can set the compiler to clang with the following:
+```
+export CC=/usr/bin/clang
+export CXX=/usr/bin/clang++
+```
+And to actually build (the below snippet removes any existing build in case you've messed up and need to restart, and then builds):
+```
+cd musiclingo/examples/TestRunner
+rm -rf build
+mkdir build && cd build
+cmake .. -G Xcode
+```
+This builds the demos into an Xcode project, which you can open in Xcode with:
+```
+open DemoRunner.xcodeproj
+```
+
+
+IN XCODE:
+Make sure you have versioni 15.1 or later. You should be able to just run and have it say build successful and have the basic GUI pop up. (Make sure the scheme is DemoRunner and target is My Mac or something similar, which should be the default.)
+
+
+
+
+
 ![](tutorials/images/tracktion_engine_powered.png)
 
 master: [![Build](https://github.com/Tracktion/tracktion_engine/actions/workflows/build.yaml/badge.svg?branch=master)](https://github.com/Tracktion/tracktion_engine/actions/workflows/build.yaml)
