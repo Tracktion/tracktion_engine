@@ -29,7 +29,7 @@ cd tests
 ```
 And to actually build (the below snippet removes any existing build in case you've messed up and need to restart, and then builds; also, make sure you update the path to the correct musiclingo folder when it's contained):
 ```
-cd musiclingo/examples/TestRunner
+cd musiclingo/examples/DemoRunner
 rm -rf build
 mkdir build && cd build
 cmake .. -G Xcode
