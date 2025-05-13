@@ -429,21 +429,27 @@ TEST_SUITE ("tracktion_engine")
 
         SUBCASE("AutomationCurve after Edit load")
         {
+            // Need to add two points as a curve with a single point is considered empty
             volCurve.addPoint (0_tp, 1.0f, 0.0f, nullptr);
+            volCurve.addPoint (1_tp, 0.0f, 0.0f, nullptr);
+
             CHECK(volParam->isAutomationActive());
             CHECK(volPlugin->isAutomationNeeded());
             CHECK(volPlugin->isActiveParameter (*volParam));
 
             auto editState = edit->state.createCopy();
+            volParam.reset();
             edit.reset();
 
-            auto newEdit = loadEditFromState (engine, editState);
-            auto newTrack = getAudioTracks(*newEdit)[0];
-            auto newVolPlugin = newTrack->getVolumePlugin();
-            auto newVolParam = newVolPlugin->volParam;
-            CHECK(newVolParam->isAutomationActive());
-            CHECK(newVolPlugin->isAutomationNeeded());
-            CHECK(newVolPlugin->isActiveParameter (*newVolParam));
+            {
+                auto newEdit = loadEditFromState (engine, editState);
+                auto newTrack = getAudioTracks (*newEdit)[0];
+                auto newVolPlugin = newTrack->getVolumePlugin();
+                auto newVolParam = newVolPlugin->volParam;
+                CHECK(newVolParam->isAutomationActive());
+                CHECK(newVolPlugin->isAutomationNeeded());
+                CHECK(newVolPlugin->isActiveParameter (*newVolParam));
+            }
         }
 
         SUBCASE("Macro")
