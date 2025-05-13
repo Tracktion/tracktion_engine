@@ -35,7 +35,7 @@ open DemoRunner.xcodeproj
 
 
 IN XCODE:
-Make sure you have versioni 15.1 or later. You should be able to just run and have it say build successful and have the basic GUI pop up. (Make sure the scheme is DemoRunner and target is My Mac or something similar, which should be the default.)
+Make sure you have version 15.1 or later. You should be able to just run and have it say build successful and have the basic GUI pop up. (Make sure the scheme is DemoRunner and target is My Mac or something similar, which should be the default.)
 
 
 
