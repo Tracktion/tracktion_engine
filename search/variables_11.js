@@ -86,5 +86,5 @@ var searchData=
   ['role_83',['role',['../structtracktion_1_1engine_1_1Edit_1_1Options.html#ad8bbd038fd08eae1ab21b9147815bc92',1,'tracktion::engine::Edit::Options']]],
   ['roomsizeparam_84',['roomSizeParam',['../classtracktion_1_1engine_1_1ReverbPlugin.html#acef06648b60e109456649537c43ad8e7',1,'tracktion::engine::ReverbPlugin']]],
   ['roomsizevalue_85',['roomSizeValue',['../classtracktion_1_1engine_1_1ReverbPlugin.html#a8051de4c22b326c6de1ef7bcc1d73ff4',1,'tracktion::engine::ReverbPlugin']]],
-  ['rootnode_86',['rootnode',['../classtracktion_1_1engine_1_1AutomatableParameterTree.html#a5c2d08c636704d938a0d592f24917814',1,'tracktion::engine::AutomatableParameterTree::rootNode'],['../structtracktion_1_1graph_1_1NodeGraph.html#add874bfc578e0dfeaf09140c110cc047',1,'tracktion::graph::NodeGraph::rootNode']]]
+  ['rootnode_86',['rootnode',['../classtracktion_1_1engine_1_1AutomatableParameterTree.html#a5c2d08c636704d938a0d592f24917814',1,'tracktion::engine::AutomatableParameterTree::rootNode'],['../structtracktion_1_1graph_1_1NodeGraph.html#add874bfc578e0dfeaf09140c110cc047',1,'tracktion::graph::NodeGraph::rootNode'],['../structtracktion_1_1graph_1_1Node_1_1TransformOptions.html#a0796d9919c589f18e10712bb893a2af0',1,'tracktion::graph::Node::TransformOptions::rootNode']]]
 ];

@@ -392,6 +392,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a65a468ba390c66ccd43a1d977f144cbe" id="r_a65a468ba390c66ccd43a1d977f144cbe"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="structtracktion_1_1engine_1_1EditItemID.html">EditItemID</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Edit.html#a65a468ba390c66ccd43a1d977f144cbe">getLowLatencyDisabledPlugins</a> ()</td></tr>
 <tr class="memdesc:a65a468ba390c66ccd43a1d977f144cbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current set of diabled plugins.  <br /></td></tr>
 <tr class="separator:a65a468ba390c66ccd43a1d977f144cbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12f68b1045e86a460b319c7c88437234" id="r_a12f68b1045e86a460b319c7c88437234"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Edit.html#a12f68b1045e86a460b319c7c88437234">setLatencyCompensationEnabled</a> (bool enabled)</td></tr>
+<tr class="memdesc:a12f68b1045e86a460b319c7c88437234"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can be used to disable latency compensation when playing (it is enabled by default)  <br /></td></tr>
+<tr class="separator:a12f68b1045e86a460b319c7c88437234"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac63d2cb24d6d18dcfe8a000335b0607b" id="r_ac63d2cb24d6d18dcfe8a000335b0607b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Edit.html#ac63d2cb24d6d18dcfe8a000335b0607b">isLatencyCompensationEnabled</a> () const noexcept</td></tr>
+<tr class="separator:ac63d2cb24d6d18dcfe8a000335b0607b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4ef8f026885becf6226c16eacde6430" id="r_af4ef8f026885becf6226c16eacde6430"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1RackTypeList.html">RackTypeList</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Edit.html#af4ef8f026885becf6226c16eacde6430">getRackList</a> () const noexcept</td></tr>
 <tr class="memdesc:af4ef8f026885becf6226c16eacde6430"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classtracktion_1_1engine_1_1RackTypeList.html">RackTypeList</a> which contains all the RackTypes for the <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <br /></td></tr>
 <tr class="separator:af4ef8f026885becf6226c16eacde6430"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3184,6 +3189,51 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a12f68b1045e86a460b319c7c88437234" name="a12f68b1045e86a460b319c7c88437234"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12f68b1045e86a460b319c7c88437234">&#9670;&#160;</a></span>setLatencyCompensationEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::Edit::setLatencyCompensationEnabled </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enabled</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Can be used to disable latency compensation when playing (it is enabled by default) </p>
+
+</div>
+</div>
+<a id="ac63d2cb24d6d18dcfe8a000335b0607b" name="ac63d2cb24d6d18dcfe8a000335b0607b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac63d2cb24d6d18dcfe8a000335b0607b">&#9670;&#160;</a></span>isLatencyCompensationEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tracktion::engine::Edit::isLatencyCompensationEnabled </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="af4ef8f026885becf6226c16eacde6430" name="af4ef8f026885becf6226c16eacde6430"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af4ef8f026885becf6226c16eacde6430">&#9670;&#160;</a></span>getRackList()</h2>
 
@@ -5098,7 +5148,7 @@ Static Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri May 9 2025 17:34:39 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue May 13 2025 08:18:21 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

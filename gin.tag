@@ -2820,6 +2820,7 @@
     <class kind="class">tracktion::graph::TransformCache</class>
     <class kind="class">tracktion::graph::Node</class>
     <class kind="struct">tracktion::graph::Node::AudioAndMidiBuffer</class>
+    <class kind="struct">tracktion::graph::Node::TransformOptions</class>
     <class kind="struct">tracktion::graph::Node::ProcessContext</class>
     <class kind="struct">tracktion::graph::detail::VisitNodesWithRecord</class>
     <class kind="struct">tracktion::graph::detail::VisitNodesWithRecordBFS</class>
@@ -16985,8 +16986,8 @@
       <type>TransformResult</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1graph_1_1ConnectedNode.html</anchorfile>
-      <anchor>ac9a7a8b461d338a794b08a41712efb09</anchor>
-      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;, TransformCache &amp;) override</arglist>
+      <anchor>a0da9d596b45a9f0aec9056f595e9c621</anchor>
+      <arglist>(TransformOptions &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -24991,6 +24992,20 @@
       <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
       <anchor>a65a468ba390c66ccd43a1d977f144cbe</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setLatencyCompensationEnabled</name>
+      <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
+      <anchor>a12f68b1045e86a460b319c7c88437234</anchor>
+      <arglist>(bool enabled)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isLatencyCompensationEnabled</name>
+      <anchorfile>classtracktion_1_1engine_1_1Edit.html</anchorfile>
+      <anchor>ac63d2cb24d6d18dcfe8a000335b0607b</anchor>
+      <arglist>() const noexcept</arglist>
     </member>
     <member kind="function">
       <type>RackTypeList &amp;</type>
@@ -34825,8 +34840,8 @@
       <type>TransformResult</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1engine_1_1InsertNode.html</anchorfile>
-      <anchor>a3e913f2d84e3919566837fb8551c70c9</anchor>
-      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;, TransformCache &amp;) override</arglist>
+      <anchor>abccc3d3f1432ad11cc31be2bc14df9ab</anchor>
+      <arglist>(TransformOptions &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>tracktion::graph::NodeProperties</type>
@@ -35158,8 +35173,8 @@
       <type>TransformResult</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1engine_1_1InsertSendNode.html</anchorfile>
-      <anchor>a3384b4f2852d9466bc0c2f27df4c6db8</anchor>
-      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;, TransformCache &amp;) override</arglist>
+      <anchor>a0c693908d42959fe63ca0b4e96afb70e</anchor>
+      <arglist>(TransformOptions &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>tracktion::graph::NodeProperties</type>
@@ -38075,6 +38090,13 @@
       <anchorfile>classtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer.html</anchorfile>
       <anchor>a9606f852703182111c508bcbbfb67374</anchor>
       <arglist>(bool shouldBeEnabled)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setLatencyCompensationEnabled</name>
+      <anchorfile>classtracktion_1_1graph_1_1LockFreeMultiThreadedNodePlayer.html</anchorfile>
+      <anchor>a5dd70eff4c8c01fab1dd31395be2133e</anchor>
+      <arglist>(bool)</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -46795,6 +46817,7 @@
     <filename>classtracktion_1_1graph_1_1Node.html</filename>
     <class kind="struct">tracktion::graph::Node::AudioAndMidiBuffer</class>
     <class kind="struct">tracktion::graph::Node::ProcessContext</class>
+    <class kind="struct">tracktion::graph::Node::TransformOptions</class>
     <member kind="function">
       <type></type>
       <name>Node</name>
@@ -46848,8 +46871,8 @@
       <type>virtual TransformResult</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1graph_1_1Node.html</anchorfile>
-      <anchor>ad8156b0902fe0ab5104a9c13b34dad77</anchor>
-      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;, TransformCache &amp;)</arglist>
+      <anchor>a18ca3e65b36143f463e60a7284ac0025</anchor>
+      <arglist>(TransformOptions &amp;)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual std::vector&lt; Node * &gt;</type>
@@ -56395,8 +56418,8 @@
       <type>TransformResult</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1engine_1_1RackReturnNode.html</anchorfile>
-      <anchor>af74e5e9be0aa3c38f8467a9c2fd432a9</anchor>
-      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;, TransformCache &amp;) override</arglist>
+      <anchor>acaa19b050df7dc2a7e9af0d1ade26ab2</anchor>
+      <arglist>(TransformOptions &amp;) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -59021,8 +59044,8 @@
       <type>TransformResult</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1graph_1_1ReturnNode.html</anchorfile>
-      <anchor>a0cbaf65c784d043fbdd84539db9a3dea</anchor>
-      <arglist>(Node &amp;rootNode, const std::vector&lt; Node * &gt; &amp;postOrderedNodes, TransformCache &amp;cache) override</arglist>
+      <anchor>a56b1160e83f330bb9bec717c2b55c481</anchor>
+      <arglist>(TransformOptions &amp;options) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -65213,8 +65236,8 @@
       <type>TransformResult</type>
       <name>transform</name>
       <anchorfile>classtracktion_1_1graph_1_1SummingNode.html</anchorfile>
-      <anchor>af400d80a6dc87bbd88d5c114725015d8</anchor>
-      <arglist>(Node &amp;, const std::vector&lt; Node * &gt; &amp;, TransformCache &amp;) override</arglist>
+      <anchor>a0cc34d002380f4c2288d2d5dfb07e3c5</anchor>
+      <arglist>(TransformOptions &amp;options) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -70599,6 +70622,13 @@
       <anchor>a60763ed578adead13da7d1f414f0e9c1</anchor>
       <arglist>(bool enableNodeMemorySharing)</arglist>
     </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setLatencyCompensationEnabled</name>
+      <anchorfile>classtracktion_1_1engine_1_1TracktionNodePlayer.html</anchorfile>
+      <anchor>a0c3658f6f0384d9be31e91fb7ce8cb87</anchor>
+      <arglist>(bool shouldEnable)</arglist>
+    </member>
   </compound>
   <compound kind="class">
     <name>tracktion::engine::TrackWaveInputDeviceNode</name>
@@ -70671,6 +70701,38 @@
       <anchorfile>classtracktion_1_1graph_1_1TransformCache.html</anchorfile>
       <anchor>ac7e1ae902bcc7355da4363507cef84d3</anchor>
       <arglist>(size_t key)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tracktion::graph::Node::TransformOptions</name>
+    <filename>structtracktion_1_1graph_1_1Node_1_1TransformOptions.html</filename>
+    <member kind="variable">
+      <type>Node &amp;</type>
+      <name>rootNode</name>
+      <anchorfile>structtracktion_1_1graph_1_1Node_1_1TransformOptions.html</anchorfile>
+      <anchor>a0796d9919c589f18e10712bb893a2af0</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>const std::vector&lt; Node * &gt; &amp;</type>
+      <name>postOrderedNodes</name>
+      <anchorfile>structtracktion_1_1graph_1_1Node_1_1TransformOptions.html</anchorfile>
+      <anchor>aa9c9c6c1061432d41aabf28b6bad64d9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>TransformCache &amp;</type>
+      <name>cache</name>
+      <anchorfile>structtracktion_1_1graph_1_1Node_1_1TransformOptions.html</anchorfile>
+      <anchor>a744a29811040053b197891b35223c577</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>disableLatencyCompensation</name>
+      <anchorfile>structtracktion_1_1graph_1_1Node_1_1TransformOptions.html</anchorfile>
+      <anchor>abcc9ad514800102894e509dbc5a1131b</anchor>
+      <arglist></arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -79454,8 +79516,8 @@
       <type>std::unique_ptr&lt; NodeGraph &gt;</type>
       <name>createNodeGraph</name>
       <anchorfile>namespacetracktion_1_1graph.html</anchorfile>
-      <anchor>affddc1ea5f169421b306a7af1799cb0c</anchor>
-      <arglist>(std::unique_ptr&lt; Node &gt;)</arglist>
+      <anchor>ab9b05c58ea795a8ab803d276bec89046</anchor>
+      <arglist>(std::unique_ptr&lt; Node &gt;, bool disableLatencyCompensation)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -80432,6 +80494,7 @@
     <class kind="class">tracktion::graph::TransformCache</class>
     <class kind="class">tracktion::graph::Node</class>
     <class kind="struct">tracktion::graph::Node::AudioAndMidiBuffer</class>
+    <class kind="struct">tracktion::graph::Node::TransformOptions</class>
     <class kind="struct">tracktion::graph::Node::ProcessContext</class>
     <class kind="struct">tracktion::graph::detail::VisitNodesWithRecord</class>
     <class kind="struct">tracktion::graph::detail::VisitNodesWithRecordBFS</class>

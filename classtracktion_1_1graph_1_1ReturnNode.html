@@ -99,9 +99,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a214bf2f348244b652848b808cbc11cf2" id="r_a214bf2f348244b652848b808cbc11cf2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1ReturnNode.html#a214bf2f348244b652848b808cbc11cf2">getDirectInputNodes</a> () override</td></tr>
 <tr class="memdesc:a214bf2f348244b652848b808cbc11cf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return all the inputs directly feeding in to this node.  <br /></td></tr>
 <tr class="separator:a214bf2f348244b652848b808cbc11cf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0cbaf65c784d043fbdd84539db9a3dea" id="r_a0cbaf65c784d043fbdd84539db9a3dea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetracktion_1_1graph.html#ae8337885018777ed501740f02dcbca0d">TransformResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1ReturnNode.html#a0cbaf65c784d043fbdd84539db9a3dea">transform</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &amp;rootNode, const std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt; &amp;postOrderedNodes, <a class="el" href="classtracktion_1_1graph_1_1TransformCache.html">TransformCache</a> &amp;cache) override</td></tr>
-<tr class="memdesc:a0cbaf65c784d043fbdd84539db9a3dea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after construction to give the node a chance to modify its topology.  <br /></td></tr>
-<tr class="separator:a0cbaf65c784d043fbdd84539db9a3dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56b1160e83f330bb9bec717c2b55c481" id="r_a56b1160e83f330bb9bec717c2b55c481"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetracktion_1_1graph.html#ae8337885018777ed501740f02dcbca0d">TransformResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1ReturnNode.html#a56b1160e83f330bb9bec717c2b55c481">transform</a> (<a class="el" href="structtracktion_1_1graph_1_1Node_1_1TransformOptions.html">TransformOptions</a> &amp;options) override</td></tr>
+<tr class="memdesc:a56b1160e83f330bb9bec717c2b55c481"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after construction to give the node a chance to modify its topology.  <br /></td></tr>
+<tr class="separator:a56b1160e83f330bb9bec717c2b55c481"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3dc0f890463048ae00760586c110d5d" id="r_af3dc0f890463048ae00760586c110d5d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1ReturnNode.html#af3dc0f890463048ae00760586c110d5d">prepareToPlay</a> (const <a class="el" href="structtracktion_1_1graph_1_1PlaybackInitialisationInfo.html">tracktion::graph::PlaybackInitialisationInfo</a> &amp;info) override</td></tr>
 <tr class="memdesc:af3dc0f890463048ae00760586c110d5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called once before playback begins for each node.  <br /></td></tr>
 <tr class="separator:af3dc0f890463048ae00760586c110d5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -294,8 +294,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a0cbaf65c784d043fbdd84539db9a3dea" name="a0cbaf65c784d043fbdd84539db9a3dea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0cbaf65c784d043fbdd84539db9a3dea">&#9670;&#160;</a></span>transform()</h2>
+<a id="a56b1160e83f330bb9bec717c2b55c481" name="a56b1160e83f330bb9bec717c2b55c481"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56b1160e83f330bb9bec717c2b55c481">&#9670;&#160;</a></span>transform()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -306,25 +306,9 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="namespacetracktion_1_1graph.html#ae8337885018777ed501740f02dcbca0d">TransformResult</a> tracktion::graph::ReturnNode::transform </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1graph_1_1Node_1_1TransformOptions.html">TransformOptions</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt; &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classtracktion_1_1graph_1_1TransformCache.html">TransformCache</a> &amp;&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -336,16 +320,9 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Called after construction to give the node a chance to modify its topology. </p>
 <p>This should return true if any changes were made to the topology as this indicates that the method may need to be called again after other nodes have had their toplogy changed.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">postOrderedNodes</td><td>This is an ordered list obtained from visiting all the Nodes and can be used for quicker introspection of the graph </td></tr>
-    <tr><td class="paramname"><a class="el" href="classtracktion_1_1graph_1_1TransformCache.html">TransformCache</a></td><td>A cache which can be used to speed up operations during the transform stage.</td></tr>
-  </table>
-  </dd>
-</dl>
 <dl class="section return"><dt>Returns</dt><dd>TransformResult The type of transformation that has taken place. If connections have been made AND nodes deleted, return nodesDeleted </dd></dl>
 
-<p>Reimplemented from <a class="el" href="classtracktion_1_1graph_1_1Node.html#ad8156b0902fe0ab5104a9c13b34dad77">tracktion::graph::Node</a>.</p>
+<p>Reimplemented from <a class="el" href="classtracktion_1_1graph_1_1Node.html#a18ca3e65b36143f463e60a7284ac0025">tracktion::graph::Node</a>.</p>
 
 <p class="reference">References <a class="el" href="namespacetracktion_1_1graph.html#ae8337885018777ed501740f02dcbca0da2bc4ad49aaeeedd7b7b4cbbd3cc1835e">tracktion::graph::connectionsMade</a>, and <a class="el" href="namespacetracktion_1_1graph.html#ae8337885018777ed501740f02dcbca0da334c4a4c42fdb79d7ebc3e73b517e6f8">tracktion::graph::none</a>.</p>
 
@@ -496,7 +473,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri May 9 2025 17:34:40 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue May 13 2025 08:18:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

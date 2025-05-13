@@ -166,7 +166,7 @@ var searchData=
   ['foldertrackplugins_163',['folderTrackPlugins',['../classtracktion_1_1engine_1_1Plugin.html#a40ac6aa87a5d994a3d796722c0ed16f9a585279d417834861136f0a63c58084e4',1,'tracktion::engine::Plugin']]],
   ['followaction_164',['FollowAction',['../namespaceengine.html#a8adf9568644e9fd569d34ea8751bfdde',1,'engine']]],
   ['followactionbeats_165',['followActionBeats',['../classtracktion_1_1engine_1_1Clip.html#a12ba12fb801a83e32935b466e56f69ea',1,'tracktion::engine::Clip']]],
-  ['followactiondurationtype_166',['followactiondurationtype',['../classtracktion_1_1engine_1_1Clip.html#adc95ebd7f90eac7a6972790064cb6b86',1,'tracktion::engine::Clip::FollowActionDurationType'],['../classtracktion_1_1engine_1_1Clip.html#aa64b21d54848f335b588b98584be43a6',1,'tracktion::engine::Clip::followActionDurationType']]],
+  ['followactiondurationtype_166',['followactiondurationtype',['../classtracktion_1_1engine_1_1Clip.html#aa64b21d54848f335b588b98584be43a6',1,'tracktion::engine::Clip::followActionDurationType'],['../classtracktion_1_1engine_1_1Clip.html#adc95ebd7f90eac7a6972790064cb6b86',1,'tracktion::engine::Clip::FollowActionDurationType']]],
   ['followactiondurationtypefromstring_167',['followActionDurationTypeFromString',['../namespacetracktion_1_1engine_1_1details.html#ad1624d70e4c73563cc086784fa67c9e9',1,'tracktion::engine::details']]],
   ['followactionfromchoice_168',['followActionFromChoice',['../namespaceengine.html#a6f54a0717d4b1c60ed024986cdce6a13',1,'engine']]],
   ['followactionfromstring_169',['followActionFromString',['../namespaceengine.html#abdd5df14dbfdae7b1283b27cbb3a1fae',1,'engine']]],

@@ -101,6 +101,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1Node_1_1ProcessContext.html">ProcessContext</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct to describe a single iteration of a process call.  <a href="structtracktion_1_1graph_1_1Node_1_1ProcessContext.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1graph_1_1Node_1_1TransformOptions.html">TransformOptions</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -123,9 +125,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:adc67998aa3b75e41bc7b89e1ebf94d50" id="r_adc67998aa3b75e41bc7b89e1ebf94d50"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1graph_1_1Node_1_1AudioAndMidiBuffer.html">AudioAndMidiBuffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#adc67998aa3b75e41bc7b89e1ebf94d50">getProcessedOutput</a> ()</td></tr>
 <tr class="memdesc:adc67998aa3b75e41bc7b89e1ebf94d50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the processed audio and MIDI output.  <br /></td></tr>
 <tr class="separator:adc67998aa3b75e41bc7b89e1ebf94d50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8156b0902fe0ab5104a9c13b34dad77" id="r_ad8156b0902fe0ab5104a9c13b34dad77"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacetracktion_1_1graph.html#ae8337885018777ed501740f02dcbca0d">TransformResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#ad8156b0902fe0ab5104a9c13b34dad77">transform</a> (<a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &amp;, const std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt; &amp;, <a class="el" href="classtracktion_1_1graph_1_1TransformCache.html">TransformCache</a> &amp;)</td></tr>
-<tr class="memdesc:ad8156b0902fe0ab5104a9c13b34dad77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after construction to give the node a chance to modify its topology.  <br /></td></tr>
-<tr class="separator:ad8156b0902fe0ab5104a9c13b34dad77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18ca3e65b36143f463e60a7284ac0025" id="r_a18ca3e65b36143f463e60a7284ac0025"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacetracktion_1_1graph.html#ae8337885018777ed501740f02dcbca0d">TransformResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#a18ca3e65b36143f463e60a7284ac0025">transform</a> (<a class="el" href="structtracktion_1_1graph_1_1Node_1_1TransformOptions.html">TransformOptions</a> &amp;)</td></tr>
+<tr class="memdesc:a18ca3e65b36143f463e60a7284ac0025"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after construction to give the node a chance to modify its topology.  <br /></td></tr>
+<tr class="separator:a18ca3e65b36143f463e60a7284ac0025"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0af9ce8fb56eacd6fe0ff87d9c7ed130" id="r_a0af9ce8fb56eacd6fe0ff87d9c7ed130"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1graph_1_1Node.html#a0af9ce8fb56eacd6fe0ff87d9c7ed130">getDirectInputNodes</a> ()</td></tr>
 <tr class="memdesc:a0af9ce8fb56eacd6fe0ff87d9c7ed130"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return all the inputs directly feeding in to this node.  <br /></td></tr>
 <tr class="separator:a0af9ce8fb56eacd6fe0ff87d9c7ed130"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -366,8 +368,8 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad8156b0902fe0ab5104a9c13b34dad77" name="ad8156b0902fe0ab5104a9c13b34dad77"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad8156b0902fe0ab5104a9c13b34dad77">&#9670;&#160;</a></span>transform()</h2>
+<a id="a18ca3e65b36143f463e60a7284ac0025" name="a18ca3e65b36143f463e60a7284ac0025"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18ca3e65b36143f463e60a7284ac0025">&#9670;&#160;</a></span>transform()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -378,25 +380,9 @@ Protected Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual <a class="el" href="namespacetracktion_1_1graph.html#ae8337885018777ed501740f02dcbca0d">TransformResult</a> tracktion::graph::Node::transform </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype"><a class="el" href="structtracktion_1_1graph_1_1Node_1_1TransformOptions.html">TransformOptions</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt; &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classtracktion_1_1graph_1_1TransformCache.html">TransformCache</a> &amp;&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -408,16 +394,9 @@ Protected Member Functions</h2></td></tr>
 
 <p>Called after construction to give the node a chance to modify its topology. </p>
 <p>This should return true if any changes were made to the topology as this indicates that the method may need to be called again after other nodes have had their toplogy changed.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">postOrderedNodes</td><td>This is an ordered list obtained from visiting all the Nodes and can be used for quicker introspection of the graph </td></tr>
-    <tr><td class="paramname"><a class="el" href="classtracktion_1_1graph_1_1TransformCache.html">TransformCache</a></td><td>A cache which can be used to speed up operations during the transform stage.</td></tr>
-  </table>
-  </dd>
-</dl>
 <dl class="section return"><dt>Returns</dt><dd>TransformResult The type of transformation that has taken place. If connections have been made AND nodes deleted, return nodesDeleted </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classtracktion_1_1graph_1_1ConnectedNode.html#ac9a7a8b461d338a794b08a41712efb09">tracktion::graph::ConnectedNode</a>, <a class="el" href="classtracktion_1_1graph_1_1SummingNode.html#af400d80a6dc87bbd88d5c114725015d8">tracktion::graph::SummingNode</a>, and <a class="el" href="classtracktion_1_1graph_1_1ReturnNode.html#a0cbaf65c784d043fbdd84539db9a3dea">tracktion::graph::ReturnNode</a>.</p>
+<p>Reimplemented in <a class="el" href="classtracktion_1_1engine_1_1InsertNode.html#abccc3d3f1432ad11cc31be2bc14df9ab">tracktion::engine::InsertNode</a>, <a class="el" href="classtracktion_1_1engine_1_1InsertSendNode.html#a0c693908d42959fe63ca0b4e96afb70e">tracktion::engine::InsertSendNode</a>, <a class="el" href="classtracktion_1_1engine_1_1RackReturnNode.html#acaa19b050df7dc2a7e9af0d1ade26ab2">tracktion::engine::RackReturnNode</a>, <a class="el" href="classtracktion_1_1graph_1_1ConnectedNode.html#a0da9d596b45a9f0aec9056f595e9c621">tracktion::graph::ConnectedNode</a>, <a class="el" href="classtracktion_1_1graph_1_1SummingNode.html#a0cc34d002380f4c2288d2d5dfb07e3c5">tracktion::graph::SummingNode</a>, and <a class="el" href="classtracktion_1_1graph_1_1ReturnNode.html#a56b1160e83f330bb9bec717c2b55c481">tracktion::graph::ReturnNode</a>.</p>
 
 <p class="reference">References <a class="el" href="namespacetracktion_1_1graph.html#ae8337885018777ed501740f02dcbca0da334c4a4c42fdb79d7ebc3e73b517e6f8">tracktion::graph::none</a>.</p>
 
@@ -927,7 +906,7 @@ Protected Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri May 9 2025 17:34:40 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue May 13 2025 08:18:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
