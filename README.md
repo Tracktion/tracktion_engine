@@ -16,12 +16,18 @@ If you don't have cmake already, install using brew:
 ```
 brew install cmake
 ```
+
 Now time to build the examples! You may run into an error with being unable to find CC or CXX compiler when running the cmake command, but you can set the compiler to clang with the following:
 ```
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
 ```
-And to actually build (the below snippet removes any existing build in case you've messed up and need to restart, and then builds):
+And then cd into the tests directory to generate the examples:
+```
+cd tests
+./generate_examples
+```
+And to actually build (the below snippet removes any existing build in case you've messed up and need to restart, and then builds; also, make sure you update the path to the correct musiclingo folder when it's contained):
 ```
 cd musiclingo/examples/TestRunner
 rm -rf build
