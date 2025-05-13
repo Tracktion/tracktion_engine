@@ -259,11 +259,15 @@ void AutomationCurveModifier::setPositionDelegate (std::function<CurvePosition()
 }
 
 //==============================================================================
-bool AutomationCurveModifier::hasAnyPoints() const
+bool hasAnyPoints (AutomationCurveModifier& curve)
 {
-    for (auto c : { &absoluteCurve, &relativeCurve, &scaleCurve })
+    for (auto c : { &curve.getCurve (CurveModifierType::absolute).curve,
+                    &curve.getCurve (CurveModifierType::relative).curve,
+                    &curve.getCurve (CurveModifierType::scale).curve })
+    {
         if (c->getNumPoints() > 0)
             return true;
+    }
 
     return false;
 }
@@ -311,7 +315,7 @@ void AutomationCurveModifier::updateModifierAssignment()
 
     if (auto param = getParameter (*this))
     {
-        if (hasAnyPoints())
+        if (hasAnyPoints (*this))
             param->addModifier (*this);
         else
             param->removeModifier (*this);

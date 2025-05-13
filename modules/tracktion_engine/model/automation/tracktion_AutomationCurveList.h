@@ -256,7 +256,6 @@ private:
     LambdaValueTreeAllEventListener stateListener { state };
     juce::ListenerList<Listener> listeners;
 
-    bool hasAnyPoints() const;
     void curveUnlinkedStateChanged (juce::ValueTree&);
     void updateModifierAssignment();
 };
@@ -312,6 +311,9 @@ struct BaseAndModValue
 [[nodiscard]] float getDefaultValue (AutomatableParameter&, CurveModifierType);
 
 //==============================================================================
+/** Returns true if any of the curves have any points. */
+[[nodiscard]] bool hasAnyPoints (AutomationCurveModifier&);
+
 /** Returns the destination parameter this curve is controlling. */
 [[nodiscard]] AutomatableParameter::Ptr getParameter (const AutomationCurveModifier&);
 
