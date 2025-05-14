@@ -256,9 +256,6 @@ public:
 
     /// Restore a custom control surface from custom XML
     virtual ControlSurface* getCustomControlSurfaceForXML (ExternalControllerManager&, const juce::XmlElement&)     { return {}; }
-
-    // Experimental
-    virtual bool enableExperimentalAutomation()                                     { return false; }
 };
 
 }} // namespace tracktion { inline namespace engine
