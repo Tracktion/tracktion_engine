@@ -24,7 +24,7 @@ export CXX=/usr/bin/clang++
 ```
 First cd into the musiclingo directory, wherever you have stored it, and then cd into the tests directory to generate the examples:
 ```
-cd [oath to your musiclingo directory]
+cd [path to your musiclingo directory]
 cd tests
 ./generate_examples
 ```
@@ -44,7 +44,7 @@ open DemoRunner.xcodeproj
 IN XCODE:
 Make sure you have version 15.1 or later. Make sure the scheme is DemoRunner (the default may say DemoRunner Binary Data) and target is My Mac, which should be the default. You should be able to just run and have it say build successful and have the basic GUI pop up. 
 
-
+Potential CodeSignature issue: fix it via tbd
 
 
 
