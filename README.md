@@ -1,4 +1,4 @@
-Musiclingo set-up steps (on macOS)
+Demo set-up steps for macOS
 
 CLONING:
 ```
@@ -24,13 +24,13 @@ export CXX=/usr/bin/clang++
 ```
 First cd into the musiclingo directory, wherever you have stored it, and then cd into the tests directory to generate the examples:
 ```
+cd [oath to your musiclingo directory]
 cd tests
 ./generate_examples
 ```
 And to actually build (the below snippet cds out of tests and into examples/DemoRunner, removes any existing build in case you've messed up and need to restart, and then builds):
 ```
-cd ..
-cd examples/DemoRunner
+cd ../examples/DemoRunner
 rm -rf build
 mkdir build && cd build
 cmake .. -G Xcode
