@@ -163,6 +163,17 @@ function App() {
         >
           Delete Track
         </button>
+        <br></br>
+        <label>Playhead:</label>
+        <input
+          type="range"
+          min={0}
+          max={60}
+          step={0.1}
+          value={playheadPosition}
+          onChange={(e) => onScrubPlayhead(parseFloat(e.target.value))}
+          disabled={isPlaying}
+        />
       </div>
 
       <Timeline
