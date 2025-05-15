@@ -58,6 +58,14 @@ Command + B
 HOW TO ADD A DEMO TO DEMORUNNER:
 In examples/DemoRunner/demos, create a new header file. I called it TestDemo.h, and it's functionally just a copy of MidiRecordingDemo.h, but I found and replaced all instances of "MidiRecordingDemo" with "TestDemo" in the file. To make sure it is included in the build, go to examples/DemoRunner/DemoRunner.h and ctrl+f "MidiRecordingDemo" and you should find an include block of all the demo files. Add your newly made file (#include "demos/TestDemo.h" in my case). Then go to examples/DemoRunner/CMakeLists.txt and ctrl+f "MidiRecordingDemo" and you should see a set(SourceFiles...), where you should add your new demo as well. Then, follow the instructions above again to regenerate the examples and build.
 
+To make regenerating examples easier out of build
+```
+cd ..
+cd ..
+cd ../tests
+./generate_examples
+```
+
 
 ![](tutorials/images/tracktion_engine_powered.png)
 
