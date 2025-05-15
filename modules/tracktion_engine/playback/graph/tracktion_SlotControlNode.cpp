@@ -31,7 +31,7 @@ SlotControlNode::SlotControlNode (ProcessState& ps,
     assert (getProcessState().getTempoSequence() != nullptr);
     assert (launchHandle);
 
-    for (auto n : transformNodes (*input))
+    for (auto n : transformNodes (*input, false))
     {
         orderedNodes.push_back (n);
 

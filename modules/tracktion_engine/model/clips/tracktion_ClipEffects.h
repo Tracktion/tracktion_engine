@@ -56,7 +56,7 @@ public:
         N.B. because the sourceFile may not be valid at the time of job creation you should use
         the sourceLength parameter to determine how to build the render node.
     */
-    virtual juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile& sourceFile, double sourceLength) = 0;
+    virtual juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile& sourceFile, TimeDuration sourceLength) = 0;
 
     /** Return true here to show a properties button in the editor and enable the propertiesButtonPressed callback. */
     virtual bool hasProperties()                                { return false; }
@@ -344,7 +344,7 @@ struct VolumeEffect : public ClipEffect,
                       private juce::Timer
 {
     VolumeEffect (const juce::ValueTree&, ClipEffects&);
-    juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile& sourceFile, double sourceLength) override;
+    juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile& sourceFile, TimeDuration sourceLength) override;
 
     void initialise() override
     {
@@ -377,7 +377,7 @@ struct FadeInOutEffect  : public ClipEffect
     void setFadeIn (TimeDuration);
     void setFadeOut (TimeDuration);
 
-    juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile& sourceFile, double sourceLength) override;
+    juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile& sourceFile, TimeDuration sourceLength) override;
 
     juce::CachedValue<TimeDuration> fadeIn, fadeOut;
     juce::CachedValue<AudioFadeCurve::Type> fadeInType, fadeOutType;
@@ -399,7 +399,7 @@ struct StepVolumeEffect  : public ClipEffect,
 
     int getMaxNumNotes();
 
-    juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile& sourceFile, double sourceLength) override;
+    juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile& sourceFile, TimeDuration sourceLength) override;
 
     bool hasProperties() override;
     void propertiesButtonPressed (SelectionManager&) override;
@@ -453,7 +453,7 @@ struct PitchShiftEffect  : public ClipEffect,
 
     void initialise() override;
 
-    juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile& sourceFile, double sourceLength) override;
+    juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile& sourceFile, TimeDuration sourceLength) override;
 
     bool hasProperties() override;
     void propertiesButtonPressed (SelectionManager&) override;
@@ -476,7 +476,7 @@ struct WarpTimeEffect   : public ClipEffect
 {
     WarpTimeEffect (const juce::ValueTree&, ClipEffects&);
 
-    juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile&, double sourceLength) override;
+    juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile&, TimeDuration sourceLength) override;
 
     HashCode getIndividualHash() const override;
     void sourceChanged() override;
@@ -498,7 +498,7 @@ struct PluginEffect  : public ClipEffect,
 {
     PluginEffect (const juce::ValueTree&, ClipEffects&);
 
-    juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile&, double sourceLength) override;
+    juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile&, TimeDuration sourceLength) override;
 
     void initialise() override
     {
@@ -536,7 +536,7 @@ struct NormaliseEffect  : public ClipEffect,
     NormaliseEffect (const juce::ValueTree&, ClipEffects&);
     ~NormaliseEffect() override;
 
-    juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile& sourceFile, double sourceLength) override;
+    juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile& sourceFile, TimeDuration sourceLength) override;
 
     bool hasProperties() override;
     void propertiesButtonPressed (SelectionManager&) override;
@@ -566,7 +566,7 @@ struct MakeMonoEffect : public ClipEffect,
     MakeMonoEffect (const juce::ValueTree&, ClipEffects&);
     ~MakeMonoEffect() override;
 
-    juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile&, double sourceLength) override;
+    juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile&, TimeDuration sourceLength) override;
 
     bool hasProperties() override;
     void propertiesButtonPressed (SelectionManager&) override;
@@ -587,7 +587,7 @@ struct ReverseEffect  : public ClipEffect
 {
     ReverseEffect (const juce::ValueTree&, ClipEffects&);
 
-    juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile&, double sourceLength) override;
+    juce::ReferenceCountedObjectPtr<ClipEffectRenderJob> createRenderJob (const AudioFile&, TimeDuration sourceLength) override;
 
     struct ReverseRenderJob;
 
@@ -601,7 +601,7 @@ struct InvertEffect  : public ClipEffect
 {
     InvertEffect (const juce::ValueTree&, ClipEffects&);
 
-    juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> createRenderJob (const AudioFile&, double sourceLength) override;
+    juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> createRenderJob (const AudioFile&, TimeDuration sourceLength) override;
 
     struct InvertRenderJob;
 

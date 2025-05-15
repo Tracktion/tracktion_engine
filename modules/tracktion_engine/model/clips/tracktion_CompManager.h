@@ -283,7 +283,7 @@ public:
         This will return true if the comp was successfully completed or false if it failed.
         Note that this should only be called for comp takes and will simply return true for full takes.
     */
-    static bool renderTake (CompRenderContext&, AudioFileWriter&,
+    static bool renderTake (CompRenderContext&, Edit&, AudioFileWriter&,
                             juce::ThreadPoolJob&, std::atomic<float>& progress);
 
 private:

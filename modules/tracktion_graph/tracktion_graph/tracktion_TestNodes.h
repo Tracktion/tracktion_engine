@@ -588,11 +588,11 @@ public:
         return { input.get() };
     }
 
-    TransformResult transform (Node& rootNode, const std::vector<Node*>& postOrderedNodes, TransformCache& cache) override
+    TransformResult transform (TransformOptions& options) override
     {
         if (! hasInitialised)
         {
-            findSendNodes (rootNode, postOrderedNodes, cache);
+            findSendNodes (options);
             return TransformResult::connectionsMade;
         }
 
@@ -657,7 +657,7 @@ private:
     const int busID;
     bool hasInitialised = false, canUseSourceBuffers = false;
 
-    void findSendNodes (Node&, const std::vector<Node*>& postOrderedNodes, TransformCache& cache)
+    void findSendNodes (TransformOptions& options)
     {
         // This can only be initialised once as otherwise the latency nodes will get created again
         jassert (! hasInitialised);
@@ -669,17 +669,17 @@ private:
 
         constexpr size_t cacheKey = 3399892065; // Random number
 
-        if (auto cachedVec = cache.getCachedProperty<std::vector<SendNode*>> (cacheKey))
+        if (auto cachedVec = options.cache.getCachedProperty<std::vector<SendNode*>> (cacheKey))
         {
             allSends = *cachedVec;
         }
         else
         {
-            for (auto n : postOrderedNodes)
+            for (auto n : options.postOrderedNodes)
                if (auto send = dynamic_cast<SendNode*> (n))
                    allSends.push_back (send);
 
-            cache.cacheProperty (cacheKey, allSends);
+            options.cache.cacheProperty (cacheKey, allSends);
         }
 
         std::vector<SendNode*> sends;

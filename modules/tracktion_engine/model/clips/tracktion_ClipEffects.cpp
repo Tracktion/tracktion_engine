@@ -8,12 +8,13 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#include "../../playback/audionodes/tracktion_AudioNode.h"
-#include "../../playback/audionodes/tracktion_WaveAudioNode.h"
-#include "../../playback/audionodes/tracktion_TrackCompAudioNode.h"
-#include "../../playback/audionodes/tracktion_SpeedRampAudioNode.h"
-#include "../../playback/audionodes/tracktion_PluginAudioNode.h"
-#include "../../playback/audionodes/tracktion_FadeInOutAudioNode.h"
+#include "../../playback/graph/tracktion_TracktionEngineNode.h"
+#include "../../playback/graph/tracktion_TracktionNodePlayer.h"
+#include "../../playback/graph/tracktion_SpeedRampWaveNode.h"
+#include "../../playback/graph/tracktion_WaveNode.h"
+#include "../../playback/graph/tracktion_PluginNode.h"
+#include "../../playback/graph/tracktion_FadeInOutNode.h"
+#include "../../playback/graph/tracktion_TimedMutingNode.h"
 
 namespace tracktion { inline namespace engine
 {
@@ -377,13 +378,25 @@ void ClipEffect::invalidateDestination()
 /** Takes an AudioNode and renders it to a file. */
 struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
 {
-    AudioNodeRenderJob (Engine& e, AudioNode* n,
+    AudioNodeRenderJob (Engine& e,
                         const AudioFile& dest, const AudioFile& src,
-                        SampleCount blockSizeToUse = defaultBlockSize,
-                        double prerollTimeSeconds = 0)
-        : ClipEffectRenderJob (e, dest, src, blockSizeToUse),
-          node (n), prerollTime (prerollTimeSeconds)
+                        SampleCount blockSizeToUse = defaultBlockSize)
+        : ClipEffectRenderJob (e, dest, src, blockSizeToUse)
     {
+    }
+
+    static juce::ReferenceCountedObjectPtr<AudioNodeRenderJob> create (Engine& e,
+                                                                       const AudioFile& dest, const AudioFile& src,
+                                                                       SampleCount blockSizeToUse)
+    {
+        return new AudioNodeRenderJob (e, dest, src, blockSizeToUse);
+    }
+
+    void initialise (std::unique_ptr<tracktion::graph::Node> nodeToUse,
+                     double prerollTimeSeconds = 0)
+    {
+        prerollTime = prerollTimeSeconds;
+        node = std::move (nodeToUse);
         jassert (node != nullptr);
     }
 
@@ -406,7 +419,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
     bool renderNextBlock() override
     {
         CRASH_TRACER
-        return renderContext->render (*node, progress) == juce::ThreadPoolJob::jobHasFinished;
+        return renderContext->render (progress) == juce::ThreadPoolJob::jobHasFinished;
     }
 
     bool completeRender() override
@@ -427,16 +440,33 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
         return ok;
     }
 
+    std::unique_ptr<tracktion::graph::Node> createWaveNodeForFile (const AudioFile& file, TimeRange timeRange)
+    {
+        return tracktion::graph::makeNode<WaveNode> (file, timeRange, TimeDuration(), TimeRange(), LiveClipLevel(), 1.0,
+                                                     juce::AudioChannelSet::canonicalChannelSet (file.getInfo().numChannels),
+                                                     juce::AudioChannelSet::stereo(),
+                                                     processState,
+                                                     EditItemID(), true);
+    }
+
+    tracktion::graph::PlayHead playHead;
+    tracktion::graph::PlayHeadState playHeadState { playHead };
+    ProcessState processState { playHeadState };
+
+private:
+    //==============================================================================
     struct RenderContext
     {
-        RenderContext (const AudioFile& destination, const AudioFile& source,
+        RenderContext (std::unique_ptr<tracktion::graph::Node> nodeToUse,
+                       ProcessState& processStateToUse,
+                       const AudioFile& destination, const AudioFile& source,
                        int numDestChannels, SampleCount blockSizeToUse, double prerollTimeS)
             : blockSize (blockSizeToUse)
         {
             CRASH_TRACER
             jassert (source.isValid());
             jassert (numDestChannels > 0);
-            streamRange = { 0.0, source.getLength() };
+            streamRange = TimeRange (0s, TimeDuration::fromSeconds (source.getLength()));
             jassert (! streamRange.isEmpty());
 
             auto sourceInfo = source.getInfo();
@@ -455,73 +485,66 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
                                                         std::max (16, sourceInfo.bitsPerSample),
                                                         sourceInfo.metadata, 0);
 
-            renderingBuffer = std::make_unique<juce::AudioBuffer<float>> (writer->getNumChannels(), (int) blockSize + 256);
-            auto renderingBufferChannels = juce::AudioChannelSet::canonicalChannelSet (renderingBuffer->getNumChannels());
+            sampleRate = writer->getSampleRate();
 
-            // now prepare the render context
-            rc = std::make_unique<AudioRenderContext> (localPlayhead, streamRange,
-                                                       renderingBuffer.get(),
-                                                       renderingBufferChannels, 0, (int) blockSize,
-                                                       nullptr, 0.0,
-                                                       AudioRenderContext::playheadJumped, true);
-
-            // round pre roll timr to nearest block
+            // round preroll time to nearest block
             numPreBlocks = (int) std::ceil ((prerollTimeS * sourceInfo.sampleRate) / blockSize);
+            auto prerollTimeRounded = TimeDuration::fromSeconds ((numPreBlocks * blockSizeToUse) / writer->getSampleRate());
+            streamRange = streamRange.withStart (streamRange.getStart() - prerollTimeRounded);
 
-            auto prerollTimeRounded = numPreBlocks * blockSizeToUse / writer->getSampleRate();
+            totalSamples = juce::roundToInt (streamRange.getLength().inSeconds() * sampleRate);
 
-            streamTime = -prerollTimeRounded;
+            processStateToUse.playHeadState.playHead.playSyncedToRange ({ 0, totalSamples });
 
-            auto prerollStart = streamRange.getStart() - prerollTimeRounded;
+            nodePlayer = std::make_unique<TracktionNodePlayer> (std::move (nodeToUse), processStateToUse, sampleRate, (int) blockSize,
+                                                                getPoolCreatorFunction (ThreadPoolStrategy::realTime));
 
-            localPlayhead.setPosition (prerollStart);
-            localPlayhead.playLockedToEngine ({ prerollStart, streamRange.getEnd() });
+            nodePlayer->setNumThreads (0);
+            nodePlayer->prepareToPlay (sampleRate, (int) blockSize);
+
+            audioBuffer = choc::buffer::ChannelArrayBuffer<float> ((choc::buffer::ChannelCount) numDestChannels, (choc::buffer::FrameCount) blockSize);
         }
 
-        juce::ThreadPoolJob::JobStatus render (AudioNode& audioNode, std::atomic<float>& progressToUpdate)
+        juce::ThreadPoolJob::JobStatus render (std::atomic<float>& progressToUpdate)
         {
             CRASH_TRACER
-            auto blockLength = blockSize / writer->getSampleRate();
-            SampleCount samplesToWrite = juce::roundToInt ((streamRange.getEnd() - streamTime) * writer->getSampleRate());
-            auto blockEnd = std::min (streamTime + blockLength, streamRange.getEnd());
-            rc->streamTime = { streamTime, blockEnd };
+            auto samplesToDo = (choc::buffer::FrameCount) std::min (blockSize, (SampleCount) (totalSamples - samplesDone));
+
+            tracktion::graph::Node::ProcessContext pc
+            {
+                samplesToDo,
+                juce::Range<int64_t> (samplesDone, samplesDone + samplesToDo),
+
+                {
+                    audioBuffer.getStart (samplesToDo),
+                    midiBuffer
+                }
+            };
+
+            if (samplesToDo > 0)
+            {
+                pc.buffers.audio.clear();
+                pc.buffers.midi.clear();
+
+                auto misses = nodePlayer->process (pc);
+                jassert (misses == 0); (void) misses;
+
+                samplesDone += samplesToDo;
+            }
 
             // run blocks through the engine and discard
             if (numPreBlocks-- > 0)
-            {
-                audioNode.prepareForNextBlock (*rc);
-                audioNode.renderOver (*rc);
-
-                rc->continuity = AudioRenderContext::contiguous;
-                streamTime = blockEnd;
-
                 return juce::ThreadPoolJob::jobNeedsRunningAgain;
-            }
 
-            auto numSamplesDone = (int) std::min (samplesToWrite, blockSize);
-            rc->bufferNumSamples = numSamplesDone;
-
-            if (numSamplesDone > 0)
-            {
-                audioNode.prepareForNextBlock (*rc);
-                audioNode.renderOver (*rc);
-            }
-
-            rc->continuity = AudioRenderContext::contiguous;
-            streamTime = blockEnd;
-
-            const float prog = (float) ((streamTime - streamRange.getStart()) / streamRange.getLength()) * 0.9f;
-            progressToUpdate = juce::jlimit (0.0f, 0.9f, prog);
+            progressToUpdate = juce::jlimit (0.0f, 0.9f, (float) (0.9 * samplesDone / (double) totalSamples));
 
             // NB buffer gets trashed by this call
-            if (numSamplesDone <= 0 || ! writer->isOpen()
-                 || ! writer->appendBuffer (*renderingBuffer, numSamplesDone))
+            if (samplesToDo <= 0 || ! writeChocBufferToAudioFormatWriter (pc.buffers.audio))
             {
                 // complete render
-                localPlayhead.stop();
                 writer->closeForWriting();
 
-                if (numSamplesDone <= 0)
+                if (samplesToDo <= 0)
                     progressToUpdate = 1.0f;
 
                 return juce::ThreadPoolJob::jobHasFinished;
@@ -530,46 +553,37 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
             return juce::ThreadPoolJob::jobNeedsRunningAgain;
         }
 
-        const SampleCount blockSize;
-        int numPreBlocks = 0;
-        std::unique_ptr<AudioFileWriter> writer;
-        PlayHead localPlayhead;
-        std::unique_ptr<juce::AudioBuffer<float>> renderingBuffer;
+        bool writeChocBufferToAudioFormatWriter (const choc::buffer::ChannelArrayView<float>& bufferToWrite)
+        {
+            if (! writer->isOpen())
+                return false;
 
-        std::unique_ptr<AudioRenderContext> rc;
-        legacy::EditTimeRange streamRange;
-        double streamTime = 0;
+            juce::AudioBuffer<float> buffer (bufferToWrite.data.channels, (int) bufferToWrite.getNumChannels(), (int) bufferToWrite.getNumFrames());
+            return writer->appendBuffer (buffer, buffer.getNumSamples());
+        }
+
+        const SampleCount blockSize;
+        std::unique_ptr<TracktionNodePlayer> nodePlayer;
+        std::unique_ptr<AudioFileWriter> writer;
+        double sampleRate = 0;
+        TimeRange streamRange;
+        int numPreBlocks = 0;
+        int64_t samplesDone = 0, totalSamples = 0;
+        choc::buffer::ChannelArrayBuffer<float> audioBuffer;
+        MidiMessageArray midiBuffer;
     };
 
-    std::unique_ptr<AudioNode> node;
+    std::unique_ptr<tracktion::graph::Node> node;
     std::unique_ptr<RenderContext> renderContext;
-    const double prerollTime = 0;
+    double prerollTime = 0;
 
     void createAndPrepareRenderContext()
     {
-        {
-            AudioNodeProperties props;
-            node->getAudioNodeProperties (props);
+        auto numChannels = node->getNodeProperties().numberOfChannels;
 
-            renderContext = std::make_unique<RenderContext> (destination, source, props.numberOfChannels,
-                                                             blockSize, prerollTime);
-        }
-
-        {
-            juce::Array<AudioNode*> allNodes;
-            allNodes.add (node.get());
-
-            PlaybackInitialisationInfo info =
-            {
-                0.0,
-                renderContext->writer->getSampleRate(),
-                (int) renderContext->blockSize,
-                &allNodes,
-                renderContext->rc->playhead
-            };
-
-            node->prepareAudioNodeToPlay (info);
-        }
+        renderContext = std::make_unique<RenderContext> (std::move (node), processState,
+                                                         destination, source,
+                                                         numChannels, blockSize, prerollTime);
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioNodeRenderJob)
@@ -578,7 +592,7 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
 //==============================================================================
 struct BlockBasedRenderJob : public ClipEffect::ClipEffectRenderJob
 {
-    BlockBasedRenderJob (Engine& e, const AudioFile& dest, const AudioFile& src, double sourceLength)
+    BlockBasedRenderJob (Engine& e, const AudioFile& dest, const AudioFile& src, TimeDuration sourceLength)
         : ClipEffect::ClipEffectRenderJob (e, dest, src, defaultBlockSize),
           sourceLengthSeconds (sourceLength)
     {
@@ -599,7 +613,7 @@ struct BlockBasedRenderJob : public ClipEffect::ClipEffectRenderJob
         if (reader == nullptr || reader->lengthInSamples == 0)
             return false;
 
-        sourceLengthSamples = static_cast<SampleCount> (sourceLengthSeconds * reader->sampleRate);
+        sourceLengthSamples = static_cast<SampleCount> (sourceLengthSeconds.inSeconds() * reader->sampleRate);
 
         writer = std::make_unique<AudioFileWriter> (destination, engine.getAudioFileFormatManager().getWavFormat(),
                                                     sourceInfo.numChannels, sourceInfo.sampleRate,
@@ -622,7 +636,7 @@ protected:
     std::unique_ptr<juce::AudioFormatReader> reader;
     std::unique_ptr<AudioFileWriter> writer;
 
-    double sourceLengthSeconds = 0;
+    TimeDuration sourceLengthSeconds;
     SampleCount position = 0, sourceLengthSamples = 0;
 
     SampleCount getNumSamplesForCurrentBlock() const
@@ -638,7 +652,7 @@ class WarpTimeEffectRenderJob :   public BlockBasedRenderJob
 {
 public:
     WarpTimeEffectRenderJob (Engine& e, const AudioFile& dest, const AudioFile& src,
-                             double sourceLength,
+                             TimeDuration sourceLength,
                              WarpTimeManager& wtm, AudioClipBase& c)
         : BlockBasedRenderJob (e, dest, src, sourceLength),
           clip (c), warpTimeManager (wtm)
@@ -696,17 +710,23 @@ VolumeEffect::VolumeEffect (const juce::ValueTree& v, ClipEffects& o)
 }
 
 juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> VolumeEffect::createRenderJob (const AudioFile& sourceFile,
-                                                                                                double sourceLength)
+                                                                                                TimeDuration sourceLength)
 {
     CRASH_TRACER
-    legacy::EditTimeRange timeRange (0.0, sourceLength);
+    auto timeRange = TimeRange (0s, sourceLength);
     jassert (! timeRange.isEmpty());
 
-    auto n = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {},
-                                1.0, juce::AudioChannelSet::stereo());
+    auto sourceInfo = sourceFile.getInfo();
+    const int blockSize = 128;
 
-    return new AudioNodeRenderJob (edit.engine, new PluginAudioNode (plugin, n, false),
-                                   getDestinationFile(), sourceFile, 128);
+    auto job = AudioNodeRenderJob::create (edit.engine, getDestinationFile(), sourceFile, blockSize);
+
+    auto waveNode = job->createWaveNodeForFile (sourceFile, timeRange);
+
+    job->initialise (std::make_unique<PluginNode> (std::move (waveNode), plugin,
+                                                   sourceInfo.sampleRate, (int) job->blockSize, nullptr,
+                                                   job->processState, true, false, -1));
+    return job;
 }
 
 bool VolumeEffect::hasProperties()
@@ -800,16 +820,15 @@ void FadeInOutEffect::setFadeOut (TimeDuration out)
 }
 
 juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> FadeInOutEffect::createRenderJob (const AudioFile& sourceFile,
-                                                                                                   double sourceLength)
+                                                                                                   TimeDuration sourceLength)
 {
     CRASH_TRACER
     AudioFile destFile (getDestinationFile());
-    legacy::EditTimeRange timeRange (0.0, sourceLength);
+    TimeRange timeRange (0s, sourceLength);
     jassert (! timeRange.isEmpty());
 
-    AudioNode* n = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {},
-                                      1.0, juce::AudioChannelSet::stereo());
-    auto blockSize = AudioNodeRenderJob::defaultBlockSize;
+    auto job = AudioNodeRenderJob::create (edit.engine, destFile, sourceFile, 128);
+    auto n = job->createWaveNodeForFile (sourceFile, timeRange);
 
     auto speedRatio = clipEffects.getSpeedRatioEstimate();
     auto effectRange = clipEffects.getEffectsRange();
@@ -823,20 +842,22 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> FadeInOutEffect
     {
         case EffectType::fadeInOut:
             if (fadeIn.get() > TimeDuration() || fadeOut.get() > TimeDuration())
-                n = new FadeInOutAudioNode (n,
-                                            toEditTimeRange (fadeInRange), toEditTimeRange (fadeOutRange),
-                                            fadeInType, fadeOutType);
+                n = tracktion::graph::makeNode<FadeInOutNode> (std::move (n),
+                                                               job->processState,
+                                                               fadeInRange, fadeOutRange,
+                                                               fadeInType, fadeOutType,
+                                                               true);
 
             break;
 
         case EffectType::tapeStartStop:
             if (fadeIn.get() > TimeDuration() || fadeOut.get() > TimeDuration())
-            {
-                n = new SpeedRampAudioNode (n,
-                                            toEditTimeRange (fadeInRange), toEditTimeRange (fadeOutRange),
-                                            fadeInType, fadeOutType);
-                blockSize = 128;
-            }
+                n = tracktion::graph::makeNode<SpeedRampWaveNode> (sourceFile, timeRange, TimeDuration(), TimeRange(), LiveClipLevel(), 1.0,
+                                                                   juce::AudioChannelSet::canonicalChannelSet (sourceFile.getInfo().numChannels),
+                                                                   juce::AudioChannelSet::stereo(),
+                                                                   job->processState,
+                                                                   EditItemID(), true,
+                                                                   SpeedFadeDescription { fadeInRange, fadeOutRange, fadeInType, fadeOutType });
 
             break;
 
@@ -855,10 +876,13 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> FadeInOutEffect
             break;
     }
 
-    n = new TimedMutingAudioNode (n, { legacy::EditTimeRange ({}, effectRange.getStart().inSeconds()),
-                                       legacy::EditTimeRange (effectRange.getEnd().inSeconds(), sourceLength) });
+    n = tracktion::graph::makeNode<TimedMutingNode> (std::move (n),
+                                                     juce::Array<TimeRange> { TimeRange (0s, effectRange.getStart()),
+                                                                              TimeRange (effectRange.getEnd(), sourceLength) },
+                                                     job->playHeadState);
 
-    return new AudioNodeRenderJob (edit.engine, n, destFile, sourceFile, blockSize);
+    job->initialise (std::move (n));
+    return job;
 }
 
 HashCode FadeInOutEffect::getIndividualHash() const
@@ -911,19 +935,19 @@ int StepVolumeEffect::getMaxNumNotes()
 }
 
 juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> StepVolumeEffect::createRenderJob (const AudioFile& sourceFile,
-                                                                                                    double sourceLength)
+                                                                                                    TimeDuration sourceLength)
 {
     CRASH_TRACER
-    jassert (sourceLength > 0);
 
     auto destFile = getDestinationFile();
-    legacy::EditTimeRange timeRange (0.0, sourceLength);
+    TimeRange timeRange (0s, sourceLength);
+    jassert (! timeRange.isEmpty());
 
     auto speedRatio = clipEffects.getSpeedRatioEstimate();
     auto effectRange = clipEffects.getEffectsRange();
 
-    auto fade = crossfade.get();
-    auto halfCrossfade = TimeDuration::fromSeconds (fade / 2.0);
+    auto fade = TimeDuration::fromSeconds (crossfade.get());
+    auto halfCrossfade = fade / 2.0;
     juce::Array<TimeRange> nonMuteTimes;
 
     // Calculate non-mute times
@@ -980,13 +1004,31 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> StepVolumeEffec
             t = t.rescaled (TimePosition(), speedRatio);
     }
 
-    auto waveNode = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {},
-                                       1.0, juce::AudioChannelSet::stereo());
-    auto compNode = createTrackCompAudioNode (waveNode,
-                                              TrackCompManager::TrackComp::getMuteTimes (nonMuteTimes),
-                                              nonMuteTimes, TimeDuration::fromSeconds (fade));
+    auto job = AudioNodeRenderJob::create (edit.engine, destFile, sourceFile, AudioNodeRenderJob::defaultBlockSize);
 
-    return new AudioNodeRenderJob (edit.engine, compNode, destFile, sourceFile);
+    auto node = job->createWaveNodeForFile (sourceFile, timeRange);
+
+    auto muteTimes = TrackCompManager::TrackComp::getMuteTimes (nonMuteTimes);
+
+    if (! muteTimes.isEmpty())
+    {
+        node = tracktion::graph::makeNode<TimedMutingNode> (std::move (node), muteTimes, job->playHeadState);
+
+        for (auto r : nonMuteTimes)
+        {
+            auto fadeIn = r.withLength (fade).withStart (r.getStart() - 0.0001s);
+            auto fadeOut = fadeIn.movedToEndAt (r.getEnd() + 0.0001s);
+
+            if (! (fadeIn.isEmpty() && fadeOut.isEmpty()))
+                node = tracktion::graph::makeNode<FadeInOutNode> (std::move (node), job->processState,
+                                                                  fadeIn, fadeOut,
+                                                                  AudioFadeCurve::convex,
+                                                                  AudioFadeCurve::convex, false);
+        }
+    }
+
+    job->initialise (std::move (node));
+    return job;
 }
 
 bool StepVolumeEffect::hasProperties()
@@ -1117,19 +1159,26 @@ void PitchShiftEffect::initialise()
             ap->updateStream();
 }
 
-juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> PitchShiftEffect::createRenderJob (const AudioFile& sourceFile, double sourceLength)
+juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> PitchShiftEffect::createRenderJob (const AudioFile& sourceFile, TimeDuration sourceLength)
 {
     CRASH_TRACER
-    const legacy::EditTimeRange timeRange (0.0, sourceLength);
+    TimeRange timeRange (0s, sourceLength);
     jassert (! timeRange.isEmpty());
 
-    auto n = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {},
-                                1.0, juce::AudioChannelSet::stereo());
+    const int blockSize = 512;
+
+    auto job = AudioNodeRenderJob::create (edit.engine, getDestinationFile(), sourceFile, blockSize);
+
+    auto node = job->createWaveNodeForFile (sourceFile, timeRange);
 
     // Use 1.0 second of preroll to be safe. We can't ask the plugin since it
     // may not be initialized yet
-    return new AudioNodeRenderJob (edit.engine, new PluginAudioNode (plugin, n, false),
-                                   getDestinationFile(), sourceFile, 512, 1.0);
+    job->initialise (std::make_unique<PluginNode> (std::move (node), plugin,
+                                                   sourceFile.getInfo().sampleRate, (int) job->blockSize, nullptr,
+                                                   job->processState, true, false, -1),
+                     1.0);
+
+    return job;
 }
 
 bool PitchShiftEffect::hasProperties()
@@ -1187,7 +1236,7 @@ WarpTimeEffect::WarpTimeEffect (const juce::ValueTree& v, ClipEffects& o)
 }
 
 juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> WarpTimeEffect::createRenderJob (const AudioFile& sourceFile,
-                                                                                                  double sourceLength)
+                                                                                                  TimeDuration sourceLength)
 {
     CRASH_TRACER
     return new WarpTimeEffectRenderJob (edit.engine, getDestinationFile(), sourceFile,
@@ -1331,30 +1380,35 @@ PluginEffect::PluginEffect (const juce::ValueTree& v, ClipEffects& o)
 }
 
 juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> PluginEffect::createRenderJob (const AudioFile& sourceFile,
-                                                                                                double sourceLength)
+                                                                                                TimeDuration sourceLength)
 {
     CRASH_TRACER
 
     const ScopedPluginUnloadInhibitor lock (*pluginUnloadInhibitor);
 
-    const legacy::EditTimeRange timeRange (0.0, sourceLength);
+    TimeRange timeRange (0s, sourceLength);
     jassert (! timeRange.isEmpty());
 
-    AudioNode* n = new WaveAudioNode (sourceFile, timeRange, 0.0, {}, {},
-                                      1.0, juce::AudioChannelSet::stereo());
+    const int blockSize = 512;
+    auto job = AudioNodeRenderJob::create (edit.engine, getDestinationFile(), sourceFile, blockSize);
+
+    auto n = job->createWaveNodeForFile (sourceFile, timeRange);
 
     if (plugin != nullptr)
     {
         plugin->setProcessingEnabled (true);
-        n = new PluginAudioNode (plugin, n, false);
-    }
 
-    // Use 1.0 second of preroll to be safe. We can't ask the plugin since it
-    // may not be initialized yet
-    auto job = new AudioNodeRenderJob (edit.engine, n, getDestinationFile(), sourceFile, 512, 1.0);
+        n = std::make_unique<PluginNode> (std::move (n), plugin,
+                                          job->processState.sampleRate, (int) job->blockSize, nullptr,
+                                          job->processState, true, false, -1);
+    }
 
     if (pluginUnloadInhibitor != nullptr)
         pluginUnloadInhibitor->increaseForJob (30 * 1000, job);
+
+    // Use 1.0 second of preroll to be safe. We can't ask the plugin since it
+    // may not be initialized yet
+    job->initialise (std::move (n), 1.0);
 
     return job;
 }
@@ -1436,7 +1490,7 @@ void PluginEffect::curveHasChanged (AutomatableParameter&)
 //==============================================================================
 struct NormaliseEffect::NormaliseRenderJob : public BlockBasedRenderJob
 {
-    NormaliseRenderJob (Engine& e, const AudioFile& dest, const AudioFile& src, double sourceLength, double gain)
+    NormaliseRenderJob (Engine& e, const AudioFile& dest, const AudioFile& src, TimeDuration sourceLength, double gain)
         : BlockBasedRenderJob (e, dest, src, sourceLength), maxGain (gain) {}
 
     bool renderNextBlock() override
@@ -1488,7 +1542,7 @@ NormaliseEffect::~NormaliseEffect()
     notifyListenersOfDeletion();
 }
 
-juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> NormaliseEffect::createRenderJob (const AudioFile& sourceFile, double sourceLength)
+juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> NormaliseEffect::createRenderJob (const AudioFile& sourceFile, TimeDuration sourceLength)
 {
     CRASH_TRACER
 
@@ -1514,7 +1568,7 @@ juce::String NormaliseEffect::getSelectableDescription()
 //==============================================================================
 struct MakeMonoEffect::MakeMonoRenderJob : public BlockBasedRenderJob
 {
-    MakeMonoRenderJob (Engine& e, const AudioFile& dest, const AudioFile& src, double sourceLength, SrcChannels srcCh)
+    MakeMonoRenderJob (Engine& e, const AudioFile& dest, const AudioFile& src, TimeDuration sourceLength, SrcChannels srcCh)
         : BlockBasedRenderJob (e, dest, src, sourceLength), srcChannels (srcCh) {}
 
     bool setUpRender() override
@@ -1532,7 +1586,7 @@ struct MakeMonoEffect::MakeMonoRenderJob : public BlockBasedRenderJob
         if (reader == nullptr || reader->lengthInSamples == 0)
             return false;
 
-        sourceLengthSamples = static_cast<SampleCount> (sourceLengthSeconds * reader->sampleRate);
+        sourceLengthSamples = static_cast<SampleCount> (sourceLengthSeconds.inSeconds() * reader->sampleRate);
 
         writer = std::make_unique<AudioFileWriter> (destination, engine.getAudioFileFormatManager().getWavFormat(),
                                                     1, sourceInfo.sampleRate,
@@ -1600,7 +1654,7 @@ MakeMonoEffect::~MakeMonoEffect()
     notifyListenersOfDeletion();
 }
 
-juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> MakeMonoEffect::createRenderJob (const AudioFile& sourceFile, double sourceLength)
+juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> MakeMonoEffect::createRenderJob (const AudioFile& sourceFile, TimeDuration sourceLength)
 {
     CRASH_TRACER
     return new MakeMonoRenderJob (edit.engine, getDestinationFile(), sourceFile,
@@ -1625,7 +1679,7 @@ juce::String MakeMonoEffect::getSelectableDescription()
 //==============================================================================
 struct ReverseEffect::ReverseRenderJob  : public BlockBasedRenderJob
 {
-    ReverseRenderJob (Engine& e, const AudioFile& dest, const AudioFile& src, double sourceLength)
+    ReverseRenderJob (Engine& e, const AudioFile& dest, const AudioFile& src, TimeDuration sourceLength)
         : BlockBasedRenderJob (e, dest, src, sourceLength) {}
 
     bool renderNextBlock() override
@@ -1654,7 +1708,7 @@ ReverseEffect::ReverseEffect (const juce::ValueTree& v, ClipEffects& o)
 }
 
 juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> ReverseEffect::createRenderJob (const AudioFile& sourceFile,
-                                                                                                 double sourceLength)
+                                                                                                 TimeDuration sourceLength)
 {
     CRASH_TRACER
     return new ReverseRenderJob (edit.engine, getDestinationFile(), sourceFile, sourceLength);
@@ -1663,7 +1717,7 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> ReverseEffect::
 //==============================================================================
 struct InvertEffect::InvertRenderJob : public BlockBasedRenderJob
 {
-    InvertRenderJob (Engine& e, const AudioFile& dest, const AudioFile& src, double sourceLength)
+    InvertRenderJob (Engine& e, const AudioFile& dest, const AudioFile& src, TimeDuration sourceLength)
         : BlockBasedRenderJob (e, dest, src, sourceLength) {}
 
     bool renderNextBlock() override
@@ -1692,7 +1746,7 @@ InvertEffect::InvertEffect (const juce::ValueTree& v, ClipEffects& o)
 }
 
 juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> InvertEffect::createRenderJob (const AudioFile& sourceFile,
-                                                                                                double sourceLength)
+                                                                                                TimeDuration sourceLength)
 {
     CRASH_TRACER
     return new InvertRenderJob (edit.engine, getDestinationFile(), sourceFile, sourceLength);
@@ -1802,7 +1856,7 @@ RenderManager::Job::Ptr ClipEffects::createRenderJob (const AudioFile& destFile,
     CRASH_TRACER
     clip.edit.getTransport().forceOrphanFreezeAndProxyFilesPurge();
 
-    const double length = sourceFile.getLength();
+    auto length = TimeDuration::fromSeconds (sourceFile.getLength());
     AudioFile inputFile (sourceFile);
     juce::ReferenceCountedArray<ClipEffect::ClipEffectRenderJob> jobs;
 

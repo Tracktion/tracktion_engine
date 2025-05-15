@@ -354,7 +354,7 @@ public:
 
             {
                 const ScopedBenchmark sb (createBenchmarkDescription ("Node", "Serial Racks", "Build NodeGraph for 10 Racks on a track"));
-                [[ maybe_unused ]] auto graph = createNodeGraph (std::move (editNode));
+                [[ maybe_unused ]] auto graph = createNodeGraph (std::move (editNode), false);
             }
         }
     }

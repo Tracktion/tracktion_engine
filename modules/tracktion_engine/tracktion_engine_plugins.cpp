@@ -45,8 +45,6 @@ using namespace std::literals;
 #include "playback/graph/tracktion_TrackMutingNode.h"
 #include "playback/graph/tracktion_RackNode.h"
 
-#include "playback/audionodes/tracktion_AudioNode.h"
-
 #include "model/automation/modifiers/tracktion_ModifierInternal.h"
 
 #include "plugins/tracktion_Plugin.cpp"

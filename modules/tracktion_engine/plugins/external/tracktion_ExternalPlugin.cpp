@@ -803,32 +803,27 @@ void ExternalPlugin::refreshParameterValues()
             p->valueChangedByPlugin();
 }
 
-std::unique_ptr<juce::PluginDescription> ExternalPlugin::findDescForUID (int uid, int deprecatedUid) const
+static std::unique_ptr<juce::PluginDescription> findMatchingPluginDescription (Engine& engine, const juce::PluginDescription& desc)
 {
-    if (uid != 0)
-        for (auto d : engine.getPluginManager().knownPluginList.getTypes())
-            if (d.uniqueId == uid)
-                return std::make_unique<juce::PluginDescription> (d);
+    auto& pm = engine.getPluginManager();
 
-    if (deprecatedUid != 0)
-        for (auto d : engine.getPluginManager().knownPluginList.getTypes())
-            if (d.deprecatedUid == deprecatedUid)
-                return std::make_unique<juce::PluginDescription> (d);
-
-    return {};
-}
-
-std::unique_ptr<juce::PluginDescription> ExternalPlugin::findDescForFileOrID (const juce::String& fileOrID) const
-{
-    if (fileOrID.isNotEmpty())
-    {
-        auto& pm = engine.getPluginManager();
-
+    if (desc.uniqueId != 0)
         for (auto d : pm.knownPluginList.getTypes())
-            if (d.fileOrIdentifier == fileOrID)
+            if (d.uniqueId == desc.uniqueId && (desc.fileOrIdentifier.isEmpty() || desc.fileOrIdentifier == d.fileOrIdentifier))
                 return std::make_unique<juce::PluginDescription> (d);
 
-        return engine.getEngineBehaviour().findDescriptionForFileOrID (fileOrID);
+    if (desc.deprecatedUid != 0)
+        for (auto d : pm.knownPluginList.getTypes())
+            if (d.deprecatedUid == desc.deprecatedUid)
+                return std::make_unique<juce::PluginDescription> (d);
+
+    if (desc.fileOrIdentifier.isNotEmpty())
+    {
+        for (auto d : pm.knownPluginList.getTypes())
+            if (d.fileOrIdentifier == desc.fileOrIdentifier)
+                return std::make_unique<juce::PluginDescription> (d);
+
+        return engine.getEngineBehaviour().findDescriptionForFileOrID (desc.fileOrIdentifier);
     }
 
     return {};
@@ -882,10 +877,7 @@ std::unique_ptr<juce::PluginDescription> ExternalPlugin::findMatchingPlugin() co
             return p;
     }
 
-    if (auto p = findDescForFileOrID (desc.fileOrIdentifier))
-        return p;
-
-    if (auto p = findDescForUID (desc.uniqueId, desc.deprecatedUid))
+    if (auto p = findMatchingPluginDescription (engine, desc))
         return p;
 
     auto getPreferredFormat = [] (juce::PluginDescription d)
@@ -907,10 +899,6 @@ std::unique_ptr<juce::PluginDescription> ExternalPlugin::findMatchingPlugin() co
     for (auto d : pm.knownPluginList.getTypes())
         if (juce::File::createFileWithoutCheckingPath (d.fileOrIdentifier).getFileNameWithoutExtension() == desc.name)
             return std::make_unique<juce::PluginDescription> (d);
-
-    if (desc.uniqueId == 0x4d44416a || desc.deprecatedUid == 0x4d44416a) // old JX-10: hack to update to JX-16
-        if (auto p = findDescForUID (0x4D44414A, 0x4D44414A))
-            return p;
 
     return {};
 }
@@ -1206,13 +1194,12 @@ void ExternalPlugin::reset()
 
 void ExternalPlugin::setEnabled (bool shouldEnable)
 {
+    bool wasEnabled = isEnabled();
     Plugin::setEnabled (shouldEnable);
 
-    if (shouldEnable != isEnabled())
+    if (wasEnabled != isEnabled())
     {
-        if (auto pi = getAudioPluginInstance())
-            pi->reset();
-
+        reset();
         propertiesChanged();
     }
 }

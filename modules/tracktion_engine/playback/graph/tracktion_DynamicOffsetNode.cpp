@@ -35,7 +35,7 @@ DynamicOffsetNode::DynamicOffsetNode (ProcessState& editProcessState,
 
     for (auto& i : inputs)
     {
-        for (auto n : transformNodes (*i))
+        for (auto n : transformNodes (*i, false))
         {
             orderedNodes.push_back (n);
 

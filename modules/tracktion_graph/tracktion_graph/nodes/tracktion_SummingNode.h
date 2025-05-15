@@ -99,10 +99,10 @@ public:
         return nodes;
     }
 
-    TransformResult transform (Node&, const std::vector<Node*>&, TransformCache&) override
+    TransformResult transform (TransformOptions& options) override
     {
         const bool hasFlattened = flattenSummingNodes();
-        const bool hasCreatedLatency = createLatencyNodes();
+        const bool hasCreatedLatency = ! options.disableLatencyCompensation && createLatencyNodes();
 
         if (hasFlattened)
             return TransformResult::nodesDeleted;

@@ -111,13 +111,14 @@ namespace node_player_utils
                                                      double sampleRate, int blockSize,
                                                      std::function<NodeBuffer (choc::buffer::Size)> allocateAudioBuffer = nullptr,
                                                      std::function<void (NodeBuffer&&)> deallocateAudioBuffer = nullptr,
-                                                     bool nodeMemorySharingEnabled = false)
+                                                     bool nodeMemorySharingEnabled = false,
+                                                     bool disableLatencyCompensation = false)
     {
         if (node == nullptr)
             return {};
 
         // First give the Nodes a chance to transform
-        auto nodeGraph = createNodeGraph (std::move (node));
+        auto nodeGraph = createNodeGraph (std::move (node), disableLatencyCompensation);
         assert (! areThereAnyCycles (nodeGraph->orderedNodes));
         jassert (areNodeIDsUnique (nodeGraph->orderedNodes, true));
 
