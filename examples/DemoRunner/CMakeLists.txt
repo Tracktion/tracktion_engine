@@ -74,7 +74,8 @@ set(SourceFiles
     demos/PlaybackDemo.h
     demos/PluginDemo.h
     demos/RecordingDemo.h
-    demos/StepSequencerDemo.h)
+    demos/StepSequencerDemo.h
+    demos/TestDemo.h)
 
 target_sources(${TARGET_NAME} PRIVATE ${SourceFiles})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/.. PREFIX Source FILES ${SourceFiles})
