@@ -1,5 +1,9 @@
 # Changelist
 
+## v3.2
+- Automation modes (read/write/touch/latch)
+- AutomationCurve bypass
+
 ## v3
 - Clip launcher for non-linear composition
   - Launch clips quantised to timeline
