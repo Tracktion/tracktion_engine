@@ -1,4 +1,23 @@
-Demo set-up steps for macOS
+# REACT SET UP
+Once you've pulled from the main branch, cd into the reactdaw/my-app folder in the repo. All react app stuff will be in this folder from now on (tracktion folders may be discarded later).
+
+If you don't have npm, install using brew:
+```
+brew install npm
+```
+
+Install require node packages and tone.js using
+```
+npm install
+npm install tone
+```
+
+To start the app, run
+```
+npm start
+```
+
+Tracktion Demo set-up steps for macOS
 
 CLONING:
 ```
