@@ -20,7 +20,6 @@
   }
   
   .track-lane {
-    display: relative;
     height: 40px;
     border-bottom: 1px solid #333;
     background-color: #2a2a2a;
@@ -29,11 +28,16 @@
   
   .clip {
     height: 100%;
-    background-color: #3fa9f5;
     border-radius: 4px;
-    margin: 2px;
     box-shadow: 0 0 4px #3fa9f5;
-    transition: all 0.2s;
-    position: absolute;
+  } 
+  
+  .playhead {
+    pointer-events: none;
+  }
+
+  .timeline-container {
+    position: relative;
+    cursor: pointer;
   }
   
