@@ -1,3 +1,72 @@
+Demo set-up steps for macOS
+
+CLONING:
+```
+git clone --recurse-submodules https://github.com/lavinialei2/musiclingo.git
+```
+There will be an error about being unable to clone the subrepo juce, so clone that separately with
+```
+git clone https://github.com/juce-framework/JUCE.git
+```
+Then once this repo is cloned, drag and drop it into musiclingo/modules (and you'll be prompted with are you sure you want to replace this other folder with the same name, and say yes because the current juce is empty).
+
+
+BUILDING:
+If you don't have cmake already, install using brew (and if you don't have brew, google how to install homebrew):
+```
+brew install cmake
+```
+
+Now time to build the examples! You may run into an error with being unable to find CC or CXX compiler when running the cmake command, but you can set the compiler to clang with the following:
+```
+export CC=/usr/bin/clang
+export CXX=/usr/bin/clang++
+```
+First cd into the musiclingo directory, wherever you have stored it, and then cd into the tests directory to generate the examples:
+```
+cd [path to your musiclingo directory]
+cd tests
+./generate_examples
+```
+And to actually build (the below snippet cds out of tests and into examples/DemoRunner, removes any existing build in case you've messed up and need to restart, and then builds):
+```
+cd ../examples/DemoRunner
+rm -rf build
+mkdir build && cd build
+cmake .. -G Xcode
+```
+This builds the demos into an Xcode project, which you can open in Xcode with:
+```
+open DemoRunner.xcodeproj
+```
+
+
+IN XCODE:
+Make sure you have version 15.1 or later. Make sure the scheme is DemoRunner (the default may say DemoRunner Binary Data or All Build) and target is My Mac, which should be the default. You should be able to just run and have it say build successful and have the basic GUI pop up. 
+
+Potential CodeSignature issue:
+Make sure the repo is not in an iCloud directory, and if you still get a Codesign build error, then do this:
+Click the Xcode project in the left sidebar which will pull up some settings
+Then select the project under Targets (not project)
+Click on Signing & Capabilities 
+Check the box for “automatically manage signing”
+Select a team and make sure the signing certificate is set to Development
+Command + Shift + K
+Command + B
+
+
+HOW TO ADD A DEMO TO DEMORUNNER:
+In examples/DemoRunner/demos, create a new header file. I called it TestDemo.h, and it's functionally just a copy of MidiRecordingDemo.h, but I found and replaced all instances of "MidiRecordingDemo" with "TestDemo" in the file. To make sure it is included in the build, go to examples/DemoRunner/DemoRunner.h and ctrl+f "MidiRecordingDemo" and you should find an include block of all the demo files. Add your newly made file (#include "demos/TestDemo.h" in my case). Then go to examples/DemoRunner/CMakeLists.txt and ctrl+f "MidiRecordingDemo" and you should see a set(SourceFiles...), where you should add your new demo as well. Then, follow the instructions above again to regenerate the examples and build.
+
+To make regenerating examples easier out of build
+```
+cd ..
+cd ..
+cd ../tests
+./generate_examples
+```
+
+
 ![](tutorials/images/tracktion_engine_powered.png)
 
 master: [![Build](https://github.com/Tracktion/tracktion_engine/actions/workflows/build.yaml/badge.svg?branch=master)](https://github.com/Tracktion/tracktion_engine/actions/workflows/build.yaml)
