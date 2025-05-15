@@ -1,0 +1,39 @@
+.timeline-container {
+    width: 100%;
+    overflow-x: auto;
+    padding: 10px;
+    background: #1e1e1e;
+  }
+  
+  .timeline-grid {
+    display: flex;
+    color: white;
+    font-size: 12px;
+    border-bottom: 1px solid #444;
+  }
+  
+  .beat-marker {
+    min-width: 50px;
+    text-align: center;
+    border-right: 1px solid #444;
+    padding: 2px 0;
+  }
+  
+  .track-lane {
+    display: relative;
+    height: 40px;
+    border-bottom: 1px solid #333;
+    background-color: #2a2a2a;
+    position: relative;
+  }
+  
+  .clip {
+    height: 100%;
+    background-color: #3fa9f5;
+    border-radius: 4px;
+    margin: 2px;
+    box-shadow: 0 0 4px #3fa9f5;
+    transition: all 0.2s;
+    position: absolute;
+  }
+  
