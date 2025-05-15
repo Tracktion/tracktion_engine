@@ -4,7 +4,6 @@ import "./Timeline.css";
 export default function Timeline({ tracks = [], numBeats = 16 }) {
   return (
     <div className="timeline-container">
-      {/* Time grid */}
       <div className="timeline-grid">
         {[...Array(numBeats)].map((_, i) => (
           <div className="beat-marker" key={i}>
@@ -12,9 +11,7 @@ export default function Timeline({ tracks = [], numBeats = 16 }) {
           </div>
         ))}
       </div>
-
-      {/* Track lanes */}
-      {tracks.map((track, i) => (
+      {tracks.map((track) => (
         <div className="track-lane" key={track.id}>
           {track.clip && (
             <div
@@ -22,7 +19,8 @@ export default function Timeline({ tracks = [], numBeats = 16 }) {
               style={{
                 left: `${(track.clip.start / numBeats) * 100}%`,
                 width: `${(track.clip.duration / numBeats) * 100}%`,
-                position: "relative", // clip positioning
+                position: "absolute",
+                backgroundColor: "#3fa9f5",
               }}
               title={`Track ${track.id}`}
             />

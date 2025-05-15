@@ -12,23 +12,24 @@ function App() {
     const newTrack = {
       id: Date.now(),
       player: null,
-      clip: null, // holds { url, start, duration }
+      clip: null, // { url, start, duration }
     };
-
     setTracks([...tracks, newTrack]);
+  };
+
+  const updateTrackClip = (id, clip) => {
+    setTracks((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, clip } : t))
+    );
   };
 
   return (
     <div className="App">
       <h1>🎛 Simple React DAW</h1>
-
       <TransportControls isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
-
       <button onClick={addTrack}>Add Track</button>
-
       <Timeline tracks={tracks} numBeats={16} />
-
-      <TrackList tracks={tracks} />
+      <TrackList tracks={tracks} updateTrackClip={updateTrackClip} />
     </div>
   );
 }
