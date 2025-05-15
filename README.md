@@ -12,7 +12,7 @@ Then once this repo is cloned, drag and drop it into musiclingo/modules (and you
 
 
 BUILDING:
-If you don't have cmake already, install using brew:
+If you don't have cmake already, install using brew (and if you don't have brew, google how to install homebrew):
 ```
 brew install cmake
 ```
@@ -42,9 +42,17 @@ open DemoRunner.xcodeproj
 
 
 IN XCODE:
-Make sure you have version 15.1 or later. Make sure the scheme is DemoRunner (the default may say DemoRunner Binary Data) and target is My Mac, which should be the default. You should be able to just run and have it say build successful and have the basic GUI pop up. 
+Make sure you have version 15.1 or later. Make sure the scheme is DemoRunner (the default may say DemoRunner Binary Data or All Build) and target is My Mac, which should be the default. You should be able to just run and have it say build successful and have the basic GUI pop up. 
 
-Potential CodeSignature issue: fix it via tbd
+Potential CodeSignature issue:
+Make sure the repo is not in an iCloud directory, and if you still get a Codesign build error, then do this:
+Click the Xcode project in the left sidebar which will pull up some settings
+Then select the project under Targets (not project)
+Click on Signing & Capabilities 
+Check the box for “automatically manage signing”
+Select a team and make sure the signing certificate is set to Development
+Command + Shift + K
+Command + B
 
 
 HOW TO ADD A DEMO TO DEMORUNNER:
