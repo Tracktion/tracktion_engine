@@ -25,6 +25,27 @@ function App() {
     return () => cancelAnimationFrame(id);
   }, [isPlaying]);
 
+  // Use space bar on keyboard to control play/pause
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.code === "Space") {
+        e.preventDefault(); // prevent page scroll
+        setIsPlaying((prev) => {
+          const newPlay = !prev;
+          if (newPlay) {
+            Tone.Transport.start();
+          } else {
+            Tone.Transport.pause();
+          }
+          return newPlay;
+        });
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   const onScrubPlayhead = (positionInSeconds) => {
     Tone.Transport.seconds = positionInSeconds;
     setPlayheadPosition(positionInSeconds);
@@ -163,6 +184,8 @@ function App() {
         >
           Delete Track
         </button>
+        <button onClick={() => onScrubPlayhead(0)}>Reset Playhead</button>
+
         <br></br>
         <label>Playhead:</label>
         <input

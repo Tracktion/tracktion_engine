@@ -43,6 +43,9 @@ export default function Timeline({
     <div
       ref={timelineRef}
       style={{
+        overflowX: "auto", // horizontal scroll
+        overflowY: "visible", // allow track height to expand
+        whiteSpace: "nowrap", // Prevent wrapping of children
         position: "relative",
         width: "100%",
         backgroundColor: "#1e1e1e",
@@ -53,8 +56,9 @@ export default function Timeline({
       {/* Grid that handles click-to-scrub */}
       <div
         style={{
+          width: `${numBeats * 80}px`,
           display: "flex",
-          position: "relative",
+          position: "inline-block",
           height: "24px",
           borderBottom: "1px solid #555",
         }}
