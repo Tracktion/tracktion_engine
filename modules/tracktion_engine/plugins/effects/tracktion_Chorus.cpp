@@ -13,18 +13,59 @@ namespace tracktion { inline namespace engine
 
 ChorusPlugin::ChorusPlugin (PluginCreationInfo info)  : Plugin (info)
 {
+    depthParam = addParam ("depth", TRANS("Depth"), { 0.0f, 10.0f },
+                          [] (float value) { return juce::String (value, 1) + " ms"; },
+                          [] (const juce::String& s) { return s.getFloatValue(); });
+
+    speedParam = addParam ("speed", TRANS("Speed"), { 0.0f, 10.0f },
+                          [] (float value) { return juce::String (value, 1) + " Hz"; },
+                          [] (const juce::String& s) { return s.getFloatValue(); });
+
+    widthParam = addParam ("width", TRANS("Width"), { 0.0f, 1.0f },
+                          [] (float value) { return juce::String ((int)(100.0f * value)) + "%"; },
+                          [] (const juce::String& s) { return s.getFloatValue(); });
+
+    mixParam = addParam ("mix", TRANS("Mix"), { 0.0f, 1.0f },
+                        [] (float value) { return juce::String ((int)(100.0f * value)) + "%"; },
+                        [] (const juce::String& s) { return s.getFloatValue(); });
+
     auto um = getUndoManager();
 
     depthMs.referTo (state, IDs::depthMs, um, 3.0f);
     speedHz.referTo (state, IDs::speedHz, um, 1.0f);
     width.referTo (state, IDs::width, um, 0.5f);
     mixProportion.referTo (state, IDs::mixProportion, um, 0.5f);
+
+    // Attach parameters to their values
+    depthParam->attachToCurrentValue (depthMs);
+    speedParam->attachToCurrentValue (speedHz);
+    widthParam->attachToCurrentValue (width);
+    mixParam->attachToCurrentValue (mixProportion);
 }
 
 ChorusPlugin::~ChorusPlugin()
 {
     notifyListenersOfDeletion();
+
+    // Detach parameters from their values
+    depthParam->detachFromCurrentValue();
+    speedParam->detachFromCurrentValue();
+    widthParam->detachFromCurrentValue();
+    mixParam->detachFromCurrentValue();
 }
+
+// Add getter/setter implementations
+void ChorusPlugin::setDepth (float value)    { depthParam->setParameter (juce::jlimit (0.0f, 10.0f, value), juce::sendNotification); }
+float ChorusPlugin::getDepth()               { return depthParam->getCurrentValue(); }
+
+void ChorusPlugin::setSpeed (float value)    { speedParam->setParameter (juce::jlimit (0.0f, 10.0f, value), juce::sendNotification); }
+float ChorusPlugin::getSpeed()               { return speedParam->getCurrentValue(); }
+
+void ChorusPlugin::setWidth (float value)    { widthParam->setParameter (juce::jlimit (0.0f, 1.0f, value), juce::sendNotification); }
+float ChorusPlugin::getWidth()               { return widthParam->getCurrentValue(); }
+
+void ChorusPlugin::setMix (float value)      { mixParam->setParameter (juce::jlimit (0.0f, 1.0f, value), juce::sendNotification); }
+float ChorusPlugin::getMix()                 { return mixParam->getCurrentValue(); }
 
 const char* ChorusPlugin::xmlTypeName = "chorus";
 
