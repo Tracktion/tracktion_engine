@@ -37,7 +37,9 @@ function App() {
           ? {
               ...t,
               clips: t.clips.map((clip, i) =>
-                i === clipIndex ? { ...clip, start: Math.max(0, newStart) } : clip
+                i === clipIndex
+                  ? { ...clip, start: Math.max(0, newStart) }
+                  : clip
               ),
             }
           : t
@@ -79,6 +81,12 @@ function App() {
       clips: [],
     };
     setTracks([...tracks, newTrack]);
+  };
+
+  const deleteSelectedTrack = () => {
+    if (!selectedTrackId) return;
+    setTracks((prev) => prev.filter((t) => t.id !== selectedTrackId));
+    setSelectedTrackId(null);
   };
 
   const updateTrackClip = (id, clip) => {
@@ -147,6 +155,13 @@ function App() {
           disabled={!selectedTrackId}
         >
           {isRecording ? "Stop Recording" : "Record"}
+        </button>
+        <button
+          onClick={deleteSelectedTrack}
+          disabled={!selectedTrackId}
+          style={{ marginLeft: "8px" }}
+        >
+          Delete Track
         </button>
       </div>
 
