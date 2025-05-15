@@ -32,3 +32,12 @@
     box-shadow: 0 0 4px #3fa9f5;
   } 
   
+  .playhead {
+    pointer-events: none;
+  }
+
+  .timeline-container {
+    position: relative;
+    cursor: pointer;
+  }
+  
