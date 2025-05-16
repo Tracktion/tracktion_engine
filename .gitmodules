@@ -1,4 +1,0 @@
-[submodule "modules/juce"]
-	path = modules/juce
-    url=git@github.com:juce-framework/JUCE.git
-	branch = develop
