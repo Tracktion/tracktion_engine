@@ -363,8 +363,8 @@ namespace tracktion::inline engine
 
             // Add an InsertPlugin on track 1 and asign the second set of mono channels to it
             auto& dm = engine.getDeviceManager();
-            dm.setDeviceInChannelStereo (0, false);
-            dm.setDeviceOutChannelStereo (0, false);
+            dm.setAllWaveInputsToNumChannels (1);
+            dm.setAllWaveOutputsToNumChannels (1);
             auto waveOutput = dm.getWaveOutputDevices();
             auto waveInputs = dm.getWaveInputDevices();
             auto insertPlugin = insertNewPlugin<InsertPlugin> (sourceTrack, 0);
