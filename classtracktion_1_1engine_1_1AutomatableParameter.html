@@ -102,6 +102,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierSource.html">ModifierSource</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base class for things that can be used to modify parameters.  <a href="structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierSource.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1ScopedActiveParameter.html">ScopedActiveParameter</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -129,7 +131,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad6bd7310396eb6585771859d4c18de5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c6e2f1621edfcfac96c08538510f6e0" id="r_a7c6e2f1621edfcfac96c08538510f6e0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a7c6e2f1621edfcfac96c08538510f6e0">getTrack</a> () <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">const</a> <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">noexcept</a></td></tr>
 <tr class="separator:a7c6e2f1621edfcfac96c08538510f6e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a703c7520517af4f93bc78782814266e8" id="r_a703c7520517af4f93bc78782814266e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1AutomationCurve.html">AutomationCurve</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a703c7520517af4f93bc78782814266e8">getCurve</a> () <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">const</a> <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">noexcept</a></td></tr>
+<tr class="memitem:a703c7520517af4f93bc78782814266e8" id="r_a703c7520517af4f93bc78782814266e8"><td class="memItemLeft" align="right" valign="top">AutomationCurve &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a703c7520517af4f93bc78782814266e8">getCurve</a> () <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">const</a> <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">noexcept</a></td></tr>
 <tr class="separator:a703c7520517af4f93bc78782814266e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a918b2cab734fb96ea6412554b7666bd3" id="r_a918b2cab734fb96ea6412554b7666bd3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a918b2cab734fb96ea6412554b7666bd3">attachToCurrentValue</a> (juce::CachedValue&lt; <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">float</a> &gt; &amp;)</td></tr>
 <tr class="separator:a918b2cab734fb96ea6412554b7666bd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -186,12 +188,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abde8c499041c160f27ebe6ba89a37619" id="r_abde8c499041c160f27ebe6ba89a37619"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierAssignment.html#ac542d6f2b59c9c4d13fc4e49405b1539">ModifierAssignment::Ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#abde8c499041c160f27ebe6ba89a37619">addModifier</a> (<a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierSource.html">ModifierSource</a> &amp;, <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">float</a> value=1.0f, <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">float</a> offset=0.0f, <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">float</a> curve=0.5f)</td></tr>
 <tr class="memdesc:abde8c499041c160f27ebe6ba89a37619"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an assignment for a given source.  <br /></td></tr>
 <tr class="separator:abde8c499041c160f27ebe6ba89a37619"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a1fb1ad319d3476cbb0ff92d6c8d56b" id="r_a0a1fb1ad319d3476cbb0ff92d6c8d56b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a0a1fb1ad319d3476cbb0ff92d6c8d56b">removeModifier</a> (<a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierAssignment.html">ModifierAssignment</a> &amp;)</td></tr>
-<tr class="memdesc:a0a1fb1ad319d3476cbb0ff92d6c8d56b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes an assignment.  <br /></td></tr>
-<tr class="separator:a0a1fb1ad319d3476cbb0ff92d6c8d56b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbd68ddbafde89315a718613cf52a046" id="r_abbd68ddbafde89315a718613cf52a046"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#abbd68ddbafde89315a718613cf52a046">removeModifier</a> (<a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierSource.html">ModifierSource</a> &amp;)</td></tr>
-<tr class="memdesc:abbd68ddbafde89315a718613cf52a046"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes assignments for a <a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierSource.html" title="Base class for things that can be used to modify parameters.">ModifierSource</a>.  <br /></td></tr>
-<tr class="separator:abbd68ddbafde89315a718613cf52a046"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e0828387e26898073e7f9549e980842" id="r_a3e0828387e26898073e7f9549e980842"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a3e0828387e26898073e7f9549e980842">removeModifier</a> (<a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierAssignment.html">ModifierAssignment</a> &amp;)</td></tr>
+<tr class="memdesc:a3e0828387e26898073e7f9549e980842"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes an assignment.  <br /></td></tr>
+<tr class="separator:a3e0828387e26898073e7f9549e980842"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdfde646b26123b1da4280b47f4b1a61" id="r_abdfde646b26123b1da4280b47f4b1a61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#abdfde646b26123b1da4280b47f4b1a61">removeModifier</a> (<a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierSource.html">ModifierSource</a> &amp;)</td></tr>
+<tr class="memdesc:abdfde646b26123b1da4280b47f4b1a61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes assignments for a <a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierSource.html" title="Base class for things that can be used to modify parameters.">ModifierSource</a>.  <br /></td></tr>
+<tr class="separator:abdfde646b26123b1da4280b47f4b1a61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a550a57d07dec0398cce3fda9ec2bcd52" id="r_a550a57d07dec0398cce3fda9ec2bcd52"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a550a57d07dec0398cce3fda9ec2bcd52">hasActiveModifierAssignments</a> () <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">const</a></td></tr>
 <tr class="memdesc:a550a57d07dec0398cce3fda9ec2bcd52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if any ModifierSources are currently in use by assignments.  <br /></td></tr>
 <tr class="separator:a550a57d07dec0398cce3fda9ec2bcd52"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -357,6 +359,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a372be32c8a0a5266b61931bbecb0454c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a165e0aaaf18c52ee4d44a15ff6325e60" id="r_a165e0aaaf18c52ee4d44a15ff6325e60"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">float</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a165e0aaaf18c52ee4d44a15ff6325e60">currentModifierValue</a> { 0.0f }</td></tr>
 <tr class="separator:a165e0aaaf18c52ee4d44a15ff6325e60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a193179e257a4dbfd6dceccbda6679d2d" id="r_a193179e257a4dbfd6dceccbda6679d2d"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">int</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a193179e257a4dbfd6dceccbda6679d2d">numActiveAutomationSources</a> { 0 }</td></tr>
+<tr class="separator:a193179e257a4dbfd6dceccbda6679d2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab18f9fc6a954e490a45a9f23b0786a5c" id="r_ab18f9fc6a954e490a45a9f23b0786a5c"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">bool</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab18f9fc6a954e490a45a9f23b0786a5c">isRecording</a> { <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">false</a> }</td></tr>
 <tr class="separator:ab18f9fc6a954e490a45a9f23b0786a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a2a44f883b8320b13fbf844b98608ee" id="r_a5a2a44f883b8320b13fbf844b98608ee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a5a2a44f883b8320b13fbf844b98608ee">updateParametersRecursionCheck</a> = <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">false</a></td></tr>
@@ -600,7 +604,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1AutomationCurve.html">AutomationCurve</a> &amp; tracktion::engine::AutomatableParameter::getCurve </td>
+          <td class="memname">AutomationCurve &amp; tracktion::engine::AutomatableParameter::getCurve </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -1180,7 +1184,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a703c7520517af4f93bc78782814266e8">getCurve()</a>, and <a class="el" href="classtracktion_1_1engine_1_1AutomationCurve.html#a1bf31c565c275f5fa3579d9b173f0352">tracktion::engine::AutomationCurve::getNumPoints()</a>.</p>
+<p class="reference">References <a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#a703c7520517af4f93bc78782814266e8">getCurve()</a>.</p>
 
 </div>
 </div>
@@ -1234,14 +1238,14 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a0a1fb1ad319d3476cbb0ff92d6c8d56b" name="a0a1fb1ad319d3476cbb0ff92d6c8d56b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0a1fb1ad319d3476cbb0ff92d6c8d56b">&#9670;&#160;</a></span>removeModifier() <span class="overload">[1/2]</span></h2>
+<a id="a3e0828387e26898073e7f9549e980842" name="a3e0828387e26898073e7f9549e980842"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e0828387e26898073e7f9549e980842">&#9670;&#160;</a></span>removeModifier() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">void</a> tracktion::engine::AutomatableParameter::removeModifier </td>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">bool</a> tracktion::engine::AutomatableParameter::removeModifier </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierAssignment.html">ModifierAssignment</a> &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -1251,18 +1255,18 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Removes an assignment. </p>
-<p>N.B. the passed in assignment is likely to be deleted after this call. </p>
+<p>N.B. the passed in assignment is likely to be deleted after this call. </p><dl class="section return"><dt>Returns</dt><dd>true if the <a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierAssignment.html" title="Connects a modifier source to an AutomatableParameter.">ModifierAssignment</a> was removed </dd></dl>
 
 </div>
 </div>
-<a id="abbd68ddbafde89315a718613cf52a046" name="abbd68ddbafde89315a718613cf52a046"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abbd68ddbafde89315a718613cf52a046">&#9670;&#160;</a></span>removeModifier() <span class="overload">[2/2]</span></h2>
+<a id="abdfde646b26123b1da4280b47f4b1a61" name="abdfde646b26123b1da4280b47f4b1a61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abdfde646b26123b1da4280b47f4b1a61">&#9670;&#160;</a></span>removeModifier() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">void</a> tracktion::engine::AutomatableParameter::removeModifier </td>
+          <td class="memname"><a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">bool</a> tracktion::engine::AutomatableParameter::removeModifier </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierSource.html">ModifierSource</a> &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -1272,6 +1276,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Removes assignments for a <a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierSource.html" title="Base class for things that can be used to modify parameters.">ModifierSource</a>. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if the <a class="el" href="structtracktion_1_1engine_1_1AutomatableParameter_1_1ModifierSource.html" title="Base class for things that can be used to modify parameters.">ModifierSource</a> was removed </dd></dl>
 
 </div>
 </div>
@@ -2557,6 +2562,28 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a193179e257a4dbfd6dceccbda6679d2d" name="a193179e257a4dbfd6dceccbda6679d2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a193179e257a4dbfd6dceccbda6679d2d">&#9670;&#160;</a></span>numActiveAutomationSources</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::atomic&lt;<a class="el" href="classtracktion_1_1engine_1_1AutomatableParameter.html#ab4746d9c9663430beba5b4fb901b683d">int</a>&gt; tracktion::engine::AutomatableParameter::numActiveAutomationSources { 0 }</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">mutable</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ab18f9fc6a954e490a45a9f23b0786a5c" name="ab18f9fc6a954e490a45a9f23b0786a5c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab18f9fc6a954e490a45a9f23b0786a5c">&#9670;&#160;</a></span>isRecording</h2>
 
@@ -2697,7 +2724,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 15 2025 10:37:43 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Fri May 16 2025 14:22:28 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

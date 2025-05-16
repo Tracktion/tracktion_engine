@@ -83,28 +83,37 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AutomationCurve.html">tracktion::engine::AutomationCurve</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AutomationCurve.html">engine::AutomationCurve</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AutomationCurve_1_1AutomationPoint.html">tracktion::engine::AutomationCurve::AutomationPoint</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1AutomationCurve_1_1AutomationPoint.html">engine::AutomationCurve::AutomationPoint</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespacetracktion" id="r_namespacetracktion"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion.html">tracktion</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacetracktion_1_1engine" id="r_namespacetracktion_1_1engine"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html">tracktion::engine</a></td></tr>
+<tr class="memitem:namespaceengine" id="r_namespaceengine"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html">engine</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a7323140bc0794f96471d49cfcde34908" id="r_a7323140bc0794f96471d49cfcde34908"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a7323140bc0794f96471d49cfcde34908">tracktion::engine::simplify</a> (<a class="el" href="classtracktion_1_1engine_1_1AutomationCurve.html">AutomationCurve</a> &amp;, int strength, TimeRange)</td></tr>
-<tr class="memdesc:a7323140bc0794f96471d49cfcde34908"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes points from the curve to simplfy it and returns the number of points removed.  <br /></td></tr>
-<tr class="separator:a7323140bc0794f96471d49cfcde34908"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a506246f96dd916f0cd46995542e59a8b" id="r_a506246f96dd916f0cd46995542e59a8b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#a506246f96dd916f0cd46995542e59a8b">engine::simplify</a> (<a class="el" href="classengine_1_1AutomationCurve.html">AutomationCurve</a> &amp;, int strength, EditTimeRange, juce::Range&lt; float &gt; valueRange, juce::UndoManager *)</td></tr>
+<tr class="memdesc:a506246f96dd916f0cd46995542e59a8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes points from the curve to simplify it and returns the number of points removed.  <br /></td></tr>
+<tr class="separator:a506246f96dd916f0cd46995542e59a8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69d5313d2aeefd2fb6017854fcab6de0" id="r_a69d5313d2aeefd2fb6017854fcab6de0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#a69d5313d2aeefd2fb6017854fcab6de0">engine::mergeCurve</a> (<a class="el" href="classengine_1_1AutomationCurve.html">AutomationCurve</a> &amp;dest, EditTimeRange destRange, const <a class="el" href="classengine_1_1AutomationCurve.html">AutomationCurve</a> &amp;source, EditPosition sourceStartTime, float defaultValue, EditDuration fadeLength, bool leaveOpenAtStart, bool leaveOpenEnded)</td></tr>
+<tr class="separator:a69d5313d2aeefd2fb6017854fcab6de0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bd3efe4d7614651b38507c018768e01" id="r_a6bd3efe4d7614651b38507c018768e01"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#a6bd3efe4d7614651b38507c018768e01">engine::getValueAt</a> (AutomatableParameter &amp;, EditPosition)</td></tr>
+<tr class="memdesc:a6bd3efe4d7614651b38507c018768e01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the value of a parameter's curve at the given position.  <br /></td></tr>
+<tr class="separator:a6bd3efe4d7614651b38507c018768e01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0121b81b4caf747f5247aa640503425a" id="r_a0121b81b4caf747f5247aa640503425a"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#a0121b81b4caf747f5247aa640503425a">engine::getValueAt</a> (AutomatableParameter &amp;, TimePosition)</td></tr>
+<tr class="memdesc:a0121b81b4caf747f5247aa640503425a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the value of a parameter's curve at the given position.  <br /></td></tr>
+<tr class="separator:a0121b81b4caf747f5247aa640503425a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a446d0b0c9b0dd6f2ea17ac2c45a6dc64" id="r_a446d0b0c9b0dd6f2ea17ac2c45a6dc64"><td class="memItemLeft" align="right" valign="top">EditTimeRange&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#a446d0b0c9b0dd6f2ea17ac2c45a6dc64">engine::getFullRange</a> (const <a class="el" href="classengine_1_1AutomationCurve.html">AutomationCurve</a> &amp;)</td></tr>
+<tr class="memdesc:a446d0b0c9b0dd6f2ea17ac2c45a6dc64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the range the curve occupies.  <br /></td></tr>
+<tr class="separator:a446d0b0c9b0dd6f2ea17ac2c45a6dc64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 15 2025 10:37:42 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Fri May 16 2025 14:22:27 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

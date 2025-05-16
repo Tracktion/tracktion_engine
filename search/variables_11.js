@@ -81,7 +81,7 @@ var searchData=
   ['rightoutdb_78',['rightOutDb',['../classtracktion_1_1engine_1_1RackInstance.html#a8dd77d6e4cbb26e258f621d5d5c5488d',1,'tracktion::engine::RackInstance']]],
   ['rightoutputcomesfrom_79',['rightOutputComesFrom',['../classtracktion_1_1engine_1_1RackInstance.html#a29a45e4fcd8fcee5e4c7071bc8583186',1,'tracktion::engine::RackInstance']]],
   ['rightoutvalue_80',['rightOutValue',['../classtracktion_1_1engine_1_1RackInstance.html#af40748bbbeb14d4e363ee7fec8264c33',1,'tracktion::engine::RackInstance']]],
-  ['righttime_81',['rightTime',['../classtracktion_1_1engine_1_1CurveEditor.html#a5443e020c85ddf864d9a9ce119a302e0',1,'tracktion::engine::CurveEditor']]],
+  ['righttime_81',['rightTime',['../classtracktion_1_1engine_1_1CurveEditor.html#a9f2588272dc27fbd0b3e048088b28a71',1,'tracktion::engine::CurveEditor']]],
   ['rmsleveldb_82',['rmsLevelDb',['../classtracktion_1_1engine_1_1RenderOptions.html#a89f1e0ea83d8b1e8ee1fad836547a1e1',1,'tracktion::engine::RenderOptions']]],
   ['role_83',['role',['../structtracktion_1_1engine_1_1Edit_1_1Options.html#ad8bbd038fd08eae1ab21b9147815bc92',1,'tracktion::engine::Edit::Options']]],
   ['roomsizeparam_84',['roomSizeParam',['../classtracktion_1_1engine_1_1ReverbPlugin.html#acef06648b60e109456649537c43ad8e7',1,'tracktion::engine::ReverbPlugin']]],

@@ -98,9 +98,11 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0d246f325c8a06a3c35d41bd0405bf36" id="r_a0d246f325c8a06a3c35d41bd0405bf36"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RackInstanceNode.html#a0d246f325c8a06a3c35d41bd0405bf36">RackInstanceNode</a> (<a class="el" href="classtracktion_1_1engine_1_1RackInstance.html#aae1f9d8a06b703a17d05bdc54873936b">RackInstance::Ptr</a>, std::unique_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &gt;, <a class="el" href="classtracktion_1_1engine_1_1RackInstanceNode.html#a2e3bfdc449355c234790a89bbcf140cc">ChannelMap</a> channelMap, <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html">ProcessState</a> &amp;)</td></tr>
-<tr class="memdesc:a0d246f325c8a06a3c35d41bd0405bf36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classtracktion_1_1engine_1_1RackInstanceNode.html" title="Sends an input Node to a Rack bus handling the channel mapping and channel gain levels.">RackInstanceNode</a> that maps an input node channel to an output channel and applies a gain parameter to each mapped channel.  <br /></td></tr>
-<tr class="separator:a0d246f325c8a06a3c35d41bd0405bf36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afcc37dfa649b0d25a6dcb4b3fa37973c" id="r_afcc37dfa649b0d25a6dcb4b3fa37973c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RackInstanceNode.html#afcc37dfa649b0d25a6dcb4b3fa37973c">RackInstanceNode</a> (<a class="el" href="classtracktion_1_1engine_1_1RackInstance.html#aae1f9d8a06b703a17d05bdc54873936b">RackInstance::Ptr</a>, std::unique_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> &gt;, <a class="el" href="classtracktion_1_1engine_1_1RackInstanceNode.html#a2e3bfdc449355c234790a89bbcf140cc">ChannelMap</a> channelMap, <a class="el" href="structtracktion_1_1engine_1_1ProcessState.html">ProcessState</a> &amp;, SampleRateAndBlockSize)</td></tr>
+<tr class="memdesc:afcc37dfa649b0d25a6dcb4b3fa37973c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classtracktion_1_1engine_1_1RackInstanceNode.html" title="Sends an input Node to a Rack bus handling the channel mapping and channel gain levels.">RackInstanceNode</a> that maps an input node channel to an output channel and applies a gain parameter to each mapped channel.  <br /></td></tr>
+<tr class="separator:afcc37dfa649b0d25a6dcb4b3fa37973c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac58c63da503c34fff55bef668344eff8" id="r_ac58c63da503c34fff55bef668344eff8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RackInstanceNode.html#ac58c63da503c34fff55bef668344eff8">~RackInstanceNode</a> () override</td></tr>
+<tr class="separator:ac58c63da503c34fff55bef668344eff8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a270b5484aaaaed38e337fb8353e6814e" id="r_a270b5484aaaaed38e337fb8353e6814e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">Node</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1RackInstanceNode.html#a270b5484aaaaed38e337fb8353e6814e">getDirectInputNodes</a> () override</td></tr>
 <tr class="memdesc:a270b5484aaaaed38e337fb8353e6814e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return all the inputs directly feeding in to this node.  <br /></td></tr>
 <tr class="separator:a270b5484aaaaed38e337fb8353e6814e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -243,8 +245,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a0d246f325c8a06a3c35d41bd0405bf36" name="a0d246f325c8a06a3c35d41bd0405bf36"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0d246f325c8a06a3c35d41bd0405bf36">&#9670;&#160;</a></span>RackInstanceNode()</h2>
+<a id="afcc37dfa649b0d25a6dcb4b3fa37973c" name="afcc37dfa649b0d25a6dcb4b3fa37973c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afcc37dfa649b0d25a6dcb4b3fa37973c">&#9670;&#160;</a></span>RackInstanceNode()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -271,6 +273,12 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="structtracktion_1_1engine_1_1ProcessState.html">ProcessState</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">SampleRateAndBlockSize&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -282,6 +290,31 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Creates a <a class="el" href="classtracktion_1_1engine_1_1RackInstanceNode.html" title="Sends an input Node to a Rack bus handling the channel mapping and channel gain levels.">RackInstanceNode</a> that maps an input node channel to an output channel and applies a gain parameter to each mapped channel. </p>
+
+</div>
+</div>
+<a id="ac58c63da503c34fff55bef668344eff8" name="ac58c63da503c34fff55bef668344eff8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac58c63da503c34fff55bef668344eff8">&#9670;&#160;</a></span>~RackInstanceNode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">tracktion::engine::RackInstanceNode::~RackInstanceNode </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -515,7 +548,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 15 2025 10:37:43 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Fri May 16 2025 14:22:28 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

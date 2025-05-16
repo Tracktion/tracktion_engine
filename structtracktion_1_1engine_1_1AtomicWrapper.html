@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TracktionEngine: tracktion::engine::AtomicWrapper&lt; Type, Constrainer &gt; Struct Template Reference</title>
+<title>TracktionEngine: tracktion::engine::AtomicWrapper&lt; Type, Constrainer, MemoryOrderLoad, MemoryOrderStore &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -76,7 +76,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structtracktion_1_1engine_1_1AtomicWrapper-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">tracktion::engine::AtomicWrapper&lt; Type, Constrainer &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__tracktion__engine.html">tracktion_engine</a> &raquo; <a class="el" href="group__tracktion__engine-utilities.html">utilities</a></div></div></div>
+  <div class="headertitle"><div class="title">tracktion::engine::AtomicWrapper&lt; Type, Constrainer, MemoryOrderLoad, MemoryOrderStore &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__tracktion__engine.html">tracktion_engine</a> &raquo; <a class="el" href="group__tracktion__engine-utilities.html">utilities</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -87,59 +87,59 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9fd5e06fe6bba701eee0b4e615d9cca8" id="r_a9fd5e06fe6bba701eee0b4e615d9cca8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#a9fd5e06fe6bba701eee0b4e615d9cca8">AtomicWrapper</a> ()=default</td></tr>
-<tr class="memdesc:a9fd5e06fe6bba701eee0b4e615d9cca8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <br /></td></tr>
-<tr class="separator:a9fd5e06fe6bba701eee0b4e615d9cca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abff00cc88fb6e20dcb8f87002e90ce4e" id="r_abff00cc88fb6e20dcb8f87002e90ce4e"><td class="memTemplParams" colspan="2">template&lt;typename OtherType &gt; </td></tr>
-<tr class="memitem:abff00cc88fb6e20dcb8f87002e90ce4e"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#abff00cc88fb6e20dcb8f87002e90ce4e">AtomicWrapper</a> (const OtherType &amp;other)</td></tr>
-<tr class="memdesc:abff00cc88fb6e20dcb8f87002e90ce4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a copy of another wrapper type.  <br /></td></tr>
-<tr class="separator:abff00cc88fb6e20dcb8f87002e90ce4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acacb592a580691f2bd55dad5f5581295" id="r_acacb592a580691f2bd55dad5f5581295"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#acacb592a580691f2bd55dad5f5581295">AtomicWrapper</a> (const <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a> &amp;other)</td></tr>
-<tr class="memdesc:acacb592a580691f2bd55dad5f5581295"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a copy of another <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html" title="Wraps an atomic with an interface compatible with var so it can be used within CachedValues in a thre...">AtomicWrapper</a>.  <br /></td></tr>
-<tr class="separator:acacb592a580691f2bd55dad5f5581295"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1057ada1590b3fb304d9f5d5d414ff2" id="r_ac1057ada1590b3fb304d9f5d5d414ff2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#ac1057ada1590b3fb304d9f5d5d414ff2">operator=</a> (const <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a> &amp;other) noexcept</td></tr>
-<tr class="memdesc:ac1057ada1590b3fb304d9f5d5d414ff2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assigns another <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html" title="Wraps an atomic with an interface compatible with var so it can be used within CachedValues in a thre...">AtomicWrapper</a>'s underlying value to this one atomically.  <br /></td></tr>
-<tr class="separator:ac1057ada1590b3fb304d9f5d5d414ff2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7337c10adf98391832a3f9ce3ef2f5f5" id="r_a7337c10adf98391832a3f9ce3ef2f5f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#a7337c10adf98391832a3f9ce3ef2f5f5">operator=</a> (const Type &amp;other) noexcept</td></tr>
-<tr class="memdesc:a7337c10adf98391832a3f9ce3ef2f5f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assigns a value to this one atomically.  <br /></td></tr>
-<tr class="separator:a7337c10adf98391832a3f9ce3ef2f5f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6aaf022dd53538bdacd9caa3e21ec25f" id="r_a6aaf022dd53538bdacd9caa3e21ec25f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#a6aaf022dd53538bdacd9caa3e21ec25f">operator==</a> (const <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a> &amp;other) const noexcept</td></tr>
-<tr class="memdesc:a6aaf022dd53538bdacd9caa3e21ec25f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares the underlaying value of another wrapper with this one.  <br /></td></tr>
-<tr class="separator:a6aaf022dd53538bdacd9caa3e21ec25f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89586c70ac2231af84d26c02514eebe7" id="r_a89586c70ac2231af84d26c02514eebe7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#a89586c70ac2231af84d26c02514eebe7">operator!=</a> (const <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a> &amp;other) const noexcept</td></tr>
-<tr class="memdesc:a89586c70ac2231af84d26c02514eebe7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares the underlaying value of another wrapper with this one.  <br /></td></tr>
-<tr class="separator:a89586c70ac2231af84d26c02514eebe7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a81427ecf3a9f0ec54ab9cce83d3437" id="r_a2a81427ecf3a9f0ec54ab9cce83d3437"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#a2a81427ecf3a9f0ec54ab9cce83d3437">operator==</a> (const Type &amp;other) const noexcept</td></tr>
-<tr class="memdesc:a2a81427ecf3a9f0ec54ab9cce83d3437"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares another value with this one.  <br /></td></tr>
-<tr class="separator:a2a81427ecf3a9f0ec54ab9cce83d3437"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa58bc278c165aa841b317c4a0ce4840d" id="r_aa58bc278c165aa841b317c4a0ce4840d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#aa58bc278c165aa841b317c4a0ce4840d">operator!=</a> (const Type &amp;other) const noexcept</td></tr>
-<tr class="memdesc:aa58bc278c165aa841b317c4a0ce4840d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares another value with this one.  <br /></td></tr>
-<tr class="separator:aa58bc278c165aa841b317c4a0ce4840d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb3356acf94e5a10bb80f7dccb3757b2" id="r_acb3356acf94e5a10bb80f7dccb3757b2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#acb3356acf94e5a10bb80f7dccb3757b2">operator juce::var</a> () const noexcept</td></tr>
-<tr class="memdesc:acb3356acf94e5a10bb80f7dccb3757b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the underlying value as a var.  <br /></td></tr>
-<tr class="separator:acb3356acf94e5a10bb80f7dccb3757b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2dfd04f5b7e2288001868fa6514a5c7f" id="r_a2dfd04f5b7e2288001868fa6514a5c7f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#a2dfd04f5b7e2288001868fa6514a5c7f">operator Type</a> () const noexcept</td></tr>
-<tr class="memdesc:a2dfd04f5b7e2288001868fa6514a5c7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the underlying value.  <br /></td></tr>
-<tr class="separator:a2dfd04f5b7e2288001868fa6514a5c7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e7ed6331b9995340c5e27feffff1f0b" id="r_a1e7ed6331b9995340c5e27feffff1f0b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#a1e7ed6331b9995340c5e27feffff1f0b">AtomicWrapper</a> ()=default</td></tr>
+<tr class="memdesc:a1e7ed6331b9995340c5e27feffff1f0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <br /></td></tr>
+<tr class="separator:a1e7ed6331b9995340c5e27feffff1f0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a660bb400ecc0dcacfe782402aaae5c20" id="r_a660bb400ecc0dcacfe782402aaae5c20"><td class="memTemplParams" colspan="2">template&lt;typename OtherType &gt; </td></tr>
+<tr class="memitem:a660bb400ecc0dcacfe782402aaae5c20"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#a660bb400ecc0dcacfe782402aaae5c20">AtomicWrapper</a> (const OtherType &amp;other)</td></tr>
+<tr class="memdesc:a660bb400ecc0dcacfe782402aaae5c20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a copy of another wrapper type.  <br /></td></tr>
+<tr class="separator:a660bb400ecc0dcacfe782402aaae5c20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa18cf5985d72d49441e7051e903c0703" id="r_aa18cf5985d72d49441e7051e903c0703"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#aa18cf5985d72d49441e7051e903c0703">AtomicWrapper</a> (const <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a> &amp;other)</td></tr>
+<tr class="memdesc:aa18cf5985d72d49441e7051e903c0703"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a copy of another <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html" title="Wraps an atomic with an interface compatible with var so it can be used within CachedValues in a thre...">AtomicWrapper</a>.  <br /></td></tr>
+<tr class="separator:aa18cf5985d72d49441e7051e903c0703"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa105b3ffb1f276b9a3620c4c3acc7ab6" id="r_aa105b3ffb1f276b9a3620c4c3acc7ab6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#aa105b3ffb1f276b9a3620c4c3acc7ab6">operator=</a> (const <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a> &amp;other) noexcept</td></tr>
+<tr class="memdesc:aa105b3ffb1f276b9a3620c4c3acc7ab6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assigns another <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html" title="Wraps an atomic with an interface compatible with var so it can be used within CachedValues in a thre...">AtomicWrapper</a>'s underlying value to this one atomically.  <br /></td></tr>
+<tr class="separator:aa105b3ffb1f276b9a3620c4c3acc7ab6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a017e9fce2d90aaabd7c1732f5983aceb" id="r_a017e9fce2d90aaabd7c1732f5983aceb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#a017e9fce2d90aaabd7c1732f5983aceb">operator=</a> (const Type &amp;other) noexcept</td></tr>
+<tr class="memdesc:a017e9fce2d90aaabd7c1732f5983aceb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assigns a value to this one atomically.  <br /></td></tr>
+<tr class="separator:a017e9fce2d90aaabd7c1732f5983aceb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae552bc71c86cf31137dcabc39a0ddf2c" id="r_ae552bc71c86cf31137dcabc39a0ddf2c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#ae552bc71c86cf31137dcabc39a0ddf2c">operator==</a> (const <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a> &amp;other) const noexcept</td></tr>
+<tr class="memdesc:ae552bc71c86cf31137dcabc39a0ddf2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares the underlaying value of another wrapper with this one.  <br /></td></tr>
+<tr class="separator:ae552bc71c86cf31137dcabc39a0ddf2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5bbf2542151208b9d4ec7816df52d962" id="r_a5bbf2542151208b9d4ec7816df52d962"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#a5bbf2542151208b9d4ec7816df52d962">operator!=</a> (const <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a> &amp;other) const noexcept</td></tr>
+<tr class="memdesc:a5bbf2542151208b9d4ec7816df52d962"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares the underlaying value of another wrapper with this one.  <br /></td></tr>
+<tr class="separator:a5bbf2542151208b9d4ec7816df52d962"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41b728da736af630684156523d00873d" id="r_a41b728da736af630684156523d00873d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#a41b728da736af630684156523d00873d">operator==</a> (const Type &amp;other) const noexcept</td></tr>
+<tr class="memdesc:a41b728da736af630684156523d00873d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares another value with this one.  <br /></td></tr>
+<tr class="separator:a41b728da736af630684156523d00873d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5625fa283d465bd8fba5a2f444f54cd" id="r_af5625fa283d465bd8fba5a2f444f54cd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#af5625fa283d465bd8fba5a2f444f54cd">operator!=</a> (const Type &amp;other) const noexcept</td></tr>
+<tr class="memdesc:af5625fa283d465bd8fba5a2f444f54cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares another value with this one.  <br /></td></tr>
+<tr class="separator:af5625fa283d465bd8fba5a2f444f54cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a560458afec93d456b8504931b954ca24" id="r_a560458afec93d456b8504931b954ca24"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#a560458afec93d456b8504931b954ca24">operator juce::var</a> () const noexcept</td></tr>
+<tr class="memdesc:a560458afec93d456b8504931b954ca24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the underlying value as a var.  <br /></td></tr>
+<tr class="separator:a560458afec93d456b8504931b954ca24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc386c1f84ce23f08fa2aa3a0e89ff34" id="r_abc386c1f84ce23f08fa2aa3a0e89ff34"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html#abc386c1f84ce23f08fa2aa3a0e89ff34">operator Type</a> () const noexcept</td></tr>
+<tr class="memdesc:abc386c1f84ce23f08fa2aa3a0e89ff34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the underlying value.  <br /></td></tr>
+<tr class="separator:abc386c1f84ce23f08fa2aa3a0e89ff34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;typename Type, typename Constrainer = DummyConstrainer&lt;Type&gt;&gt;<br />
-struct tracktion::engine::AtomicWrapper&lt; Type, Constrainer &gt;</div><p>Wraps an atomic with an interface compatible with var so it can be used within CachedValues in a thread safe way. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename Type, typename Constrainer = DummyConstrainer&lt;Type&gt;, auto MemoryOrderLoad = std::memory_order_seq_cst, auto MemoryOrderStore = std::memory_order_seq_cst&gt;<br />
+struct tracktion::engine::AtomicWrapper&lt; Type, Constrainer, MemoryOrderLoad, MemoryOrderStore &gt;</div><p>Wraps an atomic with an interface compatible with var so it can be used within CachedValues in a thread safe way. </p>
 <p>Optionally supply a Constrainer to limit the value in some way. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a9fd5e06fe6bba701eee0b4e615d9cca8" name="a9fd5e06fe6bba701eee0b4e615d9cca8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9fd5e06fe6bba701eee0b4e615d9cca8">&#9670;&#160;</a></span>AtomicWrapper() <span class="overload">[1/3]</span></h2>
+<a id="a1e7ed6331b9995340c5e27feffff1f0b" name="a1e7ed6331b9995340c5e27feffff1f0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e7ed6331b9995340c5e27feffff1f0b">&#9670;&#160;</a></span>AtomicWrapper() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;&gt; </div>
+template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;, auto MemoryOrderLoad = std::memory_order_seq_cst, auto MemoryOrderStore = std::memory_order_seq_cst&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer &gt;::AtomicWrapper </td>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer, MemoryOrderLoad, MemoryOrderStore &gt;::AtomicWrapper </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -156,18 +156,18 @@ template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;
 
 </div>
 </div>
-<a id="abff00cc88fb6e20dcb8f87002e90ce4e" name="abff00cc88fb6e20dcb8f87002e90ce4e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abff00cc88fb6e20dcb8f87002e90ce4e">&#9670;&#160;</a></span>AtomicWrapper() <span class="overload">[2/3]</span></h2>
+<a id="a660bb400ecc0dcacfe782402aaae5c20" name="a660bb400ecc0dcacfe782402aaae5c20"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a660bb400ecc0dcacfe782402aaae5c20">&#9670;&#160;</a></span>AtomicWrapper() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;&gt; </div>
+template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;, auto MemoryOrderLoad = std::memory_order_seq_cst, auto MemoryOrderStore = std::memory_order_seq_cst&gt; </div>
 <div class="memtemplate">
 template&lt;typename OtherType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer &gt;::AtomicWrapper </td>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer, MemoryOrderLoad, MemoryOrderStore &gt;::AtomicWrapper </td>
           <td>(</td>
           <td class="paramtype">const OtherType &amp;&#160;</td>
           <td class="paramname"><em>other</em></td><td>)</td>
@@ -180,18 +180,18 @@ template&lt;typename OtherType &gt; </div>
 
 </div>
 </div>
-<a id="acacb592a580691f2bd55dad5f5581295" name="acacb592a580691f2bd55dad5f5581295"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acacb592a580691f2bd55dad5f5581295">&#9670;&#160;</a></span>AtomicWrapper() <span class="overload">[3/3]</span></h2>
+<a id="aa18cf5985d72d49441e7051e903c0703" name="aa18cf5985d72d49441e7051e903c0703"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa18cf5985d72d49441e7051e903c0703">&#9670;&#160;</a></span>AtomicWrapper() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;&gt; </div>
+template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;, auto MemoryOrderLoad = std::memory_order_seq_cst, auto MemoryOrderStore = std::memory_order_seq_cst&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer &gt;::AtomicWrapper </td>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer, MemoryOrderLoad, MemoryOrderStore &gt;::AtomicWrapper </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a>&lt; Type, Constrainer &gt; &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a>&lt; Type, Constrainer, MemoryOrderLoad, MemoryOrderStore &gt; &amp;&#160;</td>
           <td class="paramname"><em>other</em></td><td>)</td>
           <td></td>
         </tr>
@@ -203,21 +203,21 @@ template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ac1057ada1590b3fb304d9f5d5d414ff2" name="ac1057ada1590b3fb304d9f5d5d414ff2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac1057ada1590b3fb304d9f5d5d414ff2">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
+<a id="aa105b3ffb1f276b9a3620c4c3acc7ab6" name="aa105b3ffb1f276b9a3620c4c3acc7ab6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa105b3ffb1f276b9a3620c4c3acc7ab6">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;&gt; </div>
+template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;, auto MemoryOrderLoad = std::memory_order_seq_cst, auto MemoryOrderStore = std::memory_order_seq_cst&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a> &amp; <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer &gt;::operator= </td>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a> &amp; <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer, MemoryOrderLoad, MemoryOrderStore &gt;::operator= </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a>&lt; Type, Constrainer &gt; &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a>&lt; Type, Constrainer, MemoryOrderLoad, MemoryOrderStore &gt; &amp;&#160;</td>
           <td class="paramname"><em>other</em></td><td>)</td>
           <td></td>
         </tr>
@@ -233,19 +233,19 @@ template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;
 
 </div>
 </div>
-<a id="a7337c10adf98391832a3f9ce3ef2f5f5" name="a7337c10adf98391832a3f9ce3ef2f5f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7337c10adf98391832a3f9ce3ef2f5f5">&#9670;&#160;</a></span>operator=() <span class="overload">[2/2]</span></h2>
+<a id="a017e9fce2d90aaabd7c1732f5983aceb" name="a017e9fce2d90aaabd7c1732f5983aceb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a017e9fce2d90aaabd7c1732f5983aceb">&#9670;&#160;</a></span>operator=() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;&gt; </div>
+template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;, auto MemoryOrderLoad = std::memory_order_seq_cst, auto MemoryOrderStore = std::memory_order_seq_cst&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a> &amp; <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer &gt;::operator= </td>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a> &amp; <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer, MemoryOrderLoad, MemoryOrderStore &gt;::operator= </td>
           <td>(</td>
           <td class="paramtype">const Type &amp;&#160;</td>
           <td class="paramname"><em>other</em></td><td>)</td>
@@ -263,21 +263,21 @@ template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;
 
 </div>
 </div>
-<a id="a6aaf022dd53538bdacd9caa3e21ec25f" name="a6aaf022dd53538bdacd9caa3e21ec25f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6aaf022dd53538bdacd9caa3e21ec25f">&#9670;&#160;</a></span>operator==() <span class="overload">[1/2]</span></h2>
+<a id="ae552bc71c86cf31137dcabc39a0ddf2c" name="ae552bc71c86cf31137dcabc39a0ddf2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae552bc71c86cf31137dcabc39a0ddf2c">&#9670;&#160;</a></span>operator==() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;&gt; </div>
+template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;, auto MemoryOrderLoad = std::memory_order_seq_cst, auto MemoryOrderStore = std::memory_order_seq_cst&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer &gt;::operator== </td>
+          <td class="memname">bool <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer, MemoryOrderLoad, MemoryOrderStore &gt;::operator== </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a>&lt; Type, Constrainer &gt; &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a>&lt; Type, Constrainer, MemoryOrderLoad, MemoryOrderStore &gt; &amp;&#160;</td>
           <td class="paramname"><em>other</em></td><td>)</td>
           <td> const</td>
         </tr>
@@ -293,21 +293,21 @@ template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;
 
 </div>
 </div>
-<a id="a89586c70ac2231af84d26c02514eebe7" name="a89586c70ac2231af84d26c02514eebe7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a89586c70ac2231af84d26c02514eebe7">&#9670;&#160;</a></span>operator!=() <span class="overload">[1/2]</span></h2>
+<a id="a5bbf2542151208b9d4ec7816df52d962" name="a5bbf2542151208b9d4ec7816df52d962"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5bbf2542151208b9d4ec7816df52d962">&#9670;&#160;</a></span>operator!=() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;&gt; </div>
+template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;, auto MemoryOrderLoad = std::memory_order_seq_cst, auto MemoryOrderStore = std::memory_order_seq_cst&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer &gt;::operator!= </td>
+          <td class="memname">bool <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer, MemoryOrderLoad, MemoryOrderStore &gt;::operator!= </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a>&lt; Type, Constrainer &gt; &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">AtomicWrapper</a>&lt; Type, Constrainer, MemoryOrderLoad, MemoryOrderStore &gt; &amp;&#160;</td>
           <td class="paramname"><em>other</em></td><td>)</td>
           <td> const</td>
         </tr>
@@ -323,19 +323,19 @@ template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;
 
 </div>
 </div>
-<a id="a2a81427ecf3a9f0ec54ab9cce83d3437" name="a2a81427ecf3a9f0ec54ab9cce83d3437"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a81427ecf3a9f0ec54ab9cce83d3437">&#9670;&#160;</a></span>operator==() <span class="overload">[2/2]</span></h2>
+<a id="a41b728da736af630684156523d00873d" name="a41b728da736af630684156523d00873d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41b728da736af630684156523d00873d">&#9670;&#160;</a></span>operator==() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;&gt; </div>
+template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;, auto MemoryOrderLoad = std::memory_order_seq_cst, auto MemoryOrderStore = std::memory_order_seq_cst&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer &gt;::operator== </td>
+          <td class="memname">bool <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer, MemoryOrderLoad, MemoryOrderStore &gt;::operator== </td>
           <td>(</td>
           <td class="paramtype">const Type &amp;&#160;</td>
           <td class="paramname"><em>other</em></td><td>)</td>
@@ -353,19 +353,19 @@ template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;
 
 </div>
 </div>
-<a id="aa58bc278c165aa841b317c4a0ce4840d" name="aa58bc278c165aa841b317c4a0ce4840d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa58bc278c165aa841b317c4a0ce4840d">&#9670;&#160;</a></span>operator!=() <span class="overload">[2/2]</span></h2>
+<a id="af5625fa283d465bd8fba5a2f444f54cd" name="af5625fa283d465bd8fba5a2f444f54cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5625fa283d465bd8fba5a2f444f54cd">&#9670;&#160;</a></span>operator!=() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;&gt; </div>
+template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;, auto MemoryOrderLoad = std::memory_order_seq_cst, auto MemoryOrderStore = std::memory_order_seq_cst&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer &gt;::operator!= </td>
+          <td class="memname">bool <a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer, MemoryOrderLoad, MemoryOrderStore &gt;::operator!= </td>
           <td>(</td>
           <td class="paramtype">const Type &amp;&#160;</td>
           <td class="paramname"><em>other</em></td><td>)</td>
@@ -383,19 +383,19 @@ template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;
 
 </div>
 </div>
-<a id="acb3356acf94e5a10bb80f7dccb3757b2" name="acb3356acf94e5a10bb80f7dccb3757b2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acb3356acf94e5a10bb80f7dccb3757b2">&#9670;&#160;</a></span>operator juce::var()</h2>
+<a id="a560458afec93d456b8504931b954ca24" name="a560458afec93d456b8504931b954ca24"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a560458afec93d456b8504931b954ca24">&#9670;&#160;</a></span>operator juce::var()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;&gt; </div>
+template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;, auto MemoryOrderLoad = std::memory_order_seq_cst, auto MemoryOrderStore = std::memory_order_seq_cst&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer &gt;::operator juce::var </td>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer, MemoryOrderLoad, MemoryOrderStore &gt;::operator juce::var </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -412,19 +412,19 @@ template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;
 
 </div>
 </div>
-<a id="a2dfd04f5b7e2288001868fa6514a5c7f" name="a2dfd04f5b7e2288001868fa6514a5c7f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2dfd04f5b7e2288001868fa6514a5c7f">&#9670;&#160;</a></span>operator Type()</h2>
+<a id="abc386c1f84ce23f08fa2aa3a0e89ff34" name="abc386c1f84ce23f08fa2aa3a0e89ff34"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc386c1f84ce23f08fa2aa3a0e89ff34">&#9670;&#160;</a></span>operator Type()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;&gt; </div>
+template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;, auto MemoryOrderLoad = std::memory_order_seq_cst, auto MemoryOrderStore = std::memory_order_seq_cst&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer &gt;::operator Type </td>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1AtomicWrapper.html">tracktion::engine::AtomicWrapper</a>&lt; Type, Constrainer, MemoryOrderLoad, MemoryOrderStore &gt;::operator Type </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -447,7 +447,7 @@ template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 15 2025 10:37:42 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Fri May 16 2025 14:22:28 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

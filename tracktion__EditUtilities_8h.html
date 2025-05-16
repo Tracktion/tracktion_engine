@@ -315,11 +315,22 @@ Functions</h2></td></tr>
 <tr class="memitem:a2aab0b963d877265253cdfb802d8ecee" id="r_a2aab0b963d877265253cdfb802d8ecee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1Destination.html">InputDeviceInstance::Destination</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a2aab0b963d877265253cdfb802d8ecee">tracktion::engine::assignTrackAsInput</a> (<a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> &amp;destinationTrack, const <a class="el" href="classtracktion_1_1engine_1_1AudioTrack.html">AudioTrack</a> &amp;sourceTrack, <a class="el" href="classtracktion_1_1engine_1_1InputDevice.html#ac142baad652904d37630d4e5c1142d8f">InputDevice::DeviceType</a>)</td></tr>
 <tr class="memdesc:a2aab0b963d877265253cdfb802d8ecee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an <a class="el" href="structtracktion_1_1engine_1_1InputDeviceInstance_1_1Destination.html">InputDeviceInstance::Destination</a> on the destinationTrack from the sourceTrack if possible.  <br /></td></tr>
 <tr class="separator:a2aab0b963d877265253cdfb802d8ecee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25333e4971d1ab1ca2dda15d77e3da42" id="r_a25333e4971d1ab1ca2dda15d77e3da42"><td class="memTemplParams" colspan="2">template&lt;typename Type &gt; <br />
+requires (std::is_same_v&lt;Type, <a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a>&gt; || requires (Type t) { t.edit; } || requires (Type t) { t.getEdit(); })</td></tr>
+<tr class="memitem:a25333e4971d1ab1ca2dda15d77e3da42"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a25333e4971d1ab1ca2dda15d77e3da42">tracktion::engine::getEdit</a> (Type &amp;type)</td></tr>
+<tr class="memdesc:a25333e4971d1ab1ca2dda15d77e3da42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a reference to the <a class="el" href="classtracktion_1_1engine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> if accessible by the given object.  <br /></td></tr>
+<tr class="separator:a25333e4971d1ab1ca2dda15d77e3da42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6642361fdab917d49073100891fd6603" id="r_a6642361fdab917d49073100891fd6603"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1TempoSequence.html">TempoSequence</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a6642361fdab917d49073100891fd6603">tracktion::engine::getTempoSequence</a> (auto &amp;type)</td></tr>
+<tr class="separator:a6642361fdab917d49073100891fd6603"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada1d33f0382c0141707c4fc92cdad160" id="r_ada1d33f0382c0141707c4fc92cdad160"><td class="memItemLeft" align="right" valign="top">juce::UndoManager &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#ada1d33f0382c0141707c4fc92cdad160">tracktion::engine::getUndoManager</a> (auto &amp;type)</td></tr>
+<tr class="separator:ada1d33f0382c0141707c4fc92cdad160"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42ba31f8d27698788c038f75f96e218f" id="r_a42ba31f8d27698788c038f75f96e218f"><td class="memItemLeft" align="right" valign="top">juce::UndoManager *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a42ba31f8d27698788c038f75f96e218f">tracktion::engine::getUndoManager_p</a> (auto &amp;type)</td></tr>
+<tr class="separator:a42ba31f8d27698788c038f75f96e218f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 15 2025 10:37:42 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Fri May 16 2025 14:22:27 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

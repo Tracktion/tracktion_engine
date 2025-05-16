@@ -105,6 +105,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a06c3dfb92ffee7976b9fb10515fda8c3" id="r_a06c3dfb92ffee7976b9fb10515fda8c3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1EditTimeRange.html#a06c3dfb92ffee7976b9fb10515fda8c3">EditTimeRange</a> (BeatPosition, BeatDuration)</td></tr>
 <tr class="memdesc:a06c3dfb92ffee7976b9fb10515fda8c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an <a class="el" href="structtracktion_1_1engine_1_1EditTimeRange.html" title="Represents a time range in an Edit stored as either time or beats.">EditTimeRange</a> from a BeatRange.  <br /></td></tr>
 <tr class="separator:a06c3dfb92ffee7976b9fb10515fda8c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61ce5708bbe4a1163b43a6edf8e2b1e8" id="r_a61ce5708bbe4a1163b43a6edf8e2b1e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1EditPosition.html">EditPosition</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1EditTimeRange.html#a61ce5708bbe4a1163b43a6edf8e2b1e8">getStart</a> () const</td></tr>
+<tr class="memdesc:a61ce5708bbe4a1163b43a6edf8e2b1e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the start of the range.  <br /></td></tr>
+<tr class="separator:a61ce5708bbe4a1163b43a6edf8e2b1e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67858d64e154c068610b3c13859a9e45" id="r_a67858d64e154c068610b3c13859a9e45"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtracktion_1_1engine_1_1EditPosition.html">EditPosition</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1EditTimeRange.html#a67858d64e154c068610b3c13859a9e45">getEnd</a> () const</td></tr>
+<tr class="memdesc:a67858d64e154c068610b3c13859a9e45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the end of the range.  <br /></td></tr>
+<tr class="separator:a67858d64e154c068610b3c13859a9e45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a821250414954a03001d6ea980fdd6441" id="r_a821250414954a03001d6ea980fdd6441"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetracktion_1_1engine.html#a8db697bbe1bfc6a6e15057a64d56b8ed">EditDuration</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1EditTimeRange.html#a821250414954a03001d6ea980fdd6441">getLength</a> () const</td></tr>
+<tr class="memdesc:a821250414954a03001d6ea980fdd6441"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the length of the range.  <br /></td></tr>
+<tr class="separator:a821250414954a03001d6ea980fdd6441"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad13377664a57f812758fb7cdf20166e9" id="r_ad13377664a57f812758fb7cdf20166e9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1EditTimeRange.html#ad13377664a57f812758fb7cdf20166e9">isBeats</a> () const</td></tr>
 <tr class="memdesc:ad13377664a57f812758fb7cdf20166e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the time is stored as beats, false if stored as a TimePosition.  <br /></td></tr>
 <tr class="separator:ad13377664a57f812758fb7cdf20166e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -274,6 +283,69 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a61ce5708bbe4a1163b43a6edf8e2b1e8" name="a61ce5708bbe4a1163b43a6edf8e2b1e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61ce5708bbe4a1163b43a6edf8e2b1e8">&#9670;&#160;</a></span>getStart()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1EditPosition.html">EditPosition</a> tracktion::engine::EditTimeRange::getStart </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the start of the range. </p>
+
+<p class="reference">References <a class="el" href="structtracktion_1_1engine_1_1EditTimeRange.html#ad13377664a57f812758fb7cdf20166e9">isBeats()</a>.</p>
+
+</div>
+</div>
+<a id="a67858d64e154c068610b3c13859a9e45" name="a67858d64e154c068610b3c13859a9e45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67858d64e154c068610b3c13859a9e45">&#9670;&#160;</a></span>getEnd()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtracktion_1_1engine_1_1EditPosition.html">EditPosition</a> tracktion::engine::EditTimeRange::getEnd </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the end of the range. </p>
+
+<p class="reference">References <a class="el" href="structtracktion_1_1engine_1_1EditTimeRange.html#ad13377664a57f812758fb7cdf20166e9">isBeats()</a>.</p>
+
+</div>
+</div>
+<a id="a821250414954a03001d6ea980fdd6441" name="a821250414954a03001d6ea980fdd6441"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a821250414954a03001d6ea980fdd6441">&#9670;&#160;</a></span>getLength()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacetracktion_1_1engine.html#a8db697bbe1bfc6a6e15057a64d56b8ed">EditDuration</a> tracktion::engine::EditTimeRange::getLength </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the length of the range. </p>
+
+<p class="reference">References <a class="el" href="structtracktion_1_1engine_1_1EditTimeRange.html#ad13377664a57f812758fb7cdf20166e9">isBeats()</a>.</p>
+
+</div>
+</div>
 <a id="ad13377664a57f812758fb7cdf20166e9" name="ad13377664a57f812758fb7cdf20166e9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad13377664a57f812758fb7cdf20166e9">&#9670;&#160;</a></span>isBeats()</h2>
 
@@ -291,6 +363,8 @@ Public Member Functions</h2></td></tr>
 
 <p>Returns true if the time is stored as beats, false if stored as a TimePosition. </p>
 
+<p class="reference">Referenced by <a class="el" href="structtracktion_1_1engine_1_1EditTimeRange.html#a67858d64e154c068610b3c13859a9e45">getEnd()</a>, <a class="el" href="structtracktion_1_1engine_1_1EditTimeRange.html#a821250414954a03001d6ea980fdd6441">getLength()</a>, and <a class="el" href="structtracktion_1_1engine_1_1EditTimeRange.html#a61ce5708bbe4a1163b43a6edf8e2b1e8">getStart()</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
@@ -299,7 +373,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 15 2025 10:37:43 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Fri May 16 2025 14:22:28 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

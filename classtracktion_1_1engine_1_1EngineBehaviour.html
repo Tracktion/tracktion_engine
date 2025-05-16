@@ -226,9 +226,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afbc7c115034593c0915d100f071ded40" id="r_afbc7c115034593c0915d100f071ded40"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#afbc7c115034593c0915d100f071ded40">autoAddClipEdgeFades</a> ()</td></tr>
 <tr class="memdesc:afbc7c115034593c0915d100f071ded40"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this returns true, it means that newly inserted clips will automatically have a fade-in and fade-out of 3ms applied.  <br /></td></tr>
 <tr class="separator:afbc7c115034593c0915d100f071ded40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7605666b7f1e84e8d7c8166bb5823533" id="r_a7605666b7f1e84e8d7c8166bb5823533"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a7605666b7f1e84e8d7c8166bb5823533">interpolateAutomation</a> ()</td></tr>
-<tr class="memdesc:a7605666b7f1e84e8d7c8166bb5823533"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interpolate automation at 10ms intervals (faster) or calculate actual value (slower)  <br /></td></tr>
-<tr class="separator:a7605666b7f1e84e8d7c8166bb5823533"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7308deba6f8c9a4567c2bb8e0d1f58a" id="r_af7308deba6f8c9a4567c2bb8e0d1f58a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structtracktion_1_1engine_1_1EngineBehaviour_1_1LevelMeterSettings.html">LevelMeterSettings</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#af7308deba6f8c9a4567c2bb8e0d1f58a">getLevelMeterSettings</a> ()</td></tr>
 <tr class="separator:af7308deba6f8c9a4567c2bb8e0d1f58a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d6cfdc2c70a6c4cc8c2448609518fbf" id="r_a9d6cfdc2c70a6c4cc8c2448609518fbf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a9d6cfdc2c70a6c4cc8c2448609518fbf">setLevelMeterSettings</a> (<a class="el" href="structtracktion_1_1engine_1_1EngineBehaviour_1_1LevelMeterSettings.html">LevelMeterSettings</a>)</td></tr>
@@ -245,8 +242,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6f36bc705b9d8a253b33e4756b4163dd" id="r_a6f36bc705b9d8a253b33e4756b4163dd"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtracktion_1_1engine_1_1ControlSurface.html">ControlSurface</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a6f36bc705b9d8a253b33e4756b4163dd">getCustomControlSurfaceForXML</a> (<a class="el" href="classtracktion_1_1engine_1_1ExternalControllerManager.html">ExternalControllerManager</a> &amp;, const juce::XmlElement &amp;)</td></tr>
 <tr class="memdesc:a6f36bc705b9d8a253b33e4756b4163dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restore a custom control surface from custom XML.  <br /></td></tr>
 <tr class="separator:a6f36bc705b9d8a253b33e4756b4163dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81ac5c33038df49027b71d03e85e87d5" id="r_a81ac5c33038df49027b71d03e85e87d5"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a81ac5c33038df49027b71d03e85e87d5">enableExperimentalAutomation</a> ()</td></tr>
-<tr class="separator:a81ac5c33038df49027b71d03e85e87d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Provides custom handlers to control various aspects of the engine's behaviour. </p>
@@ -1709,33 +1704,6 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a7605666b7f1e84e8d7c8166bb5823533" name="a7605666b7f1e84e8d7c8166bb5823533"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7605666b7f1e84e8d7c8166bb5823533">&#9670;&#160;</a></span>interpolateAutomation()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::interpolateAutomation </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Interpolate automation at 10ms intervals (faster) or calculate actual value (slower) </p>
-
-</div>
-</div>
 <a id="af7308deba6f8c9a4567c2bb8e0d1f58a" name="af7308deba6f8c9a4567c2bb8e0d1f58a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af7308deba6f8c9a4567c2bb8e0d1f58a">&#9670;&#160;</a></span>getLevelMeterSettings()</h2>
 
@@ -1917,38 +1885,13 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a81ac5c33038df49027b71d03e85e87d5" name="a81ac5c33038df49027b71d03e85e87d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a81ac5c33038df49027b71d03e85e87d5">&#9670;&#160;</a></span>enableExperimentalAutomation()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool tracktion::engine::EngineBehaviour::enableExperimentalAutomation </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="tracktion__EngineBehaviour_8h.html">tracktion_EngineBehaviour.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 15 2025 10:37:43 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Fri May 16 2025 14:22:28 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

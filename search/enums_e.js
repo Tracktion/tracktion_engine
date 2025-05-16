@@ -2,7 +2,7 @@ var searchData=
 [
   ['targetfileformat_0',['TargetFileFormat',['../classtracktion_1_1engine_1_1RenderOptions.html#ad6d5a75dec65fce82ab44309d512c399',1,'tracktion::engine::RenderOptions']]],
   ['threadpoolstrategy_1',['threadpoolstrategy',['../namespacetracktion_1_1graph.html#a269844fbe17f2d681b0a3df8ae112f96',1,'tracktion::ThreadPoolStrategy'],['../namespacetracktion_1_1graph.html#a269844fbe17f2d681b0a3df8ae112f96',1,'tracktion::graph::ThreadPoolStrategy']]],
-  ['timebase_2',['TimeBase',['../classtracktion_1_1engine_1_1MidiList.html#a9d9af5294100f73961a88ccca2dc3394',1,'tracktion::engine::MidiList']]],
+  ['timebase_2',['timebase',['../classtracktion_1_1engine_1_1MidiList.html#a9d9af5294100f73961a88ccca2dc3394',1,'tracktion::engine::MidiList::TimeBase'],['../classengine_1_1AutomationCurve.html#ac2bda2cf8940f44c3c1d0212c10af5ae',1,'engine::AutomationCurve::TimeBase']]],
   ['timecodetype_3',['timecodetype',['../namespacetracktion_1_1engine.html#a106acf13adac6f34b462a0c4de6e4fe3',1,'tracktion::TimecodeType'],['../namespacetracktion_1_1engine.html#a106acf13adac6f34b462a0c4de6e4fe3',1,'tracktion::engine::TimecodeType']]],
   ['timeformat_4',['TimeFormat',['../structtracktion_1_1engine_1_1TrackCompManager_1_1TrackComp.html#a24a568ee55b4a58b14273344e1773c05',1,'tracktion::engine::TrackCompManager::TrackComp']]],
   ['transformresult_5',['transformresult',['../namespacetracktion_1_1graph.html#ae8337885018777ed501740f02dcbca0d',1,'tracktion::TransformResult'],['../namespacetracktion_1_1graph.html#ae8337885018777ed501740f02dcbca0d',1,'tracktion::graph::TransformResult']]],
