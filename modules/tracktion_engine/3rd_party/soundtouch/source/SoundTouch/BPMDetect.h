@@ -1,5 +1,0 @@
-#include "../../include/BPMDetect.h"
-
-
-
-
