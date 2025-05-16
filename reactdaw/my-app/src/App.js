@@ -3,6 +3,8 @@ import TransportControls from "./components/TransportControls";
 import Timeline from "./components/Timeline";
 import "./App.css";
 import * as Tone from "tone";
+import LessonTooltip from "./components/LessonTooltip.js";
+import lessons from "./Lessons";
 
 function App() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -10,6 +12,25 @@ function App() {
   const [selectedTrackId, setSelectedTrackId] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [playheadPosition, setPlayheadPosition] = useState(0);
+
+
+  // Lesson index tracking
+  const [lessonIndex, setLessonIndex] = useState(0);
+  const [stepIndex, setStepIndex] = useState(0);
+
+  const currentLesson = lessons[lessonIndex]
+  const currentStep = currentLesson?.steps[stepIndex];
+
+  const handleContinue = () => {
+  if (stepIndex < currentLesson.steps.length - 1) {
+    setStepIndex(stepIndex + 1);
+  } else {
+    // End of current lesson
+    setLessonIndex(lessonIndex + 1); 
+    setStepIndex(0);
+  }
+  };
+
 
   useEffect(() => {
     let id;
@@ -161,6 +182,17 @@ function App() {
         onSetClipVolume={onSetClipVolume}
         onScrubPlayhead={onScrubPlayhead}
       />
+
+       {typeof stepIndex === "number" && (
+        <LessonTooltip
+          title={currentStep.title}
+          text={currentStep.text}
+          position={currentStep.position}
+          visible={true}
+          onContinue={handleContinue}
+        />
+      )}
+
     </div>
   );
 }

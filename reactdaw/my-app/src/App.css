@@ -36,3 +36,19 @@
     transform: rotate(360deg);
   }
 }
+
+
+.tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.button {
+  padding: 10px 16px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}

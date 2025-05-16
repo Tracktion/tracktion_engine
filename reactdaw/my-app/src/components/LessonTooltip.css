@@ -1,0 +1,64 @@
+.lesson-tooltip {
+  position: absolute;
+  background-color: #222;
+  color: white;
+  left: 50%;
+  top: 50%;
+  border-radius: 8px;
+  font-size: 20px;
+  width: 400px;
+  height: 300px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  white-space: normal;
+  transition: opacity 0.2s ease-in-out;
+  transform: translateX(-50%);
+}
+
+.lesson-tooltip--top {
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -110%);
+}
+
+.lesson-tooltip--bottom {
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, 10%);
+}
+
+.lesson-tooltip--left {
+  right: 100%;
+  top: 50%;
+  transform: translate(-10%, -50%);
+}
+
+.lesson-tooltip--right {
+  left: 100%;
+  top: 50%;
+  transform: translate(10%, -50%);
+}
+
+.lesson-tooltip-title {
+  font-weight: bold;
+  font-size: 25px;
+}
+
+.lesson-tooltip-text {
+  margin-top: 20px; 
+  padding: 20px;
+}
+
+.lesson-tooltip-extra {
+  color: #ccc;
+}
+
+.lesson-tooltip-button {
+  margin-bottom: 50px;
+  padding: 8px 12px;
+  background-color: #555;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
