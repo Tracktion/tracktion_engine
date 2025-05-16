@@ -12,7 +12,7 @@ namespace tracktion::inline engine {
 
 WaveOutputDevice::WaveOutputDevice (Engine& e, const WaveDeviceDescription& desc)
     : OutputDevice (e, desc.name, "waveout_" + juce::String::toHexString (desc.name.hashCode())),
-      deviceChannels (desc.channels),
+      deviceDescription (desc),
       channelSet (createChannelSet (desc.channels)),
       ditheringEnabled (false),
       leftRightReversed (false)
@@ -39,7 +39,7 @@ void WaveOutputDevice::setEnabled (bool b)
     {
         enabled = b;
         changed();
-        engine.getDeviceManager().setWaveOutChannelsEnabled (deviceChannels, b);
+        engine.getDeviceManager().setDeviceEnabled (*this, b);
         // do nothing now! this object is probably deleted..
     }
 }
@@ -124,27 +124,38 @@ void WaveOutputDeviceInstance::prepareToPlay (double, int blockSize)
 //==============================================================================
 int WaveOutputDevice::getLeftChannel() const
 {
-    return deviceChannels.size() >= 1 ? deviceChannels[0].indexInDevice : -1;
+    return deviceDescription.getNumChannels() >= 1 ? deviceDescription.channels[0].indexInDevice : -1;
 }
 
 int WaveOutputDevice::getRightChannel() const
 {
-    return deviceChannels.size() >= 2 ? deviceChannels[1].indexInDevice : -1;
+    return deviceDescription.getNumChannels() >= 2 ? deviceDescription.channels[1].indexInDevice : -1;
 }
 
 bool WaveOutputDevice::isStereoPair() const
 {
-    return deviceChannels.size() == 2;
+    return deviceDescription.getNumChannels() == 2;
 }
 
 void WaveOutputDevice::setStereoPair (bool stereo)
 {
-    auto& dm = engine.getDeviceManager();
+    engine.getDeviceManager().setDeviceNumChannels (*this, stereo ? 2 : 1);
+}
 
-    if (deviceChannels.size() == 2)
-        dm.setDeviceOutChannelStereo (std::max (getLeftChannel(), getRightChannel()), stereo);
-    else if (deviceChannels.size() == 1)
-        dm.setDeviceOutChannelStereo (getLeftChannel(), stereo);
+juce::PopupMenu WaveOutputDevice::createChannelGroupMenu()
+{
+    juce::PopupMenu m;
+    auto& dm = engine.getDeviceManager();
+    uint32_t channelNum = 0;
+
+    for (auto& option : dm.getPossibleChannelGroupsForDevice (*this, DeviceManager::maxNumChannelsPerDevice))
+        m.addItem (option, [this, &dm, num = ++channelNum] { dm.setDeviceNumChannels (*this, num); });
+
+    m.addSeparator();
+    m.addItem ("Set all to mono channels", [&dm] { dm.setAllWaveOutputsToNumChannels (1); });
+    m.addItem ("Set all to stereo pairs",  [&dm] { dm.setAllWaveOutputsToNumChannels (2); });
+
+    return m;
 }
 
 } // namespace tracktion::inline engine

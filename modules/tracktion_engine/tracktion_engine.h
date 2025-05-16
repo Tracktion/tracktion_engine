@@ -59,6 +59,7 @@
  #include <choc/audio/choc_MIDI.h>
  #include <choc/containers/choc_SingleReaderSingleWriterFIFO.h>
  #include <choc/containers/choc_NonAllocatingStableSort.h>
+<<<<<<< HEAD
  #include <choc/containers/choc_ZipFile.h>
  #include <choc/text/choc_Files.h>
 #else
@@ -68,6 +69,15 @@
  #include "../3rd_party/choc/choc/containers/choc_NonAllocatingStableSort.h"
  #include "../3rd_party/choc/choc/containers/choc_ZipFile.h"
  #include "../3rd_party/choc/choc/text/choc_Files.h"
+=======
+ #include <choc/containers/choc_Value.h>
+#else
+ #include "../3rd_party/choc/audio/choc_SampleBuffers.h"
+ #include "../3rd_party/choc/audio/choc_MIDI.h"
+ #include "../3rd_party/choc/containers/choc_SingleReaderSingleWriterFIFO.h"
+ #include "../3rd_party/choc/containers/choc_NonAllocatingStableSort.h"
+ #include "../3rd_party/choc/containers/choc_Value.h"
+>>>>>>> 25a1baebab4 (Refactored the way that audio channel groupings are handled and stored by the DeviceManager so that groupings with any number of channels are possible.)
 #endif
 
 #include "../3rd_party/expected/expected.hpp"
