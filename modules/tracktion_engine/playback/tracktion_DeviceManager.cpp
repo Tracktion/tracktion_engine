@@ -19,56 +19,6 @@ namespace tracktion { inline namespace engine
  #define TRACKTION_LOG_DEVICE(text)
 #endif
 
-static juce::String mergeTwoNames (const juce::String& s1, const juce::String& s2)
-{
-    juce::String nm;
-
-    auto bracketed1 = s1.fromLastOccurrenceOf ("(", false, false)
-                        .upToFirstOccurrenceOf (")", false, false).trim();
-
-    auto bracketed2 = s2.fromLastOccurrenceOf ("(", false, false)
-                        .upToFirstOccurrenceOf (")", false, false).trim();
-
-    if ((! (bracketed1.isEmpty() || bracketed2.isEmpty()))
-        && s1.endsWithChar (')') && s2.endsWithChar (')')
-        && s1.upToLastOccurrenceOf ("(", false, false).trim()
-             == s2.upToLastOccurrenceOf ("(", false, false).trim())
-    {
-        nm << s1.upToLastOccurrenceOf ("(", false, false).trim()
-           << " (" << bracketed1 << " + " << bracketed2 << ")";
-    }
-    else
-    {
-        juce::String endNum1, endNum2;
-
-        for (int i = s1.length(); --i >= 0;)
-            if (juce::CharacterFunctions::isDigit (s1[i]))
-                endNum1 = juce::String::charToString (s1[i]) + endNum1;
-            else
-                break;
-
-        for (int i = s2.length(); --i >= 0;)
-            if (juce::CharacterFunctions::isDigit (s2[i]))
-                endNum2 = juce::String::charToString (s2[i]) + endNum2;
-            else
-                break;
-
-        if ((! (endNum1.isEmpty() || endNum2.isEmpty()))
-            && s1.substring (0, s1.length() - endNum1.length())
-               == s2.substring (0, s2.length() - endNum2.length()))
-        {
-            nm << s1.substring (0, s1.length() - endNum1.length())
-               << endNum1 << " + " << endNum2;
-        }
-        else
-        {
-            nm << s1 << " + " << s2;
-        }
-    }
-
-    return nm;
-}
-
 static bool isMicrosoftGSSynth (MidiOutputDevice& mo)
 {
    #if JUCE_WINDOWS
@@ -86,76 +36,6 @@ void DeviceManager::TracktionEngineAudioDeviceManager::createAudioDeviceTypes (j
     if (engine.getEngineBehaviour().addSystemAudioIODeviceTypes())
         juce::AudioDeviceManager::createAudioDeviceTypes (types);
 }
-
-//==============================================================================
-struct DeviceManager::AvailableWaveDeviceList
-{
-    AvailableWaveDeviceList (DeviceManager& d) : dm (d)
-    {
-        if (auto device = dm.deviceManager.getCurrentAudioDevice())
-        {
-            deviceName = device->getName();
-
-            if (dm.engine.getEngineBehaviour().isDescriptionOfWaveDevicesSupported())
-            {
-                dm.engine.getEngineBehaviour().describeWaveDevices (inputs, *device, true);
-                dm.engine.getEngineBehaviour().describeWaveDevices (outputs, *device, false);
-            }
-            else
-            {
-                describeStandardDevices (inputs, *device, true);
-                describeStandardDevices (outputs, *device, false);
-            }
-        }
-    }
-
-    void describeStandardDevices (std::vector<WaveDeviceDescription>& descriptions, juce::AudioIODevice& device, bool isInput)
-    {
-        auto channelNames = isInput ? device.getInputChannelNames()
-                                    : device.getOutputChannelNames();
-
-        if (channelNames.size() == 2)
-        {
-            juce::String name (isInput ? TRANS("Input 123") : TRANS("Output 123"));
-            channelNames.set (0, name.replace ("123", "1"));
-            channelNames.set (1, name.replace ("123", "2"));
-        }
-
-        auto isDeviceEnabled = [this, isInput] (int index)
-        {
-            return isInput ? dm.isDeviceInEnabled (index) : dm.isDeviceOutEnabled (index);
-        };
-
-        for (int i = 0; i < channelNames.size(); ++i)
-        {
-            const bool canBeStereo = i < channelNames.size() - 1;
-
-            if (canBeStereo && (isInput ? dm.isDeviceInChannelStereo (i)
-                                        : dm.isDeviceOutChannelStereo (i)))
-            {
-                descriptions.push_back (WaveDeviceDescription (mergeTwoNames (channelNames[i], channelNames[i + 1]),
-                                                               i, i + 1, isDeviceEnabled (i) || isDeviceEnabled (i + 1)));
-                ++i;
-            }
-            else
-            {
-                descriptions.push_back (WaveDeviceDescription (channelNames[i], i, -1, isDeviceEnabled (i)));
-                ++i;
-
-                if (i < channelNames.size())
-                    descriptions.push_back (WaveDeviceDescription (channelNames[i], i, -1, isDeviceEnabled (i)));
-            }
-        }
-    }
-
-    bool operator== (const AvailableWaveDeviceList& other) const noexcept    { return deviceName == other.deviceName && inputs == other.inputs && outputs == other.outputs; }
-    bool operator!= (const AvailableWaveDeviceList& other) const noexcept    { return ! operator== (other); }
-
-    DeviceManager& dm;
-    juce::String deviceName;
-    std::vector<WaveDeviceDescription> inputs, outputs;
-};
-
 
 //==============================================================================
 struct DeviceManager::PrepareToStartCaller  : public juce::AsyncUpdater
@@ -408,6 +288,7 @@ void DeviceManager::initialise (int defaultNumInputs, int defaultNumOutputs)
 {
     defaultNumInputChannelsToOpen = defaultNumInputs;
     defaultNumOutputChannelsToOpen = defaultNumOutputs;
+    deviceDescriptionList = {};
 
     loadSettings();
     finishedInitialising = true;
@@ -427,7 +308,6 @@ void DeviceManager::closeDevices()
     TRACKTION_ASSERT_MESSAGE_THREAD
 
     lastMIDIDeviceList.reset();
-    lastAvailableWaveDeviceList.reset();
 
     jassert (activeContexts.isEmpty());
     clearAllContextDevices();
@@ -681,7 +561,10 @@ bool DeviceManager::usesHardwareMidiDevices()
 HostedAudioDeviceInterface& DeviceManager::getHostedAudioDeviceInterface()
 {
     if (hostedAudioDeviceInterface == nullptr)
+    {
         hostedAudioDeviceInterface = std::make_unique<HostedAudioDeviceInterface> (engine);
+        deviceListChanged (true);
+    }
 
     return *hostedAudioDeviceInterface;
 }
@@ -793,43 +676,32 @@ void DeviceManager::deleteVirtualMidiDevice (VirtualMidiInputDevice& vmi)
     rescanMidiDeviceList();
 }
 
-void DeviceManager::sanityCheckEnabledChannels()
-{
-    for (int i = outEnabled.getHighestBit() + 2; --i >= 0;)
-    {
-        if (isDeviceOutChannelStereo (i))
-        {
-            const int chan = i & ~1;
-            const bool en = outEnabled[chan] || outEnabled[chan + 1];
-            outEnabled.setBit (chan, en);
-            outEnabled.setBit (chan + 1, en);
-        }
-    }
-
-    for (int i = inEnabled.getHighestBit() + 2; --i >= 0;)
-    {
-        if (isDeviceInChannelStereo (i))
-        {
-            const int chan = i & ~1;
-            const bool en = inEnabled[chan] || inEnabled[chan + 1];
-            inEnabled.setBit (chan, en);
-            inEnabled.setBit (chan + 1, en);
-        }
-    }
-
-    if (currentSampleRate < 22050 || currentSampleRate > 200000)
-        currentSampleRate = 44100.0;
-}
-
 void DeviceManager::rescanWaveDeviceList()
 {
-    auto newList = std::make_unique<AvailableWaveDeviceList> (*this);
+    auto newList = deviceDescriptionList;
 
-    if (lastAvailableWaveDeviceList == nullptr || *newList != *lastAvailableWaveDeviceList)
+    if (auto device = deviceManager.getCurrentAudioDevice())
     {
-        lastAvailableWaveDeviceList = std::move (newList);
-        triggerAsyncUpdate();
+        if (! newList.updateForDevice (*device))
+        {
+            auto storedState = engine.getPropertyStorage().getXmlPropertyItem (SettingID::audiosettings, deviceManager.getCurrentAudioDeviceType());
+            newList.initialise (engine, *device, storedState.get());
+        }
     }
+
+    if (newList != deviceDescriptionList)
+    {
+        deviceDescriptionList = newList;
+        deviceListChanged (false);
+    }
+}
+
+void DeviceManager::deviceListChanged (bool reloadAllDevices)
+{
+    triggerAsyncUpdate();
+
+    if (reloadAllDevices)
+        reloadAllContextDevices();
 }
 
 void DeviceManager::handleAsyncUpdate()
@@ -849,33 +721,30 @@ void DeviceManager::handleAsyncUpdate()
 
     prepareToStartCaller->handleUpdateNowIfNeeded();
 
-    if (lastAvailableWaveDeviceList == nullptr)
-        lastAvailableWaveDeviceList = std::make_unique<AvailableWaveDeviceList> (*this);
-
     juce::OwnedArray<WaveInputDevice>  newWaveInputs;
     juce::OwnedArray<WaveOutputDevice> newWaveOutputs;
-    juce::BigInteger newActiveOutChannels;
+    std::vector<int> newActiveOutChannels;
 
-    for (auto& d : lastAvailableWaveDeviceList->inputs)
+    for (auto& d : deviceDescriptionList.inputs)
     {
         auto wi = new WaveInputDevice (engine, d, InputDevice::waveDevice);
         newWaveInputs.add (wi);
 
         TRACKTION_LOG_DEVICE ("Wave In: " + wi->getName() + (wi->isEnabled() ? " (enabled): " : ": ")
-                               + createDescriptionOfChannels (wi->deviceChannels));
+                               + createDescriptionOfChannels (wi->getChannels()));
     }
 
-    for (auto& d : lastAvailableWaveDeviceList->outputs)
+    for (auto& d : deviceDescriptionList.outputs)
     {
         auto wo = new WaveOutputDevice (engine, d);
         newWaveOutputs.add (wo);
 
         if (wo->isEnabled())
             for (const auto& ci : wo->getChannels())
-                newActiveOutChannels.setBit (ci.indexInDevice);
+                newActiveOutChannels.push_back (ci.indexInDevice);
 
         TRACKTION_LOG_DEVICE ("Wave Out: " + wo->getName() + (wo->isEnabled() ? " (enabled): " : ": ")
-                               + createDescriptionOfChannels (wo->deviceChannels));
+                               + createDescriptionOfChannels (wo->getChannels()));
     }
 
     clearAllContextDevices();
@@ -884,10 +753,12 @@ void DeviceManager::handleAsyncUpdate()
         const std::unique_lock sl (contextLock);
         newWaveInputs.swapWith (waveInputs);
         newWaveOutputs.swapWith (waveOutputs);
-        newActiveOutChannels.swapWith (activeOutChannels);
+        std::swap (newActiveOutChannels, activeOutputChannels);
     }
 
-    sanityCheckEnabledChannels();
+    if (currentSampleRate < 22050 || currentSampleRate > 200000)
+        currentSampleRate = 44100.0;
+
     reloadAllContextDevices();
     saveSettings();
     checkDefaultDevicesAreValid();
@@ -910,23 +781,23 @@ void DeviceManager::handleAsyncUpdate()
 
 void DeviceManager::loadSettings()
 {
-    juce::String error;
     auto& storage = engine.getPropertyStorage();
 
     {
         CRASH_TRACER
+        juce::String error;
+
         if (isHostedAudioDeviceInterfaceInUse())
         {
             error = deviceManager.initialise (defaultNumInputChannelsToOpen,
                                               defaultNumOutputChannelsToOpen,
                                               nullptr, false, "Hosted Device", nullptr);
+
             applyNewMidiDeviceList(); // Do this syncronously for hosted audio interfaces
         }
         else
         {
-            auto audioXml = storage.getXmlProperty (SettingID::audio_device_setup);
-
-            if (audioXml != nullptr)
+            if (auto audioXml = storage.getXmlProperty (SettingID::audio_device_setup))
                 error = deviceManager.initialise (defaultNumInputChannelsToOpen,
                                                   defaultNumOutputChannelsToOpen,
                                                   audioXml.get(), true);
@@ -937,32 +808,13 @@ void DeviceManager::loadSettings()
 
         if (error.isNotEmpty())
             TRACKTION_LOG_ERROR ("AudioDeviceManager init: " + error);
-    }
 
-    outMonoChans.clear();
-    inStereoChans.clear();
-    outEnabled.clear();
-    outEnabled.setRange (0, 256, true);
-    inEnabled.clear();
-    inEnabled.setRange (0, 256, true);
-
-    if (! engine.getEngineBehaviour().isDescriptionOfWaveDevicesSupported())   //else UI will take care about inputs/outputs names and their mapping to device channels
-    {
-        if (auto n = storage.getXmlPropertyItem (SettingID::audiosettings, deviceManager.getCurrentAudioDeviceType()))
-        {
-            outMonoChans.parseString (n->getStringAttribute ("monoChansOut", outMonoChans.toString (2)), 2);
-            inStereoChans.parseString (n->getStringAttribute ("stereoChansIn", inStereoChans.toString (2)), 2);
-            outEnabled.parseString (n->getStringAttribute ("outEnabled", outEnabled.toString (2)), 2);
-            inEnabled.parseString (n->getStringAttribute ("inEnabled", inEnabled.toString (2)), 2);
-        }
+        TRACKTION_LOG ("Audio block size: " + std::to_string (getBlockSize()) + "  Rate: " + std::to_string (getSampleRate()));
     }
 
     auto currentDeviceType = deviceManager.getCurrentAudioDeviceType();
     defaultWaveOutID = storage.getPropertyItem (SettingID::defaultWaveOutDevice, currentDeviceType, defaultWaveOutID);
     defaultWaveInID  = storage.getPropertyItem (SettingID::defaultWaveInDevice, currentDeviceType, defaultWaveInID);
-
-    TRACKTION_LOG ("Audio block size: " + juce::String (getBlockSize())
-                    + "  Rate: " + juce::String ((int) getSampleRate()));
 }
 
 void DeviceManager::saveSettings()
@@ -976,14 +828,8 @@ void DeviceManager::saveSettings()
     {
         if (deviceManager.getCurrentAudioDevice() != nullptr)
         {
-            juce::XmlElement n ("AUDIODEVICE");
-
-            n.setAttribute ("outEnabled", outEnabled.toString (2));
-            n.setAttribute ("inEnabled", inEnabled.toString (2));
-            n.setAttribute ("monoChansOut", outMonoChans.toString (2));
-            n.setAttribute ("stereoChansIn", inStereoChans.toString (2));
-
-            storage.setXmlPropertyItem (SettingID::audiosettings, deviceManager.getCurrentAudioDeviceType(), n);
+            auto xml = deviceDescriptionList.toXML();
+            storage.setXmlPropertyItem (SettingID::audiosettings, deviceManager.getCurrentAudioDeviceType(), xml);
         }
     }
 }
@@ -1161,26 +1007,6 @@ void DeviceManager::setDefaultMidiInDevice (juce::String deviceID)
     }
 }
 
-void DeviceManager::setDeviceOutChannelStereo (int chan, bool isStereoPair)
-{
-    chan &= ~1;
-
-    if (isDeviceOutChannelStereo (chan) != isStereoPair)
-    {
-        outMonoChans.setBit (chan / 2, ! isStereoPair);
-
-        if (isStereoPair)
-        {
-            const bool en = outEnabled[chan] || outEnabled[chan + 1];
-            outEnabled.setBit (chan, en);
-            outEnabled.setBit (chan + 1, en);
-        }
-
-        rescanWaveDeviceList();
-        reloadAllContextDevices();
-    }
-}
-
 std::vector<WaveOutputDevice*> DeviceManager::getWaveOutputDevices()
 {
     dispatchPendingUpdates();
@@ -1193,108 +1019,56 @@ std::vector<WaveInputDevice*> DeviceManager::getWaveInputDevices()
     return { waveInputs.begin(), waveInputs.end() };
 }
 
-void DeviceManager::setDeviceInChannelStereo (int chan, bool isStereoPair)
+void DeviceManager::setDeviceEnabled (WaveOutputDevice& device, bool enabled)
 {
-    chan &= ~1;
+    deviceDescriptionList.setDeviceEnabled (device.deviceDescription, false, enabled);
+    deviceListChanged (false);
+}
 
-    if (isDeviceInChannelStereo (chan) != isStereoPair)
+void DeviceManager::setDeviceEnabled (WaveInputDevice& device, bool enabled)
+{
+    deviceDescriptionList.setDeviceEnabled (device.deviceDescription, true, enabled);
+    deviceListChanged (false);
+}
+
+void DeviceManager::setDeviceNumChannels (WaveOutputDevice& device, uint32_t numChannels)
+{
+    if (device.deviceDescription.getNumChannels() != numChannels)
     {
-        inStereoChans.setBit (chan / 2, isStereoPair);
-
-        if (isStereoPair)
-        {
-            const bool en = inEnabled[chan] || inEnabled[chan + 1];
-            inEnabled.setBit (chan, en);
-            inEnabled.setBit (chan + 1, en);
-        }
-
-        rescanWaveDeviceList();
+        deviceDescriptionList.setChannelCountInDevice (device.deviceDescription, false, numChannels);
+        deviceListChanged (true);
     }
 }
 
-void DeviceManager::setWaveOutChannelsEnabled (const std::vector<ChannelIndex>& channels, bool b)
+void DeviceManager::setDeviceNumChannels (WaveInputDevice& device, uint32_t numChannels)
 {
-    bool anyChanged = false;
-
-    for (auto& ci : channels)
+    if (device.deviceDescription.getNumChannels() != numChannels)
     {
-        if (outEnabled[ci.indexInDevice] != b)
-        {
-            outEnabled.setBit (ci.indexInDevice, b);
-            anyChanged = true;
-        }
+        deviceDescriptionList.setChannelCountInDevice (device.deviceDescription, true, numChannels);
+        deviceListChanged (true);
     }
-
-    if (anyChanged)
-        rescanWaveDeviceList();
 }
 
-void DeviceManager::setWaveInChannelsEnabled (const std::vector<ChannelIndex>& channels, bool b)
+void DeviceManager::setAllWaveInputsToNumChannels (uint32_t numChannels)
 {
-    bool anyChanged = false;
-
-    for (auto& ci : channels)
-    {
-        if (inEnabled[ci.indexInDevice] != b)
-        {
-            inEnabled.setBit (ci.indexInDevice, b);
-            anyChanged = true;
-        }
-    }
-
-    if (anyChanged)
-        rescanWaveDeviceList();
+    if (deviceDescriptionList.setAllInputsToNumChannels (numChannels))
+        deviceListChanged (true);
 }
 
-void DeviceManager::enableAllWaveInputs()
+void DeviceManager::setAllWaveOutputsToNumChannels (uint32_t numChannels)
 {
-    std::vector<ChannelIndex> chans;
-
-    for (auto& w : waveInputs)
-        for (auto index : w->getChannels())
-            chans.push_back (index);
-
-    setWaveInChannelsEnabled (chans, true);
+    if (deviceDescriptionList.setAllOutputsToNumChannels (numChannels))
+        deviceListChanged (true);
 }
 
-void DeviceManager::enableAllWaveOutputs()
+juce::StringArray DeviceManager::getPossibleChannelGroupsForDevice (WaveOutputDevice& device, uint32_t maxNumChannels) const
 {
-    std::vector<ChannelIndex> chans;
-
-    for (auto& w : waveOutputs)
-        for (auto index : w->getChannels())
-            chans.push_back (index);
-
-    setWaveOutChannelsEnabled (chans, true);
+    return deviceDescriptionList.getPossibleChannelGroupsForDevice (device.deviceDescription, maxNumChannels, false);
 }
 
-void DeviceManager::setAllWaveInputsToStereoPair()
+juce::StringArray DeviceManager::getPossibleChannelGroupsForDevice (WaveInputDevice& device, uint32_t maxNumChannels) const
 {
-    bool anyChanged = false;
-
-    for (auto& w : waveInputs)
-    {
-        for (auto ci : w->getChannels())
-        {
-            if (! inStereoChans[ci.indexInDevice / 2])
-            {
-                inStereoChans.setBit (ci.indexInDevice / 2, true);
-                anyChanged = true;
-            }
-        }
-    }
-
-    if (anyChanged)
-        rescanWaveDeviceList();
-}
-
-void DeviceManager::setAllWaveOutputsToStereoPair()
-{
-    if (! outMonoChans.isZero())
-    {
-        outMonoChans.clear();
-        rescanWaveDeviceList();
-    }
+    return deviceDescriptionList.getPossibleChannelGroupsForDevice (device.deviceDescription, maxNumChannels, true);
 }
 
 int DeviceManager::getNumMidiInDevices() const
@@ -1555,9 +1329,9 @@ void DeviceManager::audioDeviceIOCallbackInternal (const float* const* inputChan
                     c->fillNextNodeBlock (outputChannelData, totalNumOutputChannels, numSamples);
             }
 
-            for (int i = totalNumOutputChannels; --i >= 0;)
-                if (auto* dest = outputChannelData[i])
-                    if (activeOutChannels[i])
+            for (auto chan : activeOutputChannels)
+                if (chan >= 0 && chan < totalNumOutputChannels)
+                    if (auto* dest = outputChannelData[chan])
                         for (int j = 0; j < numSamples; ++j)
                             if (! std::isnormal (dest[j]))
                                 dest[j] = 0;
@@ -1578,11 +1352,11 @@ void DeviceManager::audioDeviceIOCallbackInternal (const float* const* inputChan
         {
             bool hasClipped = false;
 
-            for (int i = totalNumOutputChannels; --i >= 0;)
+            for (auto chan : activeOutputChannels)
             {
-                if (auto dest = outputChannelData[i])
+                if (chan >= 0 && chan < totalNumOutputChannels)
                 {
-                    if (activeOutChannels[i])
+                    if (auto* dest = outputChannelData[chan])
                     {
                         for (int j = 0; j < numSamples; ++j)
                         {
