@@ -160,6 +160,7 @@ namespace tracktion
 
 #include "../3rd_party/choc/platform/choc_ReenableAllWarnings.h"
 #include "../3rd_party/crill/seqlock_object.h"
+#include "../3rd_party/choc/text/choc_JSON.h"
 
 //==============================================================================
 #if JUCE_LINUX || JUCE_WINDOWS

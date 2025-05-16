@@ -130,22 +130,19 @@ public:
     juce::String getDefaultWaveInDeviceID() const               { return defaultWaveInID; }
 
     std::vector<WaveOutputDevice*> getWaveOutputDevices();
-    void setWaveOutChannelsEnabled (const std::vector<ChannelIndex>&, bool);
-    void setDeviceOutChannelStereo (int channelNum, bool isStereoPair);
-    bool isDeviceOutChannelStereo (int chan) const              { return ! outMonoChans[chan / 2]; }
-    bool isDeviceOutEnabled (int chanNum)                       { return outEnabled[chanNum]; }
-
     std::vector<WaveInputDevice*> getWaveInputDevices();
-    void setWaveInChannelsEnabled (const std::vector<ChannelIndex>&, bool);
-    void setDeviceInChannelStereo (int channelNum, bool isStereoPair);
-    bool isDeviceInChannelStereo (int chan) const               { return inStereoChans[chan / 2]; }
-    bool isDeviceInEnabled (int chanNum)                        { return inEnabled[chanNum]; }
 
-    void enableAllWaveInputs();
-    void enableAllWaveOutputs();
+    void setDeviceEnabled (WaveOutputDevice&, bool);
+    void setDeviceEnabled (WaveInputDevice&, bool);
 
-    void setAllWaveInputsToStereoPair();
-    void setAllWaveOutputsToStereoPair();
+    void setDeviceNumChannels (WaveOutputDevice&, uint32_t numChannels);
+    void setDeviceNumChannels (WaveInputDevice&, uint32_t numChannels);
+
+    void setAllWaveInputsToNumChannels (uint32_t numChannels);
+    void setAllWaveOutputsToNumChannels (uint32_t numChannels);
+
+    juce::StringArray getPossibleChannelGroupsForDevice (WaveOutputDevice&, uint32_t maxNumChannels) const;
+    juce::StringArray getPossibleChannelGroupsForDevice (WaveInputDevice&, uint32_t maxNumChannels) const;
 
     //==============================================================================
     int getNumMidiOutDevices() const                            { return (int) midiOutputs.size(); }
@@ -238,6 +235,7 @@ public:
     */
     std::function<void(InputDevice*)> warnOfWastedMidiMessagesFunction;
 
+    static constexpr uint32_t maxNumChannelsPerDevice = 2; // Temporary limit until we support multichannel
 
 private:
     //==============================================================================
@@ -250,17 +248,16 @@ private:
     int maxBlockSize = 0;
 
     int defaultNumInputChannelsToOpen = 512, defaultNumOutputChannelsToOpen = 512;
-    juce::BigInteger outEnabled, inEnabled, activeOutChannels, outMonoChans, inStereoChans;
     juce::String defaultWaveOutID, defaultMidiOutID, defaultWaveInID, defaultMidiInID;
+    std::vector<int> activeOutputChannels;
 
     int midiRescanIntervalSeconds = 4;
     bool onlyRescanMidiOnHardwareChange = true;
 
+    WaveDeviceDescriptionList deviceDescriptionList;
+
     struct MIDIDeviceList;
     std::unique_ptr<MIDIDeviceList> lastMIDIDeviceList;
-
-    struct AvailableWaveDeviceList;
-    std::unique_ptr<AvailableWaveDeviceList> lastAvailableWaveDeviceList;
 
     struct PrepareToStartCaller;
     std::unique_ptr<PrepareToStartCaller> prepareToStartCaller;
@@ -288,11 +285,11 @@ private:
     void reloadAllContextDevices();
 
     void loadSettings();
-    void sanityCheckEnabledChannels();
 
     bool usesHardwareMidiDevices();
     void timerCallback() override;
 
+    void deviceListChanged (bool);
     void handleAsyncUpdate() override;
     void changeListenerCallback (juce::ChangeBroadcaster*) override;
 
@@ -306,6 +303,13 @@ private:
     void audioDeviceIOCallbackInternal (const float* const* inputChannelData, int numInputChannels,
                                         float* const* outputChannelData, int totalNumOutputChannels,
                                         int numSamples);
+
+    // Deprecated: these legacy methods have been removed as we move to a more flexible
+    // channel layout system. Use methods in the wave devices instead.
+    bool isDeviceOutChannelStereo (int) const;
+    bool isDeviceOutEnabled (int);
+    bool isDeviceInChannelStereo (int) const;
+    bool isDeviceInEnabled (int);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DeviceManager)
 };
