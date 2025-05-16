@@ -13,8 +13,8 @@ namespace tracktion { inline namespace engine
 
 /** A (virtual) audio output device.
 
-    There'll be multiple instances of these, representing mono or stereo pairs of
-    output channels.
+    There'll be one or more instances of these, each one representing a group of
+    channels from a physical device.
 */
 class WaveOutputDevice  : public OutputDevice
 {
@@ -24,7 +24,7 @@ public:
 
     void resetToDefault();
     void setEnabled (bool) override;
-    const std::vector<ChannelIndex>& getChannels() const noexcept   { return deviceChannels; }
+    const std::vector<ChannelIndex>& getChannels() const noexcept   { return deviceDescription.channels; }
     const juce::AudioChannelSet& getChannelSet() const noexcept     { return channelSet; }
 
     void reverseChannels (bool);
@@ -52,6 +52,8 @@ public:
 
     WaveOutputDeviceInstance* createInstance (EditPlaybackContext&);
 
+    const WaveDeviceDescription deviceDescription;
+
 protected:
     juce::String openDevice() override;
     void closeDevice() override;
@@ -60,7 +62,6 @@ private:
     friend class DeviceManager;
     friend class WaveOutputDeviceInstance;
 
-    const std::vector<ChannelIndex> deviceChannels;
     const juce::AudioChannelSet channelSet;
     bool ditheringEnabled, leftRightReversed;
 

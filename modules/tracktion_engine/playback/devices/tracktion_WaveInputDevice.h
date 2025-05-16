@@ -13,8 +13,8 @@ namespace tracktion { inline namespace engine
 
 /** A (virtual) audio input device.
 
-    There'll be multiple instances of these, representing mono or stereo pairs of
-    input channels.
+    There'll be one or more instances of these, each one representing a group of
+    channels from a physical device.
 */
 class WaveInputDevice   : public InputDevice
 {
@@ -57,7 +57,7 @@ public:
     void setMergeMode (const juce::String&);
     juce::String getMergeMode() const;
 
-    const std::vector<ChannelIndex>& getChannels() const noexcept   { return deviceChannels; }
+    const std::vector<ChannelIndex>& getChannels() const noexcept   { return deviceDescription.channels; }
     const juce::AudioChannelSet& getChannelSet() const noexcept     { return channelSet; }
 
     //==============================================================================
@@ -70,6 +70,8 @@ public:
     //==============================================================================
     juce::String getSelectableDescription() override;
 
+    const WaveDeviceDescription deviceDescription;
+
 protected:
     juce::String openDevice();
     void closeDevice();
@@ -78,7 +80,6 @@ private:
     friend class DeviceManager;
     friend class WaveInputDeviceInstance;
 
-    const std::vector<ChannelIndex> deviceChannels;
     const DeviceType deviceType;
     const juce::AudioChannelSet channelSet;
 

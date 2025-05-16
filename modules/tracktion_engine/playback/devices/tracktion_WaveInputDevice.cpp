@@ -1336,7 +1336,7 @@ protected:
 WaveInputDevice::WaveInputDevice (Engine& e, const juce::String& devType,
                                   const WaveDeviceDescription& desc, DeviceType t)
     : InputDevice (e, devType, desc.name, "wavein_" + juce::String::toHexString (desc.name.hashCode())),
-      deviceChannels (desc.channels),
+      deviceDescription (desc),
       deviceType (t),
       channelSet (createChannelSet (desc.channels))
 {
@@ -1396,7 +1396,7 @@ void WaveInputDevice::setEnabled (bool b)
 
         if (! isTrackDevice())
         {
-            engine.getDeviceManager().setWaveInChannelsEnabled (deviceChannels, b);
+            engine.getDeviceManager().setDeviceEnabled (*this, b);
         }
         else
         {
@@ -1483,7 +1483,7 @@ juce::String WaveInputDevice::getSelectableDescription()
 
 bool WaveInputDevice::isStereoPair() const
 {
-    return deviceChannels.size() == 2;
+    return deviceDescription.getNumChannels() == 2;
 }
 
 void WaveInputDevice::setStereoPair (bool stereo)
@@ -1494,12 +1494,7 @@ void WaveInputDevice::setStereoPair (bool stereo)
         return;
     }
 
-    auto& dm = engine.getDeviceManager();
-
-    if (deviceChannels.size() == 2)
-        dm.setDeviceInChannelStereo (std::max (deviceChannels[0].indexInDevice, deviceChannels[1].indexInDevice), stereo);
-    else if (deviceChannels.size() == 1)
-        dm.setDeviceInChannelStereo (deviceChannels[0].indexInDevice, stereo);
+    engine.getDeviceManager().setDeviceNumChannels (*this, stereo ? 2 : 1);
 }
 
 void WaveInputDevice::setRecordAdjustment (TimeDuration d)
