@@ -8,22 +8,54 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-
 namespace tracktion { inline namespace engine
 {
 
+struct EditPosition;
+
 /** Converts a TimePosition to a BeatPosition given a TempoSequence. */
 BeatPosition toBeats (TimePosition, const TempoSequence&);
+BeatPosition toBeats (TimePosition, const tempo::Sequence&);
 
 /** Converts a BeatPosition to a TimePosition given a TempoSequence. */
 TimePosition toTime (BeatPosition, const TempoSequence&);
+TimePosition toTime (BeatPosition, const tempo::Sequence&);
 
 //==============================================================================
 /** Converts a TimeRange to a BeatRange given a TempoSequence. */
 BeatRange toBeats (TimeRange, const TempoSequence&);
+BeatRange toBeats (TimeRange, const tempo::Sequence&);
 
 /** Converts a BeatRange to a TimeRange given a TempoSequence. */
 TimeRange toTime (BeatRange, const TempoSequence&);
+TimeRange toTime (BeatRange, const tempo::Sequence&);
+
+
+//==============================================================================
+//==============================================================================
+/**
+    Alias for a duration.
+    Note this isn't a proper type like EditPosition as a duration by itself
+    doesn't make sense for beats, you can't convert to/from Time without a
+    position as well. So most of the time you'd specify this as an EditRange.
+*/
+using EditDuration = std::variant<TimeDuration, BeatDuration>;
+
+/** Returns the raw value of beats or seconds, only really useful for
+    comparing two EditDurations with the same time base.
+*/
+EditPosition toPosition (EditDuration);
+
+/** Returns the raw value of beats or seconds, only really useful for
+    comparing two EditDurations with the same time base.
+*/
+double toUnderlying (EditDuration);
+
+/** Returns true if the duration is 0 beats or seconds. */
+bool isZero (EditDuration);
+
+/** Returns true if the duration is greater than zero beats or seconds. */
+bool isGreaterThanZero (EditDuration);
 
 
 //==============================================================================
@@ -32,37 +64,222 @@ TimeRange toTime (BeatRange, const TempoSequence&);
     Represents a time point in an Edit stored as either time or beats.
     This is basically a variant to simplify APIs that can accept either time base.
 */
-struct EditTime
+struct EditPosition
 {
     /** Creates an empty EditTime, starting at 0. */
-    EditTime();
+    EditPosition();
 
     /** Creates an EditTime from a TimePosition. */
-    EditTime (TimePosition);
+    EditPosition (TimePosition);
 
     /** Creates an EditTime from a BeatPosition. */
-    EditTime (BeatPosition);
+    EditPosition (BeatPosition);
 
     /** Returns true if the time is stored as beats, false if stored as a TimePosition. */
     bool isBeats() const;
 
 private:
-    friend TimePosition toTime (EditTime, const TempoSequence&);
-    friend BeatPosition toBeats (EditTime, const TempoSequence&);
+    friend TimePosition toTime (EditPosition, const TempoSequence&);
+    friend BeatPosition toBeats (EditPosition, const TempoSequence&);
+    friend TimePosition toTime (EditPosition, const tempo::Sequence&);
+    friend BeatPosition toBeats (EditPosition, const tempo::Sequence&);
+    friend double toUnderlying (EditPosition);
 
     std::variant<TimePosition, BeatPosition> position;
 };
+
+/** Alias provided for compatibility, may be removed in future. */
+using EditTime = EditPosition;
+
+inline EditPosition plus (const EditPosition& lhs, const EditDuration& rhs, const TempoSequence& ts)
+{
+    // Do this in terms of the duration's time base
+    if (auto beatDur = std::get_if<BeatDuration> (&rhs))
+        return toBeats (lhs, ts) + *beatDur;
+
+    auto timeDur = std::get<TimeDuration> (rhs);
+    return toTime (lhs, ts) + timeDur;
+}
+
+inline EditPosition minus (const EditPosition& lhs, const EditDuration& rhs, const TempoSequence& ts)
+{
+    // Do this in terms of the duration's time base
+    if (auto beatDur = std::get_if<BeatDuration> (&rhs))
+        return toBeats (lhs, ts) - *beatDur;
+
+    auto timeDur = std::get<TimeDuration> (rhs);
+    return toTime (lhs, ts) - timeDur;
+}
+
+inline bool equals (const EditPosition& lhs, const EditPosition& rhs, const TempoSequence& ts)
+{
+    // Convert to beats if the lhs is beats
+    if (lhs.isBeats())
+        return toBeats (lhs, ts) == toBeats (rhs, ts);
+
+    // Otherwise convert to time
+    return toTime (lhs, ts) == toTime (rhs, ts);
+}
+
+inline EditDuration minus (const EditPosition& lhs, const EditPosition& rhs, const TempoSequence& ts)
+{
+    // Convert to beats if the lhs is beats
+    if (lhs.isBeats())
+        return toBeats (lhs, ts) - toBeats (rhs, ts);
+
+    // Otherwise convert to time
+    return toTime (lhs, ts) - toTime (rhs, ts);
+}
+
+inline bool less (const EditPosition& lhs, const EditPosition& rhs, const TempoSequence& ts)
+{
+    if (rhs.isBeats() == lhs.isBeats())
+        return toUnderlying (lhs) < toUnderlying (rhs);
+
+    return toTime (lhs, ts) < toTime (rhs, ts);
+}
+
+inline bool greater (const EditPosition& lhs, const EditPosition& rhs, const TempoSequence& ts)
+{
+    if (rhs.isBeats() == lhs.isBeats())
+        return toUnderlying (lhs) > toUnderlying (rhs);
+
+    return toTime (lhs, ts) > toTime (rhs, ts);
+}
+
+inline bool lessThanOrEqualTo (const EditPosition& lhs, const EditPosition& rhs, const TempoSequence& ts)
+{
+    if (rhs.isBeats() == lhs.isBeats())
+        return toUnderlying (lhs) <= toUnderlying (rhs);
+
+    return toTime (lhs, ts) <= toTime (rhs, ts);
+}
+
+inline bool greaterThanOrEqualTo (const EditPosition& lhs, const EditPosition& rhs, const TempoSequence& ts)
+{
+    if (rhs.isBeats() == lhs.isBeats())
+        return toUnderlying (lhs) >= toUnderlying (rhs);
+
+    return toTime (lhs, ts) >= toTime (rhs, ts);
+}
+
+inline EditPosition min (const EditPosition& lhs, const EditPosition& rhs, const TempoSequence& ts)
+{
+    if (lhs.isBeats())
+    {
+        BeatPosition rhsBeats = rhs.isBeats() ? BeatPosition::fromBeats (toUnderlying (rhs))
+                                              : toBeats (rhs, ts);
+        return BeatPosition::fromBeats (std::min (toUnderlying (lhs), rhsBeats.inBeats()));
+    }
+
+    TimePosition rhsTime = rhs.isBeats() ? toTime (rhs, ts)
+                                         : TimePosition::fromSeconds (toUnderlying (rhs));
+    return TimePosition::fromSeconds (std::min (toUnderlying (lhs), rhsTime.inSeconds()));
+}
+
+inline EditPosition max (const EditPosition& lhs, const EditPosition& rhs, const TempoSequence& ts)
+{
+    if (lhs.isBeats())
+    {
+        BeatPosition rhsBeats = rhs.isBeats() ? BeatPosition::fromBeats (toUnderlying (rhs))
+                                              : toBeats (rhs, ts);
+        return BeatPosition::fromBeats (std::max (toUnderlying (lhs), rhsBeats.inBeats()));
+    }
+
+    TimePosition rhsTime = rhs.isBeats() ? toTime (rhs, ts)
+                                         : TimePosition::fromSeconds (toUnderlying (rhs));
+    return TimePosition::fromSeconds (std::max (toUnderlying (lhs), rhsTime.inSeconds()));
+}
+
+inline EditDuration toDuration (const EditPosition& p)
+{
+    if (p.isBeats())
+        return BeatDuration::fromBeats (toUnderlying (p));
+
+    return TimeDuration::fromSeconds (toUnderlying (p));
+}
+
+//==============================================================================
+//==============================================================================
+class EditPositionWithTempoSequence
+{
+public:
+    EditPositionWithTempoSequence (EditPosition, const TempoSequence&);
+
+    EditPosition getPosition() const                { return position; }
+    const TempoSequence& getTempoSequence() const   { return sequence; }
+
+private:
+    EditPosition position;
+    const TempoSequence& sequence;
+};
+
+inline EditPositionWithTempoSequence::EditPositionWithTempoSequence (EditPosition ep, const TempoSequence& ts)
+    : position (std::move (ep)), sequence (ts)
+{
+}
+
+inline bool operator== (const EditPositionWithTempoSequence& lhs, const EditPositionWithTempoSequence& rhs)
+{
+    assert (&lhs.getTempoSequence() == &rhs.getTempoSequence());
+    return equals (lhs.getPosition(), rhs.getPosition(), lhs.getTempoSequence());
+}
+
+inline bool operator< (const EditPositionWithTempoSequence& lhs, const EditPositionWithTempoSequence& rhs)
+{
+    assert (&lhs.getTempoSequence() == &rhs.getTempoSequence());
+    return less (lhs.getPosition(), rhs.getPosition(), lhs.getTempoSequence());
+}
+
+inline bool operator<= (const EditPositionWithTempoSequence& lhs, const EditPositionWithTempoSequence& rhs)
+{
+    assert (&lhs.getTempoSequence() == &rhs.getTempoSequence());
+    return lessThanOrEqualTo (lhs.getPosition(), rhs.getPosition(), lhs.getTempoSequence());
+}
+
+inline bool operator> (const EditPositionWithTempoSequence& lhs, const EditPositionWithTempoSequence& rhs)
+{
+    assert (&lhs.getTempoSequence() == &rhs.getTempoSequence());
+    return greater (lhs.getPosition(), rhs.getPosition(), lhs.getTempoSequence());
+}
+
+inline bool operator>= (const EditPositionWithTempoSequence& lhs, const EditPositionWithTempoSequence& rhs)
+{
+    assert (&lhs.getTempoSequence() == &rhs.getTempoSequence());
+    return greaterThanOrEqualTo (lhs.getPosition(), rhs.getPosition(), lhs.getTempoSequence());
+}
+
+inline EditDuration operator- (const EditPositionWithTempoSequence& lhs, const EditPositionWithTempoSequence& rhs)
+{
+    assert (&lhs.getTempoSequence() == &rhs.getTempoSequence());
+    return minus (lhs.getPosition(), rhs.getPosition(), lhs.getTempoSequence());
+}
+
+inline EditPosition operator+ (const EditPositionWithTempoSequence& lhs, const EditDuration& rhs)
+{
+    return plus (lhs.getPosition(), rhs, lhs.getTempoSequence());
+}
+
+inline EditPosition operator- (const EditPositionWithTempoSequence& lhs, const EditDuration& rhs)
+{
+    return minus (lhs.getPosition(), rhs, lhs.getTempoSequence());
+}
 
 //==============================================================================
 /** Converts an EditTime to a TimePosition.
     N.B. This may be a slow operation if this was created using a BeatPosition.
 */
-TimePosition toTime (EditTime, const TempoSequence&);
+TimePosition toTime (EditPosition, const TempoSequence&);
 
 /** Converts an EditTime to a BeatPosition.
     N.B. This may be a slow operation if this was created using a TimePosition.
 */
-BeatPosition toBeats (EditTime, const TempoSequence&);
+BeatPosition toBeats (EditPosition, const TempoSequence&);
+
+/** Returns the raw number of seconds or beats.
+    Mostly useful for testing.
+*/
+double toUnderlying (EditPosition);
 
 
 //==============================================================================
@@ -91,15 +308,37 @@ struct EditTimeRange
     /** Creates an EditTimeRange from a BeatRange. */
     EditTimeRange (BeatPosition, BeatDuration);
 
+    /** Returns the start of the range. */
+    EditPosition getStart() const;
+
+    /** Returns the end of the range. */
+    EditPosition getEnd() const;
+
+    /** Returns the length of the range. */
+    EditDuration getLength() const;
+
     /** Returns true if the time is stored as beats, false if stored as a TimePosition. */
     bool isBeats() const;
 
 private:
     friend TimeRange toTime (EditTimeRange, const TempoSequence&);
     friend BeatRange toBeats (EditTimeRange, const TempoSequence&);
+    friend TimeRange toTime (EditTimeRange, const tempo::Sequence&);
+    friend BeatRange toBeats (EditTimeRange, const tempo::Sequence&);
 
     std::variant<TimeRange, BeatRange> range;
 };
+
+/** Returns the raw number of seconds or beats.
+    Mostly useful for testing.
+*/
+juce::Range<double> toUnderlying (EditTimeRange);
+
+/** Returns true if the given position is contained within the given range. */
+bool contains (EditTimeRange, EditPosition, const TempoSequence&);
+
+/** Returns true if the given position is contained within the given closed range. */
+bool containsInclusive (EditTimeRange, EditPosition, const TempoSequence&);
 
 /** Converts an EditTimeRange to a TimeRange.
     N.B. This may be a slow operation if this was created using a BeatRange.
@@ -153,6 +392,14 @@ ClipPosition createClipPosition (const TempoSequence&, TimeRange, TimeDuration o
 /** Creates a ClipPosition from either a time or beat range. */
 ClipPosition createClipPosition (const TempoSequence&, BeatRange, BeatDuration offset = {});
 
+/** Represents the position of a clip on a timeline.
+*/
+struct ClipPositionBeats
+{
+    BeatRange position;         /**< The BeatRange this ClipPosition occupies. */
+    BeatDuration offset = {};   /**< The offset this ClipPosition has. */
+};
+
 
 //==============================================================================
 //==============================================================================
@@ -202,28 +449,61 @@ namespace tracktion { inline namespace engine {
 //
 //==============================================================================
 
-inline EditTime::EditTime()
-    : EditTime (TimePosition())
+inline EditPosition toPosition (EditDuration duration)
+{
+    // N.B. std::get unavailable prior to macOS 10.14
+    if (const auto tp = std::get_if<TimeDuration> (&duration))
+        return TimePosition::fromSeconds (tp->inSeconds());
+
+    assert (std::holds_alternative<BeatDuration> (duration));
+    return BeatPosition::fromBeats (std::get<BeatDuration> (duration).inBeats());
+}
+
+inline double toUnderlying (EditDuration duration)
+{
+    // N.B. std::get unavailable prior to macOS 10.14
+    if (const auto tp = std::get_if<TimeDuration> (&duration))
+        return tp->inSeconds();
+
+    assert (std::holds_alternative<BeatDuration> (duration));
+    return std::get<BeatDuration> (duration).inBeats();
+}
+
+inline bool isZero (EditDuration duration)
+{
+    return toUnderlying (duration) == 0.0;
+}
+
+inline bool isGreaterThanZero (EditDuration duration)
+{
+    return toUnderlying (duration) > 0.0;
+}
+
+
+//==============================================================================
+//==============================================================================
+inline EditPosition::EditPosition()
+    : EditPosition (TimePosition())
 {
 }
 
-inline EditTime::EditTime (TimePosition tp)
+inline EditPosition::EditPosition (TimePosition tp)
     : position (tp)
 {
 }
 
-inline EditTime::EditTime (BeatPosition bp)
+inline EditPosition::EditPosition (BeatPosition bp)
     : position (bp)
 {
 }
 
-inline bool EditTime::isBeats() const
+inline bool EditPosition::isBeats() const
 {
     return std::holds_alternative<BeatPosition> (position);
 }
 
 //==============================================================================
-inline TimePosition toTime (EditTime et, const TempoSequence& ts)
+inline TimePosition toTime (EditPosition et, const TempoSequence& ts)
 {
     // N.B. std::get unavailable prior to macOS 10.14
     if (const auto tp = std::get_if<TimePosition> (&et.position))
@@ -232,13 +512,41 @@ inline TimePosition toTime (EditTime et, const TempoSequence& ts)
     return tracktion::engine::toTime (*std::get_if<BeatPosition> (&et.position), ts);
 }
 
-inline BeatPosition toBeats (EditTime et, const TempoSequence& ts)
+inline BeatPosition toBeats (EditPosition et, const TempoSequence& ts)
 {
     if (const auto bp = std::get_if<BeatPosition> (&et.position))
         return *bp;
 
     return tracktion::engine::toBeats (*std::get_if<TimePosition> (&et.position), ts);
 }
+
+inline TimePosition toTime (EditPosition et, const tempo::Sequence& ts)
+{
+    // N.B. std::get unavailable prior to macOS 10.14
+    if (const auto tp = std::get_if<TimePosition> (&et.position))
+        return *tp;
+
+    return tracktion::engine::toTime (*std::get_if<BeatPosition> (&et.position), ts);
+}
+
+inline BeatPosition toBeats (EditPosition et, const tempo::Sequence& ts)
+{
+    if (const auto bp = std::get_if<BeatPosition> (&et.position))
+        return *bp;
+
+    return tracktion::engine::toBeats (*std::get_if<TimePosition> (&et.position), ts);
+}
+
+inline double toUnderlying (EditPosition et)
+{
+    // N.B. std::get unavailable prior to macOS 10.14
+    if (const auto tp = std::get_if<TimePosition> (&et.position))
+        return tp->inSeconds();
+
+    assert (std::holds_alternative<BeatPosition> (et.position));
+    return std::get<BeatPosition> (et.position).inBeats();
+}
+
 
 //==============================================================================
 inline EditTimeRange::EditTimeRange (TimeRange r)
@@ -271,12 +579,57 @@ inline EditTimeRange::EditTimeRange (BeatPosition start, BeatDuration length)
 {
 }
 
+inline EditPosition EditTimeRange::getStart() const
+{
+    if (const auto tr = std::get_if<TimeRange> (&range))
+        return tr->getStart();
+
+    assert (isBeats());
+    return std::get_if<BeatRange> (&range)->getStart();
+}
+
+inline EditPosition EditTimeRange::getEnd() const
+{
+    if (const auto tr = std::get_if<TimeRange> (&range))
+        return tr->getEnd();
+
+    assert (isBeats());
+    return std::get_if<BeatRange> (&range)->getEnd();
+}
+
+inline EditDuration EditTimeRange::getLength() const
+{
+    if (const auto tr = std::get_if<TimeRange> (&range))
+        return tr->getLength();
+
+    assert (isBeats());
+    return std::get_if<BeatRange> (&range)->getLength();
+}
+
 inline bool EditTimeRange::isBeats() const
 {
     return std::holds_alternative<BeatRange> (range);
 }
 
 //==============================================================================
+inline juce::Range<double> toUnderlying (EditTimeRange r)
+{
+    return { toUnderlying (r.getStart()),
+             toUnderlying (r.getEnd()) };
+}
+
+inline bool contains (EditTimeRange r, EditPosition pos, const TempoSequence& ts)
+{
+    return greaterThanOrEqualTo (pos, r.getStart(), ts)
+        && less (pos, r.getEnd(), ts);
+}
+
+inline bool containsInclusive (EditTimeRange r, EditPosition pos, const TempoSequence& ts)
+{
+    return greaterThanOrEqualTo (pos, r.getStart(), ts)
+        && lessThanOrEqualTo (pos, r.getEnd(), ts);
+}
+
 inline TimeRange toTime (EditTimeRange r, const TempoSequence& ts)
 {
     // N.B. std::get unavailable prior to macOS 10.14
@@ -293,6 +646,24 @@ inline BeatRange toBeats (EditTimeRange r, const TempoSequence& ts)
 
     return tracktion::engine::toBeats (*std::get_if<TimeRange> (&r.range), ts);
 }
+
+inline TimeRange toTime (EditTimeRange r, const tempo::Sequence& ts)
+{
+    // N.B. std::get unavailable prior to macOS 10.14
+    if (const auto tr = std::get_if<TimeRange> (&r.range))
+        return *tr;
+
+    return tracktion::engine::toTime (*std::get_if<BeatRange> (&r.range), ts);
+}
+
+inline BeatRange toBeats (EditTimeRange r, const tempo::Sequence& ts)
+{
+    if (const auto br = std::get_if<BeatRange> (&r.range))
+        return *br;
+
+    return tracktion::engine::toBeats (*std::get_if<TimeRange> (&r.range), ts);
+}
+
 
 //==============================================================================
 inline ClipPosition ClipPosition::rescaled (TimePosition anchorTime, double factor) const

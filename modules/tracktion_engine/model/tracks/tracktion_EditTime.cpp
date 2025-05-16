@@ -16,7 +16,17 @@ BeatPosition toBeats (TimePosition tp, const TempoSequence& ts)
     return ts.toBeats (tp);
 }
 
+BeatPosition toBeats (TimePosition tp, const tempo::Sequence& ts)
+{
+    return ts.toBeats (tp);
+}
+
 TimePosition toTime (BeatPosition bp, const TempoSequence& ts)
+{
+    return ts.toTime (bp);
+}
+
+TimePosition toTime (BeatPosition bp, const tempo::Sequence& ts)
 {
     return ts.toTime (bp);
 }
@@ -27,6 +37,16 @@ BeatRange toBeats (TimeRange r, const TempoSequence& ts)
 }
 
 TimeRange toTime (BeatRange r, const TempoSequence& ts)
+{
+    return { toTime (r.getStart(), ts), toTime (r.getEnd(), ts) };
+}
+
+BeatRange toBeats (TimeRange r, const tempo::Sequence& ts)
+{
+    return { toBeats (r.getStart(), ts), toBeats (r.getEnd(), ts) };
+}
+
+TimeRange toTime (BeatRange r, const tempo::Sequence& ts)
 {
     return { toTime (r.getStart(), ts), toTime (r.getEnd(), ts) };
 }

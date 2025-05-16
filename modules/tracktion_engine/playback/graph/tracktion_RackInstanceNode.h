@@ -24,7 +24,8 @@ public:
         and applies a gain parameter to each mapped channel.
     */
     RackInstanceNode (RackInstance::Ptr, std::unique_ptr<Node>, ChannelMap channelMap,
-                      ProcessState&);
+                      ProcessState&, SampleRateAndBlockSize);
+    ~RackInstanceNode() override;
 
     std::vector<Node*> getDirectInputNodes() override;
     tracktion::graph::NodeProperties getNodeProperties() override;
@@ -42,7 +43,7 @@ private:
     TimeDuration automationAdjustmentTime;
     int maxNumChannels = 0;
     float lastGain[2];
-    bool canUseSourceBuffers = false;
+    bool canUseSourceBuffers = false, isInitialised = false;
 };
 
 }} // namespace tracktion { inline namespace engine

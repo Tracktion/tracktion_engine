@@ -7,7 +7,7 @@
 
     Tracktion Engine uses a GPL or Commercial licence - see LICENCE.md for details.
 */
-
+#include <bit>
 
 #if ! JUCE_PROJUCER_LIVE_BUILD
 

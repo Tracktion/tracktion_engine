@@ -217,9 +217,6 @@ public:
     /// If this returns true, it means that newly inserted clips will automatically have a fade-in and fade-out of 3ms applied.
     virtual bool autoAddClipEdgeFades()                                             { return false; }
 
-    /// Interpolate automation at 10ms intervals (faster) or calculate actual value (slower)
-    virtual bool interpolateAutomation()                                            { return true; }
-
     struct LevelMeterSettings
     {
         int maxPeakAgeMs = 2000;
@@ -259,9 +256,6 @@ public:
 
     /// Restore a custom control surface from custom XML
     virtual ControlSurface* getCustomControlSurfaceForXML (ExternalControllerManager&, const juce::XmlElement&)     { return {}; }
-
-    // Experimental
-    virtual bool enableExperimentalAutomation()                                     { return false; }
 };
 
 }} // namespace tracktion { inline namespace engine

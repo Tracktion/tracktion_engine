@@ -179,6 +179,29 @@ private:
 
 //==============================================================================
 /**
+    Similar to ScopedBenchmark except it doesn't start/stop the measurement so
+    you can do this manually (or with a ScopedMeasurement) around a specific
+    code section.
+*/
+struct PublishingBenchmark
+{
+    /** Constructs a Benchmark. */
+    PublishingBenchmark (BenchmarkDescription desc)
+        : benchmark (std::move (desc))
+    {
+    }
+
+    /** Adds the result to the BenchmarkList. */
+    ~PublishingBenchmark()
+    {
+        BenchmarkList::getInstance().addResult (benchmark.getResult());
+    }
+
+    Benchmark benchmark;
+};
+
+//==============================================================================
+/**
     Helper class for starting/stopping a benchmark measurement.
 */
 struct ScopedMeasurement

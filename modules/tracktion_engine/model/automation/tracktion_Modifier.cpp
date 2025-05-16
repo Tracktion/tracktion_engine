@@ -146,6 +146,8 @@ void Modifier::baseClassInitialise (double newSampleRate, int blockSizeSamples)
         const int numSamples = (int) tracktion::toSamples (numSecondsToStore, sampleRate);
         const int numBlocks = (numSamples / blockSizeSamples) * 2;
         valueFifoQueue.reset ((size_t) numBlocks);
+
+        updateStreamIterators();
     }
 
     CRASH_TRACER

@@ -583,6 +583,9 @@ Plugin::Ptr PluginCache::createNewPlugin (const juce::ValueTree& v)
     const juce::ScopedLock sl (lock);
     auto p = addPluginToCache (edit.engine.getPluginManager().createNewPlugin (edit, v));
 
+    if (p != nullptr && edit.engine.getEngineBehaviour().arePluginsRemappedWhenTempoChanges())
+        p->remapOnTempoChange = true;
+
     if (p != nullptr && newPluginAddedCallback != nullptr)
         newPluginAddedCallback (*p);
 
@@ -595,6 +598,9 @@ Plugin::Ptr PluginCache::createNewPlugin (const juce::String& type, const juce::
 
     const juce::ScopedLock sl (lock);
     auto p = addPluginToCache (edit.engine.getPluginManager().createNewPlugin (edit, type, desc));
+
+    if (p != nullptr && edit.engine.getEngineBehaviour().arePluginsRemappedWhenTempoChanges())
+        p->remapOnTempoChange = true;
 
     if (p != nullptr && newPluginAddedCallback != nullptr)
         newPluginAddedCallback (*p);

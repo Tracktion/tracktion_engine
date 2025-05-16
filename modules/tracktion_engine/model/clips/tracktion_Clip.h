@@ -409,6 +409,10 @@ public:
     virtual PatternGenerator* getPatternGenerator() { return {}; }
 
     //==============================================================================
+    /** Returns an AutomationCurveList if this clip type supports it. */
+    AutomationCurveList* getAutomationCurveList (bool createIfNoItems);
+
+    //==============================================================================
     /** Listener interface to be notified of recorded MIDI being sent to the plugins. */
     struct Listener
     {
@@ -449,6 +453,9 @@ public:
     */
     virtual void setParent (ClipOwner*);
 
+    /** @internal. */
+    void updateAutomationCurveListDestinations();
+
 protected:
     friend class Track;
     friend class ClipTrack;
@@ -468,6 +475,7 @@ protected:
     juce::CachedValue<SyncType> syncType;
     juce::CachedValue<bool> showingTakes;
     std::unique_ptr<PatternGenerator> patternGenerator;
+    std::unique_ptr<AutomationCurveList> automationCurveList;
     AsyncCaller updateLinkedClipsCaller;
 
     juce::ListenerList<Listener> listeners;
@@ -481,10 +489,13 @@ protected:
     /** @internal */
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
     /** @internal */
+    void valueTreeChildRemoved (juce::ValueTree&, juce::ValueTree&, int) override;
+    /** @internal */
     void valueTreeParentChanged (juce::ValueTree&) override;
 
 private:
     void updateParent();
+    std::pair<std::function<CurvePosition()>, std::function<ClipPositionInfo()>> getAutomationCurveListDelegates();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Clip)
 };

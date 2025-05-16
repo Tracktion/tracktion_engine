@@ -58,15 +58,25 @@ bool CurveEditorPoint::arePointsConsecutive (const SelectableList& items)
     return arePointsOnSameCurve (items);
 }
 
-TimeRange CurveEditorPoint::getPointTimeRange (const SelectableList& items)
+EditTimeRange CurveEditorPoint::getPointEditPositionRange (const SelectableList& items)
 {
     juce::Array<int> set;
 
     if (auto ed = getPointIndexes (set, items))
-        return { ed->getPointTime (set.getFirst()),
-                 ed->getPointTime (set.getLast()) };
+    {
+        auto& ts = ed->getEdit().tempoSequence;
 
-    return {};
+        auto p1 = ed->getPointPosition (set.getFirst());
+        auto p2 = ed->getPointPosition (set.getLast());
+
+        jassert (p1.isBeats() == p2.isBeats());
+        if (p1.isBeats())
+            return { toBeats (p1, ts), toBeats (p2, ts) };
+
+        return { toTime (p1, ts), toTime (p2, ts) };
+    }
+
+    return { 0_tp, 0_tp };
 }
 
 void CurveEditorPoint::selectionStatusChanged (bool)
@@ -101,23 +111,30 @@ CurveEditor::~CurveEditor()
     deleteAllChildren();
 }
 
+EditPosition CurveEditor::fromUnderlying (double u)
+{
+    if (isBeats())
+        return BeatPosition::fromBeats (u);
+
+    return TimePosition::fromSeconds (u);
+}
+
+EditPosition CurveEditor::toEditPosition (const TimePosition& t)
+{
+    return EditPosition (t);
+}
+
 void CurveEditor::updateLineThickness()
 {
-    auto newthickness = (isMouseOverOrDragging() || isCurveSelected || areAnyPointsSelected())
-                          ? 2.0f : 1.0f;
-
-    if (lineThickness != newthickness)
-    {
-        lineThickness = newthickness;
+    if (setIfDifferent (lineThickness, getLineThickness (isMouseOverOrDragging(), isCurveSelected || areAnyPointsSelected())))
         repaint();
-    }
 }
 
 void CurveEditor::paint (juce::Graphics& g)
 {
     CRASH_TRACER
 
-    if ((rightTime - leftTime) == TimeDuration())
+    if ((toUnderlying (rightTime) - toUnderlying (leftTime)) <= 0)
         return;
 
     const bool isOver = isMouseOverOrDragging();
@@ -150,7 +167,7 @@ void CurveEditor::paint (juce::Graphics& g)
     auto clipBounds = g.getClipBounds();
 
     {
-        const auto startX = std::max (0.0f, timeToX ({}));
+        const auto startX = std::max (0.0f, timeToX (fromUnderlying (0.0f)));
         auto lastY = valueToY (getValueAt (leftTime));
 
         juce::Path curvePath;
@@ -181,12 +198,10 @@ void CurveEditor::paint (juce::Graphics& g)
                     }
                     else
                     {
-                        double lineX1, lineX2;
-                        float lineY1, lineY2;
-                        getBezierEnds (index, lineX1, lineY1, lineX2, lineY2);
+                        auto [e1, e2] = getBezierEnds (index);
 
-                        curvePath.lineTo (getPosition ({ TimePosition::fromSeconds (lineX1), lineY1 }));
-                        curvePath.quadraticTo (bp, getPosition ({ TimePosition::fromSeconds (lineX2), lineY2 }));
+                        curvePath.lineTo (getPosition (e1));
+                        curvePath.quadraticTo (bp, getPosition (e2));
                         curvePath.lineTo (p2);
                     }
                 }
@@ -200,7 +215,7 @@ void CurveEditor::paint (juce::Graphics& g)
 
         curvePath.lineTo ((float) getWidth(), lastY);
 
-        if (auto fillCol = getCurrentFillColour(); ! fillCol.isTransparent())
+        if (auto fillCol = getCurrentFillColour(); ! fillCol.isTransparent() && fillPath())
         {
             juce::Path fillPath (curvePath);
             const auto y = getHeight() + 1.0f;
@@ -213,7 +228,7 @@ void CurveEditor::paint (juce::Graphics& g)
         }
 
         g.setColour (getCurrentLineColour());
-        g.strokePath (curvePath, juce::PathStrokeType (lineThickness));
+        drawLine (g, curvePath, lineThickness);
     }
 
     // draw the points along the line - the points, the add point and the curve point
@@ -284,6 +299,33 @@ void CurveEditor::paint (juce::Graphics& g)
                 g.fillEllipse (r.reduced (1.0f));
             }
         }
+
+        if (getDrawPointInsertionIndicator() && pointUnderMouse < 0)
+        {
+            auto mods = juce::ModifierKeys::getCurrentModifiers();
+            auto mousePos = getMouseXYRelative().toFloat();
+            auto t = snapTime (xToTime (mousePos.x), mods);
+            auto value = getValueAt (t);
+
+            if (juce::Point<float> (mousePos.x, valueToY (value)).getDistanceFrom (mousePos) < 8.0f)
+            {
+                auto pos = getPosition ({ t, value });
+                juce::Rectangle<float> r (pos.x - pointRadius,
+                                          pos.y - pointRadius,
+                                          pointRadius * 2,
+                                          pointRadius * 2);
+                r = r.reduced (2);
+
+                if (r.getX() <= clipBounds.getRight())
+                {
+                    g.setColour (getCurrentLineColour());
+                    g.fillRect (r);
+
+                    g.setColour (backgroundColour);
+                    g.fillRect (r.reduced (1));
+                }
+            }
+        }
     }
 }
 
@@ -297,9 +339,9 @@ bool CurveEditor::hitTest (int x, int y)
 
     for (int i = firstIndexOnScreen; i < getNumPoints(); ++i)
     {
-        auto t = getPointTime (i);
+        auto t = getPointPosition (i);
 
-        if (t >= rightTime)
+        if (toUnderlying (t) >= toUnderlying (rightTime))
             break;
 
         auto px = timeToX (t);
@@ -374,7 +416,7 @@ void CurveEditor::mouseDown (const juce::MouseEvent& e)
         selectionManager.deselectAll();
         selectPoint (curveUnderMouse, false);
     }
-    else
+    else if (canSelectItem())
     {
         selectionManager.select (getItem(), e.mods.isShiftDown());
     }
@@ -383,6 +425,16 @@ void CurveEditor::mouseDown (const juce::MouseEvent& e)
 juce::Colour CurveEditor::getCurrentFillColour()
 {
     return juce::Colours::transparentWhite;
+}
+
+float CurveEditor::getLineThickness (bool mouseOverOrDragging, bool curveOrPointsSelected) const
+{
+    return mouseOverOrDragging || curveOrPointsSelected ? 2.0f : 1.0f;
+}
+
+void CurveEditor::drawLine (juce::Graphics& g, juce::Path curvePath, float lineThicknessToUse)
+{
+    g.strokePath (curvePath, juce::PathStrokeType (lineThicknessToUse));
 }
 
 void CurveEditor::selectPoint (int pointIdx, bool addToSelection)
@@ -421,15 +473,15 @@ void CurveEditor::mouseDrag (const juce::MouseEvent& e)
             // add new endpoints to the line
             if (e.mods.isCommandDown())
             {
-                auto t1 = getPointTime (lineUnderMouse);
-                auto t2 = getPointTime (lineUnderMouse + 1);
+                auto t1 = getPointPosition (lineUnderMouse);
+                auto t2 = getPointPosition (lineUnderMouse + 1);
                 auto v1 = getPointValue (lineUnderMouse);
                 auto v2 = getPointValue (lineUnderMouse + 1);
                 auto c1 = getPointCurve (lineUnderMouse);
                 auto c2 = getPointCurve (lineUnderMouse + 1);
 
                 addPoint (t1, v1, c1);
-                addPoint (t2 - TimeDuration::fromSeconds (0.0000001), v2, c2); // Shift this a fraction forwards so it inserts before any existing points
+                addPoint (fromUnderlying (toUnderlying (t2) - 0.0000001), v2, c2); // Shift this a fraction forwards so it inserts before any existing points
 
                 lineUnderMouse++;
 
@@ -477,12 +529,12 @@ void CurveEditor::mouseDrag (const juce::MouseEvent& e)
 
         if (movingAllPoints)
         {
-            auto delta = t - mouseDownTime;
+            auto delta = toUnderlying (t) - toUnderlying (mouseDownTime);
 
-            if (delta > TimeDuration())
+            if (delta > 0)
             {
                 for (int i = getNumPoints(); --i >= pointBeingMoved;)
-                    movePoint (i, getPointTime (i) + delta, getPointValue (i), false);
+                    movePoint (i, fromUnderlying (toUnderlying (getPointPosition (i)) + delta), getPointValue (i), false);
             }
             else
             {
@@ -491,7 +543,7 @@ void CurveEditor::mouseDrag (const juce::MouseEvent& e)
                 for (int i = pointBeingMoved; i < getNumPoints(); ++i)
                 {
                     auto newIndex = movePoint (i,
-                                               getPointTime (i) + delta,
+                                               fromUnderlying (toUnderlying (getPointPosition (i)) + delta),
                                                getPointValue (i),
                                                i == pointBeingMoved
                                                  && e.mods.testFlags (juce::ModifierKeys::commandModifier
@@ -517,7 +569,7 @@ void CurveEditor::mouseDrag (const juce::MouseEvent& e)
                 if (std::abs (e.getDistanceFromDragStartX()) > std::abs (e.getDistanceFromDragStartY()))
                     newValue = getPointValue(pointBeingMoved);
                 else
-                    newTime  = getPointTime(pointBeingMoved);
+                    newTime  = getPointPosition (pointBeingMoved);
             }
 
             pointUnderMouse = movePoint (pointBeingMoved, newTime, newValue,
@@ -533,8 +585,8 @@ void CurveEditor::mouseDrag (const juce::MouseEvent& e)
         CRASH_TRACER
         auto offset = mouseDownValue - yToValue (e.position.y);
 
-        movePoint (lineUnderMouse, getPointTime(lineUnderMouse), point1 - offset, false);
-        movePoint (lineUnderMouse + 1, getPointTime(lineUnderMouse + 1), point2 - offset, false);
+        movePoint (lineUnderMouse, getPointPosition (lineUnderMouse), point1 - offset, false);
+        movePoint (lineUnderMouse + 1, getPointPosition (lineUnderMouse + 1), point2 - offset, false);
     }
     else
     {
@@ -543,10 +595,10 @@ void CurveEditor::mouseDrag (const juce::MouseEvent& e)
 
         if (getNumPoints() <= 0)
             setValueWhenNoPoints (point1 - offset);
-        else if (getNumPoints() == 1 || mouseDownTime < getPointTime (0))
-            movePoint (0, getPointTime (0), point1 - offset, false);
-        else if (mouseDownTime > getPointTime (getNumPoints() - 1))
-            movePoint (getNumPoints() - 1, getPointTime (getNumPoints() - 1), point2 - offset, false);
+        else if (getNumPoints() == 1 || toUnderlying (mouseDownTime) < toUnderlying (getPointPosition (0)))
+            movePoint (0, getPointPosition (0), point1 - offset, false);
+        else if (toUnderlying (mouseDownTime) > toUnderlying (getPointPosition (getNumPoints() - 1)))
+            movePoint (getNumPoints() - 1, getPointPosition (getNumPoints() - 1), point2 - offset, false);
     }
 
     CRASH_TRACER
@@ -637,6 +689,9 @@ void CurveEditor::mouseMove (const juce::MouseEvent& e)
 
     updatePointUnderMouse (e.position);
     updateLineThickness();
+
+    if (getDrawPointInsertionIndicator())
+        repaint();
 }
 
 void CurveEditor::mouseEnter (const juce::MouseEvent& e)
@@ -675,7 +730,7 @@ void CurveEditor::updatePointUnderMouse (juce::Point<float> pos)
     if (getItem() == nullptr || pointBeingMoved >= 0)
         return;
 
-    pos.x = std::max (timeToX ({}), pos.x);
+    pos.x = std::max (timeToX (fromUnderlying (0.0f)), pos.x);
 
     const auto captureRadius = pointRadius * pointRadius;
     int point = -1;
@@ -683,9 +738,9 @@ void CurveEditor::updatePointUnderMouse (juce::Point<float> pos)
 
     for (int i = firstIndexOnScreen; i < getNumPoints(); ++i)
     {
-        auto t = getPointTime (i);
+        auto t = getPointPosition (i);
 
-        if (t >= rightTime)
+        if (toUnderlying (t) >= toUnderlying (rightTime))
             break;
 
         // check if there is a point under the mouse
@@ -726,9 +781,9 @@ void CurveEditor::updatePointUnderMouse (juce::Point<float> pos)
 
             for (int i = 0; i < numPoints - 1; ++i)
             {
-                auto t = xToTime (pos.x);
+                auto t = toUnderlying (xToTime (pos.x));
 
-                if (t > getPointTime(i) && t < getPointTime (i + 1))
+                if (t > toUnderlying (getPointPosition (i)) && t < toUnderlying (getPointPosition (i + 1)))
                     newLineUnderMouse = i;
             }
         }
@@ -741,45 +796,67 @@ void CurveEditor::updatePointUnderMouse (juce::Point<float> pos)
     }
 }
 
-void CurveEditor::setTimes (TimePosition l, TimePosition r)
+void CurveEditor::setTimes (EditPosition l, EditPosition r)
 {
+    jassert (l.isBeats() == isBeats());
+    jassert (r.isBeats() == isBeats());
+
     leftTime = l;
     rightTime = r;
 }
 
-TimeRange CurveEditor::getTimes() const
+EditTimeRange CurveEditor::getTimes() const
 {
-    return { leftTime, rightTime };
+    auto& ts = getEdit().tempoSequence;
+
+    if (isBeats())
+        return { toBeats (leftTime, ts), toBeats (rightTime, ts) };
+
+    return { toTime (leftTime, ts), toTime (rightTime, ts) };
 }
 
-float CurveEditor::timeToX (TimePosition t) const
+bool CurveEditor::getDrawPointInsertionIndicator() const
 {
-    return (float) (getWidth() * ((t - leftTime) / (rightTime - leftTime)));
+    return drawPointInsertionIndicator;
 }
 
-TimePosition CurveEditor::xToTime (double x) const
+void CurveEditor::setDrawPointInsertionIndicator (bool shouldDraw)
 {
-    return TimePosition::fromSeconds (std::max (0.0, leftTime.inSeconds() + (x * (rightTime - leftTime).inSeconds()) / getWidth()));
+    if (setIfDifferent (drawPointInsertionIndicator, shouldDraw))
+        repaint();
+}
+
+float CurveEditor::timeToX (EditPosition t) const
+{
+    return (float) (getWidth() * ((toUnderlying (t) - toUnderlying (leftTime)) / (toUnderlying (rightTime) - toUnderlying (leftTime))));
+}
+
+EditPosition CurveEditor::xToTime (double x) const
+{
+    return TimePosition::fromSeconds (std::max (0.0, toUnderlying (leftTime) + (x * (toUnderlying (rightTime) - toUnderlying (leftTime))) / getWidth()));
 }
 
 float CurveEditor::valueToY (float val) const
 {
-    return 1.0f + (1.0f - (val - parameterMinValue) / parameterRange) * (getHeight() - 2);
+    return 1.0f + (1.0f - (val - getParameterRange().getStart()) / getParameterRange().getLength()) * (getHeight() - 2);
 }
 
 float CurveEditor::yToValue (double y) const
 {
-    return (float) ((1.0 - (y - 1) / (getHeight() - 2)) * parameterRange + parameterMinValue);
+    // 1px border at top/bottom
+    auto validYRange = getLocalBounds().reduced (0, 1).toDouble().getVerticalRange();
+    auto yProp = 1.0 - juce::NormalisableRange (validYRange).convertTo0to1 (validYRange.clipValue (y));
+    return juce::NormalisableRange (getParameterRange()).convertFrom0to1 (static_cast<float> (yProp));
 }
 
 juce::Point<float> CurveEditor::getPosition (CurvePoint p) const
 {
-    return { timeToX (toTime (p.time, edit.tempoSequence)), valueToY (p.value) };
+    return { timeToX (p.time), valueToY (p.value) };
 }
 
 juce::Point<float> CurveEditor::getPosition (int index)
 {
-    return getPosition ({ getPointTime (index), getPointValue (index) });
+    return getPosition ({ getPointPosition (index), getPointValue (index) });
 }
 
 void CurveEditor::selectableObjectChanged (Selectable*)
@@ -819,7 +896,7 @@ Edit& CurveEditor::getEdit() const
     return edit;
 }
 
-TimePosition CurveEditor::snapTime (TimePosition time, juce::ModifierKeys)
+EditPosition CurveEditor::snapTime (EditPosition time, juce::ModifierKeys)
 {
     return time;
 }

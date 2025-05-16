@@ -36,313 +36,6 @@ namespace tracktion::inline engine
         virtual void parameterBeingDeleted (AutomatableParameter&) = 0;
     };
 
-    namespace v1
-    {
-        class AutomationRecordManager   : public AutomationRecordManagerBase,
-                                          public juce::ChangeBroadcaster,
-                                          private juce::ChangeListener
-        {
-        public:
-            //==============================================================================
-            AutomationRecordManager (Edit& ed)
-                : engine (ed.engine), edit (ed)
-            {
-                if (edit.shouldPlay())
-                {
-                    auto getMessageManagerLock = []() -> std::unique_ptr<juce::MessageManagerLock>
-                    {
-                        if (auto job = juce::ThreadPoolJob::getCurrentThreadPoolJob())
-                            return std::make_unique<juce::MessageManagerLock> (job);
-
-                        if (auto t = juce::Thread::getCurrentThread())
-                            return  std::make_unique<juce::MessageManagerLock> (t);
-
-                        return {};
-                    };
-
-                    if (juce::MessageManager::getInstance()->isThisTheMessageThread())
-                    {
-                        edit.getTransport().addChangeListener (this);
-                    }
-                    else if (auto mml = getMessageManagerLock(); mml && mml->lockWasGained())
-                    {
-                        edit.getTransport().addChangeListener (this);
-                    }
-                    else
-                    {
-                        // Exception will be caught by the Edit constructor
-                        callBlocking ([this] { edit.getTransport().addChangeListener (this); });
-                    }
-                }
-
-                readingAutomation.referTo (edit.getTransport().state, IDs::automationRead, nullptr, true);
-            }
-
-            ~AutomationRecordManager() override
-            {
-                if (edit.shouldPlay())
-                    edit.getTransport().removeChangeListener (this);
-            }
-
-            //==============================================================================
-            bool isReadingAutomation() const noexcept override
-            {
-                return readingAutomation;
-            }
-
-            void setReadingAutomation (bool b) override
-            {
-                if (readingAutomation != b)
-                {
-                    readingAutomation = b;
-                    sendChangeMessage();
-
-                    engine.getExternalControllerManager().automationModeChanged (readingAutomation, writingAutomation);
-                }
-            }
-
-            bool isWritingAutomation() const noexcept override
-            {
-                return writingAutomation;
-            }
-
-            void setWritingAutomation (bool b) override
-            {
-                if (writingAutomation != b)
-                {
-                    writingAutomation = b;
-                    sendChangeMessage();
-
-                    engine.getExternalControllerManager().automationModeChanged (readingAutomation, writingAutomation);
-                }
-            }
-
-            //==============================================================================
-            bool isRecordingAutomation() const override
-            {
-                const juce::ScopedLock sl (lock);
-                return recordedParams.size() > 0;
-            }
-
-            bool isParameterRecording (AutomatableParameter* param) const override
-            {
-                const juce::ScopedLock sl (lock);
-
-                for (auto p : recordedParams)
-                    if (&p->parameter == param)
-                        return true;
-
-                return false;
-            }
-
-            void punchOut (bool toEnd) override
-            {
-                const juce::ScopedLock sl (lock);
-
-                if (recordedParams.size() > 0)
-                {
-                    auto endTime = edit.getTransport().getPosition();
-
-                    // If the punch out was triggered by a position change, we want to make
-                    // sure the playhead position is used as the end time
-                    if (auto epc = edit.getTransport().getCurrentPlaybackContext())
-                    {
-                        endTime = epc->isLooping() ? std::max (epc->getUnloopedPosition(),
-                                                               epc->getLoopTimes().getEnd())
-                                                   : epc->getPosition();
-                    }
-
-                    for (auto param : recordedParams)
-                    {
-                        if (toEnd)
-                            endTime = std::max (endTime, toPosition (param->parameter.getCurve().getLength()) + TimeDuration::fromSeconds (1.0));
-
-                        applyChangesToParameter (param, endTime, toEnd);
-                        param->parameter.resetRecordingStatus();
-                    }
-
-                    recordedParams.clear();
-                    sendChangeMessage();
-                }
-            }
-
-            Engine& engine;
-
-        private:
-            //==============================================================================
-            AutomationRecordManager (const AutomationRecordManager&) = delete;
-
-            struct AutomationParamData
-            {
-                AutomationParamData (AutomatableParameter& p, float value)
-                    : parameter (p), originalValue (value)
-                {
-                }
-
-                struct Change
-                {
-                    inline Change (TimePosition t, float v) noexcept
-                        : time (t), value (v) {}
-
-                    TimePosition time;
-                    float value;
-                };
-
-                AutomatableParameter& parameter;
-                juce::Array<Change> changes;
-                float originalValue;
-            };
-
-            Edit& edit;
-            juce::CriticalSection lock;
-            juce::OwnedArray<AutomationParamData> recordedParams;
-            bool writingAutomation = false;
-            juce::CachedValue<bool> readingAutomation;
-            bool wasPlaying = false;
-
-            void postFirstAutomationChange (AutomatableParameter& param, float originalValue, AutomationTrigger) override
-            {
-                TRACKTION_ASSERT_MESSAGE_THREAD
-                auto entry = std::make_unique<AutomationParamData> (param, originalValue);
-
-                // recording status has changed, so inform our listeners
-                sendChangeMessage();
-
-                const juce::ScopedLock sl (lock);
-                recordedParams.add (entry.release());
-            }
-
-            void postAutomationChange (AutomatableParameter& param, TimePosition time, float value) override
-            {
-                TRACKTION_ASSERT_MESSAGE_THREAD
-                const juce::ScopedLock sl (lock);
-
-                for (auto p : recordedParams)
-                {
-                    if (&p->parameter == &param)
-                    {
-                        p->changes.add (AutomationParamData::Change (time, value));
-                        break;
-                    }
-                }
-            }
-
-            void parameterBeingDeleted (AutomatableParameter& param) override
-            {
-                const juce::ScopedLock sl (lock);
-
-                for (int i = recordedParams.size(); --i >= 0;)
-                    if (&recordedParams.getUnchecked (i)->parameter == &param)
-                        recordedParams.remove (i);
-            }
-
-            void applyChangesToParameter (AutomationParamData* parameter, TimePosition end, bool toEnd)
-            {
-                CRASH_TRACER
-                juce::OwnedArray<AutomationCurve> newCurves;
-
-                {
-                    std::unique_ptr<AutomationCurve> curve (new AutomationCurve());
-                    curve->setOwnerParameter (&parameter->parameter);
-
-                    for (int i = 0; i < parameter->changes.size(); ++i)
-                    {
-                        auto& change = parameter->changes.getReference (i);
-
-                        if (i > 0 && change.time < parameter->changes.getReference (i - 1).time - TimeDuration::fromSeconds (0.1))
-                        {
-                            // gone back to the start - must be looping, so add this to the list and carry on..
-                            if (curve->getNumPoints() > 0)
-                            {
-                                newCurves.add (curve.release());
-                                curve = std::make_unique<AutomationCurve>();
-                                curve->setOwnerParameter (&parameter->parameter);
-                            }
-                        }
-
-                        const float oldVal = (i == 0) ? (parameter->parameter.getCurve().getNumPoints() > 0 ? parameter->parameter.getCurve().getValueAt (change.time)
-                                                                                                            : parameter->originalValue)
-                                                      : curve->getValueAt (change.time);
-
-                        const float newVal = parameter->parameter.snapToState (change.value);
-
-                        if (parameter->parameter.isDiscrete())
-                        {
-                            curve->addPoint (change.time, oldVal, 0.0f);
-                            curve->addPoint (change.time, newVal, 0.0f);
-                        }
-                        else
-                        {
-                            if (std::abs (oldVal - newVal) > (parameter->parameter.getValueRange().getLength() * 0.21f))
-                            {
-                                if (i == 0)
-                                    curve->addPoint (change.time - TimeDuration::fromSeconds (0.000001), oldVal, 0.0f);
-                                else
-                                    curve->addPoint (change.time, oldVal, 0.0f);
-                            }
-
-                            curve->addPoint (change.time, newVal, 0.0f);
-                        }
-                    }
-
-                    if (curve->getNumPoints() > 0)
-                        newCurves.add (curve.release());
-                }
-
-                auto glideLength = tracktion::AutomationRecordManager::getGlideSeconds (engine);
-
-                for (int i = 0; i < newCurves.size(); ++i)
-                {
-                    auto& curve = *newCurves.getUnchecked (i);
-
-                    if (curve.getNumPoints() > 0)
-                    {
-                        auto startTime = curve.getPointTime (0);
-                        auto endTime = end;
-
-                        if (i < newCurves.size() - 1)
-                            endTime = curve.getPointTime (curve.getNumPoints() - 1);
-
-                        // if the curve is empty, set the parameter so that the bits outside the new curve
-                        // are set to the levels they were at when we started recording..
-                        if (parameter->parameter.getCurve().getNumPoints() == 0)
-                            parameter->parameter.setParameter (parameter->originalValue, juce::sendNotification);
-
-                        auto& c = parameter->parameter.getCurve();
-                        TimeRange curveRange (startTime, endTime + glideLength);
-                        c.mergeOtherCurve (curve, curveRange,
-                                           startTime, glideLength, false, toEnd);
-
-                        if (engine.getPropertyStorage().getProperty (SettingID::simplifyAfterRecording, true))
-                            c.simplify (curveRange.expanded (TimeDuration::fromSeconds (0.001)), 0.01, 0.002f);
-                    }
-                }
-            }
-
-            void changeListenerCallback (juce::ChangeBroadcaster* source) override
-            {
-                // called back when transport state changes
-                if (source == &edit.getTransport())
-                {
-                    const bool isPlaying = edit.getTransport().isPlaying()
-                                            || edit.getTransport().isRecording();
-
-                    if (wasPlaying != isPlaying)
-                    {
-                        wasPlaying = isPlaying;
-
-                        if (! isPlaying)
-                            punchOut (false);
-
-                        jassert (recordedParams.isEmpty());
-                        const juce::ScopedLock sl (lock);
-                        recordedParams.clear();
-                    }
-                }
-            }
-        };
-    }
-
     namespace v2
     {
         class AutomationRecordManager   : public AutomationRecordManagerBase,
@@ -482,13 +175,14 @@ namespace tracktion::inline engine
             //==============================================================================
             AutomationRecordManager (const AutomationRecordManager&) = delete;
 
-            struct AutomationParamData : public AutomatableParameter::Listener, juce::Timer
+            struct AutomationParamData : public AutomatableParameter::Listener,
+                                         public juce::Timer
             {
                 AutomationParamData (AutomationRecordManager& o, AutomatableParameter& p, float value, AutomationTrigger t)
                     : owner (o), parameter (p), originalValue (value), trigger (t)
                 {
                     if (auto& tc = p.getEdit().getTransport(); tc.looping)
-                        valueAtLoopEnd = p.getCurve().getValueAt (tc.getLoopRange().getEnd());
+                        valueAtLoopEnd = p.getCurve().getValueAt (tc.getLoopRange().getEnd(), parameter.getCurrentBaseValue());
 
                     parameter.addListener (this);
                 }
@@ -521,6 +215,8 @@ namespace tracktion::inline engine
 
             private:
                 const ScopedListener listener { parameter, *this};
+                const TransportControl::ReallocationInhibitor reallocationInhibitor { owner.edit.getTransport() };
+
                 void curveHasChanged (AutomatableParameter&) override {}
 
                 void parameterChangeGestureEnd (AutomatableParameter&) override
@@ -611,22 +307,23 @@ namespace tracktion::inline engine
 
                 auto& autoParamData = *(*recordedParam);
                 auto& curve = param.getCurve();
+                auto um = &edit.getUndoManager();
                 assert (autoParamData.lastChangeFlushed);
 
                 // Glide last param
                 if (autoParamData.glideTime != 0_td)
                 {
                     const TimeRange glideRange (autoParamData.lastChangeFlushed->time, autoParamData.glideTime);
-                    const auto valueAtGlideEnd = curve.getValueAt (glideRange.getEnd());
-                    curve.removePointsInRegion (glideRange.withStart (glideRange.getStart() + 1us));
-                    curve.addPoint (glideRange.getEnd(), valueAtGlideEnd, param.isDiscrete() ? 1.0f : 0.0f);
+                    const auto valueAtGlideEnd = curve.getValueAt (glideRange.getEnd(), param.getCurrentBaseValue());
+                    curve.removePointsInRegion (glideRange.withStart (glideRange.getStart() + 1us), um);
+                    curve.addPoint (glideRange.getEnd(), valueAtGlideEnd, param.isDiscrete() ? 1.0f : 0.0f, um);
                 }
 
                 // Then simplify the sections
                 if (engine.getPropertyStorage().getProperty (SettingID::simplifyAfterRecording, true))
                     for (auto subRange : autoParamData.timeRangeCovered.getRanges())
                         curve.simplify (TimeRange (subRange.getStart(), subRange.getEnd()).expanded (0.001_td),
-                                        0.01, 0.002f);
+                                        0.01, 0.002f, um);
 
                 param.resetRecordingStatus();
 
@@ -666,7 +363,7 @@ namespace tracktion::inline engine
                                     break;
                                 case touch:
                                     punchOut (param, false);
-                                break;
+                                    break;
                                 case latch:
                                     break;
                                 case write:
@@ -733,9 +430,9 @@ namespace tracktion::inline engine
                                                                              : changesLoopEnd.back();
                         changesLoopEnd.emplace_back (timeRangeLoopEnd.getEnd(), endChangeLoopEnd.value);
                         changesLoopEnd.emplace_back (timeRangeLoopEnd.getEnd(), paramData->valueAtLoopEnd ? *paramData->valueAtLoopEnd
-                                                                                                          : curve.getValueAt (timeRangeLoopEnd.getEnd() + 1us));
+                                                                                                          : curve.getValueAt (timeRangeLoopEnd.getEnd() + 1us, paramData->parameter.getCurrentBaseValue()));
                         // Extend end so that points at the loop end are cleared
-                        flushSection (curve, withEndExtended (timeRangeLoopEnd, TimeDuration (1us)), changesLoopEnd);
+                        flushSection (paramData->parameter, curve, withEndExtended (timeRangeLoopEnd, TimeDuration (1us)), changesLoopEnd);
                         paramData->timeRangeCovered.addRange ({ timeRangeLoopEnd.getStart(), timeRangeLoopEnd.getEnd() });
 
                         // Then the wrapped start
@@ -744,7 +441,7 @@ namespace tracktion::inline engine
                         changesLoopStart.emplace (changesLoopStart.begin(),
                                                   timeRangeLoopStart.getStart(), endChangeLoopEnd.value);
                         changesLoopStart.emplace_back (timeRangeLoopStart.getEnd(), endChangeLoopStart.value);
-                        flushSection (curve, timeRangeLoopStart, changesLoopStart);
+                        flushSection (paramData->parameter, curve, timeRangeLoopStart, changesLoopStart);
                         paramData->timeRangeCovered.addRange ({ timeRangeLoopStart.getStart(), timeRangeLoopStart.getEnd() });
                         paramData->lastChangeFlushed = endChangeLoopStart;
                     }
@@ -756,7 +453,7 @@ namespace tracktion::inline engine
                                                                             : paramData->changes.getReference (paramData->changes.size() - 1);
                         paramData->changes.add ({ timeRange.getEnd(), endChange.value });
 
-                        flushSection (curve, timeRange, paramData->changes);
+                        flushSection (paramData->parameter, curve, timeRange, paramData->changes);
                         paramData->timeRangeCovered.addRange ({ timeRange.getStart(), timeRange.getEnd() });
                         paramData->lastChangeFlushed = endChange;
                     }
@@ -765,22 +462,22 @@ namespace tracktion::inline engine
                 }
             }
 
-            static void flushSection (AutomationCurve& curve, TimeRange time, std::span<AutomationParamData::Change> changes)
+            static void flushSection (AutomatableParameter& parameter, AutomationCurve& curve, TimeRange time, std::span<AutomationParamData::Change> changes)
             {
                 if (time.isEmpty())
                     return;
 
-                auto& parameter = *curve.getOwnerParameter();
+                auto um = &parameter.getEdit().getUndoManager();
 
                 // Remove all events in this range
-                curve.removePointsInRegion (time.withStart (time.getStart() + 1us));
+                curve.removePointsInRegion (time.withStart (time.getStart() + 1us), um);
 
                 // Iterate all the changes and add them to the curve
                 for (auto change : changes)
                 {
                     assert (time.containsInclusive (change.time));
                     const float newVal = parameter.snapToState (change.value);
-                    curve.addPoint (change.time, newVal, parameter.isDiscrete() ? 1.0f : 0.0f);
+                    curve.addPoint (change.time, newVal, parameter.isDiscrete() ? 1.0f : 0.0f, um);
                 }
             }
 
@@ -788,10 +485,12 @@ namespace tracktion::inline engine
             {
                 CRASH_TRACER
                 juce::OwnedArray<AutomationCurve> newCurves;
+                auto& ts = edit.tempoSequence;
+                auto um = &ts.edit.getUndoManager();
 
                 {
-                    std::unique_ptr<AutomationCurve> curve (new AutomationCurve());
-                    curve->setOwnerParameter (&parameter->parameter);
+                    auto curve = std::make_unique<AutomationCurve> (edit, AutomationCurve::TimeBase::time);
+                    curve->setParameterID (parameter->parameter.paramID);
 
                     for (int i = 0; i < parameter->changes.size(); ++i)
                     {
@@ -803,33 +502,33 @@ namespace tracktion::inline engine
                             if (curve->getNumPoints() > 0)
                             {
                                 newCurves.add (curve.release());
-                                curve = std::make_unique<AutomationCurve>();
-                                curve->setOwnerParameter (&parameter->parameter);
+                                curve = std::make_unique<AutomationCurve> (edit, AutomationCurve::TimeBase::time);
+                                curve->setParameterID (parameter->parameter.paramID);
                             }
                         }
 
-                        const float oldVal = (i == 0) ? (parameter->parameter.getCurve().getNumPoints() > 0 ? parameter->parameter.getCurve().getValueAt (change.time)
+                        const float oldVal = (i == 0) ? (parameter->parameter.getCurve().getNumPoints() > 0 ? parameter->parameter.getCurve().getValueAt (change.time, parameter->parameter.getCurrentBaseValue())
                                                                                                             : parameter->originalValue)
-                                                      : curve->getValueAt (change.time);
+                                                      : curve->getValueAt (change.time, parameter->parameter.getCurrentBaseValue());
 
                         const float newVal = parameter->parameter.snapToState (change.value);
 
                         if (parameter->parameter.isDiscrete())
                         {
-                            curve->addPoint (change.time, oldVal, 0.0f);
-                            curve->addPoint (change.time, newVal, 0.0f);
+                            curve->addPoint (change.time, oldVal, 0.0f, um);
+                            curve->addPoint (change.time, newVal, 0.0f, um);
                         }
                         else
                         {
                             if (std::abs (oldVal - newVal) > (parameter->parameter.getValueRange().getLength() * 0.21f))
                             {
                                 if (i == 0)
-                                    curve->addPoint (change.time - TimeDuration::fromSeconds (0.000001), oldVal, 0.0f);
+                                    curve->addPoint (change.time - TimeDuration::fromSeconds (0.000001), oldVal, 0.0f, um);
                                 else
-                                    curve->addPoint (change.time, oldVal, 0.0f);
+                                    curve->addPoint (change.time, oldVal, 0.0f, um);
                             }
 
-                            curve->addPoint (change.time, newVal, 0.0f);
+                            curve->addPoint (change.time, newVal, 0.0f, um);
                         }
                     }
 
@@ -841,28 +540,30 @@ namespace tracktion::inline engine
 
                 for (int i = 0; i < newCurves.size(); ++i)
                 {
-                    auto& curve = *newCurves.getUnchecked (i);
+                    auto& sourceCurve = *newCurves.getUnchecked (i);
 
-                    if (curve.getNumPoints() > 0)
+                    if (sourceCurve.getNumPoints() > 0)
                     {
-                        auto startTime = curve.getPointTime (0);
+                        auto startTime = sourceCurve.getPointTime (0);
                         auto endTime = end;
 
                         if (i < newCurves.size() - 1)
-                            endTime = curve.getPointTime (curve.getNumPoints() - 1);
+                            endTime = sourceCurve.getPointTime (sourceCurve.getNumPoints() - 1);
 
                         // if the curve is empty, set the parameter so that the bits outside the new curve
                         // are set to the levels they were at when we started recording..
                         if (parameter->parameter.getCurve().getNumPoints() == 0)
                             parameter->parameter.setParameter (parameter->originalValue, juce::sendNotification);
 
-                        auto& c = parameter->parameter.getCurve();
+                        auto& destCurve = parameter->parameter.getCurve();
                         TimeRange curveRange (startTime, endTime + glideLength);
-                        c.mergeOtherCurve (curve, curveRange,
-                                           startTime, glideLength, false, toEnd);
+                        mergeCurve (destCurve, curveRange,
+                                    sourceCurve, startTime,
+                                    parameter->parameter.getCurrentBaseValue(), glideLength,
+                                    false, toEnd);
 
                         if (engine.getPropertyStorage().getProperty (SettingID::simplifyAfterRecording, true))
-                            c.simplify (curveRange.expanded (TimeDuration::fromSeconds (0.001)), 0.01, 0.002f);
+                            destCurve.simplify (curveRange.expanded (0.001_td), 0.01, 0.002f, um);
                     }
                 }
             }
@@ -896,10 +597,7 @@ namespace tracktion::inline engine
     AutomationRecordManager::AutomationRecordManager (Edit& ed)
         : engine (ed.engine)
     {
-        if (engine.getEngineBehaviour().enableExperimentalAutomation())
-            pimpl = std::make_unique<v2::AutomationRecordManager> (ed);
-        else
-            pimpl = std::make_unique<v1::AutomationRecordManager> (ed);
+        pimpl = std::make_unique<v2::AutomationRecordManager> (ed);
     }
 
     AutomationRecordManager::~AutomationRecordManager()

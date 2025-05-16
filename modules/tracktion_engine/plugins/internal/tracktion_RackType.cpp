@@ -1049,35 +1049,16 @@ juce::UndoManager* RackType::getUndoManager() const
     return &edit.getUndoManager();
 }
 
-void RackType::countInstancesInEdit()
-{
-    CRASH_TRACER
-    TRACKTION_ASSERT_MESSAGE_THREAD
-
-    numberOfInstancesInEdit = 0;
-
-    for (auto p : getAllPlugins (edit, false))
-        if (auto rf = dynamic_cast<RackInstance*> (p))
-            if (rf->type.get() == this)
-                ++numberOfInstancesInEdit;
-}
-
 //==============================================================================
 void RackType::registerInstance (RackInstance* instance, const PluginInitialisationInfo&)
 {
     CRASH_TRACER
     activeRackInstances.addIfNotAlreadyThere (instance);
-    numActiveInstances.store (activeRackInstances.size());
-
-    countInstancesInEdit();
 }
 
 void RackType::deregisterInstance (RackInstance* instance)
 {
     activeRackInstances.removeAllInstancesOf (instance);
-    numActiveInstances.store (activeRackInstances.size());
-
-    countInstancesInEdit();
 }
 
 void RackType::updateAutomatableParamPositions (TimePosition time)
@@ -1421,8 +1402,6 @@ void RackType::triggerUpdate()
 
     if (edit.isLoading())
         return;
-
-    countInstancesInEdit();
 
     edit.restartPlayback();
 }

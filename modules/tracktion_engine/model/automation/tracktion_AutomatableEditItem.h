@@ -50,7 +50,7 @@ public:
 
     //==============================================================================
     // true if it's got any points on any params
-    bool isAutomationNeeded() const noexcept                    { return automationActive.load (std::memory_order_relaxed); }
+    bool isAutomationNeeded() const noexcept;
 
     // updates any automatables to their state at this time
     void setAutomatableParamPosition (TimePosition);
@@ -58,16 +58,17 @@ public:
     // true if it's not been more than a few hundred ms since a block was processed
     bool isBeingActivelyPlayed() const;
 
-    /** Updates all the auto params to their positions at this time. */
+    /** Updates all the auto params to their positions at this time.
+        [[ message_thread ]]
+    */
     virtual void updateAutomatableParamPosition (TimePosition);
 
     /** Updates all the parameter streams to their positions at this time.
-        This should be used during real time processing as it's a lot quicker than the above method.
+        This should be used during real time processing as it's a lot quicker than
+        the above method but is called automatically by the audio graph so
+        shouldn't really be called manually.
     */
     void updateParameterStreams (TimePosition);
-
-    /** Iterates all the parameters to find out which ones need to be automated. */
-    void updateActiveParameters();
 
     /** Marks the end of an automation recording stream. Call this when play stops or starts. */
     void resetRecordingStatus();
@@ -75,6 +76,15 @@ public:
     //==============================================================================
     juce::ValueTree elementState;
     juce::CachedValue<bool> remapOnTempoChange;
+
+    /** @internal. */
+    void updateStreamIterators();
+    /** @internal. */
+    void addActiveParameter (const AutomatableParameter&);
+    /** @internal. */
+    void removeActiveParameter (const AutomatableParameter&);
+    /** @internal. Testing only. */
+    bool isActiveParameter (AutomatableParameter&);
 
 protected:
     virtual void buildParameterTree() const;
@@ -96,7 +106,8 @@ private:
     mutable AutomatableParameterTree parameterTree;
 
     mutable bool parameterTreeBuilt = false;
-    std::atomic<bool> automationActive { false };
+    friend struct AutomatableParameter::ScopedActiveParameter;
+    mutable std::atomic<int> numActiveParameters { 0 };
     uint32_t systemTimeOfLastPlayedBlock = 0;
     TimePosition lastTime;
 

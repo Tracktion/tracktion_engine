@@ -65,6 +65,13 @@ struct ClipOwner::ClipList : public ValueTreeObjectList<Clip>,
 
     void newObjectAdded (Clip* c) override
     {
+        assert (c);
+
+        // If a new clip has been added, it's parent will already have been set so we
+        // won't get a later call to setParent so update the mod list here
+        if (c->getParent())
+            c->updateAutomationCurveListDestinations();
+
         objectAddedOrRemoved (c);
 
         if (c && ! edit.getUndoManager().isPerformingUndoRedo())
@@ -658,6 +665,7 @@ Clip* split (Clip& clip, const TimePosition time)
     {
         auto newClipState = clip.state.createCopy();
         edit.createNewItemID().writeID (newClipState, nullptr);
+        assignNewIDsToAutomationCurveModifiers (clip.edit, newClipState);
 
         if (auto newClip = insertClipWithState (*parent, newClipState))
         {

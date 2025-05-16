@@ -464,6 +464,8 @@ void Plugin::baseClassInitialise (const PluginInitialisationInfo& info)
         isInitialisingFlag = true;
         initialise (info);
         isInitialisingFlag = false;
+
+        updateStreamIterators();
     }
     else
     {

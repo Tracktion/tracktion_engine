@@ -21,9 +21,9 @@ struct TransparentToMouseInTrackItemComp {};
 struct CurvePoint
 {
     CurvePoint() = default;
-    CurvePoint (EditTime t, float val) : time (t), value (val) {}
+    CurvePoint (EditPosition t, float val) : time (t), value (val) {}
 
-    EditTime time;
+    EditPosition time;
     float value = 0;
 };
 
@@ -40,7 +40,7 @@ public:
     static bool arePointsConsecutive (const SelectableList&);
     static bool arePointsOnSameCurve (const SelectableList&);
 
-    static TimeRange getPointTimeRange (const SelectableList&);
+    static EditTimeRange getPointEditPositionRange (const SelectableList&);
 
     int index = 0;
     juce::Component::SafePointer<CurveEditor> editor;
@@ -75,11 +75,14 @@ public:
 
     juce::MouseCursor getMouseCursor() override;
 
-    void setTimes (TimePosition leftTime, TimePosition rightTime);
-    TimeRange getTimes() const;
+    void setTimes (EditPosition leftTime, EditPosition rightTime);
+    EditTimeRange getTimes() const;
 
-    float timeToX (TimePosition) const;
-    TimePosition xToTime (double x) const;
+    bool getDrawPointInsertionIndicator() const;
+    void setDrawPointInsertionIndicator (bool);
+
+    virtual float timeToX (EditPosition) const;
+    virtual EditPosition xToTime (double x) const;
     float valueToY (float val) const;
     float yToValue (double y) const;
     juce::Point<float> getPosition (CurvePoint) const;
@@ -94,20 +97,21 @@ public:
     Edit& getEdit() const;
     virtual Track* getTrack()      { return {}; }
 
-    virtual TimePosition snapTime (TimePosition, juce::ModifierKeys);
+    virtual EditPosition snapTime (EditPosition, juce::ModifierKeys);
 
-    virtual float getValueAt (TimePosition) = 0;
-    virtual TimePosition getPointTime (int idx) = 0;
+    virtual float getValueAt (EditPosition) = 0;
+    virtual EditPosition getPointPosition (int idx) = 0;
     virtual float getPointValue (int idx) = 0;
     virtual float getPointCurve (int idx) = 0;
     virtual void removePoint (int index) = 0;
-    virtual int addPoint (TimePosition time, float value, float curve) = 0;
+    virtual int addPoint (EditPosition time, float value, float curve) = 0;
     virtual int getNumPoints() = 0;
     virtual CurvePoint getBezierHandle (int idx) = 0;
     virtual CurvePoint getBezierPoint (int idx) = 0;
-    virtual int nextIndexAfter (TimePosition) = 0;
+    virtual int nextIndexAfter (EditPosition) = 0;
     virtual void getBezierEnds (int index, double& x1out, float& y1out, double& x2out, float& y2out) = 0;
-    virtual int movePoint (int index, TimePosition newTime, float newValue, bool removeInterveningPoints) = 0;
+    virtual std::pair<CurvePoint, CurvePoint> getBezierEnds (int index) = 0;
+    virtual int movePoint (int index, EditPosition newTime, float newValue, bool removeInterveningPoints) = 0;
     virtual void setValueWhenNoPoints (float value) = 0;
     virtual CurveEditorPoint* createPoint (int idx) = 0;
     virtual int curvePoint (int index, float newCurve) = 0;
@@ -125,15 +129,26 @@ public:
     virtual juce::Colour getCurveNameTextBackgroundColour() const = 0;
     virtual juce::Colour getPointOutlineColour() const = 0;
 
+    virtual float getLineThickness (bool mouseOverOrDragging, bool curveOrPointsSelected) const;
+    virtual void drawLine (juce::Graphics&, juce::Path, float lineThickness);
+
     void selectPoint (int pointIdx, bool addToSelection);
 
+    virtual EditPosition toEditPosition (const TimePosition& t);
+    virtual juce::Range<float> getParameterRange() const = 0;
+
 protected:
+    virtual bool fillPath() const { return true; }
+    virtual bool isBeats() const { return false; }
+    EditPosition fromUnderlying (double u);
     void updatePointUnderMouse (juce::Point<float>);
     virtual void showBubbleForPointUnderMouse() = 0;
     virtual void hideBubble() = 0;
 
     virtual void nonRealTimeDragStart() {}
     virtual void nonRealTimeDragEnd()   {}
+
+    virtual bool canSelectItem() const { return true; }
 
     bool isPointSelected (int idx);
     bool areAnyPointsSelected();
@@ -144,13 +159,12 @@ protected:
     Edit& edit;
     juce::UndoManager& undoManager;
     SelectionManager& selectionManager;
-    float parameterMinValue = 0, parameterRange = 1.0f;
-    TimePosition leftTime, rightTime;
+    EditPosition leftTime, rightTime;
     int firstIndexOnScreen = 0;
     int pointUnderMouse = -1, pointBeingMoved = -1;
     int curveUnderMouse = -1, lineUnderMouse = -1;
     bool dragged = false, movingAllPoints = false;
-    TimePosition mouseDownTime;
+    EditPosition mouseDownTime;
     float mouseDownValue = 0;
     bool isCurveSelected = false;
     float mouseDownCurve = 0;
@@ -158,6 +172,7 @@ protected:
     bool realTimeDrag = true;
     float defaultCurve = 0;
     float lineThickness = 1.0f;
+    bool drawPointInsertionIndicator = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CurveEditor)
 };

@@ -11,6 +11,60 @@
 namespace tracktion { inline namespace engine
 {
 
+class ThreadSafeClipPosition
+{
+public:
+    ThreadSafeClipPosition (Clip& c)
+        : tempoSequence (c.edit.tempoSequence.getInternalSequence())
+    {
+        assert (! c.isLooping() || c.beatBasedLooping());
+
+        start.referTo (c.state, IDs::start, nullptr);
+        length.referTo (c.state, IDs::length, nullptr);
+        offset.referTo (c.state, IDs::offset, nullptr);
+
+        loopStart.referTo (c.state, IDs::loopStartBeats, nullptr);
+        loopLength.referTo (c.state, IDs::loopLengthBeats, nullptr);
+    }
+
+    BeatRange getEditBeatRange() const
+    {
+        auto startPos = start.get();
+        return toBeats (TimeRange (startPos, startPos + length.get()), tempoSequence);
+    }
+
+    BeatDuration getOffsetInBeats() const
+    {
+        return BeatDuration::fromBeats (TimeDuration (offset.get()).inSeconds()
+                                        * tempoSequence.getBeatsPerSecondAt (start.get()).v);
+    }
+
+    BeatPosition getContentStartBeat() const
+    {
+        return toBeats (start.get() - offset.get(), tempoSequence);
+    }
+
+    std::optional<BeatRange> getLoopRange() const
+    {
+        BeatRange loopRange { loopStart.get(), loopLength.get() };
+
+        if (loopRange.getLength() > 0_bd)
+            return loopRange;
+
+        return std::nullopt;
+    }
+
+private:
+    const tempo::Sequence& tempoSequence;
+
+    juce::CachedValue<AtomicWrapperRelaxed<TimePosition>> start;
+    juce::CachedValue<AtomicWrapperRelaxed<TimeDuration>> length, offset;
+
+    juce::CachedValue<AtomicWrapperRelaxed<BeatPosition>> loopStart;
+    juce::CachedValue<AtomicWrapperRelaxed<BeatDuration>> loopLength;
+};
+
+
 //==============================================================================
 Clip::Clip (const juce::ValueTree& v, ClipOwner& targetParent, EditItemID id, Type t)
     : TrackItem (targetParent.getClipOwnerEdit(), id, t),
@@ -43,6 +97,8 @@ Clip::Clip (const juce::ValueTree& v, ClipOwner& targetParent, EditItemID id, Ty
         jassertfalse;
         length = 0_td;
     }
+
+    getAutomationCurveList (false);
 
     state.addListener (this);
 
@@ -238,9 +294,28 @@ void Clip::setParent (ClipOwner* newParent)
 
     parent = newParent;
 
+    // Parent is set to nullptr on Edit destruction so we don't want to remove curves in that case
+    // N.B. In some cases this is called from the ClipOwner::ClipList::newObjectAdded
+    // but if it's an existing clip being moved, it won't have a valid parent at that
+    // time so this call here catches that at a slightly later time
+    if (parent)
+        updateAutomationCurveListDestinations();
+
     if (auto track = getTrack())
         if (auto f = track->getParentFolderTrack())
             f->setDirtyClips();
+}
+
+void Clip::updateAutomationCurveListDestinations()
+{
+    if (auto automation = getAutomationCurveList (false))
+    {
+        for (auto curve : automation->getItems())
+        {
+            updateRelativeDestinationOrRemove (*automation, *curve, *this);
+            curve->setPositionDelegate (getAutomationCurveListDelegates().first);
+        }
+    }
 }
 
 ClipOwner* Clip::getParent() const
@@ -396,8 +471,14 @@ void Clip::trimAwayOverlap (TimeRange r)
 
 void Clip::removeFromParent()
 {
-    if (state.getParent().isValid())
-        state.getParent().removeChild (state, getUndoManager());
+    if (! state.getParent().isValid())
+        return;
+
+    if (auto automation = getAutomationCurveList (false))
+        for (auto curve : automation->getItems())
+            curve->remove();
+
+    state.getParent().removeChild (state, getUndoManager());
 }
 
 bool Clip::moveTo (ClipOwner& newParent)
@@ -492,6 +573,10 @@ void Clip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifi
                     f->setDirtyClips();
 
                 changed();
+
+                if (auto curveList = getAutomationCurveList (false))
+                    for (auto curve : curveList->getItems())
+                        curve->changed();
             }
         }
         else if (id == IDs::source)
@@ -546,6 +631,13 @@ void Clip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifi
     }
 }
 
+void Clip::valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree& c, int)
+{
+    if (p == state)
+        if (c.hasType (IDs::AUTOMATIONCURVES))
+            automationCurveList.reset();
+}
+
 void Clip::valueTreeParentChanged (juce::ValueTree& v)
 {
     if (v == state)
@@ -565,6 +657,39 @@ void Clip::updateParent()
         setParent (dynamic_cast<ClipSlot*> (findClipSlotForID (edit, EditItemID::fromID (parentState))));
     else
         setParent ({});
+}
+
+std::pair<std::function<CurvePosition()>, std::function<ClipPositionInfo()>> Clip::getAutomationCurveListDelegates()
+{
+    if (! edit.isLoading())
+        TRACKTION_ASSERT_MESSAGE_THREAD
+
+    auto clipPosition = std::make_shared<ThreadSafeClipPosition> (*this);
+    std::shared_ptr<LaunchHandle> clipLauncherHandle;
+
+    if (getClipSlot())
+        clipLauncherHandle = getLaunchHandle();
+
+    std::function<CurvePosition()> curvePos =
+        [position = clipPosition, handle = std::move (clipLauncherHandle)]
+        {
+            if (handle)
+                if (auto playedRange = handle->getPlayedRange())
+                    return CurvePosition { playedRange->getStart() - position->getOffsetInBeats(), *playedRange };
+
+            return CurvePosition { position->getContentStartBeat(), position->getEditBeatRange() };
+        };
+
+    std::function<ClipPositionInfo()> posInfo =
+        [position = clipPosition]
+        {
+            return ClipPositionInfo {
+                       .position = { position->getEditBeatRange(), position->getOffsetInBeats() },
+                       .loopRange = position->getLoopRange()
+                   };
+        };
+
+    return { curvePos, posInfo };
 }
 
 //==============================================================================
@@ -637,6 +762,29 @@ juce::Colour Clip::getColour() const
 {
     return colour.get();
 }
+
+//==============================================================================
+AutomationCurveList* Clip::getAutomationCurveList (bool createIfNoItems)
+{
+    if (! matchesAnyOf (type, { Type::wave, Type::midi, Type::edit, Type::step }))
+        return nullptr;
+
+    if (! automationCurveList)
+    {
+        auto curvesParentState = state.getOrCreateChildWithName (IDs::AUTOMATIONCURVES, getUndoManager());
+
+        if (curvesParentState.getNumChildren() > 0 || createIfNoItems)
+        {
+            auto delegates = getAutomationCurveListDelegates();
+            automationCurveList = std::make_unique<AutomationCurveList> (edit, curvesParentState,
+                                                                         std::move (delegates.first),
+                                                                         std::move (delegates.second));
+        }
+    }
+
+    return automationCurveList.get();
+}
+
 
 //==============================================================================
 void Clip::addListener (Listener* l)

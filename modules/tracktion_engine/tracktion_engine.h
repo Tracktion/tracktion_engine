@@ -53,7 +53,6 @@
 #include <juce_audio_utils/juce_audio_utils.h>
 #include <juce_dsp/juce_dsp.h>
 #include <juce_osc/juce_osc.h>
-#include <juce_gui_extra/juce_gui_extra.h>
 
 #if __has_include(<choc/audio/choc_SampleBuffers.h>)
  #include <choc/audio/choc_SampleBuffers.h>
@@ -433,11 +432,12 @@ namespace tracktion { inline namespace engine
 #include "playback/devices/tracktion_WaveDeviceDescription.h"
 
 //==============================================================================
+#include "model/edit/tracktion_EditItem.h"
 #include "model/automation/tracktion_AutomationMode.h"
 #include "model/automation/tracktion_AutomationCurve.h"
-#include "model/edit/tracktion_EditItem.h"
 #include "model/automation/tracktion_AutomatableParameterTree.h"
 #include "model/automation/tracktion_AutomatableParameter.h"
+#include "model/automation/tracktion_AutomationCurveList.h"
 #include "model/automation/tracktion_AutomatableEditItem.h"
 #include "model/automation/tracktion_MacroParameter.h"
 #include "model/automation/tracktion_Modifier.h"

@@ -239,8 +239,10 @@ struct TrackAutomationSection
     /** Holds a parameter and curve section. */
     struct ActiveParameters
     {
-        AutomatableParameter::Ptr param;    /**< The parameter. */
-        AutomationCurve curve;              /**< The curve section of this parameter. */
+        ActiveParameters (AutomatableParameter&);
+
+        AutomatableParameter::Ptr param;                                                /**< The parameter. */
+        AutomationCurve curve { param->getEdit(), AutomationCurve::TimeBase::time };    /**< The curve section of this parameter. */
     };
 
     juce::Array<ActiveParameters> activeParameters; /**< A list of parameteres and their curves. */

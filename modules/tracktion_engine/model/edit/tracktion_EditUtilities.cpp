@@ -431,7 +431,7 @@ void deleteRegionOfTracks (Edit& edit, TimeRange rangeToDelete, bool onlySelecte
     auto removeAutomationRangeOfPlugin = [&] (Plugin& p)
     {
         for (auto param : p.getAutomatableParameters())
-            param->getCurve().removeRegionAndCloseGap (rangeToDelete);
+            param->getCurve().removeRegionAndCloseGap (*param, rangeToDelete, &edit.getUndoManager());
     };
 
     auto removeAutomationRangeFindingRackPlugins = [&] (Track& t)
@@ -1096,20 +1096,24 @@ void deleteAutomation (const SelectableList& selectedClips)
     {
         for (auto& section : TrackSection::findSections (selectedClips.getItemsOfType<TrackItem>()))
         {
+            auto& ts = section.track->edit.tempoSequence;
+            auto* um = &ts.edit.getUndoManager();
+
             for (auto plugin : section.track->pluginList)
             {
                 for (auto& param : plugin->getAutomatableParameters())
                 {
                     auto& curve = param->getCurve();
 
-                    if (curve.countPointsInRegion (section.range.expanded (TimeDuration::fromSeconds (0.0001))))
+                    if (curve.countPointsInRegion (section.range.expanded (0.0001s)))
                     {
-                        auto start = curve.getValueAt (section.range.getStart());
-                        auto end   = curve.getValueAt (section.range.getEnd());
+                        auto defaultValue = param->getCurrentBaseValue();
+                        auto start = curve.getValueAt (section.range.getStart(), defaultValue);
+                        auto end   = curve.getValueAt (section.range.getEnd(), defaultValue);
 
-                        curve.removePointsInRegion (section.range.expanded (TimeDuration::fromSeconds (0.0001)));
-                        curve.addPoint (section.range.getStart(), start, 1.0f);
-                        curve.addPoint (section.range.getEnd(),   end,   0.0f);
+                        curve.removePointsInRegion (section.range.expanded (0.0001s), um);
+                        curve.addPoint (section.range.getStart(), start, 1.0f, um);
+                        curve.addPoint (section.range.getEnd(),   end,   0.0f, um);
                     }
                 }
             }
@@ -1126,6 +1130,11 @@ juce::Array<AutomatableParameter::ModifierSource*> getAllModifierSources (const 
 
     for (auto mpe : getAllMacroParameterElements (edit))
         sources.addArray (mpe->getMacroParameters());
+
+    edit.automationCurveModifierEditItemCache.visitItems ([&sources] (auto acm)
+                                                          {
+                                                             sources.add (acm);
+                                                          });
 
     return sources;
 }

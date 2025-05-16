@@ -123,7 +123,7 @@ void UIBehaviour::nudgeSelectedClips (TimecodeSnapType snapType, const juce::Str
                     if (auto t = allTracks [allTracks.indexOf (clip->getTrack()) + trackDelta])
                         ts.dst = t;
 
-                    sections.add (ts);
+                    sections.add (std::move (ts));
                 }
             }
 

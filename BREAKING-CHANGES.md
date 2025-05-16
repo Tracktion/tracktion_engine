@@ -1,6 +1,19 @@
 # Tracktion Engine breaking changes
 
-## Develop
+
+### Change
+`AutomationCurve` has been restructured. It now only stores the parameter as a string and not a reference.
+
+#### Possible Issues
+Many functions now need a `AutomatableParameter&`, `TempoSequence&` or `juce::UndoManager*` as additional arguments. 
+
+#### Workaround
+These extra parameters are usually within easy reach at the call site. You can use the new `getTempoSequence (Type&)` and `getUndoManager_p (Type&)` to easily get these from a bunch of objects.  
+
+#### Rationale
+This decoupling enables `AutomationCurve` to be used in more places and supports clip automation and `AutomationClip`s.
+
+___
 
 ### Change
 The `Edit` constructor can now throw exceptions in rare cases. E.g. if it's being constructed on the message thread which is blocked.

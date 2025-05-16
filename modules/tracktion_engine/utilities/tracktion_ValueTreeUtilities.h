@@ -373,6 +373,104 @@ struct ValueTreeAllEventListener  : public juce::ValueTree::Listener
     void valueTreeRedirected (juce::ValueTree&) override                                { valueTreeChanged(); }
 };
 
+//==============================================================================
+class LambdaValueTreeAllEventListener   : private ValueTreeAllEventListener
+{
+public:
+    LambdaValueTreeAllEventListener (const juce::ValueTree& v)
+        : LambdaValueTreeAllEventListener (v, {})
+    {}
+
+    LambdaValueTreeAllEventListener (const juce::ValueTree& v, std::function<void()> callback)
+        : onValueTreeChanged (std::move (callback)), state (v)
+    {
+        state.addListener (this);
+    }
+
+    std::function<void()> onValueTreeChanged;
+    std::function<void (juce::ValueTree&, const juce::Identifier&)> onPropertyChanged;
+    std::function<void (juce::ValueTree&, juce::ValueTree&)> onChildAdded;
+    std::function<void (juce::ValueTree&, juce::ValueTree&, int)> onChildRemoved;
+
+private:
+    juce::ValueTree state;
+
+    void valueTreeChanged() override
+    {
+        if (onValueTreeChanged)
+            onValueTreeChanged();
+    }
+
+    void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& id) override
+    {
+        if (onPropertyChanged)
+            onPropertyChanged (v, id);
+
+        valueTreeChanged();
+    }
+
+    void valueTreeChildAdded (juce::ValueTree& p, juce::ValueTree& c) override
+    {
+        if (onChildAdded)
+            onChildAdded (p, c);
+
+        valueTreeChanged();
+    }
+
+    void valueTreeChildRemoved (juce::ValueTree& p, juce::ValueTree& c, int i) override
+    {
+        if (onChildRemoved)
+            onChildRemoved (p, c, i);
+
+        valueTreeChanged();
+    }
+};
+
+//==============================================================================
+class ValueTreePropertyChangedListener : private juce::ValueTree::Listener
+{
+public:
+    ValueTreePropertyChangedListener (const juce::ValueTree& v, std::vector<juce::Identifier> propertiesToListenTo)
+        : ValueTreePropertyChangedListener (v, std::move (propertiesToListenTo), {})
+    {
+    }
+
+    ValueTreePropertyChangedListener (const juce::ValueTree& v, std::vector<juce::Identifier> propertiesToListenTo,
+                                     std::function<void (const juce::Identifier&)> callback)
+        : onPropertyChanged (std::move (callback)),
+          state (v), properties (std::move (propertiesToListenTo))
+    {
+        state.addListener (this);
+    }
+
+    ValueTreePropertyChangedListener (ValueTreePropertyChangedListener&& o)
+        : onPropertyChanged (std::move (o.onPropertyChanged)),
+          state (std::move (o.state)), properties (std::move (o.properties))
+    {
+        state.addListener (this);
+    }
+
+    std::function<void (const juce::Identifier&)> onPropertyChanged;
+
+private:
+    juce::ValueTree state;
+    std::vector<juce::Identifier> properties;
+
+    void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& id) override
+    {
+        if (v != state)
+            return;
+
+        if (! contains_v (properties, id))
+            return;
+
+        if (onPropertyChanged)
+            onPropertyChanged (id);
+    }
+};
+
+
+//==============================================================================
 template<typename Type>
 struct ValueTreeComparator
 {
@@ -627,6 +725,25 @@ inline void renamePropertyRecursive (juce::ValueTree& tree,
 
     for (auto child : tree)
         renamePropertyRecursive (child, oldName, newName, um);
+}
+
+/** Looks for a chile with the given name and property,
+   if one doesn't exist, creates it.
+*/
+inline juce::ValueTree getOrCreateChildWithTypeAndProperty (juce::ValueTree& tree,
+                                                            const juce::Identifier& type,
+                                                            const juce::Identifier& property,
+                                                            const juce::var& propertyValue,
+                                                            juce::UndoManager* undoManager)
+{
+    for (auto v : tree)
+        if (v.hasType (type) && v.hasProperty (property) && v[property] == propertyValue)
+            return v;
+
+    juce::ValueTree newTree { type, {{ property, propertyValue }} };
+    tree.appendChild (newTree, undoManager);
+
+    return newTree;
 }
 
 }} // namespace tracktion { inline namespace engine

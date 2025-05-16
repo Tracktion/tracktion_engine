@@ -699,9 +699,16 @@ Edit::~Edit()
         af->hideWindowForShutdown();
 
     for (auto at : getTracksOfType<AudioTrack> (*this, true))
+    {
         for (auto c : at->getClips())
+        {
             if (auto acb = dynamic_cast<AudioClipBase*> (c))
+            {
+                acb->flushStateToValueTree();
                 acb->hideMelodyneWindow();
+            }
+        }
+    }
 
     engine.getActiveEdits().edits.removeFirstMatchingValue (this);
     masterReference.clear();
@@ -768,7 +775,7 @@ void Edit::setProjectItemID (ProjectItemID newID)
 }
 
 Edit::ScopedRenderStatus::ScopedRenderStatus (Edit& ed, bool shouldReallocateOnDestruction)
-    : edit (ed), reallocateOnDestruction (shouldReallocateOnDestruction)
+    : edit (ed), reallocateOnDestruction (shouldReallocateOnDestruction && edit.getTransport().isPlayContextActive())
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     jassert (edit.performingRenderCount >= 0);
@@ -847,13 +854,19 @@ void Edit::initialise (const Options& options)
                       // Must be set to false before curve updates
                       // but set inside here to give the message loop some time to dispatch async updates
                       isLoadInProgress = false;
+                      auto cursorPos = getTransport().getPosition();
 
                       for (auto mpl : getAllMacroParameterLists (*this))
                           for (auto mp : mpl->getMacroParameters())
                               mp->initialise();
 
                       for (auto ap : getAllAutomatableParams (true))
+                      {
                           ap->updateStream();
+
+                          if (ap->isAutomationActive())
+                              ap->updateFromAutomationSources (cursorPos);
+                      }
 
                       for (auto effect : getAllClipEffects (*this))
                           effect->initialise();
@@ -956,10 +969,10 @@ void Edit::initialiseMasterVolume (const Options& options)
         const float masterVolumeFaderPos = gainToVolumeFaderPosition (volGain);
         const float masterPan = (rightGain - volGain) / volGain;
 
-        getMasterSliderPosParameter()->getCurve().clear();
+        getMasterSliderPosParameter()->getCurve().clear (um);
         getMasterSliderPosParameter()->setParameter (masterVolumeFaderPos, juce::dontSendNotification);
 
-        getMasterPanParameter()->getCurve().clear();
+        getMasterPanParameter()->getCurve().clear (um);
         getMasterPanParameter()->setParameter (masterPan, juce::dontSendNotification);
     }
 }

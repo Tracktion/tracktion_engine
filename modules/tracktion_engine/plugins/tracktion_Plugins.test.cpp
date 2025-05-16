@@ -284,6 +284,7 @@ public:
         const float modifierOffset = 0.2f;
 
         // 1. create a new edit and add rack with a macro parameter
+        beginTest ("Rack with macro parameter");
         {
             editFile.deleteFile();
 
@@ -297,15 +298,13 @@ public:
             // Add macro parameter
             const auto macroParameter = rackType->getMacroParameterListForWriting().createMacroParameter();
             macroParameter->setNormalisedParameter (macroParameterValue, juce::NotificationType::sendNotification);
+            expectWithinAbsoluteError (getValueAt (*macroParameter, -1s), macroParameterValue, 0.001f);
 
             auto volumeAndPan = dynamic_cast<VolumeAndPanPlugin*> (volumePlugin.get());
             auto volParam = volumeAndPan->volParam;
             volParam->setNormalisedParameter (0.0f, juce::NotificationType::sendNotification);
             volParam->addModifier (*macroParameter, modifierValue, modifierOffset, 0.5f);
-
-            // Run the dispatch loop so the ValueTree properties attached to the parameter are updated. (Otherwise the assertions below will fail)
-            // This happens implicitly in the real application.
-            juce::MessageManager::getInstance()->runDispatchLoopUntil (1000);
+            expect (volParam->isAutomationActive());
 
             expectWithinAbsoluteError (volParam->getCurrentValue(),
                                        0.35f,
@@ -326,17 +325,27 @@ public:
         }
 
         // 2. Load previously saved edit and check the parameter value
+        beginTest ("Loading saved Rack with macro parameter");
         {
             auto edit = loadEditFromFile (engine, editFile);
             auto rackType = edit->getRackList().getRackType (0);
+
+            auto mpl = rackType->getMacroParameterList();
+            expect (mpl != nullptr);
+            expectEquals (mpl->getMacroParameters().size(), 1);
+            const auto macroParameter = mpl->getMacroParameters()[0];
+            expect (macroParameter != nullptr);
+            expectWithinAbsoluteError (getValueAt (*macroParameter, -1s), macroParameterValue, 0.001f);
+
             auto volumeAndPan = dynamic_cast<VolumeAndPanPlugin*> (rackType->getPlugins().getFirst());
             auto volParam = volumeAndPan->volParam;
+            expect (volParam->isAutomationActive());
 
             expectWithinAbsoluteError (volParam->getCurrentBaseValue(),
                                        volParam->valueRange.convertFrom0to1 (0.0f),
                                        0.001f);
             expectWithinAbsoluteError (volParam->getCurrentValue(),
-                                       volParam->valueRange.convertFrom0to1(modifierOffset + modifierValue * macroParameterValue),
+                                       volParam->valueRange.convertFrom0to1 (modifierOffset + modifierValue * macroParameterValue),
                                        0.001f);
             expectWithinAbsoluteError (volParam->getCurrentModifierValue(),
                                        volParam->valueRange.convertFrom0to1 (modifierOffset + modifierValue * macroParameterValue) - volParam->getCurrentBaseValue(),
@@ -365,19 +374,19 @@ TEST_SUITE ("tracktion_engine")
         auto& volCurve = volParam->getCurve();
 
         // Add point with curve=1 to give a square shape
-        volCurve.addPoint (0_tp, 1.0f, 1.0f);
-        CHECK_EQ (volCurve.getValueAt (0_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (5_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (10_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (15_tp), 1.0f);
+        volCurve.addPoint (0_tp, 1.0f, 1.0f, nullptr);
+        CHECK_EQ (getValueAt (*volParam, 0_tp), 1.0f);
+        CHECK_EQ (getValueAt (*volParam, 5_tp), 1.0f);
+        CHECK_EQ (getValueAt (*volParam, 10_tp), 1.0f);
+        CHECK_EQ (getValueAt (*volParam, 15_tp), 1.0f);
 
-        volCurve.addPoint (10_tp, 0.0f, 1.0f);
-        CHECK_EQ (volCurve.getValueAt (0_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (5_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (9.9_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (10_tp), 1.0f);
-        CHECK_EQ (volCurve.getValueAt (10.1_tp), 0.0f);
-        CHECK_EQ (volCurve.getValueAt (15_tp), 0.0f);
+        volCurve.addPoint (10_tp, 0.0f, 1.0f, nullptr);
+        CHECK_EQ (getValueAt (*volParam, 0_tp), 1.0f);
+        CHECK_EQ (getValueAt (*volParam, 5_tp), 1.0f);
+        CHECK_EQ (getValueAt (*volParam, 9.9_tp), 1.0f);
+        CHECK_EQ (getValueAt (*volParam, 10_tp), 1.0f);
+        CHECK_EQ (getValueAt (*volParam, 10.1_tp), 0.0f);
+        CHECK_EQ (getValueAt (*volParam, 15_tp), 0.0f);
 
         // Now check the same with an automation iterator
         {
@@ -389,6 +398,112 @@ TEST_SUITE ("tracktion_engine")
             CHECK_EQ (setAndGet (10_tp), 1.0f);
             CHECK_EQ (setAndGet (10.1_tp), 0.0f);
             CHECK_EQ (setAndGet (15_tp), 0.0f);
+        }
+    }
+
+    TEST_CASE ("Automation active")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = engine::test_utilities::createTestEdit (engine, 1);
+        auto track = getAudioTracks(*edit)[0];
+        auto volPlugin = track->getVolumePlugin();
+        auto volParam = volPlugin->volParam;
+        CHECK(! volPlugin->isAutomationNeeded());
+        CHECK(! volParam->isAutomationActive());
+        CHECK(! volPlugin->isActiveParameter (*volParam));
+
+        auto& volCurve = volParam->getCurve();
+
+        SUBCASE("AutomationCurve")
+        {
+            volCurve.addPoint (0_tp, 1.0f, 0.0f, nullptr);
+            CHECK(volParam->isAutomationActive());
+            CHECK(volPlugin->isAutomationNeeded());
+            CHECK(volPlugin->isActiveParameter (*volParam));
+
+            volCurve.removePoint (0, nullptr);
+            CHECK(! volParam->isAutomationActive());
+            CHECK(! volPlugin->isAutomationNeeded());
+            CHECK(! volPlugin->isActiveParameter (*volParam));
+        }
+
+        SUBCASE("AutomationCurve after Edit load")
+        {
+            // Need to add two points as a curve with a single point is considered empty
+            volCurve.addPoint (0_tp, 1.0f, 0.0f, nullptr);
+            volCurve.addPoint (1_tp, 0.0f, 0.0f, nullptr);
+
+            CHECK(volParam->isAutomationActive());
+            CHECK(volPlugin->isAutomationNeeded());
+            CHECK(volPlugin->isActiveParameter (*volParam));
+
+            auto editState = edit->state.createCopy();
+            volParam.reset();
+            edit.reset();
+
+            {
+                auto newEdit = loadEditFromState (engine, editState);
+                auto newTrack = getAudioTracks (*newEdit)[0];
+                auto newVolPlugin = newTrack->getVolumePlugin();
+                auto newVolParam = newVolPlugin->volParam;
+                CHECK(newVolParam->isAutomationActive());
+                CHECK(newVolPlugin->isAutomationNeeded());
+                CHECK(newVolPlugin->isActiveParameter (*newVolParam));
+            }
+        }
+
+        SUBCASE("Macro")
+        {
+            auto& macroList = volPlugin->getMacroParameterListForWriting();
+            auto macroParam = macroList.createMacroParameter();
+            auto assignment = volParam->addModifier (*macroParam);
+            CHECK(volParam->isAutomationActive());
+            CHECK(volPlugin->isAutomationNeeded());
+            CHECK(volPlugin->isActiveParameter (*volParam));
+            CHECK(! macroParam->isAutomationActive());
+            CHECK(! macroList.isAutomationNeeded());
+
+            auto& macroParamCurve = macroParam->getCurve();
+            macroParamCurve.addPoint (0_tp, 1.0f, 0.0f, nullptr);
+            CHECK(macroParam->isAutomationActive());
+            CHECK(macroList.isAutomationNeeded());
+
+            volParam->removeModifier (*assignment);
+            CHECK(! volParam->isAutomationActive());
+            CHECK(! volPlugin->isAutomationNeeded());
+            CHECK(! volPlugin->isActiveParameter (*volParam));
+            CHECK(macroParam->isAutomationActive());
+            CHECK(macroList.isAutomationNeeded());
+        }
+
+        SUBCASE("Modifier")
+        {
+            auto modifierList = track->getModifierList();
+            auto lfo = modifierList->insertModifier (juce::ValueTree (IDs::LFO), 0, nullptr);
+            volParam->addModifier (*lfo);
+            CHECK(volParam->isAutomationActive());
+            CHECK(volPlugin->isAutomationNeeded());
+            CHECK(volPlugin->isActiveParameter (*volParam));
+
+            volParam->removeModifier (*lfo);
+            CHECK(! volParam->isAutomationActive());
+            CHECK(! volPlugin->isAutomationNeeded());
+            CHECK(! volPlugin->isActiveParameter (*volParam));
+        }
+
+        SUBCASE("AutomationCurveSource")
+        {
+            auto clip = insertMIDIClip (*track, {}, { 0_tp, 4_tp });
+            auto curveList = clip->getAutomationCurveList (true);
+            auto curve = curveList->addCurve (*volParam);
+            CHECK(volParam->isAutomationActive());
+            CHECK(volPlugin->isAutomationNeeded());
+            CHECK(volPlugin->isActiveParameter (*volParam));
+
+            curve->remove();
+            CHECK(! volParam->isAutomationActive());
+            CHECK(! volPlugin->isAutomationNeeded());
+            CHECK(! volPlugin->isActiveParameter (*volParam));
         }
     }
 }
