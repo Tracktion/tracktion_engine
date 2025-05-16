@@ -1,7 +1,14 @@
 import React from "react";
 import Track from "./Track";
 
-export default function TrackList({ tracks, updateTrackClip, selectedTrackId, onSelectTrack }) {
+export default function TrackList({
+  tracks,
+  updateTrackClip,
+  selectedTrackId,
+  onSelectTrack,
+  onVolumeChange,
+  onToggleMute,
+}) {
   return (
     <div>
       {tracks.map((track) => (

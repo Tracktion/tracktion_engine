@@ -3,6 +3,7 @@ import TransportControls from "./components/TransportControls";
 import Timeline from "./components/Timeline";
 import "./App.css";
 import * as Tone from "tone";
+import TrackList from "./components/TrackList";
 
 function App() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -25,6 +26,27 @@ function App() {
     return () => cancelAnimationFrame(id);
   }, [isPlaying]);
 
+  // Use space bar on keyboard to control play/pause
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.code === "Space") {
+        e.preventDefault(); // prevent page scroll
+        setIsPlaying((prev) => {
+          const newPlay = !prev;
+          if (newPlay) {
+            Tone.Transport.start();
+          } else {
+            Tone.Transport.pause();
+          }
+          return newPlay;
+        });
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   const onScrubPlayhead = (positionInSeconds) => {
     Tone.Transport.seconds = positionInSeconds;
     setPlayheadPosition(positionInSeconds);
@@ -37,7 +59,9 @@ function App() {
           ? {
               ...t,
               clips: t.clips.map((clip, i) =>
-                i === clipIndex ? { ...clip, start: Math.max(0, newStart) } : clip
+                i === clipIndex
+                  ? { ...clip, start: Math.max(0, newStart) }
+                  : clip
               ),
             }
           : t
@@ -77,8 +101,39 @@ function App() {
     const newTrack = {
       id: Date.now(),
       clips: [],
+      volume: 1,
+      muted: false,
+      instrument: "voice",
+      gainNode: new Tone.Gain(1).toDestination(),
     };
     setTracks([...tracks, newTrack]);
+  };
+
+  const updateTrackVolume = (id, volume) => {
+    setTracks((prev) =>
+      prev.map((t) => {
+        if (t.id !== id) return t;
+        if (t.gainNode) t.gainNode.gain.value = t.muted ? 0 : volume;
+        return { ...t, volume };
+      })
+    );
+  };
+
+  const toggleMuteTrack = (id) => {
+    setTracks((prev) =>
+      prev.map((t) => {
+        if (t.id !== id) return t;
+        const newMuted = !t.muted;
+        if (t.gainNode) t.gainNode.gain.value = newMuted ? 0 : t.volume;
+        return { ...t, muted: !t.muted };
+      })
+    );
+  };
+
+  const deleteSelectedTrack = () => {
+    if (!selectedTrackId) return;
+    setTracks((prev) => prev.filter((t) => t.id !== selectedTrackId));
+    setSelectedTrackId(null);
   };
 
   const updateTrackClip = (id, clip) => {
@@ -124,8 +179,9 @@ function App() {
       autostart: false,
       onload: () => {
         clip.duration = player.buffer.duration;
-        const gain = new Tone.Gain(clip.volume).toDestination();
-        player.connect(gain);
+        const track = tracks.find((t) => t.id === selectedTrackId);
+        if (!track) return;
+        player.connect(track.gainNode);
         player.sync().start(clip.start);
         updateTrackClip(selectedTrackId, clip);
         setIsRecording(false);
@@ -148,6 +204,26 @@ function App() {
         >
           {isRecording ? "Stop Recording" : "Record"}
         </button>
+        <button
+          onClick={deleteSelectedTrack}
+          disabled={!selectedTrackId}
+          style={{ marginLeft: "8px" }}
+        >
+          Delete Track
+        </button>
+        <button onClick={() => onScrubPlayhead(0)}>Reset Playhead</button>
+
+        <br></br>
+        <label>Playhead:</label>
+        <input
+          type="range"
+          min={0}
+          max={60}
+          step={0.1}
+          value={playheadPosition}
+          onChange={(e) => onScrubPlayhead(parseFloat(e.target.value))}
+          disabled={isPlaying}
+        />
       </div>
 
       <Timeline
@@ -160,6 +236,8 @@ function App() {
         onDeleteClip={onDeleteClip}
         onSetClipVolume={onSetClipVolume}
         onScrubPlayhead={onScrubPlayhead}
+        onVolumeChange={updateTrackVolume} // ✅ added here
+        onToggleMute={toggleMuteTrack} // ✅ added here
       />
     </div>
   );

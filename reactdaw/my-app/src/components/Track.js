@@ -1,6 +1,11 @@
 import React from "react";
 
-export default function Track({ track, updateTrackClip, isSelected, onSelect }) {
+export default function Track({
+  track,
+  updateTrackClip,
+  isSelected,
+  onSelect,
+}) {
   return (
     <div
       onClick={onSelect}
@@ -10,10 +15,13 @@ export default function Track({ track, updateTrackClip, isSelected, onSelect }) 
         padding: 10,
         cursor: "pointer",
         backgroundColor: isSelected ? "#1a2a3a" : "#222",
+        color: "#ccc",
+        display: "flex",
+        flexDirection: "column",
+        gap: "4px",
       }}
     >
-      <p>Track #{track.id}</p>
-      {track.clip && <p>Clip duration: {track.clip.duration.toFixed(2)}s</p>}
+      {track.clip && <p>🎧 Clip duration: {track.clip.duration.toFixed(2)}s</p>}
     </div>
   );
 }
