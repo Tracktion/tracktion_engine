@@ -20,7 +20,7 @@ class WaveInputDevice   : public InputDevice
 {
 public:
     //==============================================================================
-    WaveInputDevice (Engine&, const juce::String& type, const WaveDeviceDescription&, DeviceType);
+    WaveInputDevice (Engine&, const WaveDeviceDescription&, DeviceType);
     ~WaveInputDevice() override;
 
     static juce::StringArray getMergeModes();
@@ -29,7 +29,9 @@ public:
     void resetToDefault();
     void setEnabled (bool) override;
 
-    DeviceType getDeviceType() const override          { return deviceType; }
+    DeviceType getDeviceType() const override                   { return deviceType; }
+    juce::String getDeviceTypeDescription() const override;
+
     InputDeviceInstance* createInstance (EditPlaybackContext&) override;
 
     //==============================================================================
