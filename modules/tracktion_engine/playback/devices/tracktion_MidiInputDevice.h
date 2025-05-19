@@ -18,7 +18,7 @@ class MidiInputDevice : public InputDevice,
                         private juce::MidiKeyboardStateListener
 {
 public:
-    MidiInputDevice (Engine&, juce::String type, juce::String name, juce::String deviceID);
+    MidiInputDevice (Engine&, juce::String name, juce::String deviceID);
     ~MidiInputDevice() override;
 
     virtual juce::String openDevice() = 0;

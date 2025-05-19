@@ -858,7 +858,7 @@ void DeviceManager::handleAsyncUpdate()
 
     for (auto& d : lastAvailableWaveDeviceList->inputs)
     {
-        auto wi = new WaveInputDevice (engine, TRANS("Wave Audio Input"), d, InputDevice::waveDevice);
+        auto wi = new WaveInputDevice (engine, d, InputDevice::waveDevice);
         newWaveInputs.add (wi);
 
         TRACKTION_LOG_DEVICE ("Wave In: " + wi->getName() + (wi->isEnabled() ? " (enabled): " : ": ")
