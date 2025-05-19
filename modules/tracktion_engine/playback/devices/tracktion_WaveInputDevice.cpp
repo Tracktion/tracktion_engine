@@ -1333,9 +1333,8 @@ protected:
 };
 
 //==============================================================================
-WaveInputDevice::WaveInputDevice (Engine& e, const juce::String& devType,
-                                  const WaveDeviceDescription& desc, DeviceType t)
-    : InputDevice (e, devType, desc.name, "wavein_" + juce::String::toHexString (desc.name.hashCode())),
+WaveInputDevice::WaveInputDevice (Engine& e, const WaveDeviceDescription& desc, DeviceType t)
+    : InputDevice (e, desc.name, "wavein_" + juce::String::toHexString (desc.name.hashCode())),
       deviceChannels (desc.channels),
       deviceType (t),
       channelSet (createChannelSet (desc.channels))
@@ -1348,6 +1347,14 @@ WaveInputDevice::~WaveInputDevice()
 {
     notifyListenersOfDeletion();
     closeDevice();
+}
+
+juce::String WaveInputDevice::getDeviceTypeDescription() const
+{
+    if (deviceType == trackWaveDevice)
+        return TRANS("Track Wave Input");
+
+    return TRANS("Wave Audio Input");
 }
 
 juce::StringArray WaveInputDevice::getMergeModes()
@@ -1476,7 +1483,7 @@ void WaveInputDevice::saveProps()
 juce::String WaveInputDevice::getSelectableDescription()
 {
     if (getDeviceType() == trackWaveDevice)
-        return getAlias() + " (" + getType() + ")";
+        return getAlias() + " (" + getDeviceTypeDescription() + ")";
 
     return InputDevice::getSelectableDescription();
 }

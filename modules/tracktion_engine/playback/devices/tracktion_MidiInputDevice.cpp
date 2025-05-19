@@ -330,8 +330,8 @@ struct RetrospectiveMidiBuffer
 };
 
 //==============================================================================
-MidiInputDevice::MidiInputDevice (Engine& e, juce::String deviceType, juce::String deviceName, juce::String deviceIDToUse)
-   : InputDevice (e, std::move (deviceType), std::move (deviceName), std::move (deviceIDToUse))
+MidiInputDevice::MidiInputDevice (Engine& e, juce::String deviceName, juce::String deviceIDToUse)
+   : InputDevice (e, std::move (deviceName), std::move (deviceIDToUse))
 {
     enabled = true;
     levelMeasurer.setShowMidi (true);

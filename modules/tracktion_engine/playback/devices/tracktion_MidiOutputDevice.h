@@ -18,6 +18,8 @@ public:
     MidiOutputDevice (Engine&, juce::MidiDeviceInfo);
     ~MidiOutputDevice() override;
 
+    juce::String getDeviceTypeDescription() const override          { return NEEDS_TRANS("MIDI Output"); }
+
     juce::String openDevice() override;
     void closeDevice() override;
 

@@ -23,6 +23,7 @@ public:
     ~WaveOutputDevice() override;
 
     void resetToDefault();
+    juce::String getDeviceTypeDescription() const override          { return NEEDS_TRANS("Wave Audio Output"); }
     void setEnabled (bool) override;
     const std::vector<ChannelIndex>& getChannels() const noexcept   { return deviceChannels; }
     const juce::AudioChannelSet& getChannelSet() const noexcept     { return channelSet; }

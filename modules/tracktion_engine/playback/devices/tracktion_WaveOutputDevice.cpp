@@ -12,7 +12,7 @@ namespace tracktion { inline namespace engine
 {
 
 WaveOutputDevice::WaveOutputDevice (Engine& e, const WaveDeviceDescription& desc)
-    : OutputDevice (e, NEEDS_TRANS("Wave Audio Output"), desc.name, desc.name),
+    : OutputDevice (e, desc.name, "waveout_" + juce::String::toHexString (desc.name.hashCode())),
       deviceChannels (desc.channels),
       channelSet (createChannelSet (desc.channels)),
       ditheringEnabled (false),

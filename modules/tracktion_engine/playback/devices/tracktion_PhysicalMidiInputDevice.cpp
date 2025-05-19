@@ -291,7 +291,7 @@ private:
 
 //==============================================================================
 PhysicalMidiInputDevice::PhysicalMidiInputDevice (Engine& e, juce::MidiDeviceInfo info)
-   : MidiInputDevice (e, TRANS("MIDI Input"), info.name, "midiin_" + juce::String::toHexString (info.identifier.hashCode())),
+   : MidiInputDevice (e, info.name, "midiin_" + juce::String::toHexString (info.identifier.hashCode())),
      deviceInfo (std::move (info))
 {
     enabled = true;

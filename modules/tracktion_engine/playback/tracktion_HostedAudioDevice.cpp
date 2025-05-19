@@ -156,13 +156,18 @@ class HostedMidiInputDevice : public MidiInputDevice
 {
 public:
     HostedMidiInputDevice (HostedAudioDeviceInterface& aif)
-        : MidiInputDevice (aif.engine, TRANS("MIDI Input"), TRANS("MIDI Input"), "MIDI Input")
+        : MidiInputDevice (aif.engine, TRANS("MIDI Input"), "MIDI Input")
     {
     }
 
     DeviceType getDeviceType() const override
     {
         return virtualMidiDevice;
+    }
+
+    juce::String getDeviceTypeDescription() const override
+    {
+        return TRANS("MIDI Input");
     }
 
     InputDeviceInstance* createInstance (EditPlaybackContext& epc) override

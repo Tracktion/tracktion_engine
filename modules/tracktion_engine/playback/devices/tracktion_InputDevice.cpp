@@ -11,57 +11,19 @@
 namespace tracktion { inline namespace engine
 {
 
-InputDevice::InputDevice (Engine& e, juce::String t, juce::String n, juce::String idToUse)
-   : engine (e), type (t), deviceID (std::move (idToUse)), name (n)
+InputDevice::InputDevice (Engine& e, juce::String n, juce::String idToUse)
+   : IODevice (e, std::move (n), std::move (idToUse))
 {
-    alias = e.getPropertyStorage().getPropertyItem (SettingID::invalid, getAliasPropName());
 }
 
 InputDevice::~InputDevice()
 {
 }
 
-juce::String InputDevice::getAliasPropName() const
-{
-    return type + "in_" + name + "_alias";
-}
-
 bool InputDevice::isTrackDevice() const
 {
     return getDeviceType() == trackWaveDevice
             || getDeviceType() == trackMidiDevice;
-}
-
-juce::String InputDevice::getAlias() const
-{
-    if (alias.trim().isNotEmpty())
-        return alias;
-
-    return getName();
-}
-
-void InputDevice::setAlias (const juce::String& a)
-{
-    if (alias != a)
-    {
-        alias = a.substring (0, 40).trim();
-
-        if (alias == getName())
-            alias = {};
-
-        if (! isTrackDevice())
-        {
-            if (alias.isNotEmpty())
-                engine.getPropertyStorage().setPropertyItem (SettingID::invalid, getAliasPropName(), alias);
-            else
-                engine.getPropertyStorage().removePropertyItem (SettingID::invalid, getAliasPropName());
-        }
-    }
-}
-
-bool InputDevice::isEnabled() const
-{
-    return enabled;
 }
 
 void InputDevice::setMonitorMode (MonitorMode newMode)
@@ -73,11 +35,6 @@ void InputDevice::setMonitorMode (MonitorMode newMode)
     TransportControl::restartAllTransports (engine, false);
     changed();
     saveProps();
-}
-
-juce::String InputDevice::getSelectableDescription()
-{
-    return name + " (" + type + ")";
 }
 
 void InputDevice::setRetrospectiveLock (Engine& e, const juce::Array<InputDeviceInstance*>& devices, bool lock)

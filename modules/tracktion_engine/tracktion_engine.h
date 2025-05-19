@@ -551,6 +551,7 @@ namespace tracktion { inline namespace engine
 #include "model/automation/tracktion_ParameterChangeHandler.h"
 #include "model/automation/tracktion_ParameterControlMappings.h"
 
+#include "playback/devices/tracktion_IODevice.h"
 #include "playback/devices/tracktion_OutputDevice.h"
 
 #include "model/tracks/tracktion_TrackOutput.h"

@@ -125,8 +125,7 @@ AudioTrack::AudioTrack (Edit& ed, const juce::ValueTree& v)
         desc.channels = { ChannelIndex (0, juce::AudioChannelSet::left),
                           ChannelIndex (1, juce::AudioChannelSet::right) };
 
-        waveInputDevice = std::make_unique<WaveInputDevice> (edit.engine, TRANS("Track Wave Input"),
-                                                             desc, InputDevice::trackWaveDevice);
+        waveInputDevice = std::make_unique<WaveInputDevice> (edit.engine, desc, InputDevice::trackWaveDevice);
 
         midiInputDevice = std::make_unique<VirtualMidiInputDevice> (edit.engine, itemIDString,
                                                                     InputDevice::trackMidiDevice,

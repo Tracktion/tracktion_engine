@@ -33,7 +33,8 @@ public:
 
     void handleMessageFromPhysicalDevice (PhysicalMidiInputDevice&, const juce::MidiMessage&);
 
-    DeviceType getDeviceType() const override      { return deviceType; }
+    DeviceType getDeviceType() const override;
+    juce::String getDeviceTypeDescription() const override;
 
     const bool useAllInputs = false;
 

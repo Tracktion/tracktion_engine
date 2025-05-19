@@ -275,6 +275,7 @@ using namespace std::literals;
 #include "playback/tracktion_TransportControl.cpp"
 #include "playback/tracktion_AbletonLink.cpp"
 
+#include "playback/devices/tracktion_IODevice.cpp"
 #include "playback/devices/tracktion_InputDevice.cpp"
 #include "playback/devices/tracktion_MidiInputDevice.cpp"
 #include "playback/devices/tracktion_PhysicalMidiInputDevice.cpp"

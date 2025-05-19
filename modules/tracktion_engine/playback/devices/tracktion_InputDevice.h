@@ -18,7 +18,7 @@ namespace tracktion { inline namespace engine
     For each InputDevice, there may be multiple InputDeviceInstance objects, for
     all the active EditPlaybackContexts
 */
-class InputDevice   : public Selectable
+class InputDevice   : public IODevice
 {
 public:
     /** enum to allow quick querying of the device type. */
@@ -32,28 +32,16 @@ public:
     };
 
     //==============================================================================
-    InputDevice (Engine&, juce::String type, juce::String name, juce::String deviceID);
+    InputDevice (Engine&, juce::String name, juce::String deviceID);
     ~InputDevice() override;
 
     //==============================================================================
-    const juce::String& getName() const         { return name; }
-    const juce::String& getType() const         { return type; }
-
-    juce::String getDeviceID() const            { return deviceID; }
-
     virtual DeviceType getDeviceType() const = 0;
-    bool isTrackDevice() const;
-
-    /** the alias is the name shown in the draggable input device components */
-    juce::String getAlias() const;
-    void setAlias (const juce::String& newAlias);
+    bool isTrackDevice() const override;
 
     virtual bool isAvailableToEdit() const      { return isEnabled(); }
 
-    bool isEnabled() const;
-    virtual void setEnabled (bool) = 0;
-
-    virtual bool isMidi() const                 { return false; }
+    bool isMidi() const override                { return false; }
 
     /** Enum to describe monitor modes. */
     enum class MonitorMode
@@ -76,24 +64,14 @@ public:
     virtual void updateRetrospectiveBufferLength (double length) = 0;
 
     //==============================================================================
-    juce::String getSelectableDescription() override;
-
     virtual void saveProps() = 0;
 
-    Engine& engine;
     LevelMeasurer levelMeasurer;
 
 protected:
-    std::atomic<bool> enabled { false };
     MonitorMode monitorMode = MonitorMode::automatic;
     MonitorMode defaultMonitorMode = MonitorMode::automatic;
     bool retrospectiveRecordLock = false;
-
-private:
-    const juce::String type, deviceID, name;
-    juce::String alias;
-
-    juce::String getAliasPropName() const;
 };
 
 

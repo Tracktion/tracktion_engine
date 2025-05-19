@@ -39,7 +39,8 @@ public:
     void loadProps() override;
     void saveProps() override;
 
-    DeviceType getDeviceType() const override       { return InputDevice::physicalMidiDevice; }
+    DeviceType getDeviceType() const override               { return InputDevice::physicalMidiDevice; }
+    juce::String getDeviceTypeDescription() const override  { return TRANS("MIDI Input"); }
 
     bool isTakingControllerMessages = true;
 
