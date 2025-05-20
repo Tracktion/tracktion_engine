@@ -143,18 +143,25 @@ void WaveOutputDevice::setStereoPair (bool stereo)
     engine.getDeviceManager().setDeviceNumChannels (*this, stereo ? 2 : 1);
 }
 
-juce::PopupMenu WaveOutputDevice::createChannelGroupMenu()
+juce::PopupMenu WaveOutputDevice::createChannelGroupMenu (bool includeSetAllChannelsOptions)
 {
     juce::PopupMenu m;
     auto& dm = engine.getDeviceManager();
     uint32_t channelNum = 0;
+    auto currentNumChannels = deviceDescription.getNumChannels();
 
     for (auto& option : dm.getPossibleChannelGroupsForDevice (*this, DeviceManager::maxNumChannelsPerDevice))
-        m.addItem (option, [this, &dm, num = ++channelNum] { dm.setDeviceNumChannels (*this, num); });
+    {
+        auto num = ++channelNum;
+        m.addItem (option, true, num == currentNumChannels, [this, &dm, num] { dm.setDeviceNumChannels (*this, num); });
+    }
 
-    m.addSeparator();
-    m.addItem ("Set all to mono channels", [&dm] { dm.setAllWaveOutputsToNumChannels (1); });
-    m.addItem ("Set all to stereo pairs",  [&dm] { dm.setAllWaveOutputsToNumChannels (2); });
+    if (includeSetAllChannelsOptions)
+    {
+        m.addSeparator();
+        m.addItem ("Set all to mono channels", [&dm] { dm.setAllWaveOutputsToNumChannels (1); });
+        m.addItem ("Set all to stereo pairs",  [&dm] { dm.setAllWaveOutputsToNumChannels (2); });
+    }
 
     return m;
 }

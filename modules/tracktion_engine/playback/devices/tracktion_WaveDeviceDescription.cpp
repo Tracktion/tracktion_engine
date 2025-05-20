@@ -572,13 +572,20 @@ static juce::String getDefaultChannelName (bool isInput, uint32_t index)
             .replace ("123", std::to_string (index + 1));
 }
 
+static void replaceBareNumbersWithNames (juce::StringArray& channelNames, bool isInput)
+{
+    for (int i = 0; i < channelNames.size(); ++i)
+        if (channelNames[i].trim() != juce::String (i + 1))
+            return;
+
+    for (int i = 0; i < channelNames.size(); ++i)
+        if (channelNames[i].trim() == juce::String (i + 1))
+            channelNames.set (i, getDefaultChannelName (isInput, (uint32_t) i));
+}
+
 static void refreshNamesInList (std::vector<WaveDeviceDescription>& descriptions, juce::StringArray channelNames, bool isInput)
 {
-    if (channelNames.size() <= 2)
-    {
-        channelNames.set (0, getDefaultChannelName (isInput, 0));
-        channelNames.set (1, getDefaultChannelName (isInput, 1));
-    }
+    replaceBareNumbersWithNames (channelNames, isInput);
 
     for (auto& desc : descriptions)
     {

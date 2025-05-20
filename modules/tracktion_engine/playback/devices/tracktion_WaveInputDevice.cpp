@@ -1480,14 +1480,6 @@ void WaveInputDevice::saveProps()
 }
 
 //==============================================================================
-juce::String WaveInputDevice::getSelectableDescription()
-{
-    if (getDeviceType() == trackWaveDevice)
-        return getAlias() + " (" + getDeviceTypeDescription() + ")";
-
-    return InputDevice::getSelectableDescription();
-}
-
 bool WaveInputDevice::isStereoPair() const
 {
     return deviceDescription.getNumChannels() == 2;
@@ -1504,18 +1496,25 @@ void WaveInputDevice::setStereoPair (bool stereo)
     engine.getDeviceManager().setDeviceNumChannels (*this, stereo ? 2 : 1);
 }
 
-juce::PopupMenu WaveInputDevice::createChannelGroupMenu()
+juce::PopupMenu WaveInputDevice::createChannelGroupMenu (bool includeSetAllChannelsOptions)
 {
     juce::PopupMenu m;
     auto& dm = engine.getDeviceManager();
     uint32_t channelNum = 0;
+    auto currentNumChannels = deviceDescription.getNumChannels();
 
     for (auto& option : dm.getPossibleChannelGroupsForDevice (*this, DeviceManager::maxNumChannelsPerDevice))
-        m.addItem (option, [this, &dm, num = ++channelNum] { dm.setDeviceNumChannels (*this, num); });
+    {
+        auto num = ++channelNum;
+        m.addItem (option, true, num == currentNumChannels, [this, &dm, num] { dm.setDeviceNumChannels (*this, num); });
+    }
 
-    m.addSeparator();
-    m.addItem ("Set all to mono channels", [&dm] { dm.setAllWaveInputsToNumChannels (1); });
-    m.addItem ("Set all to stereo pairs",  [&dm] { dm.setAllWaveInputsToNumChannels (2); });
+    if (includeSetAllChannelsOptions)
+    {
+        m.addSeparator();
+        m.addItem ("Set all to mono channels", [&dm] { dm.setAllWaveInputsToNumChannels (1); });
+        m.addItem ("Set all to stereo pairs",  [&dm] { dm.setAllWaveInputsToNumChannels (2); });
+    }
 
     return m;
 }
