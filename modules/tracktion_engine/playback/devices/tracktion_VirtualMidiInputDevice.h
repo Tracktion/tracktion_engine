@@ -20,7 +20,6 @@ public:
 
     using MidiInputDevice::handleIncomingMidiMessage;
     void handleIncomingMidiMessage (const juce::MidiMessage&, MPESourceID) override;
-    juce::String getSelectableDescription() override;
 
     void setEnabled (bool) override;
     void loadProps() override;

@@ -47,7 +47,7 @@ public:
 
     bool isStereoPair() const;
     void setStereoPair (bool);
-    juce::PopupMenu createChannelGroupMenu();
+    juce::PopupMenu createChannelGroupMenu (bool includeSetAllChannelsOptions);
 
     WaveOutputDeviceInstance* createInstance (EditPlaybackContext&);
 

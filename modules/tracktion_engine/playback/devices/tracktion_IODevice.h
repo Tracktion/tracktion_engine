@@ -24,8 +24,8 @@ public:
     ~IODevice() override;
 
     //==============================================================================
-    const juce::String& getName() const         { return name; }
-    juce::String getDeviceID() const            { return deviceID; }
+    const juce::String& getName() const                       { return name; }
+    juce::String getDeviceID() const                          { return deviceID; }
 
     bool isEnabled() const;
     virtual void setEnabled (bool) = 0;
@@ -35,8 +35,11 @@ public:
     virtual juce::String getDeviceTypeDescription() const = 0;
 
     /// the alias is the name shown in the draggable input device components
-    juce::String getAlias() const;
     void setAlias (const juce::String& newAlias);
+    /// Returns the alias if set, otherwise the name.
+    juce::String getAliasOrName() const;
+    /// Returns the alias, or an empty string if not set.
+    juce::String getAliasIfSet() const;
 
     juce::String getSelectableDescription() override;
 
