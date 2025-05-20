@@ -26,30 +26,31 @@ juce::String IODevice::getAliasPropName() const
     return "devicealias_" + deviceID;
 }
 
-juce::String IODevice::getAlias() const
+juce::String IODevice::getAliasOrName() const
 {
-    if (alias.isNotEmpty())
-        return alias;
+    return alias.isNotEmpty() ? alias : name;
+}
 
-    return getName();
+juce::String IODevice::getAliasIfSet() const
+{
+    return alias;
 }
 
 void IODevice::setAlias (const juce::String& a)
 {
-    if (alias != a)
+    auto newAlias = a.substring (0, 50).trim();
+
+    if (newAlias == getName())
+        newAlias = {};
+
+    if (alias != newAlias)
     {
-        alias = a.substring (0, 40).trim();
+        alias = newAlias;
 
-        if (alias == getName())
-            alias = {};
-
-        if (! isTrackDevice())
-        {
-            if (alias.isNotEmpty())
-                engine.getPropertyStorage().setPropertyItem (SettingID::invalid, getAliasPropName(), alias);
-            else
-                engine.getPropertyStorage().removePropertyItem (SettingID::invalid, getAliasPropName());
-        }
+        if (alias.isNotEmpty() && ! isTrackDevice())
+            engine.getPropertyStorage().setPropertyItem (SettingID::invalid, getAliasPropName(), alias);
+        else
+            engine.getPropertyStorage().removePropertyItem (SettingID::invalid, getAliasPropName());
 
         changed();
     }
@@ -57,14 +58,13 @@ void IODevice::setAlias (const juce::String& a)
 
 juce::String IODevice::getSelectableDescription()
 {
-    return name + " (" + TRANS(getDeviceTypeDescription()) + ")";
+    return getAliasOrName() + " (" + TRANS(getDeviceTypeDescription()) + ")";
 }
 
 bool IODevice::isEnabled() const
 {
     return enabled;
 }
-
 
 
 }} // namespace tracktion { inline namespace engine

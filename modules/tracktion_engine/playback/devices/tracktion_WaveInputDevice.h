@@ -41,7 +41,7 @@ public:
     double getRecordAdjustmentMs() const                        { return recordAdjustMs; }
     bool isStereoPair() const;
     void setStereoPair (bool);
-    juce::PopupMenu createChannelGroupMenu();
+    juce::PopupMenu createChannelGroupMenu (bool includeSetAllChannelsOptions);
     juce::Array<int> getAvailableBitDepths() const;
     void setBitDepth (int);
     int getBitDepth() const                                     { return bitDepth; }
@@ -71,8 +71,6 @@ public:
     void updateRetrospectiveBufferLength (double length) override;
 
     //==============================================================================
-    juce::String getSelectableDescription() override;
-
     const WaveDeviceDescription deviceDescription;
 
 protected:
