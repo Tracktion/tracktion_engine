@@ -205,7 +205,7 @@ juce::String TrackOutput::getDescriptiveOutputName() const
     }
 
     if (auto dev = getOutputDevice (false))
-        return dev->getAlias();
+        return dev->getAliasOrName();
 
     return outputDevice;
 }
@@ -288,7 +288,7 @@ void TrackOutput::getPossibleOutputDeviceNames (const juce::Array<AudioTrack*>& 
                 }
 
                 s.add (out->getName());
-                a.add (out->getAlias());
+                a.add (out->getAliasOrName());
             }
         }
     }

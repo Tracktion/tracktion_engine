@@ -31,7 +31,7 @@ static void getPossibleInputDeviceNames (Engine& e,
                 hasAudio.setBit (s.size(), true);
 
             s.add (in->getName());
-            a.add (in->getAlias());
+            a.add (in->getAliasOrName());
         }
     }
 }
@@ -63,7 +63,7 @@ static void getPossibleOutputDeviceNames (Engine& e,
             }
 
             s.add (out->getName());
-            a.add (out->getAlias());
+            a.add (out->getAliasOrName());
         }
     }
 }

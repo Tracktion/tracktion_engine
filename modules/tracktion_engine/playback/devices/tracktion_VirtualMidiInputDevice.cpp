@@ -134,12 +134,4 @@ void VirtualMidiInputDevice::handleMessageFromPhysicalDevice (PhysicalMidiInputD
         handleIncomingMidiMessage (m, dev.getMPESourceID());
 }
 
-juce::String VirtualMidiInputDevice::getSelectableDescription()
-{
-    if (getDeviceType() == trackMidiDevice)
-        return getAlias() + " (" + getDeviceTypeDescription() + ")";
-
-    return MidiInputDevice::getSelectableDescription();
-}
-
 }} // namespace tracktion { inline namespace engine
