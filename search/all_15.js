@@ -323,7 +323,7 @@ var searchData=
   ['tracktion_5ffouroscplugin_2eh_320',['tracktion_FourOscPlugin.h',['../tracktion__FourOscPlugin_8h.html',1,'']]],
   ['tracktion_5ffreezepoint_2eh_321',['tracktion_FreezePoint.h',['../tracktion__FreezePoint_8h.html',1,'']]],
   ['tracktion_5fgluecode_2eh_322',['tracktion_GlueCode.h',['../tracktion__GlueCode_8h.html',1,'']]],
-  ['tracktion_5fgraph_323',['tracktion_graph',['../group__tracktion__graph.html',1,'tracktion_graph'],['../group__tracktion__graph-tracktion__graph.html',1,'tracktion_graph']]],
+  ['tracktion_5fgraph_323',['tracktion_graph',['../group__tracktion__graph-tracktion__graph.html',1,'tracktion_graph'],['../group__tracktion__graph.html',1,'tracktion_graph']]],
   ['tracktion_5fgraph_2ftracktion_5fgraph_2ftracktion_5fmultithreadednodeplayer_2eh_324',['tracktion_MultiThreadedNodePlayer.h',['../tracktion__graph_2tracktion__graph_2tracktion__MultiThreadedNodePlayer_8h.html',1,'']]],
   ['tracktion_5fgraph_2ftracktion_5fgraph_2ftracktion_5ftestutilities_2eh_325',['tracktion_TestUtilities.h',['../tracktion__graph_2tracktion__graph_2tracktion__TestUtilities_8h.html',1,'']]],
   ['tracktion_5fgraph_2futilities_2ftracktion_5faudiofifo_2eh_326',['tracktion_AudioFifo.h',['../tracktion__graph_2utilities_2tracktion__AudioFifo_8h.html',1,'']]],
