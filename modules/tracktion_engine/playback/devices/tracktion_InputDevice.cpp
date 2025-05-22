@@ -49,10 +49,13 @@ void InputDevice::setAlias (const juce::String& a)
         if (alias == getName())
             alias = {};
 
-        if (alias.isNotEmpty())
-            engine.getPropertyStorage().setPropertyItem (SettingID::invalid, getAliasPropName(), alias);
-        else
-            engine.getPropertyStorage().removePropertyItem (SettingID::invalid, getAliasPropName());
+        if (! isTrackDevice())
+        {
+            if (alias.isNotEmpty())
+                engine.getPropertyStorage().setPropertyItem (SettingID::invalid, getAliasPropName(), alias);
+            else
+                engine.getPropertyStorage().removePropertyItem (SettingID::invalid, getAliasPropName());
+        }
     }
 }
 
