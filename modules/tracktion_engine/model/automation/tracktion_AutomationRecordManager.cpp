@@ -143,28 +143,11 @@ namespace tracktion::inline engine
                 if (flushTimer.isTimerRunning())
                     flushTimer.timerCallback();
 
-                auto endTime = edit.getTransport().getPosition();
-
-                // If the punch out was triggered by a position change, we want to make
-                // sure the playhead position is used as the end time
-                if (auto epc = edit.getTransport().getCurrentPlaybackContext())
-                {
-                    endTime = epc->isLooping() ? std::max (epc->getUnloopedPosition(),
-                                                           epc->getLoopTimes().getEnd())
-                                               : epc->getPosition();
-                }
-
+                // Punch out any remaining parameters (which will include those on latch mode)
                 for (auto param : recordedParams)
-                {
-                    if (toEnd)
-                        endTime = std::max (endTime, toPosition (param->parameter.getCurve().getLength()) + 1_td);
-
-                    applyChangesToParameter (param, endTime, toEnd);
-                    param->parameter.resetRecordingStatus();
-                }
+                    punchOut (param->parameter, toEnd);
 
                 recordedParams.clear();
-
                 flushTimer.stopTimer();
             }
 
@@ -478,93 +461,6 @@ namespace tracktion::inline engine
                     assert (time.containsInclusive (change.time));
                     const float newVal = parameter.snapToState (change.value);
                     curve.addPoint (change.time, newVal, parameter.isDiscrete() ? 1.0f : 0.0f, um);
-                }
-            }
-
-            void applyChangesToParameter (AutomationParamData* parameter, TimePosition end, bool toEnd)
-            {
-                CRASH_TRACER
-                juce::OwnedArray<AutomationCurve> newCurves;
-                auto& ts = edit.tempoSequence;
-                auto um = &ts.edit.getUndoManager();
-
-                {
-                    auto curve = std::make_unique<AutomationCurve> (edit, AutomationCurve::TimeBase::time);
-                    curve->setParameterID (parameter->parameter.paramID);
-
-                    for (int i = 0; i < parameter->changes.size(); ++i)
-                    {
-                        auto& change = parameter->changes.getReference (i);
-
-                        if (i > 0 && change.time < parameter->changes.getReference (i - 1).time - TimeDuration::fromSeconds (0.1))
-                        {
-                            // gone back to the start - must be looping, so add this to the list and carry on..
-                            if (curve->getNumPoints() > 0)
-                            {
-                                newCurves.add (curve.release());
-                                curve = std::make_unique<AutomationCurve> (edit, AutomationCurve::TimeBase::time);
-                                curve->setParameterID (parameter->parameter.paramID);
-                            }
-                        }
-
-                        const float oldVal = (i == 0) ? (parameter->parameter.getCurve().getNumPoints() > 0 ? parameter->parameter.getCurve().getValueAt (change.time, parameter->parameter.getCurrentBaseValue())
-                                                                                                            : parameter->originalValue)
-                                                      : curve->getValueAt (change.time, parameter->parameter.getCurrentBaseValue());
-
-                        const float newVal = parameter->parameter.snapToState (change.value);
-
-                        if (parameter->parameter.isDiscrete())
-                        {
-                            curve->addPoint (change.time, oldVal, 0.0f, um);
-                            curve->addPoint (change.time, newVal, 0.0f, um);
-                        }
-                        else
-                        {
-                            if (std::abs (oldVal - newVal) > (parameter->parameter.getValueRange().getLength() * 0.21f))
-                            {
-                                if (i == 0)
-                                    curve->addPoint (change.time - TimeDuration::fromSeconds (0.000001), oldVal, 0.0f, um);
-                                else
-                                    curve->addPoint (change.time, oldVal, 0.0f, um);
-                            }
-
-                            curve->addPoint (change.time, newVal, 0.0f, um);
-                        }
-                    }
-
-                    if (curve->getNumPoints() > 0)
-                        newCurves.add (curve.release());
-                }
-
-                auto glideLength = tracktion::AutomationRecordManager::getGlideSeconds (engine);
-
-                for (int i = 0; i < newCurves.size(); ++i)
-                {
-                    auto& sourceCurve = *newCurves.getUnchecked (i);
-
-                    if (sourceCurve.getNumPoints() > 0)
-                    {
-                        auto startTime = sourceCurve.getPointTime (0);
-                        auto endTime = end;
-
-                        if (i < newCurves.size() - 1)
-                            endTime = sourceCurve.getPointTime (sourceCurve.getNumPoints() - 1);
-
-                        // if the curve is empty, set the parameter so that the bits outside the new curve
-                        // are set to the levels they were at when we started recording..
-                        if (parameter->parameter.getCurve().getNumPoints() == 0)
-                            parameter->parameter.setParameter (parameter->originalValue, juce::sendNotification);
-
-                        auto& destCurve = parameter->parameter.getCurve();
-                        TimeRange curveRange (startTime, endTime + glideLength);
-                        mergeCurve (destCurve, curveRange,
-                                    sourceCurve, startTime,
-                                    parameter->parameter.getCurrentBaseValue(), glideLength,
-                                    false, toEnd);
-
-                        if (engine.getPropertyStorage().getProperty (SettingID::simplifyAfterRecording, true))
-                            destCurve.simplify (curveRange.expanded (0.001_td), 0.01, 0.002f, um);
-                    }
                 }
             }
 
