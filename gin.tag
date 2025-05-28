@@ -9656,13 +9656,6 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>resetRecordingStatus</name>
-      <anchorfile>classtracktion_1_1engine_1_1AutomatableParameter.html</anchorfile>
-      <anchor>a5eadf9b15ef4aac7924271d8619f993b</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
       <name>midiControllerMoved</name>
       <anchorfile>classtracktion_1_1engine_1_1AutomatableParameter.html</anchorfile>
       <anchor>a68dce21b0051d5c6813f62d5432d0984</anchor>
@@ -9702,6 +9695,20 @@
       <anchorfile>classtracktion_1_1engine_1_1AutomatableParameter.html</anchorfile>
       <anchor>ab59cf0035fcef2a2a401cb71f326a953</anchor>
       <arglist>(Listener *l)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>resetRecordingStatus</name>
+      <anchorfile>classtracktion_1_1engine_1_1AutomatableParameter.html</anchorfile>
+      <anchor>a5eadf9b15ef4aac7924271d8619f993b</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>startRecordingStatus</name>
+      <anchorfile>classtracktion_1_1engine_1_1AutomatableParameter.html</anchorfile>
+      <anchor>a2ce283699ea9434f6702fe5050e679cf</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="variable">
       <type>const juce::String</type>
