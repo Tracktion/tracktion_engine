@@ -187,9 +187,6 @@ public:
     /** true if the parameter been moved while in an automation record mode. */
     bool isCurrentlyRecording() const                               { return isRecording; }
 
-    /** this is called before and after playback or recording. */
-    void resetRecordingStatus();
-
     //==============================================================================
     // called by ParameterControlMappings
     void midiControllerMoved (float newPosition);
@@ -238,6 +235,11 @@ public:
 
         const AutomatableParameter& parameter;
     };
+
+    /** @internal */
+    void resetRecordingStatus();
+    /** @internal */
+    void startRecordingStatus();
 
 protected:
     struct AttachedValue;

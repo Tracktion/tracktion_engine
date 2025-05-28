@@ -959,7 +959,7 @@ Plugin::Array getAllPlugins (const Edit& edit, bool includeMasterVolume)
                                       return true;
                                   });
 
-    // Master plugins may have been found by the MasterTrack plugnList
+    // Master plugins may have been found by the MasterTrack pluginList
     for (auto p : edit.getMasterPluginList().getPlugins())
         list.addIfNotAlreadyThere (p);
 

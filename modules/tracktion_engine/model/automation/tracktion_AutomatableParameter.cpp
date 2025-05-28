@@ -1374,16 +1374,6 @@ juce::String AutomatableParameter::getFullName() const
 }
 
 //==============================================================================
-void AutomatableParameter::resetRecordingStatus()
-{
-    if (! isRecording)
-        return;
-
-    isRecording = false;
-    listeners.call (&Listener::recordingStatusChanged, *this);
-}
-
-//==============================================================================
 void AutomatableParameter::setParameterValue (float value, bool isFollowingCurve)
 {
     auto& curve = getCurve();
@@ -1493,6 +1483,26 @@ juce::String AutomatableParameter::getCurrentValueAsStringWithLabel()
         return text + ' ' + label;
 
     return text;
+}
+
+//==============================================================================
+    void AutomatableParameter::resetRecordingStatus()
+{
+    if (! isRecording)
+        return;
+
+    isRecording = false;
+    listeners.call (&Listener::recordingStatusChanged, *this);
+}
+
+
+void AutomatableParameter::startRecordingStatus()
+{
+    if (isRecording)
+        return;
+
+    isRecording = true;
+    listeners.call (&Listener::recordingStatusChanged, *this);
 }
 
 AutomatableParameter::AutomationSourceList& AutomatableParameter::getAutomationSourceList() const

@@ -8,6 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#include <ranges>
+
 namespace tracktion::inline engine
 {
     //==============================================================================
@@ -133,6 +135,26 @@ namespace tracktion::inline engine
                 return false;
             }
 
+            void punchInWriteParams (TimePosition pos)
+            {
+                const juce::ScopedLock sl (lock);
+
+                auto punchInWriteParam = [this, pos] (auto& ap)
+                {
+                    auto value = ap.getCurrentBaseValue();
+                    postFirstAutomationChange (ap, value, AutomationTrigger::touch);
+                    postAutomationChange (ap, pos, value);
+                    ap.startRecordingStatus();
+                };
+
+                for (auto p : getAllPlugins (edit, false))
+                    if (auto t = p->getOwnerTrack())
+                        if (t->automationMode == AutomationMode::write)
+                            for (auto ap : p->getAutomatableParameters())
+                                if (ap->hasAutomationPoints())
+                                    punchInWriteParam (*ap);
+            }
+
             void punchOut (bool toEnd) override
             {
                 const juce::ScopedLock sl (lock);
@@ -144,8 +166,9 @@ namespace tracktion::inline engine
                     flushTimer.timerCallback();
 
                 // Punch out any remaining parameters (which will include those on latch mode)
-                for (auto param : recordedParams)
-                    punchOut (param->parameter, toEnd);
+                // Do this in reverse order as punching out will modify the array
+                for (int i = recordedParams.size(); --i >= 0;)
+                    punchOut (recordedParams.getUnchecked (i)->parameter, toEnd);
 
                 recordedParams.clear();
                 flushTimer.stopTimer();
@@ -232,7 +255,8 @@ namespace tracktion::inline engine
                     return;
                 }
                 else if (mode == AutomationMode::touch
-                         || mode == AutomationMode::latch)
+                         || mode == AutomationMode::latch
+                         || mode == AutomationMode::write)
                 {
                     if (param.getCurve().bypass.get())
                         param.getCurve().bypass = false;
@@ -309,6 +333,10 @@ namespace tracktion::inline engine
                                         0.01, 0.002f, um);
 
                 param.resetRecordingStatus();
+
+                if (autoParamData.mode == AutomationMode::write)
+                    if (auto t = param.getTrack())
+                        t->automationMode = AutomationMode::latch;
 
                 recordedParams.removeObject (*recordedParam);
 
@@ -467,21 +495,30 @@ namespace tracktion::inline engine
             void changeListenerCallback (juce::ChangeBroadcaster* source) override
             {
                 // called back when transport state changes
-                if (source == &edit.getTransport())
+                auto& tc = edit.getTransport();
+
+                if (source == &tc)
                 {
-                    const bool isPlaying = edit.getTransport().isPlaying()
-                                           || edit.getTransport().isRecording();
+                    const bool isPlaying = tc.isPlaying()
+                                           || tc.isRecording();
 
                     if (wasPlaying != isPlaying)
                     {
                         wasPlaying = isPlaying;
 
-                        if (! isPlaying)
+                        if (isPlaying)
+                        {
+                            if (isWritingAutomation())
+                                punchInWriteParams (tc.getPosition());
+                        }
+                        else
+                        {
                             punchOut (false);
 
-                        const juce::ScopedLock sl (lock);
-                        jassert (recordedParams.isEmpty());
-                        recordedParams.clear();
+                            const juce::ScopedLock sl (lock);
+                            jassert (recordedParams.isEmpty());
+                            recordedParams.clear();
+                        }
                     }
                 }
             }
