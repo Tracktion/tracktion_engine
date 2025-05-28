@@ -68,20 +68,32 @@ private:
                              expectWithinAbsoluteError (n.inBeats(), next.inBeats(), 0.000001);
                          };
 
-        beginTest ("Bar");
+        beginTest ("Eight Bars");
         {
-            auto expectQ = [&] (auto c, auto n) { expectNext (c, n, LaunchQType::bar); };
+            auto expectQ = [&] (auto c, auto n) { expectNext (c, n, LaunchQType::eightBars); };
 
             expectQ (0_bp, 0_bp);
-            expectQ (1_bp, 4_bp);
-            expectQ (2_bp, 4_bp);
-            expectQ (3_bp, 4_bp);
-            expectQ (4_bp, 4_bp);
-            expectQ (5_bp, 8_bp);
-            expectQ (6_bp, 8_bp);
-            expectQ (7_bp, 8_bp);
-            expectQ (8_bp, 8_bp);
-            expectQ (9_bp, 12_bp);
+            expectQ (1_bp, 32_bp);
+            expectQ (8_bp, 32_bp);
+            expectQ (16_bp, 32_bp);
+            expectQ (32_bp, 32_bp);
+            expectQ (33_bp, 64_bp);
+            expectQ (63_bp, 64_bp);
+            expectQ (64_bp, 64_bp);
+            expectQ (65_bp, 96_bp);
+        }
+
+        beginTest ("Four Bars");
+        {
+            auto expectQ = [&] (auto c, auto n) { expectNext (c, n, LaunchQType::fourBars); };
+
+            expectQ (0_bp, 0_bp);
+            expectQ (1_bp, 16_bp);
+            expectQ (8_bp, 16_bp);
+            expectQ (15_bp, 16_bp);
+            expectQ (16_bp, 16_bp);
+            expectQ (17_bp, 32_bp);
+            expectQ (32_bp, 32_bp);
         }
 
         beginTest ("Two Bars");
@@ -100,50 +112,44 @@ private:
             expectQ (9_bp, 16_bp);
         }
 
-        beginTest ("Four Bars");
+        beginTest ("Bar");
         {
-            auto expectQ = [&] (auto c, auto n) { expectNext (c, n, LaunchQType::fourBars); };
+            auto expectQ = [&] (auto c, auto n) { expectNext (c, n, LaunchQType::bar); };
 
             expectQ (0_bp, 0_bp);
-            expectQ (1_bp, 16_bp);
-            expectQ (8_bp, 16_bp);
-            expectQ (15_bp, 16_bp);
-            expectQ (16_bp, 16_bp);
-            expectQ (17_bp, 32_bp);
-            expectQ (32_bp, 32_bp);
-        }
-
-        beginTest ("Eight Bars");
-        {
-            auto expectQ = [&] (auto c, auto n) { expectNext (c, n, LaunchQType::eightBars); };
-
-            expectQ (0_bp, 0_bp);
-            expectQ (1_bp, 32_bp);
-            expectQ (8_bp, 32_bp);
-            expectQ (16_bp, 32_bp);
-            expectQ (32_bp, 32_bp);
-            expectQ (33_bp, 64_bp);
-            expectQ (63_bp, 64_bp);
-            expectQ (64_bp, 64_bp);
-            expectQ (65_bp, 96_bp);
+            expectQ (1_bp, 4_bp);
+            expectQ (2_bp, 4_bp);
+            expectQ (3_bp, 4_bp);
+            expectQ (4_bp, 4_bp);
+            expectQ (5_bp, 8_bp);
+            expectQ (6_bp, 8_bp);
+            expectQ (7_bp, 8_bp);
+            expectQ (8_bp, 8_bp);
+            expectQ (9_bp, 12_bp);
         }
 
         beginTest ("Half");
         {
             auto expectQ = [&] (auto c, auto n) { expectNext (c, n, LaunchQType::half); };
 
-            expectQ (0_bp, 0_bp);
-            expectQ (0.1_bp, 0.5_bp);
-            expectQ (0.5_bp, 0.5_bp);
+            expectQ (0_bp,      0_bp);
 
-            expectQ (0.9_bp, 1_bp);
-            expectQ (1.0_bp, 1_bp);
+            expectQ (0.1_bp,    2_bp);
+            expectQ (1_bp,      2_bp);
+            expectQ (1.5_bp,    2_bp);
+            expectQ (2_bp,      2_bp);
 
-            expectQ (1.1_bp, 1.5_bp);
-            expectQ (1.5_bp, 1.5_bp);
+            expectQ (3_bp,      4_bp);
+            expectQ (4_bp,      4_bp);
 
-            expectQ (1.9_bp, 2_bp);
-            expectQ (2.0_bp, 2_bp);
+            expectQ (5_bp,      6_bp);
+            expectQ (6_bp,      6_bp);
+
+            expectQ (7_bp,      8_bp);
+            expectQ (8_bp,      8_bp);
+
+            expectQ (8.01_bp,   10_bp);
+            expectQ (9_bp,      10_bp);
         }
 
         beginTest ("Quarter");
@@ -151,18 +157,23 @@ private:
             auto expectQ = [&] (auto c, auto n) { expectNext (c, n, LaunchQType::quarter); };
 
             expectQ (0_bp, 0_bp);
-            expectQ (0.1_bp, 0.25_bp);
-            expectQ (0.5_bp, 0.5_bp);
-            expectQ (0.6_bp, 0.75_bp);
 
+            expectQ (0.1_bp, 1_bp);
+            expectQ (0.5_bp, 1_bp);
+            expectQ (0.6_bp, 1_bp);
             expectQ (0.9_bp, 1_bp);
             expectQ (1.0_bp, 1_bp);
 
-            expectQ (1.1_bp, 1.25_bp);
-            expectQ (1.5_bp, 1.5_bp);
-
+            expectQ (1.1_bp, 2_bp);
+            expectQ (1.5_bp, 2_bp);
             expectQ (1.9_bp, 2_bp);
             expectQ (2.0_bp, 2_bp);
+
+            expectQ (2.1_bp, 3_bp);
+            expectQ (2.9_bp, 3_bp);
+
+            expectQ (3.1_bp, 4_bp);
+            expectQ (3.9_bp, 4_bp);
         }
     }
 };

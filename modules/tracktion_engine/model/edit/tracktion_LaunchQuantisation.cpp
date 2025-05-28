@@ -126,9 +126,12 @@ BeatPosition getNext (LaunchQType q, const tempo::Sequence& ts, BeatPosition pos
         barsBeats.bars = static_cast<int> (qFraction * (int) std::floor (barsPlusBeats / qFraction + adjustment));
         barsBeats.beats = {};
     }
-
-    // Fractional bars
-    barsBeats.beats = BeatDuration::fromBeats (qFraction * std::floor ((barsBeats.beats.inBeats() / qFraction) + adjustment));
+    else
+    {
+        // Fractional bars
+        const auto beatFraction = barsBeats.numerator * qFraction;
+        barsBeats.beats = BeatDuration::fromBeats (beatFraction * std::floor ((barsBeats.beats.inBeats() / beatFraction) + adjustment));
+    }
 
     return ts.toBeats (barsBeats);
 }
