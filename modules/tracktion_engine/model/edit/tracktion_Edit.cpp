@@ -810,82 +810,95 @@ void Edit::initialise (const Options& options)
     isLoadInProgress = true;
     tempDirectory = juce::File();
 
-    if (! state.hasProperty (IDs::creationTime))
-        addValueTreeProperties (state,
-                                IDs::appVersion, engine.getPropertyStorage().getApplicationVersion(),
-                                IDs::creationTime, juce::Time::getCurrentTime().toMilliseconds());
+    auto stateVersion = state[IDs::appVersion].toString();
+    bool isLegacy = stateVersion.isEmpty() || stateVersion.upToFirstOccurrenceOf (".", false, false).getIntValue() < 6;
 
-    lastSignificantChange.referTo (state, IDs::lastSignificantChange, nullptr,
-                                   juce::String::toHexString (juce::Time::getCurrentTime().toMilliseconds()));
-
-    globalMacros = std::make_unique<GlobalMacros> (*this);
-    initialiseTempoAndPitch();
-    initialiseTransport();
-    initialiseVideo();
-    initialiseClickTrack();
-    initialiseMasterVolume (options);
-    initialiseRacks();
-    initialiseMasterPlugins();
-    initialiseAudioDevices();
-    loadTracks();
-
-    if (loadContext != nullptr)
+    auto init = [this, &options, isLegacy]
     {
-        assert (loadContext->totalNumTracks == loadContext->numTracksLoaded);
-        loadContext->progress = 1.0f;
-    }
+        addValueTreeProperties (state, IDs::appVersion, engine.getPropertyStorage().getApplicationVersion());
 
-    initialiseTracks (options);
-    initialiseARA();
-    updateMuteSoloStatuses();
-    readFrozenTracksFiles();
+        if (! state.hasProperty (IDs::creationTime))
+            addValueTreeProperties (state, IDs::creationTime, juce::Time::getCurrentTime().toMilliseconds());
 
-    getLength(); // forcibly update the length before the isLoadInProgress is disabled.
+        lastSignificantChange.referTo (state, IDs::lastSignificantChange, nullptr,
+                                    juce::String::toHexString (juce::Time::getCurrentTime().toMilliseconds()));
 
-    for (auto t : getAllTracks (*this))
-        t->cancelAnyPendingUpdates();
+        globalMacros = std::make_unique<GlobalMacros> (*this);
+        initialiseTempoAndPitch();
+        initialiseTransport();
+        initialiseVideo();
+        initialiseClickTrack();
+        initialiseMasterVolume (options);
+        initialiseRacks();
+        initialiseMasterPlugins();
+        initialiseAudioDevices();
+        loadTracks();
 
-    initialiseControllerMappings();
+        if (loadContext != nullptr)
+        {
+            assert (loadContext->totalNumTracks == loadContext->numTracksLoaded || isLegacy);
+            loadContext->progress = 1.0f;
+        }
 
-    callBlocking ([this]
-                  {
-                      TemporaryFileManager::purgeOrphanFreezeAndProxyFiles (*this);
+        initialiseTracks (options);
+        initialiseARA();
+        updateMuteSoloStatuses();
+        readFrozenTracksFiles();
 
-                      // Must be set to false before curve updates
-                      // but set inside here to give the message loop some time to dispatch async updates
-                      isLoadInProgress = false;
-                      auto cursorPos = getTransport().getPosition();
+        getLength(); // forcibly update the length before the isLoadInProgress is disabled.
 
-                      for (auto mpl : getAllMacroParameterLists (*this))
-                          for (auto mp : mpl->getMacroParameters())
-                              mp->initialise();
+        for (auto t : getAllTracks (*this))
+            t->cancelAnyPendingUpdates();
 
-                      for (auto ap : getAllAutomatableParams (true))
-                      {
-                          ap->updateStream();
+        initialiseControllerMappings();
 
-                          if (ap->isAutomationActive())
-                              ap->updateFromAutomationSources (cursorPos);
-                      }
+        callBlocking ([this]
+        {
+            TemporaryFileManager::purgeOrphanFreezeAndProxyFiles (*this);
 
-                      for (auto effect : getAllClipEffects (*this))
-                          effect->initialise();
-                  });
+            // Must be set to false before curve updates
+            // but set inside here to give the message loop some time to dispatch async updates
+            isLoadInProgress = false;
+            auto cursorPos = getTransport().getPosition();
 
-    cancelAnyPendingUpdates();
+            for (auto mpl : getAllMacroParameterLists (*this))
+                for (auto mp : mpl->getMacroParameters())
+                    mp->initialise();
 
-    // reset the change status asynchronously to take into account deferred updates
-    changeResetterTimer = std::make_unique<EditChangeResetterTimer> (*this);
+            for (auto ap : getAllAutomatableParams (true))
+            {
+                ap->updateStream();
 
-   #if TRACKTION_ENABLE_AUTOMAP && TRACKTION_ENABLE_CONTROL_SURFACES
-    if (shouldPlay())
-        if (auto na = engine.getExternalControllerManager().getAutomap())
-            na->load (*this);
-   #endif
+                if (ap->isAutomationActive())
+                    ap->updateFromAutomationSources (cursorPos);
+            }
 
-    auxBusses = state.getChildWithName ("AUXBUSNAMES");
+            for (auto effect : getAllClipEffects (*this))
+                effect->initialise();
+        });
 
-    getUndoManager().clearUndoHistory();
+        cancelAnyPendingUpdates();
+
+        // reset the change status asynchronously to take into account deferred updates
+        changeResetterTimer = std::make_unique<EditChangeResetterTimer> (*this);
+
+       #if TRACKTION_ENABLE_AUTOMAP && TRACKTION_ENABLE_CONTROL_SURFACES
+        if (shouldPlay())
+            if (auto na = engine.getExternalControllerManager().getAutomap())
+                na->load (*this);
+       #endif
+
+        auxBusses = state.getChildWithName ("AUXBUSNAMES");
+
+        getUndoManager().clearUndoHistory();
+    };
+
+    /// When loading a legacy edit, we need to do it all on the message thread, because
+    /// it causes all kinds of indirect updates to values.
+    if (isLegacy)
+        callBlocking ([&] { init(); });
+    else
+        init();
 
     DBG ("Edit loaded in: " << loadTimer.getDescription());
 }
