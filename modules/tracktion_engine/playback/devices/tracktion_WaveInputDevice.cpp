@@ -827,7 +827,7 @@ public:
 
         auto endPos = rc.punchTimes.getStart() + newClipLen;
 
-        if (isPunching || context.transport.looping)
+        if (isPunching || isLooping)
             endPos = juce::jlimit (rc.punchTimes.getStart() + 0.5s, loopEnd, endPos);
 
         Clip::Ptr newClip;
