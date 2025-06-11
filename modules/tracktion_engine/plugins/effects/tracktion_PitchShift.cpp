@@ -31,7 +31,7 @@ struct PitchShiftPlugin::Pimpl
         if (! timestretcher->isInitialised())
         {
             timestretcher->initialise (sr, samplesPerBlock, 2, mode, elastiqueOptions, true);
-            jassert (timestretcher->isInitialised());
+            jassert (mode == TimeStretcher::Mode::disabled || timestretcher->isInitialised());
         }
 
         if (timestretcher->isInitialised())
