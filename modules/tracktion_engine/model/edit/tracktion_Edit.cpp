@@ -837,6 +837,7 @@ void Edit::initialise (const Options& options)
         if (loadContext != nullptr)
         {
             assert (loadContext->totalNumTracks == loadContext->numTracksLoaded || isLegacy);
+            (void) isLegacy;
             loadContext->progress = 1.0f;
         }
 
