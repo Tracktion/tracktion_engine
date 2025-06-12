@@ -14462,8 +14462,8 @@
       <type>void</type>
       <name>setColour</name>
       <anchorfile>classtracktion_1_1engine_1_1Clip.html</anchorfile>
-      <anchor>a6ede9aafce7da44410c2f91ecb927e9a</anchor>
-      <arglist>(juce::Colour col)</arglist>
+      <anchor>a4d3c1e94de7598635c7875b6ba68cea0</anchor>
+      <arglist>(juce::Colour)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -41180,13 +41180,6 @@
       <anchorfile>classtracktion_1_1engine_1_1MarkerClip.html</anchorfile>
       <anchor>ab9b5dc498f34dd47f7e66b5bf21db08e</anchor>
       <arglist>(ClipOwner &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>juce::Colour</type>
-      <name>getColour</name>
-      <anchorfile>classtracktion_1_1engine_1_1MarkerClip.html</anchorfile>
-      <anchor>a541f3869d12da6c8b5a8a95076675fc7</anchor>
-      <arglist>() const override</arglist>
     </member>
     <member kind="function">
       <type>juce::Colour</type>
