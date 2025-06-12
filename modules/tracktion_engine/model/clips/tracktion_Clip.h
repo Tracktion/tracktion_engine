@@ -341,7 +341,7 @@ public:
     /** Returns the colour property of this clip. */
     virtual juce::Colour getColour() const;
     /** Sets the colour property of this clip. */
-    void setColour (juce::Colour col)               { colour = col; }
+    void setColour (juce::Colour);
 
     //==============================================================================
     /** Removes the given plugin from the clip if the clip supports plugins. */

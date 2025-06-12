@@ -28,7 +28,6 @@ public:
 
     juce::String getSelectableDescription() override;
     bool canBeAddedTo (ClipOwner&) override;
-    juce::Colour getColour() const override;
     juce::Colour getDefaultColour() const override;
     void initialise() override;
 

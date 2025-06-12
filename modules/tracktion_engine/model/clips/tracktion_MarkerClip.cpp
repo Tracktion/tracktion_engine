@@ -43,7 +43,10 @@ juce::String MarkerClip::getSelectableDescription()
 
 juce::Colour MarkerClip::getDefaultColour() const
 {
-    return juce::Colours::red.withHue (1.0f / 9.0f);
+    if (isSyncAbsolute())   return juce::Colours::red.withHue (0.0f);
+    if (isSyncBarsBeats())  return juce::Colours::red.withHue (1.0f / 9.0f);
+
+    return MarkerClip::getDefaultColour();
 }
 
 void MarkerClip::setMarkerID (int newID)
@@ -77,17 +80,6 @@ void MarkerClip::valueTreePropertyChanged (juce::ValueTree& v, const juce::Ident
     }
 
     Clip::valueTreePropertyChanged (v, i);
-}
-
-juce::Colour MarkerClip::getColour() const
-{
-    if (Clip::getColour() == getDefaultColour())
-    {
-        if (isSyncAbsolute())   return juce::Colours::red.withHue (0.0f);
-        if (isSyncBarsBeats())  return juce::Colours::red.withHue (1.0f / 9.0f);
-    }
-
-    return Clip::getColour();
 }
 
 }} // namespace tracktion { inline namespace engine

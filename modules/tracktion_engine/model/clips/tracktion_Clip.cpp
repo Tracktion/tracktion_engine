@@ -118,9 +118,6 @@ void Clip::initialise()
 
     const juce::ScopedValueSetter<bool> initialiser (isInitialised, false, true);
 
-    if (colour.isUsingDefault())
-        colour = getDefaultColour();
-
     if (sourceFileReference.isUsingProjectReference())
         sourceMediaChanged();
 
@@ -760,7 +757,18 @@ void Clip::setGroup (EditItemID newGroupID)
 
 juce::Colour Clip::getColour() const
 {
+    if (colour.isUsingDefault())
+        return getDefaultColour();
+
     return colour.get();
+}
+
+void Clip::setColour (juce::Colour c)
+{
+    if (c.isTransparent())
+        colour.resetToDefault();
+    else
+        colour = c;
 }
 
 //==============================================================================
