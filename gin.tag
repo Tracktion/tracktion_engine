@@ -28983,6 +28983,20 @@
       <arglist>(int)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
+      <type>virtual juce::File</type>
+      <name>getDefaultFolderForAudioRecordings</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>aef25cb30a5c7a67857f1d3e4c677e012</anchor>
+      <arglist>(Edit &amp;)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual juce::String</type>
+      <name>getDefaultAudioRecordingFilePattern</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a9f1b2e57a8775ef1e0d12757a1d10eb8</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
       <type>virtual int</type>
       <name>getMiddleCOctave</name>
       <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
@@ -75366,18 +75380,18 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
-      <name>setFilenameMask</name>
-      <anchorfile>classtracktion_1_1engine_1_1WaveInputDevice.html</anchorfile>
-      <anchor>a8ae4ea2aa4501b7ecf92c46b222ad6a4</anchor>
-      <arglist>(const juce::String &amp;)</arglist>
-    </member>
-    <member kind="function">
       <type>juce::String</type>
       <name>getFilenameMask</name>
       <anchorfile>classtracktion_1_1engine_1_1WaveInputDevice.html</anchorfile>
       <anchor>a77e938a20289befcd12804f541327cc4</anchor>
       <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setFilenameMask</name>
+      <anchorfile>classtracktion_1_1engine_1_1WaveInputDevice.html</anchorfile>
+      <anchor>a8ae4ea2aa4501b7ecf92c46b222ad6a4</anchor>
+      <arglist>(const juce::String &amp;)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -75468,13 +75482,6 @@
       <name>getMergeModes</name>
       <anchorfile>classtracktion_1_1engine_1_1WaveInputDevice.html</anchorfile>
       <anchor>a04c315a0bf6511d43d537dae202f93d7</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" static="yes">
-      <type>static juce::String</type>
-      <name>getDefaultMask</name>
-      <anchorfile>classtracktion_1_1engine_1_1WaveInputDevice.html</anchorfile>
-      <anchor>a7438b661f09a1634564112de013771a4</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" protection="protected">
@@ -81232,14 +81239,14 @@
     </member>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph-3rd_party</name>
-    <title>3rd_party</title>
-    <filename>group__tracktion__graph-3rd__party.html</filename>
-  </compound>
-  <compound kind="group">
     <name>tracktion_engine-3rd_party</name>
     <title>3rd_party</title>
     <filename>group__tracktion__engine-3rd__party.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_graph-3rd_party</name>
+    <title>3rd_party</title>
+    <filename>group__tracktion__graph-3rd__party.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-audio_files</name>

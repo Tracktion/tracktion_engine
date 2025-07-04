@@ -168,6 +168,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6619ff1dd9cf8adf3d42ae2ae0acd873" id="r_a6619ff1dd9cf8adf3d42ae2ae0acd873"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a6619ff1dd9cf8adf3d42ae2ae0acd873">setProcessPriority</a> (int)</td></tr>
 <tr class="memdesc:a6619ff1dd9cf8adf3d42ae2ae0acd873"><td class="mdescLeft">&#160;</td><td class="mdescRight">0 = normal, 1 = high, 2 = realtime  <br /></td></tr>
 <tr class="separator:a6619ff1dd9cf8adf3d42ae2ae0acd873"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef25cb30a5c7a67857f1d3e4c677e012" id="r_aef25cb30a5c7a67857f1d3e4c677e012"><td class="memItemLeft" align="right" valign="top">virtual juce::File&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#aef25cb30a5c7a67857f1d3e4c677e012">getDefaultFolderForAudioRecordings</a> (<a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;)</td></tr>
+<tr class="memdesc:aef25cb30a5c7a67857f1d3e4c677e012"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this is implemented, this folder will be used for the project% pattern when parsing an audio input device's target filename.  <br /></td></tr>
+<tr class="separator:aef25cb30a5c7a67857f1d3e4c677e012"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f1b2e57a8775ef1e0d12757a1d10eb8" id="r_a9f1b2e57a8775ef1e0d12757a1d10eb8"><td class="memItemLeft" align="right" valign="top">virtual juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a9f1b2e57a8775ef1e0d12757a1d10eb8">getDefaultAudioRecordingFilePattern</a> ()</td></tr>
+<tr class="memdesc:a9f1b2e57a8775ef1e0d12757a1d10eb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default filename that will be used for audio input devices if not overridden.  <br /></td></tr>
+<tr class="separator:a9f1b2e57a8775ef1e0d12757a1d10eb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4bf6af8049c0afb0240d0ddc9b22593c" id="r_a4bf6af8049c0afb0240d0ddc9b22593c"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a4bf6af8049c0afb0240d0ddc9b22593c">getMiddleCOctave</a> ()</td></tr>
 <tr class="separator:a4bf6af8049c0afb0240d0ddc9b22593c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1cf026c35e59330c677c2a0a1384e063" id="r_a1cf026c35e59330c677c2a0a1384e063"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a1cf026c35e59330c677c2a0a1384e063">setMiddleCOctave</a> (int)</td></tr>
@@ -976,6 +982,61 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>0 = normal, 1 = high, 2 = realtime </p>
+
+</div>
+</div>
+<a id="aef25cb30a5c7a67857f1d3e4c677e012" name="aef25cb30a5c7a67857f1d3e4c677e012"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef25cb30a5c7a67857f1d3e4c677e012">&#9670;&#160;</a></span>getDefaultFolderForAudioRecordings()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual juce::File tracktion::engine::EngineBehaviour::getDefaultFolderForAudioRecordings </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>If this is implemented, this folder will be used for the project% pattern when parsing an audio input device's target filename. </p>
+
+</div>
+</div>
+<a id="a9f1b2e57a8775ef1e0d12757a1d10eb8" name="a9f1b2e57a8775ef1e0d12757a1d10eb8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f1b2e57a8775ef1e0d12757a1d10eb8">&#9670;&#160;</a></span>getDefaultAudioRecordingFilePattern()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual juce::String tracktion::engine::EngineBehaviour::getDefaultAudioRecordingFilePattern </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The default filename that will be used for audio input devices if not overridden. </p>
 
 </div>
 </div>
@@ -1891,7 +1952,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jun 12 2025 09:48:09 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Fri Jul 4 2025 07:50:39 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
