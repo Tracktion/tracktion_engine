@@ -57727,6 +57727,13 @@
       <arglist>(const juce::ValueTree &amp;)</arglist>
     </member>
     <member kind="function">
+      <type>bool</type>
+      <name>isInitialised</name>
+      <anchorfile>classtracktion_1_1engine_1_1RackTypeList.html</anchorfile>
+      <anchor>a19018edee6ba7e996df19982d76ddcfa</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
       <type>int</type>
       <name>size</name>
       <anchorfile>classtracktion_1_1engine_1_1RackTypeList.html</anchorfile>
