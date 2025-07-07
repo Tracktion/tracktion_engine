@@ -168,6 +168,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6619ff1dd9cf8adf3d42ae2ae0acd873" id="r_a6619ff1dd9cf8adf3d42ae2ae0acd873"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#a6619ff1dd9cf8adf3d42ae2ae0acd873">setProcessPriority</a> (int)</td></tr>
 <tr class="memdesc:a6619ff1dd9cf8adf3d42ae2ae0acd873"><td class="mdescLeft">&#160;</td><td class="mdescRight">0 = normal, 1 = high, 2 = realtime  <br /></td></tr>
 <tr class="separator:a6619ff1dd9cf8adf3d42ae2ae0acd873"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab917ec6ca648e7dd8da9bc46261dfba0" id="r_ab917ec6ca648e7dd8da9bc46261dfba0"><td class="memItemLeft" align="right" valign="top">virtual juce::File&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#ab917ec6ca648e7dd8da9bc46261dfba0">getFileForNewAudioRecording</a> (<a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;, const juce::String &amp;fileExtension)</td></tr>
+<tr class="memdesc:ab917ec6ca648e7dd8da9bc46261dfba0"><td class="mdescLeft">&#160;</td><td class="mdescRight">If implemented, this lets the behaviour determine exactly which file a new auto recording for the given track should be made to.  <br /></td></tr>
+<tr class="separator:ab917ec6ca648e7dd8da9bc46261dfba0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef25cb30a5c7a67857f1d3e4c677e012" id="r_aef25cb30a5c7a67857f1d3e4c677e012"><td class="memItemLeft" align="right" valign="top">virtual juce::File&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1EngineBehaviour.html#aef25cb30a5c7a67857f1d3e4c677e012">getDefaultFolderForAudioRecordings</a> (<a class="el" href="classtracktion_1_1engine_1_1Edit.html">Edit</a> &amp;)</td></tr>
 <tr class="memdesc:aef25cb30a5c7a67857f1d3e4c677e012"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this is implemented, this folder will be used for the project% pattern when parsing an audio input device's target filename.  <br /></td></tr>
 <tr class="separator:aef25cb30a5c7a67857f1d3e4c677e012"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -982,6 +985,44 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>0 = normal, 1 = high, 2 = realtime </p>
+
+</div>
+</div>
+<a id="ab917ec6ca648e7dd8da9bc46261dfba0" name="ab917ec6ca648e7dd8da9bc46261dfba0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab917ec6ca648e7dd8da9bc46261dfba0">&#9670;&#160;</a></span>getFileForNewAudioRecording()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual juce::File tracktion::engine::EngineBehaviour::getFileForNewAudioRecording </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtracktion_1_1engine_1_1Track.html">Track</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>fileExtension</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>If implemented, this lets the behaviour determine exactly which file a new auto recording for the given track should be made to. </p>
 
 </div>
 </div>
@@ -1952,7 +1993,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jul 7 2025 12:11:43 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Jul 7 2025 13:42:58 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

@@ -28984,6 +28984,13 @@
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual juce::File</type>
+      <name>getFileForNewAudioRecording</name>
+      <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>ab917ec6ca648e7dd8da9bc46261dfba0</anchor>
+      <arglist>(Track &amp;, const juce::String &amp;fileExtension)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual juce::File</type>
       <name>getDefaultFolderForAudioRecordings</name>
       <anchorfile>classtracktion_1_1engine_1_1EngineBehaviour.html</anchorfile>
       <anchor>aef25cb30a5c7a67857f1d3e4c677e012</anchor>
