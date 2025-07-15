@@ -32527,11 +32527,11 @@
       <arglist>(const juce::File &amp;) override</arglist>
     </member>
     <member kind="function">
-      <type>juce::AudioFormatWriter *</type>
+      <type>std::unique_ptr&lt; juce::AudioFormatWriter &gt;</type>
       <name>createWriterFor</name>
       <anchorfile>classtracktion_1_1engine_1_1FloatAudioFormat.html</anchorfile>
-      <anchor>aaebd66059ecf6f879a4d0a6de3c045de</anchor>
-      <arglist>(juce::OutputStream *, double sampleRate, unsigned int numChannels, int bitsPerSample, const juce::StringPairArray &amp;metadataValues, int qualityOptionIndex) override</arglist>
+      <anchor>a7a154e3ecfed4eac1af52920b0920594</anchor>
+      <arglist>(std::unique_ptr&lt; juce::OutputStream &gt; &amp;, const juce::AudioFormatWriterOptions &amp;) override</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -81253,14 +81253,14 @@
     </member>
   </compound>
   <compound kind="group">
-    <name>tracktion_engine-3rd_party</name>
-    <title>3rd_party</title>
-    <filename>group__tracktion__engine-3rd__party.html</filename>
-  </compound>
-  <compound kind="group">
     <name>tracktion_graph-3rd_party</name>
     <title>3rd_party</title>
     <filename>group__tracktion__graph-3rd__party.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_engine-3rd_party</name>
+    <title>3rd_party</title>
+    <filename>group__tracktion__engine-3rd__party.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-audio_files</name>

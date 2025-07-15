@@ -107,8 +107,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a24d032ca73061a91c3f90c1e799f385f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2e53bf1d7062981e1037c23fbdb3fce" id="r_ac2e53bf1d7062981e1037c23fbdb3fce"><td class="memItemLeft" align="right" valign="top">juce::MemoryMappedAudioFormatReader *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1FloatAudioFormat.html#ac2e53bf1d7062981e1037c23fbdb3fce">createMemoryMappedReader</a> (const juce::File &amp;) override</td></tr>
 <tr class="separator:ac2e53bf1d7062981e1037c23fbdb3fce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaebd66059ecf6f879a4d0a6de3c045de" id="r_aaebd66059ecf6f879a4d0a6de3c045de"><td class="memItemLeft" align="right" valign="top">juce::AudioFormatWriter *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1FloatAudioFormat.html#aaebd66059ecf6f879a4d0a6de3c045de">createWriterFor</a> (juce::OutputStream *, double sampleRate, unsigned int numChannels, int bitsPerSample, const juce::StringPairArray &amp;metadataValues, int qualityOptionIndex) override</td></tr>
-<tr class="separator:aaebd66059ecf6f879a4d0a6de3c045de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a154e3ecfed4eac1af52920b0920594" id="r_a7a154e3ecfed4eac1af52920b0920594"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; juce::AudioFormatWriter &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1FloatAudioFormat.html#a7a154e3ecfed4eac1af52920b0920594">createWriterFor</a> (std::unique_ptr&lt; juce::OutputStream &gt; &amp;, const juce::AudioFormatWriterOptions &amp;) override</td></tr>
+<tr class="separator:a7a154e3ecfed4eac1af52920b0920594"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A raw, proprietary, simple floating point format used for freeze files, etc. </p>
@@ -344,8 +344,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aaebd66059ecf6f879a4d0a6de3c045de" name="aaebd66059ecf6f879a4d0a6de3c045de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaebd66059ecf6f879a4d0a6de3c045de">&#9670;&#160;</a></span>createWriterFor()</h2>
+<a id="a7a154e3ecfed4eac1af52920b0920594" name="a7a154e3ecfed4eac1af52920b0920594"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a154e3ecfed4eac1af52920b0920594">&#9670;&#160;</a></span>createWriterFor()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -354,40 +354,16 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">juce::AudioFormatWriter * tracktion::engine::FloatAudioFormat::createWriterFor </td>
+          <td class="memname">std::unique_ptr&lt; juce::AudioFormatWriter &gt; tracktion::engine::FloatAudioFormat::createWriterFor </td>
           <td>(</td>
-          <td class="paramtype">juce::OutputStream *&#160;</td>
+          <td class="paramtype">std::unique_ptr&lt; juce::OutputStream &gt; &amp;&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>sampleRate</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>numChannels</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>bitsPerSample</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const juce::StringPairArray &amp;&#160;</td>
-          <td class="paramname"><em>metadataValues</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>qualityOptionIndex</em>&#160;</td>
+          <td class="paramtype">const juce::AudioFormatWriterOptions &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -410,7 +386,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jul 8 2025 10:40:45 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Jul 15 2025 16:56:06 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
