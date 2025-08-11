@@ -79024,9 +79024,9 @@
     </member>
     <member kind="function">
       <type>juce::AudioChannelSet</type>
-      <name>channelSetFromSpeakerArrangmentString</name>
+      <name>channelSetFromSpeakerArrangementString</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
-      <anchor>a8210dd18b3030c9c7c629b60322467c7</anchor>
+      <anchor>ab3b35f3330d4f1a9ba95c78a5f4bf28e</anchor>
       <arglist>(const juce::String &amp;)</arglist>
     </member>
     <member kind="function">
@@ -81912,15 +81912,6 @@
     <subgroup>tracktion_engine-utilities</subgroup>
   </compound>
   <compound kind="group">
-    <name>tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph.html</filename>
-    <subgroup>tracktion_graph-3rd_party</subgroup>
-    <subgroup>tracktion_graph-docs</subgroup>
-    <subgroup>tracktion_graph-tracktion_graph</subgroup>
-    <subgroup>tracktion_graph-utilities</subgroup>
-  </compound>
-  <compound kind="group">
     <name>tracktion_graph-tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph-tracktion__graph.html</filename>
@@ -81969,6 +81960,15 @@
     <class kind="struct">tracktion::graph::test_utilities::TestSetup</class>
     <class kind="struct">tracktion::graph::test_utilities::TestContext</class>
     <class kind="struct">tracktion::graph::test_utilities::TestProcess</class>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph.html</filename>
+    <subgroup>tracktion_graph-3rd_party</subgroup>
+    <subgroup>tracktion_graph-docs</subgroup>
+    <subgroup>tracktion_graph-tracktion_graph</subgroup>
+    <subgroup>tracktion_graph-utilities</subgroup>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-utilities</name>
