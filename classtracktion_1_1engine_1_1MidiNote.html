@@ -149,6 +149,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac355dc8b1bbaee6b1a54e6962c8a51b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31e666d16b99706c0565a6b6a77ac2bf" id="r_a31e666d16b99706c0565a6b6a77ac2bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MidiNote.html#a31e666d16b99706c0565a6b6a77ac2bf">setVelocity</a> (int newVelocity, juce::UndoManager *)</td></tr>
 <tr class="separator:a31e666d16b99706c0565a6b6a77ac2bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91b1250e1fedd7b477ef446448eec048" id="r_a91b1250e1fedd7b477ef446448eec048"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MidiNote.html#a91b1250e1fedd7b477ef446448eec048">getNoteOffVelocity</a> () const noexcept</td></tr>
+<tr class="separator:a91b1250e1fedd7b477ef446448eec048"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72f846d4f77c90b0b4f0a38e91c2f7ca" id="r_a72f846d4f77c90b0b4f0a38e91c2f7ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MidiNote.html#a72f846d4f77c90b0b4f0a38e91c2f7ca">setNoteOffVelocity</a> (int newOffVelocity, juce::UndoManager *)</td></tr>
+<tr class="separator:a72f846d4f77c90b0b4f0a38e91c2f7ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a997e4b8f1ee0f8a928c6d840714ff5f4" id="r_a997e4b8f1ee0f8a928c6d840714ff5f4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MidiNote.html#a997e4b8f1ee0f8a928c6d840714ff5f4">getColour</a> () const noexcept</td></tr>
 <tr class="separator:a997e4b8f1ee0f8a928c6d840714ff5f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:addabe277f457974fb02440645fda5b1e" id="r_addabe277f457974fb02440645fda5b1e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MidiNote.html#addabe277f457974fb02440645fda5b1e">setColour</a> (int newColourIndex, juce::UndoManager *)</td></tr>
@@ -856,6 +860,59 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a91b1250e1fedd7b477ef446448eec048" name="a91b1250e1fedd7b477ef446448eec048"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91b1250e1fedd7b477ef446448eec048">&#9670;&#160;</a></span>getNoteOffVelocity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int tracktion::engine::MidiNote::getNoteOffVelocity </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a72f846d4f77c90b0b4f0a38e91c2f7ca" name="a72f846d4f77c90b0b4f0a38e91c2f7ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72f846d4f77c90b0b4f0a38e91c2f7ca">&#9670;&#160;</a></span>setNoteOffVelocity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tracktion::engine::MidiNote::setNoteOffVelocity </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>newOffVelocity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::UndoManager *&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a997e4b8f1ee0f8a928c6d840714ff5f4" name="a997e4b8f1ee0f8a928c6d840714ff5f4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a997e4b8f1ee0f8a928c6d840714ff5f4">&#9670;&#160;</a></span>getColour()</h2>
 
@@ -985,7 +1042,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 11 2025 20:59:56 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Aug 12 2025 11:08:12 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

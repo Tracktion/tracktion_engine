@@ -45052,6 +45052,20 @@
     </member>
     <member kind="function">
       <type>int</type>
+      <name>getNoteOffVelocity</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiNote.html</anchorfile>
+      <anchor>a91b1250e1fedd7b477ef446448eec048</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setNoteOffVelocity</name>
+      <anchorfile>classtracktion_1_1engine_1_1MidiNote.html</anchorfile>
+      <anchor>a72f846d4f77c90b0b4f0a38e91c2f7ca</anchor>
+      <arglist>(int newOffVelocity, juce::UndoManager *)</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
       <name>getColour</name>
       <anchorfile>classtracktion_1_1engine_1_1MidiNote.html</anchorfile>
       <anchor>a997e4b8f1ee0f8a928c6d840714ff5f4</anchor>
