@@ -2050,6 +2050,10 @@ requires (std::is_same_v&lt;Type, <a class="el" href="classtracktion_1_1engine_1
 <tr class="memitem:a2f80ad8bd9f3d05603f28899610893c4"><td class="memTemplItemLeft" align="right" valign="top">choc::buffer::BufferView&lt; SampleType, choc::buffer::SeparateChannelLayout &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a2f80ad8bd9f3d05603f28899610893c4">toBufferView</a> (juce::AudioBuffer&lt; SampleType &gt; &amp;buffer)</td></tr>
 <tr class="memdesc:a2f80ad8bd9f3d05603f28899610893c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a juce::AudioBuffer&lt;SampleType&gt; to a choc::buffer::BufferView.  <br /></td></tr>
 <tr class="separator:a2f80ad8bd9f3d05603f28899610893c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3bbafa4195953084f57094036090b39" id="r_aa3bbafa4195953084f57094036090b39"><td class="memTemplParams" colspan="2">template&lt;typename SampleType &gt; </td></tr>
+<tr class="memitem:aa3bbafa4195953084f57094036090b39"><td class="memTemplItemLeft" align="right" valign="top">SampleType&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#aa3bbafa4195953084f57094036090b39">getRMS</a> (choc::buffer::MonoView&lt; SampleType &gt;)</td></tr>
+<tr class="memdesc:aa3bbafa4195953084f57094036090b39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the RMS of a single channel buffer.  <br /></td></tr>
+<tr class="separator:aa3bbafa4195953084f57094036090b39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba1426996eca5c89d11cfc8e1b4fb8bf" id="r_aba1426996eca5c89d11cfc8e1b4fb8bf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetracktion_1_1engine.html#a40238495220f5d933844bcfe2397d810">PanLaw</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#aba1426996eca5c89d11cfc8e1b4fb8bf">getDefaultPanLaw</a> () noexcept</td></tr>
 <tr class="separator:aba1426996eca5c89d11cfc8e1b4fb8bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a86651567d8754cdbc66448fcde7a13" id="r_a7a86651567d8754cdbc66448fcde7a13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#a7a86651567d8754cdbc66448fcde7a13">setDefaultPanLaw</a> (<a class="el" href="namespacetracktion_1_1engine.html#a40238495220f5d933844bcfe2397d810">PanLaw</a>)</td></tr>
@@ -9546,6 +9550,28 @@ template&lt;typename SampleType &gt; </div>
 
 </div>
 </div>
+<a id="aa3bbafa4195953084f57094036090b39" name="aa3bbafa4195953084f57094036090b39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3bbafa4195953084f57094036090b39">&#9670;&#160;</a></span>getRMS()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename SampleType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">SampleType tracktion::engine::getRMS </td>
+          <td>(</td>
+          <td class="paramtype">choc::buffer::MonoView&lt; SampleType &gt;&#160;</td>
+          <td class="paramname"><em>view</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the RMS of a single channel buffer. </p>
+
+</div>
+</div>
 <a id="aba1426996eca5c89d11cfc8e1b4fb8bf" name="aba1426996eca5c89d11cfc8e1b4fb8bf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aba1426996eca5c89d11cfc8e1b4fb8bf">&#9670;&#160;</a></span>getDefaultPanLaw()</h2>
 
@@ -10843,7 +10869,7 @@ template&lt;typename... Properties&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Nov 24 2025 12:39:12 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Nov 24 2025 20:12:40 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

@@ -47096,12 +47096,21 @@
     <name>tracktion::engine::ModifierNode</name>
     <filename>classtracktion_1_1engine_1_1ModifierNode.html</filename>
     <base>tracktion::graph::Node</base>
+    <member kind="enumeration">
+      <type></type>
+      <name>ClearOutputs</name>
+      <anchorfile>classtracktion_1_1engine_1_1ModifierNode.html</anchorfile>
+      <anchor>a47d84260b4f2951f2d6b6ffece494d67</anchor>
+      <arglist></arglist>
+      <enumvalue file="classtracktion_1_1engine_1_1ModifierNode.html" anchor="a47d84260b4f2951f2d6b6ffece494d67a7fa3b767c460b54a2be4d49030b349c7">no</enumvalue>
+      <enumvalue file="classtracktion_1_1engine_1_1ModifierNode.html" anchor="a47d84260b4f2951f2d6b6ffece494d67aa6105c0a611b41b08f1209506350279e">yes</enumvalue>
+    </member>
     <member kind="function">
       <type></type>
       <name>ModifierNode</name>
       <anchorfile>classtracktion_1_1engine_1_1ModifierNode.html</anchorfile>
-      <anchor>a60e9c347871a040fefeab64437b5b0e3</anchor>
-      <arglist>(std::unique_ptr&lt; Node &gt; input, tracktion::engine::Modifier::Ptr, double sampleRateToUse, int blockSizeToUse, const TrackMuteState *, tracktion::graph::PlayHeadState &amp;, bool rendering)</arglist>
+      <anchor>a8602c7a091b1f35afcd199843ba4d748</anchor>
+      <arglist>(std::unique_ptr&lt; Node &gt; input, tracktion::engine::Modifier::Ptr, double sampleRateToUse, int blockSizeToUse, const TrackMuteState *, tracktion::graph::PlayHeadState &amp;, bool rendering, ClearOutputs)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -79378,6 +79387,13 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>a2f80ad8bd9f3d05603f28899610893c4</anchor>
       <arglist>(juce::AudioBuffer&lt; SampleType &gt; &amp;buffer)</arglist>
+    </member>
+    <member kind="function">
+      <type>SampleType</type>
+      <name>getRMS</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>aa3bbafa4195953084f57094036090b39</anchor>
+      <arglist>(choc::buffer::MonoView&lt; SampleType &gt;)</arglist>
     </member>
     <member kind="function">
       <type>PanLaw</type>
