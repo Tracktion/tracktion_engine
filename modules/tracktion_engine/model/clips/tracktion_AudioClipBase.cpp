@@ -260,7 +260,7 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
     clipEffectsVisible.referTo (state, IDs::effectsVisible, nullptr);
     updateClipEffectsState();
 
-    updateLeftRightChannelActivenessFlags();
+    updateActiveChannelConfiguration();
 
     pluginList.setTrackAndClip (getTrack(), this);
     pluginList.initialise (state);
@@ -362,16 +362,32 @@ void AudioClipBase::cloneFrom (Clip* c)
     }
 }
 
-void AudioClipBase::updateLeftRightChannelActivenessFlags()
+void AudioClipBase::updateActiveChannelConfiguration()
 {
     juce::String channelMask = channels;
 
-    if (channelMask.isEmpty())
-        activeChannels = juce::AudioChannelSet::disabled();
-
-    if (channels == "r")        activeChannels.addChannel (juce::AudioChannelSet::right);
-    else if (channels == "l")   activeChannels.addChannel (juce::AudioChannelSet::left);
-    else                        activeChannels = channelSetFromSpeakerArrangementString (channelMask);
+    // Handle legacy "l" and "r" single-channel strings
+    if (channelMask == "r")
+    {
+        activeChannelConfig = ChannelConfiguration();
+        activeChannelConfig.addChannel (ChannelIndex (1, juce::AudioChannelSet::right));
+    }
+    else if (channelMask == "l")
+    {
+        activeChannelConfig = ChannelConfiguration();
+        activeChannelConfig.addChannel (ChannelIndex (0, juce::AudioChannelSet::left));
+    }
+    else if (channelMask.isEmpty())
+    {
+        // Default to stereo when no channels are specified
+        activeChannelConfig = ChannelConfiguration::stereo();
+    }
+    else
+    {
+        // Parse standard speaker arrangement string (e.g. "L R", "L R C LFE Ls Rs")
+        activeChannelConfig = ChannelConfiguration::fromChannelSet (
+            channelSetFromSpeakerArrangementString (channelMask));
+    }
 }
 
 void AudioClipBase::flushStateToValueTree()
@@ -452,58 +468,26 @@ void AudioClipBase::setPan (float p)
 }
 
 //==============================================================================
-void AudioClipBase::setLeftChannelActive (bool b)
+ChannelConfiguration AudioClipBase::getSourceChannelConfiguration()
 {
-    if (isLeftChannelActive() != b)
-    {
-        auto set = activeChannels;
-
-        if (b)
-        {
-            set.addChannel (juce::AudioChannelSet::left);
-        }
-        else
-        {
-            set.removeChannel (juce::AudioChannelSet::left);
-
-            if (set.size() == 0)
-                set.addChannel (juce::AudioChannelSet::right);
-        }
-
-        channels = set.getSpeakerArrangementAsString();
-    }
+    auto info = getWaveInfo();
+    return ChannelConfiguration::discreteChannels (info.numChannels);
 }
 
-bool AudioClipBase::isLeftChannelActive() const
+ChannelConfiguration AudioClipBase::getActiveChannelConfiguration() const
 {
-    return activeChannels.size() == 0 || activeChannels.getChannelIndexForType (juce::AudioChannelSet::left) != -1;
+    return activeChannelConfig;
 }
 
-void AudioClipBase::setRightChannelActive (bool b)
+void AudioClipBase::setActiveChannelConfiguration (const ChannelConfiguration& config)
 {
-    if (isRightChannelActive() != b)
-    {
-        auto set = activeChannels;
-
-        if (b)
-        {
-            set.addChannel (juce::AudioChannelSet::right);
-        }
-        else
-        {
-            set.removeChannel (juce::AudioChannelSet::right);
-
-            if (set.size() == 0)
-                set.addChannel (juce::AudioChannelSet::left);
-        }
-
-        channels = set.getSpeakerArrangementAsString();
-    }
+    channels = config.toChannelSet().getSpeakerArrangementAsString();
 }
 
-bool AudioClipBase::isRightChannelActive() const
+ChannelConfiguration AudioClipBase::getOutputChannelConfiguration() const
 {
-    return activeChannels.size() == 0 || activeChannels.getChannelIndexForType (juce::AudioChannelSet::right) != -1;
+    // For now, return active channels. In future, this will consider clip effects.
+    return activeChannelConfig;
 }
 
 //==============================================================================
@@ -2420,7 +2404,7 @@ void AudioClipBase::valueTreePropertyChanged (juce::ValueTree& tree, const juce:
         else if (id == IDs::channels)
         {
             channels.forceUpdateOfCachedValue();
-            updateLeftRightChannelActivenessFlags();
+            updateActiveChannelConfiguration();
             changed();
         }
         else if (id == IDs::proxyAllowed)
