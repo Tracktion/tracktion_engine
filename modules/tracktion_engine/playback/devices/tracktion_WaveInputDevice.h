@@ -59,7 +59,7 @@ public:
     void setMergeMode (const juce::String&);
     juce::String getMergeMode() const;
 
-    const std::vector<ChannelIndex>& getChannels() const noexcept   { return deviceDescription.channels; }
+    const ChannelConfiguration& getChannels() const noexcept        { return deviceDescription.channels; }
     const juce::AudioChannelSet& getChannelSet() const noexcept     { return channelSet; }
 
     //==============================================================================

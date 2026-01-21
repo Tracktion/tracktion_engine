@@ -10,93 +10,6 @@
 
 namespace tracktion::inline engine {
 
-//==============================================================================
-ChannelIndex::ChannelIndex() {}
-
-ChannelIndex::ChannelIndex (int index, juce::AudioChannelSet::ChannelType c)
-    : indexInDevice (index), channel (c)
-{
-}
-
-ChannelIndex ChannelIndex::createMono (int indexInDevice)
-{
-    return ChannelIndex (indexInDevice, juce::AudioChannelSet::ChannelType (juce::AudioChannelSet::discreteChannel0 + indexInDevice));
-}
-
-bool ChannelIndex::operator== (const ChannelIndex& other) const  { return indexInDevice == other.indexInDevice && channel == other.channel; }
-bool ChannelIndex::operator!= (const ChannelIndex& other) const  { return ! operator== (other); }
-
-juce::String createDescriptionOfChannels (const std::vector<ChannelIndex>& channels)
-{
-    juce::MemoryOutputStream desc;
-    bool isFirst = true;
-
-    for (const auto& ci : channels)
-    {
-        if (! isFirst)
-            desc << ", ";
-        else
-            isFirst = false;
-
-        desc << ci.indexInDevice << " (" << juce::AudioChannelSet::getAbbreviatedChannelTypeName (ci.channel) << ")";
-    }
-
-    return desc.toString();
-}
-
-juce::AudioChannelSet createChannelSet (const std::vector<ChannelIndex>& channels)
-{
-    juce::AudioChannelSet channelSet;
-
-    for (const auto& ci : channels)
-        channelSet.addChannel (ci.channel);
-
-    return channelSet;
-}
-
-juce::AudioChannelSet::ChannelType channelTypeFromAbbreviatedName (const juce::String& abbreviatedName)
-{
-    struct NamedChannelTypeCache
-    {
-        NamedChannelTypeCache()
-        {
-            for (int i = 0; i < juce::AudioChannelSet::discreteChannel0; ++i)
-            {
-                const auto channelType = static_cast<juce::AudioChannelSet::ChannelType> (i);
-                auto name = juce::AudioChannelSet::getAbbreviatedChannelTypeName (channelType);
-
-                if (name.isNotEmpty())
-                    map[name] = channelType;
-            }
-        }
-
-        std::map<juce::String, juce::AudioChannelSet::ChannelType> map;
-    };
-
-    static NamedChannelTypeCache cache;
-    const auto result = cache.map.find (abbreviatedName);
-
-    if (result != cache.map.end())
-        return result->second;
-
-    return juce::AudioChannelSet::unknown;
-}
-
-juce::AudioChannelSet channelSetFromSpeakerArrangementString (const juce::String& arrangement)
-{
-    juce::AudioChannelSet cs;
-
-    for (auto& channel : juce::StringArray::fromTokens (arrangement, false))
-    {
-        const auto ct = channelTypeFromAbbreviatedName (channel);
-
-        if (ct != juce::AudioChannelSet::unknown)
-            cs.addChannel (ct);
-    }
-
-    return cs;
-}
-
 static uint32_t countTotalSourceChannels (const std::vector<WaveDeviceDescription>& list)
 {
     uint32_t total = 0;
@@ -111,7 +24,7 @@ static uint32_t countTotalSourceChannels (const std::vector<WaveDeviceDescriptio
 //==============================================================================
 WaveDeviceDescription::WaveDeviceDescription() {}
 
-WaveDeviceDescription::WaveDeviceDescription (const juce::String& nm, std::vector<ChannelIndex> chans, bool isEnabled)
+WaveDeviceDescription::WaveDeviceDescription (const juce::String& nm, ChannelConfiguration chans, bool isEnabled)
     : name (nm), channels (std::move (chans)), enabled (isEnabled)
 {
 }
@@ -127,57 +40,23 @@ WaveDeviceDescription WaveDeviceDescription::withNumChannels (const juce::String
 
 void WaveDeviceDescription::setNumChannels (uint32_t newNumChannels)
 {
-    setNumChannels (getDeviceChannelRange().first, newNumChannels);
+    setNumChannels (static_cast<uint32_t> (channels.getChannelRange().first), newNumChannels);
 }
 
 void WaveDeviceDescription::setNumChannels (uint32_t firstChannelIndexInDevice, uint32_t newNumChannels)
 {
-    channels.clear();
-
-    if (newNumChannels == 2)
-    {
-        channels.push_back (ChannelIndex ((int) firstChannelIndexInDevice, juce::AudioChannelSet::left));
-        channels.push_back (ChannelIndex ((int) firstChannelIndexInDevice + 1, juce::AudioChannelSet::right));
-    }
-    else if (newNumChannels > 0)
-    {
-        for (uint32_t i = 0; i < newNumChannels; ++i)
-            channels.push_back (ChannelIndex::createMono ((int) (firstChannelIndexInDevice + i)));
-    }
+    channels.setNumChannels (static_cast<int> (newNumChannels), static_cast<int> (firstChannelIndexInDevice));
 }
 
 uint32_t WaveDeviceDescription::getNumChannels() const
 {
-    return static_cast<uint32_t> (channels.size());
+    return static_cast<uint32_t> (channels.getNumChannels());
 }
 
 std::pair<uint32_t, uint32_t> WaveDeviceDescription::getDeviceChannelRange() const
 {
-    uint32_t low = 0, high = 0, numCounted = 0;
-
-    for (const auto& channel : channels)
-    {
-        if (channel.indexInDevice >= 0)
-        {
-            auto index = static_cast<uint32_t> (channel.indexInDevice);
-
-            if (numCounted++ == 0)
-            {
-                low = index;
-                high = low;
-            }
-            else
-            {
-                low = std::min (low, index);
-                high = std::max (high, index);
-            }
-        }
-    }
-
-    if (numCounted == 0)
-        return { 0, 0 };
-
-    return { low, high + 1 };
+    auto range = channels.getChannelRange();
+    return { static_cast<uint32_t> (range.first), static_cast<uint32_t> (range.second) };
 }
 
 bool WaveDeviceDescription::operator== (const WaveDeviceDescription& other) const
@@ -193,27 +72,12 @@ bool WaveDeviceDescription::operator!= (const WaveDeviceDescription& other) cons
 choc::value::Value WaveDeviceDescription::toJSON() const
 {
     return choc::json::create ("enabled", enabled,
-                               "channels", choc::value::createArray ((uint32_t) channels.size(),
-                                               [&] (uint32_t index)
-                                               {
-                                                   auto& channel = channels[index];
-                                                   return choc::json::create ("index", channel.indexInDevice,
-                                                                              "type", juce::AudioChannelSet::getAbbreviatedChannelTypeName (channel.channel).toStdString());
-                                               }));
+                               "channels", channels.toJSON());
 }
 
 WaveDeviceDescription WaveDeviceDescription::fromJSON (const choc::value::ValueView& json)
 {
-    std::vector<ChannelIndex> chans;
-
-    for (const auto& channel : json["channels"])
-    {
-        auto index = channel["index"].getWithDefault<int> (-1);
-        auto type = channel["type"].toString();
-        chans.push_back (ChannelIndex (index, channelTypeFromAbbreviatedName (type)));
-    }
-
-    return { {}, std::move (chans), json["enabled"].getWithDefault<bool> (true) };
+    return { {}, ChannelConfiguration::fromJSON (json["channels"]), json["enabled"].getWithDefault<bool> (true) };
 }
 
 std::string WaveDeviceDescription::toString() const

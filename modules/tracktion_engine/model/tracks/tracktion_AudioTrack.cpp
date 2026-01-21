@@ -121,8 +121,7 @@ AudioTrack::AudioTrack (Edit& ed, const juce::ValueTree& v)
     {
         WaveDeviceDescription desc;
         desc.name = itemIDString;
-        desc.channels = { ChannelIndex (0, juce::AudioChannelSet::left),
-                          ChannelIndex (1, juce::AudioChannelSet::right) };
+        desc.channels = ChannelConfiguration::stereo();
 
         waveInputDevice = std::make_unique<WaveInputDevice> (edit.engine, desc, InputDevice::trackWaveDevice);
 

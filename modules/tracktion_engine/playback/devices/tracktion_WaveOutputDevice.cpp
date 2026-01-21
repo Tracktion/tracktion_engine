@@ -13,7 +13,7 @@ namespace tracktion::inline engine {
 WaveOutputDevice::WaveOutputDevice (Engine& e, const WaveDeviceDescription& desc)
     : OutputDevice (e, desc.name, "waveout_" + juce::String::toHexString (desc.name.hashCode())),
       deviceDescription (desc),
-      channelSet (createChannelSet (desc.channels)),
+      channelSet (desc.channels.toChannelSet()),
       ditheringEnabled (false),
       leftRightReversed (false)
 {

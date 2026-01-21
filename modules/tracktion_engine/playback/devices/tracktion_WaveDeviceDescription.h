@@ -11,55 +11,15 @@
 namespace tracktion::inline engine {
 
 //==============================================================================
-/** Describes a channel of a WaveInputDevice or WaveOutputDevice by specifying the
-    channel index in the global device's audio buffer and the purpose as an
-    AudioChannelSet::ChannelType e.g. left, right, leftSurround etc.
-*/
-struct ChannelIndex
-{
-    /** Creates a default, invalid ChannelIndex. */
-    ChannelIndex();
-
-    /** Creates a ChannelIndex for a given index and a channel type. */
-    ChannelIndex (int indexInDevice, juce::AudioChannelSet::ChannelType);
-
-    static ChannelIndex createMono (int indexInDevice);
-
-    bool operator== (const ChannelIndex&) const;
-    bool operator!= (const ChannelIndex&) const;
-
-    int indexInDevice = -1; // Index of this channel in the device's full channel list
-    juce::AudioChannelSet::ChannelType channel = juce::AudioChannelSet::unknown;
-};
-
-/** Creates a String description of the channels. Useful for debugging. */
-juce::String createDescriptionOfChannels (const std::vector<ChannelIndex>&);
-
-/** Creates an AudioChannelSet for a list of ChannelIndexes. */
-juce::AudioChannelSet createChannelSet (const std::vector<ChannelIndex>&);
-
-/** Returns the ChannelType for an abbreviated name.
-    @see AudioChannelSet::getAbbreviatedChannelTypeName.
-*/
-juce::AudioChannelSet::ChannelType channelTypeFromAbbreviatedName (const juce::String&);
-
-/** Creates an AudioChannelSet from a list of abbreviated channel names.
-    E.g. "L R"
-*/
-juce::AudioChannelSet channelSetFromSpeakerArrangementString (const juce::String&);
-
-
-//==============================================================================
-/** Describes a group of audio channels from a physical device, which are to be
-    treated as a WaveInputDevice or WaveOutputDevice.
-*/
+/// Describes a group of audio channels from a physical device, which are to be
+/// treated as a WaveInputDevice or WaveOutputDevice.
 struct WaveDeviceDescription
 {
     /// Creates an invalid device description.
     WaveDeviceDescription();
 
     /// Creates a WaveDeviceDescription for a given set of channels.
-    WaveDeviceDescription (const juce::String& name, std::vector<ChannelIndex>, bool isEnabled);
+    WaveDeviceDescription (const juce::String& name, ChannelConfiguration, bool isEnabled);
 
     /// Creates a canonical WaveDeviceDescription for a number of channels
     static WaveDeviceDescription withNumChannels (const juce::String& name, uint32_t firstChannelIndexInDevice,
@@ -79,7 +39,7 @@ struct WaveDeviceDescription
     bool operator!= (const WaveDeviceDescription&) const;
 
     juce::String name;
-    std::vector<ChannelIndex> channels;
+    ChannelConfiguration channels;
     bool enabled = true;
 };
 

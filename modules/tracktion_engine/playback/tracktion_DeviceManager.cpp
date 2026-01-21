@@ -730,7 +730,7 @@ void DeviceManager::handleAsyncUpdate()
         newWaveInputs.add (wi);
 
         TRACKTION_LOG_DEVICE ("Wave In: " + wi->getName() + (wi->isEnabled() ? " (enabled): " : ": ")
-                               + createDescriptionOfChannels (wi->getChannels()));
+                               + wi->getChannels().getDescription());
     }
 
     for (auto& d : deviceDescriptionList.outputs)
@@ -743,7 +743,7 @@ void DeviceManager::handleAsyncUpdate()
                 newActiveOutChannels.push_back (ci.indexInDevice);
 
         TRACKTION_LOG_DEVICE ("Wave Out: " + wo->getName() + (wo->isEnabled() ? " (enabled): " : ": ")
-                               + createDescriptionOfChannels (wo->getChannels()));
+                               + wo->getChannels().getDescription());
     }
 
     clearAllContextDevices();

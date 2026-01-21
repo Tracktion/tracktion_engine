@@ -1368,7 +1368,7 @@ WaveInputDevice::WaveInputDevice (Engine& e, const WaveDeviceDescription& desc, 
     : InputDevice (e, desc.name, "wavein_" + juce::String::toHexString (desc.name.hashCode())),
       deviceDescription (desc),
       deviceType (t),
-      channelSet (createChannelSet (desc.channels))
+      channelSet (desc.channels.toChannelSet())
 {
     enabled = desc.enabled;
     loadProps();
