@@ -87,6 +87,14 @@ public:
     bool canPlayMidi() const;
 
     //==============================================================================
+    /** Returns the channel configuration for this track, derived from its clips.
+        If all clips have the same channel format, returns that format.
+        If clips differ, returns the largest format.
+        Returns stereo if there are no clips.
+    */
+    ChannelConfiguration getChannelConfiguration() const;
+
+    //==============================================================================
     /** Returns the ClipSlotList for this track. */
     ClipSlotList& getClipSlotList();
 

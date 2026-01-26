@@ -607,6 +607,38 @@ bool AudioTrack::canPlayMidi() const
 }
 
 //==============================================================================
+ChannelConfiguration AudioTrack::getChannelConfiguration() const
+{
+    ChannelConfiguration result;
+    bool hasAnyClips = false;
+
+    for (auto clip : getClips())
+    {
+        if (auto audioClip = dynamic_cast<AudioClipBase*> (clip))
+        {
+            auto clipConfig = audioClip->getActiveChannelConfiguration();
+
+            if (! hasAnyClips)
+            {
+                result = clipConfig;
+                hasAnyClips = true;
+            }
+            else if (clipConfig.getNumChannels() > result.getNumChannels())
+            {
+                // Use the largest format when clips differ
+                result = clipConfig;
+            }
+        }
+    }
+
+    // Default to stereo if no audio clips
+    if (! hasAnyClips)
+        return ChannelConfiguration::stereo();
+
+    return result;
+}
+
+//==============================================================================
 ClipSlotList& AudioTrack::getClipSlotList()
 {
     if (! clipSlotList)

@@ -13,6 +13,7 @@
 #define TRACKTION_UNIT_TESTS_ALGORITHM                  1
 
 // Defined in tracktion_engine
+#define GRAPH_UNIT_TESTS_CHANNELREMAPPINGNODE           1
 #define GRAPH_UNIT_TESTS_WAVENODE                       1
 #define GRAPH_UNIT_TESTS_MIDINODE                       1
 #define GRAPH_UNIT_TESTS_RACKNODE                       1

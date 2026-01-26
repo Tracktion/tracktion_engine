@@ -188,6 +188,7 @@ using namespace std::literals;
 #include "playback/graph/tracktion_DynamicOffsetNode.h"
 #include "playback/graph/tracktion_FadeInOutNode.h"
 #include "playback/graph/tracktion_PluginNode.h"
+#include "playback/graph/tracktion_ChannelRemappingNode.h"
 #include "playback/graph/tracktion_InsertSendNode.h"
 #include "playback/graph/tracktion_LevelMeasurerProcessingNode.h"
 #include "playback/graph/tracktion_LevelMeasuringNode.h"
@@ -241,6 +242,8 @@ using namespace std::literals;
 #include "playback/graph/tracktion_RackReturnNode.cpp"
 #include "playback/graph/tracktion_PluginNode.cpp"
 #include "playback/graph/tracktion_PluginNodeBenchmarks.test.cpp"
+#include "playback/graph/tracktion_ChannelRemappingNode.cpp"
+#include "playback/graph/tracktion_ChannelRemappingNode.test.cpp"
 #include "playback/graph/tracktion_ModifierNode.cpp"
 
 #include "playback/graph/tracktion_TrackMutingNode.cpp"
