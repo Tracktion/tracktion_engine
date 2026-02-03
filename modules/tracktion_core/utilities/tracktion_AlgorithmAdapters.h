@@ -112,6 +112,13 @@ inline typename Container::value_type get_or (const Container& container, IndexT
     return defaultValue;
 }
 
+template<class T, std::ranges::input_range R>
+void append_range (std::vector<T>& v, R&& r)
+{
+    std::ranges::copy (r, std::back_inserter (v));
+}
+
+
 template<class Type>
 bool assign_if_valid (Type& dest, const std::optional<Type>& src)
 {
