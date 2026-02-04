@@ -19,5 +19,6 @@ var searchData=
   ['waveoutputdevice_16',['waveoutputdevice',['../classtracktion_1_1engine_1_1WaveOutputDevice.html',1,'tracktion::engine::WaveOutputDevice'],['../classtracktion_1_1engine_1_1WaveOutputDevice.html',1,'tracktion::WaveOutputDevice']]],
   ['waveoutputdeviceinstance_17',['waveoutputdeviceinstance',['../classtracktion_1_1engine_1_1WaveOutputDeviceInstance.html',1,'tracktion::engine::WaveOutputDeviceInstance'],['../classtracktion_1_1engine_1_1WaveOutputDeviceInstance.html',1,'tracktion::WaveOutputDeviceInstance']]],
   ['windowstate_18',['windowstate',['../structtracktion_1_1engine_1_1Plugin_1_1WindowState.html',1,'tracktion::engine::Plugin::WindowState'],['../structtracktion_1_1engine_1_1RackType_1_1WindowState.html',1,'tracktion::engine::RackType::WindowState']]],
-  ['wire_19',['wire',['../structtracktion_1_1engine_1_1PatchBayPlugin_1_1Wire.html',1,'tracktion::engine::PatchBayPlugin::Wire'],['../structtracktion_1_1engine_1_1Plugin_1_1Wire.html',1,'tracktion::engine::Plugin::Wire']]]
+  ['wire_19',['wire',['../structtracktion_1_1engine_1_1PatchBayPlugin_1_1Wire.html',1,'tracktion::engine::PatchBayPlugin::Wire'],['../structtracktion_1_1engine_1_1Plugin_1_1Wire.html',1,'tracktion::engine::Plugin::Wire']]],
+  ['writeoptions_20',['WriteOptions',['../structtracktion_1_1engine_1_1dawproject_1_1WriteOptions.html',1,'tracktion::engine::dawproject']]]
 ];
