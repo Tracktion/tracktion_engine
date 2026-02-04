@@ -37,7 +37,7 @@ tl::expected<std::unique_ptr<juce::XmlElement>, juce::String> DAWprojectExporter
     // Arrangement element
     createArrangement (*project);
 
-    return std::move (project);
+    return project;
 }
 
 //==============================================================================
