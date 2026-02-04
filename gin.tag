@@ -7009,59 +7009,59 @@
       <arglist>(int numSamples)</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>TRACKTION_NO_TSAN bool</type>
       <name>write</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioFifo.html</anchorfile>
-      <anchor>a3cffe9a5d1e7f449f79ad43af9050a00</anchor>
+      <anchor>ab976f236b1c5fc8ccf18761cae4aa18e</anchor>
       <arglist>(const juce::AudioBuffer&lt; float &gt; &amp;src)</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>TRACKTION_NO_TSAN bool</type>
       <name>write</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioFifo.html</anchorfile>
-      <anchor>a1f0d64259a793120dadda1a56674e2dc</anchor>
+      <anchor>aef6dc6ea8b6c430840069b9c441bd240</anchor>
       <arglist>(const juce::AudioBuffer&lt; float &gt; &amp;src, int startSample, int numSamples)</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>TRACKTION_NO_TSAN bool</type>
       <name>write</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioFifo.html</anchorfile>
-      <anchor>acb4fb1e587400dacaf1a97bbbecbeb59</anchor>
+      <anchor>aa7901b53f94b6838c9585f2e60343afc</anchor>
       <arglist>(const float *const *data, int numSamples)</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>TRACKTION_NO_TSAN bool</type>
       <name>writeSilence</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioFifo.html</anchorfile>
-      <anchor>a77c7fb6e43a5a2b2ef204522a6d09911</anchor>
+      <anchor>a47dd9024dc290061f791ae3482611539</anchor>
       <arglist>(int numSamples)</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>TRACKTION_NO_TSAN bool</type>
       <name>read</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioFifo.html</anchorfile>
-      <anchor>adc8d0358ad595b42c70a3593af157fdf</anchor>
+      <anchor>a2ebef535ae07db64293899b08bb19803</anchor>
       <arglist>(juce::AudioBuffer&lt; float &gt; &amp;dest, int startSampleInDestBuffer)</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>TRACKTION_NO_TSAN bool</type>
       <name>read</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioFifo.html</anchorfile>
-      <anchor>aa4e7a0bb63e60e1d19e4cb0080221f44</anchor>
+      <anchor>a7efbeeabc53ed2f8282f042187833636</anchor>
       <arglist>(juce::AudioBuffer&lt; float &gt; &amp;dest, int startSampleInDestBuffer, int numSamples)</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>TRACKTION_NO_TSAN bool</type>
       <name>readAdding</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioFifo.html</anchorfile>
-      <anchor>a05bfec0cde91df5f6c98780adb2f77a7</anchor>
+      <anchor>aacf8152a11e7dbba3afacf512c456502</anchor>
       <arglist>(juce::AudioBuffer&lt; float &gt; &amp;dest, int startSampleInDestBuffer)</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>TRACKTION_NO_TSAN bool</type>
       <name>readAdding</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioFifo.html</anchorfile>
-      <anchor>a33562b4541126738fef534c8338bb560</anchor>
+      <anchor>a6025ca8f27d4fb82c5d0e4b3fa5a0443</anchor>
       <arglist>(juce::AudioBuffer&lt; float &gt; &amp;dest, int startSampleInDestBuffer, int numSamples)</arglist>
     </member>
   </compound>
@@ -7118,31 +7118,31 @@
       <arglist>(int numFrames)</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>TRACKTION_NO_TSAN bool</type>
       <name>write</name>
       <anchorfile>classtracktion_1_1graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a9088fc0241d0f97c308d8c57255d7ca8</anchor>
+      <anchor>a1fc6dace0d977f40f1a2ab0bdf586b39</anchor>
       <arglist>(choc::buffer::ChannelArrayView&lt; float &gt; block)</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>TRACKTION_NO_TSAN bool</type>
       <name>writeSilence</name>
       <anchorfile>classtracktion_1_1graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a965f2fa4561c44350458fb816ebcf743</anchor>
+      <anchor>afd7ef7c5dbb45ed99c10fbd462d08603</anchor>
       <arglist>(choc::buffer::FrameCount numFrames)</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>TRACKTION_NO_TSAN bool</type>
       <name>readAdding</name>
       <anchorfile>classtracktion_1_1graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a0c9727bc6a9bebb0beea4a3bf5f80521</anchor>
+      <anchor>ae13bbb2609b20b41b5a2480d72e453db</anchor>
       <arglist>(choc::buffer::ChannelArrayView&lt; float &gt; dest)</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>TRACKTION_NO_TSAN bool</type>
       <name>readOverwriting</name>
       <anchorfile>classtracktion_1_1graph_1_1AudioFifo.html</anchorfile>
-      <anchor>a0e28184f89311310cf679d2b865a047a</anchor>
+      <anchor>aca32cb2201d52c87a19eb075f04684cb</anchor>
       <arglist>(choc::buffer::ChannelArrayView&lt; float &gt; dest)</arglist>
     </member>
     <member kind="function">
