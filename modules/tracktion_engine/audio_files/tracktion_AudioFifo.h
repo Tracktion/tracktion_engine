@@ -45,12 +45,12 @@ public:
         }
     }
 
-    bool write (const juce::AudioBuffer<float>& src)
+    TRACKTION_NO_TSAN bool write (const juce::AudioBuffer<float>& src)
     {
         return write (src.getArrayOfReadPointers(), src.getNumSamples());
     }
 
-    bool write (const juce::AudioBuffer<float>& src, int startSample, int numSamples)
+    TRACKTION_NO_TSAN bool write (const juce::AudioBuffer<float>& src, int startSample, int numSamples)
     {
         if (numSamples <= 0)
             return true;
@@ -77,7 +77,7 @@ public:
         return true;
     }
 
-    bool write (const float* const* data, int numSamples)
+    TRACKTION_NO_TSAN bool write (const float* const* data, int numSamples)
     {
         if (numSamples <= 0)
             return true;
@@ -98,7 +98,7 @@ public:
         return true;
     }
 
-    bool writeSilence (int numSamples)
+    TRACKTION_NO_TSAN bool writeSilence (int numSamples)
     {
         if (numSamples <= 0)
             return true;
@@ -117,12 +117,12 @@ public:
         return true;
     }
 
-    bool read (juce::AudioBuffer<float>& dest, int startSampleInDestBuffer)
+    TRACKTION_NO_TSAN bool read (juce::AudioBuffer<float>& dest, int startSampleInDestBuffer)
     {
         return read (dest, startSampleInDestBuffer, dest.getNumSamples());
     }
 
-    bool read (juce::AudioBuffer<float>& dest, int startSampleInDestBuffer, int numSamples)
+    TRACKTION_NO_TSAN bool read (juce::AudioBuffer<float>& dest, int startSampleInDestBuffer, int numSamples)
     {
         int start1, size1, start2, size2;
         fifo.prepareToRead (numSamples, start1, size1, start2, size2);
@@ -145,12 +145,12 @@ public:
         return true;
     }
 
-    bool readAdding (juce::AudioBuffer<float>& dest, int startSampleInDestBuffer)
+    TRACKTION_NO_TSAN bool readAdding (juce::AudioBuffer<float>& dest, int startSampleInDestBuffer)
     {
         return readAdding (dest, startSampleInDestBuffer, dest.getNumSamples());
     }
 
-    bool readAdding (juce::AudioBuffer<float>& dest, int startSampleInDestBuffer, int numSamples)
+    TRACKTION_NO_TSAN bool readAdding (juce::AudioBuffer<float>& dest, int startSampleInDestBuffer, int numSamples)
     {
         int start1, size1, start2, size2;
         fifo.prepareToRead (numSamples, start1, size1, start2, size2);

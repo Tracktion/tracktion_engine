@@ -49,7 +49,7 @@ public:
         }
     }
 
-    bool write (choc::buffer::ChannelArrayView<float> block)
+    TRACKTION_NO_TSAN bool write (choc::buffer::ChannelArrayView<float> block)
     {
         jassert (block.getNumChannels() <= buffer.getNumChannels());
 
@@ -75,7 +75,7 @@ public:
         return true;
     }
 
-    bool writeSilence (choc::buffer::FrameCount numFrames)
+    TRACKTION_NO_TSAN bool writeSilence (choc::buffer::FrameCount numFrames)
     {
         if (numFrames == 0)
             return true;
@@ -99,7 +99,7 @@ public:
         return true;
     }
 
-    bool readAdding (choc::buffer::ChannelArrayView<float> dest)
+    TRACKTION_NO_TSAN bool readAdding (choc::buffer::ChannelArrayView<float> dest)
     {
         jassert (dest.getNumChannels() <= buffer.getNumChannels());
 
@@ -125,7 +125,7 @@ public:
         return true;
     }
 
-    bool readOverwriting (choc::buffer::ChannelArrayView<float> dest)
+    TRACKTION_NO_TSAN bool readOverwriting (choc::buffer::ChannelArrayView<float> dest)
     {
         jassert (dest.getNumChannels() <= buffer.getNumChannels());
 
