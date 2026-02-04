@@ -86,6 +86,11 @@ using namespace std::literals;
 #include "project/tracktion_ProjectManager.cpp"
 #include "project/tracktion_ProjectSearchIndex.cpp"
 
+#include "project/dawproject/tracktion_DAWproject.cpp"
+#include "project/dawproject/tracktion_DAWprojectImport.cpp"
+#include "project/dawproject/tracktion_DAWprojectExport.cpp"
+#include "project/dawproject/tracktion_DAWproject.test.cpp"
+
 #ifdef __GNUC__
  #pragma GCC diagnostic pop
 #endif

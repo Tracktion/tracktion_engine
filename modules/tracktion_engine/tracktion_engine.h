@@ -617,6 +617,11 @@ namespace tracktion { inline namespace engine
 
 #include "model/edit/tracktion_EditUtilities.h"
 
+#include "project/dawproject/tracktion_DAWprojectMapping.h"
+#include "project/dawproject/tracktion_DAWproject.h"
+#include "project/dawproject/tracktion_DAWprojectImport.h"
+#include "project/dawproject/tracktion_DAWprojectExport.h"
+
 #if JUCE_ANDROID
  #include "playback/tracktion_ScopedSteadyLoad.h"
 #endif
