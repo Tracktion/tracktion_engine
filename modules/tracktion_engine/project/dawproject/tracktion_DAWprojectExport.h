@@ -56,6 +56,7 @@ private:
     void exportMidiClip (juce::XmlElement& clipElement, MidiClip& clip);
     juce::XmlElement* createNotesElement (juce::XmlElement& parent, MidiClip& clip);
     juce::XmlElement* createNoteElement (juce::XmlElement& parent, const MidiNote& note);
+    void createControllerLanes (juce::XmlElement& parent, MidiClip& clip);
 
     // Plugin export
     juce::XmlElement* createDevices (juce::XmlElement& parent, Track& track);

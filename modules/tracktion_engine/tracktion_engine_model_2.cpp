@@ -86,6 +86,9 @@ using namespace std::literals;
 #include "project/tracktion_ProjectManager.cpp"
 #include "project/tracktion_ProjectSearchIndex.cpp"
 
+#include "project/dawproject/tracktion_DAWprojectMapping.h"
+#include "project/dawproject/tracktion_DAWprojectImport.h"
+#include "project/dawproject/tracktion_DAWprojectExport.h"
 #include "project/dawproject/tracktion_DAWproject.cpp"
 #include "project/dawproject/tracktion_DAWprojectImport.cpp"
 #include "project/dawproject/tracktion_DAWprojectExport.cpp"

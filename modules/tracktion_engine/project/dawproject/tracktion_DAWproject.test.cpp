@@ -238,8 +238,11 @@ TEST_SUITE ("tracktion_engine")
         REQUIRE (clipElement != nullptr);
         CHECK_EQ (clipElement->getStringAttribute ("name"), "Test MIDI Clip");
 
-        // Check notes
-        auto* notes = clipElement->getChildByName ("Notes");
+        // Check notes (Notes is now inside a Lanes element within the Clip)
+        auto* clipLanes = clipElement->getChildByName ("Lanes");
+        REQUIRE (clipLanes != nullptr);
+
+        auto* notes = clipLanes->getChildByName ("Notes");
         REQUIRE (notes != nullptr);
 
         int noteCount = 0;
@@ -442,10 +445,12 @@ TEST_SUITE ("tracktion_engine")
         const int numTracks = 8;
         const int clipsPerTrack = 6;
         const int notesPerClip = 100;
+        const int controllerEventsPerClip = 50;
         const double clipLength = 16.0; // beats
 
-        // Track total notes for verification
+        // Track totals for verification
         int totalNotesCreated = 0;
+        int totalControllerEventsCreated = 0;
         std::vector<juce::String> trackNames;
 
         // Create multiple tracks with MIDI clips
@@ -489,11 +494,51 @@ TEST_SUITE ("tracktion_engine")
                                       velocity, 0, nullptr);
                     ++totalNotesCreated;
                 }
+
+                // Generate random controller events
+                for (int cc = 0; cc < controllerEventsPerClip; ++cc)
+                {
+                    double beatPos = random.nextDouble() * clipLength;
+
+                    // Mix of different controller types
+                    int controllerType;
+                    int controllerValue;
+
+                    int typeChoice = random.nextInt (5);
+                    switch (typeChoice)
+                    {
+                        case 0: // Modulation wheel (CC 1)
+                            controllerType = 1;
+                            controllerValue = random.nextInt (128) << 7;
+                            break;
+                        case 1: // Expression (CC 11)
+                            controllerType = 11;
+                            controllerValue = random.nextInt (128) << 7;
+                            break;
+                        case 2: // Sustain pedal (CC 64)
+                            controllerType = 64;
+                            controllerValue = (random.nextBool() ? 127 : 0) << 7;
+                            break;
+                        case 3: // Pitch bend
+                            controllerType = MidiControllerEvent::pitchWheelType;
+                            controllerValue = random.nextInt (16384);
+                            break;
+                        default: // Channel pressure
+                            controllerType = MidiControllerEvent::channelPressureType;
+                            controllerValue = random.nextInt (128) << 7;
+                            break;
+                    }
+
+                    sequence.addControllerEvent (BeatPosition::fromBeats (beatPos),
+                                                 controllerType, controllerValue, nullptr);
+                    ++totalControllerEventsCreated;
+                }
             }
         }
 
         INFO ("Created " << numTracks << " tracks with " << clipsPerTrack << " clips each");
         INFO ("Total notes created: " << totalNotesCreated);
+        INFO ("Total controller events created: " << totalControllerEventsCreated);
 
         // Write to file
         juce::TemporaryFile tempFile (".dawproject");
@@ -530,8 +575,9 @@ TEST_SUITE ("tracktion_engine")
             CHECK_MESSAGE (found, "Track not found: " << trackName);
         }
 
-        // Count total imported notes
+        // Count total imported notes and controller events
         int totalNotesImported = 0;
+        int totalControllerEventsImported = 0;
         for (auto* track : importedTracks)
         {
             for (auto* clip : track->getClips())
@@ -539,12 +585,15 @@ TEST_SUITE ("tracktion_engine")
                 if (auto* midiClip = dynamic_cast<MidiClip*> (clip))
                 {
                     totalNotesImported += midiClip->getSequence().getNotes().size();
+                    totalControllerEventsImported += midiClip->getSequence().getControllerEvents().size();
                 }
             }
         }
 
         INFO ("Total notes imported: " << totalNotesImported);
+        INFO ("Total controller events imported: " << totalControllerEventsImported);
         CHECK_EQ (totalNotesImported, totalNotesCreated);
+        CHECK_EQ (totalControllerEventsImported, totalControllerEventsCreated);
 
         // Verify tempo was preserved
         auto* originalTempo = edit->tempoSequence.getTempo (0);
@@ -569,8 +618,9 @@ TEST_SUITE ("tracktion_engine")
         REQUIRE (track != nullptr);
         track->setName ("StressTestTrack");
 
-        // Create one very long clip with thousands of notes
+        // Create one very long clip with thousands of notes and controller data
         const int numNotes = 5000;
+        const int numControllerEvents = 2000;
         const double clipLengthBeats = 1000.0;
 
         auto midiClip = track->insertMIDIClip ({ 0_tp, TimePosition::fromSeconds (clipLengthBeats) }, nullptr);
@@ -602,8 +652,30 @@ TEST_SUITE ("tracktion_engine")
             currentBeat += 0.25 + random.nextDouble() * 0.75; // Advance by 1/4 to 1 beat
         }
 
+        // Generate continuous controller data (mod wheel automation)
+        for (int cc = 0; cc < numControllerEvents; ++cc)
+        {
+            double beatPos = (cc / static_cast<double> (numControllerEvents)) * clipLengthBeats;
+
+            // Sine wave modulation
+            double phase = beatPos * 0.1;
+            int modValue = static_cast<int> ((std::sin (phase) * 0.5 + 0.5) * 127.0) << 7;
+
+            sequence.addControllerEvent (BeatPosition::fromBeats (beatPos), 1, modValue, nullptr);
+        }
+
+        // Add pitch bend ramps
+        for (int pb = 0; pb < numControllerEvents / 4; ++pb)
+        {
+            double beatPos = random.nextDouble() * clipLengthBeats;
+            int bendValue = random.nextInt (16384);
+            sequence.addControllerEvent (BeatPosition::fromBeats (beatPos),
+                                         MidiControllerEvent::pitchWheelType, bendValue, nullptr);
+        }
+
         int notesCreated = sequence.getNotes().size();
-        INFO ("Created " << notesCreated << " notes in a single clip");
+        int controllerEventsCreated = sequence.getControllerEvents().size();
+        INFO ("Created " << notesCreated << " notes and " << controllerEventsCreated << " controller events");
 
         // Export
         juce::TemporaryFile tempFile (".dawproject");
@@ -624,6 +696,7 @@ TEST_SUITE ("tracktion_engine")
 
         // Find our track and clip
         int notesImported = 0;
+        int controllerEventsImported = 0;
         for (auto* importedTrack : getAudioTracks (*importedEdit))
         {
             if (importedTrack->getName() == "StressTestTrack")
@@ -633,13 +706,16 @@ TEST_SUITE ("tracktion_engine")
                     if (auto* midiClip2 = dynamic_cast<MidiClip*> (clip))
                     {
                         notesImported += midiClip2->getSequence().getNotes().size();
+                        controllerEventsImported += midiClip2->getSequence().getControllerEvents().size();
                     }
                 }
             }
         }
 
         INFO ("Notes imported: " << notesImported);
+        INFO ("Controller events imported: " << controllerEventsImported);
         CHECK_EQ (notesImported, notesCreated);
+        CHECK_EQ (controllerEventsImported, controllerEventsCreated);
     }
 }
 

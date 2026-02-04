@@ -53,6 +53,7 @@ private:
     void parseAudioClip (const juce::XmlElement& clipElement, WaveAudioClip& clip);
     void parseMidiClip (const juce::XmlElement& clipElement, MidiClip& clip);
     void parseNotes (const juce::XmlElement& notesElement, MidiClip& clip);
+    void parseControllerPoints (const juce::XmlElement& lanesElement, MidiClip& clip);
 
     // Plugin parsing
     void parseDevices (const juce::XmlElement& devicesElement, Edit& edit, Track& track);

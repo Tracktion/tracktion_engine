@@ -442,8 +442,19 @@ Clip::Ptr DAWprojectImporter::parseClip (const juce::XmlElement& clipElement, Ed
     auto durationAttr = parseDouble (clipElement.getStringAttribute (xml::duration), 0.0);
 
     // Determine clip type based on content
+    // Content can be directly in the clip or inside a Lanes element
     auto* audioElement = clipElement.getChildByName (xml::Audio);
     auto* notesElement = clipElement.getChildByName (xml::Notes);
+    auto* lanesElement = clipElement.getChildByName (xml::Lanes);
+
+    // If there's a Lanes element, look for Notes/Audio inside it
+    if (lanesElement != nullptr)
+    {
+        if (notesElement == nullptr)
+            notesElement = lanesElement->getChildByName (xml::Notes);
+        if (audioElement == nullptr)
+            audioElement = lanesElement->getChildByName (xml::Audio);
+    }
 
     Clip::Ptr clip;
 
@@ -488,6 +499,11 @@ Clip::Ptr DAWprojectImporter::parseClip (const juce::XmlElement& clipElement, Ed
             {
                 midiClip->setName (name);
                 parseNotes (*notesElement, *midiClip);
+
+                // Parse controller data from Points elements in Lanes
+                if (lanesElement != nullptr)
+                    parseControllerPoints (*lanesElement, *midiClip);
+
                 parseMidiClip (clipElement, *midiClip);
                 clip = midiClip;
             }
@@ -614,6 +630,71 @@ void DAWprojectImporter::parseNotes (const juce::XmlElement& notesElement, MidiC
                               normalizedToVelocity (vel),
                               0,  // colourIndex (used for MIDI channel in tracktion)
                               undoManager);
+        }
+    }
+}
+
+//==============================================================================
+void DAWprojectImporter::parseControllerPoints (const juce::XmlElement& lanesElement, MidiClip& clip)
+{
+    auto& sequence = clip.getSequence();
+    auto* undoManager = &clip.edit.getUndoManager();
+
+    // Look for Points elements with controller targets
+    for (auto* child : lanesElement.getChildIterator())
+    {
+        if (! child->hasTagName (xml::Points))
+            continue;
+
+        // Get the target to determine what type of controller this is
+        auto* targetElement = child->getChildByName (xml::Target);
+        if (targetElement == nullptr)
+            continue;
+
+        auto expressionStr = targetElement->getStringAttribute (xml::expression);
+        if (expressionStr.isEmpty())
+            continue;
+
+        // Determine controller type
+        int controllerType = expressionToControllerType (expressionStr);
+
+        // For regular CCs, get the controller number from the target
+        if (controllerType < 0 && expressionStr == xml::channelController)
+        {
+            controllerType = parseInt (targetElement->getStringAttribute (xml::controller), -1);
+            if (controllerType < 0 || controllerType > 127)
+                continue;
+        }
+        else if (controllerType < 0)
+        {
+            continue; // Unknown expression type
+        }
+
+        bool isBeats = isTimeUnitBeats (*child);
+
+        // Parse all the RealPoint children
+        for (auto* pointElement : child->getChildIterator())
+        {
+            if (! pointElement->hasTagName (xml::RealPoint))
+                continue;
+
+            double timeVal = parseDouble (pointElement->getStringAttribute (xml::time), 0.0);
+            float normalizedValue = static_cast<float> (parseDouble (pointElement->getStringAttribute (xml::value), 0.5));
+
+            BeatPosition beatPos;
+            if (isBeats)
+            {
+                beatPos = BeatPosition::fromBeats (timeVal);
+            }
+            else
+            {
+                auto& tempoSeq = clip.edit.tempoSequence;
+                beatPos = tempoSeq.toBeats (TimePosition::fromSeconds (timeVal));
+            }
+
+            int controllerValue = normalizedToControllerValue (normalizedValue, controllerType);
+
+            sequence.addControllerEvent (beatPos, controllerType, controllerValue, undoManager);
         }
     }
 }

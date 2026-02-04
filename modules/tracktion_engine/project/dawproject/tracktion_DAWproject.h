@@ -50,7 +50,7 @@ struct WriteOptions
     bool embedPluginState = true;
 
     /** Application name to write in the project metadata. */
-    juce::String applicationName = "Tracktion Waveform";
+    juce::String applicationName = "Tracktion Engine";
 
     /** Application version to write in the project metadata. */
     juce::String applicationVersion;

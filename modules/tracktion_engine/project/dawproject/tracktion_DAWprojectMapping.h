@@ -165,6 +165,13 @@ namespace xml
     static constexpr auto percent = "percent";
     static constexpr auto hertz = "hertz";
     static constexpr auto semitones = "semitones";
+
+    // Expression types for MIDI controller automation
+    static constexpr auto channelController = "channelController";
+    static constexpr auto pitchBend = "pitchBend";
+    static constexpr auto channelPressure = "channelPressure";
+    static constexpr auto polyPressure = "polyPressure";
+    static constexpr auto programChange = "programChange";
 }
 
 //==============================================================================
@@ -231,6 +238,65 @@ inline float velocityToNormalized (int velocity)
 inline int normalizedToVelocity (float normalized)
 {
     return juce::jlimit (0, 127, juce::roundToInt (normalized * 127.0f));
+}
+
+//==============================================================================
+/** MIDI controller value conversion.
+    tracktion_engine stores most controller values as 14-bit (value << 7 for 7-bit CCs).
+    DAWproject uses normalized 0.0-1.0 values.
+*/
+inline float controllerValueToNormalized (int value, int controllerType)
+{
+    // Pitch wheel is 14-bit centered at 8192
+    if (controllerType == MidiControllerEvent::pitchWheelType)
+        return juce::jlimit (0.0f, 1.0f, static_cast<float> (value) / 16383.0f);
+
+    // Most controllers are stored as 14-bit (value << 7)
+    return juce::jlimit (0.0f, 1.0f, static_cast<float> (value >> 7) / 127.0f);
+}
+
+inline int normalizedToControllerValue (float normalized, int controllerType)
+{
+    // Pitch wheel is 14-bit centered at 8192
+    if (controllerType == MidiControllerEvent::pitchWheelType)
+        return juce::jlimit (0, 16383, juce::roundToInt (normalized * 16383.0f));
+
+    // Most controllers stored as 14-bit (value << 7)
+    return juce::jlimit (0, 16256, juce::roundToInt (normalized * 127.0f) << 7);
+}
+
+/** Maps tracktion MidiControllerEvent type to DAWproject expression type string. */
+inline const char* controllerTypeToExpression (int type)
+{
+    if (type == MidiControllerEvent::pitchWheelType)
+        return xml::pitchBend;
+    if (type == MidiControllerEvent::channelPressureType)
+        return xml::channelPressure;
+    if (type == MidiControllerEvent::aftertouchType)
+        return xml::polyPressure;
+    if (type == MidiControllerEvent::programChangeType)
+        return xml::programChange;
+
+    // Regular CC (0-127)
+    return xml::channelController;
+}
+
+/** Maps DAWproject expression type string to tracktion MidiControllerEvent type.
+    For channelController, returns -1 (caller should use the controller attribute).
+*/
+inline int expressionToControllerType (const juce::String& expression)
+{
+    if (expression == xml::pitchBend)
+        return MidiControllerEvent::pitchWheelType;
+    if (expression == xml::channelPressure)
+        return MidiControllerEvent::channelPressureType;
+    if (expression == xml::polyPressure)
+        return MidiControllerEvent::aftertouchType;
+    if (expression == xml::programChange)
+        return MidiControllerEvent::programChangeType;
+
+    // channelController - return -1, caller uses controller attribute
+    return -1;
 }
 
 //==============================================================================

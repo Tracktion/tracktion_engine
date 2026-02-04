@@ -143,7 +143,7 @@ juce::XmlElement* DAWprojectExporter::createStructure (juce::XmlElement& parent)
             continue;
 
         // Only export top-level tracks (ones without a parent folder)
-        if (auto* parentTrack = track->getParentTrack())
+        if ([[maybe_unused]] auto* parentTrack = track->getParentTrack())
             continue;
 
         createTrackElement (*structure, *track);
@@ -450,7 +450,16 @@ void DAWprojectExporter::exportAudioClip (juce::XmlElement& clipElement, WaveAud
 void DAWprojectExporter::exportMidiClip (juce::XmlElement& clipElement, MidiClip& clip)
 {
     clipElement.setAttribute (xml::contentTimeUnit, xml::beats);
-    createNotesElement (clipElement, clip);
+
+    // Create a Lanes element to hold Notes and controller automation
+    auto* lanes = addChildElement (clipElement, xml::Lanes);
+    lanes->setAttribute (xml::timeUnit, xml::beats);
+
+    // Add notes
+    createNotesElement (*lanes, clip);
+
+    // Add controller data
+    createControllerLanes (*lanes, clip);
 
     // Offset (playStart)
     auto offset = clip.getPosition().getOffset();
@@ -495,6 +504,51 @@ juce::XmlElement* DAWprojectExporter::createNoteElement (juce::XmlElement& paren
     noteElement->setAttribute (xml::vel, velocityToNormalized (note.getVelocity()));
 
     return noteElement;
+}
+
+//==============================================================================
+void DAWprojectExporter::createControllerLanes (juce::XmlElement& parent, MidiClip& clip)
+{
+    auto& sequence = clip.getSequence();
+    auto& controllerEvents = sequence.getControllerEvents();
+
+    if (controllerEvents.isEmpty())
+        return;
+
+    // Group events by controller type
+    std::map<int, juce::Array<MidiControllerEvent*>> eventsByType;
+
+    for (auto* event : controllerEvents)
+    {
+        if (event != nullptr)
+            eventsByType[event->getType()].add (event);
+    }
+
+    // Create a Points element for each controller type
+    for (auto& [controllerType, events] : eventsByType)
+    {
+        if (events.isEmpty())
+            continue;
+
+        auto* points = addChildElement (parent, xml::Points);
+        points->setAttribute (xml::timeUnit, xml::beats);
+
+        // Add target with expression type
+        auto* target = addChildElement (*points, xml::Target);
+        target->setAttribute (xml::expression, controllerTypeToExpression (controllerType));
+
+        // For regular CCs, add the controller number
+        if (controllerType >= 0 && controllerType <= 127)
+            target->setAttribute (xml::controller, controllerType);
+
+        // Add points for each event
+        for (auto* event : events)
+        {
+            auto* point = addChildElement (*points, xml::RealPoint);
+            point->setAttribute (xml::time, event->getBeatPosition().inBeats());
+            point->setAttribute (xml::value, controllerValueToNormalized (event->getControllerValue(), controllerType));
+        }
+    }
 }
 
 //==============================================================================
