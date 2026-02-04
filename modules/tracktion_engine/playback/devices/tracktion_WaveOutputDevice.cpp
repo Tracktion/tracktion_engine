@@ -113,12 +113,15 @@ WaveOutputDeviceInstance::WaveOutputDeviceInstance (WaveOutputDevice& d, EditPla
 
 void WaveOutputDeviceInstance::prepareToPlay (double, int blockSize)
 {
-    outputBuffer.setSize (2, blockSize);
+    const auto numChannels = (int) getWaveOutput().getChannels().getNumChannels();
+    outputBuffer.setSize (numChannels, blockSize);
 
     int ditherDepth = juce::jlimit (16, 32, edit.engine.getDeviceManager().getBitDepth());
 
-    ditherers[0].reset (ditherDepth);
-    ditherers[1].reset (ditherDepth);
+    ditherers.resize ((size_t) numChannels);
+
+    for (auto& d : ditherers)
+        d.reset (ditherDepth);
 }
 
 //==============================================================================

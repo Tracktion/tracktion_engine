@@ -35,7 +35,7 @@ tracktion::graph::NodeProperties WaveInputDeviceNode::getNodeProperties()
 
 void WaveInputDeviceNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
-    auto numIncomingChannels = (waveInputDevice.isStereoPair()) ? 2u : 1u;
+    auto numIncomingChannels = (uint32_t) waveInputDevice.getChannels().getNumChannels();
     audioFifo.setSize (numIncomingChannels, (uint32_t) info.blockSize * 8);
     lastCallbackTime = juce::Time::getMillisecondCounter();
 

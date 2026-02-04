@@ -1243,7 +1243,10 @@ std::unique_ptr<tracktion::graph::Node> createNodeForPlugin (Plugin& plugin, con
     // If there's a channel count mismatch, wrap in ChannelRemappingNode to handle:
     // - Passthrough (input > processor): extra channels pass through unprocessed
     // - Expansion (input < processor): processor outputs its full channel count
-    if (incomingChannels != pluginInputChannels)
+    // Skip if either config is empty - ChannelRemappingNode requires valid channel configs
+    if (incomingChannels != pluginInputChannels
+        && incomingChannels > 0
+        && pluginInputChannels > 0)
     {
         return tracktion::graph::makeNode<ChannelRemappingNode> (std::move (pluginNode),
                                                                  ChannelConfiguration::discreteChannels (incomingChannels),

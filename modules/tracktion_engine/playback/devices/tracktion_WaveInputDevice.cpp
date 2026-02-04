@@ -390,7 +390,7 @@ public:
             auto& wi = getWaveInput();
 
             rc->fileWriter = std::make_unique<AudioFileWriter> (AudioFile (edit.engine, recordedFile), format,
-                                                                wi.isStereoPair() ? 2 : 1,
+                                                                (int) wi.getChannels().getNumChannels(),
                                                                 rc->sampleRate, wi.bitDepth, metadata, 0);
 
             if (rc->fileWriter->isOpen())
@@ -431,7 +431,7 @@ public:
                 {
                     if ((rc->thumbnail = edit.engine.getRecordingThumbnailManager().getThumbnailFor (recordedFile)))
                     {
-                        rc->thumbnail->reset (wi.isStereoPair() ? 2 : 1, rc->sampleRate);
+                        rc->thumbnail->reset ((int) wi.getChannels().getNumChannels(), rc->sampleRate);
                         rc->thumbnail->punchInTime = punchRange.getStart();
                     }
                 }

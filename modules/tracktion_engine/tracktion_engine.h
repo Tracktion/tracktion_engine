@@ -74,7 +74,7 @@
  #include "../3rd_party/choc/containers/choc_Value.h"
  #include "../3rd_party/choc/containers/choc_SmallVector.h"
  #include "../3rd_party/choc/text/choc_JSON.h"
-#else
+#endif
 
 #include "../3rd_party/expected/expected.hpp"
 

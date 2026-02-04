@@ -79,7 +79,7 @@ public:
     void prepareToPlay (double sampleRate, int blockSizeSamples);
 
 protected:
-    Ditherer ditherers[2];
+    std::vector<Ditherer> ditherers;
     MidiMessageArray midiBuffer;
     juce::AudioBuffer<float> outputBuffer;
 
