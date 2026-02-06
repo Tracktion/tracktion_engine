@@ -96,7 +96,7 @@ Engine::~Engine()
     deviceManager.reset();
     midiProgramManager.reset();
 
-    MelodyneFileReader::cleanUpOnShutdown();
+    ARAFileReader::cleanUpOnShutdown();
     pluginManager.reset();
 
     temporaryFileManager.reset();

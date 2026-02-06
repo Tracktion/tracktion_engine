@@ -45,12 +45,14 @@
 #include "pluginterfaces/vst/ivstcomponent.h"
 #include "pluginterfaces/vst/ivstaudioprocessor.h"
 
+#if ! JUCE_PLUGINHOST_ARA
 namespace ARA
 {
     DEF_CLASS_IID (IMainFactory)
     DEF_CLASS_IID (IPlugInEntryPoint)
     DEF_CLASS_IID (IPlugInEntryPoint2)
 }
+#endif
 
 #if JUCE_MSVC
  #pragma warning (pop)
@@ -65,12 +67,12 @@ using namespace ARA;
 
 struct ARAClipPlayer  : private Selectable::Listener
 {
-    #include "tracktion_MelodyneInstanceFactory.h"
+    #include "tracktion_ARAPluginFactory.h"
     #include "tracktion_ARAWrapperFunctions.h"
     #include "tracktion_ARAWrapperInterfaces.h"
 
     //==============================================================================
-    ARAClipPlayer (Edit& ed, MelodyneFileReader& o, AudioClipBase& c)
+    ARAClipPlayer (Edit& ed, ARAFileReader& o, AudioClipBase& c)
       : Selectable::Listener (ed.tempoSequence), owner (o),
         clip (c),
         file (c.getAudioFile()),
@@ -107,7 +109,7 @@ struct ARAClipPlayer  : private Selectable::Listener
                     playbackRegionAndSource = nullptr;
                 }
 
-                melodyneInstance = nullptr;
+                araInstance = nullptr;
             }
         }
     }
@@ -115,8 +117,8 @@ struct ARAClipPlayer  : private Selectable::Listener
     //==============================================================================
     Edit& getEdit()                         { return edit; }
     AudioClipBase& getClip()                { return clip; }
-    ExternalPlugin* getPlugin()             { return melodyneInstance != nullptr ? melodyneInstance->plugin.get() : nullptr; }
-    const ARAFactory* getARAFactory() const { return melodyneInstance != nullptr ? melodyneInstance->factory : nullptr; }
+    ExternalPlugin* getPlugin()             { return araInstance != nullptr ? araInstance->plugin.get() : nullptr; }
+    const ARAFactory* getARAFactory() const { return araInstance != nullptr ? araInstance->factory : nullptr; }
 
     //==============================================================================
     bool initialise (ARAClipPlayer* clipToClone)
@@ -126,14 +128,14 @@ struct ARAClipPlayer  : private Selectable::Listener
 
         if (auto doc = getDocument())
         {
-            ExternalPlugin::Ptr p = MelodyneInstanceFactory::getInstance (edit.engine).createPlugin (edit);
+            ExternalPlugin::Ptr p = ARAPluginFactory::getInstance (edit.engine).createPlugin (edit);
 
             if (p == nullptr || getDocument() == nullptr)
                 return false;
 
-            melodyneInstance.reset (MelodyneInstanceFactory::getInstance (edit.engine).createInstance (*p, doc->dcRef));
+            araInstance.reset (ARAPluginFactory::getInstance (edit.engine).createInstance (*p, doc->dcRef));
 
-            if (melodyneInstance == nullptr)
+            if (araInstance == nullptr)
                 return false;
 
             updateContent (clipToClone);
@@ -341,12 +343,12 @@ struct ARAClipPlayer  : private Selectable::Listener
 
 private:
     //==============================================================================
-    MelodyneFileReader& owner;
+    ARAFileReader& owner;
     AudioClipBase& clip;
     const AudioFile file;
     Edit& edit;
 
-    std::unique_ptr<MelodyneInstance> melodyneInstance;
+    std::unique_ptr<ARAInstance> araInstance;
     std::unique_ptr<PlaybackRegionAndSource> playbackRegionAndSource;
     HashCode currentHashCode = 0;
 
@@ -381,7 +383,7 @@ private:
     };
 
     //==============================================================================
-    /** NB: Must delete the old objects *after* creating the new ones, because Melodyne crashes
+    /** NB: Must delete the old objects *after* creating the new ones, because some ARA plugins crash
             if you deselect a play region and then try to select a different one.
             But doing it in the opposite order seems to work ok.
     */
@@ -390,14 +392,14 @@ private:
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
 
-        jassert (melodyneInstance != nullptr);
-        jassert (melodyneInstance->factory != nullptr);
-        jassert (melodyneInstance->extensionInstance != nullptr);
+        jassert (araInstance != nullptr);
+        jassert (araInstance->factory != nullptr);
+        jassert (araInstance->extensionInstance != nullptr);
 
         auto oldTrack = std::move (playbackRegionAndSource);
 
-        playbackRegionAndSource = std::make_unique<PlaybackRegionAndSource> (*getDocument(), clip, *melodyneInstance->factory,
-                                                                             *melodyneInstance->extensionInstance,
+        playbackRegionAndSource = std::make_unique<PlaybackRegionAndSource> (*getDocument(), clip, *araInstance->factory,
+                                                                             *araInstance->extensionInstance,
                                                                              juce::String::toHexString (currentHashCode),
                                                                              clipToClone != nullptr ? clipToClone->playbackRegionAndSource.get() : nullptr);
 
@@ -496,7 +498,7 @@ private:
 };
 
 //==============================================================================
-MelodyneFileReader::MelodyneFileReader (Edit& ed, AudioClipBase& clip)
+ARAFileReader::ARAFileReader (Edit& ed, AudioClipBase& clip)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
@@ -507,7 +509,7 @@ MelodyneFileReader::MelodyneFileReader (Edit& ed, AudioClipBase& clip)
         player = nullptr;
 }
 
-MelodyneFileReader::MelodyneFileReader (Edit& ed, AudioClipBase& clip, MelodyneFileReader& other)
+ARAFileReader::ARAFileReader (Edit& ed, AudioClipBase& clip, ARAFileReader& other)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
@@ -523,7 +525,7 @@ MelodyneFileReader::MelodyneFileReader (Edit& ed, AudioClipBase& clip, MelodyneF
     jassert (player != nullptr);
 }
 
-MelodyneFileReader::~MelodyneFileReader()
+ARAFileReader::~ARAFileReader()
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
@@ -537,7 +539,7 @@ MelodyneFileReader::~MelodyneFileReader()
 }
 
 //==============================================================================
-void MelodyneFileReader::showPluginWindow()
+void ARAFileReader::showPluginWindow()
 {
     if (player != nullptr)
         player->setViewSelection();
@@ -546,13 +548,13 @@ void MelodyneFileReader::showPluginWindow()
         p->showWindowExplicitly();
 }
 
-void MelodyneFileReader::hidePluginWindow()
+void ARAFileReader::hidePluginWindow()
 {
     if (auto p = getPlugin())
         p->hideWindowForShutdown();
 }
 
-ExternalPlugin* MelodyneFileReader::getPlugin()
+ExternalPlugin* ARAFileReader::getPlugin()
 {
     if (isValid())
         return player->getPlugin();
@@ -561,19 +563,19 @@ ExternalPlugin* MelodyneFileReader::getPlugin()
 }
 
 //==============================================================================
-bool MelodyneFileReader::isAnalysingContent()
+bool ARAFileReader::isAnalysingContent()
 {
     return player != nullptr && player->isAnalysingContent();
 }
 
-void MelodyneFileReader::sourceClipChanged()
+void ARAFileReader::sourceClipChanged()
 {
     if (player != nullptr)
         player->updateContent (nullptr);
 }
 
 //==============================================================================
-juce::MidiMessageSequence MelodyneFileReader::getAnalysedMIDISequence()
+juce::MidiMessageSequence ARAFileReader::getAnalysedMIDISequence()
 {
     if (player != nullptr)
         return player->getAnalysedMIDISequence();
@@ -581,9 +583,9 @@ juce::MidiMessageSequence MelodyneFileReader::getAnalysedMIDISequence()
     return {};
 }
 
-void MelodyneFileReader::cleanUpOnShutdown()
+void ARAFileReader::cleanUpOnShutdown()
 {
-    ARAClipPlayer::MelodyneInstanceFactory::shutdown();
+    ARAClipPlayer::ARAPluginFactory::shutdown();
 }
 
 //==============================================================================
@@ -603,7 +605,7 @@ struct ARADocumentHolder::Pimpl
             visitAllTrackItems (edit, [] (TrackItem& i)
             {
                 if (auto c = dynamic_cast<AudioClipBase*> (&i))
-                    c->loadMelodyneState();
+                    c->loadARAState();
 
                 return true;
             });
@@ -670,17 +672,17 @@ namespace tracktion { inline namespace engine
 struct ARADocumentHolder::Pimpl {};
 struct ARAClipPlayer {};
 
-MelodyneFileReader::MelodyneFileReader (Edit&, AudioClipBase&) {}
-MelodyneFileReader::MelodyneFileReader (Edit&, AudioClipBase&, MelodyneFileReader&) {}
-MelodyneFileReader::~MelodyneFileReader() {}
+ARAFileReader::ARAFileReader (Edit&, AudioClipBase&) {}
+ARAFileReader::ARAFileReader (Edit&, AudioClipBase&, ARAFileReader&) {}
+ARAFileReader::~ARAFileReader() {}
 
-void MelodyneFileReader::cleanUpOnShutdown()                        {}
-ExternalPlugin* MelodyneFileReader::getPlugin()                     { return {}; }
-void MelodyneFileReader::showPluginWindow()                         {}
-void MelodyneFileReader::hidePluginWindow()                         {}
-bool MelodyneFileReader::isAnalysingContent()                       { return false; }
-juce::MidiMessageSequence MelodyneFileReader::getAnalysedMIDISequence()   { return {}; }
-void MelodyneFileReader::sourceClipChanged()                        {}
+void ARAFileReader::cleanUpOnShutdown()                        {}
+ExternalPlugin* ARAFileReader::getPlugin()                     { return {}; }
+void ARAFileReader::showPluginWindow()                         {}
+void ARAFileReader::hidePluginWindow()                         {}
+bool ARAFileReader::isAnalysingContent()                       { return false; }
+juce::MidiMessageSequence ARAFileReader::getAnalysedMIDISequence()   { return {}; }
+void ARAFileReader::sourceClipChanged()                        {}
 
 ARADocumentHolder::ARADocumentHolder (Edit& e, const juce::ValueTree&) : edit (e) { juce::ignoreUnused (edit); }
 ARADocumentHolder::~ARADocumentHolder() {}

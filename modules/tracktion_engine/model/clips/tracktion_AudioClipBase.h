@@ -518,25 +518,48 @@ public:
     AudioClipBase* getOverlappingClip (ClipDirection) const;
 
     //==============================================================================
-    /** The MelodyneFileReader proxy if this clip is using Melodyne. */
-    juce::ReferenceCountedObjectPtr<MelodyneFileReader> melodyneProxy;
+    /** The ARAFileReader proxy if this clip is using an ARA plugin (e.g. Melodyne). */
+    juce::ReferenceCountedObjectPtr<ARAFileReader> araProxy;
 
-    /** Returns true if this clip is using Melodyne. */
-    bool isUsingMelodyne() const;
+    /** @deprecated Use araProxy instead. */
+    juce::ReferenceCountedObjectPtr<ARAFileReader>& melodyneProxy = araProxy;
 
-    /** Shows the Melodyne window if this clip is using Melodyne. */
-    void showMelodyneWindow();
+    /** Returns true if this clip is using an ARA plugin. */
+    bool isUsingARA() const;
 
-    /** Hides the Melodyne window if this clip is using Melodyne. */
-    void hideMelodyneWindow();
+    /** @deprecated Use isUsingARA() instead. */
+    [[deprecated("Use isUsingARA() instead")]]
+    bool isUsingMelodyne() const { return isUsingARA(); }
 
-    /** If this clip is using Melodyne, this will create a new MIDI clip based
-        on the Melodyne analysis.
+    /** Shows the ARA plugin window if this clip is using an ARA plugin. */
+    void showARAWindow();
+
+    /** @deprecated Use showARAWindow() instead. */
+    [[deprecated("Use showARAWindow() instead")]]
+    void showMelodyneWindow() { showARAWindow(); }
+
+    /** Hides the ARA plugin window if this clip is using an ARA plugin. */
+    void hideARAWindow();
+
+    /** @deprecated Use hideARAWindow() instead. */
+    [[deprecated("Use hideARAWindow() instead")]]
+    void hideMelodyneWindow() { hideARAWindow(); }
+
+    /** If this clip is using an ARA plugin, this will create a new MIDI clip based
+        on the ARA plugin's analysis.
     */
-    void melodyneConvertToMIDI();
+    void araConvertToMIDI();
+
+    /** @deprecated Use araConvertToMIDI() instead. */
+    [[deprecated("Use araConvertToMIDI() instead")]]
+    void melodyneConvertToMIDI() { araConvertToMIDI(); }
 
     /** @internal */
-    void loadMelodyneState();
+    void loadARAState();
+
+    /** @deprecated Use loadARAState() instead. */
+    [[deprecated("Use loadARAState() instead")]]
+    void loadMelodyneState() { loadARAState(); }
 
     /** This internal method is used solely to find out if createAudioNode()
         should return nullptr or not.
@@ -549,8 +572,6 @@ public:
                  It's possible no ARA-compatible plugins were found,
                  or that ARA complained about something resulting
                  in failure to set it up accordingly.
-                 Celemony's ARA is really flaky and touchy, so the latter
-                 is most likely!
     */
     bool setupARA (bool dontPopupErrorMessages);
 

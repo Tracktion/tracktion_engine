@@ -705,7 +705,7 @@ Edit::~Edit()
             if (auto acb = dynamic_cast<AudioClipBase*> (c))
             {
                 acb->flushStateToValueTree();
-                acb->hideMelodyneWindow();
+                acb->hideARAWindow();
             }
         }
     }
@@ -1126,18 +1126,18 @@ ARADocumentHolder& Edit::getARADocument()
 
 void Edit::initialiseARA()
 {
-    auto areAnyClipsUsingMelodyne = [this]()
+    auto areAnyClipsUsingARA = [this]()
     {
         for (auto at : getTracksOfType<AudioTrack> (*this, true))
             for (auto c : at->getClips())
                 if (auto acb = dynamic_cast<AudioClipBase*> (c))
-                    if (acb->isUsingMelodyne())
+                    if (acb->isUsingARA())
                         return true;
 
         return false;
     };
 
-    if (areAnyClipsUsingMelodyne())
+    if (areAnyClipsUsingARA())
         getARADocument().getPimpl();
 }
 
@@ -3336,7 +3336,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingClip (Clip& clip)
             // fails, then something has gone wrong with that plan
             jassert (dynamic_cast<AudioClipBase*> (c) == nullptr
                        || ((AudioClipBase*) c)->getPlaybackFile() == ((AudioClipBase&) clip).getPlaybackFile()
-                       || ((AudioClipBase*) c)->isUsingMelodyne());
+                       || ((AudioClipBase*) c)->isUsingARA());
 
             if (c->isMidi())
                 track->getOutput().setOutputToDefaultDevice (true);

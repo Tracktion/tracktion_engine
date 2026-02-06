@@ -689,7 +689,7 @@ public:
         proxyInfo = std::make_unique<AudioClipBase::ProxyRenderingInfo>();
         proxyInfo->clipTime     = { {}, wtm.getWarpEndMarkerTime() };
         proxyInfo->speedRatio   = 1.0;
-        proxyInfo->mode         = (tm != TimeStretcher::disabled && tm != TimeStretcher::melodyne)
+        proxyInfo->mode         = (tm != TimeStretcher::disabled && tm != TimeStretcher::ara)
                                         ? tm : TimeStretcher::defaultMode;
     }
 

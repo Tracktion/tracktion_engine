@@ -413,15 +413,15 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
     // Check if ARA should be used
     if (clip.setupARA (false))
     {
-        jassert (clip.melodyneProxy != nullptr);
+        jassert (clip.araProxy != nullptr);
 
         if (includeMelodyne)
-            return makeNode<MelodyneNode> (clip, playHeadState.playHead, params.forRendering);
+            return makeNode<ARANode> (clip, playHeadState.playHead, params.forRendering);
 
         return {}; // the ARA node creation will be handled by the track to allow live-play...
     }
 
-    clip.melodyneProxy = nullptr;
+    clip.araProxy = nullptr;
 
     // Otherwise use audio file
     auto original = clip.getAudioFile();
@@ -1046,7 +1046,7 @@ std::unique_ptr<tracktion::graph::Node> createARAClipsNode (const juce::Array<Cl
     for (auto clip : clips)
         if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
             if (auto acb = dynamic_cast<AudioClipBase*> (clip))
-                if (acb->isUsingMelodyne() && acb->melodyneProxy != nullptr)
+                if (acb->isUsingARA() && acb->araProxy != nullptr)
                     araClips.add (acb);
 
     if (araClips.size() == 0)

@@ -276,7 +276,7 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
 
 AudioClipBase::~AudioClipBase()
 {
-    melodyneProxy = nullptr;
+    araProxy = nullptr;
 
     if (renderJob != nullptr)
         renderJob->removeListener (this);
@@ -401,8 +401,8 @@ void AudioClipBase::changed()
 
     createNewProxyAsync();
 
-    if (melodyneProxy != nullptr)
-        melodyneProxy->sourceClipChanged();
+    if (araProxy != nullptr)
+        araProxy->sourceClipChanged();
 }
 
 juce::Colour AudioClipBase::getDefaultColour() const
@@ -941,7 +941,7 @@ TimeRange AudioClipBase::getLoopRange() const
 
 bool AudioClipBase::canLoop() const
 {
-    return isUsingMelodyne() ? false
+    return isUsingARA() ? false
                              : loopInfo.isLoopable();
 }
 
@@ -1040,8 +1040,8 @@ void AudioClipBase::pitchTempoTrackChanged()
     clearCachedAudioSegmentList();
     createNewProxyAsync();
 
-    if (melodyneProxy != nullptr)
-        melodyneProxy->sourceClipChanged();
+    if (araProxy != nullptr)
+        araProxy->sourceClipChanged();
 }
 
 void AudioClipBase::clearCachedAudioSegmentList()
@@ -1087,33 +1087,33 @@ void AudioClipBase::setSpeedRatio (double r)
     }
 }
 
-bool AudioClipBase::isUsingMelodyne() const
+bool AudioClipBase::isUsingARA() const
 {
-    return TimeStretcher::isMelodyne (timeStretchMode);
+    return TimeStretcher::isARA (timeStretchMode);
 }
 
-void AudioClipBase::loadMelodyneState()
+void AudioClipBase::loadARAState()
 {
     setupARA (true);
 }
 
-void AudioClipBase::showMelodyneWindow()
+void AudioClipBase::showARAWindow()
 {
-    if (melodyneProxy != nullptr)
-        melodyneProxy->showPluginWindow();
+    if (araProxy != nullptr)
+        araProxy->showPluginWindow();
 }
 
-void AudioClipBase::hideMelodyneWindow()
+void AudioClipBase::hideARAWindow()
 {
-    if (melodyneProxy != nullptr)
-        melodyneProxy->hidePluginWindow();
+    if (araProxy != nullptr)
+        araProxy->hidePluginWindow();
 }
 
-void AudioClipBase::melodyneConvertToMIDI()
+void AudioClipBase::araConvertToMIDI()
 {
-    if (melodyneProxy != nullptr)
+    if (araProxy != nullptr)
     {
-        juce::MidiMessageSequence m (melodyneProxy->getAnalysedMIDISequence());
+        juce::MidiMessageSequence m (araProxy->getAnalysedMIDISequence());
 
         if (m.getNumEvents() > 0)
         {
@@ -1274,7 +1274,7 @@ juce::StringArray AudioClipBase::getPitchChoices()
 {
     juce::StringArray s;
 
-    const int numSemitones = isUsingMelodyne() ? 12 : 24;
+    const int numSemitones = isUsingARA() ? 12 : 24;
 
     if (loopInfo.getRootNote() == -1)
     {
@@ -1622,22 +1622,22 @@ bool AudioClipBase::setupARA (bool dontPopupErrorMessages)
     const juce::ScopedValueSetter<bool> svs (araReentrancyCheck, true);
 
    #if TRACKTION_ENABLE_ARA
-    if (isUsingMelodyne())
+    if (isUsingARA())
     {
-        if (melodyneProxy == nullptr)
+        if (araProxy == nullptr)
         {
             TRACKTION_LOG ("Created ARA reader!");
-            melodyneProxy = new MelodyneFileReader (edit, *this);
+            araProxy = new ARAFileReader (edit, *this);
         }
 
-        if (melodyneProxy != nullptr && melodyneProxy->isValid())
+        if (araProxy != nullptr && araProxy->isValid())
             return true;
 
         if (! dontPopupErrorMessages)
         {
             TRACKTION_LOG_ERROR ("Failed setting up ARA for audio clip!");
 
-            if (TimeStretcher::isMelodyne (timeStretchMode)
+            if (TimeStretcher::isARA (timeStretchMode)
                   && edit.engine.getPluginManager().getARACompatiblePlugDescriptions().size() <= 0)
             {
                 TRACKTION_LOG_ERROR ("No ARA-compatible plugins were found!");
@@ -1894,7 +1894,7 @@ bool AudioClipBase::usesTimeStretchedProxy() const
 
     return getAutoTempo() || getAutoPitch()
            || getPitchChange() != 0.0f
-           || isUsingMelodyne()
+           || isUsingARA()
            || (std::abs (getSpeedRatio() - 1.0) > 0.00001
                && TimeStretcher::canProcessFor (timeStretchMode));
 }
@@ -2117,7 +2117,7 @@ std::unique_ptr<AudioClipBase::ProxyRenderingInfo> AudioClipBase::createProxyRen
     p->audioSegmentList = AudioSegmentList::create (*this, true, true);
     p->clipTime = getEditTimeRange();
     p->speedRatio = getSpeedRatio();
-    p->mode = (timeStretchMode != TimeStretcher::disabled && timeStretchMode != TimeStretcher::melodyne)
+    p->mode = (timeStretchMode != TimeStretcher::disabled && timeStretchMode != TimeStretcher::ara)
                  ? timeStretchMode
                  : TimeStretcher::defaultMode;
     p->options = elastiqueProOptions;

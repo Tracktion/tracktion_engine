@@ -13,15 +13,22 @@ namespace tracktion { inline namespace engine
 
 struct ARAClipPlayer;
 
-class MelodyneFileReader   : public juce::ReferenceCountedObject,
-                             public juce::ChangeBroadcaster
+//==============================================================================
+/**
+    Manages an ARA plugin instance for an audio clip.
+
+    This class handles the ARA (Audio Random Access) integration, allowing
+    plugins like Melodyne to provide advanced audio analysis and manipulation.
+*/
+class ARAFileReader   : public juce::ReferenceCountedObject,
+                        public juce::ChangeBroadcaster
 {
 public:
-    MelodyneFileReader (Edit&, AudioClipBase&);
-    MelodyneFileReader (Edit&, AudioClipBase&, MelodyneFileReader& oneToClone);
-    ~MelodyneFileReader();
+    ARAFileReader (Edit&, AudioClipBase&);
+    ARAFileReader (Edit&, AudioClipBase&, ARAFileReader& oneToClone);
+    ~ARAFileReader();
 
-    using Ptr = juce::ReferenceCountedObjectPtr<MelodyneFileReader>;
+    using Ptr = juce::ReferenceCountedObjectPtr<ARAFileReader>;
 
     static void cleanUpOnShutdown();
 
@@ -41,8 +48,11 @@ private:
     std::unique_ptr<ARAClipPlayer> player;
     juce::MidiBuffer midiBuffer;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MelodyneFileReader)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ARAFileReader)
 };
+
+/** @deprecated Use ARAFileReader instead */
+using MelodyneFileReader = ARAFileReader;
 
 
 //==============================================================================

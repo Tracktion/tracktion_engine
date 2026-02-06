@@ -27,7 +27,7 @@ class ARADocument
 {
 public:
     ARADocument (Edit& sourceEdit,
-                 MelodyneInstance* validPluginWrapper,
+                 ARAInstance* validPluginWrapper,
                  const ARAPlugInExtensionInstance&,
                  const ARADocumentControllerInstance& dc,
                  ARADocumentControllerHostInstance* dchi)
@@ -165,7 +165,7 @@ public:
     std::unique_ptr<juce::MemoryBlock> lastArchiveState;
 
 private:
-    std::unique_ptr<MelodyneInstance> wrapper;
+    std::unique_ptr<ARAInstance> wrapper;
     std::unique_ptr<ARADocumentControllerHostInstance> hostInstance;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ARADocument)
@@ -213,12 +213,12 @@ static ARADocument* createDocumentInternal (Edit& edit)
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
 
-    auto plugin = MelodyneInstanceFactory::getInstance (edit.engine).createPlugin (edit);
+    auto plugin = ARAPluginFactory::getInstance (edit.engine).createPlugin (edit);
 
     if (plugin == nullptr || plugin->getAudioPluginInstance() == nullptr)
         return {};
 
-    if (auto factory = MelodyneInstanceFactory::getInstance (edit.engine).factory)
+    if (auto factory = ARAPluginFactory::getInstance (edit.engine).factory)
     {
         static const SizedStruct<ARA_STRUCT_MEMBER (ARAAudioAccessControllerInterface, destroyAudioReader)> audioAccess =
         {
@@ -291,7 +291,7 @@ static ARADocument* createDocumentInternal (Edit& edit)
 
         if (auto dci = factory->createDocumentControllerWithDocument (hostInstance.get(), &documentProperties))
         {
-            if (auto wrapper = std::unique_ptr<MelodyneInstance> (MelodyneInstanceFactory::getInstance (edit.engine)
+            if (auto wrapper = std::unique_ptr<ARAInstance> (ARAPluginFactory::getInstance (edit.engine)
                                                                     .createInstance (*plugin, dci->documentControllerRef)))
             {
                 auto d = new ARADocument (edit, wrapper.get(), *wrapper->extensionInstance,
