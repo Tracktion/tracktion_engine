@@ -880,15 +880,6 @@ std::unique_ptr<juce::PluginDescription> ExternalPlugin::findMatchingPlugin() co
     if (auto p = findMatchingPluginDescription (engine, desc))
         return p;
 
-    auto getPreferredFormat = [] (juce::PluginDescription d)
-    {
-        auto file = d.fileOrIdentifier.toLowerCase();
-        if (file.endsWith (".vst3"))                            return "VST3";
-        if (file.endsWith (".vst") || file.endsWith (".dll"))   return "VST";
-        if (file.startsWith ("audiounit:"))                     return "AudioUnit";
-        return "";
-    };
-
     if (auto p = findDescForName (engine, desc.name, getPreferredFormat (desc)))
         return p;
 
