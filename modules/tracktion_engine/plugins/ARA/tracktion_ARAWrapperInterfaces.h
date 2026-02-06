@@ -581,17 +581,20 @@ private:
             auto chordTrack = ed.getChordTrack();
             jassert (! chordTrack->getClips().isEmpty());
 
-            auto rangeStartBeat = range ? ed.tempoSequence.toBeats (TimePosition::fromSeconds (range->start)) : BeatPosition::fromBeats (-std::numeric_limits<float>::max());
-            auto rangeEndBeat = range ? ed.tempoSequence.toBeats (TimePosition::fromSeconds (range->start + range->duration)) : BeatPosition::fromBeats (std::numeric_limits<float>::max());
-            auto endBeatOfPreviousClip = BeatPosition::fromBeats (-std::numeric_limits<float>::max());
+            auto rangeStartBeat = range ? ed.tempoSequence.toBeats (TimePosition::fromSeconds (range->start))
+                                        : BeatPosition();
+            auto rangeEndBeat = range ? ed.tempoSequence.toBeats (TimePosition::fromSeconds (range->start + range->duration))
+                                      : BeatPosition::fromBeats (std::numeric_limits<float>::max());
+            auto endBeatOfPreviousClip = rangeStartBeat;
 
             // construct a "no chord" for representing gaps in the chord track
             ARAContentChord noChord{};
             noChord.name = chordNames.insert ("NoChord").first->toRawUTF8();
 
+            double lastEmittedPosition = -std::numeric_limits<double>::max();
+
             for (auto chordClip : chordTrack->getClips())
             {
-                // auto position = chordClip->getPosition();
                 auto chordStartBeat = chordClip->getStartBeat();
                 auto chordEndBeat = chordClip->getEndBeat();
 
@@ -600,34 +603,46 @@ private:
                     // insert a no chord between gaps in chord clips
                     if (endBeatOfPreviousClip < chordStartBeat)
                     {
-                        ARAContentChord noChordCopy = noChord;
-                        noChordCopy.position = endBeatOfPreviousClip.inBeats();
-                        items.add (noChordCopy);
+                        auto gapPosition = endBeatOfPreviousClip.inBeats();
+
+                        if (gapPosition > lastEmittedPosition)
+                        {
+                            ARAContentChord noChordCopy = noChord;
+                            noChordCopy.position = gapPosition;
+                            items.add (noChordCopy);
+                            lastEmittedPosition = gapPosition;
+                        }
                     }
 
-                    endBeatOfPreviousClip = chordEndBeat;
+                    endBeatOfPreviousClip = juce::jmax (endBeatOfPreviousClip, chordEndBeat);
                     BeatPosition patternBeat;
                     auto ptnGen = chordClip->getPatternGenerator();
                     jassert (ptnGen);
 
                     for (auto itm : ptnGen->getChordProgression())
                     {
-                        ARAContentChord item{};
                         auto timelineBeat = patternBeat + toDuration (chordStartBeat);
+                        auto position = timelineBeat.inBeats();
 
-                        bool sharp = ed.pitchSequence.getPitchAtBeat (timelineBeat).accidentalsSharp;
-                        Scale scale = ptnGen->getScaleAtBeat (patternBeat);
-                        int rootNote = itm->getRootNote (ptnGen->getNoteAtBeat (patternBeat), scale);
-                        item.root = MusicalContextFunctions::getCircleOfFifthsIndexforMIDINote (rootNote, sharp);
-                        item.bass = item.root;
+                        if (position > lastEmittedPosition)
+                        {
+                            ARAContentChord item{};
 
-                        auto chordIntervals = MusicalContextFunctions::getChordARAIntervalUsage (itm->getChord (scale));
-                        memcpy (item.intervals, chordIntervals.data(), sizeof (item.intervals));
+                            bool sharp = ed.pitchSequence.getPitchAtBeat (timelineBeat).accidentalsSharp;
+                            Scale scale = ptnGen->getScaleAtBeat (patternBeat);
+                            int rootNote = itm->getRootNote (ptnGen->getNoteAtBeat (patternBeat), scale);
+                            item.root = MusicalContextFunctions::getCircleOfFifthsIndexforMIDINote (rootNote, sharp);
+                            item.bass = item.root;
 
-                        item.name = chordNames.insert (itm->getChordSymbol()).first->toRawUTF8();
+                            auto chordIntervals = MusicalContextFunctions::getChordARAIntervalUsage (itm->getChord (scale));
+                            memcpy (item.intervals, chordIntervals.data(), sizeof (item.intervals));
 
-                        item.position = timelineBeat.inBeats();
-                        items.add (item);
+                            item.name = chordNames.insert (itm->getChordSymbol()).first->toRawUTF8();
+
+                            item.position = position;
+                            items.add (item);
+                            lastEmittedPosition = position;
+                        }
 
                         patternBeat = patternBeat + itm->lengthInBeats;
                     }
@@ -638,8 +653,13 @@ private:
             // add the no chord here
             if (items.isEmpty() || endBeatOfPreviousClip < rangeEndBeat)
             {
-                noChord.position = endBeatOfPreviousClip.inBeats();
-                items.add (noChord);
+                auto trailPosition = endBeatOfPreviousClip.inBeats();
+
+                if (items.isEmpty() || trailPosition > lastEmittedPosition)
+                {
+                    noChord.position = trailPosition;
+                    items.add (noChord);
+                }
             }
         }
 

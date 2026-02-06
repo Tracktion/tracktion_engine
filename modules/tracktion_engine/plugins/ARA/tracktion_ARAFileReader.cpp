@@ -617,7 +617,20 @@ bool ARAFileReader::isAnalysingContent()
 void ARAFileReader::sourceClipChanged()
 {
     if (player != nullptr)
+    {
         player->updateContent (nullptr);
+
+        // Also update musical context (e.g. when chord track changes)
+        if (auto doc = player->getDocument())
+        {
+            if (doc->musicalContext != nullptr)
+            {
+                doc->beginEditing (true);
+                doc->musicalContext->update();
+                doc->endEditing (true);
+            }
+        }
+    }
 }
 
 void ARAFileReader::contentHasChanged()
@@ -765,6 +778,17 @@ struct ARADocumentHolder::Pimpl
         // End restoring for each document
         for (auto& [key, doc] : araDocuments)
             doc->endRestoringState();
+
+        // Notify plugins that musical context content is now available
+        for (auto& [key, doc] : araDocuments)
+        {
+            if (doc->musicalContext != nullptr)
+            {
+                doc->beginEditing (true);
+                doc->musicalContext->update();
+                doc->endEditing (true);
+            }
+        }
     }
 
     ARAClipPlayer::ARADocument* getOrCreateDocument (const juce::PluginDescription& desc)
