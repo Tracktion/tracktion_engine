@@ -986,11 +986,8 @@ public:
         {
             CRASH_TRACER
             TRACKTION_ASSERT_MESSAGE_THREAD
-            // TODO ARA2
-            // At this point the track has already been destroyed, so this
-            // function won't work properly. What to do?
-            doc.willDestroyPlaybackRegionOnTrack (clip.getTrack());
             doc.dci->destroyPlaybackRegion (doc.dcRef, playbackRegionRef);
+            doc.willDestroyPlaybackRegionOnTrack (clip.getTrack());
         }
     }
 

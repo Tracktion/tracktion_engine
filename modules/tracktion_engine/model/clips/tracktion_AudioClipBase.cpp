@@ -277,10 +277,19 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
 
 AudioClipBase::~AudioClipBase()
 {
-    araProxy = nullptr;
-
     if (renderJob != nullptr)
         renderJob->removeListener (this);
+}
+
+void AudioClipBase::tearDownARA()
+{
+   #if TRACKTION_ENABLE_ARA
+    if (araProxy != nullptr)
+    {
+        jassert (araProxy->getReferenceCount() == 1);
+        araProxy = nullptr;
+    }
+   #endif
 }
 
 //==============================================================================
@@ -415,19 +424,20 @@ juce::Colour AudioClipBase::getDefaultColour() const
 //==============================================================================
 TimeDuration AudioClipBase::getMaximumLength()
 {
-    if (! isLooping())
-    {
-        if (getSourceLength() <= 0_td)
-            return 100000.0_td;
+    if (isLooping())
+        return Edit::getMaximumLength();
 
-        if (getAutoTempo())
-            return edit.tempoSequence.toTime (getStartBeat() + BeatDuration::fromBeats (loopInfo.getNumBeats()))
-                     - getPosition().getStart();
+    if (isUsingARA())
+        return Edit::getMaximumLength();
 
-        return getSourceLength() / speedRatio;
-    }
+    if (getSourceLength() <= 0_td)
+        return 100000.0_td;
 
-    return Edit::getMaximumLength();
+    if (getAutoTempo())
+        return edit.tempoSequence.toTime (getStartBeat() + BeatDuration::fromBeats (loopInfo.getNumBeats()))
+                 - getPosition().getStart();
+
+    return getSourceLength() / speedRatio;
 }
 
 //==============================================================================

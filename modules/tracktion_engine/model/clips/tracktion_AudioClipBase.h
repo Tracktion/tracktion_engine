@@ -518,6 +518,10 @@ public:
     AudioClipBase* getOverlappingClip (ClipDirection) const;
 
     //==============================================================================
+    /** Releases the ARA proxy. Called during track destruction to ensure
+        ARA cleanup happens while the track is still alive. */
+    void tearDownARA();
+
     /** The ARAFileReader proxy if this clip is using an ARA plugin (e.g. Melodyne). */
     juce::ReferenceCountedObjectPtr<ARAFileReader> araProxy;
 
