@@ -44,6 +44,10 @@ public:
 
     void sourceClipChanged();
 
+    /** Notifies that the ARA content has changed (e.g. notes edited in Melodyne).
+        This re-reads the content and broadcasts a change message. */
+    void contentHasChanged();
+
 private:
     std::unique_ptr<ARAClipPlayer> player;
     juce::MidiBuffer midiBuffer;

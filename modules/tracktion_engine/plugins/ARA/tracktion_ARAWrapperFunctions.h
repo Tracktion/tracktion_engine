@@ -114,6 +114,17 @@ struct EditProxyFunctions
 //==============================================================================
 struct ModelUpdateFunctions
 {
+    static void notifyARAContentChanged (Edit& edit)
+    {
+        edit.markAsChanged();
+
+        for (auto track : getAudioTracks (edit))
+            for (auto clip : track->getClips())
+                if (auto audioClip = dynamic_cast<AudioClipBase*> (clip))
+                    if (audioClip->araProxy != nullptr)
+                        audioClip->araProxy->contentHasChanged();
+    }
+
     static void ARA_CALL notifyAudioSourceAnalysisProgress (ARAModelUpdateControllerHostRef,
                                                             ARAAudioSourceHostRef,
                                                             ARAAnalysisProgressState,
@@ -128,7 +139,7 @@ struct ModelUpdateFunctions
     {
         CRASH_TRACER
         if (auto e = (Edit*) hostRef)
-            e->markAsChanged();
+            notifyARAContentChanged (*e);
     }
 
     static void ARA_CALL notifyAudioModificationContentChanged (ARAModelUpdateControllerHostRef hostRef,
@@ -138,7 +149,7 @@ struct ModelUpdateFunctions
     {
         CRASH_TRACER
         if (auto e = (Edit*) hostRef)
-            e->markAsChanged();
+            notifyARAContentChanged (*e);
     }
 };
 

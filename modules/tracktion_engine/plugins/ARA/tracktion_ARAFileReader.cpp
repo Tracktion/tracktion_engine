@@ -232,11 +232,32 @@ struct ARAClipPlayer  : private Selectable::Listener
         {
             const ARADocumentControllerInterface* dci = doc->dci;
             ARADocumentControllerRef dcRef = doc->dcRef;
-            ARAAudioSourceRef audioSourceRef = playbackRegionAndSource->audioSource->audioSourceRef;
 
-            if (dci->isAudioSourceContentAvailable (dcRef, audioSourceRef, kARAContentTypeNotes))
+            // Try reading from audio modification first (contains user edits e.g. Melodyne),
+            // falling back to audio source (original analysis) if not available.
+            ARAContentReaderRef contentReaderRef = nullptr;
+
+            if (playbackRegionAndSource->audioModification != nullptr)
             {
-                ARAContentReaderRef contentReaderRef = dci->createAudioSourceContentReader (dcRef, audioSourceRef, kARAContentTypeNotes, nullptr);
+                ARAAudioModificationRef audioModRef = playbackRegionAndSource->audioModification->audioModificationRef;
+
+                if (audioModRef != nullptr
+                    && dci->isAudioModificationContentAvailable (dcRef, audioModRef, kARAContentTypeNotes))
+                {
+                    contentReaderRef = dci->createAudioModificationContentReader (dcRef, audioModRef, kARAContentTypeNotes, nullptr);
+                }
+            }
+
+            if (contentReaderRef == nullptr)
+            {
+                ARAAudioSourceRef audioSourceRef = playbackRegionAndSource->audioSource->audioSourceRef;
+
+                if (dci->isAudioSourceContentAvailable (dcRef, audioSourceRef, kARAContentTypeNotes))
+                    contentReaderRef = dci->createAudioSourceContentReader (dcRef, audioSourceRef, kARAContentTypeNotes, nullptr);
+            }
+
+            if (contentReaderRef != nullptr)
+            {
                 int numEvents = (int) dci->getContentReaderEventCount (dcRef, contentReaderRef);
 
                 for (int i = 0; i < numEvents; ++i)
@@ -599,6 +620,12 @@ void ARAFileReader::sourceClipChanged()
         player->updateContent (nullptr);
 }
 
+void ARAFileReader::contentHasChanged()
+{
+    if (player != nullptr)
+        player->contentHasChanged();
+}
+
 //==============================================================================
 juce::MidiMessageSequence ARAFileReader::getAnalysedMIDISequence()
 {
@@ -868,6 +895,7 @@ void ARAFileReader::hidePluginWindow()                         {}
 bool ARAFileReader::isAnalysingContent()                       { return false; }
 juce::MidiMessageSequence ARAFileReader::getAnalysedMIDISequence()   { return {}; }
 void ARAFileReader::sourceClipChanged()                        {}
+void ARAFileReader::contentHasChanged()                        {}
 
 ARADocumentHolder::ARADocumentHolder (Edit& e, const juce::ValueTree&) : edit (e) { juce::ignoreUnused (edit); }
 ARADocumentHolder::~ARADocumentHolder() {}

@@ -1128,10 +1128,10 @@ public:
 
     std::unique_ptr<PlaybackRegionWrapper> playbackRegion;
     std::unique_ptr<AudioSourceWrapper> audioSource;
+    std::unique_ptr<AudioModificationWrapper> audioModification;
 
 private:
     const ARAPlugInExtensionInstance& pluginInstance;
-    std::unique_ptr<AudioModificationWrapper> audioModification;
 
     void setPlaybackRegion()
     {
