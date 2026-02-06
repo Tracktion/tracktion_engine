@@ -128,12 +128,33 @@ struct ARAClipPlayer  : private Selectable::Listener
 
         if (auto doc = getDocument())
         {
-            ExternalPlugin::Ptr p = ARAPluginFactory::getInstance (edit.engine).createPlugin (edit);
+            auto desc = clip.araPluginDescription.get();
+            ExternalPlugin::Ptr p;
 
-            if (p == nullptr || getDocument() == nullptr)
-                return false;
+            if (desc.name.isNotEmpty())
+            {
+                auto& pluginFactory = ARAPluginFactory::getInstance (edit.engine, desc);
+                p = pluginFactory.createPlugin (edit, desc);
 
-            araInstance.reset (ARAPluginFactory::getInstance (edit.engine).createInstance (*p, doc->dcRef));
+                if (p == nullptr || getDocument() == nullptr)
+                    return false;
+
+                araInstance.reset (pluginFactory.createInstance (*p, doc->dcRef));
+            }
+            else
+            {
+                auto* pluginFactory = ARAPluginFactory::getDefaultInstance (edit.engine);
+
+                if (pluginFactory == nullptr)
+                    return false;
+
+                p = pluginFactory->createPlugin (edit);
+
+                if (p == nullptr || getDocument() == nullptr)
+                    return false;
+
+                araInstance.reset (pluginFactory->createInstance (*p, doc->dcRef));
+            }
 
             if (araInstance == nullptr)
                 return false;
@@ -596,26 +617,160 @@ struct ARADocumentHolder::Pimpl
     void initialise()
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
-        araDocument.reset (ARAClipPlayer::createDocument (edit));
 
-        if (araDocument != nullptr)
+        auto& state = edit.getARADocument().lastState;
+
+        // Collect which plugin types are needed by scanning clips
+        std::set<juce::String> neededPluginKeys;
+        juce::HashMap<juce::String, juce::PluginDescription> pluginDescsByKey;
+
+        visitAllTrackItems (edit, [&] (TrackItem& i)
         {
-            araDocument->beginRestoringState (edit.getARADocument().lastState);
-
-            visitAllTrackItems (edit, [] (TrackItem& i)
+            if (auto c = dynamic_cast<AudioClipBase*> (&i))
             {
-                if (auto c = dynamic_cast<AudioClipBase*> (&i))
-                    c->loadARAState();
+                auto desc = c->araPluginDescription.get();
 
-                return true;
-            });
+                if (desc.name.isNotEmpty())
+                {
+                    auto key = desc.createIdentifierString();
+                    neededPluginKeys.insert (key);
+                    pluginDescsByKey.set (key, desc);
+                }
+            }
 
-            araDocument->endRestoringState();
+            return true;
+        });
+
+        // Also check for saved ARAPLUGIN children in the state
+        for (int i = 0; i < state.getNumChildren(); ++i)
+        {
+            auto child = state.getChild (i);
+
+            if (child.hasType (IDs::ARAPLUGIN))
+            {
+                auto key = child.getProperty (IDs::id).toString();
+
+                if (key.isNotEmpty() && neededPluginKeys.find (key) == neededPluginKeys.end())
+                    neededPluginKeys.insert (key);
+            }
         }
+
+        // If no clips specify a plugin but old-format state has data, use default plugin
+        if (neededPluginKeys.empty())
+        {
+            auto defaultDescs = edit.engine.getPluginManager().getARACompatiblePlugDescriptions();
+
+            if (! defaultDescs.isEmpty())
+            {
+                auto key = defaultDescs.getFirst().createIdentifierString();
+                neededPluginKeys.insert (key);
+                pluginDescsByKey.set (key, defaultDescs.getFirst());
+            }
+        }
+
+        // Create documents for each needed plugin type
+        for (auto& key : neededPluginKeys)
+        {
+            juce::PluginDescription desc;
+
+            if (pluginDescsByKey.contains (key))
+            {
+                desc = pluginDescsByKey[key];
+            }
+            else
+            {
+                // Try to find the description from available plugins
+                for (auto& d : edit.engine.getPluginManager().getARACompatiblePlugDescriptions())
+                {
+                    if (d.createIdentifierString() == key)
+                    {
+                        desc = d;
+                        break;
+                    }
+                }
+            }
+
+            if (desc.name.isEmpty())
+                continue;
+
+            auto* doc = ARAClipPlayer::createDocument (edit, desc);
+
+            if (doc != nullptr)
+                araDocuments[key] = std::unique_ptr<ARAClipPlayer::ARADocument> (doc);
+        }
+
+        // Restore state for each document
+        for (auto& [key, doc] : araDocuments)
+        {
+            // Look for per-plugin state child
+            auto pluginState = state.getChildWithProperty (IDs::id, key);
+
+            if (pluginState.isValid() && pluginState.hasType (IDs::ARAPLUGIN))
+            {
+                // Create a temporary ARADOCUMENT-typed tree with the data property
+                juce::ValueTree tempState (IDs::ARADOCUMENT);
+                tempState.setProperty ("data", pluginState.getProperty ("data"), nullptr);
+                doc->beginRestoringState (tempState);
+            }
+            else if (state.hasProperty ("data"))
+            {
+                // Old format: single data property on ARADOCUMENT itself (backward compat)
+                doc->beginRestoringState (state);
+            }
+        }
+
+        // Load clip ARA states
+        visitAllTrackItems (edit, [] (TrackItem& i)
+        {
+            if (auto c = dynamic_cast<AudioClipBase*> (&i))
+                c->loadARAState();
+
+            return true;
+        });
+
+        // End restoring for each document
+        for (auto& [key, doc] : araDocuments)
+            doc->endRestoringState();
+    }
+
+    ARAClipPlayer::ARADocument* getOrCreateDocument (const juce::PluginDescription& desc)
+    {
+        auto key = desc.createIdentifierString();
+        auto it = araDocuments.find (key);
+
+        if (it != araDocuments.end())
+            return it->second.get();
+
+        // Create a new document for this plugin type
+        auto* doc = ARAClipPlayer::createDocument (edit, desc);
+
+        if (doc != nullptr)
+            araDocuments[key] = std::unique_ptr<ARAClipPlayer::ARADocument> (doc);
+
+        return doc;
+    }
+
+    ARAClipPlayer::ARADocument* getDocumentForPlugin (const juce::PluginDescription& desc)
+    {
+        auto key = desc.createIdentifierString();
+        auto it = araDocuments.find (key);
+
+        if (it != araDocuments.end())
+            return it->second.get();
+
+        return nullptr;
+    }
+
+    ARAClipPlayer::ARADocument* getDefaultDocument()
+    {
+        if (! araDocuments.empty())
+            return araDocuments.begin()->second.get();
+
+        return nullptr;
     }
 
     Edit& edit;
-    std::unique_ptr<ARAClipPlayer::ARADocument> araDocument;
+    std::map<juce::String, std::unique_ptr<ARAClipPlayer::ARADocument>> araDocuments;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pimpl)
 };
@@ -649,14 +804,37 @@ void ARADocumentHolder::flushStateToValueTree()
     TRACKTION_ASSERT_MESSAGE_THREAD
 
     if (pimpl != nullptr)
-        if (pimpl->araDocument != nullptr)
-            pimpl->araDocument->flushStateToValueTree (lastState);
+    {
+        // Remove old per-plugin children
+        for (int i = lastState.getNumChildren(); --i >= 0;)
+            if (lastState.getChild (i).hasType (IDs::ARAPLUGIN))
+                lastState.removeChild (i, nullptr);
+
+        // Remove old-format data property
+        lastState.removeProperty ("data", nullptr);
+
+        // Save each document under its own ARAPLUGIN child
+        for (auto& [key, doc] : pimpl->araDocuments)
+        {
+            juce::ValueTree pluginState (IDs::ARAPLUGIN);
+            pluginState.setProperty (IDs::id, key, nullptr);
+            doc->flushStateToValueTree (pluginState);
+            lastState.addChild (pluginState, -1, nullptr);
+        }
+    }
 }
 
 ARAClipPlayer::ARADocument* ARAClipPlayer::getDocument() const
 {
     if (auto p = edit.getARADocument().getPimpl())
-        return p->araDocument.get();
+    {
+        auto& desc = clip.araPluginDescription;
+
+        if (desc.get().name.isNotEmpty())
+            return p->getOrCreateDocument (desc);
+
+        return p->getDefaultDocument();
+    }
 
     return {};
 }

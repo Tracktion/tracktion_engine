@@ -238,6 +238,7 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
 
     timeStretchMode.referTo (state, IDs::elastiqueMode, um);
     elastiqueProOptions.referTo (state, IDs::elastiqueOptions, um);
+    araPluginDescription.referTo (state, IDs::araPluginDescription, um);
 
     // Keep this in to handle old edits..
     if (state.getProperty (IDs::timeStretch))
@@ -332,6 +333,7 @@ void AudioClipBase::cloneFrom (Clip* c)
         beatSensitivity     .setValue (other->beatSensitivity, nullptr);
         timeStretchMode     .setValue (other->timeStretchMode, nullptr);
         elastiqueProOptions .setValue (other->elastiqueProOptions, nullptr);
+        araPluginDescription.setValue (other->araPluginDescription, nullptr);
         autoPitch           .setValue (other->autoPitch, nullptr);
         autoPitchMode       .setValue (other->autoPitchMode, nullptr);
         autoTempo           .setValue (other->autoTempo, nullptr);
@@ -2408,6 +2410,16 @@ void AudioClipBase::valueTreePropertyChanged (juce::ValueTree& tree, const juce:
         else if (id == IDs::proxyAllowed)
         {
             propertiesChanged();
+        }
+        else if (id == IDs::araPluginDescription)
+        {
+            if (isUsingARA())
+            {
+                // Reset the proxy to load a new plugin
+                araProxy.reset();
+                loadARAState();
+                changed();
+            }
         }
         else
         {

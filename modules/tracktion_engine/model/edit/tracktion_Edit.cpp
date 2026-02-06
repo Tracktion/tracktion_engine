@@ -161,6 +161,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
                         || i == IDs::loopStartBeats || i == IDs::loopLengthBeats
                         || i == IDs::transpose || i == IDs::pitchChange
                         || i == IDs::elastiqueMode || i == IDs::elastiqueOptions
+                        || i == IDs::araPluginDescription
                         || i == IDs::autoPitch || i == IDs::autoTempo
                         || i == IDs::channels || i == IDs::isReversed
                         || i == IDs::currentTake || i == IDs::sequence || i == IDs::repeatSequence
@@ -3250,6 +3251,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
             if (editToMatch != nullptr)
             {
                 wc->setTimeStretchMode (TimeStretcher::disabled);
+
                 if (tryToMatchTempo || tryToMatchPitch)
                 {
                     wc->setLoopInfo (af.getInfo().loopInfo);

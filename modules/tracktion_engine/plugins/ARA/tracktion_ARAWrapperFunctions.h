@@ -63,9 +63,12 @@ struct ArchivingFunctions
         //TRACKTION_LOG_ARA ("Unarchiving progress: " << p);
     }
 
-    static ARAPersistentID ARA_CALL getDocumentArchiveID (ARAArchivingControllerHostRef, ARAArchiveReaderHostRef)
+    static ARAPersistentID ARA_CALL getDocumentArchiveID (ARAArchivingControllerHostRef ref, ARAArchiveReaderHostRef)
     {
-        return "com.celemony.ara.chunk.1";
+        if (auto f = (const ARAFactory*) ref)
+            return f->documentArchiveID;
+
+        return "com.celemony.ara.chunk.1"; // fallback
     }
 };
 

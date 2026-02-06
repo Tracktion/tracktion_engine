@@ -174,18 +174,19 @@ private:
 //==============================================================================
 struct ARADocumentCreatorCallback : private MessageThreadCallback
 {
-    ARADocumentCreatorCallback (Edit& e) : edit (e) {}
+    ARADocumentCreatorCallback (Edit& e, const juce::PluginDescription& d) : edit (e), desc (d) {}
 
-    static ARADocument* perform (Edit& edit)
+    static ARADocument* perform (Edit& edit, const juce::PluginDescription& desc)
     {
         CRASH_TRACER
-        ARADocumentCreatorCallback adcc (edit);
+        ARADocumentCreatorCallback adcc (edit, desc);
         adcc.triggerAndWaitForCallback();
 
         return adcc.result.release();
     }
 
     Edit& edit;
+    juce::PluginDescription desc;
     std::unique_ptr<ARADocument> result;
 
     void performAction() override
@@ -193,32 +194,33 @@ struct ARADocumentCreatorCallback : private MessageThreadCallback
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
 
-        result.reset (createDocumentInternal (edit));
+        result.reset (createDocumentInternal (edit, desc));
     }
 
     ARADocumentCreatorCallback() = delete;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ARADocumentCreatorCallback)
 };
 
-static ARADocument* createDocument (Edit& edit)
+static ARADocument* createDocument (Edit& edit, const juce::PluginDescription& desc)
 {
     if (juce::MessageManager::getInstance()->isThisTheMessageThread())
-        return createDocumentInternal (edit);
+        return createDocumentInternal (edit, desc);
 
-    return ARADocumentCreatorCallback::perform (edit);
+    return ARADocumentCreatorCallback::perform (edit, desc);
 }
 
-static ARADocument* createDocumentInternal (Edit& edit)
+static ARADocument* createDocumentInternal (Edit& edit, const juce::PluginDescription& desc)
 {
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
 
-    auto plugin = ARAPluginFactory::getInstance (edit.engine).createPlugin (edit);
+    auto& pluginFactory = ARAPluginFactory::getInstance (edit.engine, desc);
+    auto plugin = pluginFactory.createPlugin (edit, desc);
 
     if (plugin == nullptr || plugin->getAudioPluginInstance() == nullptr)
         return {};
 
-    if (auto factory = ARAPluginFactory::getInstance (edit.engine).factory)
+    if (auto factory = pluginFactory.factory)
     {
         static const SizedStruct<ARA_STRUCT_MEMBER (ARAAudioAccessControllerInterface, destroyAudioReader)> audioAccess =
         {
@@ -270,7 +272,7 @@ static ARADocument* createDocumentInternal (Edit& edit)
         std::unique_ptr<ARADocumentControllerHostInstance> hostInstance (new SizedStruct<ARA_STRUCT_MEMBER (ARADocumentControllerHostInstance, playbackControllerInterface)>());
         hostInstance->audioAccessControllerHostRef      = nullptr;
         hostInstance->audioAccessControllerInterface    = &audioAccess;
-        hostInstance->archivingControllerHostRef        = nullptr;
+        hostInstance->archivingControllerHostRef        = (ARAArchivingControllerHostRef) factory;
         hostInstance->archivingControllerInterface      = &hostArchiving;
         hostInstance->contentAccessControllerHostRef    = toHostRef (&edit);
         hostInstance->contentAccessControllerInterface  = &content;
@@ -291,8 +293,7 @@ static ARADocument* createDocumentInternal (Edit& edit)
 
         if (auto dci = factory->createDocumentControllerWithDocument (hostInstance.get(), &documentProperties))
         {
-            if (auto wrapper = std::unique_ptr<ARAInstance> (ARAPluginFactory::getInstance (edit.engine)
-                                                                    .createInstance (*plugin, dci->documentControllerRef)))
+            if (auto wrapper = std::unique_ptr<ARAInstance> (pluginFactory.createInstance (*plugin, dci->documentControllerRef)))
             {
                 auto d = new ARADocument (edit, wrapper.get(), *wrapper->extensionInstance,
                                           *dci, hostInstance.release());

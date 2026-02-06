@@ -823,7 +823,7 @@ private:
 TimeStretcher::TimeStretcher() {}
 TimeStretcher::~TimeStretcher() {}
 
-static juce::String getARADefault()                  { return "ARA"; }
+static juce::String getARADefault()                 { return "ARA"; }
 static juce::String getElastiquePro()               { return "Elastique (" + TRANS("Pro") + ")"; }
 static juce::String getElastiqueEfficeint()         { return "Elastique (" + TRANS("Efficient") + ")"; }
 static juce::String getElastiqueMobile()            { return "Elastique (" + TRANS("Mobile") + ")"; }
@@ -980,21 +980,6 @@ juce::String TimeStretcher::getNameOfMode (const Mode mode)
         default:                        jassertfalse; break;
     }
 
-    return {};
-}
-
-juce::String TimeStretcher::getARAPluginName (Engine& e, Mode mode)
-{
-   #if TRACKTION_ENABLE_ARA
-    if (mode == ara)
-    {
-        auto descs = e.getPluginManager().getARACompatiblePlugDescriptions();
-        if (descs.size() > 0)
-            return descs.getFirst().name;
-    }
-   #else
-    juce::ignoreUnused (e, mode);
-   #endif
     return {};
 }
 

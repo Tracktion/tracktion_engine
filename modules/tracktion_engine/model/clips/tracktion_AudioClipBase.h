@@ -578,6 +578,9 @@ public:
     /** The ElastiqueProOptions for fine tuning Elastique (if available). */
     juce::CachedValue<TimeStretcher::ElastiqueProOptions> elastiqueProOptions;
 
+    /** Stores the PluginDescription of the ARA plugin to use for this clip. */
+    juce::CachedValue<juce::PluginDescription> araPluginDescription;
+
     //==============================================================================
     /** @internal */
     void initialise() override;
@@ -753,4 +756,36 @@ namespace juce
         static tracktion::engine::AudioClipBase::AutoPitchMode fromVar (const var& v)   { return (tracktion::engine::AudioClipBase::AutoPitchMode) static_cast<int> (v); }
         static var toVar (tracktion::engine::AudioClipBase::AutoPitchMode v)            { return static_cast<int> (v); }
     };
+
+    template <>
+    struct VariantConverter<PluginDescription>
+    {
+        static PluginDescription fromVar (const var& v)
+        {
+            PluginDescription pd;
+            if (auto xml = juce::parseXML (v.toString()))
+                pd.loadFromXml (*xml);
+            return pd;
+        }
+
+        static var toVar (const PluginDescription& pd)
+        {
+            if (auto xml = pd.createXml())
+                return xml->toString();
+            return {};
+        }
+    };
+
+    inline bool operator== (const PluginDescription& a, const PluginDescription& b)
+    {
+        return a.name == b.name
+            && a.pluginFormatName == b.pluginFormatName
+            && a.fileOrIdentifier == b.fileOrIdentifier
+            && a.uniqueId == b.uniqueId;
+    }
+
+    inline bool operator!= (const PluginDescription& a, const PluginDescription& b)
+    {
+        return ! (a == b);
+    }
 }

@@ -99,9 +99,6 @@ public:
     /** Returns the name of a given Mode for display purposes. */
     static juce::String getNameOfMode (Mode);
 
-    /** Returns the name of the ARA plugin for the given mode, or empty if not ARA. */
-    static juce::String getARAPluginName (Engine&, Mode);
-
     /** Returns true if the given Mode is an ARA mode. */
     static bool isARA (Mode);
 
