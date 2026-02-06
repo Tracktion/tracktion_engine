@@ -94,7 +94,7 @@ public:
                 return d;
 
         // If there is no default, Melodyne might not be installed so
-        // just return an empty desc to avoid overrwriting the data
+        // just return an empty desc to avoid overwriting the data
         return {};
     }
 
