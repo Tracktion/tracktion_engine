@@ -153,6 +153,10 @@ struct ARAClipPlayer  : private Selectable::Listener
                 if (p == nullptr || getDocument() == nullptr)
                     return false;
 
+                // Save the resolved description so the UI shows the correct plugin
+                // and future sessions don't need to re-resolve
+                clip.araPluginDescription.setValue (p->desc, nullptr);
+
                 araInstance.reset (pluginFactory->createInstance (*p, doc->dcRef));
             }
 
@@ -656,15 +660,17 @@ struct ARADocumentHolder::Pimpl
         }
 
         // If no clips specify a plugin but old-format state has data, use default plugin
+        // Prefer Melodyne since legacy clips were always Melodyne
         if (neededPluginKeys.empty())
         {
             auto defaultDescs = edit.engine.getPluginManager().getARACompatiblePlugDescriptions();
 
             if (! defaultDescs.isEmpty())
             {
-                auto key = defaultDescs.getFirst().createIdentifierString();
+                auto preferred = ARAClipPlayer::ARAPluginFactory::findPreferredDefault (defaultDescs);
+                auto key = preferred.createIdentifierString();
                 neededPluginKeys.insert (key);
-                pluginDescsByKey.set (key, defaultDescs.getFirst());
+                pluginDescsByKey.set (key, preferred);
             }
         }
 
@@ -699,7 +705,17 @@ struct ARADocumentHolder::Pimpl
                 araDocuments[key] = std::unique_ptr<ARAClipPlayer::ARADocument> (doc);
         }
 
-        // Restore state for each document
+        // Load clip ARA states FIRST — plugin instances must be bound
+        // before any beginEditing calls on the document controller
+        visitAllTrackItems (edit, [] (TrackItem& i)
+        {
+            if (auto c = dynamic_cast<AudioClipBase*> (&i))
+                c->loadARAState();
+
+            return true;
+        });
+
+        // Restore state for each document (now that all instances are bound)
         for (auto& [key, doc] : araDocuments)
         {
             // Look for per-plugin state child
@@ -718,15 +734,6 @@ struct ARADocumentHolder::Pimpl
                 doc->beginRestoringState (state);
             }
         }
-
-        // Load clip ARA states
-        visitAllTrackItems (edit, [] (TrackItem& i)
-        {
-            if (auto c = dynamic_cast<AudioClipBase*> (&i))
-                c->loadARAState();
-
-            return true;
-        });
 
         // End restoring for each document
         for (auto& [key, doc] : araDocuments)

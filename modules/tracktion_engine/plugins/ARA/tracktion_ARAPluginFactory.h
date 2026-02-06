@@ -85,6 +85,19 @@ public:
         return *it->second;
     }
 
+    /** Picks the preferred default ARA plugin description for legacy clips.
+        Prefers Melodyne since legacy clips were always Melodyne. */
+    static juce::PluginDescription findPreferredDefault (const juce::Array<juce::PluginDescription>& descs)
+    {
+        for (auto& d : descs)
+            if (d.name.containsIgnoreCase ("Melodyne"))
+                return d;
+
+        // If there is no default, Melodyne might not be installed so
+        // just return an empty desc to avoid overrwriting the data
+        return {};
+    }
+
     /** Returns the factory for the first/default ARA plugin (backward compat). */
     static ARAPluginFactory* getDefaultInstance (Engine& engine)
     {
@@ -99,7 +112,7 @@ public:
         if (araDescs.isEmpty())
             return nullptr;
 
-        return &getInstance (engine, araDescs.getFirst());
+        return &getInstance (engine, findPreferredDefault (araDescs));
     }
 
     static void shutdown()
