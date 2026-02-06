@@ -868,8 +868,29 @@ std::unique_ptr<juce::PluginDescription> ExternalPlugin::findMatchingPlugin() co
     if (auto p = pm.knownPluginList.getTypeForIdentifierString (createIdentifierString (desc)))
         return p;
 
+    auto getPreferredFormat = [] (juce::PluginDescription d)
+    {
+        auto file = d.fileOrIdentifier.toLowerCase();
+        if (file.endsWith (".vst3"))                            return "VST3";
+        if (file.endsWith (".vst") || file.endsWith (".dll"))   return "VST";
+        if (file.startsWith ("audiounit:"))                     return "AudioUnit";
+        return "";
+    };
+
+    // If that fails, retry with format inferred from file extension
+    {
+        auto descWithFormat = desc;
+        descWithFormat.pluginFormatName = getPreferredFormat (desc);
+
+        if (auto p = pm.knownPluginList.getTypeForIdentifierString (createIdentifierString (descWithFormat)))
+            return p;
+    }
+
     if (desc.pluginFormatName.isEmpty())
     {
+        if (auto p = pm.knownPluginList.getTypeForIdentifierString ("VST3" + createIdentifierString (desc)))
+            return p;
+
         if (auto p = pm.knownPluginList.getTypeForIdentifierString ("VST" + createIdentifierString (desc)))
             return p;
 
@@ -879,15 +900,6 @@ std::unique_ptr<juce::PluginDescription> ExternalPlugin::findMatchingPlugin() co
 
     if (auto p = findMatchingPluginDescription (engine, desc))
         return p;
-
-    auto getPreferredFormat = [] (juce::PluginDescription d)
-    {
-        auto file = d.fileOrIdentifier.toLowerCase();
-        if (file.endsWith (".vst3"))                            return "VST3";
-        if (file.endsWith (".vst") || file.endsWith (".dll"))   return "VST";
-        if (file.startsWith ("audiounit:"))                     return "AudioUnit";
-        return "";
-    };
 
     if (auto p = findDescForName (engine, desc.name, getPreferredFormat (desc)))
         return p;
