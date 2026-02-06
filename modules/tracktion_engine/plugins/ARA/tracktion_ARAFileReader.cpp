@@ -185,9 +185,8 @@ struct ARAClipPlayer  : private Selectable::Listener
         {
             if (doc->musicalContext != nullptr)
             {
-                doc->beginEditing (true);
+                const ARADocument::ScopedEdit scope (*doc, true);
                 doc->musicalContext->update();
-                doc->endEditing (true);
             }
         }
     }
@@ -625,9 +624,8 @@ void ARAFileReader::sourceClipChanged()
         {
             if (doc->musicalContext != nullptr)
             {
-                doc->beginEditing (true);
+                const ARAClipPlayer::ARADocument::ScopedEdit scope (*doc, true);
                 doc->musicalContext->update();
-                doc->endEditing (true);
             }
         }
     }
@@ -784,9 +782,8 @@ struct ARADocumentHolder::Pimpl
         {
             if (doc->musicalContext != nullptr)
             {
-                doc->beginEditing (true);
+                const ARAClipPlayer::ARADocument::ScopedEdit scope (*doc, true);
                 doc->musicalContext->update();
-                doc->endEditing (true);
             }
         }
     }

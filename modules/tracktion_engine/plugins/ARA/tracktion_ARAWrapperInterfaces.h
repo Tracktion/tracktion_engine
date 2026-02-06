@@ -48,10 +48,9 @@ public:
 
         if (musicalContext != nullptr)
         {
-            beginEditing (true);
+            const ScopedEdit scope (*this, true);
             regionSequences.clear();
             musicalContext = nullptr;
-            endEditing (true);
         }
 
         dci->destroyDocumentController (dcRef);
@@ -80,6 +79,26 @@ public:
         if (canEdit (dontCheckMusicalContext))
             dci->endEditing (dcRef);
     }
+
+    struct ScopedEdit
+    {
+        ScopedEdit (ARADocument& d, bool dontCheckMusicalContext)
+            : doc (d), skipContextCheck (dontCheckMusicalContext)
+        {
+            doc.beginEditing (skipContextCheck);
+        }
+
+        ~ScopedEdit()
+        {
+            doc.endEditing (skipContextCheck);
+        }
+
+    private:
+        ARADocument& doc;
+        const bool skipContextCheck;
+
+        JUCE_DECLARE_NON_COPYABLE (ScopedEdit)
+    };
 
     void flushStateToValueTree (juce::ValueTree& v)
     {
@@ -324,11 +343,10 @@ public:
 
         if (document.dci != nullptr)
         {
-            doc.beginEditing (true);
+            const ARADocument::ScopedEdit scope (doc, true);
             updateMusicalContextProperties();
             auto musicalContextProperties = getMusicalContextProperties();
             musicalContextRef = document.dci->createMusicalContext (document.dcRef, toHostRef (&doc.edit), &musicalContextProperties);
-            doc.endEditing (true);
         }
     }
     ~MusicalContextWrapper()
