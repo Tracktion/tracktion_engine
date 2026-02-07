@@ -1738,6 +1738,7 @@ struct WaveInputRecordingThread::BlockQueue
     QueuedBlock* lastPending = nullptr;
     QueuedBlock* firstFree = nullptr;
     std::atomic<int> numPending { 0 };
+    std::mutex processingMutex;
 
     QueuedBlock* findFreeBlock()
     {
@@ -1869,8 +1870,17 @@ void WaveInputRecordingThread::addBlockToRecord (AudioFileWriter& writer, const 
 
 void WaveInputRecordingThread::waitForWriterToFinish (AudioFileWriter& writer)
 {
-    while (queue->isWriterInQueue (writer) && isThreadRunning())
+    while (isThreadRunning())
+    {
+        {
+            std::scoped_lock lock (queue->processingMutex);
+
+            if (! queue->isWriterInQueue (writer))
+                return;
+        }
+
         Thread::sleep (2);
+    }
 }
 
 void WaveInputRecordingThread::run()
@@ -1886,24 +1896,38 @@ void WaveInputRecordingThread::run()
             TRACKTION_LOG_ERROR ("Audio recording can't keep up!");
         }
 
-        if (auto block = queue->removeFirstPending())
+        auto processNextPendingBlock = [&]() -> BlockQueue::QueuedBlock*
         {
-            if (! block->writer.load()->appendBuffer (block->buffer, block->buffer.getNumSamples()))
+            std::scoped_lock lock (queue->processingMutex);
+
+            if (auto b = queue->removeFirstPending())
             {
-                if (! hasSentStop)
+                auto w = b->writer.load();
+
+                if (! w->appendBuffer (b->buffer, b->buffer.getNumSamples()))
                 {
-                    hasSentStop = true;
-                    TRACKTION_LOG_ERROR ("Audio recording failed to write to disk!");
-                    startTimer (1);
+                    if (! hasSentStop)
+                    {
+                        hasSentStop = true;
+                        TRACKTION_LOG_ERROR ("Audio recording failed to write to disk!");
+                        startTimer (1);
+                    }
                 }
+
+                if (b->thumbnail != nullptr)
+                {
+                    b->thumbnail->addBlock (b->buffer, 0, b->buffer.getNumSamples());
+                    b->thumbnail = nullptr;
+                }
+
+                return b;
             }
 
-            if (block->thumbnail != nullptr)
-            {
-                block->thumbnail->addBlock (block->buffer, 0, block->buffer.getNumSamples());
-                block->thumbnail = nullptr;
-            }
+            return nullptr;
+        };
 
+        if (auto block = processNextPendingBlock())
+        {
             queue->addToFreeQueue (block);
         }
         else
