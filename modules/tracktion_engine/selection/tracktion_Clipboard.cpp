@@ -626,14 +626,14 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects,
                                         IDs::resamplingQuality, juce::VariantConverter<ResamplingQuality>::toVar (acb->getResamplingQuality()));
 
                 // Store ARA plugin state (e.g. Melodyne note edits) so it survives copy/paste
-                if (acb->araProxy != nullptr && acb->araProxy->isValid())
+                if (auto proxy = acb->getARAProxy(); proxy != nullptr && proxy->isValid())
                 {
-                    auto araData = acb->araProxy->storeARAArchiveForCopy();
+                    auto araData = proxy->storeARAArchiveForCopy();
 
                     if (araData.getSize() > 0)
                     {
-                        auto sourceID = acb->araProxy->getAudioSourcePersistentID();
-                        auto modID = acb->araProxy->getAudioModificationPersistentID();
+                        auto sourceID = proxy->getAudioSourcePersistentID();
+                        auto modID = proxy->getAudioModificationPersistentID();
 
                         info.state.setProperty (IDs::araArchive, araData.toBase64Encoding(), nullptr);
                         info.state.setProperty ("araArchiveSourceID", sourceID, nullptr);
@@ -996,12 +996,12 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
                     // Ensure ARA is initialized for this clip
                     acb->setupARA (true);
 
-                    if (acb->araProxy != nullptr && acb->araProxy->isValid())
+                    if (auto proxy = acb->getARAProxy(); proxy != nullptr && proxy->isValid())
                     {
                         juce::MemoryBlock data;
                         data.fromBase64Encoding (archiveData);
 
-                        acb->araProxy->restoreARAArchiveForPaste (data, archivedSourceID, archivedModID);
+                        proxy->restoreARAArchiveForPaste (data, archivedSourceID, archivedModID);
                     }
                 }
             }

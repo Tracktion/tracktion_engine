@@ -522,11 +522,12 @@ public:
         ARA cleanup happens while the track is still alive. */
     void tearDownARA();
 
-    /** The ARAFileReader proxy if this clip is using an ARA plugin (e.g. Melodyne). */
-    juce::ReferenceCountedObjectPtr<ARAFileReader> araProxy;
+    /** Returns the ARAFileReader proxy if this clip is using an ARA plugin (e.g. Melodyne). */
+    juce::ReferenceCountedObjectPtr<ARAFileReader> getARAProxy() const   { return araProxy; }
 
-    /** @deprecated Use araProxy instead. */
-    juce::ReferenceCountedObjectPtr<ARAFileReader>& melodyneProxy = araProxy;
+    /** @deprecated Use getARAProxy() instead. */
+    [[deprecated("Use getARAProxy() instead")]]
+    juce::ReferenceCountedObjectPtr<ARAFileReader> getMelodyneProxy() const  { return araProxy; }
 
     /** Returns true if this clip is using an ARA plugin. */
     bool isUsingARA() const;
@@ -535,28 +536,6 @@ public:
     [[deprecated("Use isUsingARA() instead")]]
     bool isUsingMelodyne() const { return isUsingARA(); }
 
-    /** Shows the ARA plugin window if this clip is using an ARA plugin. */
-    void showARAWindow();
-
-    /** @deprecated Use showARAWindow() instead. */
-    [[deprecated("Use showARAWindow() instead")]]
-    void showMelodyneWindow() { showARAWindow(); }
-
-    /** Hides the ARA plugin window if this clip is using an ARA plugin. */
-    void hideARAWindow();
-
-    /** @deprecated Use hideARAWindow() instead. */
-    [[deprecated("Use hideARAWindow() instead")]]
-    void hideMelodyneWindow() { hideARAWindow(); }
-
-    /** If this clip is using an ARA plugin, this will create a new MIDI clip based
-        on the ARA plugin's analysis.
-    */
-    void araConvertToMIDI();
-
-    /** @deprecated Use araConvertToMIDI() instead. */
-    [[deprecated("Use araConvertToMIDI() instead")]]
-    void melodyneConvertToMIDI() { araConvertToMIDI(); }
 
     /** @internal */
     void loadARAState();
@@ -710,6 +689,8 @@ protected:
 
 private:
     //==============================================================================
+    juce::ReferenceCountedObjectPtr<ARAFileReader> araProxy;
+
     class TempoDetectTask;
     class BeatSensitivityComp;
 
@@ -742,6 +723,30 @@ private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioClipBase)
 };
+
+//==============================================================================
+/** Shows the ARA plugin window if this clip is using an ARA plugin. */
+void showARAWindow (AudioClipBase&);
+
+/** Hides the ARA plugin window if this clip is using an ARA plugin. */
+void hideARAWindow (AudioClipBase&);
+
+/** If this clip is using an ARA plugin, this will create a new MIDI clip based
+    on the ARA plugin's analysis.
+*/
+void araConvertToMIDI (AudioClipBase&);
+
+/** @deprecated Use showARAWindow() instead. */
+[[deprecated("Use showARAWindow() instead")]]
+inline void showMelodyneWindow (AudioClipBase& c) { showARAWindow (c); }
+
+/** @deprecated Use hideARAWindow() instead. */
+[[deprecated("Use hideARAWindow() instead")]]
+inline void hideMelodyneWindow (AudioClipBase& c) { hideARAWindow (c); }
+
+/** @deprecated Use araConvertToMIDI() instead. */
+[[deprecated("Use araConvertToMIDI() instead")]]
+inline void melodyneConvertToMIDI (AudioClipBase& c) { araConvertToMIDI (c); }
 
 }} // namespace tracktion { inline namespace engine
 

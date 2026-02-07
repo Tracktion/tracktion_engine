@@ -706,7 +706,7 @@ Edit::~Edit()
             if (auto acb = dynamic_cast<AudioClipBase*> (c))
             {
                 acb->flushStateToValueTree();
-                acb->hideARAWindow();
+                hideARAWindow (*acb);
             }
         }
     }

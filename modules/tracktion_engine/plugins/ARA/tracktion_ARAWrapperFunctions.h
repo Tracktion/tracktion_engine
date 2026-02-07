@@ -121,8 +121,8 @@ struct ModelUpdateFunctions
         for (auto track : getAudioTracks (edit))
             for (auto clip : track->getClips())
                 if (auto audioClip = dynamic_cast<AudioClipBase*> (clip))
-                    if (audioClip->araProxy != nullptr)
-                        audioClip->araProxy->contentHasChanged();
+                    if (auto proxy = audioClip->getARAProxy())
+                        proxy->contentHasChanged();
     }
 
     static void ARA_CALL notifyAudioSourceAnalysisProgress (ARAModelUpdateControllerHostRef,

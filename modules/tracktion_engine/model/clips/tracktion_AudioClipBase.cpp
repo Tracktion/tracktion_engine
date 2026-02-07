@@ -1109,32 +1109,32 @@ void AudioClipBase::loadARAState()
     setupARA (true);
 }
 
-void AudioClipBase::showARAWindow()
+void showARAWindow (AudioClipBase& clip)
 {
-    if (araProxy != nullptr)
-        araProxy->showPluginWindow();
+    if (auto proxy = clip.getARAProxy())
+        proxy->showPluginWindow();
 }
 
-void AudioClipBase::hideARAWindow()
+void hideARAWindow (AudioClipBase& clip)
 {
-    if (araProxy != nullptr)
-        araProxy->hidePluginWindow();
+    if (auto proxy = clip.getARAProxy())
+        proxy->hidePluginWindow();
 }
 
-void AudioClipBase::araConvertToMIDI()
+void araConvertToMIDI (AudioClipBase& clip)
 {
-    if (araProxy != nullptr)
+    if (auto proxy = clip.getARAProxy())
     {
-        juce::MidiMessageSequence m (araProxy->getAnalysedMIDISequence());
+        juce::MidiMessageSequence m (proxy->getAnalysedMIDISequence());
 
         if (m.getNumEvents() > 0)
         {
             juce::UndoManager* um = nullptr;
 
             juce::ValueTree midiClip (IDs::MIDICLIP);
-            midiClip.setProperty (IDs::name, getName(), um);
-            midiClip.setProperty (IDs::start, getPosition().getStart().inSeconds(), um);
-            midiClip.setProperty (IDs::length, getPosition().getLength().inSeconds(), um);
+            midiClip.setProperty (IDs::name, clip.getName(), um);
+            midiClip.setProperty (IDs::start, clip.getPosition().getStart().inSeconds(), um);
+            midiClip.setProperty (IDs::length, clip.getPosition().getLength().inSeconds(), um);
 
             juce::ValueTree ms (IDs::SEQUENCE);
             ms.setProperty (IDs::ver, 1, um);
@@ -1142,7 +1142,7 @@ void AudioClipBase::araConvertToMIDI()
 
             midiClip.addChild (ms, -1, um);
 
-            auto& ts = edit.tempoSequence;
+            auto& ts = clip.edit.tempoSequence;
 
             for (int i = 0; i < m.getNumEvents(); ++i)
             {
@@ -1161,13 +1161,13 @@ void AudioClipBase::araConvertToMIDI()
                 }
             }
 
-            if (auto t = getClipTrack())
-                t->insertClipWithState (midiClip, getName(), Type::midi,
-                                        { getPosition().time, {} }, true, false);
+            if (auto t = clip.getClipTrack())
+                t->insertClipWithState (midiClip, clip.getName(), TrackItem::Type::midi,
+                                        { clip.getPosition().time, {} }, true, false);
         }
         else
         {
-            edit.engine.getUIBehaviour().showWarningMessage (TRANS("No MIDI notes were found by the plugin!"));
+            clip.edit.engine.getUIBehaviour().showWarningMessage (TRANS("No MIDI notes were found by the plugin!"));
         }
     }
 }

@@ -99,7 +99,7 @@ private:
 ARANode::ARANode (AudioClipBase& c, tracktion::graph::PlayHead& ph, bool isRendering)
     : clip (c), playHead (ph),
       clipLevel (clip.getLiveClipLevel()), clipPtr (&c),
-      araProxy (c.araProxy),
+      araProxy (c.getARAProxy()),
       fileInfo (clip.getAudioFile().getInfo()),
       isOfflineRender (isRendering)
 {
