@@ -48,6 +48,25 @@ public:
         This re-reads the content and broadcasts a change message. */
     void contentHasChanged();
 
+    /** Store a partial ARA archive of this clip's plugin edits for copy/paste.
+        Returns an empty MemoryBlock if ARA is not active. */
+    juce::MemoryBlock storeARAArchiveForCopy();
+
+    /** Restore a partial ARA archive into this clip after paste.
+        @param data            The archive data (from storeARAArchiveForCopy)
+        @param archivedSourceID  The audio source persistent ID from when the archive was created
+        @param archivedModID     The audio modification persistent ID from when the archive was created
+    */
+    void restoreARAArchiveForPaste (const juce::MemoryBlock& data,
+                                    const juce::String& archivedSourceID,
+                                    const juce::String& archivedModID);
+
+    /** Returns the persistent ID of the current audio source, or empty if ARA is not active. */
+    juce::String getAudioSourcePersistentID() const;
+
+    /** Returns the persistent ID of the current audio modification, or empty if ARA is not active. */
+    juce::String getAudioModificationPersistentID() const;
+
 private:
     std::unique_ptr<ARAClipPlayer> player;
     juce::MidiBuffer midiBuffer;

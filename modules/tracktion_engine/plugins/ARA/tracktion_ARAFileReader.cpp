@@ -284,6 +284,58 @@ struct ARAClipPlayer  : private Selectable::Listener
     }
 
     //==============================================================================
+    juce::MemoryBlock storeARAArchiveForCopy()
+    {
+        if (auto doc = getDocument())
+        {
+            if (playbackRegionAndSource != nullptr
+                && playbackRegionAndSource->audioSource != nullptr
+                && playbackRegionAndSource->audioModification != nullptr)
+            {
+                return doc->storeObjectsForCopy (playbackRegionAndSource->audioSource->audioSourceRef,
+                                                 playbackRegionAndSource->audioModification->audioModificationRef);
+            }
+        }
+
+        return {};
+    }
+
+    void restoreARAArchiveForPaste (const juce::MemoryBlock& data,
+                                    const juce::String& archivedSourceID,
+                                    const juce::String& archivedModID)
+    {
+        if (auto doc = getDocument())
+        {
+            if (playbackRegionAndSource != nullptr
+                && playbackRegionAndSource->audioSource != nullptr
+                && playbackRegionAndSource->audioModification != nullptr)
+            {
+                auto currentSourceID = getAudioSourcePersistentID();
+                auto currentModID = getAudioModificationPersistentID();
+
+                doc->restoreObjectsForPaste (data, archivedSourceID, currentSourceID,
+                                             archivedModID, currentModID);
+            }
+        }
+    }
+
+    juce::String getAudioSourcePersistentID() const
+    {
+        if (playbackRegionAndSource != nullptr && playbackRegionAndSource->audioSource != nullptr)
+            return clip.getAudioFile().getHashString() + "_" + clip.itemID.toString();
+
+        return {};
+    }
+
+    juce::String getAudioModificationPersistentID() const
+    {
+        if (playbackRegionAndSource != nullptr && playbackRegionAndSource->audioModification != nullptr)
+            return juce::String::toHexString (currentHashCode);
+
+        return {};
+    }
+
+    //==============================================================================
     void setViewSelection()
     {
         if (playbackRegionAndSource != nullptr)
@@ -637,6 +689,38 @@ void ARAFileReader::contentHasChanged()
         player->contentHasChanged();
 }
 
+juce::MemoryBlock ARAFileReader::storeARAArchiveForCopy()
+{
+    if (player != nullptr)
+        return player->storeARAArchiveForCopy();
+
+    return {};
+}
+
+void ARAFileReader::restoreARAArchiveForPaste (const juce::MemoryBlock& data,
+                                               const juce::String& archivedSourceID,
+                                               const juce::String& archivedModID)
+{
+    if (player != nullptr)
+        player->restoreARAArchiveForPaste (data, archivedSourceID, archivedModID);
+}
+
+juce::String ARAFileReader::getAudioSourcePersistentID() const
+{
+    if (player != nullptr)
+        return player->getAudioSourcePersistentID();
+
+    return {};
+}
+
+juce::String ARAFileReader::getAudioModificationPersistentID() const
+{
+    if (player != nullptr)
+        return player->getAudioModificationPersistentID();
+
+    return {};
+}
+
 //==============================================================================
 juce::MidiMessageSequence ARAFileReader::getAnalysedMIDISequence()
 {
@@ -917,6 +1001,10 @@ bool ARAFileReader::isAnalysingContent()                       { return false; }
 juce::MidiMessageSequence ARAFileReader::getAnalysedMIDISequence()   { return {}; }
 void ARAFileReader::sourceClipChanged()                        {}
 void ARAFileReader::contentHasChanged()                        {}
+juce::MemoryBlock ARAFileReader::storeARAArchiveForCopy()      { return {}; }
+void ARAFileReader::restoreARAArchiveForPaste (const juce::MemoryBlock&, const juce::String&, const juce::String&) {}
+juce::String ARAFileReader::getAudioSourcePersistentID() const { return {}; }
+juce::String ARAFileReader::getAudioModificationPersistentID() const { return {}; }
 
 ARADocumentHolder::ARADocumentHolder (Edit& e, const juce::ValueTree&) : edit (e) { juce::ignoreUnused (edit); }
 ARADocumentHolder::~ARADocumentHolder() {}

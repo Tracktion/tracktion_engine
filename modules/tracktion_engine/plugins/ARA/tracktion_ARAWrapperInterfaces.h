@@ -156,6 +156,65 @@ public:
         }
     }
 
+    /** Store a partial ARA archive containing just the given audio source and modification.
+        Used by clipboard copy to capture ARA plugin edits (e.g. Melodyne note corrections).
+    */
+    juce::MemoryBlock storeObjectsForCopy (ARAAudioSourceRef source, ARAAudioModificationRef modification)
+    {
+        CRASH_TRACER
+        TRACKTION_ASSERT_MESSAGE_THREAD
+
+        juce::MemoryBlock data;
+        juce::MemoryOutputStream out (data, false);
+
+        SizedStruct<ARA_STRUCT_MEMBER (ARAStoreObjectsFilter, audioModificationRefs)> filter {};
+        filter.documentData = kARAFalse;
+        filter.audioSourceRefsCount = 1;
+        filter.audioSourceRefs = &source;
+        filter.audioModificationRefsCount = 1;
+        filter.audioModificationRefs = &modification;
+
+        dci->storeObjectsToArchive (dcRef, toHostRef (&out), &filter);
+        out.flush();
+
+        return data;
+    }
+
+    /** Restore a partial ARA archive, mapping archived persistent IDs to current ones.
+        Used by clipboard paste to restore ARA plugin edits into a newly pasted clip.
+    */
+    void restoreObjectsForPaste (const juce::MemoryBlock& data,
+                                 const juce::String& archivedSourceID, const juce::String& currentSourceID,
+                                 const juce::String& archivedModID, const juce::String& currentModID)
+    {
+        CRASH_TRACER
+        TRACKTION_ASSERT_MESSAGE_THREAD
+
+        if (data.getSize() == 0)
+            return;
+
+        juce::MemoryBlock dataCopy (data);
+
+        SizedStruct<ARA_STRUCT_MEMBER (ARARestoreObjectsFilter, audioModificationCurrentIDs)> filter {};
+        filter.documentData = kARAFalse;
+
+        ARAPersistentID srcArchiveID = archivedSourceID.toRawUTF8();
+        ARAPersistentID srcCurrentID = currentSourceID.toRawUTF8();
+        filter.audioSourceIDsCount = 1;
+        filter.audioSourceArchiveIDs = &srcArchiveID;
+        filter.audioSourceCurrentIDs = &srcCurrentID;
+
+        ARAPersistentID modArchiveID = archivedModID.toRawUTF8();
+        ARAPersistentID modCurrentID = currentModID.toRawUTF8();
+        filter.audioModificationIDsCount = 1;
+        filter.audioModificationArchiveIDs = &modArchiveID;
+        filter.audioModificationCurrentIDs = &modCurrentID;
+
+        beginEditing (true);
+        dci->restoreObjectsFromArchive (dcRef, toHostRef (&dataCopy), &filter);
+        endEditing (true);
+    }
+
     void willCreatePlaybackRegionOnTrack (Track* track)
     {
         if (regionSequences.count (track) == 0)

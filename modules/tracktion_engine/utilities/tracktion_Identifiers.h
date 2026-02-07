@@ -370,6 +370,7 @@ namespace IDs
     DECLARE_ID (linkID)
     DECLARE_ID (araPluginID)
     DECLARE_ID (araPluginDescription)
+    DECLARE_ID (araArchive)
     DECLARE_ID (MELODYNEFILEREADER)
     DECLARE_ID (ARAFILEREADER)
     DECLARE_ID (ARADOCUMENT)

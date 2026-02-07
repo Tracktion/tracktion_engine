@@ -624,6 +624,22 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects,
                 addValueTreeProperties (info.state,
                                         IDs::proxyAllowed, acb->canUseProxy(),
                                         IDs::resamplingQuality, juce::VariantConverter<ResamplingQuality>::toVar (acb->getResamplingQuality()));
+
+                // Store ARA plugin state (e.g. Melodyne note edits) so it survives copy/paste
+                if (acb->araProxy != nullptr && acb->araProxy->isValid())
+                {
+                    auto araData = acb->araProxy->storeARAArchiveForCopy();
+
+                    if (araData.getSize() > 0)
+                    {
+                        auto sourceID = acb->araProxy->getAudioSourcePersistentID();
+                        auto modID = acb->araProxy->getAudioModificationPersistentID();
+
+                        info.state.setProperty (IDs::araArchive, araData.toBase64Encoding(), nullptr);
+                        info.state.setProperty ("araArchiveSourceID", sourceID, nullptr);
+                        info.state.setProperty ("araArchiveModID", modID, nullptr);
+                    }
+                }
             }
 
             info.trackOffset = allTracks.indexOf (clip->getTrack()) - firstTrackIndex;
@@ -956,6 +972,39 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
                 groupMap[originalGroup] = c->edit.createNewItemID();
 
             c->setGroup (groupMap[originalGroup]);
+        }
+    }
+
+    // Restore ARA plugin state (e.g. Melodyne note edits) for pasted audio clips
+    for (auto c : itemsAdded.getItemsOfType<Clip>())
+    {
+        if (auto acb = dynamic_cast<AudioClipBase*> (c))
+        {
+            if (acb->state.hasProperty (IDs::araArchive))
+            {
+                auto archiveData = acb->state.getProperty (IDs::araArchive).toString();
+                auto archivedSourceID = acb->state.getProperty ("araArchiveSourceID").toString();
+                auto archivedModID = acb->state.getProperty ("araArchiveModID").toString();
+
+                // Remove transient clipboard properties from the live state
+                acb->state.removeProperty (IDs::araArchive, nullptr);
+                acb->state.removeProperty ("araArchiveSourceID", nullptr);
+                acb->state.removeProperty ("araArchiveModID", nullptr);
+
+                if (archiveData.isNotEmpty() && acb->isUsingARA())
+                {
+                    // Ensure ARA is initialized for this clip
+                    acb->setupARA (true);
+
+                    if (acb->araProxy != nullptr && acb->araProxy->isValid())
+                    {
+                        juce::MemoryBlock data;
+                        data.fromBase64Encoding (archiveData);
+
+                        acb->araProxy->restoreARAArchiveForPaste (data, archivedSourceID, archivedModID);
+                    }
+                }
+            }
         }
     }
 
