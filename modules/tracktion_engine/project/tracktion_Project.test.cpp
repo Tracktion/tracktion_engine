@@ -215,6 +215,141 @@ TEST_SUITE ("tracktion_engine")
         cleanup();
     }
 
+    TEST_CASE ("FolderBasedProject: create with edits and clips")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        // Use a temp directory for the whole test
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        // Create a folder-based project
+        auto projectFolder = tempDir.getChildFile ("test_folder_project");
+        projectFolder.createDirectory();
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        auto project = tp.project;
+
+        REQUIRE (project != nullptr);
+        CHECK (project->isValid());
+
+        // Create a sin wave file to use as audio source
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile != nullptr);
+        REQUIRE (sinFile->getFile().existsAsFile());
+
+        // Create 2 edits
+        auto editItem1 = project->createNewEdit();
+        auto editItem2 = project->createNewEdit();
+        REQUIRE (editItem1 != nullptr);
+        REQUIRE (editItem2 != nullptr);
+
+        auto editSourceFile1 = editItem1->getSourceFile();
+        auto editSourceFile2 = editItem2->getSourceFile();
+
+        // -- Edit 1: one audio clip + one MIDI clip --
+        {
+            auto edit = createEmptyEdit (engine, editSourceFile1);
+
+            edit->ensureNumberOfAudioTracks (2);
+            auto audioTracks = getAudioTracks (*edit);
+            REQUIRE (audioTracks.size() >= 2);
+
+            // Audio clip on track 0
+            auto waveClip = insertWaveClip (*audioTracks[0], "TestWave",
+                                            sinFile->getFile(),
+                                            { { 0_tp, TimePosition::fromSeconds (2.0) } },
+                                            DeleteExistingClips::no);
+            CHECK (waveClip != nullptr);
+
+            // MIDI clip on track 1
+            auto midiClip = insertMIDIClip (*audioTracks[1], "TestMIDI",
+                                            { 0_tp, TimePosition::fromSeconds (4.0) });
+            REQUIRE (midiClip != nullptr);
+            midiClip->getSequence().addNote (60, BeatPosition::fromBeats (0.0),
+                                             BeatDuration::fromBeats (1.0), 100, 0, nullptr);
+            midiClip->getSequence().addNote (64, BeatPosition::fromBeats (1.0),
+                                             BeatDuration::fromBeats (0.5), 80, 0, nullptr);
+            midiClip->getSequence().addNote (67, BeatPosition::fromBeats (2.0),
+                                             BeatDuration::fromBeats (2.0), 127, 0, nullptr);
+
+            CHECK (EditFileOperations (*edit).save (false, true, false));
+        }
+
+        // -- Edit 2: one audio clip --
+        {
+            auto edit = createEmptyEdit (engine, editSourceFile2);
+
+            edit->ensureNumberOfAudioTracks (1);
+            auto audioTracks = getAudioTracks (*edit);
+            REQUIRE (audioTracks.size() >= 1);
+
+            auto waveClip = insertWaveClip (*audioTracks[0], "TestWave2",
+                                            sinFile->getFile(),
+                                            { { 0_tp, TimePosition::fromSeconds (1.0) } },
+                                            DeleteExistingClips::no);
+            CHECK (waveClip != nullptr);
+
+            CHECK (EditFileOperations (*edit).save (false, true, false));
+        }
+
+        project->save();
+
+        // Verify project has items (2 edits + potentially audio items)
+        CHECK (project->getNumProjectItems() >= 2);
+
+        // Verify edit items can be found by file
+        CHECK (project->getProjectItemForFile (editSourceFile1) != nullptr);
+        CHECK (project->getProjectItemForFile (editSourceFile2) != nullptr);
+
+        // Re-load edit 1 and verify content
+        {
+            auto loadedEdit = loadEditFromFile (engine, editSourceFile1);
+            REQUIRE (loadedEdit != nullptr);
+
+            auto audioTracks = getAudioTracks (*loadedEdit);
+            CHECK (audioTracks.size() >= 2);
+
+            // Verify MIDI clip with 3 notes
+            bool foundMidiClip = false;
+            for (auto* track : audioTracks)
+            {
+                for (auto* clip : track->getClips())
+                {
+                    if (auto* midiClip = dynamic_cast<MidiClip*> (clip))
+                    {
+                        foundMidiClip = true;
+                        CHECK (midiClip->getSequence().getNotes().size() == 3);
+                    }
+                }
+            }
+            CHECK (foundMidiClip);
+
+            // Verify audio clip exists
+            bool foundAudioClip = false;
+            for (auto* track : audioTracks)
+            {
+                for (auto* clip : track->getClips())
+                {
+                    if (dynamic_cast<WaveAudioClip*> (clip) != nullptr)
+                    {
+                        foundAudioClip = true;
+                        break;
+                    }
+                }
+            }
+            CHECK (foundAudioClip);
+        }
+
+        cleanup();
+    }
+
     TEST_CASE ("Project: archive and unarchive round-trip")
     {
         auto& engine = *Engine::getEngines()[0];
