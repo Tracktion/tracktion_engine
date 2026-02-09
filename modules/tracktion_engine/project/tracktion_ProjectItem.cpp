@@ -235,6 +235,19 @@ static juce::String readStringAutoDetectingUTF (juce::InputStream& in)
     return mo.toString();
 }
 
+ProjectItem::ProjectItem (Engine& e, const juce::File& src,
+                          const juce::String& type_, const juce::String& name_,
+                          Category category_, Project& owner)
+   : engine (e),
+     type (type_),
+     objectName (name_),
+     file (src.getFullPathName()),
+     sourceFile (src),
+     ownerProject (&owner)
+{
+    setCategory (category_);
+}
+
 ProjectItem::ProjectItem (Engine& e, ProjectItemID id, juce::InputStream* in)
    : engine (e), itemID (id)
 {
@@ -423,7 +436,11 @@ juce::File ProjectItem::getEditPreviewFile() const
         auto dir = engine.getTemporaryFileManager().getTempDirectory().getChildFile ("previews");
         dir.createDirectory();
 
-        return dir.getChildFile ("preview_" + getID().toStringSuitableForFilename()).withFileExtension ("ogg");
+        auto fileId = getID().isValid()
+            ? getID().toStringSuitableForFilename()
+            : juce::String::toHexString (file.hashCode64());
+
+        return dir.getChildFile ("preview_" + fileId).withFileExtension ("ogg");
     }
 
     return {};
@@ -438,7 +455,11 @@ juce::File ProjectItem::getEditThumbnailFile() const
         auto dir = engine.getTemporaryFileManager().getTempDirectory().getChildFile ("previews");
         dir.createDirectory();
 
-        return dir.getChildFile ("preview_" + getID().toStringSuitableForFilename()).withFileExtension ("png");
+        auto fileId = getID().isValid()
+            ? getID().toStringSuitableForFilename()
+            : juce::String::toHexString (file.hashCode64());
+
+        return dir.getChildFile ("preview_" + fileId).withFileExtension ("png");
     }
 
     return {};
@@ -447,13 +468,16 @@ juce::File ProjectItem::getEditThumbnailFile() const
 //==============================================================================
 Project::Ptr ProjectItem::getProject() const
 {
+    if (auto* p = ownerProject.get())
+        return p;
+
     return engine.getProjectManager().getProject (getID().getProjectID());
 }
 
 bool ProjectItem::hasBeenDeleted() const
 {
     if (auto p = getProject())
-        return p->getProjectItemForID (getID()) == nullptr;
+        return itemID.isValid() ? (p->getProjectItemForID (getID()) == nullptr) : false;
 
     return true;
 }

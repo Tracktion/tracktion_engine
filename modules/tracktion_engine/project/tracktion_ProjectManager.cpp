@@ -245,7 +245,7 @@ Project::Ptr ProjectManager::addProjectToList (const juce::File& f,
                                                juce::ValueTree folderToAddTo,
                                                int index)
 {
-    if (f.existsAsFile() && isTracktionProjectFile (f))
+    if ((f.existsAsFile() && isTracktionProjectFile (f)) || f.isDirectory())
     {
         const juce::ScopedLock sl (lock);
 
@@ -256,8 +256,9 @@ Project::Ptr ProjectManager::addProjectToList (const juce::File& f,
 
         if (p->isValid())
         {
-            if (auto existing = findProjectWithId (folders, p->getProjectID()))
-                return existing;
+            if (p->getProjectID() != 0)
+                if (auto existing = findProjectWithId (folders, p->getProjectID()))
+                    return existing;
 
             auto v = createValueTree (IDs::PROJECT,
                                       IDs::file, f.getFullPathName());

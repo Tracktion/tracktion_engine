@@ -12,15 +12,18 @@ namespace tracktion { inline namespace engine
 {
 
 //==============================================================================
-Project::Project (Engine& e, ProjectManager& pm, const juce::File& projectFile)
+Project::Project (Engine& e, ProjectManager& pm, const juce::File& fileOrFolder)
    : engine (e), projectManager (pm)
 {
-    impl = std::make_unique<FileBasedProject> (*this, projectFile);
+    if (fileOrFolder.isDirectory())
+        impl = std::make_unique<FolderBasedProject> (*this, fileOrFolder);
+    else
+        impl = std::make_unique<FileBasedProject> (*this, fileOrFolder);
 
     for (auto* p : pm.openProjects)
     {
         juce::ignoreUnused (p);
-        jassert (p->getProjectFile() != projectFile);
+        jassert (p->getProjectFile() != fileOrFolder);
     }
 
     pm.openProjects.add (this);

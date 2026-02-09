@@ -83,6 +83,7 @@ using namespace std::literals;
 #include "project/tracktion_ProjectItemID.cpp"
 #include "project/tracktion_ProjectItem.cpp"
 #include "project/tracktion_FileBasedProject.cpp"
+#include "project/tracktion_FolderBasedProject.cpp"
 #include "project/tracktion_Project.cpp"
 #include "project/tracktion_ProjectManager.cpp"
 #include "project/tracktion_ProjectSearchIndex.cpp"

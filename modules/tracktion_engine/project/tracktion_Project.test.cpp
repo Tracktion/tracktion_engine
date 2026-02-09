@@ -120,6 +120,101 @@ TEST_SUITE ("tracktion_engine")
         cleanup();
     }
 
+    TEST_CASE ("FolderBasedProject: basic operations")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        // Create a temp folder to act as the project root
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFolder = tempDir.getChildFile ("test_folder_project");
+        projectFolder.createDirectory();
+
+        // Drop a .wav file into the folder
+        auto wavFile = projectFolder.getChildFile ("audio.wav");
+        wavFile.create();
+        REQUIRE (wavFile.existsAsFile());
+
+        // Drop a .tracktionedit file into the folder
+        auto editFile = projectFolder.getChildFile ("my_edit.tracktionedit");
+        editFile.create();
+        REQUIRE (editFile.existsAsFile());
+
+        // Add a file in a "Recorded" subfolder
+        auto recordedDir = projectFolder.getChildFile ("Recorded");
+        recordedDir.createDirectory();
+        auto recordedWav = recordedDir.getChildFile ("take1.wav");
+        recordedWav.create();
+
+        // Create the folder-based project via TempProject
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        auto project = tp.project;
+
+        REQUIRE (project != nullptr);
+
+        // isValid — folder exists
+        CHECK (project->isValid());
+
+        // getName — folder name
+        CHECK (project->getName() == "test_folder_project");
+
+        // getProjectID — always 0
+        CHECK (project->getProjectID() == 0);
+
+        // save — always returns true
+        CHECK (project->save());
+
+        // getSelectableDescription
+        CHECK (project->getSelectableDescription() == TRANS("Folder Project"));
+
+        // getDefaultDirectory — returns the folder itself
+        CHECK (project->getDefaultDirectory() == projectFolder);
+
+        // getAllProjectItems — should discover all 3 files
+        auto items = project->getAllProjectItems();
+        CHECK (items.size() == 3);
+
+        // getProjectItemForFile
+        auto wavItem = project->getProjectItemForFile (wavFile);
+        REQUIRE (wavItem != nullptr);
+        CHECK (wavItem->getType() == ProjectItem::waveItemType());
+        CHECK (wavItem->getName() == "audio");
+        CHECK (wavItem->getSourceFile() == wavFile);
+
+        auto editItem = project->getProjectItemForFile (editFile);
+        REQUIRE (editItem != nullptr);
+        CHECK (editItem->getType() == ProjectItem::editItemType());
+
+        // hasBeenDeleted — should be false for folder items
+        CHECK_FALSE (wavItem->hasBeenDeleted());
+        CHECK_FALSE (editItem->hasBeenDeleted());
+
+        // getProject() should return the owning project
+        CHECK (wavItem->getProject() == project);
+        CHECK (editItem->getProject() == project);
+
+        // ProjectItemID should be invalid for folder-backed items
+        CHECK_FALSE (wavItem->getID().isValid());
+        CHECK_FALSE (editItem->getID().isValid());
+
+        // Category: edit in root should be Category::edit
+        CHECK (editItem->getCategory() == ProjectItem::Category::edit);
+
+        // Verify category inference for "Recorded" subfolder
+        auto recordedItem = project->getProjectItemForFile (recordedWav);
+        REQUIRE (recordedItem != nullptr);
+        CHECK (recordedItem->getCategory() == ProjectItem::Category::recorded);
+
+        cleanup();
+    }
+
     TEST_CASE ("Project: archive and unarchive round-trip")
     {
         auto& engine = *Engine::getEngines()[0];

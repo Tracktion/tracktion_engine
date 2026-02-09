@@ -67,6 +67,11 @@ public:
                  double length,
                  ProjectItemID);
 
+    /** Creates a folder-backed ProjectItem with an absolute source file path. */
+    ProjectItem (Engine&, const juce::File& sourceFile,
+                 const juce::String& type, const juce::String& name,
+                 Category, Project& ownerProject);
+
     ~ProjectItem() override;
 
     //==============================================================================
@@ -182,6 +187,7 @@ public:
 
 private:
     friend class FileBasedProject;
+    friend class FolderBasedProject;
     friend class ProjectManager;
     friend class Project;
 
@@ -189,6 +195,7 @@ private:
     juce::String type, objectName, description, file;
     double length = 0;
     juce::File sourceFile, newDstFile;
+    SafeSelectable<Project> ownerProject;
 
     void timerCallback() override;
     void handleAsyncUpdate() override;

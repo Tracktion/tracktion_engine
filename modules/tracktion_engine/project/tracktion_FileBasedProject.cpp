@@ -16,7 +16,7 @@ static const char* fileBasedProjectMagicNumberV1 = "TP01";
 
 //==============================================================================
 FileBasedProject::FileBasedProject (Project& o, const juce::File& projectFile)
-   : owner (o), file (projectFile)
+   : ProjectBase (o), file (projectFile)
 {
     jassert (isTracktionProjectFile (file));
 }

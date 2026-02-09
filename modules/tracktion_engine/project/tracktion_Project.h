@@ -11,7 +11,9 @@
 namespace tracktion { inline namespace engine
 {
 
+class ProjectBase;
 class FileBasedProject;
+class FolderBasedProject;
 
 //==============================================================================
 /** A tracktion project.
@@ -146,11 +148,13 @@ public:
     ProjectManager& projectManager;
 
 private:
+    friend class ProjectBase;
     friend class FileBasedProject;
+    friend class FolderBasedProject;
     friend class ProjectItem;
     friend class ProjectManager;
 
-    std::unique_ptr<FileBasedProject> impl;
+    std::unique_ptr<ProjectBase> impl;
 
     Project (Engine&, ProjectManager&, const juce::File&);
 

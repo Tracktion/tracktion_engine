@@ -1,0 +1,467 @@
+/*
+    ,--.                     ,--.     ,--.  ,--.
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
+  '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
+    |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
+    `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
+
+    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+*/
+
+namespace tracktion { inline namespace engine
+{
+
+//==============================================================================
+FolderBasedProject::FolderBasedProject (Project& o, const juce::File& f)
+   : ProjectBase (o), folder (f)
+{
+    jassert (folder.isDirectory());
+}
+
+FolderBasedProject::~FolderBasedProject()
+{
+}
+
+//==============================================================================
+void FolderBasedProject::ensureScanned()
+{
+    const juce::ScopedLock sl (itemLock);
+
+    if (! itemsScanned)
+        scanFolder();
+}
+
+void FolderBasedProject::scanFolder()
+{
+    cachedItems.clear();
+
+    auto files = folder.findChildFiles (juce::File::findFiles, true,
+                                        "*.tracktionedit;*.trkedit;"
+                                        "*.wav;*.aiff;*.aif;*.mp3;*.ogg;*.flac;"
+                                        "*.mid;*.midi;"
+                                        "*.mp4;*.mov");
+
+    for (auto& f : files)
+    {
+        auto type = inferType (f);
+
+        if (type.isEmpty())
+            continue;
+
+        auto category = inferCategory (f, folder);
+        auto name = f.getFileNameWithoutExtension();
+
+        cachedItems.add (new ProjectItem (owner.engine, f, type, name, category, owner));
+    }
+
+    itemsScanned = true;
+}
+
+juce::String FolderBasedProject::inferType (const juce::File& f)
+{
+    if (f.hasFileExtension (".tracktionedit;.trkedit"))
+        return ProjectItem::editItemType();
+
+    if (f.hasFileExtension (".wav;.aiff;.aif;.mp3;.ogg;.flac"))
+        return ProjectItem::waveItemType();
+
+    if (f.hasFileExtension (".mid;.midi"))
+        return ProjectItem::midiItemType();
+
+    if (f.hasFileExtension (".mp4;.mov"))
+        return ProjectItem::videoItemType();
+
+    return {};
+}
+
+ProjectItem::Category FolderBasedProject::inferCategory (const juce::File& f, const juce::File& root)
+{
+    auto parent = f.getParentDirectory();
+
+    if (parent == root)
+    {
+        if (f.hasFileExtension (".tracktionedit;.trkedit"))
+            return ProjectItem::Category::edit;
+
+        return ProjectItem::Category::none;
+    }
+
+    auto dirName = parent.getFileName().toLowerCase();
+
+    if (dirName == "recorded")   return ProjectItem::Category::recorded;
+    if (dirName == "exported")   return ProjectItem::Category::exports;
+    if (dirName == "imported")   return ProjectItem::Category::imported;
+    if (dirName == "rendered")   return ProjectItem::Category::rendered;
+    if (dirName == "frozen")     return ProjectItem::Category::frozen;
+    if (dirName == "archived")   return ProjectItem::Category::archives;
+    if (dirName == "movies")     return ProjectItem::Category::video;
+
+    return ProjectItem::Category::none;
+}
+
+//==============================================================================
+// TODO: PROBLEMATIC — Folder has no binary file to save
+bool FolderBasedProject::save()
+{
+    return true;
+}
+
+// TODO: PROBLEMATIC — No project ID to check; uses folder existence
+bool FolderBasedProject::isValid() const
+{
+    return folder.isDirectory();
+}
+
+bool FolderBasedProject::isReadOnly() const
+{
+    return ! folder.hasWriteAccess();
+}
+
+// TODO: PROBLEMATIC — No project ID concept
+int FolderBasedProject::getProjectID() const
+{
+    return 0;
+}
+
+juce::String FolderBasedProject::getName() const
+{
+    return folder.getFileNameWithoutExtension();
+}
+
+juce::String FolderBasedProject::getDescription() const
+{
+    return {};
+}
+
+// TODO: PROBLEMATIC — getProjectFile() returns the folder itself (name is misleading)
+const juce::File& FolderBasedProject::getProjectFile() const noexcept
+{
+    return folder;
+}
+
+juce::File FolderBasedProject::getDefaultDirectory() const
+{
+    return folder;
+}
+
+juce::File FolderBasedProject::getDirectoryForMedia (ProjectItem::Category category) const
+{
+    auto dir = folder;
+
+    switch (category)
+    {
+        case ProjectItem::Category::archives:  dir = dir.getChildFile (TRANS("Archived")); break;
+        case ProjectItem::Category::exports:   dir = dir.getChildFile (TRANS("Exported")); break;
+        case ProjectItem::Category::frozen:    dir = dir.getChildFile (TRANS("Frozen")); break;
+        case ProjectItem::Category::imported:  dir = dir.getChildFile (TRANS("Imported")); break;
+        case ProjectItem::Category::recorded:  dir = dir.getChildFile (TRANS("Recorded")); break;
+        case ProjectItem::Category::rendered:  dir = dir.getChildFile (TRANS("Rendered")); break;
+        case ProjectItem::Category::video:     dir = dir.getChildFile (TRANS("Movies")); break;
+
+        case ProjectItem::Category::edit:
+        case ProjectItem::Category::none:
+            break;
+    }
+
+    if (! dir.isDirectory())
+        dir.createDirectory();
+
+    return dir;
+}
+
+// TODO: PROBLEMATIC — Renaming the folder on disk
+void FolderBasedProject::setName (const juce::String& newName)
+{
+    if (getName() != newName)
+    {
+        auto dst = folder.getParentDirectory().getChildFile (juce::File::createLegalFileName (newName));
+
+        if (folder.moveFileTo (dst) || folder.moveFileTo (dst))
+            folder = dst;
+
+        owner.projectManager.updateProjectFile (owner, folder);
+        owner.projectManager.saveList();
+        owner.engine.getUIBehaviour().updateAllProjectItemLists();
+    }
+}
+
+void FolderBasedProject::setDescription (const juce::String&)
+{
+    // No-op: folder-based projects have no stored description
+}
+
+void FolderBasedProject::createNewProjectId()
+{
+    // No-op: folder-based projects don't use project IDs
+}
+
+juce::String FolderBasedProject::getProjectProperty (const juce::String&) const
+{
+    return {};
+}
+
+void FolderBasedProject::setProjectProperty (const juce::String&, const juce::String&)
+{
+    // No-op: folder-based projects have no property storage
+}
+
+void FolderBasedProject::refreshProjectPropertiesFromFile()
+{
+    // No-op: no binary file
+}
+
+bool FolderBasedProject::isLibraryProject() const
+{
+    return owner.projectManager.findFolderContaining (owner) == owner.projectManager.getLibraryProjectsFolder();
+}
+
+bool FolderBasedProject::askAboutTempoDetect (const juce::File& f, bool& shouldSetAutoTempo) const
+{
+   #if JUCE_MODAL_LOOPS_PERMITTED
+    Project::NagMode im = (Project::NagMode) static_cast<int> (owner.engine.getPropertyStorage().getProperty (SettingID::autoTempoDetect, (int) Project::nagAsk));
+
+    shouldSetAutoTempo = owner.engine.getPropertyStorage().getProperty (SettingID::autoTempoMatch, false);
+
+    if (im == Project::nagAutoYes)
+        return true;
+
+    if (im == Project::nagAutoNo)
+        return false;
+
+    juce::ToggleButton autoTempo (TRANS("Set tempo to match project"));
+    autoTempo.setToggleState (shouldSetAutoTempo, juce::dontSendNotification);
+    autoTempo.setSize (200, 20);
+
+    juce::ToggleButton dontAsk (TRANS("Remember my choice"));
+    dontAsk.setSize (200, 20);
+
+    const std::unique_ptr<juce::AlertWindow> w (juce::LookAndFeel::getDefaultLookAndFeel()
+                                                  .createAlertWindow (TRANS("Detect Tempo?"),
+                                                                      TRANS("No tempo information was found in XZZX, would you like to detect it automatically?")
+                                                                        .replace ("XZZX", f.getFileNameWithoutExtension()),
+                                                                      {}, {}, {}, juce::AlertWindow::QuestionIcon, 0, nullptr));
+
+    w->addCustomComponent (&autoTempo);
+    w->addCustomComponent (&dontAsk);
+    w->addButton (TRANS("Yes"), 1, juce::KeyPress (juce::KeyPress::returnKey));
+    w->addButton (TRANS("No"), 0, juce::KeyPress (juce::KeyPress::escapeKey));
+
+    const int res = w->runModalLoop();
+
+    shouldSetAutoTempo = autoTempo.getToggleState();
+    owner.engine.getPropertyStorage().setProperty (SettingID::autoTempoMatch, shouldSetAutoTempo);
+
+    if (dontAsk.getToggleState())
+        owner.engine.getPropertyStorage().setProperty (SettingID::autoTempoDetect, (int) (res == 1 ? Project::nagAutoYes : Project::nagAutoNo));
+
+    return res == 1;
+   #else
+    juce::ignoreUnused (f, shouldSetAutoTempo);
+    return true;
+   #endif
+}
+
+juce::Array<ProjectItemID> FolderBasedProject::findOrphanItems()
+{
+    return {};
+}
+
+//==============================================================================
+int FolderBasedProject::getNumProjectItems()
+{
+    ensureScanned();
+    const juce::ScopedLock sl (itemLock);
+    return cachedItems.size();
+}
+
+// TODO: PROBLEMATIC — All items have invalid IDs
+ProjectItemID FolderBasedProject::getProjectItemID (int index)
+{
+    juce::ignoreUnused (index);
+    return {};
+}
+
+// TODO: PROBLEMATIC — All invalid
+juce::Array<ProjectItemID> FolderBasedProject::getAllProjectItemIDs() const
+{
+    return {};
+}
+
+// TODO: PROBLEMATIC — All zero
+juce::Array<int> FolderBasedProject::getAllItemIDs() const
+{
+    return {};
+}
+
+ProjectItem::Ptr FolderBasedProject::getProjectItemAt (int index)
+{
+    ensureScanned();
+    const juce::ScopedLock sl (itemLock);
+
+    if (juce::isPositiveAndBelow (index, cachedItems.size()))
+        return cachedItems[index];
+
+    return {};
+}
+
+juce::Array<ProjectItem::Ptr> FolderBasedProject::getAllProjectItems()
+{
+    ensureScanned();
+    const juce::ScopedLock sl (itemLock);
+
+    juce::Array<ProjectItem::Ptr> result;
+    result.addArray (cachedItems);
+    return result;
+}
+
+// TODO: PROBLEMATIC — Can't match invalid IDs
+int FolderBasedProject::getIndexOf (ProjectItemID) const
+{
+    return -1;
+}
+
+// TODO: PROBLEMATIC — Can't match invalid IDs
+ProjectItem::Ptr FolderBasedProject::getProjectItemForID (ProjectItemID)
+{
+    return {};
+}
+
+ProjectItem::Ptr FolderBasedProject::getProjectItemForFile (const juce::File& fileToFind)
+{
+    ensureScanned();
+    const juce::ScopedLock sl (itemLock);
+
+    for (auto& item : cachedItems)
+        if (item->isForFile (fileToFind))
+            return item;
+
+    return {};
+}
+
+//==============================================================================
+// TODO: PROBLEMATIC — Should it work? Creates a file and adds to cache.
+ProjectItem::Ptr FolderBasedProject::createNewItem (const juce::File& fileToReference,
+                                                    const juce::String& type,
+                                                    const juce::String& name,
+                                                    const juce::String&,
+                                                    ProjectItem::Category cat,
+                                                    bool)
+{
+    ensureScanned();
+
+    if (auto existing = getProjectItemForFile (fileToReference))
+        if (existing->getType() == type)
+            return existing;
+
+    auto item = new ProjectItem (owner.engine, fileToReference, type, name, cat, owner);
+
+    {
+        const juce::ScopedLock sl (itemLock);
+        cachedItems.add (item);
+    }
+
+    changed();
+    return item;
+}
+
+// TODO: PROBLEMATIC — Takes a ProjectItemID which is invalid for folder items
+bool FolderBasedProject::removeProjectItem (ProjectItemID, bool)
+{
+    return false;
+}
+
+void FolderBasedProject::moveProjectItem (int, int)
+{
+    // No-op: no ordering concept
+}
+
+// TODO: PROBLEMATIC — Should it work? Creates a .tracktionedit file in the folder.
+ProjectItem::Ptr FolderBasedProject::createNewEdit()
+{
+    ensureScanned();
+
+    int maxSuffix = 0;
+
+    for (auto& item : cachedItems)
+    {
+        if (item->isEdit())
+        {
+            auto nm = item->getName();
+
+            if (nm.startsWithIgnoreCase (getName() + " Edit "))
+                maxSuffix = std::max (maxSuffix, nm.getTrailingIntValue());
+        }
+    }
+
+    auto name = getName() + " Edit ";
+    name << (maxSuffix + 1);
+
+    auto f = folder.getNonexistentChildFile (name, editFileSuffix, false);
+
+    if (f.create())
+        return createNewItem (f, ProjectItem::editItemType(), name,
+                              {}, ProjectItem::Category::edit, true);
+
+    return {};
+}
+
+void FolderBasedProject::redirectIDsFromProject (int, int)
+{
+    // No-op: no IDs to redirect
+}
+
+//==============================================================================
+void FolderBasedProject::mergeArchiveContents (const juce::File&)
+{
+    // No-op: doesn't apply to folder-based projects
+}
+
+void FolderBasedProject::mergeOtherProjectIntoThis (const juce::File&)
+{
+    // No-op: doesn't apply to folder-based projects
+}
+
+void FolderBasedProject::refreshFolderStructure()
+{
+    // No-op: folder-based projects don't move files to category subfolders.
+    // Use reload() instead to rescan.
+}
+
+void FolderBasedProject::createDefaultFolders()
+{
+    getDirectoryForMedia (ProjectItem::Category::archives);
+    getDirectoryForMedia (ProjectItem::Category::exports);
+    getDirectoryForMedia (ProjectItem::Category::imported);
+    getDirectoryForMedia (ProjectItem::Category::recorded);
+    getDirectoryForMedia (ProjectItem::Category::rendered);
+    getDirectoryForMedia (ProjectItem::Category::edit);
+}
+
+//==============================================================================
+void FolderBasedProject::searchFor (juce::Array<ProjectItemID>&, SearchOperation&)
+{
+    // No-op: no search index
+}
+
+//==============================================================================
+juce::String FolderBasedProject::getSelectableDescription() const
+{
+    return TRANS("Folder Project");
+}
+
+void FolderBasedProject::changed()
+{
+    owner.projectChanged();
+}
+
+void FolderBasedProject::reload (bool lazy)
+{
+    const juce::ScopedLock sl (itemLock);
+    cachedItems.clear();
+    itemsScanned = false;
+
+    if (! lazy)
+        scanFolder();
+}
+
+}} // namespace tracktion { inline namespace engine

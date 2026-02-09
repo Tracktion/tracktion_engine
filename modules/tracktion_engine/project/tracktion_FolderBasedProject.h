@@ -13,14 +13,14 @@ namespace tracktion { inline namespace engine
 
 //==============================================================================
 /**
-    Contains the implementation logic for a file-based (.tracktion) project.
-    Project delegates to this class via the pimpl pattern.
+    A project backend that represents a folder on disk.
+    Files in the folder are discovered as ProjectItems.
 */
-class FileBasedProject  : public ProjectBase
+class FolderBasedProject  : public ProjectBase
 {
 public:
-    FileBasedProject (Project& owner, const juce::File& projectFile);
-    ~FileBasedProject() override;
+    FolderBasedProject (Project& owner, const juce::File& folder);
+    ~FolderBasedProject() override;
 
     //==============================================================================
     bool save() override;
@@ -29,7 +29,7 @@ public:
     int getProjectID() const override;
     juce::String getName() const override;
     juce::String getDescription() const override;
-    const juce::File& getProjectFile() const noexcept override          { return file; }
+    const juce::File& getProjectFile() const noexcept override;
     juce::File getDefaultDirectory() const override;
     juce::File getDirectoryForMedia (ProjectItem::Category) const override;
 
@@ -79,48 +79,24 @@ public:
     //==============================================================================
     juce::String getSelectableDescription() const override;
 
-    void load() override;
     void changed() override;
-    void lockFile() override;
-    void unlockFile() override;
+
+    /** Clears the cached items so the folder is rescanned on next access.
+        If lazy is false, immediately rescans. */
+    void reload (bool lazy = true);
 
 private:
-    friend class Project;
+    juce::File folder;
+    juce::Array<ProjectItem::Ptr> cachedItems;
+    juce::CriticalSection itemLock;
+    bool itemsScanned = false;
 
-    juce::File file;
-    int projectId = 0;
+    void ensureScanned();
+    void scanFolder();
+    static juce::String inferType (const juce::File&);
+    static ProjectItem::Category inferCategory (const juce::File&, const juce::File& root);
 
-    juce::NamedValueSet properties;
-    juce::CriticalSection objectLock, propertyLock;
-
-    std::unique_ptr<juce::BufferedInputStream> stream;
-    std::unique_ptr<juce::FileInputStream> fileLockingStream;
-
-    struct ObjectInfo
-    {
-        int itemID = 0, fileOffset = 0;
-        ProjectItem::Ptr item;
-    };
-
-    juce::Array<ObjectInfo> objects;
-    int objectOffset = 0, indexOffset = 0;
-    bool readOnly = false, hasChanged = false;
-
-    void saveTo (juce::FileOutputStream&);
-    bool readProjectHeader (juce::InputStream&, bool clearObjectInfo = true);
-    juce::BufferedInputStream* getInputStream();
-    void loadAllProjectItems();
-    bool loadProjectItem (ObjectInfo&);
-    void ensureFolderCreated (ProjectItem::Category);
-
-    ProjectItem::Ptr quickAddProjectItem (const juce::String& relPathName,
-                                          const juce::String& type,
-                                          const juce::String& name,
-                                          const juce::String& description,
-                                          ProjectItem::Category,
-                                          ProjectItemID);
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FileBasedProject)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FolderBasedProject)
 };
 
 }} // namespace tracktion { inline namespace engine
