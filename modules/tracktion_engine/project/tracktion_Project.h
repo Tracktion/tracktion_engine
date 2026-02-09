@@ -11,6 +11,8 @@
 namespace tracktion { inline namespace engine
 {
 
+class FileBasedProject;
+
 //==============================================================================
 /** A tracktion project.
 
@@ -40,12 +42,12 @@ public:
     /** true if it's got a proper project ID. */
     bool isValid() const;
     bool isReadOnly() const;
-    bool isTemporary() const                                  { return temporary; }
+    bool isTemporary() const;
 
     int getProjectID() const;
     juce::String getName() const;
     juce::String getDescription() const;
-    const juce::File& getProjectFile() const noexcept         { return file; }
+    const juce::File& getProjectFile() const noexcept;
     juce::File getDefaultDirectory() const;
     juce::File getDirectoryForMedia (ProjectItem::Category category) const;
 
@@ -144,47 +146,17 @@ public:
     ProjectManager& projectManager;
 
 private:
+    friend class FileBasedProject;
     friend class ProjectItem;
     friend class ProjectManager;
 
-    juce::File file;
-    int projectId = 0;
-
-    juce::NamedValueSet properties;
-    juce::CriticalSection objectLock, propertyLock;
-
-    std::unique_ptr<juce::BufferedInputStream> stream;
-    std::unique_ptr<juce::FileInputStream> fileLockingStream;
-
-    struct ObjectInfo
-    {
-        int itemID = 0, fileOffset = 0;
-        ProjectItem::Ptr item;
-    };
-
-    juce::Array<ObjectInfo> objects;
-    int objectOffset = 0, indexOffset = 0;
-    bool readOnly = false, hasChanged = false, temporary = false;
+    std::unique_ptr<FileBasedProject> impl;
 
     Project (Engine&, ProjectManager&, const juce::File&);
 
-    juce::BufferedInputStream* getInputStream();
-
-    void load();
-    void saveTo (juce::FileOutputStream&);
-    bool readProjectHeader (juce::InputStream&, bool clearObjectInfo = true);
-    void loadAllProjectItems();
-    bool loadProjectItem (ObjectInfo&);
-    void ensureFolderCreated (ProjectItem::Category);
     void changed() override;
-
-    /** adds an item without checking */
-    ProjectItem::Ptr quickAddProjectItem (const juce::String& relPathName,
-                                          const juce::String& type,
-                                          const juce::String& name,
-                                          const juce::String& description,
-                                          const ProjectItem::Category cat,
-                                          ProjectItemID newID);
+    void projectChanged();
+    void setTemporary (bool);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Project)
 };

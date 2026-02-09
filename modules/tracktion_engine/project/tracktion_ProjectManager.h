@@ -96,7 +96,7 @@ public:
             if (f.exists() || f.create())
             {
                 auto p = pm.createNewProject (f);
-                p->temporary = true;
+                p->setTemporary (true);
 
                 if (createNewProjectID)
                 {

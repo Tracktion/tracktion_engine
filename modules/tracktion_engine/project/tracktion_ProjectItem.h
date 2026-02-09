@@ -181,6 +181,7 @@ public:
     Engine& engine; /**< The Engine instance this belongs to. */
 
 private:
+    friend class FileBasedProject;
     friend class ProjectManager;
     friend class Project;
 
