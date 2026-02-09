@@ -80,3 +80,4 @@ doxygen/doc
 **/.idea/**
 coverage.xml
 CoverageReport-*
+.claude/*local*
