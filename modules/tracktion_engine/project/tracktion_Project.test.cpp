@@ -580,6 +580,92 @@ TEST_SUITE ("tracktion_engine")
         cleanup();
     }
 
+    TEST_CASE ("ProjectManager: create and retrieve both project types")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        // Use a temp directory for the whole test
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        // === Create a file-based project ===
+        auto projectFile = tempDir.getChildFile ("pm_test_project.tracktion");
+        ProjectManager::TempProject fileTp (pm, projectFile, true);
+        auto fileProject = fileTp.project;
+
+        REQUIRE (fileProject != nullptr);
+        CHECK (fileProject->isValid());
+        CHECK (fileProject->getProjectID() != 0);
+        CHECK (fileProject->getProjectFile() == projectFile);
+
+        // === Create a folder-based project ===
+        auto projectFolder = tempDir.getChildFile ("pm_test_folder_project");
+        projectFolder.createDirectory();
+
+        ProjectManager::TempProject folderTp (pm, projectFolder, false);
+        auto folderProject = folderTp.project;
+
+        REQUIRE (folderProject != nullptr);
+        CHECK (folderProject->isValid());
+        CHECK (folderProject->getProjectID() == 0);
+        CHECK (folderProject->getProjectFile() == projectFolder);
+
+        // === Add both to the project list ===
+        auto activeFolder = pm.getActiveProjectsFolder();
+        auto addedFile = pm.addProjectToList (projectFile, true, activeFolder);
+        auto addedFolder = pm.addProjectToList (projectFolder, true, activeFolder);
+
+        CHECK (addedFile != nullptr);
+        CHECK (addedFolder != nullptr);
+
+        // === Test getProject(File) ===
+        auto foundFile = pm.getProject (projectFile);
+        auto foundFolder = pm.getProject (projectFolder);
+
+        CHECK (foundFile != nullptr);
+        CHECK (foundFolder != nullptr);
+
+        // === Test getAllProjects() ===
+        auto allProjects = pm.getAllProjects();
+        bool foundFileInAll = false;
+        bool foundFolderInAll = false;
+
+        for (auto* p : allProjects)
+        {
+            if (p->getProjectFile() == projectFile)
+                foundFileInAll = true;
+            if (p->getProjectFile() == projectFolder)
+                foundFolderInAll = true;
+        }
+
+        CHECK (foundFileInAll);
+        CHECK (foundFolderInAll);
+
+        // === Test findProjectWithFile() ===
+        auto foundFileBySearch = pm.findProjectWithFile (activeFolder, projectFile);
+        auto foundFolderBySearch = pm.findProjectWithFile (activeFolder, projectFolder);
+
+        CHECK (foundFileBySearch != nullptr);
+        CHECK (foundFolderBySearch != nullptr);
+
+        // === Test findProjectWithId() — works for file-based, not for folder-based ===
+        auto fileId = fileProject->getProjectID();
+        auto foundById = pm.findProjectWithId (activeFolder, fileId);
+        CHECK (foundById != nullptr);
+
+        // Folder-based project has ID 0 — findProjectWithId with 0 should not match
+        auto foundByZeroId = pm.findProjectWithId (activeFolder, 0);
+        CHECK (foundByZeroId == nullptr);
+
+        cleanup();
+    }
+
     TEST_CASE ("Project: convert file-based to folder-based")
     {
         auto& engine = *Engine::getEngines()[0];
