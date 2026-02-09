@@ -343,6 +343,7 @@ public:
     //==============================================================================
     juce::Array<ReferencedItem> getReferencedItems() override;
     void reassignReferencedItem (const ReferencedItem&, ProjectItemID newID, double newStartTime) override;
+    using Exportable::reassignReferencedItem;
 
     /** Called when ProjectItem sources are re-assigned so you can reload from the new source. */
     virtual void sourceMediaChanged()  {}
