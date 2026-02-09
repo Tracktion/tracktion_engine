@@ -63,9 +63,12 @@ struct ArchivingFunctions
         //TRACKTION_LOG_ARA ("Unarchiving progress: " << p);
     }
 
-    static ARAPersistentID ARA_CALL getDocumentArchiveID (ARAArchivingControllerHostRef, ARAArchiveReaderHostRef)
+    static ARAPersistentID ARA_CALL getDocumentArchiveID (ARAArchivingControllerHostRef ref, ARAArchiveReaderHostRef)
     {
-        return "com.celemony.ara.chunk.1";
+        if (auto f = (const ARAFactory*) ref)
+            return f->documentArchiveID;
+
+        return "com.celemony.ara.chunk.1"; // fallback
     }
 };
 
@@ -111,6 +114,17 @@ struct EditProxyFunctions
 //==============================================================================
 struct ModelUpdateFunctions
 {
+    static void notifyARAContentChanged (Edit& edit)
+    {
+        edit.markAsChanged();
+
+        for (auto track : getAudioTracks (edit))
+            for (auto clip : track->getClips())
+                if (auto audioClip = dynamic_cast<AudioClipBase*> (clip))
+                    if (auto proxy = audioClip->getARAProxy())
+                        proxy->contentHasChanged();
+    }
+
     static void ARA_CALL notifyAudioSourceAnalysisProgress (ARAModelUpdateControllerHostRef,
                                                             ARAAudioSourceHostRef,
                                                             ARAAnalysisProgressState,
@@ -125,7 +139,7 @@ struct ModelUpdateFunctions
     {
         CRASH_TRACER
         if (auto e = (Edit*) hostRef)
-            e->markAsChanged();
+            notifyARAContentChanged (*e);
     }
 
     static void ARA_CALL notifyAudioModificationContentChanged (ARAModelUpdateControllerHostRef hostRef,
@@ -135,7 +149,7 @@ struct ModelUpdateFunctions
     {
         CRASH_TRACER
         if (auto e = (Edit*) hostRef)
-            e->markAsChanged();
+            notifyARAContentChanged (*e);
     }
 };
 

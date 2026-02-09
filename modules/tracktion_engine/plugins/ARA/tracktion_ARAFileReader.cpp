@@ -45,12 +45,14 @@
 #include "pluginterfaces/vst/ivstcomponent.h"
 #include "pluginterfaces/vst/ivstaudioprocessor.h"
 
+#if ! JUCE_PLUGINHOST_ARA
 namespace ARA
 {
     DEF_CLASS_IID (IMainFactory)
     DEF_CLASS_IID (IPlugInEntryPoint)
     DEF_CLASS_IID (IPlugInEntryPoint2)
 }
+#endif
 
 #if JUCE_MSVC
  #pragma warning (pop)
@@ -65,12 +67,12 @@ using namespace ARA;
 
 struct ARAClipPlayer  : private Selectable::Listener
 {
-    #include "tracktion_MelodyneInstanceFactory.h"
+    #include "tracktion_ARAPluginFactory.h"
     #include "tracktion_ARAWrapperFunctions.h"
     #include "tracktion_ARAWrapperInterfaces.h"
 
     //==============================================================================
-    ARAClipPlayer (Edit& ed, MelodyneFileReader& o, AudioClipBase& c)
+    ARAClipPlayer (Edit& ed, ARAFileReader& o, AudioClipBase& c)
       : Selectable::Listener (ed.tempoSequence), owner (o),
         clip (c),
         file (c.getAudioFile()),
@@ -107,7 +109,7 @@ struct ARAClipPlayer  : private Selectable::Listener
                     playbackRegionAndSource = nullptr;
                 }
 
-                melodyneInstance = nullptr;
+                araInstance = nullptr;
             }
         }
     }
@@ -115,8 +117,8 @@ struct ARAClipPlayer  : private Selectable::Listener
     //==============================================================================
     Edit& getEdit()                         { return edit; }
     AudioClipBase& getClip()                { return clip; }
-    ExternalPlugin* getPlugin()             { return melodyneInstance != nullptr ? melodyneInstance->plugin.get() : nullptr; }
-    const ARAFactory* getARAFactory() const { return melodyneInstance != nullptr ? melodyneInstance->factory : nullptr; }
+    ExternalPlugin* getPlugin()             { return araInstance != nullptr ? araInstance->plugin.get() : nullptr; }
+    const ARAFactory* getARAFactory() const { return araInstance != nullptr ? araInstance->factory : nullptr; }
 
     //==============================================================================
     bool initialise (ARAClipPlayer* clipToClone)
@@ -126,14 +128,39 @@ struct ARAClipPlayer  : private Selectable::Listener
 
         if (auto doc = getDocument())
         {
-            ExternalPlugin::Ptr p = MelodyneInstanceFactory::getInstance (edit.engine).createPlugin (edit);
+            auto desc = clip.araPluginDescription.get();
+            ExternalPlugin::Ptr p;
 
-            if (p == nullptr || getDocument() == nullptr)
-                return false;
+            if (desc.name.isNotEmpty())
+            {
+                auto& pluginFactory = ARAPluginFactory::getInstance (edit.engine, desc);
+                p = pluginFactory.createPlugin (edit, desc);
 
-            melodyneInstance.reset (MelodyneInstanceFactory::getInstance (edit.engine).createInstance (*p, doc->dcRef));
+                if (p == nullptr || getDocument() == nullptr)
+                    return false;
 
-            if (melodyneInstance == nullptr)
+                araInstance.reset (pluginFactory.createInstance (*p, doc->dcRef));
+            }
+            else
+            {
+                auto* pluginFactory = ARAPluginFactory::getDefaultInstance (edit.engine);
+
+                if (pluginFactory == nullptr)
+                    return false;
+
+                p = pluginFactory->createPlugin (edit);
+
+                if (p == nullptr || getDocument() == nullptr)
+                    return false;
+
+                // Save the resolved description so the UI shows the correct plugin
+                // and future sessions don't need to re-resolve
+                clip.araPluginDescription.setValue (p->desc, nullptr);
+
+                araInstance.reset (pluginFactory->createInstance (*p, doc->dcRef));
+            }
+
+            if (araInstance == nullptr)
                 return false;
 
             updateContent (clipToClone);
@@ -158,9 +185,8 @@ struct ARAClipPlayer  : private Selectable::Listener
         {
             if (doc->musicalContext != nullptr)
             {
-                doc->beginEditing (true);
+                const ARADocument::ScopedEdit scope (*doc, true);
                 doc->musicalContext->update();
-                doc->endEditing (true);
             }
         }
     }
@@ -205,11 +231,32 @@ struct ARAClipPlayer  : private Selectable::Listener
         {
             const ARADocumentControllerInterface* dci = doc->dci;
             ARADocumentControllerRef dcRef = doc->dcRef;
-            ARAAudioSourceRef audioSourceRef = playbackRegionAndSource->audioSource->audioSourceRef;
 
-            if (dci->isAudioSourceContentAvailable (dcRef, audioSourceRef, kARAContentTypeNotes))
+            // Try reading from audio modification first (contains user edits e.g. Melodyne),
+            // falling back to audio source (original analysis) if not available.
+            ARAContentReaderRef contentReaderRef = nullptr;
+
+            if (playbackRegionAndSource->audioModification != nullptr)
             {
-                ARAContentReaderRef contentReaderRef = dci->createAudioSourceContentReader (dcRef, audioSourceRef, kARAContentTypeNotes, nullptr);
+                ARAAudioModificationRef audioModRef = playbackRegionAndSource->audioModification->audioModificationRef;
+
+                if (audioModRef != nullptr
+                    && dci->isAudioModificationContentAvailable (dcRef, audioModRef, kARAContentTypeNotes))
+                {
+                    contentReaderRef = dci->createAudioModificationContentReader (dcRef, audioModRef, kARAContentTypeNotes, nullptr);
+                }
+            }
+
+            if (contentReaderRef == nullptr)
+            {
+                ARAAudioSourceRef audioSourceRef = playbackRegionAndSource->audioSource->audioSourceRef;
+
+                if (dci->isAudioSourceContentAvailable (dcRef, audioSourceRef, kARAContentTypeNotes))
+                    contentReaderRef = dci->createAudioSourceContentReader (dcRef, audioSourceRef, kARAContentTypeNotes, nullptr);
+            }
+
+            if (contentReaderRef != nullptr)
+            {
                 int numEvents = (int) dci->getContentReaderEventCount (dcRef, contentReaderRef);
 
                 for (int i = 0; i < numEvents; ++i)
@@ -234,6 +281,58 @@ struct ARAClipPlayer  : private Selectable::Listener
         }
 
         return result;
+    }
+
+    //==============================================================================
+    juce::MemoryBlock storeARAArchiveForCopy()
+    {
+        if (auto doc = getDocument())
+        {
+            if (playbackRegionAndSource != nullptr
+                && playbackRegionAndSource->audioSource != nullptr
+                && playbackRegionAndSource->audioModification != nullptr)
+            {
+                return doc->storeObjectsForCopy (playbackRegionAndSource->audioSource->audioSourceRef,
+                                                 playbackRegionAndSource->audioModification->audioModificationRef);
+            }
+        }
+
+        return {};
+    }
+
+    void restoreARAArchiveForPaste (const juce::MemoryBlock& data,
+                                    const juce::String& archivedSourceID,
+                                    const juce::String& archivedModID)
+    {
+        if (auto doc = getDocument())
+        {
+            if (playbackRegionAndSource != nullptr
+                && playbackRegionAndSource->audioSource != nullptr
+                && playbackRegionAndSource->audioModification != nullptr)
+            {
+                auto currentSourceID = getAudioSourcePersistentID();
+                auto currentModID = getAudioModificationPersistentID();
+
+                doc->restoreObjectsForPaste (data, archivedSourceID, currentSourceID,
+                                             archivedModID, currentModID);
+            }
+        }
+    }
+
+    juce::String getAudioSourcePersistentID() const
+    {
+        if (playbackRegionAndSource != nullptr && playbackRegionAndSource->audioSource != nullptr)
+            return clip.getAudioFile().getHashString() + "_" + clip.itemID.toString();
+
+        return {};
+    }
+
+    juce::String getAudioModificationPersistentID() const
+    {
+        if (playbackRegionAndSource != nullptr && playbackRegionAndSource->audioModification != nullptr)
+            return juce::String::toHexString (currentHashCode);
+
+        return {};
     }
 
     //==============================================================================
@@ -341,12 +440,12 @@ struct ARAClipPlayer  : private Selectable::Listener
 
 private:
     //==============================================================================
-    MelodyneFileReader& owner;
+    ARAFileReader& owner;
     AudioClipBase& clip;
     const AudioFile file;
     Edit& edit;
 
-    std::unique_ptr<MelodyneInstance> melodyneInstance;
+    std::unique_ptr<ARAInstance> araInstance;
     std::unique_ptr<PlaybackRegionAndSource> playbackRegionAndSource;
     HashCode currentHashCode = 0;
 
@@ -381,7 +480,7 @@ private:
     };
 
     //==============================================================================
-    /** NB: Must delete the old objects *after* creating the new ones, because Melodyne crashes
+    /** NB: Must delete the old objects *after* creating the new ones, because some ARA plugins crash
             if you deselect a play region and then try to select a different one.
             But doing it in the opposite order seems to work ok.
     */
@@ -390,14 +489,14 @@ private:
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
 
-        jassert (melodyneInstance != nullptr);
-        jassert (melodyneInstance->factory != nullptr);
-        jassert (melodyneInstance->extensionInstance != nullptr);
+        jassert (araInstance != nullptr);
+        jassert (araInstance->factory != nullptr);
+        jassert (araInstance->extensionInstance != nullptr);
 
         auto oldTrack = std::move (playbackRegionAndSource);
 
-        playbackRegionAndSource = std::make_unique<PlaybackRegionAndSource> (*getDocument(), clip, *melodyneInstance->factory,
-                                                                             *melodyneInstance->extensionInstance,
+        playbackRegionAndSource = std::make_unique<PlaybackRegionAndSource> (*getDocument(), clip, *araInstance->factory,
+                                                                             *araInstance->extensionInstance,
                                                                              juce::String::toHexString (currentHashCode),
                                                                              clipToClone != nullptr ? clipToClone->playbackRegionAndSource.get() : nullptr);
 
@@ -496,7 +595,7 @@ private:
 };
 
 //==============================================================================
-MelodyneFileReader::MelodyneFileReader (Edit& ed, AudioClipBase& clip)
+ARAFileReader::ARAFileReader (Edit& ed, AudioClipBase& clip)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
@@ -507,7 +606,7 @@ MelodyneFileReader::MelodyneFileReader (Edit& ed, AudioClipBase& clip)
         player = nullptr;
 }
 
-MelodyneFileReader::MelodyneFileReader (Edit& ed, AudioClipBase& clip, MelodyneFileReader& other)
+ARAFileReader::ARAFileReader (Edit& ed, AudioClipBase& clip, ARAFileReader& other)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
@@ -523,7 +622,7 @@ MelodyneFileReader::MelodyneFileReader (Edit& ed, AudioClipBase& clip, MelodyneF
     jassert (player != nullptr);
 }
 
-MelodyneFileReader::~MelodyneFileReader()
+ARAFileReader::~ARAFileReader()
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     CRASH_TRACER
@@ -537,7 +636,7 @@ MelodyneFileReader::~MelodyneFileReader()
 }
 
 //==============================================================================
-void MelodyneFileReader::showPluginWindow()
+void ARAFileReader::showPluginWindow()
 {
     if (player != nullptr)
         player->setViewSelection();
@@ -546,13 +645,13 @@ void MelodyneFileReader::showPluginWindow()
         p->showWindowExplicitly();
 }
 
-void MelodyneFileReader::hidePluginWindow()
+void ARAFileReader::hidePluginWindow()
 {
     if (auto p = getPlugin())
         p->hideWindowForShutdown();
 }
 
-ExternalPlugin* MelodyneFileReader::getPlugin()
+ExternalPlugin* ARAFileReader::getPlugin()
 {
     if (isValid())
         return player->getPlugin();
@@ -561,19 +660,69 @@ ExternalPlugin* MelodyneFileReader::getPlugin()
 }
 
 //==============================================================================
-bool MelodyneFileReader::isAnalysingContent()
+bool ARAFileReader::isAnalysingContent()
 {
     return player != nullptr && player->isAnalysingContent();
 }
 
-void MelodyneFileReader::sourceClipChanged()
+void ARAFileReader::sourceClipChanged()
 {
     if (player != nullptr)
+    {
         player->updateContent (nullptr);
+
+        // Also update musical context (e.g. when chord track changes)
+        if (auto doc = player->getDocument())
+        {
+            if (doc->musicalContext != nullptr)
+            {
+                const ARAClipPlayer::ARADocument::ScopedEdit scope (*doc, true);
+                doc->musicalContext->update();
+            }
+        }
+    }
+}
+
+void ARAFileReader::contentHasChanged()
+{
+    if (player != nullptr)
+        player->contentHasChanged();
+}
+
+juce::MemoryBlock ARAFileReader::storeARAArchiveForCopy()
+{
+    if (player != nullptr)
+        return player->storeARAArchiveForCopy();
+
+    return {};
+}
+
+void ARAFileReader::restoreARAArchiveForPaste (const juce::MemoryBlock& data,
+                                               const juce::String& archivedSourceID,
+                                               const juce::String& archivedModID)
+{
+    if (player != nullptr)
+        player->restoreARAArchiveForPaste (data, archivedSourceID, archivedModID);
+}
+
+juce::String ARAFileReader::getAudioSourcePersistentID() const
+{
+    if (player != nullptr)
+        return player->getAudioSourcePersistentID();
+
+    return {};
+}
+
+juce::String ARAFileReader::getAudioModificationPersistentID() const
+{
+    if (player != nullptr)
+        return player->getAudioModificationPersistentID();
+
+    return {};
 }
 
 //==============================================================================
-juce::MidiMessageSequence MelodyneFileReader::getAnalysedMIDISequence()
+juce::MidiMessageSequence ARAFileReader::getAnalysedMIDISequence()
 {
     if (player != nullptr)
         return player->getAnalysedMIDISequence();
@@ -581,9 +730,9 @@ juce::MidiMessageSequence MelodyneFileReader::getAnalysedMIDISequence()
     return {};
 }
 
-void MelodyneFileReader::cleanUpOnShutdown()
+void ARAFileReader::cleanUpOnShutdown()
 {
-    ARAClipPlayer::MelodyneInstanceFactory::shutdown();
+    ARAClipPlayer::ARAPluginFactory::shutdown();
 }
 
 //==============================================================================
@@ -594,26 +743,173 @@ struct ARADocumentHolder::Pimpl
     void initialise()
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
-        araDocument.reset (ARAClipPlayer::createDocument (edit));
 
-        if (araDocument != nullptr)
+        auto& state = edit.getARADocument().lastState;
+
+        // Collect which plugin types are needed by scanning clips
+        std::set<juce::String> neededPluginKeys;
+        juce::HashMap<juce::String, juce::PluginDescription> pluginDescsByKey;
+
+        visitAllTrackItems (edit, [&] (TrackItem& i)
         {
-            araDocument->beginRestoringState (edit.getARADocument().lastState);
-
-            visitAllTrackItems (edit, [] (TrackItem& i)
+            if (auto c = dynamic_cast<AudioClipBase*> (&i))
             {
-                if (auto c = dynamic_cast<AudioClipBase*> (&i))
-                    c->loadMelodyneState();
+                auto desc = c->araPluginDescription.get();
 
-                return true;
-            });
+                if (desc.name.isNotEmpty())
+                {
+                    auto key = desc.createIdentifierString();
+                    neededPluginKeys.insert (key);
+                    pluginDescsByKey.set (key, desc);
+                }
+            }
 
-            araDocument->endRestoringState();
+            return true;
+        });
+
+        // Also check for saved ARAPLUGIN children in the state
+        for (int i = 0; i < state.getNumChildren(); ++i)
+        {
+            auto child = state.getChild (i);
+
+            if (child.hasType (IDs::ARAPLUGIN))
+            {
+                auto key = child.getProperty (IDs::id).toString();
+
+                if (key.isNotEmpty() && neededPluginKeys.find (key) == neededPluginKeys.end())
+                    neededPluginKeys.insert (key);
+            }
+        }
+
+        // If no clips specify a plugin but old-format state has data, use default plugin
+        // Prefer Melodyne since legacy clips were always Melodyne
+        if (neededPluginKeys.empty())
+        {
+            auto defaultDescs = edit.engine.getPluginManager().getARACompatiblePlugDescriptions();
+
+            if (! defaultDescs.isEmpty())
+            {
+                auto preferred = ARAClipPlayer::ARAPluginFactory::findPreferredDefault (defaultDescs);
+                auto key = preferred.createIdentifierString();
+                neededPluginKeys.insert (key);
+                pluginDescsByKey.set (key, preferred);
+            }
+        }
+
+        // Create documents for each needed plugin type
+        for (auto& key : neededPluginKeys)
+        {
+            juce::PluginDescription desc;
+
+            if (pluginDescsByKey.contains (key))
+            {
+                desc = pluginDescsByKey[key];
+            }
+            else
+            {
+                // Try to find the description from available plugins
+                for (auto& d : edit.engine.getPluginManager().getARACompatiblePlugDescriptions())
+                {
+                    if (d.createIdentifierString() == key)
+                    {
+                        desc = d;
+                        break;
+                    }
+                }
+            }
+
+            if (desc.name.isEmpty())
+                continue;
+
+            auto* doc = ARAClipPlayer::createDocument (edit, desc);
+
+            if (doc != nullptr)
+                araDocuments[key] = std::unique_ptr<ARAClipPlayer::ARADocument> (doc);
+        }
+
+        // Load clip ARA states FIRST — plugin instances must be bound
+        // before any beginEditing calls on the document controller
+        visitAllTrackItems (edit, [] (TrackItem& i)
+        {
+            if (auto c = dynamic_cast<AudioClipBase*> (&i))
+                c->loadARAState();
+
+            return true;
+        });
+
+        // Restore state for each document (now that all instances are bound)
+        for (auto& [key, doc] : araDocuments)
+        {
+            // Look for per-plugin state child
+            auto pluginState = state.getChildWithProperty (IDs::id, key);
+
+            if (pluginState.isValid() && pluginState.hasType (IDs::ARAPLUGIN))
+            {
+                // Create a temporary ARADOCUMENT-typed tree with the data property
+                juce::ValueTree tempState (IDs::ARADOCUMENT);
+                tempState.setProperty ("data", pluginState.getProperty ("data"), nullptr);
+                doc->beginRestoringState (tempState);
+            }
+            else if (state.hasProperty ("data"))
+            {
+                // Old format: single data property on ARADOCUMENT itself (backward compat)
+                doc->beginRestoringState (state);
+            }
+        }
+
+        // End restoring for each document
+        for (auto& [key, doc] : araDocuments)
+            doc->endRestoringState();
+
+        // Notify plugins that musical context content is now available
+        for (auto& [key, doc] : araDocuments)
+        {
+            if (doc->musicalContext != nullptr)
+            {
+                const ARAClipPlayer::ARADocument::ScopedEdit scope (*doc, true);
+                doc->musicalContext->update();
+            }
         }
     }
 
+    ARAClipPlayer::ARADocument* getOrCreateDocument (const juce::PluginDescription& desc)
+    {
+        auto key = desc.createIdentifierString();
+        auto it = araDocuments.find (key);
+
+        if (it != araDocuments.end())
+            return it->second.get();
+
+        // Create a new document for this plugin type
+        auto* doc = ARAClipPlayer::createDocument (edit, desc);
+
+        if (doc != nullptr)
+            araDocuments[key] = std::unique_ptr<ARAClipPlayer::ARADocument> (doc);
+
+        return doc;
+    }
+
+    ARAClipPlayer::ARADocument* getDocumentForPlugin (const juce::PluginDescription& desc)
+    {
+        auto key = desc.createIdentifierString();
+        auto it = araDocuments.find (key);
+
+        if (it != araDocuments.end())
+            return it->second.get();
+
+        return nullptr;
+    }
+
+    ARAClipPlayer::ARADocument* getDefaultDocument()
+    {
+        if (! araDocuments.empty())
+            return araDocuments.begin()->second.get();
+
+        return nullptr;
+    }
+
     Edit& edit;
-    std::unique_ptr<ARAClipPlayer::ARADocument> araDocument;
+    std::map<juce::String, std::unique_ptr<ARAClipPlayer::ARADocument>> araDocuments;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Pimpl)
 };
@@ -647,14 +943,37 @@ void ARADocumentHolder::flushStateToValueTree()
     TRACKTION_ASSERT_MESSAGE_THREAD
 
     if (pimpl != nullptr)
-        if (pimpl->araDocument != nullptr)
-            pimpl->araDocument->flushStateToValueTree (lastState);
+    {
+        // Remove old per-plugin children
+        for (int i = lastState.getNumChildren(); --i >= 0;)
+            if (lastState.getChild (i).hasType (IDs::ARAPLUGIN))
+                lastState.removeChild (i, nullptr);
+
+        // Remove old-format data property
+        lastState.removeProperty ("data", nullptr);
+
+        // Save each document under its own ARAPLUGIN child
+        for (auto& [key, doc] : pimpl->araDocuments)
+        {
+            juce::ValueTree pluginState (IDs::ARAPLUGIN);
+            pluginState.setProperty (IDs::id, key, nullptr);
+            doc->flushStateToValueTree (pluginState);
+            lastState.addChild (pluginState, -1, nullptr);
+        }
+    }
 }
 
 ARAClipPlayer::ARADocument* ARAClipPlayer::getDocument() const
 {
     if (auto p = edit.getARADocument().getPimpl())
-        return p->araDocument.get();
+    {
+        auto& desc = clip.araPluginDescription;
+
+        if (desc.get().name.isNotEmpty())
+            return p->getOrCreateDocument (desc);
+
+        return p->getDefaultDocument();
+    }
 
     return {};
 }
@@ -670,17 +989,22 @@ namespace tracktion { inline namespace engine
 struct ARADocumentHolder::Pimpl {};
 struct ARAClipPlayer {};
 
-MelodyneFileReader::MelodyneFileReader (Edit&, AudioClipBase&) {}
-MelodyneFileReader::MelodyneFileReader (Edit&, AudioClipBase&, MelodyneFileReader&) {}
-MelodyneFileReader::~MelodyneFileReader() {}
+ARAFileReader::ARAFileReader (Edit&, AudioClipBase&) {}
+ARAFileReader::ARAFileReader (Edit&, AudioClipBase&, ARAFileReader&) {}
+ARAFileReader::~ARAFileReader() {}
 
-void MelodyneFileReader::cleanUpOnShutdown()                        {}
-ExternalPlugin* MelodyneFileReader::getPlugin()                     { return {}; }
-void MelodyneFileReader::showPluginWindow()                         {}
-void MelodyneFileReader::hidePluginWindow()                         {}
-bool MelodyneFileReader::isAnalysingContent()                       { return false; }
-juce::MidiMessageSequence MelodyneFileReader::getAnalysedMIDISequence()   { return {}; }
-void MelodyneFileReader::sourceClipChanged()                        {}
+void ARAFileReader::cleanUpOnShutdown()                        {}
+ExternalPlugin* ARAFileReader::getPlugin()                     { return {}; }
+void ARAFileReader::showPluginWindow()                         {}
+void ARAFileReader::hidePluginWindow()                         {}
+bool ARAFileReader::isAnalysingContent()                       { return false; }
+juce::MidiMessageSequence ARAFileReader::getAnalysedMIDISequence()   { return {}; }
+void ARAFileReader::sourceClipChanged()                        {}
+void ARAFileReader::contentHasChanged()                        {}
+juce::MemoryBlock ARAFileReader::storeARAArchiveForCopy()      { return {}; }
+void ARAFileReader::restoreARAArchiveForPaste (const juce::MemoryBlock&, const juce::String&, const juce::String&) {}
+juce::String ARAFileReader::getAudioSourcePersistentID() const { return {}; }
+juce::String ARAFileReader::getAudioModificationPersistentID() const { return {}; }
 
 ARADocumentHolder::ARADocumentHolder (Edit& e, const juce::ValueTree&) : edit (e) { juce::ignoreUnused (edit); }
 ARADocumentHolder::~ARADocumentHolder() {}

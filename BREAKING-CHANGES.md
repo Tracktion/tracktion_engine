@@ -1,5 +1,112 @@
 # Tracktion Engine breaking changes
 
+___
+
+### Change
+`AudioClipBase::melodyneProxy` public member has been removed. Use the new `getARAProxy()` accessor instead.
+
+#### Possible Issues
+Code directly accessing `clip.melodyneProxy` will no longer compile.
+
+#### Workaround
+Replace `clip.melodyneProxy` with `clip.getARAProxy()`. The deprecated `getMelodyneProxy()` accessor is also available temporarily.
+
+#### Rationale
+The direct public member has been replaced with an accessor to support generic ARA plugins beyond Melodyne.
+
+___
+
+### Change
+`AudioClipBase::showMelodyneWindow()`, `hideMelodyneWindow()`, and `melodyneConvertToMIDI()` have been moved from member functions to free functions: `showARAWindow(AudioClipBase&)`, `hideARAWindow(AudioClipBase&)`, and `araConvertToMIDI(AudioClipBase&)`.
+
+#### Possible Issues
+Code calling `clip.showMelodyneWindow()` etc. as member functions will no longer compile.
+
+#### Workaround
+Replace member calls with free function calls:
+- `clip.showMelodyneWindow()` → `showARAWindow(clip)`
+- `clip.hideMelodyneWindow()` → `hideARAWindow(clip)`
+- `clip.melodyneConvertToMIDI()` → `araConvertToMIDI(clip)`
+
+Deprecated free-function wrappers `showMelodyneWindow(clip)`, `hideMelodyneWindow(clip)`, and `melodyneConvertToMIDI(clip)` are also available temporarily.
+
+#### Rationale
+Moving these to free functions supports the generalised ARA plugin architecture.
+
+___
+
+### Change
+`MelodyneFileReader` has been renamed to `ARAFileReader`. The header file has been renamed from `tracktion_MelodyneFileReader.h` to `tracktion_ARAFileReader.h`.
+
+#### Possible Issues
+Direct `#include` of the old header path will fail. Code using the class name directly will get deprecation warnings.
+
+#### Workaround
+A `using MelodyneFileReader = ARAFileReader` alias is provided for source compatibility. Update includes and type names when convenient.
+
+#### Rationale
+The reader now supports any ARA-compatible plugin, not just Melodyne.
+
+___
+
+### Change
+`MelodyneNode` has been renamed to `ARANode`. The header file has been renamed from `tracktion_MelodyneNode.h` to `tracktion_ARANode.h`.
+
+#### Possible Issues
+Direct `#include` of the old header path will fail. Code referencing the class name directly will get deprecation warnings.
+
+#### Workaround
+A `using MelodyneNode = ARANode` alias is provided for source compatibility. Update includes and type names when convenient.
+
+#### Rationale
+The node now handles any ARA plugin playback, not just Melodyne.
+
+___
+
+### Change
+`AudioClipBase::isUsingMelodyne()` has been renamed to `isUsingARA()`.
+
+#### Possible Issues
+Deprecation warnings. Code will still compile via the deprecated wrapper.
+
+#### Workaround
+Replace `isUsingMelodyne()` with `isUsingARA()`.
+
+#### Rationale
+The method now reflects generic ARA plugin support.
+
+___
+
+### Change
+`TimeStretcher::Mode::melodyne` has been renamed to `TimeStretcher::Mode::ara`. `TimeStretcher::isMelodyne()` has been renamed to `isARA()`. The `getPossibleModes()` parameter has been renamed from `excludeMelodyne` to `excludeARA`.
+
+#### Possible Issues
+Code using `TimeStretcher::Mode::melodyne` will get deprecation warnings but will still compile. Code passing a named parameter `excludeMelodyne` will need updating.
+
+#### Workaround
+Replace `TimeStretcher::Mode::melodyne` with `TimeStretcher::Mode::ara`, `isMelodyne()` with `isARA()`, and `excludeMelodyne` with `excludeARA`.
+
+#### Rationale
+The timestretcher mode now supports any ARA plugin, not just Melodyne.
+
+___
+
+### Change
+New `TRACKTION_ENABLE_ARA` config flag replaces the implicit Melodyne-only behaviour. ARA now requires explicit JUCE and SDK configuration.
+
+#### Possible Issues
+ARA support is now opt-in via the `TRACKTION_ENABLE_ARA` preprocessor flag (defaults to `0`/disabled). Projects that previously relied on implicit Melodyne support will need to update their build configuration.
+
+#### Workaround
+To enable ARA support:
+1. Define `TRACKTION_ENABLE_ARA=1` in your build
+2. Enable `JUCE_PLUGINHOST_ARA=1` in your JUCE project settings
+3. Call `juce_set_ara_sdk_path()` in your CMake configuration, pointing to ARA SDK version 2.3 or later
+
+#### Rationale
+ARA support is now a generic, configurable feature rather than being tied to a single plugin. The explicit SDK dependency ensures correct versioning and compatibility.
+
+___
 
 ### Change
 `AutomationCurve` has been restructured. It now only stores the parameter as a string and not a reference.

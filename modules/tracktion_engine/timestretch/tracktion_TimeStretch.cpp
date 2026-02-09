@@ -195,7 +195,7 @@ private:
             case TimeStretcher::elastiqueTonal:             [[ fallthrough ]];
             case TimeStretcher::soundtouchNormal:           [[ fallthrough ]];
             case TimeStretcher::soundtouchBetter:           [[ fallthrough ]];
-            case TimeStretcher::melodyne:                   [[ fallthrough ]];
+            case TimeStretcher::ara:                   [[ fallthrough ]];
             case TimeStretcher::rubberbandMelodic:          [[ fallthrough ]];
             case TimeStretcher::rubberbandPercussive:       [[ fallthrough ]];
             default:
@@ -390,7 +390,7 @@ private:
             case TimeStretcher::elastiqueTonal:             [[ fallthrough ]];
             case TimeStretcher::soundtouchNormal:           [[ fallthrough ]];
             case TimeStretcher::soundtouchBetter:           [[ fallthrough ]];
-            case TimeStretcher::melodyne:                   [[ fallthrough ]];
+            case TimeStretcher::ara:                   [[ fallthrough ]];
             case TimeStretcher::rubberbandMelodic:          [[ fallthrough ]];
             case TimeStretcher::rubberbandPercussive:       [[ fallthrough ]];
             default:
@@ -823,7 +823,7 @@ private:
 TimeStretcher::TimeStretcher() {}
 TimeStretcher::~TimeStretcher() {}
 
-static juce::String getMelodyne()                   { return "Melodyne"; }
+static juce::String getARADefault()                 { return "ARA"; }
 static juce::String getElastiquePro()               { return "Elastique (" + TRANS("Pro") + ")"; }
 static juce::String getElastiqueEfficeint()         { return "Elastique (" + TRANS("Efficient") + ")"; }
 static juce::String getElastiqueMobile()            { return "Elastique (" + TRANS("Mobile") + ")"; }
@@ -881,13 +881,13 @@ TimeStretcher::Mode TimeStretcher::checkModeIsAvailable (Mode m)
             return m;
        #endif
         case disabled:
-        case melodyne:
+        case ara:
         default:
             return m;
     }
 }
 
-juce::StringArray TimeStretcher::getPossibleModes (Engine& e, bool excludeMelodyne)
+juce::StringArray TimeStretcher::getPossibleModes (Engine& e, bool excludeARA)
 {
     juce::StringArray s;
 
@@ -912,10 +912,14 @@ juce::StringArray TimeStretcher::getPossibleModes (Engine& e, bool excludeMelody
    #endif
 
    #if TRACKTION_ENABLE_ARA
-    if (! excludeMelodyne && e.getPluginManager().getARACompatiblePlugDescriptions().size() > 0)
-        s.add (getMelodyne());
+    if (! excludeARA)
+    {
+        // Add each ARA-compatible plugin by name
+        for (const auto& desc : e.getPluginManager().getARACompatiblePlugDescriptions())
+            s.add (desc.name);
+    }
    #else
-    juce::ignoreUnused (e, excludeMelodyne);
+    juce::ignoreUnused (e, excludeARA);
    #endif
 
     return s;
@@ -944,7 +948,10 @@ TimeStretcher::Mode TimeStretcher::getModeFromName (Engine& e, const juce::Strin
    #endif
 
    #if TRACKTION_ENABLE_ARA
-    if (name == getMelodyne())              return melodyne;
+    // Check if the name matches any ARA-compatible plugin
+    for (const auto& desc : e.getPluginManager().getARACompatiblePlugDescriptions())
+        if (name == desc.name)
+            return ara;
    #endif
 
     return getPossibleModes (e, false).contains (name) ? defaultMode
@@ -966,7 +973,7 @@ juce::String TimeStretcher::getNameOfMode (const Mode mode)
         case soundtouchBetter:          return getSoundTouchBetter();
         case rubberbandMelodic:         return getRubberBandMelodic();
         case rubberbandPercussive:      return getRubberBandPercussive();
-        case melodyne:                  return getMelodyne();
+        case ara:                       return getARADefault();
         case disabled:
         case elastiqueTransient:
         case elastiqueTonal:
@@ -976,10 +983,10 @@ juce::String TimeStretcher::getNameOfMode (const Mode mode)
     return {};
 }
 
-bool TimeStretcher::isMelodyne (Mode mode)
+bool TimeStretcher::isARA (Mode mode)
 {
    #if TRACKTION_ENABLE_ARA
-    return mode == melodyne;
+    return mode == ara;
    #else
     juce::ignoreUnused (mode);
     return false;
@@ -995,7 +1002,7 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
                                 int numChannels, Mode mode, ElastiqueProOptions options, bool realtime)
 {
     juce::ignoreUnused (sourceSampleRate, numChannels, mode, options, realtime);
-    jassert (! isMelodyne (mode));
+    jassert (! isARA (mode));
 
     samplesPerBlockRequested = samplesPerBlock;
 
@@ -1057,7 +1064,7 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
        #endif
 
         case disabled:              [[fallthrough]];
-        case melodyne:              [[fallthrough]];
+        case ara:                   [[fallthrough]];
         case elastiqueTransient:    [[fallthrough]];
         case elastiqueTonal:        [[fallthrough]];
         default:

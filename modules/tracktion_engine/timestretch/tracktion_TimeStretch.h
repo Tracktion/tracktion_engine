@@ -38,7 +38,8 @@ public:
         elastiqueTonal = 2,             /**< Defunct, don't use. */
         soundtouchNormal = 3,           /**< SoundTouch normal quality, lower CPU use. */
         soundtouchBetter = 4,           /**< SoundTouch better quality, higher CPU use. */
-        melodyne = 5,                   /**< Melodyne, only used for clip timestretching. */
+        ara = 5,                        /**< ARA plugin (e.g. Melodyne), only used for clip timestretching. */
+        melodyne [[deprecated("Use ara instead")]] = ara, /**< @deprecated Use ara instead. */
         elastiquePro = 6,               /**< Elastique Pro good all round (@see ElastiqueProOptions). */
         elastiqueEfficient = 7,         /**< Elastique lower quality and lower CPU usage. */
         elastiqueMobile = 8,            /**< Elastique lower quality and lower CPU usage, optimised for mobile. */
@@ -89,8 +90,8 @@ public:
     /** Checks if the given mode is available for use. */
     static Mode checkModeIsAvailable (Mode);
 
-    /** Returns the names of the availabel Modes. */
-    static juce::StringArray getPossibleModes (Engine&, bool excludeMelodyne);
+    /** Returns the names of the available Modes. */
+    static juce::StringArray getPossibleModes (Engine&, bool excludeARA);
 
     /** Returns the Mode for a given name @see getPossibleModes. */
     static Mode getModeFromName (Engine&, const juce::String& name);
@@ -98,8 +99,12 @@ public:
     /** Returns the name of a given Mode for display purposes. */
     static juce::String getNameOfMode (Mode);
 
-    /** Returns true if the given Mode is a Melodyne mode. */
-    static bool isMelodyne (Mode);
+    /** Returns true if the given Mode is an ARA mode. */
+    static bool isARA (Mode);
+
+    /** @deprecated Use isARA instead. */
+    [[deprecated("Use isARA instead")]]
+    static bool isMelodyne (Mode m) { return isARA (m); }
 
     /** Checks that the given Mode is a valid mode and not disabled. */
     static bool canProcessFor (Mode);

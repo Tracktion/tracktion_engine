@@ -377,16 +377,12 @@ juce::Array<juce::PluginDescription> PluginManager::getARACompatiblePlugDescript
 
     for (const auto& p : knownPluginList.getTypes())
     {
-        if (p.pluginFormatName != "VST3")
+        // Support both VST3 and AU formats for ARA
+        if (p.pluginFormatName != "VST3" && p.pluginFormatName != "AudioUnit")
             continue;
 
-        if (p.name.containsIgnoreCase ("Melodyne"))
-        {
-            auto version = p.version.trim().removeCharacters ("V").upToFirstOccurrenceOf (".", false, true);
-
-            if (version.getIntValue() >= 4)
-                descs.add (p);
-        }
+        if (p.hasARAExtension)
+            descs.add (p);
     }
 
     return descs;

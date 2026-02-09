@@ -161,6 +161,7 @@ struct Edit::TreeWatcher   : public juce::ValueTree::Listener
                         || i == IDs::loopStartBeats || i == IDs::loopLengthBeats
                         || i == IDs::transpose || i == IDs::pitchChange
                         || i == IDs::elastiqueMode || i == IDs::elastiqueOptions
+                        || i == IDs::araPluginDescription
                         || i == IDs::autoPitch || i == IDs::autoTempo
                         || i == IDs::channels || i == IDs::isReversed
                         || i == IDs::currentTake || i == IDs::sequence || i == IDs::repeatSequence
@@ -705,7 +706,7 @@ Edit::~Edit()
             if (auto acb = dynamic_cast<AudioClipBase*> (c))
             {
                 acb->flushStateToValueTree();
-                acb->hideMelodyneWindow();
+                hideARAWindow (*acb);
             }
         }
     }
@@ -1126,18 +1127,18 @@ ARADocumentHolder& Edit::getARADocument()
 
 void Edit::initialiseARA()
 {
-    auto areAnyClipsUsingMelodyne = [this]()
+    auto areAnyClipsUsingARA = [this]()
     {
         for (auto at : getTracksOfType<AudioTrack> (*this, true))
             for (auto c : at->getClips())
                 if (auto acb = dynamic_cast<AudioClipBase*> (c))
-                    if (acb->isUsingMelodyne())
+                    if (acb->isUsingARA())
                         return true;
 
         return false;
     };
 
-    if (areAnyClipsUsingMelodyne())
+    if (areAnyClipsUsingARA())
         getARADocument().getPimpl();
 }
 
@@ -3250,6 +3251,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
             if (editToMatch != nullptr)
             {
                 wc->setTimeStretchMode (TimeStretcher::disabled);
+
                 if (tryToMatchTempo || tryToMatchPitch)
                 {
                     wc->setLoopInfo (af.getInfo().loopInfo);
@@ -3336,7 +3338,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingClip (Clip& clip)
             // fails, then something has gone wrong with that plan
             jassert (dynamic_cast<AudioClipBase*> (c) == nullptr
                        || ((AudioClipBase*) c)->getPlaybackFile() == ((AudioClipBase&) clip).getPlaybackFile()
-                       || ((AudioClipBase*) c)->isUsingMelodyne());
+                       || ((AudioClipBase*) c)->isUsingARA());
 
             if (c->isMidi())
                 track->getOutput().setOutputToDefaultDevice (true);

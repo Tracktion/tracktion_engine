@@ -518,25 +518,31 @@ public:
     AudioClipBase* getOverlappingClip (ClipDirection) const;
 
     //==============================================================================
-    /** The MelodyneFileReader proxy if this clip is using Melodyne. */
-    juce::ReferenceCountedObjectPtr<MelodyneFileReader> melodyneProxy;
+    /** Releases the ARA proxy. Called during track destruction to ensure
+        ARA cleanup happens while the track is still alive. */
+    void tearDownARA();
 
-    /** Returns true if this clip is using Melodyne. */
-    bool isUsingMelodyne() const;
+    /** Returns the ARAFileReader proxy if this clip is using an ARA plugin (e.g. Melodyne). */
+    juce::ReferenceCountedObjectPtr<ARAFileReader> getARAProxy() const   { return araProxy; }
 
-    /** Shows the Melodyne window if this clip is using Melodyne. */
-    void showMelodyneWindow();
+    /** @deprecated Use getARAProxy() instead. */
+    [[deprecated("Use getARAProxy() instead")]]
+    juce::ReferenceCountedObjectPtr<ARAFileReader> getMelodyneProxy() const  { return araProxy; }
 
-    /** Hides the Melodyne window if this clip is using Melodyne. */
-    void hideMelodyneWindow();
+    /** Returns true if this clip is using an ARA plugin. */
+    bool isUsingARA() const;
 
-    /** If this clip is using Melodyne, this will create a new MIDI clip based
-        on the Melodyne analysis.
-    */
-    void melodyneConvertToMIDI();
+    /** @deprecated Use isUsingARA() instead. */
+    [[deprecated("Use isUsingARA() instead")]]
+    bool isUsingMelodyne() const { return isUsingARA(); }
+
 
     /** @internal */
-    void loadMelodyneState();
+    void loadARAState();
+
+    /** @deprecated Use loadARAState() instead. */
+    [[deprecated("Use loadARAState() instead")]]
+    void loadMelodyneState() { loadARAState(); }
 
     /** This internal method is used solely to find out if createAudioNode()
         should return nullptr or not.
@@ -549,13 +555,14 @@ public:
                  It's possible no ARA-compatible plugins were found,
                  or that ARA complained about something resulting
                  in failure to set it up accordingly.
-                 Celemony's ARA is really flaky and touchy, so the latter
-                 is most likely!
     */
     bool setupARA (bool dontPopupErrorMessages);
 
     /** The ElastiqueProOptions for fine tuning Elastique (if available). */
     juce::CachedValue<TimeStretcher::ElastiqueProOptions> elastiqueProOptions;
+
+    /** Stores the PluginDescription of the ARA plugin to use for this clip. */
+    juce::CachedValue<juce::PluginDescription> araPluginDescription;
 
     //==============================================================================
     /** @internal */
@@ -682,6 +689,8 @@ protected:
 
 private:
     //==============================================================================
+    juce::ReferenceCountedObjectPtr<ARAFileReader> araProxy;
+
     class TempoDetectTask;
     class BeatSensitivityComp;
 
@@ -715,6 +724,30 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioClipBase)
 };
 
+//==============================================================================
+/** Shows the ARA plugin window if this clip is using an ARA plugin. */
+void showARAWindow (AudioClipBase&);
+
+/** Hides the ARA plugin window if this clip is using an ARA plugin. */
+void hideARAWindow (AudioClipBase&);
+
+/** If this clip is using an ARA plugin, this will create a new MIDI clip based
+    on the ARA plugin's analysis.
+*/
+void araConvertToMIDI (AudioClipBase&);
+
+/** @deprecated Use showARAWindow() instead. */
+[[deprecated("Use showARAWindow() instead")]]
+inline void showMelodyneWindow (AudioClipBase& c) { showARAWindow (c); }
+
+/** @deprecated Use hideARAWindow() instead. */
+[[deprecated("Use hideARAWindow() instead")]]
+inline void hideMelodyneWindow (AudioClipBase& c) { hideARAWindow (c); }
+
+/** @deprecated Use araConvertToMIDI() instead. */
+[[deprecated("Use araConvertToMIDI() instead")]]
+inline void melodyneConvertToMIDI (AudioClipBase& c) { araConvertToMIDI (c); }
+
 }} // namespace tracktion { inline namespace engine
 
 namespace juce
@@ -732,4 +765,36 @@ namespace juce
         static tracktion::engine::AudioClipBase::AutoPitchMode fromVar (const var& v)   { return (tracktion::engine::AudioClipBase::AutoPitchMode) static_cast<int> (v); }
         static var toVar (tracktion::engine::AudioClipBase::AutoPitchMode v)            { return static_cast<int> (v); }
     };
+
+    template <>
+    struct VariantConverter<PluginDescription>
+    {
+        static PluginDescription fromVar (const var& v)
+        {
+            PluginDescription pd;
+            if (auto xml = juce::parseXML (v.toString()))
+                pd.loadFromXml (*xml);
+            return pd;
+        }
+
+        static var toVar (const PluginDescription& pd)
+        {
+            if (auto xml = pd.createXml())
+                return xml->toString();
+            return {};
+        }
+    };
+
+    inline bool operator== (const PluginDescription& a, const PluginDescription& b)
+    {
+        return a.name == b.name
+            && a.pluginFormatName == b.pluginFormatName
+            && a.fileOrIdentifier == b.fileOrIdentifier
+            && a.uniqueId == b.uniqueId;
+    }
+
+    inline bool operator!= (const PluginDescription& a, const PluginDescription& b)
+    {
+        return ! (a == b);
+    }
 }

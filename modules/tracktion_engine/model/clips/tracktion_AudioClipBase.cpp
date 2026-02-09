@@ -238,6 +238,7 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
 
     timeStretchMode.referTo (state, IDs::elastiqueMode, um);
     elastiqueProOptions.referTo (state, IDs::elastiqueOptions, um);
+    araPluginDescription.referTo (state, IDs::araPluginDescription, um);
 
     // Keep this in to handle old edits..
     if (state.getProperty (IDs::timeStretch))
@@ -276,10 +277,19 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
 
 AudioClipBase::~AudioClipBase()
 {
-    melodyneProxy = nullptr;
-
     if (renderJob != nullptr)
         renderJob->removeListener (this);
+}
+
+void AudioClipBase::tearDownARA()
+{
+   #if TRACKTION_ENABLE_ARA
+    if (araProxy != nullptr)
+    {
+        jassert (araProxy->getReferenceCount() == 1);
+        araProxy = nullptr;
+    }
+   #endif
 }
 
 //==============================================================================
@@ -332,6 +342,7 @@ void AudioClipBase::cloneFrom (Clip* c)
         beatSensitivity     .setValue (other->beatSensitivity, nullptr);
         timeStretchMode     .setValue (other->timeStretchMode, nullptr);
         elastiqueProOptions .setValue (other->elastiqueProOptions, nullptr);
+        araPluginDescription.setValue (other->araPluginDescription, nullptr);
         autoPitch           .setValue (other->autoPitch, nullptr);
         autoPitchMode       .setValue (other->autoPitchMode, nullptr);
         autoTempo           .setValue (other->autoTempo, nullptr);
@@ -401,8 +412,8 @@ void AudioClipBase::changed()
 
     createNewProxyAsync();
 
-    if (melodyneProxy != nullptr)
-        melodyneProxy->sourceClipChanged();
+    if (araProxy != nullptr)
+        araProxy->sourceClipChanged();
 }
 
 juce::Colour AudioClipBase::getDefaultColour() const
@@ -413,19 +424,20 @@ juce::Colour AudioClipBase::getDefaultColour() const
 //==============================================================================
 TimeDuration AudioClipBase::getMaximumLength()
 {
-    if (! isLooping())
-    {
-        if (getSourceLength() <= 0_td)
-            return 100000.0_td;
+    if (isLooping())
+        return Edit::getMaximumLength();
 
-        if (getAutoTempo())
-            return edit.tempoSequence.toTime (getStartBeat() + BeatDuration::fromBeats (loopInfo.getNumBeats()))
-                     - getPosition().getStart();
+    if (isUsingARA())
+        return Edit::getMaximumLength();
 
-        return getSourceLength() / speedRatio;
-    }
+    if (getSourceLength() <= 0_td)
+        return 100000.0_td;
 
-    return Edit::getMaximumLength();
+    if (getAutoTempo())
+        return edit.tempoSequence.toTime (getStartBeat() + BeatDuration::fromBeats (loopInfo.getNumBeats()))
+                 - getPosition().getStart();
+
+    return getSourceLength() / speedRatio;
 }
 
 //==============================================================================
@@ -941,7 +953,7 @@ TimeRange AudioClipBase::getLoopRange() const
 
 bool AudioClipBase::canLoop() const
 {
-    return isUsingMelodyne() ? false
+    return isUsingARA() ? false
                              : loopInfo.isLoopable();
 }
 
@@ -1040,8 +1052,8 @@ void AudioClipBase::pitchTempoTrackChanged()
     clearCachedAudioSegmentList();
     createNewProxyAsync();
 
-    if (melodyneProxy != nullptr)
-        melodyneProxy->sourceClipChanged();
+    if (araProxy != nullptr)
+        araProxy->sourceClipChanged();
 }
 
 void AudioClipBase::clearCachedAudioSegmentList()
@@ -1087,42 +1099,42 @@ void AudioClipBase::setSpeedRatio (double r)
     }
 }
 
-bool AudioClipBase::isUsingMelodyne() const
+bool AudioClipBase::isUsingARA() const
 {
-    return TimeStretcher::isMelodyne (timeStretchMode);
+    return TimeStretcher::isARA (timeStretchMode);
 }
 
-void AudioClipBase::loadMelodyneState()
+void AudioClipBase::loadARAState()
 {
     setupARA (true);
 }
 
-void AudioClipBase::showMelodyneWindow()
+void showARAWindow (AudioClipBase& clip)
 {
-    if (melodyneProxy != nullptr)
-        melodyneProxy->showPluginWindow();
+    if (auto proxy = clip.getARAProxy())
+        proxy->showPluginWindow();
 }
 
-void AudioClipBase::hideMelodyneWindow()
+void hideARAWindow (AudioClipBase& clip)
 {
-    if (melodyneProxy != nullptr)
-        melodyneProxy->hidePluginWindow();
+    if (auto proxy = clip.getARAProxy())
+        proxy->hidePluginWindow();
 }
 
-void AudioClipBase::melodyneConvertToMIDI()
+void araConvertToMIDI (AudioClipBase& clip)
 {
-    if (melodyneProxy != nullptr)
+    if (auto proxy = clip.getARAProxy())
     {
-        juce::MidiMessageSequence m (melodyneProxy->getAnalysedMIDISequence());
+        juce::MidiMessageSequence m (proxy->getAnalysedMIDISequence());
 
         if (m.getNumEvents() > 0)
         {
             juce::UndoManager* um = nullptr;
 
             juce::ValueTree midiClip (IDs::MIDICLIP);
-            midiClip.setProperty (IDs::name, getName(), um);
-            midiClip.setProperty (IDs::start, getPosition().getStart().inSeconds(), um);
-            midiClip.setProperty (IDs::length, getPosition().getLength().inSeconds(), um);
+            midiClip.setProperty (IDs::name, clip.getName(), um);
+            midiClip.setProperty (IDs::start, clip.getPosition().getStart().inSeconds(), um);
+            midiClip.setProperty (IDs::length, clip.getPosition().getLength().inSeconds(), um);
 
             juce::ValueTree ms (IDs::SEQUENCE);
             ms.setProperty (IDs::ver, 1, um);
@@ -1130,7 +1142,7 @@ void AudioClipBase::melodyneConvertToMIDI()
 
             midiClip.addChild (ms, -1, um);
 
-            auto& ts = edit.tempoSequence;
+            auto& ts = clip.edit.tempoSequence;
 
             for (int i = 0; i < m.getNumEvents(); ++i)
             {
@@ -1149,13 +1161,13 @@ void AudioClipBase::melodyneConvertToMIDI()
                 }
             }
 
-            if (auto t = getClipTrack())
-                t->insertClipWithState (midiClip, getName(), Type::midi,
-                                        { getPosition().time, {} }, true, false);
+            if (auto t = clip.getClipTrack())
+                t->insertClipWithState (midiClip, clip.getName(), TrackItem::Type::midi,
+                                        { clip.getPosition().time, {} }, true, false);
         }
         else
         {
-            edit.engine.getUIBehaviour().showWarningMessage (TRANS("No MIDI notes were found by the plugin!"));
+            clip.edit.engine.getUIBehaviour().showWarningMessage (TRANS("No MIDI notes were found by the plugin!"));
         }
     }
 }
@@ -1274,7 +1286,7 @@ juce::StringArray AudioClipBase::getPitchChoices()
 {
     juce::StringArray s;
 
-    const int numSemitones = isUsingMelodyne() ? 12 : 24;
+    const int numSemitones = isUsingARA() ? 12 : 24;
 
     if (loopInfo.getRootNote() == -1)
     {
@@ -1622,22 +1634,22 @@ bool AudioClipBase::setupARA (bool dontPopupErrorMessages)
     const juce::ScopedValueSetter<bool> svs (araReentrancyCheck, true);
 
    #if TRACKTION_ENABLE_ARA
-    if (isUsingMelodyne())
+    if (isUsingARA())
     {
-        if (melodyneProxy == nullptr)
+        if (araProxy == nullptr)
         {
             TRACKTION_LOG ("Created ARA reader!");
-            melodyneProxy = new MelodyneFileReader (edit, *this);
+            araProxy = new ARAFileReader (edit, *this);
         }
 
-        if (melodyneProxy != nullptr && melodyneProxy->isValid())
+        if (araProxy != nullptr && araProxy->isValid())
             return true;
 
         if (! dontPopupErrorMessages)
         {
             TRACKTION_LOG_ERROR ("Failed setting up ARA for audio clip!");
 
-            if (TimeStretcher::isMelodyne (timeStretchMode)
+            if (TimeStretcher::isARA (timeStretchMode)
                   && edit.engine.getPluginManager().getARACompatiblePlugDescriptions().size() <= 0)
             {
                 TRACKTION_LOG_ERROR ("No ARA-compatible plugins were found!");
@@ -1894,7 +1906,7 @@ bool AudioClipBase::usesTimeStretchedProxy() const
 
     return getAutoTempo() || getAutoPitch()
            || getPitchChange() != 0.0f
-           || isUsingMelodyne()
+           || isUsingARA()
            || (std::abs (getSpeedRatio() - 1.0) > 0.00001
                && TimeStretcher::canProcessFor (timeStretchMode));
 }
@@ -2117,7 +2129,7 @@ std::unique_ptr<AudioClipBase::ProxyRenderingInfo> AudioClipBase::createProxyRen
     p->audioSegmentList = AudioSegmentList::create (*this, true, true);
     p->clipTime = getEditTimeRange();
     p->speedRatio = getSpeedRatio();
-    p->mode = (timeStretchMode != TimeStretcher::disabled && timeStretchMode != TimeStretcher::melodyne)
+    p->mode = (timeStretchMode != TimeStretcher::disabled && timeStretchMode != TimeStretcher::ara)
                  ? timeStretchMode
                  : TimeStretcher::defaultMode;
     p->options = elastiqueProOptions;
@@ -2408,6 +2420,16 @@ void AudioClipBase::valueTreePropertyChanged (juce::ValueTree& tree, const juce:
         else if (id == IDs::proxyAllowed)
         {
             propertiesChanged();
+        }
+        else if (id == IDs::araPluginDescription)
+        {
+            if (isUsingARA())
+            {
+                // Reset the proxy to load a new plugin
+                araProxy.reset();
+                loadARAState();
+                changed();
+            }
         }
         else
         {

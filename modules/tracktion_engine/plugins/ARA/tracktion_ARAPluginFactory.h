@@ -8,31 +8,117 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-struct MelodyneInstance
+//==============================================================================
+/** Holds an instance of an ARA plugin along with its factory and extension info. */
+struct ARAInstance
 {
     ExternalPlugin::Ptr plugin;
     const ARAFactory* factory = nullptr;
     const ARAPlugInExtensionInstance* extensionInstance = nullptr;
 };
 
+/** @deprecated Use ARAInstance instead */
+using MelodyneInstance = ARAInstance;
+
 //==============================================================================
-struct MelodyneInstanceFactory
+/** RAII guard that ref-counts initializeARA/uninitializeARA calls per unique ARAFactory pointer.
+    Multiple ARAPluginFactory entries may share the same underlying ARAFactory* (same DLL);
+    this ensures initializeARA is called once on first use and uninitializeARA once on last destruction.
+*/
+struct ARAFactoryInitGuard
+{
+    ARAFactoryInitGuard (const ARAFactory* f, const ARAInterfaceConfiguration* config)
+        : factoryPtr (f)
+    {
+        TRACKTION_ASSERT_MESSAGE_THREAD
+        auto& refCounts = getRefCounts();
+
+        if (refCounts[factoryPtr]++ == 0)
+            factoryPtr->initializeARAWithConfiguration (config);
+    }
+
+    ~ARAFactoryInitGuard()
+    {
+        TRACKTION_ASSERT_MESSAGE_THREAD
+        auto& refCounts = getRefCounts();
+
+        if (--refCounts[factoryPtr] == 0)
+        {
+            factoryPtr->uninitializeARA();
+            refCounts.erase (factoryPtr);
+        }
+    }
+
+    const ARAFactory* factoryPtr;
+
+private:
+    static std::map<const ARAFactory*, int>& getRefCounts()
+    {
+        static std::map<const ARAFactory*, int> refs;
+        return refs;
+    }
+
+    JUCE_DECLARE_NON_COPYABLE (ARAFactoryInitGuard)
+};
+
+//==============================================================================
+/** Factory for creating ARA plugin instances.
+    Maintains a registry of per-plugin-type factories, keyed by PluginDescription identifier string.
+*/
+struct ARAPluginFactory
 {
 public:
-    static MelodyneInstanceFactory& getInstance (Engine& engine)
+    /** Returns (or creates) the factory for a specific ARA plugin type. */
+    static ARAPluginFactory& getInstance (Engine& engine, const juce::PluginDescription& desc)
     {
-        auto& p = getInstancePointer();
+        auto key = desc.createIdentifierString();
+        auto& registry = getRegistry();
+        auto it = registry.find (key);
 
-        if (p == nullptr)
-            p = new MelodyneInstanceFactory (engine);
+        if (it == registry.end())
+        {
+            auto* f = new ARAPluginFactory (engine, desc);
+            registry[key] = std::unique_ptr<ARAPluginFactory> (f);
+            return *f;
+        }
 
-        return *p;
+        return *it->second;
+    }
+
+    /** Picks the preferred default ARA plugin description for legacy clips.
+        Prefers Melodyne since legacy clips were always Melodyne. */
+    static juce::PluginDescription findPreferredDefault (const juce::Array<juce::PluginDescription>& descs)
+    {
+        for (auto& d : descs)
+            if (d.name.containsIgnoreCase ("Melodyne"))
+                return d;
+
+        // If there is no default, Melodyne might not be installed so
+        // just return an empty desc to avoid overwriting the data
+        return {};
+    }
+
+    /** Returns the factory for the first/default ARA plugin (backward compat). */
+    static ARAPluginFactory* getDefaultInstance (Engine& engine)
+    {
+        auto& registry = getRegistry();
+
+        if (! registry.empty())
+            return registry.begin()->second.get();
+
+        // Create one from the first available ARA plugin
+        auto araDescs = engine.getPluginManager().getARACompatiblePlugDescriptions();
+
+        if (araDescs.isEmpty())
+            return nullptr;
+
+        return &getInstance (engine, findPreferredDefault (araDescs));
     }
 
     static void shutdown()
     {
         CRASH_TRACER
-        delete getInstancePointer();
+        getRegistry().clear();
     }
 
     ExternalPlugin::Ptr createPlugin (Edit& ed)
@@ -49,12 +135,23 @@ public:
         return {};
     }
 
-    MelodyneInstance* createInstance (ExternalPlugin& p, ARADocumentControllerRef dcRef)
+    ExternalPlugin::Ptr createPlugin (Edit& ed, const juce::PluginDescription& desc)
+    {
+        auto newState = ExternalPlugin::create (ed.engine, desc);
+        ExternalPlugin::Ptr p = new ExternalPlugin (PluginCreationInfo (ed, newState, true));
+
+        if (p->getAudioPluginInstance() != nullptr)
+            return p;
+
+        return {};
+    }
+
+    ARAInstance* createInstance (ExternalPlugin& p, ARADocumentControllerRef dcRef)
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         jassert (plugin != nullptr);
 
-        std::unique_ptr<MelodyneInstance> w (new MelodyneInstance());
+        std::unique_ptr<ARAInstance> w (new ARAInstance());
         w->plugin = &p;
         w->factory = factory;
         w->extensionInstance = nullptr;
@@ -67,19 +164,26 @@ public:
 
     const ARAFactory* factory = nullptr;
 
+    ~ARAPluginFactory()
+    {
+        initGuard.reset();
+        plugin = nullptr;
+    }
+
 private:
     // Because ARA has some state which is global to the DLL, this dummy instance
     // of the plugin is kept hanging around until shutdown, forcing the DLL to
     // remain in memory until we're sure all other instances have gone away. Not
     // pretty, but not sure how else we could handle this.
     std::unique_ptr<juce::AudioPluginInstance> plugin;
+    std::unique_ptr<ARAFactoryInitGuard> initGuard;
 
-    MelodyneInstanceFactory (Engine& engine)
+    ARAPluginFactory (Engine& engine, const juce::PluginDescription& desc)
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         CRASH_TRACER
 
-        plugin = createMelodynePlugin (engine);
+        plugin = createARAPluginFromDescription (engine, desc);
 
         if (plugin != nullptr)
         {
@@ -101,7 +205,7 @@ private:
                         assertFuncPtr
                     };
 
-                    factory->initializeARAWithConfiguration (&interfaceConfig);
+                    initGuard = std::make_unique<ARAFactoryInitGuard> (factory, &interfaceConfig);
                 }
                 else
                 {
@@ -119,18 +223,10 @@ private:
         }
     }
 
-    ~MelodyneInstanceFactory()
+    static std::map<juce::String, std::unique_ptr<ARAPluginFactory>>& getRegistry()
     {
-        if (factory != nullptr)
-            factory->uninitializeARA();
-
-        plugin = nullptr;
-    }
-
-    static MelodyneInstanceFactory*& getInstancePointer()
-    {
-        static MelodyneInstanceFactory* instance;
-        return instance;
+        static std::map<juce::String, std::unique_ptr<ARAPluginFactory>> registry;
+        return registry;
     }
 
     void getFactoryForPlugin()
@@ -144,7 +240,7 @@ private:
             factory = nullptr;
     }
 
-    bool setExtensionInstance (MelodyneInstance& w, ARADocumentControllerRef dcRef)
+    bool setExtensionInstance (ARAInstance& w, ARADocumentControllerRef dcRef)
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         CRASH_TRACER
@@ -165,26 +261,12 @@ private:
     {
         entrypoint_t* ep = nullptr;
 
-        auto getIComponent = [] (juce::AudioPluginInstance& p) -> Steinberg::Vst::IComponent*
-        {
-            struct VST3Visitor : public juce::ExtensionsVisitor
-            {
-                void visitVST3Client (const VST3Client& client) override
-                {
-                    icomponent = static_cast<Steinberg::Vst::IComponent*> (client.getIComponentPtr());
-                }
-
-                Steinberg::Vst::IComponent* icomponent = nullptr;
-            };
-
-            VST3Visitor vst3Visitor;
-            p.getExtensions (vst3Visitor);
-
-            return vst3Visitor.icomponent;
-        };
-
-        if (auto component = getIComponent (p))
+        // Use getPlatformSpecificData() instead of getExtensions() to avoid
+        // triggering JUCE's internal ARA init/uninit cycle in getARAFactory()
+        JUCE_BEGIN_IGNORE_DEPRECATION_WARNINGS
+        if (auto* component = static_cast<Steinberg::Vst::IComponent*> (p.getPlatformSpecificData()))
             component->queryInterface (entrypoint_t::iid, (void**) &ep);
+        JUCE_END_IGNORE_DEPRECATION_WARNINGS
 
         return { ep };
     }
@@ -200,7 +282,7 @@ private:
         return {};
     }
 
-    bool setExtensionInstanceVST3 (MelodyneInstance& w, ARADocumentControllerRef dcRef)
+    bool setExtensionInstanceVST3 (ARAInstance& w, ARADocumentControllerRef dcRef)
     {
         if (auto p = w.plugin->getAudioPluginInstance())
         {
@@ -240,13 +322,30 @@ private:
         jassertfalse;
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MelodyneInstanceFactory)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ARAPluginFactory)
 };
 
+/** @deprecated Use ARAPluginFactory instead */
+using MelodyneInstanceFactory = ARAPluginFactory;
+
 //==============================================================================
-static std::unique_ptr<juce::AudioPluginInstance> createMelodynePlugin (Engine& engine,
-                                                                        const char* formatToTry,
-                                                                        const juce::Array<juce::PluginDescription>& araDescs)
+static std::unique_ptr<juce::AudioPluginInstance> createARAPluginFromDescription (Engine& engine,
+                                                                                   const juce::PluginDescription& desc)
+{
+    CRASH_TRACER
+
+    juce::String error;
+    auto& pfm = engine.getPluginManager().pluginFormatManager;
+
+    if (auto p = pfm.createPluginInstance (desc, 44100.0, 512, error))
+        return p;
+
+    return {};
+}
+
+static std::unique_ptr<juce::AudioPluginInstance> createARAPlugin (Engine& engine,
+                                                                    const char* formatToTry,
+                                                                    const juce::Array<juce::PluginDescription>& araDescs)
 {
     CRASH_TRACER
 
@@ -261,15 +360,22 @@ static std::unique_ptr<juce::AudioPluginInstance> createMelodynePlugin (Engine& 
     return {};
 }
 
-static std::unique_ptr<juce::AudioPluginInstance> createMelodynePlugin (Engine& engine)
+static std::unique_ptr<juce::AudioPluginInstance> createARAPlugin (Engine& engine)
 {
     CRASH_TRACER
     TRACKTION_ASSERT_MESSAGE_THREAD
 
     auto araDescs = engine.getPluginManager().getARACompatiblePlugDescriptions();
 
-    if (auto p = createMelodynePlugin (engine, "VST3", araDescs))
+    if (auto p = createARAPlugin (engine, "VST3", araDescs))
         return p;
 
     return {};
+}
+
+/** @deprecated Use createARAPlugin instead */
+[[deprecated("Use createARAPlugin instead")]]
+inline std::unique_ptr<juce::AudioPluginInstance> createMelodynePlugin (Engine& engine)
+{
+    return createARAPlugin (engine);
 }

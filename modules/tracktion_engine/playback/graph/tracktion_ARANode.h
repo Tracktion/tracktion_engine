@@ -14,14 +14,17 @@ namespace tracktion { inline namespace engine
 //==============================================================================
 //==============================================================================
 /**
-    Plays back a Melodyne plugin.
+    Node for playing back audio through an ARA plugin.
+
+    This node handles playback of audio clips processed through ARA-compatible
+    plugins such as Melodyne.
 */
-class MelodyneNode final  : public tracktion::graph::Node,
-                            private juce::Timer
+class ARANode final  : public tracktion::graph::Node,
+                       private juce::Timer
 {
 public:
-    MelodyneNode (AudioClipBase&, tracktion::graph::PlayHead&, bool isOfflineRender);
-    ~MelodyneNode() override;
+    ARANode (AudioClipBase&, tracktion::graph::PlayHead&, bool isOfflineRender);
+    ~ARANode() override;
 
     //==============================================================================
     tracktion::graph::NodeProperties getNodeProperties() override;
@@ -32,17 +35,17 @@ public:
 
 private:
     //==============================================================================
-    class MelodynePlayhead;
+    class ARAPlayhead;
 
     AudioClipBase& clip;
     tracktion::graph::PlayHead& playHead;
     LiveClipLevel clipLevel;
     Clip::Ptr clipPtr;
-    MelodyneFileReader::Ptr melodyneProxy;
+    ARAFileReader::Ptr araProxy;
     const AudioFileInfo fileInfo;
     juce::MidiBuffer midiMessages;
     juce::PluginDescription desc;
-    std::unique_ptr<MelodynePlayhead> playhead;
+    std::unique_ptr<ARAPlayhead> playhead;
     bool isOfflineRender = false;
     std::atomic<bool> analysingContent { true };
 
@@ -50,5 +53,8 @@ private:
     void updateAnalysingState();
     void timerCallback() override;
 };
+
+/** @deprecated Use ARANode instead */
+using MelodyneNode = ARANode;
 
 }} // namespace tracktion { inline namespace engine

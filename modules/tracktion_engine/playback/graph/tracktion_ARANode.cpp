@@ -16,10 +16,10 @@ namespace tracktion { inline namespace engine
 /** This class is a necessary bodge due to ARA needing to be told that we're playing, even if we aren't,
     so it can generate audio while its graph is being modified!
 */
-class MelodyneNode::MelodynePlayhead  : public juce::AudioPlayHead
+class ARANode::ARAPlayhead  : public juce::AudioPlayHead
 {
 public:
-    MelodynePlayhead (ExternalPlugin& p)
+    ARAPlayhead (ExternalPlugin& p)
         : plugin (p)
     {
     }
@@ -91,15 +91,15 @@ private:
         return AudioPlayHead::fps30; //Just to cope with it.
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MelodynePlayhead)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ARAPlayhead)
 };
 
 //==============================================================================
 //==============================================================================
-MelodyneNode::MelodyneNode (AudioClipBase& c, tracktion::graph::PlayHead& ph, bool isRendering)
+ARANode::ARANode (AudioClipBase& c, tracktion::graph::PlayHead& ph, bool isRendering)
     : clip (c), playHead (ph),
       clipLevel (clip.getLiveClipLevel()), clipPtr (&c),
-      melodyneProxy (c.melodyneProxy),
+      araProxy (c.getARAProxy()),
       fileInfo (clip.getAudioFile().getInfo()),
       isOfflineRender (isRendering)
 {
@@ -113,46 +113,46 @@ MelodyneNode::MelodyneNode (AudioClipBase& c, tracktion::graph::PlayHead& ph, bo
     }
 }
 
-MelodyneNode::~MelodyneNode()
+ARANode::~ARANode()
 {
     CRASH_TRACER
 
-    if (auto ep = melodyneProxy->getPlugin())
+    if (auto ep = araProxy->getPlugin())
         if (auto p = ep->getAudioPluginInstance())
             p->setPlayHead (nullptr);
 
     playhead.reset();
-    melodyneProxy = nullptr;
+    araProxy = nullptr;
 }
 
 //==============================================================================
-tracktion::graph::NodeProperties MelodyneNode::getNodeProperties()
+tracktion::graph::NodeProperties ARANode::getNodeProperties()
 {
     tracktion::graph::NodeProperties props;
     props.hasAudio = true;
     props.numberOfChannels = fileInfo.numChannels;
 
-    if (auto plugin = melodyneProxy->getPlugin())
+    if (auto plugin = araProxy->getPlugin())
         if (auto p = plugin->getAudioPluginInstance())
             props.numberOfChannels = juce::jmax (props.numberOfChannels, p->getTotalNumInputChannels(), p->getTotalNumOutputChannels());
 
     return props;
 }
 
-std::vector<tracktion::graph::Node*> MelodyneNode::getDirectInputNodes()
+std::vector<tracktion::graph::Node*> ARANode::getDirectInputNodes()
 {
     return {};
 }
 
-void MelodyneNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
+void ARANode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     CRASH_TRACER
-    if (auto plugin = melodyneProxy->getPlugin())
+    if (auto plugin = araProxy->getPlugin())
     {
         if (auto p = plugin->getAudioPluginInstance())
         {
-            //NB: Reducing the number of calls to juce::AudioProcessor::prepareToPlay() keeps Celemony happy;
-            //    the VST3 version of their plugin relies heavily on calls to the inconspicuous IComponent::setActive()!
+            //NB: Reducing the number of calls to juce::AudioProcessor::prepareToPlay() keeps some ARA plugins happy;
+            //    the VST3 version of Melodyne relies heavily on calls to the inconspicuous IComponent::setActive()!
             if (p->getSampleRate() != info.sampleRate
                  || p->getBlockSize() != info.blockSize)
             {
@@ -160,7 +160,7 @@ void MelodyneNode::prepareToPlay (const tracktion::graph::PlaybackInitialisation
             }
 
             p->setPlayHead (nullptr);
-            playhead = std::make_unique<MelodynePlayhead> (*plugin);
+            playhead = std::make_unique<ARAPlayhead> (*plugin);
             p->setPlayHead (playhead.get());
 
             desc = p->getPluginDescription();
@@ -168,7 +168,7 @@ void MelodyneNode::prepareToPlay (const tracktion::graph::PlaybackInitialisation
     }
 }
 
-bool MelodyneNode::isReadyToProcess()
+bool ARANode::isReadyToProcess()
 {
     if (! isOfflineRender)
         return true;
@@ -176,15 +176,15 @@ bool MelodyneNode::isReadyToProcess()
     return ! analysingContent;
 }
 
-void MelodyneNode::process (ProcessContext& pc)
+void ARANode::process (ProcessContext& pc)
 {
     CRASH_TRACER
     auto& dest = pc.buffers.audio;
 
-    if (dest.getNumFrames() == 0 || dest.getNumChannels() == 0 || melodyneProxy == nullptr)
+    if (dest.getNumFrames() == 0 || dest.getNumChannels() == 0 || araProxy == nullptr)
         return;
 
-    if (auto plugin = melodyneProxy->getPlugin())
+    if (auto plugin = araProxy->getPlugin())
     {
         if (auto pluginInstance = plugin->getAudioPluginInstance())
         {
@@ -231,16 +231,16 @@ void MelodyneNode::process (ProcessContext& pc)
 }
 
 //==============================================================================
-void MelodyneNode::updateAnalysingState()
+void ARANode::updateAnalysingState()
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
-    analysingContent = melodyneProxy->isAnalysingContent();
+    analysingContent = araProxy->isAnalysingContent();
 
     if (! analysingContent)
         stopTimer();
 }
 
-void MelodyneNode::timerCallback()
+void ARANode::timerCallback()
 {
     updateAnalysingState();
 }

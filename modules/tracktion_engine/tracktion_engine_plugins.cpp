@@ -87,7 +87,7 @@ using namespace std::literals;
 #include "plugins/effects/tracktion_SamplerPlugin.cpp"
 #include "plugins/effects/tracktion_ToneGenerator.cpp"
 
-#include "plugins/ARA/tracktion_MelodyneFileReader.cpp"
+#include "plugins/ARA/tracktion_ARAFileReader.cpp"
 
 #include "plugins/cmajor/tracktion_CmajorPluginFormat.cpp"
 

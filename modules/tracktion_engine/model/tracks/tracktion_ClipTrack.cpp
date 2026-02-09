@@ -165,6 +165,9 @@ ClipTrack::ClipTrack (Edit& ed, const juce::ValueTree& v, bool hasModifierList)
 
 ClipTrack::~ClipTrack()
 {
+    for (auto c : getClips())
+        if (auto acb = dynamic_cast<AudioClipBase*> (c))
+            acb->tearDownARA();
 }
 
 void ClipTrack::initialise()
