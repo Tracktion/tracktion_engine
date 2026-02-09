@@ -89,17 +89,17 @@ void Project::setProjectProperty (const juce::String& n, const juce::String& v) 
 void Project::refreshProjectPropertiesFromFile()                            { impl->refreshProjectPropertiesFromFile(); }
 bool Project::isLibraryProject() const                                      { return impl->isLibraryProject(); }
 
-bool Project::askAboutTempoDetect (const juce::File& f, bool& s) const     { return impl->askAboutTempoDetect (f, s); }
+bool Project::askAboutTempoDetect (const juce::File& f, bool& s) const      { return impl->askAboutTempoDetect (f, s); }
 
 juce::Array<ProjectItemID> Project::findOrphanItems()                       { return impl->findOrphanItems(); }
 
 //==============================================================================
 int Project::getNumProjectItems()                                           { return impl->getNumProjectItems(); }
 ProjectItemID Project::getProjectItemID (int i)                             { return impl->getProjectItemID (i); }
-juce::Array<ProjectItemID> Project::getAllProjectItemIDs() const             { return impl->getAllProjectItemIDs(); }
-juce::Array<int> Project::getAllItemIDs() const                              { return impl->getAllItemIDs(); }
+juce::Array<ProjectItemID> Project::getAllProjectItemIDs() const            { return impl->getAllProjectItemIDs(); }
+juce::Array<int> Project::getAllItemIDs() const                             { return impl->getAllItemIDs(); }
 ProjectItem::Ptr Project::getProjectItemAt (int i)                          { return impl->getProjectItemAt (i); }
-juce::Array<ProjectItem::Ptr> Project::getAllProjectItems()                  { return impl->getAllProjectItems(); }
+juce::Array<ProjectItem::Ptr> Project::getAllProjectItems()                 { return impl->getAllProjectItems(); }
 int Project::getIndexOf (ProjectItemID id) const                            { return impl->getIndexOf (id); }
 
 ProjectItem::Ptr Project::getProjectItemForID (ProjectItemID id)            { return impl->getProjectItemForID (id); }
@@ -120,7 +120,7 @@ void Project::redirectIDsFromProject (int oldId, int newId)                 { im
 
 //==============================================================================
 void Project::mergeArchiveContents (const juce::File& f)                    { impl->mergeArchiveContents (f); }
-void Project::mergeOtherProjectIntoThis (const juce::File& f)              { impl->mergeOtherProjectIntoThis (f); }
+void Project::mergeOtherProjectIntoThis (const juce::File& f)               { impl->mergeOtherProjectIntoThis (f); }
 void Project::refreshFolderStructure()                                      { impl->refreshFolderStructure(); }
 void Project::createDefaultFolders()                                        { impl->createDefaultFolders(); }
 
