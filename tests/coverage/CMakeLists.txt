@@ -103,6 +103,8 @@ endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     target_compile_options(${TARGET_NAME} PRIVATE "-fno-aligned-allocation")
+    target_compile_definitions(${TARGET_NAME} PRIVATE
+        $<IF:$<CONFIG:Debug>,_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_DEBUG,_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_FAST>)
 endif()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU")

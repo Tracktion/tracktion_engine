@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR"
+
+GENERATE_HTML=false
+
+for arg in "$@"; do
+    case "$arg" in
+        --html) GENERATE_HTML=true ;;
+        *)
+            echo "Usage: $0 [--html]"
+            echo "  --html  Generate an HTML coverage report in coverage_html/"
+            exit 1
+            ;;
+    esac
+done
+
+OS="$(uname -s)"
+
+echo "==> Configuring (${OS})..."
+cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo
+
+echo "==> Building..."
+cmake --build ./build --target coverage --config RelWithDebInfo --parallel
+
+echo "==> Running tests..."
+build/coverage_artefacts/RelWithDebInfo/coverage
+
+LCOV_IGNORE_ERRORS="--ignore-errors negative --ignore-errors unused"
+
+if [ "$OS" = "Darwin" ]; then
+    LCOV_IGNORE_ERRORS="$LCOV_IGNORE_ERRORS --ignore-errors inconsistent --ignore-errors format --ignore-errors count"
+fi
+
+echo "==> Capturing coverage..."
+lcov --capture --directory "build" --output-file coverage.info \
+    --rc geninfo_unexecuted_blocks=1 \
+    $LCOV_IGNORE_ERRORS \
+    --exclude "tests/coverage/*" \
+    --exclude "examples/common/*" \
+    --exclude "tests/coverage/coverage.h" \
+    --exclude "*juce_*" \
+    --exclude "*choc_*" \
+    --exclude "*3rd_Party*" \
+    --exclude "*3rd_party*" \
+    --exclude "modules/3rd_party/*" \
+    --exclude "/Applications*" \
+    --exclude "/usr*" \
+    --exclude "*examples*"
+
+echo "==> Coverage info written to: ${SCRIPT_DIR}/coverage.info"
+
+if [ "$GENERATE_HTML" = true ]; then
+    GENHTML_IGNORE_ERRORS=""
+
+    if [ "$OS" = "Darwin" ]; then
+        GENHTML_IGNORE_ERRORS="--ignore-errors inconsistent --ignore-errors format --ignore-errors count --ignore-errors category"
+    fi
+
+    echo "==> Generating HTML report..."
+    genhtml coverage.info --output-directory coverage_html $GENHTML_IGNORE_ERRORS
+    echo "==> HTML report written to: ${SCRIPT_DIR}/coverage_html/"
+fi
+
+echo "==> Done."
