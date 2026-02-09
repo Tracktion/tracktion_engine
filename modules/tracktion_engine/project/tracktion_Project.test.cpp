@@ -689,10 +689,14 @@ TEST_SUITE ("tracktion_engine")
 
         project->setDescription ("Test project for conversion");
 
-        // Create a sin wave file to use as audio source
+        // Create a sin wave file and copy it into the project directory so it's found after conversion
         auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
         REQUIRE (sinFile != nullptr);
         REQUIRE (sinFile->getFile().existsAsFile());
+
+        auto sinWavFile = tempDir.getChildFile (sinFile->getFile().getFileName());
+        sinFile->getFile().copyFileTo (sinWavFile);
+        REQUIRE (sinWavFile.existsAsFile());
 
         // Create an edit with an audio clip
         auto editItem = project->createNewEdit();
@@ -707,7 +711,7 @@ TEST_SUITE ("tracktion_engine")
             REQUIRE (audioTracks.size() >= 1);
 
             auto waveClip = insertWaveClip (*audioTracks[0], "ConvertTestWave",
-                                            sinFile->getFile(),
+                                            sinWavFile,
                                             { { 0_tp, TimePosition::fromSeconds (2.0) } },
                                             DeleteExistingClips::no);
             CHECK (waveClip != nullptr);
