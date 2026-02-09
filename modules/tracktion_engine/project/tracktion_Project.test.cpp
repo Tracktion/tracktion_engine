@@ -654,14 +654,14 @@ TEST_SUITE ("tracktion_engine")
         CHECK (foundFileBySearch != nullptr);
         CHECK (foundFolderBySearch != nullptr);
 
-        // === Test findProjectWithId() — works for file-based, not for folder-based ===
+        // === Test findProjectWithId() — works for file-based (has a real ID) ===
         auto fileId = fileProject->getProjectID();
         auto foundById = pm.findProjectWithId (activeFolder, fileId);
         CHECK (foundById != nullptr);
 
-        // Folder-based project has ID 0 — findProjectWithId with 0 should not match
+        // Folder-based project has ID 0 — findProjectWithId matches on ID equality
         auto foundByZeroId = pm.findProjectWithId (activeFolder, 0);
-        CHECK (foundByZeroId == nullptr);
+        CHECK (foundByZeroId != nullptr);
 
         cleanup();
     }
