@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TracktionEngine: tracktion_MelodyneFileReader.h File Reference</title>
+<title>TracktionEngine: tracktion_ARAPluginFactory.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -75,29 +75,40 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
-  <div class="headertitle"><div class="title">tracktion_MelodyneFileReader.h File Reference</div></div>
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a>  </div>
+  <div class="headertitle"><div class="title">tracktion_ARAPluginFactory.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MelodyneFileReader.html">tracktion::engine::MelodyneFileReader</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARAInstance.html">ARAInstance</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds an instance of an ARA plugin along with its factory and extension info.  <a href="structARAInstance.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ARADocumentHolder.html">tracktion::engine::ARADocumentHolder</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARAFactoryInitGuard.html">ARAFactoryInitGuard</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">RAII guard that ref-counts initializeARA/uninitializeARA calls per unique ARAFactory pointer.  <a href="structARAFactoryInitGuard.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARAPluginFactory.html">ARAPluginFactory</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Factory for creating ARA plugin instances.  <a href="structARAPluginFactory.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespacetracktion" id="r_namespacetracktion"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion.html">tracktion</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacetracktion_1_1engine" id="r_namespacetracktion_1_1engine"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html">tracktion::engine</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ga61d9fa9a4997dc09d48859968aa5b9da" id="r_ga61d9fa9a4997dc09d48859968aa5b9da"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tracktion__engine-plugins.html#ga61d9fa9a4997dc09d48859968aa5b9da">MelodyneInstance</a> = <a class="el" href="structARAInstance.html">ARAInstance</a></td></tr>
+<tr class="separator:ga61d9fa9a4997dc09d48859968aa5b9da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga956493f52c472202ca9488e8138aeb1e" id="r_ga956493f52c472202ca9488e8138aeb1e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tracktion__engine-plugins.html#ga956493f52c472202ca9488e8138aeb1e">MelodyneInstanceFactory</a> = <a class="el" href="structARAPluginFactory.html">ARAPluginFactory</a></td></tr>
+<tr class="separator:ga956493f52c472202ca9488e8138aeb1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:gaf337be26a74c68764e997b03fe5b0e92" id="r_gaf337be26a74c68764e997b03fe5b0e92"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; juce::AudioPluginInstance &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tracktion__engine-plugins.html#gaf337be26a74c68764e997b03fe5b0e92">createMelodynePlugin</a> (Engine &amp;engine)</td></tr>
+<tr class="separator:gaf337be26a74c68764e997b03fe5b0e92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Feb 7 2026 11:45:09 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Feb 9 2026 10:50:01 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

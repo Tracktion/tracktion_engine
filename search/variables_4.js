@@ -41,7 +41,7 @@ var searchData=
   ['excludedcolour_38',['excludedColour',['../structtracktion_1_1engine_1_1TrackCompManager_1_1TrackComp.html#adee8450500d9745cc0fcac9b90a8632d',1,'tracktion::engine::TrackCompManager::TrackComp']]],
   ['expr_39',['expr',['../structtracktion_1_1engine_1_1VSTXML_1_1Param.html#ab6e890bac042f431dbfba45ada41319e',1,'tracktion::engine::VSTXML::Param']]],
   ['extenders_40',['extenders',['../classtracktion_1_1engine_1_1MackieMCU.html#ab9eae148c989acf58ec88d4ff54963b0',1,'tracktion::engine::MackieMCU']]],
-  ['extensioninstance_41',['extensionInstance',['../structMelodyneInstance.html#a35385f1d325e0cbaef0443829ff7f3b9',1,'MelodyneInstance']]],
+  ['extensioninstance_41',['extensionInstance',['../structARAInstance.html#afd4599deb3518ebdad8b3de518bdcad8',1,'ARAInstance']]],
   ['externalcontroller_42',['externalController',['../classtracktion_1_1engine_1_1MidiOutputDevice.html#a96d3b9ce3b1c9930de4b8ce9ea53ff5a',1,'tracktion::engine::MidiOutputDevice']]],
   ['externalcontrollermanager_43',['externalControllerManager',['../classtracktion_1_1engine_1_1ControlSurface.html#ae5eca2fc57a6bdbb294f8c833edb6697',1,'tracktion::engine::ControlSurface']]],
   ['extractaudiofiles_44',['extractAudioFiles',['../structtracktion_1_1engine_1_1dawproject_1_1ParseOptions.html#ab62e7c1a20c74ae9cf1346d202af7217',1,'tracktion::engine::dawproject::ParseOptions']]],

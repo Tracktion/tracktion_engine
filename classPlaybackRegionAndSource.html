@@ -98,6 +98,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ad0dedeb0835d78450b5db8e9d53304ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71967fd92948b22f0893cf869f2dfe8a" id="r_a71967fd92948b22f0893cf869f2dfe8a"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classAudioSourceWrapper.html">AudioSourceWrapper</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionAndSource.html#a71967fd92948b22f0893cf869f2dfe8a">audioSource</a></td></tr>
 <tr class="separator:a71967fd92948b22f0893cf869f2dfe8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4babf92c65a0ecc9394004452fdfc6a6" id="r_a4babf92c65a0ecc9394004452fdfc6a6"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classAudioModificationWrapper.html">AudioModificationWrapper</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionAndSource.html#a4babf92c65a0ecc9394004452fdfc6a6">audioModification</a></td></tr>
+<tr class="separator:a4babf92c65a0ecc9394004452fdfc6a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="afe5381d185bbae3579622d8781b83987" name="afe5381d185bbae3579622d8781b83987"></a>
@@ -150,7 +152,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classPlaybackRegionAndSource.html#a71967fd92948b22f0893cf869f2dfe8a">audioSource</a>, <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classPlaybackRegionAndSource.html#a0c2dcf474ad9d2ef5f3ba6b6511b88ac">enable()</a>, and <a class="el" href="classPlaybackRegionAndSource.html#ad0dedeb0835d78450b5db8e9d53304ce">playbackRegion</a>.</p>
+<p class="reference">References <a class="el" href="classPlaybackRegionAndSource.html#a4babf92c65a0ecc9394004452fdfc6a6">audioModification</a>, <a class="el" href="classPlaybackRegionAndSource.html#a71967fd92948b22f0893cf869f2dfe8a">audioSource</a>, <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classPlaybackRegionAndSource.html#a0c2dcf474ad9d2ef5f3ba6b6511b88ac">enable()</a>, and <a class="el" href="classPlaybackRegionAndSource.html#ad0dedeb0835d78450b5db8e9d53304ce">playbackRegion</a>.</p>
 
 </div>
 </div>
@@ -170,7 +172,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section note"><dt>Note</dt><dd>Destruction order matters here </dd></dl>
 
-<p class="reference">References <a class="el" href="classPlaybackRegionAndSource.html#a71967fd92948b22f0893cf869f2dfe8a">audioSource</a>, <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classPlaybackRegionAndSource.html#aa52f420d09ca256da9282358fc995608">disable()</a>, and <a class="el" href="classPlaybackRegionAndSource.html#ad0dedeb0835d78450b5db8e9d53304ce">playbackRegion</a>.</p>
+<p class="reference">References <a class="el" href="classPlaybackRegionAndSource.html#a4babf92c65a0ecc9394004452fdfc6a6">audioModification</a>, <a class="el" href="classPlaybackRegionAndSource.html#a71967fd92948b22f0893cf869f2dfe8a">audioSource</a>, <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classPlaybackRegionAndSource.html#aa52f420d09ca256da9282358fc995608">disable()</a>, and <a class="el" href="classPlaybackRegionAndSource.html#ad0dedeb0835d78450b5db8e9d53304ce">playbackRegion</a>.</p>
 
 </div>
 </div>
@@ -269,13 +271,29 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a4babf92c65a0ecc9394004452fdfc6a6" name="a4babf92c65a0ecc9394004452fdfc6a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4babf92c65a0ecc9394004452fdfc6a6">&#9670;&#160;</a></span>audioModification</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt;<a class="el" href="classAudioModificationWrapper.html">AudioModificationWrapper</a>&gt; PlaybackRegionAndSource::audioModification</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classPlaybackRegionAndSource.html#afe5381d185bbae3579622d8781b83987">PlaybackRegionAndSource()</a>, and <a class="el" href="classPlaybackRegionAndSource.html#aaf42b3a9bcc6f5807cacfe6b59b68c2f">~PlaybackRegionAndSource()</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="tracktion__ARAWrapperInterfaces_8h.html">tracktion_ARAWrapperInterfaces.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Feb 7 2026 11:45:09 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Feb 9 2026 10:50:01 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

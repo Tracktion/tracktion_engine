@@ -71,7 +71,9 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">plugins<div class="ingroups"><a class="el" href="group__tracktion__engine.html">tracktion_engine</a></div></div></div>
 </div><!--header-->
 <div class="contents">
@@ -93,6 +95,20 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1AirWindowsAutomatableParameter.html">tracktion::engine::AirWindowsAutomatableParameter</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ARAFileReader.html">tracktion::engine::ARAFileReader</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manages an ARA plugin instance for an audio clip.  <a href="classtracktion_1_1engine_1_1ARAFileReader.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ARADocumentHolder.html">tracktion::engine::ARADocumentHolder</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARAInstance.html">ARAInstance</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds an instance of an ARA plugin along with its factory and extension info.  <a href="structARAInstance.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARAFactoryInitGuard.html">ARAFactoryInitGuard</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">RAII guard that ref-counts initializeARA/uninitializeARA calls per unique ARAFactory pointer.  <a href="structARAFactoryInitGuard.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARAPluginFactory.html">ARAPluginFactory</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Factory for creating ARA plugin instances.  <a href="structARAPluginFactory.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structArchivingFunctions.html">ArchivingFunctions</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structEditProxyFunctions.html">EditProxyFunctions</a></td></tr>
@@ -103,6 +119,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html">ARADocument</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">As specified by the Celmony:  <a href="classARADocument.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARADocument_1_1ScopedEdit.html">ARADocument::ScopedEdit</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARADocumentCreatorCallback.html">ARADocumentCreatorCallback</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -119,14 +137,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionWrapper.html">PlaybackRegionWrapper</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionAndSource.html">PlaybackRegionAndSource</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1MelodyneFileReader.html">tracktion::engine::MelodyneFileReader</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ARADocumentHolder.html">tracktion::engine::ARADocumentHolder</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMelodyneInstance.html">MelodyneInstance</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMelodyneInstanceFactory.html">MelodyneInstanceFactory</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ChorusPlugin.html">tracktion::engine::ChorusPlugin</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -285,12 +295,75 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1PluginWindowState.html">tracktion::engine::PluginWindowState</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ga61d9fa9a4997dc09d48859968aa5b9da" id="r_ga61d9fa9a4997dc09d48859968aa5b9da"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tracktion__engine-plugins.html#ga61d9fa9a4997dc09d48859968aa5b9da">MelodyneInstance</a> = <a class="el" href="structARAInstance.html">ARAInstance</a></td></tr>
+<tr class="separator:ga61d9fa9a4997dc09d48859968aa5b9da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga956493f52c472202ca9488e8138aeb1e" id="r_ga956493f52c472202ca9488e8138aeb1e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tracktion__engine-plugins.html#ga956493f52c472202ca9488e8138aeb1e">MelodyneInstanceFactory</a> = <a class="el" href="structARAPluginFactory.html">ARAPluginFactory</a></td></tr>
+<tr class="separator:ga956493f52c472202ca9488e8138aeb1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:gaf337be26a74c68764e997b03fe5b0e92" id="r_gaf337be26a74c68764e997b03fe5b0e92"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; juce::AudioPluginInstance &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tracktion__engine-plugins.html#gaf337be26a74c68764e997b03fe5b0e92">createMelodynePlugin</a> (Engine &amp;engine)</td></tr>
+<tr class="separator:gaf337be26a74c68764e997b03fe5b0e92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="ga61d9fa9a4997dc09d48859968aa5b9da" name="ga61d9fa9a4997dc09d48859968aa5b9da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga61d9fa9a4997dc09d48859968aa5b9da">&#9670;&#160;</a></span>MelodyneInstance</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="group__tracktion__engine-plugins.html#ga61d9fa9a4997dc09d48859968aa5b9da">MelodyneInstance</a> =  <a class="el" href="structARAInstance.html">ARAInstance</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000009">Deprecated:</a></b></dt><dd>Use <a class="el" href="structARAInstance.html" title="Holds an instance of an ARA plugin along with its factory and extension info.">ARAInstance</a> instead </dd></dl>
+
+</div>
+</div>
+<a id="ga956493f52c472202ca9488e8138aeb1e" name="ga956493f52c472202ca9488e8138aeb1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga956493f52c472202ca9488e8138aeb1e">&#9670;&#160;</a></span>MelodyneInstanceFactory</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="group__tracktion__engine-plugins.html#ga956493f52c472202ca9488e8138aeb1e">MelodyneInstanceFactory</a> =  <a class="el" href="structARAPluginFactory.html">ARAPluginFactory</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000010">Deprecated:</a></b></dt><dd>Use <a class="el" href="structARAPluginFactory.html" title="Factory for creating ARA plugin instances.">ARAPluginFactory</a> instead </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="gaf337be26a74c68764e997b03fe5b0e92" name="gaf337be26a74c68764e997b03fe5b0e92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf337be26a74c68764e997b03fe5b0e92">&#9670;&#160;</a></span>createMelodynePlugin()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::unique_ptr&lt; juce::AudioPluginInstance &gt; createMelodynePlugin </td>
+          <td>(</td>
+          <td class="paramtype">Engine &amp;&#160;</td>
+          <td class="paramname"><em>engine</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000011">Deprecated:</a></b></dt><dd>Use createARAPlugin instead </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Feb 7 2026 11:45:09 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Feb 9 2026 10:50:01 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

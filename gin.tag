@@ -1264,6 +1264,14 @@
     <namespace>tracktion::engine</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_ARANode.h</name>
+    <path>build/tracktion_engine/playback/graph/</path>
+    <filename>tracktion__ARANode_8h.html</filename>
+    <class kind="class">tracktion::engine::ARANode</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_ArrangerLauncherSwitchingNode.h</name>
     <path>build/tracktion_engine/playback/graph/</path>
     <filename>tracktion__ArrangerLauncherSwitchingNode_8h.html</filename>
@@ -1398,14 +1406,6 @@
     <path>build/tracktion_engine/playback/graph/</path>
     <filename>tracktion__LoopingMidiNode_8h.html</filename>
     <class kind="class">tracktion::engine::LoopingMidiNode</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::engine</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_MelodyneNode.h</name>
-    <path>build/tracktion_engine/playback/graph/</path>
-    <filename>tracktion__MelodyneNode_8h.html</filename>
-    <class kind="class">tracktion::engine::MelodyneNode</class>
     <namespace>tracktion</namespace>
     <namespace>tracktion::engine</namespace>
   </compound>
@@ -1808,6 +1808,44 @@
     </member>
   </compound>
   <compound kind="file">
+    <name>tracktion_ARAFileReader.h</name>
+    <path>build/tracktion_engine/plugins/ARA/</path>
+    <filename>tracktion__ARAFileReader_8h.html</filename>
+    <class kind="class">tracktion::engine::ARAFileReader</class>
+    <class kind="struct">tracktion::engine::ARADocumentHolder</class>
+    <namespace>tracktion</namespace>
+    <namespace>tracktion::engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_ARAPluginFactory.h</name>
+    <path>build/tracktion_engine/plugins/ARA/</path>
+    <filename>tracktion__ARAPluginFactory_8h.html</filename>
+    <class kind="struct">ARAInstance</class>
+    <class kind="struct">ARAFactoryInitGuard</class>
+    <class kind="struct">ARAPluginFactory</class>
+    <member kind="typedef">
+      <type>ARAInstance</type>
+      <name>MelodyneInstance</name>
+      <anchorfile>group__tracktion__engine-plugins.html</anchorfile>
+      <anchor>ga61d9fa9a4997dc09d48859968aa5b9da</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>ARAPluginFactory</type>
+      <name>MelodyneInstanceFactory</name>
+      <anchorfile>group__tracktion__engine-plugins.html</anchorfile>
+      <anchor>ga956493f52c472202ca9488e8138aeb1e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="function">
+      <type>std::unique_ptr&lt; juce::AudioPluginInstance &gt;</type>
+      <name>createMelodynePlugin</name>
+      <anchorfile>group__tracktion__engine-plugins.html</anchorfile>
+      <anchor>gaf337be26a74c68764e997b03fe5b0e92</anchor>
+      <arglist>(Engine &amp;engine)</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
     <name>tracktion_ARAWrapperFunctions.h</name>
     <path>build/tracktion_engine/plugins/ARA/</path>
     <filename>tracktion__ARAWrapperFunctions_8h.html</filename>
@@ -1821,6 +1859,7 @@
     <path>build/tracktion_engine/plugins/ARA/</path>
     <filename>tracktion__ARAWrapperInterfaces_8h.html</filename>
     <class kind="class">ARADocument</class>
+    <class kind="struct">ARADocument::ScopedEdit</class>
     <class kind="struct">ARADocumentCreatorCallback</class>
     <class kind="class">MusicalContextWrapper</class>
     <class kind="class">NodeReader</class>
@@ -1829,22 +1868,6 @@
     <class kind="class">RegionSequenceWrapper</class>
     <class kind="class">PlaybackRegionWrapper</class>
     <class kind="class">PlaybackRegionAndSource</class>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_MelodyneFileReader.h</name>
-    <path>build/tracktion_engine/plugins/ARA/</path>
-    <filename>tracktion__MelodyneFileReader_8h.html</filename>
-    <class kind="class">tracktion::engine::MelodyneFileReader</class>
-    <class kind="struct">tracktion::engine::ARADocumentHolder</class>
-    <namespace>tracktion</namespace>
-    <namespace>tracktion::engine</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_MelodyneInstanceFactory.h</name>
-    <path>build/tracktion_engine/plugins/ARA/</path>
-    <filename>tracktion__MelodyneInstanceFactory_8h.html</filename>
-    <class kind="struct">MelodyneInstance</class>
-    <class kind="struct">MelodyneInstanceFactory</class>
   </compound>
   <compound kind="file">
     <name>tracktion_CmajorPluginFormat.h</name>
@@ -4348,12 +4371,13 @@
   <compound kind="class">
     <name>ARADocument</name>
     <filename>classARADocument.html</filename>
+    <class kind="struct">ARADocument::ScopedEdit</class>
     <member kind="function">
       <type></type>
       <name>ARADocument</name>
       <anchorfile>classARADocument.html</anchorfile>
-      <anchor>a76ae9f7b9f061aa0272bb9dd0f8a03e9</anchor>
-      <arglist>(Edit &amp;sourceEdit, MelodyneInstance *validPluginWrapper, const ARAPlugInExtensionInstance &amp;, const ARADocumentControllerInstance &amp;dc, ARADocumentControllerHostInstance *dchi)</arglist>
+      <anchor>ac4390aff246ecec2157824b84730ab44</anchor>
+      <arglist>(Edit &amp;sourceEdit, ARAInstance *validPluginWrapper, const ARAPlugInExtensionInstance &amp;, const ARADocumentControllerInstance &amp;dc, ARADocumentControllerHostInstance *dchi)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -4403,6 +4427,20 @@
       <anchorfile>classARADocument.html</anchorfile>
       <anchor>a71649f72ecfbd09f1062001c1007a922</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::MemoryBlock</type>
+      <name>storeObjectsForCopy</name>
+      <anchorfile>classARADocument.html</anchorfile>
+      <anchor>a3370282e7072f62f1177fdf1802ca0e9</anchor>
+      <arglist>(ARAAudioSourceRef source, ARAAudioModificationRef modification)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>restoreObjectsForPaste</name>
+      <anchorfile>classARADocument.html</anchorfile>
+      <anchor>a57f29c08f5c22ee7f396f7c57636e2d5</anchor>
+      <arglist>(const juce::MemoryBlock &amp;data, const juce::String &amp;archivedSourceID, const juce::String &amp;currentSourceID, const juce::String &amp;archivedModID, const juce::String &amp;currentModID)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -4475,8 +4513,8 @@
       <type></type>
       <name>ARADocumentCreatorCallback</name>
       <anchorfile>structARADocumentCreatorCallback.html</anchorfile>
-      <anchor>ab2509e16a996a22f9858af996bcf685a</anchor>
-      <arglist>(Edit &amp;e)</arglist>
+      <anchor>a85f236b509bd66fa61ccd77bcd0db63b</anchor>
+      <arglist>(Edit &amp;e, const juce::PluginDescription &amp;d)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -4496,14 +4534,21 @@
       <type>static ARADocument *</type>
       <name>perform</name>
       <anchorfile>structARADocumentCreatorCallback.html</anchorfile>
-      <anchor>afd494c00a5e30ab3d1b1ceb1ed33af8b</anchor>
-      <arglist>(Edit &amp;edit)</arglist>
+      <anchor>a9cad9cfb14d50878a599d95a9e4cc9c8</anchor>
+      <arglist>(Edit &amp;edit, const juce::PluginDescription &amp;desc)</arglist>
     </member>
     <member kind="variable">
       <type>Edit &amp;</type>
       <name>edit</name>
       <anchorfile>structARADocumentCreatorCallback.html</anchorfile>
       <anchor>ad5674141610c60f997a423851a478294</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::PluginDescription</type>
+      <name>desc</name>
+      <anchorfile>structARADocumentCreatorCallback.html</anchorfile>
+      <anchor>aef46a442ab9b1191ba3976b188e192a8</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -4544,6 +4589,300 @@
       <anchorfile>structtracktion_1_1engine_1_1ARADocumentHolder.html</anchorfile>
       <anchor>a5640ff4a166d61509608587d6337b429</anchor>
       <arglist>()</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>ARAFactoryInitGuard</name>
+    <filename>structARAFactoryInitGuard.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>ARAFactoryInitGuard</name>
+      <anchorfile>structARAFactoryInitGuard.html</anchorfile>
+      <anchor>a9e5efef1c93d1b7d5a959c07443d467c</anchor>
+      <arglist>(const ARAFactory *f, const ARAInterfaceConfiguration *config)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ARAFactoryInitGuard</name>
+      <anchorfile>structARAFactoryInitGuard.html</anchorfile>
+      <anchor>a0e8bff622c94c3acac57cefbb86e5795</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="variable">
+      <type>const ARAFactory *</type>
+      <name>factoryPtr</name>
+      <anchorfile>structARAFactoryInitGuard.html</anchorfile>
+      <anchor>ae0faa69e7d629d5d18938ac69ff4cf3b</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::ARAFileReader</name>
+    <filename>classtracktion_1_1engine_1_1ARAFileReader.html</filename>
+    <member kind="typedef">
+      <type>juce::ReferenceCountedObjectPtr&lt; ARAFileReader &gt;</type>
+      <name>Ptr</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARAFileReader.html</anchorfile>
+      <anchor>a20110ea7fd1ec330f8284d32444ac6da</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>ARAFileReader</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARAFileReader.html</anchorfile>
+      <anchor>a29b1db059422e4ab16bcbd396181dc6a</anchor>
+      <arglist>(Edit &amp;, AudioClipBase &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>ARAFileReader</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARAFileReader.html</anchorfile>
+      <anchor>af55877def2dd1979d6dc940c7031e4e1</anchor>
+      <arglist>(Edit &amp;, AudioClipBase &amp;, ARAFileReader &amp;oneToClone)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ARAFileReader</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARAFileReader.html</anchorfile>
+      <anchor>a85973128e91e0e27289822746e756d77</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isValid</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARAFileReader.html</anchorfile>
+      <anchor>ade86bf20a57580c70c392d7f6028f751</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>ExternalPlugin *</type>
+      <name>getPlugin</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARAFileReader.html</anchorfile>
+      <anchor>ae835acd30946e03e78950206ba765b16</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>showPluginWindow</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARAFileReader.html</anchorfile>
+      <anchor>a837bc1fd17dd1ca2395eb9837afaf469</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>hidePluginWindow</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARAFileReader.html</anchorfile>
+      <anchor>aafb69b749323e4914a9b86f92586508b</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isAnalysingContent</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARAFileReader.html</anchorfile>
+      <anchor>ac3991762088088e1ec3f5a9946724cea</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::MidiMessageSequence</type>
+      <name>getAnalysedMIDISequence</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARAFileReader.html</anchorfile>
+      <anchor>a6490e2360106736b051dea9d29daa2ea</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>sourceClipChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARAFileReader.html</anchorfile>
+      <anchor>a845b8eab3b9b57af80ef5bbab69b5180</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>contentHasChanged</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARAFileReader.html</anchorfile>
+      <anchor>ab0dfe7a84d1aca399cb04c99480d0c79</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::MemoryBlock</type>
+      <name>storeARAArchiveForCopy</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARAFileReader.html</anchorfile>
+      <anchor>afd8043a9157c590c79101eb992b0fc2a</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>restoreARAArchiveForPaste</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARAFileReader.html</anchorfile>
+      <anchor>a3153849c31985df304e86c12fe497377</anchor>
+      <arglist>(const juce::MemoryBlock &amp;data, const juce::String &amp;archivedSourceID, const juce::String &amp;archivedModID)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>getAudioSourcePersistentID</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARAFileReader.html</anchorfile>
+      <anchor>a5990f87481f65ed3f8c23427c0106dd0</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>getAudioModificationPersistentID</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARAFileReader.html</anchorfile>
+      <anchor>a7521069c2e191ddd4d3877e0becf1746</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>cleanUpOnShutdown</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARAFileReader.html</anchorfile>
+      <anchor>acd44288ed55e64fef166b35c0a3d054d</anchor>
+      <arglist>()</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>ARAInstance</name>
+    <filename>structARAInstance.html</filename>
+    <member kind="variable">
+      <type>ExternalPlugin::Ptr</type>
+      <name>plugin</name>
+      <anchorfile>structARAInstance.html</anchorfile>
+      <anchor>ada88f4b5ad18876ab62e84701a788e4e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>const ARAFactory *</type>
+      <name>factory</name>
+      <anchorfile>structARAInstance.html</anchorfile>
+      <anchor>a3d553e869c1222b1153a238c51d852c7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>const ARAPlugInExtensionInstance *</type>
+      <name>extensionInstance</name>
+      <anchorfile>structARAInstance.html</anchorfile>
+      <anchor>afd4599deb3518ebdad8b3de518bdcad8</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>tracktion::engine::ARANode</name>
+    <filename>classtracktion_1_1engine_1_1ARANode.html</filename>
+    <base>tracktion::graph::Node</base>
+    <member kind="function">
+      <type></type>
+      <name>ARANode</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARANode.html</anchorfile>
+      <anchor>a9732bcdf10a4714ee6e58a8eee42a573</anchor>
+      <arglist>(AudioClipBase &amp;, tracktion::graph::PlayHead &amp;, bool isOfflineRender)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ARANode</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARANode.html</anchorfile>
+      <anchor>a82c6e3f05c339e8561d13de397c50f21</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>tracktion::graph::NodeProperties</type>
+      <name>getNodeProperties</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARANode.html</anchorfile>
+      <anchor>a7e08bca8bda3d9f9070594d8158608f2</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; Node * &gt;</type>
+      <name>getDirectInputNodes</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARANode.html</anchorfile>
+      <anchor>a4ae06c568888ad6a3800016a51bcab02</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prepareToPlay</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARANode.html</anchorfile>
+      <anchor>a739c86d8175501b3a57cbfc2b4abf718</anchor>
+      <arglist>(const tracktion::graph::PlaybackInitialisationInfo &amp;) override</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isReadyToProcess</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARANode.html</anchorfile>
+      <anchor>aaff0b1691bc8fa0dca6a16a1c5443689</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>process</name>
+      <anchorfile>classtracktion_1_1engine_1_1ARANode.html</anchorfile>
+      <anchor>a5d8436c81ec955041f902e276c479fc9</anchor>
+      <arglist>(ProcessContext &amp;) override</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>ARAPluginFactory</name>
+    <filename>structARAPluginFactory.html</filename>
+    <member kind="function">
+      <type>ExternalPlugin::Ptr</type>
+      <name>createPlugin</name>
+      <anchorfile>structARAPluginFactory.html</anchorfile>
+      <anchor>abb1338d8ff3648d6b2792602fa2fbd1b</anchor>
+      <arglist>(Edit &amp;ed)</arglist>
+    </member>
+    <member kind="function">
+      <type>ExternalPlugin::Ptr</type>
+      <name>createPlugin</name>
+      <anchorfile>structARAPluginFactory.html</anchorfile>
+      <anchor>a0d4d38dfd9771b0be49ed0443395be76</anchor>
+      <arglist>(Edit &amp;ed, const juce::PluginDescription &amp;desc)</arglist>
+    </member>
+    <member kind="function">
+      <type>ARAInstance *</type>
+      <name>createInstance</name>
+      <anchorfile>structARAPluginFactory.html</anchorfile>
+      <anchor>a001f844d08d5d20b2e6be224d8356978</anchor>
+      <arglist>(ExternalPlugin &amp;p, ARADocumentControllerRef dcRef)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ARAPluginFactory</name>
+      <anchorfile>structARAPluginFactory.html</anchorfile>
+      <anchor>a8ccd39a4dd6bba86021c0b9e83938e1e</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static ARAPluginFactory &amp;</type>
+      <name>getInstance</name>
+      <anchorfile>structARAPluginFactory.html</anchorfile>
+      <anchor>a1b8d62fe184055a7c913bda2be5360b7</anchor>
+      <arglist>(Engine &amp;engine, const juce::PluginDescription &amp;desc)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static juce::PluginDescription</type>
+      <name>findPreferredDefault</name>
+      <anchorfile>structARAPluginFactory.html</anchorfile>
+      <anchor>a732e3842446c1bee5729cbf5e66900ef</anchor>
+      <arglist>(const juce::Array&lt; juce::PluginDescription &gt; &amp;descs)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static ARAPluginFactory *</type>
+      <name>getDefaultInstance</name>
+      <anchorfile>structARAPluginFactory.html</anchorfile>
+      <anchor>a9589886f7c706cb08a5ee87db1acd6d0</anchor>
+      <arglist>(Engine &amp;engine)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>shutdown</name>
+      <anchorfile>structARAPluginFactory.html</anchorfile>
+      <anchor>a0665e67e25c6ac5f53d0c9085e77d295</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="variable">
+      <type>const ARAFactory *</type>
+      <name>factory</name>
+      <anchorfile>structARAPluginFactory.html</anchorfile>
+      <anchor>a2c50cc158fc2427cbd2febcada532a8a</anchor>
+      <arglist></arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -4588,8 +4927,8 @@
       <type>static ARAPersistentID ARA_CALL</type>
       <name>getDocumentArchiveID</name>
       <anchorfile>structArchivingFunctions.html</anchorfile>
-      <anchor>af5cd02d1e082e95806c58c544ac8b65e</anchor>
-      <arglist>(ARAArchivingControllerHostRef, ARAArchiveReaderHostRef)</arglist>
+      <anchor>a127dc9b99d34990a37874f21eb9034cd</anchor>
+      <arglist>(ARAArchivingControllerHostRef ref, ARAArchiveReaderHostRef)</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -6322,6 +6661,34 @@
       <arglist>(ClipDirection) const</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>tearDownARA</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
+      <anchor>ad7652b5669a940a6018ef61fabfa7f31</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ReferenceCountedObjectPtr&lt; ARAFileReader &gt;</type>
+      <name>getARAProxy</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
+      <anchor>abf752fdb624003b43b3cffa3c9ee1727</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::ReferenceCountedObjectPtr&lt; ARAFileReader &gt;</type>
+      <name>getMelodyneProxy</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
+      <anchor>a46bf6325375bf185761703038ad20b48</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isUsingARA</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
+      <anchor>a0a41a34c6e4309eed674278d2d456de5</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
       <type>bool</type>
       <name>isUsingMelodyne</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
@@ -6330,23 +6697,9 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>showMelodyneWindow</name>
+      <name>loadARAState</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
-      <anchor>a682426e9185a2b5e25f303ef63050817</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>hideMelodyneWindow</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
-      <anchor>af8e5efe9a1f1099815e4cd1d837a6347</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>melodyneConvertToMIDI</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
-      <anchor>ae1e287cd0c11e466943820e2b4300cf7</anchor>
+      <anchor>a504e3c3c03f43c7ca7ec74afeb5270fc</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">
@@ -6539,17 +6892,17 @@
       <arglist>(Engine &amp;)</arglist>
     </member>
     <member kind="variable">
-      <type>juce::ReferenceCountedObjectPtr&lt; MelodyneFileReader &gt;</type>
-      <name>melodyneProxy</name>
-      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
-      <anchor>ad3746f92cdbe8f43ed271c9b61ad0af6</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
       <type>juce::CachedValue&lt; TimeStretcher::ElastiqueProOptions &gt;</type>
       <name>elastiqueProOptions</name>
       <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
       <anchor>afde026dcce30911a3aa75b20daee7dd6</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::CachedValue&lt; juce::PluginDescription &gt;</type>
+      <name>araPluginDescription</name>
+      <anchorfile>classtracktion_1_1engine_1_1AudioClipBase.html</anchorfile>
+      <anchor>a9c0e90f6e86e8f31b85c68f6d3a5681e</anchor>
       <arglist></arglist>
     </member>
     <member kind="function" protection="protected">
@@ -41619,212 +41972,6 @@
       <arglist>(Plugin *) const override</arglist>
     </member>
   </compound>
-  <compound kind="class">
-    <name>tracktion::engine::MelodyneFileReader</name>
-    <filename>classtracktion_1_1engine_1_1MelodyneFileReader.html</filename>
-    <member kind="typedef">
-      <type>juce::ReferenceCountedObjectPtr&lt; MelodyneFileReader &gt;</type>
-      <name>Ptr</name>
-      <anchorfile>classtracktion_1_1engine_1_1MelodyneFileReader.html</anchorfile>
-      <anchor>afe4b90140fbcfd823d0b83e6f0242ec3</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>MelodyneFileReader</name>
-      <anchorfile>classtracktion_1_1engine_1_1MelodyneFileReader.html</anchorfile>
-      <anchor>a6268e030819d40efc7cca4b61888fc30</anchor>
-      <arglist>(Edit &amp;, AudioClipBase &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>MelodyneFileReader</name>
-      <anchorfile>classtracktion_1_1engine_1_1MelodyneFileReader.html</anchorfile>
-      <anchor>af5393fbe91dd6de86003bcd232a9afe2</anchor>
-      <arglist>(Edit &amp;, AudioClipBase &amp;, MelodyneFileReader &amp;oneToClone)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>~MelodyneFileReader</name>
-      <anchorfile>classtracktion_1_1engine_1_1MelodyneFileReader.html</anchorfile>
-      <anchor>ab920211a3ee3def88b9b6188a48a29c1</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isValid</name>
-      <anchorfile>classtracktion_1_1engine_1_1MelodyneFileReader.html</anchorfile>
-      <anchor>a788018c5bfb5058b64a9f7b782c48fc9</anchor>
-      <arglist>() const noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type>ExternalPlugin *</type>
-      <name>getPlugin</name>
-      <anchorfile>classtracktion_1_1engine_1_1MelodyneFileReader.html</anchorfile>
-      <anchor>a3892e028d671805bc66e9ad08ffbea06</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>showPluginWindow</name>
-      <anchorfile>classtracktion_1_1engine_1_1MelodyneFileReader.html</anchorfile>
-      <anchor>a54f08b06e29de3b9a820ee62f89ca6e4</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>hidePluginWindow</name>
-      <anchorfile>classtracktion_1_1engine_1_1MelodyneFileReader.html</anchorfile>
-      <anchor>af6f80357e9c39b441ff0df7814ceacb4</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isAnalysingContent</name>
-      <anchorfile>classtracktion_1_1engine_1_1MelodyneFileReader.html</anchorfile>
-      <anchor>ac81479deb3b8683e90c4bbaaca6ac89a</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>juce::MidiMessageSequence</type>
-      <name>getAnalysedMIDISequence</name>
-      <anchorfile>classtracktion_1_1engine_1_1MelodyneFileReader.html</anchorfile>
-      <anchor>af90780c3416d8ecf403003beae7e0725</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>sourceClipChanged</name>
-      <anchorfile>classtracktion_1_1engine_1_1MelodyneFileReader.html</anchorfile>
-      <anchor>ac2580732805d14c86781c67c29bc0d6c</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" static="yes">
-      <type>static void</type>
-      <name>cleanUpOnShutdown</name>
-      <anchorfile>classtracktion_1_1engine_1_1MelodyneFileReader.html</anchorfile>
-      <anchor>a32ab1a2c424c4db1cfa6f3ae3703c7ff</anchor>
-      <arglist>()</arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>MelodyneInstance</name>
-    <filename>structMelodyneInstance.html</filename>
-    <member kind="variable">
-      <type>ExternalPlugin::Ptr</type>
-      <name>plugin</name>
-      <anchorfile>structMelodyneInstance.html</anchorfile>
-      <anchor>a0fecdc73dc76550cbc8dda6e05ae1a82</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>const ARAFactory *</type>
-      <name>factory</name>
-      <anchorfile>structMelodyneInstance.html</anchorfile>
-      <anchor>af2ef3a98d1e8183bee97f99b502ee53c</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>const ARAPlugInExtensionInstance *</type>
-      <name>extensionInstance</name>
-      <anchorfile>structMelodyneInstance.html</anchorfile>
-      <anchor>a35385f1d325e0cbaef0443829ff7f3b9</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>MelodyneInstanceFactory</name>
-    <filename>structMelodyneInstanceFactory.html</filename>
-    <member kind="function">
-      <type>ExternalPlugin::Ptr</type>
-      <name>createPlugin</name>
-      <anchorfile>structMelodyneInstanceFactory.html</anchorfile>
-      <anchor>a1955be4931b561db8a6f45565ac6c2a5</anchor>
-      <arglist>(Edit &amp;ed)</arglist>
-    </member>
-    <member kind="function">
-      <type>MelodyneInstance *</type>
-      <name>createInstance</name>
-      <anchorfile>structMelodyneInstanceFactory.html</anchorfile>
-      <anchor>ac9e8079615b71857433d3c8958f5a2e8</anchor>
-      <arglist>(ExternalPlugin &amp;p, ARADocumentControllerRef dcRef)</arglist>
-    </member>
-    <member kind="function" static="yes">
-      <type>static MelodyneInstanceFactory &amp;</type>
-      <name>getInstance</name>
-      <anchorfile>structMelodyneInstanceFactory.html</anchorfile>
-      <anchor>aeb1a1cf0436bd7534dca2e3b0f998b8d</anchor>
-      <arglist>(Engine &amp;engine)</arglist>
-    </member>
-    <member kind="function" static="yes">
-      <type>static void</type>
-      <name>shutdown</name>
-      <anchorfile>structMelodyneInstanceFactory.html</anchorfile>
-      <anchor>a49382ebdd4fdc4c3e3311130f0d86612</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="variable">
-      <type>const ARAFactory *</type>
-      <name>factory</name>
-      <anchorfile>structMelodyneInstanceFactory.html</anchorfile>
-      <anchor>adf6c1b045f7440163ea990c6f21a21eb</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="class">
-    <name>tracktion::engine::MelodyneNode</name>
-    <filename>classtracktion_1_1engine_1_1MelodyneNode.html</filename>
-    <base>tracktion::graph::Node</base>
-    <member kind="function">
-      <type></type>
-      <name>MelodyneNode</name>
-      <anchorfile>classtracktion_1_1engine_1_1MelodyneNode.html</anchorfile>
-      <anchor>af9d5096835ca9d86299ed2f132556737</anchor>
-      <arglist>(AudioClipBase &amp;, tracktion::graph::PlayHead &amp;, bool isOfflineRender)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>~MelodyneNode</name>
-      <anchorfile>classtracktion_1_1engine_1_1MelodyneNode.html</anchorfile>
-      <anchor>accc86a8f04e0e93356d63a95cd02158a</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>tracktion::graph::NodeProperties</type>
-      <name>getNodeProperties</name>
-      <anchorfile>classtracktion_1_1engine_1_1MelodyneNode.html</anchorfile>
-      <anchor>a6e9635f3ddfda166f5f946cca084b1bd</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>std::vector&lt; Node * &gt;</type>
-      <name>getDirectInputNodes</name>
-      <anchorfile>classtracktion_1_1engine_1_1MelodyneNode.html</anchorfile>
-      <anchor>a6cba9c60c62023864710f5ac6fdefebd</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>prepareToPlay</name>
-      <anchorfile>classtracktion_1_1engine_1_1MelodyneNode.html</anchorfile>
-      <anchor>aec98f332c1d7c79df71de5e762dfdf5d</anchor>
-      <arglist>(const tracktion::graph::PlaybackInitialisationInfo &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>bool</type>
-      <name>isReadyToProcess</name>
-      <anchorfile>classtracktion_1_1engine_1_1MelodyneNode.html</anchorfile>
-      <anchor>afe5c0bfb9135d06d130f61ed8bb58cfa</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>void</type>
-      <name>process</name>
-      <anchorfile>classtracktion_1_1engine_1_1MelodyneNode.html</anchorfile>
-      <anchor>ad2ece188439ee5a1e6230cd409293378</anchor>
-      <arglist>(ProcessContext &amp;) override</arglist>
-    </member>
-  </compound>
   <compound kind="struct">
     <name>tracktion::engine::MemoryMappedFileReader</name>
     <filename>structtracktion_1_1engine_1_1MemoryMappedFileReader.html</filename>
@@ -46745,6 +46892,13 @@
   <compound kind="struct">
     <name>ModelUpdateFunctions</name>
     <filename>structModelUpdateFunctions.html</filename>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>notifyARAContentChanged</name>
+      <anchorfile>structModelUpdateFunctions.html</anchorfile>
+      <anchor>a71ffc12519c7feb3ad49c260500025e9</anchor>
+      <arglist>(Edit &amp;edit)</arglist>
+    </member>
     <member kind="function" static="yes">
       <type>static void ARA_CALL</type>
       <name>notifyAudioSourceAnalysisProgress</name>
@@ -52184,6 +52338,13 @@
       <name>audioSource</name>
       <anchorfile>classPlaybackRegionAndSource.html</anchorfile>
       <anchor>a71967fd92948b22f0893cf869f2dfe8a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::unique_ptr&lt; AudioModificationWrapper &gt;</type>
+      <name>audioModification</name>
+      <anchorfile>classPlaybackRegionAndSource.html</anchorfile>
+      <anchor>a4babf92c65a0ecc9394004452fdfc6a6</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -61953,6 +62114,24 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>ARADocument::ScopedEdit</name>
+    <filename>structARADocument_1_1ScopedEdit.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>ScopedEdit</name>
+      <anchorfile>structARADocument_1_1ScopedEdit.html</anchorfile>
+      <anchor>aff750ae57186724d86d18b0e50eda336</anchor>
+      <arglist>(ARADocument &amp;d, bool dontCheckMusicalContext)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ScopedEdit</name>
+      <anchorfile>structARADocument_1_1ScopedEdit.html</anchorfile>
+      <anchor>a9e387d41152487ded52ca864ebb397b7</anchor>
+      <arglist>()</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tracktion::engine::MidiClip::ScopedEventsList</name>
     <filename>structtracktion_1_1engine_1_1MidiClip_1_1ScopedEventsList.html</filename>
     <member kind="function">
@@ -68765,6 +68944,12 @@
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
+      <name>ara</name>
+      <anchorfile>classtracktion_1_1engine_1_1TimeStretcher.html</anchorfile>
+      <anchor>aef6990d119f230d6c5ffb78f4470c79ea3ada3720d60fd8aef4bc1735aa4669e5</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
       <name>melodyne</name>
       <anchorfile>classtracktion_1_1engine_1_1TimeStretcher.html</anchorfile>
       <anchor>aef6990d119f230d6c5ffb78f4470c79eac2510c267da3bb584284990e15735488</anchor>
@@ -68858,6 +69043,12 @@
       <name>soundtouchBetter</name>
       <anchorfile>classtracktion_1_1engine_1_1TimeStretcher.html</anchorfile>
       <anchor>aef6990d119f230d6c5ffb78f4470c79eaffd4fc1d8ca6b1302f15869ff6d4d57e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>ara</name>
+      <anchorfile>classtracktion_1_1engine_1_1TimeStretcher.html</anchorfile>
+      <anchor>aef6990d119f230d6c5ffb78f4470c79ea3ada3720d60fd8aef4bc1735aa4669e5</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
@@ -69014,8 +69205,8 @@
       <type>static juce::StringArray</type>
       <name>getPossibleModes</name>
       <anchorfile>classtracktion_1_1engine_1_1TimeStretcher.html</anchorfile>
-      <anchor>ac63602d1fdafb98ccfd16253abdcb310</anchor>
-      <arglist>(Engine &amp;, bool excludeMelodyne)</arglist>
+      <anchor>a7a6e0a6e4f233c6b116731091b2ddcde</anchor>
+      <arglist>(Engine &amp;, bool excludeARA)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static Mode</type>
@@ -69033,10 +69224,17 @@
     </member>
     <member kind="function" static="yes">
       <type>static bool</type>
+      <name>isARA</name>
+      <anchorfile>classtracktion_1_1engine_1_1TimeStretcher.html</anchorfile>
+      <anchor>a1c784ebc6cf1e333ccb685c004637e82</anchor>
+      <arglist>(Mode)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static bool</type>
       <name>isMelodyne</name>
       <anchorfile>classtracktion_1_1engine_1_1TimeStretcher.html</anchorfile>
-      <anchor>a23d4935753bb73c6d3b229c33995ef60</anchor>
-      <arglist>(Mode)</arglist>
+      <anchor>a481179b47989ad2ddbda5de2ff7e4e16</anchor>
+      <arglist>(Mode m)</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static bool</type>
@@ -76689,6 +76887,8 @@
     <class kind="class">tracktion::AirWindowsPlugin</class>
     <class kind="class">tracktion::AlphaTrackControlSurface</class>
     <class kind="struct">tracktion::ARADocumentHolder</class>
+    <class kind="class">tracktion::ARAFileReader</class>
+    <class kind="class">tracktion::ARANode</class>
     <class kind="class">tracktion::ArrangerClip</class>
     <class kind="class">tracktion::ArrangerLauncherSwitchingNode</class>
     <class kind="class">tracktion::ArrangerTrack</class>
@@ -76871,8 +77071,6 @@
     <class kind="struct">tracktion::MarkerSetting</class>
     <class kind="class">tracktion::MarkerTrack</class>
     <class kind="class">tracktion::MasterTrack</class>
-    <class kind="class">tracktion::MelodyneFileReader</class>
-    <class kind="class">tracktion::MelodyneNode</class>
     <class kind="struct">tracktion::MemoryMappedFileReader</class>
     <class kind="class">tracktion::MessageThreadCallback</class>
     <class kind="class">tracktion::MidiAssignable</class>
@@ -77123,6 +77321,8 @@
     <class kind="class">tracktion::engine::AirWindowsPlugin</class>
     <class kind="class">tracktion::engine::AlphaTrackControlSurface</class>
     <class kind="struct">tracktion::engine::ARADocumentHolder</class>
+    <class kind="class">tracktion::engine::ARAFileReader</class>
+    <class kind="class">tracktion::engine::ARANode</class>
     <class kind="class">tracktion::engine::ArrangerClip</class>
     <class kind="class">tracktion::engine::ArrangerLauncherSwitchingNode</class>
     <class kind="class">tracktion::engine::ArrangerTrack</class>
@@ -77291,8 +77491,6 @@
     <class kind="struct">tracktion::engine::MarkerSetting</class>
     <class kind="class">tracktion::engine::MarkerTrack</class>
     <class kind="class">tracktion::engine::MasterTrack</class>
-    <class kind="class">tracktion::engine::MelodyneFileReader</class>
-    <class kind="class">tracktion::engine::MelodyneNode</class>
     <class kind="struct">tracktion::engine::MemoryMappedFileReader</class>
     <class kind="class">tracktion::engine::MessageThreadCallback</class>
     <class kind="class">tracktion::engine::MidiAssignable</class>
@@ -77508,10 +77706,24 @@
       <arglist></arglist>
     </member>
     <member kind="typedef">
+      <type>ARANode</type>
+      <name>MelodyneNode</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>ac42355a085385968b73043552c0897e3</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
       <type>std::vector&lt; WarpPoint &gt;</type>
       <name>WarpMap</name>
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>adeeadbd2dea66b29cc5bb3586b64326a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>ARAFileReader</type>
+      <name>MelodyneFileReader</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>afb54a3e773571433fc16fa0681b349f1</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
@@ -77919,6 +78131,48 @@
       <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
       <anchor>a92172060d5623ea1950e31e5879815da</anchor>
       <arglist>(ModifierList &amp;, EditItemID)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>showARAWindow</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a6968f6d7b0db6a5ee101f19e7b7aeda7</anchor>
+      <arglist>(AudioClipBase &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>hideARAWindow</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>af916d35d53212edcef637223a98e456d</anchor>
+      <arglist>(AudioClipBase &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>araConvertToMIDI</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>af8ec7e22a452da118cca5aae8872a4d9</anchor>
+      <arglist>(AudioClipBase &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>showMelodyneWindow</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a3e22b1a9786dfbfafe8db0e708735090</anchor>
+      <arglist>(AudioClipBase &amp;c)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>hideMelodyneWindow</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a16e2fa3c9344880a67f29121f446aebe</anchor>
+      <arglist>(AudioClipBase &amp;c)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>melodyneConvertToMIDI</name>
+      <anchorfile>namespacetracktion_1_1engine.html</anchorfile>
+      <anchor>a1a87869d41df00b658fa2f81b49783b2</anchor>
+      <arglist>(AudioClipBase &amp;c)</arglist>
     </member>
     <member kind="function">
       <type>Clip *</type>
@@ -82045,6 +82299,7 @@
     <class kind="struct">tracktion::engine::WaveInputRecordingThread::ScopedInitialiser</class>
     <class kind="class">tracktion::engine::WaveOutputDevice</class>
     <class kind="class">tracktion::engine::WaveOutputDeviceInstance</class>
+    <class kind="class">tracktion::engine::ARANode</class>
     <class kind="class">tracktion::engine::SampleFader</class>
     <class kind="class">tracktion::engine::ArrangerLauncherSwitchingNode</class>
     <class kind="class">tracktion::engine::AuxSendNode</class>
@@ -82065,7 +82320,6 @@
     <class kind="class">tracktion::engine::LiveMidiInjectingNode</class>
     <class kind="class">tracktion::engine::LiveMidiOutputNode</class>
     <class kind="class">tracktion::engine::LoopingMidiNode</class>
-    <class kind="class">tracktion::engine::MelodyneNode</class>
     <class kind="class">tracktion::engine::MidiInputDeviceNode</class>
     <class kind="class">tracktion::engine::MidiNode</class>
     <class kind="class">tracktion::engine::MidiOutputDeviceInstanceInjectingNode</class>
@@ -82132,11 +82386,17 @@
     <class kind="class">tracktion::engine::AirWindowsPlugin</class>
     <class kind="class">tracktion::engine::AirWindowsBase</class>
     <class kind="class">tracktion::engine::AirWindowsAutomatableParameter</class>
+    <class kind="class">tracktion::engine::ARAFileReader</class>
+    <class kind="struct">tracktion::engine::ARADocumentHolder</class>
+    <class kind="struct">ARAInstance</class>
+    <class kind="struct">ARAFactoryInitGuard</class>
+    <class kind="struct">ARAPluginFactory</class>
     <class kind="struct">ArchivingFunctions</class>
     <class kind="struct">EditProxyFunctions</class>
     <class kind="struct">ModelUpdateFunctions</class>
     <class kind="struct">MusicalContextFunctions</class>
     <class kind="class">ARADocument</class>
+    <class kind="struct">ARADocument::ScopedEdit</class>
     <class kind="struct">ARADocumentCreatorCallback</class>
     <class kind="class">MusicalContextWrapper</class>
     <class kind="class">NodeReader</class>
@@ -82145,10 +82405,6 @@
     <class kind="class">RegionSequenceWrapper</class>
     <class kind="class">PlaybackRegionWrapper</class>
     <class kind="class">PlaybackRegionAndSource</class>
-    <class kind="class">tracktion::engine::MelodyneFileReader</class>
-    <class kind="struct">tracktion::engine::ARADocumentHolder</class>
-    <class kind="struct">MelodyneInstance</class>
-    <class kind="struct">MelodyneInstanceFactory</class>
     <class kind="class">tracktion::engine::ChorusPlugin</class>
     <class kind="class">tracktion::engine::CompressorPlugin</class>
     <class kind="struct">tracktion::engine::DelayBufferBase</class>
@@ -82221,6 +82477,27 @@
     <class kind="struct">tracktion::engine::PluginScanHelpers::PluginScanChildProcess</class>
     <class kind="struct">tracktion::engine::PluginScanHelpers::CustomScanner</class>
     <class kind="struct">tracktion::engine::PluginWindowState</class>
+    <member kind="typedef">
+      <type>ARAInstance</type>
+      <name>MelodyneInstance</name>
+      <anchorfile>group__tracktion__engine-plugins.html</anchorfile>
+      <anchor>ga61d9fa9a4997dc09d48859968aa5b9da</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>ARAPluginFactory</type>
+      <name>MelodyneInstanceFactory</name>
+      <anchorfile>group__tracktion__engine-plugins.html</anchorfile>
+      <anchor>ga956493f52c472202ca9488e8138aeb1e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="function">
+      <type>std::unique_ptr&lt; juce::AudioPluginInstance &gt;</type>
+      <name>createMelodynePlugin</name>
+      <anchorfile>group__tracktion__engine-plugins.html</anchorfile>
+      <anchor>gaf337be26a74c68764e997b03fe5b0e92</anchor>
+      <arglist>(Engine &amp;engine)</arglist>
+    </member>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-project</name>

@@ -20,10 +20,10 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classtracktion_1_1engine_1_1ArrangerLauncherSwitchingNode.html" target="_top" xlink:title="A Node that switches between two of its inputs based on a flag.">
-<polygon fill="white" stroke="#666666" points="355.5,-2096.5 179.5,-2096.5 179.5,-2066.5 355.5,-2066.5 355.5,-2096.5"/>
-<text text-anchor="start" x="187.5" y="-2084.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="267.5" y="-2073.5" font-family="Helvetica,sans-Serif" font-size="10.00">ArrangerLauncherSwitchingNode</text>
+<g id="a_Node000002"><a xlink:href="classtracktion_1_1engine_1_1ARANode.html" target="_top" xlink:title="Node for playing back audio through an ARA plugin.">
+<polygon fill="white" stroke="#666666" points="320,-2096.5 215,-2096.5 215,-2066.5 320,-2066.5 320,-2096.5"/>
+<text text-anchor="start" x="223" y="-2084.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="267.5" y="-2073.5" font-family="Helvetica,sans-Serif" font-size="10.00">ARANode</text>
 </a>
 </g>
 </g>
@@ -31,7 +31,7 @@
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node1&#45;&gt;Node2</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M63.91,-997.48C67,-1137.98 88.37,-1974.45 161,-2057.5 166.19,-2063.44 172.52,-2068.07 179.48,-2071.68"/>
+<path fill="none" stroke="#63b8ff" d="M63.91,-997.48C67,-1137.98 88.37,-1974.45 161,-2057.5 174.35,-2072.77 195.22,-2079.43 214.88,-2082.02"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="67.41,-997.23 63.7,-987.31 60.41,-997.38 67.41,-997.23"/>
 </a>
 </g>
@@ -39,10 +39,10 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="classtracktion_1_1engine_1_1ClickNode.html" target="_top" xlink:title="Adds audio and MIDI clicks to the input buffers.">
-<polygon fill="white" stroke="#666666" points="320,-2048.5 215,-2048.5 215,-2018.5 320,-2018.5 320,-2048.5"/>
-<text text-anchor="start" x="223" y="-2036.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="267.5" y="-2025.5" font-family="Helvetica,sans-Serif" font-size="10.00">ClickNode</text>
+<g id="a_Node000003"><a xlink:href="classtracktion_1_1engine_1_1ArrangerLauncherSwitchingNode.html" target="_top" xlink:title="A Node that switches between two of its inputs based on a flag.">
+<polygon fill="white" stroke="#666666" points="355.5,-2048.5 179.5,-2048.5 179.5,-2018.5 355.5,-2018.5 355.5,-2048.5"/>
+<text text-anchor="start" x="187.5" y="-2036.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="267.5" y="-2025.5" font-family="Helvetica,sans-Serif" font-size="10.00">ArrangerLauncherSwitchingNode</text>
 </a>
 </g>
 </g>
@@ -50,7 +50,7 @@
 <g id="edge2_Node000001_Node000003" class="edge">
 <title>Node1&#45;&gt;Node3</title>
 <g id="a_edge2_Node000001_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M64,-997.42C67.61,-1134.12 91.55,-1930.42 161,-2009.5 174.39,-2024.74 195.26,-2031.4 214.91,-2033.99"/>
+<path fill="none" stroke="#63b8ff" d="M64,-997.42C67.61,-1134.12 91.55,-1930.42 161,-2009.5 166.08,-2015.29 172.24,-2019.84 179,-2023.39"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="67.49,-997.09 63.74,-987.18 60.5,-997.27 67.49,-997.09"/>
 </a>
 </g>
@@ -58,10 +58,10 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="classtracktion_1_1engine_1_1CombiningNode.html" target="_top" xlink:title="An Node that mixes a sequence of clips of other nodes.">
+<g id="a_Node000004"><a xlink:href="classtracktion_1_1engine_1_1ClickNode.html" target="_top" xlink:title="Adds audio and MIDI clicks to the input buffers.">
 <polygon fill="white" stroke="#666666" points="320,-2000.5 215,-2000.5 215,-1970.5 320,-1970.5 320,-2000.5"/>
 <text text-anchor="start" x="223" y="-1988.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="267.5" y="-1977.5" font-family="Helvetica,sans-Serif" font-size="10.00">CombiningNode</text>
+<text text-anchor="middle" x="267.5" y="-1977.5" font-family="Helvetica,sans-Serif" font-size="10.00">ClickNode</text>
 </a>
 </g>
 </g>
@@ -77,10 +77,10 @@
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
-<g id="a_Node000005"><a xlink:href="classtracktion_1_1engine_1_1ContainerClipNode.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="321.5,-1952.5 213.5,-1952.5 213.5,-1922.5 321.5,-1922.5 321.5,-1952.5"/>
-<text text-anchor="start" x="221.5" y="-1940.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="267.5" y="-1929.5" font-family="Helvetica,sans-Serif" font-size="10.00">ContainerClipNode</text>
+<g id="a_Node000005"><a xlink:href="classtracktion_1_1engine_1_1CombiningNode.html" target="_top" xlink:title="An Node that mixes a sequence of clips of other nodes.">
+<polygon fill="white" stroke="#666666" points="320,-1952.5 215,-1952.5 215,-1922.5 320,-1922.5 320,-1952.5"/>
+<text text-anchor="start" x="223" y="-1940.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="267.5" y="-1929.5" font-family="Helvetica,sans-Serif" font-size="10.00">CombiningNode</text>
 </a>
 </g>
 </g>
@@ -88,7 +88,7 @@
 <g id="edge4_Node000001_Node000005" class="edge">
 <title>Node1&#45;&gt;Node5</title>
 <g id="a_edge4_Node000001_Node000005"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M64.21,-997.52C68.95,-1126.97 97.93,-1842.38 161,-1913.5 174.09,-1928.26 194.19,-1934.95 213.34,-1937.7"/>
+<path fill="none" stroke="#63b8ff" d="M64.21,-997.52C68.95,-1126.97 97.93,-1842.38 161,-1913.5 174.46,-1928.68 195.34,-1935.32 214.98,-1937.93"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="67.69,-997.02 63.83,-987.15 60.7,-997.27 67.69,-997.02"/>
 </a>
 </g>
@@ -96,10 +96,10 @@
 <!-- Node6 -->
 <g id="Node000006" class="node">
 <title>Node6</title>
-<g id="a_Node000006"><a xlink:href="classtracktion_1_1engine_1_1DynamicOffsetNode.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="325,-1904.5 210,-1904.5 210,-1874.5 325,-1874.5 325,-1904.5"/>
-<text text-anchor="start" x="218" y="-1892.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="267.5" y="-1881.5" font-family="Helvetica,sans-Serif" font-size="10.00">DynamicOffsetNode</text>
+<g id="a_Node000006"><a xlink:href="classtracktion_1_1engine_1_1ContainerClipNode.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="321.5,-1904.5 213.5,-1904.5 213.5,-1874.5 321.5,-1874.5 321.5,-1904.5"/>
+<text text-anchor="start" x="221.5" y="-1892.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="267.5" y="-1881.5" font-family="Helvetica,sans-Serif" font-size="10.00">ContainerClipNode</text>
 </a>
 </g>
 </g>
@@ -107,7 +107,7 @@
 <g id="edge5_Node000001_Node000006" class="edge">
 <title>Node1&#45;&gt;Node6</title>
 <g id="a_edge5_Node000001_Node000006"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M64.31,-997.28C69.63,-1122.16 101.07,-1798.29 161,-1865.5 173.31,-1879.31 191.77,-1886.04 209.82,-1889.11"/>
+<path fill="none" stroke="#63b8ff" d="M64.31,-997.28C69.63,-1122.16 101.07,-1798.29 161,-1865.5 174.13,-1880.22 194.23,-1886.9 213.39,-1889.66"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="67.81,-997.07 63.89,-987.23 60.82,-997.37 67.81,-997.07"/>
 </a>
 </g>
@@ -115,10 +115,10 @@
 <!-- Node7 -->
 <g id="Node000007" class="node">
 <title>Node7</title>
-<g id="a_Node000007"><a xlink:href="classtracktion_1_1engine_1_1HostedMidiInputDeviceNode.html" target="_top" xlink:title="A Node that intercepts MIDI from a plugin callback and inserts it in to the playback graph.">
-<polygon fill="white" stroke="#666666" points="345.5,-1856.5 189.5,-1856.5 189.5,-1826.5 345.5,-1826.5 345.5,-1856.5"/>
-<text text-anchor="start" x="197.5" y="-1844.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="267.5" y="-1833.5" font-family="Helvetica,sans-Serif" font-size="10.00">HostedMidiInputDeviceNode</text>
+<g id="a_Node000007"><a xlink:href="classtracktion_1_1engine_1_1DynamicOffsetNode.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="325,-1856.5 210,-1856.5 210,-1826.5 325,-1826.5 325,-1856.5"/>
+<text text-anchor="start" x="218" y="-1844.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="267.5" y="-1833.5" font-family="Helvetica,sans-Serif" font-size="10.00">DynamicOffsetNode</text>
 </a>
 </g>
 </g>
@@ -126,7 +126,7 @@
 <g id="edge6_Node000001_Node000007" class="edge">
 <title>Node1&#45;&gt;Node7</title>
 <g id="a_edge6_Node000001_Node000007"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M64.45,-997.32C70.4,-1118.31 104.25,-1754.25 161,-1817.5 168.65,-1826.03 178.65,-1831.85 189.44,-1835.78"/>
+<path fill="none" stroke="#63b8ff" d="M64.45,-997.32C70.4,-1118.31 104.25,-1754.25 161,-1817.5 173.36,-1831.27 191.82,-1838 209.87,-1841.06"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="67.94,-997.08 63.96,-987.26 60.95,-997.41 67.94,-997.08"/>
 </a>
 </g>
@@ -134,10 +134,10 @@
 <!-- Node8 -->
 <g id="Node000008" class="node">
 <title>Node8</title>
-<g id="a_Node000008"><a xlink:href="classtracktion_1_1engine_1_1InsertNode.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="320,-1808.5 215,-1808.5 215,-1778.5 320,-1778.5 320,-1808.5"/>
-<text text-anchor="start" x="223" y="-1796.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="267.5" y="-1785.5" font-family="Helvetica,sans-Serif" font-size="10.00">InsertNode</text>
+<g id="a_Node000008"><a xlink:href="classtracktion_1_1engine_1_1HostedMidiInputDeviceNode.html" target="_top" xlink:title="A Node that intercepts MIDI from a plugin callback and inserts it in to the playback graph.">
+<polygon fill="white" stroke="#666666" points="345.5,-1808.5 189.5,-1808.5 189.5,-1778.5 345.5,-1778.5 345.5,-1808.5"/>
+<text text-anchor="start" x="197.5" y="-1796.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="267.5" y="-1785.5" font-family="Helvetica,sans-Serif" font-size="10.00">HostedMidiInputDeviceNode</text>
 </a>
 </g>
 </g>
@@ -145,7 +145,7 @@
 <g id="edge7_Node000001_Node000008" class="edge">
 <title>Node1&#45;&gt;Node8</title>
 <g id="a_edge7_Node000001_Node000008"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M64.59,-997.27C71.2,-1114 107.4,-1710.19 161,-1769.5 174.54,-1784.48 195.31,-1791.11 214.85,-1793.77"/>
+<path fill="none" stroke="#63b8ff" d="M64.59,-997.27C71.2,-1114 107.4,-1710.19 161,-1769.5 168.68,-1778 178.69,-1783.81 189.49,-1787.74"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="68.08,-997.03 64.03,-987.24 61.09,-997.42 68.08,-997.03"/>
 </a>
 </g>
@@ -153,10 +153,10 @@
 <!-- Node9 -->
 <g id="Node000009" class="node">
 <title>Node9</title>
-<g id="a_Node000009"><a xlink:href="classtracktion_1_1engine_1_1InsertSendNode.html" target="_top" xlink:title="The send node picks up audio/MIDI data from the InsertPlugin and then its output will be sent to the ...">
+<g id="a_Node000009"><a xlink:href="classtracktion_1_1engine_1_1InsertNode.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="320,-1760.5 215,-1760.5 215,-1730.5 320,-1730.5 320,-1760.5"/>
 <text text-anchor="start" x="223" y="-1748.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="267.5" y="-1737.5" font-family="Helvetica,sans-Serif" font-size="10.00">InsertSendNode</text>
+<text text-anchor="middle" x="267.5" y="-1737.5" font-family="Helvetica,sans-Serif" font-size="10.00">InsertNode</text>
 </a>
 </g>
 </g>
@@ -172,10 +172,10 @@
 <!-- Node10 -->
 <g id="Node000010" class="node">
 <title>Node10</title>
-<g id="a_Node000010"><a xlink:href="classtracktion_1_1engine_1_1LevelMeasurerProcessingNode.html" target="_top" xlink:title="A Node that introduces latency to balance the latency at the root Node and its position in the graph.">
-<polygon fill="white" stroke="#666666" points="351,-1712.5 184,-1712.5 184,-1682.5 351,-1682.5 351,-1712.5"/>
-<text text-anchor="start" x="192" y="-1700.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="267.5" y="-1689.5" font-family="Helvetica,sans-Serif" font-size="10.00">LevelMeasurerProcessingNode</text>
+<g id="a_Node000010"><a xlink:href="classtracktion_1_1engine_1_1InsertSendNode.html" target="_top" xlink:title="The send node picks up audio/MIDI data from the InsertPlugin and then its output will be sent to the ...">
+<polygon fill="white" stroke="#666666" points="320,-1712.5 215,-1712.5 215,-1682.5 320,-1682.5 320,-1712.5"/>
+<text text-anchor="start" x="223" y="-1700.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="267.5" y="-1689.5" font-family="Helvetica,sans-Serif" font-size="10.00">InsertSendNode</text>
 </a>
 </g>
 </g>
@@ -183,7 +183,7 @@
 <g id="edge9_Node000001_Node000010" class="edge">
 <title>Node1&#45;&gt;Node10</title>
 <g id="a_edge9_Node000001_Node000010"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M63.37,-997.35C63.08,-1100.16 67,-1571.2 161,-1673.5 167.35,-1680.42 175.25,-1685.55 183.85,-1689.32"/>
+<path fill="none" stroke="#63b8ff" d="M63.37,-997.35C63.08,-1100.16 67,-1571.2 161,-1673.5 174.66,-1688.37 195.45,-1694.98 214.98,-1697.65"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="66.87,-997.17 63.41,-987.15 59.87,-997.13 66.87,-997.17"/>
 </a>
 </g>
@@ -191,10 +191,10 @@
 <!-- Node11 -->
 <g id="Node000011" class="node">
 <title>Node11</title>
-<g id="a_Node000011"><a xlink:href="classtracktion_1_1engine_1_1LevelMeasuringNode.html" target="_top" xlink:title="A Node that passes its incoming audio and MIDI through a LevelMeasurer.">
-<polygon fill="white" stroke="#666666" points="327,-1664.5 208,-1664.5 208,-1634.5 327,-1634.5 327,-1664.5"/>
-<text text-anchor="start" x="216" y="-1652.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="267.5" y="-1641.5" font-family="Helvetica,sans-Serif" font-size="10.00">LevelMeasuringNode</text>
+<g id="a_Node000011"><a xlink:href="classtracktion_1_1engine_1_1LevelMeasurerProcessingNode.html" target="_top" xlink:title="A Node that introduces latency to balance the latency at the root Node and its position in the graph.">
+<polygon fill="white" stroke="#666666" points="351,-1664.5 184,-1664.5 184,-1634.5 351,-1634.5 351,-1664.5"/>
+<text text-anchor="start" x="192" y="-1652.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="267.5" y="-1641.5" font-family="Helvetica,sans-Serif" font-size="10.00">LevelMeasurerProcessingNode</text>
 </a>
 </g>
 </g>
@@ -202,7 +202,7 @@
 <g id="edge10_Node000001_Node000011" class="edge">
 <title>Node1&#45;&gt;Node11</title>
 <g id="a_edge10_Node000001_Node000011"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M63.59,-997.53C64.47,-1096.36 73.33,-1531.06 161,-1625.5 173.08,-1638.51 190.61,-1645.18 207.93,-1648.43"/>
+<path fill="none" stroke="#63b8ff" d="M63.59,-997.53C64.47,-1096.36 73.33,-1531.06 161,-1625.5 167.39,-1632.38 175.31,-1637.49 183.91,-1641.26"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="67.09,-997.39 63.52,-987.41 60.09,-997.44 67.09,-997.39"/>
 </a>
 </g>
@@ -210,10 +210,10 @@
 <!-- Node12 -->
 <g id="Node000012" class="node">
 <title>Node12</title>
-<g id="a_Node000012"><a xlink:href="classtracktion_1_1engine_1_1LiveMidiInjectingNode.html" target="_top" xlink:title="A Node that injects MIDI message in to the stream, for keyboard key entry, note previews and MIDI ste...">
-<polygon fill="white" stroke="#666666" points="330,-1616.5 205,-1616.5 205,-1586.5 330,-1586.5 330,-1616.5"/>
-<text text-anchor="start" x="213" y="-1604.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="267.5" y="-1593.5" font-family="Helvetica,sans-Serif" font-size="10.00">LiveMidiInjectingNode</text>
+<g id="a_Node000012"><a xlink:href="classtracktion_1_1engine_1_1LevelMeasuringNode.html" target="_top" xlink:title="A Node that passes its incoming audio and MIDI through a LevelMeasurer.">
+<polygon fill="white" stroke="#666666" points="327,-1616.5 208,-1616.5 208,-1586.5 327,-1586.5 327,-1616.5"/>
+<text text-anchor="start" x="216" y="-1604.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="267.5" y="-1593.5" font-family="Helvetica,sans-Serif" font-size="10.00">LevelMeasuringNode</text>
 </a>
 </g>
 </g>
@@ -221,7 +221,7 @@
 <g id="edge11_Node000001_Node000012" class="edge">
 <title>Node1&#45;&gt;Node12</title>
 <g id="a_edge11_Node000001_Node000012"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M63.85,-997.21C65.93,-1090.96 79.5,-1490.74 161,-1577.5 172.45,-1589.69 188.68,-1596.3 205,-1599.74"/>
+<path fill="none" stroke="#63b8ff" d="M63.85,-997.21C65.93,-1090.96 79.5,-1490.74 161,-1577.5 173.09,-1590.37 190.52,-1597.02 207.75,-1600.29"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="67.35,-997.05 63.65,-987.13 60.35,-997.19 67.35,-997.05"/>
 </a>
 </g>
@@ -229,10 +229,10 @@
 <!-- Node13 -->
 <g id="Node000013" class="node">
 <title>Node13</title>
-<g id="a_Node000013"><a xlink:href="classtracktion_1_1engine_1_1LiveMidiOutputNode.html" target="_top" xlink:title="A Node that calls the listeners of an AudioTrack with any incoming MIDI.">
-<polygon fill="white" stroke="#666666" points="325.5,-1568.5 209.5,-1568.5 209.5,-1538.5 325.5,-1538.5 325.5,-1568.5"/>
-<text text-anchor="start" x="217.5" y="-1556.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="267.5" y="-1545.5" font-family="Helvetica,sans-Serif" font-size="10.00">LiveMidiOutputNode</text>
+<g id="a_Node000013"><a xlink:href="classtracktion_1_1engine_1_1LiveMidiInjectingNode.html" target="_top" xlink:title="A Node that injects MIDI message in to the stream, for keyboard key entry, note previews and MIDI ste...">
+<polygon fill="white" stroke="#666666" points="330,-1568.5 205,-1568.5 205,-1538.5 330,-1538.5 330,-1568.5"/>
+<text text-anchor="start" x="213" y="-1556.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="267.5" y="-1545.5" font-family="Helvetica,sans-Serif" font-size="10.00">LiveMidiInjectingNode</text>
 </a>
 </g>
 </g>
@@ -240,7 +240,7 @@
 <g id="edge12_Node000001_Node000013" class="edge">
 <title>Node1&#45;&gt;Node13</title>
 <g id="a_edge12_Node000001_Node000013"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M64.16,-997.31C67.53,-1086.58 85.78,-1450.51 161,-1529.5 173.5,-1542.63 191.57,-1549.27 209.23,-1552.45"/>
+<path fill="none" stroke="#63b8ff" d="M64.16,-997.31C67.53,-1086.58 85.78,-1450.51 161,-1529.5 172.46,-1541.54 188.61,-1548.12 204.83,-1551.58"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="67.65,-997.07 63.8,-987.2 60.66,-997.32 67.65,-997.07"/>
 </a>
 </g>
@@ -248,10 +248,10 @@
 <!-- Node14 -->
 <g id="Node000014" class="node">
 <title>Node14</title>
-<g id="a_Node000014"><a xlink:href="classtracktion_1_1engine_1_1LoopingMidiNode.html" target="_top" xlink:title="A Node that plays MIDI data from a MidiMessageSequence, at a specific MIDI channel.">
-<polygon fill="white" stroke="#666666" points="320,-1520.5 215,-1520.5 215,-1490.5 320,-1490.5 320,-1520.5"/>
-<text text-anchor="start" x="223" y="-1508.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="267.5" y="-1497.5" font-family="Helvetica,sans-Serif" font-size="10.00">LoopingMidiNode</text>
+<g id="a_Node000014"><a xlink:href="classtracktion_1_1engine_1_1LiveMidiOutputNode.html" target="_top" xlink:title="A Node that calls the listeners of an AudioTrack with any incoming MIDI.">
+<polygon fill="white" stroke="#666666" points="325.5,-1520.5 209.5,-1520.5 209.5,-1490.5 325.5,-1490.5 325.5,-1520.5"/>
+<text text-anchor="start" x="217.5" y="-1508.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
+<text text-anchor="middle" x="267.5" y="-1497.5" font-family="Helvetica,sans-Serif" font-size="10.00">LiveMidiOutputNode</text>
 </a>
 </g>
 </g>
@@ -259,7 +259,7 @@
 <g id="edge13_Node000001_Node000014" class="edge">
 <title>Node1&#45;&gt;Node14</title>
 <g id="a_edge13_Node000001_Node000014"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M64.51,-997.18C69.25,-1081.36 91.96,-1410.17 161,-1481.5 174.91,-1495.87 195.51,-1502.44 214.82,-1505.21"/>
+<path fill="none" stroke="#63b8ff" d="M64.51,-997.18C69.25,-1081.36 91.96,-1410.17 161,-1481.5 173.61,-1494.52 191.7,-1501.14 209.35,-1504.33"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="68.01,-996.96 63.97,-987.17 61.02,-997.34 68.01,-996.96"/>
 </a>
 </g>
@@ -267,10 +267,10 @@
 <!-- Node15 -->
 <g id="Node000015" class="node">
 <title>Node15</title>
-<g id="a_Node000015"><a xlink:href="classtracktion_1_1engine_1_1MelodyneNode.html" target="_top" xlink:title="Plays back a Melodyne plugin.">
+<g id="a_Node000015"><a xlink:href="classtracktion_1_1engine_1_1LoopingMidiNode.html" target="_top" xlink:title="A Node that plays MIDI data from a MidiMessageSequence, at a specific MIDI channel.">
 <polygon fill="white" stroke="#666666" points="320,-1472.5 215,-1472.5 215,-1442.5 320,-1442.5 320,-1472.5"/>
 <text text-anchor="start" x="223" y="-1460.5" font-family="Helvetica,sans-Serif" font-size="10.00">tracktion::engine::</text>
-<text text-anchor="middle" x="267.5" y="-1449.5" font-family="Helvetica,sans-Serif" font-size="10.00">MelodyneNode</text>
+<text text-anchor="middle" x="267.5" y="-1449.5" font-family="Helvetica,sans-Serif" font-size="10.00">LoopingMidiNode</text>
 </a>
 </g>
 </g>

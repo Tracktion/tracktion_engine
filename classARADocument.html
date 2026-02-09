@@ -70,6 +70,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classARADocument-members.html">List of all members</a>  </div>
@@ -82,10 +83,15 @@ $(function() {
 
 <p><code>#include &lt;tracktion_ARAWrapperInterfaces.h&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARADocument_1_1ScopedEdit.html">ScopedEdit</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a76ae9f7b9f061aa0272bb9dd0f8a03e9" id="r_a76ae9f7b9f061aa0272bb9dd0f8a03e9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a76ae9f7b9f061aa0272bb9dd0f8a03e9">ARADocument</a> (Edit &amp;sourceEdit, <a class="el" href="structMelodyneInstance.html">MelodyneInstance</a> *validPluginWrapper, const ARAPlugInExtensionInstance &amp;, const ARADocumentControllerInstance &amp;dc, ARADocumentControllerHostInstance *dchi)</td></tr>
-<tr class="separator:a76ae9f7b9f061aa0272bb9dd0f8a03e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4390aff246ecec2157824b84730ab44" id="r_ac4390aff246ecec2157824b84730ab44"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#ac4390aff246ecec2157824b84730ab44">ARADocument</a> (Edit &amp;sourceEdit, <a class="el" href="structARAInstance.html">ARAInstance</a> *validPluginWrapper, const ARAPlugInExtensionInstance &amp;, const ARADocumentControllerInstance &amp;dc, ARADocumentControllerHostInstance *dchi)</td></tr>
+<tr class="separator:ac4390aff246ecec2157824b84730ab44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27a3393488d556e3b580ed495ad89a63" id="r_a27a3393488d556e3b580ed495ad89a63"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a27a3393488d556e3b580ed495ad89a63">~ARADocument</a> ()</td></tr>
 <tr class="separator:a27a3393488d556e3b580ed495ad89a63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec391580c9bf5675fd88538b698b895c" id="r_aec391580c9bf5675fd88538b698b895c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#aec391580c9bf5675fd88538b698b895c">canEdit</a> (bool dontCheckMusicalContext) const</td></tr>
@@ -100,6 +106,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a8335741ce06f35a63db6180ff888b877"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71649f72ecfbd09f1062001c1007a922" id="r_a71649f72ecfbd09f1062001c1007a922"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a71649f72ecfbd09f1062001c1007a922">endRestoringState</a> ()</td></tr>
 <tr class="separator:a71649f72ecfbd09f1062001c1007a922"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3370282e7072f62f1177fdf1802ca0e9" id="r_a3370282e7072f62f1177fdf1802ca0e9"><td class="memItemLeft" align="right" valign="top">juce::MemoryBlock&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a3370282e7072f62f1177fdf1802ca0e9">storeObjectsForCopy</a> (ARAAudioSourceRef source, ARAAudioModificationRef modification)</td></tr>
+<tr class="memdesc:a3370282e7072f62f1177fdf1802ca0e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store a partial ARA archive containing just the given audio source and modification.  <br /></td></tr>
+<tr class="separator:a3370282e7072f62f1177fdf1802ca0e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57f29c08f5c22ee7f396f7c57636e2d5" id="r_a57f29c08f5c22ee7f396f7c57636e2d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a57f29c08f5c22ee7f396f7c57636e2d5">restoreObjectsForPaste</a> (const juce::MemoryBlock &amp;data, const juce::String &amp;archivedSourceID, const juce::String &amp;currentSourceID, const juce::String &amp;archivedModID, const juce::String &amp;currentModID)</td></tr>
+<tr class="memdesc:a57f29c08f5c22ee7f396f7c57636e2d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restore a partial ARA archive, mapping archived persistent IDs to current ones.  <br /></td></tr>
+<tr class="separator:a57f29c08f5c22ee7f396f7c57636e2d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e5d2363ef4524e00265ec3c41fd9ef2" id="r_a3e5d2363ef4524e00265ec3c41fd9ef2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a3e5d2363ef4524e00265ec3c41fd9ef2">willCreatePlaybackRegionOnTrack</a> (Track *track)</td></tr>
 <tr class="separator:a3e5d2363ef4524e00265ec3c41fd9ef2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8cd9393a9d15f940d6b090e719eed48c" id="r_a8cd9393a9d15f940d6b090e719eed48c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a8cd9393a9d15f940d6b090e719eed48c">willDestroyPlaybackRegionOnTrack</a> (Track *track)</td></tr>
@@ -129,8 +141,8 @@ Public Attributes</h2></td></tr>
 <li>1 musical context per edit </li>
 </ul>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a76ae9f7b9f061aa0272bb9dd0f8a03e9" name="a76ae9f7b9f061aa0272bb9dd0f8a03e9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a76ae9f7b9f061aa0272bb9dd0f8a03e9">&#9670;&#160;</a></span>ARADocument()</h2>
+<a id="ac4390aff246ecec2157824b84730ab44" name="ac4390aff246ecec2157824b84730ab44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4390aff246ecec2157824b84730ab44">&#9670;&#160;</a></span>ARADocument()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -144,7 +156,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structMelodyneInstance.html">MelodyneInstance</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structARAInstance.html">ARAInstance</a> *&#160;</td>
           <td class="paramname"><em>validPluginWrapper</em>, </td>
         </tr>
         <tr>
@@ -231,8 +243,6 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classMusicalContextWrapper.html#a396f7e72c675c984a00c3ffb9ae99777">MusicalContextWrapper::MusicalContextWrapper()</a>.</p>
-
 </div>
 </div>
 <a id="aebca067b4d36ae34e1e464baf693599e" name="aebca067b4d36ae34e1e464baf693599e"></a>
@@ -250,8 +260,6 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="classMusicalContextWrapper.html#a396f7e72c675c984a00c3ffb9ae99777">MusicalContextWrapper::MusicalContextWrapper()</a>.</p>
 
 </div>
 </div>
@@ -310,6 +318,90 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>.</p>
+
+</div>
+</div>
+<a id="a3370282e7072f62f1177fdf1802ca0e9" name="a3370282e7072f62f1177fdf1802ca0e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3370282e7072f62f1177fdf1802ca0e9">&#9670;&#160;</a></span>storeObjectsForCopy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::MemoryBlock ARADocument::storeObjectsForCopy </td>
+          <td>(</td>
+          <td class="paramtype">ARAAudioSourceRef&#160;</td>
+          <td class="paramname"><em>source</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ARAAudioModificationRef&#160;</td>
+          <td class="paramname"><em>modification</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Store a partial ARA archive containing just the given audio source and modification. </p>
+<p>Used by clipboard copy to capture ARA plugin edits (e.g. Melodyne note corrections). </p>
+
+<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>.</p>
+
+</div>
+</div>
+<a id="a57f29c08f5c22ee7f396f7c57636e2d5" name="a57f29c08f5c22ee7f396f7c57636e2d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57f29c08f5c22ee7f396f7c57636e2d5">&#9670;&#160;</a></span>restoreObjectsForPaste()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ARADocument::restoreObjectsForPaste </td>
+          <td>(</td>
+          <td class="paramtype">const juce::MemoryBlock &amp;&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>archivedSourceID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>currentSourceID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>archivedModID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>currentModID</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Restore a partial ARA archive, mapping archived persistent IDs to current ones. </p>
+<p>Used by clipboard paste to restore ARA plugin edits into a newly pasted clip. </p>
 
 <p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>.</p>
 
@@ -470,7 +562,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Feb 7 2026 11:45:09 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Feb 9 2026 10:50:01 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
