@@ -163,6 +163,35 @@ void WaveAudioClip::reassignReferencedItem (const ReferencedItem& item,
     }
 }
 
+void WaveAudioClip::reassignReferencedItem (const ReferencedItem& item,
+                                            const juce::File& newFile)
+{
+    if (hasAnyTakes())
+    {
+        auto indexInList = getReferencedItems().indexOf (item);
+
+        if (indexInList < 0)
+        {
+            jassertfalse;
+            return;
+        }
+
+        auto path = SourceFileReference::findPathFromFile (edit, newFile, true);
+
+        if (indexInList == getCurrentTake())
+            sourceFileReference.setToDirectFileReference (newFile, true);
+
+        auto take = getTakesTree().getChild (indexInList);
+
+        if (take.isValid())
+            take.setProperty (IDs::source, path, getUndoManager());
+    }
+    else
+    {
+        AudioClipBase::reassignReferencedItem (item, newFile);
+    }
+}
+
 //==============================================================================
 void WaveAudioClip::addTake (ProjectItemID id)
 {

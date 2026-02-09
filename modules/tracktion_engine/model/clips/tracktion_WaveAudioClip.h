@@ -109,6 +109,8 @@ public:
 
     /** @internal */
     void reassignReferencedItem (const ReferencedItem&, ProjectItemID newID, double newStartTime) override;
+    /** @internal */
+    void reassignReferencedItem (const ReferencedItem&, const juce::File& newFile) override;
 
 private:
     //==============================================================================

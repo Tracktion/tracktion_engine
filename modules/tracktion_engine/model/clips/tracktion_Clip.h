@@ -141,6 +141,9 @@ public:
     /** Should be implemented to change the underlying source to a new ProjectItemID. */
     void reassignReferencedItem (const ReferencedItem&, ProjectItemID /*newID*/, double /*newStartTime*/) override;
 
+    /** Should be implemented to change the underlying source to a new File. */
+    void reassignReferencedItem (const ReferencedItem&, const juce::File&) override;
+
     //==============================================================================
     /** Some clip types can be launched, if that's possible, this returns a handle to
         trigger starting/stopping the clip.

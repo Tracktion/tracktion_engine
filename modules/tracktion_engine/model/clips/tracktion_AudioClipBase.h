@@ -602,6 +602,8 @@ public:
     juce::Array<ReferencedItem> getReferencedItems() override;
     /** @internal */
     void reassignReferencedItem (const ReferencedItem&, ProjectItemID newID, double newStartTime) override;
+    /** @internal */
+    void reassignReferencedItem (const ReferencedItem&, const juce::File& newFile) override;
 
     //==============================================================================
     /** @internal */

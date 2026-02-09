@@ -62,6 +62,7 @@ public:
 
     juce::Array<Exportable::ReferencedItem> getReferencedItems() override;
     void reassignReferencedItem (const ReferencedItem&, ProjectItemID newID, double newStartTime) override;
+    void reassignReferencedItem (const ReferencedItem&, const juce::File& newFile) override;
 
     void applyToBuffer (const PluginRenderContext&) override;
 

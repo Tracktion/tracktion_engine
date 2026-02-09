@@ -41,6 +41,12 @@ public:
                                          ProjectItemID newID,
                                          double newStartTime) = 0;
 
+    /** Reassigns a referenced item to point directly at a file on disk.
+        Used when converting from ID-based to file-based references.
+    */
+    virtual void reassignReferencedItem (const ReferencedItem&,
+                                         const juce::File&) {}
+
     //==============================================================================
     /** Returns all the Exportables contained in an Edit. */
     static juce::Array<Exportable*> addAllExportables (Edit&);

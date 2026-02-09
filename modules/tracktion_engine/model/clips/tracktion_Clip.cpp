@@ -727,6 +727,11 @@ void Clip::reassignReferencedItem (const ReferencedItem& itm, ProjectItemID newI
     edit.engine.getEngineBehaviour().reassignReferencedItem (*this, itm, newID, newStartTime);
 }
 
+void Clip::reassignReferencedItem (const ReferencedItem& itm, const juce::File& newFile)
+{
+    edit.engine.getEngineBehaviour().reassignReferencedItem (*this, itm, newFile);
+}
+
 ClipPosition Clip::getPosition() const
 {
     auto s = clipStart.get();

@@ -579,6 +579,180 @@ TEST_SUITE ("tracktion_engine")
 
         cleanup();
     }
+
+    TEST_CASE ("Project: convert file-based to folder-based")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        // Use a temp directory for the whole test
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        // Create a file-based project
+        auto projectFile = tempDir.getChildFile ("convert_project.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+        REQUIRE (project->isValid());
+
+        project->setDescription ("Test project for conversion");
+
+        // Create a sin wave file to use as audio source
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile != nullptr);
+        REQUIRE (sinFile->getFile().existsAsFile());
+
+        // Create an edit with an audio clip
+        auto editItem = project->createNewEdit();
+        REQUIRE (editItem != nullptr);
+
+        {
+            auto edit = createEmptyEdit (engine, editItem->getSourceFile());
+            edit->setProjectItemID (editItem->getID());
+
+            edit->ensureNumberOfAudioTracks (1);
+            auto audioTracks = getAudioTracks (*edit);
+            REQUIRE (audioTracks.size() >= 1);
+
+            auto waveClip = insertWaveClip (*audioTracks[0], "ConvertTestWave",
+                                            sinFile->getFile(),
+                                            { { 0_tp, TimePosition::fromSeconds (2.0) } },
+                                            DeleteExistingClips::no);
+            CHECK (waveClip != nullptr);
+
+            CHECK (EditFileOperations (*edit).save (false, true, false));
+        }
+
+        project->save();
+
+        // Capture old state
+        auto oldName = project->getName();
+        auto oldDesc = project->getDescription();
+        auto oldProjectId = project->getProjectID();
+        auto projectDir = project->getDefaultDirectory();
+
+        struct ItemInfo
+        {
+            juce::String type;
+            juce::File sourceFile;
+        };
+        std::vector<ItemInfo> oldItems;
+        for (int i = 0; i < project->getNumProjectItems(); ++i)
+        {
+            if (auto item = project->getProjectItemAt (i))
+                oldItems.push_back ({ item->getType(), item->getSourceFile() });
+        }
+
+        // Verify pre-conversion: edit source should be a ProjectItemID
+        {
+            auto editState = loadEditFromFile (engine, editItem->getSourceFile(), ProjectItemID{});
+            bool foundProjectItemIdSource = false;
+
+            std::function<void (const juce::ValueTree&)> checkTree = [&] (const juce::ValueTree& v)
+            {
+                if (v.hasProperty (IDs::source))
+                {
+                    auto src = v[IDs::source].toString();
+                    if (ProjectItemID (src).isValid())
+                        foundProjectItemIdSource = true;
+                }
+
+                for (int i = 0; i < v.getNumChildren(); ++i)
+                    checkTree (v.getChild (i));
+            };
+
+            checkTree (editState);
+            CHECK (foundProjectItemIdSource);
+        }
+
+        // Convert
+        auto newProject = convertToFolderBasedProject (*project);
+        REQUIRE (newProject != nullptr);
+
+        // Verify .tracktion file was deleted
+        CHECK_FALSE (projectFile.existsAsFile());
+
+        // Verify project_info.json
+        auto infoFile = projectDir.getChildFile ("project_info.json");
+        CHECK (infoFile.existsAsFile());
+
+        {
+            auto infoJson = juce::JSON::parse (infoFile);
+            CHECK (infoJson.isObject());
+
+            if (auto* obj = infoJson.getDynamicObject())
+            {
+                CHECK_EQ (obj->getProperty ("name").toString().toStdString(), oldName.toStdString());
+                CHECK_EQ (obj->getProperty ("description").toString().toStdString(), oldDesc.toStdString());
+                CHECK_EQ ((int) obj->getProperty ("projectId"), oldProjectId);
+            }
+        }
+
+        // Verify items exist in new project
+        for (auto& oldItem : oldItems)
+        {
+            auto found = newProject->getProjectItemForFile (oldItem.sourceFile);
+            CHECK_MESSAGE (found != nullptr, "Missing item for: " << oldItem.sourceFile.getFullPathName());
+
+            if (found != nullptr)
+                CHECK_EQ (found->getType().toStdString(), oldItem.type.toStdString());
+        }
+
+        // Verify edit sources are no longer ProjectItemIDs
+        {
+            auto editFile = editItem->getSourceFile();
+            auto editState = loadEditFromFile (engine, editFile, ProjectItemID{});
+            bool foundRelativePath = false;
+
+            std::function<void (const juce::ValueTree&)> checkTree = [&] (const juce::ValueTree& v)
+            {
+                if (v.hasProperty (IDs::source))
+                {
+                    auto src = v[IDs::source].toString();
+
+                    if (src.isNotEmpty() && ! ProjectItemID (src).isValid())
+                        foundRelativePath = true;
+                }
+
+                for (int i = 0; i < v.getNumChildren(); ++i)
+                    checkTree (v.getChild (i));
+            };
+
+            checkTree (editState);
+            CHECK (foundRelativePath);
+        }
+
+        // Verify the edit loads correctly and audio clip resolves
+        {
+            auto loadedEdit = loadEditFromFile (engine, editItem->getSourceFile());
+            REQUIRE (loadedEdit != nullptr);
+
+            bool foundAudioClip = false;
+
+            for (auto* track : getAudioTracks (*loadedEdit))
+            {
+                for (auto* clip : track->getClips())
+                {
+                    if (auto* waveClip = dynamic_cast<WaveAudioClip*> (clip))
+                    {
+                        foundAudioClip = true;
+                        auto audioFile = waveClip->getAudioFile();
+                        CHECK (audioFile.getFile().existsAsFile());
+                    }
+                }
+            }
+
+            CHECK (foundAudioClip);
+        }
+
+        cleanup();
+    }
 }
 
 } // namespace tracktion::inline engine

@@ -69,6 +69,7 @@ public:
 
     juce::Array<ReferencedItem> getReferencedItems() override;
     void reassignReferencedItem (const ReferencedItem&, ProjectItemID newID, double newStartTime) override;
+    void reassignReferencedItem (const ReferencedItem&, const juce::File& newFile) override;
     void sourceMediaChanged() override;
 
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;

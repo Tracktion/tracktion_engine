@@ -1984,6 +1984,11 @@ void ExternalPlugin::reassignReferencedItem (const ReferencedItem& itm, ProjectI
     engine.getEngineBehaviour().reassignReferencedItem (*this, itm, newID, newStartTime);
 }
 
+void ExternalPlugin::reassignReferencedItem (const ReferencedItem& itm, const juce::File& newFile)
+{
+    engine.getEngineBehaviour().reassignReferencedItem (*this, itm, newFile);
+}
+
 
 //==============================================================================
 struct AudioProcessorEditorContentComp  : public Plugin::EditorComponent

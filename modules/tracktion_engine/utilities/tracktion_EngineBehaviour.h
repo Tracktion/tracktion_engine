@@ -170,11 +170,17 @@ public:
     /// If you have any special plugins that access items in the Edit, you need to reassign them
     virtual void reassignReferencedItem (Clip&, const Exportable::ReferencedItem&, ProjectItemID, double)  {}
 
+    /// If you have any special clips that access items in the Edit, you need to reassign them
+    virtual void reassignReferencedItem (Clip&, const Exportable::ReferencedItem&, const juce::File&)  {}
+
     /// If you have any special clips that access items in the Edit, you need to return them
     virtual juce::Array<Exportable::ReferencedItem> getReferencedItems (Clip&)      { return {}; }
 
     /// If you have any special clips that access items in the Edit, you need to reassign them
     virtual void reassignReferencedItem (ExternalPlugin&, const Exportable::ReferencedItem&, ProjectItemID, double)  {}
+
+    /// If you have any special plugins that access items in the Edit, you need to reassign them
+    virtual void reassignReferencedItem (ExternalPlugin&, const Exportable::ReferencedItem&, const juce::File&)  {}
 
     /// If this returns false, ClipSlot Clips won't be included in the playback graph
     /// and arranger track clips will always be audible.

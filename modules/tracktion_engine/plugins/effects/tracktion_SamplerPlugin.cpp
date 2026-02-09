@@ -587,6 +587,22 @@ void SamplerPlugin::reassignReferencedItem (const ReferencedItem& item, ProjectI
     }
 }
 
+void SamplerPlugin::reassignReferencedItem (const ReferencedItem& item,
+                                            const juce::File& newFile)
+{
+    auto index = getReferencedItems().indexOf (item);
+
+    if (index >= 0)
+    {
+        auto v = getSound (index);
+        v.setProperty (IDs::source, newFile.getFullPathName(), getUndoManager());
+    }
+    else
+    {
+        jassertfalse;
+    }
+}
+
 void SamplerPlugin::sourceMediaChanged()
 {
     const juce::ScopedLock sl (lock);

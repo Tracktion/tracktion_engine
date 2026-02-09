@@ -133,4 +133,64 @@ juce::String Project::getSelectableDescription()                            { re
 void Project::lockFile()                                                    { impl->lockFile(); }
 void Project::unlockFile()                                                  { impl->unlockFile(); }
 
+//==============================================================================
+Project::Ptr convertToFolderBasedProject (Project& project)
+{
+    // Only convert valid file-based projects
+    if (project.getProjectID() == 0 || ! project.getProjectFile().existsAsFile())
+        return nullptr;
+
+    auto projectDir = project.getDefaultDirectory();
+    projectDir.createDirectory();
+
+    // Write project metadata to project_info.json
+    {
+        auto info = std::make_unique<juce::DynamicObject>();
+        info->setProperty ("name", project.getName());
+        info->setProperty ("description", project.getDescription());
+        info->setProperty ("projectId", project.getProjectID());
+
+        auto jsonString = juce::JSON::toString (juce::var (info.release()));
+        projectDir.getChildFile ("project_info.json").replaceWithText (jsonString);
+    }
+
+    // Convert edit source references from ProjectItemIDs to direct file paths
+    for (int i = 0; i < project.getNumProjectItems(); ++i)
+    {
+        if (auto item = project.getProjectItemAt (i))
+        {
+            if (item->isEdit())
+            {
+                auto editFile = item->getSourceFile();
+                auto edit = loadEditFromFile (project.engine, editFile);
+
+                if (edit != nullptr)
+                {
+                    for (auto exportable : Exportable::addAllExportables (*edit))
+                    {
+                        for (auto& ref : exportable->getReferencedItems())
+                        {
+                            if (ref.itemID.isValid())
+                            {
+                                if (auto projItem = project.engine.getProjectManager().getProjectItem (ref.itemID))
+                                    exportable->reassignReferencedItem (ref, projItem->getSourceFile());
+                            }
+                        }
+                    }
+
+                    EditFileOperations (*edit).save (false, true, false);
+                }
+            }
+        }
+    }
+
+    // Delete the project file
+    project.save();
+    project.unlockFile();
+    project.getProjectFile().deleteFile();
+
+    // Return a new folder-based project
+    return project.projectManager.createNewProject (projectDir);
+}
+
 }} // namespace tracktion { inline namespace engine

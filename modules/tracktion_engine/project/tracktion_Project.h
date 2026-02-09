@@ -275,4 +275,12 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Project)
 };
 
+/** Converts a file-based project to a folder-based project.
+    Opens each edit and rewrites ProjectItemID source references as relative
+    file paths. Writes project metadata to project_info.json and deletes the
+    .tracktion file. Returns a new folder-based Project opened from the
+    directory. The original Project object should be released promptly.
+*/
+Project::Ptr convertToFolderBasedProject (Project&);
+
 }} // namespace tracktion { inline namespace engine

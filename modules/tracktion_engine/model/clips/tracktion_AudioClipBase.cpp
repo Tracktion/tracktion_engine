@@ -1554,6 +1554,17 @@ void AudioClipBase::reassignReferencedItem (const ReferencedItem& item,
     }
 }
 
+void AudioClipBase::reassignReferencedItem (const ReferencedItem& item,
+                                            const juce::File& newFile)
+{
+    Clip::reassignReferencedItem (item, newFile);
+
+    if (getReferencedItems().size() == 1 && item == getReferencedItems().getFirst())
+        sourceFileReference.setToDirectFileReference (newFile, true);
+    else
+        jassertfalse;
+}
+
 juce::Array<ProjectItemID> AudioClipBase::getTakes() const
 {
     jassert (! hasAnyTakes());
