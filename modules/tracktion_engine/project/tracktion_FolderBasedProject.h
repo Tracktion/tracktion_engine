@@ -91,6 +91,13 @@ private:
     juce::CriticalSection itemLock;
     bool itemsScanned = false;
 
+    juce::NamedValueSet properties;
+    juce::CriticalSection propertyLock;
+
+    juce::File getInfoFile() const;
+    void loadPropertiesFromFile();
+    void savePropertiesToFile();
+
     void ensureScanned();
     void scanFolder();
     static juce::String inferType (const juce::File&);

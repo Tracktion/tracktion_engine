@@ -16,10 +16,50 @@ FolderBasedProject::FolderBasedProject (Project& o, const juce::File& f)
    : ProjectBase (o), folder (f)
 {
     jassert (folder.isDirectory());
+    loadPropertiesFromFile();
 }
 
 FolderBasedProject::~FolderBasedProject()
 {
+}
+
+//==============================================================================
+juce::File FolderBasedProject::getInfoFile() const
+{
+    return folder.getChildFile ("project_info.json");
+}
+
+void FolderBasedProject::loadPropertiesFromFile()
+{
+    auto infoFile = getInfoFile();
+
+    if (! infoFile.existsAsFile())
+        return;
+
+    auto parsed = juce::JSON::parse (infoFile);
+
+    if (auto* obj = parsed.getDynamicObject())
+    {
+        const juce::ScopedLock sl (propertyLock);
+        properties.clear();
+
+        for (const auto& prop : obj->getProperties())
+            properties.set (prop.name, prop.value.toString());
+    }
+}
+
+void FolderBasedProject::savePropertiesToFile()
+{
+    auto info = std::make_unique<juce::DynamicObject>();
+
+    {
+        const juce::ScopedLock sl (propertyLock);
+
+        for (int i = 0; i < properties.size(); ++i)
+            info->setProperty (properties.getName (i), properties.getValueAt (i));
+    }
+
+    getInfoFile().replaceWithText (juce::JSON::toString (juce::var (info.release())));
 }
 
 //==============================================================================
@@ -103,6 +143,7 @@ ProjectItem::Category FolderBasedProject::inferCategory (const juce::File& f, co
 // TODO: PROBLEMATIC — Folder has no binary file to save
 bool FolderBasedProject::save()
 {
+    savePropertiesToFile();
     return true;
 }
 
@@ -195,19 +236,26 @@ void FolderBasedProject::createNewProjectId()
     // No-op: folder-based projects don't use project IDs
 }
 
-juce::String FolderBasedProject::getProjectProperty (const juce::String&) const
+juce::String FolderBasedProject::getProjectProperty (const juce::String& name) const
 {
-    return {};
+    const juce::ScopedLock sl (propertyLock);
+    return properties [name];
 }
 
-void FolderBasedProject::setProjectProperty (const juce::String&, const juce::String&)
+void FolderBasedProject::setProjectProperty (const juce::String& name, const juce::String& value)
 {
-    // No-op: folder-based projects have no property storage
+    {
+        const juce::ScopedLock sl (propertyLock);
+        properties.set (name, value);
+    }
+
+    savePropertiesToFile();
+    changed();
 }
 
 void FolderBasedProject::refreshProjectPropertiesFromFile()
 {
-    // No-op: no binary file
+    loadPropertiesFromFile();
 }
 
 bool FolderBasedProject::isLibraryProject() const
