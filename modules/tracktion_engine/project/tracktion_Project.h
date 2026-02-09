@@ -18,14 +18,23 @@ class FolderBasedProject;
 //==============================================================================
 /** A tracktion project.
 
-    The projects contain a set of ProjectItems to represent each item in it, which
-    may be edits, wave files, etc.
+    A Project wraps either a .tracktion project file (FileBasedProject) or a
+    project folder (FolderBasedProject). The backend is chosen automatically
+    based on whether the path passed to ProjectManager is a file or directory.
 
-    Originally these were designed to hold huge numbers of items (so I could use them
-    for holding sound-libraries and searching them), so some of the implementation
-    might seem like overkill, such as the reverse-index text search stuff.
+    **File-based projects** persist their state in a binary .tracktion file.
+    Items have valid ProjectItemIDs and support full ID-based lookup, search,
+    reordering, and merging.
 
-    @see ProjectManager
+    **Folder-based projects** discover
+    *items by lazily scanning the folder on
+    disk. Items have invalid (zero) ProjectItemIDs, so ID-based lookup always
+    returns nullptr. Many operations that rely on IDs or binary state (search,
+    merge, reorder, property storage) are no-ops for folder-based projects.
+
+    The per-method docs below note where behaviour differs between backends.
+
+    @see ProjectManager, ProjectItem
 */
 class Project  : public juce::ReferenceCountedObject,
                  public Selectable,
@@ -36,53 +45,128 @@ public:
     ~Project() override;
 
     //==============================================================================
-    /** only saves if a change has been made since last time  */
+    /** Saves the project if changes have been made since the last save.
+        Folder-based projects have no persistent state file, so this always returns true.
+    */
     bool save();
     void handleAsyncUpdate() override;
 
     //==============================================================================
-    /** true if it's got a proper project ID. */
+    /** Returns true if the project is valid.
+        File-based: checks that the project ID is non-zero.
+        Folder-based: checks that the folder exists on disk.
+    */
     bool isValid() const;
+
+    /** Returns true if the project file or folder is read-only. */
     bool isReadOnly() const;
+
+    /** Returns true if this is a temporary project (won't appear in recent projects). */
     bool isTemporary() const;
 
+    /** Returns the numeric project ID.
+        Always 0 for folder-based projects.
+    */
     int getProjectID() const;
+
+    /** Returns the project name.
+        Folder-based projects return the folder name.
+    */
     juce::String getName() const;
+
+    /** Returns the project description string.
+        Always empty for folder-based projects.
+    */
     juce::String getDescription() const;
+
+    /** Returns the project file (.tracktion) or, for folder-based projects, the folder itself. */
     const juce::File& getProjectFile() const noexcept;
+
+    /** Returns the default directory for storing project media.
+        For folder-based projects this is the project folder itself.
+    */
     juce::File getDefaultDirectory() const;
+
+    /** Returns the subdirectory for media of the given category (e.g. "recorded", "rendered"). */
     juce::File getDirectoryForMedia (ProjectItem::Category category) const;
 
+    /** Renames the project. This renames the underlying file or folder on disk. */
     void setName (const juce::String& newName);
+
+    /** Sets the project description. No-op for folder-based projects. */
     void setDescription (const juce::String& newDesc);
 
+    /** Generates and assigns a new random project ID. No-op for folder-based projects. */
     void createNewProjectId();
 
+    /** Returns a named project property. Always empty for folder-based projects. */
     juce::String getProjectProperty (const juce::String& name) const;
+
+    /** Sets a named project property. No-op for folder-based projects. */
     void setProjectProperty (const juce::String& name, const juce::String& value);
 
+    /** Reloads project properties from the project file. No-op for folder-based projects. */
     void refreshProjectPropertiesFromFile();
 
+    /** Returns true if this project is flagged as a library project (a shared sound/media library). */
     bool isLibraryProject() const;
+
+    /** Checks whether automatic tempo detection should be applied to the given file.
+        On return, shouldSetAutoTempo indicates the result. Returns false if the user cancelled.
+    */
     bool askAboutTempoDetect (const juce::File&, bool& shouldSetAutoTempo) const;
 
+    /** Returns the IDs of items whose source files no longer exist on disk.
+        Always returns an empty array for folder-based projects.
+    */
     juce::Array<ProjectItemID> findOrphanItems();
 
     //==============================================================================
+    /** Returns the number of items in this project.
+        Folder-based projects lazily scan the folder on the first call.
+    */
     int getNumProjectItems();
+
+    /** Returns the ProjectItemID at the given index.
+        Always returns an invalid ID for folder-based projects.
+    */
     ProjectItemID getProjectItemID (int index);
+
+    /** Returns all ProjectItemIDs in this project.
+        Always returns an empty array for folder-based projects.
+    */
     juce::Array<ProjectItemID> getAllProjectItemIDs() const;
+
+    /** Returns all item IDs (the integer part of ProjectItemID) in this project.
+        Always returns an empty array for folder-based projects.
+    */
     juce::Array<int> getAllItemIDs() const;
+
+    /** Returns the ProjectItem at the given index, or nullptr if out of range. */
     ProjectItem::Ptr getProjectItemAt (int index);
+
+    /** Returns all ProjectItems in this project. */
     juce::Array<ProjectItem::Ptr> getAllProjectItems();
+
+    /** Returns the index of the item with the given ID, or -1 if not found.
+        Always returns -1 for folder-based projects.
+    */
     int getIndexOf (ProjectItemID) const;
 
+    /** Returns the ProjectItem with the given ID, or nullptr if not found.
+        Always returns nullptr for folder-based projects.
+    */
     ProjectItem::Ptr getProjectItemForID (ProjectItemID);
+
+    /** Returns the ProjectItem that references the given file, or nullptr if not found.
+        Works for both file-based and folder-based projects.
+    */
     ProjectItem::Ptr getProjectItemForFile (const juce::File& file);
 
     //==============================================================================
-    /** Returns an existing object if there is one. If not, it will use the given name
-        and description to create a new one
+    /** Returns an existing ProjectItem for the file if one exists, otherwise creates
+        a new one with the given name, type, description, and category.
+        Folder-based items are created with invalid ProjectItemIDs.
     */
     ProjectItem::Ptr createNewItem (const juce::File& fileToReference,
                                     const juce::String& type,
@@ -91,13 +175,22 @@ public:
                                     const ProjectItem::Category cat,
                                     bool atTopOfList);
 
+    /** Removes the item with the given ID. If deleteSourceMaterial is true, deletes
+        the source file on disk. Always returns false for folder-based projects.
+    */
     bool removeProjectItem (ProjectItemID, bool deleteSourceMaterial);
 
+    /** Moves a project item from one index to another. No-op for folder-based projects. */
     void moveProjectItem (int indexToMoveFrom, int indexToMoveTo);
 
+    /** Creates a new empty .tracktionedit file and adds it as a ProjectItem.
+        Folder-based items are created with invalid ProjectItemIDs.
+    */
     ProjectItem::Ptr createNewEdit();
 
-    /** Tells all exportables in all edits to change this project ID. */
+    /** Tells all exportables in all edits to remap references from oldProjId to newProjId.
+        No-op for folder-based projects.
+    */
     void redirectIDsFromProject (int oldProjId, int newProjId);
 
     //==============================================================================
@@ -111,12 +204,22 @@ public:
         nagAutoNo   /**< Should not do task automatically. */
     };
 
+    /** Imports items from a .tracktion archive file into this project.
+        No-op for folder-based projects.
+    */
     void mergeArchiveContents (const juce::File& archiveFile);
 
+    /** Merges all items from another project file into this project.
+        No-op for folder-based projects.
+    */
     void mergeOtherProjectIntoThis (const juce::File& otherProject);
 
-    /** makes sure all media is in the correct sub folder **/
+    /** Makes sure all media files are in the correct category subfolders.
+        No-op for folder-based projects.
+    */
     void refreshFolderStructure();
+
+    /** Creates the default media subdirectories (e.g. "recorded", "rendered") if they don't exist. */
     void createDefaultFolders();
 
     //==============================================================================
@@ -132,19 +235,26 @@ public:
     };
 
     //==============================================================================
-    /** this will load the keyword table, and do a search */
+    /** Loads the keyword table and performs a text search across project items.
+        No-op for folder-based projects (results will be empty).
+    */
     void searchFor (juce::Array<ProjectItemID>& results, SearchOperation&);
 
     //==============================================================================
     juce::String getSelectableDescription() override;
 
-    /** Stops anyone writing/moving the project file */
+    /** Locks the project file to prevent writes or moves. No-op for folder-based projects. */
     void lockFile();
+
+    /** Unlocks the project file. No-op for folder-based projects. */
     void unlockFile();
 
     using Ptr = juce::ReferenceCountedObjectPtr<Project>;
 
+    /** The Engine instance this project belongs to. */
     Engine& engine;
+
+    /** The ProjectManager that owns this project. */
     ProjectManager& projectManager;
 
 private:
