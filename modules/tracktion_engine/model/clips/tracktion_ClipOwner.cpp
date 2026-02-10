@@ -480,9 +480,22 @@ juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (ClipOwner& parent
 
     if (auto proj = getProjectForEdit (edit))
     {
-        if (auto source = proj->createNewItem (sourceFile, ProjectItem::waveItemType(),
-                                               name, {}, ProjectItem::Category::imported, true))
+        auto source = proj->createNewItem (sourceFile, ProjectItem::waveItemType(),
+                                           name, {}, ProjectItem::Category::imported, true);
+
+        if (source != nullptr && source->getID().isValid())
             return insertWaveClip (parent, name, source->getID(), position, deleteExistingClips);
+
+        // Folder-based project: store a file path (relative to project folder or absolute)
+        if (source != nullptr)
+        {
+            auto newState = clip_owner::createNewClipState (name, TrackItem::Type::wave, edit.createNewItemID(), position);
+            newState.setProperty (IDs::source, proj->getSourcePathForFile (sourceFile), nullptr);
+
+            if (auto c = insertClipWithState (parent, newState, name, TrackItem::Type::wave, position, deleteExistingClips, false))
+                if (auto wc = dynamic_cast<WaveAudioClip*> (c))
+                    return *wc;
+        }
 
         jassertfalse;
         return {};

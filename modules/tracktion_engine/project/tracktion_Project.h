@@ -34,6 +34,14 @@ class FolderBasedProject;
 
     The per-method docs below note where behaviour differs between backends.
 
+    **Source references in edits:**
+    Clips in an Edit reference their audio source via a string stored in the
+    @c source property. For file-based projects this is a ProjectItemID string
+    (e.g. @c "1234_5678"). For folder-based projects this is a file path --
+    relative to the project folder if the file lives inside it, or absolute
+    otherwise. Use getSourcePathForFile() to obtain the correct string for
+    a given file.
+
     @see ProjectManager, ProjectItem
 */
 class Project  : public juce::ReferenceCountedObject,
@@ -79,6 +87,9 @@ public:
     */
     juce::String getDescription() const;
 
+    /** Returns true if this is a folder-based project (as opposed to file-based). */
+    bool isFolderBased() const;
+
     /** Returns the project file (.tracktion) or, for folder-based projects, the folder itself. */
     const juce::File& getProjectFile() const noexcept;
 
@@ -89,6 +100,14 @@ public:
 
     /** Returns the subdirectory for media of the given category (e.g. "recorded", "rendered"). */
     juce::File getDirectoryForMedia (ProjectItem::Category category) const;
+
+    /** Returns the appropriate source path string for referencing the given file.
+
+        For folder-based projects, this returns a path relative to the project
+        folder if the file is a child of it, or an absolute path otherwise.
+        File-based projects should not use this method — they use ProjectItemIDs.
+    */
+    juce::String getSourcePathForFile (const juce::File& file) const;
 
     /** Renames the project. This renames the underlying file or folder on disk. */
     void setName (const juce::String& newName);

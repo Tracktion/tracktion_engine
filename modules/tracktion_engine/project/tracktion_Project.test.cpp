@@ -268,6 +268,11 @@ TEST_SUITE ("tracktion_engine")
                                             DeleteExistingClips::no);
             CHECK (waveClip != nullptr);
 
+            // Files outside of the project folder should be absolute
+            REQUIRE (! waveClip->getSourceFileReference().isUsingProjectReference());
+            REQUIRE (juce::File::isAbsolutePath (waveClip->getSourceFileReference().source.get()));
+            REQUIRE (waveClip->getSourceFileReference().getFile() == sinFile->getFile());
+
             // MIDI clip on track 1
             auto midiClip = insertMIDIClip (*audioTracks[1], "TestMIDI",
                                             { 0_tp, TimePosition::fromSeconds (4.0) });
@@ -716,6 +721,10 @@ TEST_SUITE ("tracktion_engine")
                                             DeleteExistingClips::no);
             CHECK (waveClip != nullptr);
 
+            // File-based project: source is a ProjectItemID
+            REQUIRE (waveClip->getSourceFileReference().isUsingProjectReference());
+            REQUIRE (waveClip->getSourceFileReference().getFile() == sinWavFile);
+
             CHECK (EditFileOperations (*edit).save (false, true, false));
         }
 
@@ -825,15 +834,20 @@ TEST_SUITE ("tracktion_engine")
 
             bool foundAudioClip = false;
 
-            for (auto* track : getAudioTracks (*loadedEdit))
+            for (auto track : getAudioTracks (*loadedEdit))
             {
-                for (auto* clip : track->getClips())
+                for (auto clip : track->getClips())
                 {
-                    if (auto* waveClip = dynamic_cast<WaveAudioClip*> (clip))
+                    if (auto waveClip = dynamic_cast<WaveAudioClip*> (clip))
                     {
                         foundAudioClip = true;
                         auto audioFile = waveClip->getAudioFile();
                         CHECK (audioFile.getFile().existsAsFile());
+
+                        // Files inside of the project folder should be relative
+                        REQUIRE (! waveClip->getSourceFileReference().isUsingProjectReference());
+                        REQUIRE (! juce::File::isAbsolutePath (waveClip->getSourceFileReference().source.get()));
+                        REQUIRE (waveClip->getSourceFileReference().getFile() == sinWavFile);
                     }
                 }
             }
@@ -841,6 +855,7 @@ TEST_SUITE ("tracktion_engine")
             CHECK (foundAudioClip);
         }
 
+        newProject.reset(); // Reset the project ptr before the dir is deleted
         cleanup();
     }
 }

@@ -48,14 +48,14 @@ void FolderBasedProject::loadPropertiesFromFile()
     }
 }
 
-void FolderBasedProject::savePropertiesToFile()
+bool FolderBasedProject::savePropertiesToFile()
 {
     auto infoFile = getInfoFile();
 
     if (properties.isEmpty())
     {
         if (infoFile.existsAsFile())
-            infoFile.deleteFile();
+            return infoFile.deleteFile();
     }
     else
     {
@@ -68,8 +68,10 @@ void FolderBasedProject::savePropertiesToFile()
                 info->setProperty (properties.getName (i), properties.getValueAt (i));
         }
 
-        infoFile.replaceWithText (juce::JSON::toString (juce::var (info.release())));
+        return infoFile.replaceWithText (juce::JSON::toString (juce::var (info.release())));
     }
+
+    return true;
 }
 
 //==============================================================================
@@ -150,14 +152,11 @@ ProjectItem::Category FolderBasedProject::inferCategory (const juce::File& f, co
 }
 
 //==============================================================================
-// TODO: PROBLEMATIC — Folder has no binary file to save
 bool FolderBasedProject::save()
 {
-    savePropertiesToFile();
-    return true;
+    return savePropertiesToFile();
 }
 
-// TODO: PROBLEMATIC — No project ID to check; uses folder existence
 bool FolderBasedProject::isValid() const
 {
     return folder.isDirectory();
@@ -168,7 +167,6 @@ bool FolderBasedProject::isReadOnly() const
     return ! folder.hasWriteAccess();
 }
 
-// TODO: PROBLEMATIC — No project ID concept
 int FolderBasedProject::getProjectID() const
 {
     return 0;
@@ -184,7 +182,6 @@ juce::String FolderBasedProject::getDescription() const
     return {};
 }
 
-// TODO: PROBLEMATIC — getProjectFile() returns the folder itself (name is misleading)
 const juce::File& FolderBasedProject::getProjectFile() const noexcept
 {
     return folder;
@@ -220,7 +217,6 @@ juce::File FolderBasedProject::getDirectoryForMedia (ProjectItem::Category categ
     return dir;
 }
 
-// TODO: PROBLEMATIC — Renaming the folder on disk
 void FolderBasedProject::setName (const juce::String& newName)
 {
     if (getName() != newName)
@@ -397,7 +393,6 @@ ProjectItem::Ptr FolderBasedProject::getProjectItemForFile (const juce::File& fi
 }
 
 //==============================================================================
-// TODO: PROBLEMATIC — Should it work? Creates a file and adds to cache.
 ProjectItem::Ptr FolderBasedProject::createNewItem (const juce::File& fileToReference,
                                                     const juce::String& type,
                                                     const juce::String& name,
@@ -433,7 +428,6 @@ void FolderBasedProject::moveProjectItem (int, int)
     // No-op: no ordering concept
 }
 
-// TODO: PROBLEMATIC — Should it work? Creates a .tracktionedit file in the folder.
 ProjectItem::Ptr FolderBasedProject::createNewEdit()
 {
     ensureScanned();

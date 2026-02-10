@@ -252,7 +252,11 @@ Project::Ptr ProjectManager::addProjectToList (const juce::File& f,
         if (auto existing = findProjectWithFile (folders, f))
             return existing;
 
-        auto p = createNewProject (f);
+        // Reuse an already-open project for this file/folder if one exists
+        auto p = getProject (f);
+
+        if (p == nullptr)
+            p = createNewProject (f);
 
         if (p->isValid())
         {

@@ -96,7 +96,7 @@ private:
 
     juce::File getInfoFile() const;
     void loadPropertiesFromFile();
-    void savePropertiesToFile();
+    bool savePropertiesToFile();
 
     void ensureScanned();
     void scanFolder();

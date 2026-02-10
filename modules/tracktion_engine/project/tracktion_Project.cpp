@@ -69,6 +69,7 @@ bool Project::save()
     return result;
 }
 
+bool Project::isFolderBased() const                                          { return getProjectFile().isDirectory(); }
 bool Project::isValid() const                                               { return impl->isValid(); }
 bool Project::isReadOnly() const                                            { return impl->isReadOnly(); }
 bool Project::isTemporary() const                                           { return impl->isTemporary(); }
@@ -78,6 +79,16 @@ juce::String Project::getDescription() const                                { re
 const juce::File& Project::getProjectFile() const noexcept                  { return impl->getProjectFile(); }
 juce::File Project::getDefaultDirectory() const                             { return impl->getDefaultDirectory(); }
 juce::File Project::getDirectoryForMedia (ProjectItem::Category c) const    { return impl->getDirectoryForMedia (c); }
+
+juce::String Project::getSourcePathForFile (const juce::File& file) const
+{
+    auto projectDir = getDefaultDirectory();
+
+    if (file.isAChildOf (projectDir))
+        return file.getRelativePathFrom (projectDir);
+
+    return file.getFullPathName();
+}
 
 void Project::setName (const juce::String& n)                               { impl->setName (n); }
 void Project::setDescription (const juce::String& d)                        { impl->setDescription (d); }
