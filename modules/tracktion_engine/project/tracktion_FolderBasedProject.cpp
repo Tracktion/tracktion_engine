@@ -50,16 +50,26 @@ void FolderBasedProject::loadPropertiesFromFile()
 
 void FolderBasedProject::savePropertiesToFile()
 {
-    auto info = std::make_unique<juce::DynamicObject>();
+    auto infoFile = getInfoFile();
 
+    if (properties.isEmpty())
     {
-        const juce::ScopedLock sl (propertyLock);
-
-        for (int i = 0; i < properties.size(); ++i)
-            info->setProperty (properties.getName (i), properties.getValueAt (i));
+        if (infoFile.existsAsFile())
+            infoFile.deleteFile();
     }
+    else
+    {
+        auto info = std::make_unique<juce::DynamicObject>();
 
-    getInfoFile().replaceWithText (juce::JSON::toString (juce::var (info.release())));
+        {
+            const juce::ScopedLock sl (propertyLock);
+
+            for (int i = 0; i < properties.size(); ++i)
+                info->setProperty (properties.getName (i), properties.getValueAt (i));
+        }
+
+        infoFile.replaceWithText (juce::JSON::toString (juce::var (info.release())));
+    }
 }
 
 //==============================================================================
