@@ -189,6 +189,7 @@ MacroParameterList::MacroParameterList (Edit& e, const juce::ValueTree& v)
 MacroParameterList::~MacroParameterList()
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
+    deleteAutomatableParameters();
 }
 
 MacroParameter* MacroParameterList::createMacroParameter()
