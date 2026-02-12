@@ -722,14 +722,9 @@ juce::Array<Exportable::ReferencedItem> Clip::getReferencedItems()
     return edit.engine.getEngineBehaviour().getReferencedItems (*this);
 }
 
-void Clip::reassignReferencedItem (const ReferencedItem& itm, ProjectItemID newID, double newStartTime)
+void Clip::reassignReferencedItem (const ReferencedItem& itm, ProjectItemRef newRef, double newStartTime)
 {
-    edit.engine.getEngineBehaviour().reassignReferencedItem (*this, itm, newID, newStartTime);
-}
-
-void Clip::reassignReferencedItem (const ReferencedItem& itm, const juce::File& newFile)
-{
-    edit.engine.getEngineBehaviour().reassignReferencedItem (*this, itm, newFile);
+    edit.engine.getEngineBehaviour().reassignReferencedItem (*this, itm, newRef, newStartTime);
 }
 
 ClipPosition Clip::getPosition() const

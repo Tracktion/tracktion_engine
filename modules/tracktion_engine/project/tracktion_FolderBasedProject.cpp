@@ -172,6 +172,11 @@ int FolderBasedProject::getProjectID() const
     return 0;
 }
 
+int FolderBasedProject::hash() const
+{
+    return folder.hashCode();
+}
+
 juce::String FolderBasedProject::getName() const
 {
     return folder.getFileNameWithoutExtension();
@@ -315,11 +320,6 @@ bool FolderBasedProject::askAboutTempoDetect (const juce::File& f, bool& shouldS
    #endif
 }
 
-juce::Array<ProjectItemID> FolderBasedProject::findOrphanItems()
-{
-    return {};
-}
-
 //==============================================================================
 int FolderBasedProject::getNumProjectItems()
 {
@@ -328,20 +328,29 @@ int FolderBasedProject::getNumProjectItems()
     return cachedItems.size();
 }
 
-// TODO: PROBLEMATIC — All items have invalid IDs
-ProjectItemID FolderBasedProject::getProjectItemID (int index)
+ProjectItemRef FolderBasedProject::getProjectItemRef (int index)
 {
-    juce::ignoreUnused (index);
+    ensureScanned();
+    const juce::ScopedLock sl (itemLock);
+
+    if (juce::isPositiveAndBelow (index, cachedItems.size()))
+    {
+        auto f = cachedItems[index]->getSourceFile();
+
+        if (f.isAChildOf (folder))
+            return ProjectItemRef::fromPath (f.getRelativePathFrom (folder));
+
+        return ProjectItemRef::fromAbsolutePath (f);
+    }
+
     return {};
 }
 
-// TODO: PROBLEMATIC — All invalid
-juce::Array<ProjectItemID> FolderBasedProject::getAllProjectItemIDs() const
+juce::Array<ProjectItemRef> FolderBasedProject::getAllProjectItemRefs() const
 {
     return {};
 }
 
-// TODO: PROBLEMATIC — All zero
 juce::Array<int> FolderBasedProject::getAllItemIDs() const
 {
     return {};
@@ -368,16 +377,15 @@ juce::Array<ProjectItem::Ptr> FolderBasedProject::getAllProjectItems()
     return result;
 }
 
-// TODO: PROBLEMATIC — Can't match invalid IDs
-int FolderBasedProject::getIndexOf (ProjectItemID) const
+int FolderBasedProject::getIndexOf (const ProjectItemRef&) const
 {
     return -1;
 }
 
-// TODO: PROBLEMATIC — Can't match invalid IDs
-ProjectItem::Ptr FolderBasedProject::getProjectItemForID (ProjectItemID)
+ProjectItem::Ptr FolderBasedProject::getProjectItemFor (const ProjectItemRef& ref)
 {
-    return {};
+    auto file = ref.resolve (owner.engine, folder);
+    return file != juce::File() ? getProjectItemForFile (file) : nullptr;
 }
 
 ProjectItem::Ptr FolderBasedProject::getProjectItemForFile (const juce::File& fileToFind)
@@ -417,8 +425,7 @@ ProjectItem::Ptr FolderBasedProject::createNewItem (const juce::File& fileToRefe
     return item;
 }
 
-// TODO: PROBLEMATIC — Takes a ProjectItemID which is invalid for folder items
-bool FolderBasedProject::removeProjectItem (ProjectItemID, bool)
+bool FolderBasedProject::removeProjectItem (const ProjectItemRef&, bool)
 {
     return false;
 }
@@ -490,7 +497,7 @@ void FolderBasedProject::createDefaultFolders()
 }
 
 //==============================================================================
-void FolderBasedProject::searchFor (juce::Array<ProjectItemID>&, SearchOperation&)
+void FolderBasedProject::searchFor (juce::Array<ProjectItemRef>&, SearchOperation&)
 {
     // No-op: no search index
 }

@@ -438,6 +438,22 @@ std::unique_ptr<Edit> loadEditForExamining (ProjectManager& pm, ProjectItemID it
     return Edit::createEditForExamining (pm.engine, loadEditFromProjectManager (pm, itemID), role, loadContext);
 }
 
+std::unique_ptr<Edit> loadEditForExamining (ProjectManager& pm, ProjectItemRef ref, Edit::EditRole role, Edit::LoadContext* loadContext)
+{
+    if (auto pid = ref.getProjectItemID(); pid.isValid())
+        return loadEditForExamining (pm, pid, role, loadContext);
+
+    if (auto p = ref.getProject())
+    {
+        assert (p->isFolderBased());
+        auto editFile = ref.resolve (p->engine);
+
+        return loadEditFromFile (p->engine, editFile, role);
+    }
+
+    return {};
+}
+
 juce::ValueTree loadEditFromFile (Engine& e, const juce::File& f, ProjectItemID itemID)
 {
     CRASH_TRACER

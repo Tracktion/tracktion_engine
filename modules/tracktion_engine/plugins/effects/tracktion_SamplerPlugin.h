@@ -68,8 +68,7 @@ public:
     bool hasNameForMidiNoteNumber (int note, int midiChannel, juce::String& name) override;
 
     juce::Array<ReferencedItem> getReferencedItems() override;
-    void reassignReferencedItem (const ReferencedItem&, ProjectItemID newID, double newStartTime) override;
-    void reassignReferencedItem (const ReferencedItem&, const juce::File& newFile) override;
+    void reassignReferencedItem (const ReferencedItem&, ProjectItemRef newRef, double newStartTime) override;
     void sourceMediaChanged() override;
 
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;

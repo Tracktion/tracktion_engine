@@ -211,11 +211,11 @@ ProjectItem::ProjectItem (Engine& e,
                           const juce::String& name_, const juce::String& type_,
                           const juce::String& desc_, const juce::String& file_,
                           ProjectItem::Category category_,
-                          double length_, ProjectItemID id)
+                          double length_, ProjectItemRef ref)
    : Selectable(),
      ReferenceCountedObject(),
      engine (e),
-     itemID (id),
+     itemRef (ref),
      type (type_),
      objectName (name_),
      description (desc_),
@@ -239,6 +239,7 @@ ProjectItem::ProjectItem (Engine& e, const juce::File& src,
                           const juce::String& type_, const juce::String& name_,
                           Category category_, Project& owner)
    : engine (e),
+     itemRef (ProjectItemRef::fromAbsolutePath (src)),
      type (type_),
      objectName (name_),
      file (src.getFullPathName()),
@@ -248,8 +249,8 @@ ProjectItem::ProjectItem (Engine& e, const juce::File& src,
     setCategory (category_);
 }
 
-ProjectItem::ProjectItem (Engine& e, ProjectItemID id, juce::InputStream* in)
-   : engine (e), itemID (id)
+ProjectItem::ProjectItem (Engine& e, ProjectItemRef ref, juce::InputStream* in)
+   : engine (e), itemRef (ref)
 {
     objectName  = readStringAutoDetectingUTF (*in);
     type        = readStringAutoDetectingUTF (*in);
@@ -287,6 +288,13 @@ juce::String ProjectItem::getSelectableDescription()
     if (isVideo())              return TRANS ("Video File");
 
     return TRANS("Project item of type 'XXX'").replace ("XXX", type);
+}
+
+juce::String ProjectItem::hash() const
+{
+    return getID().isValid()
+        ? getID().toStringSuitableForFilename()
+        : juce::String::toHexString (file.hashCode64());
 }
 
 void ProjectItem::selectionStatusChanged (bool isNowSelected)
@@ -427,48 +435,10 @@ juce::String ProjectItem::getFileName() const
     return standardised;
 }
 
-juce::File ProjectItem::getEditPreviewFile() const
-{
-    jassert (isEdit());
-
-    if (auto p = getProject())
-    {
-        auto dir = engine.getTemporaryFileManager().getTempDirectory().getChildFile ("previews");
-        dir.createDirectory();
-
-        auto fileId = getID().isValid()
-            ? getID().toStringSuitableForFilename()
-            : juce::String::toHexString (file.hashCode64());
-
-        return dir.getChildFile ("preview_" + fileId).withFileExtension ("ogg");
-    }
-
-    return {};
-}
-
-juce::File ProjectItem::getEditThumbnailFile() const
-{
-    jassert (isEdit());
-
-    if (auto p = getProject())
-    {
-        auto dir = engine.getTemporaryFileManager().getTempDirectory().getChildFile ("previews");
-        dir.createDirectory();
-
-        auto fileId = getID().isValid()
-            ? getID().toStringSuitableForFilename()
-            : juce::String::toHexString (file.hashCode64());
-
-        return dir.getChildFile ("preview_" + fileId).withFileExtension ("png");
-    }
-
-    return {};
-}
-
 //==============================================================================
 Project::Ptr ProjectItem::getProject() const
 {
-    if (auto* p = ownerProject.get())
+    if (auto p = ownerProject.get())
         return p;
 
     return engine.getProjectManager().getProject (getID().getProjectID());
@@ -477,7 +447,15 @@ Project::Ptr ProjectItem::getProject() const
 bool ProjectItem::hasBeenDeleted() const
 {
     if (auto p = getProject())
-        return itemID.isValid() ? (p->getProjectItemForID (getID()) == nullptr) : false;
+    {
+        if (getID().isValid())
+            return p->getProjectItemFor (getID()) == nullptr;
+
+        if (itemRef.isValid())
+            return ! itemRef.resolve (engine, p->getProjectFile()).existsAsFile();
+
+        return false;
+    }
 
     return true;
 }
@@ -839,7 +817,7 @@ bool ProjectItem::deleteSourceFile()
 void ProjectItem::changeProjectId (int oldID, int newID)
 {
     if (getID().getProjectID() == oldID)
-        itemID = ProjectItemID (getID().getItemID(), newID);
+        itemRef = ProjectItemID (getID().getItemID(), newID);
 
     if (isEdit())
     {
@@ -847,8 +825,8 @@ void ProjectItem::changeProjectId (int oldID, int newID)
 
         for (auto exp : Exportable::addAllExportables (*ed))
             for (auto& item : exp->getReferencedItems())
-                 if (item.itemID.getProjectID() == oldID)
-                     exp->reassignReferencedItem (item, item.itemID.withNewProjectID (newID), 0.0);
+                 if (item.itemRef.getProjectItemID().getProjectID() == oldID)
+                     exp->reassignReferencedItem (item, item.itemRef.getProjectItemID().withNewProjectID (newID), 0.0);
 
         EditFileOperations (*ed).save (false, true, false);
     }

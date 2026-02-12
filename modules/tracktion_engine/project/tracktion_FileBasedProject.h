@@ -27,6 +27,7 @@ public:
     bool isValid() const override;
     bool isReadOnly() const override;
     int getProjectID() const override;
+    int hash() const override;
     juce::String getName() const override;
     juce::String getDescription() const override;
     const juce::File& getProjectFile() const noexcept override          { return file; }
@@ -44,25 +45,23 @@ public:
     bool isLibraryProject() const override;
     bool askAboutTempoDetect (const juce::File&, bool&) const override;
 
-    juce::Array<ProjectItemID> findOrphanItems() override;
-
     //==============================================================================
     int getNumProjectItems() override;
-    ProjectItemID getProjectItemID (int index) override;
-    juce::Array<ProjectItemID> getAllProjectItemIDs() const override;
+    ProjectItemRef getProjectItemRef (int index) override;
+    juce::Array<ProjectItemRef> getAllProjectItemRefs() const override;
     juce::Array<int> getAllItemIDs() const override;
     ProjectItem::Ptr getProjectItemAt (int index) override;
     juce::Array<ProjectItem::Ptr> getAllProjectItems() override;
-    int getIndexOf (ProjectItemID) const override;
+    int getIndexOf (const ProjectItemRef&) const override;
 
-    ProjectItem::Ptr getProjectItemForID (ProjectItemID) override;
+    ProjectItem::Ptr getProjectItemFor (const ProjectItemRef&) override;
     ProjectItem::Ptr getProjectItemForFile (const juce::File&) override;
 
     //==============================================================================
     ProjectItem::Ptr createNewItem (const juce::File&, const juce::String& type,
                                     const juce::String& name, const juce::String& description,
                                     ProjectItem::Category, bool atTopOfList) override;
-    bool removeProjectItem (ProjectItemID, bool deleteSourceMaterial) override;
+    bool removeProjectItem (const ProjectItemRef&, bool deleteSourceMaterial) override;
     void moveProjectItem (int from, int to) override;
     ProjectItem::Ptr createNewEdit() override;
     void redirectIDsFromProject (int oldProjId, int newProjId) override;
@@ -74,7 +73,7 @@ public:
     void createDefaultFolders() override;
 
     //==============================================================================
-    void searchFor (juce::Array<ProjectItemID>&, SearchOperation&) override;
+    void searchFor (juce::Array<ProjectItemRef>&, SearchOperation&) override;
 
     //==============================================================================
     juce::String getSelectableDescription() const override;

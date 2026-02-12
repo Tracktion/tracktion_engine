@@ -280,6 +280,11 @@ int FileBasedProject::getProjectID() const
     return projectId;
 }
 
+int FileBasedProject::hash() const
+{
+    return getProjectID();
+}
+
 juce::String FileBasedProject::getProjectProperty (const juce::String& name) const
 {
     const juce::ScopedLock sl (propertyLock);
@@ -359,8 +364,8 @@ void FileBasedProject::redirectIDsFromProject (int oldProjId, int newProjId)
                 {
                     for (auto& item : exportable->getReferencedItems())
                     {
-                         if (item.itemID.getProjectID() == oldProjId)
-                             exportable->reassignReferencedItem (item, item.itemID.withNewProjectID (newProjId), 0.0);
+                         if (item.itemRef.getProjectItemID().getProjectID() == oldProjId)
+                             exportable->reassignReferencedItem (item, item.itemRef.getProjectItemID().withNewProjectID (newProjId), 0.0);
                     }
                 }
 
@@ -388,12 +393,12 @@ int FileBasedProject::getNumProjectItems()
     return objects.size();
 }
 
-ProjectItemID FileBasedProject::getProjectItemID (int i)
+ProjectItemRef FileBasedProject::getProjectItemRef (int i)
 {
     const juce::ScopedLock sl (objectLock);
 
     if (juce::isPositiveAndBelow (i, objects.size()))
-        return ProjectItemID (objects.getReference(i).itemID, projectId);
+        return ProjectItemRef (ProjectItemID (objects.getReference(i).itemID, projectId));
 
     return {};
 }
@@ -408,14 +413,14 @@ juce::Array<int> FileBasedProject::getAllItemIDs() const
     return a;
 }
 
-juce::Array<ProjectItemID> FileBasedProject::getAllProjectItemIDs() const
+juce::Array<ProjectItemRef> FileBasedProject::getAllProjectItemRefs() const
 {
-    juce::Array<ProjectItemID> dest;
+    juce::Array<ProjectItemRef> dest;
 
     const juce::ScopedLock sl (objectLock);
 
     for (auto& o : objects)
-        dest.add (ProjectItemID (o.itemID, projectId));
+        dest.add (ProjectItemRef (ProjectItemID (o.itemID, projectId)));
 
     return dest;
 }
@@ -454,10 +459,16 @@ juce::Array<ProjectItem::Ptr> FileBasedProject::getAllProjectItems()
     return dest;
 }
 
-ProjectItem::Ptr FileBasedProject::getProjectItemForID (ProjectItemID targetId)
+ProjectItem::Ptr FileBasedProject::getProjectItemFor (const ProjectItemRef& ref)
 {
-    const juce::ScopedLock sl (objectLock);
-    return getProjectItemAt (getIndexOf (targetId));
+    if (ref.isProjectItemID())
+    {
+        const juce::ScopedLock sl (objectLock);
+        return getProjectItemAt (getIndexOf (ref));
+    }
+
+    auto resolved = ref.resolve (owner.engine, getDefaultDirectory());
+    return resolved != juce::File() ? getProjectItemForFile (resolved) : nullptr;
 }
 
 ProjectItem::Ptr FileBasedProject::getProjectItemForFile (const juce::File& fileToFind)
@@ -477,11 +488,13 @@ ProjectItem::Ptr FileBasedProject::getProjectItemForFile (const juce::File& file
     return {};
 }
 
-int FileBasedProject::getIndexOf (ProjectItemID mo) const
+int FileBasedProject::getIndexOf (const ProjectItemRef& ref) const
 {
+    auto mo = ref.getProjectItemID();
+
     const juce::ScopedLock sl (objectLock);
 
-    if (mo.getProjectID() == getProjectID())
+    if (mo.isValid() && mo.getProjectID() == getProjectID())
     {
         auto itemID = mo.getItemID();
 
@@ -569,14 +582,14 @@ ProjectItem::Ptr FileBasedProject::quickAddProjectItem (const juce::String& relP
     return o.item;
 }
 
-bool FileBasedProject::removeProjectItem (ProjectItemID item, bool deleteSourceMaterial)
+bool FileBasedProject::removeProjectItem (const ProjectItemRef& ref, bool deleteSourceMaterial)
 {
     if (isValid() && ! isReadOnly())
     {
         {
             const juce::ScopedLock sl (objectLock);
 
-            const int index = getIndexOf (item);
+            const int index = getIndexOf (ref);
             jassert (index >= 0);
 
             if (index >= 0)
@@ -663,7 +676,7 @@ ProjectItem::Ptr FileBasedProject::createNewEdit()
     return {};
 }
 
-void FileBasedProject::searchFor (juce::Array<ProjectItemID>& results, SearchOperation& searchOp)
+void FileBasedProject::searchFor (juce::Array<ProjectItemRef>& results, SearchOperation& searchOp)
 {
     owner.save();
 
@@ -681,7 +694,11 @@ void FileBasedProject::searchFor (juce::Array<ProjectItemID>& results, SearchOpe
             }
         }
 
-        psi.findMatches (searchOp, results);
+        juce::Array<ProjectItemID> idResults;
+        psi.findMatches (searchOp, idResults);
+
+        for (auto& id : idResults)
+            results.add (ProjectItemRef (id));
     }
 }
 
@@ -749,33 +766,6 @@ void FileBasedProject::mergeOtherProjectIntoThis (const juce::File& f)
             }
         }
     }
-}
-
-juce::Array<ProjectItemID> FileBasedProject::findOrphanItems()
-{
-    const juce::ScopedLock sl (objectLock);
-
-    auto unreffed = getAllProjectItemIDs();
-
-    for (int j = 0; j < getNumProjectItems(); ++j)
-    {
-        if (unreffed.isEmpty())
-            break;
-
-        if (auto mo = getProjectItemAt (j))
-        {
-            if (mo->isEdit())
-            {
-                auto ed = loadEditForExamining (owner.projectManager, mo->getID());
-
-                for (int i = unreffed.size(); --i >= 0;)
-                    if (referencesProjectItem (*ed, unreffed.getReference(i)))
-                        unreffed.remove (i);
-            }
-        }
-    }
-
-    return unreffed;
 }
 
 juce::String FileBasedProject::getSelectableDescription() const
@@ -852,9 +842,9 @@ void FileBasedProject::refreshFolderStructure()
 {
     auto projDir = getProjectFile().getParentDirectory();
 
-    for (auto& item : getAllProjectItemIDs())
+    for (auto& ref : getAllProjectItemRefs())
     {
-        if (auto mo = getProjectItemForID (item))
+        if (auto mo = getProjectItemFor (ref))
         {
             auto srcFile = mo->getSourceFile();
             auto dstDir = getDirectoryForMedia (mo->getCategory());

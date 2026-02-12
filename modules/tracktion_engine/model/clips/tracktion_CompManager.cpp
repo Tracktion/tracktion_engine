@@ -938,7 +938,7 @@ juce::File WaveCompManager::getDefaultTakeFile (int takeIndex) const
 {
     if (auto project = getProjectForEdit (clip.edit))
     {
-        auto firstTakeItem = project->getProjectItemForID (clip.getTakes()[0]);
+        auto firstTakeItem = project->getProjectItemFor (clip.getTakes()[0]);
 
         if (firstTakeItem == nullptr)
             return {};
@@ -971,7 +971,7 @@ ProjectItem::Ptr WaveCompManager::getOrCreateProjectItemForTake (juce::ValueTree
     {
         auto takeIndex = takeTree.getParent().indexOf (takeTree);
 
-        if (auto item = project->getProjectItemForID (getProjectItemIDForTake (takeIndex)))
+        if (auto item = project->getProjectItemFor (getProjectItemIDForTake (takeIndex)))
             return item;
 
         auto destCompFile = getDefaultTakeFile (takeIndex);

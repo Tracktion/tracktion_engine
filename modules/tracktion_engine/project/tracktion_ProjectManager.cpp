@@ -221,7 +221,7 @@ Project::Ptr ProjectManager::getProject (int pid)
 {
     const juce::ScopedLock sl (lock);
 
-    for (auto* p : openProjects)
+    for (auto p : openProjects)
         if (p->getProjectID() == pid)
             return p;
 
@@ -232,7 +232,7 @@ Project::Ptr ProjectManager::getProject (const juce::File& f)
 {
     const juce::ScopedLock sl (lock);
 
-    for (auto* p : openProjects)
+    for (auto p : openProjects)
         if (p->getProjectFile() == f)
             return p;
 
@@ -398,7 +398,7 @@ void ProjectManager::updateProjectFile (Project& p, const juce::File& f)
 ProjectItem::Ptr ProjectManager::getProjectItem (ProjectItemID id)
 {
     if (auto p = getProject (id.getProjectID()))
-        return p->getProjectItemForID (id);
+        return p->getProjectItemFor (id);
 
     return {};
 }
@@ -410,7 +410,15 @@ ProjectItem::Ptr ProjectManager::getProjectItem (const Edit& ed)
 
 Project::Ptr ProjectManager::getProject (const Edit& ed)
 {
-    return getProject (ed.getProjectItemID().getProjectID());
+    auto ref = ed.getProjectItemRef();
+
+    if (auto p = getProject (ref.getProjectItemID().getProjectID()))
+        return p;
+
+    if (auto p = ref.getProject())
+        return p;
+
+    return {};
 }
 
 juce::File ProjectManager::findSourceFile (ProjectItemID id)
@@ -434,7 +442,9 @@ Project::Ptr ProjectManager::createNewProject (const juce::File& projectFile)
     return new Project (engine, *this, projectFile);
 }
 
-Project::Ptr ProjectManager::createNewProject (const juce::File& projectFile, juce::ValueTree folderToAddTo)
+Project::Ptr ProjectManager::createNewProject (const juce::File& projectFile,
+                                                juce::ValueTree folderToAddTo,
+                                                ProjectType)
 {
     const juce::ScopedLock sl (lock);
 
@@ -473,7 +483,8 @@ Project::Ptr ProjectManager::createNewProject (const juce::File& projectFile, ju
 }
 
 Project::Ptr ProjectManager::createNewProjectFromTemplate (const juce::String& name, const juce::File& lastPath,
-                                                           const juce::File& archiveFile, juce::ValueTree folder)
+                                                           const juce::File& archiveFile, juce::ValueTree folder,
+                                                           ProjectType projectType)
 {
     auto extractPath = lastPath.getNonexistentChildFile (juce::File::createLegalFileName (name), {});
 
@@ -497,6 +508,7 @@ Project::Ptr ProjectManager::createNewProjectFromTemplate (const juce::String& n
             {
                 const juce::ScopedLock sl (lock);
 
+                // Always open as file-based first for ID remapping
                 auto p = createNewProject (f);
 
                 auto oldID = p->getProjectID();
@@ -509,10 +521,20 @@ Project::Ptr ProjectManager::createNewProjectFromTemplate (const juce::String& n
                     p->save();
                 }
 
-                auto newFileName = p->getProjectFile();
-                p = nullptr;
+                if (projectType == ProjectType::folderBased)
+                {
+                    proj = convertToFolderBasedProject (*p);
+                    p = nullptr;
 
-                proj = addProjectToList (newFileName, true, folder);
+                    if (proj != nullptr)
+                        addProjectToList (proj->getDefaultDirectory(), true, folder);
+                }
+                else
+                {
+                    auto newFileName = p->getProjectFile();
+                    p = nullptr;
+                    proj = addProjectToList (newFileName, true, folder);
+                }
 
                 if (proj != nullptr)
                 {
@@ -551,12 +573,35 @@ Project::Ptr ProjectManager::createNewProjectFromTemplate (const juce::String& n
 
 Project::Ptr ProjectManager::createNewProjectInteractively (const juce::String& name,
                                                             const juce::File& lastPath,
-                                                            juce::ValueTree folderToAddTo)
+                                                            juce::ValueTree folderToAddTo,
+                                                            ProjectType projectType)
 {
     if (name.isNotEmpty())
     {
         auto& ui = engine.getUIBehaviour();
         auto fileName = juce::File::createLegalFileName (name);
+
+        if (projectType == ProjectType::folderBased)
+        {
+            auto projectFolder = lastPath.getChildFile (fileName);
+
+            if (projectFolder.isDirectory())
+            {
+                if (! ui.showOkCancelAlertBox (TRANS("Create project"),
+                                               TRANS("This folder already exists - do you want to open it?"),
+                                               TRANS("Open")))
+                    return {};
+            }
+            else if (! projectFolder.createDirectory().wasOk())
+            {
+                ui.showWarningAlert (TRANS("Create project"),
+                                     TRANS("Couldn't create the project folder")
+                                       + ":\n\n" + projectFolder.getFullPathName());
+                return {};
+            }
+
+            return createNewProject (projectFolder, folderToAddTo, projectType);
+        }
 
         auto projectFile = lastPath.getChildFile (fileName)
                                    .getChildFile (fileName + projectFileSuffix);
@@ -628,7 +673,7 @@ Project::Ptr ProjectManager::createNewProjectInteractively (const juce::String& 
             }
         }
 
-        return createNewProject (projectFile, folderToAddTo);
+        return createNewProject (projectFile, folderToAddTo, projectType);
     }
 
     return {};

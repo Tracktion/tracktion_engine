@@ -578,13 +578,33 @@ static int getNextInstanceId() noexcept
     return ++nextId;
 }
 
+ProjectItemID determineProjectItemID (const Edit::Options& o)
+{
+    if (auto pid = o.editProjectItemID.getProjectItemID(); pid.isValid())
+        return pid;
+
+    auto editFileRelPath = o.editProjectItemID.toString();
+    jassert (editFileRelPath.isNotEmpty());
+    auto editPathHash = editFileRelPath.hashCode();
+
+    if (o.projectFolder.exists())
+        return ProjectItemID (editPathHash, o.projectFolder.hashCode());
+
+    if (editPathHash != 0)
+        return ProjectItemID (editPathHash, 0);
+
+    // Temporary, in-memory edit
+    return ProjectItemID::createNewID (0);
+}
+
 //==============================================================================
 Edit::Edit (Options options)
     : engine (options.engine),
       tempoSequence (*this),
       state (options.editState),
       instanceId (getNextInstanceId()),
-      editProjectItemID (options.editProjectItemID),
+      editProjectItemID (determineProjectItemID (options)),
+      editProjectItemRef (options.editProjectItemID),
       loadContext (options.loadContext),
       editRole (options.role)
 {
@@ -592,11 +612,14 @@ Edit::Edit (Options options)
 
     jassert (state.isValid());
     jassert (state.hasType (IDs::EDIT));
-    jassert (editProjectItemID.load().isValid()); // This must be valid or it won't be able to create temp files etc.
+    jassert (editProjectItemID.load().isValid()); // Always valid: either from ref or auto-generated
 
     if (options.editFileRetriever)
+    {
         editFileRetriever = std::move (options.editFileRetriever);
+    }
     else
+    {
         editFileRetriever = [this] () -> juce::File
         {
             if (auto item = getProjectItemForEdit (*this))
@@ -604,22 +627,34 @@ Edit::Edit (Options options)
 
             return {};
         };
+    }
 
     if (options.filePathResolver)
+    {
         filePathResolver = std::move (options.filePathResolver);
+    }
     else
-        filePathResolver = [this] (const juce::String& path) -> juce::File
+    {
+        filePathResolver = [this, projectFolder = options.projectFolder] (const juce::String& path) -> juce::File
         {
             jassert (path.isNotEmpty());
 
             if (juce::File::isAbsolutePath (path))
                 return path;
 
+            if (projectFolder != juce::File())
+                return projectFolder.getChildFile (path);
+
             if (editFileRetriever)
-                return editFileRetriever().getSiblingFile (path);
+                if (auto f = editFileRetriever(); f != juce::File())
+                    return f.getSiblingFile (path);
+
+            if (auto p = getProjectForEdit (*this); p && p->isFolderBased())
+                return p->getProjectFile().getChildFile (path);
 
             return {};
         };
+    }
 
     if (loadContext != nullptr && ! loadContext->shouldExit)
         loadContext->totalNumTracks = countNumTracks (state);

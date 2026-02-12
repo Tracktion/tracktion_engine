@@ -81,6 +81,7 @@ using namespace std::literals;
 #include "audio_files/tracktion_LoopInfo.test.cpp"
 
 #include "project/tracktion_ProjectItemID.cpp"
+#include "project/tracktion_ProjectItemRef.cpp"
 #include "project/tracktion_ProjectItem.cpp"
 #include "project/tracktion_FileBasedProject.cpp"
 #include "project/tracktion_FolderBasedProject.cpp"

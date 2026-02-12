@@ -29,15 +29,16 @@ juce::File getEditFileFromProjectManager (Edit& edit)
     return {};
 }
 
-bool referencesProjectItem (Edit& edit, ProjectItemID itemID)
+bool referencesProjectItem (Edit& edit, ProjectItemRef itemRef)
 {
     for (auto e : Exportable::addAllExportables (edit))
         for (auto& i : e->getReferencedItems())
-            if (i.itemID == itemID)
+            if (i.itemRef == itemRef)
                 return true;
 
     return false;
 }
+
 
 //==============================================================================
 //==============================================================================

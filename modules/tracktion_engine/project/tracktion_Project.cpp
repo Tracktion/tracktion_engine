@@ -69,11 +69,12 @@ bool Project::save()
     return result;
 }
 
-bool Project::isFolderBased() const                                          { return getProjectFile().isDirectory(); }
+bool Project::isFolderBased() const                                         { return getProjectFile().isDirectory(); }
 bool Project::isValid() const                                               { return impl->isValid(); }
 bool Project::isReadOnly() const                                            { return impl->isReadOnly(); }
 bool Project::isTemporary() const                                           { return impl->isTemporary(); }
 int Project::getProjectID() const                                           { return impl->getProjectID(); }
+int Project::hash() const                                                   { return impl->hash();  }
 juce::String Project::getName() const                                       { return impl->getName(); }
 juce::String Project::getDescription() const                                { return impl->getDescription(); }
 const juce::File& Project::getProjectFile() const noexcept                  { return impl->getProjectFile(); }
@@ -102,18 +103,66 @@ bool Project::isLibraryProject() const                                      { re
 
 bool Project::askAboutTempoDetect (const juce::File& f, bool& s) const      { return impl->askAboutTempoDetect (f, s); }
 
-juce::Array<ProjectItemID> Project::findOrphanItems()                       { return impl->findOrphanItems(); }
+juce::Array<ProjectItemRef> Project::findOrphanItemRefs()
+{
+    juce::Array<ProjectItemRef> refs;
+
+    for (auto& item : findOrphanItems())
+        refs.add (item->getProjectItemRef());
+
+    return refs;
+}
+
+juce::Array<ProjectItem::Ptr> Project::findOrphanItems()
+{
+    juce::Array<ProjectItem::Ptr> edits, notEdits;
+
+    for (auto& item : getAllProjectItems())
+    {
+        if (item->isEdit())
+            edits.add (item);
+        else
+            notEdits.add (item);
+    }
+
+    for (auto& editPI : edits)
+    {
+        auto ed = loadEditForExamining (projectManager, editPI->getProjectItemRef());
+
+        for (int i = notEdits.size(); --i >= 0;)
+            if (referencesProjectItem (*ed, notEdits.getReference (i)->getProjectItemRef()))
+                notEdits.remove (i);
+    }
+
+    return notEdits;
+}
 
 //==============================================================================
 int Project::getNumProjectItems()                                           { return impl->getNumProjectItems(); }
-ProjectItemID Project::getProjectItemID (int i)                             { return impl->getProjectItemID (i); }
-juce::Array<ProjectItemID> Project::getAllProjectItemIDs() const            { return impl->getAllProjectItemIDs(); }
+ProjectItemRef Project::getProjectItemRef (int i)                           { return impl->getProjectItemRef (i); }
+
+ProjectItemID Project::getProjectItemID (int i)
+{
+    return getProjectItemRef (i).getProjectItemID();
+}
+
+juce::Array<ProjectItemRef> Project::getAllProjectItemRefs() const          { return impl->getAllProjectItemRefs(); }
+
+juce::Array<ProjectItemID> Project::getAllProjectItemIDs() const
+{
+    juce::Array<ProjectItemID> result;
+    for (auto& ref : getAllProjectItemRefs())
+        result.add (ref.getProjectItemID());
+    return result;
+}
+
 juce::Array<int> Project::getAllItemIDs() const                             { return impl->getAllItemIDs(); }
 ProjectItem::Ptr Project::getProjectItemAt (int i)                          { return impl->getProjectItemAt (i); }
 juce::Array<ProjectItem::Ptr> Project::getAllProjectItems()                 { return impl->getAllProjectItems(); }
-int Project::getIndexOf (ProjectItemID id) const                            { return impl->getIndexOf (id); }
+int Project::getIndexOf (const ProjectItemRef& ref) const                   { return impl->getIndexOf (ref); }
 
-ProjectItem::Ptr Project::getProjectItemForID (ProjectItemID id)            { return impl->getProjectItemForID (id); }
+ProjectItem::Ptr Project::getProjectItemFor (const ProjectItemRef& ref)     { return impl->getProjectItemFor (ref); }
+ProjectItem::Ptr Project::getProjectItemForID (ProjectItemID id)            { return getProjectItemFor (ProjectItemRef (id)); }
 ProjectItem::Ptr Project::getProjectItemForFile (const juce::File& f)       { return impl->getProjectItemForFile (f); }
 
 //==============================================================================
@@ -124,7 +173,7 @@ ProjectItem::Ptr Project::createNewItem (const juce::File& f, const juce::String
     return impl->createNewItem (f, type, name, desc, cat, atTop);
 }
 
-bool Project::removeProjectItem (ProjectItemID id, bool del)                { return impl->removeProjectItem (id, del); }
+bool Project::removeProjectItem (const ProjectItemRef& ref, bool del)       { return impl->removeProjectItem (ref, del); }
 void Project::moveProjectItem (int from, int to)                            { impl->moveProjectItem (from, to); }
 ProjectItem::Ptr Project::createNewEdit()                                   { return impl->createNewEdit(); }
 void Project::redirectIDsFromProject (int oldId, int newId)                 { impl->redirectIDsFromProject (oldId, newId); }
@@ -136,7 +185,15 @@ void Project::refreshFolderStructure()                                      { im
 void Project::createDefaultFolders()                                        { impl->createDefaultFolders(); }
 
 //==============================================================================
-void Project::searchFor (juce::Array<ProjectItemID>& r, SearchOperation& s) { impl->searchFor (r, s); }
+void Project::searchFor (juce::Array<ProjectItemRef>& r, SearchOperation& s) { impl->searchFor (r, s); }
+
+void Project::searchFor (juce::Array<ProjectItemID>& r, SearchOperation& s)
+{
+    juce::Array<ProjectItemRef> refs;
+    searchFor (refs, s);
+    for (auto& ref : refs)
+        r.add (ref.getProjectItemID());
+}
 
 //==============================================================================
 juce::String Project::getSelectableDescription()                            { return impl->getSelectableDescription(); }
@@ -181,10 +238,10 @@ Project::Ptr convertToFolderBasedProject (Project& project)
                     {
                         for (auto& ref : exportable->getReferencedItems())
                         {
-                            if (ref.itemID.isValid())
+                            if (ref.itemRef.isValid())
                             {
-                                if (auto projItem = project.engine.getProjectManager().getProjectItem (ref.itemID))
-                                    exportable->reassignReferencedItem (ref, projItem->getSourceFile());
+                                if (auto projItem = project.engine.getProjectManager().getProjectItem (ref.itemRef.getProjectItemID()))
+                                    exportable->reassignReferencedItem (ref, ProjectItemRef::fromAbsolutePath (projItem->getSourceFile()), 0.0);
                             }
                         }
                     }

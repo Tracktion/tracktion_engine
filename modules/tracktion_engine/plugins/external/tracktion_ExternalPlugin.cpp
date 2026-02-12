@@ -1979,14 +1979,9 @@ juce::Array<Exportable::ReferencedItem> ExternalPlugin::getReferencedItems()
     return engine.getEngineBehaviour().getReferencedItems (*this);
 }
 
-void ExternalPlugin::reassignReferencedItem (const ReferencedItem& itm, ProjectItemID newID, double newStartTime)
+void ExternalPlugin::reassignReferencedItem (const ReferencedItem& item, ProjectItemRef newRef, double newStartTime)
 {
-    engine.getEngineBehaviour().reassignReferencedItem (*this, itm, newID, newStartTime);
-}
-
-void ExternalPlugin::reassignReferencedItem (const ReferencedItem& itm, const juce::File& newFile)
-{
-    engine.getEngineBehaviour().reassignReferencedItem (*this, itm, newFile);
+    engine.getEngineBehaviour().reassignReferencedItem (*this, item, newRef, newStartTime);
 }
 
 

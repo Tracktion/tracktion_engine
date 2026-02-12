@@ -560,7 +560,7 @@ juce::Array<Exportable::ReferencedItem> SamplerPlugin::getReferencedItems()
         auto v = getSound (i);
 
         Exportable::ReferencedItem ref;
-        ref.itemID = ProjectItemID::fromProperty (v, IDs::source);
+        ref.itemRef = ProjectItemID::fromProperty (v, IDs::source);
         ref.firstTimeUsed = v[IDs::startTime];
         ref.lengthUsed = v[IDs::length];
         results.add (ref);
@@ -569,33 +569,25 @@ juce::Array<Exportable::ReferencedItem> SamplerPlugin::getReferencedItems()
     return results;
 }
 
-void SamplerPlugin::reassignReferencedItem (const ReferencedItem& item, ProjectItemID newID, double newStartTime)
+void SamplerPlugin::reassignReferencedItem (const ReferencedItem& item, ProjectItemRef newRef, double newStartTime)
 {
     auto index = getReferencedItems().indexOf (item);
 
     if (index >= 0)
     {
         auto um = getUndoManager();
-
         auto v = getSound (index);
-        v.setProperty (IDs::source, newID.toString(), um);
-        v.setProperty (IDs::startTime, static_cast<double> (v[IDs::startTime]) - newStartTime, um);
-    }
-    else
-    {
-        jassertfalse;
-    }
-}
 
-void SamplerPlugin::reassignReferencedItem (const ReferencedItem& item,
-                                            const juce::File& newFile)
-{
-    auto index = getReferencedItems().indexOf (item);
-
-    if (index >= 0)
-    {
-        auto v = getSound (index);
-        v.setProperty (IDs::source, newFile.getFullPathName(), getUndoManager());
+        if (newRef.isProjectItemID())
+        {
+            v.setProperty (IDs::source, newRef.toString(), um);
+            v.setProperty (IDs::startTime, static_cast<double> (v[IDs::startTime]) - newStartTime, um);
+        }
+        else
+        {
+            auto newFile = newRef.resolve (edit.engine);
+            v.setProperty (IDs::source, newFile.getFullPathName(), um);
+        }
     }
     else
     {

@@ -716,7 +716,7 @@ bool Plugin::hasNameForMidiBank (int, juce::String&)
 
 //==============================================================================
 juce::Array<Exportable::ReferencedItem> Plugin::getReferencedItems()  { return {}; }
-void Plugin::reassignReferencedItem (const ReferencedItem&, ProjectItemID, double) {}
+void Plugin::reassignReferencedItem (const ReferencedItem&, ProjectItemRef, double) {}
 
 //==============================================================================
 static bool mirrorPluginIsRecursive (Plugin& p, int depth)

@@ -138,11 +138,8 @@ public:
     /** Returns an array of any ReferencedItem[s] e.g. audio files. */
     juce::Array<ReferencedItem> getReferencedItems() override;
 
-    /** Should be implemented to change the underlying source to a new ProjectItemID. */
-    void reassignReferencedItem (const ReferencedItem&, ProjectItemID /*newID*/, double /*newStartTime*/) override;
-
-    /** Should be implemented to change the underlying source to a new File. */
-    void reassignReferencedItem (const ReferencedItem&, const juce::File&) override;
+    /** Should be implemented to change the underlying source to a new ProjectItemRef. */
+    void reassignReferencedItem (const ReferencedItem&, ProjectItemRef newRef, double newStartTime) override;
 
     //==============================================================================
     /** Some clip types can be launched, if that's possible, this returns a handle to

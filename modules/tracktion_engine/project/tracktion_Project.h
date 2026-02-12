@@ -77,6 +77,11 @@ public:
     */
     int getProjectID() const;
 
+    /** An identifying hash.
+        N.B. This isn't stable, particularly for folder-based projects so don't store it anywhere.
+    */
+    int hash() const;
+
     /** Returns the project name.
         Folder-based projects return the folder name.
     */
@@ -135,10 +140,13 @@ public:
     */
     bool askAboutTempoDetect (const juce::File&, bool& shouldSetAutoTempo) const;
 
-    /** Returns the IDs of items whose source files no longer exist on disk.
+    /** Returns refs to items whose source files are not referenced by any edit.
         Always returns an empty array for folder-based projects.
     */
-    juce::Array<ProjectItemID> findOrphanItems();
+    juce::Array<ProjectItemRef> findOrphanItemRefs();
+
+    /** @deprecated Use findOrphanItemRefs() instead. */
+    juce::Array<ProjectItem::Ptr> findOrphanItems();
 
     //==============================================================================
     /** Returns the number of items in this project.
@@ -146,14 +154,22 @@ public:
     */
     int getNumProjectItems();
 
-    /** Returns the ProjectItemID at the given index.
-        Always returns an invalid ID for folder-based projects.
+    /** Returns a ProjectItemRef at the given index.
+        File-based projects return an ID-based ref, folder-based return a path-based ref.
     */
+    ProjectItemRef getProjectItemRef (int index);
+
+    /** @deprecated Use getProjectItemRef() instead. */
+    [[deprecated ("Use getProjectItemRef() instead")]]
     ProjectItemID getProjectItemID (int index);
 
-    /** Returns all ProjectItemIDs in this project.
-        Always returns an empty array for folder-based projects.
+    /** Returns all ProjectItemRefs in this project.
+        Always returns an empty array for folder-based projects (const prevents lazy scan).
     */
+    juce::Array<ProjectItemRef> getAllProjectItemRefs() const;
+
+    /** @deprecated Use getAllProjectItemRefs() instead. */
+    [[deprecated ("Use getAllProjectItemRefs() instead")]]
     juce::Array<ProjectItemID> getAllProjectItemIDs() const;
 
     /** Returns all item IDs (the integer part of ProjectItemID) in this project.
@@ -167,14 +183,19 @@ public:
     /** Returns all ProjectItems in this project. */
     juce::Array<ProjectItem::Ptr> getAllProjectItems();
 
-    /** Returns the index of the item with the given ID, or -1 if not found.
+    /** Returns the index of the item with the given ref, or -1 if not found.
         Always returns -1 for folder-based projects.
     */
-    int getIndexOf (ProjectItemID) const;
+    int getIndexOf (const ProjectItemRef&) const;
 
-    /** Returns the ProjectItem with the given ID, or nullptr if not found.
-        Always returns nullptr for folder-based projects.
+    /** Returns the ProjectItem for the given ref, or nullptr if not found.
+        For file-based projects, looks up by ID. For folder-based, resolves
+        the path and looks up by file.
     */
+    ProjectItem::Ptr getProjectItemFor (const ProjectItemRef&);
+
+    /** @deprecated Use getProjectItemFor() instead. */
+    [[deprecated ("Use getProjectItemFor() instead")]]
     ProjectItem::Ptr getProjectItemForID (ProjectItemID);
 
     /** Returns the ProjectItem that references the given file, or nullptr if not found.
@@ -194,10 +215,10 @@ public:
                                     const ProjectItem::Category cat,
                                     bool atTopOfList);
 
-    /** Removes the item with the given ID. If deleteSourceMaterial is true, deletes
+    /** Removes the item matching the given ref. If deleteSourceMaterial is true, deletes
         the source file on disk. Always returns false for folder-based projects.
     */
-    bool removeProjectItem (ProjectItemID, bool deleteSourceMaterial);
+    bool removeProjectItem (const ProjectItemRef&, bool deleteSourceMaterial);
 
     /** Moves a project item from one index to another. No-op for folder-based projects. */
     void moveProjectItem (int indexToMoveFrom, int indexToMoveTo);
@@ -257,6 +278,10 @@ public:
     /** Loads the keyword table and performs a text search across project items.
         No-op for folder-based projects (results will be empty).
     */
+    void searchFor (juce::Array<ProjectItemRef>& results, SearchOperation&);
+
+    /** @deprecated Use searchFor (Array<ProjectItemRef>&, SearchOperation&) instead. */
+    [[deprecated ("Use searchFor (Array<ProjectItemRef>&, SearchOperation&) instead")]]
     void searchFor (juce::Array<ProjectItemID>& results, SearchOperation&);
 
     //==============================================================================

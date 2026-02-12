@@ -207,12 +207,13 @@ void ExportJob::copyEditFilesToTempDir()
                 break;
 
             double start = 0.0, length = 0.0;
-            auto newFilename = refList.getReassignedFileName (ref.itemID, ref.firstTimeUsed,
+            auto refID = ref.itemRef.getProjectItemID();
+            auto newFilename = refList.getReassignedFileName (refID, ref.firstTimeUsed,
                                                               start, length);
 
             if (length > 0.0 && newFilename.isNotEmpty())
             {
-                auto oldSourceMedia (projectManager.getProjectItem (ref.itemID));
+                auto oldSourceMedia (projectManager.getProjectItem (refID));
 
                 if (oldSourceMedia != nullptr
                      && (includeLibraryFiles || ! oldSourceMedia->getProject()->isLibraryProject()))

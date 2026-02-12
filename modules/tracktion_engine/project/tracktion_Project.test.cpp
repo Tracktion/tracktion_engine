@@ -110,8 +110,8 @@ TEST_SUITE ("tracktion_engine")
         CHECK (numItems >= 2); // At least the 2 edits
 
         // Verify edit items exist
-        CHECK (project->getProjectItemForID (editItem1->getID()) != nullptr);
-        CHECK (project->getProjectItemForID (editItem2->getID()) != nullptr);
+        CHECK (project->getProjectItemFor (editItem1->getID()) != nullptr);
+        CHECK (project->getProjectItemFor (editItem2->getID()) != nullptr);
 
         // Verify the audio file was added as a project item
         auto audioItem = project->getProjectItemForFile (sinFile->getFile());

@@ -46,7 +46,7 @@ public:
 
     void add (const Exportable::ReferencedItem& item)
     {
-        add (item.itemID, item.firstTimeUsed, item.lengthUsed);
+        add (item.itemRef.getProjectItemID(), item.firstTimeUsed, item.lengthUsed);
     }
 
     void add (const ProjectItem::Ptr& mop, double start, double length)
@@ -58,14 +58,16 @@ public:
 
         for (int i = ids.size(); --i >= 0;)
         {
-            if (itemID == ids.getReference(i))
+            if (itemID == ids.getReference (i))
             {
                 excerpts[i]->addInterval (start, length);
                 return;
             }
         }
 
+        items.add (mop);
         ids.add (itemID);
+
         auto intervals = new IntervalList();
         intervals->addInterval (start, length);
         excerpts.add (intervals);
@@ -167,6 +169,7 @@ public:
 
     //==============================================================================
     ProjectManager& projectManager;
+    juce::Array<ProjectItem::Ptr> items;
     juce::Array<ProjectItemID> ids;
 
 private:

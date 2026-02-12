@@ -11,6 +11,15 @@
 namespace tracktion { inline namespace engine
 {
 
+/** Selects whether a new project is stored as a single .tracktion file
+    or as a folder on disk.
+*/
+enum class ProjectType
+{
+    fileBased,    /**< Traditional .tracktion binary project file. */
+    folderBased   /**< Folder-based project that discovers items by scanning. */
+};
+
 //==============================================================================
 /** Manages the master list of projects known to the engine.
 
@@ -153,15 +162,24 @@ public:
     /** Creates a project with a new ID, a default edit, and adds it to the list.
         Also creates default media folders and refreshes the folder structure.
     */
-    Project::Ptr createNewProject (const juce::File& projectFile, juce::ValueTree folderToAddTo);
+    Project::Ptr createNewProject (const juce::File& projectFile,
+                                    juce::ValueTree folderToAddTo,
+                                    ProjectType projectType /*= ProjectType::fileBased*/);
 
     /** Shows UI dialogs to let the user create a project in a chosen location.
         Handles directory creation, non-empty directory warnings, and naming.
     */
-    Project::Ptr createNewProjectInteractively (const juce::String& suggestedName, const juce::File& lastPath, juce::ValueTree folderToAddTo);
+    Project::Ptr createNewProjectInteractively (const juce::String& suggestedName,
+                                                const juce::File& lastPath,
+                                                juce::ValueTree folderToAddTo,
+                                                ProjectType projectType /*= ProjectType::fileBased*/);
 
     /** Extracts a template archive, remaps IDs, and adds the resulting project to the list. */
-    Project::Ptr createNewProjectFromTemplate (const juce::String& suggestedName, const juce::File& lastPath, const juce::File& templateArchiveFile, juce::ValueTree folderToAddTo);
+    Project::Ptr createNewProjectFromTemplate (const juce::String& suggestedName,
+                                               const juce::File& lastPath,
+                                               const juce::File& templateArchiveFile,
+                                               juce::ValueTree folderToAddTo,
+                                               ProjectType projectType /*= ProjectType::fileBased*/);
 
     /** Recursively searches a folder subtree for a project matching the given numeric ID. */
     Project::Ptr findProjectWithId (const juce::ValueTree& folder, int pid);
@@ -189,9 +207,14 @@ public:
     */
     struct TempProject
     {
-        TempProject (ProjectManager& pm, const juce::File& f, bool createNewProjectID)
+        TempProject (ProjectManager& pm, const juce::File& f, bool createNewProjectID,
+                     ProjectType projectType = ProjectType::fileBased)
         {
-            if (f.exists() || f.create())
+            const bool created = f.exists() || (projectType == ProjectType::folderBased
+                                                    ? f.createDirectory().wasOk()
+                                                    : f.create());
+
+            if (created)
             {
                 auto p = pm.createNewProject (f);
                 p->setTemporary (true);

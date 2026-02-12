@@ -125,8 +125,8 @@ static void deleteEditPreviewsNotInUse (Engine& engine, juce::Array<juce::File>&
     juce::StringArray ids;
 
     for (auto& p : pm.getAllProjects (pm.folders))
-        for (auto& itemID : p->getAllProjectItemIDs())
-            ids.add (itemID.toStringSuitableForFilename());
+        for (auto item : p->getAllProjectItems())
+            ids.add (item->hash());
 
     for (int i = files.size(); --i >= 0;)
     {
@@ -290,7 +290,7 @@ void TemporaryFileManager::purgeOrphanEditTempFolders (ProjectManager& pm)
                     reasonsForDeletion.add ("Invalid project ID");
                 else if (pp == nullptr)
                     reasonsForDeletion.add ("Can't find project");
-                else if (pp->getProjectItemForID (itemID) == nullptr)
+                else if (pp->getProjectItemFor (itemID) == nullptr)
                     reasonsForDeletion.add ("Can't find source media");
                 else
                     reasonsForDeletion.add ("Unknown");

@@ -1505,7 +1505,7 @@ juce::Array<Exportable::ReferencedItem> AudioClipBase::getReferencedItems()
     {
         for (auto takeID : getTakes())
         {
-            item.itemID = takeID;
+            item.itemRef = takeID;
             results.add (item);
         }
 
@@ -1513,7 +1513,7 @@ juce::Array<Exportable::ReferencedItem> AudioClipBase::getReferencedItems()
     }
     else
     {
-        item.itemID = ProjectItemID (sourceFileReference.source.get());
+        item.itemRef = ProjectItemID (sourceFileReference.source.get());
         results.add (item);
     }
 
@@ -1521,7 +1521,7 @@ juce::Array<Exportable::ReferencedItem> AudioClipBase::getReferencedItems()
     {
         for (auto& ref : results)
         {
-            auto wi = edit.engine.getAudioFileManager().getAudioFile (ref.itemID).getInfo();
+            auto wi = edit.engine.getAudioFileManager().getAudioFile (ref.itemRef.getProjectItemID()).getInfo();
 
             if (wi.sampleRate > 0)
             {
@@ -1535,34 +1535,31 @@ juce::Array<Exportable::ReferencedItem> AudioClipBase::getReferencedItems()
 }
 
 void AudioClipBase::reassignReferencedItem (const ReferencedItem& item,
-                                            ProjectItemID newItemID, double newStartTime)
+                                            ProjectItemRef newRef, double newStartTime)
 {
-    Clip::reassignReferencedItem (item, newItemID, newStartTime);
+    Clip::reassignReferencedItem (item, newRef, newStartTime);
 
     if (getReferencedItems().size() == 1 && item == getReferencedItems().getFirst())
     {
-        sourceFileReference.setToProjectFileReference (newItemID);
+        if (newRef.isProjectItemID())
+        {
+            sourceFileReference.setToProjectFileReference (newRef.getProjectItemID());
 
-        if (! isLooping())
-            setOffset (getPosition().getOffset() - TimeDuration::fromSeconds ((newStartTime / getSpeedRatio())));
+            if (! isLooping())
+                setOffset (getPosition().getOffset() - TimeDuration::fromSeconds ((newStartTime / getSpeedRatio())));
+            else
+                loopStart = loopStart - TimeDuration::fromSeconds ((newStartTime / getSpeedRatio()));
+        }
         else
-            loopStart = loopStart - TimeDuration::fromSeconds ((newStartTime / getSpeedRatio()));
+        {
+            auto newFile = newRef.resolve (edit.engine);
+            sourceFileReference.setToDirectFileReference (newFile, true);
+        }
     }
     else
     {
         jassertfalse;
     }
-}
-
-void AudioClipBase::reassignReferencedItem (const ReferencedItem& item,
-                                            const juce::File& newFile)
-{
-    Clip::reassignReferencedItem (item, newFile);
-
-    if (getReferencedItems().size() == 1 && item == getReferencedItems().getFirst())
-        sourceFileReference.setToDirectFileReference (newFile, true);
-    else
-        jassertfalse;
 }
 
 juce::Array<ProjectItemID> AudioClipBase::getTakes() const

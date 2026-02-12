@@ -127,44 +127,7 @@ void WaveAudioClip::setLoopDefaults()
 }
 
 void WaveAudioClip::reassignReferencedItem (const ReferencedItem& item,
-                                            ProjectItemID newItemID, double newStartTimeSeconds)
-{
-    const auto newStartTime = TimeDuration::fromSeconds (newStartTimeSeconds);
-
-    if (hasAnyTakes())
-    {
-        auto indexInList = getReferencedItems().indexOf (item);
-
-        if (indexInList < 0)
-        {
-            jassertfalse;
-            return;
-        }
-
-        if (indexInList == getCurrentTake())
-            sourceFileReference.setToProjectFileReference (newItemID);
-
-        auto take = getTakesTree().getChild (indexInList);
-
-        if (take.isValid())
-            take.setProperty (IDs::source, newItemID.toString(), getUndoManager());
-
-        if (indexInList == 0)
-        {
-            if (! isLooping())
-                setOffset (getPosition().getOffset() - (newStartTime / getSpeedRatio()));
-            else
-                loopStart = loopStart - (newStartTime / getSpeedRatio());
-        }
-    }
-    else
-    {
-        AudioClipBase::reassignReferencedItem (item, newItemID, newStartTimeSeconds);
-    }
-}
-
-void WaveAudioClip::reassignReferencedItem (const ReferencedItem& item,
-                                            const juce::File& newFile)
+                                            ProjectItemRef newRef, double newStartTime)
 {
     if (hasAnyTakes())
     {
@@ -176,19 +139,45 @@ void WaveAudioClip::reassignReferencedItem (const ReferencedItem& item,
             return;
         }
 
-        auto path = SourceFileReference::findPathFromFile (edit, newFile, true);
+        if (newRef.isProjectItemID())
+        {
+            auto newItemID = newRef.getProjectItemID();
 
-        if (indexInList == getCurrentTake())
-            sourceFileReference.setToDirectFileReference (newFile, true);
+            if (indexInList == getCurrentTake())
+                sourceFileReference.setToProjectFileReference (newItemID);
 
-        auto take = getTakesTree().getChild (indexInList);
+            auto take = getTakesTree().getChild (indexInList);
 
-        if (take.isValid())
-            take.setProperty (IDs::source, path, getUndoManager());
+            if (take.isValid())
+                take.setProperty (IDs::source, newItemID.toString(), getUndoManager());
+
+            if (indexInList == 0)
+            {
+                auto startOffset = TimeDuration::fromSeconds (newStartTime);
+
+                if (! isLooping())
+                    setOffset (getPosition().getOffset() - (startOffset / getSpeedRatio()));
+                else
+                    loopStart = loopStart - (startOffset / getSpeedRatio());
+            }
+        }
+        else
+        {
+            auto newFile = newRef.resolve (edit.engine);
+            auto path = SourceFileReference::findPathFromFile (edit, newFile, true);
+
+            if (indexInList == getCurrentTake())
+                sourceFileReference.setToDirectFileReference (newFile, true);
+
+            auto take = getTakesTree().getChild (indexInList);
+
+            if (take.isValid())
+                take.setProperty (IDs::source, path, getUndoManager());
+        }
     }
     else
     {
-        AudioClipBase::reassignReferencedItem (item, newFile);
+        AudioClipBase::reassignReferencedItem (item, newRef, newStartTime);
     }
 }
 
@@ -456,7 +445,7 @@ void WaveAudioClip::deleteAllUnusedTakes (bool deleteSourceFiles)
             if (! isTakeInUse (*this, takeProjectItemID))
             {
                 bool removedOk = ! deleteSourceFiles
-                                  || proj->getProjectItemForID (takeProjectItemID) == nullptr
+                                  || proj->getProjectItemFor (takeProjectItemID) == nullptr
                                   || proj->removeProjectItem (takeProjectItemID, true);
 
                 if (removedOk)

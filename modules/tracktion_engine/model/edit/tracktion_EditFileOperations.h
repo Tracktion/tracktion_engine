@@ -68,6 +68,11 @@ std::unique_ptr<Edit> loadEditForExamining (ProjectManager&, ProjectItemID,
                                             Edit::EditRole role = Edit::EditRole::forExamining,
                                             Edit::LoadContext* = nullptr);
 
+/** Uses the Project and ProjectItemRef to find an Edit file and open it. */
+std::unique_ptr<Edit> loadEditForExamining (ProjectManager&, ProjectItemRef,
+                                            Edit::EditRole = Edit::EditRole::forExamining,
+                                            Edit::LoadContext* = nullptr);
+
 /** Legacy, will be deprecated soon. Use version that returns an edit.
     Loads a ValueTree from a file to load an Edit.
     If the file is empty, a new Edit state will be created with the given ProjectItemID.

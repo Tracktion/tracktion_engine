@@ -29,6 +29,7 @@ public:
     virtual bool isReadOnly() const = 0;
     virtual bool isTemporary() const                                    { return temporary; }
     virtual int getProjectID() const = 0;
+    virtual int hash() const = 0;
     virtual juce::String getName() const = 0;
     virtual juce::String getDescription() const = 0;
     virtual const juce::File& getProjectFile() const noexcept = 0;
@@ -46,25 +47,23 @@ public:
     virtual bool isLibraryProject() const = 0;
     virtual bool askAboutTempoDetect (const juce::File&, bool&) const = 0;
 
-    virtual juce::Array<ProjectItemID> findOrphanItems() = 0;
-
     //==============================================================================
     virtual int getNumProjectItems() = 0;
-    virtual ProjectItemID getProjectItemID (int index) = 0;
-    virtual juce::Array<ProjectItemID> getAllProjectItemIDs() const = 0;
+    virtual ProjectItemRef getProjectItemRef (int index) = 0;
+    virtual juce::Array<ProjectItemRef> getAllProjectItemRefs() const = 0;
     virtual juce::Array<int> getAllItemIDs() const = 0;
     virtual ProjectItem::Ptr getProjectItemAt (int index) = 0;
     virtual juce::Array<ProjectItem::Ptr> getAllProjectItems() = 0;
-    virtual int getIndexOf (ProjectItemID) const = 0;
+    virtual int getIndexOf (const ProjectItemRef&) const = 0;
 
-    virtual ProjectItem::Ptr getProjectItemForID (ProjectItemID) = 0;
+    virtual ProjectItem::Ptr getProjectItemFor (const ProjectItemRef&) = 0;
     virtual ProjectItem::Ptr getProjectItemForFile (const juce::File&) = 0;
 
     //==============================================================================
     virtual ProjectItem::Ptr createNewItem (const juce::File&, const juce::String& type,
                                             const juce::String& name, const juce::String& description,
                                             ProjectItem::Category, bool atTopOfList) = 0;
-    virtual bool removeProjectItem (ProjectItemID, bool deleteSourceMaterial) = 0;
+    virtual bool removeProjectItem (const ProjectItemRef&, bool deleteSourceMaterial) = 0;
     virtual void moveProjectItem (int from, int to) = 0;
     virtual ProjectItem::Ptr createNewEdit() = 0;
     virtual void redirectIDsFromProject (int oldProjId, int newProjId) = 0;
@@ -76,7 +75,7 @@ public:
     virtual void createDefaultFolders() = 0;
 
     //==============================================================================
-    virtual void searchFor (juce::Array<ProjectItemID>&, SearchOperation&) = 0;
+    virtual void searchFor (juce::Array<ProjectItemRef>&, SearchOperation&) = 0;
 
     //==============================================================================
     virtual juce::String getSelectableDescription() const = 0;

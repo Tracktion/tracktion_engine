@@ -429,6 +429,7 @@ namespace tracktion { inline namespace engine
 #include "utilities/tracktion_ScreenSaverDefeater.h"
 
 #include "project/tracktion_ProjectItemID.h"
+#include "project/tracktion_ProjectItemRef.h"
 
 #include "playback/devices/tracktion_WaveDeviceDescription.h"
 

@@ -26,26 +26,20 @@ public:
     //==============================================================================
     struct ReferencedItem
     {
-        ProjectItemID itemID;
+        ProjectItemRef itemRef;
         double firstTimeUsed, lengthUsed;
 
         bool operator== (const ReferencedItem& other) const  { return firstTimeUsed == other.firstTimeUsed
                                                                         && lengthUsed == other.lengthUsed
-                                                                        && itemID == other.itemID; }
+                                                                        && itemRef == other.itemRef; }
         bool operator!= (const ReferencedItem& other) const  { return ! operator== (other); }
     };
 
     virtual juce::Array<ReferencedItem> getReferencedItems() = 0;
 
     virtual void reassignReferencedItem (const ReferencedItem&,
-                                         ProjectItemID newID,
+                                         ProjectItemRef newRef,
                                          double newStartTime) = 0;
-
-    /** Reassigns a referenced item to point directly at a file on disk.
-        Used when converting from ID-based to file-based references.
-    */
-    virtual void reassignReferencedItem (const ReferencedItem&,
-                                         const juce::File&) {}
 
     //==============================================================================
     /** Returns all the Exportables contained in an Edit. */

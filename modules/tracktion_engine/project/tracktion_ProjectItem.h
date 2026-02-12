@@ -54,7 +54,7 @@ public:
 
     //==============================================================================
     /** Loads a ProjectItem from a stream that was saved using writeToStream(). */
-    ProjectItem (Engine&, ProjectItemID, juce::InputStream*);
+    ProjectItem (Engine&, ProjectItemRef, juce::InputStream*);
 
     //==============================================================================
     /** Creates a ProjectItem with some settings. */
@@ -65,7 +65,7 @@ public:
                  const juce::String& file,
                  Category,
                  double length,
-                 ProjectItemID);
+                 ProjectItemRef);
 
     /** Creates a folder-backed ProjectItem with an absolute source file path. */
     ProjectItem (Engine&, const juce::File& sourceFile,
@@ -79,7 +79,16 @@ public:
     void selectionStatusChanged (bool isNowSelected) override;
 
     //==============================================================================
-    ProjectItemID getID() const noexcept            { return itemID; }
+    ProjectItemID getID() const noexcept              { return itemRef.getProjectItemID(); }
+
+    /** Returns the ProjectItemRef that identifies this item. */
+    const ProjectItemRef& getProjectItemRef() const noexcept    { return itemRef; }
+
+    /** Returns a filename-safe unique identifier string for this item.
+        For file-based items this is the ProjectItemID string; for folder-based
+        items it is a hex hash of the source file path.
+    */
+    juce::String hash() const;
 
     juce::ReferenceCountedObjectPtr<Project> getProject() const;
 
@@ -125,12 +134,6 @@ public:
 
     /** name of the project it's inside. */
     juce::String getProjectName() const;
-
-    /** Returns the file that should be used as a preview for this Edit. */
-    juce::File getEditPreviewFile() const;
-
-    /** Returns the file that should be used as a visual preview for this Edit. */
-    juce::File getEditThumbnailFile() const;
 
     //==============================================================================
     juce::File getSourceFile();
@@ -191,7 +194,7 @@ private:
     friend class ProjectManager;
     friend class Project;
 
-    ProjectItemID itemID;
+    ProjectItemRef itemRef;
     juce::String type, objectName, description, file;
     double length = 0;
     juce::File sourceFile, newDstFile;

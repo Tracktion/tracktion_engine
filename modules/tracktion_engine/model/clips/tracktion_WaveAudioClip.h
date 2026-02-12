@@ -108,9 +108,7 @@ public:
     Clip::Array unpackTakes (bool toNewTracks) override;
 
     /** @internal */
-    void reassignReferencedItem (const ReferencedItem&, ProjectItemID newID, double newStartTime) override;
-    /** @internal */
-    void reassignReferencedItem (const ReferencedItem&, const juce::File& newFile) override;
+    void reassignReferencedItem (const ReferencedItem&, ProjectItemRef newRef, double newStartTime) override;
 
 private:
     //==============================================================================

@@ -108,7 +108,7 @@ public:
     {
         Engine& engine;                                              ///< The Engine to use.
         juce::ValueTree editState;                                   ///< The Edit state. @see createEmptyEdit
-        ProjectItemID editProjectItemID;                             ///< The editProjectItemID, must be valid.
+        ProjectItemRef editProjectItemID;                            ///< A ProjectItemID or file path identifying this Edit.
 
         EditRole role = forEditing;                                  ///< An optional role to open the Edit with.
         LoadContext* loadContext = nullptr;                          ///< An optional context to be monitor for loading status.
@@ -120,6 +120,8 @@ public:
         uint32_t numAudioTracks = 1;                                 ///< If non-zero, will ensure the edit has this many audio tracks
 
         float defaultMasterVolumedB = -3.0f;                         ///< The initial level for the edit's master volume
+
+        juce::File projectFolder;                                    ///< Optional project folder for resolving relative paths.
     };
 
     /** Creates an Edit from a set of Options.
@@ -163,6 +165,9 @@ public:
 
     /** Returns the ProjectItemID of the Edit. */
     ProjectItemID getProjectItemID() const noexcept    { return editProjectItemID; }
+
+    /** Returns the ProjectItemRef that was used to create this Edit. */
+    const ProjectItemRef& getProjectItemRef() const noexcept    { return editProjectItemRef; }
 
     //==============================================================================
     /** Returns the EditRole. */
@@ -866,6 +871,7 @@ private:
     //==============================================================================
     const int instanceId;
     std::atomic<ProjectItemID> editProjectItemID { ProjectItemID() };
+    ProjectItemRef editProjectItemRef;
 
     // persistent properties (i.e. stuff that gets saved)
     juce::CachedValue<juce::String> clickTrackDevice;

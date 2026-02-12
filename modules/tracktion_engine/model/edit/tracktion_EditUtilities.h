@@ -24,8 +24,8 @@ ProjectItem::Ptr getProjectItemForEdit (const Edit&);
 /** Uses the ProjectManager to look up the file for an Edit. */
 juce::File getEditFileFromProjectManager (Edit&);
 
-/** Returns true if the ProjectItemID is being used for any of the Edit's elements. */
-bool referencesProjectItem (Edit&, ProjectItemID);
+/** Returns true if the ProjectItemRef is being used for any of the Edit's elements. */
+bool referencesProjectItem (Edit&, ProjectItemRef);
 
 
 //==============================================================================
