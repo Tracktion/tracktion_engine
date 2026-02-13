@@ -85,9 +85,9 @@ public:
 
 private:
     juce::File folder;
-    juce::Array<ProjectItem::Ptr> cachedItems;
-    juce::CriticalSection itemLock;
-    bool itemsScanned = false;
+    mutable juce::Array<ProjectItem::Ptr> cachedItems;
+    mutable juce::CriticalSection itemLock;
+    mutable bool itemsScanned = false;
 
     juce::NamedValueSet properties;
     juce::CriticalSection propertyLock;
@@ -96,8 +96,8 @@ private:
     void loadPropertiesFromFile();
     bool savePropertiesToFile();
 
-    void ensureScanned();
-    void scanFolder();
+    void ensureScanned() const;
+    void scanFolder() const;
     static juce::String inferType (const juce::File&);
     static ProjectItem::Category inferCategory (const juce::File&, const juce::File& root);
 

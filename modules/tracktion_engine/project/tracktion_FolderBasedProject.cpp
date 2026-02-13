@@ -75,7 +75,7 @@ bool FolderBasedProject::savePropertiesToFile()
 }
 
 //==============================================================================
-void FolderBasedProject::ensureScanned()
+void FolderBasedProject::ensureScanned() const
 {
     const juce::ScopedLock sl (itemLock);
 
@@ -83,7 +83,7 @@ void FolderBasedProject::ensureScanned()
         scanFolder();
 }
 
-void FolderBasedProject::scanFolder()
+void FolderBasedProject::scanFolder() const
 {
     cachedItems.clear();
 
@@ -343,7 +343,22 @@ ProjectItemRef FolderBasedProject::getProjectItemRef (int index)
 
 juce::Array<ProjectItemRef> FolderBasedProject::getAllProjectItemRefs() const
 {
-    return {};
+    ensureScanned();
+    const juce::ScopedLock sl (itemLock);
+
+    juce::Array<ProjectItemRef> result;
+
+    for (auto& item : cachedItems)
+    {
+        auto f = item->getSourceFile();
+
+        if (f.isAChildOf (folder))
+            result.add (ProjectItemRef::fromPath (f.getRelativePathFrom (folder)));
+        else
+            result.add (ProjectItemRef::fromAbsolutePath (f));
+    }
+
+    return result;
 }
 
 juce::Array<int> FolderBasedProject::getAllItemIDs() const
@@ -372,8 +387,20 @@ juce::Array<ProjectItem::Ptr> FolderBasedProject::getAllProjectItems()
     return result;
 }
 
-int FolderBasedProject::getIndexOf (const ProjectItemRef&) const
+int FolderBasedProject::getIndexOf (const ProjectItemRef& ref) const
 {
+    ensureScanned();
+    auto file = ref.resolve (owner.engine, folder);
+
+    if (file == juce::File())
+        return -1;
+
+    const juce::ScopedLock sl (itemLock);
+
+    for (int i = 0; i < cachedItems.size(); ++i)
+        if (cachedItems[i]->isForFile (file))
+            return i;
+
     return -1;
 }
 

@@ -239,7 +239,7 @@ ProjectItem::ProjectItem (Engine& e, const juce::File& src,
                           const juce::String& type_, const juce::String& name_,
                           Category category_, Project& owner)
    : engine (e),
-     itemRef (ProjectItemRef::fromAbsolutePath (src)),
+     itemRef (ProjectItemRef (src.getFullPathName(), owner)),
      type (type_),
      objectName (name_),
      file (src.getFullPathName()),

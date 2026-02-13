@@ -212,6 +212,26 @@ TEST_SUITE ("tracktion_engine")
         REQUIRE (recordedItem != nullptr);
         CHECK (recordedItem->getCategory() == ProjectItem::Category::recorded);
 
+        // getAllProjectItemRefs — should return refs for all 3 discovered items
+        auto allRefs = project->getAllProjectItemRefs();
+        CHECK (allRefs.size() == 3);
+
+        for (auto& ref : allRefs)
+        {
+            CHECK (ref.isValid());
+            CHECK_FALSE (ref.isProjectItemID());
+        }
+
+        // getIndexOf — should find each item by its ref
+        for (int i = 0; i < project->getNumProjectItems(); ++i)
+        {
+            auto ref = project->getProjectItemRef (i);
+            CHECK (project->getIndexOf (ref) == i);
+        }
+
+        // getIndexOf — unknown ref should return -1
+        CHECK (project->getIndexOf (ProjectItemRef::fromPath ("nonexistent.wav")) == -1);
+
         cleanup();
     }
 
@@ -256,6 +276,7 @@ TEST_SUITE ("tracktion_engine")
         // -- Edit 1: one audio clip + one MIDI clip --
         {
             auto edit = createEmptyEdit (engine, editSourceFile1);
+            edit->setProjectItemRef (editItem1->getProjectItemRef());
 
             edit->ensureNumberOfAudioTracks (2);
             auto audioTracks = getAudioTracks (*edit);
@@ -290,6 +311,7 @@ TEST_SUITE ("tracktion_engine")
         // -- Edit 2: one audio clip --
         {
             auto edit = createEmptyEdit (engine, editSourceFile2);
+            edit->setProjectItemRef (editItem2->getProjectItemRef());
 
             edit->ensureNumberOfAudioTracks (1);
             auto audioTracks = getAudioTracks (*edit);

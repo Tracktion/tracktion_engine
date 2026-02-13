@@ -174,7 +174,7 @@ public:
     */
     Project::Ptr createNewProject (const juce::File& projectFile,
                                     juce::ValueTree folderToAddTo,
-                                    ProjectType projectType /*= ProjectType::fileBased*/);
+                                    ProjectType projectType);
 
     /** Shows UI dialogs to let the user create a project in a chosen location.
         Handles directory creation, non-empty directory warnings, and naming.
@@ -182,14 +182,14 @@ public:
     Project::Ptr createNewProjectInteractively (const juce::String& suggestedName,
                                                 const juce::File& lastPath,
                                                 juce::ValueTree folderToAddTo,
-                                                ProjectType projectType /*= ProjectType::fileBased*/);
+                                                ProjectType projectType);
 
     /** Extracts a template archive, remaps IDs, and adds the resulting project to the list. */
     Project::Ptr createNewProjectFromTemplate (const juce::String& suggestedName,
                                                const juce::File& lastPath,
                                                const juce::File& templateArchiveFile,
                                                juce::ValueTree folderToAddTo,
-                                               ProjectType projectType /*= ProjectType::fileBased*/);
+                                               ProjectType projectType);
 
     /** Recursively searches a folder subtree for a project matching the given ID. */
     Project::Ptr findProjectWithId (const juce::ValueTree& folder, ProjectID pid);
