@@ -43,28 +43,28 @@ ProjectItemID::ProjectItemID (const juce::String& asString) noexcept
         }
     }
 
-    *this = ProjectItemID (mid, pid);
+    *this = ProjectItemID (mid, ProjectID (pid));
 }
 
-ProjectItemID::ProjectItemID (int itemID, int projectID) noexcept
-   : combinedID ((((int64_t) projectID) << 32) | itemID)
+ProjectItemID::ProjectItemID (int itemID, ProjectID projectID) noexcept
+   : combinedID ((((int64_t) projectID.toInt()) << 32) | itemID)
 {
 }
 
-int ProjectItemID::getProjectID() const         { return (int) (combinedID >> 32); }
+ProjectID ProjectItemID::getProjectID() const   { return ProjectID ((int) (combinedID >> 32)); }
 int ProjectItemID::getItemID() const            { return (int) combinedID; }
 
 juce::String ProjectItemID::toString() const
 {
-    return juce::String::toHexString (getProjectID()) + '/' + juce::String::toHexString (getItemID());
+    return juce::String::toHexString (getProjectID().toInt()) + '/' + juce::String::toHexString (getItemID());
 }
 
 juce::String ProjectItemID::toStringSuitableForFilename() const
 {
-    return juce::String::toHexString (getProjectID()) + '_' + juce::String::toHexString (getItemID());
+    return juce::String::toHexString (getProjectID().toInt()) + '_' + juce::String::toHexString (getItemID());
 }
 
-ProjectItemID ProjectItemID::createNewID (int projectID) noexcept
+ProjectItemID ProjectItemID::createNewID (ProjectID projectID) noexcept
 {
     return ProjectItemID (juce::Random::getSystemRandom().nextInt (0x3ffffff), projectID);
 }
@@ -74,7 +74,7 @@ ProjectItemID ProjectItemID::fromProperty (const juce::ValueTree& v, const juce:
     return ProjectItemID (v.getProperty (prop).toString());
 }
 
-ProjectItemID ProjectItemID::withNewProjectID (int newProjectID) const
+ProjectItemID ProjectItemID::withNewProjectID (ProjectID newProjectID) const
 {
     return { getItemID(), newProjectID };
 }

@@ -158,7 +158,7 @@ juce::ValueTree ProjectManager::getActiveProjectsFolder()     { return folders.g
 juce::ValueTree ProjectManager::getLibraryProjectsFolder()    { return folders.getChildWithName (IDs::LIBRARY); }
 
 //==============================================================================
-Project::Ptr ProjectManager::findProjectWithId (const juce::ValueTree& folder, int pid)
+Project::Ptr ProjectManager::findProjectWithId (const juce::ValueTree& folder, ProjectID pid)
 {
     if (auto p = getProjectFrom (folder))
         if (p->getProjectID() == pid)
@@ -217,7 +217,7 @@ Project::Ptr ProjectManager::getProjectFrom (const juce::ValueTree& v,
     return {};
 }
 
-Project::Ptr ProjectManager::getProject (int pid)
+Project::Ptr ProjectManager::getProject (ProjectID pid)
 {
     const juce::ScopedLock sl (lock);
 
@@ -260,7 +260,7 @@ Project::Ptr ProjectManager::addProjectToList (const juce::File& f,
 
         if (p->isValid())
         {
-            if (p->getProjectID() != 0)
+            if (p->getProjectID().isValid())
                 if (auto existing = findProjectWithId (folders, p->getProjectID()))
                     return existing;
 

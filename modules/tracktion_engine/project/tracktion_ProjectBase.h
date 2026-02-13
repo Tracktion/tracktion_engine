@@ -28,7 +28,7 @@ public:
     virtual bool isValid() const = 0;
     virtual bool isReadOnly() const = 0;
     virtual bool isTemporary() const                                    { return temporary; }
-    virtual int getProjectID() const = 0;
+    virtual ProjectID getProjectID() const = 0;
     virtual juce::String getName() const = 0;
     virtual juce::String getDescription() const = 0;
     virtual const juce::File& getProjectFile() const noexcept = 0;
@@ -65,7 +65,7 @@ public:
     virtual bool removeProjectItem (const ProjectItemRef&, bool deleteSourceMaterial) = 0;
     virtual void moveProjectItem (int from, int to) = 0;
     virtual ProjectItem::Ptr createNewEdit() = 0;
-    virtual void redirectIDsFromProject (int oldProjId, int newProjId) = 0;
+    virtual void redirectIDsFromProject (ProjectID oldProjId, ProjectID newProjId) = 0;
 
     //==============================================================================
     virtual void mergeArchiveContents (const juce::File&) = 0;

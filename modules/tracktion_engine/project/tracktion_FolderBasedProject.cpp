@@ -167,9 +167,9 @@ bool FolderBasedProject::isReadOnly() const
     return ! folder.hasWriteAccess();
 }
 
-int FolderBasedProject::getProjectID() const
+ProjectID FolderBasedProject::getProjectID() const
 {
-    return folder.hashCode();
+    return ProjectID (folder.hashCode());
 }
 
 juce::String FolderBasedProject::getName() const
@@ -459,7 +459,7 @@ ProjectItem::Ptr FolderBasedProject::createNewEdit()
     return {};
 }
 
-void FolderBasedProject::redirectIDsFromProject (int, int)
+void FolderBasedProject::redirectIDsFromProject (ProjectID, ProjectID)
 {
     // No-op: no IDs to redirect
 }

@@ -231,7 +231,7 @@ namespace benchmark_utilities
         auto id = ProjectItemID::fromProperty (editState, IDs::projectID);
 
         if (! id.isValid())
-            id = ProjectItemID::createNewID (0);
+            id = ProjectItemID::createNewID (ProjectID{});
 
         return Edit::createEdit (Edit::Options
         {

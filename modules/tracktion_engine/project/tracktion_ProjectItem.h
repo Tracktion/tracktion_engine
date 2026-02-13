@@ -168,7 +168,7 @@ public:
     void verifyLength();
 
     /** used when moving to another project. */
-    void changeProjectId (int oldID, int newID);
+    void changeProjectId (ProjectID oldID, ProjectID newID);
 
     //==============================================================================
     void writeToStream (juce::OutputStream&) const;

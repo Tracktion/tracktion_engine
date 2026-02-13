@@ -186,7 +186,7 @@ public:
             auto editStateCopy = edit->state.createCopy();
 
             ScopedBenchmark sb (getDescription ("Load Edit from state"));
-            Edit editCopy ({ engine, editStateCopy, ProjectItemID::createNewID (0) });
+            Edit editCopy ({ engine, editStateCopy, ProjectItemID::createNewID (ProjectID{}) });
             jassert (getAudioTracks (editCopy).size() == 100);
         }
     }

@@ -73,7 +73,7 @@ bool Project::isFolderBased() const                                         { re
 bool Project::isValid() const                                               { return impl->isValid(); }
 bool Project::isReadOnly() const                                            { return impl->isReadOnly(); }
 bool Project::isTemporary() const                                           { return impl->isTemporary(); }
-int Project::getProjectID() const                                           { return impl->getProjectID(); }
+ProjectID Project::getProjectID() const                                     { return impl->getProjectID(); }
 juce::String Project::getName() const                                       { return impl->getName(); }
 juce::String Project::getDescription() const                                { return impl->getDescription(); }
 const juce::File& Project::getProjectFile() const noexcept                  { return impl->getProjectFile(); }
@@ -161,7 +161,7 @@ ProjectItem::Ptr Project::createNewItem (const juce::File& f, const juce::String
 bool Project::removeProjectItem (const ProjectItemRef& ref, bool del)       { return impl->removeProjectItem (ref, del); }
 void Project::moveProjectItem (int from, int to)                            { impl->moveProjectItem (from, to); }
 ProjectItem::Ptr Project::createNewEdit()                                   { return impl->createNewEdit(); }
-void Project::redirectIDsFromProject (int oldId, int newId)                 { impl->redirectIDsFromProject (oldId, newId); }
+void Project::redirectIDsFromProject (ProjectID oldId, ProjectID newId)     { impl->redirectIDsFromProject (oldId, newId); }
 
 //==============================================================================
 void Project::mergeArchiveContents (const juce::File& f)                    { impl->mergeArchiveContents (f); }
@@ -182,7 +182,7 @@ void Project::unlockFile()                                                  { im
 Project::Ptr convertToFolderBasedProject (Project& project)
 {
     // Only convert valid file-based projects
-    if (project.getProjectID() == 0 || ! project.getProjectFile().existsAsFile())
+    if (! project.getProjectID().isValid() || ! project.getProjectFile().existsAsFile())
         return nullptr;
 
     auto projectDir = project.getDefaultDirectory();
@@ -193,7 +193,7 @@ Project::Ptr convertToFolderBasedProject (Project& project)
         auto info = std::make_unique<juce::DynamicObject>();
         info->setProperty ("name", project.getName());
         info->setProperty ("description", project.getDescription());
-        info->setProperty ("projectId", project.getProjectID());
+        info->setProperty ("projectId", project.getProjectID().toInt());
 
         auto jsonString = juce::JSON::toString (juce::var (info.release()));
         projectDir.getChildFile ("project_info.json").replaceWithText (jsonString);

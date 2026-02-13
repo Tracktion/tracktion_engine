@@ -667,7 +667,7 @@ Edit::Edit (Options options)
         }
 
         // Don't spam logs with preview Edits
-        if (auto pid = editProjectItemRef.getProjectItemID(); pid.isValid() && pid.getProjectID() != 0)
+        if (auto pid = editProjectItemRef.getProjectItemID(); pid.isValid() && pid.getProjectID().isValid())
             TRACKTION_LOG ("Loaded edit: " + getName());
 
         jassert (! engine.getActiveEdits().edits.contains (this));

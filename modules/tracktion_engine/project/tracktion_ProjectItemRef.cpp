@@ -66,7 +66,7 @@ bool ProjectItemRef::isAbsolutePath() const noexcept
         && juce::File::isAbsolutePath (value);
 }
 
-int ProjectItemRef::getProjectID() const noexcept
+ProjectID ProjectItemRef::getProjectID() const noexcept
 {
     ProjectItemID pid (value);
 
@@ -76,7 +76,7 @@ int ProjectItemRef::getProjectID() const noexcept
     if (ownerProject)
         return ownerProject->getProjectID();
 
-    return 0;
+    return {};
 }
 
 ProjectItemID ProjectItemRef::getProjectItemID() const noexcept

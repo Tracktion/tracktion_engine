@@ -807,7 +807,7 @@ bool ProjectItem::deleteSourceFile()
 }
 
 //==============================================================================
-void ProjectItem::changeProjectId (int oldID, int newID)
+void ProjectItem::changeProjectId (ProjectID oldID, ProjectID newID)
 {
     if (itemRef.getProjectItemID().getProjectID() == oldID)
         itemRef = ProjectItemID (itemRef.getProjectItemID().getItemID(), newID);

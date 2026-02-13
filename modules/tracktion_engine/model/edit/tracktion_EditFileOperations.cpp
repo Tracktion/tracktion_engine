@@ -488,7 +488,7 @@ juce::ValueTree loadEditFromFile (Engine& e, const juce::File& f, ProjectItemRef
 
 juce::ValueTree createEmptyEdit (Engine& e)
 {
-    return loadEditFromFile (e, {}, ProjectItemID::createNewID (0));
+    return loadEditFromFile (e, {}, ProjectItemID::createNewID (ProjectID{}));
 }
 
 static std::unique_ptr<Edit> createEdit (Engine& engine, const juce::ValueTree& editState,
@@ -500,7 +500,7 @@ static std::unique_ptr<Edit> createEdit (Engine& engine, const juce::ValueTree& 
     auto id = ProjectItemID::fromProperty (editState, IDs::projectID);
 
     if (! id.isValid())
-        id = ProjectItemID::createNewID (0);
+        id = ProjectItemID::createNewID (ProjectID{});
 
     return Edit::createEdit (Edit::Options
     {
@@ -528,7 +528,7 @@ std::unique_ptr<Edit> loadEditFromState (Engine& engine, const juce::ValueTree& 
 
 std::unique_ptr<Edit> createEmptyEdit (Engine& engine, const juce::File& editFile)
 {
-    auto id = ProjectItemID::createNewID (0);
+    auto id = ProjectItemID::createNewID (ProjectID{});
 
     return Edit::createEdit (Edit::Options
     {

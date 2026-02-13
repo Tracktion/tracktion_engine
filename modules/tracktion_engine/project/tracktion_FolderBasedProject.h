@@ -26,7 +26,7 @@ public:
     bool save() override;
     bool isValid() const override;
     bool isReadOnly() const override;
-    int getProjectID() const override;
+    ProjectID getProjectID() const override;
     juce::String getName() const override;
     juce::String getDescription() const override;
     const juce::File& getProjectFile() const noexcept override;
@@ -63,7 +63,7 @@ public:
     bool removeProjectItem (const ProjectItemRef&, bool deleteSourceMaterial) override;
     void moveProjectItem (int from, int to) override;
     ProjectItem::Ptr createNewEdit() override;
-    void redirectIDsFromProject (int oldProjId, int newProjId) override;
+    void redirectIDsFromProject (ProjectID oldProjId, ProjectID newProjId) override;
 
     //==============================================================================
     void mergeArchiveContents (const juce::File&) override;

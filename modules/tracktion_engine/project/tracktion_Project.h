@@ -72,10 +72,11 @@ public:
     /** Returns true if this is a temporary project (won't appear in recent projects). */
     bool isTemporary() const;
 
-    /** Returns the numeric project ID.
-        Always 0 for folder-based projects.
+    /** Returns the project ID.
+        File-based: the persisted random ID.
+        Folder-based: a hash of the folder path.
     */
-    int getProjectID() const;
+    ProjectID getProjectID() const;
 
     /** Returns the project name.
         Folder-based projects return the folder name.
@@ -214,7 +215,7 @@ public:
     /** Tells all exportables in all edits to remap references from oldProjId to newProjId.
         No-op for folder-based projects.
     */
-    void redirectIDsFromProject (int oldProjId, int newProjId);
+    void redirectIDsFromProject (ProjectID oldProjId, ProjectID newProjId);
 
     //==============================================================================
     /** General enum for requests that have a project setting and so can return

@@ -54,7 +54,7 @@ public:
     /** Returns the ID of the Project
         @see Project::getProjectId.
     */
-    int getProjectID() const noexcept;
+    ProjectID getProjectID() const noexcept;
 
     /** Returns the ProjectItemID if this ref is ID-based, otherwise invalid. */
     ProjectItemID getProjectItemID() const noexcept;

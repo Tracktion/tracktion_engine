@@ -44,7 +44,7 @@ juce::File SourceFileReference::findFileFromString (Edit& edit, const juce::Stri
 
     ProjectItemRef ref (sourceDescription);
 
-    if (ref.isValid())
+    if (ref.isProjectItemID())
     {
         if (auto projectItem = edit.engine.getProjectManager().getProjectItem (ref))
             return projectItem->getSourceFile();
@@ -66,7 +66,7 @@ juce::File SourceFileReference::getFile() const
 
 bool SourceFileReference::isUsingProjectReference() const
 {
-    return getSourceProjectItemRef().isValid();
+    return getSourceProjectItemRef().isProjectItemID();
 }
 
 ProjectItemRef SourceFileReference::getSourceProjectItemRef() const
@@ -80,7 +80,7 @@ ProjectItem::Ptr SourceFileReference::getSourceProjectItem() const
     jassert (source.get() == state[source.getPropertyID()].toString());
     ProjectItemRef ref (source.get());
 
-    if (ref.isValid())
+    if (ref.isProjectItemID())
         return edit.engine.getProjectManager().getProjectItem (ref);
 
     return {};

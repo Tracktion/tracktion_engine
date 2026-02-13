@@ -286,7 +286,7 @@ void TemporaryFileManager::purgeOrphanEditTempFolders (ProjectManager& pm)
 
                 auto pp = pm.getProject (itemID.getProjectID());
 
-                if (itemID.getProjectID() == 0)
+                if (! itemID.getProjectID().isValid())
                     reasonsForDeletion.add ("Invalid project ID");
                 else if (pp == nullptr)
                     reasonsForDeletion.add ("Can't find project");

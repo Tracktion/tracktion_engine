@@ -59,7 +59,7 @@ std::shared_ptr<EditLoader::Handle> EditLoader::loadEdit (Edit::Options editOpti
                                           auto id = ProjectItemID::fromProperty (opts.editState, IDs::projectID);
 
                                           if (! id.isValid())
-                                              id = ProjectItemID::createNewID (0);
+                                              id = ProjectItemID::createNewID (ProjectID{});
 
                                           opts.editProjectItemID = id;
                                           completionCallback (Edit::createEdit (std::move (opts)));
@@ -113,7 +113,7 @@ std::shared_ptr<EditLoader::Handle> EditLoader::loadEdit (Engine& engine, juce::
                                           auto id = ProjectItemID::fromProperty (opts.editState, IDs::projectID);
 
                                           if (! id.isValid())
-                                              id = ProjectItemID::createNewID (0);
+                                              id = ProjectItemID::createNewID (ProjectID{});
 
                                           opts.editProjectItemID = id;
 

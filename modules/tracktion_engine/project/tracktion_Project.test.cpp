@@ -165,8 +165,8 @@ TEST_SUITE ("tracktion_engine")
         // getName — folder name
         CHECK (project->getName() == "test_folder_project");
 
-        // getProjectID — always 0
-        CHECK (project->getProjectID() == 0);
+        // getProjectID — folder-based uses hash of folder path
+        CHECK (project->getProjectID().isValid());
 
         // save — always returns true
         CHECK (project->save());
@@ -201,8 +201,8 @@ TEST_SUITE ("tracktion_engine")
         CHECK (editItem->getProject() == project);
 
         // ProjectItemID should be invalid for folder-backed items
-        CHECK_FALSE (wavItem->getProjectItemRef().isValid());
-        CHECK_FALSE (editItem->getProjectItemRef().isValid());
+        CHECK_FALSE (wavItem->getProjectItemRef().isProjectItemID());
+        CHECK_FALSE (editItem->getProjectItemRef().isProjectItemID());
 
         // Category: edit in root should be Category::edit
         CHECK (editItem->getCategory() == ProjectItem::Category::edit);
@@ -606,7 +606,7 @@ TEST_SUITE ("tracktion_engine")
 
         REQUIRE (fileProject != nullptr);
         CHECK (fileProject->isValid());
-        CHECK (fileProject->getProjectID() != 0);
+        CHECK (fileProject->getProjectID().isValid());
         CHECK (fileProject->getProjectFile() == projectFile);
 
         // === Create a folder-based project ===
@@ -618,7 +618,7 @@ TEST_SUITE ("tracktion_engine")
 
         REQUIRE (folderProject != nullptr);
         CHECK (folderProject->isValid());
-        CHECK (folderProject->getProjectID() == 0);
+        CHECK (folderProject->getProjectID().isValid());
         CHECK (folderProject->getProjectFile() == projectFolder);
 
         // === Add both to the project list ===
@@ -664,9 +664,9 @@ TEST_SUITE ("tracktion_engine")
         auto foundById = pm.findProjectWithId (activeFolder, fileId);
         CHECK (foundById != nullptr);
 
-        // Folder-based project has ID 0 — findProjectWithId matches on ID equality
-        auto foundByZeroId = pm.findProjectWithId (activeFolder, 0);
-        CHECK (foundByZeroId != nullptr);
+        // Folder-based project has a hash-based ID — findProjectWithId matches on ID equality
+        auto foundByFolderId = pm.findProjectWithId (activeFolder, folderProject->getProjectID());
+        CHECK (foundByFolderId != nullptr);
 
         cleanup();
     }
@@ -789,7 +789,7 @@ TEST_SUITE ("tracktion_engine")
             {
                 CHECK_EQ (obj->getProperty ("name").toString().toStdString(), oldName.toStdString());
                 CHECK_EQ (obj->getProperty ("description").toString().toStdString(), oldDesc.toStdString());
-                CHECK_EQ ((int) obj->getProperty ("projectId"), oldProjectId);
+                CHECK_EQ ((int) obj->getProperty ("projectId"), oldProjectId.toInt());
             }
         }
 

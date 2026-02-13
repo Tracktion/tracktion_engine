@@ -85,10 +85,10 @@ public:
     */
     Project::Ptr getProjectFrom (const juce::ValueTree&, bool createIfNotFound = true);
 
-    /** Looks up a project by its numeric ID.
+    /** Looks up a project by its ID.
         Checks open projects first, then searches the entire folder tree.
     */
-    Project::Ptr getProject (int projectID);
+    Project::Ptr getProject (ProjectID projectID);
 
     /** Looks up a project by its file or folder path.
         Checks open projects first, then searches the entire folder tree.
@@ -147,7 +147,7 @@ public:
     juce::ValueTree findFolderContaining (const Project&) const;
 
     /** Returns the parent ValueTree folder node containing the project with the given ID. */
-    juce::ValueTree findFolderContaining (int projectId) const;
+    juce::ValueTree findFolderContaining (ProjectID projectId) const;
 
     /** Returns the PROJECT ValueTree node for the given project. */
     juce::ValueTree getFolderItemFor (const Project&) const;
@@ -191,8 +191,8 @@ public:
                                                juce::ValueTree folderToAddTo,
                                                ProjectType projectType /*= ProjectType::fileBased*/);
 
-    /** Recursively searches a folder subtree for a project matching the given numeric ID. */
-    Project::Ptr findProjectWithId (const juce::ValueTree& folder, int pid);
+    /** Recursively searches a folder subtree for a project matching the given ID. */
+    Project::Ptr findProjectWithId (const juce::ValueTree& folder, ProjectID pid);
 
     /** Recursively searches a folder subtree for a project matching the given file path. */
     Project::Ptr findProjectWithFile (const juce::ValueTree& folder, const juce::File&);

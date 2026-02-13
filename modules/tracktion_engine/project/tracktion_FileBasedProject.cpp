@@ -40,7 +40,7 @@ void FileBasedProject::load()
 {
     CRASH_TRACER
     readOnly = ! (file.hasWriteAccess() && ! file.isDirectory());
-    projectId = 0;
+    projectId = {};
 
     auto in = getInputStream();
 
@@ -70,7 +70,7 @@ void FileBasedProject::load()
     else
     {
         stream = nullptr;
-        projectId = 0;
+        projectId = {};
     }
 
     hasChanged = false;
@@ -96,7 +96,7 @@ bool FileBasedProject::readProjectHeader (juce::InputStream& in, bool clearObjec
 
     if (strncmp (n, fileBasedProjectMagicNumberV1, 4) == 0)
     {
-        projectId = in.readInt();
+        projectId = ProjectID (in.readInt());
         objectOffset = in.readInt();
         indexOffset = in.readInt();
 
@@ -214,7 +214,7 @@ void FileBasedProject::saveTo (juce::FileOutputStream& out)
         return;
 
     out.write (fileBasedProjectMagicNumberV1, 4);
-    out.writeInt (getProjectID());
+    out.writeInt (getProjectID().toInt());
     out.writeInt (0);
     out.writeInt (0);
     out.writeInt (properties.size());
@@ -267,7 +267,7 @@ void FileBasedProject::saveTo (juce::FileOutputStream& out)
 //==============================================================================
 bool FileBasedProject::isValid() const
 {
-    return projectId != 0;
+    return projectId.isValid();
 }
 
 bool FileBasedProject::isReadOnly() const
@@ -275,7 +275,7 @@ bool FileBasedProject::isReadOnly() const
     return readOnly;
 }
 
-int FileBasedProject::getProjectID() const
+ProjectID FileBasedProject::getProjectID() const
 {
     return projectId;
 }
@@ -333,19 +333,19 @@ void FileBasedProject::setDescription (const juce::String& newDesc)
 
 void FileBasedProject::createNewProjectId()
 {
-    auto newID = juce::Random::getSystemRandom().nextInt (9999999);
+    auto newID = ProjectID (juce::Random::getSystemRandom().nextInt (9999999));
 
     while (owner.projectManager.getProject (newID))
     {
         jassertfalse;
-        newID = juce::Random::getSystemRandom().nextInt (9999999);
+        newID = ProjectID (juce::Random::getSystemRandom().nextInt (9999999));
     }
 
     projectId = newID;
     hasChanged = true;
 }
 
-void FileBasedProject::redirectIDsFromProject (int oldProjId, int newProjId)
+void FileBasedProject::redirectIDsFromProject (ProjectID oldProjId, ProjectID newProjId)
 {
     for (int k = 0; k < getNumProjectItems(); ++k)
     {
