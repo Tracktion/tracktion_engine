@@ -257,7 +257,7 @@ public:
     juce::File getCurrentCompFile() const;
 
     //==============================================================================
-    HashCode getBaseTakeHash (int takeIndex) const override    { return getProjectItemIDForTake (takeIndex).getItemID(); }
+    HashCode getBaseTakeHash (int takeIndex) const override    { return getProjectItemRefForTake (takeIndex).toString().hashCode64(); }
     double getTakeLength (int takeIndex) const override;
     double getOffset() const override;
     double getLoopLength() const override;
@@ -300,8 +300,8 @@ private:
     struct CompUpdater;
     std::unique_ptr<CompUpdater> compUpdater;
 
-    void setProjectItemIDForTake (int takeIndex, ProjectItemID) const;
-    ProjectItemID getProjectItemIDForTake (int takeIndex) const;
+    void setProjectItemIDForTake (int takeIndex, ProjectItemRef) const;
+    ProjectItemRef getProjectItemRefForTake (int takeIndex) const;
     AudioFile getSourceFileForTake (int takeIndex) const;
     juce::File getDefaultTakeFile (int index) const;
     ProjectItem::Ptr getOrCreateProjectItemForTake (juce::ValueTree& takeTree);

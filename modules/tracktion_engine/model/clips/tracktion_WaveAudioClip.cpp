@@ -182,7 +182,7 @@ void WaveAudioClip::reassignReferencedItem (const ReferencedItem& item,
 }
 
 //==============================================================================
-void WaveAudioClip::addTake (ProjectItemID id)
+void WaveAudioClip::addTake (ProjectItemRef id)
 {
     auto um = getUndoManager();
     auto takesTree = state.getOrCreateChildWithName (IDs::TAKES, um);
@@ -215,15 +215,15 @@ int WaveAudioClip::getNumTakes (bool includeComps)
     return hasAnyTakes() ? getCompManager().getNumTakes() : 0;
 }
 
-juce::Array<ProjectItemID> WaveAudioClip::getTakes() const
+juce::Array<ProjectItemRef> WaveAudioClip::getTakes() const
 {
-    juce::Array<ProjectItemID> takes;
+    juce::Array<ProjectItemRef> takes;
 
     auto takesTree = state.getChildWithName (IDs::TAKES);
 
     for (auto t : takesTree)
         if (t.hasProperty (IDs::source))
-            takes.add (ProjectItemID::fromProperty (t, IDs::source));
+            takes.add (ProjectItemRef (t.getProperty (IDs::source).toString()));
 
     return takes;
 }
@@ -245,7 +245,7 @@ int WaveAudioClip::getCurrentTake() const
         currentTakeIndex = -1;
 
         auto takesTree = getTakesTree();
-        auto pid = sourceFileReference.getSourceProjectItemID().toString();
+        auto pid = sourceFileReference.getSourceProjectItemRef().toString();
 
         for (int i = takesTree.getNumChildren(); --i >= 0;)
         {
@@ -411,17 +411,17 @@ void WaveAudioClip::deleteAllUnusedTakesConfirmingWithUser (bool deleteSourceFil
         deleteAllUnusedTakes (deleteSourceFiles);
 }
 
-static bool isTakeInUse (const WaveAudioClip& clip, ProjectItemID takeProjectItemID)
+static bool isTakeInUse (const WaveAudioClip& clip, const ProjectItemRef& takeRef)
 {
     for (auto t : getClipTracks (clip.edit))
     {
         for (auto& c : t->getClips())
         {
-            if (c->getSourceFileReference().getSourceProjectItemID() == takeProjectItemID)
+            if (c->getSourceFileReference().getSourceProjectItemRef() == takeRef)
                 return true;
 
             if (auto wac = dynamic_cast<WaveAudioClip*> (c))
-                if (wac != &clip && wac->getTakes().contains (takeProjectItemID))
+                if (wac != &clip && wac->getTakes().contains (takeRef))
                     return true;
         }
     }
@@ -440,19 +440,19 @@ void WaveAudioClip::deleteAllUnusedTakes (bool deleteSourceFiles)
     {
         for (int i = takes.size(); --i >= 0;)
         {
-            auto takeProjectItemID = takes.getReference (i);
+            auto takeRef = takes.getReference (i);
 
-            if (! isTakeInUse (*this, takeProjectItemID))
+            if (! isTakeInUse (*this, takeRef))
             {
                 bool removedOk = ! deleteSourceFiles
-                                  || proj->getProjectItemFor (takeProjectItemID) == nullptr
-                                  || proj->removeProjectItem (takeProjectItemID, true);
+                                  || proj->getProjectItemFor (takeRef) == nullptr
+                                  || proj->removeProjectItem (takeRef, true);
 
                 if (removedOk)
                 {
                     for (auto child : state)
                     {
-                        if (ProjectItemID::fromProperty (child, IDs::source) == takeProjectItemID)
+                        if (ProjectItemRef (child.getProperty (IDs::source).toString()) == takeRef)
                         {
                             state.removeChild (child, getUndoManager());
                             break;

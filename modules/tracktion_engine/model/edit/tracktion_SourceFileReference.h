@@ -29,7 +29,7 @@ public:
 
     juce::File getFile() const;
     bool isUsingProjectReference() const;
-    ProjectItemID getSourceProjectItemID() const;
+    ProjectItemRef getSourceProjectItemRef() const;
     ProjectItem::Ptr getSourceProjectItem() const;
 
     void setToDirectFileReference (const juce::File&, bool useRelativePath);
@@ -41,7 +41,7 @@ public:
     */
     void setToProjectFileReference (const juce::File&, bool updateProjectItem);
 
-    void setToProjectFileReference (ProjectItemID);
+    void setToProjectFileReference (ProjectItemRef);
 
     static juce::String findPathFromFile (Edit&, const juce::File&, bool useRelativePath);
     static juce::File findFileFromString (Edit&, const juce::String& source);

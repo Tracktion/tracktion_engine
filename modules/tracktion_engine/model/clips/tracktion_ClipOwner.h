@@ -108,7 +108,7 @@ juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (ClipOwner&, const
                                                                ClipPosition, DeleteExistingClips);
 
 /** Inserts a new WaveAudioClip into the ClipOwner's clip list. */
-juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (ClipOwner&, const juce::String& name, ProjectItemID sourceID,
+juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (ClipOwner&, const juce::String& name, ProjectItemRef sourceID,
                                                                ClipPosition, DeleteExistingClips);
 
 /** Inserts a new MidiClip into the ClipOwner's clip list. */
@@ -118,7 +118,7 @@ juce::ReferenceCountedObjectPtr<MidiClip> insertMIDIClip (ClipOwner&, const juce
 juce::ReferenceCountedObjectPtr<MidiClip> insertMIDIClip (ClipOwner&, TimeRange);
 
 /** Inserts a new EditClip into the ClipOwner's clip list. */
-juce::ReferenceCountedObjectPtr<EditClip> insertEditClip (ClipOwner&, TimeRange, ProjectItemID);
+juce::ReferenceCountedObjectPtr<EditClip> insertEditClip (ClipOwner&, TimeRange, ProjectItemRef);
 
 //==============================================================================
 /** Removes a region of a ClipOwner and returns any newly created clips. */

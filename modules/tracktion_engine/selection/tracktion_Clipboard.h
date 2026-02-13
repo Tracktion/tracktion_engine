@@ -58,7 +58,7 @@ public:
 
         struct ItemInfo
         {
-            ProjectItemID itemID;
+            ProjectItemRef itemID;
             TimeRange range;
         };
 

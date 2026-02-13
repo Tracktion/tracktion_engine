@@ -31,7 +31,7 @@ public:
     /** Creates a job based on a set of RenderOptions properties and a source Edit ProjectItemID.
         If this method is used the Edit will be created on the background render thread and be owned by the job.
     */
-    static Ptr getOrCreateRenderJob (Engine&, const AudioFile& destFile, const RenderOptions&, ProjectItemID itemID,
+    static Ptr getOrCreateRenderJob (Engine&, const AudioFile& destFile, const RenderOptions&, ProjectItemRef itemID,
                                      bool silenceOnBackup, bool reverse);
 
     //==============================================================================
@@ -83,7 +83,7 @@ private:
     };
 
     RenderOptions renderOptions;
-    const ProjectItemID itemID;
+    const ProjectItemRef itemRef;
 
     Renderer::Parameters params;
     juce::OptionalScopedPointer<Edit> editDeleter;
@@ -103,7 +103,7 @@ private:
     //==============================================================================
     EditRenderJob (Engine&, const Renderer::Parameters&, bool deleteEdit, bool silenceOnBackup, bool reverse);
 
-    EditRenderJob (Engine&, const AudioFile& destFile, const RenderOptions&, ProjectItemID itemID,
+    EditRenderJob (Engine&, const AudioFile& destFile, const RenderOptions&, ProjectItemRef itemRef,
                    bool silenceOnBackup, bool reverse);
 
     //==============================================================================

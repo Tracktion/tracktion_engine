@@ -816,7 +816,7 @@ void AudioFileManager::removeFile (HashCode hash)
         knownFiles.erase (f);
 }
 
-AudioFile AudioFileManager::getAudioFile (ProjectItemID sourceID)
+AudioFile AudioFileManager::getAudioFile (ProjectItemRef sourceID)
 {
     return AudioFile (engine, engine.getProjectManager().findSourceFile (sourceID));
 }

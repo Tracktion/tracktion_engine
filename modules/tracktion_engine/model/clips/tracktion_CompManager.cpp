@@ -629,16 +629,16 @@ void CompFactory::removeComp (CompManager& cm)
 //==============================================================================
 struct WaveCompManager::CompRenderContext
 {
-    CompRenderContext (Engine& e, const juce::Array<ProjectItemID> takesIDs_, const juce::ValueTree& takeTree_, int activeTakeIndex_,
+    CompRenderContext (Engine& e, const juce::Array<ProjectItemRef> takesRefs_, const juce::ValueTree& takeTree_, int activeTakeIndex_,
                        double sourceTimeMultiplier_, double offset_, double maxLength_, double xFade)
-        : engine (e), takesIDs (takesIDs_), takeTree (takeTree_.createCopy()),
+        : engine (e), takesRefs (takesRefs_), takeTree (takeTree_.createCopy()),
           activeTakeIndex (activeTakeIndex_),
           sourceTimeMultiplier (sourceTimeMultiplier_), offset (offset_), maxLength (maxLength_), crossfadeLength (xFade)
     {
     }
 
     Engine& engine;
-    juce::Array<ProjectItemID> takesIDs;
+    juce::Array<ProjectItemRef> takesRefs;
     const juce::ValueTree takeTree;
     const int activeTakeIndex;
     const double sourceTimeMultiplier, offset, maxLength, crossfadeLength;
@@ -881,10 +881,10 @@ void WaveCompManager::flattenTake (int takeIndex, bool deleteSourceFiles)
 
         // Keep a local reference here to avoid re-creating it during the clear process
         CompManager::Ptr ptr = &clip.getCompManager();
-        clip.getTakes()[takeIndex] = item->getID();
+        setProjectItemIDForTake (takeIndex, item->getProjectItemRef());
         clip.setCurrentTake (takeIndex);
         clip.deleteAllUnusedTakes (deleteSourceFiles);
-        clip.getSourceFileReference().setToProjectFileReference (item->getID());
+        clip.getSourceFileReference().setToProjectFileReference (item->getProjectItemRef());
         clip.setShowingTakes (false);
     }
     else
@@ -911,11 +911,8 @@ juce::ValueTree WaveCompManager::pasteComp (const juce::ValueTree& compTree)
 }
 
 //==============================================================================
-void WaveCompManager::setProjectItemIDForTake (int takeIndex, ProjectItemID newID) const
+void WaveCompManager::setProjectItemIDForTake (int takeIndex, ProjectItemRef newID) const
 {
-    if (takeIndex < clip.getTakes().size())
-        clip.getTakes()[takeIndex] = newID;
-
     auto takeTree = takesTree.getChild (takeIndex);
     jassert (takeTree.isValid());
 
@@ -923,7 +920,7 @@ void WaveCompManager::setProjectItemIDForTake (int takeIndex, ProjectItemID newI
         takeTree.setProperty (IDs::source, newID.toString(), getUndoManager());
 }
 
-ProjectItemID WaveCompManager::getProjectItemIDForTake (int takeIndex) const
+ProjectItemRef WaveCompManager::getProjectItemRefForTake (int takeIndex) const
 {
     return clip.getTakes()[takeIndex];
 }
@@ -931,7 +928,7 @@ ProjectItemID WaveCompManager::getProjectItemIDForTake (int takeIndex) const
 AudioFile WaveCompManager::getSourceFileForTake (int takeIndex) const
 {
     auto& e = clip.edit.engine;
-    return AudioFile (e, e.getProjectManager().findSourceFile (getProjectItemIDForTake (takeIndex)));
+    return AudioFile (e, e.getProjectManager().findSourceFile (getProjectItemRefForTake (takeIndex)));
 }
 
 juce::File WaveCompManager::getDefaultTakeFile (int takeIndex) const
@@ -971,7 +968,7 @@ ProjectItem::Ptr WaveCompManager::getOrCreateProjectItemForTake (juce::ValueTree
     {
         auto takeIndex = takeTree.getParent().indexOf (takeTree);
 
-        if (auto item = project->getProjectItemFor (getProjectItemIDForTake (takeIndex)))
+        if (auto item = project->getProjectItemFor (getProjectItemRefForTake (takeIndex)))
             return item;
 
         auto destCompFile = getDefaultTakeFile (takeIndex);
@@ -1043,12 +1040,12 @@ bool WaveCompManager::renderTake (CompRenderContext& context, Edit& edit, AudioF
         auto takeIndex = (int) compSegment.getProperty (IDs::takeIndex);
         auto endTime = double (compSegment.getProperty (IDs::endTime)) / timeRatio;
 
-        if (juce::isPositiveAndBelow (takeIndex, context.takesIDs.size()))
+        if (juce::isPositiveAndBelow (takeIndex, context.takesRefs.size()))
         {
-            const ProjectItemID takeID (context.takesIDs[takeIndex]);
-            jassert (takeID.isValid());
+            const auto takeRef = context.takesRefs[takeIndex];
+            jassert (takeRef.isValid());
 
-            auto takeFile = AudioFile (context.engine, context.engine.getProjectManager().findSourceFile (takeID));
+            auto takeFile = AudioFile (context.engine, context.engine.getProjectManager().findSourceFile (takeRef));
 
             auto node = tracktion::graph::makeNode<WaveNode> (takeFile, totalRange, TimeDuration(), TimeRange(), LiveClipLevel(), 1.0,
                                                               juce::AudioChannelSet::canonicalChannelSet (takeFile.getInfo().numChannels),
@@ -1191,9 +1188,9 @@ private:
         // just use the first existing take as the basis for the comp render
         juce::File takeFile;
 
-        for (auto& takeID : context->takesIDs)
+        for (auto& takeRef : context->takesRefs)
         {
-            takeFile = engine.getProjectManager().findSourceFile (takeID);
+            takeFile = engine.getProjectManager().findSourceFile (takeRef);
 
             if (takeFile.existsAsFile())
                 break;

@@ -857,7 +857,7 @@ public:
                             playInStopEnabled;                  ///< Whether the audio engine should run when playback is stopped.
 
     juce::CachedValue<float> clickTrackGain;        ///< The gain of the click track.
-    juce::CachedValue<ProjectItemID> videoSource;   ///< The ProjectItemID of the video source.
+    juce::CachedValue<ProjectItemRef> videoSource;   ///< The ProjectItemRef of the video source.
 
     juce::ValueTree state { IDs::EDIT };     ///< The ValueTree of the Edit state.
     juce::ValueTree inputDeviceState;        ///< The ValueTree of the input device states.

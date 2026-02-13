@@ -108,7 +108,12 @@ public:
     void unpackArchiveAndAddToList (const juce::File& archiveFile, juce::ValueTree folder);
 
     //==============================================================================
-    /** Finds the project containing the given item ID and returns the matching ProjectItem. */
+    /** Finds the project containing the given ref and returns the matching ProjectItem. */
+    ProjectItem::Ptr getProjectItem (const ProjectItemRef&);
+
+    /** Finds the project containing the given item ID and returns the matching ProjectItem.
+        Prefer the ProjectItemRef overload for new code.
+    */
     ProjectItem::Ptr getProjectItem (ProjectItemID);
 
     /** Returns the ProjectItem for the given Edit's project item ID. */
@@ -117,7 +122,12 @@ public:
     /** Returns the Project that owns the given Edit (may return nullptr). */
     Project::Ptr getProject (const Edit&);
 
-    /** Returns the source file for the given project item ID. */
+    /** Returns the source file for the given project item ref. */
+    juce::File findSourceFile (const ProjectItemRef&);
+
+    /** Returns the source file for the given project item ID.
+        Prefer the ProjectItemRef overload for new code.
+    */
     juce::File findSourceFile (ProjectItemID);
 
     //==============================================================================

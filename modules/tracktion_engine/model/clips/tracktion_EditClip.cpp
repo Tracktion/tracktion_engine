@@ -11,7 +11,7 @@
 namespace tracktion { inline namespace engine
 {
 
-EditClip::EditClip (const juce::ValueTree& v, EditItemID clipID, ClipOwner& targetParent, ProjectItemID sourceEditID)
+EditClip::EditClip (const juce::ValueTree& v, EditItemID clipID, ClipOwner& targetParent, ProjectItemRef sourceEditID)
     : AudioClipBase (v, clipID, Type::edit, targetParent),
       waveInfo (getAudioFile().getInfo())
 {
@@ -113,7 +113,7 @@ RenderManager::Job::Ptr EditClip::getRenderJob (const AudioFile& destFile)
 
     auto j = EditRenderJob::getOrCreateRenderJob (edit.engine,
                                                   destFile, *renderOptions,
-                                                  sourceFileReference.getSourceProjectItemID(),
+                                                  sourceFileReference.getSourceProjectItemRef(),
                                                   true, getIsReversed());
     j->setName (TRANS("Creating Edit Clip") + ": " + getName());
 
@@ -154,7 +154,7 @@ juce::String EditClip::getRenderMessage()
 
 juce::String EditClip::getClipMessage()
 {
-    if (! sourceFileReference.getSourceProjectItemID().isValid())
+    if (! sourceFileReference.getSourceProjectItemRef().isValid())
         return TRANS("No source set");
 
     if (renderOptions->getNumTracks() == 0)
@@ -174,17 +174,17 @@ void EditClip::sourceMediaChanged()
 
     const juce::ScopedValueSetter<bool> svs (sourceMediaReEntrancyCheck, true);
 
-    auto newID = sourceFileReference.getSourceProjectItemID();
+    auto newRef = sourceFileReference.getSourceProjectItemRef();
 
     // Check this here because when any ProjectItem in this project gets changed the Edit will call
     // sendSourceFileUpdate bypassing the usual check in setSourceProjectItemID
-    if (isInitialised && lastSourceId == newID)
+    if (isInitialised && lastSourceRef == newRef)
         return;
 
-    const bool resetTracksToDefault = (! edit.isLoading() && ! lastSourceId.isValid());
+    const bool resetTracksToDefault = (! edit.isLoading() && ! lastSourceRef.isValid());
 
-    lastSourceId = newID;
-    editSnapshot = EditSnapshot::getEditSnapshot (edit.engine, newID);
+    lastSourceRef = newRef;
+    editSnapshot = EditSnapshot::getEditSnapshot (edit.engine, newRef);
     const bool invalidSource = editSnapshot == nullptr || ! editSnapshot->isValid();
 
     if (invalidSource)

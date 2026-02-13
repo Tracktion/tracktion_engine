@@ -21,7 +21,7 @@ class EditClip    : public AudioClipBase,
 {
 public:
     //==============================================================================
-    EditClip (const juce::ValueTree&, EditItemID, ClipOwner&, ProjectItemID sourceEdit);
+    EditClip (const juce::ValueTree&, EditItemID, ClipOwner&, ProjectItemRef sourceEdit);
     ~EditClip() override;
 
     using Ptr = juce::ReferenceCountedObjectPtr<EditClip>;
@@ -87,7 +87,7 @@ private:
     AsyncCaller sourceIdUpdater;
 
     //==============================================================================
-    ProjectItemID lastSourceId;
+    ProjectItemRef lastSourceRef;
     EditSnapshot::Ptr editSnapshot;
     juce::ReferenceCountedArray<EditSnapshot> referencedEdits;
 

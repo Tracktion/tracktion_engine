@@ -1513,7 +1513,7 @@ juce::Array<Exportable::ReferencedItem> AudioClipBase::getReferencedItems()
     }
     else
     {
-        item.itemRef = ProjectItemID (sourceFileReference.source.get());
+        item.itemRef = ProjectItemRef (sourceFileReference.source.get());
         results.add (item);
     }
 
@@ -1562,7 +1562,7 @@ void AudioClipBase::reassignReferencedItem (const ReferencedItem& item,
     }
 }
 
-juce::Array<ProjectItemID> AudioClipBase::getTakes() const
+juce::Array<ProjectItemRef> AudioClipBase::getTakes() const
 {
     jassert (! hasAnyTakes());
     return {};

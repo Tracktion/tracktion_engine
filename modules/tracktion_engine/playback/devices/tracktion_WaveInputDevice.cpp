@@ -171,7 +171,7 @@ struct RetrospectiveRecordBuffer
     void syncToEdit (Edit& edit, EditPlaybackContext& context, double streamTime, int numSamplesIn)
     {
         const juce::SpinLock::ScopedLockType sl (editInfoLock);
-        auto& pei = editInfo[edit.getProjectItemRef().getProjectItemID()];
+        auto& pei = editInfo[edit.getProjectItemRef()];
 
         if (context.isPlaying())
         {
@@ -187,7 +187,7 @@ struct RetrospectiveRecordBuffer
     bool wasRecentlyPlaying (Edit& edit)
     {
         const juce::SpinLock::ScopedLockType sl (editInfoLock);
-        auto& pei = editInfo[edit.getProjectItemRef().getProjectItemID()];
+        auto& pei = editInfo[edit.getProjectItemRef()];
 
         return (pei.lastEditTime >= 0s && pei.pausedTime < 20s);
     }
@@ -195,7 +195,7 @@ struct RetrospectiveRecordBuffer
     void removeEditSync (Edit& edit)
     {
         const juce::SpinLock::ScopedLockType sl (editInfoLock);
-        auto itr = editInfo.find (edit.getProjectItemRef().getProjectItemID());
+        auto itr = editInfo.find (edit.getProjectItemRef());
 
         if (itr != editInfo.end())
             editInfo.erase (itr);
@@ -216,7 +216,7 @@ struct RetrospectiveRecordBuffer
         TimeDuration pausedTime;
     };
 
-    std::map<ProjectItemID, PerEditInfo> editInfo;
+    std::map<ProjectItemRef, PerEditInfo> editInfo;
     juce::SpinLock editInfoLock;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RetrospectiveRecordBuffer)
@@ -1103,7 +1103,7 @@ public:
                 }
                 else
                 {
-                    auto& pei = recordBuffer->editInfo[edit.getProjectItemRef().getProjectItemID()];
+                    auto& pei = recordBuffer->editInfo[edit.getProjectItemRef()];
                     start = pei.lastEditTime + pei.pausedTime - recordedLength + adjust;
                     pei.lastEditTime = -1s;
                 }

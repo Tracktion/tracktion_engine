@@ -54,10 +54,12 @@ struct EditSnapshot::ListHolder
 };
 
 //==============================================================================
-EditSnapshot::Ptr EditSnapshot::getEditSnapshot (Engine& engine, ProjectItemID itemID)
+EditSnapshot::Ptr EditSnapshot::getEditSnapshot (Engine& engine, ProjectItemRef itemRef)
 {
     juce::SharedResourcePointer<EditSnapshotList> list;
     const juce::ScopedLock sl (list->getLock());
+
+    auto itemID = itemRef.getProjectItemID();
 
     if (itemID.isInvalid())
         return {};
@@ -249,8 +251,8 @@ void EditSnapshot::clear()
     trackNames.clearQuick();
     audioTracks.clear();
     trackIDs.clear();
-    editClipIDs.clear();
-    clipSourceIDs.clear();
+    editClipRefs.clear();
+    clipSourceRefs.clear();
     length = 0.0;
     markIn = 0.0;
     markOut = 0.0;
@@ -267,7 +269,7 @@ void EditSnapshot::addEditClips (const juce::XmlElement& track)
 {
     for (auto clip : track.getChildIterator())
         if (clip->hasTagName (IDs::EDITCLIP))
-            editClipIDs.add (ProjectItemID (clip->getStringAttribute ("source")));
+            editClipRefs.add (ProjectItemRef (clip->getStringAttribute ("source")));
 }
 
 void EditSnapshot::addClipSources (const juce::XmlElement& track)
@@ -277,7 +279,7 @@ void EditSnapshot::addClipSources (const juce::XmlElement& track)
         auto sourceID = clip->getStringAttribute ("source");
 
         if (sourceID.isNotEmpty())
-            clipSourceIDs.add (ProjectItemID (sourceID));
+            clipSourceRefs.add (ProjectItemRef (sourceID));
     }
 }
 

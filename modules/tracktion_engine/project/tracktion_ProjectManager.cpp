@@ -395,17 +395,27 @@ void ProjectManager::updateProjectFile (Project& p, const juce::File& f)
         result.setProperty (IDs::file, f.getFullPathName(), nullptr);
 }
 
-ProjectItem::Ptr ProjectManager::getProjectItem (ProjectItemID id)
+ProjectItem::Ptr ProjectManager::getProjectItem (const ProjectItemRef& ref)
 {
-    if (auto p = getProject (id.getProjectID()))
-        return p->getProjectItemFor (id);
+    if (auto pid = ref.getProjectItemID(); pid.isValid())
+        if (auto p = getProject (pid.getProjectID()))
+            return p->getProjectItemFor (ref);
+
+    // For path-based refs, try the owner project
+    if (auto p = ref.getProject())
+        return p->getProjectItemFor (ref);
 
     return {};
 }
 
+ProjectItem::Ptr ProjectManager::getProjectItem (ProjectItemID id)
+{
+    return getProjectItem (ProjectItemRef (id));
+}
+
 ProjectItem::Ptr ProjectManager::getProjectItem (const Edit& ed)
 {
-    return getProjectItem (ed.getProjectItemRef().getProjectItemID());
+    return getProjectItem (ed.getProjectItemRef());
 }
 
 Project::Ptr ProjectManager::getProject (const Edit& ed)
@@ -421,12 +431,17 @@ Project::Ptr ProjectManager::getProject (const Edit& ed)
     return {};
 }
 
-juce::File ProjectManager::findSourceFile (ProjectItemID id)
+juce::File ProjectManager::findSourceFile (const ProjectItemRef& ref)
 {
-    if (auto i = getProjectItem (id))
+    if (auto i = getProjectItem (ref))
         return i->getSourceFile();
 
     return {};
+}
+
+juce::File ProjectManager::findSourceFile (ProjectItemID id)
+{
+    return findSourceFile (ProjectItemRef (id));
 }
 
 void ProjectManager::saveAllProjects()

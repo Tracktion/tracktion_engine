@@ -81,7 +81,7 @@ AudioSegmentList::AudioSegmentList (AudioClipBase& acb, bool relTime, bool shoul
 
     auto anyTakesValid = [&]
     {
-        for (ProjectItemID m : clip.getTakes())
+        for (auto m : clip.getTakes())
             if (pm.findSourceFile (m).existsAsFile())
                 return true;
 
@@ -89,7 +89,7 @@ AudioSegmentList::AudioSegmentList (AudioClipBase& acb, bool relTime, bool shoul
     };
 
    #if JUCE_DEBUG
-    auto f = pm.findSourceFile (clip.getSourceFileReference().getSourceProjectItemID());
+    auto f = pm.findSourceFile (clip.getSourceFileReference().getSourceProjectItemRef());
     jassert (f == juce::File() || f == clip.getSourceFileReference().getFile());
    #endif
 

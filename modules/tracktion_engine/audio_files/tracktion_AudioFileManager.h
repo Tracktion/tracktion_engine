@@ -22,7 +22,7 @@ public:
     AudioFileManager (Engine&);
     ~AudioFileManager();
 
-    AudioFile getAudioFile (ProjectItemID);
+    AudioFile getAudioFile (ProjectItemRef);
     AudioFileInfo getInfo (const AudioFile&);
 
     void checkFileForChangesAsync (const AudioFile&);

@@ -335,7 +335,7 @@ inline bool isRecursiveEditClipPaste (const Clipboard::ProjectItems& items, Edit
 
     for (auto& item : items.itemIDs)
         if (auto source = pm.getProjectItem (item.itemID))
-            if (source->isEdit() && source->getID() == edit.getProjectItemRef().getProjectItemID())
+            if (source->isEdit() && source->getProjectItemRef() == edit.getProjectItemRef())
                 return true;
 
     return false;

@@ -1686,7 +1686,7 @@ void Edit::loadOldVideoInfo (const juce::ValueTree& videoState)
             if (auto newItem = proj->createNewItem (videoFile, ProjectItem::videoItemType(),
                                                     videoFile.getFileNameWithoutExtension(),
                                                     {}, ProjectItem::Category::video, false))
-                videoSource = newItem->getID();
+                videoSource = newItem->getProjectItemRef();
 }
 
 TimecodeDisplayFormat Edit::getTimecodeFormat() const
@@ -2706,7 +2706,7 @@ juce::File Edit::getTempDirectory (bool createIfNonExistent) const
 
     if (result == juce::File())
         result = tempDirectory = engine.getTemporaryFileManager().getTempDirectory()
-                                    .getChildFile ("edit_" + editProjectItemRef.getProjectItemID().toStringSuitableForFilename());
+                                    .getChildFile ("edit_" + editProjectItemRef.toIDForFilename());
 
     if (createIfNonExistent && ! result.createDirectory())
         TRACKTION_LOG_ERROR ("Failed to create edit temp folder: " + result.getFullPathName());
@@ -2741,7 +2741,7 @@ void Edit::setVideoFile (const juce::File& f, juce::String importDesc)
                                             importDesc, ProjectItem::Category::video, false);
 
             if (item != nullptr)
-                videoSource = item->getID();
+                videoSource = item->getProjectItemRef();
         }
     }
 }

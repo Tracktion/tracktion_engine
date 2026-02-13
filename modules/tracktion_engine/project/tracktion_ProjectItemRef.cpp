@@ -66,6 +66,19 @@ bool ProjectItemRef::isAbsolutePath() const noexcept
         && juce::File::isAbsolutePath (value);
 }
 
+int ProjectItemRef::getProjectID() const noexcept
+{
+    ProjectItemID pid (value);
+
+    if (pid.isValid())
+        return pid.getProjectID();
+
+    if (ownerProject)
+        return ownerProject->getProjectID();
+
+    return 0;
+}
+
 ProjectItemID ProjectItemRef::getProjectItemID() const noexcept
 {
     ProjectItemID pid (value);
@@ -122,5 +135,8 @@ juce::File ProjectItemRef::resolve (Engine& engine, const juce::File& projectFol
 bool ProjectItemRef::operator== (const ProjectItemRef& other) const    { return value == other.value; }
 bool ProjectItemRef::operator!= (const ProjectItemRef& other) const    { return value != other.value; }
 bool ProjectItemRef::operator<  (const ProjectItemRef& other) const    { return value <  other.value; }
+
+bool ProjectItemRef::operator== (ProjectItemID pid) const              { return value == pid.toString(); }
+bool ProjectItemRef::operator!= (ProjectItemID pid) const              { return value != pid.toString(); }
 
 }} // namespace tracktion { inline namespace engine

@@ -21,7 +21,7 @@ public:
     //==============================================================================
     using Ptr = juce::ReferenceCountedObjectPtr<EditSnapshot>;
 
-    static Ptr getEditSnapshot (Engine&, ProjectItemID);
+    static Ptr getEditSnapshot (Engine&, ProjectItemRef);
 
     //==============================================================================
     struct Marker
@@ -93,8 +93,8 @@ public:
 
     const juce::Array<Marker>& getMarkers() const                       { return markers; }
     const juce::Array<EditItemID>& getTracks() const                    { return trackIDs; }
-    const juce::Array<ProjectItemID>& getEditClips() const              { return editClipIDs; }
-    const juce::Array<ProjectItemID>& getClipsSourceIDs() const         { return clipSourceIDs; }
+    const juce::Array<ProjectItemRef>& getEditClips() const              { return editClipRefs; }
+    const juce::Array<ProjectItemRef>& getClipsSourceRefs() const       { return clipSourceRefs; }
     HashCode getHash() const                                            { return lastSaveTime.toMilliseconds(); }
 
     //==============================================================================
@@ -125,7 +125,7 @@ private:
     juce::BigInteger audioTracks, mutedTracks, soloedTracks, soloIsolatedTracks;
 
     juce::Array<EditItemID> trackIDs;
-    juce::Array<ProjectItemID> editClipIDs, clipSourceIDs;
+    juce::Array<ProjectItemRef> editClipRefs, clipSourceRefs;
     double length = 0.0, markIn = 0.0, markOut = 0.0, tempo = 0.0;
     bool marksActive = false;
     int timeSigNumerator = 4, timeSigDenominator = 4, pitch = 60;

@@ -73,7 +73,7 @@ public:
     juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (const juce::String& name, const juce::File& sourceFile,
                                                                    ClipPosition position, bool deleteExistingClips);
 
-    juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (const juce::String& name, ProjectItemID sourceID,
+    juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (const juce::String& name, ProjectItemRef sourceID,
                                                                    ClipPosition position, bool deleteExistingClips);
 
     juce::ReferenceCountedObjectPtr<MidiClip> insertMIDIClip (TimeRange position,
@@ -82,7 +82,7 @@ public:
     juce::ReferenceCountedObjectPtr<MidiClip> insertMIDIClip (const juce::String& name, TimeRange position,
                                                               SelectionManager* selectionManagerToSelectWith);
 
-    juce::ReferenceCountedObjectPtr<EditClip> insertEditClip (TimeRange position, ProjectItemID sourceID);
+    juce::ReferenceCountedObjectPtr<EditClip> insertEditClip (TimeRange position, ProjectItemRef sourceID);
 
     void deleteRegion (TimeRange, SelectionManager*);
     void deleteRegionOfClip (Clip::Ptr, TimeRange, SelectionManager*);

@@ -427,8 +427,8 @@ public:
     void snapToOriginalBWavTime();
 
     //==============================================================================
-    /** Returns the ProjectItemID of the clip's takes. */
-    virtual juce::Array<ProjectItemID> getTakes() const;
+    /** Returns the ProjectItemRefs of the clip's takes. */
+    virtual juce::Array<ProjectItemRef> getTakes() const;
 
     //==============================================================================
     /** Returns an empty string if this plugin can be added, otherwise an error message

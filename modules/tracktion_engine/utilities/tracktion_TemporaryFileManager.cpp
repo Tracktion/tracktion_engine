@@ -201,7 +201,7 @@ juce::File TemporaryFileManager::getThumbnailsFolder() const
 //==============================================================================
 static juce::String getClipProxyPrefix()                { return "clip_"; }
 static juce::String getFileProxyPrefix()                { return "proxy_"; }
-static juce::String getDeviceFreezePrefix (Edit& edit)  { return "freeze_" + edit.getProjectItemRef().getProjectItemID().toStringSuitableForFilename() + "_"; }
+static juce::String getDeviceFreezePrefix (Edit& edit)  { return "freeze_" + edit.getProjectItemRef().toIDForFilename() + "_"; }
 static juce::String getTrackFreezePrefix()              { return "trackFreeze_"; }
 static juce::String getCompPrefix()                     { return "comp_"; }
 

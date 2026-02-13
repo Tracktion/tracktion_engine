@@ -375,7 +375,7 @@ WaveAudioClip::Ptr ClipTrack::insertWaveClip (const juce::String& name, const ju
     return engine::insertWaveClip (*this, name, sourceFile, position, deleteExistingClips ? DeleteExistingClips::yes : DeleteExistingClips::no);
 }
 
-WaveAudioClip::Ptr ClipTrack::insertWaveClip (const juce::String& name, ProjectItemID sourceID,
+WaveAudioClip::Ptr ClipTrack::insertWaveClip (const juce::String& name, ProjectItemRef sourceID,
                                               ClipPosition position, bool deleteExistingClips)
 {
     return engine::insertWaveClip (*this, name, sourceID, position, deleteExistingClips ? DeleteExistingClips::yes : DeleteExistingClips::no);
@@ -402,7 +402,7 @@ MidiClip::Ptr ClipTrack::insertMIDIClip (TimeRange position, SelectionManager* s
     return insertMIDIClip (TrackItem::getSuggestedNameForNewItem (TrackItem::Type::midi), position, sm);
 }
 
-EditClip::Ptr ClipTrack::insertEditClip (TimeRange position, ProjectItemID sourceID)
+EditClip::Ptr ClipTrack::insertEditClip (TimeRange position, ProjectItemRef sourceID)
 {
     return engine::insertEditClip (*this, position, sourceID);
 }

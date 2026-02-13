@@ -27,8 +27,8 @@ public:
     using Ptr = juce::ReferenceCountedObjectPtr<WaveAudioClip>;
 
     //==============================================================================
-    /** Adds a new take with the ProjectItemID as the source. */
-    void addTake (ProjectItemID);
+    /** Adds a new take with the ProjectItemRef as the source. */
+    void addTake (ProjectItemRef);
 
     /** Adds a new take with the given file as the source. */
     void addTake (const juce::File&);
@@ -95,7 +95,7 @@ public:
     /** @internal */
     int getNumTakes (bool includeComps) override;
     /** @internal */
-    juce::Array<ProjectItemID> getTakes() const override;
+    juce::Array<ProjectItemRef> getTakes() const override;
     /** @internal */
     void clearTakes() override;
     /** @internal */

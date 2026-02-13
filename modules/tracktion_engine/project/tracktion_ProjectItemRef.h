@@ -51,6 +51,11 @@ public:
     bool isRelativePath() const noexcept;
     bool isAbsolutePath() const noexcept;
 
+    /** Returns the ID of the Project
+        @see Project::getProjectId.
+    */
+    int getProjectID() const noexcept;
+
     /** Returns the ProjectItemID if this ref is ID-based, otherwise invalid. */
     ProjectItemID getProjectItemID() const noexcept;
 
@@ -78,9 +83,25 @@ public:
     bool operator!= (const ProjectItemRef&) const;
     bool operator<  (const ProjectItemRef&) const;
 
+    bool operator== (ProjectItemID) const;
+    bool operator!= (ProjectItemID) const;
+
 private:
     juce::String value;
     SafeSelectable<Project> ownerProject;
 };
 
+inline bool operator== (ProjectItemID lhs, const ProjectItemRef& rhs) { return rhs == lhs; }
+inline bool operator!= (ProjectItemID lhs, const ProjectItemRef& rhs) { return rhs != lhs; }
+
 }} // namespace tracktion { inline namespace engine
+
+namespace juce
+{
+    template <>
+    struct VariantConverter<tracktion::engine::ProjectItemRef>
+    {
+        static tracktion::engine::ProjectItemRef fromVar (const var& v)   { return tracktion::engine::ProjectItemRef (v.toString()); }
+        static var toVar (const tracktion::engine::ProjectItemRef& v)     { return v.toString(); }
+    };
+}

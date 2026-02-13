@@ -32,7 +32,7 @@ RenderManager::Job::Ptr EditRenderJob::getOrCreateRenderJob (Engine& e, Renderer
 }
 
 RenderManager::Job::Ptr EditRenderJob::getOrCreateRenderJob (Engine& e, const AudioFile& destFile, const RenderOptions& ro,
-                                                             ProjectItemID itemID, bool silenceOnBackup, bool reverse)
+                                                             ProjectItemRef itemID, bool silenceOnBackup, bool reverse)
 {
     if (auto ptr = e.getRenderManager().getRenderJobWithoutCreating (destFile))
         return ptr;
@@ -55,10 +55,10 @@ EditRenderJob::EditRenderJob (Engine& e, const Renderer::Parameters& p, bool del
 }
 
 EditRenderJob::EditRenderJob (Engine& e, const AudioFile& destFile_, const RenderOptions& ro,
-                              ProjectItemID edID, bool silenceOnBackup_, bool reverse_)
+                              ProjectItemRef edRef, bool silenceOnBackup_, bool reverse_)
     : Job (e, AudioFile (destFile_)),
       renderOptions (ro, nullptr),
-      itemID (edID),
+      itemRef (edRef),
       params (e),
       silenceOnBackup (silenceOnBackup_), reverse (reverse_),
       thumbnailToUpdate (256, e.getAudioFileFormatManager().readFormatManager,
@@ -90,7 +90,7 @@ void EditRenderJob::setLastError (const juce::String& e)
 //==============================================================================
 bool EditRenderJob::setUpRender()
 {
-    if (params.edit == nullptr || itemID.isValid())
+    if (params.edit == nullptr || itemRef.isValid())
     {
         CRASH_TRACER
 
@@ -108,7 +108,7 @@ bool EditRenderJob::setUpRender()
                                               }
                                           });
 
-        auto edit = loadEditForExamining (params.engine->getProjectManager(), itemID,
+        auto edit = loadEditForExamining (params.engine->getProjectManager(), itemRef,
                                           Edit::EditRole::forRendering, &context);
 
         // If the load was cancelled becuase the thread was cancelled we need to bail out

@@ -61,23 +61,21 @@ std::unique_ptr<Edit> loadEditFromState (Engine&, const juce::ValueTree&,
 std::unique_ptr<Edit> createEmptyEdit (Engine&, const juce::File&);
 
 /** Uses the ProjectManager to find an Edit file and load it as a ValueTree. */
-juce::ValueTree loadEditFromProjectManager (ProjectManager&, ProjectItemID);
+juce::ValueTree loadEditFromProjectManager (ProjectManager&, ProjectItemRef);
 
-/** Uses the ProjectManager to find an Edit file and open it. */
-std::unique_ptr<Edit> loadEditForExamining (ProjectManager&, ProjectItemID,
-                                            Edit::EditRole role = Edit::EditRole::forExamining,
-                                            Edit::LoadContext* = nullptr);
-
-/** Uses the Project and ProjectItemRef to find an Edit file and open it. */
+/** Uses the ProjectManager to find an Edit file and open it.
+    If the ref is ID-based, looks up via ProjectManager.
+    If the ref is path-based with an owner project, resolves the file directly.
+*/
 std::unique_ptr<Edit> loadEditForExamining (ProjectManager&, ProjectItemRef,
-                                            Edit::EditRole = Edit::EditRole::forExamining,
+                                            Edit::EditRole role = Edit::EditRole::forExamining,
                                             Edit::LoadContext* = nullptr);
 
 /** Legacy, will be deprecated soon. Use version that returns an edit.
     Loads a ValueTree from a file to load an Edit.
     If the file is empty, a new Edit state will be created with the given ProjectItemID.
 */
-juce::ValueTree loadEditFromFile (Engine&, const juce::File&, ProjectItemID);
+juce::ValueTree loadEditFromFile (Engine&, const juce::File&, ProjectItemRef);
 
 /** Legacy, will be deprecated soon. Use version that returns an edit.
     Creates an empty Edit with no project. */

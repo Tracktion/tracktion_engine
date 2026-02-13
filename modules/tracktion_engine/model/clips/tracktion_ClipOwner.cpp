@@ -520,7 +520,7 @@ juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (ClipOwner& parent
     return {};
 }
 
-WaveAudioClip::Ptr insertWaveClip (ClipOwner& parent, const juce::String& name, ProjectItemID sourceID,
+WaveAudioClip::Ptr insertWaveClip (ClipOwner& parent, const juce::String& name, ProjectItemRef sourceID,
                                    ClipPosition position, DeleteExistingClips deleteExistingClips)
 {
     CRASH_TRACER
@@ -562,7 +562,7 @@ MidiClip::Ptr insertMIDIClip (ClipOwner& parent, TimeRange position)
     return insertMIDIClip (parent, TrackItem::getSuggestedNameForNewItem (TrackItem::Type::midi), position);
 }
 
-EditClip::Ptr insertEditClip (ClipOwner& parent, TimeRange position, ProjectItemID sourceID)
+EditClip::Ptr insertEditClip (ClipOwner& parent, TimeRange position, ProjectItemRef sourceID)
 {
     CRASH_TRACER
 

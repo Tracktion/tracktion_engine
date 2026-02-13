@@ -91,7 +91,7 @@ struct SharedEditFileDataCache
 
         Edit& edit;
         juce::Time timeOfLastSave { juce::Time::getCurrentTime() };
-        EditSnapshot::Ptr editSnapshot { EditSnapshot::getEditSnapshot (edit.engine, edit.getProjectItemRef().getProjectItemID()) };
+        EditSnapshot::Ptr editSnapshot { EditSnapshot::getEditSnapshot (edit.engine, edit.getProjectItemRef()) };
     };
 
     SharedEditFileDataCache() = default;
@@ -336,7 +336,7 @@ bool EditFileOperations::saveAs (const juce::File& f, bool forceOverwriteExistin
 
                     jassert (edit.getProjectItemRef() != newItem->getProjectItemRef());
                     edit.setProjectItemRef (newItem->getProjectItemRef());
-                    editSnapshot = EditSnapshot::getEditSnapshot (edit.engine, edit.getProjectItemRef().getProjectItemID());
+                    editSnapshot = EditSnapshot::getEditSnapshot (edit.engine, edit.getProjectItemRef());
 
                     const bool ok = save (true, true, false);
 
@@ -425,7 +425,7 @@ void EditFileOperations::updateEditFiles()
 }
 
 //==============================================================================
-juce::ValueTree loadEditFromProjectManager (ProjectManager& pm, ProjectItemID itemID)
+juce::ValueTree loadEditFromProjectManager (ProjectManager& pm, ProjectItemRef itemID)
 {
     if (auto item = pm.getProjectItem (itemID))
         return loadEditFromFile (pm.engine, item->getSourceFile(), itemID);
@@ -433,15 +433,10 @@ juce::ValueTree loadEditFromProjectManager (ProjectManager& pm, ProjectItemID it
     return {};
 }
 
-std::unique_ptr<Edit> loadEditForExamining (ProjectManager& pm, ProjectItemID itemID, Edit::EditRole role, Edit::LoadContext* loadContext)
-{
-    return Edit::createEditForExamining (pm.engine, loadEditFromProjectManager (pm, itemID), role, loadContext);
-}
-
 std::unique_ptr<Edit> loadEditForExamining (ProjectManager& pm, ProjectItemRef ref, Edit::EditRole role, Edit::LoadContext* loadContext)
 {
     if (auto pid = ref.getProjectItemID(); pid.isValid())
-        return loadEditForExamining (pm, pid, role, loadContext);
+        return Edit::createEditForExamining (pm.engine, loadEditFromProjectManager (pm, ref), role, loadContext);
 
     if (auto p = ref.getProject())
     {
@@ -454,7 +449,7 @@ std::unique_ptr<Edit> loadEditForExamining (ProjectManager& pm, ProjectItemRef r
     return {};
 }
 
-juce::ValueTree loadEditFromFile (Engine& e, const juce::File& f, ProjectItemID itemID)
+juce::ValueTree loadEditFromFile (Engine& e, const juce::File& f, ProjectItemRef itemID)
 {
     CRASH_TRACER
     juce::ValueTree state;

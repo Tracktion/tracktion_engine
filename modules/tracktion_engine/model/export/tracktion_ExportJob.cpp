@@ -207,13 +207,12 @@ void ExportJob::copyEditFilesToTempDir()
                 break;
 
             double start = 0.0, length = 0.0;
-            auto refID = ref.itemRef.getProjectItemID();
-            auto newFilename = refList.getReassignedFileName (refID, ref.firstTimeUsed,
+            auto newFilename = refList.getReassignedFileName (ref.itemRef, ref.firstTimeUsed,
                                                               start, length);
 
             if (length > 0.0 && newFilename.isNotEmpty())
             {
-                auto oldSourceMedia (projectManager.getProjectItem (refID));
+                auto oldSourceMedia (projectManager.getProjectItem (ref.itemRef));
 
                 if (oldSourceMedia != nullptr
                      && (includeLibraryFiles || ! oldSourceMedia->getProject()->isLibraryProject()))
@@ -254,9 +253,9 @@ void ExportJob::copyEditFilesToTempDir()
                         newSourceItem = newProject->getProjectItemForFile (newFile);
                     }
 
-                    auto newID = newSourceItem != nullptr ? newSourceItem->getID() : ProjectItemID();
+                    auto newRef = newSourceItem != nullptr ? newSourceItem->getProjectItemRef() : ProjectItemRef();
 
-                    callBlocking ([=]() { exportable->reassignReferencedItem (ref, newID, start); });
+                    callBlocking ([=]() { exportable->reassignReferencedItem (ref, newRef, start); });
                 }
             }
             else
@@ -269,7 +268,7 @@ void ExportJob::copyEditFilesToTempDir()
     }
 
     // put the new edit at the top of the list
-    newProject->moveProjectItem (newProject->getIndexOf (edit->getProjectItemRef().getProjectItemID()), 0);
+    newProject->moveProjectItem (newProject->getIndexOf (edit->getProjectItemRef()), 0);
     callBlocking ([this] { EditFileOperations (*edit).save (true, true, false); });
 }
 

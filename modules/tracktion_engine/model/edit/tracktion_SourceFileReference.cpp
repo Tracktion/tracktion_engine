@@ -42,11 +42,11 @@ juce::File SourceFileReference::findFileFromString (Edit& edit, const juce::Stri
     if (sourceDescription.isEmpty())
         return {};
 
-    ProjectItemID pid (sourceDescription);
+    ProjectItemRef ref (sourceDescription);
 
-    if (pid.isValid())
+    if (ref.isValid())
     {
-        if (auto projectItem = edit.engine.getProjectManager().getProjectItem (pid))
+        if (auto projectItem = edit.engine.getProjectManager().getProjectItem (ref))
             return projectItem->getSourceFile();
 
         return {};
@@ -66,22 +66,22 @@ juce::File SourceFileReference::getFile() const
 
 bool SourceFileReference::isUsingProjectReference() const
 {
-    return getSourceProjectItemID().isValid();
+    return getSourceProjectItemRef().isValid();
 }
 
-ProjectItemID SourceFileReference::getSourceProjectItemID() const
+ProjectItemRef SourceFileReference::getSourceProjectItemRef() const
 {
     jassert (source.get() == state[source.getPropertyID()].toString());
-    return ProjectItemID (source.get());
+    return ProjectItemRef (source.get());
 }
 
 ProjectItem::Ptr SourceFileReference::getSourceProjectItem() const
 {
     jassert (source.get() == state[source.getPropertyID()].toString());
-    ProjectItemID pid (source.get());
+    ProjectItemRef ref (source.get());
 
-    if (pid.isValid())
-        return edit.engine.getProjectManager().getProjectItem (pid);
+    if (ref.isValid())
+        return edit.engine.getProjectManager().getProjectItem (ref);
 
     return {};
 }
@@ -150,7 +150,7 @@ void SourceFileReference::setToProjectFileReference (const juce::File& file, boo
         edit.restartPlayback();
 }
 
-void SourceFileReference::setToProjectFileReference (ProjectItemID newID)
+void SourceFileReference::setToProjectFileReference (ProjectItemRef newID)
 {
     auto oldFile = getFile();
     source = newID.toString();
