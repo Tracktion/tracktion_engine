@@ -598,7 +598,7 @@ Clip::Ptr RenderOptions::applyRenderToEdit (Edit& edit,
             }
         }
 
-        newClip = trackToUse->insertWaveClip (newClipName, projectItem->getID(), { insertPos, {} }, false);
+        newClip = trackToUse->insertWaveClip (newClipName, projectItem->getProjectItemRef(), { insertPos, {} }, false);
         if (auto ac = dynamic_cast<WaveAudioClip*> (newClip.get()))
         {
             // We only want to enable auto tempo is the rendered clip has tempo information

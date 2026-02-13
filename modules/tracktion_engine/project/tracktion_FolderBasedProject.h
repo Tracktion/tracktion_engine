@@ -27,7 +27,6 @@ public:
     bool isValid() const override;
     bool isReadOnly() const override;
     int getProjectID() const override;
-    int hash() const override;
     juce::String getName() const override;
     juce::String getDescription() const override;
     const juce::File& getProjectFile() const noexcept override;

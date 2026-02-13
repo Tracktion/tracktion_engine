@@ -280,11 +280,6 @@ int FileBasedProject::getProjectID() const
     return projectId;
 }
 
-int FileBasedProject::hash() const
-{
-    return getProjectID();
-}
-
 juce::String FileBasedProject::getProjectProperty (const juce::String& name) const
 {
     const juce::ScopedLock sl (propertyLock);
@@ -358,7 +353,7 @@ void FileBasedProject::redirectIDsFromProject (int oldProjId, int newProjId)
         {
             if (mo->isEdit())
             {
-                auto ed = loadEditForExamining (owner.projectManager, mo->getID());
+                auto ed = loadEditForExamining (owner.projectManager, mo->getProjectItemRef());
 
                 for (auto exportable : Exportable::addAllExportables (*ed))
                 {
@@ -532,13 +527,13 @@ ProjectItem::Ptr FileBasedProject::createNewItem (const juce::File& fileToRefere
     if (isValid() && ! isReadOnly())
     {
         if (auto mo = getProjectItemForFile (fileToReference))
-            if (mo->getID().isValid() && mo->getType() == type)
+            if (mo->getProjectItemRef().getProjectItemID().isValid() && mo->getType() == type)
                 return mo;
 
         ObjectInfo o;
         o.item = new ProjectItem (owner.engine, name, type, description, {}, cat, 0,
                                   ProjectItemID::createNewID (getProjectID()));
-        o.itemID = o.item->getID().getItemID();
+        o.itemID = o.item->getProjectItemRef().getProjectItemID().getItemID();
         o.fileOffset = 0;
 
         {
@@ -569,7 +564,7 @@ ProjectItem::Ptr FileBasedProject::quickAddProjectItem (const juce::String& relP
 {
     ObjectInfo o;
     o.item = new ProjectItem (owner.engine, name, type, description, {}, cat, 0, newID);
-    o.itemID = o.item->getID().getItemID();
+    o.itemID = o.item->getProjectItemRef().getProjectItemID().getItemID();
     o.fileOffset = 0;
     o.item->file = relPathName;
 
@@ -756,7 +751,7 @@ void FileBasedProject::mergeOtherProjectIntoThis (const juce::File& f)
                                                        src->getName(),
                                                        src->description,
                                                        src->getCategory(),
-                                                       src->getID()))
+                                                       src->getProjectItemRef().getProjectItemID()))
                     {
                         mo->copyAllPropertiesFrom (*src);
                         mo->verifyLength();

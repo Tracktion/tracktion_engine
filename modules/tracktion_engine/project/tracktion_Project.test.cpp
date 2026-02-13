@@ -110,8 +110,8 @@ TEST_SUITE ("tracktion_engine")
         CHECK (numItems >= 2); // At least the 2 edits
 
         // Verify edit items exist
-        CHECK (project->getProjectItemFor (editItem1->getID()) != nullptr);
-        CHECK (project->getProjectItemFor (editItem2->getID()) != nullptr);
+        CHECK (project->getProjectItemFor (editItem1->getProjectItemRef()) != nullptr);
+        CHECK (project->getProjectItemFor (editItem2->getProjectItemRef()) != nullptr);
 
         // Verify the audio file was added as a project item
         auto audioItem = project->getProjectItemForFile (sinFile->getFile());
@@ -201,8 +201,8 @@ TEST_SUITE ("tracktion_engine")
         CHECK (editItem->getProject() == project);
 
         // ProjectItemID should be invalid for folder-backed items
-        CHECK_FALSE (wavItem->getID().isValid());
-        CHECK_FALSE (editItem->getID().isValid());
+        CHECK_FALSE (wavItem->getProjectItemRef().isValid());
+        CHECK_FALSE (editItem->getProjectItemRef().isValid());
 
         // Category: edit in root should be Category::edit
         CHECK (editItem->getCategory() == ProjectItem::Category::edit);
@@ -545,7 +545,7 @@ TEST_SUITE ("tracktion_engine")
             }
             REQUIRE (newEditItem != nullptr);
 
-            auto loadedEdit = loadEditForExamining (pm, newEditItem->getID());
+            auto loadedEdit = loadEditForExamining (pm, newEditItem->getProjectItemRef());
             REQUIRE (loadedEdit != nullptr);
 
             auto audioTracks = getAudioTracks (*loadedEdit);

@@ -74,7 +74,6 @@ bool Project::isValid() const                                               { re
 bool Project::isReadOnly() const                                            { return impl->isReadOnly(); }
 bool Project::isTemporary() const                                           { return impl->isTemporary(); }
 int Project::getProjectID() const                                           { return impl->getProjectID(); }
-int Project::hash() const                                                   { return impl->hash();  }
 juce::String Project::getName() const                                       { return impl->getName(); }
 juce::String Project::getDescription() const                                { return impl->getDescription(); }
 const juce::File& Project::getProjectFile() const noexcept                  { return impl->getProjectFile(); }
@@ -141,20 +140,7 @@ juce::Array<ProjectItem::Ptr> Project::findOrphanItems()
 int Project::getNumProjectItems()                                           { return impl->getNumProjectItems(); }
 ProjectItemRef Project::getProjectItemRef (int i)                           { return impl->getProjectItemRef (i); }
 
-ProjectItemID Project::getProjectItemID (int i)
-{
-    return getProjectItemRef (i).getProjectItemID();
-}
-
 juce::Array<ProjectItemRef> Project::getAllProjectItemRefs() const          { return impl->getAllProjectItemRefs(); }
-
-juce::Array<ProjectItemID> Project::getAllProjectItemIDs() const
-{
-    juce::Array<ProjectItemID> result;
-    for (auto& ref : getAllProjectItemRefs())
-        result.add (ref.getProjectItemID());
-    return result;
-}
 
 juce::Array<int> Project::getAllItemIDs() const                             { return impl->getAllItemIDs(); }
 ProjectItem::Ptr Project::getProjectItemAt (int i)                          { return impl->getProjectItemAt (i); }
@@ -162,7 +148,6 @@ juce::Array<ProjectItem::Ptr> Project::getAllProjectItems()                 { re
 int Project::getIndexOf (const ProjectItemRef& ref) const                   { return impl->getIndexOf (ref); }
 
 ProjectItem::Ptr Project::getProjectItemFor (const ProjectItemRef& ref)     { return impl->getProjectItemFor (ref); }
-ProjectItem::Ptr Project::getProjectItemForID (ProjectItemID id)            { return getProjectItemFor (ProjectItemRef (id)); }
 ProjectItem::Ptr Project::getProjectItemForFile (const juce::File& f)       { return impl->getProjectItemForFile (f); }
 
 //==============================================================================
@@ -186,14 +171,6 @@ void Project::createDefaultFolders()                                        { im
 
 //==============================================================================
 void Project::searchFor (juce::Array<ProjectItemRef>& r, SearchOperation& s) { impl->searchFor (r, s); }
-
-void Project::searchFor (juce::Array<ProjectItemID>& r, SearchOperation& s)
-{
-    juce::Array<ProjectItemRef> refs;
-    searchFor (refs, s);
-    for (auto& ref : refs)
-        r.add (ref.getProjectItemID());
-}
 
 //==============================================================================
 juce::String Project::getSelectableDescription()                            { return impl->getSelectableDescription(); }

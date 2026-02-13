@@ -845,7 +845,7 @@ public:
                                                                 bool isLooping, bool isPunching, TimePosition loopEnd)
     {
         CRASH_TRACER
-        jassert (projectItem == nullptr || projectItem->getID().isValid());
+        jassert (projectItem == nullptr || projectItem->getProjectItemRef().isValid());
         auto& engine = edit.engine;
         auto& afm = engine.getAudioFileManager();
 
@@ -869,7 +869,7 @@ public:
         if (replaceOldClips && isPunching)
         {
             if (projectItem != nullptr)
-                newClip = insertWaveClip (destClipOwner, getNameForNewClip (destClipOwner), projectItem->getID(),
+                newClip = insertWaveClip (destClipOwner, getNameForNewClip (destClipOwner), projectItem->getProjectItemRef(),
                                           { { loopRange.getStart(), endPos }, {} }, DeleteExistingClips::yes);
             else
                 newClip = insertWaveClip (destClipOwner, getNameForNewClip (destClipOwner), recordedFile.getFile(),
@@ -881,7 +881,7 @@ public:
         else
         {
             if (projectItem != nullptr)
-                newClip = insertWaveClip (destClipOwner, getNameForNewClip (destClipOwner), projectItem->getID(),
+                newClip = insertWaveClip (destClipOwner, getNameForNewClip (destClipOwner), projectItem->getProjectItemRef(),
                                           { { rc.punchTimes.getStart(), endPos }, {} },
                                           replaceOldClips ? DeleteExistingClips::yes : DeleteExistingClips::no);
             else
@@ -926,7 +926,7 @@ public:
             if (extraTakes.size() > 0)
             {
                 for (auto& take : extraTakes)
-                    wc->addTake (take->getID());
+                    wc->addTake (take->getProjectItemRef());
             }
             else if (filesCreated.size() > 1)
             {
@@ -1079,7 +1079,7 @@ public:
             if (projectItem == nullptr)
                 continue;
 
-            jassert (projectItem->getID().isValid());
+            jassert (projectItem->getProjectItemRef().isValid());
 
             auto clipName = getNameForNewClip (*dstTrack);
             TimePosition start;
@@ -1126,7 +1126,7 @@ public:
                 clipPos.time = clipPos.time.withStart (0s);
             }
 
-            auto newClip = dstTrack->insertWaveClip (clipName, projectItem->getID(), clipPos, false);
+            auto newClip = dstTrack->insertWaveClip (clipName, projectItem->getProjectItemRef(), clipPos, false);
 
             if (newClip == nullptr)
                 continue;

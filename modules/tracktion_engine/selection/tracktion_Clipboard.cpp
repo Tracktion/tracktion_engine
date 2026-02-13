@@ -408,7 +408,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
                             existingClip->removeFromParent();
 
                     if (auto newClip = insertWaveClip (*clipOwner,
-                                                       sourceItem->getName(), sourceItem->getID(),
+                                                       sourceItem->getName(), sourceItem->getProjectItemRef(),
                                                        { { startTime, TimePosition::fromSeconds (startTime.inSeconds() + sourceItem->getLength()) }, 0_td },
                                                        DeleteExistingClips::no))
                     {
@@ -439,7 +439,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
 
                     if (auto newClip = insertEditClip (*clipOwner,
                                                        { startTime, startTime + TimeDuration::fromSeconds (sourceItem->getLength()) },
-                                                         sourceItem->getID()))
+                                                         sourceItem->getProjectItemRef()))
                     {
                         newClipEndTime = newClip->getPosition().getEnd();
                         itemsAdded.add (newClip.get());

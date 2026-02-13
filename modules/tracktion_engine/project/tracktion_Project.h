@@ -77,11 +77,6 @@ public:
     */
     int getProjectID() const;
 
-    /** An identifying hash.
-        N.B. This isn't stable, particularly for folder-based projects so don't store it anywhere.
-    */
-    int hash() const;
-
     /** Returns the project name.
         Folder-based projects return the folder name.
     */
@@ -159,18 +154,10 @@ public:
     */
     ProjectItemRef getProjectItemRef (int index);
 
-    /** @deprecated Use getProjectItemRef() instead. */
-    [[deprecated ("Use getProjectItemRef() instead")]]
-    ProjectItemID getProjectItemID (int index);
-
     /** Returns all ProjectItemRefs in this project.
         Always returns an empty array for folder-based projects (const prevents lazy scan).
     */
     juce::Array<ProjectItemRef> getAllProjectItemRefs() const;
-
-    /** @deprecated Use getAllProjectItemRefs() instead. */
-    [[deprecated ("Use getAllProjectItemRefs() instead")]]
-    juce::Array<ProjectItemID> getAllProjectItemIDs() const;
 
     /** Returns all item IDs (the integer part of ProjectItemID) in this project.
         Always returns an empty array for folder-based projects.
@@ -193,10 +180,6 @@ public:
         the path and looks up by file.
     */
     ProjectItem::Ptr getProjectItemFor (const ProjectItemRef&);
-
-    /** @deprecated Use getProjectItemFor() instead. */
-    [[deprecated ("Use getProjectItemFor() instead")]]
-    ProjectItem::Ptr getProjectItemForID (ProjectItemID);
 
     /** Returns the ProjectItem that references the given file, or nullptr if not found.
         Works for both file-based and folder-based projects.
@@ -279,10 +262,6 @@ public:
         No-op for folder-based projects (results will be empty).
     */
     void searchFor (juce::Array<ProjectItemRef>& results, SearchOperation&);
-
-    /** @deprecated Use searchFor (Array<ProjectItemRef>&, SearchOperation&) instead. */
-    [[deprecated ("Use searchFor (Array<ProjectItemRef>&, SearchOperation&) instead")]]
-    void searchFor (juce::Array<ProjectItemID>& results, SearchOperation&);
 
     //==============================================================================
     juce::String getSelectableDescription() override;

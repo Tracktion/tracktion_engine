@@ -48,7 +48,7 @@ TEST_SUITE("tracktion_engine")
             CHECK (EditFileOperations (*sourceEdit).save (false, true, false));
             CHECK (sourceEditProjectItem);
             CHECK (sourceEditProjectItem->isEdit());
-            CHECK (sourceEditProjectItem->getID().isValid());
+            CHECK (sourceEditProjectItem->getProjectItemRef().isValid());
             CHECK (sourceEditProjectItem->getSourceFile().existsAsFile());
         }
 
@@ -77,7 +77,7 @@ TEST_SUITE("tracktion_engine")
 
             auto track = getAudioTracks (*destEdit)[0];
             auto editClip = insertEditClip (*track, { 0_tp, TimeDuration::fromSeconds (sourceEditProjectItem->getLength()) },
-                                            sourceEditProjectItem->getID());
+                                            sourceEditProjectItem->getProjectItemRef());
             CHECK(editClip);
             editClip->setUsesProxy (false);
 

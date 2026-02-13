@@ -126,7 +126,7 @@ static void deleteEditPreviewsNotInUse (Engine& engine, juce::Array<juce::File>&
 
     for (auto& p : pm.getAllProjects (pm.folders))
         for (auto item : p->getAllProjectItems())
-            ids.add (item->hash());
+            ids.add (item->getProjectItemRef().toIDForFilename());
 
     for (int i = files.size(); --i >= 0;)
     {

@@ -111,7 +111,7 @@ void SourceFileReference::setToProjectFileReference (const juce::File& file, boo
                 if (auto existingItem = project->getProjectItemForFile (file))
                 {
                     // point at the existing ProjectItem for this file
-                    setToProjectFileReference (existingItem->getID());
+                    setToProjectFileReference (existingItem->getProjectItemRef());
                 }
                 else
                 {
@@ -122,7 +122,7 @@ void SourceFileReference::setToProjectFileReference (const juce::File& file, boo
                                                           false);
 
                     if (projectItem != nullptr)
-                        setToProjectFileReference (projectItem->getID());
+                        setToProjectFileReference (projectItem->getProjectItemRef());
                 }
             }
         }
@@ -136,14 +136,14 @@ void SourceFileReference::setToProjectFileReference (const juce::File& file, boo
                                                   false);
 
             if (projectItem != nullptr)
-                setToProjectFileReference (projectItem->getID());
+                setToProjectFileReference (projectItem->getProjectItemRef());
         }
     }
     else
     {
         if (project != nullptr)
             if (auto existingProjectItem = project->getProjectItemForFile (file))
-                setToProjectFileReference (existingProjectItem->getID());
+                setToProjectFileReference (existingProjectItem->getProjectItemRef());
     }
 
     if (getFile() != oldFile)

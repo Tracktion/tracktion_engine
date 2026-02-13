@@ -79,16 +79,8 @@ public:
     void selectionStatusChanged (bool isNowSelected) override;
 
     //==============================================================================
-    ProjectItemID getID() const noexcept              { return itemRef.getProjectItemID(); }
-
     /** Returns the ProjectItemRef that identifies this item. */
     const ProjectItemRef& getProjectItemRef() const noexcept    { return itemRef; }
-
-    /** Returns a filename-safe unique identifier string for this item.
-        For file-based items this is the ProjectItemID string; for folder-based
-        items it is a hex hash of the source file path.
-    */
-    juce::String hash() const;
 
     juce::ReferenceCountedObjectPtr<Project> getProject() const;
 
@@ -108,7 +100,7 @@ public:
     bool isVideo() const noexcept                   { return getType() == videoItemType(); }
 
     const juce::String& getName() const;
-    void setName (const juce::String& name, SetNameMode mode);
+    void setName (const juce::String& name, SetNameMode);
 
     Category getCategory() const;
     void setCategory (Category cat);

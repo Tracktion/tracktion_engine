@@ -272,7 +272,7 @@ EditRenderJob::RenderPass::~RenderPass()
                                                      r.category,
                                                      true))
                 {
-                    jassert (item->getID().isValid());
+                    jassert (item->getProjectItemRef().isValid());
                     owner.result.items.add (item);
                 }
                 else

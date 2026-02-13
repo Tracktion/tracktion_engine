@@ -29,7 +29,6 @@ public:
     virtual bool isReadOnly() const = 0;
     virtual bool isTemporary() const                                    { return temporary; }
     virtual int getProjectID() const = 0;
-    virtual int hash() const = 0;
     virtual juce::String getName() const = 0;
     virtual juce::String getDescription() const = 0;
     virtual const juce::File& getProjectFile() const noexcept = 0;

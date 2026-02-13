@@ -978,7 +978,7 @@ ProjectItem::Ptr WaveCompManager::getOrCreateProjectItemForTake (juce::ValueTree
                                                 {}, ProjectItem::Category::recorded, false))
         {
             // If we've had to create a new ProjectItem we need to update the take ProjectItemID to reflect it
-            setProjectItemIDForTake (takeIndex, item->getID());
+            setProjectItemIDForTake (takeIndex, item->getProjectItemRef());
             return item;
         }
     }

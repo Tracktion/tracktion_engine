@@ -98,11 +98,11 @@ void ProjectSearchIndex::addClip (const ProjectItem::Ptr& item)
             {
                 if (auto w = findWordMatch (word))
                 {
-                    w->addID (item->getID().getItemID());
+                    w->addID (item->getProjectItemRef().getProjectItemID().getItemID());
                 }
                 else
                 {
-                    index.add (new IndexedWord (word, item->getID().getItemID()));
+                    index.add (new IndexedWord (word, item->getProjectItemRef().getProjectItemID().getItemID()));
 
                     std::sort (index.begin(), index.end(),
                                [] (IndexedWord* a, IndexedWord* b) { return a->word < b->word; });

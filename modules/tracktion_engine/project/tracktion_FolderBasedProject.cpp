@@ -169,11 +169,6 @@ bool FolderBasedProject::isReadOnly() const
 
 int FolderBasedProject::getProjectID() const
 {
-    return hash();
-}
-
-int FolderBasedProject::hash() const
-{
     return folder.hashCode();
 }
 

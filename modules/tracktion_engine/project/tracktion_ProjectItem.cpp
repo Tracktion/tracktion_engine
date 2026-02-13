@@ -290,13 +290,6 @@ juce::String ProjectItem::getSelectableDescription()
     return TRANS("Project item of type 'XXX'").replace ("XXX", type);
 }
 
-juce::String ProjectItem::hash() const
-{
-    return getID().isValid()
-        ? getID().toStringSuitableForFilename()
-        : juce::String::toHexString (file.hashCode64());
-}
-
 void ProjectItem::selectionStatusChanged (bool isNowSelected)
 {
     if (isNowSelected && getLength() == 0)
@@ -441,15 +434,15 @@ Project::Ptr ProjectItem::getProject() const
     if (auto p = ownerProject.get())
         return p;
 
-    return engine.getProjectManager().getProject (getID().getProjectID());
+    return engine.getProjectManager().getProject (itemRef.getProjectID());
 }
 
 bool ProjectItem::hasBeenDeleted() const
 {
     if (auto p = getProject())
     {
-        if (getID().isValid())
-            return p->getProjectItemFor (getID()) == nullptr;
+        if (itemRef.getProjectItemID().isValid())
+            return p->getProjectItemFor (itemRef) == nullptr;
 
         if (itemRef.isValid())
             return ! itemRef.resolve (engine, p->getProjectFile()).existsAsFile();
@@ -816,12 +809,12 @@ bool ProjectItem::deleteSourceFile()
 //==============================================================================
 void ProjectItem::changeProjectId (int oldID, int newID)
 {
-    if (getID().getProjectID() == oldID)
-        itemRef = ProjectItemID (getID().getItemID(), newID);
+    if (itemRef.getProjectItemID().getProjectID() == oldID)
+        itemRef = ProjectItemID (itemRef.getProjectItemID().getItemID(), newID);
 
     if (isEdit())
     {
-        auto ed = loadEditForExamining (engine.getProjectManager(), getID());
+        auto ed = loadEditForExamining (engine.getProjectManager(), itemRef);
 
         for (auto exp : Exportable::addAllExportables (*ed))
             for (auto& item : exp->getReferencedItems())

@@ -483,8 +483,8 @@ juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (ClipOwner& parent
         auto source = proj->createNewItem (sourceFile, ProjectItem::waveItemType(),
                                            name, {}, ProjectItem::Category::imported, true);
 
-        if (source != nullptr && source->getID().isValid())
-            return insertWaveClip (parent, name, source->getID(), position, deleteExistingClips);
+        if (source != nullptr && source->getProjectItemRef().isValid())
+            return insertWaveClip (parent, name, source->getProjectItemRef(), position, deleteExistingClips);
 
         // Folder-based project: store a file path (relative to project folder or absolute)
         if (source != nullptr)
