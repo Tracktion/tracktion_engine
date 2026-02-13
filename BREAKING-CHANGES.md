@@ -3,6 +3,62 @@
 ___
 
 ### Change
+`Project::getProjectID()` now returns `ProjectID` instead of `int`. `ProjectItemID` constructors and `createNewID` take `ProjectID` instead of `int`. `ProjectManager::getProject()` takes `ProjectID` instead of `int`.
+
+#### Possible Issues
+Code that stores or passes project IDs as raw `int` values will no longer compile.
+
+#### Workaround
+Wrap raw ints with `ProjectID(myInt)` and extract with `.toInt()`. For example: `ProjectID pid = project.getProjectID();` instead of `int pid = project.getProjectID();`.
+
+#### Rationale
+A strong type prevents accidental misuse of raw integers as project identifiers and makes the API self-documenting.
+
+___
+
+### Change
+`ProjectItemRef` replaces raw `ProjectItemID` in many APIs. `Project::getProjectItemRef()`, `getProjectItemFor()`, `removeProjectItem()`, `getIndexOf()`, and `searchFor()` now use `ProjectItemRef`. `ProjectItem::getProjectItemRef()` returns `const ProjectItemRef&`. `ProjectManager::getProjectItem()` and `findSourceFile()` have new `ProjectItemRef` overloads.
+
+#### Possible Issues
+Code that explicitly types return values as `ProjectItemID` from these methods will no longer compile.
+
+#### Workaround
+`ProjectItemRef` has an implicit constructor from `ProjectItemID`, so most call sites compile unchanged. For return values, use `auto` or `ProjectItemRef`. If you need the old type, call `.getProjectItemID()` on the ref after checking `isProjectItemID()`.
+
+#### Rationale
+`ProjectItemRef` supports both ID-based references (file-based projects) and path-based references (folder-based projects) in a single type.
+
+___
+
+### Change
+`ProjectManager::createNewProject`, `createNewProjectInteractively`, `createNewProjectFromTemplate`, and the `TempProject` constructor now accept a `ProjectType` parameter (`ProjectType::fileBased` or `ProjectType::folderBased`).
+
+#### Possible Issues
+None for existing code — the parameter defaults to `ProjectType::fileBased`.
+
+#### Workaround
+No changes required. Pass `ProjectType::folderBased` to create folder-based projects.
+
+#### Rationale
+Enables creation of folder-based projects through the existing project creation APIs.
+
+___
+
+### Change
+`Project::findOrphanItems()` has been deprecated in favour of `findOrphanItemRefs()`.
+
+#### Possible Issues
+Deprecation warnings when calling `findOrphanItems()`.
+
+#### Workaround
+Replace `findOrphanItems()` with `findOrphanItemRefs()`, which returns `juce::Array<ProjectItemRef>` instead of `juce::Array<ProjectItem::Ptr>`.
+
+#### Rationale
+The new method returns `ProjectItemRef` values that work with both file-based and folder-based project backends.
+
+___
+
+### Change
 `AudioClipBase::melodyneProxy` public member has been removed. Use the new `getARAProxy()` accessor instead.
 
 #### Possible Issues
