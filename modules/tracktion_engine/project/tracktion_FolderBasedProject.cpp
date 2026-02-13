@@ -519,12 +519,6 @@ void FolderBasedProject::createDefaultFolders()
 }
 
 //==============================================================================
-void FolderBasedProject::searchFor (juce::Array<ProjectItemRef>&, SearchOperation&)
-{
-    // No-op: no search index
-}
-
-//==============================================================================
 juce::String FolderBasedProject::getSelectableDescription() const
 {
     return TRANS("Folder Project");

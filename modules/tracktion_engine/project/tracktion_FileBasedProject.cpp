@@ -251,13 +251,7 @@ void FileBasedProject::saveTo (juce::FileOutputStream& out)
     }
 
     indexOffset = (int) out.getPosition();
-    ProjectSearchIndex searchIndex (owner);
-
-    for (auto& o : objects)
-        if (auto c = o.item)
-            searchIndex.addClip (c);
-
-    searchIndex.writeToStream (out);
+    out.writeInt (0); // empty search index for backward compat
 
     out.setPosition (8);
     out.writeInt (objectOffset);
@@ -669,32 +663,6 @@ ProjectItem::Ptr FileBasedProject::createNewEdit()
                               {}, ProjectItem::Category::edit, true);
 
     return {};
-}
-
-void FileBasedProject::searchFor (juce::Array<ProjectItemRef>& results, SearchOperation& searchOp)
-{
-    owner.save();
-
-    if (indexOffset > 0)
-    {
-        ProjectSearchIndex psi (owner);
-
-        {
-            const juce::ScopedLock sl (objectLock);
-
-            if (auto in = getInputStream())
-            {
-                in->setPosition (indexOffset);
-                psi.readFromStream (*in);
-            }
-        }
-
-        juce::Array<ProjectItemID> idResults;
-        psi.findMatches (searchOp, idResults);
-
-        for (auto& id : idResults)
-            results.add (ProjectItemRef (id));
-    }
 }
 
 void FileBasedProject::mergeArchiveContents (const juce::File& archiveFile)

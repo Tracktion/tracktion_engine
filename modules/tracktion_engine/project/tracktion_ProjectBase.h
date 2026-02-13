@@ -74,9 +74,6 @@ public:
     virtual void createDefaultFolders() = 0;
 
     //==============================================================================
-    virtual void searchFor (juce::Array<ProjectItemRef>&, SearchOperation&) = 0;
-
-    //==============================================================================
     virtual juce::String getSelectableDescription() const = 0;
 
     virtual void load() {}

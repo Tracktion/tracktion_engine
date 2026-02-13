@@ -259,12 +259,6 @@ public:
     };
 
     //==============================================================================
-    /** Loads the keyword table and performs a text search across project items.
-        No-op for folder-based projects (results will be empty).
-    */
-    void searchFor (juce::Array<ProjectItemRef>& results, SearchOperation&);
-
-    //==============================================================================
     juce::String getSelectableDescription() override;
 
     /** Locks the project file to prevent writes or moves. No-op for folder-based projects. */

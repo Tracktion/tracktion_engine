@@ -475,7 +475,6 @@ namespace tracktion { inline namespace engine
 #include "utilities/tracktion_ParameterHelpers.h"
 
 #include "project/tracktion_ProjectItem.h"
-#include "project/tracktion_ProjectSearchIndex.h"
 #include "project/tracktion_ProjectBase.h"
 #include "project/tracktion_FileBasedProject.h"
 #include "project/tracktion_FolderBasedProject.h"

@@ -170,9 +170,6 @@ void Project::refreshFolderStructure()                                      { im
 void Project::createDefaultFolders()                                        { impl->createDefaultFolders(); }
 
 //==============================================================================
-void Project::searchFor (juce::Array<ProjectItemRef>& r, SearchOperation& s) { impl->searchFor (r, s); }
-
-//==============================================================================
 juce::String Project::getSelectableDescription()                            { return impl->getSelectableDescription(); }
 
 void Project::lockFile()                                                    { impl->lockFile(); }

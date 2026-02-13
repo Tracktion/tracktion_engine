@@ -72,9 +72,6 @@ public:
     void createDefaultFolders() override;
 
     //==============================================================================
-    void searchFor (juce::Array<ProjectItemRef>&, SearchOperation&) override;
-
-    //==============================================================================
     juce::String getSelectableDescription() const override;
 
     void load() override;
