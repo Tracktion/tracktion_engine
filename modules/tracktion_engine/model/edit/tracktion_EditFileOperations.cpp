@@ -91,7 +91,7 @@ struct SharedEditFileDataCache
 
         Edit& edit;
         juce::Time timeOfLastSave { juce::Time::getCurrentTime() };
-        EditSnapshot::Ptr editSnapshot { EditSnapshot::getEditSnapshot (edit.engine, edit.getProjectItemID()) };
+        EditSnapshot::Ptr editSnapshot { EditSnapshot::getEditSnapshot (edit.engine, edit.getProjectItemRef().getProjectItemID()) };
     };
 
     SharedEditFileDataCache() = default;
@@ -334,9 +334,9 @@ bool EditFileOperations::saveAs (const juce::File& f, bool forceOverwriteExistin
                     newItem->copyAllPropertiesFrom (*item);
                     newItem->setName (f.getFileNameWithoutExtension(), ProjectItem::SetNameMode::forceNoRename);
 
-                    jassert (edit.getProjectItemID() != newItem->getID());
-                    edit.setProjectItemID (newItem->getID());
-                    editSnapshot = EditSnapshot::getEditSnapshot (edit.engine, edit.getProjectItemID());
+                    jassert (edit.getProjectItemRef() != newItem->getProjectItemRef());
+                    edit.setProjectItemRef (newItem->getProjectItemRef());
+                    editSnapshot = EditSnapshot::getEditSnapshot (edit.engine, edit.getProjectItemRef().getProjectItemID());
 
                     const bool ok = save (true, true, false);
 

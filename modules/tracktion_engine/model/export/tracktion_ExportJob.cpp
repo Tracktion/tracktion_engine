@@ -269,7 +269,7 @@ void ExportJob::copyEditFilesToTempDir()
     }
 
     // put the new edit at the top of the list
-    newProject->moveProjectItem (newProject->getIndexOf (edit->getProjectItemID()), 0);
+    newProject->moveProjectItem (newProject->getIndexOf (edit->getProjectItemRef().getProjectItemID()), 0);
     callBlocking ([this] { EditFileOperations (*edit).save (true, true, false); });
 }
 

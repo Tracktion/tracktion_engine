@@ -405,7 +405,7 @@ ProjectItem::Ptr ProjectManager::getProjectItem (ProjectItemID id)
 
 ProjectItem::Ptr ProjectManager::getProjectItem (const Edit& ed)
 {
-    return getProjectItem (ed.getProjectItemID());
+    return getProjectItem (ed.getProjectItemRef().getProjectItemID());
 }
 
 Project::Ptr ProjectManager::getProject (const Edit& ed)

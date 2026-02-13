@@ -578,32 +578,12 @@ static int getNextInstanceId() noexcept
     return ++nextId;
 }
 
-ProjectItemID determineProjectItemID (const Edit::Options& o)
-{
-    if (auto pid = o.editProjectItemID.getProjectItemID(); pid.isValid())
-        return pid;
-
-    auto editFileRelPath = o.editProjectItemID.toString();
-    jassert (editFileRelPath.isNotEmpty());
-    auto editPathHash = editFileRelPath.hashCode();
-
-    if (o.projectFolder.exists())
-        return ProjectItemID (editPathHash, o.projectFolder.hashCode());
-
-    if (editPathHash != 0)
-        return ProjectItemID (editPathHash, 0);
-
-    // Temporary, in-memory edit
-    return ProjectItemID::createNewID (0);
-}
-
 //==============================================================================
 Edit::Edit (Options options)
     : engine (options.engine),
       tempoSequence (*this),
       state (options.editState),
       instanceId (getNextInstanceId()),
-      editProjectItemID (determineProjectItemID (options)),
       editProjectItemRef (options.editProjectItemID),
       loadContext (options.loadContext),
       editRole (options.role)
@@ -612,7 +592,6 @@ Edit::Edit (Options options)
 
     jassert (state.isValid());
     jassert (state.hasType (IDs::EDIT));
-    jassert (editProjectItemID.load().isValid()); // Always valid: either from ref or auto-generated
 
     if (options.editFileRetriever)
     {
@@ -635,15 +614,15 @@ Edit::Edit (Options options)
     }
     else
     {
-        filePathResolver = [this, projectFolder = options.projectFolder] (const juce::String& path) -> juce::File
+        filePathResolver = [this] (const juce::String& path) -> juce::File
         {
             jassert (path.isNotEmpty());
 
             if (juce::File::isAbsolutePath (path))
                 return path;
 
-            if (projectFolder != juce::File())
-                return projectFolder.getChildFile (path);
+            if (auto proj = editProjectItemRef.getProject())
+                return proj->getProjectFile().getChildFile (path);
 
             if (editFileRetriever)
                 if (auto f = editFileRetriever(); f != juce::File())
@@ -688,7 +667,7 @@ Edit::Edit (Options options)
         }
 
         // Don't spam logs with preview Edits
-        if (getProjectItemID().getProjectID() != 0)
+        if (auto pid = editProjectItemRef.getProjectItemID(); pid.isValid() && pid.getProjectID() != 0)
             TRACKTION_LOG ("Loaded edit: " + getName());
 
         jassert (! engine.getActiveEdits().edits.contains (this));
@@ -805,10 +784,10 @@ juce::String Edit::getName()
     return {};
 }
 
-void Edit::setProjectItemID (ProjectItemID newID)
+void Edit::setProjectItemRef (ProjectItemRef newRef)
 {
-    editProjectItemID = newID;
-    state.setProperty (IDs::projectID, editProjectItemID.load().toString(), nullptr);
+    editProjectItemRef = std::move (newRef);
+    state.setProperty (IDs::projectID, editProjectItemRef.toString(), nullptr);
 }
 
 Edit::ScopedRenderStatus::ScopedRenderStatus (Edit& ed, bool shouldReallocateOnDestruction)
@@ -1190,7 +1169,7 @@ void Edit::flushState()
     addValueTreeProperties (state,
                             IDs::appVersion, engine.getPropertyStorage().getApplicationVersion(),
                             IDs::modifiedBy, engine.getPropertyStorage().getUserName(),
-                            IDs::projectID, editProjectItemID.load().toString());
+                            IDs::projectID, editProjectItemRef.toString());
 
     for (auto p : getAllPlugins (*this, true))
         p->flushPluginStateToValueTree();
@@ -2727,7 +2706,7 @@ juce::File Edit::getTempDirectory (bool createIfNonExistent) const
 
     if (result == juce::File())
         result = tempDirectory = engine.getTemporaryFileManager().getTempDirectory()
-                                    .getChildFile ("edit_" + getProjectItemID().toStringSuitableForFilename());
+                                    .getChildFile ("edit_" + editProjectItemRef.getProjectItemID().toStringSuitableForFilename());
 
     if (createIfNonExistent && ! result.createDirectory())
         TRACKTION_LOG_ERROR ("Failed to create edit temp folder: " + result.getFullPathName());

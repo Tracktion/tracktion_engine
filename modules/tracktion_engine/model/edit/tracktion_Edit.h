@@ -120,8 +120,6 @@ public:
         uint32_t numAudioTracks = 1;                                 ///< If non-zero, will ensure the edit has this many audio tracks
 
         float defaultMasterVolumedB = -3.0f;                         ///< The initial level for the edit's master volume
-
-        juce::File projectFolder;                                    ///< Optional project folder for resolving relative paths.
     };
 
     /** Creates an Edit from a set of Options.
@@ -160,11 +158,8 @@ public:
     */
     FilePathResolver filePathResolver;
 
-    /** Sets the ProjectItemID of the Edit, this is also stored in the state. */
-    void setProjectItemID (ProjectItemID);
-
-    /** Returns the ProjectItemID of the Edit. */
-    ProjectItemID getProjectItemID() const noexcept    { return editProjectItemID; }
+    /** Sets the ProjectItemRef of the Edit, this is also stored in the state. */
+    void setProjectItemRef (ProjectItemRef);
 
     /** Returns the ProjectItemRef that was used to create this Edit. */
     const ProjectItemRef& getProjectItemRef() const noexcept    { return editProjectItemRef; }
@@ -870,7 +865,6 @@ public:
 private:
     //==============================================================================
     const int instanceId;
-    std::atomic<ProjectItemID> editProjectItemID { ProjectItemID() };
     ProjectItemRef editProjectItemRef;
 
     // persistent properties (i.e. stuff that gets saved)

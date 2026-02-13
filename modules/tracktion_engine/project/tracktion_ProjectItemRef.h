@@ -54,8 +54,13 @@ public:
     /** Returns the ProjectItemID if this ref is ID-based, otherwise invalid. */
     ProjectItemID getProjectItemID() const noexcept;
 
+    /** Returns a string which can be used for filenames.
+        This isn't meant for resolution, it will be the ProjectItemID or a hash of path.
+    */
+    juce::String toIDForFilename() const noexcept;
+
     /** Returns the raw string value. */
-    const juce::String& toString() const noexcept;
+    juce::String toString() const noexcept;
 
     /** Returns the owner project, if one was provided at construction. */
     Project* getProject() const noexcept;

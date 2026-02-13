@@ -56,7 +56,7 @@ TEST_SUITE ("tracktion_engine")
         // -- Edit 1: one audio clip + one MIDI clip --
         {
             auto edit = createEmptyEdit (engine, editItem1->getSourceFile());
-            edit->setProjectItemID (editItem1->getID());
+            edit->setProjectItemRef (editItem1->getProjectItemRef());
 
             edit->ensureNumberOfAudioTracks (2);
             auto audioTracks = getAudioTracks (*edit);
@@ -88,7 +88,7 @@ TEST_SUITE ("tracktion_engine")
         // -- Edit 2: one audio clip --
         {
             auto edit = createEmptyEdit (engine, editItem2->getSourceFile());
-            edit->setProjectItemID (editItem2->getID());
+            edit->setProjectItemRef (editItem2->getProjectItemRef());
 
             edit->ensureNumberOfAudioTracks (1);
             auto audioTracks = getAudioTracks (*edit);
@@ -386,7 +386,7 @@ TEST_SUITE ("tracktion_engine")
 
         {
             auto edit = createEmptyEdit (engine, editItem->getSourceFile());
-            edit->setProjectItemID (editItem->getID());
+            edit->setProjectItemRef (editItem->getProjectItemRef());
 
             edit->ensureNumberOfAudioTracks (2);
             auto audioTracks = getAudioTracks (*edit);
@@ -709,7 +709,7 @@ TEST_SUITE ("tracktion_engine")
 
         {
             auto edit = createEmptyEdit (engine, editItem->getSourceFile());
-            edit->setProjectItemID (editItem->getID());
+            edit->setProjectItemRef (editItem->getProjectItemRef());
 
             edit->ensureNumberOfAudioTracks (1);
             auto audioTracks = getAudioTracks (*edit);

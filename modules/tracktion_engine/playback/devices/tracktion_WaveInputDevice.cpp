@@ -171,7 +171,7 @@ struct RetrospectiveRecordBuffer
     void syncToEdit (Edit& edit, EditPlaybackContext& context, double streamTime, int numSamplesIn)
     {
         const juce::SpinLock::ScopedLockType sl (editInfoLock);
-        auto& pei = editInfo[edit.getProjectItemID()];
+        auto& pei = editInfo[edit.getProjectItemRef().getProjectItemID()];
 
         if (context.isPlaying())
         {
@@ -187,7 +187,7 @@ struct RetrospectiveRecordBuffer
     bool wasRecentlyPlaying (Edit& edit)
     {
         const juce::SpinLock::ScopedLockType sl (editInfoLock);
-        auto& pei = editInfo[edit.getProjectItemID()];
+        auto& pei = editInfo[edit.getProjectItemRef().getProjectItemID()];
 
         return (pei.lastEditTime >= 0s && pei.pausedTime < 20s);
     }
@@ -195,7 +195,7 @@ struct RetrospectiveRecordBuffer
     void removeEditSync (Edit& edit)
     {
         const juce::SpinLock::ScopedLockType sl (editInfoLock);
-        auto itr = editInfo.find (edit.getProjectItemID());
+        auto itr = editInfo.find (edit.getProjectItemRef().getProjectItemID());
 
         if (itr != editInfo.end())
             editInfo.erase (itr);
@@ -1103,7 +1103,7 @@ public:
                 }
                 else
                 {
-                    auto& pei = recordBuffer->editInfo[edit.getProjectItemID()];
+                    auto& pei = recordBuffer->editInfo[edit.getProjectItemRef().getProjectItemID()];
                     start = pei.lastEditTime + pei.pausedTime - recordedLength + adjust;
                     pei.lastEditTime = -1s;
                 }

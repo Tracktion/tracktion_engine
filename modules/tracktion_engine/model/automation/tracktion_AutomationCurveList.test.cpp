@@ -135,7 +135,7 @@ TEST_SUITE("tracktion_engine")
 
         // Delete and reload the Edit and check final state again
         {
-            auto pid = context->edit->getProjectItemID();
+            auto pid = context->edit->getProjectItemRef();
             auto editState = context->edit->state;
             auto squareFile = std::move (context->squareFile);
             context = std::make_unique<AutomationCurveListTestContext>();

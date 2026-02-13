@@ -72,7 +72,14 @@ ProjectItemID ProjectItemRef::getProjectItemID() const noexcept
     return pid.isValid() ? pid : ProjectItemID();
 }
 
-const juce::String& ProjectItemRef::toString() const noexcept
+juce::String ProjectItemRef::toIDForFilename() const noexcept
+{
+    ProjectItemID pid (value);
+    return pid.isValid() ? pid.toStringSuitableForFilename()
+                         : juce::String::toHexString (value.hash());
+}
+
+juce::String ProjectItemRef::toString() const noexcept
 {
     return value;
 }

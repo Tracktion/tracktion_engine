@@ -736,7 +736,7 @@ std::unique_ptr<RenderOptions> RenderOptions::forGeneralExporter (Edit& edit)
     std::unique_ptr<RenderOptions> ro (new RenderOptions (edit.engine));
     ro->setToDefault();
 
-    updateLastUsedRenderPath (*ro, edit.getProjectItemID().toString());
+    updateLastUsedRenderPath (*ro, edit.getProjectItemRef().toString());
 
     for (auto t : getAllTracks (edit))
         ro->tracks.add (t->itemID);
@@ -758,7 +758,7 @@ std::unique_ptr<RenderOptions> RenderOptions::forTrackRender (juce::Array<Track*
         std::unique_ptr<RenderOptions> ro (new RenderOptions (edit.engine));
         ro->setToDefault();
         ro->type = RenderType::track;
-        updateLastUsedRenderPath (*ro, edit.getProjectItemID().toString());
+        updateLastUsedRenderPath (*ro, edit.getProjectItemRef().toString());
 
         for (auto t : tracks)
             ro->tracks.add (t->itemID);
@@ -781,7 +781,7 @@ std::unique_ptr<RenderOptions> RenderOptions::forClipRender (juce::Array<Clip*> 
 
         std::unique_ptr<RenderOptions> ro (new RenderOptions (edit.engine));
         ro->setToDefault();
-        updateLastUsedRenderPath (*ro, edit.getProjectItemID().toString());
+        updateLastUsedRenderPath (*ro, edit.getProjectItemRef().toString());
 
         ro->allowedClips = clips;
         bool areAllClipsMono = true;

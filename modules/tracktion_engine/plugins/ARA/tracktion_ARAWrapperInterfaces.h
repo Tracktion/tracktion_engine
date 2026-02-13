@@ -359,7 +359,7 @@ static ARADocument* createDocumentInternal (Edit& edit, const juce::PluginDescri
         hostInstance->playbackControllerHostRef         = toHostRef (&edit.getTransport());
         hostInstance->playbackControllerInterface       = &playback;
 
-        auto name = edit.getProjectItemID().toString().trim();
+        auto name = edit.getProjectItemRef().toString().trim();
 
         if (name.isEmpty()) name = edit.getName().trim();
         if (name.isEmpty()) name = getEditFileFromProjectManager (edit).getFullPathName().trim();

@@ -74,7 +74,7 @@ bool TrackMuteState::isBeingPlayed() const
 size_t TrackMuteState::getItemID() const
 {
     return track != nullptr ? (size_t) track->itemID.getRawID()
-                            : (size_t) edit.getProjectItemID().getRawID();
+                            : (size_t) edit.getProjectItemRef().getProjectItemID().getRawID();
 }
 
 

@@ -43,7 +43,7 @@ TEST_SUITE("tracktion_engine")
 
         {
             sourceEditProjectItem = proj.createNewEdit();
-            sourceEdit->setProjectItemID (sourceEditProjectItem->getID());
+            sourceEdit->setProjectItemRef (sourceEditProjectItem->getProjectItemRef());
 
             CHECK (EditFileOperations (*sourceEdit).save (false, true, false));
             CHECK (sourceEditProjectItem);
@@ -73,7 +73,7 @@ TEST_SUITE("tracktion_engine")
         // Dest Edit
         {
             auto destEditProjectItem = proj.createNewEdit();
-            destEdit->setProjectItemID (destEditProjectItem->getID());
+            destEdit->setProjectItemRef (destEditProjectItem->getProjectItemRef());
 
             auto track = getAudioTracks (*destEdit)[0];
             auto editClip = insertEditClip (*track, { 0_tp, TimeDuration::fromSeconds (sourceEditProjectItem->getLength()) },
