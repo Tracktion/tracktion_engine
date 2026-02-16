@@ -27,6 +27,8 @@
 
 #pragma once
 
+#include <span>
+
 #define DOCTEST_CONFIG_IMPLEMENT
 #include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
 
@@ -207,7 +209,7 @@ namespace JUnit
 //==============================================================================
 namespace TestRunner
 {
-    inline int runTests (const File& junitResultsFile)
+    inline int runTests (const File& junitResultsFile, bool runJuceTests, std::span<const char*> args = {})
     {
         CoutLogger logger;
         Logger::setCurrentLogger (&logger);
@@ -217,41 +219,48 @@ namespace TestRunner
                                           std::make_unique<TestEngineBehaviour>() };
         engine.getTemporaryFileManager().getTempDirectory().deleteRecursively (false);
 
-        UnitTestRunner testRunner;
-        testRunner.setAssertOnFailure (true);
-
-        Array<UnitTest*> tests;
-        tests.addArray (UnitTest::getTestsInCategory ("tracktion_core"));
-        tests.addArray (UnitTest::getTestsInCategory ("tracktion_graph"));
-        tests.addArray (UnitTest::getTestsInCategory ("tracktion_engine"));
-        tests.addArray (UnitTest::getTestsInCategory ("Tracktion"));
-        tests.addArray (UnitTest::getTestsInCategory ("Tracktion:Longer"));
-        
-        const auto startTime = Time::getCurrentTime();
-        testRunner.runTests (tests);
-        const auto endTime = Time::getCurrentTime();
-
         int numFailues = 0;
 
-        for (int i = 0; i <= testRunner.getNumResults(); ++i)
-            if (auto result = testRunner.getResult (i))
-                numFailues += result->failures;
-
-        if (junitResultsFile != File())
+        if (runJuceTests)
         {
-            junitResultsFile.create();
-            auto res = JUnit::createJUnitXMLFile (junitResultsFile, "Tracktion", testRunner, endTime - startTime);
-            
-            if (res)
-                Logger::writeToLog ("Wrote junit results to :" + junitResultsFile.getFullPathName());
-            else
-                Logger::writeToLog (res.getErrorMessage());
+            UnitTestRunner testRunner;
+            testRunner.setAssertOnFailure (true);
+
+            Array<UnitTest*> tests;
+            tests.addArray (UnitTest::getTestsInCategory ("tracktion_core"));
+            tests.addArray (UnitTest::getTestsInCategory ("tracktion_graph"));
+            tests.addArray (UnitTest::getTestsInCategory ("tracktion_engine"));
+            tests.addArray (UnitTest::getTestsInCategory ("Tracktion"));
+            tests.addArray (UnitTest::getTestsInCategory ("Tracktion:Longer"));
+
+            const auto startTime = Time::getCurrentTime();
+            testRunner.runTests (tests);
+            const auto endTime = Time::getCurrentTime();
+
+            for (int i = 0; i <= testRunner.getNumResults(); ++i)
+                if (auto result = testRunner.getResult (i))
+                    numFailues += result->failures;
+
+            if (junitResultsFile != File())
+            {
+                junitResultsFile.create();
+                auto res = JUnit::createJUnitXMLFile (junitResultsFile, "Tracktion", testRunner, endTime - startTime);
+
+                if (res)
+                    Logger::writeToLog ("Wrote junit results to :" + junitResultsFile.getFullPathName());
+                else
+                    Logger::writeToLog (res.getErrorMessage());
+            }
         }
 
         doctest::Context doctestContext;
         // doctestContext.setOption ("success", true);  // Shows passed tests
         // doctestContext.setOption ("abort-after", 1); // Aborts after the first fail
         doctestContext.setOption ("duration", true);
+
+        if (! args.empty())
+            doctestContext.applyCommandLine ((int) args.size(), args.data());
+
         doctestContext.addFilter("test-suite", "tracktion_core");
         doctestContext.addFilter("test-suite", "tracktion_graph");
         doctestContext.addFilter("test-suite", "tracktion_engine");
@@ -267,15 +276,29 @@ namespace TestRunner
 
 //==============================================================================
 //==============================================================================
-int main (int argv, char** argc)
+int main (int argc, char** argv)
 {
     File junitFile;
-    
-    for (int i = 1; i < argv; ++i)
-        if (String (argc[i]) == "--junit-xml-file")
-            if ((i + 1) < argv)
-                junitFile = String (argc[i + 1]);
-    
+    bool runJuceTests = true;
+    std::vector<const char*> doctestArgs;
+
+    for (int i = 1; i < argc; ++i)
+    {
+        if (String (argv[i]) == "--junit-xml-file")
+        {
+            if ((i + 1) < argc)
+                junitFile = String (argv[++i]);
+        }
+        else if (String (argv[i]) == "--no-juce-tests")
+        {
+            runJuceTests = false;
+        }
+        else
+        {
+            doctestArgs.push_back (argv[i]);
+        }
+    }
+
     ScopedJuceInitialiser_GUI init;
-    return TestRunner::runTests (junitFile);
+    return TestRunner::runTests (junitFile, runJuceTests, doctestArgs);
 }
