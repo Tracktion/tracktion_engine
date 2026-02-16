@@ -441,7 +441,7 @@ bool ProjectItem::hasBeenDeleted() const
 {
     if (auto p = getProject())
     {
-        if (itemRef.getProjectItemID().isValid())
+        if (itemRef.getProjectItemID().has_value())
             return p->getProjectItemFor (itemRef) == nullptr;
 
         if (itemRef.isValid())
@@ -809,8 +809,8 @@ bool ProjectItem::deleteSourceFile()
 //==============================================================================
 void ProjectItem::changeProjectId (ProjectID oldID, ProjectID newID)
 {
-    if (itemRef.getProjectItemID().getProjectID() == oldID)
-        itemRef = ProjectItemID (itemRef.getProjectItemID().getItemID(), newID);
+    if (auto pid = itemRef.getProjectItemID(); pid && pid->getProjectID() == oldID)
+        itemRef = ProjectItemID (pid->getItemID(), newID);
 
     if (isEdit())
     {
@@ -818,8 +818,8 @@ void ProjectItem::changeProjectId (ProjectID oldID, ProjectID newID)
 
         for (auto exp : Exportable::addAllExportables (*ed))
             for (auto& item : exp->getReferencedItems())
-                 if (item.itemRef.getProjectItemID().getProjectID() == oldID)
-                     exp->reassignReferencedItem (item, item.itemRef.getProjectItemID().withNewProjectID (newID), 0.0);
+                 if (auto pid2 = item.itemRef.getProjectItemID(); pid2 && pid2->getProjectID() == oldID)
+                     exp->reassignReferencedItem (item, pid2->withNewProjectID (newID), 0.0);
 
         EditFileOperations (*ed).save (false, true, false);
     }

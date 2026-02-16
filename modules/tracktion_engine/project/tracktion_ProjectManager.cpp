@@ -397,8 +397,8 @@ void ProjectManager::updateProjectFile (Project& p, const juce::File& f)
 
 ProjectItem::Ptr ProjectManager::getProjectItem (const ProjectItemRef& ref)
 {
-    if (auto pid = ref.getProjectItemID(); pid.isValid())
-        if (auto p = getProject (pid.getProjectID()))
+    if (auto pid = ref.getProjectItemID())
+        if (auto p = getProject (pid->getProjectID()))
             return p->getProjectItemFor (ref);
 
     // For path-based refs, try the owner project
@@ -422,8 +422,9 @@ Project::Ptr ProjectManager::getProject (const Edit& ed)
 {
     auto ref = ed.getProjectItemRef();
 
-    if (auto p = getProject (ref.getProjectItemID().getProjectID()))
-        return p;
+    if (auto pid = ref.getProjectItemID())
+        if (auto p = getProject (pid->getProjectID()))
+            return p;
 
     if (auto p = ref.getProject())
         return p;

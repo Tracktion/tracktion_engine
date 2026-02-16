@@ -271,7 +271,8 @@ tracktion::graph::NodeProperties ClickNode::getNodeProperties()
     props.hasAudio = ! generateMidi;
     props.hasMidi = generateMidi;
     props.numberOfChannels = numChannels;
-    props.nodeID = (size_t) edit.getProjectItemRef().getProjectItemID().getRawID();
+    auto pid = edit.getProjectItemRef().getProjectItemID();
+    props.nodeID = pid ? (size_t) pid->getRawID() : size_t (0);
 
     return props;
 }

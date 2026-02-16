@@ -48,7 +48,6 @@ public:
     int getNumProjectItems() override;
     ProjectItemRef getProjectItemRef (int index) override;
     juce::Array<ProjectItemRef> getAllProjectItemRefs() const override;
-    juce::Array<int> getAllItemIDs() const override;
     ProjectItem::Ptr getProjectItemAt (int index) override;
     juce::Array<ProjectItem::Ptr> getAllProjectItems() override;
     int getIndexOf (const ProjectItemRef&) const override;

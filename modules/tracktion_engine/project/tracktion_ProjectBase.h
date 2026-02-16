@@ -50,7 +50,6 @@ public:
     virtual int getNumProjectItems() = 0;
     virtual ProjectItemRef getProjectItemRef (int index) = 0;
     virtual juce::Array<ProjectItemRef> getAllProjectItemRefs() const = 0;
-    virtual juce::Array<int> getAllItemIDs() const = 0;
     virtual ProjectItem::Ptr getProjectItemAt (int index) = 0;
     virtual juce::Array<ProjectItem::Ptr> getAllProjectItems() = 0;
     virtual int getIndexOf (const ProjectItemRef&) const = 0;

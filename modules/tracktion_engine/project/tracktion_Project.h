@@ -160,11 +160,6 @@ public:
     */
     juce::Array<ProjectItemRef> getAllProjectItemRefs() const;
 
-    /** Returns all item IDs (the integer part of ProjectItemID) in this project.
-        Always returns an empty array for folder-based projects.
-    */
-    juce::Array<int> getAllItemIDs() const;
-
     /** Returns the ProjectItem at the given index, or nullptr if out of range. */
     ProjectItem::Ptr getProjectItemAt (int index);
 

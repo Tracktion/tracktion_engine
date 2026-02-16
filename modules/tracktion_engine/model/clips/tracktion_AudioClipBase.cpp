@@ -1521,7 +1521,7 @@ juce::Array<Exportable::ReferencedItem> AudioClipBase::getReferencedItems()
     {
         for (auto& ref : results)
         {
-            auto wi = edit.engine.getAudioFileManager().getAudioFile (ref.itemRef.getProjectItemID()).getInfo();
+            auto wi = edit.engine.getAudioFileManager().getAudioFile (ref.itemRef).getInfo();
 
             if (wi.sampleRate > 0)
             {
@@ -1543,7 +1543,7 @@ void AudioClipBase::reassignReferencedItem (const ReferencedItem& item,
     {
         if (newRef.isProjectItemID())
         {
-            sourceFileReference.setToProjectFileReference (newRef.getProjectItemID());
+            sourceFileReference.setToProjectFileReference (newRef);
 
             if (! isLooping())
                 setOffset (getPosition().getOffset() - TimeDuration::fromSeconds ((newStartTime / getSpeedRatio())));

@@ -142,7 +142,6 @@ ProjectItemRef Project::getProjectItemRef (int i)                           { re
 
 juce::Array<ProjectItemRef> Project::getAllProjectItemRefs() const          { return impl->getAllProjectItemRefs(); }
 
-juce::Array<int> Project::getAllItemIDs() const                             { return impl->getAllItemIDs(); }
 ProjectItem::Ptr Project::getProjectItemAt (int i)                          { return impl->getProjectItemAt (i); }
 juce::Array<ProjectItem::Ptr> Project::getAllProjectItems()                 { return impl->getAllProjectItems(); }
 int Project::getIndexOf (const ProjectItemRef& ref) const                   { return impl->getIndexOf (ref); }
@@ -214,7 +213,7 @@ Project::Ptr convertToFolderBasedProject (Project& project)
                         {
                             if (ref.itemRef.isValid())
                             {
-                                if (auto projItem = project.engine.getProjectManager().getProjectItem (ref.itemRef.getProjectItemID()))
+                                if (auto projItem = project.engine.getProjectManager().getProjectItem (ref.itemRef))
                                     exportable->reassignReferencedItem (ref, ProjectItemRef::fromAbsolutePath (projItem->getSourceFile()), 0.0);
                             }
                         }

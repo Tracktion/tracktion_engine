@@ -79,10 +79,10 @@ ProjectID ProjectItemRef::getProjectID() const noexcept
     return {};
 }
 
-ProjectItemID ProjectItemRef::getProjectItemID() const noexcept
+std::optional<ProjectItemID> ProjectItemRef::getProjectItemID() const noexcept
 {
     ProjectItemID pid (value);
-    return pid.isValid() ? pid : ProjectItemID();
+    return pid.isValid() ? std::optional<ProjectItemID> (pid) : std::nullopt;
 }
 
 juce::String ProjectItemRef::toIDForFilename() const noexcept

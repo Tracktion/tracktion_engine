@@ -61,13 +61,13 @@ EditSnapshot::Ptr EditSnapshot::getEditSnapshot (Engine& engine, ProjectItemRef 
 
     auto itemID = itemRef.getProjectItemID();
 
-    if (itemID.isInvalid())
+    if (! itemID)
         return {};
 
-    if (auto snapshot = list->getEditSnapshot (itemID))
+    if (auto snapshot = list->getEditSnapshot (*itemID))
         return snapshot;
 
-    return new EditSnapshot (engine, itemID);
+    return new EditSnapshot (engine, *itemID);
 }
 
 //==============================================================================

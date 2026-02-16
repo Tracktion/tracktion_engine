@@ -141,10 +141,10 @@ void WaveAudioClip::reassignReferencedItem (const ReferencedItem& item,
 
         if (newRef.isProjectItemID())
         {
-            auto newItemID = newRef.getProjectItemID();
+            auto newItemID = *newRef.getProjectItemID();
 
             if (indexInList == getCurrentTake())
-                sourceFileReference.setToProjectFileReference (newItemID);
+                sourceFileReference.setToProjectFileReference (ProjectItemRef (newItemID));
 
             auto take = getTakesTree().getChild (indexInList);
 

@@ -361,11 +361,6 @@ juce::Array<ProjectItemRef> FolderBasedProject::getAllProjectItemRefs() const
     return result;
 }
 
-juce::Array<int> FolderBasedProject::getAllItemIDs() const
-{
-    return {};
-}
-
 ProjectItem::Ptr FolderBasedProject::getProjectItemAt (int index)
 {
     ensureScanned();

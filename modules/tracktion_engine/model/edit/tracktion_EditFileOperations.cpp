@@ -435,7 +435,7 @@ juce::ValueTree loadEditFromProjectManager (ProjectManager& pm, ProjectItemRef i
 
 std::unique_ptr<Edit> loadEditForExamining (ProjectManager& pm, ProjectItemRef ref, Edit::EditRole role, Edit::LoadContext* loadContext)
 {
-    if (auto pid = ref.getProjectItemID(); pid.isValid())
+    if (auto pid = ref.getProjectItemID())
         return Edit::createEditForExamining (pm.engine, loadEditFromProjectManager (pm, ref), role, loadContext);
 
     if (auto p = ref.getProject())

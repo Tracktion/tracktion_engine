@@ -740,7 +740,8 @@ WaveCompManager::WaveCompManager (WaveAudioClip& owner)
     for (auto take : takesTree)
         if (isTakeComp (take))
             if (! ProjectItemID::fromProperty (take, IDs::source).isValid())
-                take.setProperty (IDs::source, ProjectItemID::createNewID (clip.edit.getProjectItemRef().getProjectItemID().getProjectID()).toString(), &owner.edit.getUndoManager());
+                if (auto pid = clip.edit.getProjectItemRef().getProjectItemID())
+                    take.setProperty (IDs::source, ProjectItemID::createNewID (pid->getProjectID()).toString(), &owner.edit.getUndoManager());
 }
 
 WaveCompManager::~WaveCompManager() {}
@@ -989,7 +990,12 @@ ProjectItem::Ptr WaveCompManager::getOrCreateProjectItemForTake (juce::ValueTree
 juce::ValueTree WaveCompManager::addNewComp()
 {
     auto newTake = getNewCompTree();
-    auto newID = ProjectItemID::createNewID (clip.edit.getProjectItemRef().getProjectItemID().getProjectID());
+    auto editPid = clip.edit.getProjectItemRef().getProjectItemID();
+
+    if (! editPid)
+        return {};
+
+    auto newID = ProjectItemID::createNewID (editPid->getProjectID());
 
     newTake.setProperty (IDs::source, newID.toString(), nullptr);
     newTake.setProperty (IDs::isComp, true, nullptr);

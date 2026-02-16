@@ -56,8 +56,8 @@ public:
     */
     ProjectID getProjectID() const noexcept;
 
-    /** Returns the ProjectItemID if this ref is ID-based, otherwise invalid. */
-    ProjectItemID getProjectItemID() const noexcept;
+    /** Returns the ProjectItemID if this ref is ID-based, otherwise std::nullopt. */
+    std::optional<ProjectItemID> getProjectItemID() const noexcept;
 
     /** Returns a string which can be used for filenames.
         This isn't meant for resolution, it will be the ProjectItemID or a hash of path.

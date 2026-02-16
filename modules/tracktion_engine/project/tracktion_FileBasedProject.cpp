@@ -353,8 +353,8 @@ void FileBasedProject::redirectIDsFromProject (ProjectID oldProjId, ProjectID ne
                 {
                     for (auto& item : exportable->getReferencedItems())
                     {
-                         if (item.itemRef.getProjectItemID().getProjectID() == oldProjId)
-                             exportable->reassignReferencedItem (item, item.itemRef.getProjectItemID().withNewProjectID (newProjId), 0.0);
+                         if (auto pid = item.itemRef.getProjectItemID(); pid && pid->getProjectID() == oldProjId)
+                             exportable->reassignReferencedItem (item, pid->withNewProjectID (newProjId), 0.0);
                     }
                 }
 
@@ -390,16 +390,6 @@ ProjectItemRef FileBasedProject::getProjectItemRef (int i)
         return ProjectItemRef (ProjectItemID (objects.getReference(i).itemID, projectId));
 
     return {};
-}
-
-juce::Array<int> FileBasedProject::getAllItemIDs() const
-{
-    juce::Array<int> a;
-
-    for (auto& o : objects)
-        a.add (o.itemID);
-
-    return a;
 }
 
 juce::Array<ProjectItemRef> FileBasedProject::getAllProjectItemRefs() const
@@ -483,9 +473,9 @@ int FileBasedProject::getIndexOf (const ProjectItemRef& ref) const
 
     const juce::ScopedLock sl (objectLock);
 
-    if (mo.isValid() && mo.getProjectID() == getProjectID())
+    if (mo && mo->getProjectID() == getProjectID())
     {
-        auto itemID = mo.getItemID();
+        auto itemID = mo->getItemID();
 
         for (int i = objects.size(); --i >= 0;)
             if (objects.getReference(i).itemID == itemID)
@@ -521,13 +511,13 @@ ProjectItem::Ptr FileBasedProject::createNewItem (const juce::File& fileToRefere
     if (isValid() && ! isReadOnly())
     {
         if (auto mo = getProjectItemForFile (fileToReference))
-            if (mo->getProjectItemRef().getProjectItemID().isValid() && mo->getType() == type)
+            if (mo->getProjectItemRef().getProjectItemID().has_value() && mo->getType() == type)
                 return mo;
 
         ObjectInfo o;
         o.item = new ProjectItem (owner.engine, name, type, description, {}, cat, 0,
                                   ProjectItemID::createNewID (getProjectID()));
-        o.itemID = o.item->getProjectItemRef().getProjectItemID().getItemID();
+        o.itemID = o.item->getProjectItemRef().getProjectItemID()->getItemID();
         o.fileOffset = 0;
 
         {
@@ -558,7 +548,7 @@ ProjectItem::Ptr FileBasedProject::quickAddProjectItem (const juce::String& relP
 {
     ObjectInfo o;
     o.item = new ProjectItem (owner.engine, name, type, description, {}, cat, 0, newID);
-    o.itemID = o.item->getProjectItemRef().getProjectItemID().getItemID();
+    o.itemID = o.item->getProjectItemRef().getProjectItemID()->getItemID();
     o.fileOffset = 0;
     o.item->file = relPathName;
 
@@ -719,7 +709,7 @@ void FileBasedProject::mergeOtherProjectIntoThis (const juce::File& f)
                                                        src->getName(),
                                                        src->description,
                                                        src->getCategory(),
-                                                       src->getProjectItemRef().getProjectItemID()))
+                                                       *src->getProjectItemRef().getProjectItemID()))
                     {
                         mo->copyAllPropertiesFrom (*src);
                         mo->verifyLength();

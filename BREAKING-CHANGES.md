@@ -3,6 +3,34 @@
 ___
 
 ### Change
+`Project::getAllItemIDs()` has been removed.
+
+#### Possible Issues
+Code that calls `getAllItemIDs()` will no longer compile.
+
+#### Workaround
+Use `getAllProjectItemRefs()` instead to iterate over project items.
+
+#### Rationale
+The method was unused and redundant with `getAllProjectItemRefs()`.
+
+___
+
+### Change
+`ProjectItemRef::getProjectItemID()` now returns `std::optional<ProjectItemID>` instead of a bare `ProjectItemID`.
+
+#### Possible Issues
+Code that chains method calls on the return value (e.g. `.isValid()`, `.getProjectID()`, `.getRawID()`) will no longer compile.
+
+#### Workaround
+Use `has_value()` or bool conversion instead of `.isValid()`. Use `->` to access members when the optional is known to contain a value (e.g. `pid->getProjectID()`). Use `*` to extract the value when passing to functions that expect `ProjectItemID`.
+
+#### Rationale
+Returning `std::optional` makes the fallibility explicit at the type level, preventing accidental use of an invalid `ProjectItemID`.
+
+___
+
+### Change
 `Project::getProjectID()` now returns `ProjectID` instead of `int`. `ProjectItemID` constructors and `createNewID` take `ProjectID` instead of `int`. `ProjectManager::getProject()` takes `ProjectID` instead of `int`.
 
 #### Possible Issues
