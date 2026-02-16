@@ -77,6 +77,7 @@ public:
     void changed() override;
     void lockFile() override;
     void unlockFile() override;
+    void sourceFileMoved (const juce::File&, const juce::File&) override {}
 
 private:
     friend class Project;

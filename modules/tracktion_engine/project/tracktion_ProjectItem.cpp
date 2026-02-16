@@ -362,6 +362,8 @@ void ProjectItem::setSourceFile (const juce::File& f, FileMode mode)
 {
     if (auto pp = getProject())
     {
+        auto oldSourceFile = getSourceFile();
+
         auto projectDir = pp->getDefaultDirectory();
         bool relative = false;
 
@@ -381,6 +383,9 @@ void ProjectItem::setSourceFile (const juce::File& f, FileMode mode)
         pp->changed();
 
         triggerAsyncUpdate();
+
+        if (oldSourceFile != juce::File() && oldSourceFile != f)
+            pp->sourceFileMoved (oldSourceFile, f);
     }
 }
 

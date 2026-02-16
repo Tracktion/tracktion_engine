@@ -80,6 +80,9 @@ public:
     virtual void lockFile() {}
     virtual void unlockFile() {}
 
+    /** Updates all edit source references after a file has been moved/renamed. */
+    virtual void sourceFileMoved (const juce::File& oldFile, const juce::File& newFile) = 0;
+
     Project& owner;
     bool temporary = false;
 

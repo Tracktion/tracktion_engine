@@ -74,6 +74,7 @@ public:
     juce::String getSelectableDescription() const override;
 
     void changed() override;
+    void sourceFileMoved (const juce::File& oldFile, const juce::File& newFile) override;
 
     /** Clears the cached items so the folder is rescanned on next access.
         If lazy is false, immediately rescans. */

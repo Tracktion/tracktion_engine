@@ -880,6 +880,337 @@ TEST_SUITE ("tracktion_engine")
         newProject.reset(); // Reset the project ptr before the dir is deleted
         cleanup();
     }
+
+    TEST_CASE ("Project: sourceFileMoved updates edit references")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto runTest = [&] (bool fileBased)
+        {
+            auto tempDir = juce::File::createTempFile ({});
+            tempDir.createDirectory();
+
+            auto cleanup = [&tempDir]
+            {
+                tempDir.deleteRecursively (false);
+            };
+
+            // Create the project
+            juce::File projectPath;
+            bool createNewId = false;
+
+            if (fileBased)
+            {
+                projectPath = tempDir.getChildFile ("test_project.tracktion");
+                createNewId = true;
+            }
+            else
+            {
+                projectPath = tempDir.getChildFile ("test_folder_project");
+                projectPath.createDirectory();
+                createNewId = false;
+            }
+
+            ProjectManager::TempProject tp (pm, projectPath, createNewId);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+            REQUIRE (project->isValid());
+
+            // Create a wav file inside the project directory
+            auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+            REQUIRE (sinFile != nullptr);
+
+            auto projectDir = project->getDefaultDirectory();
+            auto wavFile = projectDir.getChildFile ("source_audio.wav");
+            sinFile->getFile().copyFileTo (wavFile);
+            REQUIRE (wavFile.existsAsFile());
+
+            // Create 2 edits
+            auto editItem1 = project->createNewEdit();
+            auto editItem2 = project->createNewEdit();
+            REQUIRE (editItem1 != nullptr);
+            REQUIRE (editItem2 != nullptr);
+
+            // -- Edit 1 (will remain "open" during the move) --
+            auto edit1 = createEmptyEdit (engine, editItem1->getSourceFile());
+            edit1->setProjectItemRef (editItem1->getProjectItemRef());
+            edit1->ensureNumberOfAudioTracks (1);
+
+            {
+                auto audioTracks = getAudioTracks (*edit1);
+                REQUIRE (audioTracks.size() >= 1);
+
+                auto waveClip = insertWaveClip (*audioTracks[0], "OpenClip",
+                                                wavFile,
+                                                { { 0_tp, TimePosition::fromSeconds (1.0) } },
+                                                DeleteExistingClips::no);
+                REQUIRE (waveClip != nullptr);
+                CHECK (waveClip->getSourceFileReference().getFile() == wavFile);
+            }
+
+            CHECK (EditFileOperations (*edit1).save (false, true, false));
+
+            // -- Edit 2 (will be closed during the move) --
+            {
+                auto edit2 = createEmptyEdit (engine, editItem2->getSourceFile());
+                edit2->setProjectItemRef (editItem2->getProjectItemRef());
+                edit2->ensureNumberOfAudioTracks (1);
+
+                auto audioTracks = getAudioTracks (*edit2);
+                REQUIRE (audioTracks.size() >= 1);
+
+                auto waveClip = insertWaveClip (*audioTracks[0], "ClosedClip",
+                                                wavFile,
+                                                { { 0_tp, TimePosition::fromSeconds (1.0) } },
+                                                DeleteExistingClips::no);
+                REQUIRE (waveClip != nullptr);
+                CHECK (waveClip->getSourceFileReference().getFile() == wavFile);
+
+                CHECK (EditFileOperations (*edit2).save (false, true, false));
+            }
+            // edit2 is now destroyed (simulates a closed edit)
+
+            project->save();
+
+            // Move the source file
+            auto newWavFile = projectDir.getChildFile ("moved_audio.wav");
+            CHECK (wavFile.moveFileTo (newWavFile));
+            REQUIRE (newWavFile.existsAsFile());
+            REQUIRE (! wavFile.existsAsFile());
+
+            // For file-based projects, update the ProjectItem source
+            if (fileBased)
+            {
+                if (auto audioItem = project->getProjectItemForFile (wavFile))
+                    audioItem->setSourceFile (newWavFile);
+            }
+
+            // Call sourceFileMoved
+            project->sourceFileMoved (wavFile, newWavFile);
+
+            // Verify the open edit (edit1) now points to the new file
+            {
+                bool foundUpdated = false;
+
+                for (auto track : getAudioTracks (*edit1))
+                {
+                    for (auto clip : track->getClips())
+                    {
+                        if (auto waveClip = dynamic_cast<WaveAudioClip*> (clip))
+                        {
+                            foundUpdated = true;
+                            CHECK (waveClip->getSourceFileReference().getFile() == newWavFile);
+                        }
+                    }
+                }
+
+                CHECK (foundUpdated);
+            }
+
+            // Destroy the open edit before checking the closed one
+            edit1.reset();
+
+            // Verify the closed edit (edit2) was updated on disk
+            {
+                auto loadedEdit = loadEditFromFile (engine, editItem2->getSourceFile());
+                REQUIRE (loadedEdit != nullptr);
+
+                bool foundUpdated = false;
+
+                for (auto track : getAudioTracks (*loadedEdit))
+                {
+                    for (auto clip : track->getClips())
+                    {
+                        if (auto waveClip = dynamic_cast<WaveAudioClip*> (clip))
+                        {
+                            foundUpdated = true;
+                            CHECK (waveClip->getSourceFileReference().getFile() == newWavFile);
+                        }
+                    }
+                }
+
+                CHECK (foundUpdated);
+            }
+
+            cleanup();
+        };
+
+        SUBCASE ("file-based project")
+        {
+            runTest (true);
+        }
+
+        SUBCASE ("folder-based project")
+        {
+            runTest (false);
+        }
+    }
+
+    TEST_CASE ("Project: setSourceFile triggers sourceFileMoved")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto runTest = [&] (bool fileBased)
+        {
+            auto tempDir = juce::File::createTempFile ({});
+            tempDir.createDirectory();
+
+            auto cleanup = [&tempDir]
+            {
+                tempDir.deleteRecursively (false);
+            };
+
+            // Create the project
+            juce::File projectPath;
+            bool createNewId = false;
+
+            if (fileBased)
+            {
+                projectPath = tempDir.getChildFile ("test_project.tracktion");
+                createNewId = true;
+            }
+            else
+            {
+                projectPath = tempDir.getChildFile ("test_folder_project");
+                projectPath.createDirectory();
+                createNewId = false;
+            }
+
+            ProjectManager::TempProject tp (pm, projectPath, createNewId);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+            REQUIRE (project->isValid());
+
+            // Create a wav file inside the project directory
+            auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+            REQUIRE (sinFile != nullptr);
+
+            auto projectDir = project->getDefaultDirectory();
+            auto wavFile = projectDir.getChildFile ("source_audio.wav");
+            sinFile->getFile().copyFileTo (wavFile);
+            REQUIRE (wavFile.existsAsFile());
+
+            // Create a ProjectItem for the wav file
+            auto audioItem = project->createNewItem (wavFile, ProjectItem::waveItemType(),
+                                                     "source_audio", {},
+                                                     ProjectItem::Category::imported, false);
+            REQUIRE (audioItem != nullptr);
+
+            // Create 2 edits
+            auto editItem1 = project->createNewEdit();
+            auto editItem2 = project->createNewEdit();
+            REQUIRE (editItem1 != nullptr);
+            REQUIRE (editItem2 != nullptr);
+
+            // -- Edit 1 (will remain "open" during the move) --
+            auto edit1 = createEmptyEdit (engine, editItem1->getSourceFile());
+            edit1->setProjectItemRef (editItem1->getProjectItemRef());
+            edit1->ensureNumberOfAudioTracks (1);
+
+            {
+                auto audioTracks = getAudioTracks (*edit1);
+                REQUIRE (audioTracks.size() >= 1);
+
+                auto waveClip = insertWaveClip (*audioTracks[0], "OpenClip",
+                                                wavFile,
+                                                { { 0_tp, TimePosition::fromSeconds (1.0) } },
+                                                DeleteExistingClips::no);
+                REQUIRE (waveClip != nullptr);
+                CHECK (waveClip->getSourceFileReference().getFile() == wavFile);
+            }
+
+            CHECK (EditFileOperations (*edit1).save (false, true, false));
+
+            // -- Edit 2 (will be closed during the move) --
+            {
+                auto edit2 = createEmptyEdit (engine, editItem2->getSourceFile());
+                edit2->setProjectItemRef (editItem2->getProjectItemRef());
+                edit2->ensureNumberOfAudioTracks (1);
+
+                auto audioTracks = getAudioTracks (*edit2);
+                REQUIRE (audioTracks.size() >= 1);
+
+                auto waveClip = insertWaveClip (*audioTracks[0], "ClosedClip",
+                                                wavFile,
+                                                { { 0_tp, TimePosition::fromSeconds (1.0) } },
+                                                DeleteExistingClips::no);
+                REQUIRE (waveClip != nullptr);
+                CHECK (waveClip->getSourceFileReference().getFile() == wavFile);
+
+                CHECK (EditFileOperations (*edit2).save (false, true, false));
+            }
+            // edit2 is now destroyed (simulates a closed edit)
+
+            project->save();
+
+            // Move the source file
+            auto newWavFile = projectDir.getChildFile ("moved_audio.wav");
+            CHECK (wavFile.moveFileTo (newWavFile));
+            REQUIRE (newWavFile.existsAsFile());
+            REQUIRE (! wavFile.existsAsFile());
+
+            // Call ONLY setSourceFile — this should trigger sourceFileMoved internally
+            audioItem->setSourceFile (newWavFile);
+
+            // Verify the open edit (edit1) now points to the new file
+            {
+                bool foundUpdated = false;
+
+                for (auto track : getAudioTracks (*edit1))
+                {
+                    for (auto clip : track->getClips())
+                    {
+                        if (auto waveClip = dynamic_cast<WaveAudioClip*> (clip))
+                        {
+                            foundUpdated = true;
+                            CHECK (waveClip->getSourceFileReference().getFile() == newWavFile);
+                        }
+                    }
+                }
+
+                CHECK (foundUpdated);
+            }
+
+            // Destroy the open edit before checking the closed one
+            edit1.reset();
+
+            // Verify the closed edit (edit2) was updated on disk
+            {
+                auto loadedEdit = loadEditFromFile (engine, editItem2->getSourceFile());
+                REQUIRE (loadedEdit != nullptr);
+
+                bool foundUpdated = false;
+
+                for (auto track : getAudioTracks (*loadedEdit))
+                {
+                    for (auto clip : track->getClips())
+                    {
+                        if (auto waveClip = dynamic_cast<WaveAudioClip*> (clip))
+                        {
+                            foundUpdated = true;
+                            CHECK (waveClip->getSourceFileReference().getFile() == newWavFile);
+                        }
+                    }
+                }
+
+                CHECK (foundUpdated);
+            }
+
+            cleanup();
+        };
+
+        SUBCASE ("file-based project")
+        {
+            runTest (true);
+        }
+
+        SUBCASE ("folder-based project")
+        {
+            runTest (false);
+        }
+    }
 }
 
 } // namespace tracktion::inline engine

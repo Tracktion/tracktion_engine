@@ -262,6 +262,12 @@ public:
     /** Unlocks the project file. No-op for folder-based projects. */
     void unlockFile();
 
+    /** Updates all edit source references after a file has been moved/renamed.
+        For folder-based projects, this walks all edits and calls reassignReferencedItem
+        to update path-based source references. File-based projects are a no-op (IDs are stable).
+    */
+    void sourceFileMoved (const juce::File& oldFile, const juce::File& newFile);
+
     using Ptr = juce::ReferenceCountedObjectPtr<Project>;
 
     /** The Engine instance this project belongs to. */
