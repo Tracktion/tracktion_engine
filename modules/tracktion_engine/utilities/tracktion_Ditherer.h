@@ -21,7 +21,7 @@ struct Ditherer
     {
         auto wordLen = std::pow (2.0f, (float)(numBits - 1));
         auto invWordLen = 1.0f / wordLen;
-        amp = invWordLen / RAND_MAX;
+        amp = invWordLen / (float) RAND_MAX;
         offset = invWordLen * 0.5f;
     }
 

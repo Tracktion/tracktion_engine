@@ -941,7 +941,7 @@ bool AudioFileCache::Reader::readSamples (int numSamples,
             if (! isFloatingPoint)
                 for (int i = 0; i <= highestUsedSourceChan; ++i)
                     if (auto chan = chans[i])
-                        juce::FloatVectorOperations::convertFixedToFloat (chan, (const int*) chan, 1.0f / 0x7fffffff, numSamples);
+                        juce::FloatVectorOperations::convertFixedToFloat (chan, (const int*) chan, 1.0f / (float) 0x7fffffff, numSamples);
 
             return true;
         }
@@ -998,7 +998,7 @@ bool AudioFileCache::Reader::readSamples (int numSamples,
             if (! isFloatingPoint)
                 for (int i = 0; i < 2; ++i)
                     if (auto* chan = chans[i])
-                        juce::FloatVectorOperations::convertFixedToFloat (chan, (const int*) chan, 1.0f / 0x7fffffff, numSamples);
+                        juce::FloatVectorOperations::convertFixedToFloat (chan, (const int*) chan, 1.0f / (float) 0x7fffffff, numSamples);
 
             if (dupeChannel)
             {

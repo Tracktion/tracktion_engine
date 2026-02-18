@@ -189,6 +189,7 @@ MacroParameterList::MacroParameterList (Edit& e, const juce::ValueTree& v)
 MacroParameterList::~MacroParameterList()
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
+    deleteAutomatableParameters();
 }
 
 MacroParameter* MacroParameterList::createMacroParameter()
@@ -260,7 +261,10 @@ void MacroParameterList::visitMacroParameters (const std::function<void(Automata
 
 Track* MacroParameterList::getTrack() const
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
+    if (! edit.isLoading())
+    {
+        TRACKTION_ASSERT_MESSAGE_THREAD
+    }
 
     for (auto p (state.getParent()); p.isValid(); p = p.getParent())
         if (TrackList::isTrack (p))

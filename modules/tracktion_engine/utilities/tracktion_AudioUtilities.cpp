@@ -308,7 +308,7 @@ void convertIntsToFloats (juce::AudioBuffer<float>& buffer)
     for (int i = buffer.getNumChannels(); --i >= 0;)
     {
         float* d = buffer.getWritePointer (i);
-        juce::FloatVectorOperations::convertFixedToFloat (d, (const int*) d, 1.0f / 0x7fffffff, buffer.getNumSamples());
+        juce::FloatVectorOperations::convertFixedToFloat (d, (const int*) d, 1.0f / (float) 0x7fffffff, buffer.getNumSamples());
     }
 }
 
