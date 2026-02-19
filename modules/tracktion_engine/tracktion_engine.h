@@ -514,6 +514,8 @@ namespace tracktion { inline namespace engine
 #include "model/edit/tracktion_EditFileOperations.h"
 #include "model/edit/tracktion_EditLoader.h"
 
+#include "project/tracktion_ProjectUtilities.h"
+
 #include "playback/tracktion_TransportControl.h"
 #include "playback/tracktion_AbletonLink.h"
 
