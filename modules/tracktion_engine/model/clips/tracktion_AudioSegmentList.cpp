@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 inline void dumpSegments (const juce::Array<AudioSegmentList::Segment>& segments)
 {
@@ -782,4 +781,4 @@ float AudioSegmentList::getPitchAt (TimePosition t)
     return clip.getPitchChange();
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

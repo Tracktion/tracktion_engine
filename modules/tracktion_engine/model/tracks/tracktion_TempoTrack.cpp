@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 TempoTrack::TempoTrack (Edit& e, const juce::ValueTree& v)
     : Track (e, v, true)
@@ -86,4 +85,4 @@ juce::Array<TrackItem*> TempoTrack::buildTrackItemList() const
     return items;
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

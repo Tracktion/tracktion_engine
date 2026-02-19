@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 namespace Click
@@ -90,4 +89,4 @@ private:
     double sampleRate = 44100.0;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

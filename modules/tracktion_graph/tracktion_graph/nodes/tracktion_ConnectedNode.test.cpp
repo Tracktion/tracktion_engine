@@ -14,8 +14,7 @@
 
 #include "tracktion_ConnectedNode.h"
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 //==============================================================================
 //==============================================================================
@@ -99,6 +98,6 @@ private:
 
 static ConnectedNodeTests connectedNodeTests;
 
-}}
+}
 
 #endif

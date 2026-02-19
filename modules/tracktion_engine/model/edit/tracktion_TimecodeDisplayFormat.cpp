@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 TimecodeDuration::TimecodeDuration (std::optional<TimeDuration> s, std::optional<BeatDuration> b, int bpb)
     : seconds (s), beats (b), beatsPerBar (bpb)
@@ -742,4 +741,4 @@ bool TimecodeDisplayIterator::isOneBarOrGreater() const noexcept
     return currentSnapType.getLevel() >= currentSnapType.getOneBarLevel();
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

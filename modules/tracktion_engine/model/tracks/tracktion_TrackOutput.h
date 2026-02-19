@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     Represents the destination output device(s) for a track.
@@ -96,4 +95,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackOutput)
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -14,8 +14,7 @@
 #include <cstdlib>
 #include <juce_core/juce_core.h>
 
-namespace tracktion { inline namespace core
-{
+namespace tracktion::inline core {
 
 struct TimeDuration;
 struct BeatDuration;
@@ -851,8 +850,7 @@ inline std::ostream& operator<< (std::ostream& os, const TimePosition& v) { os <
 inline std::ostream& operator<< (std::ostream& os, const BeatDuration& v) { os << v.inBeats(); return os; }
 inline std::ostream& operator<< (std::ostream& os, const BeatPosition& v) { os << v.inBeats(); return os; }
 
-}} // namespace tracktion
-
+} // namespace tracktion::inline core
 
 //==============================================================================
 //==============================================================================

@@ -9,8 +9,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 LauncherClipPlaybackHandle LauncherClipPlaybackHandle::forLooping (BeatRange loopRange,
                                                                    BeatDuration offset)
@@ -205,4 +204,4 @@ std::optional<float> LauncherClipPlaybackHandle::getProgress (BeatPosition p) co
     return std::nullopt;
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

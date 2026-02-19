@@ -51,8 +51,7 @@
  #pragma warning (disable : 4244 4100 4305 4065 4701 4706 4723)
 #endif
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 namespace airwindows
 {
 namespace doublepaul
@@ -401,7 +400,7 @@ namespace pressure4
  #include "3rd_party/airwindows/Pressure4/Pressure4Proc.cpp"
 }
 }
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 
 #if JUCE_CLANG

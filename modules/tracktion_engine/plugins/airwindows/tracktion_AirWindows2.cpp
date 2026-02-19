@@ -7,8 +7,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 const char* AirWindowsDoublePaul::xmlTypeName = "airwindows_doublepaul";
 const char* AirWindowsDrive::xmlTypeName = "airwindows_drive";
@@ -290,4 +289,4 @@ AirWindowsPressure4::AirWindowsPressure4 (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::pressure4::Pressure4> (&callback)) {}
 
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

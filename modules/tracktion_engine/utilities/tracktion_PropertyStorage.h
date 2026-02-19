@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     Create a subclass of PropertyStorage to customize how settings are saved
@@ -71,4 +70,4 @@ private:
     std::unique_ptr<juce::PropertiesFile> propertiesFile;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -12,8 +12,7 @@
 
 #include "../utilities/tracktion_TestUtilities.h"
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -60,6 +59,6 @@ public:
 
 static MidiListTests midiListTests;
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #endif

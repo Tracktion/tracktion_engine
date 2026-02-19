@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 AuxSendNode::AuxSendNode (std::unique_ptr<Node> inputNode, int busIDToUse,
                           SampleRateAndBlockSize info,
@@ -94,4 +93,4 @@ void AuxSendNode::process (ProcessContext& pc)
     SendNode::process (pc);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

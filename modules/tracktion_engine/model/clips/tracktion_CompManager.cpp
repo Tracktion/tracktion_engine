@@ -15,8 +15,7 @@
 #include "../../playback/graph/tracktion_CombiningNode.h"
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 struct CompManager::RenderTrigger   : public ValueTreeAllEventListener,
                                       private juce::Timer
@@ -1517,4 +1516,4 @@ void MidiCompManager::createComp (const juce::ValueTree& takeTree)
     }
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 class MidiNote
 {
@@ -95,4 +94,4 @@ private:
     JUCE_LEAK_DETECTOR (MidiNote)
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

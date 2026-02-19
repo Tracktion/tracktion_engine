@@ -7,8 +7,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 ExpEnvelope::ExpEnvelope()
@@ -42,4 +41,4 @@ void ExpEnvelope::calculateReleaseTime()
     releaseOffset = -releaseTCO * (1.0f - releaseCoeff);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

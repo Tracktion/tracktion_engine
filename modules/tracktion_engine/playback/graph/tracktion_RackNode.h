@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -133,4 +132,4 @@ namespace RackNodeBuilder
                                                             ProcessState&, bool isRendering);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

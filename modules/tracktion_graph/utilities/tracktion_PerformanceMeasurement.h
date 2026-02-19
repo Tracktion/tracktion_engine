@@ -18,8 +18,7 @@
 
 #include "../../tracktion_core/utilities/tracktion_CPU.h"
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 //==============================================================================
 //==============================================================================
@@ -387,4 +386,4 @@ inline PerformanceMeasurement::Statistics PerformanceMeasurement::getStatisticsA
     return s;
 }
 
-}}
+}

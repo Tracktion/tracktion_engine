@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 struct InputProvider;
 class TrackMuteState;
@@ -84,4 +83,4 @@ private:
     void replaceLatencyProcessorIfPossible (NodeGraph*);
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

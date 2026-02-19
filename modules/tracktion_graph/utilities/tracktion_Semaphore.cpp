@@ -13,8 +13,7 @@
 #include "../3rd_party/concurrentqueue.h"
 #include "../3rd_party/lightweightsemaphore.h"
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 //==============================================================================
 //==============================================================================
@@ -79,4 +78,4 @@ void LightweightSemaphore::signal (int count)
     return pimpl->signal (count);
 }
 
-}} // namespace tracktion_engine
+} // namespace tracktion::inline graph

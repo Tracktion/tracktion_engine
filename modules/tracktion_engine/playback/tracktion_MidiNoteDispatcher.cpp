@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 MidiNoteDispatcher::MidiNoteDispatcher()
 {
@@ -136,4 +135,4 @@ void MidiNoteDispatcher::hiResTimerCallback()
         m.device->getMidiOutput().fireMessage (m.message);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

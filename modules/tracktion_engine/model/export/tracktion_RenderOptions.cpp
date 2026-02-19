@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 TimeDuration RenderOptions::findEndAllowance (Edit& edit,
                                               juce::Array<EditItemID>* tracks,
@@ -1281,4 +1280,4 @@ juce::String RenderOptions::getCurrentFileExtension()
     return {};
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
     std::string getCmajorVersion();
     std::unique_ptr<juce::AudioPluginFormat> createCmajorPatchPluginFormat (Engine&);
 
@@ -20,4 +19,4 @@ namespace tracktion { inline namespace engine
     juce::String getCmajorPatchPluginFormatName();
     juce::String getCmajorPatchCompileError (Plugin&);
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -10,8 +10,7 @@
 
 #include "../../utilities/tracktion_TestUtilities.h"
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 #if GRAPH_UNIT_TESTS_EDITNODE
 
@@ -564,4 +563,4 @@ static EditNodeBuilderTests editNodeBuilderTests;
 
 #endif
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

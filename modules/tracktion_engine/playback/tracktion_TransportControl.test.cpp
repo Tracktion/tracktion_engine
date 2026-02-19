@@ -13,8 +13,7 @@
 #include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
 #include <tracktion_engine/testing/tracktion_EnginePlayer.h>
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 #if ENGINE_UNIT_TESTS_PLAYBACK
     TEST_SUITE ("tracktion_engine")
@@ -376,6 +375,6 @@ TEST_SUITE ("tracktion_engine")
 }
 #endif // ENGINE_UNIT_TESTS_RECORDING
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #endif // TRACKTION_UNIT_TESTS

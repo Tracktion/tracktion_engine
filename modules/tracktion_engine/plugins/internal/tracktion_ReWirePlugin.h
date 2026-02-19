@@ -10,8 +10,7 @@
 
 #if TRACKTION_ENABLE_REWIRE
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 /** */
@@ -133,6 +132,6 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ReWirePlugin)
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #endif //TRACKTION_ENABLE_REWIRE

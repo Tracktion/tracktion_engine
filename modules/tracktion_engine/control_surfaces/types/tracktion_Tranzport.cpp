@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 static const uint8_t cmdInitNativeMode[] = { 0xf0, 0x00, 0x01, 0x40, 0x10, 0x01, 0x00, 0xf7 };
 static const uint8_t cmdInquiry[]        = { 0xf0, 0x7e, 0x00, 0x06, 0x01, 0xf7 };
@@ -571,4 +570,4 @@ void TranzportControlSurface::displayPrint (int pos, const char* text)
     sendMidiCommandToController (0, buffer, (int) len + 8);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

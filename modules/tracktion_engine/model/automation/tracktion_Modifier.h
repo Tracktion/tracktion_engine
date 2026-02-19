@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /** Base class for objects which need to know about the global Edit time every block.
     The Edit holds an array of these which will be called before every render callback.
@@ -203,4 +202,4 @@ juce::ReferenceCountedArray<ModifierType> getModifiersOfType (const ModifierList
 /** Returns a Modifier if it can be found in the list. */
 Modifier::Ptr findModifierForID (ModifierList&, EditItemID);
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

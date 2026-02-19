@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 /**
@@ -422,4 +421,4 @@ void EnvelopeFollowerModifier::valueTreeChanged()
         changedTimer.startTimerHz (30);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 AuxSendPlugin::AuxSendPlugin (PluginCreationInfo info) : Plugin (info)
 {
@@ -184,4 +183,4 @@ bool AuxSendPlugin::isOwnedBy (Track& t)
     return &t == ownerTrack;
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

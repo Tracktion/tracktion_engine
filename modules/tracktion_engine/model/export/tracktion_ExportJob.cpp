@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 ExportJob::ExportJob (Edit* edit_,
                       const juce::File& destDir_,
@@ -313,4 +312,4 @@ float ExportJob::getCurrentTaskProgress()
     return progress;
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

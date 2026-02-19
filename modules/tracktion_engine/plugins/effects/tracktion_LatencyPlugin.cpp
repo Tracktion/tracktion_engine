@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 //==============================================================================
 //==============================================================================
 /** Simple delay register.
@@ -214,4 +213,4 @@ void LatencyPlugin::valueTreePropertyChanged (juce::ValueTree& v, const juce::Id
     Plugin::valueTreePropertyChanged (v, i);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

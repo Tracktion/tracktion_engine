@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /** Selects whether a new project is stored as a single .tracktion file
     or as a folder on disk.
@@ -252,4 +251,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProjectManager)
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

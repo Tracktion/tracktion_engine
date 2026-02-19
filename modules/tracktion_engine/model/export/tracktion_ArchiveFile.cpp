@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 static bool isWorthConvertingToOgg (AudioFile& source, int quality)
 {
@@ -549,4 +548,4 @@ int TracktionArchiveFile::getOggQuality (CompressionType c)
     return numOptions / 5;
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

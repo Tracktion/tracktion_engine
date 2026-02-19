@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 HostedMidiInputDeviceNode::HostedMidiInputDeviceNode (InputDeviceInstance& idi, MidiInputDevice&,
                                                       tracktion::graph::PlayHeadState&, tracktion::ProcessState& ps)
@@ -72,4 +71,4 @@ void HostedMidiInputDeviceNode::handleIncomingMidiMessage (const juce::MidiMessa
     incomingMessages.addMidiMessage (message, message.getTimeStamp() - globalStreamTime, sourceID);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -9,8 +9,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 TrackWaveInputDeviceNode::TrackWaveInputDeviceNode (ProcessState& processState_, WaveInputDevice& owner, std::unique_ptr<Node> inputNode,
                                                     bool copyInputsToOutputs_)
@@ -80,4 +79,4 @@ void TrackWaveInputDeviceNode::process (ProcessContext& pc)
     }
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 LoopInfo::LoopInfo (Engine& e)
     : engine (e), state (IDs::LOOPINFO)
@@ -583,4 +582,4 @@ bool LoopInfo::deduceTempo (const juce::File& file, const juce::AudioFormatReade
     return true;
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -38,8 +38,7 @@
  #pragma warning (pop)
 #endif
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //=============================================================================
 class AutoMap   : private juce::AsyncUpdater
@@ -1125,6 +1124,6 @@ bool NovationAutomap::showingMarkers()                              { return fal
 bool NovationAutomap::showingTracks()                               { return true; }
 bool NovationAutomap::isPluginSelected (Plugin*)                    { return false; }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #endif

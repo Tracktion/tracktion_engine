@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 MackieXT::MackieXT (ExternalControllerManager& ecm, MackieMCU& m, int id)
     : ControlSurface (ecm), mcu (m)
@@ -60,4 +59,4 @@ void MackieXT::acceptMidiMessage (int, const juce::MidiMessage& m)
     mcu.acceptMidiMessageInt (deviceIdx, m);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

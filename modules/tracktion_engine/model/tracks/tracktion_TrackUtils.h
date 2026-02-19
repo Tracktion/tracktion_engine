@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     Defines the place to insert Track[s].
@@ -304,4 +303,4 @@ TimeRange findUnionOfEditTimeRanges (const ArrayType& items)
     return total;
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

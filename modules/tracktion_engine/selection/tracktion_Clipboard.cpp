@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 Clipboard::Clipboard() {}
 Clipboard::~Clipboard() { clearSingletonInstance(); }
@@ -2286,4 +2285,4 @@ bool Clipboard::Modifiers::pasteIntoEdit (const EditPastingOptions& options) con
     return false;
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /** An area of the edit currently control by a control surface */
 struct ColourArea
@@ -230,4 +229,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ExternalControllerManager)
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

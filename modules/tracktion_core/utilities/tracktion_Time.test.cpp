@@ -12,8 +12,7 @@
 
 #include "tracktion_Time.h"
 
-namespace tracktion { inline namespace core
-{
+namespace tracktion::inline core {
 
 struct TimelineClock
 {
@@ -433,6 +432,5 @@ public:
 
 static TimeTests timeTests;
 
-}} // namespace tracktion
-
+} // namespace tracktion::inline core
 #endif //TRACKTION_UNIT_TESTS_TIME

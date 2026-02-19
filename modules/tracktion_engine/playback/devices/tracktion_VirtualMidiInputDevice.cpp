@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 struct VirtualMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
 {
@@ -136,4 +135,4 @@ juce::String VirtualMidiInputDevice::getSelectableDescription()
     return MidiInputDevice::getSelectableDescription();
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

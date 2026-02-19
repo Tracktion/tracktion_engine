@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 SourceFileReference::SourceFileReference (Edit& e, juce::ValueTree& v, const juce::Identifier& prop)
     : edit (e), source (v, prop, &e.getUndoManager()), state (v)
@@ -159,4 +158,4 @@ void SourceFileReference::setToProjectFileReference (ProjectItemRef newID)
         edit.restartPlayback();
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

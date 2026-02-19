@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 StepClip::Pattern::Pattern (StepClip& c, const juce::ValueTree& v) noexcept
     : clip (c), state (v)
@@ -405,4 +404,4 @@ juce::String StepClip::PatternInstance::getSelectableDescription()
          + TRANS("Variation 123").replace ("123", juce::String (patternIndex + 1)) + ")";
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

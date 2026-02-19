@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 PluginRenderContext::PluginRenderContext (juce::AudioBuffer<float>* buffer,
                                           const juce::AudioChannelSet& bufferChannels,
@@ -935,4 +934,4 @@ void Plugin::flushPluginStateToValueTree()
     }
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

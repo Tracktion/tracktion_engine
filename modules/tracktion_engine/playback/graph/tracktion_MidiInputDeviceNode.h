@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     A Node that intercepts incoming live MIDI and inserts it in to the playback graph.
@@ -78,4 +77,4 @@ private:
     void updateLoopOverdubs();
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

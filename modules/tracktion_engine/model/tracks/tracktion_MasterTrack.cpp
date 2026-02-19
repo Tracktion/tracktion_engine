@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 MasterTrack::MasterTrack (Edit& e, const juce::ValueTree& v)
     : Track (e, v, true)
@@ -33,4 +32,4 @@ juce::String MasterTrack::getName() const             { return TRANS("Master"); 
 juce::String MasterTrack::getSelectableDescription()  { return TRANS("Master Track"); }
 bool MasterTrack::canContainPlugin (Plugin* p) const  { return p->canBeAddedToMaster(); }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

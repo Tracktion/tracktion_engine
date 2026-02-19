@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     Holds the state of a process call.
@@ -178,4 +177,4 @@ public:
 };
 
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

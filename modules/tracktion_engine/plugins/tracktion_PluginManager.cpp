@@ -10,8 +10,7 @@
 
 #include "tracktion_PluginScanHelpers.h"
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 // Defined in ExternalPlugin.cpp to clean up plugins waiting to be deleted
 extern void cleanUpDanglingPlugins();
@@ -651,4 +650,4 @@ void PluginCache::timerCallback()
     }
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

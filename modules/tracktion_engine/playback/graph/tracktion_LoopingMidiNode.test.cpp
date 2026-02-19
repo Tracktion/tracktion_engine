@@ -10,8 +10,7 @@
 
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_LOOPINGMIDINODE
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -434,6 +433,6 @@ private:
 
 static LoopingMidiNodeTests loopingMidiNodeTests;
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #endif //ENGINE_UNIT_TESTS_LOOPINGMIDINODE

@@ -7,8 +7,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 AirWindowsCallback::AirWindowsCallback (AirWindowsPlugin& o)
@@ -223,4 +222,4 @@ void AirWindowsPlugin::flushPluginStateToValueTree()
 }
 
 
-} }
+}

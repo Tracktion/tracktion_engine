@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 InsertNode::InsertNode (std::unique_ptr<Node> input_, InsertPlugin& ip, std::unique_ptr<Node> returnNode_, SampleRateAndBlockSize info)
     : owner (ip), plugin (ip),
@@ -174,4 +173,4 @@ void InsertSendNode::process (ProcessContext& pc)
     pc.buffers.midi.copyFrom (buffers.midi);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

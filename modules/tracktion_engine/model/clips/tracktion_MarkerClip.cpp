@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 MarkerClip::MarkerClip (const juce::ValueTree& v, EditItemID id, ClipOwner& targetParent)
    : Clip (v, targetParent, id, Type::marker)
@@ -82,4 +81,4 @@ void MarkerClip::valueTreePropertyChanged (juce::ValueTree& v, const juce::Ident
     Clip::valueTreePropertyChanged (v, i);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /** A Node that plays MIDI data from a MidiMessageSequence,
     at a specific MIDI channel.
@@ -60,4 +59,4 @@ private:
                          juce::MidiMessageSequence&);
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

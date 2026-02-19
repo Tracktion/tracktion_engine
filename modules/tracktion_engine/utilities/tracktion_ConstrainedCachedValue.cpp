@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_CONSTRAINED_CACHED_VALUE
 
@@ -72,4 +71,4 @@ static ConstrainedCachedValueTests constrainedCachedValueTests;
 
 #endif // TRACKTION_UNIT_TESTS
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

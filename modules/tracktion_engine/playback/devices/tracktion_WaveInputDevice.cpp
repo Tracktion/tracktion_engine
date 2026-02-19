@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 class DiskSpaceCheckTask  : public juce::ThreadPoolJob,
                             private juce::Timer,
@@ -1964,4 +1963,4 @@ void WaveInputRecordingThread::flushAndStop()
     hasWarned = false;
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

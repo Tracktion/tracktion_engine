@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 /**
@@ -101,4 +100,4 @@ juce::Result writeDAWprojectFile (const juce::File& file,
 
 } // namespace dawproject
 
-}} // namespace tracktion::engine
+} // namespace tracktion::inline engine

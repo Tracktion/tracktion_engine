@@ -60,8 +60,7 @@ namespace ARA
  #pragma clang diagnostic pop
 #endif
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 using namespace ARA;
 
@@ -978,13 +977,12 @@ ARAClipPlayer::ARADocument* ARAClipPlayer::getDocument() const
     return {};
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #else
 
 //==============================================================================
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 struct ARADocumentHolder::Pimpl {};
 struct ARAClipPlayer {};
@@ -1011,6 +1009,6 @@ ARADocumentHolder::~ARADocumentHolder() {}
 ARADocumentHolder::Pimpl* ARADocumentHolder::getPimpl()             { return {}; }
 void ARADocumentHolder::flushStateToValueTree() {}
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #endif

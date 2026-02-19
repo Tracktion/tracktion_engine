@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 using SampleCount = int64_t;
 using SampleRange = juce::Range<SampleCount>;
@@ -270,7 +269,7 @@ inline SampleType getRMS (choc::buffer::MonoView<SampleType> view)
 }
 
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 namespace juce
 {

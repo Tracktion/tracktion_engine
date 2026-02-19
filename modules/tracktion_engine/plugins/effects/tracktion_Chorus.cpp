@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 ChorusPlugin::ChorusPlugin (PluginCreationInfo info)  : Plugin (info)
 {
@@ -125,4 +124,4 @@ void ChorusPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
         p->updateFromAttachedValue();
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

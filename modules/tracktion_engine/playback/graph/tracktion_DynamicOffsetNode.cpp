@@ -10,8 +10,7 @@
 
 #include "tracktion_WaveNode.h"
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -291,4 +290,4 @@ void DynamicOffsetNode::processSection (ProcessContext& pc, BeatRange sectionRan
     }
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

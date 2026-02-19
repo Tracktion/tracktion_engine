@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 //==============================================================================
 //==============================================================================
@@ -158,4 +157,4 @@ private:
     bool needToUnlockPushingObjectMutex = false, needToUnlockClearObjectsMutex = true;
 };
 
-}} // namespace tracktion_engine
+} // namespace tracktion::inline graph

@@ -14,8 +14,7 @@
 #include "../utilities/tracktion_TestUtilities.h"
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -66,6 +65,6 @@ private:
 
 static SelectableTests selectableTests;
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #endif //ENGINE_UNIT_TESTS_SELECTABLE

@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 class TrackMuteState;
 
@@ -86,4 +85,4 @@ private:
     PluginRenderContext getPluginRenderContext (juce::Range<int64_t>, juce::AudioBuffer<float>&);
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

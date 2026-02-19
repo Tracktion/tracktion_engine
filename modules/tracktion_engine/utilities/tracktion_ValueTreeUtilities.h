@@ -18,8 +18,7 @@ namespace juce
     };
 }
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 /** Ensures a property is a given type which can avoid having to parse a string
@@ -746,4 +745,4 @@ inline juce::ValueTree getOrCreateChildWithTypeAndProperty (juce::ValueTree& tre
     return newTree;
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

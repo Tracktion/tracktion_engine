@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 FolderTrack::FolderTrack (Edit& ed, const juce::ValueTree& v)
     : Track (ed, v, true)
@@ -522,4 +521,4 @@ void FolderTrack::valueTreeChildOrderChanged (juce::ValueTree& p, int oldIndex, 
     Track::valueTreeChildOrderChanged (p, oldIndex, newIndex);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

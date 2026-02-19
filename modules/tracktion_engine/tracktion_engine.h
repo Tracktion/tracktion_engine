@@ -273,8 +273,7 @@ namespace tracktion::inline graph
 
 
 //==============================================================================
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
     class EngineBehaviour;
     class Engine;
     class DeviceManager;
@@ -377,7 +376,7 @@ namespace tracktion { inline namespace engine
     class LaunchHandle;
     class LaunchQuantisation;
     class BufferedAudioFileManager;
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #ifdef __GNUC__
  #pragma GCC diagnostic push

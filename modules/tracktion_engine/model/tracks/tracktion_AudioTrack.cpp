@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 struct AudioTrack::TrackMuter  : private juce::AsyncUpdater
@@ -1216,4 +1215,4 @@ juce::Array<Track*> AudioTrack::findSidechainSourceTracks() const
     return srcTracks;
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

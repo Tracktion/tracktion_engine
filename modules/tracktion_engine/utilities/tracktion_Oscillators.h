@@ -7,8 +7,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 class BandlimitedWaveLookupTables : public juce::ReferenceCountedObject
@@ -109,4 +108,4 @@ private:
     float detune = 0, spread = 0, gain = 1.0f, note = 69.0f, pan = 0.0f;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

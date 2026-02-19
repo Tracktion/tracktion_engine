@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 MIDITrackerModifier::MIDITrackerModifier (Edit& e, const juce::ValueTree& v)
@@ -282,4 +281,4 @@ void MIDITrackerModifier::valueTreePropertyChanged (juce::ValueTree& v, const ju
     ValueTreeAllEventListener::valueTreePropertyChanged (v, i);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

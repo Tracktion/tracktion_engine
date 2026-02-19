@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 /**
@@ -227,7 +226,7 @@ void mergeInMidiSequence (MidiClip&, juce::MidiMessageSequence, TimeDuration off
                           MidiList::NoteAutomationType);
 
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 namespace juce
 {

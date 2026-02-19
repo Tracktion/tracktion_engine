@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 /** Describes a channel of a WaveInputDevice or WaveOutputDevice by specifying the
@@ -71,4 +70,4 @@ struct WaveDeviceDescription
     bool enabled = true;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 InputDevice::InputDevice (Engine& e, juce::String t, juce::String n, juce::String idToUse)
    : engine (e), type (t), deviceID (std::move (idToUse)), name (n)
@@ -417,4 +416,4 @@ InputDeviceInstance::Destination* getDestination (InputDeviceInstance& instance,
 }
 
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

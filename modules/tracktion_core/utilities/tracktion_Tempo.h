@@ -18,8 +18,7 @@
 #include "tracktion_TimeRange.h"
 #include "tracktion_Bezier.h"
 
-namespace tracktion { inline namespace core
-{
+namespace tracktion::inline core {
 
 //==============================================================================
 //==============================================================================
@@ -990,4 +989,4 @@ inline double Sequence::Position::getPPQTimeOfBarStart() const noexcept
 
 } // namespace Tempo
 
-}} // namespace tracktion
+} // namespace tracktion::inline core

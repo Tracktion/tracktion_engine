@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     A Node that calculates a position to show visually what time is currently being processed by the graph based on its internal latency.
@@ -120,4 +119,4 @@ private:
     }
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

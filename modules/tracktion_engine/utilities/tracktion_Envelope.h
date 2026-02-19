@@ -7,8 +7,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 // An ADSR Envelope with exponential curves with the same API as the juce::ADSR
@@ -423,4 +422,4 @@ protected:
     float attackRate = 0.0f, decayRate = 0.0f, releaseRate = 0.0f;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

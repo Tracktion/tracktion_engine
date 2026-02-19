@@ -12,8 +12,7 @@
 
 #include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -64,14 +63,13 @@ private:
 
 static EditTests editTests;
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #endif //TRACKTION_UNIT_TESTS
 
 #if TRACKTION_BENCHMARKS && ENGINE_BENCHMARKS_EDITITEMID
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -204,6 +202,6 @@ private:
 
 static EditItemIDBenchmarks editItemIDBenchmarks;
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #endif //TRACKTION_BENCHMARKS

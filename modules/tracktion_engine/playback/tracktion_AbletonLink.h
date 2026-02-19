@@ -12,8 +12,7 @@
  struct ABLLink;
 #endif
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     Manages an Ableton Link session connecting an Edit with a number of networked peers,
@@ -154,4 +153,4 @@ private:
     std::unique_ptr<ImplBase> implementation;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

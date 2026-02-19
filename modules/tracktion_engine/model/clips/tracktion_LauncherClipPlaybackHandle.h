@@ -9,8 +9,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -65,4 +64,4 @@ private:
     LauncherClipPlaybackHandle() = default;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

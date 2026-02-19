@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -120,7 +119,7 @@ using AtomicWrapperRelaxed = AtomicWrapper<Type, Constrainer, std::memory_order_
 template<typename Type, typename Constrainer = DummyConstrainer<Type>>
 using AtomicWrapperAcqRel = AtomicWrapper<Type, Constrainer, std::memory_order_acquire, std::memory_order_release>;
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 
 //==============================================================================

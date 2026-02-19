@@ -9,8 +9,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 /**
@@ -120,4 +119,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ImpulseResponsePlugin)
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

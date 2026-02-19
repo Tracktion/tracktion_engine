@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 class HostedAudioDevice : public juce::AudioIODevice
@@ -479,4 +478,4 @@ std::shared_ptr<MidiInputDevice> HostedAudioDeviceInterface::createMidiInput()
     return midiInputs.back();
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

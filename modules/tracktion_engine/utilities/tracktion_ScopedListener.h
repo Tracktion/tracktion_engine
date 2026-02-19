@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     Manages adding and removing listeners in an RAII way so you don't forget to unregister a listener.
@@ -94,4 +93,4 @@ public:
     std::any pimpl;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

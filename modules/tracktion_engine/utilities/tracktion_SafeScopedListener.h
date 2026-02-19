@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 template<typename T>
 concept WeakReferenceable = requires (T x)
@@ -130,4 +129,4 @@ public:
     std::any pimpl;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

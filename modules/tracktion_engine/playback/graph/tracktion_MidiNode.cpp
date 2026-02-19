@@ -12,8 +12,7 @@
 
 #define TRACKTION_SANITY_CHECK_MIDI_BUFFERS 0
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 MidiNode::MidiNode (std::vector<juce::MidiMessageSequence> sequences,
                     MidiList::TimeBase tb,
@@ -209,4 +208,4 @@ void MidiNode::processSection (Node::ProcessContext& pc,
 
 
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

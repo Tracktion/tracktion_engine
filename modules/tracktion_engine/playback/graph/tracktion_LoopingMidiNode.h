@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 class GeneratorAndNoteList;
 
@@ -84,4 +83,4 @@ private:
     bool wasMute = false;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

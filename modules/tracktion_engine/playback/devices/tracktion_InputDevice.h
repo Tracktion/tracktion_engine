@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     Represents an input device.
@@ -479,4 +478,4 @@ inline InputDeviceInstance::PreparedContext& append (InputDeviceInstance::Prepar
 }
 
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

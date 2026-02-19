@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 namespace PredefinedWavetable
 {
@@ -131,4 +130,4 @@ static inline AutomatableParameter* createSuffixedParameter (AutomatableEditItem
     return p;
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

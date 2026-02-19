@@ -12,8 +12,7 @@
 
 #include "../../tracktion_graph/utilities/tracktion_PerformanceMeasurement.h"
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -223,4 +222,4 @@ private:
     Benchmark& benchmark;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

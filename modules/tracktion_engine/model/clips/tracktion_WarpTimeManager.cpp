@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 inline HashCode hashDouble (double d) noexcept
 {
@@ -607,4 +606,4 @@ void WarpTimeFactory::removeWarpTimeManager (WarpTimeManager& wtm)
     warpTimeManagers.removeAllInstancesOf (&wtm);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

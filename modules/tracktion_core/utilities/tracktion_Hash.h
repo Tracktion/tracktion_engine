@@ -46,8 +46,7 @@
 #include <cstddef>
 #include <functional>
 
-namespace tracktion { inline namespace core
-{
+namespace tracktion::inline core {
 
 //==============================================================================
 //==============================================================================
@@ -94,4 +93,4 @@ template<typename T>
     return seed;
 }
 
-}}
+}

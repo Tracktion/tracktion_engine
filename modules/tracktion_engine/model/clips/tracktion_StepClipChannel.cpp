@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 StepClip::Channel::Channel (StepClip& c, const juce::ValueTree& v)
     : clip (c), state (v)
@@ -69,4 +68,4 @@ juce::String StepClip::Channel::getSelectableDescription()
     return {};
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

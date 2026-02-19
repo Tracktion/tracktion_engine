@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 struct AbletonLink::ImplBase  : public juce::Timer
 {
@@ -589,4 +588,4 @@ void AbletonLink::removeListener (Listener* l)
         implementation->removeListener (l);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

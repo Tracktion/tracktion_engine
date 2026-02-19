@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 struct EditPosition;
 
@@ -403,7 +402,7 @@ struct ClipPositionBeats
 
 //==============================================================================
 //==============================================================================
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 namespace juce
 {
@@ -436,7 +435,7 @@ namespace juce
     };
 }
 
-namespace tracktion { inline namespace engine {
+namespace tracktion::inline engine {
 
 //==============================================================================
 //        _        _           _  _
@@ -672,4 +671,4 @@ inline ClipPosition ClipPosition::rescaled (TimePosition anchorTime, double fact
 }
 
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

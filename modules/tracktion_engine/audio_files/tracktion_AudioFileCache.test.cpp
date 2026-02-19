@@ -16,8 +16,7 @@
 
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_AUDIO_FILE_CACHE
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -64,14 +63,13 @@ private:
 
 static AudioFileCacheTests audioFileCacheTests;
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #endif
 
 
 #if TRACKTION_BENCHMARKS && ENGINE_BENCHMARKS_AUDIOFILECACHE
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 class JUCEBufferingAudioReaderWrapper   : public FallbackReader
@@ -449,6 +447,6 @@ private:
 
 static AudioFileCacheBenchmarks audioFileCacheBenchmarks;
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #endif

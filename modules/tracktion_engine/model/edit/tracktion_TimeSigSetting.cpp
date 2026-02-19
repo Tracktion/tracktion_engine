@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 TimeSigSetting::TimeSigSetting (TempoSequence& ts, const juce::ValueTree& v)
     : TrackItem (ts.edit, {}, Type::timeSig),
@@ -78,4 +77,4 @@ juce::String TimeSigSetting::getName() const
     return getStringTimeSig();
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

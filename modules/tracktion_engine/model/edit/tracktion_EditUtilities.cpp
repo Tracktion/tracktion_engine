@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 Project::Ptr getProjectForEdit (const Edit& e)
 {
@@ -1328,4 +1327,4 @@ InputDeviceInstance::Destination* assignTrackAsInput (AudioTrack& destTrack, con
     return res ? *res : nullptr;
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

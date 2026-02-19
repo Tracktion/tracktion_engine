@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     A MacroParameter is an AutomatableParameter which is a collection of
@@ -120,4 +119,4 @@ private:
     std::unique_ptr<MacroParameterList> macroParameterList;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

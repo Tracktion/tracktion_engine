@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /** */
 class AutomationTrack  : public Track
@@ -30,4 +29,4 @@ public:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AutomationTrack)
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

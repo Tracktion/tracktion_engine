@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine { namespace dawproject
-{
+namespace tracktion::inline engine { namespace dawproject {
 
 //==============================================================================
 DAWprojectExporter::DAWprojectExporter (Edit& e, const WriteOptions& opts)
@@ -763,4 +762,4 @@ juce::String DAWprojectExporter::getDeviceRole (Plugin& plugin) const
     return xml::audioFX;
 }
 
-}}} // namespace tracktion::engine::dawproject
+}} // namespace tracktion::inline engine::dawproject

@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     The VCA plugin sits on a folder track to control the overall level of all the volume/pan
@@ -58,4 +57,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VCAPlugin)
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -9,8 +9,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 ClipSlot::ClipSlot (const juce::ValueTree& v, Track& t)
     : EditItem (t.edit, v), state (v), track (t)
@@ -211,4 +210,4 @@ void ClipSlotList::objectOrderChanged()
 }
 
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 RemoteSLCompact::RemoteSLCompact (ExternalControllerManager& ecm)  : NovationRemoteSl (ecm)
 {
@@ -44,4 +43,4 @@ bool RemoteSLCompact::showingTracks()                                   { return
 bool RemoteSLCompact::isPluginSelected (Plugin*)                        { return false; }
 bool RemoteSLCompact::wantsMessage (int, const juce::MidiMessage& m)    { return m.isController(); }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

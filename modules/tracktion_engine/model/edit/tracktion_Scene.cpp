@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 Scene::Scene (const juce::ValueTree& v, SceneList& sl)
     : state (v), edit (sl.edit), sceneList (sl)
@@ -269,4 +268,4 @@ void SceneList::objectOrderChanged()
 }
 
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

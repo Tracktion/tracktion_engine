@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 struct MidiMessageArray
 {
@@ -258,4 +257,4 @@ private:
     juce::Array<tracktion::engine::MidiMessageWithSource> messages;
 };
 
-}} // namespace tracktion
+} // namespace tracktion::inline graph

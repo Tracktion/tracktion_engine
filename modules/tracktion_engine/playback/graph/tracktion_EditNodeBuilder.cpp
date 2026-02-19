@@ -15,8 +15,7 @@
 #define USE_DYNAMIC_OFFSET_CONTAINER_CLIP 1
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -2010,4 +2009,4 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (Edit& edit, const Cre
 std::function<std::unique_ptr<tracktion::graph::Node> (std::unique_ptr<tracktion::graph::Node>)> EditNodeBuilder::insertOptionalLastStageNode
     = [] (std::unique_ptr<tracktion::graph::Node> input) { return input; };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -11,8 +11,7 @@
 #pragma once
 
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 /**
     Simple player for an Node.
@@ -224,4 +223,4 @@ protected:
     }
 };
 
-}}
+}

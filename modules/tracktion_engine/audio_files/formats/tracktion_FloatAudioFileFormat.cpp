@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 static int getFloatFileHeaderIntV1()  { return (int) juce::ByteOrder::littleEndianInt ("TRKF"); }
 static int getFloatFileHeaderIntV2()  { return (int) juce::ByteOrder::littleEndianInt ("TF64"); }
@@ -333,4 +332,4 @@ std::unique_ptr<juce::AudioFormatWriter> FloatAudioFormat::createWriterFor (std:
     return std::make_unique<FloatAudioFormatWriter> (out.release(), opts.getSampleRate(), opts.getNumChannels());
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -12,8 +12,7 @@
 
 #include "../../3rd_party/choc/audio/choc_MIDISequence.h"
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 //==============================================================================
 /** Creates a juce::AudioBuffer from a choc::buffer::BufferView. */
@@ -197,8 +196,7 @@ static void copyIfNotAliased (DestBuffer&& dest, const SourceBuffer& source)
 
 }
 
-}} // namespace tracktion
-
+} // namespace tracktion::inline graph
 #ifndef DOXYGEN
 template<>
 struct std::hash<juce::MidiMessageSequence>

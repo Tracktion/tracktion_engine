@@ -12,8 +12,7 @@
 
  #include "../../../tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -83,6 +82,6 @@ private:
 
 static ClipSlotTests clipSlotTests;
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #endif //TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_CLIPSLOT

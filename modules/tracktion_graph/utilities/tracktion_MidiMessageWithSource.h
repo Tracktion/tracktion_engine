@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 using MPESourceID = uint32_t;
 
@@ -39,4 +38,4 @@ inline static MPESourceID createUniqueMPESourceID() noexcept
 static constexpr MPESourceID notMPE = 0;
 
 
-}} // namespace tracktion
+} // namespace tracktion::inline graph

@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 class TrackMuteState;
 
@@ -50,4 +49,4 @@ private:
     bool isInitialised = false;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -10,8 +10,7 @@
 
 #if TRACKTION_ENABLE_REX
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 class RexAudioFormat    : public juce::AudioFormat
 {
@@ -41,6 +40,6 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RexAudioFormat)
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #endif

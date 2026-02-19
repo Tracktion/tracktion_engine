@@ -11,8 +11,7 @@
 #pragma once
 
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 //==============================================================================
 /**
@@ -33,4 +32,4 @@ enum class ThreadPoolStrategy
 /** Returns a function to create a ThreadPool for the given stategy. */
 LockFreeMultiThreadedNodePlayer::ThreadPoolCreator getPoolCreatorFunction (ThreadPoolStrategy);
 
-}}
+}

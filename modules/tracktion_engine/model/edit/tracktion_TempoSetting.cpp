@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 TempoSetting::TempoSetting (TempoSequence& ts, const juce::ValueTree& v)
     : ReferenceCountedObject(),
@@ -122,4 +121,4 @@ HashCode TempoSetting::getHash() const noexcept
                 + static_cast<HashCode> (curve * 1023.0));
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine { namespace dawproject
-{
+namespace tracktion::inline engine { namespace dawproject {
 
 //==============================================================================
 DAWprojectImporter::DAWprojectImporter (Engine& e, const ParseOptions& opts)
@@ -834,4 +833,4 @@ bool DAWprojectImporter::isTimeUnitBeats (const juce::XmlElement& element) const
     return timeUnit.isEmpty() || timeUnit == xml::beats;
 }
 
-}}} // namespace tracktion::engine::dawproject
+}} // namespace tracktion::inline engine::dawproject

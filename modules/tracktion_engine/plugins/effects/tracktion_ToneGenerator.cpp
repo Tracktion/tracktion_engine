@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 juce::StringArray ToneGeneratorPlugin::getOscTypeNames()
@@ -241,4 +240,4 @@ void ToneGeneratorPlugin::initialiseOscilators()
     noise.initialise (noiseFunc);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

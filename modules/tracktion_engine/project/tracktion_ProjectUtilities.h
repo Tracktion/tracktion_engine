@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /** Utilities for consolidating Projects and Edits. */
 namespace ProjectUtilities
@@ -110,4 +109,4 @@ namespace ProjectUtilities
     void consolidateProjectInteractive (Project& project, std::function<void()> completionCallback = nullptr);
 }
 
-}} // namespace tracktion::engine
+} // namespace tracktion::inline engine

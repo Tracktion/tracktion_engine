@@ -11,8 +11,7 @@
 #include "tracktion_MidiNodeHelpers.h"
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 using EditBeatPosition = double;
@@ -1522,4 +1521,4 @@ void LoopingMidiNode::process (ProcessContext& pc)
                                           getPlayHeadState().isLastBlockOfLoop());
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

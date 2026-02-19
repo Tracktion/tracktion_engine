@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 WaveAudioClip::WaveAudioClip (const juce::ValueTree& v, EditItemID clipID, ClipOwner& co)
     : AudioClipBase (v, clipID, Type::wave, co)
@@ -603,4 +602,4 @@ bool WaveAudioClip::isUsingFile (const AudioFile& af)
     return false;
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

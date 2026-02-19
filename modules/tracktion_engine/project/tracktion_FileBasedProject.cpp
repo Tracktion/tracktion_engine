@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 // a combined version number and file identifier for the project file
 static const char* fileBasedProjectMagicNumberV1 = "TP01";
@@ -810,4 +809,4 @@ void FileBasedProject::refreshFolderStructure()
     }
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

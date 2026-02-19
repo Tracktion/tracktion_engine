@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 namespace fade_utils
 {
@@ -207,4 +206,4 @@ bool FadeInOutNode::renderingNeeded (const TimeRange timelineRange)
                                   || timelineRange.getEnd() >= (fadeOut.getEnd() + dynamicOffset)));
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

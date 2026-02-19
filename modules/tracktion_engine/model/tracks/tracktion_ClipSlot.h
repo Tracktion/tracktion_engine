@@ -9,8 +9,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     Represents a slot on a track that a Clip can live in to be played as a launched clip.
@@ -105,4 +104,4 @@ private:
     void objectOrderChanged() override;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

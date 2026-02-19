@@ -10,8 +10,7 @@
 
 #include "../../model/clips/tracktion_LaunchHandle.h"
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 SlotControlNode::SlotControlNode (ProcessState& ps,
                                   std::shared_ptr<LaunchHandle> launchHandle_,
@@ -351,4 +350,4 @@ void SlotControlNode::processStop (ProcessContext& pc, double timestampForMidiNo
     launchHandle->advance (getProcessState().getSyncRange());
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 /** Represents a set of user properties used to control a render operation, using
@@ -209,7 +208,7 @@ private:
     juce::String getCurrentFileExtension();
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 namespace juce
 {

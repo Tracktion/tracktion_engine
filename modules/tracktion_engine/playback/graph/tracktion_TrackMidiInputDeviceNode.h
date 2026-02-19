@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     A Node that takes MIDI from the output of a track and sends it to its corresponding InputDevice.
@@ -35,4 +34,4 @@ private:
     const bool copyInputsToOutputs = false;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

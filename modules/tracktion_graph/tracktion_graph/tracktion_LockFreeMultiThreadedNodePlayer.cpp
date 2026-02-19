@@ -15,8 +15,7 @@
 
 #define RETURN_MID_NODES_OPTIMISATION 1
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 LockFreeMultiThreadedNodePlayer::LockFreeMultiThreadedNodePlayer()
 {
@@ -466,4 +465,4 @@ void LockFreeMultiThreadedNodePlayer::processNode (PreparedNode& preparedNode, N
     }
 }
 
-}}
+}

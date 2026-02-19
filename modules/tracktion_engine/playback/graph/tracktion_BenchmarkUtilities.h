@@ -16,8 +16,7 @@
 #include "../../playback/graph/tracktion_TracktionNodePlayer.h"
 #include "../../playback/graph/tracktion_MultiThreadedNodePlayer.h"
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 namespace benchmark_utilities
 {
@@ -254,4 +253,4 @@ namespace benchmark_utilities
     }
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -11,8 +11,7 @@
 #pragma once
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -244,4 +243,4 @@ private:
     }
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 struct PluginScanHelpers
 {
@@ -375,4 +374,4 @@ static juce::MemoryBlock createScanMessage (const juce::XmlElement& xml)
 
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

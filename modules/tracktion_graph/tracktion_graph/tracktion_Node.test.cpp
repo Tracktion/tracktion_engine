@@ -9,8 +9,7 @@
 */
 
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 #if GRAPH_UNIT_TESTS_NODE
 
@@ -671,4 +670,4 @@ static NodeTests nodeTests;
 
 #endif
 
-}}
+}

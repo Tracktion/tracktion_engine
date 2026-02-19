@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     Holds tempo/beat information about an audio file.
@@ -190,4 +189,4 @@ private:
     JUCE_LEAK_DETECTOR (LoopInfo)
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

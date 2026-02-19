@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 AudioFileFormatManager::AudioFileFormatManager()
 {
@@ -151,4 +150,4 @@ juce::AudioFormat* AudioFileFormatManager::getNamedFormat (const juce::String& f
     return getDefaultFormat();
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -12,8 +12,7 @@
  #include "../../tracktion_core/utilities/tracktion_Benchmark.h"
 #endif
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 #if GRAPH_UNIT_TESTS_SEMAPHORE
 
@@ -440,4 +439,4 @@ private:
 static ThreadSignallingBenchmarks threadSignallingBenchmarks;
 #endif
 
-}} // namespace tracktion_engine
+} // namespace tracktion::inline graph

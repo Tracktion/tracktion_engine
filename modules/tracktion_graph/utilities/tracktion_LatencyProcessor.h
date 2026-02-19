@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 //==============================================================================
 //==============================================================================
@@ -150,4 +149,4 @@ private:
     tracktion_engine::MidiMessageArray midi;
 };
 
-}}
+}

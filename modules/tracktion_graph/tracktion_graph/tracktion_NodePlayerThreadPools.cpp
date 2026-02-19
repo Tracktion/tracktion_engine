@@ -15,8 +15,7 @@
  #pragma warning (disable: 4127)
 #endif
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 //==============================================================================
 //==============================================================================
@@ -697,4 +696,4 @@ LockFreeMultiThreadedNodePlayer::ThreadPoolCreator getPoolCreatorFunction (Threa
  #pragma warning (pop)
 #endif
 
-}}
+}

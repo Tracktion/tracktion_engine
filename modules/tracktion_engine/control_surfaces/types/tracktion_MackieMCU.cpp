@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 MackieMCU::MackieMCU (ExternalControllerManager& ecm)  : ControlSurface (ecm)
 {
@@ -1478,4 +1477,4 @@ void MackieMCU::undoStatusChanged (bool undo, bool redo)
     lightUpButton (deviceIdx, 0x4f, redo);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

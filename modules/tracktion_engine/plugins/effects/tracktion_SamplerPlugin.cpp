@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 // this must be high enough for low freq sounds not to click
 static constexpr int minimumSamplesToPlayWhenStopping = 8;
@@ -718,4 +717,4 @@ void SamplerPlugin::SamplerSound::refreshFile()
     setExcerpt (startTime, length);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

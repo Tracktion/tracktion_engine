@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 struct ClipOwner::ClipList : public ValueTreeObjectList<Clip>,
                              private juce::AsyncUpdater
@@ -785,4 +784,4 @@ bool isOnTop (const Track& track)
         || (isAutomationTrack (track) && track.getParentTrack() != nullptr && track.getParentTrack()->isMasterTrack());
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

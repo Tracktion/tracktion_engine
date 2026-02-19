@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /** Base class for audio or midi output devices, to which a track's output can be sent.
     The DeviceManager keeps a list of these objects.
@@ -68,4 +67,4 @@ protected:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OutputDeviceInstance)
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 TrackItem::TrackItem (Edit& ed, EditItemID id, Type t)
     : EditItem (id, ed), type (t)
@@ -142,4 +141,4 @@ BeatPosition TrackItem::getEndBeat() const                              { return
 TimePosition TrackItem::getTimeOfRelativeBeat (BeatDuration b) const    { return edit.tempoSequence.toTime (getStartBeat() + b); }
 BeatPosition TrackItem::getBeatOfRelativeTime (TimeDuration t) const    { return edit.tempoSequence.toBeats (getPosition().getStart() + t); }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

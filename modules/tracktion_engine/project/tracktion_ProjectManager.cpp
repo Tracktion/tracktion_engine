@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 ProjectManager::ProjectManager (Engine& e)
     : engine (e)
@@ -848,4 +847,4 @@ void ProjectManager::deleteProjectFolder (juce::ValueTree folder)
     folder.getParent().removeChild (folder, nullptr);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

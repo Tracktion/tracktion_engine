@@ -9,8 +9,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 TrackMidiInputDeviceNode::TrackMidiInputDeviceNode (MidiInputDevice& owner, std::unique_ptr<Node> inputNode, ProcessState& ps,
                                                     bool copyInputsToOutputs_)
@@ -67,4 +66,4 @@ void TrackMidiInputDeviceNode::process (ProcessContext& pc)
         midiInputDevice.handleIncomingMidiMessage (nullptr, juce::MidiMessage (m, midiStreamTime + m.getTimeStamp()));
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

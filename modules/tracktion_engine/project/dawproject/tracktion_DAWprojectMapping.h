@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine { namespace dawproject
-{
+namespace tracktion::inline engine { namespace dawproject {
 
 //==============================================================================
 /** DAWproject XML element and attribute names. */
@@ -400,4 +399,4 @@ inline bool parseBool (const juce::String& str, bool defaultValue = false)
     return str.equalsIgnoreCase ("true") || str == "1";
 }
 
-}}} // namespace tracktion::engine::dawproject
+}} // namespace tracktion::inline engine::dawproject

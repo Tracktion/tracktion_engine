@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 MacroParameter::Assignment::Assignment (const juce::ValueTree& v, const MacroParameter& mp)
     : AutomatableParameter::ModifierAssignment (mp.edit, v),
@@ -317,4 +316,4 @@ juce::ReferenceCountedArray<MacroParameter> MacroParameterElement::getMacroParam
 }
 
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

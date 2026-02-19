@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 // JUCE Changed the format of PluginDescription::createIdentifierString
 // breaking all our saved files. This reverts to the old format
@@ -213,4 +212,4 @@ struct PluginWetDryAutomatableParam  : public AutomatableParameter
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginWetDryAutomatableParam)
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

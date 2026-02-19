@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 RenderManager::Job::Job (Engine& e, const AudioFile& proxyToUse)
     : ThreadPoolJobWithProgress ("Render Job"),
@@ -290,4 +289,4 @@ void RenderManager::handleAsyncUpdate()
     jobsToDelete.clear();
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

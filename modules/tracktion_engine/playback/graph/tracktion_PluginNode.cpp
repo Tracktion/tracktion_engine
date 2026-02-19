@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 namespace
 {
@@ -322,4 +321,4 @@ void PluginNode::replaceLatencyProcessorIfPossible (NodeGraph* nodeGraphToReplac
     }
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

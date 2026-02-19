@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 bool UIBehaviour::paste (const Clipboard& clipboard)
 {
@@ -228,4 +227,4 @@ void UIBehaviour::recreatePluginWindowContentAsync (Plugin& p)
     p.windowState->recreateWindowIfShowing();
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

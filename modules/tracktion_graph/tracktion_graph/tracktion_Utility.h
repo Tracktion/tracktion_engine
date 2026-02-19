@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 //==============================================================================
 //==============================================================================
@@ -110,4 +109,4 @@ NodeType* findNodeWithIDIfNonZero (NodeGraph* nodeGraph, size_t nodeIDToLookFor)
                 : findNodeWithID<NodeType> (*nodeGraph, nodeIDToLookFor);
 }
 
-}}
+}

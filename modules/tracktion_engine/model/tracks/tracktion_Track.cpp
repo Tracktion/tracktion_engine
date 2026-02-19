@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 Track::Track (Edit& ed, const juce::ValueTree& v, bool hasModifierList)
     : EditItem (ed, v), state (v), pluginList (ed)
@@ -625,4 +624,4 @@ void Track::handleAsyncUpdate()
     pluginList.updateTrackProperties();
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

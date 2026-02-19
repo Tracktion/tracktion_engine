@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /** Holds a pool of Thumbnails that are populated whilst recording.
     These can then be used to draw visual waveforms during the recoridng process.
@@ -95,4 +94,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RecordingThumbnailManager)
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

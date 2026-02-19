@@ -7,8 +7,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 const char* AirWindowsPurestAir::xmlTypeName = "airwindows_purestair";
@@ -239,4 +238,4 @@ AirWindowsuLawEncode::AirWindowsuLawEncode (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::ulawencode::uLawEncode> (&callback)) {}
 
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

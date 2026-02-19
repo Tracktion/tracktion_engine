@@ -7,8 +7,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 #define __audioeffect__
 #define VstInt32                int32_t
@@ -208,4 +207,4 @@ public:
     juce::NormalisableRange<float> conversionRange;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

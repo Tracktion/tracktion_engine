@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 static constexpr int maxRackAudioChans = 64;
 
@@ -1466,4 +1465,4 @@ RackType::WindowState::WindowState (RackType& r, juce::ValueTree windowStateTree
     : PluginWindowState (r.edit), rack (r), state (std::move (windowStateTree))
 {}
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

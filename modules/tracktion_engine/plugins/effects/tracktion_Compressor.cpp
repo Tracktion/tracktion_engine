@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 CompressorPlugin::CompressorPlugin (PluginCreationInfo info)  : Plugin (info)
 {
@@ -217,4 +216,4 @@ void CompressorPlugin::valueTreePropertyChanged (juce::ValueTree& v, const juce:
     Plugin::valueTreePropertyChanged (v, id);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

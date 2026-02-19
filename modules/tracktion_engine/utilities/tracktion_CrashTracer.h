@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     Used by the CRASH_TRACER macros to help provide a useful crash log of the stack.
@@ -61,4 +60,4 @@ private:
     static juce::File getDeadMansPedalFile (PropertyStorage&);
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

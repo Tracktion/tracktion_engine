@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 namespace NovationRemoteSL
 {
@@ -833,4 +832,4 @@ juce::String NovationRemoteSl::padAndLimit (const juce::String& s, int max)
     return {};
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

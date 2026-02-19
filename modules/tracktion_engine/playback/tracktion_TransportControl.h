@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /** Moves the transport to the start of the selected objects. */
 void toStart (TransportControl&, const SelectableList&);
@@ -459,4 +458,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TransportControl)
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

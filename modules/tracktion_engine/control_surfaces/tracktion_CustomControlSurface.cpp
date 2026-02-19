@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 void CustomControlSurface::CustomControlSurfaceManager::registerSurface (CustomControlSurface* item)
 {
@@ -1827,4 +1826,4 @@ void CustomControlSurface::clearMarker (int)
 {
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

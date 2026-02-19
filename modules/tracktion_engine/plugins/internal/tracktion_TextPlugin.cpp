@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 const char* TextPlugin::xmlTypeName ("text");
 
@@ -32,4 +31,4 @@ juce::ValueTree TextPlugin::create()
                             IDs::type, xmlTypeName);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

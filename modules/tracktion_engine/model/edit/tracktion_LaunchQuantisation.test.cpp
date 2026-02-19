@@ -12,8 +12,7 @@
 
 #include "../../../tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -180,6 +179,6 @@ private:
 
 static LaunchQuantisationTests launchQuantisationTests;
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #endif

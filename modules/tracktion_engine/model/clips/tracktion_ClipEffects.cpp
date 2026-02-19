@@ -16,8 +16,7 @@
 #include "../../playback/graph/tracktion_FadeInOutNode.h"
 #include "../../playback/graph/tracktion_TimedMutingNode.h"
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 static inline HashCode hashValueTree (HashCode startHash, const juce::ValueTree& v)
 {
@@ -125,7 +124,7 @@ ClipEffects::~ClipEffects()
 }
 
 //==============================================================================
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 namespace juce {
 
@@ -177,7 +176,7 @@ struct VariantConverter<tracktion::engine::ClipEffect::EffectType>
     }
 };
 
-} namespace tracktion { inline namespace engine {
+} namespace tracktion::inline engine {
 
 //==============================================================================
 struct ClipEffect::ClipEffectRenderJob  : public juce::ReferenceCountedObject
@@ -1907,4 +1906,4 @@ RenderManager::Job::Ptr ClipEffects::createRenderJob (const AudioFile& destFile,
     return new AggregateJob (clip.edit.engine, destFile, firstFile, std::move (jobs));
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

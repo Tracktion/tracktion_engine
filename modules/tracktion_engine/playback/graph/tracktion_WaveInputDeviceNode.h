@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     A Node that intercepts incoming live audio and inserts it in to the playback graph.
@@ -38,4 +37,4 @@ private:
     const juce::AudioChannelSet destChannels;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

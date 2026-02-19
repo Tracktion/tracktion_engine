@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 /** A strongly-typed wrapper for a project's numeric ID.
@@ -90,7 +89,7 @@ private:
     ProjectItemID (const juce::var&) = delete;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 namespace juce
 {

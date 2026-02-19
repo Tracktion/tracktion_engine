@@ -70,8 +70,7 @@
 */
 
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 class Node;
 
@@ -815,4 +814,4 @@ inline T* TransformCache::getCachedProperty (size_t key)
     return {};
 }
 
-}}
+}

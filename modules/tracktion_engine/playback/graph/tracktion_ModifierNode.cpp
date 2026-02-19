@@ -11,8 +11,7 @@
 #pragma once
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 ModifierNode::ModifierNode (std::unique_ptr<Node> inputNode,
                             tracktion::engine::Modifier::Ptr modifierToProcess,
@@ -165,4 +164,4 @@ PluginRenderContext ModifierNode::getPluginRenderContext (juce::Range<int64_t> r
              playHead.isPlaying(), playHead.isUserDragging(), isRendering, false };
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

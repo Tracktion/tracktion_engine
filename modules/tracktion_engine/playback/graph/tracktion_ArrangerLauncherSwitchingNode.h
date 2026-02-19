@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 
 class SampleFader
@@ -177,4 +176,4 @@ private:
     void sharedTimerCallback() override;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -12,8 +12,7 @@
  #define REPLACE_ELASTIQUE_WITH_DIRECT_MODE 1
 #endif
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -2340,4 +2339,4 @@ tempo::Key WaveNodeRealTime::getKeyToSyncTo (TimePosition editPosition) const
     return getKey();
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

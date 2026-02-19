@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 struct VolAutomatableParameter : public AutomatableParameter
 {
@@ -345,4 +344,4 @@ void VolumeAndPanPlugin::restorePluginStateFromValueTree (const juce::ValueTree&
         p->updateFromAttachedValue();
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

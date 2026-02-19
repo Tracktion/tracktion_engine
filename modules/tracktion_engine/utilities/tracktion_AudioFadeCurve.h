@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 struct AudioFadeCurve
 {
@@ -158,7 +157,7 @@ struct AudioFadeCurve
                                float x1, float x2, float top, float bottom, juce::Rectangle<int> clip);
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 
 namespace juce

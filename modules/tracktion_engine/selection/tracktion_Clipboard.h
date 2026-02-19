@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
 */
@@ -289,4 +288,4 @@ private:
 
 AudioTrack* getOrInsertAudioTrackNearestIndex (Edit& edit, int trackIndex);
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

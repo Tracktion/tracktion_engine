@@ -7,8 +7,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 static int numScreenSaverDefeaters = 0;
 
@@ -34,4 +33,4 @@ ScreenSaverDefeater::~ScreenSaverDefeater()
 }
 
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

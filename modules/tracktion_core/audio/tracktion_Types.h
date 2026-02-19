@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace core
-{
+namespace tracktion::inline core {
 
 using SampleCount = int64_t;
 
@@ -21,4 +20,4 @@ struct SampleRateAndBlockSize
     int blockSize = 0;
 };
 
-}} // namespace tracktion { inline namespace core
+} // namespace tracktion::inline core

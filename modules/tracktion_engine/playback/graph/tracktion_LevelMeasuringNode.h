@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     A Node that passes its incoming audio and MIDI through a LevelMeasurer.
@@ -29,4 +28,4 @@ private:
     LevelMeasurer& levelMeasurer;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

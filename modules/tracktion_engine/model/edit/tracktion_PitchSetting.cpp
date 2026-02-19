@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 PitchSetting::PitchSetting (Edit& ed, const juce::ValueTree& v)
     : TrackItem (ed, {}, Type::pitch), state (v)
@@ -84,4 +83,4 @@ void PitchSetting::removeFromEdit()
         p.removeChild (state, &edit.getUndoManager());
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

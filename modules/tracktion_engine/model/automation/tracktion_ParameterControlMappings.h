@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /** Controls the set of midi-controller-to-parameter mappings. */
 class ParameterControlMappings  : public juce::ChangeBroadcaster,
@@ -97,4 +96,4 @@ private:
     void handleAsyncUpdate() override;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

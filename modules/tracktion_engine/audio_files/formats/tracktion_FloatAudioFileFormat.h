@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     A raw, proprietary, simple floating point format used for freeze files, etc.
@@ -41,4 +40,4 @@ public:
                                                               const juce::AudioFormatWriterOptions&) override;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

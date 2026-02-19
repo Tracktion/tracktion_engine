@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 CurveEditorPoint::~CurveEditorPoint()
 {
@@ -927,4 +926,4 @@ CurveEditorPoint* CurveEditor::getSelectedPoint (int idx)
     return {};
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

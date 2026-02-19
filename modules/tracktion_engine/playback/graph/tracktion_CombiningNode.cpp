@@ -12,8 +12,7 @@
 
 #define USE_PARTITION_INSERTION 1
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 namespace combining_node_utils
 {
@@ -384,4 +383,4 @@ void CombiningNode::queueNoteOffsForClipsNoLongerPresent (const CombiningNode& o
     }
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

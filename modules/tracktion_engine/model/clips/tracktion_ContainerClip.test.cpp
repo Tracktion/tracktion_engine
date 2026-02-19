@@ -13,8 +13,7 @@
 #include "../../../tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
 #include "../../utilities/tracktion_TestUtilities.h"
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -379,7 +378,7 @@ private:
 
 static ContainerClipTests containerClipTests;
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #endif //TRACKTION_UNIT_TESTS_CLIPS
 
@@ -391,8 +390,7 @@ static ContainerClipTests containerClipTests;
 #include "../../../tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
 #include "../../playback/graph/tracktion_BenchmarkUtilities.h"
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -517,6 +515,6 @@ private:
 
 static ContainerClipBenchmarks containerClipBenchmarks;
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #endif

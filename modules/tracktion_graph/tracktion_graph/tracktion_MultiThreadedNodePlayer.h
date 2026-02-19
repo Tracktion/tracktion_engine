@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 /**
     Plays back a node with mutiple threads.
@@ -143,4 +142,4 @@ private:
     bool processNextFreeNode();
 };
 
-}}
+}

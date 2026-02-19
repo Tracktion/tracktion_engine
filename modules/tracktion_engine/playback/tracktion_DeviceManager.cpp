@@ -10,8 +10,7 @@
 
 juce::AudioDeviceManager* gDeviceManager = nullptr; // TODO
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 #if TRACKTION_LOG_DEVICES
  #define TRACKTION_LOG_DEVICE(text) TRACKTION_LOG(text)
@@ -1758,4 +1757,4 @@ void DeviceManager::setGlobalOutputAudioProcessor (std::unique_ptr<juce::AudioPr
     newProcessor.reset();
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

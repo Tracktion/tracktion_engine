@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine { namespace dawproject
-{
+namespace tracktion::inline engine { namespace dawproject {
 
 //==============================================================================
 std::unique_ptr<Edit> parseDAWproject (Engine& engine,
@@ -43,4 +42,4 @@ juce::Result writeDAWprojectFile (const juce::File& file,
     return exporter.writeToFile (file);
 }
 
-}}} // namespace tracktion::engine::dawproject
+}} // namespace tracktion::inline engine::dawproject

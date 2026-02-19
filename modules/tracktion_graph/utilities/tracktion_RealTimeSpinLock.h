@@ -12,8 +12,7 @@
 
 #include "../../tracktion_core/utilities/tracktion_CPU.h"
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 /** A basic spin lock that uses an atomic_flag to store the locked state so should never result in a system call.
     Note that only try_lock should be called from a real-time thread. If you can't take the lock you should exit quickly.
@@ -56,4 +55,4 @@ private:
     std::atomic_flag flag = ATOMIC_FLAG_INIT;
 };
 
-}}
+}

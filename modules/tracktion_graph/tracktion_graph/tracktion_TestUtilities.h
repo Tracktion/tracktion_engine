@@ -14,8 +14,7 @@
 #include <juce_audio_formats/juce_audio_formats.h>
 #include "../../tracktion_engine/audio_files/formats/tracktion_FloatAudioFileFormat.h"
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 //==============================================================================
 namespace test_utilities
@@ -743,4 +742,4 @@ namespace test_utilities
     }
 }
 
-}}
+}

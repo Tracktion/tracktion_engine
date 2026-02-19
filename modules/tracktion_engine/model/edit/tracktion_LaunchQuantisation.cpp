@@ -9,8 +9,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 juce::StringArray getLaunchQTypeChoices()
 {
@@ -155,4 +154,4 @@ BeatPosition LaunchQuantisation::getNext (BeatPosition p) const noexcept
     return engine::getNext (type, edit.tempoSequence, p);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

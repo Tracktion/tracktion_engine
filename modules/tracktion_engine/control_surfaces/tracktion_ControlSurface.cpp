@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 namespace control_surface_utils
 {
@@ -687,4 +686,4 @@ void ControlSurface::setFollowsTrackSelection (bool f)
         owner->followsTrackSelection = f;
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

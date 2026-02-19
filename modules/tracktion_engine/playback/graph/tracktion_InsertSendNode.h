@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 class InsertSendNode;
 
@@ -72,4 +71,4 @@ private:
     Node* input = nullptr;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

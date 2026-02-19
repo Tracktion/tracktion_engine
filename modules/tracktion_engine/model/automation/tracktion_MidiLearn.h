@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     Manages the Midi learn state and Listener interface to notify subclasses when the state changes.
@@ -134,4 +133,4 @@ private:
     juce::Array<Assignment> assignemnts;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

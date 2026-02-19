@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -49,4 +48,4 @@ private:
     bool renderingNeeded (TimeRange);
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

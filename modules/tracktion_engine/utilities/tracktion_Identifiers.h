@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 namespace IDs
 {
@@ -677,4 +676,4 @@ namespace IDs
     #undef DECLARE_ID
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

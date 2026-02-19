@@ -7,8 +7,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 /// As long as at least one of these objects exists, the screensaver will be disabled
@@ -19,4 +18,4 @@ struct ScreenSaverDefeater
 };
 
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

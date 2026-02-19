@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 struct HertzTag { explicit HertzTag() = default; };
 inline constexpr HertzTag HertzTag_t{};
@@ -83,4 +82,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SharedTimer)
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

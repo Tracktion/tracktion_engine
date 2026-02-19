@@ -10,8 +10,7 @@
 
 #include "tracktion_MidiNodeHelpers.h"
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -403,4 +402,4 @@ void ArrangerLauncherSwitchingNode::sharedTimerCallback()
         updatePlaySlotsState();
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

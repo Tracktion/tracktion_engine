@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 bool ColourArea::contains (ClipSlot& clipSlot) const
 {
@@ -1288,4 +1287,4 @@ void ExternalControllerManager::refreshXTOrder()
    #endif
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -20,8 +20,7 @@
 #include "tracktion_Types.h"
 
 
-namespace tracktion { inline namespace core
-{
+namespace tracktion::inline core {
 
 //==============================================================================
 //==============================================================================
@@ -59,4 +58,4 @@ public:
     virtual bool readSamples (choc::buffer::ChannelArrayView<float>&) = 0;
 };
 
-}} // namespace tracktion { inline namespace core
+} // namespace tracktion::inline core

@@ -15,8 +15,7 @@
 #include "tracktion_BenchmarkUtilities.h"
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 using namespace tracktion::graph;
 
@@ -153,6 +152,6 @@ private:
 
 static PluginNodeBenchmarks pluginNodeBenchmarks;
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #endif

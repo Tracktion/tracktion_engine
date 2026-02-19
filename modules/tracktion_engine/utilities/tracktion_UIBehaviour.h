@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     Create a subclass of UIBehaviour to custom UI elements created by the engine
@@ -171,4 +170,4 @@ public:
     virtual SelectableList getAssociatedClipsToEdit (const SelectableList& items)   { return items; }
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

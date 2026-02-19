@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 FreezePointPlugin::ScopedTrackUnsoloer::ScopedTrackUnsoloer (Edit& e)  : edit (e)
 {
@@ -220,4 +219,4 @@ void FreezePointPlugin::freezeTrack (bool shouldBeFrozen)
     changed();
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

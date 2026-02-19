@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 /**
@@ -101,4 +100,4 @@ private:
     HashCode hash = 0;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

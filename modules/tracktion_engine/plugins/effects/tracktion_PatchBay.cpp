@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 PatchBayPlugin::Wire::Wire (const juce::ValueTree& v, juce::UndoManager* um)  : state (v)
 {
@@ -185,4 +184,4 @@ void PatchBayPlugin::cacheInputAndOutputPlugins()
 }
 
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

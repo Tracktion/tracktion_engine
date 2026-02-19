@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     An interpolated spline curve, used by the EQ to draw its response graph.
@@ -77,4 +76,4 @@ private:
     juce::Array<juce::Point<float>> points;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

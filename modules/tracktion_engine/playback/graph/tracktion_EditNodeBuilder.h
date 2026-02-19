@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 class TrackMuteState;
 
@@ -52,4 +51,4 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext&,
 std::unique_ptr<tracktion::graph::Node> createNodeForEdit (Edit&, const CreateNodeParams&);
 
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

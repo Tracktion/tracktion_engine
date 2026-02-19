@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace core
-{
+namespace tracktion::inline core {
 
 template<class Container, class T, class BinaryOperation>
 inline T accumulate (const Container& container, T init)
@@ -193,4 +192,4 @@ juce::Array<Type> remove_if_nullptr (juce::Array<Type>&& container)
    #endif
 }
 
-}}
+}

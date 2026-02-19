@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 struct MidiTimecodeReader  : private juce::MessageListener,
                              private juce::Timer
@@ -527,4 +526,4 @@ void PhysicalMidiInputDevice::setReadingControllerMessages (bool b)
     isTakingControllerMessages = b;
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 Project::Project (Engine& e, ProjectManager& pm, const juce::File& fileOrFolder)
@@ -235,4 +234,4 @@ Project::Ptr convertToFolderBasedProject (Project& project)
     return project.projectManager.createNewProject (projectDir);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

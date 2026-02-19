@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 ContainerClip::ContainerClip (const juce::ValueTree& v, EditItemID clipID, ClipOwner& targetParent)
     : AudioClipBase (v, clipID, Type::container, targetParent)
@@ -174,4 +173,4 @@ void ContainerClip::clipPositionChanged()
 }
 
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

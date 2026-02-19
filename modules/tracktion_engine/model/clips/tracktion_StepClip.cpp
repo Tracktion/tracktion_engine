@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 struct StepClip::ChannelList  : public ValueTreeObjectList<StepClip::Channel>
 {
@@ -839,4 +838,4 @@ FollowActions* StepClip::getFollowActions()
     return followActions.get();
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -11,8 +11,7 @@
 #pragma once
 
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 //==============================================================================
 //==============================================================================
@@ -58,4 +57,4 @@ private:
     std::unique_ptr<NodeGraph> graph;
 };
 
-}}
+}

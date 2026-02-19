@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==========================================================================
 //==========================================================================
@@ -69,4 +68,4 @@ inline int64_t getNumSamples (const SyncRange& r)
 }
 
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

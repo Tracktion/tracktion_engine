@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 class Project;
 
@@ -94,7 +93,7 @@ private:
 inline bool operator== (ProjectItemID lhs, const ProjectItemRef& rhs) { return rhs == lhs; }
 inline bool operator!= (ProjectItemID lhs, const ProjectItemRef& rhs) { return rhs != lhs; }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 namespace juce
 {

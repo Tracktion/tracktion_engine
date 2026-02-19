@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 namespace IDs
 {
@@ -1824,4 +1823,4 @@ void freePlaybackContextIfNotRecording (TransportControl& tc)
         tc.freePlaybackContext();
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

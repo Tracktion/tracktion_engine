@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 ProcessState::ProcessState (tracktion::graph::PlayHeadState& phs)
     : playHeadState (phs)
@@ -166,4 +165,4 @@ void TracktionEngineNode::setProcessState (ProcessState& newProcessState)
     processState = &newProcessState;
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

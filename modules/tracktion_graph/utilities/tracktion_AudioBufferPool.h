@@ -9,13 +9,11 @@
 */
 
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 #include "../3rd_party/farbot/include/farbot/fifo.hpp"
-}}
+}
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 //==============================================================================
 /**
@@ -251,4 +249,4 @@ inline size_t AudioBufferPool::getAllocatedSize()
     return size;
 }
 
-}} // namespace tracktion
+} // namespace tracktion::inline graph

@@ -7,8 +7,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 namespace Distortion
@@ -1805,4 +1804,4 @@ float FourOscPlugin::paramValue (AutomatableParameter::Ptr param)
     return param->valueRange.convertFrom0to1 (smoothItr->second.getCurrentValue());
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

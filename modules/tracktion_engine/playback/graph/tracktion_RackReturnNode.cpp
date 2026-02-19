@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 RackReturnNode::RackReturnNode (std::unique_ptr<Node> wetNode,
                                 std::function<float()> wetGainFunc,
@@ -155,4 +154,4 @@ void RackReturnNode::process (ProcessContext& pc)
     }
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

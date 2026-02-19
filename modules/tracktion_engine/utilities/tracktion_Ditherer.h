@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     An extremely naive ditherer.
@@ -61,4 +60,4 @@ struct Ditherer
     float s1 = 0, s2 = 0;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

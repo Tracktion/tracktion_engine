@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 const char* GrooveTemplate::grooveXmlTag = "GROOVETEMPLATE";
 
@@ -360,4 +359,4 @@ void GrooveTemplateManager::deleteTemplate (int index)
     TransportControl::restartAllTransports (engine, false);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

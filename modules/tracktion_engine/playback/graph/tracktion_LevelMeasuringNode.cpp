@@ -9,8 +9,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 LevelMeasuringNode::LevelMeasuringNode (std::unique_ptr<tracktion::graph::Node> inputNode, LevelMeasurer& measurer)
     : input (std::move (inputNode)), levelMeasurer (measurer)
@@ -54,4 +53,4 @@ void LevelMeasuringNode::process (tracktion::graph::Node::ProcessContext& pc)
     levelMeasurer.processMidi (pc.buffers.midi, nullptr);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -13,8 +13,7 @@
 #include "tracktion_LatencyNode.h"
 
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 //==============================================================================
 //==============================================================================
@@ -293,4 +292,4 @@ inline bool ConnectedNode::createLatencyNodes()
     return topologyChanged;
 }
 
-}}
+}

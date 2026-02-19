@@ -12,8 +12,7 @@
 
 #include <span>
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 namespace node_player_utils
 {
@@ -167,4 +166,4 @@ namespace node_player_utils
     }
 }
 
-}}
+}

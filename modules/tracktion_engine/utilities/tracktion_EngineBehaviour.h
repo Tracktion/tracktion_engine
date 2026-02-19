@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     Contains the limits of the various elements that can be added to an Edit.
@@ -269,4 +268,4 @@ public:
     virtual ControlSurface* getCustomControlSurfaceForXML (ExternalControllerManager&, const juce::XmlElement&)     { return {}; }
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

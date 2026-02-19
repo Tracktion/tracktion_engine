@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 ExternalController::ExternalController (Engine& e, ControlSurface* c)  : engine (e), controlSurface (c)
 {
@@ -1719,4 +1718,4 @@ juce::String ExternalController::shortenName (juce::String s, int maxLen)
     return result.substring (0, maxLen);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

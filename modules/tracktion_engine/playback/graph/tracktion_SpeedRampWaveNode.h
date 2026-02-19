@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 /** Describes the time and type of the speed fade in/outs.*/
@@ -92,7 +91,7 @@ private:
     static double rescale (AudioFadeCurve::Type, double proportion, bool rampUp);
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #ifndef DOXYGEN
 template<>

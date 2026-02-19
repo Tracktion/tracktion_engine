@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 inline void addSortedListToMenu (juce::PopupMenu& m, juce::StringArray names, int startID)
 {
@@ -128,4 +127,4 @@ enum class AuxPosition
     byPosition,
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

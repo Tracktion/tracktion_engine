@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 EditInsertPoint::EditInsertPoint (Edit& e)
     : edit (e)
@@ -198,4 +197,4 @@ EditInsertPoint::Placement EditInsertPoint::chooseInsertPoint (bool pasteAfterSe
     return { track, clipOwner, { time } };
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

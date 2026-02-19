@@ -11,8 +11,7 @@
 #include "../../3rd_party/rpmalloc/rpallocator.h"
 
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 #if GRAPH_UNIT_TESTS_ALLOCATION
 
@@ -224,4 +223,4 @@ static AllocationTests allocationTests;
 
 #endif
 
-}} // namespace tracktion_engine
+} // namespace tracktion::inline graph

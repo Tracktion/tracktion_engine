@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 class Chord
 {
@@ -325,7 +324,7 @@ struct KeyResult
 
 juce::Array<KeyResult> determineKeyOfNotes (const juce::Array<MidiNote*>& notes);
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 namespace juce
 {

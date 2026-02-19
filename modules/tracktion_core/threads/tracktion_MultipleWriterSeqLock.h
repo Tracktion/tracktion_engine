@@ -13,8 +13,7 @@
 #include "../../3rd_party/crill/seqlock_object.h"
 #include "../../tracktion_graph/utilities/tracktion_RealTimeSpinLock.h"
 
-namespace tracktion { inline namespace core
-{
+namespace tracktion::inline core {
 
 /** Wraps a seqlock to allow a thread-safe object with wait-free reads with respect to each other.
     This version also allows multiple threads to write to the object but they will block each other.
@@ -61,4 +60,4 @@ private:
     crill::seqlock_object<T> object;
 };
 
-}} // namespace tracktion { inline namespace core
+} // namespace tracktion::inline core

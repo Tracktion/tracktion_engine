@@ -7,8 +7,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 inline int oddEven (int x)
@@ -364,4 +363,4 @@ BandlimitedWaveLookupTables::~BandlimitedWaveLookupTables()
     tableCache.removeFirstMatchingValue (this);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

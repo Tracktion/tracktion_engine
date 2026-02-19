@@ -7,8 +7,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 class AirWindowsBase;
 class AirWindowsPlugin;
@@ -302,4 +301,4 @@ AIRWINDOWSPLUGIN(AirWindowscurve, "curve")
 AIRWINDOWSPLUGIN(AirWindowsuLawDecode, "u Law Decode")
 AIRWINDOWSPLUGIN(AirWindowsuLawEncode, "u Law Encode")
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

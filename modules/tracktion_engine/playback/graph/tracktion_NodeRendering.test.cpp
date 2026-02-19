@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 #if TRACKTION_BENCHMARKS && ENGINE_BENCHMARKS_WAVENODE
 
@@ -237,4 +236,4 @@ static ResamplingBenchmarks resamplingBenchmarks;
 
 #endif
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

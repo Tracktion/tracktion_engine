@@ -7,8 +7,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 const char* AirWindowsADClip7::xmlTypeName = "airwindows_adclip7";
@@ -258,4 +257,4 @@ AirWindowsDitherMeTimbers::AirWindowsDitherMeTimbers (PluginCreationInfo info)
 AirWindowsDitherbox::AirWindowsDitherbox (PluginCreationInfo info)
     : AirWindowsPlugin (info, std::make_unique<airwindows::ditherbox::Ditherbox> (&callback)) {}
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

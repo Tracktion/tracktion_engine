@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 static juce::String getDeprecatedPluginDescSuffix (const juce::PluginDescription& d)
 {
@@ -2111,4 +2110,4 @@ float PluginWetDryAutomatableParam::stringToValue (const juce::String& s)
     return juce::Decibels::decibelsToGain (dbStringToDb (s));
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

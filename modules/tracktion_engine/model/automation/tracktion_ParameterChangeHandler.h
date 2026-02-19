@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /** Manages a set of AutomatableParameters for an Edit and notifies controllers and
     registered listeners when they change.
@@ -97,4 +96,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ParameterChangeHandler)
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

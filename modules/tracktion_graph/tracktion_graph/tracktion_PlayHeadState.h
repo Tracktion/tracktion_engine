@@ -11,8 +11,7 @@
 #pragma once
 
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 //==============================================================================
 //==============================================================================
@@ -97,4 +96,4 @@ inline void PlayHeadState::update (juce::Range<int64_t> referenceSampleRange)
     }
 }
 
-}}
+}

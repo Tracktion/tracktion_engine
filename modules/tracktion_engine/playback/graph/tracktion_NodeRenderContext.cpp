@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 namespace
 {
@@ -478,4 +477,4 @@ juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
 }
 
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

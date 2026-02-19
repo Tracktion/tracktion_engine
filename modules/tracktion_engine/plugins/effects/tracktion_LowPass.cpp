@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 LowPassPlugin::LowPassPlugin (PluginCreationInfo info) : Plugin (info)
 {
@@ -84,4 +83,4 @@ void LowPassPlugin::applyToBuffer (const PluginRenderContext& fc)
     }
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

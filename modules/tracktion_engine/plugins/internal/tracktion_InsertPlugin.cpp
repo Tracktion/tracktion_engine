@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 static void getPossibleInputDeviceNames (Engine& e,
                                          juce::StringArray& s, juce::StringArray& a,
@@ -228,4 +227,4 @@ void InsertPlugin::valueTreePropertyChanged (juce::ValueTree& v, const juce::Ide
     Plugin::valueTreePropertyChanged (v, i);
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

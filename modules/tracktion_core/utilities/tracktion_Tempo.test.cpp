@@ -14,8 +14,7 @@
 
 #if TRACKTION_UNIT_TESTS && TRACKTION_UNIT_TESTS_TIME
 
-namespace tracktion { inline namespace core
-{
+namespace tracktion::inline core {
 
 //==============================================================================
 //==============================================================================
@@ -429,8 +428,7 @@ private:
 
 static SequenceTests sequenceTests;
 
-}} // namespace tracktion
-
+} // namespace tracktion::inline core
 #endif //TRACKTION_UNIT_TESTS_TIME
 
 
@@ -438,8 +436,7 @@ static SequenceTests sequenceTests;
 //==============================================================================
 #if TRACKTION_BENCHMARKS && CORE_BENCHMARKS_TEMPO
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -610,6 +607,6 @@ public:
 
 static TempoBenchmarks tempoBenchmarks;
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #endif //TRACKTION_BENCHMARKS

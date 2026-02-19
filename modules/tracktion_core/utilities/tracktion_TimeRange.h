@@ -12,8 +12,7 @@
 
 #include "tracktion_Time.h"
 
-namespace tracktion { inline namespace core
-{
+namespace tracktion::inline core {
 
 template<typename PositionType>
 struct RangeType;
@@ -395,8 +394,7 @@ std::string to_string (RangeType range)
 inline std::ostream& operator<< (std::ostream& os, const TimeRange& r) { os << to_string (r); return os; }
 inline std::ostream& operator<< (std::ostream& os, const BeatRange& r) { os << to_string (r); return os; }
 
-}} // namespace tracktion
-
+} // namespace tracktion::inline core
 
 //==============================================================================
 //==============================================================================

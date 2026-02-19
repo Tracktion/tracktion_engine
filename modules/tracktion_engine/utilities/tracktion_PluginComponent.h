@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /** Components that represent a Plugin should inherit from this to ensure
     they are correctly notified when their colour changes e.g. from a controller
@@ -61,4 +60,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginComponent)
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

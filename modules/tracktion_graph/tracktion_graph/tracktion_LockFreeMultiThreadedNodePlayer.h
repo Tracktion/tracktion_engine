@@ -19,8 +19,7 @@
  #pragma warning (pop)
 #endif
 
-namespace tracktion { inline namespace graph
-{
+namespace tracktion::inline graph {
 
 //==============================================================================
 //==============================================================================
@@ -308,4 +307,4 @@ private:
     bool processNextFreeNode (PreparedNode&);
 };
 
-}}
+}

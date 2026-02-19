@@ -10,8 +10,7 @@
 
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_LAUNCHER_CLIP_PLAYBACK_HANDLE
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -273,6 +272,6 @@ private:
 
 static LauncherClipPlaybackHandleTests launcherClipPlaybackHandleTests;
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
  #endif

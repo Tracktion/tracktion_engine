@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /** Keeps a list of available wave formats and can create a format object
     for a file.
@@ -62,4 +61,4 @@ private:
    #endif
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

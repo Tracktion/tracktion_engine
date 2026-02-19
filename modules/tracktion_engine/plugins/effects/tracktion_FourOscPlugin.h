@@ -7,8 +7,7 @@
 */
 
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 class FODelay;
 class FOChorus;
@@ -391,4 +390,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FourOscPlugin)
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

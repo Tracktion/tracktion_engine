@@ -13,8 +13,7 @@
 #include <cstddef>
 #include <cmath>
 
-namespace tracktion { inline namespace core
-{
+namespace tracktion::inline core {
 
 inline std::pair<double /*x*/, double /*y*/> getBezierPoint (double x1, double y1, double x2, double y2,
                                                              double c)
@@ -152,4 +151,4 @@ inline double getBezierXfromT (double t, double x1, double xb, double x2)
     return (std::pow (1.0 - t, 2.0) * x1) + 2 * t * (1 - t) * xb + std::pow (t, 2.0) * x2;
 }
 
-}}
+}

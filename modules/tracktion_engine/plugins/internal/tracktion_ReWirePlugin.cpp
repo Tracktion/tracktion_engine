@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 #if TRACKTION_ENABLE_REWIRE
 
@@ -1359,4 +1358,4 @@ juce::StringArray ReWirePlugin::getDeviceChannelNames() const
 
 #endif
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

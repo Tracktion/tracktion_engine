@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /** A list of settings the engine will get and set */
 enum class SettingID
@@ -135,4 +134,4 @@ enum class SettingID
     addAcidMetadata,
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

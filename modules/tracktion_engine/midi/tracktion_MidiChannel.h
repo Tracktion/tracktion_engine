@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     Represents a MIDI channel 1-16, and also contains extra ID bits to encode
@@ -56,4 +55,4 @@ private:
     uint8_t channel = 0;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

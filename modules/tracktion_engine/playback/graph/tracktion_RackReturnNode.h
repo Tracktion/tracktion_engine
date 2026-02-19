@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     Sends an input Node to a Rack bus handling the channel mapping and channel gain levels.
@@ -42,4 +41,4 @@ private:
     bool hasTransformed = false, canUseWetSourceBuffers = false;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

@@ -26,8 +26,7 @@
  #define NOMINMAX
 #endif
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 TimeStretcher::ElastiqueProOptions::ElastiqueProOptions (const juce::String& string)
 {
@@ -646,7 +645,7 @@ private:
 #define Point CarbonDummyPointName
 #define Component CarbonDummyCompName
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 #if TRACKTION_BUILD_RUBBERBAND
  #if __has_include(<rubberband/single/RubberBandSingle.cpp>)
   #include <rubberband/single/RubberBandSingle.cpp>
@@ -664,7 +663,7 @@ private:
   #error "TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND enabled but not found in the search path!"
  #endif
 #endif
-namespace tracktion { inline namespace engine {
+namespace tracktion::inline engine {
 
 #undef WIN32_LEAN_AND_MEAN
 #undef Point
@@ -1147,4 +1146,4 @@ int TimeStretcher::flush (float* const* outChannels)
     return 0;
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

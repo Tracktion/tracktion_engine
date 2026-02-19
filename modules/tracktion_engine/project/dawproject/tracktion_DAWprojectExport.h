@@ -10,8 +10,7 @@
 
 #pragma once
 
-namespace tracktion { inline namespace engine { namespace dawproject
-{
+namespace tracktion::inline engine { namespace dawproject {
 
 //==============================================================================
 /**
@@ -105,4 +104,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DAWprojectExporter)
 };
 
-}}} // namespace tracktion::engine::dawproject
+}} // namespace tracktion::inline engine::dawproject

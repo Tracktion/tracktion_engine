@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 /** Converts an Edit's internal transport information to a juce::AudioPlayHead::CurrentPositionInfo. */
@@ -61,4 +60,4 @@ private:
     mutable juce::SpinLock positionInfoLock;
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

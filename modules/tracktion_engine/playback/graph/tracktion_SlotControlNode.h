@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 class DynamicOffsetNode;
 
@@ -64,4 +63,4 @@ private:
     void processStop (ProcessContext&, double timestampForMidiNoteOffs);
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

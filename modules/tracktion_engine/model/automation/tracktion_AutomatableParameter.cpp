@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 namespace AutomationScaleHelpers
 {
@@ -1905,4 +1904,4 @@ void AutomationDragDropTarget::itemDropped (const SourceDetails& dragSourceDetai
     }
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

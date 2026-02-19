@@ -10,8 +10,7 @@
 
 #include "tracktion_Threads.h"
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 /**
     Asyncronously call a function.
@@ -303,4 +302,4 @@ inline bool callBlockingCatching (std::function<void()> f) noexcept
     }
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

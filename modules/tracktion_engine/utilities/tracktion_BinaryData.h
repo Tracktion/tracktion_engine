@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 namespace TracktionBinaryData
 {
@@ -39,4 +38,4 @@ namespace TracktionBinaryData
     const char* getNamedResource (const char* resourceNameUTF8, int& dataSizeInBytes) noexcept;
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

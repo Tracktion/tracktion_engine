@@ -12,8 +12,7 @@
 
 #include "tracktion_TimeRange.h"
 
-namespace tracktion { inline namespace core
-{
+namespace tracktion::inline core {
 
 //==============================================================================
 //==============================================================================
@@ -126,6 +125,5 @@ public:
 
 static TimeRangeTests timeRangeTests;
 
-}} // namespace tracktion
-
+} // namespace tracktion::inline core
 #endif //TRACKTION_UNIT_TESTS_TIME

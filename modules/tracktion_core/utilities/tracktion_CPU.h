@@ -28,8 +28,7 @@
  #include <emmintrin.h>
 #endif
 
-namespace tracktion { inline namespace core
-{
+namespace tracktion::inline core {
 
 /** Returns the CPU cycle count, useful for benchmarking. */
 inline std::uint64_t rdtsc()
@@ -68,4 +67,4 @@ inline void pause()
    #endif
 }
 
-}} // namespace tracktion { inline namespace core
+} // namespace tracktion::inline core

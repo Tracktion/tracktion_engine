@@ -10,8 +10,7 @@
 
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_EDIT_TIME
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -181,6 +180,6 @@ public:
 
 static EditTimeTests editTimeTests;
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
 
 #endif // TRACKTION_UNIT_TESTS

@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 #if TRACKTION_ENABLE_FFMPEG
 
@@ -254,4 +253,4 @@ std::unique_ptr<juce::AudioFormatWriter> FFmpegEncoderAudioFormat::createWriterF
 
 #endif
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

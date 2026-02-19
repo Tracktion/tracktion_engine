@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 /**
@@ -46,4 +45,4 @@ public:
     static juce::Array<Exportable*> addAllExportables (Edit&);
 };
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine

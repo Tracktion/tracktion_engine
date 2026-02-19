@@ -8,8 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion { inline namespace engine
-{
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
@@ -117,4 +116,4 @@ void TimedMutingNode::muteSection (choc::buffer::ChannelArrayView<float> block, 
                                (choc::buffer::FrameCount) (startSample + numSamples) }).clear();
 }
 
-}} // namespace tracktion { inline namespace engine
+} // namespace tracktion::inline engine
