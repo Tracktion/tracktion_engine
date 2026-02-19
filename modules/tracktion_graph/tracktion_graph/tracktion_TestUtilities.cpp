@@ -9,7 +9,7 @@
 */
 
 #include "tracktion_TestUtilities.h"
-#include "../../3rd_party/choc/text/choc_StringUtilities.h"
+#include "../../3rd_party/choc/choc/text/choc_StringUtilities.h"
 
 #if __has_include (<cxxabi.h>)
 #include <cxxabi.h>

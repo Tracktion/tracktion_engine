@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "../../3rd_party/choc/audio/choc_MIDISequence.h"
+#include "../../3rd_party/choc/choc/audio/choc_MIDISequence.h"
 
 namespace tracktion::inline graph {
 

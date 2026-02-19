@@ -10,7 +10,7 @@
 
 
 
-#include "../choc/platform/choc_DisableAllWarnings.h"
+#include "../choc/choc/platform/choc_DisableAllWarnings.h"
 
 #if __GNUC__
  #pragma GCC diagnostic push
@@ -27,9 +27,9 @@
  #pragma GCC diagnostic pop
 #endif
 
-#include "../choc/platform/choc_ReenableAllWarnings.h"
+#include "../choc/choc/platform/choc_ReenableAllWarnings.h"
 
-#include "../choc/text/choc_OpenSourceLicenseList.h"
+#include "../choc/choc/text/choc_OpenSourceLicenseList.h"
 
 #ifdef CHOC_REGISTER_OPEN_SOURCE_LICENCE
  CHOC_REGISTER_OPEN_SOURCE_LICENCE (MPMCQueue, R"(

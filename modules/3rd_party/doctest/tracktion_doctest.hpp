@@ -11,15 +11,15 @@
 
 #pragma once
 
-#include "../choc/platform/choc_DisableAllWarnings.h"
+#include "../choc/choc/platform/choc_DisableAllWarnings.h"
  #if __has_include(<doctest.h>)
  #include <doctest.h>
  #else
   #include "doctest.h"
  #endif
-#include "../choc/platform/choc_ReenableAllWarnings.h"
+#include "../choc/choc/platform/choc_ReenableAllWarnings.h"
 
-#include "../choc/text/choc_OpenSourceLicenseList.h"
+#include "../choc/choc/text/choc_OpenSourceLicenseList.h"
 
 #ifdef CHOC_REGISTER_OPEN_SOURCE_LICENCE
  CHOC_REGISTER_OPEN_SOURCE_LICENCE (doctest, R"(

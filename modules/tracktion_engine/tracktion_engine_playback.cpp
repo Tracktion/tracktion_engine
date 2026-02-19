@@ -52,10 +52,10 @@
       #include <ifaddrs.h>
      #endif
 
-    #include "../3rd_party/choc/platform/choc_DisableAllWarnings.h"
+    #include "../3rd_party/choc/choc/platform/choc_DisableAllWarnings.h"
      #include <ableton/Link.hpp>
      #include <ableton/link/HostTimeFilter.hpp>
-    #include "../3rd_party/choc/platform/choc_ReenableAllWarnings.h"
+    #include "../3rd_party/choc/choc/platform/choc_ReenableAllWarnings.h"
 
      #if JUCE_ANDROID
       #include <ifaddrs.cpp>
@@ -131,7 +131,7 @@ extern "C"
 #define ENABLE_SINC_MEDIUM_CONVERTER
 #define ENABLE_SINC_FAST_CONVERTER
 
-#include "../3rd_party/choc/platform/choc_DisableAllWarnings.h"
+#include "../3rd_party/choc/choc/platform/choc_DisableAllWarnings.h"
 
 #if __GNUC__
  #pragma GCC diagnostic ignored "-Wpedantic"
@@ -158,7 +158,7 @@ namespace tracktion
 #undef ENABLE_SINC_MEDIUM_CONVERTER
 #undef ENABLE_SINC_FAST_CONVERTER
 
-#include "../3rd_party/choc/platform/choc_ReenableAllWarnings.h"
+#include "../3rd_party/choc/choc/platform/choc_ReenableAllWarnings.h"
 #include "../3rd_party/crill/seqlock_object.h"
 
 //==============================================================================

@@ -60,10 +60,10 @@
  #include <choc/containers/choc_SingleReaderSingleWriterFIFO.h>
  #include <choc/containers/choc_NonAllocatingStableSort.h>
 #else
- #include "../3rd_party/choc/audio/choc_SampleBuffers.h"
- #include "../3rd_party/choc/audio/choc_MIDI.h"
- #include "../3rd_party/choc/containers/choc_SingleReaderSingleWriterFIFO.h"
- #include "../3rd_party/choc/containers/choc_NonAllocatingStableSort.h"
+ #include "../3rd_party/choc/choc/audio/choc_SampleBuffers.h"
+ #include "../3rd_party/choc/choc/audio/choc_MIDI.h"
+ #include "../3rd_party/choc/choc/containers/choc_SingleReaderSingleWriterFIFO.h"
+ #include "../3rd_party/choc/choc/containers/choc_NonAllocatingStableSort.h"
 #endif
 
 #include "../3rd_party/expected/expected.hpp"
@@ -384,9 +384,9 @@ namespace tracktion::inline engine {
 #endif
 
 //==============================================================================
-#include "../3rd_party/choc/platform/choc_DisableAllWarnings.h"
+#include "../3rd_party/choc/choc/platform/choc_DisableAllWarnings.h"
  #include "../3rd_party/crill/spin_mutex.h"
-#include "../3rd_party/choc/platform/choc_ReenableAllWarnings.h"
+#include "../3rd_party/choc/choc/platform/choc_ReenableAllWarnings.h"
 
 //==============================================================================
 #include "../tracktion_graph/utilities/tracktion_PerformanceMeasurement.h"

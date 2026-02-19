@@ -19,69 +19,69 @@
 #ifndef CHOC_TESTS_HEADER_INCLUDED
 #define CHOC_TESTS_HEADER_INCLUDED
 
-#include "../platform/choc_BuildDate.h"
-#include "../containers/choc_ZipFile.h"
-#include "../platform/choc_Execute.h"
-#include "../platform/choc_FileWatcher.h"
-#include "../threading/choc_ThreadSafeFunctor.h"
-#include "../threading/choc_TaskThread.h"
-#include "../gui/choc_MessageLoop.h"
-#include "../gui/choc_WebView.h"
-#include "../text/choc_OpenSourceLicenseList.h"
-#include "../audio/choc_AudioFileFormat_MP3.h"
-#include "../audio/choc_AudioFileFormat_FLAC.h"
-#include "../audio/choc_AudioFileFormat_Ogg.h"
-#include "../audio/choc_AudioFileFormat_WAV.h"
-#include "../memory/choc_VariableLengthEncoding.h"
-#include "../containers/choc_NonAllocatingStableSort.h"
-#include "../platform/choc_DetectDebugger.h"
-#include "../platform/choc_Platform.h"
-#include "../threading/choc_SpinLock.h"
-#include "../platform/choc_DynamicLibrary.h"
-#include "../memory/choc_Endianness.h"
-#include "../text/choc_CodePrinter.h"
-#include "../text/choc_FloatToString.h"
-#include "../text/choc_HTML.h"
-#include "../text/choc_JSON.h"
-#include "../text/choc_StringUtilities.h"
-#include "../text/choc_UTF8.h"
-#include "../text/choc_TextTable.h"
-#include "../text/choc_Files.h"
-#include "../text/choc_Wildcard.h"
-#include "../network/choc_MIMETypes.h"
-#include "../memory/choc_Base64.h"
-#include "../memory/choc_xxHash.h"
-#include "../math/choc_MathHelpers.h"
-#include "../containers/choc_COM.h"
-#include "../containers/choc_DirtyList.h"
-#include "../containers/choc_Span.h"
-#include "../containers/choc_Value.h"
-#include "../containers/choc_MultipleReaderMultipleWriterFIFO.h"
-#include "../containers/choc_SingleReaderMultipleWriterFIFO.h"
-#include "../containers/choc_SingleReaderSingleWriterFIFO.h"
-#include "../containers/choc_VariableSizeFIFO.h"
-#include "../containers/choc_SmallVector.h"
-#include "../memory/choc_PoolAllocator.h"
-#include "../memory/choc_ObjectPointer.h"
-#include "../memory/choc_ObjectReference.h"
-#include "../memory/choc_AlignedMemoryBlock.h"
-#include "../audio/choc_MIDI.h"
-#include "../audio/choc_MIDIFile.h"
-#include "../audio/choc_Oscillators.h"
-#include "../audio/choc_SampleBuffers.h"
-#include "../audio/choc_AudioSampleData.h"
-#include "../audio/choc_SincInterpolator.h"
-#include "../audio/choc_SampleBufferUtilities.h"
-#include "../audio/choc_AudioMIDIBlockDispatcher.h"
-#include "../javascript/choc_javascript.h"
-#include "../javascript/choc_javascript_Timer.h"
-#include "../javascript/choc_javascript_Console.h"
+#include "../choc/platform/choc_BuildDate.h"
+#include "../choc/containers/choc_ZipFile.h"
+#include "../choc/platform/choc_Execute.h"
+#include "../choc/platform/choc_FileWatcher.h"
+#include "../choc/threading/choc_ThreadSafeFunctor.h"
+#include "../choc/threading/choc_TaskThread.h"
+#include "../choc/gui/choc_MessageLoop.h"
+#include "../choc/gui/choc_WebView.h"
+#include "../choc/text/choc_OpenSourceLicenseList.h"
+#include "../choc/audio/choc_AudioFileFormat_MP3.h"
+#include "../choc/audio/choc_AudioFileFormat_FLAC.h"
+#include "../choc/audio/choc_AudioFileFormat_Ogg.h"
+#include "../choc/audio/choc_AudioFileFormat_WAV.h"
+#include "../choc/memory/choc_VariableLengthEncoding.h"
+#include "../choc/containers/choc_NonAllocatingStableSort.h"
+#include "../choc/platform/choc_DetectDebugger.h"
+#include "../choc/platform/choc_Platform.h"
+#include "../choc/threading/choc_SpinLock.h"
+#include "../choc/platform/choc_DynamicLibrary.h"
+#include "../choc/memory/choc_Endianness.h"
+#include "../choc/text/choc_CodePrinter.h"
+#include "../choc/text/choc_FloatToString.h"
+#include "../choc/text/choc_HTML.h"
+#include "../choc/text/choc_JSON.h"
+#include "../choc/text/choc_StringUtilities.h"
+#include "../choc/text/choc_UTF8.h"
+#include "../choc/text/choc_TextTable.h"
+#include "../choc/text/choc_Files.h"
+#include "../choc/text/choc_Wildcard.h"
+#include "../choc/network/choc_MIMETypes.h"
+#include "../choc/memory/choc_Base64.h"
+#include "../choc/memory/choc_xxHash.h"
+#include "../choc/math/choc_MathHelpers.h"
+#include "../choc/containers/choc_COM.h"
+#include "../choc/containers/choc_DirtyList.h"
+#include "../choc/containers/choc_Span.h"
+#include "../choc/containers/choc_Value.h"
+#include "../choc/containers/choc_MultipleReaderMultipleWriterFIFO.h"
+#include "../choc/containers/choc_SingleReaderMultipleWriterFIFO.h"
+#include "../choc/containers/choc_SingleReaderSingleWriterFIFO.h"
+#include "../choc/containers/choc_VariableSizeFIFO.h"
+#include "../choc/containers/choc_SmallVector.h"
+#include "../choc/memory/choc_PoolAllocator.h"
+#include "../choc/memory/choc_ObjectPointer.h"
+#include "../choc/memory/choc_ObjectReference.h"
+#include "../choc/memory/choc_AlignedMemoryBlock.h"
+#include "../choc/audio/choc_MIDI.h"
+#include "../choc/audio/choc_MIDIFile.h"
+#include "../choc/audio/choc_Oscillators.h"
+#include "../choc/audio/choc_SampleBuffers.h"
+#include "../choc/audio/choc_AudioSampleData.h"
+#include "../choc/audio/choc_SincInterpolator.h"
+#include "../choc/audio/choc_SampleBufferUtilities.h"
+#include "../choc/audio/choc_AudioMIDIBlockDispatcher.h"
+#include "../choc/javascript/choc_javascript.h"
+#include "../choc/javascript/choc_javascript_Timer.h"
+#include "../choc/javascript/choc_javascript_Console.h"
 
 #if CHOC_ENABLE_HTTP_SERVER_TEST
- #include "../network/choc_HTTPServer.h"
+ #include "../choc/network/choc_HTTPServer.h"
 #endif
 
-#include "choc_UnitTest.h"
+#include "../choc/platform/choc_UnitTest.h"
 #include <future>
 
 /**
@@ -149,6 +149,24 @@ inline void testPlatform (choc::test::TestProgress& progress)
         // For the purpose of testing, we'll assume you always do a fresh build
         // before running this.
         CHOC_EXPECT_TRUE (choc::getDaysSinceBuildDate() < 5);
+
+        // Verify that the build date includes time information, not just the date
+        auto buildDate = choc::getBuildDate();
+        auto duration = buildDate.time_since_epoch();
+        auto seconds = std::chrono::duration_cast<std::chrono::seconds> (duration).count();
+
+        // The time should not be exactly at midnight (which would indicate missing time)
+        // We check that seconds modulo 86400 (seconds in a day) is not zero
+        auto secondsInDay = seconds % 86400;
+        CHOC_EXPECT_TRUE (secondsInDay != 0); // Should have actual time, not 00:00:00
+
+        // The build date should not be in the future
+        auto now = std::chrono::system_clock::now();
+        CHOC_EXPECT_TRUE (buildDate <= now);
+
+        // The build date should be recent (within the last week)
+        auto oneWeekAgo = now - std::chrono::hours (24 * 7);
+        CHOC_EXPECT_TRUE (buildDate >= oneWeekAgo);
     }
 
     {
@@ -1251,10 +1269,105 @@ inline void testMIDI (choc::test::TestProgress& progress)
     }
 
     {
-        CHOC_TEST (ShortMessages)
+        CHOC_TEST (CreationFunctions)
 
         choc::midi::ShortMessage msg;
         CHOC_EXPECT_TRUE (msg.isNull());
+
+        auto m1 = choc::midi::noteOn (2, 60, 100);
+        CHOC_EXPECT_TRUE (m1.isNoteOn());
+        CHOC_EXPECT_EQ (m1.getChannel1to16(), 2);
+        CHOC_EXPECT_EQ (m1.getNoteNumber(), 60);
+        CHOC_EXPECT_EQ (m1.getVelocity(), 100);
+
+        auto m2 = choc::midi::noteOff (3, 61, 101);
+        CHOC_EXPECT_TRUE (m2.isNoteOff());
+        CHOC_EXPECT_EQ (m2.getChannel1to16(), 3);
+        CHOC_EXPECT_EQ (m2.getNoteNumber(), 61);
+        CHOC_EXPECT_EQ (m2.getVelocity(), 101);
+
+        auto m3 = choc::midi::controlChange (4, 62, 102);
+        CHOC_EXPECT_TRUE (m3.isController());
+        CHOC_EXPECT_EQ (m3.getChannel1to16(), 4);
+        CHOC_EXPECT_EQ (m3.getControllerNumber(), 62);
+        CHOC_EXPECT_EQ (m3.getControllerValue(), 102);
+
+        auto m4 = choc::midi::programChange (5, 63);
+        CHOC_EXPECT_TRUE (m4.isProgramChange());
+        CHOC_EXPECT_EQ (m4.getChannel1to16(), 5);
+        CHOC_EXPECT_EQ (m4.getProgramChangeNumber(), 63);
+
+        auto m5 = choc::midi::pitchBend (6, 12345);
+        CHOC_EXPECT_TRUE (m5.isPitchWheel());
+        CHOC_EXPECT_EQ (m5.getChannel1to16(), 6);
+        CHOC_EXPECT_EQ (m5.getPitchWheelValue(), 12345u);
+
+        auto m6 = choc::midi::channelPressure (7, 103);
+        CHOC_EXPECT_TRUE (m6.isChannelPressure());
+        CHOC_EXPECT_EQ (m6.getChannel1to16(), 7);
+        CHOC_EXPECT_EQ (m6.getChannelPressureValue(), 103);
+
+        auto m7 = choc::midi::polyphonicAftertouch (8, 64, 104);
+        CHOC_EXPECT_TRUE (m7.isAftertouch());
+        CHOC_EXPECT_EQ (m7.getChannel1to16(), 8);
+        CHOC_EXPECT_EQ (m7.getNoteNumber(), 64);
+        CHOC_EXPECT_EQ (m7.getAfterTouchValue(), 104);
+
+        uint8_t sysexData[] = { 1, 2, 3, 4, 5 };
+        auto m8 = choc::midi::sysex (sysexData, sizeof (sysexData));
+        CHOC_EXPECT_TRUE (m8.isSysex());
+        CHOC_EXPECT_EQ (m8.size(), sizeof (sysexData) + 2);
+        CHOC_EXPECT_EQ (m8.data()[0], 0xf0);
+        CHOC_EXPECT_EQ (m8.data()[6], 0xf7);
+        CHOC_EXPECT_TRUE (memcmp (m8.data() + 1, sysexData, sizeof (sysexData)) == 0);
+
+        auto m9 = choc::midi::allNotesOff (9);
+        CHOC_EXPECT_TRUE (m9.isAllNotesOff());
+        CHOC_EXPECT_EQ (m9.getChannel1to16(), 9);
+
+        auto m10 = choc::midi::allSoundOff (10);
+        CHOC_EXPECT_TRUE (m10.isAllSoundOff());
+        CHOC_EXPECT_EQ (m10.getChannel1to16(), 10);
+
+        auto m11 = choc::midi::resetAllControllers (11);
+        CHOC_EXPECT_TRUE (m11.isController());
+        CHOC_EXPECT_EQ (m11.getChannel1to16(), 11);
+        CHOC_EXPECT_EQ (m11.getControllerNumber(), 121);
+
+        auto m12 = choc::midi::localControl (12, true);
+        CHOC_EXPECT_TRUE (m12.isController());
+        CHOC_EXPECT_EQ (m12.getChannel1to16(), 12);
+        CHOC_EXPECT_EQ (m12.getControllerNumber(), 122);
+        CHOC_EXPECT_EQ (m12.getControllerValue(), 127);
+
+        auto m13 = choc::midi::songPositionPointer (12345);
+        CHOC_EXPECT_TRUE (m13.isSongPositionPointer());
+        CHOC_EXPECT_EQ (m13.getSongPositionPointerValue(), 12345u);
+
+        auto m14 = choc::midi::songSelect (105);
+        CHOC_EXPECT_EQ (m14.data()[0], 0xf3);
+        CHOC_EXPECT_EQ (m14.data()[1], 105);
+
+        auto m15 = choc::midi::tuneRequest();
+        CHOC_EXPECT_EQ (m15.data()[0], 0xf6);
+
+        auto m16 = choc::midi::timingClock();
+        CHOC_EXPECT_TRUE (m16.isClock());
+
+        auto m17 = choc::midi::start();
+        CHOC_EXPECT_TRUE (m17.isStart());
+
+        auto m18 = choc::midi::continuePlayback();
+        CHOC_EXPECT_TRUE (m18.isContinue());
+
+        auto m19 = choc::midi::stop();
+        CHOC_EXPECT_TRUE (m19.isStop());
+
+        auto m20 = choc::midi::activeSensing();
+        CHOC_EXPECT_TRUE (m20.isActiveSense());
+
+        auto m21 = choc::midi::systemReset();
+        CHOC_EXPECT_EQ (m21.data()[0], 0xff);
     }
 }
 
@@ -2076,6 +2189,21 @@ inline void testMIDIFiles (choc::test::TestProgress& progress)
             // This is just a simple regression test to see whether anything changes. Update the hash number if it does.
             CHOC_EXPECT_EQ (5294939095423848520ull, simpleHash (output1));
             CHOC_EXPECT_EQ (output1, output2);
+
+            auto savedData = mf.save();
+            choc::midi::File mf2;
+            mf2.load (savedData.data(), savedData.size());
+
+            auto sequence = mf.toSequence();
+            auto sequence2 = mf2.toSequence();
+
+            CHOC_EXPECT_EQ (sequence.events.size(), sequence2.events.size());
+
+            for (size_t i = 0; i < sequence.events.size(); ++i)
+            {
+                CHOC_EXPECT_NEAR (sequence.events[i].timeStamp, sequence2.events[i].timeStamp, 0.001);
+                CHOC_EXPECT_TRUE (sequence.events[i].message == sequence2.events[i].message);
+            }
         }
         CHOC_CATCH_UNEXPECTED_EXCEPTION
 
@@ -2087,6 +2215,34 @@ inline void testMIDIFiles (choc::test::TestProgress& progress)
             CHOC_FAIL ("Expected a failure")
         }
         catch (...) {}
+    }
+
+    {
+        CHOC_TEST (MIDIFileWrite)
+
+        choc::midi::Sequence sequence;
+
+        for (int i = 0; i < 100; ++i)
+        {
+            sequence.events.push_back ({ (double) i * 0.1, choc::midi::noteOn (1, (uint8_t) (i + 20), (uint8_t) ((i % 97) + 30)) });
+            sequence.events.push_back ({ (double) i * 0.1 + 0.05, choc::midi::noteOff (1, (uint8_t) (i + 20), 0) });
+        }
+
+        choc::midi::File file (sequence);
+        auto savedData = file.save();
+
+        choc::midi::File file2;
+        file2.load (savedData.data(), savedData.size());
+
+        auto sequence2 = file2.toSequence();
+
+        CHOC_EXPECT_EQ (sequence.events.size(), sequence2.events.size());
+
+        for (size_t i = 0; i < sequence.events.size(); ++i)
+        {
+            CHOC_EXPECT_NEAR (sequence.events[i].timeStamp, sequence2.events[i].timeStamp, 0.001);
+            CHOC_EXPECT_TRUE (sequence.events[i].message == sequence2.events[i].message);
+        }
     }
 }
 
@@ -3074,8 +3230,9 @@ static void testZLIB (choc::test::TestProgress& progress)
         auto performTest = [&] (size_t dataSize, choc::zlib::DeflaterStream::CompressionLevel compression)
         {
             performTestWithBits (dataSize, compression, 0, choc::zlib::InflaterStream::FormatType::zlib);
-            performTestWithBits (dataSize, compression, -15, choc::zlib::InflaterStream::FormatType::zlib);
+            performTestWithBits (dataSize, compression, -15, choc::zlib::InflaterStream::FormatType::deflate);
         };
+
 
         for (auto compression = choc::zlib::DeflaterStream::CompressionLevel::none;
              compression <= choc::zlib::DeflaterStream::CompressionLevel::best;
@@ -3178,8 +3335,372 @@ static void testZipFile (choc::test::TestProgress& progress)
             }
         }
         CHOC_CATCH_UNEXPECTED_EXCEPTION
+
+    }
+
+    {
+        CHOC_TEST (ZipWriter_BasicFile)
+
+        try
+        {
+            // Create a simple zip with one file
+            auto stream = std::make_shared<std::ostringstream> (std::ios::binary);
+
+            {
+                choc::zip::ZipWriter writer (stream);
+                writer.addFile ("test.txt", "Hello, World!", choc::zip::ZipWriter::CompressionLevel::uncompressed);
+            }
+
+            // Read it back
+            auto zipData = stream->str();
+            auto readStream = std::make_shared<std::istringstream> (zipData, std::ios::binary);
+            choc::zip::ZipFile zipFile (readStream);
+
+            CHOC_EXPECT_EQ (zipFile.items.size(), 1u);
+            CHOC_EXPECT_EQ (zipFile.items[0].filename, "test.txt");
+            CHOC_EXPECT_EQ (zipFile.items[0].uncompressedSize, 13u);
+            CHOC_EXPECT_FALSE (zipFile.items[0].isCompressed);
+
+            auto reader = zipFile.items[0].createReader();
+            std::string content;
+            content.resize (13);
+            reader->read (content.data(), 13);
+            CHOC_EXPECT_EQ (content, "Hello, World!");
+        }
+        CHOC_CATCH_UNEXPECTED_EXCEPTION
+    }
+
+    {
+        CHOC_TEST (ZipWriter_CompressedFile)
+
+        try
+        {
+            // Create a zip with compressed file
+            auto stream = std::make_shared<std::ostringstream> (std::ios::binary);
+
+            {
+                choc::zip::ZipWriter writer (stream);
+                std::string largeContent (10000, 'A');
+                writer.addFile ("large.txt", largeContent, choc::zip::ZipWriter::CompressionLevel::best);
+                writer.flush();
+                writer.flush();
+            }
+
+            // Read it back
+            auto zipData = stream->str();
+            auto readStream = std::make_shared<std::istringstream> (zipData, std::ios::binary);
+            choc::zip::ZipFile zipFile (readStream);
+
+            CHOC_EXPECT_EQ (zipFile.items.size(), 1u);
+            CHOC_EXPECT_EQ (zipFile.items[0].filename, "large.txt");
+            CHOC_EXPECT_EQ (zipFile.items[0].uncompressedSize, 10000u);
+            CHOC_EXPECT_TRUE (zipFile.items[0].isCompressed);
+            CHOC_EXPECT_TRUE (zipFile.items[0].compressedSize < zipFile.items[0].uncompressedSize);
+
+            auto reader = zipFile.items[0].createReader();
+            std::string content;
+            content.resize (10000);
+            reader->read (content.data(), 10000);
+            CHOC_EXPECT_EQ (content, std::string (10000, 'A'));
+        }
+        CHOC_CATCH_UNEXPECTED_EXCEPTION
+    }
+
+    {
+        CHOC_TEST (ZipWriter_MultipleFiles)
+
+        try
+        {
+            // Create a zip with multiple files and folders
+            auto stream = std::make_shared<std::ostringstream> (std::ios::binary);
+
+            {
+                choc::zip::ZipWriter writer (stream);
+                writer.addFolder ("folder1/");
+                writer.addFile ("folder1/file1.txt", "Content 1");
+                writer.addFolder ("folder2/");
+                writer.addFile ("folder2/file2.txt", "Content 2");
+                writer.addFile ("root.txt", "Root content");
+            }
+
+            // Read it back
+            auto zipData = stream->str();
+            auto readStream = std::make_shared<std::istringstream> (zipData, std::ios::binary);
+            choc::zip::ZipFile zipFile (readStream);
+
+            CHOC_EXPECT_EQ (zipFile.items.size(), 5u);
+
+            // Check folders
+            bool foundFolder1 = false, foundFolder2 = false;
+            int fileCount = 0;
+
+            for (const auto& item : zipFile.items)
+            {
+                if (item.filename == "folder1/")
+                {
+                    foundFolder1 = true;
+                    CHOC_EXPECT_TRUE (item.isFolder());
+                }
+                else if (item.filename == "folder2/")
+                {
+                    foundFolder2 = true;
+                    CHOC_EXPECT_TRUE (item.isFolder());
+                }
+                else if (item.filename == "folder1/file1.txt")
+                {
+                    fileCount++;
+                    auto reader = item.createReader();
+                    std::string content;
+                    content.resize (item.uncompressedSize);
+                    reader->read (content.data(), static_cast<std::streamsize> (item.uncompressedSize));
+                    CHOC_EXPECT_EQ (content, "Content 1");
+                }
+                else if (item.filename == "folder2/file2.txt")
+                {
+                    fileCount++;
+                    auto reader = item.createReader();
+                    std::string content;
+                    content.resize (item.uncompressedSize);
+                    reader->read (content.data(), static_cast<std::streamsize> (item.uncompressedSize));
+                    CHOC_EXPECT_EQ (content, "Content 2");
+                }
+                else if (item.filename == "root.txt")
+                {
+                    fileCount++;
+                    auto reader = item.createReader();
+                    std::string content;
+                    content.resize (item.uncompressedSize);
+                    reader->read (content.data(), static_cast<std::streamsize> (item.uncompressedSize));
+                    CHOC_EXPECT_EQ (content, "Root content");
+                }
+            }
+
+            CHOC_EXPECT_TRUE (foundFolder1);
+            CHOC_EXPECT_TRUE (foundFolder2);
+            CHOC_EXPECT_EQ (fileCount, 3);
+        }
+        CHOC_CATCH_UNEXPECTED_EXCEPTION
+    }
+
+    {
+        CHOC_TEST (ZipWriter_FromStream)
+
+        try
+        {
+            // Create a zip reading from a stream
+            auto stream = std::make_shared<std::ostringstream> (std::ios::binary);
+
+            {
+                choc::zip::ZipWriter writer (stream);
+
+                // Create source data stream
+                std::string sourceData (5000, 'X');
+                std::istringstream sourceStream (sourceData, std::ios::binary);
+
+                writer.addFileFromStream ("streamed.dat", sourceStream, choc::zip::ZipWriter::CompressionLevel::normal);
+                writer.flush();
+            }
+
+            // Read it back
+            auto zipData = stream->str();
+            auto readStream = std::make_shared<std::istringstream> (zipData, std::ios::binary);
+            choc::zip::ZipFile zipFile (readStream);
+
+            CHOC_EXPECT_EQ (zipFile.items.size(), 1u);
+            CHOC_EXPECT_EQ (zipFile.items[0].uncompressedSize, 5000u);
+
+            auto reader = zipFile.items[0].createReader();
+            std::string content;
+            content.resize (5000);
+            reader->read (content.data(), 5000);
+            CHOC_EXPECT_EQ (content, std::string (5000, 'X'));
+        }
+        CHOC_CATCH_UNEXPECTED_EXCEPTION
+    }
+
+    {
+        CHOC_TEST (ZipWriter_CompressionLevels)
+
+        try
+        {
+            // Test different compression levels
+            std::string testData (1000, 'Z');
+
+            for (auto level : { choc::zip::ZipWriter::CompressionLevel::uncompressed,
+                                choc::zip::ZipWriter::CompressionLevel::fastest,
+                                choc::zip::ZipWriter::CompressionLevel::normal,
+                                choc::zip::ZipWriter::CompressionLevel::best })
+            {
+                auto stream = std::make_shared<std::ostringstream> (std::ios::binary);
+
+                {
+                    choc::zip::ZipWriter writer (stream);
+                    writer.addFile ("test.txt", testData, level);
+                }
+
+                auto zipData = stream->str();
+                auto readStream = std::make_shared<std::istringstream> (zipData, std::ios::binary);
+                choc::zip::ZipFile zipFile (readStream);
+
+                CHOC_EXPECT_EQ (zipFile.items.size(), 1u);
+                CHOC_EXPECT_EQ (zipFile.items[0].uncompressedSize, 1000u);
+
+                if (level == choc::zip::ZipWriter::CompressionLevel::uncompressed)
+                {
+                    CHOC_EXPECT_FALSE (zipFile.items[0].isCompressed);
+                }
+                else
+                {
+                    CHOC_EXPECT_TRUE (zipFile.items[0].isCompressed);
+                }
+
+                auto reader = zipFile.items[0].createReader();
+                std::string content;
+                content.resize (1000);
+                reader->read (content.data(), 1000);
+                CHOC_EXPECT_EQ (content, testData);
+            }
+        }
+        CHOC_CATCH_UNEXPECTED_EXCEPTION
+    }
+
+
+    {
+        CHOC_TEST (ZipWriter_EmptyFile)
+
+        try
+        {
+            // Test empty file handling
+            auto stream = std::make_shared<std::ostringstream> (std::ios::binary);
+
+            {
+                choc::zip::ZipWriter writer (stream);
+                writer.addFile ("empty.txt", "", choc::zip::ZipWriter::CompressionLevel::uncompressed);
+                writer.flush();
+                writer.addFile ("nonempty.txt", "content");
+            }
+
+            // Read it back
+            auto zipData = stream->str();
+            auto readStream = std::make_shared<std::istringstream> (zipData, std::ios::binary);
+            choc::zip::ZipFile zipFile (readStream);
+
+            CHOC_EXPECT_EQ (zipFile.items.size(), 2u);
+
+            // Find and check empty file
+            for (const auto& item : zipFile.items)
+            {
+                if (item.filename == "empty.txt")
+                {
+                    CHOC_EXPECT_EQ (item.uncompressedSize, 0u);
+                    CHOC_EXPECT_EQ (item.compressedSize, 0u);
+                    CHOC_EXPECT_FALSE (item.isCompressed);
+
+                    auto reader = item.createReader();
+                    CHOC_EXPECT_EQ (reader->gcount(), 0);
+
+                }
+                else if (item.filename == "nonempty.txt")
+                {
+                    CHOC_EXPECT_EQ (item.uncompressedSize, 7u);
+                }
+            }
+        }
+        CHOC_CATCH_UNEXPECTED_EXCEPTION
+    }
+
+    {
+        CHOC_TEST (ZipWriter_RoundTrip)
+
+        try
+        {
+            // Create files similar to the original test
+            struct File
+            {
+                std::string name, data;
+            };
+
+            auto generateFile = [] (uint32_t seed)
+            {
+                File file;
+                auto len = std::max (1u, std::min (8192u, seed * 13));
+
+                for (uint32_t i = 0; i < len; ++i)
+                {
+                    seed = ((seed * 3 + seed * 17) ^ seed) + 1;
+                    file.data += (char) seed;
+
+                    if ((seed & 4) == 0)
+                        for (uint32_t n = 0; n < 1 + (seed / 10) % 30; ++n)
+                            file.data += (char) seed;
+                }
+
+                file.name = "zip/folder" + std::to_string (seed % 3) + "/file" + std::to_string (seed);
+                return file;
+            };
+
+            std::vector<File> files;
+
+            for (uint32_t i = 0; i < 10; ++i)
+                files.push_back (generateFile ((1 + (i * 13)) ^ ((i * 17) + i)));
+
+            // Create ZIP
+            auto stream = std::make_shared<std::ostringstream> (std::ios::binary);
+
+            {
+                choc::zip::ZipWriter writer (stream);
+
+                // Add folders first
+                writer.addFolder ("zip/");
+                writer.addFolder ("zip/folder0/");
+                writer.addFolder ("zip/folder1/");
+                writer.addFolder ("zip/folder2/");
+
+                // Add files with compression
+                for (const auto& file : files)
+                {
+                    writer.addFile (file.name, file.data);
+                    writer.flush();
+                }
+            }
+
+            // Read it back
+            auto zipData = stream->str();
+            auto readStream = std::make_shared<std::istringstream> (zipData, std::ios::binary);
+            choc::zip::ZipFile zipFile (readStream);
+
+            // Verify files
+            for (const auto& item : zipFile.items)
+            {
+                if (item.isFolder())
+                    continue;
+
+                bool found = false;
+
+                for (const auto& original : files)
+                {
+                    if (original.name == item.filename)
+                    {
+                        found = true;
+                        CHOC_EXPECT_EQ (item.uncompressedSize, original.data.size());
+
+                        auto reader = item.createReader();
+                        std::string content;
+                        content.resize (item.uncompressedSize);
+                        reader->read (content.data(), static_cast<std::streamsize> (item.uncompressedSize));
+                        CHOC_EXPECT_EQ (content, original.data);
+                        break;
+                    }
+                }
+
+                CHOC_EXPECT_TRUE (found);
+            }
+        }
+        CHOC_CATCH_UNEXPECTED_EXCEPTION
     }
 }
+
+
 
 //==============================================================================
 static void testExecute (choc::test::TestProgress& progress)

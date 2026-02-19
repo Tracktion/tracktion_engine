@@ -10,7 +10,7 @@
 
 
 #include "tracktion_Tempo.h"
-#include "../../3rd_party/choc/text/choc_StringUtilities.h"
+#include "../../3rd_party/choc/choc/text/choc_StringUtilities.h"
 
 #if TRACKTION_UNIT_TESTS && TRACKTION_UNIT_TESTS_TIME
 
