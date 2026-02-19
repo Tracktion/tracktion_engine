@@ -1715,7 +1715,6 @@ void TransportControl::performPositionChange()
 
     position = newPos;
 
-    yieldGUIThread();
 
     if (! transportState->userDragging)
         transportState->lastUserDragTime = juce::Time::getMillisecondCounter();

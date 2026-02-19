@@ -445,7 +445,6 @@ void CurveEditor::selectPoint (int pointIdx, bool addToSelection)
 
 void CurveEditor::mouseDrag (const juce::MouseEvent& e)
 {
-    yieldGUIThread();
 
     if (getItem() == nullptr)
         return;

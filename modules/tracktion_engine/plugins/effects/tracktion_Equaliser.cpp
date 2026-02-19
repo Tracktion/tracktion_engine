@@ -332,7 +332,6 @@ float EqualiserPlugin::getDBGainAtFrequency (float f)
         }
 
         curveNeedsUpdating = false;
-        yieldGUIThread();
     }
 
     return curve.getY (f / (lastSampleRate / 2));

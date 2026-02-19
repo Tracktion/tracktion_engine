@@ -66,13 +66,6 @@ float getAudioDataMagnitude (const float* data, int num);
 void convertIntsToFloats (juce::AudioBuffer<float>&);
 void convertFloatsToInts (juce::AudioBuffer<float>&);
 
-inline void yieldGUIThread() noexcept
-{
-   #if JUCE_WINDOWS
-    juce::Thread::yield();
-   #endif
-}
-
 //==============================================================================
 /** Converts a juce::AudioBuffer<SampleType> to a choc::buffer::BufferView. */
 template<typename SampleType>
