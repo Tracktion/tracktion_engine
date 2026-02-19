@@ -28,13 +28,11 @@ public:
     bool isReadOnly() const override;
     ProjectID getProjectID() const override;
     juce::String getName() const override;
-    juce::String getDescription() const override;
     const juce::File& getProjectFile() const noexcept override          { return file; }
     juce::File getDefaultDirectory() const override;
     juce::File getDirectoryForMedia (ProjectItem::Category) const override;
 
     void setName (const juce::String&) override;
-    void setDescription (const juce::String&) override;
     void createNewProjectId() override;
 
     juce::String getProjectProperty (const juce::String&) const override;

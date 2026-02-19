@@ -30,13 +30,11 @@ public:
     virtual bool isTemporary() const                                    { return temporary; }
     virtual ProjectID getProjectID() const = 0;
     virtual juce::String getName() const = 0;
-    virtual juce::String getDescription() const = 0;
     virtual const juce::File& getProjectFile() const noexcept = 0;
     virtual juce::File getDefaultDirectory() const = 0;
     virtual juce::File getDirectoryForMedia (ProjectItem::Category) const = 0;
 
     virtual void setName (const juce::String&) = 0;
-    virtual void setDescription (const juce::String&) = 0;
     virtual void createNewProjectId() = 0;
 
     virtual juce::String getProjectProperty (const juce::String&) const = 0;

@@ -177,11 +177,6 @@ juce::String FolderBasedProject::getName() const
     return folder.getFileNameWithoutExtension();
 }
 
-juce::String FolderBasedProject::getDescription() const
-{
-    return {};
-}
-
 const juce::File& FolderBasedProject::getProjectFile() const noexcept
 {
     return folder;
@@ -230,11 +225,6 @@ void FolderBasedProject::setName (const juce::String& newName)
         owner.projectManager.saveList();
         owner.engine.getUIBehaviour().updateAllProjectItemLists();
     }
-}
-
-void FolderBasedProject::setDescription (const juce::String&)
-{
-    // No-op: folder-based projects have no stored description
 }
 
 void FolderBasedProject::createNewProjectId()

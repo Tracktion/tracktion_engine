@@ -84,7 +84,7 @@ public:
     juce::String getName() const;
 
     /** Returns the project description string.
-        Always empty for folder-based projects.
+        Stored as a project property and works for both file-based and folder-based projects.
     */
     juce::String getDescription() const;
 
@@ -113,7 +113,7 @@ public:
     /** Renames the project. This renames the underlying file or folder on disk. */
     void setName (const juce::String& newName);
 
-    /** Sets the project description. No-op for folder-based projects. */
+    /** Sets the project description. Works for both file-based and folder-based projects. */
     void setDescription (const juce::String& newDesc);
 
     /** Generates and assigns a new random project ID. No-op for folder-based projects. */

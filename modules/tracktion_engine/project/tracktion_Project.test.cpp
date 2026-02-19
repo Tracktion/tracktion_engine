@@ -1047,6 +1047,71 @@ TEST_SUITE ("tracktion_engine")
         }
     }
 
+    TEST_CASE ("Project: get and set description")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        SUBCASE ("file-based project")
+        {
+            auto projectFile = tempDir.getChildFile ("desc_test.tracktion");
+            ProjectManager::TempProject tp (pm, projectFile, true);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+
+            CHECK (project->getDescription().isEmpty());
+
+            project->setDescription ("Hello world");
+            CHECK (project->getDescription() == "Hello world");
+
+            // Verify persistence
+            project->save();
+            project->refreshProjectPropertiesFromFile();
+            CHECK (project->getDescription() == "Hello world");
+        }
+
+        SUBCASE ("folder-based project")
+        {
+            auto projectFolder = tempDir.getChildFile ("desc_folder_test");
+            projectFolder.createDirectory();
+
+            ProjectManager::TempProject tp (pm, projectFolder, false);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+
+            CHECK (project->getDescription().isEmpty());
+
+            project->setDescription ("Folder description");
+            CHECK (project->getDescription() == "Folder description");
+
+            // Verify persistence via project_info.json
+            project->refreshProjectPropertiesFromFile();
+            CHECK (project->getDescription() == "Folder description");
+        }
+
+        SUBCASE ("truncation at 8192 characters")
+        {
+            auto projectFile = tempDir.getChildFile ("desc_trunc.tracktion");
+            ProjectManager::TempProject tp (pm, projectFile, true);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+
+            auto longDesc = juce::String::repeatedString ("x", 10000);
+            project->setDescription (longDesc);
+            CHECK (project->getDescription().length() == 8192);
+        }
+
+        cleanup();
+    }
+
     TEST_CASE ("Project: setSourceFile triggers sourceFileMoved")
     {
         auto& engine = *Engine::getEngines()[0];

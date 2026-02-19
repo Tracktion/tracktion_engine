@@ -292,11 +292,6 @@ juce::String FileBasedProject::getName() const
     return getProjectProperty ("name");
 }
 
-juce::String FileBasedProject::getDescription() const
-{
-    return getProjectProperty ("description");
-}
-
 void FileBasedProject::setName (const juce::String& newName)
 {
     if (getName() != newName)
@@ -318,11 +313,6 @@ void FileBasedProject::setName (const juce::String& newName)
 
         owner.projectManager.saveList();
     }
-}
-
-void FileBasedProject::setDescription (const juce::String& newDesc)
-{
-    setProjectProperty ("description", juce::String (newDesc).substring (0, 512));
 }
 
 void FileBasedProject::createNewProjectId()

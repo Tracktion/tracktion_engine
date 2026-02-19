@@ -75,7 +75,7 @@ bool Project::isReadOnly() const                                            { re
 bool Project::isTemporary() const                                           { return impl->isTemporary(); }
 ProjectID Project::getProjectID() const                                     { return impl->getProjectID(); }
 juce::String Project::getName() const                                       { return impl->getName(); }
-juce::String Project::getDescription() const                                { return impl->getDescription(); }
+juce::String Project::getDescription() const                                { return getProjectProperty ("description"); }
 const juce::File& Project::getProjectFile() const noexcept                  { return impl->getProjectFile(); }
 juce::File Project::getDefaultDirectory() const                             { return impl->getDefaultDirectory(); }
 juce::File Project::getDirectoryForMedia (ProjectItem::Category c) const    { return impl->getDirectoryForMedia (c); }
@@ -91,7 +91,7 @@ juce::String Project::getSourcePathForFile (const juce::File& file) const
 }
 
 void Project::setName (const juce::String& n)                               { impl->setName (n); }
-void Project::setDescription (const juce::String& d)                        { impl->setDescription (d); }
+void Project::setDescription (const juce::String& d)                        { setProjectProperty ("description", juce::String (d).substring (0, 8192)); }
 void Project::createNewProjectId()                                          { impl->createNewProjectId(); }
 
 juce::String Project::getProjectProperty (const juce::String& n) const      { return impl->getProjectProperty (n); }
@@ -173,7 +173,7 @@ juce::String Project::getSelectableDescription()                            { re
 
 void Project::lockFile()                                                    { impl->lockFile(); }
 void Project::unlockFile()                                                  { impl->unlockFile(); }
-void Project::sourceFileMoved (const juce::File& o, const juce::File& n)   { impl->sourceFileMoved (o, n); }
+void Project::sourceFileMoved (const juce::File& o, const juce::File& n)    { impl->sourceFileMoved (o, n); }
 
 //==============================================================================
 Project::Ptr convertToFolderBasedProject (Project& project)
