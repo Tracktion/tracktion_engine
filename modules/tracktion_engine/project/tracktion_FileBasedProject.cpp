@@ -20,10 +20,6 @@ FileBasedProject::FileBasedProject (Project& o, const juce::File& projectFile)
     jassert (isTracktionProjectFile (file));
 }
 
-FileBasedProject::~FileBasedProject()
-{
-}
-
 void FileBasedProject::lockFile()
 {
     if (fileLockingStream == nullptr)
@@ -349,8 +345,8 @@ void FileBasedProject::redirectIDsFromProject (ProjectID oldProjId, ProjectID ne
                 {
                     for (auto& item : exportable->getReferencedItems())
                     {
-                         if (auto pid = item.itemRef.getProjectItemID(); pid && pid->getProjectID() == oldProjId)
-                             exportable->reassignReferencedItem (item, pid->withNewProjectID (newProjId), 0.0);
+                        if (auto pid = item.itemRef.getProjectItemID(); pid && pid->getProjectID() == oldProjId)
+                            exportable->reassignReferencedItem (item, pid->withNewProjectID (newProjId), 0.0);
                     }
                 }
 

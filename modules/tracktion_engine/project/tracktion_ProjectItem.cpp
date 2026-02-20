@@ -822,8 +822,8 @@ void ProjectItem::changeProjectId (ProjectID oldID, ProjectID newID)
 
         for (auto exp : Exportable::addAllExportables (*ed))
             for (auto& item : exp->getReferencedItems())
-                 if (auto pid2 = item.itemRef.getProjectItemID(); pid2 && pid2->getProjectID() == oldID)
-                     exp->reassignReferencedItem (item, pid2->withNewProjectID (newID), 0.0);
+                if (auto pid2 = item.itemRef.getProjectItemID(); pid2 && pid2->getProjectID() == oldID)
+                    exp->reassignReferencedItem (item, pid2->withNewProjectID (newID), 0.0);
 
         EditFileOperations (*ed).save (false, true, false);
     }

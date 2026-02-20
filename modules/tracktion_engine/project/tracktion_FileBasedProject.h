@@ -19,7 +19,7 @@ class FileBasedProject  : public ProjectBase
 {
 public:
     FileBasedProject (Project& owner, const juce::File& projectFile);
-    ~FileBasedProject() override;
+    ~FileBasedProject() override = default;
 
     //==============================================================================
     bool save() override;

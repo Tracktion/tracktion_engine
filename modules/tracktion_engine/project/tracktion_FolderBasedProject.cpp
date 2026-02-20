@@ -18,10 +18,6 @@ FolderBasedProject::FolderBasedProject (Project& o, const juce::File& f)
     loadPropertiesFromFile();
 }
 
-FolderBasedProject::~FolderBasedProject()
-{
-}
-
 //==============================================================================
 juce::File FolderBasedProject::getInfoFile() const
 {

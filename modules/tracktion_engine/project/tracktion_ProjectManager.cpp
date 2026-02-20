@@ -155,8 +155,8 @@ juce::ReferenceCountedArray<Project> ProjectManager::getAllProjects (const juce:
     return list;
 }
 
-juce::ValueTree ProjectManager::getActiveProjectsFolder()     { return folders.getChildWithName (IDs::ACTIVE); }
-juce::ValueTree ProjectManager::getLibraryProjectsFolder()    { return folders.getChildWithName (IDs::LIBRARY); }
+juce::ValueTree ProjectManager::getActiveProjectsFolder()                      { return folders.getChildWithName (IDs::ACTIVE); }
+juce::ValueTree ProjectManager::getLibraryProjectsFolder()                     { return folders.getChildWithName (IDs::LIBRARY); }
 
 //==============================================================================
 Project::Ptr ProjectManager::findProjectWithId (const juce::ValueTree& folder, ProjectID pid)

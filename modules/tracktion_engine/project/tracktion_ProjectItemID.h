@@ -93,10 +93,10 @@ private:
 
 namespace juce
 {
-    template <>
-    struct VariantConverter<tracktion::engine::ProjectItemID>
-    {
-        static tracktion::engine::ProjectItemID fromVar (const var& v)   { return tracktion::engine::ProjectItemID (v.toString()); }
-        static var toVar (const tracktion::engine::ProjectItemID& v)     { return v.toString(); }
-    };
+template <>
+struct VariantConverter<tracktion::engine::ProjectItemID>
+{
+    static tracktion::engine::ProjectItemID fromVar (const var& v)   { return tracktion::engine::ProjectItemID (v.toString()); }
+    static var toVar (const tracktion::engine::ProjectItemID& v)     { return v.toString(); }
+};
 }

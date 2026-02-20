@@ -261,7 +261,7 @@ std::pair<int, juce::String> consolidateProject (Project& project)
 
     for (auto edit : edits.getEdits())
     {
-        const auto[imported, error] = consolidateEdit (*edit);
+        const auto [imported, error] = consolidateEdit (*edit);
         numImported += imported;
 
         if (error.isNotEmpty())

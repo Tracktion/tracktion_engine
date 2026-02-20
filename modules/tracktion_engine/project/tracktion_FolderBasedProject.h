@@ -19,7 +19,7 @@ class FolderBasedProject  : public ProjectBase
 {
 public:
     FolderBasedProject (Project& owner, const juce::File& folder);
-    ~FolderBasedProject() override;
+    ~FolderBasedProject() override = default;
 
     //==============================================================================
     bool save() override;
