@@ -249,6 +249,8 @@ bool ArchiveJob::copyToTempDir()
             return false;
         }
 
+        progress = 0.1f;
+
         // Copy referenced media files
         auto edit = loadEditForExamining (engine.getProjectManager(),
                                          (*projectItem)->getProjectItemRef());
@@ -261,36 +263,58 @@ bool ArchiveJob::copyToTempDir()
                 ProjectItemRef newRef;
             };
 
-            std::vector<ExportableUpdate> exportablesToUpdate;
+            struct FileToCopy
+            {
+                juce::File mediaSrc;
+                juce::String itemType, itemName, itemDescription;
+                ProjectItem::Category itemCategory;
+                ProjectItemRef oldRef;
+            };
+
+            // Pass 1: Collect all files to copy
+            std::vector<FileToCopy> filesToCopy;
 
             for (auto e : Exportable::addAllExportables (*edit))
             {
                 for (auto& ref : e->getReferencedItems())
                 {
-                    if (shouldExit()) return false;
-
                     if (auto item = pm.getProjectItem (ref.itemRef))
                     {
                         auto mediaSrc = item->getSourceFile();
 
                         if (mediaSrc.existsAsFile() && ! mediaSrc.isAChildOf (projectDir))
-                        {
-                            auto destMedia = projectDir.getChildFile (mediaSrc.getFileName())
-                                                       .getNonexistentSibling (true);
-
-                            if (mediaSrc.copyFileTo (destMedia))
-                            {
-                                auto destItem = tempProject->createNewItem (destMedia,
-                                                                            item->getType(),
-                                                                            item->getName(),
-                                                                            item->getDescription(),
-                                                                            item->getCategory(),
-                                                                            true);
-                                exportablesToUpdate.push_back (ExportableUpdate (ref.itemRef, destItem->getProjectItemRef()));
-                            }
-                        }
+                            filesToCopy.push_back ({ mediaSrc, item->getType(), item->getName(),
+                                                     item->getDescription(), item->getCategory(),
+                                                     ref.itemRef });
                     }
                 }
+            }
+
+            // Pass 2: Copy files with progress
+            std::vector<ExportableUpdate> exportablesToUpdate;
+            auto totalFiles = (int) filesToCopy.size();
+
+            for (int i = 0; i < totalFiles; ++i)
+            {
+                if (shouldExit())
+                    return false;
+
+                auto& f = filesToCopy[(size_t) i];
+                auto destMedia = projectDir.getChildFile (f.mediaSrc.getFileName())
+                                           .getNonexistentSibling (true);
+
+                if (f.mediaSrc.copyFileTo (destMedia))
+                {
+                    auto destItem = tempProject->createNewItem (destMedia,
+                                                                f.itemType,
+                                                                f.itemName,
+                                                                f.itemDescription,
+                                                                f.itemCategory,
+                                                                true);
+                    exportablesToUpdate.push_back (ExportableUpdate (f.oldRef, destItem->getProjectItemRef()));
+                }
+
+                progress = 0.1f + (0.2f * (float) (i + 1) / (float) totalFiles);
             }
 
             {
