@@ -506,7 +506,7 @@ Project::Ptr ProjectManager::createNewProjectFromTemplate (const juce::String& n
     if (! extractPath.createDirectory())
         return {};
 
-    TracktionArchiveFile archive (engine, archiveFile);
+    legacy::TracktionArchiveFile archive (engine, archiveFile);
 
     Project::Ptr proj;
     bool aborted = false;
@@ -696,7 +696,7 @@ Project::Ptr ProjectManager::createNewProjectInteractively (const juce::String& 
 
 void ProjectManager::unpackArchiveAndAddToList (const juce::File& archiveFile, juce::ValueTree folder)
 {
-    TracktionArchiveFile archive (engine, archiveFile);
+    legacy::TracktionArchiveFile archive (engine, archiveFile);
 
     if (! archive.isValidArchive())
     {

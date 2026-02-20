@@ -9,6 +9,7 @@
 */
 
 namespace tracktion::inline engine {
+namespace legacy {
 
 ExportJob::ExportJob (Edit* edit_,
                       const juce::File& destDir_,
@@ -312,4 +313,5 @@ float ExportJob::getCurrentTaskProgress()
     return progress;
 }
 
+} // namespace legacy
 } // namespace tracktion::inline engine

@@ -3376,6 +3376,8 @@ std::unique_ptr<Edit> Edit::createSingleTrackEdit (Engine& e, EditRole roleToUse
     return {};
 }
 
+JUCE_BEGIN_IGNORE_WARNINGS_GCC_LIKE ("-Wdeprecated-declarations")
+JUCE_BEGIN_IGNORE_WARNINGS_MSVC (4996)
 std::unique_ptr<Edit> Edit::createEditForExamining (Engine& e, juce::ValueTree editState, EditRole roleToUse, LoadContext* loadContextToUse)
 {
     return createEdit (Options
@@ -3391,6 +3393,8 @@ std::unique_ptr<Edit> Edit::createEditForExamining (Engine& e, juce::ValueTree e
         0 // min num audio tracks
     });
 }
+JUCE_END_IGNORE_WARNINGS_GCC_LIKE
+JUCE_END_IGNORE_WARNINGS_MSVC
 
 //==============================================================================
 EditDeleter::EditDeleter() = default;

@@ -240,7 +240,11 @@ public:
     /** Creates an Edit with a single AudioTrack. */
     static std::unique_ptr<Edit> createSingleTrackEdit (Engine&, EditRole role = EditRole::forEditing);
 
-    /** Creates an Edit that loads a state, using the role Edit::forExamining */
+    /** Creates an Edit that loads a state, using the role Edit::forExamining.
+        @deprecated Use loadEditForExamining(ProjectManager&, ProjectItemRef) for file-based edits.
+                    This function doesn't set editFileRetriever, so relative paths won't resolve.
+    */
+    [[deprecated("Use loadEditForExamining for file-based edits")]]
     static std::unique_ptr<Edit> createEditForExamining (Engine&, juce::ValueTree, EditRole role = EditRole::forExamining, LoadContext* = nullptr);
 
     //==============================================================================

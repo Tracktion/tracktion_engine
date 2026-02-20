@@ -1,0 +1,443 @@
+/*
+    ,--.                     ,--.     ,--.  ,--.
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
+  '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
+    |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
+    `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
+
+    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+*/
+
+#include <ranges>
+
+namespace tracktion::inline engine {
+
+bool isLegacyArchive (Engine& engine, const juce::File& file)
+{
+    legacy::TracktionArchiveFile archive (engine, file);
+    return archive.isValidArchive();
+}
+
+bool isArchive (Engine& engine, const juce::File& file)
+{
+    if (isLegacyArchive (engine, file))
+        return true;
+
+    // Check if it's a valid zip containing at least one .tracktionedit file
+    juce::ZipFile zip (file);
+
+    for (int i = 0; i < zip.getNumEntries(); ++i)
+        if (auto entry = zip.getEntry (i))
+            if (entry->filename.endsWithIgnoreCase (".tracktionedit"))
+                return true;
+
+    return false;
+}
+
+//==============================================================================
+ArchiveJob::ArchiveJob (Source src,
+                        const juce::File& dest,
+                        CompressionLevel level)
+    : ThreadPoolJobWithProgress (TRANS("Archiving") + "..."),
+      source (std::move (src)),
+      destZipFile (dest),
+      compressionLevel (level)
+{
+}
+
+ArchiveJob::~ArchiveJob() = default;
+
+float ArchiveJob::getCurrentTaskProgress()
+{
+    return progress.load();
+}
+
+bool ArchiveJob::canCancel() const
+{
+    return true;
+}
+
+juce::String ArchiveJob::getError() const
+{
+    return errorMessage;
+}
+
+juce::ThreadPoolJob::JobStatus ArchiveJob::runJob()
+{
+    CRASH_TRACER
+    juce::FloatVectorOperations::disableDenormalisedNumberSupport();
+
+    if (! copyToTempDir())
+    {
+        if (errorMessage.isEmpty())
+            errorMessage = TRANS("Failed to copy project files");
+
+        return jobHasFinished;
+    }
+
+    if (shouldExit())
+        return jobHasFinished;
+
+    if (! consolidate())
+    {
+        if (errorMessage.isEmpty())
+            errorMessage = TRANS("Failed to consolidate project");
+
+        return jobHasFinished;
+    }
+
+    if (shouldExit())
+        return jobHasFinished;
+
+    if (! createZip())
+    {
+        if (errorMessage.isEmpty())
+            errorMessage = TRANS("Failed to create archive");
+
+        return jobHasFinished;
+    }
+
+    return jobHasFinished;
+}
+
+bool ArchiveJob::runSynchronously()
+{
+    CRASH_TRACER
+
+    if (! copyToTempDir())
+    {
+        if (errorMessage.isEmpty())
+            errorMessage = TRANS("Failed to copy project files");
+
+        return false;
+    }
+
+    if (! consolidate())
+    {
+        if (errorMessage.isEmpty())
+            errorMessage = TRANS("Failed to consolidate project");
+
+        return false;
+    }
+
+    if (! createZip())
+    {
+        if (errorMessage.isEmpty())
+            errorMessage = TRANS("Failed to create archive");
+
+        return false;
+    }
+
+    return true;
+}
+
+//==============================================================================
+static Engine& getEngineFromSource (const ArchiveJob::Source& source)
+{
+    return std::visit ([] (auto* ptr) -> Engine& { return ptr->engine; }, source);
+}
+
+bool ArchiveJob::copyToTempDir()
+{
+    progress = 0.0f;
+
+    auto& engine = getEngineFromSource (source);
+
+    // Create temp directory
+    tempDir = choc::file::TempFile (choc::file::TempFile::createRandomFilename ("tracktion_archive", ""));
+    auto tempDirFile = juce::File (tempDir.file.string());
+
+    if (auto project = std::get_if<Project*> (&source))
+    {
+        // Copy the whole project folder to temp
+        auto srcDir = (*project)->getDefaultDirectory();
+
+        if ((*project)->isFolderBased())
+        {
+            if (! srcDir.copyDirectoryTo (tempDirFile.getChildFile (srcDir.getFileName())))
+            {
+                errorMessage = TRANS("Failed to copy project folder");
+                return false;
+            }
+
+            auto copiedProjectDir = tempDirFile.getChildFile (srcDir.getFileName());
+            tempProject = engine.getProjectManager().createNewProject (copiedProjectDir);
+        }
+        else
+        {
+            // File-based project: copy to temp and convert to folder-based
+            auto projectFile = (*project)->getProjectFile();
+            auto projDir = (*project)->getDefaultDirectory();
+            auto copiedDir = tempDirFile.getChildFile (projDir.getFileName());
+
+            if (! srcDir.copyDirectoryTo (copiedDir))
+            {
+                errorMessage = TRANS("Failed to copy project directory");
+                return false;
+            }
+
+            progress = 0.1f;
+
+            auto copiedProjectFile = copiedDir.getChildFile (projectFile.getFileName());
+            auto copiedProject = engine.getProjectManager().createNewProject (copiedProjectFile);
+
+            if (copiedProject == nullptr)
+            {
+                errorMessage = TRANS("Failed to open copied project");
+                return false;
+            }
+
+            tempProject = convertToFolderBasedProject (*copiedProject);
+
+            if (tempProject == nullptr)
+            {
+                errorMessage = TRANS("Failed to convert project to folder-based format");
+                return false;
+            }
+        }
+    }
+    else if (auto projectItem = std::get_if<ProjectItem*> (&source))
+    {
+        // Single edit: copy the edit and its referenced files to temp
+        auto& pm = engine.getProjectManager();
+        auto srcFile = (*projectItem)->getSourceFile();
+
+        if (! srcFile.existsAsFile())
+        {
+            errorMessage = TRANS("Source edit file doesn't exist");
+            return false;
+        }
+
+        // Create a folder-based project in temp
+        auto projectDir = tempDirFile.getChildFile (srcFile.getFileNameWithoutExtension() + "_project");
+
+        if (! projectDir.createDirectory())
+        {
+            errorMessage = TRANS("Couldn't create temporary project directory");
+            return false;
+        }
+
+        tempProject = pm.createNewProject (projectDir);
+
+        if (tempProject == nullptr)
+        {
+            errorMessage = TRANS("Couldn't create temporary project");
+            return false;
+        }
+
+        tempProject->createNewProjectId();
+
+        // Copy the edit file into the project
+        auto destEditFile = projectDir.getChildFile (srcFile.getFileName());
+
+        if (! srcFile.copyFileTo (destEditFile))
+        {
+            errorMessage = TRANS("Failed to copy edit file");
+            return false;
+        }
+
+        auto destEditItem = tempProject->createNewItem (destEditFile,
+                                                        ProjectItem::editItemType(),
+                                                        (*projectItem)->getName(),
+                                                        (*projectItem)->getDescription(),
+                                                        (*projectItem)->getCategory(),
+                                                        true);
+
+        if (! destEditItem)
+        {
+            errorMessage = TRANS("Failed create new Edit");
+            return false;
+        }
+
+        // Copy referenced media files
+        auto edit = loadEditForExamining (engine.getProjectManager(),
+                                         (*projectItem)->getProjectItemRef());
+
+        if (edit != nullptr)
+        {
+            struct ExportableUpdate
+            {
+                ProjectItemRef oldRef;
+                ProjectItemRef newRef;
+            };
+
+            std::vector<ExportableUpdate> exportablesToUpdate;
+
+            for (auto e : Exportable::addAllExportables (*edit))
+            {
+                for (auto& ref : e->getReferencedItems())
+                {
+                    if (shouldExit()) return false;
+
+                    if (auto item = pm.getProjectItem (ref.itemRef))
+                    {
+                        auto mediaSrc = item->getSourceFile();
+
+                        if (mediaSrc.existsAsFile() && ! mediaSrc.isAChildOf (projectDir))
+                        {
+                            auto destMedia = projectDir.getChildFile (mediaSrc.getFileName())
+                                                       .getNonexistentSibling (true);
+
+                            if (mediaSrc.copyFileTo (destMedia))
+                            {
+                                auto destItem = tempProject->createNewItem (destMedia,
+                                                                            item->getType(),
+                                                                            item->getName(),
+                                                                            item->getDescription(),
+                                                                            item->getCategory(),
+                                                                            true);
+                                exportablesToUpdate.push_back (ExportableUpdate (ref.itemRef, destItem->getProjectItemRef()));
+                            }
+                        }
+                    }
+                }
+            }
+
+            {
+                auto destEdit = loadEditForExamining (engine.getProjectManager(),
+                                                      destEditItem->getProjectItemRef());
+
+                if (destEdit == nullptr)
+                {
+                    errorMessage = TRANS("Couldn't create new edit");
+                    return false;
+                }
+
+                // Fix up the references
+                juce::MessageManager::callSync ([&exportablesToUpdate, &destEdit]
+                                                {
+                                                    for (auto destExportable : Exportable::addAllExportables (*destEdit))
+                                                    {
+                                                        for (const auto& destReferencedItem : destExportable->getReferencedItems())
+                                                        {
+                                                            if (auto foundRef = std::ranges::find (exportablesToUpdate, destReferencedItem.itemRef, &ExportableUpdate::oldRef);
+                                                                foundRef != exportablesToUpdate.end())
+                                                            {
+                                                                std::cout << "Reassigning:\n"
+                                                                          << "\t" << destReferencedItem.itemRef.toString() << "\n"
+                                                                          << "\t" << foundRef->newRef.toString() << std::endl;
+                                                                destExportable->reassignReferencedItem (destReferencedItem, foundRef->newRef, 0.0);
+                                                            }
+                                                        }
+                                                    }
+                                                });
+
+                tempEdits.push_back (std::move (destEdit));
+            }
+
+            tempEdits.push_back (std::move (edit));
+        }
+
+        tempProject->save();
+    }
+
+    if (tempProject != nullptr)
+        tempProject->setTemporary (true);
+
+    progress = 0.3f;
+    return true;
+}
+
+bool ArchiveJob::consolidate()
+{
+    if (tempProject == nullptr)
+    {
+        errorMessage = TRANS("No project to consolidate");
+        return false;
+    }
+
+    progress = 0.3f;
+
+    std::pair<int, juce::String> numImportedAndError;
+    juce::MessageManager::callSync ([this, &numImportedAndError]
+                                    {
+                                        numImportedAndError = ProjectUtilities::consolidateProject (*tempProject);
+                                    });
+
+    auto [numImported, error] = numImportedAndError;
+    juce::ignoreUnused (numImported);
+
+    if (error.isNotEmpty())
+    {
+        errorMessage = error;
+        return false;
+    }
+
+    progress = 0.5f;
+    return true;
+}
+
+bool ArchiveJob::createZip()
+{
+    progress = 0.5f;
+
+    // Find the root dir to zip
+    juce::File rootDir;
+
+    if (tempProject->isFolderBased())
+        rootDir = tempProject->getDefaultDirectory();
+    else
+        rootDir = juce::File (tempDir.file.string());
+
+    // Save the project before zipping
+    tempProject->save();
+
+    // Add archive_type to project_info.json
+    {
+        auto infoFile = rootDir.getChildFile ("project_info.json");
+        auto infoJson = juce::JSON::parse (infoFile);
+        auto obj = infoJson.getDynamicObject();
+
+        if (obj == nullptr)
+        {
+            obj = new juce::DynamicObject();
+            infoJson = juce::var (obj);
+        }
+
+        obj->setProperty ("archive_type", 1);
+        infoFile.replaceWithText (juce::JSON::toString (infoJson));
+    }
+
+    // Collect all files to zip
+    juce::Array<juce::File> files;
+    rootDir.findChildFiles (files, juce::File::findFiles, true);
+
+    if (files.isEmpty())
+    {
+        errorMessage = TRANS("No files to archive");
+        return false;
+    }
+
+    int level = static_cast<int> (compressionLevel);
+    juce::ZipFile::Builder builder;
+
+    for (auto& f : files)
+    {
+        auto relativePath = f.getRelativePathFrom (rootDir)
+                             .replaceCharacter ('\\', '/');
+        builder.addFile (f, level, relativePath);
+    }
+
+    juce::FileOutputStream outStream (destZipFile);
+
+    if (! outStream.openedOk())
+    {
+        errorMessage = TRANS("Couldn't create archive file");
+        return false;
+    }
+
+    double zipProgress = 0.0;
+    auto result = builder.writeToStream (outStream, &zipProgress);
+
+    progress = 1.0f;
+
+    if (! result)
+    {
+        errorMessage = TRANS("Failed to write archive");
+        return false;
+    }
+
+    return true;
+}
+
+} // namespace tracktion::inline engine

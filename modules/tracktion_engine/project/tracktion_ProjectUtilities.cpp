@@ -15,6 +15,7 @@ namespace ProjectUtilities
 
 EditReferences getEditsInProject (Project& project)
 {
+    TRACKTION_ASSERT_MESSAGE_THREAD
     EditReferences edits;
 
     auto& engine = project.engine;
@@ -46,10 +47,8 @@ EditReferences getEditsInProject (Project& project)
         if (foundActiveEdit)
             continue;
 
-        edits.add (Edit::createEditForExamining (engine,
-                                                 loadEditFromFile (engine,
-                                                                   projectItem->getSourceFile(),
-                                                                   projectItem->getProjectItemRef())));
+        edits.add (loadEditForExamining (engine.getProjectManager(),
+                                        projectItem->getProjectItemRef()));
     }
 
     return edits;
@@ -145,6 +144,7 @@ int importExternalReferences (Project& proj, juce::Array<ProjectItemRef> refsToI
 
 std::pair<int, juce::String> consolidateEdit (Edit& edit)
 {
+    TRACKTION_ASSERT_MESSAGE_THREAD
     auto proj = getProjectForEdit (edit);
 
     if (proj == nullptr)
@@ -153,20 +153,30 @@ std::pair<int, juce::String> consolidateEdit (Edit& edit)
         return { 0, {} };
     }
 
+    const auto projectDir = proj->getDefaultDirectory();
+
     juce::Array<ProjectItemRef> allRefs, externalProjectItemRefs;
 
     for (auto e : Exportable::addAllExportables (edit))
     {
         for (const auto& refItem : e->getReferencedItems())
         {
-            if (refItem.itemRef.getProjectID() == proj->getProjectID())
+            auto refProjectID = refItem.itemRef.getProjectID();
+            bool isInternal = (refProjectID == proj->getProjectID());
+
+            if (! isInternal && refItem.itemRef.isRelativePath())
+            {
+                auto resolved = refItem.itemRef.resolve (edit.engine, projectDir);
+                isInternal = resolved != juce::File() && resolved.isAChildOf (projectDir);
+            }
+
+            if (isInternal)
                 allRefs.addIfNotAlreadyThere (refItem.itemRef);
             else
                 externalProjectItemRefs.addIfNotAlreadyThere (refItem.itemRef);
         }
     }
 
-    const auto projectDir = proj->getDefaultDirectory();
     const auto mediaDir = proj->getDirectoryForMedia (ProjectItem::Category::imported);
 
     const int numProjectItemsImported = importExternalReferences (*proj, externalProjectItemRefs);
@@ -196,9 +206,22 @@ bool canConsolidateEdit (Edit& edit)
     const auto projectDir = proj->getDefaultDirectory();
 
     for (auto e : Exportable::addAllExportables (edit))
+    {
         for (const auto& ref : e->getReferencedItems())
-            if (ref.itemRef.getProjectID() == proj->getProjectID())
+        {
+            auto refProjectID = ref.itemRef.getProjectID();
+            bool isInternal = (refProjectID == proj->getProjectID());
+
+            if (! isInternal && ref.itemRef.isRelativePath())
+            {
+                auto resolved = ref.itemRef.resolve (edit.engine, projectDir);
+                isInternal = resolved != juce::File() && resolved.isAChildOf (projectDir);
+            }
+
+            if (isInternal)
                 allRefs.addIfNotAlreadyThere (ref.itemRef);
+        }
+    }
 
     auto& pm = edit.engine.getProjectManager();
 
@@ -212,6 +235,7 @@ bool canConsolidateEdit (Edit& edit)
 
 std::pair<int, juce::String> consolidateProject (Project& project)
 {
+    TRACKTION_ASSERT_MESSAGE_THREAD
     int numImported = 0;
     auto edits = getEditsInProject (project);
 
@@ -229,6 +253,7 @@ std::pair<int, juce::String> consolidateProject (Project& project)
 
 bool canConsolidateProject (Project& project)
 {
+    TRACKTION_ASSERT_MESSAGE_THREAD
     juce::Array<ProjectItemRef> allRefs;
     auto& pm = project.projectManager;
     const auto projectDir = project.getDefaultDirectory();
@@ -246,6 +271,16 @@ bool canConsolidateProject (Project& project)
                return true;
 
     return false;
+}
+
+bool isConsolidated (Edit& edit)
+{
+    return ! canConsolidateEdit (edit);
+}
+
+bool isConsolidated (Project& project)
+{
+    return ! canConsolidateProject (project);
 }
 
 void consolidateEditInteractive (Edit& edit, std::function<void()> completionCallback)

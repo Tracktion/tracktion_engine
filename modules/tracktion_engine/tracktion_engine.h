@@ -59,11 +59,13 @@
  #include <choc/audio/choc_MIDI.h>
  #include <choc/containers/choc_SingleReaderSingleWriterFIFO.h>
  #include <choc/containers/choc_NonAllocatingStableSort.h>
+ #include <choc/text/choc_Files.h>
 #else
  #include "../3rd_party/choc/choc/audio/choc_SampleBuffers.h"
  #include "../3rd_party/choc/choc/audio/choc_MIDI.h"
  #include "../3rd_party/choc/choc/containers/choc_SingleReaderSingleWriterFIFO.h"
  #include "../3rd_party/choc/choc/containers/choc_NonAllocatingStableSort.h"
+ #include "../3rd_party/choc/choc/text/choc_Files.h"
 #endif
 
 #include "../3rd_party/expected/expected.hpp"
@@ -569,6 +571,7 @@ namespace tracktion::inline engine {
 
 #include "model/export/tracktion_ArchiveFile.h"
 #include "model/export/tracktion_ExportJob.h"
+#include "model/export/tracktion_Archive.h"
 #include "model/export/tracktion_ReferencedMaterialList.h"
 #include "model/export/tracktion_Renderer.h"
 #include "model/export/tracktion_RenderManager.h"

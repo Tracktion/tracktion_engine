@@ -202,7 +202,7 @@ namespace benchmark_utilities
 
         {
             tempArchiveFile.getFile().replaceWithData (data, (size_t) size);
-            TracktionArchiveFile archive (engine, tempArchiveFile.getFile());
+            legacy::TracktionArchiveFile archive (engine, tempArchiveFile.getFile());
 
             juce::Array<juce::File> createdFiles;
             const auto res = archive.extractAll (tempDir.getFile(), createdFiles);

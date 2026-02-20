@@ -435,14 +435,24 @@ juce::ValueTree loadEditFromProjectManager (ProjectManager& pm, ProjectItemRef i
 std::unique_ptr<Edit> loadEditForExamining (ProjectManager& pm, ProjectItemRef ref, Edit::EditRole role, Edit::LoadContext* loadContext)
 {
     if (auto pid = ref.getProjectItemID())
+    {
+        JUCE_BEGIN_IGNORE_WARNINGS_GCC_LIKE ("-Wdeprecated-declarations")
+        JUCE_BEGIN_IGNORE_WARNINGS_MSVC (4996)
         return Edit::createEditForExamining (pm.engine, loadEditFromProjectManager (pm, ref), role, loadContext);
+        JUCE_END_IGNORE_WARNINGS_GCC_LIKE
+        JUCE_END_IGNORE_WARNINGS_MSVC
+    }
 
     if (auto p = ref.getProject())
     {
         assert (p->isFolderBased());
         auto editFile = ref.resolve (p->engine);
+        auto edit = loadEditFromFile (p->engine, editFile, role);
 
-        return loadEditFromFile (p->engine, editFile, role);
+        if (edit)
+            edit->setProjectItemRef (ref);
+
+        return edit;
     }
 
     return {};

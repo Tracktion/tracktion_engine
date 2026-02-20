@@ -9,6 +9,7 @@
 */
 
 namespace tracktion::inline engine {
+namespace legacy {
 
 static bool isWorthConvertingToOgg (AudioFile& source, int quality)
 {
@@ -548,4 +549,5 @@ int TracktionArchiveFile::getOggQuality (CompressionType c)
     return numOptions / 5;
 }
 
+} // namespace legacy
 } // namespace tracktion::inline engine

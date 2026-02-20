@@ -646,7 +646,7 @@ ProjectItem::Ptr FileBasedProject::createNewEdit()
 
 void FileBasedProject::mergeArchiveContents (const juce::File& archiveFile)
 {
-    TracktionArchiveFile archive (owner.engine, archiveFile);
+    legacy::TracktionArchiveFile archive (owner.engine, archiveFile);
 
     if (! archive.isValidArchive())
     {

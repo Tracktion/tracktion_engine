@@ -9,6 +9,7 @@
 */
 
 namespace tracktion::inline engine {
+namespace legacy {
 
 //==============================================================================
 /**
@@ -66,4 +67,5 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ExportJob)
 };
 
+} // namespace legacy
 } // namespace tracktion::inline engine

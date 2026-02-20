@@ -71,6 +71,9 @@ public:
     /** Returns true if this is a temporary project (won't appear in recent projects). */
     bool isTemporary() const;
 
+    /** Marks this project as temporary (won't appear in recent projects). */
+    void setTemporary (bool);
+
     /** Returns the project ID.
         File-based: the persisted random ID.
         Folder-based: a hash of the folder path.
@@ -288,7 +291,6 @@ private:
 
     void changed() override;
     void projectChanged();
-    void setTemporary (bool);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Project)
 };

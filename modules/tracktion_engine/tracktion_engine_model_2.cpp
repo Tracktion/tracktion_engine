@@ -74,6 +74,8 @@ using namespace std::literals;
 #include "model/export/tracktion_Renderer.test.cpp"
 #include "model/export/tracktion_RenderManager.cpp"
 #include "model/export/tracktion_ArchiveFile.cpp"
+#include "model/export/tracktion_Archive.cpp"
+#include "model/export/tracktion_Archive.test.cpp"
 #include "model/export/tracktion_RenderOptions.cpp"
 #include "model/clips/tracktion_EditClipRenderJob.cpp"
 #include "model/clips/tracktion_AudioSegmentList.cpp"

@@ -102,6 +102,12 @@ namespace ProjectUtilities
     /** Returns true if the Project has any ProjectItem references to files outside the project directory. */
     bool canConsolidateProject (Project& project);
 
+    /** Returns true if the Edit is fully consolidated (no external file refs). */
+    bool isConsolidated (Edit& edit);
+
+    /** Returns true if the Project is fully consolidated. */
+    bool isConsolidated (Project& project);
+
     /** Consolidates an Edit showing a confirmation dialog box first and a completion dialog afterwards. */
     void consolidateEditInteractive (Edit& edit, std::function<void()> completionCallback = nullptr);
 

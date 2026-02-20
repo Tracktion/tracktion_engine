@@ -459,11 +459,11 @@ TEST_SUITE ("tracktion_engine")
         // === Archive ===
         auto archiveFile = tempDir.getChildFile ("test_archive.trkx");
         {
-            TracktionArchiveFile archive (engine, archiveFile);
+            legacy::TracktionArchiveFile archive (engine, archiveFile);
 
             // Add project file
             CHECK (archive.addFile (projectFile, projectFile.getParentDirectory(),
-                                    TracktionArchiveFile::CompressionType::none));
+                                    legacy::TracktionArchiveFile::CompressionType::none));
 
             // Add all source files from project items
             for (int i = 0; i < project->getNumProjectItems(); ++i)
@@ -475,7 +475,7 @@ TEST_SUITE ("tracktion_engine")
                     if (sourceFile.existsAsFile() && sourceFile != projectFile)
                     {
                         archive.addFile (sourceFile, projectFile.getParentDirectory(),
-                                         TracktionArchiveFile::CompressionType::none);
+                                         legacy::TracktionArchiveFile::CompressionType::none);
                     }
                 }
             }
@@ -485,7 +485,7 @@ TEST_SUITE ("tracktion_engine")
 
         // Verify archive
         {
-            TracktionArchiveFile archive (engine, archiveFile);
+            legacy::TracktionArchiveFile archive (engine, archiveFile);
             CHECK (archive.isValidArchive());
             CHECK (archive.getNumFiles() >= 2); // At least project file + edit file
         }
@@ -496,7 +496,7 @@ TEST_SUITE ("tracktion_engine")
 
         juce::Array<juce::File> extractedFiles;
         {
-            TracktionArchiveFile archive (engine, archiveFile);
+            legacy::TracktionArchiveFile archive (engine, archiveFile);
             CHECK (archive.extractAll (extractDir, extractedFiles));
         }
 
