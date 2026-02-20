@@ -16,10 +16,10 @@ if (MSVC)
     set (CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
-# If we are compiling for macOS we want to target OS versions down to 10.13
+# If we are compiling for macOS we want to target OS versions down to 10.15
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 message ("-- building for macOS")
-    set (CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE INTERNAL "")
+    set (CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE INTERNAL "")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "iOS")
     set (CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET "17.0" CACHE INTERNAL "")
     set (CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "Apple Development" CACHE INTERNAL "")
