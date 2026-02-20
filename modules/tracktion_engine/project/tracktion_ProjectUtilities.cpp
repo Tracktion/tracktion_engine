@@ -110,7 +110,27 @@ int importExternalReferences (Project& proj, juce::Array<ProjectItemRef> refsToI
         }
         else
         {
-            newRefs.add ({});
+            // Path-based ref without owner - resolve file directly
+            auto resolvedFile = ref.resolve (pm.engine, proj.getDefaultDirectory());
+
+            if (resolvedFile.existsAsFile())
+            {
+                if (auto newItem = proj.createNewItem (resolvedFile, ProjectItem::waveItemType(),
+                                                       resolvedFile.getFileNameWithoutExtension(),
+                                                       {}, ProjectItem::Category::imported, true))
+                {
+                    ++numImported;
+                    newRefs.add (newItem->getProjectItemRef());
+                }
+                else
+                {
+                    newRefs.add ({});
+                }
+            }
+            else
+            {
+                newRefs.add ({});
+            }
         }
     }
 

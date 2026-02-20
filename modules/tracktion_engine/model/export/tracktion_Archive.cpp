@@ -287,6 +287,20 @@ bool ArchiveJob::copyToTempDir()
                                                      item->getDescription(), item->getCategory(),
                                                      ref.itemRef });
                     }
+                    else
+                    {
+                        // Path-based ref without owner (folder-based projects) - resolve directly
+                        auto srcProject = (*projectItem)->getProject();
+                        auto mediaSrc = srcProject != nullptr
+                                            ? ref.itemRef.resolve (engine, srcProject->getDefaultDirectory())
+                                            : ref.itemRef.resolve (engine);
+
+                        if (mediaSrc.existsAsFile() && ! mediaSrc.isAChildOf (projectDir))
+                            filesToCopy.push_back ({ mediaSrc, ProjectItem::waveItemType(),
+                                                     mediaSrc.getFileNameWithoutExtension(),
+                                                     {}, ProjectItem::Category::imported,
+                                                     ref.itemRef });
+                    }
                 }
             }
 
