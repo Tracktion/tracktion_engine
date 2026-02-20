@@ -48,7 +48,9 @@ lcov --capture --directory "build" --output-file coverage.info \
     --exclude "modules/3rd_party/*" \
     --exclude "/Applications*" \
     --exclude "/usr*" \
-    --exclude "*examples*"
+    --exclude "*examples*" \
+    --exclude "*/tracktion_ArchiveFile.*" \
+    --exclude "*/tracktion_ExportJob.*"
 
 echo "==> Coverage info written to: ${SCRIPT_DIR}/coverage.info"
 

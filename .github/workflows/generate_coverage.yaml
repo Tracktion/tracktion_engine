@@ -73,7 +73,9 @@ jobs:
             --exclude "modules/3rd_party/*" \
             --exclude "/Applications*" \
             --exclude "/usr*" \
-            --exclude "*examples*"
+            --exclude "*examples*" \
+            --exclude "*/tracktion_ArchiveFile.*" \
+            --exclude "*/tracktion_ExportJob.*"
 
       # - name: macOS coverage
       #   if: runner.os == 'macOS'
