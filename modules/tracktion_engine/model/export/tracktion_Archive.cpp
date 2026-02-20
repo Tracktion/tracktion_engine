@@ -432,35 +432,38 @@ bool ArchiveJob::createZip()
         return false;
     }
 
-    int level = static_cast<int> (compressionLevel);
-    juce::ZipFile::Builder builder;
+    auto stream = std::make_shared<std::ofstream> (destZipFile.getFullPathName().toStdString(),
+                                                    std::ios::binary);
 
-    for (auto& f : files)
-    {
-        auto relativePath = f.getRelativePathFrom (rootDir)
-                             .replaceCharacter ('\\', '/');
-        builder.addFile (f, level, relativePath);
-    }
-
-    juce::FileOutputStream outStream (destZipFile);
-
-    if (! outStream.openedOk())
+    if (! stream->is_open())
     {
         errorMessage = TRANS("Couldn't create archive file");
         return false;
     }
 
-    double zipProgress = 0.0;
-    auto result = builder.writeToStream (outStream, &zipProgress);
+    auto level = static_cast<choc::zip::ZipWriter::CompressionLevel> (compressionLevel);
+    choc::zip::ZipWriter writer (stream);
+    auto totalFiles = files.size();
 
-    progress = 1.0f;
-
-    if (! result)
+    for (int i = 0; i < totalFiles; ++i)
     {
-        errorMessage = TRANS("Failed to write archive");
-        return false;
+        auto& f = files.getReference (i);
+        auto relativePath = f.getRelativePathFrom (rootDir)
+                             .replaceCharacter ('\\', '/');
+
+        std::ifstream fileStream (f.getFullPathName().toStdString(), std::ios::binary);
+
+        if (! fileStream.is_open())
+        {
+            errorMessage = TRANS("Failed to read file: ") + f.getFileName();
+            return false;
+        }
+
+        writer.addFileFromStream (relativePath.toStdString(), fileStream, level);
+        progress = 0.5f + (0.5f * static_cast<float> (i + 1) / static_cast<float> (totalFiles));
     }
 
+    writer.flush();
     return true;
 }
 

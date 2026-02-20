@@ -59,12 +59,14 @@
  #include <choc/audio/choc_MIDI.h>
  #include <choc/containers/choc_SingleReaderSingleWriterFIFO.h>
  #include <choc/containers/choc_NonAllocatingStableSort.h>
+ #include <choc/containers/choc_ZipFile.h>
  #include <choc/text/choc_Files.h>
 #else
  #include "../3rd_party/choc/choc/audio/choc_SampleBuffers.h"
  #include "../3rd_party/choc/choc/audio/choc_MIDI.h"
  #include "../3rd_party/choc/choc/containers/choc_SingleReaderSingleWriterFIFO.h"
  #include "../3rd_party/choc/choc/containers/choc_NonAllocatingStableSort.h"
+ #include "../3rd_party/choc/choc/containers/choc_ZipFile.h"
  #include "../3rd_party/choc/choc/text/choc_Files.h"
 #endif
 
