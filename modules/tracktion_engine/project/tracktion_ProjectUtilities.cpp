@@ -316,9 +316,9 @@ void consolidateEditInteractive (Edit& edit, std::function<void()> completionCal
                                       if (res == 0)
                                           return;
 
-                                      if (auto edit = editRef.get())
+                                      if (auto e = editRef.get())
                                       {
-                                          const auto [num, error] = consolidateEdit (*edit);
+                                          const auto [num, error] = consolidateEdit (*e);
 
                                           juce::AlertWindow::showMessageBoxAsync (juce::AlertWindow::InfoIcon,
                                                                             TRANS("Finished Consolidating"),
@@ -344,9 +344,9 @@ void consolidateProjectInteractive (Project& project, std::function<void()> comp
                                       if (res == 0)
                                           return;
 
-                                      if (auto project = projectRef.get())
+                                      if (auto p = projectRef.get())
                                       {
-                                          const auto [num, error] = consolidateProject (*project);
+                                          const auto [num, error] = consolidateProject (*p);
 
                                           if (error.isNotEmpty())
                                           {
