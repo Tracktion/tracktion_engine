@@ -77,6 +77,7 @@ void FileBasedProject::load()
 
 void FileBasedProject::refreshProjectPropertiesFromFile()
 {
+    const juce::ScopedLock sl (objectLock);
     stream = nullptr;
 
     if (auto in = getInputStream())

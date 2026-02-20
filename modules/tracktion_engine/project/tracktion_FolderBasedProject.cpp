@@ -446,8 +446,9 @@ ProjectItem::Ptr FolderBasedProject::createNewEdit()
     ensureScanned();
 
     int maxSuffix = 0;
+    auto items = getAllProjectItems();
 
-    for (auto& item : cachedItems)
+    for (auto& item : items)
     {
         if (item->isEdit())
         {
@@ -539,9 +540,11 @@ void FolderBasedProject::sourceFileMoved (const juce::File& oldFile, const juce:
     }
 
     // 2. Update closed edit files on disk
-    for (int i = 0; i < getNumProjectItems(); ++i)
+    auto allItems = getAllProjectItems();
+
+    for (auto item : allItems)
     {
-        if (auto item = getProjectItemAt (i))
+        if (item != nullptr)
         {
             if (item->isEdit())
             {

@@ -33,6 +33,7 @@ Project::Project (Engine& e, ProjectManager& pm, const juce::File& fileOrFolder)
 
 Project::~Project()
 {
+    cancelPendingUpdate();
     projectManager.openProjects.removeFirstMatchingValue (this);
     save();
     notifyListenersOfDeletion();
@@ -225,7 +226,8 @@ Project::Ptr convertToFolderBasedProject (Project& project)
         }
     }
 
-    // Delete the project file
+    // Delete the project file — save() sets hasChanged=false so any
+    // pending async update will be a no-op after this point.
     project.save();
     project.unlockFile();
     project.getProjectFile().deleteFile();

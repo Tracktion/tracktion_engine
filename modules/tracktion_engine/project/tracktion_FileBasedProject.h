@@ -96,7 +96,7 @@ private:
 
     juce::Array<ObjectInfo> objects;
     int objectOffset = 0, indexOffset = 0;
-    bool readOnly = false, hasChanged = false;
+    std::atomic<bool> readOnly { false }, hasChanged { false };
 
     void saveTo (juce::FileOutputStream&);
     bool readProjectHeader (juce::InputStream&, bool clearObjectInfo = true);
