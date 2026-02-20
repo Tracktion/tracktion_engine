@@ -96,7 +96,7 @@ juce::String ProjectItemRef::toString() const noexcept
     return value;
 }
 
-Project* ProjectItemRef::getProject() const noexcept
+juce::ReferenceCountedObjectPtr<Project> ProjectItemRef::getProject() const noexcept
 {
     return ownerProject.get();
 }

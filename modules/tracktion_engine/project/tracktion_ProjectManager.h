@@ -245,7 +245,7 @@ public:
 private:
     friend class Project;
 
-    juce::CriticalSection lock;
+    mutable juce::CriticalSection lock;
     juce::Array<Project*, juce::CriticalSection> openProjects;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ProjectManager)

@@ -491,8 +491,8 @@ void ProjectItem::setName (const juce::String& n, SetNameMode mode)
                 // Don't use "withFileExtension" here as it will strip any name text after a period "."
                 const auto legalFileName = juce::File::createLegalFileName (n);
                 newDstFile = src.getParentDirectory().getChildFile (legalFileName + src.getFileExtension());
-                assert (newDstFile.hasFileExtension (src.getFileExtension()));
-                assert (newDstFile.getFileNameWithoutExtension() == legalFileName);
+                jassert (newDstFile.hasFileExtension (src.getFileExtension()));
+                jassert (newDstFile.getFileNameWithoutExtension() == legalFileName);
 
                 startTimer (1);
             }

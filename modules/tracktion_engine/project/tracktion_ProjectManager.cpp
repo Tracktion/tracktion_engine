@@ -141,6 +141,7 @@ static void findProjects (ProjectManager& pm, const juce::ValueTree& folder,
 
 juce::ReferenceCountedArray<Project> ProjectManager::getAllProjects()
 {
+    const juce::ScopedLock sl (lock);
     juce::ReferenceCountedArray<Project> list;
     findProjects (*this, folders, list);
     return list;
@@ -148,6 +149,7 @@ juce::ReferenceCountedArray<Project> ProjectManager::getAllProjects()
 
 juce::ReferenceCountedArray<Project> ProjectManager::getAllProjects (const juce::ValueTree& folder)
 {
+    const juce::ScopedLock sl (lock);
     juce::ReferenceCountedArray<Project> list;
     findProjects (*this, folder, list);
     return list;
@@ -358,6 +360,7 @@ static bool getValueTreeFor (const juce::ValueTree& folder, const Project* proj,
 
 juce::ValueTree ProjectManager::findFolderContaining (const Project& p) const
 {
+    const juce::ScopedLock sl (lock);
     juce::ValueTree result;
 
     if (getValueTreeFor (folders, &p, result))
@@ -368,6 +371,7 @@ juce::ValueTree ProjectManager::findFolderContaining (const Project& p) const
 
 juce::ValueTree ProjectManager::getFolderItemFor (const Project& p) const
 {
+    const juce::ScopedLock sl (lock);
     juce::ValueTree result;
 
     if (getValueTreeFor (folders, &p, result))
@@ -378,6 +382,7 @@ juce::ValueTree ProjectManager::getFolderItemFor (const Project& p) const
 
 int ProjectManager::getFolderIndexFor (const Project& p) const
 {
+    const juce::ScopedLock sl (lock);
     juce::ValueTree result;
 
     if (getValueTreeFor (folders, &p, result))
@@ -388,6 +393,7 @@ int ProjectManager::getFolderIndexFor (const Project& p) const
 
 void ProjectManager::updateProjectFile (Project& p, const juce::File& f)
 {
+    const juce::ScopedLock sl (lock);
     juce::ValueTree result;
 
     if (getValueTreeFor (folders, &p, result, false))

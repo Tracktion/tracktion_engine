@@ -103,10 +103,16 @@ bool FileBasedProject::readProjectHeader (juce::InputStream& in, bool clearObjec
         int numProps = in.readInt();
         properties.clear();
 
+        if (numProps < 0 || numProps > 10000)
+            return false;
+
         while (--numProps >= 0)
         {
             auto propName = in.readString();
             auto size = in.readInt();
+
+            if (size <= 0 || size > 1024 * 1024)
+                return false;
 
             juce::MemoryBlock mem ((size_t) size);
             in.read (mem.getData(), size);

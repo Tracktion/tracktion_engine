@@ -69,13 +69,13 @@ bool Project::save()
     return result;
 }
 
-bool Project::isFolderBased() const                                         { return getProjectFile().isDirectory(); }
+bool Project::isFolderBased() const                                            { return getProjectFile().isDirectory(); }
 bool Project::isValid() const                                               { return impl->isValid(); }
 bool Project::isReadOnly() const                                            { return impl->isReadOnly(); }
 bool Project::isTemporary() const                                           { return impl->isTemporary(); }
 ProjectID Project::getProjectID() const                                     { return impl->getProjectID(); }
 juce::String Project::getName() const                                       { return impl->getName(); }
-juce::String Project::getDescription() const                                { return getProjectProperty ("description"); }
+juce::String Project::getDescription() const                                   { return getProjectProperty ("description"); }
 const juce::File& Project::getProjectFile() const noexcept                  { return impl->getProjectFile(); }
 juce::File Project::getDefaultDirectory() const                             { return impl->getDefaultDirectory(); }
 juce::File Project::getDirectoryForMedia (ProjectItem::Category c) const    { return impl->getDirectoryForMedia (c); }
@@ -91,10 +91,10 @@ juce::String Project::getSourcePathForFile (const juce::File& file) const
 }
 
 void Project::setName (const juce::String& n)                               { impl->setName (n); }
-void Project::setDescription (const juce::String& d)                        { setProjectProperty ("description", juce::String (d).substring (0, 8192)); }
+void Project::setDescription (const juce::String& d)                           { setProjectProperty ("description", juce::String (d).substring (0, 8192)); }
 void Project::createNewProjectId()                                          { impl->createNewProjectId(); }
 
-juce::String Project::getProjectProperty (const juce::String& n) const      { return impl->getProjectProperty (n); }
+juce::String Project::getProjectProperty (const juce::String& n) const         { return impl->getProjectProperty (n); }
 void Project::setProjectProperty (const juce::String& n, const juce::String& v) { impl->setProjectProperty (n, v); }
 
 void Project::refreshProjectPropertiesFromFile()                            { impl->refreshProjectPropertiesFromFile(); }
@@ -140,10 +140,10 @@ juce::Array<ProjectItem::Ptr> Project::findOrphanItems()
 int Project::getNumProjectItems()                                           { return impl->getNumProjectItems(); }
 ProjectItemRef Project::getProjectItemRef (int i)                           { return impl->getProjectItemRef (i); }
 
-juce::Array<ProjectItemRef> Project::getAllProjectItemRefs() const          { return impl->getAllProjectItemRefs(); }
+juce::Array<ProjectItemRef> Project::getAllProjectItemRefs() const             { return impl->getAllProjectItemRefs(); }
 
 ProjectItem::Ptr Project::getProjectItemAt (int i)                          { return impl->getProjectItemAt (i); }
-juce::Array<ProjectItem::Ptr> Project::getAllProjectItems()                 { return impl->getAllProjectItems(); }
+juce::Array<ProjectItem::Ptr> Project::getAllProjectItems()                    { return impl->getAllProjectItems(); }
 int Project::getIndexOf (const ProjectItemRef& ref) const                   { return impl->getIndexOf (ref); }
 
 ProjectItem::Ptr Project::getProjectItemFor (const ProjectItemRef& ref)     { return impl->getProjectItemFor (ref); }

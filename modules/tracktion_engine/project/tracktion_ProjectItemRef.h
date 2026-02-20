@@ -67,7 +67,7 @@ public:
     juce::String toString() const noexcept;
 
     /** Returns the owner project, if one was provided at construction. */
-    Project* getProject() const noexcept;
+    juce::ReferenceCountedObjectPtr<Project> getProject() const noexcept;
 
     /** Resolves to a file.
         - If ProjectItemID: looks up via engine's ProjectManager
