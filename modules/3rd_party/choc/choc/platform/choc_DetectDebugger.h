@@ -71,7 +71,7 @@ inline bool choc::isDebuggerActive()
 }
 
 //==============================================================================
-#elif CHOC_LINUX
+#elif CHOC_LINUX || CHOC_ANDROID
 
 #include "../text/choc_Files.h"
 #include "../text/choc_StringUtilities.h"
@@ -80,7 +80,14 @@ inline bool choc::isDebuggerActive()
 {
     auto readStatusFileItem = [] (std::string_view filename, std::string_view item) -> std::string
     {
-        auto lines = choc::text::splitIntoLines (choc::file::loadFileAsString (std::string (filename)), false);
+        // Need to read /proc files without either seeking or throwing exceptions (which would
+        // break the debugger we're trying to detect), so avoid using loadFileAsString() here
+        std::ifstream stream (std::string (filename), std::ios::binary);
+
+        auto content = std::string { std::istreambuf_iterator<char> (stream),
+                                     std::istreambuf_iterator<char>() };
+
+        auto lines = choc::text::splitIntoLines (content, false);
 
         for (auto i = lines.rbegin(); i != lines.rend(); ++i)
         {
@@ -88,7 +95,7 @@ inline bool choc::isDebuggerActive()
 
             if (choc::text::startsWith (line, item))
             {
-                auto remainder = choc::text::trimStart (item.substr (item.length()));
+                auto remainder = choc::text::trimStart (line.substr (item.length()));
 
                 if (! remainder.empty() && remainder[0] == ':')
                     return std::string (choc::text::trim (remainder.substr (1)));

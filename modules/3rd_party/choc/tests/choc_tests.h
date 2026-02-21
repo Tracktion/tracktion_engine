@@ -724,6 +724,18 @@ inline void testFileUtilities (choc::test::TestProgress& progress)
         CHOC_EXPECT_TRUE (p4.matches ("abcd.x"));
         CHOC_EXPECT_FALSE (p4.matches ("abcd.X") || p4.matches ("abcdd.x") || p4.matches ("abc.x"));
     }
+
+   #if CHOC_LINUX || CHOC_ANDROID
+    {
+        CHOC_TEST (ProcFileReading)
+
+        // /proc files report 0 size but contain data - test that loadFileAsString handles this
+        auto content = choc::file::loadFileAsString ("/proc/self/status");
+        CHOC_EXPECT_FALSE (content.empty());
+        CHOC_EXPECT_TRUE (content.find ("Name:") != std::string::npos);
+        CHOC_EXPECT_TRUE (content.find ("TracerPid:") != std::string::npos);
+    }
+   #endif
 }
 
 //==============================================================================
@@ -2631,7 +2643,14 @@ inline void testWebview (choc::test::TestProgress& progress)
 
         CHOC_EXPECT_EQ (result, "[1234, 5678]");
         CHOC_EXPECT_TRUE (error1.empty());
-        CHOC_EXPECT_EQ (choc::json::toString (value1), R"({"x": [1, 2, 3], "y": 987, "z": true})");
+        // Check individual properties since JSON object order is not guaranteed
+        CHOC_EXPECT_TRUE (value1.isObject());
+        CHOC_EXPECT_TRUE (value1.hasObjectMember ("x"));
+        CHOC_EXPECT_TRUE (value1.hasObjectMember ("y"));
+        CHOC_EXPECT_TRUE (value1.hasObjectMember ("z"));
+        CHOC_EXPECT_EQ (choc::json::toString (value1["x"]), "[1, 2, 3]");
+        CHOC_EXPECT_EQ (value1["y"].get<int>(), 987);
+        CHOC_EXPECT_EQ (value1["z"].get<bool>(), true);
        #if ! CHOC_WINDOWS
         CHOC_EXPECT_TRUE (! error2.empty()); // Windows browser seems to not do this one correctly
        #endif

@@ -335,11 +335,12 @@ struct ZipFile::Item::ZipStream  : public  std::istream,
                                    private std::streambuf
 {
     ZipStream (const Item& i)
-        : std::istream (this),
+        : std::istream (nullptr),
           fileStream (i.owner->source),
           compressedSize (static_cast<int64_t> (i.compressedSize)),
           fileStartOffset (static_cast<int64_t> (i.fileStartOffset))
     {
+        rdbuf (this);
         char entry[30];
         i.owner->readChunk (entry, fileStartOffset, 30);
 

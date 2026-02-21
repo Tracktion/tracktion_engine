@@ -19,6 +19,7 @@
 #ifndef CHOC_JAVASCRIPT_DUKTAPE_HEADER_INCLUDED
 #define CHOC_JAVASCRIPT_DUKTAPE_HEADER_INCLUDED
 
+#include <atomic>
 #include "choc_javascript.h"
 
 /**
@@ -3220,7 +3221,7 @@ typedef struct duk_hthread duk_context;
 #undef DUK_USE_EXEC_INDIRECT_BOUND_CHECK
 #undef DUK_USE_EXEC_PREFER_SIZE
 #define DUK_USE_EXEC_REGCONST_OPTIMIZE
-#undef DUK_USE_EXEC_TIMEOUT_CHECK
+#define DUK_USE_EXEC_TIMEOUT_CHECK(udata) (static_cast<std::atomic<bool>*> (udata)->load())
 #undef DUK_USE_EXPLICIT_NULL_INIT
 #undef DUK_USE_EXTSTR_FREE
 #undef DUK_USE_EXTSTR_INTERN_CHECK
@@ -3262,7 +3263,7 @@ typedef struct duk_hthread duk_context;
 #define DUK_USE_HTML_COMMENTS
 #define DUK_USE_IDCHAR_FASTPATH
 #undef DUK_USE_INJECT_HEAP_ALLOC_ERROR
-#undef DUK_USE_INTERRUPT_COUNTER
+#define DUK_USE_INTERRUPT_COUNTER
 #undef DUK_USE_INTERRUPT_DEBUG_FIXUP
 #define DUK_USE_JC
 #define DUK_USE_JSON_BUILTIN
@@ -104989,7 +104990,7 @@ DUK_INTERNAL duk_double_t duk_util_tinyrandom_get_double(duk_hthread *thr) {
 //==============================================================================
 struct DuktapeContext  : public Context::Pimpl
 {
-    DuktapeContext() : context (duktape::duk_create_heap (nullptr, nullptr, nullptr, nullptr, fatalError))
+    DuktapeContext() : context (duktape::duk_create_heap (nullptr, nullptr, nullptr, &shouldCancel, fatalError))
     {
         CHOC_ASSERT (context != nullptr);
     }
@@ -105000,6 +105001,12 @@ struct DuktapeContext  : public Context::Pimpl
     }
 
     void pumpMessageLoop() override {}
+
+    bool cancel() override
+    {
+        shouldCancel.store (true);
+        return true;
+    }
 
     void resetStack()
     {
@@ -105018,6 +105025,8 @@ struct DuktapeContext  : public Context::Pimpl
 
     void evalString (std::string_view code)
     {
+        shouldCancel.store (false);
+
         if (duk_peval_lstring (context, code.data(), code.length()) != DUK_EXEC_SUCCESS)
             throwError();
     }
@@ -105310,6 +105319,7 @@ struct DuktapeContext  : public Context::Pimpl
     duktape::duk_context* context = nullptr;
     std::vector<std::unique_ptr<RegisteredFunction>> registeredFunctions;
     duktape::duk_idx_t numFunctionArgs = 0;
+    std::atomic<bool> shouldCancel { false };
 
     static constexpr const char* objectNameAttribute = "_objectName";
 };

@@ -21,10 +21,12 @@
 
 #include <fstream>
 #include <functional>
+#include <cstring>
 #include <cwctype>
 #include <stdexcept>
 #include <random>
 #include <filesystem>
+#include "../platform/choc_Platform.h"
 #include "../text/choc_UTF8.h"
 
 namespace choc::file
@@ -145,28 +147,26 @@ size_t readFileContent (const std::filesystem::path& filename, GetDestBufferFn&&
 
         auto fileSize = stream.tellg();
 
-        if (fileSize < 0)
-            throw Error ("Failed to read from file: " + filename.string());
-
         if (fileSize == 0)
-            return {};
+            return 0;
 
-        if (auto destBuffer = getBuffer (static_cast<uint64_t> (fileSize)))
+        if (fileSize > 0)
         {
-            stream.seekg (0);
+            if (auto destBuffer = getBuffer (static_cast<uint64_t> (fileSize)))
+            {
+                stream.seekg (0);
 
-            if (stream.read (static_cast<std::ifstream::char_type*> (destBuffer), static_cast<std::streamsize> (fileSize)))
-                return static_cast<size_t> (fileSize);
-
-            throw Error ("Failed to read from file: " + filename.string());
+                if (stream.read (static_cast<std::ifstream::char_type*> (destBuffer), static_cast<std::streamsize> (fileSize)))
+                    return static_cast<size_t> (fileSize);
+            }
         }
+
+        throw Error ("Failed to read from file: " + filename.string());
     }
     catch (const std::ios_base::failure& e)
     {
         throw Error ("Failed to read from file: " + filename.string() + ": " + e.what());
     }
-
-    return 0;
 }
 
 inline std::string loadFileAsString (const std::filesystem::path& filename)

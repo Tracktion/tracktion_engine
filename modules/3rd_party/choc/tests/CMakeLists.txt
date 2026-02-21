@@ -71,7 +71,7 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /W4 /WX -DWIN32 /bigobj ")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /W4 /WX /w14355 -DWIN32 /bigobj ")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
 endif()
 

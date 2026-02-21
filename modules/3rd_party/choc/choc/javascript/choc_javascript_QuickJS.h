@@ -51,6 +51,7 @@
 #include <time.h>
 #include <fenv.h>
 #include <math.h>
+#include <atomic>
 #if defined(__APPLE__)
 #include <malloc/malloc.h>
 #elif defined(__linux__)
@@ -64052,9 +64053,29 @@ struct QuickJSContext  : public Context::Pimpl
         context = JS_NewContext (runtime);
         CHOC_ASSERT (context != nullptr);
         JS_SetContextOpaque (context, this);
+
+        JS_SetInterruptHandler (runtime, [] (JSRuntime*, void* opaque)
+        {
+            if (auto qjctx = static_cast<QuickJSContext*> (opaque))
+            {
+                if (qjctx->shouldCancel.load())
+                {
+                    qjctx->shouldCancel.store (false);
+                    return 1;
+                }
+            }
+
+            return 0;
+        }, this);
     }
 
     void pumpMessageLoop() override {}
+
+    bool cancel() override
+    {
+        shouldCancel.store (true);
+        return true;
+    }
 
     void pushObjectOrArray (const choc::value::ValueView& v) override { functionArgs.push_back (valueToJS (v).release()); }
     void pushArg (std::string_view v) override                        { functionArgs.push_back (stringToJS (v).release()); }
@@ -64350,6 +64371,7 @@ struct QuickJSContext  : public Context::Pimpl
     std::vector<Context::NativeFunction> registeredFunctions;
     std::vector<JSValue> functionArgs;
     JSAtom functionToCall = {};
+    std::atomic<bool> shouldCancel { false };
 
     static constexpr const char* objectNameAttribute = "_objectName";
 };

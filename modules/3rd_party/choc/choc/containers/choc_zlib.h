@@ -96,6 +96,7 @@ private:
     std::unique_ptr<Pimpl> pimpl;
 
     int overflow (int) override;
+    std::streamsize xsputn (const char_type* s, std::streamsize n) override;
 };
 
 
@@ -120,7 +121,7 @@ struct zlib
 // I even started trying to improve some of the appalling variable names,
 // but honestly, life's too short..
 
-CHOC_REGISTER_OPEN_SOURCE_LICENCE (QuickJS, R"(
+CHOC_REGISTER_OPEN_SOURCE_LICENCE (ZLIB, R"(
 ==============================================================================
 ZLIB License:
 
@@ -910,13 +911,15 @@ private:
                 /* strstart == 0 is possible when wraparound on 16-bit machine */
                 s->lookahead = (uint32_t) (s->strstart - max_start);
                 s->strstart = (uint32_t) max_start;
-                s->flushBlock (0);
+                if (! s->flushBlock (false))
+                    return BlockStatus::need_more;  // Output buffer full, need to flush
             }
             /* Flush if we may have to slide, otherwise block_start may become
             * negative and the data will be gone:
             */
             if (s->strstart - (uint32_t) s->block_start >= s->MAX_DIST())
-                s->flushBlock (0);
+                if (! s->flushBlock (false))
+                    return BlockStatus::need_more;  // Output buffer full, need to flush
         }
         s->flushBlock (flush == FlushState::Z_FINISH);
         return flush == FlushState::Z_FINISH ? BlockStatus::finish_done
@@ -1498,7 +1501,7 @@ private:
         last_lit = 0;
     }
 
-    void flushBlock (bool eof)
+    bool flushBlock (bool eof)
     {
         flushCurrentBlock (block_start >= 0 ? (uint8_t*) &window[(uint32_t) block_start]
                                             : (uint8_t*) nullptr,
@@ -1506,6 +1509,7 @@ private:
                            eof);
         block_start = (long) strstart;
         flushPending();
+        return pending == 0;  // Return true if all data was flushed
     }
 
     void initialiseTrees()
@@ -3808,9 +3812,10 @@ struct InflaterStream::Pimpl
 };
 
 inline InflaterStream::InflaterStream (std::shared_ptr<std::istream> source, FormatType format)
-   : std::istream (this),
+   : std::istream (nullptr),
      pimpl (std::make_unique<Pimpl> (std::move (source), format))
 {
+    rdbuf (this);
 }
 
 inline InflaterStream::~InflaterStream() = default;
@@ -3981,14 +3986,21 @@ struct DeflaterStream::Pimpl
 };
 
 inline DeflaterStream::DeflaterStream (std::shared_ptr<std::ostream> d, CompressionLevel c, int w)
-    : std::ostream (this),
+    : std::ostream (nullptr),
       pimpl (std::make_unique<Pimpl> (std::move (d), c, w))
-{}
+{
+    rdbuf (this);
+}
 
 inline DeflaterStream::~DeflaterStream() = default;
 
 inline int DeflaterStream::overflow (int c) { return pimpl->overflow (c); }
 
+inline std::streamsize DeflaterStream::xsputn (const char_type* s, std::streamsize n)
+{
+    return pimpl->write (reinterpret_cast<const uint8_t*> (s),
+                         static_cast<size_t> (n)) ? n : 0;
+}
 
 } // namespace choc::gzip
 

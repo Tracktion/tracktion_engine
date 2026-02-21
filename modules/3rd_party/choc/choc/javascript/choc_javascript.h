@@ -162,6 +162,16 @@ namespace choc::javascript
         /// Pumps the message loop in an engine-specific way - may have no effect on some platforms.
         void pumpMessageLoop();
 
+        /// If supported by the engine, attempts to cancel the execution of the JS code.
+        /// If the JS code is stuck in a blocking call itself, this won't work, but will
+        /// work if the JS code is running a loop, for example.
+        /// This obviously has to be called from another thread, so for example if your JS engine
+        /// is running in a worker thread, the GUI thread can call this.
+        /// If the cancellation worked, an exception will be thrown.
+        /// Returns true if cancellation is supported by this engine, or false if not.
+        /// Currently only implemented in the QuickJS engine.
+        bool cancel();
+
         //==============================================================================
         /// @internal
         struct Pimpl;
@@ -235,6 +245,7 @@ struct Context::Pimpl
     virtual void pushArg (double) = 0;
     virtual void pushArg (bool) = 0;
     virtual void pumpMessageLoop() = 0;
+    virtual bool cancel() { return false; }
 
     void pushArg (const std::string& v)   { pushArg (std::string_view (v)); }
     void pushArg (const char* v)          { pushArg (std::string_view (v)); }
@@ -316,6 +327,12 @@ inline void Context::pumpMessageLoop()
 {
     CHOC_ASSERT (pimpl != nullptr); // cannot call this on a moved-from context!
     pimpl->pumpMessageLoop();
+}
+
+inline bool Context::cancel()
+{
+    CHOC_ASSERT (pimpl != nullptr); // cannot call this on a moved-from context!
+    return pimpl->cancel();
 }
 
 inline std::string makeSafeIdentifier (std::string s)
