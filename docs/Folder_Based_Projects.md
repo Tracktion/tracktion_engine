@@ -82,7 +82,6 @@ Passed to `ProjectManager::createNewProject`, `createNewProjectInteractively`, `
 | Item IDs | Stable `ProjectItemID` (numeric) | Invalid `ProjectItemID`; items referenced by path |
 | Source references in edits | ID strings (e.g. `"1234_5678"`) | Relative or absolute file paths |
 | `ProjectID` stability | Stored in the file; stable across moves | Hash of folder path; **changes if folder moves** |
-| Searching (`searchFor`) | Fully supported | No-op |
 | Merging projects | Supported | No-op |
 | Reordering items | Supported | No-op |
 | Project name | Stored in binary file | Derived from folder name |
@@ -128,7 +127,7 @@ Use `Project::getSourcePathForFile(file)` to obtain the correct reference string
 
 ## Things to Look Out For
 
-1. **No-op operations** — `searchFor()`, `mergeOtherProjectIntoThis()`, `mergeArchiveContents()`, `moveProjectItem()`, and `setProjectProperty()` are no-ops for folder-based projects. Check `isFolderBased()` if your code depends on these.
+1. **No-op operations** — `mergeOtherProjectIntoThis()`, `mergeArchiveContents()`, and `moveProjectItem()` are no-ops for folder-based projects. Check `isFolderBased()` if your code depends on these. Note that `get/setDescription()` and `get/setProjectProperty()` now work for folder-based projects (stored in `project_info.json`).
 
 2. **Lazy scanning cost** — the first call to item-listing methods triggers a directory scan. For large folders this may have noticeable latency.
 
@@ -178,8 +177,57 @@ if (ref.isProjectItemID())
 
 ### New `ProjectType` parameter
 
-`ProjectManager::createNewProject`, `createNewProjectInteractively`, and `createNewProjectFromTemplate` now require a `ProjectType` parameter — there is no default. Callers must explicitly pass `ProjectType::fileBased` or `ProjectType::folderBased`. The `TempProject` helper defaults to `ProjectType::fileBased` if not specified.
+`ProjectManager::createNewProject` has a single-argument overload (taking just a `juce::File`) that defaults to file-based. The two- and three-argument overloads of `createNewProject`, `createNewProjectInteractively`, and `createNewProjectFromTemplate` require an explicit `ProjectType` parameter. The `TempProject` helper defaults to `ProjectType::fileBased` if not specified.
 
 ### `findOrphanItems()` → `findOrphanItemRefs()`
 
 `Project::findOrphanItems()` is deprecated. Use `findOrphanItemRefs()` instead, which returns `juce::Array<ProjectItemRef>`.
+
+---
+
+## Consolidation (`ProjectUtilities`)
+
+The `ProjectUtilities` namespace in `tracktion_ProjectUtilities.h` provides functions for consolidating projects and edits — copying external media files into the project folder so everything is self-contained.
+
+| Function | Description |
+|---|---|
+| `consolidateEdit(Edit&)` | Copies external files referenced by an edit into its project folder and updates references. Returns `{count, errorMsg}`. |
+| `consolidateProject(Project&)` | Consolidates all edits in a project. Returns `{count, errorMsg}`. |
+| `canConsolidateEdit(Edit&)` | Returns `true` if the edit references files outside its project folder. |
+| `canConsolidateProject(Project&)` | Returns `true` if any edit in the project has external references. |
+| `isConsolidated(Edit&)` / `isConsolidated(Project&)` | Returns `true` if fully consolidated (no external file refs). |
+| `getEditsInProject(Project&)` | Returns an `EditReferences` container holding all edits in a project (reuses already-open edits, loads closed ones for examining). |
+| `importExternalFiles(Project&, Array<ProjectItemRef>)` | Lower-level: copies source files from outside the project folder into it. |
+| `importExternalReferences(Project&, Array<ProjectItemRef>)` | Lower-level: creates new project items for refs pointing at other projects, updating edit references. |
+| `consolidateEditInteractive(Edit&, callback)` | Shows confirmation/completion dialogs around `consolidateEdit`. |
+| `consolidateProjectInteractive(Project&, callback)` | Shows confirmation/completion dialogs around `consolidateProject`. |
+
+---
+
+## Archiving
+
+The `tracktion_Archive.h` header provides a new archive system that replaces the legacy `.trkarch` format with standard zip files.
+
+### `ArchiveJob`
+
+`ArchiveJob` is a `ThreadPoolJobWithProgress` that archives a `Project` or single `ProjectItem` into a zip file.
+
+- **Folder-based projects**: consolidates, then zips the project folder.
+- **File-based projects**: converts to folder-based in a temp directory first, consolidates, then zips.
+
+```cpp
+ArchiveJob::Source source = &myProject;
+ArchiveJob job (source, destZipFile, ArchiveJob::CompressionLevel::normal);
+job.runSynchronously();  // or submit to a thread pool
+```
+
+### Detection helpers
+
+| Function | Description |
+|---|---|
+| `isArchive(Engine&, File&)` | Returns `true` if the file is any supported archive (legacy or zip). |
+| `isLegacyArchive(Engine&, File&)` | Returns `true` if the file is a legacy `.trkarch` archive. |
+
+### Legacy classes
+
+`TracktionArchiveFile` and `ExportJob` have been moved to the `legacy::` namespace. They remain available for reading old `.trkarch` files but should not be used for new archives.

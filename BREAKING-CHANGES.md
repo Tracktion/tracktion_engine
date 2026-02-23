@@ -3,6 +3,48 @@
 ___
 
 ### Change
+`TracktionArchiveFile` and `ExportJob` moved to `legacy::` namespace.
+
+#### Possible Issues
+Code using `TracktionArchiveFile` or `ExportJob` directly will no longer compile.
+
+#### Workaround
+Qualify with `legacy::` (e.g. `legacy::TracktionArchiveFile`). For new code, use `ArchiveJob` instead, which produces standard zip files. Use `isArchive()` and `isLegacyArchive()` to detect archive formats.
+
+#### Rationale
+The legacy `.trkarch` format is replaced by standard zip archives. The old classes are preserved in a `legacy::` namespace for reading existing archives.
+
+___
+
+### Change
+`ProjectSearchIndex`, `SearchOperation`, and related APIs have been removed.
+
+#### Possible Issues
+Code using `ProjectSearchIndex`, `SearchOperation`, `createSearchForKeywords()`, or `Project::searchFor()` will no longer compile. The header `tracktion_ProjectSearchIndex.h` has been deleted.
+
+#### Workaround
+Use plain string matching or Levenshtein distance on project item names/descriptions.
+
+#### Rationale
+The search infrastructure was tightly coupled to file-based project internals and not applicable to folder-based projects. Simpler alternatives are sufficient.
+
+___
+
+### Change
+`Edit::createEditForExamining(Engine&, ValueTree, EditRole, LoadContext*)` overload is now `[[deprecated]]`.
+
+#### Possible Issues
+Deprecation warnings when calling this overload.
+
+#### Workaround
+Use `loadEditForExamining(ProjectManager&, ProjectItemRef)` instead.
+
+#### Rationale
+The new function works with both file-based and folder-based projects and handles source resolution correctly.
+
+___
+
+### Change
 `Project::getAllItemIDs()` has been removed.
 
 #### Possible Issues
@@ -45,7 +87,7 @@ A strong type prevents accidental misuse of raw integers as project identifiers 
 ___
 
 ### Change
-`ProjectItemRef` replaces raw `ProjectItemID` in many APIs. `Project::getProjectItemRef()`, `getProjectItemFor()`, `removeProjectItem()`, `getIndexOf()`, and `searchFor()` now use `ProjectItemRef`. `ProjectItem::getProjectItemRef()` returns `const ProjectItemRef&`. `ProjectManager::getProjectItem()` and `findSourceFile()` have new `ProjectItemRef` overloads.
+`ProjectItemRef` replaces raw `ProjectItemID` in many APIs. `Project::getProjectItemRef()`, `getProjectItemFor()`, `removeProjectItem()`, and `getIndexOf()` now use `ProjectItemRef`. `ProjectItem::getProjectItemRef()` returns `const ProjectItemRef&`. `ProjectManager::getProjectItem()` and `findSourceFile()` have new `ProjectItemRef` overloads.
 
 #### Possible Issues
 Code that explicitly types return values as `ProjectItemID` from these methods will no longer compile.
