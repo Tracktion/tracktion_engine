@@ -27,6 +27,8 @@
 
 #pragma once
 
+#include <span>
+
 using namespace tracktion;
 
 #define DOCTEST_CONFIG_IMPLEMENT
@@ -36,24 +38,65 @@ using namespace tracktion;
 
 //==============================================================================
 //==============================================================================
-int main (int, char**)
+int main (int argc, char** argv)
 {
+    bool runJuceTests = true;
+    std::vector<const char*> doctestArgs;
+
+    for (int i = 1; i < argc; ++i)
+    {
+        if (String (argv[i]) == "--no-juce-tests")
+        {
+            runJuceTests = false;
+        }
+        else
+        {
+            doctestArgs.push_back (argv[i]);
+        }
+    }
+
     ScopedJuceInitialiser_GUI init;
 
-    auto doctestContext = std::make_unique<doctest::Context>();
-    doctestContext->setOption ("duration", true);
-    doctestContext->addFilter("test-suite", "tracktion_core");
-    doctestContext->addFilter("test-suite", "tracktion_graph");
-    doctestContext->addFilter("test-suite", "tracktion_engine");
+    CoutLogger logger;
+    Logger::setCurrentLogger (&logger);
 
-    return TestRunner::runTests ({},
-                                 std::vector<juce::String> {
-                                    "Tracktion",
-                                    "Tracktion:Longer",
-                                    "tracktion_benchmarks",
-                                    "tracktion_core",
-                                    "tracktion_graph",
-                                    "tracktion_engine",
-                                    "tracktion_graph_performance" },
-                                    std::move (doctestContext));
+    tracktion_engine::Engine engine { ProjectInfo::projectName, std::make_unique<TestUIBehaviour>(), std::make_unique<TestEngineBehaviour>() };
+
+    int numFailures = 0;
+
+    if (runJuceTests)
+    {
+        UnitTestRunner testRunner;
+        testRunner.setAssertOnFailure (false);
+
+        Array<UnitTest*> tests;
+        tests.addArray (UnitTest::getTestsInCategory ("Tracktion"));
+        tests.addArray (UnitTest::getTestsInCategory ("Tracktion:Longer"));
+        tests.addArray (UnitTest::getTestsInCategory ("tracktion_benchmarks"));
+        tests.addArray (UnitTest::getTestsInCategory ("tracktion_core"));
+        tests.addArray (UnitTest::getTestsInCategory ("tracktion_graph"));
+        tests.addArray (UnitTest::getTestsInCategory ("tracktion_engine"));
+        tests.addArray (UnitTest::getTestsInCategory ("tracktion_graph_performance"));
+
+        testRunner.runTests (tests);
+
+        for (int i = 0; i <= testRunner.getNumResults(); ++i)
+            if (auto result = testRunner.getResult (i))
+                numFailures += result->failures;
+    }
+
+    doctest::Context doctestContext;
+    doctestContext.setOption ("duration", true);
+
+    if (! doctestArgs.empty())
+        doctestContext.applyCommandLine ((int) doctestArgs.size(), doctestArgs.data());
+
+    doctestContext.addFilter ("test-suite", "tracktion_core");
+    doctestContext.addFilter ("test-suite", "tracktion_graph");
+    doctestContext.addFilter ("test-suite", "tracktion_engine");
+    const auto doctestFailed = doctestContext.run();
+
+    Logger::setCurrentLogger (nullptr);
+
+    return (numFailures > 0 || doctestFailed) ? 1 : 0;
 }

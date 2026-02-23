@@ -1578,6 +1578,1686 @@ TEST_SUITE ("tracktion_engine")
             runTest (false);
         }
     }
+
+    TEST_CASE ("ProjectID: basic operations")
+    {
+        // Default-constructed is invalid
+        ProjectID defaultId;
+        CHECK_FALSE (defaultId.isValid());
+        CHECK (defaultId.toInt() == 0);
+
+        // Explicit construction
+        ProjectID id1 (42);
+        CHECK (id1.isValid());
+        CHECK (id1.toInt() == 42);
+
+        // Zero is invalid
+        ProjectID zero (0);
+        CHECK_FALSE (zero.isValid());
+
+        // Equality
+        ProjectID id2 (42);
+        CHECK (id1 == id2);
+        CHECK_FALSE (id1 != id2);
+
+        // Inequality
+        ProjectID id3 (99);
+        CHECK (id1 != id3);
+        CHECK_FALSE (id1 == id3);
+
+        // Negative values are valid (non-zero)
+        ProjectID neg (-1);
+        CHECK (neg.isValid());
+        CHECK (neg.toInt() == -1);
+    }
+
+    TEST_CASE ("ProjectItemID: construction and parsing")
+    {
+        SUBCASE ("default construction is invalid")
+        {
+            ProjectItemID pid;
+            CHECK_FALSE (pid.isValid());
+            CHECK (pid.isInvalid());
+            CHECK (pid.getRawID() == 0);
+        }
+
+        SUBCASE ("construct from ints")
+        {
+            ProjectItemID pid (5, ProjectID (10));
+            CHECK (pid.isValid());
+            CHECK (pid.getItemID() == 5);
+            CHECK (pid.getProjectID() == ProjectID (10));
+        }
+
+        SUBCASE ("round-trip via toString")
+        {
+            ProjectItemID original (0x1234, ProjectID (0xABCD));
+            auto str = original.toString();
+            ProjectItemID parsed (str);
+
+            CHECK (parsed.isValid());
+            CHECK (parsed == original);
+            CHECK (parsed.getItemID() == original.getItemID());
+            CHECK (parsed.getProjectID() == original.getProjectID());
+        }
+
+        SUBCASE ("round-trip via toStringSuitableForFilename")
+        {
+            ProjectItemID original (0x5678, ProjectID (0xDEF0));
+            auto fnStr = original.toStringSuitableForFilename();
+
+            // The filename format uses '_' instead of '/'
+            CHECK (fnStr.contains ("_"));
+            CHECK_FALSE (fnStr.contains ("/"));
+
+            // Should be parseable back
+            ProjectItemID parsed (fnStr);
+            CHECK (parsed == original);
+        }
+
+        SUBCASE ("parse invalid string returns invalid")
+        {
+            ProjectItemID empty { juce::String{} };
+            CHECK_FALSE (empty.isValid());
+
+            ProjectItemID garbage (juce::String ("not_a_hex_id!"));
+            CHECK_FALSE (garbage.isValid());
+
+            ProjectItemID justText (juce::String ("hello"));
+            CHECK_FALSE (justText.isValid());
+        }
+
+        SUBCASE ("createNewID produces valid IDs")
+        {
+            auto pid = ProjectItemID::createNewID (ProjectID (42));
+            CHECK (pid.isValid());
+            CHECK (pid.getProjectID() == ProjectID (42));
+        }
+
+        SUBCASE ("withNewProjectID preserves item ID")
+        {
+            ProjectItemID pid (0x100, ProjectID (0x200));
+            auto changed = pid.withNewProjectID (ProjectID (0x300));
+
+            CHECK (changed.getItemID() == pid.getItemID());
+            CHECK (changed.getProjectID() == ProjectID (0x300));
+            CHECK (changed != pid);
+        }
+
+        SUBCASE ("fromProperty")
+        {
+            ProjectItemID original (0x42, ProjectID (0x99));
+            juce::ValueTree vt ("test");
+            vt.setProperty ("myProp", original.toString(), nullptr);
+
+            auto parsed = ProjectItemID::fromProperty (vt, "myProp");
+            CHECK (parsed == original);
+        }
+    }
+
+    TEST_CASE ("ProjectItemRef: type detection and factory methods")
+    {
+        SUBCASE ("default is invalid")
+        {
+            ProjectItemRef ref;
+            CHECK_FALSE (ref.isValid());
+            CHECK_FALSE (ref.isProjectItemID());
+            CHECK_FALSE (ref.isRelativePath());
+            CHECK_FALSE (ref.isAbsolutePath());
+        }
+
+        SUBCASE ("from ProjectItemID")
+        {
+            auto pid = ProjectItemID (0x100, ProjectID (0x200));
+            ProjectItemRef ref (pid);
+
+            CHECK (ref.isValid());
+            CHECK (ref.isProjectItemID());
+            CHECK_FALSE (ref.isRelativePath());
+            CHECK_FALSE (ref.isAbsolutePath());
+            CHECK (ref.getProjectItemID().has_value());
+            CHECK (ref.getProjectItemID().value() == pid);
+            CHECK (ref.getProjectID() == pid.getProjectID());
+        }
+
+        SUBCASE ("from relative path")
+        {
+            auto ref = ProjectItemRef::fromPath ("audio/take1.wav");
+
+            CHECK (ref.isValid());
+            CHECK_FALSE (ref.isProjectItemID());
+            CHECK (ref.isRelativePath());
+            CHECK_FALSE (ref.isAbsolutePath());
+            CHECK_FALSE (ref.getProjectItemID().has_value());
+        }
+
+        SUBCASE ("from absolute path")
+        {
+            auto absFile = juce::File::getSpecialLocation (juce::File::tempDirectory).getChildFile ("test.wav");
+            auto ref = ProjectItemRef::fromAbsolutePath (absFile);
+
+            CHECK (ref.isValid());
+            CHECK_FALSE (ref.isProjectItemID());
+            CHECK_FALSE (ref.isRelativePath());
+            CHECK (ref.isAbsolutePath());
+        }
+
+        SUBCASE ("toString round-trip")
+        {
+            auto pid = ProjectItemID (0x42, ProjectID (0x99));
+            ProjectItemRef ref (pid);
+
+            CHECK (ref.toString() == pid.toString());
+        }
+
+        SUBCASE ("toIDForFilename with ProjectItemID")
+        {
+            auto pid = ProjectItemID (0x42, ProjectID (0x99));
+            ProjectItemRef ref (pid);
+
+            CHECK (ref.toIDForFilename() == pid.toStringSuitableForFilename());
+        }
+
+        SUBCASE ("toIDForFilename with path uses hash")
+        {
+            auto ref = ProjectItemRef::fromPath ("audio/take1.wav");
+            auto id = ref.toIDForFilename();
+            CHECK (id.isNotEmpty());
+
+            // Same path should give same hash
+            auto ref2 = ProjectItemRef::fromPath ("audio/take1.wav");
+            CHECK (ref2.toIDForFilename() == id);
+        }
+
+        SUBCASE ("equality operators")
+        {
+            auto pid = ProjectItemID (0x42, ProjectID (0x99));
+            ProjectItemRef ref1 (pid);
+            ProjectItemRef ref2 (pid);
+
+            CHECK (ref1 == ref2);
+            CHECK_FALSE (ref1 != ref2);
+
+            auto ref3 = ProjectItemRef::fromPath ("audio.wav");
+            CHECK (ref1 != ref3);
+        }
+
+        SUBCASE ("ProjectItemID comparison operators")
+        {
+            auto pid = ProjectItemID (0x42, ProjectID (0x99));
+            ProjectItemRef ref (pid);
+
+            CHECK (ref == pid);
+            CHECK_FALSE (ref != pid);
+            CHECK (pid == ref);
+            CHECK_FALSE (pid != ref);
+
+            auto otherPid = ProjectItemID (0x43, ProjectID (0x99));
+            CHECK (ref != otherPid);
+        }
+
+        SUBCASE ("resolve absolute path")
+        {
+            auto& engine = *Engine::getEngines()[0];
+            auto absFile = juce::File::getSpecialLocation (juce::File::tempDirectory).getChildFile ("test_resolve.wav");
+            auto ref = ProjectItemRef::fromAbsolutePath (absFile);
+
+            auto resolved = ref.resolve (engine);
+            CHECK (resolved == absFile);
+        }
+
+        SUBCASE ("resolve relative path with folder")
+        {
+            auto& engine = *Engine::getEngines()[0];
+            auto folder = juce::File::getSpecialLocation (juce::File::tempDirectory);
+            auto ref = ProjectItemRef::fromPath ("subdir/audio.wav");
+
+            auto resolved = ref.resolve (engine, folder);
+            CHECK (resolved == folder.getChildFile ("subdir/audio.wav"));
+        }
+
+        SUBCASE ("resolve empty ref returns empty")
+        {
+            auto& engine = *Engine::getEngines()[0];
+            ProjectItemRef empty;
+            CHECK (empty.resolve (engine) == juce::File());
+        }
+    }
+
+    TEST_CASE ("FolderBasedProject: inferCategory covers all subdirectories")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFolder = tempDir.getChildFile ("cat_test_project");
+        projectFolder.createDirectory();
+
+        // Create files in various category subdirectories
+        auto createFile = [&] (const juce::String& subDir, const juce::String& filename)
+        {
+            auto dir = projectFolder.getChildFile (subDir);
+            dir.createDirectory();
+            auto f = dir.getChildFile (filename);
+            f.create();
+            return f;
+        };
+
+        createFile ("Recorded", "take1.wav");
+        createFile ("Exported", "mix.wav");
+        createFile ("Imported", "sample.wav");
+        createFile ("Rendered", "render.wav");
+        createFile ("Frozen", "frozen_track.wav");
+        createFile ("Archived", "old.wav");
+        createFile ("Movies", "video.mp4");
+        createFile ("Other", "misc.wav");
+
+        // Also a root-level wav and edit
+        projectFolder.getChildFile ("root.wav").create();
+        projectFolder.getChildFile ("my_edit.tracktionedit").create();
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        // Check category inference
+        auto recordedItem = project->getProjectItemForFile (projectFolder.getChildFile ("Recorded").getChildFile ("take1.wav"));
+        REQUIRE (recordedItem != nullptr);
+        CHECK (recordedItem->getCategory() == ProjectItem::Category::recorded);
+
+        auto exportedItem = project->getProjectItemForFile (projectFolder.getChildFile ("Exported").getChildFile ("mix.wav"));
+        REQUIRE (exportedItem != nullptr);
+        CHECK (exportedItem->getCategory() == ProjectItem::Category::exports);
+
+        auto importedItem = project->getProjectItemForFile (projectFolder.getChildFile ("Imported").getChildFile ("sample.wav"));
+        REQUIRE (importedItem != nullptr);
+        CHECK (importedItem->getCategory() == ProjectItem::Category::imported);
+
+        auto renderedItem = project->getProjectItemForFile (projectFolder.getChildFile ("Rendered").getChildFile ("render.wav"));
+        REQUIRE (renderedItem != nullptr);
+        CHECK (renderedItem->getCategory() == ProjectItem::Category::rendered);
+
+        auto frozenItem = project->getProjectItemForFile (projectFolder.getChildFile ("Frozen").getChildFile ("frozen_track.wav"));
+        REQUIRE (frozenItem != nullptr);
+        CHECK (frozenItem->getCategory() == ProjectItem::Category::frozen);
+
+        auto archivedItem = project->getProjectItemForFile (projectFolder.getChildFile ("Archived").getChildFile ("old.wav"));
+        REQUIRE (archivedItem != nullptr);
+        CHECK (archivedItem->getCategory() == ProjectItem::Category::archives);
+
+        auto videoItem = project->getProjectItemForFile (projectFolder.getChildFile ("Movies").getChildFile ("video.mp4"));
+        REQUIRE (videoItem != nullptr);
+        CHECK (videoItem->getCategory() == ProjectItem::Category::video);
+
+        // "Other" directory maps to Category::none
+        auto otherItem = project->getProjectItemForFile (projectFolder.getChildFile ("Other").getChildFile ("misc.wav"));
+        REQUIRE (otherItem != nullptr);
+        CHECK (otherItem->getCategory() == ProjectItem::Category::none);
+
+        // Root-level wav maps to Category::none
+        auto rootWav = project->getProjectItemForFile (projectFolder.getChildFile ("root.wav"));
+        REQUIRE (rootWav != nullptr);
+        CHECK (rootWav->getCategory() == ProjectItem::Category::none);
+
+        // Root-level edit maps to Category::edit
+        auto rootEdit = project->getProjectItemForFile (projectFolder.getChildFile ("my_edit.tracktionedit"));
+        REQUIRE (rootEdit != nullptr);
+        CHECK (rootEdit->getCategory() == ProjectItem::Category::edit);
+
+        cleanup();
+    }
+
+    TEST_CASE ("FolderBasedProject: file type inference")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFolder = tempDir.getChildFile ("type_test_project");
+        projectFolder.createDirectory();
+
+        // Create files of different types
+        projectFolder.getChildFile ("song.tracktionedit").create();
+        projectFolder.getChildFile ("song2.trkedit").create();
+        projectFolder.getChildFile ("audio.wav").create();
+        projectFolder.getChildFile ("audio2.aiff").create();
+        projectFolder.getChildFile ("audio3.mp3").create();
+        projectFolder.getChildFile ("audio4.ogg").create();
+        projectFolder.getChildFile ("audio5.flac").create();
+        projectFolder.getChildFile ("drums.mid").create();
+        projectFolder.getChildFile ("bass.midi").create();
+        projectFolder.getChildFile ("clip.mp4").create();
+        projectFolder.getChildFile ("clip2.mov").create();
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        CHECK (project->getProjectItemForFile (projectFolder.getChildFile ("song.tracktionedit"))->getType() == ProjectItem::editItemType());
+        CHECK (project->getProjectItemForFile (projectFolder.getChildFile ("song2.trkedit"))->getType() == ProjectItem::editItemType());
+        CHECK (project->getProjectItemForFile (projectFolder.getChildFile ("audio.wav"))->getType() == ProjectItem::waveItemType());
+        CHECK (project->getProjectItemForFile (projectFolder.getChildFile ("audio2.aiff"))->getType() == ProjectItem::waveItemType());
+        CHECK (project->getProjectItemForFile (projectFolder.getChildFile ("audio3.mp3"))->getType() == ProjectItem::waveItemType());
+        CHECK (project->getProjectItemForFile (projectFolder.getChildFile ("audio4.ogg"))->getType() == ProjectItem::waveItemType());
+        CHECK (project->getProjectItemForFile (projectFolder.getChildFile ("audio5.flac"))->getType() == ProjectItem::waveItemType());
+        CHECK (project->getProjectItemForFile (projectFolder.getChildFile ("drums.mid"))->getType() == ProjectItem::midiItemType());
+        CHECK (project->getProjectItemForFile (projectFolder.getChildFile ("bass.midi"))->getType() == ProjectItem::midiItemType());
+        CHECK (project->getProjectItemForFile (projectFolder.getChildFile ("clip.mp4"))->getType() == ProjectItem::videoItemType());
+        CHECK (project->getProjectItemForFile (projectFolder.getChildFile ("clip2.mov"))->getType() == ProjectItem::videoItemType());
+
+        CHECK (project->getNumProjectItems() == 11);
+
+        cleanup();
+    }
+
+    TEST_CASE ("FolderBasedProject: createDefaultFolders and getDirectoryForMedia")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFolder = tempDir.getChildFile ("folders_test");
+        projectFolder.createDirectory();
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        // createDefaultFolders should create the subdirectories
+        project->createDefaultFolders();
+
+        CHECK (projectFolder.getChildFile ("Archived").isDirectory());
+        CHECK (projectFolder.getChildFile ("Exported").isDirectory());
+        CHECK (projectFolder.getChildFile ("Imported").isDirectory());
+        CHECK (projectFolder.getChildFile ("Recorded").isDirectory());
+        CHECK (projectFolder.getChildFile ("Rendered").isDirectory());
+
+        // getDirectoryForMedia returns appropriate directories
+        CHECK (project->getDirectoryForMedia (ProjectItem::Category::recorded) == projectFolder.getChildFile ("Recorded"));
+        CHECK (project->getDirectoryForMedia (ProjectItem::Category::exports) == projectFolder.getChildFile ("Exported"));
+        CHECK (project->getDirectoryForMedia (ProjectItem::Category::imported) == projectFolder.getChildFile ("Imported"));
+        CHECK (project->getDirectoryForMedia (ProjectItem::Category::rendered) == projectFolder.getChildFile ("Rendered"));
+        CHECK (project->getDirectoryForMedia (ProjectItem::Category::archives) == projectFolder.getChildFile ("Archived"));
+        CHECK (project->getDirectoryForMedia (ProjectItem::Category::frozen) == projectFolder.getChildFile ("Frozen"));
+        CHECK (project->getDirectoryForMedia (ProjectItem::Category::video) == projectFolder.getChildFile ("Movies"));
+
+        // edit and none categories return the project folder itself
+        CHECK (project->getDirectoryForMedia (ProjectItem::Category::edit) == projectFolder);
+        CHECK (project->getDirectoryForMedia (ProjectItem::Category::none) == projectFolder);
+
+        cleanup();
+    }
+
+    TEST_CASE ("Project: isFolderBased and getSourcePathForFile")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        SUBCASE ("file-based project is not folder-based")
+        {
+            auto projectFile = tempDir.getChildFile ("fb_test.tracktion");
+            ProjectManager::TempProject tp (pm, projectFile, true);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+
+            CHECK_FALSE (project->isFolderBased());
+        }
+
+        SUBCASE ("folder-based project is folder-based")
+        {
+            auto projectFolder = tempDir.getChildFile ("fb_test_folder");
+            projectFolder.createDirectory();
+
+            ProjectManager::TempProject tp (pm, projectFolder, false);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+
+            CHECK (project->isFolderBased());
+        }
+
+        SUBCASE ("getSourcePathForFile returns relative for child files")
+        {
+            auto projectFolder = tempDir.getChildFile ("src_path_test");
+            projectFolder.createDirectory();
+
+            ProjectManager::TempProject tp (pm, projectFolder, false);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+
+            auto childFile = projectFolder.getChildFile ("subdir").getChildFile ("audio.wav");
+            auto path = project->getSourcePathForFile (childFile);
+
+            CHECK_FALSE (juce::File::isAbsolutePath (path));
+            CHECK (path == "subdir/audio.wav");
+        }
+
+        SUBCASE ("getSourcePathForFile returns absolute for external files")
+        {
+            auto projectFolder = tempDir.getChildFile ("src_path_test2");
+            projectFolder.createDirectory();
+
+            ProjectManager::TempProject tp (pm, projectFolder, false);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+
+            auto externalFile = tempDir.getChildFile ("external.wav");
+            auto path = project->getSourcePathForFile (externalFile);
+
+            CHECK (juce::File::isAbsolutePath (path));
+            CHECK (path == externalFile.getFullPathName());
+        }
+
+        cleanup();
+    }
+
+    TEST_CASE ("FolderBasedProject: createNewItem deduplication")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFolder = tempDir.getChildFile ("dedup_test");
+        projectFolder.createDirectory();
+
+        auto wavFile = projectFolder.getChildFile ("audio.wav");
+        wavFile.create();
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        // First creation
+        auto item1 = project->createNewItem (wavFile, ProjectItem::waveItemType(),
+                                              "audio", {}, ProjectItem::Category::none, false);
+        REQUIRE (item1 != nullptr);
+
+        // Second creation with same file and type should return the same item
+        auto item2 = project->createNewItem (wavFile, ProjectItem::waveItemType(),
+                                              "audio", {}, ProjectItem::Category::none, false);
+        CHECK (item1 == item2);
+
+        cleanup();
+    }
+
+    TEST_CASE ("FolderBasedProject: project properties persistence")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFolder = tempDir.getChildFile ("prop_test");
+        projectFolder.createDirectory();
+
+        // Set and save properties
+        {
+            ProjectManager::TempProject tp (pm, projectFolder, false);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+
+            project->setProjectProperty ("myKey", "myValue");
+            CHECK (project->getProjectProperty ("myKey") == "myValue");
+            project->save();
+        }
+
+        // Reload and verify
+        {
+            ProjectManager::TempProject tp (pm, projectFolder, false);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+
+            CHECK (project->getProjectProperty ("myKey") == "myValue");
+        }
+
+        // Verify project_info.json exists
+        CHECK (projectFolder.getChildFile ("project_info.json").existsAsFile());
+
+        cleanup();
+    }
+
+    TEST_CASE ("FolderBasedProject: removeProjectItem returns false")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFolder = tempDir.getChildFile ("remove_test");
+        projectFolder.createDirectory();
+        projectFolder.getChildFile ("audio.wav").create();
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+        REQUIRE (project->getNumProjectItems() >= 1);
+
+        auto ref = project->getProjectItemRef (0);
+        CHECK_FALSE (project->removeProjectItem (ref, false));
+
+        cleanup();
+    }
+
+    TEST_CASE ("Project: isTemporary flag")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        SUBCASE ("file-based project")
+        {
+            auto projectFile = tempDir.getChildFile ("temp_test.tracktion");
+            ProjectManager::TempProject tp (pm, projectFile, true);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+
+            project->setTemporary (true);
+            CHECK (project->isTemporary());
+
+            project->setTemporary (false);
+            CHECK_FALSE (project->isTemporary());
+        }
+
+        SUBCASE ("folder-based project")
+        {
+            auto projectFolder = tempDir.getChildFile ("temp_test_folder");
+            projectFolder.createDirectory();
+
+            ProjectManager::TempProject tp (pm, projectFolder, false);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+
+            project->setTemporary (true);
+            CHECK (project->isTemporary());
+
+            project->setTemporary (false);
+            CHECK_FALSE (project->isTemporary());
+        }
+
+        cleanup();
+    }
+
+    TEST_CASE ("Project: setName")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        SUBCASE ("file-based project")
+        {
+            auto projectFile = tempDir.getChildFile ("name_test.tracktion");
+            ProjectManager::TempProject tp (pm, projectFile, true);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+
+            project->setName ("New Name");
+            CHECK (project->getName() == "New Name");
+
+            project->save();
+            project->refreshProjectPropertiesFromFile();
+            CHECK (project->getName() == "New Name");
+        }
+
+        cleanup();
+    }
+
+    TEST_CASE ("Project: isReadOnly")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFile = tempDir.getChildFile ("readonly_test.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        // A newly created project should not be read-only
+        CHECK_FALSE (project->isReadOnly());
+
+        cleanup();
+    }
+
+    TEST_CASE ("FolderBasedProject: no-op methods")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFolder = tempDir.getChildFile ("noop_test");
+        projectFolder.createDirectory();
+        projectFolder.getChildFile ("audio.wav").create();
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+        REQUIRE (project->getNumProjectItems() >= 1);
+
+        // moveProjectItem is a no-op
+        auto refBefore = project->getProjectItemRef (0);
+        project->moveProjectItem (0, 0);
+        CHECK (project->getProjectItemRef (0) == refBefore);
+
+        // redirectIDsFromProject is a no-op
+        project->redirectIDsFromProject (ProjectID (1), ProjectID (2));
+        CHECK (project->getNumProjectItems() >= 1);
+
+        // mergeArchiveContents is a no-op
+        project->mergeArchiveContents (juce::File());
+
+        // mergeOtherProjectIntoThis is a no-op
+        project->mergeOtherProjectIntoThis (juce::File());
+
+        // refreshFolderStructure is a no-op
+        project->refreshFolderStructure();
+
+        // createNewProjectId is a no-op
+        auto idBefore = project->getProjectID();
+        project->createNewProjectId();
+        CHECK (project->getProjectID() == idBefore);
+
+        cleanup();
+    }
+
+    TEST_CASE ("FolderBasedProject: getProjectItemRef out of bounds")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFolder = tempDir.getChildFile ("oob_test");
+        projectFolder.createDirectory();
+        projectFolder.getChildFile ("audio.wav").create();
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        // Out of bounds returns invalid ref
+        auto invalidRef = project->getProjectItemRef (-1);
+        CHECK_FALSE (invalidRef.isValid());
+
+        auto oobRef = project->getProjectItemRef (9999);
+        CHECK_FALSE (oobRef.isValid());
+
+        // Out of bounds getProjectItemAt returns nullptr
+        CHECK (project->getProjectItemAt (-1) == nullptr);
+        CHECK (project->getProjectItemAt (9999) == nullptr);
+
+        cleanup();
+    }
+
+    TEST_CASE ("Project: convertToFolderBasedProject with invalid project returns nullptr")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        // Create a folder-based project (not file-based)
+        auto projectFolder = tempDir.getChildFile ("invalid_convert_test");
+        projectFolder.createDirectory();
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        // Converting a folder-based project should return nullptr
+        // (it's already folder-based, getProjectFile() is a directory not a file)
+        auto result = convertToFolderBasedProject (*project);
+        CHECK (result == nullptr);
+
+        cleanup();
+    }
+
+    TEST_CASE ("ProjectUtilities: isConsolidated wrappers")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFile = tempDir.getChildFile ("consolidated_test.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        // A project with no external references should be consolidated
+        CHECK (ProjectUtilities::isConsolidated (*project));
+
+        // Create an edit with no external refs — should be consolidated
+        auto editItem = project->createNewEdit();
+        REQUIRE (editItem != nullptr);
+
+        {
+            auto edit = createEmptyEdit (engine, editItem->getSourceFile());
+            edit->setProjectItemRef (editItem->getProjectItemRef());
+            CHECK (EditFileOperations (*edit).save (false, true, false));
+        }
+
+        project->save();
+
+        {
+            auto edit = loadEditFromFile (engine, editItem->getSourceFile());
+            REQUIRE (edit != nullptr);
+            edit->setProjectItemRef (editItem->getProjectItemRef());
+            CHECK (ProjectUtilities::isConsolidated (*edit));
+        }
+
+        cleanup();
+    }
+
+    TEST_CASE ("FileBasedProject: moveProjectItem reorders items")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFile = tempDir.getChildFile ("move_test.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        // Create 3 items
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile != nullptr);
+
+        auto wavFile1 = project->getDefaultDirectory().getChildFile ("audio1.wav");
+        auto wavFile2 = project->getDefaultDirectory().getChildFile ("audio2.wav");
+
+        sinFile->getFile().copyFileTo (wavFile1);
+        sinFile->getFile().copyFileTo (wavFile2);
+
+        auto item1 = project->createNewItem (wavFile1, ProjectItem::waveItemType(),
+                                              "audio1", {}, ProjectItem::Category::none, false);
+        auto item2 = project->createNewItem (wavFile2, ProjectItem::waveItemType(),
+                                              "audio2", {}, ProjectItem::Category::none, false);
+        REQUIRE (item1 != nullptr);
+        REQUIRE (item2 != nullptr);
+
+        auto ref0 = project->getProjectItemRef (0);
+        auto ref1 = project->getProjectItemRef (1);
+
+        // Move item 0 to position 1
+        project->moveProjectItem (0, 1);
+
+        // After moving, item at position 0 should be what was at position 1
+        CHECK (project->getProjectItemRef (0) == ref1);
+        CHECK (project->getProjectItemRef (1) == ref0);
+
+        cleanup();
+    }
+
+    TEST_CASE ("Project: lockFile and unlockFile")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFile = tempDir.getChildFile ("lock_test.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        // Should be callable without error
+        project->lockFile();
+        project->unlockFile();
+
+        cleanup();
+    }
+
+    TEST_CASE ("Project: getSelectableDescription")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        SUBCASE ("file-based project")
+        {
+            auto projectFile = tempDir.getChildFile ("desc_sel_test.tracktion");
+            ProjectManager::TempProject tp (pm, projectFile, true);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+
+            CHECK (project->getSelectableDescription().isNotEmpty());
+        }
+
+        cleanup();
+    }
+
+    TEST_CASE ("FileBasedProject: redirectIDsFromProject")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFile = tempDir.getChildFile ("redirect_test.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        // Create an edit with actual content so loadEditForExamining works
+        auto editItem = project->createNewEdit();
+        REQUIRE (editItem != nullptr);
+
+        {
+            auto edit = createEmptyEdit (engine, editItem->getSourceFile());
+            edit->setProjectItemRef (editItem->getProjectItemRef());
+            CHECK (EditFileOperations (*edit).save (false, true, false));
+        }
+
+        project->save();
+
+        auto currentId = project->getProjectID();
+
+        // Redirect from a non-matching ID — should be a no-op (no items match)
+        auto fakeOldId = ProjectID (999999);
+        project->redirectIDsFromProject (fakeOldId, currentId);
+        project->save();
+
+        // Items should still have their original project ID
+        for (int i = 0; i < project->getNumProjectItems(); ++i)
+        {
+            auto ref = project->getProjectItemRef (i);
+
+            if (ref.isProjectItemID())
+                CHECK (ref.getProjectID() == currentId);
+        }
+
+        cleanup();
+    }
+
+    TEST_CASE ("FolderBasedProject: setName renames folder")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFolder = tempDir.getChildFile ("rename_test");
+        projectFolder.createDirectory();
+        projectFolder.getChildFile ("audio.wav").create();
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+        CHECK (project->getName() == "rename_test");
+
+        project->setName ("renamed_project");
+        CHECK (project->getName() == "renamed_project");
+
+        // The folder should have moved
+        CHECK (project->getProjectFile().getFileName() == "renamed_project");
+        CHECK (project->getProjectFile().isDirectory());
+
+        cleanup();
+    }
+
+    TEST_CASE ("FileBasedProject: removeProjectItem")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFile = tempDir.getChildFile ("remove_fb_test.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        // Create a wav file
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile != nullptr);
+
+        auto wavFile = project->getDefaultDirectory().getChildFile ("audio_to_remove.wav");
+        sinFile->getFile().copyFileTo (wavFile);
+
+        auto item = project->createNewItem (wavFile, ProjectItem::waveItemType(),
+                                             "audio_to_remove", {}, ProjectItem::Category::none, false);
+        REQUIRE (item != nullptr);
+
+        auto numBefore = project->getNumProjectItems();
+        auto ref = item->getProjectItemRef();
+
+        CHECK (project->removeProjectItem (ref, false));
+        CHECK (project->getNumProjectItems() == numBefore - 1);
+
+        // Source file should still exist (deleteSourceMaterial was false)
+        CHECK (wavFile.existsAsFile());
+
+        cleanup();
+    }
+
+    TEST_CASE ("FileBasedProject: getDirectoryForMedia creates subdirectories")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFile = tempDir.getChildFile ("media_dir_test.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        auto projectDir = project->getDefaultDirectory();
+
+        // getDirectoryForMedia should create the subdirectory
+        auto recordedDir = project->getDirectoryForMedia (ProjectItem::Category::recorded);
+        CHECK (recordedDir == projectDir.getChildFile ("Recorded"));
+        CHECK (recordedDir.isDirectory());
+
+        auto exportedDir = project->getDirectoryForMedia (ProjectItem::Category::exports);
+        CHECK (exportedDir == projectDir.getChildFile ("Exported"));
+        CHECK (exportedDir.isDirectory());
+
+        auto importedDir = project->getDirectoryForMedia (ProjectItem::Category::imported);
+        CHECK (importedDir == projectDir.getChildFile ("Imported"));
+        CHECK (importedDir.isDirectory());
+
+        auto renderedDir = project->getDirectoryForMedia (ProjectItem::Category::rendered);
+        CHECK (renderedDir == projectDir.getChildFile ("Rendered"));
+        CHECK (renderedDir.isDirectory());
+
+        auto frozenDir = project->getDirectoryForMedia (ProjectItem::Category::frozen);
+        CHECK (frozenDir == projectDir.getChildFile ("Frozen"));
+        CHECK (frozenDir.isDirectory());
+
+        auto archivedDir = project->getDirectoryForMedia (ProjectItem::Category::archives);
+        CHECK (archivedDir == projectDir.getChildFile ("Archived"));
+        CHECK (archivedDir.isDirectory());
+
+        auto videoDir = project->getDirectoryForMedia (ProjectItem::Category::video);
+        CHECK (videoDir == projectDir.getChildFile ("Movies"));
+        CHECK (videoDir.isDirectory());
+
+        // edit and none return the project dir itself
+        CHECK (project->getDirectoryForMedia (ProjectItem::Category::edit) == projectDir);
+        CHECK (project->getDirectoryForMedia (ProjectItem::Category::none) == projectDir);
+
+        cleanup();
+    }
+
+    TEST_CASE ("ProjectItem: getSelectableDescription")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFile = tempDir.getChildFile ("selectable_desc_test.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        // Create an edit item
+        auto editItem = project->createNewEdit();
+        REQUIRE (editItem != nullptr);
+        CHECK (editItem->getSelectableDescription().isNotEmpty());
+
+        // Create a wave item
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile != nullptr);
+
+        auto wavFile = project->getDefaultDirectory().getChildFile ("desc_audio.wav");
+        sinFile->getFile().copyFileTo (wavFile);
+
+        auto waveItem = project->createNewItem (wavFile, ProjectItem::waveItemType(),
+                                                 "desc_audio", {}, ProjectItem::Category::none, false);
+        REQUIRE (waveItem != nullptr);
+        CHECK (waveItem->getSelectableDescription().isNotEmpty());
+
+        cleanup();
+    }
+
+    TEST_CASE ("ProjectItem: isEdit, isWave, isMidi")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFolder = tempDir.getChildFile ("type_check_test");
+        projectFolder.createDirectory();
+
+        projectFolder.getChildFile ("song.tracktionedit").create();
+        projectFolder.getChildFile ("audio.wav").create();
+        projectFolder.getChildFile ("notes.mid").create();
+        projectFolder.getChildFile ("video.mp4").create();
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        auto editItem = project->getProjectItemForFile (projectFolder.getChildFile ("song.tracktionedit"));
+        REQUIRE (editItem != nullptr);
+        CHECK (editItem->isEdit());
+        CHECK_FALSE (editItem->isWave());
+        CHECK_FALSE (editItem->isMidi());
+        CHECK_FALSE (editItem->isVideo());
+
+        auto waveItem = project->getProjectItemForFile (projectFolder.getChildFile ("audio.wav"));
+        REQUIRE (waveItem != nullptr);
+        CHECK_FALSE (waveItem->isEdit());
+        CHECK (waveItem->isWave());
+        CHECK_FALSE (waveItem->isMidi());
+        CHECK_FALSE (waveItem->isVideo());
+
+        auto midiItem = project->getProjectItemForFile (projectFolder.getChildFile ("notes.mid"));
+        REQUIRE (midiItem != nullptr);
+        CHECK_FALSE (midiItem->isEdit());
+        CHECK_FALSE (midiItem->isWave());
+        CHECK (midiItem->isMidi());
+        CHECK_FALSE (midiItem->isVideo());
+
+        auto videoItem = project->getProjectItemForFile (projectFolder.getChildFile ("video.mp4"));
+        REQUIRE (videoItem != nullptr);
+        CHECK_FALSE (videoItem->isEdit());
+        CHECK_FALSE (videoItem->isWave());
+        CHECK_FALSE (videoItem->isMidi());
+        CHECK (videoItem->isVideo());
+
+        cleanup();
+    }
+
+    TEST_CASE ("FileBasedProject: getSelectableDescription returns Project")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFile = tempDir.getChildFile ("sel_desc_fb.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        // File-based project with write access should say "Project"
+        CHECK (project->getSelectableDescription() == TRANS("Project"));
+
+        cleanup();
+    }
+
+    TEST_CASE ("FileBasedProject: createDefaultFolders")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFile = tempDir.getChildFile ("default_folders_fb.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        project->createDefaultFolders();
+
+        auto projectDir = project->getDefaultDirectory();
+        CHECK (projectDir.getChildFile ("Archived").isDirectory());
+        CHECK (projectDir.getChildFile ("Exported").isDirectory());
+        CHECK (projectDir.getChildFile ("Imported").isDirectory());
+        CHECK (projectDir.getChildFile ("Recorded").isDirectory());
+        CHECK (projectDir.getChildFile ("Rendered").isDirectory());
+
+        cleanup();
+    }
+
+    TEST_CASE ("ProjectItem: setSourceFile and getSourceFile")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFile = tempDir.getChildFile ("source_file_test.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile != nullptr);
+
+        auto wavFile = project->getDefaultDirectory().getChildFile ("original.wav");
+        sinFile->getFile().copyFileTo (wavFile);
+
+        auto item = project->createNewItem (wavFile, ProjectItem::waveItemType(),
+                                             "original", {}, ProjectItem::Category::none, false);
+        REQUIRE (item != nullptr);
+        CHECK (item->getSourceFile() == wavFile);
+
+        // Move the file and update
+        auto newWavFile = project->getDefaultDirectory().getChildFile ("moved.wav");
+        wavFile.moveFileTo (newWavFile);
+
+        item->setSourceFile (newWavFile);
+        CHECK (item->getSourceFile() == newWavFile);
+
+        cleanup();
+    }
+
+    TEST_CASE ("ProjectItem: name and description")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFile = tempDir.getChildFile ("name_desc_test.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile != nullptr);
+
+        auto wavFile = project->getDefaultDirectory().getChildFile ("name_test.wav");
+        sinFile->getFile().copyFileTo (wavFile);
+
+        auto item = project->createNewItem (wavFile, ProjectItem::waveItemType(),
+                                             "original_name", "test desc",
+                                             ProjectItem::Category::none, false);
+        REQUIRE (item != nullptr);
+        CHECK (item->getName() == "original_name");
+        CHECK (item->getDescription() == "test desc");
+
+        item->setName ("new_name", {});
+        CHECK (item->getName() == "new_name");
+
+        item->setDescription ("new desc");
+        CHECK (item->getDescription() == "new desc");
+
+        cleanup();
+    }
+
+    TEST_CASE ("ProjectItem: category get/set")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFile = tempDir.getChildFile ("cat_test.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile != nullptr);
+
+        auto wavFile = project->getDefaultDirectory().getChildFile ("cat_audio.wav");
+        sinFile->getFile().copyFileTo (wavFile);
+
+        auto item = project->createNewItem (wavFile, ProjectItem::waveItemType(),
+                                             "cat_audio", {}, ProjectItem::Category::imported, false);
+        REQUIRE (item != nullptr);
+
+        CHECK (item->getCategory() == ProjectItem::Category::imported);
+
+        item->setCategory (ProjectItem::Category::recorded);
+        CHECK (item->getCategory() == ProjectItem::Category::recorded);
+
+        item->setCategory (ProjectItem::Category::exports);
+        CHECK (item->getCategory() == ProjectItem::Category::exports);
+
+        cleanup();
+    }
+
+    TEST_CASE ("ProjectItem: copyAllPropertiesFrom")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFile = tempDir.getChildFile ("copy_props_test.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile != nullptr);
+
+        auto wav1 = project->getDefaultDirectory().getChildFile ("src.wav");
+        auto wav2 = project->getDefaultDirectory().getChildFile ("dst.wav");
+        sinFile->getFile().copyFileTo (wav1);
+        sinFile->getFile().copyFileTo (wav2);
+
+        auto src = project->createNewItem (wav1, ProjectItem::waveItemType(),
+                                            "source_item", "source desc",
+                                            ProjectItem::Category::none, false);
+        auto dst = project->createNewItem (wav2, ProjectItem::waveItemType(),
+                                            "dest_item", "dest desc",
+                                            ProjectItem::Category::none, false);
+        REQUIRE (src != nullptr);
+        REQUIRE (dst != nullptr);
+
+        dst->copyAllPropertiesFrom (*src);
+        CHECK (dst->getName() == "source_item");
+        CHECK (dst->getDescription() == "source desc");
+
+        cleanup();
+    }
+
+    TEST_CASE ("ProjectItem: getFileName")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFile = tempDir.getChildFile ("filename_test.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile != nullptr);
+
+        auto wavFile = project->getDefaultDirectory().getChildFile ("my_audio.wav");
+        sinFile->getFile().copyFileTo (wavFile);
+
+        auto item = project->createNewItem (wavFile, ProjectItem::waveItemType(),
+                                             "my_audio", {}, ProjectItem::Category::none, false);
+        REQUIRE (item != nullptr);
+
+        CHECK (item->getFileName() == "my_audio.wav");
+
+        cleanup();
+    }
+
+    TEST_CASE ("ProjectItem: getLength and verifyLength")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFile = tempDir.getChildFile ("length_test.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile != nullptr);
+
+        auto wavFile = project->getDefaultDirectory().getChildFile ("length_audio.wav");
+        sinFile->getFile().copyFileTo (wavFile);
+
+        auto item = project->createNewItem (wavFile, ProjectItem::waveItemType(),
+                                             "length_audio", {}, ProjectItem::Category::none, false);
+        REQUIRE (item != nullptr);
+
+        // verifyLength should detect the length from the file
+        item->verifyLength();
+        CHECK (item->getLength() > 0.0);
+        CHECK (item->getLength() == doctest::Approx (2.0).epsilon (0.1));
+
+        cleanup();
+    }
+
+    TEST_CASE ("ProjectItem: getProjectName")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFile = tempDir.getChildFile ("projname_test.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        project->setName ("TestProjectName");
+
+        auto editItem = project->createNewEdit();
+        REQUIRE (editItem != nullptr);
+
+        CHECK (editItem->getProjectName() == "TestProjectName");
+
+        cleanup();
+    }
+
+    TEST_CASE ("ProjectItem: hasBeenDeleted")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        SUBCASE ("file-based project item after removal")
+        {
+            auto projectFile = tempDir.getChildFile ("deleted_test.tracktion");
+            ProjectManager::TempProject tp (pm, projectFile, true);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+
+            auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+            REQUIRE (sinFile != nullptr);
+
+            auto wavFile = project->getDefaultDirectory().getChildFile ("to_delete.wav");
+            sinFile->getFile().copyFileTo (wavFile);
+
+            auto item = project->createNewItem (wavFile, ProjectItem::waveItemType(),
+                                                 "to_delete", {}, ProjectItem::Category::none, false);
+            REQUIRE (item != nullptr);
+            CHECK_FALSE (item->hasBeenDeleted());
+
+            // Remove from project
+            auto ref = item->getProjectItemRef();
+            project->removeProjectItem (ref, false);
+
+            // Now it should be deleted
+            CHECK (item->hasBeenDeleted());
+        }
+
+        SUBCASE ("folder-based project item with existing file")
+        {
+            auto projectFolder = tempDir.getChildFile ("deleted_folder_test");
+            projectFolder.createDirectory();
+
+            auto wavFile = projectFolder.getChildFile ("audio.wav");
+            wavFile.create();
+
+            ProjectManager::TempProject tp (pm, projectFolder, false);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+
+            auto item = project->getProjectItemForFile (wavFile);
+            REQUIRE (item != nullptr);
+            CHECK_FALSE (item->hasBeenDeleted());
+        }
+
+        cleanup();
+    }
+
+    TEST_CASE ("ProjectItem: isForFile")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFile = tempDir.getChildFile ("isforfile_test.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile != nullptr);
+
+        auto wavFile = project->getDefaultDirectory().getChildFile ("test_match.wav");
+        sinFile->getFile().copyFileTo (wavFile);
+
+        auto item = project->createNewItem (wavFile, ProjectItem::waveItemType(),
+                                             "test_match", {}, ProjectItem::Category::none, false);
+        REQUIRE (item != nullptr);
+
+        CHECK (item->isForFile (wavFile));
+        CHECK_FALSE (item->isForFile (tempDir.getChildFile ("nonexistent.wav")));
+
+        cleanup();
+    }
+
+    TEST_CASE ("ProjectItem: isAbsolutePath")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFile = tempDir.getChildFile ("abspath_test.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile != nullptr);
+
+        // File inside project dir should use relative path
+        auto wavFile = project->getDefaultDirectory().getChildFile ("relative_test.wav");
+        sinFile->getFile().copyFileTo (wavFile);
+
+        auto item = project->createNewItem (wavFile, ProjectItem::waveItemType(),
+                                             "relative_test", {}, ProjectItem::Category::none, false);
+        REQUIRE (item != nullptr);
+        CHECK_FALSE (item->isAbsolutePath());
+
+        // File outside project dir should use absolute path
+        auto externalFile = tempDir.getParentDirectory().getChildFile ("external_test.wav");
+        sinFile->getFile().copyFileTo (externalFile);
+
+        auto extItem = project->createNewItem (externalFile, ProjectItem::waveItemType(),
+                                                "external_test", {}, ProjectItem::Category::none, false);
+        REQUIRE (extItem != nullptr);
+        CHECK (extItem->isAbsolutePath());
+
+        externalFile.deleteFile();
+        cleanup();
+    }
 }
 
 } // namespace tracktion::inline engine
