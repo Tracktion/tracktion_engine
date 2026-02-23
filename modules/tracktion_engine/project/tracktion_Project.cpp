@@ -85,7 +85,7 @@ juce::String Project::getSourcePathForFile (const juce::File& file) const
     auto projectDir = getDefaultDirectory();
 
     if (file.isAChildOf (projectDir))
-        return file.getRelativePathFrom (projectDir);
+        return file.getRelativePathFrom (projectDir).replaceCharacter ('\\', '/');
 
     return file.getFullPathName();
 }
