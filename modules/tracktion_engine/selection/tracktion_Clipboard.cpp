@@ -1713,14 +1713,76 @@ static ClipboardTempoTests clipboardTempoTests;
 
 //==============================================================================
 //==============================================================================
+static Clipboard::AutomationPoints::CurveSection buildCurveSection (AutomatableParameter& param,
+                                                                     TimeRange range,
+                                                                     int trackOffset,
+                                                                     int paramIdx)
+{
+    auto& curve = param.getCurve();
+    auto& ts = param.getEdit().tempoSequence;
+
+    Clipboard::AutomationPoints::CurveSection section;
+    section.trackOffset = trackOffset;
+    section.paramIndex = paramIdx;
+    section.valueRange = param.getValueRange();
+
+    if (auto plugin = param.getPlugin())
+        section.pluginName = plugin->getName();
+
+    section.paramID = param.paramID;
+
+    // Convert TimeRange to EditTimeRange for point extraction
+    EditTimeRange editRange (range);
+    bool pointAtStart = false;
+    bool pointAtEnd = false;
+
+    for (int i = 0; i < curve.getNumPoints(); ++i)
+    {
+        auto pt = curve.getPoint (i);
+
+        if (equals (pt.time, editRange.getStart(), ts)) pointAtStart = true;
+        if (equals (pt.time, editRange.getEnd(), ts))   pointAtEnd = true;
+
+        if (containsInclusive (editRange, pt.time, ts))
+        {
+            // Store time relative to range start
+            auto relativeTime = minus (pt.time, toDuration (editRange.getStart()), ts);
+            section.points.push_back ({ relativeTime, pt.value, pt.curve });
+        }
+    }
+
+    auto defaultValue = param.getCurrentBaseValue();
+
+    // Ensure we have points at start and end
+    if (! pointAtStart)
+        section.points.insert (section.points.begin(), { 0_tp, curve.getValueAt (editRange.getStart(), defaultValue), 0.0f });
+
+    if (! pointAtEnd)
+        section.points.push_back ({ toPosition (editRange.getLength()), curve.getValueAt (editRange.getEnd(), defaultValue), 0.0f });
+
+    std::sort (section.points.begin(), section.points.end());
+    return section;
+}
+
 Clipboard::AutomationPoints::AutomationPoints (AutomatableParameter& param, const AutomationCurve& curve, TimeRange range)
     : AutomationPoints (curve, param.getValueRange(), range, param.getCurrentBaseValue())
 {
+    // Populate plugin/param metadata into curves[0]
+    if (! curves.empty())
+    {
+        if (auto plugin = param.getPlugin())
+            curves[0].pluginName = plugin->getName();
+
+        curves[0].paramID = param.paramID;
+    }
 }
 
 Clipboard::AutomationPoints::AutomationPoints (const AutomationCurve& curve, juce::Range<float> limits, EditTimeRange range, float defaultValue)
-    : valueRange (limits)
+    : sourceDuration (toTime (range, getTempoSequence (curve.edit)).getLength())
 {
+    CurveSection section;
+    section.valueRange = limits;
+
     bool pointAtStart = false;
     bool pointAtEnd = false;
     auto& ts = getTempoSequence (curve.edit);
@@ -1736,18 +1798,94 @@ Clipboard::AutomationPoints::AutomationPoints (const AutomationCurve& curve, juc
         if (containsInclusive (range, pos, ts))
         {
             p.time = minus (pos, toDuration (range.getStart()), ts);
-            points.push_back (p);
+            section.points.push_back (p);
         }
     }
 
     if (! pointAtStart)
-        points.insert (points.begin(), AutomationCurve::AutomationPoint (0_tp, curve.getValueAt (range.getStart(), defaultValue), 0));
+        section.points.insert (section.points.begin(), AutomationCurve::AutomationPoint (0_tp, curve.getValueAt (range.getStart(), defaultValue), 0));
 
     if (! pointAtEnd)
-        points.push_back (AutomationCurve::AutomationPoint (toPosition (range.getLength()), curve.getValueAt (range.getEnd(), defaultValue), 0));
+        section.points.push_back (AutomationCurve::AutomationPoint (toPosition (range.getLength()), curve.getValueAt (range.getEnd(), defaultValue), 0));
+
+    curves.push_back (std::move (section));
 }
 
 Clipboard::AutomationPoints::~AutomationPoints() {}
+
+Clipboard::AutomationPoints::AutomationPoints (const juce::Array<Track*>& tracks, TimeRange range)
+    : sourceDuration (range.getLength())
+{
+    if (tracks.isEmpty())
+        return;
+
+    auto& edit = tracks.getFirst()->edit;
+    auto allTracks = getAllTracks (edit);
+    auto firstTrackIndex = edit.engine.getEngineBehaviour().getEditLimits().maxNumTracks;
+
+    // Find the first track index
+    for (auto track : tracks)
+        firstTrackIndex = std::min (firstTrackIndex, std::max (0, allTracks.indexOf (track)));
+
+    // Iterate through all tracks and their plugins/parameters
+    for (auto track : tracks)
+    {
+        int trackOffset = std::max (0, allTracks.indexOf (track) - firstTrackIndex);
+
+        for (auto plugin : track->pluginList)
+        {
+            for (int paramIdx = 0; paramIdx < plugin->getNumAutomatableParameters(); ++paramIdx)
+            {
+                auto param = plugin->getAutomatableParameter (paramIdx);
+
+                if (param->getCurve().getNumPoints() > 0)
+                    curves.push_back (buildCurveSection (*param, range, trackOffset, paramIdx));
+            }
+        }
+    }
+}
+
+static int findParameterIndex (AutomatableParameter& param)
+{
+    if (auto plugin = param.getPlugin())
+    {
+        for (int i = 0; i < plugin->getNumAutomatableParameters(); ++i)
+            if (plugin->getAutomatableParameter (i) == &param)
+                return i;
+    }
+
+    return 0;
+}
+
+Clipboard::AutomationPoints::AutomationPoints (const juce::Array<AutomatableParameter*>& params, TimeRange range)
+    : sourceDuration (range.getLength())
+{
+    if (params.isEmpty())
+        return;
+
+    auto& edit = params.getFirst()->getEdit();
+    auto allTracks = getAllTracks (edit);
+    auto firstTrackIndex = edit.engine.getEngineBehaviour().getEditLimits().maxNumTracks;
+
+    // Find the first track index among all parameters
+    for (auto param : params)
+        if (auto track = getTrackShowingParameter (*param))
+            firstTrackIndex = std::min (firstTrackIndex, std::max (0, allTracks.indexOf (track)));
+
+    // Copy each selected parameter's automation
+    for (auto param : params)
+    {
+        auto track = getTrackShowingParameter (*param);
+
+        if (track == nullptr)
+            continue;
+
+        int trackOffset = std::max (0, allTracks.indexOf (track) - firstTrackIndex);
+        int paramIdx = findParameterIndex (*param);
+
+        curves.push_back (buildCurveSection (*param, range, trackOffset, paramIdx));
+    }
+}
 
 bool Clipboard::AutomationPoints::pasteIntoEdit (const EditPastingOptions&) const
 {
@@ -1757,14 +1895,104 @@ bool Clipboard::AutomationPoints::pasteIntoEdit (const EditPastingOptions&) cons
 bool Clipboard::AutomationPoints::pasteAutomationCurve (AutomationCurve& targetCurve, juce::Range<float> targetValueRange, float targetDefaultValue,
                                                         std::optional<EditTimeRange> targetRange) const
 {
-    return pastePointsToCurve (points, valueRange,
+    if (curves.empty())
+        return false;
+
+    return pastePointsToCurve (curves[0].points, curves[0].valueRange,
                                targetCurve, targetValueRange, targetDefaultValue,
                                targetRange);
 }
 
 bool Clipboard::AutomationPoints::pasteAutomationCurve (AutomatableParameter& param, AutomationCurve& targetCurve, TimeRange targetRange) const
 {
-    return pastePointsToCurve (points, valueRange, param, targetCurve, targetRange);
+    if (curves.empty())
+        return false;
+
+    return pastePointsToCurve (curves[0].points, curves[0].valueRange, param, targetCurve, targetRange);
+}
+
+bool Clipboard::AutomationPoints::pasteAutomationCurveAtIndex (AutomatableParameter& param, AutomationCurve& targetCurve,
+                                                               TimeRange targetRange, size_t curveIndex) const
+{
+    if (curves.empty())
+        return false;
+
+    const auto& curveSection = curves[std::min (curveIndex, curves.size() - 1)];
+    return pastePointsToCurve (curveSection.points, curveSection.valueRange, param, targetCurve, targetRange);
+}
+
+bool Clipboard::AutomationPoints::pasteIntoTracks (const juce::Array<Track*>& targetTracks, TimePosition pasteStartTime) const
+{
+    if (curves.empty() || targetTracks.isEmpty())
+        return false;
+
+    auto& edit = targetTracks.getFirst()->edit;
+    auto allTracks = getAllTracks (edit);
+    auto firstTargetTrackIndex = edit.engine.getEngineBehaviour().getEditLimits().maxNumTracks;
+
+    // Find the first target track index
+    for (auto track : targetTracks)
+        firstTargetTrackIndex = std::min (firstTargetTrackIndex, std::max (0, allTracks.indexOf (track)));
+
+    bool anythingPasted = false;
+
+    // Group curves by trackOffset to process each track's parameters together
+    std::map<int, std::vector<const CurveSection*>> curvesByTrack;
+    for (const auto& curve : curves)
+        curvesByTrack[curve.trackOffset].push_back (&curve);
+
+    for (const auto& [trackOffset, trackCurves] : curvesByTrack)
+    {
+        // Find the target track at this offset
+        int targetTrackIdx = firstTargetTrackIndex + trackOffset;
+        Track* targetTrack = nullptr;
+
+        for (auto track : targetTracks)
+        {
+            if (allTracks.indexOf (track) == targetTrackIdx)
+            {
+                targetTrack = track;
+                break;
+            }
+        }
+
+        if (targetTrack == nullptr)
+            continue; // Skip curves for tracks that don't exist in target selection
+
+        // Match parameters by index order within each plugin
+        std::map<juce::String, std::vector<const CurveSection*>> curvesByPlugin;
+
+        for (auto curve : trackCurves)
+            curvesByPlugin[curve->pluginName].push_back (curve);
+
+        for (auto plugin : targetTrack->pluginList)
+        {
+            if (auto it = curvesByPlugin.find (plugin->getName()); it != curvesByPlugin.end())
+            {
+                for (auto curveSection : it->second)
+                {
+                    if (curveSection->paramIndex >= plugin->getNumAutomatableParameters())
+                        continue;
+
+                    auto param = plugin->getAutomatableParameter (curveSection->paramIndex);
+                    auto& targetCurve = param->getCurve();
+                    auto targetValueRange = param->getValueRange();
+                    auto defaultValue = param->getCurrentBaseValue();
+
+                    TimeRange targetRange (pasteStartTime, pasteStartTime + sourceDuration);
+
+                    if (pastePointsToCurve (curveSection->points, curveSection->valueRange,
+                                            targetCurve, targetValueRange, defaultValue,
+                                            targetRange))
+                    {
+                        anythingPasted = true;
+                    }
+                }
+            }
+        }
+    }
+
+    return anythingPasted;
 }
 
 //==============================================================================

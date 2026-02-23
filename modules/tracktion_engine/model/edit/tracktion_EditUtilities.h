@@ -265,6 +265,11 @@ Modifier::Ptr findModifierForID (const RackType&, EditItemID);
 /** Returns the Track containing a Modifier. */
 Track* getTrackContainingModifier (const Edit&, const Modifier::Ptr&);
 
+/** Returns the Track that is currently showing an AutomatableParameter's curve.
+    First tries param.getTrack(), then searches all tracks for one displaying this parameter.
+*/
+Track* getTrackShowingParameter (AutomatableParameter&);
+
 
 //==============================================================================
 // Macros

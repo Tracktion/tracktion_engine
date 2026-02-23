@@ -1189,6 +1189,19 @@ Track* getTrackContainingModifier (const Edit& edit, const Modifier::Ptr& m)
     });
 }
 
+Track* getTrackShowingParameter (AutomatableParameter& param)
+{
+    // First try the standard way
+    if (auto track = param.getTrack())
+        return track;
+
+    // Search all tracks for one that's currently showing this parameter
+    return findTrackForPredicate (param.getEdit(), [&param] (Track& t)
+    {
+        return t.getCurrentlyShownAutoParam() == &param;
+    });
+}
+
 //==============================================================================
 juce::Array<MacroParameterList*> getAllMacroParameterLists (const Edit& edit)
 {

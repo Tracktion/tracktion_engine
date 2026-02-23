@@ -1102,6 +1102,102 @@ TEST_SUITE("tracktion_engine")
         }
     }
 
+    TEST_CASE ("Clipboard::AutomationPoints")
+    {
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto context = AutomationCurveListTestContext::create (engine);
+
+        context->edit->ensureNumberOfAudioTracks (2);
+        auto audioTracks = getAudioTracks (*context->edit);
+        auto at1 = audioTracks[0];
+        auto at2 = audioTracks[1];
+
+        auto volParam1 = at1->getVolumePlugin()->volParam;
+        auto panParam1 = at1->getVolumePlugin()->panParam;
+        auto volParam2 = at2->getVolumePlugin()->volParam;
+
+        // Add some automation points to volParam1
+        auto& curve1 = volParam1->getCurve();
+        curve1.addPoint (0_tp, 0.0f, 0.0f, nullptr);
+        curve1.addPoint (1_tp, 1.0f, 0.0f, nullptr);
+        curve1.addPoint (2_tp, 0.5f, 0.0f, nullptr);
+
+        SUBCASE ("Single-curve constructor populates curves vector")
+        {
+            // Test the AutomatableParameter& constructor
+            Clipboard::AutomationPoints content (*volParam1, curve1, TimeRange (0_tp, 2_tp));
+
+            // Verify curves[0] is populated (not legacy fields)
+            CHECK_EQ (content.curves.size(), 1);
+            CHECK_EQ (content.curves[0].points.size(), 3);
+            CHECK_EQ (content.curves[0].valueRange, volParam1->getValueRange());
+            CHECK_EQ (content.curves[0].paramID, volParam1->paramID);
+        }
+
+        SUBCASE ("Empty AutomationPoints returns false on paste")
+        {
+            // Create empty content by constructing with empty track array
+            juce::Array<Track*> emptyTracks;
+            Clipboard::AutomationPoints emptyContent (emptyTracks, TimeRange (0_tp, 2_tp));
+
+            CHECK (emptyContent.curves.empty());
+
+            // All paste methods should return false for empty content
+            auto& curve2 = volParam2->getCurve();
+            CHECK_FALSE (emptyContent.pasteAutomationCurve (*volParam2, curve2, TimeRange (0_tp, 2_tp)));
+            CHECK_FALSE (emptyContent.pasteAutomationCurveAtIndex (*volParam2, curve2, TimeRange (0_tp, 2_tp), 0));
+
+            juce::Array<Track*> targetTracks;
+            targetTracks.add (at2);
+            CHECK_FALSE (emptyContent.pasteIntoTracks (targetTracks, 0_tp));
+        }
+
+        SUBCASE ("pasteAutomationCurveAtIndex clamps out-of-range index")
+        {
+            Clipboard::AutomationPoints content (*volParam1, curve1, TimeRange (0_tp, 2_tp));
+            CHECK_EQ (content.curves.size(), 1);
+
+            auto& curve2 = volParam2->getCurve();
+            auto& curve2b = at2->getVolumePlugin()->panParam->getCurve();
+
+            // Both index 0 and index 100 should paste from curves[0]
+            bool result0 = content.pasteAutomationCurveAtIndex (*volParam2, curve2, TimeRange (0_tp, 2_tp), 0);
+            bool result100 = content.pasteAutomationCurveAtIndex (*at2->getVolumePlugin()->panParam, curve2b, TimeRange (0_tp, 2_tp), 100);
+
+            CHECK (result0);
+            CHECK (result100);
+
+            // Both should have pasted something (exact counts depend on mergeCurve behavior)
+            CHECK (curve2.getNumPoints() > 0);
+            CHECK (curve2b.getNumPoints() > 0);
+        }
+
+        SUBCASE ("Multi-parameter constructor populates multiple curves")
+        {
+            // Add automation to panParam1 as well
+            auto& panCurve1 = panParam1->getCurve();
+            panCurve1.addPoint (0_tp, 0.0f, 0.0f, nullptr);
+            panCurve1.addPoint (1_tp, 0.5f, 0.0f, nullptr);
+
+            juce::Array<AutomatableParameter*> params;
+            params.add (volParam1.get());
+            params.add (panParam1.get());
+
+            Clipboard::AutomationPoints content (params, TimeRange (0_tp, 2_tp));
+
+            // Should have 2 curves with correct metadata
+            CHECK_EQ (content.curves.size(), 2);
+            CHECK_EQ (content.curves[0].valueRange, volParam1->getValueRange());
+            CHECK_EQ (content.curves[1].valueRange, panParam1->getValueRange());
+
+            // pasteAutomationCurve should succeed (uses curves[0])
+            auto& curve2 = volParam2->getCurve();
+            bool result = content.pasteAutomationCurve (*volParam2, curve2, TimeRange (0_tp, 2_tp));
+            CHECK (result);
+            CHECK (curve2.getNumPoints() > 0);
+        }
+    }
+
     TEST_CASE ("AutomationCurveList: Clip plugin")
     {
         auto& engine = *tracktion::engine::Engine::getEngines()[0];

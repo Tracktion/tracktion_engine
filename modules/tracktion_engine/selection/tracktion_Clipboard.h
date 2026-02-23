@@ -162,17 +162,38 @@ public:
     {
         AutomationPoints (const AutomationCurve&, juce::Range<float>, EditTimeRange, float defaultValue);
         AutomationPoints (AutomatableParameter&, const AutomationCurve&, TimeRange);
+        /// Multi-track constructor: copies automation from all parameters on the given tracks within the time range.
+        AutomationPoints (const juce::Array<Track*>&, TimeRange);
+        /// Multi-parameter constructor: copies automation from specific parameters within the time range.
+        AutomationPoints (const juce::Array<AutomatableParameter*>&, TimeRange);
         ~AutomationPoints() override;
 
         using ContentType::pasteIntoEdit;
         bool pasteIntoEdit (const EditPastingOptions&) const override;
 
-        bool pasteAutomationCurve (AutomationCurve& targetCurve, juce::Range<float> targetValueRange, float targetDefaultValue,
-                                   std::optional<EditTimeRange> targetRange) const;
+        /// Multi-curve paste: pastes automation curves to target tracks by position offset.
+        bool pasteIntoTracks (const juce::Array<Track*>& targetTracks, TimePosition pasteStartTime) const;
+
+        bool pasteAutomationCurve (AutomationCurve& targetCurve, juce::Range<float> targetValueRange,
+                                   float targetDefaultValue, std::optional<EditTimeRange> targetRange) const;
+
         bool pasteAutomationCurve (AutomatableParameter&, AutomationCurve&, TimeRange targetRange) const;
 
-        std::vector<AutomationCurve::AutomationPoint> points;
-        juce::Range<float> valueRange;
+        /// Pastes a specific curve by index to the target parameter. Used when multi-curve content falls back to per-param paste.
+        bool pasteAutomationCurveAtIndex (AutomatableParameter&, AutomationCurve&, TimeRange targetRange, size_t curveIndex) const;
+
+        /// Internal structure representing a single curve's data.
+        struct CurveSection
+        {
+            int trackOffset = 0;
+            int paramIndex = 0;
+            juce::String pluginName, paramID;
+            std::vector<AutomationCurve::AutomationPoint> points;
+            juce::Range<float> valueRange;
+        };
+
+        std::vector<CurveSection> curves;
+        TimeDuration sourceDuration;
     };
 
     struct MIDIEvents  : public ContentType
