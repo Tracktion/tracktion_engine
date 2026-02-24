@@ -42,6 +42,9 @@ public:
     /** Inserts space in to a sequence, shifting all PitchSettings. */
     void insertSpaceIntoSequence (TimePosition, TimeDuration amountOfSpace, bool snapToBeat);
 
+    /** Removes a region from the sequence, shifting subsequent PitchSettings. */
+    void deleteRegion (TimeRange);
+
     void sortEvents();
 
     juce::ValueTree state;

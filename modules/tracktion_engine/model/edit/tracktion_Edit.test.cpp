@@ -49,6 +49,180 @@ TEST_SUITE("tracktion_engine")
         // Point should move from 5s to 7s
         CHECK (curve.getPointTime (0) == 7_tp);
     }
+
+    TEST_CASE ("insertSpaceIntoEdit: moves global macro parameter automation")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine, Edit::EditRole::forRendering);
+        auto um = &edit->getUndoManager();
+
+        auto& globalMacros = edit->getGlobalMacros();
+        auto macroParam = globalMacros.getMacroParameterListForWriting().createMacroParameter();
+        REQUIRE (macroParam != nullptr);
+
+        auto& curve = macroParam->getCurve();
+        curve.addPoint (5_tp, 0.5f, 0.0f, um);
+
+        CHECK (curve.getPointTime (0) == 5_tp);
+
+        insertSpaceIntoEdit (*edit, { 2_tp, 2_td });
+
+        // Point should move from 5s to 7s
+        CHECK (curve.getPointTime (0) == 7_tp);
+    }
+
+    TEST_CASE ("insertSpaceIntoEdit: moves rack plugin automation")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine, Edit::EditRole::forRendering);
+        auto um = &edit->getUndoManager();
+
+        auto rackType = edit->getRackList().addNewRack();
+        auto volumePlugin = edit->getPluginCache().createNewPlugin (VolumeAndPanPlugin::xmlTypeName, {});
+        rackType->addPlugin (volumePlugin, {}, true);
+
+        auto volAndPan = dynamic_cast<VolumeAndPanPlugin*> (volumePlugin.get());
+        REQUIRE (volAndPan != nullptr);
+
+        auto volParam = volAndPan->volParam.get();
+        auto& curve = volParam->getCurve();
+        curve.addPoint (5_tp, 0.5f, 0.0f, um);
+
+        CHECK (curve.getPointTime (0) == 5_tp);
+
+        insertSpaceIntoEdit (*edit, { 2_tp, 2_td });
+
+        // Point should move from 5s to 7s
+        CHECK (curve.getPointTime (0) == 7_tp);
+    }
+
+    TEST_CASE ("deleteRegionOfTracks: removes and shifts master volume automation")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine, Edit::EditRole::forRendering);
+        auto um = &edit->getUndoManager();
+
+        auto masterVol = edit->getMasterVolumePlugin();
+        REQUIRE (masterVol != nullptr);
+
+        auto volParam = masterVol->volParam.get();
+        REQUIRE (volParam != nullptr);
+
+        auto& curve = volParam->getCurve();
+        // Add points: point within deleted region will be removed, point after will shift
+        curve.addPoint (2_tp, 0.5f, 0.0f, um);
+        curve.addPoint (10_tp, 0.5f, 0.0f, um);
+
+        CHECK (curve.getNumPoints() == 2);
+
+        // Delete region from 3s to 6s
+        deleteRegionOfTracks (*edit, { 3_tp, 6_tp }, false, CloseGap::yes, nullptr);
+
+        CHECK (curve.getNumPoints() == 2);
+        CHECK (curve.getPointTime (0) == 2_tp);
+        // Point at 10s should shift back by 3s to 7s
+        CHECK (curve.getPointTime (1) == 7_tp);
+    }
+
+    TEST_CASE ("deleteRegionOfTracks: removes and shifts global macro automation")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine, Edit::EditRole::forRendering);
+        auto um = &edit->getUndoManager();
+
+        auto& globalMacros = edit->getGlobalMacros();
+        auto macroParam = globalMacros.getMacroParameterListForWriting().createMacroParameter();
+        REQUIRE (macroParam != nullptr);
+
+        auto& curve = macroParam->getCurve();
+        // Use same values to avoid boundary preservation points being added
+        curve.addPoint (2_tp, 0.5f, 0.0f, um);
+        curve.addPoint (10_tp, 0.5f, 0.0f, um);
+
+        CHECK (curve.getNumPoints() == 2);
+
+        // Delete region from 3s to 6s
+        deleteRegionOfTracks (*edit, { 3_tp, 6_tp }, false, CloseGap::yes, nullptr);
+
+        CHECK (curve.getNumPoints() == 2);
+        CHECK (curve.getPointTime (0) == 2_tp);
+        CHECK (curve.getPointTime (1) == 7_tp);
+    }
+
+    TEST_CASE ("deleteRegionOfTracks: removes and shifts rack plugin automation")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine, Edit::EditRole::forRendering);
+        auto um = &edit->getUndoManager();
+
+        auto rackType = edit->getRackList().addNewRack();
+        auto volumePlugin = edit->getPluginCache().createNewPlugin (VolumeAndPanPlugin::xmlTypeName, {});
+        rackType->addPlugin (volumePlugin, {}, true);
+
+        auto volAndPan = dynamic_cast<VolumeAndPanPlugin*> (volumePlugin.get());
+        REQUIRE (volAndPan != nullptr);
+
+        auto volParam = volAndPan->volParam.get();
+        auto& curve = volParam->getCurve();
+        // Use same values to avoid boundary preservation points being added
+        curve.addPoint (2_tp, 0.5f, 0.0f, um);
+        curve.addPoint (10_tp, 0.5f, 0.0f, um);
+
+        CHECK (curve.getNumPoints() == 2);
+
+        deleteRegionOfTracks (*edit, { 3_tp, 6_tp }, false, CloseGap::yes, nullptr);
+
+        CHECK (curve.getNumPoints() == 2);
+        CHECK (curve.getPointTime (0) == 2_tp);
+        CHECK (curve.getPointTime (1) == 7_tp);
+    }
+
+    TEST_CASE ("deleteRegionOfTracks: shifts pitch sequence")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine, Edit::EditRole::forRendering);
+
+        auto& pitchSeq = edit->pitchSequence;
+
+        // Add pitch changes at various positions
+        pitchSeq.insertPitch (2_tp);
+        pitchSeq.insertPitch (5_tp);
+        pitchSeq.insertPitch (10_tp);
+
+        const int numPitchesBefore = pitchSeq.getNumPitches();
+        CHECK (numPitchesBefore == 4); // Including initial pitch at 0
+
+        // Delete region from 3s to 6s
+        deleteRegionOfTracks (*edit, { 3_tp, 6_tp }, false, CloseGap::yes, nullptr);
+
+        // Pitch at 5s should be removed, pitch at 10s should shift back
+        CHECK (pitchSeq.getNumPitches() == 3);
+    }
+
+    TEST_CASE ("deleteRegionOfTracks: CloseGap::no does not shift automation")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine, Edit::EditRole::forRendering);
+        auto um = &edit->getUndoManager();
+
+        auto masterVol = edit->getMasterVolumePlugin();
+        REQUIRE (masterVol != nullptr);
+
+        auto volParam = masterVol->volParam.get();
+        auto& curve = volParam->getCurve();
+        curve.addPoint (2_tp, 0.3f, 0.0f, um);
+        curve.addPoint (10_tp, 0.7f, 0.0f, um);
+
+        CHECK (curve.getNumPoints() == 2);
+
+        // Delete region but don't close gap
+        deleteRegionOfTracks (*edit, { 3_tp, 6_tp }, false, CloseGap::no, nullptr);
+
+        // Points should remain unchanged
+        CHECK (curve.getNumPoints() == 2);
+        CHECK (curve.getPointTime (0) == 2_tp);
+        CHECK (curve.getPointTime (1) == 10_tp);
+    }
 }
 
 //==============================================================================

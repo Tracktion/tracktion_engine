@@ -225,6 +225,33 @@ void PitchSequence::insertSpaceIntoSequence (TimePosition time, TimeDuration amo
         movePitchStart (*getPitch (i), BeatDuration::fromBeats (beatsToInsert), snapToBeat);
 }
 
+void PitchSequence::deleteRegion (TimeRange range)
+{
+    auto& ts = getEdit().tempoSequence;
+    const auto beatRange = ts.toBeats (range);
+
+    // Remove pitch settings within range (but never the first one at index 0)
+    for (int i = getNumPitches(); --i > 0;)
+    {
+        if (auto p = getPitch (i))
+        {
+            auto pitchBeat = p->getStartBeat();
+
+            if (pitchBeat >= beatRange.getStart() && pitchBeat < beatRange.getEnd())
+                state.removeChild (p->state, getUndoManager());
+        }
+    }
+
+    // Move subsequent pitches backward by range length
+    const bool snapToBeat = false;
+    const auto startTime = ts.toTime (beatRange.getStart());
+    const auto deltaBeats = -beatRange.getLength();
+    const int startIndex = indexOfNextPitchAt (startTime);
+
+    for (int i = startIndex; i < getNumPitches(); ++i)
+        movePitchStart (*getPitch (i), deltaBeats, snapToBeat);
+}
+
 void PitchSequence::sortEvents()
 {
     struct PitchSorter

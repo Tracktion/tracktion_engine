@@ -10,6 +10,50 @@
 
 namespace tracktion::inline engine {
 
+namespace
+{
+    struct EditSpaceTargets
+    {
+        std::vector<ClipTrack*> clipTracks;
+        std::vector<AutomatableEditItem*> automatableItems;
+
+        EditSpaceTargets (Edit& edit, const juce::Array<Track*>& onlyTheseTracks)
+        {
+            const bool allTracks = onlyTheseTracks.isEmpty();
+
+            if (allTracks)
+            {
+                for (auto ct : getTracksOfType<ClipTrack> (edit, true))
+                    clipTracks.push_back (ct);
+
+                automatableItems = getAllAutomatableEditItems (edit);
+            }
+            else
+            {
+                for (auto t : onlyTheseTracks)
+                {
+                    if (auto ct = dynamic_cast<ClipTrack*> (t))
+                        clipTracks.push_back (ct);
+
+                    for (auto sub : t->getAllSubTracks (true))
+                        if (auto ct = dynamic_cast<ClipTrack*> (sub))
+                            clipTracks.push_back (ct);
+
+                    auto trackItems = t->getAllAutomatableEditItems();
+                    automatableItems.insert (automatableItems.end(), trackItems.begin(), trackItems.end());
+                }
+            }
+
+            // Deduplicate
+            std::sort (clipTracks.begin(), clipTracks.end());
+            clipTracks.erase (std::unique (clipTracks.begin(), clipTracks.end()), clipTracks.end());
+
+            std::sort (automatableItems.begin(), automatableItems.end());
+            automatableItems.erase (std::unique (automatableItems.begin(), automatableItems.end()), automatableItems.end());
+        }
+    };
+}
+
 Project::Ptr getProjectForEdit (const Edit& e)
 {
     return e.engine.getProjectManager().getProject (e);
@@ -48,38 +92,7 @@ void insertSpaceIntoEdit (Edit& edit, TimeRange timeRange, const juce::Array<Tra
     const auto time = timeRange.getStart();
     const auto length = timeRange.getLength();
 
-    std::vector<ClipTrack*> clipTracks;
-    std::vector<AutomatableEditItem*> automatableItems;
-
-    if (allTracks)
-    {
-        for (auto ct : getTracksOfType<ClipTrack> (edit, true))
-            clipTracks.push_back (ct);
-
-        automatableItems = getAllAutomatableEditItems (edit);
-    }
-    else
-    {
-        for (auto t : onlyTheseTracks)
-        {
-            if (auto ct = dynamic_cast<ClipTrack*> (t))
-                clipTracks.push_back (ct);
-
-            for (auto sub : t->getAllSubTracks (true))
-                if (auto ct = dynamic_cast<ClipTrack*> (sub))
-                    clipTracks.push_back (ct);
-
-            auto trackItems = t->getAllAutomatableEditItems();
-            automatableItems.insert (automatableItems.end(), trackItems.begin(), trackItems.end());
-        }
-    }
-
-    // Deduplicate
-    std::sort (clipTracks.begin(), clipTracks.end());
-    clipTracks.erase (std::unique (clipTracks.begin(), clipTracks.end()), clipTracks.end());
-
-    std::sort (automatableItems.begin(), automatableItems.end());
-    automatableItems.erase (std::unique (automatableItems.begin(), automatableItems.end()), automatableItems.end());
+    EditSpaceTargets targets (edit, onlyTheseTracks);
 
     if (allTracks && doTempoTrackFirst)
     {
@@ -87,10 +100,10 @@ void insertSpaceIntoEdit (Edit& edit, TimeRange timeRange, const juce::Array<Tra
         edit.tempoSequence.insertSpaceIntoSequence (time, length, false);
     }
 
-    for (auto ct : clipTracks)
+    for (auto ct : targets.clipTracks)
         ct->insertSpace (time, length);
 
-    for (auto item : automatableItems)
+    for (auto item : targets.automatableItems)
         for (auto param : item->getAutomatableParameters())
             param->getCurve().insertSpace (*param, time, length);
 
@@ -460,70 +473,43 @@ void deleteRegionOfTracks (Edit& edit, TimeRange rangeToDelete, bool onlySelecte
         selectionManager->deselectAll();
     }
 
-    Plugin::Array pluginsInRacks;
+    EditSpaceTargets targets (edit, onlySelected ? tracks : juce::Array<Track*>{});
 
-    auto addPluginsInRack = [&] (RackInstance& r)
+    for (auto ct : targets.clipTracks)
     {
-        if (r.type != nullptr)
-            for (auto p : r.type->getPlugins())
-                pluginsInRacks.addIfNotAlreadyThere (p);
-    };
+        ct->deleteRegion (rangeToDelete, selectionManager);
 
-    auto removeAutomationRangeOfPlugin = [&] (Plugin& p)
-    {
-        for (auto param : p.getAutomatableParameters())
-            param->getCurve().removeRegionAndCloseGap (*param, rangeToDelete, &edit.getUndoManager());
-    };
+        // Remove any tiny clips that might be left over
+        juce::Array<Clip*> clipsToRemove;
 
-    auto removeAutomationRangeFindingRackPlugins = [&] (Track& t)
-    {
-        for (auto p : t.pluginList)
+        for (auto& c : ct->getClips())
+            if (c->getPosition().getLength() < TimeDuration::fromSeconds (0.0001))
+                clipsToRemove.add (c);
+
+        for (auto c : clipsToRemove)
+            c->removeFromParent();
+
+        if (closeGap == CloseGap::yes)
         {
-            removeAutomationRangeOfPlugin (*p);
-
-            // find all the plugins in racks
-            if (auto rf = dynamic_cast<RackInstance*> (p))
-                addPluginsInRack (*rf);
-        }
-    };
-
-    for (int i = tracks.size(); --i >= 0;)
-    {
-        if (auto t = dynamic_cast<ClipTrack*> (tracks[i]))
-        {
-            t->deleteRegion (rangeToDelete, selectionManager);
-
-            // Remove any tiny clips that might be left over
-            juce::Array<Clip*> clipsToRemove;
-
-            for (auto& c : t->getClips())
-                if (c->getPosition().getLength() < TimeDuration::fromSeconds (0.0001))
-                    clipsToRemove.add (c);
-
-            for (auto c : clipsToRemove)
-                c->removeFromParent();
-
-            if (closeGap == CloseGap::yes)
-            {
-                for (auto& c : t->getClips())
-                    if (c->getPosition().getStart() > rangeToDelete.getCentre())
-                        c->setStart (c->getPosition().getStart() - rangeToDelete.getLength(), false, true);
-
-                removeAutomationRangeFindingRackPlugins (*t);
-            }
-        }
-        else if (auto ft = dynamic_cast<FolderTrack*> (tracks[i]))
-        {
-            removeAutomationRangeFindingRackPlugins (*ft);
+            for (auto& c : ct->getClips())
+                if (c->getPosition().getStart() > rangeToDelete.getCentre())
+                    c->setStart (c->getPosition().getStart() - rangeToDelete.getLength(), false, true);
         }
     }
 
-    for (auto p : pluginsInRacks)
-        removeAutomationRangeOfPlugin (*p);
+    if (closeGap == CloseGap::yes)
+    {
+        for (auto item : targets.automatableItems)
+            for (auto param : item->getAutomatableParameters())
+                param->getCurve().removeRegionAndCloseGap (*param, rangeToDelete, &edit.getUndoManager());
+    }
 
-    // N.B. Delete tempo last
+    // N.B. Delete tempo/pitch last
     if (! onlySelected || tracks.contains (edit.getTempoTrack()))
+    {
+        edit.pitchSequence.deleteRegion (rangeToDelete);
         edit.tempoSequence.deleteRegion (rangeToDelete);
+    }
 }
 
 void moveSelectedClips (const SelectableList& selectedObjectsIn, Edit& edit, MoveClipAction mode, bool automationLocked)
