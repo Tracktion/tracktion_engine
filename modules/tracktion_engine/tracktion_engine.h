@@ -71,9 +71,9 @@
  #include "../3rd_party/choc/choc/containers/choc_NonAllocatingStableSort.h"
  #include "../3rd_party/choc/choc/containers/choc_ZipFile.h"
  #include "../3rd_party/choc/choc/text/choc_Files.h"
- #include "../3rd_party/choc/containers/choc_Value.h"
- #include "../3rd_party/choc/containers/choc_SmallVector.h"
- #include "../3rd_party/choc/text/choc_JSON.h"
+ #include "../3rd_party/choc/choc/containers/choc_Value.h"
+ #include "../3rd_party/choc/choc/containers/choc_SmallVector.h"
+ #include "../3rd_party/choc/choc/text/choc_JSON.h"
 #endif
 
 #include "../3rd_party/expected/expected.hpp"
