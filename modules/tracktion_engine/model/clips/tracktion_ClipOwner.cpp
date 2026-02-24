@@ -395,6 +395,21 @@ Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
                 }
             }
 
+            // Auto-detect ARA plugin from iXML chunks for newly added audio clips
+            if (auto acb = dynamic_cast<AudioClipBase*> (newClip))
+            {
+                if (acb->araPluginDescription.get().name.isEmpty())
+                {
+                    auto araResult = detectARAFromIXMLChunks (edit.engine, acb->getAudioFile().getFile());
+
+                    if (araResult.isValid())
+                    {
+                        acb->setTimeStretchMode (TimeStretcher::ara);
+                        acb->araPluginDescription.setValue (araResult.pluginDescription, nullptr);
+                    }
+                }
+            }
+
             return newClip;
         }
     }

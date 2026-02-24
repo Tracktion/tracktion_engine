@@ -1055,13 +1055,15 @@ private:
 class PlaybackRegionWrapper
 {
 public:
+    /** Creates a playback region covering the whole clip (non-looping case). */
     PlaybackRegionWrapper (ARADocument& d,
                            AudioClipBase& audioClip,
                            const ARAFactory& factory,
                            const AudioModificationWrapper& audioModification)
       : doc (d),
         clip (audioClip),
-        flags (factory.supportedPlaybackTransformationFlags)
+        flags (factory.supportedPlaybackTransformationFlags),
+        audioModificationRef (audioModification.audioModificationRef)
     {
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
@@ -1072,7 +1074,38 @@ public:
         updatePlaybackRegionProperties();
         auto playbackRegionProperties = getPlaybackRegionProperties();
         playbackRegionRef = doc.dci->createPlaybackRegion (doc.dcRef,
-                                                           audioModification.audioModificationRef,
+                                                           audioModificationRef,
+                                                           toHostRef (&doc.edit),
+                                                           &playbackRegionProperties);
+    }
+
+    /** Creates a playback region with explicit time ranges (for loop iterations). */
+    PlaybackRegionWrapper (ARADocument& d,
+                           AudioClipBase& audioClip,
+                           const ARAFactory& factory,
+                           const AudioModificationWrapper& audioModification,
+                           double modStartSecs, double modDurationSecs,
+                           double playbackStartSecs, double playbackDurationSecs)
+      : doc (d),
+        clip (audioClip),
+        flags (factory.supportedPlaybackTransformationFlags),
+        audioModificationRef (audioModification.audioModificationRef),
+        hasExplicitTimes (true),
+        explicitModStart (modStartSecs),
+        explicitModDuration (modDurationSecs),
+        explicitPlaybackStart (playbackStartSecs),
+        explicitPlaybackDuration (playbackDurationSecs)
+    {
+        CRASH_TRACER
+        TRACKTION_ASSERT_MESSAGE_THREAD
+
+        doc.willCreatePlaybackRegionOnTrack (clip.getTrack());
+
+        jassert (d.musicalContext != nullptr && d.musicalContext->musicalContextRef != nullptr);
+        updatePlaybackRegionProperties();
+        auto playbackRegionProperties = getPlaybackRegionProperties();
+        playbackRegionRef = doc.dci->createPlaybackRegion (doc.dcRef,
+                                                           audioModificationRef,
                                                            toHostRef (&doc.edit),
                                                            &playbackRegionProperties);
     }
@@ -1106,6 +1139,23 @@ public:
     SizedStruct<ARA_STRUCT_MEMBER (ARAPlaybackRegionProperties, color)> getPlaybackRegionProperties()
     {
         auto regionSequenceRef = doc.regionSequences[clip.getTrack()]->regionSequenceRef;
+
+        if (hasExplicitTimes)
+        {
+            return
+            {
+                flags,
+                explicitModStart,
+                explicitModDuration,
+                explicitPlaybackStart,
+                explicitPlaybackDuration,
+                doc.musicalContext->musicalContextRef,
+                regionSequenceRef,
+                name.toRawUTF8(),
+                &colour
+            };
+        }
+
         auto pos = clip.getPosition();
 
         return
@@ -1137,6 +1187,12 @@ private:
     juce::String name;
     ARAColor colour;
     const ARAPlaybackTransformationFlags flags;
+    ARAAudioModificationRef audioModificationRef = nullptr;
+    bool hasExplicitTimes = false;
+    double explicitModStart = 0.0;
+    double explicitModDuration = 0.0;
+    double explicitPlaybackStart = 0.0;
+    double explicitPlaybackDuration = 0.0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlaybackRegionWrapper)
 };
@@ -1151,7 +1207,10 @@ public:
                              const ARAPlugInExtensionInstance& pluginExtensionInstance,
                              const juce::String& itemID,
                              PlaybackRegionAndSource* instanceToClone)
-        : pluginInstance (pluginExtensionInstance)
+        : clip (audioClip),
+          araDoc (doc),
+          araFactory (f),
+          pluginInstance (pluginExtensionInstance)
     {
         CRASH_TRACER
 
@@ -1165,11 +1224,11 @@ public:
 
             if (audioModification->audioModificationRef != nullptr)
             {
-                playbackRegion = std::make_unique<PlaybackRegionWrapper> (doc, audioClip, f, *audioModification);
-                setPlaybackRegion();
-
+                rebuildPlaybackRegions();
                 enable();
-                playbackRegion->updateRange();
+
+                for (auto& pr : playbackRegions)
+                    pr->updateRange();
             }
         }
     }
@@ -1179,8 +1238,8 @@ public:
     {
         CRASH_TRACER
         disable();
-        removePlaybackRegion();
-        playbackRegion = nullptr;
+        removeAllPlaybackRegions();
+        playbackRegions.clear();
         audioModification = nullptr;
         audioSource = nullptr;
     }
@@ -1203,12 +1262,12 @@ public:
 
     void setViewSelection()
     {
-        if (pluginInstance.editorViewInterface != nullptr)
+        if (pluginInstance.editorViewInterface != nullptr && ! playbackRegions.empty())
         {
             ARAViewSelection selection;
 
             ARAPlaybackRegionRef refs[1];
-            refs[0] = playbackRegion->playbackRegionRef;
+            refs[0] = playbackRegions[0]->playbackRegionRef;
 
             selection.structSize = sizeof (selection);
 
@@ -1223,42 +1282,113 @@ public:
         }
     }
 
-    std::unique_ptr<PlaybackRegionWrapper> playbackRegion;
+    /** Rebuilds all playback regions based on whether the clip is looping.
+        If looping, creates one PlaybackRegionWrapper per loop iteration.
+        If not looping, creates a single region covering the whole clip. */
+    void rebuildPlaybackRegions()
+    {
+        CRASH_TRACER
+
+        removeAllPlaybackRegions();
+        playbackRegions.clear();
+
+        if (audioModification == nullptr || audioModification->audioModificationRef == nullptr)
+            return;
+
+        if (clip.isLooping())
+        {
+            auto pos = clip.getPosition();
+            auto speedRatio = clip.getSpeedRatio();
+            auto loopStartSecs = clip.getLoopStart().inSeconds();
+            auto loopLengthSecs = clip.getLoopLength().inSeconds();
+
+            if (loopLengthSecs <= 0.0)
+                return;
+
+            auto clipStartSecs = pos.getStart().inSeconds();
+            auto clipLengthSecs = pos.getLength().inSeconds();
+            auto remaining = clipLengthSecs;
+            int iteration = 0;
+
+            while (remaining > 0.0)
+            {
+                auto iterDuration = std::min (loopLengthSecs, remaining);
+
+                auto modStart = loopStartSecs * speedRatio;
+                auto modDuration = iterDuration * speedRatio;
+                auto playbackStart = clipStartSecs + (iteration * loopLengthSecs);
+                auto playbackDuration = iterDuration;
+
+                auto pr = std::make_unique<PlaybackRegionWrapper> (araDoc, clip, araFactory, *audioModification,
+                                                                   modStart, modDuration,
+                                                                   playbackStart, playbackDuration);
+                addPlaybackRegion (*pr);
+                playbackRegions.push_back (std::move (pr));
+
+                remaining -= iterDuration;
+                ++iteration;
+            }
+        }
+        else
+        {
+            auto pr = std::make_unique<PlaybackRegionWrapper> (araDoc, clip, araFactory, *audioModification);
+            addPlaybackRegion (*pr);
+            playbackRegions.push_back (std::move (pr));
+        }
+    }
+
+    /** Returns the first playback region, or nullptr if none exist. */
+    PlaybackRegionWrapper* getFirstPlaybackRegion() const
+    {
+        return playbackRegions.empty() ? nullptr : playbackRegions[0].get();
+    }
+
+    /** Returns true if there is at least one playback region. */
+    bool hasPlaybackRegions() const { return ! playbackRegions.empty(); }
+
+    std::vector<std::unique_ptr<PlaybackRegionWrapper>> playbackRegions;
     std::unique_ptr<AudioSourceWrapper> audioSource;
     std::unique_ptr<AudioModificationWrapper> audioModification;
 
 private:
+    AudioClipBase& clip;
+    ARADocument& araDoc;
+    const ARAFactory& araFactory;
     const ARAPlugInExtensionInstance& pluginInstance;
 
-    void setPlaybackRegion()
+    void addPlaybackRegion (PlaybackRegionWrapper& pr)
     {
         CRASH_TRACER
 
-        if (playbackRegion != nullptr && playbackRegion->playbackRegionRef != nullptr)
+        if (pr.playbackRegionRef != nullptr)
         {
             if (pluginInstance.playbackRendererInterface != nullptr)
                 pluginInstance.playbackRendererInterface->addPlaybackRegion (pluginInstance.playbackRendererRef,
-                                                                             playbackRegion->playbackRegionRef);
+                                                                             pr.playbackRegionRef);
             if (pluginInstance.editorRendererInterface != nullptr)
                 pluginInstance.editorRendererInterface->addPlaybackRegion (pluginInstance.editorRendererRef,
-                                                                           playbackRegion->playbackRegionRef);
+                                                                           pr.playbackRegionRef);
         }
     }
 
-    void removePlaybackRegion()
+    void removeAllPlaybackRegions()
     {
         CRASH_TRACER
 
-        if (playbackRegion != nullptr && playbackRegion->playbackRegionRef != nullptr)
+        for (auto& pr : playbackRegions)
         {
-            if (pluginInstance.playbackRendererInterface != nullptr)
-                pluginInstance.playbackRendererInterface->removePlaybackRegion (pluginInstance.playbackRendererRef,
-                                                                                playbackRegion->playbackRegionRef);
-            if (pluginInstance.editorRendererInterface != nullptr)
-                pluginInstance.editorRendererInterface->removePlaybackRegion (pluginInstance.editorRendererRef,
-                                                                              playbackRegion->playbackRegionRef);
+            if (pr != nullptr && pr->playbackRegionRef != nullptr)
+            {
+                if (pluginInstance.playbackRendererInterface != nullptr)
+                    pluginInstance.playbackRendererInterface->removePlaybackRegion (pluginInstance.playbackRendererRef,
+                                                                                    pr->playbackRegionRef);
+                if (pluginInstance.editorRendererInterface != nullptr)
+                    pluginInstance.editorRendererInterface->removePlaybackRegion (pluginInstance.editorRendererRef,
+                                                                                  pr->playbackRegionRef);
+            }
         }
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlaybackRegionAndSource)
 };
+

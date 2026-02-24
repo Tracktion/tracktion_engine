@@ -165,7 +165,7 @@ struct ARAClipPlayer  : private Selectable::Listener
             updateContent (clipToClone);
 
             return playbackRegionAndSource != nullptr
-                     && playbackRegionAndSource->playbackRegion != nullptr;
+                     && playbackRegionAndSource->hasPlaybackRegions();
         }
 
         return false;
@@ -231,13 +231,29 @@ struct ARAClipPlayer  : private Selectable::Listener
             const ARADocumentControllerInterface* dci = doc->dci;
             ARADocumentControllerRef dcRef = doc->dcRef;
 
-            // Try reading from audio modification first (contains user edits e.g. Melodyne),
-            // falling back to audio source (original analysis) if not available.
+            // Priority order for reading MIDI content:
+            // 1. Playback region content (includes plugin edits, most complete)
+            // 2. Audio modification content (contains user edits e.g. Melodyne)
+            // 3. Audio source content (original analysis)
             ARAContentReaderRef contentReaderRef = nullptr;
+            bool contentIsInPlaybackTime = false;
 
-            if (playbackRegionAndSource->audioModification != nullptr)
+            // Try playback region content first (includes user edits, most complete)
+            if (auto pr = playbackRegionAndSource->getFirstPlaybackRegion())
             {
-                ARAAudioModificationRef audioModRef = playbackRegionAndSource->audioModification->audioModificationRef;
+                if (pr->playbackRegionRef != nullptr
+                    && dci->isPlaybackRegionContentAvailable (dcRef, pr->playbackRegionRef, kARAContentTypeNotes))
+                {
+                    contentReaderRef = dci->createPlaybackRegionContentReader (dcRef, pr->playbackRegionRef,
+                                                                               kARAContentTypeNotes, nullptr);
+                    contentIsInPlaybackTime = true;
+                }
+            }
+
+            // Fall back to audio modification content
+            if (contentReaderRef == nullptr && playbackRegionAndSource->audioModification != nullptr)
+            {
+                auto audioModRef = playbackRegionAndSource->audioModification->audioModificationRef;
 
                 if (audioModRef != nullptr
                     && dci->isAudioModificationContentAvailable (dcRef, audioModRef, kARAContentTypeNotes))
@@ -246,9 +262,10 @@ struct ARAClipPlayer  : private Selectable::Listener
                 }
             }
 
+            // Fall back to audio source content
             if (contentReaderRef == nullptr)
             {
-                ARAAudioSourceRef audioSourceRef = playbackRegionAndSource->audioSource->audioSourceRef;
+                auto audioSourceRef = playbackRegionAndSource->audioSource->audioSourceRef;
 
                 if (dci->isAudioSourceContentAvailable (dcRef, audioSourceRef, kARAContentTypeNotes))
                     contentReaderRef = dci->createAudioSourceContentReader (dcRef, audioSourceRef, kARAContentTypeNotes, nullptr);
@@ -256,6 +273,12 @@ struct ARAClipPlayer  : private Selectable::Listener
 
             if (contentReaderRef != nullptr)
             {
+                // If content is from playback region, note times are in playback time
+                // and need converting to source time for callers.
+                auto clipStart = contentIsInPlaybackTime ? clip.getPosition().getStart().inSeconds() : 0.0;
+                auto speedRatio = contentIsInPlaybackTime ? clip.getSpeedRatio() : 1.0;
+                auto offset = contentIsInPlaybackTime ? clip.getPosition().getOffset().inSeconds() : 0.0;
+
                 int numEvents = (int) dci->getContentReaderEventCount (dcRef, contentReaderRef);
 
                 for (int i = 0; i < numEvents; ++i)
@@ -264,11 +287,22 @@ struct ARAClipPlayer  : private Selectable::Listener
                     {
                         if (note->pitchNumber != kARAInvalidPitchNumber)
                         {
+                            auto startPos = note->startPosition;
+                            auto duration = note->noteDuration;
+
+                            if (contentIsInPlaybackTime)
+                            {
+                                // Convert from playback time to source time:
+                                // sourceTime = (playbackTime - clipStart + offset) * speedRatio
+                                startPos = (startPos - clipStart + offset) * speedRatio;
+                                duration = duration * speedRatio;
+                            }
+
                             result.addEvent (juce::MidiMessage::noteOn  (midiChannel, note->pitchNumber, static_cast<float> (note->volume)),
-                                             note->startPosition);
+                                             startPos);
 
                             result.addEvent (juce::MidiMessage::noteOff (midiChannel, note->pitchNumber),
-                                             note->startPosition + note->noteDuration);
+                                             startPos + duration);
                         }
                     }
                 }
@@ -532,10 +566,45 @@ private:
             else
             {
                 if (playbackRegionAndSource != nullptr
-                     && playbackRegionAndSource->playbackRegion != nullptr)
+                     && playbackRegionAndSource->hasPlaybackRegions())
                 {
-                    const ScopedDocumentEditor sde (*this, true);
-                    playbackRegionAndSource->playbackRegion->updateRange();
+                    // Check if looping state requires a full region rebuild
+                    bool isLooping = clip.isLooping();
+                    auto regionCount = playbackRegionAndSource->playbackRegions.size();
+                    bool needsRebuild = (isLooping && regionCount <= 1)
+                                      || (! isLooping && regionCount > 1);
+
+                    if (isLooping)
+                    {
+                        auto loopLen = clip.getLoopLength().inSeconds();
+                        auto clipLen = clip.getPosition().getLength().inSeconds();
+                        size_t expectedCount = (loopLen > 0.0) ? (size_t) std::ceil (clipLen / loopLen) : 1;
+                        needsRebuild = needsRebuild || (regionCount != expectedCount);
+                    }
+
+                    if (needsRebuild)
+                    {
+                        const ScopedDocumentEditor sde (*this, true);
+
+                        // ARA requires renderer deactivation before adding/removing regions
+                        if (auto p = getPlugin())
+                            if (auto pi = p->getAudioPluginInstance())
+                                pi->releaseResources();
+
+                        playbackRegionAndSource->rebuildPlaybackRegions();
+
+                        if (auto p = getPlugin())
+                            if (auto pi = p->getAudioPluginInstance())
+                                if (pi->getSampleRate() > 0 && pi->getBlockSize() > 0)
+                                    pi->prepareToPlay (pi->getSampleRate(), pi->getBlockSize());
+                    }
+                    else
+                    {
+                        const ScopedDocumentEditor sde (*this, true);
+
+                        for (auto& pr : playbackRegionAndSource->playbackRegions)
+                            pr->updateRange();
+                    }
                 }
             }
 
@@ -977,6 +1046,30 @@ ARAClipPlayer::ARADocument* ARAClipPlayer::getDocument() const
     return {};
 }
 
+juce::PluginDescription ARAFileReader::findPluginForARAArchiveID (Engine& engine, const juce::String& archiveID)
+{
+    auto araDescs = engine.getPluginManager().getARACompatiblePlugDescriptions();
+
+    for (auto& desc : araDescs)
+    {
+        auto& factory = ARAClipPlayer::ARAPluginFactory::getInstance (engine, desc);
+
+        if (factory.factory == nullptr)
+            continue;
+
+        if (archiveID == juce::String::fromUTF8 (factory.factory->documentArchiveID))
+            return desc;
+
+        for (ARASize i = 0; i < factory.factory->compatibleDocumentArchiveIDsCount; ++i)
+        {
+            if (archiveID == juce::String::fromUTF8 (factory.factory->compatibleDocumentArchiveIDs[i]))
+                return desc;
+        }
+    }
+
+    return {};
+}
+
 } // namespace tracktion::inline engine
 
 #else
@@ -1004,6 +1097,8 @@ void ARAFileReader::restoreARAArchiveForPaste (const juce::MemoryBlock&, const j
 juce::String ARAFileReader::getAudioSourcePersistentID() const { return {}; }
 juce::String ARAFileReader::getAudioModificationPersistentID() const { return {}; }
 
+juce::PluginDescription ARAFileReader::findPluginForARAArchiveID (Engine&, const juce::String&) { return {}; }
+
 ARADocumentHolder::ARADocumentHolder (Edit& e, const juce::ValueTree&) : edit (e) { juce::ignoreUnused (edit); }
 ARADocumentHolder::~ARADocumentHolder() {}
 ARADocumentHolder::Pimpl* ARADocumentHolder::getPimpl()             { return {}; }
@@ -1012,3 +1107,168 @@ void ARADocumentHolder::flushStateToValueTree() {}
 } // namespace tracktion::inline engine
 
 #endif
+
+//==============================================================================
+// Static utility methods that work regardless of ARA being enabled
+namespace tracktion::inline engine {
+
+juce::String ARAFileReader::readRawIXMLFromSourceFile (const juce::File& file)
+{
+    juce::FileInputStream stream (file);
+
+    if (! stream.openedOk() || stream.getTotalLength() < 12)
+        return {};
+
+    char header[4];
+    stream.read (header, 4);
+
+    if (std::memcmp (header, "RIFF", 4) == 0)
+    {
+        stream.readInt(); // file size
+        stream.read (header, 4); // WAVE
+
+        if (std::memcmp (header, "WAVE", 4) != 0)
+            return {};
+
+        while (! stream.isExhausted())
+        {
+            char chunkID[4];
+
+            if (stream.read (chunkID, 4) < 4)
+                break;
+
+            auto chunkSize = (uint32_t) stream.readInt();
+
+            if (std::memcmp (chunkID, "iXML", 4) == 0)
+            {
+                juce::MemoryBlock block;
+                stream.readIntoMemoryBlock (block, (ssize_t) chunkSize);
+                return block.toString();
+            }
+
+            stream.setPosition (stream.getPosition() + (int64_t) ((chunkSize + 1) & ~1u));
+        }
+    }
+    else if (std::memcmp (header, "FORM", 4) == 0)
+    {
+        stream.readInt(); // file size
+        stream.read (header, 4); // AIFF or AIFC
+
+        if (std::memcmp (header, "AIFF", 4) != 0 && std::memcmp (header, "AIFC", 4) != 0)
+            return {};
+
+        while (! stream.isExhausted())
+        {
+            char chunkID[4];
+
+            if (stream.read (chunkID, 4) < 4)
+                break;
+
+            auto chunkSize = (uint32_t) stream.readIntBigEndian();
+
+            if (std::memcmp (chunkID, "iXML", 4) == 0)
+            {
+                juce::MemoryBlock block;
+                stream.readIntoMemoryBlock (block, (ssize_t) chunkSize);
+                return block.toString();
+            }
+
+            stream.setPosition (stream.getPosition() + (int64_t) ((chunkSize + 1) & ~1u));
+        }
+    }
+
+    return {};
+}
+
+juce::Array<ARAFileReader::ARAChunkInfo> ARAFileReader::parseARAAudioFileChunksFromIXML (const juce::String& ixmlString)
+{
+    juce::Array<ARAChunkInfo> results;
+
+    auto xml = juce::parseXML (ixmlString);
+
+    if (xml == nullptr)
+        return results;
+
+    // The <ARA> element may be top-level or nested inside iXML root
+    auto araElement = xml->hasTagName ("ARA") ? xml.get()
+                                              : xml->getChildByName ("ARA");
+
+    if (araElement == nullptr)
+        return results;
+
+    auto audioSourcesElement = araElement->getChildByName ("audioSources");
+
+    if (audioSourcesElement == nullptr)
+        return results;
+
+    for (auto audioSourceElement : audioSourcesElement->getChildWithTagNameIterator ("audioSource"))
+    {
+        ARAChunkInfo info;
+
+        if (auto e = audioSourceElement->getChildByName ("documentArchiveID"))
+            info.documentArchiveID = e->getAllSubText().trim();
+
+        if (auto e = audioSourceElement->getChildByName ("openAutomatically"))
+            info.openAutomatically = e->getAllSubText().trim().equalsIgnoreCase ("true");
+
+        if (auto e = audioSourceElement->getChildByName ("persistentID"))
+            info.persistentID = e->getAllSubText().trim();
+
+        if (auto e = audioSourceElement->getChildByName ("archiveData"))
+        {
+                juce::MemoryOutputStream mos (info.archiveData, false);
+                juce::Base64::convertFromBase64 (mos, e->getAllSubText().trim());
+            }
+
+        if (auto suggestedPlugin = audioSourceElement->getChildByName ("suggestedPlugIn"))
+        {
+            if (auto e = suggestedPlugin->getChildByName ("plugInName"))
+                info.suggestedPlugInName = e->getAllSubText().trim();
+
+            if (auto e = suggestedPlugin->getChildByName ("manufacturerName"))
+                info.manufacturerName = e->getAllSubText().trim();
+        }
+
+        if (info.documentArchiveID.isNotEmpty())
+            results.add (std::move (info));
+    }
+
+    return results;
+}
+
+ARAIXMLResult detectARAFromIXMLChunks (Engine& engine, const juce::File& sourceFile)
+{
+   #if TRACKTION_ENABLE_ARA
+    if (! sourceFile.existsAsFile())
+        return {};
+
+    auto ixmlString = ARAFileReader::readRawIXMLFromSourceFile (sourceFile);
+
+    if (ixmlString.isEmpty())
+        return {};
+
+    for (auto& chunk : ARAFileReader::parseARAAudioFileChunksFromIXML (ixmlString))
+    {
+        if (! chunk.openAutomatically)
+            continue;
+
+        auto desc = ARAFileReader::findPluginForARAArchiveID (engine, chunk.documentArchiveID);
+
+        if (desc.name.isNotEmpty())
+        {
+            TRACKTION_LOG ("Auto-configured ARA plugin from iXML chunk: " + desc.name);
+            return { desc, chunk.archiveData, chunk.persistentID };
+        }
+
+        TRACKTION_LOG ("ARA iXML chunk found for archive ID '" + chunk.documentArchiveID
+                        + "' (suggested: " + chunk.suggestedPlugInName
+                        + ") but no matching plugin installed");
+    }
+   #else
+    juce::ignoreUnused (engine, sourceFile);
+   #endif
+
+    return {};
+}
+
+} // namespace tracktion::inline engine

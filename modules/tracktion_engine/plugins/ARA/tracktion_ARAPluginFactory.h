@@ -330,7 +330,7 @@ using MelodyneInstanceFactory = ARAPluginFactory;
 
 //==============================================================================
 static std::unique_ptr<juce::AudioPluginInstance> createARAPluginFromDescription (Engine& engine,
-                                                                                   const juce::PluginDescription& desc)
+                                                                                  const juce::PluginDescription& desc)
 {
     CRASH_TRACER
 

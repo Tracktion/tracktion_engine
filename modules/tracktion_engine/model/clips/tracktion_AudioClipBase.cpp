@@ -952,8 +952,7 @@ TimeRange AudioClipBase::getLoopRange() const
 
 bool AudioClipBase::canLoop() const
 {
-    return isUsingARA() ? false
-                             : loopInfo.isLoopable();
+    return loopInfo.isLoopable();
 }
 
 TimePosition AudioClipBase::getLoopStart() const

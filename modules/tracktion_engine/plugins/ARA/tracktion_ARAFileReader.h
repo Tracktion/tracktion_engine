@@ -32,6 +32,27 @@ public:
     static void cleanUpOnShutdown();
 
     //==============================================================================
+    /** Parsed info from an ARA audio file chunk embedded in iXML. */
+    struct ARAChunkInfo
+    {
+        juce::String documentArchiveID;
+        bool openAutomatically = false;
+        juce::String persistentID;
+        juce::MemoryBlock archiveData;
+        juce::String suggestedPlugInName;
+        juce::String manufacturerName;
+    };
+
+    /** Reads the raw iXML chunk from a WAV or AIFF file. */
+    static juce::String readRawIXMLFromSourceFile (const juce::File&);
+
+    /** Parses ARA audio file chunks from a raw iXML string. */
+    static juce::Array<ARAChunkInfo> parseARAAudioFileChunksFromIXML (const juce::String& ixmlString);
+
+    /** Finds an installed ARA plugin whose factory matches the given archive ID. */
+    static juce::PluginDescription findPluginForARAArchiveID (Engine&, const juce::String& archiveID);
+
+    //==============================================================================
     bool isValid() const noexcept                       { return player != nullptr; }
 
     ExternalPlugin* getPlugin();
@@ -75,6 +96,20 @@ private:
 
 /** @deprecated Use ARAFileReader instead */
 using MelodyneFileReader = ARAFileReader;
+
+//==============================================================================
+/** Result of detecting ARA iXML chunks in an audio file. */
+struct ARAIXMLResult
+{
+    juce::PluginDescription pluginDescription;
+    juce::MemoryBlock archiveData;
+    juce::String persistentID;
+    bool isValid() const { return pluginDescription.name.isNotEmpty(); }
+};
+
+/** Scans a source audio file for ARA iXML chunks and returns the first
+    matching installed plugin description along with archive data. */
+ARAIXMLResult detectARAFromIXMLChunks (Engine&, const juce::File& sourceFile);
 
 
 //==============================================================================
