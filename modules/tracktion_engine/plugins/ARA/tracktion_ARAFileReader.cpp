@@ -1142,7 +1142,7 @@ juce::String ARAFileReader::readRawIXMLFromSourceFile (const juce::File& file)
             if (std::memcmp (chunkID, "iXML", 4) == 0)
             {
                 juce::MemoryBlock block;
-                stream.readIntoMemoryBlock (block, (ssize_t) chunkSize);
+                stream.readIntoMemoryBlock (block, static_cast<std::ptrdiff_t> (chunkSize));
                 return block.toString();
             }
 
@@ -1169,7 +1169,7 @@ juce::String ARAFileReader::readRawIXMLFromSourceFile (const juce::File& file)
             if (std::memcmp (chunkID, "iXML", 4) == 0)
             {
                 juce::MemoryBlock block;
-                stream.readIntoMemoryBlock (block, (ssize_t) chunkSize);
+                stream.readIntoMemoryBlock (block, static_cast<std::ptrdiff_t> (chunkSize));
                 return block.toString();
             }
 
