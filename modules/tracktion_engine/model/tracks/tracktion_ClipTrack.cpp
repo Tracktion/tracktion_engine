@@ -534,12 +534,11 @@ void ClipTrack::splitAt (TimePosition time)
     engine::split (*this, time);
 }
 
-void ClipTrack::insertSpaceIntoTrack (TimePosition time, TimeDuration amountOfSpace)
+void ClipTrack::insertSpace (TimePosition time, TimeDuration length)
 {
-    CRASH_TRACER
-    Track::insertSpaceIntoTrack (time, amountOfSpace);
+    splitAt (time);
 
-    // make a copied list first, as they'll get moved out-of-order..
+    // Build a copied list first, as clips get moved out-of-order
     Clip::Array clipsToDo;
     const auto& clips = getClips();
 
@@ -555,7 +554,7 @@ void ClipTrack::insertSpaceIntoTrack (TimePosition time, TimeDuration amountOfSp
 
     for (int i = clipsToDo.size(); --i >= 0;)
         if (auto c = clipsToDo.getUnchecked (i).get())
-            c->setStart (c->getPosition().getStart() + amountOfSpace, false, true);
+            c->setStart (c->getPosition().getStart() + length, false, true);
 }
 
 juce::Array<TimePosition> ClipTrack::findAllTimesOfInterest()

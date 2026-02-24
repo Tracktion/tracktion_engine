@@ -26,6 +26,29 @@ TEST_SUITE("tracktion_engine")
         CHECK(edit);
         CHECK(getAudioTracks (*edit).size() == 1);
     }
+
+    TEST_CASE ("insertSpaceIntoEdit: moves master volume automation")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine, Edit::EditRole::forRendering);
+        auto um = &edit->getUndoManager();
+
+        auto masterVol = edit->getMasterVolumePlugin();
+        REQUIRE (masterVol != nullptr);
+
+        auto volParam = masterVol->volParam.get();
+        REQUIRE (volParam != nullptr);
+
+        auto& curve = volParam->getCurve();
+        curve.addPoint (5_tp, 0.5f, 0.0f, um);
+
+        CHECK (curve.getPointTime (0) == 5_tp);
+
+        insertSpaceIntoEdit (*edit, { 2_tp, 2_td });
+
+        // Point should move from 5s to 7s
+        CHECK (curve.getPointTime (0) == 7_tp);
+    }
 }
 
 //==============================================================================

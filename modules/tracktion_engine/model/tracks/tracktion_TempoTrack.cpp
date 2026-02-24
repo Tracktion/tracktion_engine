@@ -51,15 +51,6 @@ TrackItem* TempoTrack::getNextTrackItemAt (TimePosition time)
     return getTrackItem (getIndexOfNextTrackItemAt (time));
 }
 
-void TempoTrack::insertSpaceIntoTrack (TimePosition time, TimeDuration amountOfSpace)
-{
-    Track::insertSpaceIntoTrack (time, amountOfSpace);
-
-    // Insert in to pitch sequence first of the tempo calculations will be different
-    edit.pitchSequence.insertSpaceIntoSequence (time, amountOfSpace, false);
-    edit.tempoSequence.insertSpaceIntoSequence (time, amountOfSpace, false);
-}
-
 juce::Array<TrackItem*> TempoTrack::buildTrackItemList() const
 {
     juce::Array<TrackItem*> items;

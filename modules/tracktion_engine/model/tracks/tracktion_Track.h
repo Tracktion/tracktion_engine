@@ -207,13 +207,6 @@ public:
     virtual TrackItem* getNextTrackItemAt (TimePosition)        { return {}; }
 
     //==============================================================================
-    /** Should insert empty space in to the track, shuffling down any items after the time.
-        @param time             The time point in seconds to insert at
-        @param amountOfSpace    The duration of time to insert
-    */
-    virtual void insertSpaceIntoTrack (TimePosition, TimeDuration);
-
-    //==============================================================================
     /** Returns the state of the parent Track. */
     juce::ValueTree getParentTrackTree() const;
 
@@ -318,7 +311,7 @@ public:
     /** Returns all AutomatableEditItem[s] on this Track.
         @see Plugin, Modifier
     */
-    juce::Array<AutomatableEditItem*> getAllAutomatableEditItems() const;
+    std::vector<AutomatableEditItem*> getAllAutomatableEditItems() const;
 
     /** Returns all pugins on this Track.
         Subclasses may implement this to also return Plugin[s] on Clip[s]

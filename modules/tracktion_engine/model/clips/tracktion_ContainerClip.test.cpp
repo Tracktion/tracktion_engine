@@ -136,9 +136,9 @@ private:
                 auto clip2VolPlug = dynamic_cast<VolumeAndPanPlugin*> (clip2->getPluginList()->insertPlugin (VolumeAndPanPlugin::create(), 0).get());
 
                 auto autoItems = getAllAutomatableEditItems (*edit);
-                expect (autoItems.contains (ccVolPlug));
-                expect (autoItems.contains (clip1VolPlug));
-                expect (autoItems.contains (clip2VolPlug));
+                expect (std::find (autoItems.begin(), autoItems.end(), ccVolPlug) != autoItems.end());
+                expect (std::find (autoItems.begin(), autoItems.end(), clip1VolPlug) != autoItems.end());
+                expect (std::find (autoItems.begin(), autoItems.end(), clip2VolPlug) != autoItems.end());
 
                 auto allParams = edit->getAllAutomatableParams (true);
                 expect (allParams.contains (ccVolPlug->volParam.get()));

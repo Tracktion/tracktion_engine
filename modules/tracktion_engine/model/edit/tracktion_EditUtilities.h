@@ -32,7 +32,9 @@ bool referencesProjectItem (Edit&, ProjectItemRef);
 //==============================================================================
 
 /// Inserts blank space in to an Edit, splitting clips if necessary.
-void insertSpaceIntoEdit (Edit&, TimeRange timeRangeToInsert);
+/// If onlyTheseTracks is provided, only those tracks are affected; otherwise all tracks are.
+void insertSpaceIntoEdit (Edit&, TimeRange timeRangeToInsert,
+                          const juce::Array<Track*>& onlyTheseTracks = {});
 
 /// Inserts a number of blank beats in to the Edit.
 void insertSpaceIntoEditFromBeatRange (Edit&, BeatRange);
@@ -237,7 +239,7 @@ juce::ReferenceCountedObjectPtr<PluginType> insertNewPlugin (Track&, int index =
 //==============================================================================
 
 /** Returns all AutomatableEditItems in an Edit. */
-juce::Array<AutomatableEditItem*> getAllAutomatableEditItems (const Edit&);
+std::vector<AutomatableEditItem*> getAllAutomatableEditItems (const Edit&);
 
 /** Deletes the automation covered by the selected clips. */
 void deleteAutomation (const SelectableList& selectedClips);

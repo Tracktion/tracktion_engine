@@ -980,6 +980,28 @@ void AutomationCurve::getBezierEnds (int index, double& x1out, float& y1out, dou
     y2out = static_cast<float> (ends.y2);
 }
 
+void AutomationCurve::insertSpace (AutomatableParameter& param, TimePosition time, TimeDuration length)
+{
+    if (getNumPoints() == 0)
+        return;
+
+    auto um = getUndoManager_p (edit);
+    auto defaultValue = param.getCurrentBaseValue();
+    auto valueAtInsertionTime = getValueAt (time, defaultValue);
+
+    for (int k = getNumPoints(); --k >= 0;)
+        if (getPointTime (k) >= time)
+            movePoint (param, k,
+                       getPointTime (k) + length,
+                       getPointValue (k), false, um);
+
+    if (! juce::approximatelyEqual (valueAtInsertionTime, getValueAt (time, defaultValue)))
+        addPoint (time, valueAtInsertionTime, 0.0f, um);
+
+    if (! juce::approximatelyEqual (valueAtInsertionTime, getValueAt (time + length, defaultValue)))
+        addPoint (time + length, valueAtInsertionTime, 0.0f, um);
+}
+
 void AutomationCurve::removeAllAutomationCurvesRecursively (const juce::ValueTree& v)
 {
     for (int i = v.getNumChildren(); --i >= 0;)

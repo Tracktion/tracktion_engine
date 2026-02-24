@@ -108,6 +108,9 @@ public:
 
     void simplify (EditTimeRange, EditDuration minTimeDifference, float minValueDifference, juce::UndoManager*);
 
+    /// Inserts space at the given time, moving all points at or after that time.
+    void insertSpace (AutomatableParameter&, TimePosition, TimeDuration);
+
     //==============================================================================
     static void removeAllAutomationCurvesRecursively (const juce::ValueTree&);
 

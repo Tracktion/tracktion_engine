@@ -1137,14 +1137,16 @@ bool Clipboard::Clips::pasteInsertingAtCursorPos (Edit& edit, EditInsertPoint& i
         return false;
 
     auto cursorPos = edit.getTransport().getPosition();
-    auto firstTrackIndex = tracks.getFirst()->getIndexInEditTrackList();
 
+    juce::Array<Track*> tracksToInsertInto;
     for (auto t : tracks)
-    {
-        t->splitAt (cursorPos);
-        t->insertSpaceIntoTrack (cursorPos, insertLength);
+        tracksToInsertInto.add (t);
+
+    insertSpaceIntoEdit (edit, { cursorPos, cursorPos + insertLength }, tracksToInsertInto);
+
+    auto firstTrackIndex = tracks.getFirst()->getIndexInEditTrackList();
+    for (auto t : tracks)
         firstTrackIndex = std::min (firstTrackIndex, t->getIndexInEditTrackList());
-    }
 
     EditPastingOptions options (edit, insertPoint, &sm);
     options.startTime = std::max (0_tp, cursorPos);

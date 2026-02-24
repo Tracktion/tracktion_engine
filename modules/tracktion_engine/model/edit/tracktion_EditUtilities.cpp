@@ -41,23 +41,64 @@ bool referencesProjectItem (Edit& edit, ProjectItemRef itemRef)
 
 //==============================================================================
 //==============================================================================
-void insertSpaceIntoEdit (Edit& edit, TimeRange timeRange)
+void insertSpaceIntoEdit (Edit& edit, TimeRange timeRange, const juce::Array<Track*>& onlyTheseTracks)
 {
+    const bool allTracks = onlyTheseTracks.isEmpty();
     const bool doTempoTrackFirst = ! edit.getTimecodeFormat().isBarsBeats();
     const auto time = timeRange.getStart();
     const auto length = timeRange.getLength();
 
-    if (doTempoTrackFirst)
-        edit.getTempoTrack()->insertSpaceIntoTrack (time, length);
+    std::vector<ClipTrack*> clipTracks;
+    std::vector<AutomatableEditItem*> automatableItems;
 
-    for (auto ct : getTracksOfType<ClipTrack> (edit, true))
+    if (allTracks)
     {
-        ct->splitAt (time);
-        ct->insertSpaceIntoTrack (time, length);
+        for (auto ct : getTracksOfType<ClipTrack> (edit, true))
+            clipTracks.push_back (ct);
+
+        automatableItems = getAllAutomatableEditItems (edit);
+    }
+    else
+    {
+        for (auto t : onlyTheseTracks)
+        {
+            if (auto ct = dynamic_cast<ClipTrack*> (t))
+                clipTracks.push_back (ct);
+
+            for (auto sub : t->getAllSubTracks (true))
+                if (auto ct = dynamic_cast<ClipTrack*> (sub))
+                    clipTracks.push_back (ct);
+
+            auto trackItems = t->getAllAutomatableEditItems();
+            automatableItems.insert (automatableItems.end(), trackItems.begin(), trackItems.end());
+        }
     }
 
-    if (! doTempoTrackFirst)
-        edit.getTempoTrack()->insertSpaceIntoTrack (time, length);
+    // Deduplicate
+    std::sort (clipTracks.begin(), clipTracks.end());
+    clipTracks.erase (std::unique (clipTracks.begin(), clipTracks.end()), clipTracks.end());
+
+    std::sort (automatableItems.begin(), automatableItems.end());
+    automatableItems.erase (std::unique (automatableItems.begin(), automatableItems.end()), automatableItems.end());
+
+    if (allTracks && doTempoTrackFirst)
+    {
+        edit.pitchSequence.insertSpaceIntoSequence (time, length, false);
+        edit.tempoSequence.insertSpaceIntoSequence (time, length, false);
+    }
+
+    for (auto ct : clipTracks)
+        ct->insertSpace (time, length);
+
+    for (auto item : automatableItems)
+        for (auto param : item->getAutomatableParameters())
+            param->getCurve().insertSpace (*param, time, length);
+
+    if (allTracks && ! doTempoTrackFirst)
+    {
+        edit.pitchSequence.insertSpaceIntoSequence (time, length, false);
+        edit.tempoSequence.insertSpaceIntoSequence (time, length, false);
+    }
 }
 
 void insertSpaceIntoEditFromBeatRange (Edit& edit, BeatRange beatRange)
@@ -1043,51 +1084,57 @@ void midiPanic (Edit& edit, bool resetPlugins)
 }
 
 //==============================================================================
-juce::Array<AutomatableEditItem*> getAllAutomatableEditItems (const Edit& edit)
+std::vector<AutomatableEditItem*> getAllAutomatableEditItems (const Edit& edit)
 {
     CRASH_TRACER
-    juce::Array<AutomatableEditItem*> destArray;
+    std::vector<AutomatableEditItem*> items;
 
     if (auto mpl = edit.getGlobalMacros().getMacroParameterList())
-        destArray.add (mpl);
+        items.push_back (mpl);
 
     edit.visitAllTracksRecursive ([&] (Track& t)
     {
         if (auto m = dynamic_cast<MacroParameterElement*> (&t))
             if (auto mpl = m->getMacroParameterList())
-                destArray.add (mpl);
+                items.push_back (mpl);
 
-        destArray.addArray (t.getAllAutomatableEditItems());
+        auto trackItems = t.getAllAutomatableEditItems();
+        items.insert (items.end(), trackItems.begin(), trackItems.end());
         return true;
     });
 
     for (auto p : edit.getMasterPluginList())
     {
         if (auto mpl = p->getMacroParameterList())
-            destArray.add (mpl);
+            items.push_back (mpl);
 
-        destArray.add (p);
+        items.push_back (p);
     }
 
     for (auto r : edit.getRackList().getTypes())
     {
         for (auto p : r->getPlugins())
         {
-            destArray.add (p);
+            items.push_back (p);
 
             if (auto mpl = p->getMacroParameterList())
-                destArray.add (mpl);
+                items.push_back (mpl);
         }
 
         if (auto mpl = r->getMacroParameterList())
-            destArray.add (mpl);
+            items.push_back (mpl);
 
-        destArray.addArray (r->getModifierList().getModifiers());
+        for (auto m : r->getModifierList().getModifiers())
+            items.push_back (m);
     }
 
-    destArray.add (edit.getMasterVolumePlugin().get());
+    items.push_back (edit.getMasterVolumePlugin().get());
 
-    return destArray;
+    // Deduplicate
+    std::sort (items.begin(), items.end());
+    items.erase (std::unique (items.begin(), items.end()), items.end());
+
+    return items;
 }
 
 void deleteAutomation (const SelectableList& selectedClips)

@@ -255,22 +255,28 @@ bool Track::hasFreezePointPlugin() const
     return false;
 }
 
-juce::Array<AutomatableEditItem*> Track::getAllAutomatableEditItems() const
+std::vector<AutomatableEditItem*> Track::getAllAutomatableEditItems() const
 {
-    juce::Array<AutomatableEditItem*> destArray;
+    std::vector<AutomatableEditItem*> items;
     auto plugins = getAllPlugins();
-    destArray.addArray (plugins);
+
+    for (auto p : plugins)
+        items.push_back (p);
 
     if (modifierList != nullptr)
         for (auto m : modifierList->getModifiers())
             if (auto aei = dynamic_cast<AutomatableEditItem*> (m))
-                destArray.add (aei);
+                items.push_back (aei);
 
     for (auto p : plugins)
         if (auto mpl = p->getMacroParameterList())
-            destArray.add (mpl);
+            items.push_back (mpl);
 
-    return destArray;
+    // Deduplicate
+    std::sort (items.begin(), items.end());
+    items.erase (std::unique (items.begin(), items.end()), items.end());
+
+    return items;
 }
 
 Plugin::Array Track::getAllPlugins() const
@@ -441,38 +447,6 @@ bool Track::isAChildOf (const Track& t) const
             return true;
 
     return false;
-}
-
-void Track::insertSpaceIntoTrack (TimePosition time, TimeDuration amountOfSpace)
-{
-    // shift up any automation curves too..
-    auto um = getUndoManager_p (edit);
-
-    for (auto p : pluginList)
-    {
-        for (int j = p->getNumAutomatableParameters(); --j >= 0;)
-        {
-            if (auto param = p->getAutomatableParameter (j))
-            {
-                auto& curve = param->getCurve();
-                auto defaultValue = param->getCurrentBaseValue();
-                auto valueAtInsertionTime = curve.getValueAt (time, defaultValue);
-
-                for (int k = curve.getNumPoints(); --k >= 0;)
-                    if (curve.getPointTime (k) >= time)
-                        curve.movePoint (*param, k,
-                                         curve.getPointTime (k) + amountOfSpace,
-                                         curve.getPointValue (k), false,
-                                         um);
-
-                if (! juce::approximatelyEqual (valueAtInsertionTime, curve.getValueAt (time, defaultValue)))
-                    curve.addPoint (time, valueAtInsertionTime, 0.0f, um);
-
-                if (! juce::approximatelyEqual (valueAtInsertionTime, curve.getValueAt (time + amountOfSpace, defaultValue)))
-                    curve.addPoint (time + amountOfSpace, valueAtInsertionTime, 0.0f, um);
-            }
-        }
-    }
 }
 
 void Track::updateTrackList()

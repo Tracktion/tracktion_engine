@@ -46,9 +46,6 @@ public:
     int getIndexOfNextTrackItemAt (TimePosition) override;
     TrackItem* getNextTrackItemAt (TimePosition) override;
 
-    /** inserts space and moves everything up */
-    void insertSpaceIntoTrack (TimePosition, TimeDuration) override;
-
     //==============================================================================
     TimeDuration getLength() const;
     TimeDuration getLengthIncludingInputTracks() const;
@@ -91,6 +88,9 @@ public:
 
     /** split all clips at this time */
     void splitAt (TimePosition);
+
+    /** Inserts space at the given time, moving clips whose center is after that point. */
+    void insertSpace (TimePosition, TimeDuration);
 
     /** finds the next cut point */
     TimePosition getNextTimeOfInterest (TimePosition afterThisTime);

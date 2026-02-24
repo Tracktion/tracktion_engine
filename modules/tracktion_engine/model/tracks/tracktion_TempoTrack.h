@@ -45,9 +45,6 @@ public:
     /** @internal */
     bool canContainPlugin (Plugin*) const override;
 
-    /** @internal */
-    void insertSpaceIntoTrack (TimePosition, TimeDuration) override;
-
 private:
     juce::Array<TrackItem*> buildTrackItemList() const;
 
