@@ -1716,9 +1716,9 @@ static ClipboardTempoTests clipboardTempoTests;
 //==============================================================================
 //==============================================================================
 static Clipboard::AutomationPoints::CurveSection buildCurveSection (AutomatableParameter& param,
-                                                                     TimeRange range,
-                                                                     int trackOffset,
-                                                                     int paramIdx)
+                                                                    TimeRange range,
+                                                                    int trackOffset,
+                                                                    int paramIdx)
 {
     auto& curve = param.getCurve();
     auto& ts = param.getEdit().tempoSequence;
@@ -1850,13 +1850,9 @@ Clipboard::AutomationPoints::AutomationPoints (const juce::Array<Track*>& tracks
 static int findParameterIndex (AutomatableParameter& param)
 {
     if (auto plugin = param.getPlugin())
-    {
-        for (int i = 0; i < plugin->getNumAutomatableParameters(); ++i)
-            if (plugin->getAutomatableParameter (i) == &param)
-                return i;
-    }
+        return plugin->indexOfAutomatableParameter (param);
 
-    return 0;
+    return -1;
 }
 
 Clipboard::AutomationPoints::AutomationPoints (const juce::Array<AutomatableParameter*>& params, TimeRange range)
@@ -1877,15 +1873,13 @@ Clipboard::AutomationPoints::AutomationPoints (const juce::Array<AutomatablePara
     // Copy each selected parameter's automation
     for (auto param : params)
     {
-        auto track = getTrackShowingParameter (*param);
+        if (auto track = getTrackShowingParameter (*param))
+        {
+            auto trackOffset = std::max (0, allTracks.indexOf (track) - firstTrackIndex);
+            auto paramIdx = std::max (0, findParameterIndex (*param));
 
-        if (track == nullptr)
-            continue;
-
-        int trackOffset = std::max (0, allTracks.indexOf (track) - firstTrackIndex);
-        int paramIdx = findParameterIndex (*param);
-
-        curves.push_back (buildCurveSection (*param, range, trackOffset, paramIdx));
+            curves.push_back (buildCurveSection (*param, range, trackOffset, paramIdx));
+        }
     }
 }
 
