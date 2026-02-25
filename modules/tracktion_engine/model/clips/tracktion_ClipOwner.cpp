@@ -406,6 +406,17 @@ Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
                     {
                         acb->setTimeStretchMode (TimeStretcher::ara);
                         acb->araPluginDescription.setValue (araResult.pluginDescription, nullptr);
+
+                        if (araResult.archiveData.getSize() > 0)
+                        {
+                            acb->setupARA (true);
+
+                            if (auto proxy = acb->getARAProxy(); proxy != nullptr && proxy->isValid())
+                                proxy->restoreARAArchiveForPaste (araResult.archiveData,
+                                                                  araResult.persistentID,
+                                                                  {}, // archivedModID
+                                                                  araResult.documentArchiveID);
+                        }
                     }
                 }
             }

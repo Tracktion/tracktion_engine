@@ -185,7 +185,8 @@ public:
     */
     void restoreObjectsForPaste (const juce::MemoryBlock& data,
                                  const juce::String& archivedSourceID, const juce::String& currentSourceID,
-                                 const juce::String& archivedModID, const juce::String& currentModID)
+                                 const juce::String& archivedModID, const juce::String& currentModID,
+                                 const juce::String& documentArchiveID = {})
     {
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
@@ -206,12 +207,18 @@ public:
 
         ARAPersistentID modArchiveID = archivedModID.toRawUTF8();
         ARAPersistentID modCurrentID = currentModID.toRawUTF8();
-        filter.audioModificationIDsCount = 1;
-        filter.audioModificationArchiveIDs = &modArchiveID;
-        filter.audioModificationCurrentIDs = &modCurrentID;
+
+        if (archivedModID.isNotEmpty())
+        {
+            filter.audioModificationIDsCount = 1;
+            filter.audioModificationArchiveIDs = &modArchiveID;
+            filter.audioModificationCurrentIDs = &modCurrentID;
+        }
 
         beginEditing (true);
+        ArchivingFunctions::documentArchiveIDOverride = documentArchiveID;
         dci->restoreObjectsFromArchive (dcRef, toHostRef (&dataCopy), &filter);
+        ArchivingFunctions::documentArchiveIDOverride = {};
         endEditing (true);
     }
 

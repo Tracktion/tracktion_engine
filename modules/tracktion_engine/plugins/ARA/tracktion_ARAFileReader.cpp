@@ -335,7 +335,8 @@ struct ARAClipPlayer  : private Selectable::Listener
 
     void restoreARAArchiveForPaste (const juce::MemoryBlock& data,
                                     const juce::String& archivedSourceID,
-                                    const juce::String& archivedModID)
+                                    const juce::String& archivedModID,
+                                    const juce::String& documentArchiveID = {})
     {
         if (auto doc = getDocument())
         {
@@ -347,7 +348,7 @@ struct ARAClipPlayer  : private Selectable::Listener
                 auto currentModID = getAudioModificationPersistentID();
 
                 doc->restoreObjectsForPaste (data, archivedSourceID, currentSourceID,
-                                             archivedModID, currentModID);
+                                             archivedModID, currentModID, documentArchiveID);
             }
         }
     }
@@ -767,10 +768,11 @@ juce::MemoryBlock ARAFileReader::storeARAArchiveForCopy()
 
 void ARAFileReader::restoreARAArchiveForPaste (const juce::MemoryBlock& data,
                                                const juce::String& archivedSourceID,
-                                               const juce::String& archivedModID)
+                                               const juce::String& archivedModID,
+                                               const juce::String& documentArchiveID)
 {
     if (player != nullptr)
-        player->restoreARAArchiveForPaste (data, archivedSourceID, archivedModID);
+        player->restoreARAArchiveForPaste (data, archivedSourceID, archivedModID, documentArchiveID);
 }
 
 juce::String ARAFileReader::getAudioSourcePersistentID() const
@@ -1093,7 +1095,7 @@ juce::MidiMessageSequence ARAFileReader::getAnalysedMIDISequence()   { return {}
 void ARAFileReader::sourceClipChanged()                        {}
 void ARAFileReader::contentHasChanged()                        {}
 juce::MemoryBlock ARAFileReader::storeARAArchiveForCopy()      { return {}; }
-void ARAFileReader::restoreARAArchiveForPaste (const juce::MemoryBlock&, const juce::String&, const juce::String&) {}
+void ARAFileReader::restoreARAArchiveForPaste (const juce::MemoryBlock&, const juce::String&, const juce::String&, const juce::String&) {}
 juce::String ARAFileReader::getAudioSourcePersistentID() const { return {}; }
 juce::String ARAFileReader::getAudioModificationPersistentID() const { return {}; }
 
@@ -1257,7 +1259,7 @@ ARAIXMLResult detectARAFromIXMLChunks (Engine& engine, const juce::File& sourceF
         if (desc.name.isNotEmpty())
         {
             TRACKTION_LOG ("Auto-configured ARA plugin from iXML chunk: " + desc.name);
-            return { desc, chunk.archiveData, chunk.persistentID };
+            return { desc, chunk.archiveData, chunk.persistentID, chunk.documentArchiveID };
         }
 
         TRACKTION_LOG ("ARA iXML chunk found for archive ID '" + chunk.documentArchiveID

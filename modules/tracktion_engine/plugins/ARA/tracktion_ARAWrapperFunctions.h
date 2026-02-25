@@ -10,6 +10,8 @@
 
 struct ArchivingFunctions
 {
+    static inline juce::String documentArchiveIDOverride;
+
     static ARASize ARA_CALL getArchiveSize (ARAArchivingControllerHostRef,
                                             ARAArchiveReaderHostRef ref)
     {
@@ -65,6 +67,9 @@ struct ArchivingFunctions
 
     static ARAPersistentID ARA_CALL getDocumentArchiveID (ARAArchivingControllerHostRef ref, ARAArchiveReaderHostRef)
     {
+        if (documentArchiveIDOverride.isNotEmpty())
+            return documentArchiveIDOverride.toRawUTF8();
+
         if (auto f = (const ARAFactory*) ref)
             return f->documentArchiveID;
 

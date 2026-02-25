@@ -79,7 +79,8 @@ public:
     */
     void restoreARAArchiveForPaste (const juce::MemoryBlock& data,
                                     const juce::String& archivedSourceID,
-                                    const juce::String& archivedModID);
+                                    const juce::String& archivedModID,
+                                    const juce::String& documentArchiveID = {});
 
     /** Returns the persistent ID of the current audio source, or empty if ARA is not active. */
     juce::String getAudioSourcePersistentID() const;
@@ -104,6 +105,7 @@ struct ARAIXMLResult
     juce::PluginDescription pluginDescription;
     juce::MemoryBlock archiveData;
     juce::String persistentID;
+    juce::String documentArchiveID;
     bool isValid() const { return pluginDescription.name.isNotEmpty(); }
 };
 
