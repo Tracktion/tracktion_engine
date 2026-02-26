@@ -29,6 +29,7 @@ void FileBasedProject::lockFile()
 void FileBasedProject::unlockFile()
 {
     fileLockingStream.reset();
+    stream.reset();
 }
 
 void FileBasedProject::load()
@@ -64,7 +65,7 @@ void FileBasedProject::load()
     }
     else
     {
-        stream = nullptr;
+        stream.reset();
         projectId = {};
     }
 
@@ -74,7 +75,7 @@ void FileBasedProject::load()
 void FileBasedProject::refreshProjectPropertiesFromFile()
 {
     const juce::ScopedLock sl (objectLock);
-    stream = nullptr;
+    stream.reset();
 
     if (auto in = getInputStream())
         readProjectHeader (*in, false);
@@ -178,7 +179,7 @@ bool FileBasedProject::save()
             saveTo (*out);
             out.reset();
 
-            stream = nullptr;
+            stream.reset();
             unlockFile();
 
             // try this twice
@@ -303,7 +304,7 @@ void FileBasedProject::setName (const juce::String& newName)
 
         auto dst = file.getParentDirectory().getChildFile (juce::File::createLegalFileName (newName)
                                                              + file.getFileExtension());
-        stream = nullptr;
+        stream.reset();
 
         unlockFile();
 
