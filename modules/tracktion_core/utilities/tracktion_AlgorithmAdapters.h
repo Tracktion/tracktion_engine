@@ -179,6 +179,14 @@ juce::Array<Type> remove_if_nullptr (juce::Array<Type>&& container)
     return std::move (container);
 }
 
+/** Returns true if the pointer matches any of the base classes. */
+template <typename... Ts, typename Base>
+bool is_any_of (Base* ptr)
+{
+    return (... || (dynamic_cast<Ts*> (ptr) != nullptr));
+}
+
+
 /** Implemtation of C++23's std::unreachable. */
 [[noreturn]] inline void unreachable()
 {
