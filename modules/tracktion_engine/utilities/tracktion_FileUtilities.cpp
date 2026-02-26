@@ -61,6 +61,26 @@ bool isTracktionArchiveFile (const juce::File& f) { return f.hasFileExtension (a
 bool isTracktionProjectFile (const juce::File& f) { return f.hasFileExtension (projectFileSuffix); }
 bool isTracktionPresetFile (const juce::File& f)  { return f.hasFileExtension (presetFileSuffix); }
 
+bool isTracktionProjectFolder (const juce::File& f)
+{
+    if (! f.isDirectory())
+        return false;
+
+    if (f.getChildFile ("project_info.json").existsAsFile())
+        return true;
+
+    for (auto& child : f.findChildFiles (juce::File::findFiles, false))
+        if (isTracktionEditFile (child))
+            return true;
+
+    return false;
+}
+
+bool isTracktionProjectFileOrFolder (const juce::File& f)
+{
+    return isTracktionProjectFile (f) || isTracktionProjectFolder (f);
+}
+
 //==============================================================================
 FileDragList::Ptr FileDragList::getFromDrag (const juce::DragAndDropTarget::SourceDetails& s)
 {

@@ -14,6 +14,8 @@ bool isMidiFile (const juce::File&);
 bool isTracktionEditFile (const juce::File&);
 bool isTracktionArchiveFile (const juce::File&);
 bool isTracktionProjectFile (const juce::File&);
+bool isTracktionProjectFolder (const juce::File&);
+bool isTracktionProjectFileOrFolder (const juce::File&);
 bool isTracktionPresetFile (const juce::File&);
 
 const char* const projectFileSuffix = ".tracktion";
