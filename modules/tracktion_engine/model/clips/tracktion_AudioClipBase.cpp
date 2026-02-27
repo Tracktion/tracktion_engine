@@ -1102,6 +1102,9 @@ bool AudioClipBase::isUsingARA() const
     return TimeStretcher::isARA (timeStretchMode);
 }
 
+TimeDuration AudioClipBase::getHead() const  { return araProxy != nullptr ? araProxy->getHead() : TimeDuration(); }
+TimeDuration AudioClipBase::getTail() const  { return araProxy != nullptr ? araProxy->getTail() : TimeDuration(); }
+
 void AudioClipBase::loadARAState()
 {
     setupARA (true);

@@ -163,6 +163,7 @@ struct ARAClipPlayer  : private Selectable::Listener
                 return false;
 
             updateContent (clipToClone);
+            updateHeadAndTailTimes();
 
             return playbackRegionAndSource != nullptr
                      && playbackRegionAndSource->hasPlaybackRegions();
@@ -175,6 +176,7 @@ struct ARAClipPlayer  : private Selectable::Listener
     {
         CRASH_TRACER
         updateContent (nullptr);
+        updateHeadAndTailTimes();
         owner.sendChangeMessage();
     }
 
@@ -470,6 +472,32 @@ struct ARAClipPlayer  : private Selectable::Listener
         return contentAnalyserChecker->isAnalysing();
     }
 
+    TimeDuration getHead() const { return TimeDuration::fromSeconds (araHeadTime); }
+    TimeDuration getTail() const { return TimeDuration::fromSeconds (araTailTime); }
+
+    void updateHeadAndTailTimes()
+    {
+        araHeadTime = 0.0;
+        araTailTime = 0.0;
+
+        if (auto doc = getDocument())
+        {
+            if (playbackRegionAndSource != nullptr)
+            {
+                if (auto pr = playbackRegionAndSource->getFirstPlaybackRegion())
+                {
+                    if (pr->playbackRegionRef != nullptr)
+                    {
+                        doc->dci->getPlaybackRegionHeadAndTailTime (doc->dcRef,
+                                                                     pr->playbackRegionRef,
+                                                                     &araHeadTime,
+                                                                     &araTailTime);
+                    }
+                }
+            }
+        }
+    }
+
     ARADocument* getDocument() const;
 
 private:
@@ -482,6 +510,8 @@ private:
     std::unique_ptr<ARAInstance> araInstance;
     std::unique_ptr<PlaybackRegionAndSource> playbackRegionAndSource;
     HashCode currentHashCode = 0;
+    double araHeadTime = 0.0;
+    double araTailTime = 0.0;
 
     //==============================================================================
     struct ScopedDocumentEditor
@@ -791,6 +821,9 @@ juce::String ARAFileReader::getAudioModificationPersistentID() const
     return {};
 }
 
+TimeDuration ARAFileReader::getHead() const  { return player != nullptr ? player->getHead() : TimeDuration(); }
+TimeDuration ARAFileReader::getTail() const  { return player != nullptr ? player->getTail() : TimeDuration(); }
+
 //==============================================================================
 juce::MidiMessageSequence ARAFileReader::getAnalysedMIDISequence()
 {
@@ -1098,6 +1131,8 @@ juce::MemoryBlock ARAFileReader::storeARAArchiveForCopy()      { return {}; }
 void ARAFileReader::restoreARAArchiveForPaste (const juce::MemoryBlock&, const juce::String&, const juce::String&, const juce::String&) {}
 juce::String ARAFileReader::getAudioSourcePersistentID() const { return {}; }
 juce::String ARAFileReader::getAudioModificationPersistentID() const { return {}; }
+TimeDuration ARAFileReader::getHead() const                    { return {}; }
+TimeDuration ARAFileReader::getTail() const                    { return {}; }
 
 juce::PluginDescription ARAFileReader::findPluginForARAArchiveID (Engine&, const juce::String&) { return {}; }
 

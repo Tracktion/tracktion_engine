@@ -932,7 +932,12 @@ std::unique_ptr<tracktion::graph::Node> createNodeForClips (EditItemID trackID, 
             auto combiner = std::make_unique<CombiningNode> (trackID, params.processState);
 
             if (auto clipNode = createNodeForClip (*clip, trackMuteState, params, ClipRole::arranger))
-                combiner->addInput (std::move (clipNode), clip->getPosition().time);
+            {
+                auto timeRange = clip->getPosition().time;
+                timeRange = timeRange.withStart (timeRange.getStart() - clip->getHead())
+                                     .withEnd (timeRange.getEnd() + clip->getTail());
+                combiner->addInput (std::move (clipNode), timeRange);
+            }
 
             return combiner;
         }
@@ -944,7 +949,12 @@ std::unique_ptr<tracktion::graph::Node> createNodeForClips (EditItemID trackID, 
     for (auto clip : clips)
         if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
             if (auto clipNode = createNodeForClip (*clip, trackMuteState, params, ClipRole::arranger))
-                combiner->addInput (std::move (clipNode), clip->getPosition().time);
+            {
+                auto timeRange = clip->getPosition().time;
+                timeRange = timeRange.withStart (timeRange.getStart() - clip->getHead())
+                                     .withEnd (timeRange.getEnd() + clip->getTail());
+                combiner->addInput (std::move (clipNode), timeRange);
+            }
 
     return combiner;
 }

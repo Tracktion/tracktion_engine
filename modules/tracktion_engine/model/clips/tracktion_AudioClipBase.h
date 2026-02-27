@@ -531,6 +531,9 @@ public:
     /** Returns true if this clip is using an ARA plugin. */
     bool isUsingARA() const;
 
+    TimeDuration getHead() const override;
+    TimeDuration getTail() const override;
+
     /** @deprecated Use isUsingARA() instead. */
     [[deprecated("Use isUsingARA() instead")]]
     bool isUsingMelodyne() const { return isUsingARA(); }

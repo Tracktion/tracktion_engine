@@ -198,6 +198,12 @@ public:
     /** Returns the maximum length this clip can have. */
     virtual TimeDuration getMaximumLength()               { return toDuration (Edit::getMaximumEditEnd()); }
 
+    /** Returns extra time before the clip start that needs processing (e.g., ARA head time). */
+    virtual TimeDuration getHead() const                  { return {}; }
+
+    /** Returns extra time after the clip end that needs processing (e.g., ARA tail time). */
+    virtual TimeDuration getTail() const                  { return {}; }
+
     /** Returns times for snapping to, relative to the Edit. Base class adds start and end time. */
     virtual juce::Array<TimePosition> getInterestingTimes();
 

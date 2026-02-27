@@ -88,6 +88,12 @@ public:
     /** Returns the persistent ID of the current audio modification, or empty if ARA is not active. */
     juce::String getAudioModificationPersistentID() const;
 
+    /** Returns extra time before the playback region start reported by the ARA plugin. */
+    TimeDuration getHead() const;
+
+    /** Returns extra time after the playback region end reported by the ARA plugin. */
+    TimeDuration getTail() const;
+
 private:
     std::unique_ptr<ARAClipPlayer> player;
     juce::MidiBuffer midiBuffer;
