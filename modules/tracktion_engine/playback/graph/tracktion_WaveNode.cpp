@@ -74,10 +74,10 @@ class AudioFileCacheReader final    : public AudioReader
 {
 public:
     AudioFileCacheReader (AudioFileCache::Reader::Ptr ptr, TimeDuration timeout,
-                          const juce::AudioChannelSet& destBufferChannels,
-                          const juce::AudioChannelSet& sourceBufferChannels)
+                          const ChannelConfiguration& destChannels,
+                          const ChannelConfiguration& sourceChannels)
         : reader (std::move (ptr)), timeoutMs ((int) std::lround (timeout.inSeconds() * 1000.0)),
-          destChannelSet (destBufferChannels), sourceChannelSet (sourceBufferChannels)
+          destChannelConfig (destChannels), sourceChannelConfig (sourceChannels)
     {
     }
 
@@ -119,17 +119,17 @@ public:
         auto buffer = toAudioBuffer (destBuffer);
         return reader->readSamples ((int) destBuffer.getNumFrames(),
                                     buffer,
-                                    destChannelSet,
+                                    destChannelConfig,
                                     0,
-                                    sourceChannelSet,
+                                    sourceChannelConfig,
                                     timeoutMs);
     }
 
     AudioFileCache::Reader::Ptr reader;
     int timeoutMs;
-    const juce::AudioChannelSet destChannelSet;
-    const juce::AudioChannelSet sourceChannelSet;
-    const choc::buffer::ChannelCount numChannels { static_cast<choc::buffer::ChannelCount> (destChannelSet.size()) };
+    const ChannelConfiguration destChannelConfig;
+    const ChannelConfiguration sourceChannelConfig;
+    const choc::buffer::ChannelCount numChannels { static_cast<choc::buffer::ChannelCount> (destChannelConfig.size()) };
 };
 
 //==============================================================================
@@ -1682,8 +1682,7 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
 
     auto destBuffer = pc.buffers.audio;
     auto numFrames = destBuffer.getNumFrames();
-    const auto destBufferChannels = juce::AudioChannelSet::canonicalChannelSet ((int) destBuffer.getNumChannels());
-    auto numChannels = (choc::buffer::ChannelCount) destBufferChannels.size();
+    auto numChannels = (choc::buffer::ChannelCount) destChannels.size();
     assert (pc.buffers.audio.getNumChannels() == numChannels);
 
     AudioScratchBuffer fileData ((int) numChannels, numFileSamples + 2);
@@ -1694,8 +1693,8 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
     {
         SCOPED_REALTIME_CHECK
 
-        if (reader->readSamples (numFileSamples + 2, fileData.buffer, destBufferChannels, 0,
-                                 sourceChannels.toChannelSet(),
+        if (reader->readSamples (numFileSamples + 2, fileData.buffer, destChannels, 0,
+                                 sourceChannels,
                                  isOfflineRender ? 5000 : 3))
         {
             if (! getPlayHeadState().isContiguousWithPreviousBlock() && ! getPlayHeadState().isFirstBlockOfLoop())
@@ -2090,7 +2089,7 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
         return false;
 
     auto audioFileCacheReader = std::make_unique<AudioFileCacheReader> (std::move (fileCacheReader), isOfflineRender ? 5s : 0ms,
-                                                                        destChannels.toChannelSet(), channelsToUse.toChannelSet());
+                                                                        destChannels, channelsToUse);
     std::unique_ptr<AudioReader> loopReader;
 
     if (warpMap)

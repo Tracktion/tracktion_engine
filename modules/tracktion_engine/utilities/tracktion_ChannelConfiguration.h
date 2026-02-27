@@ -92,6 +92,10 @@ public:
     /// Creates a configuration with discrete (unnamed) channels.
     static ChannelConfiguration discreteChannels (int numChannels, int firstDeviceChannelIndex = 0);
 
+    /// Creates a canonical configuration for a given number of channels.
+    /// 1=mono, 2=stereo, 6=5.1, 8=7.1, otherwise discrete.
+    static ChannelConfiguration canonical (int numChannels, int firstDeviceChannelIndex = 0);
+
     /// Creates a configuration from an AudioChannelSet and starting device index.
     static ChannelConfiguration fromChannelSet (const juce::AudioChannelSet&, int firstDeviceChannelIndex = 0);
 

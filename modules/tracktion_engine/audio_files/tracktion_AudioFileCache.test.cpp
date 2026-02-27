@@ -52,8 +52,8 @@ private:
         {
             const int numToRead = std::min ((int) fileReader->lengthInSamples - i, 32'768);
             cacheReader->readSamples (numToRead,
-                                      bufferFromCache, juce::AudioChannelSet::stereo(),
-                                      i, juce::AudioChannelSet::stereo(), 5'000);
+                                      bufferFromCache, ChannelConfiguration::stereo(),
+                                      i, ChannelConfiguration::stereo(), 5'000);
         }
 
         beginTest ("Read a sin wav file");
@@ -265,8 +265,8 @@ private:
 
                 cacheReader->setReadPosition (sourceStartSample);
                 cacheReader->readSamples (blockSize,
-                                          destBuffer, juce::AudioChannelSet::stereo(),
-                                          0, juce::AudioChannelSet::stereo(), 5'000);
+                                          destBuffer, ChannelConfiguration::stereo(),
+                                          0, ChannelConfiguration::stereo(), 5'000);
             }
 
             BenchmarkList::getInstance().addResult (bm.getResult());
@@ -299,8 +299,8 @@ private:
 
                 cacheReader->setReadPosition (sourceStartSample);
                 cacheReader->readSamples (blockSize,
-                                          destBuffer, juce::AudioChannelSet::stereo(),
-                                          0, juce::AudioChannelSet::stereo(), 5'000);
+                                          destBuffer, ChannelConfiguration::stereo(),
+                                          0, ChannelConfiguration::stereo(), 5'000);
             }
 
             BenchmarkList::getInstance().addResult (bm.getResult());
@@ -333,8 +333,8 @@ private:
 //
 //                cacheReader->setReadPosition (sourceStartSample);
 //                cacheReader->readSamples (blockSize,
-//                                          destBuffer, juce::AudioChannelSet::stereo(),
-//                                          0, juce::AudioChannelSet::stereo(), 5'000);
+//                                          destBuffer, ChannelConfiguration::stereo(),
+//                                          0, ChannelConfiguration::stereo(), 5'000);
 //            }
 //
 //            BenchmarkList::getInstance().addResult (bm.getResult());
@@ -367,8 +367,8 @@ private:
 
                 cacheReader->setReadPosition (sourceStartSample);
                 cacheReader->readSamples (blockSize,
-                                          destBuffer, juce::AudioChannelSet::stereo(),
-                                          0, juce::AudioChannelSet::stereo(), 5'000);
+                                          destBuffer, ChannelConfiguration::stereo(),
+                                          0, ChannelConfiguration::stereo(), 5'000);
             }
 
             BenchmarkList::getInstance().addResult (bm.getResult());
@@ -401,8 +401,8 @@ private:
 
                 cacheReader->setReadPosition (sourceStartSample);
                 cacheReader->readSamples (numThisTime,
-                                          destBuffer, juce::AudioChannelSet::stereo(),
-                                          0, juce::AudioChannelSet::stereo(), 5'000);
+                                          destBuffer, ChannelConfiguration::stereo(),
+                                          0, ChannelConfiguration::stereo(), 5'000);
             }
 
             BenchmarkList::getInstance().addResult (bm.getResult());
@@ -436,8 +436,8 @@ private:
 //
 //                cacheReader->setReadPosition (sourceStartSample);
 //                cacheReader->readSamples (numThisTime,
-//                                          destBuffer, juce::AudioChannelSet::stereo(),
-//                                          0, juce::AudioChannelSet::stereo(), 5'000);
+//                                          destBuffer, ChannelConfiguration::stereo(),
+//                                          0, ChannelConfiguration::stereo(), 5'000);
 //            }
 //
 //            BenchmarkList::getInstance().addResult (bm.getResult());

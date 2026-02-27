@@ -104,8 +104,8 @@ protected:
         auto numToDo = (int) std::min ((SampleCount) 32768, numLeft);
 
         AudioScratchBuffer scratch (numChannels, numToDo);
-        auto schannels = juce::AudioChannelSet::canonicalChannelSet(numChannels);
-        reader->readSamples (numToDo, scratch.buffer, schannels, 0, juce::AudioChannelSet::stereo(), 5000);
+        auto schannels = ChannelConfiguration::canonical (numChannels);
+        reader->readSamples (numToDo, scratch.buffer, schannels, 0, ChannelConfiguration::stereo(), 5000);
 
         if (findingNormaliseLevel)
             processNextNormaliseBuffer (scratch.buffer);

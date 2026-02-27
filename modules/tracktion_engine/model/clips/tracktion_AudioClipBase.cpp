@@ -2020,7 +2020,7 @@ struct StretchSegment
         {
             AudioScratchBuffer scratch (numChannelsToUse, needed);
             scratch.buffer.clear();
-            auto bufferChannels = juce::AudioChannelSet::canonicalChannelSet (numChannelsToUse);
+            auto bufferChannels = ChannelConfiguration::canonical (numChannelsToUse);
             auto sourceChannelsToUse = bufferChannels;
 
             if (needed > 0)

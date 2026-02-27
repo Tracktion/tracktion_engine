@@ -45,9 +45,9 @@ public:
 
         bool readSamples (int numSamples,
                           juce::AudioBuffer<float>& destBuffer,
-                          const juce::AudioChannelSet& destBufferChannels,
+                          const ChannelConfiguration& destChannels,
                           int startOffsetInDestBuffer,
-                          const juce::AudioChannelSet& sourceBufferChannels,
+                          const ChannelConfiguration& sourceChannels,
                           int timeoutMs);
 
         bool readSamples (int* const* destSamples,

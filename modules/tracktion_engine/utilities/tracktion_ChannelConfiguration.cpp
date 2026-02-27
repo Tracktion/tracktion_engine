@@ -159,6 +159,16 @@ ChannelConfiguration ChannelConfiguration::discreteChannels (int numChannels, in
     return config;
 }
 
+ChannelConfiguration ChannelConfiguration::canonical (int numChannels, int firstDeviceChannelIndex)
+{
+    if (numChannels == 1)  return mono (firstDeviceChannelIndex);
+    if (numChannels == 2)  return stereo (firstDeviceChannelIndex);
+    if (numChannels == 6)  return surround5_1 (firstDeviceChannelIndex);
+    if (numChannels == 8)  return surround7_1 (firstDeviceChannelIndex);
+
+    return discreteChannels (numChannels, firstDeviceChannelIndex);
+}
+
 ChannelConfiguration ChannelConfiguration::fromChannelSet (const juce::AudioChannelSet& channelSet, int firstDeviceChannelIndex)
 {
     ChannelConfiguration config;

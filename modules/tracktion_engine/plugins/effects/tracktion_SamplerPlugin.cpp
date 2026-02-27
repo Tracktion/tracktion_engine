@@ -666,8 +666,8 @@ void SamplerPlugin::SamplerSound::setExcerpt (double startTime_, double length_)
             audioData.setSize (audioFile.getNumChannels(), fileLengthSamples + 32);
             audioData.clear();
 
-            auto audioDataChannelSet = juce::AudioChannelSet::canonicalChannelSet (audioFile.getNumChannels());
-            auto channelsToUse = juce::AudioChannelSet::stereo();
+            auto audioDataChannels = ChannelConfiguration::canonical (audioFile.getNumChannels());
+            auto channelsToUse = ChannelConfiguration::stereo();
 
             int total = fileLengthSamples;
             int offset = 0;
@@ -677,7 +677,7 @@ void SamplerPlugin::SamplerSound::setExcerpt (double startTime_, double length_)
                 const int numThisTime = std::min (8192, total);
                 reader->setReadPosition (fileStartSample + offset);
 
-                if (! reader->readSamples (numThisTime, audioData, audioDataChannelSet, offset, channelsToUse, 2000))
+                if (! reader->readSamples (numThisTime, audioData, audioDataChannels, offset, channelsToUse, 2000))
                 {
                     jassertfalse;
                     break;

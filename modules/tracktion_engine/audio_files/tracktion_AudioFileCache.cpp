@@ -899,124 +899,54 @@ void AudioFileCache::Reader::setLoopRange (SampleRange newRange)
 
 bool AudioFileCache::Reader::readSamples (int numSamples,
                                           juce::AudioBuffer<float>& destBuffer,
-                                          const juce::AudioChannelSet& destBufferChannels,
+                                          const ChannelConfiguration& destChannels,
                                           int startOffsetInDestBuffer,
-                                          const juce::AudioChannelSet& sourceBufferChannels,
+                                          const ChannelConfiguration& sourceChannels,
                                           int timeoutMs)
 {
-    jassert (numSamples < CachedFile::readAheadSamples); // this method fails unless broken down into chunks smaller than this
+    juce::ignoreUnused (destChannels);
+    jassert (numSamples < CachedFile::readAheadSamples);
     const auto numDestChans = destBuffer.getNumChannels();
 
-    // This may need to deal with the generic surround case if destBuffer number of channels > channelsToUse.size()
-    if (cache.engine.getEngineBehaviour().isDescriptionOfWaveDevicesSupported())
-    {
-        static constexpr int maxNumChannels = 32;
-        float* chans[maxNumChannels] = {};
-        auto numSourceChans = std::min (maxNumChannels, sourceBufferChannels.size());
-        int highestUsedSourceChan = 0;
+    static constexpr int maxNumChannels = 32;
+    float* chans[maxNumChannels] = {};
+    int highestUsedSourceChan = 0;
 
-        for (int destIndex = 0; destIndex < numDestChans; ++destIndex)
+    for (int d = 0; d < numDestChans; ++d)
+    {
+        if (d < (int) sourceChannels.size())
         {
-            auto destType = destBufferChannels.getTypeOfChannel (destIndex);
-            auto destData = destBuffer.getWritePointer (destIndex, startOffsetInDestBuffer);
-            auto sourceIndex = sourceBufferChannels.getChannelIndexForType (destType);
+            auto sourceIndex = sourceChannels[(size_t) d].indexInDevice;
 
             if (sourceIndex >= 0 && sourceIndex < maxNumChannels)
             {
-                chans[sourceIndex] = destData;
+                chans[sourceIndex] = destBuffer.getWritePointer (d, startOffsetInDestBuffer);
                 highestUsedSourceChan = std::max (highestUsedSourceChan, sourceIndex);
             }
             else
             {
-                juce::FloatVectorOperations::clear (destData, numSamples);
-            }
-        }
-
-        if (readSamples ((int**) chans, numSourceChans, 0, numSamples, timeoutMs))
-        {
-            bool isFloatingPoint = (file != nullptr) ? static_cast<CachedFile*> (file)->info.isFloatingPoint
-                                                     : fallbackReader->usesFloatingPointData;
-
-            if (! isFloatingPoint)
-                for (int i = 0; i <= highestUsedSourceChan; ++i)
-                    if (auto chan = chans[i])
-                        juce::FloatVectorOperations::convertFixedToFloat (chan, (const int*) chan, 1.0f / (float) 0x7fffffff, numSamples);
-
-            return true;
-        }
-    }
-    else
-    {
-        float* chans[2] = {};
-        bool dupeChannel = false;
-
-        auto leftIndex = [&]
-                         {
-                            if (auto l = sourceBufferChannels.getChannelIndexForType (juce::AudioChannelSet::left); l >= 0)
-                                return l;
-
-                            return sourceBufferChannels.getChannelIndexForType (juce::AudioChannelSet::centre);
-                         }();
-
-        if (numDestChans > 1)
-        {
-            if (leftIndex >= 0
-                 && sourceBufferChannels.getChannelIndexForType (juce::AudioChannelSet::right) >= 0)
-            {
-                chans[0] = destBuffer.getWritePointer (0, startOffsetInDestBuffer);
-
-                if (getNumChannels() > 1)
-                    chans[1] = destBuffer.getWritePointer (1, startOffsetInDestBuffer);
-                else
-                    dupeChannel = true;
-            }
-            else if (leftIndex >= 0)
-            {
-                chans[0] = destBuffer.getWritePointer (0, startOffsetInDestBuffer);
-                dupeChannel = true;
-            }
-            else
-            {
-                chans[1] = destBuffer.getWritePointer (1, startOffsetInDestBuffer);
-                dupeChannel = true;
+                juce::FloatVectorOperations::clear (destBuffer.getWritePointer (d, startOffsetInDestBuffer), numSamples);
             }
         }
         else
         {
-            if (leftIndex >= 0 || getNumChannels() < 2)
-                chans[0] = destBuffer.getWritePointer (0, startOffsetInDestBuffer);
-            else
-                chans[1] = destBuffer.getWritePointer (0, startOffsetInDestBuffer);
+            juce::FloatVectorOperations::clear (destBuffer.getWritePointer (d, startOffsetInDestBuffer), numSamples);
         }
+    }
 
-        if (readSamples ((int**) chans, 2, 0, numSamples, timeoutMs))
-        {
-            const bool isFloatingPoint = (file != nullptr) ? static_cast<CachedFile*> (file)->info.isFloatingPoint
-                                                           : fallbackReader->usesFloatingPointData;
+    auto numSourceChans = std::min (maxNumChannels, highestUsedSourceChan + 1);
 
-            if (! isFloatingPoint)
-                for (int i = 0; i < 2; ++i)
-                    if (auto* chan = chans[i])
-                        juce::FloatVectorOperations::convertFixedToFloat (chan, (const int*) chan, 1.0f / (float) 0x7fffffff, numSamples);
+    if (readSamples ((int**) chans, numSourceChans, 0, numSamples, timeoutMs))
+    {
+        bool isFloatingPoint = (file != nullptr) ? static_cast<CachedFile*> (file)->info.isFloatingPoint
+                                                 : fallbackReader->usesFloatingPointData;
 
-            if (dupeChannel)
-            {
-                if (chans[0] == nullptr)
-                    juce::FloatVectorOperations::copy (destBuffer.getWritePointer (0), chans[1], numSamples);
-                else if (chans[1] == nullptr)
-                    juce::FloatVectorOperations::copy (destBuffer.getWritePointer (1), chans[0], numSamples);
-            }
+        if (! isFloatingPoint)
+            for (int i = 0; i <= highestUsedSourceChan; ++i)
+                if (auto chan = chans[i])
+                    juce::FloatVectorOperations::convertFixedToFloat (chan, (const int*) chan, 1.0f / (float) 0x7fffffff, numSamples);
 
-            return true;
-        }
-        else if (dupeChannel)
-        {
-            // If the read failed, we still need to dupe the channel as only one will contain cleared samples
-            if (chans[0] == nullptr)
-                juce::FloatVectorOperations::copy (destBuffer.getWritePointer (0), chans[1], numSamples);
-            else if (chans[1] == nullptr)
-                juce::FloatVectorOperations::copy (destBuffer.getWritePointer (1), chans[0], numSamples);
-        }
+        return true;
     }
 
     return false;

@@ -472,6 +472,120 @@ TEST_SUITE("tracktion_engine")
 }
 #endif
 
+#if ENGINE_UNIT_TESTS_WAVENODE_CHANNEL_ROUTING
+
+TEST_SUITE ("tracktion_engine")
+{
+    TEST_CASE ("WaveNode: channel routing through Edit")
+    {
+        using namespace tracktion::graph::test_utilities;
+
+        auto& engine = *Engine::getEngines()[0];
+        const double sampleRate = 44100.0;
+        const int blockSize = 256;
+        const auto fileLength = 1_td;
+
+        auto renderEdit = [&] (Edit& edit, int numOutputChannels) -> std::shared_ptr<TestContext>
+        {
+            tracktion::graph::PlayHead playHead;
+            tracktion::graph::PlayHeadState playHeadState { playHead };
+            ProcessState processState { playHeadState, edit.tempoSequence };
+
+            CreateNodeParams params { processState };
+            params.sampleRate = sampleRate;
+            params.blockSize = blockSize;
+            params.forRendering = true;
+            auto node = createNodeForEdit (edit, params);
+
+            TestProcess<TracktionNodePlayer> testProcess (std::make_unique<TracktionNodePlayer> (std::move (node), processState, sampleRate, blockSize,
+                                                                                                 getPoolCreatorFunction (ThreadPoolStrategy::realTime)),
+                                                          TestSetup { sampleRate, blockSize }, numOutputChannels, fileLength.inSeconds(), true);
+            testProcess.setPlayHead (&playHeadState.playHead);
+            playHeadState.playHead.playSyncedToRange ({});
+            return testProcess.processAll();
+        };
+
+        auto checkChannel = [] (const juce::AudioBuffer<float>& buffer, int channel,
+                                float expectedMag, float expectedRMS)
+        {
+            auto mag = buffer.getMagnitude (channel, 0, buffer.getNumSamples());
+            auto rms = buffer.getRMSLevel (channel, 0, buffer.getNumSamples());
+            CHECK (mag == doctest::Approx (expectedMag).epsilon (0.02));
+            CHECK (rms == doctest::Approx (expectedRMS).epsilon (0.02));
+        };
+
+        std::unique_ptr<juce::TemporaryFile> sinFile;
+
+        auto createEditWithClip = [&] (int numSourceChannels) -> std::unique_ptr<Edit>
+        {
+            sinFile = getSinFile<juce::WavAudioFormat> (sampleRate, fileLength.inSeconds(), numSourceChannels);
+            auto edit = test_utilities::createTestEdit (engine);
+            auto track = getAudioTracks (*edit)[0];
+            auto clip = insertWaveClip (*track, {}, sinFile->getFile(),
+                                        { .time = { 0_tp, toPosition (fileLength) } },
+                                        DeleteExistingClips::no);
+            clip->setUsesProxy (false);
+
+            return edit;
+        };
+
+        SUBCASE ("mono source, 1 output channel")
+        {
+            auto edit = createEditWithClip (1);
+            auto result = renderEdit (*edit, 1);
+
+            REQUIRE (result->buffer.getNumChannels() >= 1);
+            checkChannel (result->buffer, 0, 1.0f, 0.707f);
+        }
+
+        SUBCASE ("stereo source, 2 output channels")
+        {
+            auto edit = createEditWithClip (2);
+            auto result = renderEdit (*edit, 2);
+
+            REQUIRE (result->buffer.getNumChannels() >= 2);
+            checkChannel (result->buffer, 0, 1.0f, 0.707f);
+            checkChannel (result->buffer, 1, 1.0f, 0.707f);
+        }
+
+        SUBCASE ("mono source, 2 output channels")
+        {
+            auto edit = createEditWithClip (1);
+            auto result = renderEdit (*edit, 2);
+
+            REQUIRE (result->buffer.getNumChannels() >= 2);
+            checkChannel (result->buffer, 0, 1.0f, 0.707f);
+            checkChannel (result->buffer, 1, 0.0f, 0.0f);
+        }
+
+        SUBCASE ("4-channel source, 4 output channels (stereo track)")
+        {
+            // A default audio track is stereo, so only the first 2 channels
+            // of a 4-channel source are routed to the output
+            auto edit = createEditWithClip (4);
+            auto result = renderEdit (*edit, 4);
+
+            REQUIRE (result->buffer.getNumChannels() >= 4);
+            checkChannel (result->buffer, 0, 1.0f, 0.707f);
+            checkChannel (result->buffer, 1, 1.0f, 0.707f);
+            checkChannel (result->buffer, 2, 0.0f, 0.0f);
+            checkChannel (result->buffer, 3, 0.0f, 0.0f);
+        }
+
+        SUBCASE ("4-channel source, 2 output channels")
+        {
+            auto edit = createEditWithClip (4);
+            auto result = renderEdit (*edit, 2);
+
+            REQUIRE (result->buffer.getNumChannels() >= 2);
+            checkChannel (result->buffer, 0, 1.0f, 0.707f);
+            checkChannel (result->buffer, 1, 1.0f, 0.707f);
+        }
+    }
+}
+
+#endif // ENGINE_UNIT_TESTS_WAVENODE_CHANNEL_ROUTING
+
 } // namespace tracktion::inline engine
 
 #endif //TRACKTION_UNIT_TESTS

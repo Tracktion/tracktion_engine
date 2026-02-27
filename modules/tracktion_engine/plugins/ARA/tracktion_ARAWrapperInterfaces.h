@@ -834,8 +834,8 @@ public:
         buffer.clear();
 
         reader->setReadPosition (samplePosition);
-        reader->readSamples (numSamples, buffer, juce::AudioChannelSet::stereo(),
-                             0, juce::AudioChannelSet::stereo(), 5000);
+        reader->readSamples (numSamples, buffer, ChannelConfiguration::stereo(),
+                             0, ChannelConfiguration::stereo(), 5000);
 
         for (int i = 0; i < numChans; ++i)
             juce::FloatVectorOperations::copy ((float*) buffers[i], buffer.getReadPointer (i), numSamples);

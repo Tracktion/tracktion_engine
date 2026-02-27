@@ -198,8 +198,7 @@ void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t>
 
     auto destBuffer = pc.buffers.audio;
     auto numSamples = destBuffer.getNumFrames();
-    const auto destBufferChannels = juce::AudioChannelSet::canonicalChannelSet ((int) destBuffer.getNumChannels());
-    auto numChannels = (choc::buffer::ChannelCount) destBufferChannels.size();
+    auto numChannels = (choc::buffer::ChannelCount) destChannels.size();
     assert (pc.buffers.audio.getNumChannels() == numChannels);
 
     AudioScratchBuffer fileData ((int) numChannels, numFileSamples + 2);
@@ -209,8 +208,8 @@ void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t>
     {
         SCOPED_REALTIME_CHECK
 
-        if (reader->readSamples (numFileSamples + 2, fileData.buffer, destBufferChannels, 0,
-                                 channelsToUse.toChannelSet(),
+        if (reader->readSamples (numFileSamples + 2, fileData.buffer, destChannels, 0,
+                                 channelsToUse,
                                  isOfflineRender ? 5000 : 3))
         {
             if (! getPlayHeadState().isContiguousWithPreviousBlock() && ! getPlayHeadState().isFirstBlockOfLoop())
