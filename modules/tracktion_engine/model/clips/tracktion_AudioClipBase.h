@@ -148,18 +148,31 @@ public:
     LiveClipLevel getLiveClipLevel();
 
     //==============================================================================
-    /** Enables the left channel of the clip. */
-    void setLeftChannelActive (bool);
-    /** Returns whether the left channel of the clip is enabled. */
-    bool isLeftChannelActive() const;
+    /** Returns the source file's channel configuration.
+        This represents all available channels in the source audio file.
+    */
+    ChannelConfiguration getSourceChannelConfiguration();
 
-    /** Enables the right channel of the clip. */
-    void setRightChannelActive (bool);
-    /** Returns whether the right channel of the clip is enabled. */
-    bool isRightChannelActive() const;
+    /** Returns which channels are active (selected for playback).
+        Only active channels will be played back.
+    */
+    ChannelConfiguration getActiveChannelConfiguration() const;
 
-    /** Returns the layout of the active channels. */
-    juce::AudioChannelSet getActiveChannels() const     { return activeChannels; }
+    /** Sets which channels are active for playback.
+        @param config The channel configuration to use for playback
+    */
+    void setActiveChannelConfiguration (const ChannelConfiguration& config);
+
+    /** Returns the channel configuration output by this clip.
+        This considers clip effects and returns the final output channel layout.
+        For now, this returns the same as getActiveChannelConfiguration().
+    */
+    ChannelConfiguration getOutputChannelConfiguration() const;
+
+    /** Returns the layout of the active channels as a JUCE AudioChannelSet.
+        @deprecated Use getActiveChannelConfiguration() instead.
+    */
+    juce::AudioChannelSet getActiveChannels() const     { return activeChannelConfig.toChannelSet(); }
 
     //==============================================================================
     /** Sets the fade in duration in seconds.
@@ -662,8 +675,8 @@ protected:
     std::unique_ptr<ClipEffects> clipEffects;
     mutable AsyncFunctionCaller asyncFunctionCaller;
 
-    juce::AudioChannelSet activeChannels;
-    void updateLeftRightChannelActivenessFlags();
+    ChannelConfiguration activeChannelConfig;
+    void updateActiveChannelConfiguration();
 
     PluginList pluginList;
 

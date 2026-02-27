@@ -390,7 +390,7 @@ public:
             auto& wi = getWaveInput();
 
             rc->fileWriter = std::make_unique<AudioFileWriter> (AudioFile (edit.engine, recordedFile), format,
-                                                                wi.isStereoPair() ? 2 : 1,
+                                                                (int) wi.getChannels().getNumChannels(),
                                                                 rc->sampleRate, wi.bitDepth, metadata, 0);
 
             if (rc->fileWriter->isOpen())
@@ -431,7 +431,7 @@ public:
                 {
                     if ((rc->thumbnail = edit.engine.getRecordingThumbnailManager().getThumbnailFor (recordedFile)))
                     {
-                        rc->thumbnail->reset (wi.isStereoPair() ? 2 : 1, rc->sampleRate);
+                        rc->thumbnail->reset ((int) wi.getChannels().getNumChannels(), rc->sampleRate);
                         rc->thumbnail->punchInTime = punchRange.getStart();
                     }
                 }
@@ -1364,12 +1364,11 @@ protected:
 };
 
 //==============================================================================
-WaveInputDevice::WaveInputDevice (Engine& e, const juce::String& devType,
-                                  const WaveDeviceDescription& desc, DeviceType t)
-    : InputDevice (e, devType, desc.name, "wavein_" + juce::String::toHexString (desc.name.hashCode())),
-      deviceChannels (desc.channels),
+WaveInputDevice::WaveInputDevice (Engine& e, const WaveDeviceDescription& desc, DeviceType t)
+    : InputDevice (e, desc.name, "wavein_" + juce::String::toHexString (desc.name.hashCode())),
+      deviceDescription (desc),
       deviceType (t),
-      channelSet (createChannelSet (desc.channels))
+      channelSet (desc.channels.toChannelSet())
 {
     enabled = desc.enabled;
     loadProps();
@@ -1379,6 +1378,14 @@ WaveInputDevice::~WaveInputDevice()
 {
     notifyListenersOfDeletion();
     closeDevice();
+}
+
+juce::String WaveInputDevice::getDeviceTypeDescription() const
+{
+    if (deviceType == trackWaveDevice)
+        return TRANS("Track Wave Input");
+
+    return TRANS("Wave Audio Input");
 }
 
 juce::StringArray WaveInputDevice::getMergeModes()
@@ -1427,7 +1434,7 @@ void WaveInputDevice::setEnabled (bool b)
 
         if (! isTrackDevice())
         {
-            engine.getDeviceManager().setWaveInChannelsEnabled (deviceChannels, b);
+            engine.getDeviceManager().setDeviceEnabled (*this, b);
         }
         else
         {
@@ -1510,17 +1517,9 @@ void WaveInputDevice::saveProps()
 }
 
 //==============================================================================
-juce::String WaveInputDevice::getSelectableDescription()
-{
-    if (getDeviceType() == trackWaveDevice)
-        return getAlias() + " (" + getType() + ")";
-
-    return InputDevice::getSelectableDescription();
-}
-
 bool WaveInputDevice::isStereoPair() const
 {
-    return deviceChannels.size() == 2;
+    return deviceDescription.getNumChannels() == 2;
 }
 
 void WaveInputDevice::setStereoPair (bool stereo)
@@ -1531,12 +1530,30 @@ void WaveInputDevice::setStereoPair (bool stereo)
         return;
     }
 
-    auto& dm = engine.getDeviceManager();
+    engine.getDeviceManager().setDeviceNumChannels (*this, stereo ? 2 : 1);
+}
 
-    if (deviceChannels.size() == 2)
-        dm.setDeviceInChannelStereo (std::max (deviceChannels[0].indexInDevice, deviceChannels[1].indexInDevice), stereo);
-    else if (deviceChannels.size() == 1)
-        dm.setDeviceInChannelStereo (deviceChannels[0].indexInDevice, stereo);
+juce::PopupMenu WaveInputDevice::createChannelGroupMenu (bool includeSetAllChannelsOptions)
+{
+    juce::PopupMenu m;
+    auto& dm = engine.getDeviceManager();
+    uint32_t channelNum = 0;
+    auto currentNumChannels = deviceDescription.getNumChannels();
+
+    for (auto& option : dm.getPossibleChannelGroupsForDevice (*this, DeviceManager::maxNumChannelsPerDevice))
+    {
+        auto num = ++channelNum;
+        m.addItem (option, true, num == currentNumChannels, [this, &dm, num] { dm.setDeviceNumChannels (*this, num); });
+    }
+
+    if (includeSetAllChannelsOptions)
+    {
+        m.addSeparator();
+        m.addItem ("Set all to mono channels", [&dm] { dm.setAllWaveInputsToNumChannels (1); });
+        m.addItem ("Set all to stereo pairs",  [&dm] { dm.setAllWaveInputsToNumChannels (2); });
+    }
+
+    return m;
 }
 
 void WaveInputDevice::setRecordAdjustment (TimeDuration d)

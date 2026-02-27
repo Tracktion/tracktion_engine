@@ -351,6 +351,10 @@ void AudioClipComponent::drawWaveform (Graphics& g, te::AudioClipBase& c, te::Sm
 
     g.setColour (colour);
 
+    const auto activeChannels = c.getActiveChannelConfiguration();
+    const bool useLeft = activeChannels.containsDeviceChannel (0);
+    const bool useRight = activeChannels.containsDeviceChannel (1);
+
     if (usesTimeStretchedProxy)
     {
         const Rectangle<int> area (left + xOffset, y, right - left, h);
@@ -359,7 +363,7 @@ void AudioClipComponent::drawWaveform (Graphics& g, te::AudioClipBase& c, te::Sm
         {
             drawChannels (g, thumb, area,
                           getTimeRangeForDrawing (left, right),
-                          c.isLeftChannelActive(), c.isRightChannelActive(),
+                          useLeft, useRight,
                           gainL, gainR);
         }
     }
@@ -373,7 +377,7 @@ void AudioClipComponent::drawWaveform (Graphics& g, te::AudioClipBase& c, te::Sm
         drawChannels (g, thumb,
                       { left + xOffset, y, right - left, h },
                       { t1, t2 },
-                      c.isLeftChannelActive(), c.isRightChannelActive(),
+                      useLeft, useRight,
                       gainL, gainR);
     }
 }

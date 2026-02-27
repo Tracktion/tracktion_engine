@@ -91,14 +91,6 @@ namespace
         return 2;
     }
 
-    bool isUnityChannelMap (const std::vector<std::pair<int, int>>& channelMap)
-    {
-        for (auto mapping : channelMap)
-            if (mapping.first != mapping.second)
-                return false;
-
-        return true;
-    }
 
     AudioTrack* getTrackContainingTrackDevice (Edit& edit, WaveInputDevice& device)
     {
@@ -1179,7 +1171,7 @@ std::unique_ptr<tracktion::graph::Node> createSidechainInputNodeForPlugin (Plugi
     // This is complicated because the first two source channels will always be the track the plugin is on
     // Any additional channels will be from the sidechain source track
     // So we really have two channel maps, one from the plugin's track to the plugin and one from the sidechain track to the plugin
-    std::vector<std::pair<int /*source channel*/, int /*dest channel*/>> directChannelMap, sidechainChannelMap;
+    ChannelMap directChannelMap, sidechainChannelMap;
 
     for (int i = 0; i < plugin.getNumWires(); ++i)
     {
@@ -1189,25 +1181,26 @@ std::unique_ptr<tracktion::graph::Node> createSidechainInputNodeForPlugin (Plugi
             const int destIndex = w->destChannelIndex;
 
             if (sourceIndex < getTrackNumChannels())
-                directChannelMap.emplace_back (sourceIndex, destIndex);
+                directChannelMap.entries.emplace_back (sourceIndex, destIndex);
             else
-                sidechainChannelMap.emplace_back (sourceIndex - getTrackNumChannels(), destIndex);
+                sidechainChannelMap.entries.emplace_back (sourceIndex - getTrackNumChannels(), destIndex);
         }
     }
 
-    if (directChannelMap.empty() && sidechainChannelMap.empty())
+    if (directChannelMap.isEmpty() && sidechainChannelMap.isEmpty())
         return node;
 
+    const bool hasDirectChannels = ! directChannelMap.isEmpty();
     auto directInput = std::move (node);
 
-    if (! isUnityChannelMap (directChannelMap))
-        directInput = makeNode<ChannelRemappingNode> (std::move (directInput), directChannelMap, true);
+    if (! directChannelMap.isIdentity())
+        directInput = makeNode<ChannelRemappingNode> (std::move (directInput), std::move (directChannelMap));
 
     auto sidechainInput = makeNode<ReturnNode> (getSidechainBusID (sidechainSourceID),
                                                 std::make_optional (static_cast<size_t> (plugin.itemID.getRawID())));
-    sidechainInput = makeNode<ChannelRemappingNode> (std::move (sidechainInput), std::move (sidechainChannelMap), false);
+    sidechainInput = makeNode<ChannelRemappingNode> (std::move (sidechainInput), std::move (sidechainChannelMap));
 
-    if (directChannelMap.empty())
+    if (! hasDirectChannels)
         return sidechainInput;
 
     auto sumNode = makeSummingNode ({ directInput.release(), sidechainInput.release() });
@@ -1230,22 +1223,47 @@ std::unique_ptr<tracktion::graph::Node> createNodeForPlugin (Plugin& plugin, con
     if (! plugin.isEnabled() && ! params.includeBypassedPlugins)
         return node;
 
+    // Query the incoming channel count from the input node
+    const int incomingChannels = node->getNodeProperties().numberOfChannels;
+
+    // Query how many channels the plugin can handle
+    const int pluginInputChannels = plugin.getInputChannelConfiguration().getNumChannels();
+
+    // Determine maxNumChannels for the PluginNode
+    // If the plugin is on a track/clip without sidechain, use the plugin's channel configuration
+    // Otherwise, no limit (-1)
     int maxNumChannels = -1;
 
-    // If this plugin is on a track or clip and doesn't have a sidechain input we can limit the number of channels it uses
     if (plugin.getOwnerTrack() != nullptr || plugin.getOwnerClip() != nullptr)
+    {
         if (! plugin.getSidechainSourceID().isValid())
-            maxNumChannels = 2;
+            maxNumChannels = pluginInputChannels;
+    }
 
     node = createSidechainInputNodeForPlugin (plugin, std::move (node));
-    node = tracktion::graph::makeNode<PluginNode> (std::move (node),
-                                                   plugin,
-                                                   params.sampleRate, params.blockSize,
-                                                   trackMuteState, params.processState,
-                                                   params.forRendering, params.includeBypassedPlugins,
-                                                   maxNumChannels);
 
-    return node;
+    // Create the PluginNode
+    auto pluginNode = tracktion::graph::makeNode<PluginNode> (std::move (node),
+                                                              plugin,
+                                                              params.sampleRate, params.blockSize,
+                                                              trackMuteState, params.processState,
+                                                              params.forRendering, params.includeBypassedPlugins,
+                                                              maxNumChannels);
+
+    // If there's a channel count mismatch, wrap in ChannelRemappingNode to handle:
+    // - Passthrough (input > processor): extra channels pass through unprocessed
+    // - Expansion (input < processor): processor outputs its full channel count
+    // Skip if either config is empty - ChannelRemappingNode requires valid channel configs
+    if (incomingChannels != pluginInputChannels
+        && incomingChannels > 0
+        && pluginInputChannels > 0)
+    {
+        return tracktion::graph::makeNode<ChannelRemappingNode> (std::move (pluginNode),
+                                                                 ChannelConfiguration::discreteChannels (incomingChannels),
+                                                                 plugin.getInputChannelConfiguration());
+    }
+
+    return pluginNode;
 }
 
 std::unique_ptr<tracktion::graph::Node> createNodeForRackInstance (RackInstance& rackInstance, std::unique_ptr<Node> node,
@@ -1742,18 +1760,18 @@ std::unique_ptr<tracktion::graph::Node> createNodeForDevice (EditPlaybackContext
 {
     if (auto waveDevice = dynamic_cast<WaveOutputDevice*> (&device))
     {
-        std::vector<std::pair<int /*source channel*/, int /*dest channel*/>> channelMap;
+        ChannelMap channelMap;
         int sourceIndex = 0;
 
         for (const auto& channel : waveDevice->getChannels())
         {
             if (channel.indexInDevice != -1)
-                channelMap.push_back (std::make_pair (sourceIndex, channel.indexInDevice));
+                channelMap.entries.emplace_back (sourceIndex, channel.indexInDevice);
 
             ++sourceIndex;
         }
 
-        return tracktion::graph::makeNode<ChannelRemappingNode> (std::move (node), channelMap, false);
+        return tracktion::graph::makeNode<ChannelRemappingNode> (std::move (node), std::move (channelMap));
     }
     else if (auto midiInstance = dynamic_cast<MidiOutputDeviceInstance*> (epc.getOutputFor (&device)))
     {

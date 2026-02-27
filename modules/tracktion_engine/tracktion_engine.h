@@ -61,6 +61,9 @@
  #include <choc/containers/choc_NonAllocatingStableSort.h>
  #include <choc/containers/choc_ZipFile.h>
  #include <choc/text/choc_Files.h>
+ #include <choc/containers/choc_Value.h>
+ #include <choc/containers/choc_SmallVector.h>
+ #include <choc/text/choc_JSON.h>
 #else
  #include "../3rd_party/choc/choc/audio/choc_SampleBuffers.h"
  #include "../3rd_party/choc/choc/audio/choc_MIDI.h"
@@ -68,6 +71,9 @@
  #include "../3rd_party/choc/choc/containers/choc_NonAllocatingStableSort.h"
  #include "../3rd_party/choc/choc/containers/choc_ZipFile.h"
  #include "../3rd_party/choc/choc/text/choc_Files.h"
+ #include "../3rd_party/choc/choc/containers/choc_Value.h"
+ #include "../3rd_party/choc/choc/containers/choc_SmallVector.h"
+ #include "../3rd_party/choc/choc/text/choc_JSON.h"
 #endif
 
 #include "../3rd_party/expected/expected.hpp"
@@ -430,6 +436,7 @@ namespace tracktion::inline engine {
 #include "utilities/tracktion_Envelope.h"
 #include "utilities/tracktion_Oscillators.h"
 #include "utilities/tracktion_ScreenSaverDefeater.h"
+#include "utilities/tracktion_ChannelConfiguration.h"
 
 #include "project/tracktion_ProjectItemID.h"
 #include "project/tracktion_ProjectItemRef.h"
@@ -560,6 +567,7 @@ namespace tracktion::inline engine {
 #include "model/automation/tracktion_ParameterChangeHandler.h"
 #include "model/automation/tracktion_ParameterControlMappings.h"
 
+#include "playback/devices/tracktion_IODevice.h"
 #include "playback/devices/tracktion_OutputDevice.h"
 
 #include "model/tracks/tracktion_TrackOutput.h"

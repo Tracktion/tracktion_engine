@@ -121,11 +121,9 @@ AudioTrack::AudioTrack (Edit& ed, const juce::ValueTree& v)
     {
         WaveDeviceDescription desc;
         desc.name = itemIDString;
-        desc.channels = { ChannelIndex (0, juce::AudioChannelSet::left),
-                          ChannelIndex (1, juce::AudioChannelSet::right) };
+        desc.channels = ChannelConfiguration::stereo();
 
-        waveInputDevice = std::make_unique<WaveInputDevice> (edit.engine, TRANS("Track Wave Input"),
-                                                             desc, InputDevice::trackWaveDevice);
+        waveInputDevice = std::make_unique<WaveInputDevice> (edit.engine, desc, InputDevice::trackWaveDevice);
 
         midiInputDevice = std::make_unique<VirtualMidiInputDevice> (edit.engine, itemIDString,
                                                                     InputDevice::trackMidiDevice,
@@ -606,6 +604,38 @@ bool AudioTrack::canPlayMidi() const
                     return getOutput().canPlayAudio();
 
     return false;
+}
+
+//==============================================================================
+ChannelConfiguration AudioTrack::getChannelConfiguration() const
+{
+    ChannelConfiguration result;
+    bool hasAnyClips = false;
+
+    for (auto clip : getClips())
+    {
+        if (auto audioClip = dynamic_cast<AudioClipBase*> (clip))
+        {
+            auto clipConfig = audioClip->getActiveChannelConfiguration();
+
+            if (! hasAnyClips)
+            {
+                result = clipConfig;
+                hasAnyClips = true;
+            }
+            else if (clipConfig.getNumChannels() > result.getNumChannels())
+            {
+                // Use the largest format when clips differ
+                result = clipConfig;
+            }
+        }
+    }
+
+    // Default to stereo if no audio clips
+    if (! hasAnyClips)
+        return ChannelConfiguration::stereo();
+
+    return result;
 }
 
 //==============================================================================

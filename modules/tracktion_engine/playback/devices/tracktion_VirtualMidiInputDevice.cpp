@@ -25,9 +25,7 @@ struct VirtualMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
 //==============================================================================
 VirtualMidiInputDevice::VirtualMidiInputDevice (Engine& e, juce::String deviceName, DeviceType devType,
                                                 juce::String deviceIDToUse, bool isAllMIDIIns)
-    : MidiInputDevice (e, devType == trackMidiDevice ? TRANS("Track MIDI Input")
-                                                     : TRANS("Virtual MIDI Input"),
-                       deviceName, deviceIDToUse),
+    : MidiInputDevice (e, deviceName, deviceIDToUse),
       useAllInputs (isAllMIDIIns),
       deviceType (devType)
 {
@@ -44,6 +42,17 @@ VirtualMidiInputDevice::~VirtualMidiInputDevice()
 {
     notifyListenersOfDeletion();
     closeDevice();
+}
+
+InputDevice::DeviceType VirtualMidiInputDevice::getDeviceType() const
+{
+    return deviceType;
+}
+
+juce::String VirtualMidiInputDevice::getDeviceTypeDescription() const
+{
+    return deviceType == trackMidiDevice ? TRANS("Track MIDI Input")
+                                         : TRANS("Virtual MIDI Input");
 }
 
 InputDeviceInstance* VirtualMidiInputDevice::createInstance (EditPlaybackContext& c)
@@ -125,14 +134,6 @@ void VirtualMidiInputDevice::handleMessageFromPhysicalDevice (PhysicalMidiInputD
 {
     if (useAllInputs || inputDeviceIDs.contains (dev.getDeviceID()))
         handleIncomingMidiMessage (m, dev.getMPESourceID());
-}
-
-juce::String VirtualMidiInputDevice::getSelectableDescription()
-{
-    if (getDeviceType() == trackMidiDevice)
-        return getAlias() + " (" + getType() + ")";
-
-    return MidiInputDevice::getSelectableDescription();
 }
 
 } // namespace tracktion::inline engine

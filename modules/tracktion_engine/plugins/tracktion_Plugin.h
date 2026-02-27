@@ -237,6 +237,17 @@ public:
     virtual bool noTail()                               { return true; }
 
     virtual void getChannelNames (juce::StringArray* ins, juce::StringArray* outs);
+
+    /** Returns the expected input channel configuration for this plugin.
+        Default implementation returns stereo for backward compatibility.
+    */
+    virtual ChannelConfiguration getInputChannelConfiguration() const;
+
+    /** Returns the output channel configuration for this plugin.
+        Default implementation returns stereo for backward compatibility.
+    */
+    virtual ChannelConfiguration getOutputChannelConfiguration() const;
+
     virtual bool takesAudioInput()                      { return ! isSynth(); }
     virtual bool takesMidiInput()                       { return false; }
     virtual bool isSynth()                              { return false; }

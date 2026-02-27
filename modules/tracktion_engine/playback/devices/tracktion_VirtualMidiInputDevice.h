@@ -20,7 +20,6 @@ public:
 
     using MidiInputDevice::handleIncomingMidiMessage;
     void handleIncomingMidiMessage (const juce::MidiMessage&, MPESourceID) override;
-    juce::String getSelectableDescription() override;
 
     void setEnabled (bool) override;
     void loadProps() override;
@@ -32,7 +31,8 @@ public:
 
     void handleMessageFromPhysicalDevice (PhysicalMidiInputDevice&, const juce::MidiMessage&);
 
-    DeviceType getDeviceType() const override      { return deviceType; }
+    DeviceType getDeviceType() const override;
+    juce::String getDeviceTypeDescription() const override;
 
     const bool useAllInputs = false;
 

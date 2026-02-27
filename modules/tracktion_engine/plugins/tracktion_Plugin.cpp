@@ -322,6 +322,16 @@ juce::StringArray Plugin::getInputChannelNames()
     return ins;
 }
 
+ChannelConfiguration Plugin::getInputChannelConfiguration() const
+{
+    return ChannelConfiguration::stereo();
+}
+
+ChannelConfiguration Plugin::getOutputChannelConfiguration() const
+{
+    return ChannelConfiguration::stereo();
+}
+
 juce::UndoManager* Plugin::getUndoManager() const noexcept
 {
     return &edit.getUndoManager();

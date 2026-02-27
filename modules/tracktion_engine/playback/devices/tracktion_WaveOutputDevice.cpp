@@ -11,9 +11,9 @@
 namespace tracktion::inline engine {
 
 WaveOutputDevice::WaveOutputDevice (Engine& e, const WaveDeviceDescription& desc)
-    : OutputDevice (e, NEEDS_TRANS("Wave Audio Output"), desc.name, desc.name),
-      deviceChannels (desc.channels),
-      channelSet (createChannelSet (desc.channels)),
+    : OutputDevice (e, desc.name, "waveout_" + juce::String::toHexString (desc.name.hashCode())),
+      deviceDescription (desc),
+      channelSet (desc.channels.toChannelSet()),
       ditheringEnabled (false),
       leftRightReversed (false)
 {
@@ -39,7 +39,7 @@ void WaveOutputDevice::setEnabled (bool b)
     {
         enabled = b;
         changed();
-        engine.getDeviceManager().setWaveOutChannelsEnabled (deviceChannels, b);
+        engine.getDeviceManager().setDeviceEnabled (*this, b);
         // do nothing now! this object is probably deleted..
     }
 }
@@ -113,38 +113,59 @@ WaveOutputDeviceInstance::WaveOutputDeviceInstance (WaveOutputDevice& d, EditPla
 
 void WaveOutputDeviceInstance::prepareToPlay (double, int blockSize)
 {
-    outputBuffer.setSize (2, blockSize);
+    const auto numChannels = (int) getWaveOutput().getChannels().getNumChannels();
+    outputBuffer.setSize (numChannels, blockSize);
 
     int ditherDepth = juce::jlimit (16, 32, edit.engine.getDeviceManager().getBitDepth());
 
-    ditherers[0].reset (ditherDepth);
-    ditherers[1].reset (ditherDepth);
+    ditherers.resize ((size_t) numChannels);
+
+    for (auto& d : ditherers)
+        d.reset (ditherDepth);
 }
 
 //==============================================================================
 int WaveOutputDevice::getLeftChannel() const
 {
-    return deviceChannels.size() >= 1 ? deviceChannels[0].indexInDevice : -1;
+    return deviceDescription.getNumChannels() >= 1 ? deviceDescription.channels[0].indexInDevice : -1;
 }
 
 int WaveOutputDevice::getRightChannel() const
 {
-    return deviceChannels.size() >= 2 ? deviceChannels[1].indexInDevice : -1;
+    return deviceDescription.getNumChannels() >= 2 ? deviceDescription.channels[1].indexInDevice : -1;
 }
 
 bool WaveOutputDevice::isStereoPair() const
 {
-    return deviceChannels.size() == 2;
+    return deviceDescription.getNumChannels() == 2;
 }
 
 void WaveOutputDevice::setStereoPair (bool stereo)
 {
-    auto& dm = engine.getDeviceManager();
+    engine.getDeviceManager().setDeviceNumChannels (*this, stereo ? 2 : 1);
+}
 
-    if (deviceChannels.size() == 2)
-        dm.setDeviceOutChannelStereo (std::max (getLeftChannel(), getRightChannel()), stereo);
-    else if (deviceChannels.size() == 1)
-        dm.setDeviceOutChannelStereo (getLeftChannel(), stereo);
+juce::PopupMenu WaveOutputDevice::createChannelGroupMenu (bool includeSetAllChannelsOptions)
+{
+    juce::PopupMenu m;
+    auto& dm = engine.getDeviceManager();
+    uint32_t channelNum = 0;
+    auto currentNumChannels = deviceDescription.getNumChannels();
+
+    for (auto& option : dm.getPossibleChannelGroupsForDevice (*this, DeviceManager::maxNumChannelsPerDevice))
+    {
+        auto num = ++channelNum;
+        m.addItem (option, true, num == currentNumChannels, [this, &dm, num] { dm.setDeviceNumChannels (*this, num); });
+    }
+
+    if (includeSetAllChannelsOptions)
+    {
+        m.addSeparator();
+        m.addItem ("Set all to mono channels", [&dm] { dm.setAllWaveOutputsToNumChannels (1); });
+        m.addItem ("Set all to stereo pairs",  [&dm] { dm.setAllWaveOutputsToNumChannels (2); });
+    }
+
+    return m;
 }
 
 } // namespace tracktion::inline engine

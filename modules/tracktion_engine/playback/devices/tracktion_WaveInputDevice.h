@@ -12,14 +12,14 @@ namespace tracktion::inline engine {
 
 /** A (virtual) audio input device.
 
-    There'll be multiple instances of these, representing mono or stereo pairs of
-    input channels.
+    There'll be one or more instances of these, each one representing a group of
+    channels from a physical device.
 */
 class WaveInputDevice   : public InputDevice
 {
 public:
     //==============================================================================
-    WaveInputDevice (Engine&, const juce::String& type, const WaveDeviceDescription&, DeviceType);
+    WaveInputDevice (Engine&, const WaveDeviceDescription&, DeviceType);
     ~WaveInputDevice() override;
 
     static juce::StringArray getMergeModes();
@@ -28,7 +28,9 @@ public:
     void resetToDefault();
     void setEnabled (bool) override;
 
-    DeviceType getDeviceType() const override          { return deviceType; }
+    DeviceType getDeviceType() const override                   { return deviceType; }
+    juce::String getDeviceTypeDescription() const override;
+
     InputDeviceInstance* createInstance (EditPlaybackContext&) override;
 
     //==============================================================================
@@ -38,6 +40,7 @@ public:
     double getRecordAdjustmentMs() const                        { return recordAdjustMs; }
     bool isStereoPair() const;
     void setStereoPair (bool);
+    juce::PopupMenu createChannelGroupMenu (bool includeSetAllChannelsOptions);
     juce::Array<int> getAvailableBitDepths() const;
     void setBitDepth (int);
     int getBitDepth() const                                     { return bitDepth; }
@@ -56,7 +59,7 @@ public:
     void setMergeMode (const juce::String&);
     juce::String getMergeMode() const;
 
-    const std::vector<ChannelIndex>& getChannels() const noexcept   { return deviceChannels; }
+    const ChannelConfiguration& getChannels() const noexcept        { return deviceDescription.channels; }
     const juce::AudioChannelSet& getChannelSet() const noexcept     { return channelSet; }
 
     //==============================================================================
@@ -67,7 +70,7 @@ public:
     void updateRetrospectiveBufferLength (double length) override;
 
     //==============================================================================
-    juce::String getSelectableDescription() override;
+    const WaveDeviceDescription deviceDescription;
 
 protected:
     juce::String openDevice();
@@ -77,7 +80,6 @@ private:
     friend class DeviceManager;
     friend class WaveInputDeviceInstance;
 
-    const std::vector<ChannelIndex> deviceChannels;
     const DeviceType deviceType;
     const juce::AudioChannelSet channelSet;
 
