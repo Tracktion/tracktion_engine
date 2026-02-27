@@ -441,9 +441,9 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
 
     std::unique_ptr<tracktion::graph::Node> createWaveNodeForFile (const AudioFile& file, TimeRange timeRange)
     {
+        auto channelSet = juce::AudioChannelSet::canonicalChannelSet (std::max (file.getInfo().numChannels, 1));
         return tracktion::graph::makeNode<WaveNode> (file, timeRange, TimeDuration(), TimeRange(), LiveClipLevel(), 1.0,
-                                                     juce::AudioChannelSet::canonicalChannelSet (file.getInfo().numChannels),
-                                                     juce::AudioChannelSet::stereo(),
+                                                     channelSet, channelSet,
                                                      processState,
                                                      EditItemID(), true);
     }
@@ -878,12 +878,14 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> FadeInOutEffect
 
         case EffectType::tapeStartStop:
             if (fadeIn.get() > TimeDuration() || fadeOut.get() > TimeDuration())
+            {
+                auto channelSet = juce::AudioChannelSet::canonicalChannelSet (std::max (sourceFile.getInfo().numChannels, 1));
                 n = tracktion::graph::makeNode<SpeedRampWaveNode> (sourceFile, timeRange, TimeDuration(), TimeRange(), LiveClipLevel(), 1.0,
-                                                                   juce::AudioChannelSet::canonicalChannelSet (sourceFile.getInfo().numChannels),
-                                                                   juce::AudioChannelSet::stereo(),
+                                                                   channelSet, channelSet,
                                                                    job->processState,
                                                                    EditItemID(), true,
                                                                    SpeedFadeDescription { fadeInRange, fadeOutRange, fadeInType, fadeOutType });
+            }
 
             break;
 
