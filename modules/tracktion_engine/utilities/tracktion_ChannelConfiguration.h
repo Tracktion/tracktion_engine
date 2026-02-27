@@ -74,6 +74,12 @@ public:
     /// Creates a mono configuration with a single channel.
     static ChannelConfiguration mono (int deviceChannelIndex = 0);
 
+    /// Creates a left-only configuration (single left channel).
+    static ChannelConfiguration left (int deviceChannelIndex = 0);
+
+    /// Creates a right-only configuration (single right channel).
+    static ChannelConfiguration right (int deviceChannelIndex = 1);
+
     /// Creates a stereo configuration with left and right channels.
     static ChannelConfiguration stereo (int firstDeviceChannelIndex = 0);
 
@@ -138,6 +144,10 @@ public:
 
     /// Returns the range of device channel indices [first, one-past-last) used by this configuration.
     std::pair<int, int> getChannelRange() const;
+
+    /// Returns a new configuration containing only channels whose device indices
+    /// also appear in the other configuration.
+    ChannelConfiguration intersection (const ChannelConfiguration& other) const;
 
     /// Creates a JUCE AudioChannelSet from this configuration.
     juce::AudioChannelSet toChannelSet() const;

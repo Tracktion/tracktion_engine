@@ -260,8 +260,6 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
     clipEffectsVisible.referTo (state, IDs::effectsVisible, nullptr);
     updateClipEffectsState();
 
-    updateActiveChannelConfiguration();
-
     pluginList.setTrackAndClip (getTrack(), this);
     pluginList.initialise (state);
 
@@ -362,34 +360,6 @@ void AudioClipBase::cloneFrom (Clip* c)
     }
 }
 
-void AudioClipBase::updateActiveChannelConfiguration()
-{
-    juce::String channelMask = channels;
-
-    // Handle legacy "l" and "r" single-channel strings
-    if (channelMask == "r")
-    {
-        activeChannelConfig = ChannelConfiguration();
-        activeChannelConfig.addChannel (ChannelIndex (1, juce::AudioChannelSet::right));
-    }
-    else if (channelMask == "l")
-    {
-        activeChannelConfig = ChannelConfiguration();
-        activeChannelConfig.addChannel (ChannelIndex (0, juce::AudioChannelSet::left));
-    }
-    else if (channelMask.isEmpty())
-    {
-        // Default to stereo when no channels are specified
-        activeChannelConfig = ChannelConfiguration::stereo();
-    }
-    else
-    {
-        // Parse standard speaker arrangement string (e.g. "L R", "L R C LFE Ls Rs")
-        activeChannelConfig = ChannelConfiguration::fromChannelSet (
-            channelSetFromSpeakerArrangementString (channelMask));
-    }
-}
-
 void AudioClipBase::flushStateToValueTree()
 {
     Clip::flushStateToValueTree();
@@ -471,23 +441,54 @@ void AudioClipBase::setPan (float p)
 ChannelConfiguration AudioClipBase::getSourceChannelConfiguration()
 {
     auto info = getWaveInfo();
-    return ChannelConfiguration::discreteChannels (info.numChannels);
+    ChannelConfiguration config;
+    config.setNumChannels (info.numChannels);
+    return config;
 }
 
-ChannelConfiguration AudioClipBase::getActiveChannelConfiguration() const
+ChannelConfiguration AudioClipBase::getActiveChannelConfiguration()
 {
-    return activeChannelConfig;
+    auto channelMask = channels.get().trim();
+
+    if (! channelMask.isEmpty())
+    {
+        if (channelMask.equalsIgnoreCase ("r"))    return ChannelConfiguration::right (1);
+        if (channelMask.equalsIgnoreCase ("l"))    return ChannelConfiguration::left (0);
+        if (channelMask.equalsIgnoreCase ("L R"))  return ChannelConfiguration::stereo();
+
+        return ChannelConfiguration::fromString (channelMask.toStdString());
+    }
+
+    // Empty config means all source channels are active
+    return getSourceChannelConfiguration();
 }
 
 void AudioClipBase::setActiveChannelConfiguration (const ChannelConfiguration& config)
 {
-    channels = config.toChannelSet().getSpeakerArrangementAsString();
+    // Empty config means "all channels"
+    if (config.isEmpty())
+    {
+        channels = juce::String();
+        return;
+    }
+
+    auto sourceConfig = getSourceChannelConfiguration();
+    auto validated = config.intersection (sourceConfig);
+
+    // If no valid channels remain, keep the current config unchanged
+    if (validated.isEmpty())
+        return;
+
+    if (validated == sourceConfig)
+        channels = juce::String();
+    else
+        channels = validated.toString();
 }
 
-ChannelConfiguration AudioClipBase::getOutputChannelConfiguration() const
+ChannelConfiguration AudioClipBase::getOutputChannelConfiguration()
 {
     // For now, return active channels. In future, this will consider clip effects.
-    return activeChannelConfig;
+    return getActiveChannelConfiguration();
 }
 
 //==============================================================================
@@ -2407,7 +2408,6 @@ void AudioClipBase::valueTreePropertyChanged (juce::ValueTree& tree, const juce:
         else if (id == IDs::channels)
         {
             channels.forceUpdateOfCachedValue();
-            updateActiveChannelConfiguration();
             changed();
         }
         else if (id == IDs::proxyAllowed)

@@ -234,7 +234,7 @@ public:
     */
     std::function<void(InputDevice*)> warnOfWastedMidiMessagesFunction;
 
-    static constexpr uint32_t maxNumChannelsPerDevice = 2;
+    static constexpr uint32_t maxNumChannelsPerDevice = 128;
 
 private:
     //==============================================================================

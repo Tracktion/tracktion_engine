@@ -38,7 +38,7 @@ public:
     juce::String getShortName (int suggestedMaxLength) override;
     juce::String getPluginType() override           { return xmlTypeName; }
 
-    int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }
+    int getNumOutputChannelsGivenInputs (int numInputChannels) override { return numInputChannels; }
     void initialise (const PluginInitialisationInfo&) override;
     void initialiseWithoutStopping (const PluginInitialisationInfo&) override;
     void deinitialise() override;

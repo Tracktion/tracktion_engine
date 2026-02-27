@@ -86,8 +86,11 @@ namespace
         return false;
     }
 
-    constexpr int getTrackNumChannels()
+    int getTrackNumChannels (const Plugin& plugin)
     {
+        if (auto track = dynamic_cast<AudioTrack*> (plugin.getOwnerTrack()))
+            return track->getChannelConfiguration().getNumChannels();
+
         return 2;
     }
 
@@ -473,8 +476,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                                   loopRange,
                                                                   clip.getLiveClipLevel(),
                                                                   speed,
-                                                                  clip.getActiveChannels(),
-                                                                  juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
+                                                                  clip.getActiveChannelConfiguration(),
+                                                                  ChannelConfiguration::discreteChannels (clip.getActiveChannelConfiguration().getNumChannels()),
                                                                   params.processState,
                                                                   idToUse,
                                                                   params.forRendering,
@@ -488,8 +491,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                          loopRange,
                                                          clip.getLiveClipLevel(),
                                                          speed,
-                                                         clip.getActiveChannels(),
-                                                         juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
+                                                         clip.getActiveChannelConfiguration(),
+                                                         ChannelConfiguration::discreteChannels (clip.getActiveChannelConfiguration().getNumChannels()),
                                                          params.processState,
                                                          idToUse,
                                                          params.forRendering);
@@ -554,8 +557,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                     .offset = clip.getOffsetInBeats(),
                     .loopSection = clip.getLoopRangeBeats(),
                     .liveClipLevel = clip.getLiveClipLevel(),
-                    .sourceChannelsToUse = clip.getActiveChannels(),
-                    .destChannelsToFill = juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
+                    .sourceChannelsToUse = clip.getActiveChannelConfiguration(),
+                    .destChannelsToFill = ChannelConfiguration::discreteChannels (clip.getActiveChannelConfiguration().getNumChannels()),
                     .itemID = idToUse,
                     .isOfflineRender = params.forRendering,
                     .resamplingQuality = clip.getResamplingQuality(),
@@ -579,8 +582,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                    clip.getOffsetInBeats(),
                                                    BeatRange (clip.getLoopStartBeats(), clip.getLoopLengthBeats()),
                                                    clip.getLiveClipLevel(),
-                                                   clip.getActiveChannels(),
-                                                   juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
+                                                   clip.getActiveChannelConfiguration(),
+                                                   ChannelConfiguration::discreteChannels (clip.getActiveChannelConfiguration().getNumChannels()),
                                                    params.processState,
                                                    idToUse,
                                                    params.forRendering,
@@ -603,8 +606,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                clip.getLoopRange(),
                                                clip.getLiveClipLevel(),
                                                clip.getSpeedRatio(),
-                                               clip.getActiveChannels(),
-                                               juce::AudioChannelSet::canonicalChannelSet (std::max (2, clip.getActiveChannels().size())),
+                                               clip.getActiveChannelConfiguration(),
+                                               ChannelConfiguration::discreteChannels (clip.getActiveChannelConfiguration().getNumChannels()),
                                                params.processState,
                                                idToUse,
                                                params.forRendering,
@@ -1027,7 +1030,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForFrozenAudioTrack (AudioTrac
     auto node = tracktion::graph::makeNode<WaveNode> (AudioFile (track.edit.engine, TemporaryFileManager::getFreezeFileForTrack (track)),
                                                      TimeRange (TimePosition(), track.getLengthIncludingInputTracks()),
                                                      TimeDuration(), TimeRange(), LiveClipLevel(),
-                                                     1.0, juce::AudioChannelSet::stereo(), juce::AudioChannelSet::stereo(),
+                                                     1.0, ChannelConfiguration::stereo(), ChannelConfiguration::stereo(),
                                                      params.processState,
                                                      track.itemID,
                                                      params.forRendering);
@@ -1173,6 +1176,8 @@ std::unique_ptr<tracktion::graph::Node> createSidechainInputNodeForPlugin (Plugi
     // So we really have two channel maps, one from the plugin's track to the plugin and one from the sidechain track to the plugin
     ChannelMap directChannelMap, sidechainChannelMap;
 
+    const auto trackChannels = getTrackNumChannels (plugin);
+
     for (int i = 0; i < plugin.getNumWires(); ++i)
     {
         if (auto w = plugin.getWire (i))
@@ -1180,10 +1185,10 @@ std::unique_ptr<tracktion::graph::Node> createSidechainInputNodeForPlugin (Plugi
             const int sourceIndex = w->sourceChannelIndex;
             const int destIndex = w->destChannelIndex;
 
-            if (sourceIndex < getTrackNumChannels())
+            if (sourceIndex < trackChannels)
                 directChannelMap.entries.emplace_back (sourceIndex, destIndex);
             else
-                sidechainChannelMap.entries.emplace_back (sourceIndex - getTrackNumChannels(), destIndex);
+                sidechainChannelMap.entries.emplace_back (sourceIndex - trackChannels, destIndex);
         }
     }
 
@@ -1739,8 +1744,8 @@ std::unique_ptr<tracktion::graph::Node> createGroupFreezeNodeForDevice (Edit& ed
             auto node = tracktion::graph::makeNode<WaveNode> (af, TimeRange (0.0s, length),
                                                              0.0s, TimeRange(), LiveClipLevel(),
                                                              1.0,
-                                                             juce::AudioChannelSet::stereo(),
-                                                             juce::AudioChannelSet::stereo(),
+                                                             ChannelConfiguration::stereo(),
+                                                             ChannelConfiguration::stereo(),
                                                              processState,
                                                              EditItemID::fromRawID ((uint64_t) device.getName().hash()),
                                                              false);

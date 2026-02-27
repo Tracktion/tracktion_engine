@@ -1053,8 +1053,8 @@ bool WaveCompManager::renderTake (CompRenderContext& context, Edit& edit, AudioF
             auto takeFile = AudioFile (context.engine, context.engine.getProjectManager().findSourceFile (takeRef));
 
             auto node = tracktion::graph::makeNode<WaveNode> (takeFile, totalRange, TimeDuration(), TimeRange(), LiveClipLevel(), 1.0,
-                                                              juce::AudioChannelSet::canonicalChannelSet (takeFile.getInfo().numChannels),
-                                                              juce::AudioChannelSet::stereo(),
+                                                              ChannelConfiguration::discreteChannels (takeFile.getInfo().numChannels),
+                                                              ChannelConfiguration::stereo(),
                                                               processState,
                                                               EditItemID(), true);
 

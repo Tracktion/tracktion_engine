@@ -49,8 +49,8 @@ public:
               TimeRange loopSection,
               LiveClipLevel,
               double speedRatio,
-              const juce::AudioChannelSet& sourceChannelsToUse,
-              const juce::AudioChannelSet& destChannelsToFill,
+              const ChannelConfiguration& sourceChannelsToUse,
+              const ChannelConfiguration& destChannelsToFill,
               ProcessState&,
               EditItemID,
               bool isOfflineRender);
@@ -73,7 +73,7 @@ private:
     LiveClipLevel clipLevel;
     juce::Range<int64_t> editPositionInSamples;
     double audioFileSampleRate = 0;
-    const juce::AudioChannelSet sourceChannels, destChannels;
+    const ChannelConfiguration sourceChannels, destChannels;
     AudioFileCache::Reader::Ptr reader;
 
     struct PerChannelState;
@@ -113,8 +113,8 @@ public:
                       TimeRange loopSection,
                       LiveClipLevel,
                       double speedRatio,
-                      const juce::AudioChannelSet& sourceChannelsToUse,
-                      const juce::AudioChannelSet& destChannelsToFill,
+                      const ChannelConfiguration& sourceChannelsToUse,
+                      const ChannelConfiguration& destChannelsToFill,
                       ProcessState&,
                       EditItemID,
                       bool isOfflineRender,
@@ -144,8 +144,8 @@ public:
         BeatDuration offset;
         BeatRange loopSection;
         LiveClipLevel liveClipLevel;
-        juce::AudioChannelSet sourceChannelsToUse;
-        juce::AudioChannelSet destChannelsToFill;
+        ChannelConfiguration sourceChannelsToUse;
+        ChannelConfiguration destChannelsToFill;
         EditItemID itemID;
         bool isOfflineRender = false;
         ResamplingQuality resamplingQuality = ResamplingQuality::lagrange;
@@ -182,8 +182,8 @@ public:
                       BeatDuration offset,
                       BeatRange loopSection,
                       LiveClipLevel,
-                      const juce::AudioChannelSet& sourceChannelsToUse,
-                      const juce::AudioChannelSet& destChannelsToFill,
+                      const ChannelConfiguration& sourceChannelsToUse,
+                      const ChannelConfiguration& destChannelsToFill,
                       ProcessState&,
                       EditItemID,
                       bool isOfflineRender,
@@ -227,7 +227,7 @@ private:
     TimeStretcher::Mode timeStretcherMode;
     TimeStretcher::ElastiqueProOptions elastiqueProOptions;
     LiveClipLevel clipLevel;
-    const juce::AudioChannelSet channelsToUse, destChannels;
+    const ChannelConfiguration channelsToUse, destChannels;
     float pitchChangeSemitones = 0.0;
     double outputSampleRate = 44100.0;
     int outputBlockSize = 0;

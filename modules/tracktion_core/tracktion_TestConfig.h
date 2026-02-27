@@ -19,9 +19,11 @@
 #define GRAPH_UNIT_TESTS_RACKNODE                       1
 #define GRAPH_UNIT_TESTS_EDITNODE                       1
 
+#define ENGINE_UNIT_TESTS_AUDIOCLIPBASE_CHANNELS        1
 #define ENGINE_UNIT_TESTS_AUTOMATION                    1
 #define ENGINE_UNIT_TESTS_AUTOMATION_CURVE_LIST         1
 #define ENGINE_UNIT_TESTS_AUX_SEND                      1
+#define ENGINE_UNIT_TESTS_CHANNELCONFIGURATION          1
 #define ENGINE_UNIT_TESTS_CLICKNODE                     1
 #define ENGINE_UNIT_TESTS_CLIPBOARD                     1
 #define ENGINE_UNIT_TESTS_CLIPSLOT                      1

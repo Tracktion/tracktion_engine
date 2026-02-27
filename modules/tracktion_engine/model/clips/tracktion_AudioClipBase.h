@@ -156,7 +156,7 @@ public:
     /** Returns which channels are active (selected for playback).
         Only active channels will be played back.
     */
-    ChannelConfiguration getActiveChannelConfiguration() const;
+    ChannelConfiguration getActiveChannelConfiguration();
 
     /** Sets which channels are active for playback.
         @param config The channel configuration to use for playback
@@ -167,12 +167,13 @@ public:
         This considers clip effects and returns the final output channel layout.
         For now, this returns the same as getActiveChannelConfiguration().
     */
-    ChannelConfiguration getOutputChannelConfiguration() const;
+    ChannelConfiguration getOutputChannelConfiguration();
 
     /** Returns the layout of the active channels as a JUCE AudioChannelSet.
         @deprecated Use getActiveChannelConfiguration() instead.
     */
-    juce::AudioChannelSet getActiveChannels() const     { return activeChannelConfig.toChannelSet(); }
+    [[deprecated ("Use getActiveChannelConfiguration() instead")]]
+    juce::AudioChannelSet getActiveChannels()            { return getActiveChannelConfiguration().toChannelSet(); }
 
     //==============================================================================
     /** Sets the fade in duration in seconds.
@@ -674,9 +675,6 @@ protected:
     mutable std::unique_ptr<AudioSegmentList> audioSegmentList;
     std::unique_ptr<ClipEffects> clipEffects;
     mutable AsyncFunctionCaller asyncFunctionCaller;
-
-    ChannelConfiguration activeChannelConfig;
-    void updateActiveChannelConfiguration();
 
     PluginList pluginList;
 

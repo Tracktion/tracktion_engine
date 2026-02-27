@@ -441,9 +441,9 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
 
     std::unique_ptr<tracktion::graph::Node> createWaveNodeForFile (const AudioFile& file, TimeRange timeRange)
     {
-        auto channelSet = juce::AudioChannelSet::canonicalChannelSet (std::max (file.getInfo().numChannels, 1));
+        auto channelConfig = ChannelConfiguration::discreteChannels (std::max (file.getInfo().numChannels, 1));
         return tracktion::graph::makeNode<WaveNode> (file, timeRange, TimeDuration(), TimeRange(), LiveClipLevel(), 1.0,
-                                                     channelSet, channelSet,
+                                                     channelConfig, channelConfig,
                                                      processState,
                                                      EditItemID(), true);
     }
@@ -879,9 +879,9 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> FadeInOutEffect
         case EffectType::tapeStartStop:
             if (fadeIn.get() > TimeDuration() || fadeOut.get() > TimeDuration())
             {
-                auto channelSet = juce::AudioChannelSet::canonicalChannelSet (std::max (sourceFile.getInfo().numChannels, 1));
+                auto channelConfig = ChannelConfiguration::discreteChannels (std::max (sourceFile.getInfo().numChannels, 1));
                 n = tracktion::graph::makeNode<SpeedRampWaveNode> (sourceFile, timeRange, TimeDuration(), TimeRange(), LiveClipLevel(), 1.0,
-                                                                   channelSet, channelSet,
+                                                                   channelConfig, channelConfig,
                                                                    job->processState,
                                                                    EditItemID(), true,
                                                                    SpeedFadeDescription { fadeInRange, fadeOutRange, fadeInType, fadeOutType });

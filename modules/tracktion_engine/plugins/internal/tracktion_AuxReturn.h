@@ -23,7 +23,7 @@ public:
     juce::String getPluginType() override                                   { return xmlTypeName; }
     juce::String getShortName (int suggestedMaxLength) override;
     juce::String getSelectableDescription() override                        { return TRANS("Aux Return Plugin"); }
-    int getNumOutputChannelsGivenInputs (int numInputChannels) override     { return juce::jmin (numInputChannels, 2); }
+    int getNumOutputChannelsGivenInputs (int numInputChannels) override     { return numInputChannels; }
 
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;

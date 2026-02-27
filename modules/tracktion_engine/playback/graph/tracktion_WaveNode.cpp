@@ -1522,8 +1522,8 @@ WaveNode::WaveNode (const AudioFile& af,
                     TimeRange loop,
                     LiveClipLevel level,
                     double speed,
-                    const juce::AudioChannelSet& channelSetToUse,
-                    const juce::AudioChannelSet& destChannelsToFill,
+                    const ChannelConfiguration& channelSetToUse,
+                    const ChannelConfiguration& destChannelsToFill,
                     ProcessState& ps,
                     EditItemID itemIDToUse,
                     bool isRendering)
@@ -1547,7 +1547,7 @@ tracktion::graph::NodeProperties WaveNode::getNodeProperties()
     tracktion::graph::NodeProperties props;
     props.hasAudio = true;
     props.hasMidi = false;
-    props.numberOfChannels = destChannels.size();
+    props.numberOfChannels = destChannels.getNumChannels();
     props.nodeID = (size_t) editItemID.getRawID();
 
     return props;
@@ -1560,7 +1560,7 @@ void WaveNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo
     editPositionInSamples = tracktion::toSamples ({ editPosition.getStart(), editPosition.getEnd() }, outputSampleRate);
     updateFileSampleRate();
 
-    const int numChannelsToUse = std::max (sourceChannels.size(), reader != nullptr ? reader->getNumChannels() : 0);
+    const int numChannelsToUse = std::max (sourceChannels.getNumChannels(), reader != nullptr ? reader->getNumChannels() : 0);
     replaceChannelStateIfPossible (info.nodeGraphToReplace, numChannelsToUse);
 
     if (! channelState)
@@ -1695,7 +1695,7 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
         SCOPED_REALTIME_CHECK
 
         if (reader->readSamples (numFileSamples + 2, fileData.buffer, destBufferChannels, 0,
-                                 sourceChannels,
+                                 sourceChannels.toChannelSet(),
                                  isOfflineRender ? 5000 : 3))
         {
             if (! getPlayHeadState().isContiguousWithPreviousBlock() && ! getPlayHeadState().isFirstBlockOfLoop())
@@ -1809,8 +1809,8 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
                                     TimeRange loop,
                                     LiveClipLevel level,
                                     double speed,
-                                    const juce::AudioChannelSet& channelSetToUse,
-                                    const juce::AudioChannelSet& destChannelsToFill,
+                                    const ChannelConfiguration& channelSetToUse,
+                                    const ChannelConfiguration& destChannelsToFill,
                                     ProcessState& ps,
                                     EditItemID itemIDToUse,
                                     bool isRendering,
@@ -1851,8 +1851,8 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
     hash_combine (stateHash, removeRoundingError (offsetTime));
     hash_combine (stateHash, speedRatio);
     hash_combine (stateHash, editItemID.getRawID());
-    hash_combine (stateHash, channelsToUse.size());
-    hash_combine (stateHash, destChannels.size());
+    hash_combine (stateHash, channelsToUse.getNumChannels());
+    hash_combine (stateHash, destChannels.getNumChannels());
     hash_combine (stateHash, audioFile.getHash());
     hash_combine (stateHash, resamplingQualityToUse);
     hash_combine (stateHash, speedFadeDescription);
@@ -1902,8 +1902,8 @@ WaveNodeRealTime::WaveNodeRealTime (BeatConfig c)
     hash_combine (stateHash, removeRoundingError (loopSectionBeats.getEnd()));
     hash_combine (stateHash, removeRoundingError (offsetBeats));
     hash_combine (stateHash, editItemID.getRawID());
-    hash_combine (stateHash, channelsToUse.size());
-    hash_combine (stateHash, destChannels.size());
+    hash_combine (stateHash, channelsToUse.getNumChannels());
+    hash_combine (stateHash, destChannels.getNumChannels());
     hash_combine (stateHash, audioFile.getHash());
     hash_combine (stateHash, resamplingQuality);
     hash_combine (stateHash, speedFadeDescription);
@@ -1931,8 +1931,8 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
                                     BeatDuration off,
                                     BeatRange loop,
                                     LiveClipLevel level,
-                                    const juce::AudioChannelSet& channelSetToUse,
-                                    const juce::AudioChannelSet& destChannelsToFill,
+                                    const ChannelConfiguration& channelSetToUse,
+                                    const ChannelConfiguration& destChannelsToFill,
                                     ProcessState& ps,
                                     EditItemID itemIDToUse,
                                     bool isRendering,
@@ -1987,8 +1987,8 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
     hash_combine (stateHash, removeRoundingError (loopSectionBeats.getEnd()));
     hash_combine (stateHash, removeRoundingError (offsetBeats));
     hash_combine (stateHash, editItemID.getRawID());
-    hash_combine (stateHash, channelsToUse.size());
-    hash_combine (stateHash, destChannels.size());
+    hash_combine (stateHash, channelsToUse.getNumChannels());
+    hash_combine (stateHash, destChannels.getNumChannels());
     hash_combine (stateHash, audioFile.getHash());
     hash_combine (stateHash, resamplingQualityToUse);
     hash_combine (stateHash, speedFadeDescription);
@@ -2025,7 +2025,7 @@ tracktion::graph::NodeProperties WaveNodeRealTime::getNodeProperties()
     tracktion::graph::NodeProperties props;
     props.hasAudio = true;
     props.hasMidi = false;
-    props.numberOfChannels = destChannels.size();
+    props.numberOfChannels = destChannels.getNumChannels();
     props.nodeID = (size_t) editItemID.getRawID();
 
     return props;
@@ -2090,7 +2090,7 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
         return false;
 
     auto audioFileCacheReader = std::make_unique<AudioFileCacheReader> (std::move (fileCacheReader), isOfflineRender ? 5s : 0ms,
-                                                                        destChannels, channelsToUse);
+                                                                        destChannels.toChannelSet(), channelsToUse.toChannelSet());
     std::unique_ptr<AudioReader> loopReader;
 
     if (warpMap)
@@ -2178,7 +2178,7 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
     if (! channelState)
     {
         channelState = std::make_shared<std::vector<float>>();
-        const int numChannelsToUse = std::max (channelsToUse.size(), (int) (editReader->getNumChannels()));
+        const int numChannelsToUse = std::max (channelsToUse.getNumChannels(), (int) (editReader->getNumChannels()));
 
         for (int i = numChannelsToUse; --i >= 0;)
             channelState->emplace_back (0.0f);
@@ -2230,7 +2230,7 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
     const auto sectionEditTime = getEditTimeRange();
 
     // Check that the number of channels requested matches the destination buffer num channels
-    assert (destChannels.size() == (int) pc.buffers.audio.getNumChannels());
+    assert (destChannels.getNumChannels() == (int) pc.buffers.audio.getNumChannels());
 
     if (editReader == nullptr)
         return;

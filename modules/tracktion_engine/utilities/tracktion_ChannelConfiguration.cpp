@@ -100,6 +100,20 @@ ChannelConfiguration ChannelConfiguration::mono (int deviceChannelIndex)
     return config;
 }
 
+ChannelConfiguration ChannelConfiguration::left (int deviceChannelIndex)
+{
+    ChannelConfiguration config;
+    config.channels.push_back (ChannelIndex (deviceChannelIndex, juce::AudioChannelSet::left));
+    return config;
+}
+
+ChannelConfiguration ChannelConfiguration::right (int deviceChannelIndex)
+{
+    ChannelConfiguration config;
+    config.channels.push_back (ChannelIndex (deviceChannelIndex, juce::AudioChannelSet::right));
+    return config;
+}
+
 ChannelConfiguration ChannelConfiguration::stereo (int firstDeviceChannelIndex)
 {
     ChannelConfiguration config;
@@ -215,6 +229,17 @@ std::pair<int, int> ChannelConfiguration::getChannelRange() const
         return { 0, 0 };
 
     return { low, high + 1 };
+}
+
+ChannelConfiguration ChannelConfiguration::intersection (const ChannelConfiguration& other) const
+{
+    ChannelConfiguration result;
+
+    for (const auto& c : channels)
+        if (other.containsDeviceChannel (c.indexInDevice))
+            result.addChannel (c);
+
+    return result;
 }
 
 juce::AudioChannelSet ChannelConfiguration::toChannelSet() const

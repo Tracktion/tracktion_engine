@@ -29,8 +29,8 @@ SpeedRampWaveNode::SpeedRampWaveNode (const AudioFile& af,
                                       TimeRange loop,
                                       LiveClipLevel level,
                                       double speed,
-                                      const juce::AudioChannelSet& channelSetToUse,
-                                      const juce::AudioChannelSet& destChannelsToFill,
+                                      const ChannelConfiguration& channelSetToUse,
+                                      const ChannelConfiguration& destChannelsToFill,
                                       ProcessState& ps,
                                       EditItemID itemIDToUse,
                                       bool isRendering,
@@ -61,7 +61,7 @@ tracktion::graph::NodeProperties SpeedRampWaveNode::getNodeProperties()
     tracktion::graph::NodeProperties props;
     props.hasAudio = true;
     props.hasMidi = false;
-    props.numberOfChannels = destChannels.size();
+    props.numberOfChannels = destChannels.getNumChannels();
     props.nodeID = (size_t) editItemID.getRawID();
 
     return props;
@@ -77,7 +77,7 @@ void SpeedRampWaveNode::prepareToPlay (const tracktion::graph::PlaybackInitialis
     channelState.clear();
 
     if (reader != nullptr)
-        for (int i = std::max (channelsToUse.size(), reader->getNumChannels()); --i >= 0;)
+        for (int i = std::max (channelsToUse.getNumChannels(), reader->getNumChannels()); --i >= 0;)
             channelState.add (new PerChannelState());
 }
 
@@ -210,7 +210,7 @@ void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t>
         SCOPED_REALTIME_CHECK
 
         if (reader->readSamples (numFileSamples + 2, fileData.buffer, destBufferChannels, 0,
-                                 channelsToUse,
+                                 channelsToUse.toChannelSet(),
                                  isOfflineRender ? 5000 : 3))
         {
             if (! getPlayHeadState().isContiguousWithPreviousBlock() && ! getPlayHeadState().isFirstBlockOfLoop())

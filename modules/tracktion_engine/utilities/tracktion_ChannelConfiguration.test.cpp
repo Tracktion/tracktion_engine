@@ -28,6 +28,7 @@ public:
         runQueryTests();
         runSerializationTests();
         runComparisonTests();
+        runIntersectionTests();
     }
 
 private:
@@ -150,6 +151,54 @@ private:
 
         auto mono = ChannelConfiguration::mono();
         expect (stereo1 != mono);
+    }
+
+    void runIntersectionTests()
+    {
+        beginTest ("Intersection");
+
+        {
+            // Partial overlap: stereo(0) channels 0,1 intersected with discrete 4 channels 0-3
+            auto result = ChannelConfiguration::stereo (0).intersection (ChannelConfiguration::discreteChannels (4, 0));
+            expectEquals (result.getNumChannels(), 2);
+        }
+
+        {
+            // No overlap: stereo(4) channels 4,5 vs discrete 2 channels 0,1
+            auto result = ChannelConfiguration::stereo (4).intersection (ChannelConfiguration::discreteChannels (2, 0));
+            expect (result.isEmpty());
+        }
+
+        {
+            // Subset: mono(0) is a subset of stereo(0)
+            auto result = ChannelConfiguration::mono (0).intersection (ChannelConfiguration::stereo (0));
+            expectEquals (result.getNumChannels(), 1);
+        }
+
+        {
+            // Empty left operand
+            auto result = ChannelConfiguration().intersection (ChannelConfiguration::stereo());
+            expect (result.isEmpty());
+        }
+
+        {
+            // Empty right operand
+            auto result = ChannelConfiguration::stereo().intersection (ChannelConfiguration());
+            expect (result.isEmpty());
+        }
+
+        {
+            // Both empty
+            auto result = ChannelConfiguration().intersection (ChannelConfiguration());
+            expect (result.isEmpty());
+        }
+
+        {
+            // Identical configs
+            auto result = ChannelConfiguration::stereo (0).intersection (ChannelConfiguration::stereo (0));
+            expectEquals (result.getNumChannels(), 2);
+            expect (result == ChannelConfiguration::stereo (0));
+        }
     }
 };
 
