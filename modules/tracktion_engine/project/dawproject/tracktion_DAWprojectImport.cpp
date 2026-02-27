@@ -408,37 +408,49 @@ void DAWprojectImporter::parseMarkers (const juce::XmlElement& markersElement, E
 }
 
 //==============================================================================
-void DAWprojectImporter::parseLanes (const juce::XmlElement& lanesElement, Edit& edit, Track* track)
+void DAWprojectImporter::parseLanes (const juce::XmlElement& lanesElement, Edit& edit, Track* track, bool positionIsBeats)
 {
     auto* clipTrack = dynamic_cast<ClipTrack*> (track);
     if (clipTrack == nullptr)
         return;
 
+    auto isBeats = positionIsBeats || isTimeUnitBeats (lanesElement);
+
     for (auto* child : lanesElement.getChildIterator())
     {
         if (child->hasTagName (xml::Clips))
-            parseClips (*child, edit, *clipTrack);
+            parseClips (*child, edit, *clipTrack, isBeats);
         else if (child->hasTagName (xml::Lanes))
-            parseLanes (*child, edit, track);
+            parseLanes (*child, edit, track, isBeats);
     }
 }
 
 //==============================================================================
-void DAWprojectImporter::parseClips (const juce::XmlElement& clipsElement, Edit&, ClipTrack& track)
+void DAWprojectImporter::parseClips (const juce::XmlElement& clipsElement, Edit&, ClipTrack& track, bool positionIsBeats)
 {
     for (auto* child : clipsElement.getChildIterator())
     {
         if (child->hasTagName (xml::Clip))
-            parseClip (*child, track.edit, track);
+            parseClip (*child, track.edit, track, positionIsBeats);
     }
 }
 
 //==============================================================================
-Clip::Ptr DAWprojectImporter::parseClip (const juce::XmlElement& clipElement, Edit&, ClipTrack& track)
+Clip::Ptr DAWprojectImporter::parseClip (const juce::XmlElement& clipElement, Edit&, ClipTrack& track, bool positionIsBeats)
 {
     auto name = clipElement.getStringAttribute (xml::name);
     auto timeAttr = parseDouble (clipElement.getStringAttribute (xml::time), 0.0);
     auto durationAttr = parseDouble (clipElement.getStringAttribute (xml::duration), 0.0);
+
+    // Convert from beats to seconds if the parent timeUnit is beats
+    if (positionIsBeats)
+    {
+        auto& tempoSeq = track.edit.tempoSequence;
+        auto startTime = tempoSeq.toTime (BeatPosition::fromBeats (timeAttr));
+        auto endTime = tempoSeq.toTime (BeatPosition::fromBeats (timeAttr + durationAttr));
+        timeAttr = startTime.inSeconds();
+        durationAttr = (endTime - startTime).inSeconds();
+    }
 
     // Determine clip type based on content
     // Content can be directly in the clip or inside a Lanes element
@@ -561,6 +573,9 @@ void DAWprojectImporter::parseAudioClip (const juce::XmlElement& clipElement, Wa
 //==============================================================================
 void DAWprojectImporter::parseMidiClip (const juce::XmlElement& clipElement, MidiClip& clip)
 {
+    auto contentTimeUnit = clipElement.getStringAttribute (xml::contentTimeUnit);
+    auto contentIsBeats = contentTimeUnit.isEmpty() || contentTimeUnit == xml::beats;
+
     // Parse playStart (offset)
     auto playStart = parseDouble (clipElement.getStringAttribute (xml::playStart), 0.0);
     if (playStart != 0.0)
@@ -572,13 +587,24 @@ void DAWprojectImporter::parseMidiClip (const juce::XmlElement& clipElement, Mid
 
     if (loopStart.isNotEmpty() && loopEnd.isNotEmpty())
     {
-        auto loopStartBeats = parseDouble (loopStart, 0.0);
-        auto loopEndBeats = parseDouble (loopEnd, 0.0);
+        auto loopStartVal = parseDouble (loopStart, 0.0);
+        auto loopEndVal = parseDouble (loopEnd, 0.0);
 
-        if (loopEndBeats > loopStartBeats)
+        if (loopEndVal > loopStartVal)
         {
-            clip.setLoopRangeBeats (BeatRange { BeatPosition::fromBeats (loopStartBeats),
-                                                BeatDuration::fromBeats (loopEndBeats - loopStartBeats) });
+            if (contentIsBeats)
+            {
+                clip.setLoopRangeBeats (BeatRange { BeatPosition::fromBeats (loopStartVal),
+                                                    BeatDuration::fromBeats (loopEndVal - loopStartVal) });
+            }
+            else
+            {
+                // Convert from seconds to beats
+                auto& tempoSeq = clip.edit.tempoSequence;
+                auto startBeat = tempoSeq.toBeats (TimePosition::fromSeconds (loopStartVal));
+                auto endBeat = tempoSeq.toBeats (TimePosition::fromSeconds (loopEndVal));
+                clip.setLoopRangeBeats (BeatRange { startBeat, endBeat - startBeat });
+            }
         }
     }
 }

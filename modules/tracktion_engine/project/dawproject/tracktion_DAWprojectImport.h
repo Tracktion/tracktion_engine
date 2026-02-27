@@ -43,12 +43,12 @@ private:
 
     // Arrangement parsing
     void parseArrangement (const juce::XmlElement& arrangementElement, Edit& edit);
-    void parseLanes (const juce::XmlElement& lanesElement, Edit& edit, Track* track);
-    void parseClips (const juce::XmlElement& clipsElement, Edit& edit, ClipTrack& track);
+    void parseLanes (const juce::XmlElement& lanesElement, Edit& edit, Track* track, bool positionIsBeats = false);
+    void parseClips (const juce::XmlElement& clipsElement, Edit& edit, ClipTrack& track, bool positionIsBeats = false);
     void parseMarkers (const juce::XmlElement& markersElement, Edit& edit);
 
     // Clip parsing
-    Clip::Ptr parseClip (const juce::XmlElement& clipElement, Edit& edit, ClipTrack& track);
+    Clip::Ptr parseClip (const juce::XmlElement& clipElement, Edit& edit, ClipTrack& track, bool positionIsBeats = false);
     void parseAudioClip (const juce::XmlElement& clipElement, WaveAudioClip& clip);
     void parseMidiClip (const juce::XmlElement& clipElement, MidiClip& clip);
     void parseNotes (const juce::XmlElement& notesElement, MidiClip& clip);
