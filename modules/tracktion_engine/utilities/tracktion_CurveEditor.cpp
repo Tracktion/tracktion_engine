@@ -216,8 +216,11 @@ void CurveEditor::paint (juce::Graphics& g)
 
         if (auto fillCol = getCurrentFillColour(); ! fillCol.isTransparent() && fillPath())
         {
+            auto range = getParameterRange();
+            auto isBipolar = range.getStart() < 0.0f && range.getEnd() > 0.0f;
+            const auto y = isBipolar ? valueToY (0.0f) : getHeight() + 1.0f;
+
             juce::Path fillPath (curvePath);
-            const auto y = getHeight() + 1.0f;
             fillPath.lineTo ((float) getWidth(), y);
             fillPath.lineTo (startX, y);
             fillPath.closeSubPath();
