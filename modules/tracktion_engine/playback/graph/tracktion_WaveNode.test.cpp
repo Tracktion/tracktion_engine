@@ -499,7 +499,7 @@ TEST_SUITE ("tracktion_engine")
 
             TestProcess<TracktionNodePlayer> testProcess (std::make_unique<TracktionNodePlayer> (std::move (node), processState, sampleRate, blockSize,
                                                                                                  getPoolCreatorFunction (ThreadPoolStrategy::realTime)),
-                                                          TestSetup { sampleRate, blockSize }, numOutputChannels, fileLength.inSeconds(), true);
+                                                          TestSetup { sampleRate, blockSize, false, {} }, numOutputChannels, fileLength.inSeconds(), true);
             testProcess.setPlayHead (&playHeadState.playHead);
             playHeadState.playHead.playSyncedToRange ({});
             return testProcess.processAll();
