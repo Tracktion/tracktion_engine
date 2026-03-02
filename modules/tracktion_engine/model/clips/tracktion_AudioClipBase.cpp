@@ -2310,35 +2310,44 @@ void AudioClipBase::timerCallback()
     if (! canUseProxy())
         return;
 
-    const bool isTimeStretched = usesTimeStretchedProxy();
-
     const AudioFile originalFile (getAudioFile());
     const AudioFile newProxy (getPlaybackFile());
 
     const bool proxyChanged = lastProxy != newProxy;
 
-    if (proxyChanged || ! newProxy.getFile().exists())
+    if (proxyChanged)
     {
-        if (proxyChanged
-             && lastProxy != originalFile
+        if (lastProxy != originalFile
              && lastProxy.getFile().isAChildOf (edit.getTempDirectory (false))
              && ! edit.areAnyClipsUsingFile (lastProxy))
             edit.engine.getAudioFileManager().proxyGenerator.deleteProxy (lastProxy);
 
         lastProxy = newProxy;
-
-        if (isTimeStretched || newProxy != originalFile)
-        {
-            edit.engine.getAudioFileManager().proxyGenerator
-                .beginJob (new ProxyGeneratorJob (getAudioFile(), newProxy, *this, isTimeStretched));
-        }
-
-        if (proxyChanged || newProxy.getFile().exists())
-        {
-            Selectable::changed(); // force update of waveforms
-            edit.restartPlayback();
-        }
     }
+
+    if (! newProxy.getFile().exists())
+    {
+        // Proxy doesn't exist yet — start render job if needed
+        if (proxyChanged)
+        {
+            const bool isTimeStretched = usesTimeStretchedProxy();
+
+            if (isTimeStretched || newProxy != originalFile)
+                edit.engine.getAudioFileManager().proxyGenerator
+                    .beginJob (new ProxyGeneratorJob (getAudioFile(), newProxy, *this, isTimeStretched));
+        }
+
+        // poll until the proxy is ready..
+        startTimer (100);
+        return;
+    }
+
+    // Proxy file exists — restart playback to use it
+    if (! proxyChanged)
+        edit.engine.getAudioFileManager().releaseFile (newProxy);
+
+    Selectable::changed();
+    edit.restartPlayback();
 }
 
 void AudioClipBase::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifier& id)
