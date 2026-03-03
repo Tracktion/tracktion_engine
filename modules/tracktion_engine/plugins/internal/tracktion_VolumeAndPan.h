@@ -74,7 +74,7 @@ public:
 
     /// This is the time over which volume changes will be ramped, to avoid
     /// zipper noise.
-    double smoothingRampTimeSeconds = 0.05;
+    double smoothingRampTimeSeconds = 0.015;
 
 private:
     float lastVolumeBeforeMute = 0.0f;
