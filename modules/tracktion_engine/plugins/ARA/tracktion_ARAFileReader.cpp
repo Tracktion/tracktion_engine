@@ -583,9 +583,12 @@ private:
             contentAnalyserChecker = nullptr;
             modelUpdater = nullptr; // Can't be editing the document in any way while restoring
 
+            auto trackID = clip.getTrack() != nullptr ? clip.getTrack()->itemID.getRawID() : 0;
+
             HashCode newHashCode = file.getHash()
                                     ^ file.getFile().getLastModificationTime().toMilliseconds()
-                                    ^ static_cast<HashCode> (clip.itemID.getRawID());
+                                    ^ static_cast<HashCode> (clip.itemID.getRawID())
+                                    ^ static_cast<HashCode> (trackID);
 
             if (currentHashCode != newHashCode)
             {

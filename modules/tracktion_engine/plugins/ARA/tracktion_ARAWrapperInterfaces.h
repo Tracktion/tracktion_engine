@@ -224,20 +224,22 @@ public:
 
     void willCreatePlaybackRegionOnTrack (Track* track)
     {
-        if (regionSequences.count (track) == 0)
-            regionSequences[track] = std::make_unique<RegionSequenceWrapper> (*this, track);
+        auto id = track->itemID;
 
-        regionSequencePlaybackRegionCount[track]++;
+        if (regionSequences.count (id) == 0)
+            regionSequences[id] = std::make_unique<RegionSequenceWrapper> (*this, track);
+
+        regionSequencePlaybackRegionCount[id]++;
     }
 
-    void willDestroyPlaybackRegionOnTrack (Track* track)
+    void willDestroyPlaybackRegionOnTrack (EditItemID trackID)
     {
-        jassert (regionSequencePlaybackRegionCount.count (track) > 0);
+        jassert (regionSequencePlaybackRegionCount.count (trackID) > 0);
 
-        if (--regionSequencePlaybackRegionCount[track] == 0)
+        if (--regionSequencePlaybackRegionCount[trackID] == 0)
         {
-            regionSequences.erase (track);
-            regionSequencePlaybackRegionCount.erase (track);
+            regionSequences.erase (trackID);
+            regionSequencePlaybackRegionCount.erase (trackID);
         }
     }
 
@@ -245,8 +247,8 @@ public:
     const ARADocumentControllerInterface* dci;
     ARADocumentControllerRef dcRef;
     std::unique_ptr<MusicalContextWrapper> musicalContext;
-    std::map<Track*, std::unique_ptr<RegionSequenceWrapper>> regionSequences;
-    std::map<Track*, int> regionSequencePlaybackRegionCount;
+    std::map<EditItemID, std::unique_ptr<RegionSequenceWrapper>> regionSequences;
+    std::map<EditItemID, int> regionSequencePlaybackRegionCount;
     std::unique_ptr<juce::MemoryBlock> lastArchiveState;
 
 private:
@@ -940,6 +942,8 @@ public:
         };
     }
 
+    const juce::String& getPersistentID() const { return itemID; }
+
     //==============================================================================
     ARADocument& doc;
     AudioClipBase& clip;
@@ -995,6 +999,8 @@ public:
             persistentID.toRawUTF8()
         };
     }
+
+    const juce::String& getPersistentID() const { return persistentID; }
 
     ARADocument& doc;
     AudioSourceWrapper& audioSource;
@@ -1069,6 +1075,7 @@ public:
                            const AudioModificationWrapper& audioModification)
       : doc (d),
         clip (audioClip),
+        trackID (audioClip.getTrack()->itemID),
         flags (factory.supportedPlaybackTransformationFlags),
         audioModificationRef (audioModification.audioModificationRef)
     {
@@ -1095,6 +1102,7 @@ public:
                            double playbackStartSecs, double playbackDurationSecs)
       : doc (d),
         clip (audioClip),
+        trackID (audioClip.getTrack()->itemID),
         flags (factory.supportedPlaybackTransformationFlags),
         audioModificationRef (audioModification.audioModificationRef),
         hasExplicitTimes (true),
@@ -1124,7 +1132,7 @@ public:
             CRASH_TRACER
             TRACKTION_ASSERT_MESSAGE_THREAD
             doc.dci->destroyPlaybackRegion (doc.dcRef, playbackRegionRef);
-            doc.willDestroyPlaybackRegionOnTrack (clip.getTrack());
+            doc.willDestroyPlaybackRegionOnTrack (trackID);
         }
     }
 
@@ -1145,7 +1153,7 @@ public:
     /** NB: This is where time-stretching is setup */
     SizedStruct<ARA_STRUCT_MEMBER (ARAPlaybackRegionProperties, color)> getPlaybackRegionProperties()
     {
-        auto regionSequenceRef = doc.regionSequences[clip.getTrack()]->regionSequenceRef;
+        auto regionSequenceRef = doc.regionSequences[trackID]->regionSequenceRef;
 
         if (hasExplicitTimes)
         {
@@ -1182,6 +1190,7 @@ public:
     //==============================================================================
     ARADocument& doc;
     AudioClipBase& clip;
+    EditItemID trackID;
 
 private:
     void updatePlaybackRegionProperties()
