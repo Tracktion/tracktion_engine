@@ -2157,7 +2157,7 @@ TEST_SUITE ("tracktion_engine")
         cleanup();
     }
 
-    TEST_CASE ("FolderBasedProject: removeProjectItem returns false")
+    TEST_CASE ("FolderBasedProject: removeProjectItem")
     {
         auto& engine = *Engine::getEngines()[0];
         auto& pm = engine.getProjectManager();
@@ -2170,17 +2170,41 @@ TEST_SUITE ("tracktion_engine")
             tempDir.deleteRecursively (false);
         };
 
-        auto projectFolder = tempDir.getChildFile ("remove_test");
-        projectFolder.createDirectory();
-        projectFolder.getChildFile ("audio.wav").create();
+        SUBCASE ("removes item without deleting source file")
+        {
+            auto projectFolder = tempDir.getChildFile ("remove_test");
+            projectFolder.createDirectory();
+            auto sourceFile = projectFolder.getChildFile ("audio.wav");
+            sourceFile.create();
 
-        ProjectManager::TempProject tp (pm, projectFolder, false);
-        auto project = tp.project;
-        REQUIRE (project != nullptr);
-        REQUIRE (project->getNumProjectItems() >= 1);
+            ProjectManager::TempProject tp (pm, projectFolder, false);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+            REQUIRE (project->getNumProjectItems() >= 1);
 
-        auto ref = project->getProjectItemRef (0);
-        CHECK_FALSE (project->removeProjectItem (ref, false));
+            auto ref = project->getProjectItemRef (0);
+            CHECK (project->removeProjectItem (ref, false));
+            CHECK (project->getNumProjectItems() == 0);
+            CHECK (sourceFile.existsAsFile());
+        }
+
+        SUBCASE ("removes item and deletes source file")
+        {
+            auto projectFolder = tempDir.getChildFile ("remove_test2");
+            projectFolder.createDirectory();
+            auto sourceFile = projectFolder.getChildFile ("audio2.wav");
+            sourceFile.create();
+
+            ProjectManager::TempProject tp (pm, projectFolder, false);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+            REQUIRE (project->getNumProjectItems() >= 1);
+
+            auto ref = project->getProjectItemRef (0);
+            CHECK (project->removeProjectItem (ref, true));
+            CHECK (project->getNumProjectItems() == 0);
+            CHECK_FALSE (sourceFile.existsAsFile());
+        }
 
         cleanup();
     }

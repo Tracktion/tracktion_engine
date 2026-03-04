@@ -424,8 +424,37 @@ ProjectItem::Ptr FolderBasedProject::createNewItem (const juce::File& fileToRefe
     return item;
 }
 
-bool FolderBasedProject::removeProjectItem (const ProjectItemRef&, bool)
+bool FolderBasedProject::removeProjectItem (const ProjectItemRef& ref, bool deleteSourceMaterial)
 {
+    if (isValid() && ! isReadOnly())
+    {
+        {
+            const juce::ScopedLock sl (itemLock);
+
+            const int index = getIndexOf (ref);
+            jassert (index >= 0);
+
+            if (index >= 0)
+            {
+                auto item = cachedItems[index];
+
+                if (item != nullptr)
+                {
+                    item->deselect();
+
+                    if (deleteSourceMaterial)
+                        if (! item->deleteSourceFile())
+                            return false;
+                }
+
+                cachedItems.remove (index);
+            }
+        }
+
+        changed();
+        return true;
+    }
+
     return false;
 }
 
