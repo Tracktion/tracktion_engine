@@ -594,7 +594,7 @@ void FolderBasedProject::sourceFileMoved (const juce::File& oldFile, const juce:
     }
 
     // 3. Refresh cached items so the moved file is correctly indexed
-    reload (false);
+    reload (true);
 }
 
 void FolderBasedProject::reload (bool lazy)

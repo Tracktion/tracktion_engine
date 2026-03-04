@@ -33,8 +33,8 @@ public:
     //==============================================================================
     ~EditSnapshot();
 
-    /** Returns the ProjectItemID. */
-    ProjectItemID getID() const noexcept                { return itemID; }
+    /** Returns the ProjectItemRef that identifies this snapshot. */
+    const ProjectItemRef& getProjectItemRef() const noexcept    { return itemRef; }
 
     /** Returns the File if this was created from one. */
     juce::File getFile() const                          { return sourceFile; }
@@ -113,7 +113,7 @@ private:
     struct ListHolder;
     std::unique_ptr<ListHolder> listHolder;
 
-    ProjectItemID itemID;
+    ProjectItemRef itemRef;
     juce::File sourceFile;
     juce::ValueTree state;
     juce::Time lastSaveTime;
@@ -133,7 +133,7 @@ private:
     juce::ListenerList<Listener> listeners;
 
     //==============================================================================
-    EditSnapshot (Engine&, ProjectItemID);
+    EditSnapshot (Engine&, ProjectItemRef);
     void refreshFromProjectItem (ProjectItem::Ptr);
     void refreshFromXml (const juce::XmlElement&, const juce::String&, double newLength);
     void refreshFromState();

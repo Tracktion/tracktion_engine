@@ -410,6 +410,16 @@ ProjectItem::Ptr ProjectManager::getProjectItem (const ProjectItemRef& ref)
     if (auto p = ref.getProject())
         return p->getProjectItemFor (ref);
 
+    // Path-based ref without an owner — search all projects
+    if (! ref.isProjectItemID())
+    {
+        const juce::ScopedLock sl (lock);
+
+        for (auto p : openProjects)
+            if (auto item = p->getProjectItemFor (ref))
+                return item;
+    }
+
     return {};
 }
 

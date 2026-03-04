@@ -15,12 +15,12 @@ struct EditSnapshotList
 {
     EditSnapshotList() = default;
 
-    EditSnapshot::Ptr getEditSnapshot (ProjectItemID itemID)
+    EditSnapshot::Ptr getEditSnapshot (const ProjectItemRef& ref)
     {
         const juce::ScopedLock sl (getLock());
 
         for (auto s : snapshots)
-            if (s->getID() == itemID)
+            if (s->getProjectItemRef() == ref)
                 return s;
 
         return {};
@@ -55,25 +55,23 @@ struct EditSnapshot::ListHolder
 //==============================================================================
 EditSnapshot::Ptr EditSnapshot::getEditSnapshot (Engine& engine, ProjectItemRef itemRef)
 {
+    if (! itemRef.isValid())
+        return {};
+
     juce::SharedResourcePointer<EditSnapshotList> list;
     const juce::ScopedLock sl (list->getLock());
 
-    auto itemID = itemRef.getProjectItemID();
-
-    if (! itemID)
-        return {};
-
-    if (auto snapshot = list->getEditSnapshot (*itemID))
+    if (auto snapshot = list->getEditSnapshot (itemRef))
         return snapshot;
 
-    return new EditSnapshot (engine, *itemID);
+    return new EditSnapshot (engine, itemRef);
 }
 
 //==============================================================================
-EditSnapshot::EditSnapshot (Engine& e, ProjectItemID pid)
+EditSnapshot::EditSnapshot (Engine& e, ProjectItemRef ref)
     : engine (e),
       listHolder (std::make_unique<ListHolder>()),
-      itemID (pid)
+      itemRef (ref)
 {
     listHolder->list->addSnapshot (*this);
     refreshFromProjectManager();
@@ -210,7 +208,7 @@ int EditSnapshot::audioToGlobalTrackIndex (int audioIndex) const
 //==============================================================================
 void EditSnapshot::refreshFromProjectManager()
 {
-    if (auto pi = engine.getProjectManager().getProjectItem (itemID))
+    if (auto pi = engine.getProjectManager().getProjectItem (itemRef))
         refreshFromProjectItem (pi);
 }
 
