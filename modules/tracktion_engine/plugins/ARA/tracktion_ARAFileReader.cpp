@@ -358,7 +358,7 @@ struct ARAClipPlayer  : private Selectable::Listener
     juce::String getAudioSourcePersistentID() const
     {
         if (playbackRegionAndSource != nullptr && playbackRegionAndSource->audioSource != nullptr)
-            return clip.getAudioFile().getHashString() + "_" + clip.itemID.toString();
+            return clip.getAudioFile().getHashString();
 
         return {};
     }
@@ -366,7 +366,7 @@ struct ARAClipPlayer  : private Selectable::Listener
     juce::String getAudioModificationPersistentID() const
     {
         if (playbackRegionAndSource != nullptr && playbackRegionAndSource->audioModification != nullptr)
-            return juce::String::toHexString (currentHashCode);
+            return juce::String::toHexString (modificationID);
 
         return {};
     }
@@ -509,7 +509,7 @@ private:
 
     std::unique_ptr<ARAInstance> araInstance;
     std::unique_ptr<PlaybackRegionAndSource> playbackRegionAndSource;
-    HashCode currentHashCode = 0;
+    HashCode modificationID = 0;
     double araHeadTime = 0.0;
     double araTailTime = 0.0;
 
@@ -561,7 +561,7 @@ private:
 
         playbackRegionAndSource = std::make_unique<PlaybackRegionAndSource> (*getDocument(), clip, *araInstance->factory,
                                                                              *araInstance->extensionInstance,
-                                                                             juce::String::toHexString (currentHashCode),
+                                                                             juce::String::toHexString (modificationID),
                                                                              clipToClone != nullptr ? clipToClone->playbackRegionAndSource.get() : nullptr);
 
         if (oldTrack != nullptr)
@@ -583,16 +583,12 @@ private:
             contentAnalyserChecker = nullptr;
             modelUpdater = nullptr; // Can't be editing the document in any way while restoring
 
-            auto trackID = clip.getTrack() != nullptr ? clip.getTrack()->itemID.getRawID() : 0;
+            HashCode newModificationID = file.getHash()
+                                        ^ static_cast<HashCode> (clip.itemID.getRawID());
 
-            HashCode newHashCode = file.getHash()
-                                    ^ file.getFile().getLastModificationTime().toMilliseconds()
-                                    ^ static_cast<HashCode> (clip.itemID.getRawID())
-                                    ^ static_cast<HashCode> (trackID);
-
-            if (currentHashCode != newHashCode)
+            if (modificationID != newModificationID)
             {
-                currentHashCode = newHashCode;
+                modificationID = newModificationID;
                 const ScopedDocumentEditor sde (*this, true);
 
                 recreateTrack (clipToClone);

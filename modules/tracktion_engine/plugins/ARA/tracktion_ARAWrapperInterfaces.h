@@ -862,7 +862,7 @@ public:
     AudioSourceWrapper (ARADocument& d, AudioClipBase& audioClip)
       : doc (d),
         clip (audioClip),
-        itemID (audioClip.getAudioFile().getHashString() + "_" + audioClip.itemID.toString())
+        sourceID (audioClip.getAudioFile().getHashString())
     {
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
@@ -934,7 +934,7 @@ public:
         return
         {
             name.toRawUTF8(),
-            itemID.toRawUTF8(),
+            sourceID.toRawUTF8(),
             (ARASampleCount)clip.getAudioFile().getLengthInSamples(),
             (ARASampleRate)(reader != nullptr ? reader->getSampleRate() : 0.0),
             (ARAChannelCount)(reader != nullptr ? reader->getNumChannels() : 0),
@@ -942,7 +942,7 @@ public:
         };
     }
 
-    const juce::String& getPersistentID() const { return itemID; }
+    const juce::String& getPersistentID() const { return sourceID; }
 
     //==============================================================================
     ARADocument& doc;
@@ -955,7 +955,7 @@ private:
         name = clip.getAudioFile().getFile().getFileName();
     }
 
-    const juce::String itemID;
+    const juce::String sourceID;
     juce::String name;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioSourceWrapper)
