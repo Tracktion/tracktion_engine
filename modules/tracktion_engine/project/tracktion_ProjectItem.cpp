@@ -510,6 +510,8 @@ void ProjectItem::timerCallback()
 {
     stopTimer();
 
+    Ptr selfRef (this);  // prevent destruction during setSourceFile -> reload
+
     auto src = getSourceFile();
     auto dst = getNonExistentSiblingWithIncrementedNumberSuffix (newDstFile, false);
 
