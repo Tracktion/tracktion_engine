@@ -382,6 +382,7 @@ AudioFileInfo::AudioFileInfo (const AudioFile& file, juce::AudioFormatReader* re
         needsCachedProxy = dynamic_cast<juce::WavAudioFormat*> (format) == nullptr
                               && dynamic_cast<juce::AiffAudioFormat*> (format) == nullptr
                               && dynamic_cast<FloatAudioFormat*> (format) == nullptr;
+        channelLayout   = reader->getChannelLayout();
         metadata = reader->metadataValues;
     }
     else

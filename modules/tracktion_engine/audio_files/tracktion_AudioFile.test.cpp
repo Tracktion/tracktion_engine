@@ -56,6 +56,121 @@ TEST_SUITE ("tracktion_engine")
         CHECK_EQ(reader->usesFloatingPointData, false);
         CHECK_EQ(reader->bitsPerSample, 16);
     }
+    TEST_CASE("AudioFileInfo channel layout round-trip")
+    {
+        auto& engine = *Engine::getEngines().getFirst();
+
+        juce::WavAudioFormat format;
+        juce::TemporaryFile tempFile (format.getFileExtensions()[0]);
+
+        AudioFile audioFile (engine, tempFile.getFile());
+        auto channelLayout = juce::AudioChannelSet::create5point1();
+        auto numChannels = channelLayout.size();
+        auto sampleRate = 44100.0;
+        auto bitDepth = 16;
+
+        // Write a short multi-channel WAV with 5.1 layout
+        {
+            AudioFileWriter writer (audioFile, &format, numChannels, sampleRate, bitDepth, {}, 0, channelLayout);
+            REQUIRE(writer.isOpen());
+
+            juce::AudioBuffer<float> buffer (numChannels, 512);
+            buffer.clear();
+            writer.appendBuffer (buffer, buffer.getNumSamples());
+        }
+
+        // Read back and check the channel layout is preserved
+        {
+            auto info = audioFile.getInfo();
+            CHECK_EQ(info.numChannels, numChannels);
+            CHECK_EQ(info.channelLayout, channelLayout);
+        }
+    }
+
+    TEST_CASE("AudioFileInfo discrete channel layout")
+    {
+        auto& engine = *Engine::getEngines().getFirst();
+
+        juce::WavAudioFormat format;
+        juce::TemporaryFile tempFile (format.getFileExtensions()[0]);
+
+        AudioFile audioFile (engine, tempFile.getFile());
+        auto numChannels = 4;
+        auto sampleRate = 48000.0;
+        auto bitDepth = 24;
+
+        // Write a 4-channel WAV with no specific layout (discrete)
+        {
+            AudioFileWriter writer (audioFile, &format, numChannels, sampleRate, bitDepth, {}, 0);
+            REQUIRE(writer.isOpen());
+
+            juce::AudioBuffer<float> buffer (numChannels, 512);
+            buffer.clear();
+            writer.appendBuffer (buffer, buffer.getNumSamples());
+        }
+
+        // Read back — should get discrete channels (or default mapping)
+        {
+            auto info = audioFile.getInfo();
+            CHECK_EQ(info.numChannels, numChannels);
+            // Without explicit layout, WAV reader returns discreteChannels or a default set
+            auto isDiscrete = info.channelLayout == juce::AudioChannelSet::discreteChannels (numChannels);
+            auto isCanonical = info.channelLayout == juce::AudioChannelSet::canonicalChannelSet (numChannels);
+            CHECK((isDiscrete || isCanonical));
+        }
+    }
+
+    TEST_CASE("AudioFileInfo channel layout write round-trip")
+    {
+        auto& engine = *Engine::getEngines().getFirst();
+
+        juce::WavAudioFormat format;
+        juce::TemporaryFile srcTempFile (format.getFileExtensions()[0]);
+        juce::TemporaryFile dstTempFile (format.getFileExtensions()[0]);
+
+        AudioFile srcAudioFile (engine, srcTempFile.getFile());
+        AudioFile dstAudioFile (engine, dstTempFile.getFile());
+        auto channelLayout = juce::AudioChannelSet::create5point1();
+        auto numChannels = channelLayout.size();
+        auto sampleRate = 44100.0;
+        auto bitDepth = 16;
+        auto numSamples = 512;
+
+        // Step 1: Write a 5.1 WAV file
+        {
+            AudioFileWriter writer (srcAudioFile, &format, numChannels, sampleRate, bitDepth, {}, 0, channelLayout);
+            REQUIRE(writer.isOpen());
+
+            juce::AudioBuffer<float> buffer (numChannels, numSamples);
+            buffer.clear();
+            writer.appendBuffer (buffer, buffer.getNumSamples());
+        }
+
+        // Step 2: Read back via AudioFileInfo, then use that info to write a second file
+        {
+            auto info = srcAudioFile.getInfo();
+            REQUIRE(info.channelLayout == channelLayout);
+
+            AudioFileWriter writer (dstAudioFile, &format, info.numChannels,
+                                    info.sampleRate, info.bitsPerSample,
+                                    info.metadata, 0, info.channelLayout);
+            REQUIRE(writer.isOpen());
+
+            // Copy audio data through
+            auto reader = std::unique_ptr<juce::AudioFormatReader> (
+                AudioFileUtils::createReaderFor (engine, srcAudioFile.getFile()));
+            REQUIRE(reader != nullptr);
+            writer.writeFromAudioReader (*reader, 0, reader->lengthInSamples);
+        }
+
+        // Step 3: Read the second file and verify the layout survived
+        {
+            auto info = dstAudioFile.getInfo();
+            CHECK_EQ(info.numChannels, numChannels);
+            CHECK_EQ(info.channelLayout, channelLayout);
+            CHECK_EQ(info.lengthInSamples, static_cast<SampleCount> (numSamples));
+        }
+    }
 }
 
 

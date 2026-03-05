@@ -1263,7 +1263,8 @@ private:
         AudioFileWriter writer (tempFile, engine.getAudioFileFormatManager().getWavFormat(),
                                 sourceInfo.numChannels, sourceInfo.sampleRate,
                                 std::max (16, sourceInfo.bitsPerSample),
-                                sourceInfo.metadata, 0);
+                                sourceInfo.metadata, 0,
+                                sourceInfo.channelLayout);
 
         return writer.isOpen()
                 && context != nullptr

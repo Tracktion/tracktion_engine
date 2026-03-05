@@ -30,6 +30,7 @@ struct AudioFileInfo
     int bitsPerSample = 0;
     bool isFloatingPoint = false;
     bool needsCachedProxy = false;
+    juce::AudioChannelSet channelLayout;
     juce::StringPairArray metadata;
     juce::Time fileModificationTime;
     LoopInfo loopInfo;

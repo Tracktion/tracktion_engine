@@ -356,7 +356,8 @@ bool AudioFileUtils::reverse (Engine& engine,
     AudioFileWriter writer (AudioFile (engine, destination), engine.getAudioFileFormatManager().getWavFormat(),
                             (int) reader->numChannels, reader->sampleRate,
                             std::max (16, (int) reader->bitsPerSample),
-                            reader->metadataValues, 0);
+                            reader->metadataValues, 0,
+                            reader->getChannelLayout());
 
     if (auto af = writer.file.getFormat())
     {

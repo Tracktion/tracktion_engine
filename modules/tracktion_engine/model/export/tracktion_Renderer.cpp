@@ -221,7 +221,8 @@ bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parame
 
     AudioFileWriter writer (AudioFile (params.edit->engine, target.destFile),
                             target.audioFormat, (int) reader->numChannels, target.sampleRateForAudio,
-                            target.bitDepth, target.metadata, target.quality);
+                            target.bitDepth, target.metadata, target.quality,
+                            reader->getChannelLayout());
 
     if (! writer.isOpen())
     {
