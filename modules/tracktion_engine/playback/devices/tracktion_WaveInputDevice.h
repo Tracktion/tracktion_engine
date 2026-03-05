@@ -62,6 +62,10 @@ public:
     const ChannelConfiguration& getChannels() const noexcept        { return deviceDescription.channels; }
     const juce::AudioChannelSet& getChannelSet() const noexcept     { return channelSet; }
 
+    /** Updates the channel configuration for track devices.
+        Call this before recording to match the source track's channel layout. */
+    void setChannelConfiguration (const ChannelConfiguration&);
+
     //==============================================================================
     void masterTimeUpdate (double) override {}
     void consumeNextAudioBlock (const float* const* allChannels, int numChannels, int numSamples, double streamTime);
@@ -70,7 +74,7 @@ public:
     void updateRetrospectiveBufferLength (double length) override;
 
     //==============================================================================
-    const WaveDeviceDescription deviceDescription;
+    WaveDeviceDescription deviceDescription;
 
 protected:
     juce::String openDevice();
@@ -81,7 +85,7 @@ private:
     friend class WaveInputDeviceInstance;
 
     const DeviceType deviceType;
-    const juce::AudioChannelSet channelSet;
+    juce::AudioChannelSet channelSet;
 
     juce::String filenameMask;
     float inputGainDb = 0;

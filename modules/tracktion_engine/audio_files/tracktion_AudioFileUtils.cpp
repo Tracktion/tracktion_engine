@@ -125,6 +125,35 @@ juce::AudioFormatWriter* AudioFileUtils::createWriterFor (Engine& engine,
     return {};
 }
 
+juce::AudioFormatWriter* AudioFileUtils::createWriterFor (juce::AudioFormat* format, const juce::File& file,
+                                                          double sampleRate, unsigned int numChannels, int bitsPerSample,
+                                                          const juce::StringPairArray& metadata, int quality,
+                                                          const juce::AudioChannelSet& channelLayout)
+{
+    if (auto out = std::unique_ptr<juce::OutputStream> (file.createOutputStream()))
+    {
+        std::unordered_map<juce::String, juce::String> metadataMap;
+
+        for (const auto& key : metadata.getAllKeys())
+            metadataMap[key] = metadata[key];
+
+        if (auto writer = format->createWriterFor (out,
+                                                   juce::AudioFormatWriterOptions()
+                                                    .withSampleRate (sampleRate)
+                                                    .withNumChannels (static_cast<int> (numChannels))
+                                                    .withBitsPerSample (bitsPerSample)
+                                                    .withMetadataValues (metadataMap)
+                                                    .withQualityOptionIndex (quality)
+                                                    .withChannelLayout (channelLayout)))
+        {
+            out.release();
+            return writer.release();
+        }
+    }
+
+    return {};
+}
+
 SampleRange AudioFileUtils::scanForNonZeroSamples (Engine& engine, const juce::File& file, float maxZeroLevelDb)
 {
     std::unique_ptr<juce::AudioFormatReader> reader (createReaderFor (engine, file));

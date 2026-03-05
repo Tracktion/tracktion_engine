@@ -1030,7 +1030,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForFrozenAudioTrack (AudioTrac
     auto node = tracktion::graph::makeNode<WaveNode> (AudioFile (track.edit.engine, TemporaryFileManager::getFreezeFileForTrack (track)),
                                                      TimeRange (TimePosition(), track.getLengthIncludingInputTracks()),
                                                      TimeDuration(), TimeRange(), LiveClipLevel(),
-                                                     1.0, ChannelConfiguration::stereo(), ChannelConfiguration::stereo(),
+                                                     1.0, track.getChannelConfiguration(), track.getChannelConfiguration(),
                                                      params.processState,
                                                      track.itemID,
                                                      params.forRendering);
@@ -1130,14 +1130,16 @@ std::unique_ptr<tracktion::graph::Node> createLiveInputNodeForDevice (InputDevic
     {
         if (waveDevice->isTrackDevice())
             if (auto sourceTrack = getTrackContainingTrackDevice (inputDeviceInstance.edit, *waveDevice))
+            {
+                waveDevice->setChannelConfiguration (sourceTrack->getChannelConfiguration());
                 return makeNode<TrackWaveInputDeviceNode> (params.processState,
                                                            *waveDevice,
                                                            makeNode<ReturnNode> (getWaveInputDeviceBusID (sourceTrack->itemID)),
                                                            shouldMonitorTrackDevice (inputDeviceInstance));
+            }
 
-        // For legacy reasons, we always need a stereo output from our live inputs
         return makeNode<WaveInputDeviceNode> (inputDeviceInstance, *waveDevice,
-                                              juce::AudioChannelSet::canonicalChannelSet (2));
+                                              waveDevice->getChannelSet());
     }
 
     return {};
@@ -1744,8 +1746,8 @@ std::unique_ptr<tracktion::graph::Node> createGroupFreezeNodeForDevice (Edit& ed
             auto node = tracktion::graph::makeNode<WaveNode> (af, TimeRange (0.0s, length),
                                                              0.0s, TimeRange(), LiveClipLevel(),
                                                              1.0,
-                                                             ChannelConfiguration::stereo(),
-                                                             ChannelConfiguration::stereo(),
+                                                             ChannelConfiguration::canonical (af.getInfo().numChannels),
+                                                             ChannelConfiguration::canonical (af.getInfo().numChannels),
                                                              processState,
                                                              EditItemID::fromRawID ((uint64_t) device.getName().hash()),
                                                              false);

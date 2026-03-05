@@ -28,6 +28,15 @@ public:
                      const juce::StringPairArray& metadata,
                      int quality);
 
+    AudioFileWriter (const AudioFile& file,
+                     juce::AudioFormat* formatToUse,
+                     int numChannels,
+                     double sampleRate,
+                     int bitsPerSample,
+                     const juce::StringPairArray& metadata,
+                     int quality,
+                     const juce::AudioChannelSet& channelLayout);
+
     /** Destructor, calls closeForWriting. */
     ~AudioFileWriter();
 

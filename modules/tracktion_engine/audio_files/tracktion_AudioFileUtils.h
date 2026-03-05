@@ -35,6 +35,11 @@ struct AudioFileUtils
                                                      double sampleRate, unsigned int numChannels, int bitsPerSample,
                                                      const juce::StringPairArray& metadata, int quality);
 
+    static juce::AudioFormatWriter* createWriterFor (juce::AudioFormat*, const juce::File&,
+                                                     double sampleRate, unsigned int numChannels, int bitsPerSample,
+                                                     const juce::StringPairArray& metadata, int quality,
+                                                     const juce::AudioChannelSet& channelLayout);
+
     static SampleRange scanForNonZeroSamples (Engine&, const juce::File&, float maxZeroLevelDb);
 
     static SampleRange copyNonSilentSectionToNewFile (Engine&,

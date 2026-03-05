@@ -78,7 +78,7 @@ void WaveOutputDevice::saveProps()
 
 void WaveOutputDevice::reverseChannels (bool shouldReverse)
 {
-    if (! isStereoPair())
+    if (deviceDescription.getNumChannels() < 2)
         return;
 
     if (leftRightReversed != shouldReverse)

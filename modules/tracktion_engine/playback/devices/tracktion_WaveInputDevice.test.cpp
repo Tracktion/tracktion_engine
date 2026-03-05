@@ -406,6 +406,165 @@ namespace tracktion::inline engine
                                                            toBufferView (squareBuffer).getStart (recordedFileView.getNumFrames()- blockNumFrames),
                                                            juce::Decibels::decibelsToGain (-99.0f)));
         }
+
+        TEST_CASE ("WaveInputDevice: Multi-channel recording")
+        {
+            constexpr int numChannels = 4;
+            auto& engine = *Engine::getEngines()[0];
+            test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512,
+                                                           .inputChannels = numChannels, .outputChannels = numChannels,
+                                                           .inputNames = {}, .outputNames = {} });
+
+            auto edit = engine::test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+            auto& tc = edit->getTransport();
+            tc.ensureContextAllocated();
+
+            auto squareFile = graph::test_utilities::getSquareFile<juce::WavAudioFormat> (44100.0, 5.0, 1);
+            auto squareBuffer = *engine::test_utilities::loadFileInToBuffer (engine, squareFile->getFile());
+
+            auto& destTrack = *getAudioTracks (*edit)[0];
+            auto destAssignment = edit->getCurrentPlaybackContext()->getAllInputs()[0]->setTarget (destTrack.itemID, true, nullptr);
+            (*destAssignment)->recordEnabled = true;
+            edit->dispatchPendingUpdatesSynchronously();
+
+            auto waveInputDevices = engine.getDeviceManager().getWaveInputDevices();
+            CHECK (! waveInputDevices.empty());
+            auto expectedChannels = static_cast<int> (waveInputDevices[0]->getChannels().getNumChannels());
+
+            test_utilities::TempCurrentWorkingDirectory tempDir;
+            tc.record (false);
+
+            juce::AudioBuffer<float> inputBuffer (numChannels, squareBuffer.getNumSamples());
+            inputBuffer.clear();
+
+            for (int ch = 0; ch < numChannels; ++ch)
+            {
+                inputBuffer.copyFrom (ch, 0, squareBuffer, 0, 0, squareBuffer.getNumSamples());
+            }
+
+            player.process (inputBuffer);
+
+            tc.stop (false, true);
+
+            auto recordedClip = dynamic_cast<WaveAudioClip*> (destTrack.getClips()[0]);
+            CHECK (recordedClip);
+            auto recordedFile = recordedClip->getSourceFileReference().getFile();
+            auto recordedFileBuffer = *engine::test_utilities::loadFileInToBuffer (engine, recordedFile);
+
+            CHECK_EQ (recordedFileBuffer.getNumChannels(), expectedChannels);
+            CHECK_EQ (squareBuffer.getNumSamples(), recordedFileBuffer.getNumSamples());
+
+            juce::AudioBuffer<float> expectedBuffer (expectedChannels, squareBuffer.getNumSamples());
+
+            for (int ch = 0; ch < expectedChannels; ++ch)
+            {
+                expectedBuffer.copyFrom (ch, 0, squareBuffer, 0, 0, squareBuffer.getNumSamples());
+            }
+
+            CHECK (graph::test_utilities::buffersAreEqual (recordedFileBuffer, expectedBuffer,
+                                                           juce::Decibels::decibelsToGain (-99.0f)));
+        }
+
+        TEST_CASE ("WaveInputDevice: Multi-channel track device recording")
+        {
+            auto& engine = *Engine::getEngines()[0];
+            test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512,
+                                                           .inputChannels = 0, .outputChannels = 4,
+                                                           .inputNames = {}, .outputNames = {} });
+
+            auto edit = engine::test_utilities::createTestEdit (engine, 2, Edit::EditRole::forEditing);
+            auto& tc = edit->getTransport();
+
+            // Create a 4-channel square wave source file
+            constexpr int sourceChannels = 4;
+            auto squareFile = graph::test_utilities::getSquareFile<juce::WavAudioFormat> (44100.0, 5.0, sourceChannels);
+            auto squareBuffer = *engine::test_utilities::loadFileInToBuffer (engine, squareFile->getFile());
+            CHECK_EQ (squareBuffer.getNumChannels(), sourceChannels);
+
+            AudioFile af (engine, squareFile->getFile());
+            auto& sourceTrack = *getAudioTracks (*edit)[0];
+
+            auto clip = insertWaveClip (sourceTrack, {}, af.getFile(), { { 0_tp, 5_tp } }, DeleteExistingClips::no);
+            clip->setUsesProxy (false);
+            clip->setActiveChannelConfiguration (ChannelConfiguration::discreteChannels (sourceChannels));
+            edit->dispatchPendingUpdatesSynchronously();
+
+            auto& destTrack = *getAudioTracks (*edit)[1];
+            auto destAssignment = assignTrackAsInput (destTrack, sourceTrack, InputDevice::DeviceType::trackWaveDevice);
+            destAssignment->recordEnabled = true;
+            edit->dispatchPendingUpdatesSynchronously();
+
+            test_utilities::TempCurrentWorkingDirectory tempDir;
+            tc.record (false);
+
+            test_utilities::waitForFileToBeMapped (af);
+            player.process (static_cast<int> (af.getLengthInSamples()));
+
+            tc.stop (false, true);
+
+            auto recordedClip = dynamic_cast<WaveAudioClip*> (destTrack.getClips()[0]);
+            CHECK (recordedClip);
+            auto recordedFile = recordedClip->getSourceFileReference().getFile();
+            auto recordedFileBuffer = *engine::test_utilities::loadFileInToBuffer (engine, recordedFile);
+
+            // Track device now uses the source track's channel configuration
+            CHECK_EQ (recordedFileBuffer.getNumChannels(), sourceChannels);
+            CHECK_EQ (af.getLengthInSamples(), recordedFileBuffer.getNumSamples());
+
+            CHECK (graph::test_utilities::buffersAreEqual (recordedFileBuffer, squareBuffer,
+                                                           juce::Decibels::decibelsToGain (-99.0f)));
+        }
+
+        TEST_CASE ("WaveInputDevice: Stereo track device recording")
+        {
+            // Verifies the standard stereo track-as-input recording path works
+            auto& engine = *Engine::getEngines()[0];
+            test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512,
+                                                           .inputChannels = 0, .outputChannels = 2,
+                                                           .inputNames = {}, .outputNames = {} });
+
+            auto edit = engine::test_utilities::createTestEdit (engine, 2, Edit::EditRole::forEditing);
+            auto& tc = edit->getTransport();
+
+            auto squareFile = graph::test_utilities::getSquareFile<juce::WavAudioFormat> (44100.0, 2.0, 2);
+            auto squareBuffer = *engine::test_utilities::loadFileInToBuffer (engine, squareFile->getFile());
+            AudioFile af (engine, squareFile->getFile());
+            auto& sourceTrack = *getAudioTracks (*edit)[0];
+
+            auto clip = insertWaveClip (sourceTrack, {}, af.getFile(), { { 0_tp, 2_tp } }, DeleteExistingClips::no);
+            clip->setUsesProxy (false);
+
+            auto& destTrack = *getAudioTracks (*edit)[1];
+            auto destAssignment = assignTrackAsInput (destTrack, sourceTrack, InputDevice::DeviceType::trackWaveDevice);
+            destAssignment->recordEnabled = true;
+            edit->dispatchPendingUpdatesSynchronously();
+
+            test_utilities::TempCurrentWorkingDirectory tempDir;
+            tc.record (false);
+
+            test_utilities::waitForFileToBeMapped (af);
+            player.process (static_cast<int> (af.getLengthInSamples()));
+
+            tc.stop (false, true);
+
+            auto recordedClip = dynamic_cast<WaveAudioClip*> (destTrack.getClips()[0]);
+            CHECK (recordedClip);
+            auto recordedFile = recordedClip->getSourceFileReference().getFile();
+            auto recordedFileBuffer = *engine::test_utilities::loadFileInToBuffer (engine, recordedFile);
+
+            CHECK_EQ (recordedFileBuffer.getNumChannels(), 2);
+            CHECK_EQ (af.getLengthInSamples(), recordedFileBuffer.getNumSamples());
+
+            // Verify the WAV file can be read back correctly
+            if (auto reader = std::unique_ptr<juce::AudioFormatReader> (
+                    AudioFileUtils::createReaderFor (engine, recordedFile)))
+            {
+                CHECK_EQ (static_cast<int> (reader->numChannels), 2);
+            }
+
+            CHECK (graph::test_utilities::buffersAreEqual (recordedFileBuffer, squareBuffer,
+                                                           juce::Decibels::decibelsToGain (-99.0f)));
+        }
     }
 #endif
 

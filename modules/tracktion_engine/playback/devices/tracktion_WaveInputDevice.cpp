@@ -389,9 +389,15 @@ public:
             AudioFileUtils::addBWAVStartToMetadata (metadata, (SampleCount) tracktion::toSamples (punchRange.getStart(), rc->sampleRate));
             auto& wi = getWaveInput();
 
+            if (wi.isTrackDevice())
+                for (auto t : getAudioTracks (edit))
+                    if (&t->getWaveInputDevice() == &wi)
+                        { wi.setChannelConfiguration (t->getChannelConfiguration()); break; }
+
             rc->fileWriter = std::make_unique<AudioFileWriter> (AudioFile (edit.engine, recordedFile), format,
                                                                 (int) wi.getChannels().getNumChannels(),
-                                                                rc->sampleRate, wi.bitDepth, metadata, 0);
+                                                                rc->sampleRate, wi.bitDepth, metadata, 0,
+                                                                wi.getChannelSet());
 
             if (rc->fileWriter->isOpen())
             {
@@ -1378,6 +1384,12 @@ WaveInputDevice::~WaveInputDevice()
 {
     notifyListenersOfDeletion();
     closeDevice();
+}
+
+void WaveInputDevice::setChannelConfiguration (const ChannelConfiguration& newConfig)
+{
+    deviceDescription.channels = newConfig;
+    channelSet = newConfig.toChannelSet();
 }
 
 juce::String WaveInputDevice::getDeviceTypeDescription() const

@@ -163,6 +163,28 @@ AudioFileWriter::AudioFileWriter (const AudioFile& f,
     }
 }
 
+AudioFileWriter::AudioFileWriter (const AudioFile& f,
+                                  juce::AudioFormat* formatToUse,
+                                  int numChannels,
+                                  double sampleRate,
+                                  int bitsPerSample,
+                                  const juce::StringPairArray& metadata,
+                                  int quality,
+                                  const juce::AudioChannelSet& channelLayout)
+    : file (f), samplesUntilFlush (numSamplesPerFlush)
+{
+    CRASH_TRACER
+    f.engine->getAudioFileManager().releaseFile (file);
+
+    if (file.getFile().getParentDirectory().createDirectory())
+    {
+        const juce::ScopedLock sl (writerLock);
+        writer.reset (AudioFileUtils::createWriterFor (formatToUse, file.getFile(), sampleRate,
+                                                       (unsigned int) numChannels, bitsPerSample,
+                                                       metadata, quality, channelLayout));
+    }
+}
+
 AudioFileWriter::~AudioFileWriter()
 {
     closeForWriting();
