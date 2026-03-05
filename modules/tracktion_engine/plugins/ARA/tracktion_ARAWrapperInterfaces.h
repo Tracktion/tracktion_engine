@@ -23,6 +23,18 @@ ARA_MAP_HOST_REF(AudioSourceWrapper, ARAAudioSourceHostRef)
     - 1 document per Edit
     - 1 musical context per edit
 */
+struct PersistentIDMapping
+{
+    juce::String archiveID;
+    juce::String currentID;
+};
+
+struct PersistentIDMappingGroup
+{
+    PersistentIDMapping sourceMapping;
+    juce::Array<PersistentIDMapping> modificationMappings;
+};
+
 class ARADocument
 {
 public:
@@ -144,20 +156,138 @@ public:
         }
     }
 
-    void endRestoringState()
+    void endRestoringState (juce::Array<PersistentIDMappingGroup> groups = {})
     {
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
 
         if (lastArchiveState)
         {
-            dci->restoreObjectsFromArchive (dcRef, toHostRef (lastArchiveState.get()), nullptr);
+            if (groups.isEmpty())
+            {
+                dci->restoreObjectsFromArchive (dcRef, toHostRef (lastArchiveState.get()), nullptr);
+            }
+            else
+            {
+                // Check if any groups share the same sourceMapping.currentID (collision)
+                bool hasCollisions = false;
+                {
+                    juce::StringArray seenCurrentIDs;
+
+                    for (auto& g : groups)
+                    {
+                        if (seenCurrentIDs.contains (g.sourceMapping.currentID))
+                        {
+                            hasCollisions = true;
+                            break;
+                        }
+
+                        seenCurrentIDs.add (g.sourceMapping.currentID);
+                    }
+                }
+
+                if (! hasCollisions)
+                {
+                    // Fast path: no collisions, flatten all groups into one call
+                    juce::Array<PersistentIDMapping> allSources, allMods;
+
+                    for (auto& g : groups)
+                    {
+                        allSources.add (g.sourceMapping);
+                        allMods.addArray (g.modificationMappings);
+                    }
+
+                    restoreWithFilter (allSources, allMods, kARATrue);
+                }
+                else
+                {
+                    // Collisions: multiple groups map to the same current source.
+                    // Re-restoring a source wipes its modifications (see
+                    // restoreObjectsForPaste which skips source mapping for
+                    // shared sources for the same reason).
+                    //
+                    // Strategy: for groups where archiveID != currentID (old-scheme
+                    // remapping), only include the source mapping on the FIRST
+                    // group per currentID. Subsequent groups with the same
+                    // currentID skip the source mapping so the source isn't
+                    // re-restored (which would wipe earlier modifications).
+                    // ARA finds archived modifications by persistent ID globally
+                    // when no source mapping scopes the search.
+                    //
+                    // Identity groups (archiveID == currentID) always include
+                    // their source mapping — these handle new-scheme archives
+                    // where the source ID already matches and won't collide
+                    // with old-scheme groups (old-scheme sources aren't in the
+                    // new archive, so those calls are no-ops).
+                    juce::StringArray restoredSourceIDs;
+                    bool isFirstCall = true;
+
+                    for (auto& g : groups)
+                    {
+                        juce::Array<PersistentIDMapping> sourceForThisCall;
+                        bool isIdentity = (g.sourceMapping.archiveID == g.sourceMapping.currentID);
+
+                        if (isIdentity || ! restoredSourceIDs.contains (g.sourceMapping.currentID))
+                        {
+                            sourceForThisCall.add (g.sourceMapping);
+
+                            if (! isIdentity)
+                                restoredSourceIDs.add (g.sourceMapping.currentID);
+                        }
+
+                        restoreWithFilter (sourceForThisCall, g.modificationMappings,
+                                           isFirstCall ? kARATrue : kARAFalse);
+                        isFirstCall = false;
+                    }
+                }
+            }
+
             lastArchiveState = nullptr; // Make sure this is deleted before the call to endEditing or it won't get passed to the document
 
             endEditing (true);
         }
     }
 
+private:
+    void restoreWithFilter (const juce::Array<PersistentIDMapping>& sourceMappings,
+                            const juce::Array<PersistentIDMapping>& modificationMappings,
+                            ARABool documentData)
+    {
+        juce::Array<ARAPersistentID> srcArchiveIDs, srcCurrentIDs, modArchiveIDs, modCurrentIDs;
+
+        for (auto& m : sourceMappings)
+        {
+            srcArchiveIDs.add (m.archiveID.toRawUTF8());
+            srcCurrentIDs.add (m.currentID.toRawUTF8());
+        }
+
+        for (auto& m : modificationMappings)
+        {
+            modArchiveIDs.add (m.archiveID.toRawUTF8());
+            modCurrentIDs.add (m.currentID.toRawUTF8());
+        }
+
+        SizedStruct<ARA_STRUCT_MEMBER (ARARestoreObjectsFilter, audioModificationCurrentIDs)> filter {};
+        filter.documentData = documentData;
+
+        if (! sourceMappings.isEmpty())
+        {
+            filter.audioSourceIDsCount = static_cast<ARASize> (srcArchiveIDs.size());
+            filter.audioSourceArchiveIDs = srcArchiveIDs.getRawDataPointer();
+            filter.audioSourceCurrentIDs = srcCurrentIDs.getRawDataPointer();
+        }
+
+        if (! modificationMappings.isEmpty())
+        {
+            filter.audioModificationIDsCount = static_cast<ARASize> (modArchiveIDs.size());
+            filter.audioModificationArchiveIDs = modArchiveIDs.getRawDataPointer();
+            filter.audioModificationCurrentIDs = modCurrentIDs.getRawDataPointer();
+        }
+
+        dci->restoreObjectsFromArchive (dcRef, toHostRef (lastArchiveState.get()), &filter);
+    }
+
+public:
     /** Store a partial ARA archive containing just the given audio source and modification.
         Used by clipboard copy to capture ARA plugin edits (e.g. Melodyne note corrections).
     */

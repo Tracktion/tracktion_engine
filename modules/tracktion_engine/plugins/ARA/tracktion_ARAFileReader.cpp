@@ -1001,9 +1001,106 @@ struct ARADocumentHolder::Pimpl
             }
         }
 
-        // End restoring for each document
+        // Build old→new ID mapping groups for backward compatibility with the old ARA ID scheme.
+        // Before the refactor, sourceID included the clipID suffix and modificationID
+        // included lastModificationTime and trackID in the hash.
+        // Each group pairs one source mapping with its associated modification mappings,
+        // so that when collisions exist (multiple old sources → same new source),
+        // each restoreObjectsFromArchive call only touches its own modifications.
+        juce::Array<ARAClipPlayer::PersistentIDMappingGroup> mappingGroups;
+        juce::StringArray seenSourceMappings, seenModMappings;
+
+        // Collect identity mod mappings for the new-scheme identity source group
+        juce::Array<ARAClipPlayer::PersistentIDMapping> identityModMappings;
+
+        visitAllTrackItems (edit, [&] (TrackItem& i)
+        {
+            auto c = dynamic_cast<AudioClipBase*> (&i);
+            if (c == nullptr)
+                return true;
+
+            auto audioFile = c->getAudioFile();
+            auto hashString = audioFile.getHashString();
+
+            if (hashString.isEmpty())
+                return true;
+
+            auto track = c->getTrack();
+            if (track == nullptr)
+                return true;
+
+            auto fileHash = audioFile.getHash();
+            auto lastModTime = audioFile.getFile().getLastModificationTime().toMilliseconds();
+            auto clipRawID = static_cast<HashCode> (c->itemID.getRawID());
+            auto trackRawID = static_cast<HashCode> (track->itemID.getRawID());
+
+            auto oldModID = juce::String::toHexString (fileHash ^ lastModTime ^ clipRawID ^ trackRawID);
+            auto newModID = juce::String::toHexString (fileHash ^ clipRawID);
+
+            // Per-clip group: old source ID → new source ID, with this clip's mod mapping
+            {
+                auto oldSourceID = hashString + "_" + c->itemID.toString();
+                auto srcDedupKey = oldSourceID + "|" + hashString;
+
+                if (! seenSourceMappings.contains (srcDedupKey))
+                {
+                    seenSourceMappings.add (srcDedupKey);
+
+                    ARAClipPlayer::PersistentIDMappingGroup group;
+                    group.sourceMapping = { oldSourceID, hashString };
+
+                    // Only include old→new mod mapping for this clip
+                    if (oldModID != newModID)
+                        group.modificationMappings.add ({ oldModID, newModID });
+
+                    mappingGroups.add (std::move (group));
+                }
+            }
+
+            // Collect identity mod mappings for the shared identity source group
+            {
+                auto newModDedupKey = newModID + "|" + newModID;
+
+                if (! seenModMappings.contains (newModDedupKey))
+                {
+                    seenModMappings.add (newModDedupKey);
+                    identityModMappings.add ({ newModID, newModID });
+                }
+            }
+
+            return true;
+        });
+
+        // Add one identity source group per unique file with all identity mod mappings
+        // (for archives saved with the new scheme)
+        {
+            juce::StringArray seenIdentitySources;
+
+            visitAllTrackItems (edit, [&] (TrackItem& i)
+            {
+                auto c = dynamic_cast<AudioClipBase*> (&i);
+                if (c == nullptr)
+                    return true;
+
+                auto hashString = c->getAudioFile().getHashString();
+
+                if (hashString.isNotEmpty() && ! seenIdentitySources.contains (hashString))
+                {
+                    seenIdentitySources.add (hashString);
+
+                    ARAClipPlayer::PersistentIDMappingGroup group;
+                    group.sourceMapping = { hashString, hashString };
+                    group.modificationMappings = identityModMappings;
+                    mappingGroups.add (std::move (group));
+                }
+
+                return true;
+            });
+        }
+
+        // End restoring for each document, passing grouped ID mappings
         for (auto& [key, doc] : araDocuments)
-            doc->endRestoringState();
+            doc->endRestoringState (mappingGroups);
 
         // Notify plugins that musical context content is now available
         for (auto& [key, doc] : araDocuments)
