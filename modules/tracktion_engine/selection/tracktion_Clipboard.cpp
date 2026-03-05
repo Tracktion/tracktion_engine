@@ -634,9 +634,13 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects,
                         auto sourceID = proxy->getAudioSourcePersistentID();
                         auto modID = proxy->getAudioModificationPersistentID();
 
+                        T_ARA_DBG ("ARA clipboard copy: archiveSize=" << (int) araData.getSize()
+                                   << " sourceID=" << sourceID << " modID=" << modID);
+
                         info.state.setProperty (IDs::araArchive, araData.toBase64Encoding(), nullptr);
                         info.state.setProperty ("araArchiveSourceID", sourceID, nullptr);
                         info.state.setProperty ("araArchiveModID", modID, nullptr);
+                        info.state.setProperty ("araDocumentArchiveID", proxy->getDocumentArchiveID(), nullptr);
                     }
                 }
             }
@@ -982,25 +986,34 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
             if (acb->state.hasProperty (IDs::araArchive))
             {
                 auto archiveData = acb->state.getProperty (IDs::araArchive).toString();
-                auto archivedSourceID = acb->state.getProperty ("araArchiveSourceID").toString();
-                auto archivedModID = acb->state.getProperty ("araArchiveModID").toString();
+                auto archivedSourceID = acb->state.getProperty (IDs::araArchiveSourceID).toString();
+                auto archivedModID = acb->state.getProperty (IDs::araArchiveModID).toString();
+                auto docArchiveID = acb->state.getProperty (IDs::araDocumentArchiveID).toString();
 
                 // Remove transient clipboard properties from the live state
                 acb->state.removeProperty (IDs::araArchive, nullptr);
-                acb->state.removeProperty ("araArchiveSourceID", nullptr);
-                acb->state.removeProperty ("araArchiveModID", nullptr);
+                acb->state.removeProperty (IDs::araArchiveSourceID, nullptr);
+                acb->state.removeProperty (IDs::araArchiveModID, nullptr);
+                acb->state.removeProperty (IDs::araDocumentArchiveID, nullptr);
+
+                T_ARA_DBG ("ARA clipboard paste: hasAraArchive=1"
+                           << " isUsingARA=" << (int) acb->isUsingARA()
+                           << " archiveDataLen=" << archiveData.length());
 
                 if (archiveData.isNotEmpty() && acb->isUsingARA())
                 {
                     // Ensure ARA is initialized for this clip
                     acb->setupARA (true);
 
+                    T_ARA_DBG ("ARA clipboard paste: setupARA done, hasProxy=" << (acb->getARAProxy() != nullptr ? 1 : 0)
+                               << " isValid=" << (acb->getARAProxy() != nullptr ? (int) acb->getARAProxy()->isValid() : -1));
+
                     if (auto proxy = acb->getARAProxy(); proxy != nullptr && proxy->isValid())
                     {
                         juce::MemoryBlock data;
                         data.fromBase64Encoding (archiveData);
 
-                        proxy->restoreARAArchiveForPaste (data, archivedSourceID, archivedModID);
+                        proxy->restoreARAArchiveForPaste (data, archivedSourceID, archivedModID, docArchiveID);
                     }
                 }
             }

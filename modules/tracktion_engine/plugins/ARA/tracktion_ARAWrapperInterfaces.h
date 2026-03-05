@@ -49,6 +49,8 @@ public:
         if (musicalContext != nullptr)
         {
             const ScopedEdit scope (*this, true);
+            audioSources.clear();
+            audioSourceRefCount.clear();
             regionSequences.clear();
             musicalContext = nullptr;
         }
@@ -167,6 +169,9 @@ public:
         juce::MemoryBlock data;
         juce::MemoryOutputStream out (data, false);
 
+        // Flush pending plugin state changes before archiving
+        dci->notifyModelUpdates (dcRef);
+
         SizedStruct<ARA_STRUCT_MEMBER (ARAStoreObjectsFilter, audioModificationRefs)> filter {};
         filter.documentData = kARAFalse;
         filter.audioSourceRefsCount = 1;
@@ -177,6 +182,7 @@ public:
         dci->storeObjectsToArchive (dcRef, toHostRef (&out), &filter);
         out.flush();
 
+        T_ARA_DBG ("ARA storeObjectsForCopy: archived " << (int) data.getSize() << " bytes");
         return data;
     }
 
@@ -191,19 +197,45 @@ public:
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
 
+        T_ARA_DBG ("ARA restoreObjectsForPaste: dataSize=" << (int) data.getSize()
+             << " archivedSrcID=" << archivedSourceID
+             << " currentSrcID=" << currentSourceID
+             << " archivedModID=" << archivedModID
+             << " currentModID=" << currentModID
+             << " docArchiveID=" << documentArchiveID);
+
         if (data.getSize() == 0)
+        {
+            T_ARA_DBG ("ARA restoreObjectsForPaste: SKIPPED (empty data)");
             return;
+        }
 
         juce::MemoryBlock dataCopy (data);
+
+        // Flush so the plugin acknowledges the newly created modification before restoring into it
+        dci->notifyModelUpdates (dcRef);
 
         SizedStruct<ARA_STRUCT_MEMBER (ARARestoreObjectsFilter, audioModificationCurrentIDs)> filter {};
         filter.documentData = kARAFalse;
 
         ARAPersistentID srcArchiveID = archivedSourceID.toRawUTF8();
         ARAPersistentID srcCurrentID = currentSourceID.toRawUTF8();
-        filter.audioSourceIDsCount = 1;
-        filter.audioSourceArchiveIDs = &srcArchiveID;
-        filter.audioSourceCurrentIDs = &srcCurrentID;
+
+        auto isShared = [&]
+        {
+            auto it = audioSourceRefCount.find (currentSourceID);
+            return it != audioSourceRefCount.end() && it->second > 1;
+        };
+
+        // If we don't skip the sourceID assignment when pasting to the same document,
+        // it seems like the original Melodyne source will get its modifications wiped
+        if (archivedSourceID != currentSourceID
+            || ! isShared())
+        {
+            filter.audioSourceIDsCount = 1;
+            filter.audioSourceArchiveIDs = &srcArchiveID;
+            filter.audioSourceCurrentIDs = &srcCurrentID;
+        }
 
         ARAPersistentID modArchiveID = archivedModID.toRawUTF8();
         ARAPersistentID modCurrentID = currentModID.toRawUTF8();
@@ -217,7 +249,9 @@ public:
 
         beginEditing (true);
         ArchivingFunctions::documentArchiveIDOverride = documentArchiveID;
-        dci->restoreObjectsFromArchive (dcRef, toHostRef (&dataCopy), &filter);
+        auto restoreResult = dci->restoreObjectsFromArchive (dcRef, toHostRef (&dataCopy), &filter);
+        T_ARA_DBG ("ARA restoreObjectsFromArchive returned: " << (restoreResult ? "TRUE" : "FALSE"));
+        juce::ignoreUnused (restoreResult);
         ArchivingFunctions::documentArchiveIDOverride = {};
         endEditing (true);
     }
@@ -243,12 +277,36 @@ public:
         }
     }
 
+    std::shared_ptr<AudioSourceWrapper> acquireAudioSource (AudioClipBase& audioClip)
+    {
+        auto key = audioClip.getAudioFile().getHashString();
+
+        if (audioSources.count (key) == 0)
+            audioSources[key] = std::make_shared<AudioSourceWrapper> (*this, audioClip);
+
+        audioSourceRefCount[key]++;
+        return audioSources[key];
+    }
+
+    void releaseAudioSource (const juce::String& key)
+    {
+        jassert (audioSourceRefCount.count (key) > 0);
+
+        if (--audioSourceRefCount[key] == 0)
+        {
+            audioSources.erase (key);
+            audioSourceRefCount.erase (key);
+        }
+    }
+
     Edit& edit;
     const ARADocumentControllerInterface* dci;
     ARADocumentControllerRef dcRef;
     std::unique_ptr<MusicalContextWrapper> musicalContext;
     std::map<EditItemID, std::unique_ptr<RegionSequenceWrapper>> regionSequences;
     std::map<EditItemID, int> regionSequencePlaybackRegionCount;
+    std::map<juce::String, std::shared_ptr<AudioSourceWrapper>> audioSources;
+    std::map<juce::String, int> audioSourceRefCount;
     std::unique_ptr<juce::MemoryBlock> lastArchiveState;
 
 private:
@@ -897,6 +955,20 @@ public:
             doc.dci->enableAudioSourceSamplesAccess (doc.dcRef, audioSourceRef, b ? kARATrue : kARAFalse);
     }
 
+    void acquireAccess()
+    {
+        if (++accessRefCount == 1)
+            enableAccess (true);
+    }
+
+    void releaseAccess()
+    {
+        jassert (accessRefCount > 0);
+
+        if (--accessRefCount == 0)
+            enableAccess (false);
+    }
+
     //==============================================================================
     static ARAAudioReaderHostRef ARA_CALL createAudioReaderForSource (ARAAudioAccessControllerHostRef,
                                                                       ARAAudioSourceHostRef hostAudioSourceRef,
@@ -957,6 +1029,7 @@ private:
 
     const juce::String sourceID;
     juce::String name;
+    int accessRefCount = 0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioSourceWrapper)
 };
@@ -1230,7 +1303,8 @@ public:
     {
         CRASH_TRACER
 
-        audioSource = std::make_unique<AudioSourceWrapper> (doc, audioClip);
+        audioSource = doc.acquireAudioSource (audioClip);
+        audioSourceKey = audioClip.getAudioFile().getHashString();
 
         if (audioSource->audioSourceRef != nullptr)
         {
@@ -1258,6 +1332,7 @@ public:
         playbackRegions.clear();
         audioModification = nullptr;
         audioSource = nullptr;
+        araDoc.releaseAudioSource (audioSourceKey);
     }
 
     void enable()
@@ -1265,7 +1340,7 @@ public:
         CRASH_TRACER
 
         if (audioSource != nullptr)
-            audioSource->enableAccess (true);
+            audioSource->acquireAccess();
     }
 
     void disable()
@@ -1273,7 +1348,7 @@ public:
         CRASH_TRACER
 
         if (audioSource != nullptr)
-            audioSource->enableAccess (false);
+            audioSource->releaseAccess();
     }
 
     void setViewSelection()
@@ -1363,8 +1438,9 @@ public:
     bool hasPlaybackRegions() const { return ! playbackRegions.empty(); }
 
     std::vector<std::unique_ptr<PlaybackRegionWrapper>> playbackRegions;
-    std::unique_ptr<AudioSourceWrapper> audioSource;
+    std::shared_ptr<AudioSourceWrapper> audioSource;
     std::unique_ptr<AudioModificationWrapper> audioModification;
+    juce::String audioSourceKey;
 
 private:
     AudioClipBase& clip;

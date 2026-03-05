@@ -8,6 +8,11 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+#ifndef T_ARA_DBG
+ // #define T_ARA_DBG(x) DBG(x)
+ #define T_ARA_DBG(...)
+#endif
+
 namespace tracktion::inline engine {
 
 struct ARAClipPlayer;
@@ -87,6 +92,9 @@ public:
 
     /** Returns the persistent ID of the current audio modification, or empty if ARA is not active. */
     juce::String getAudioModificationPersistentID() const;
+
+    /** Returns the document archive ID from the ARA factory, or empty if ARA is not active. */
+    juce::String getDocumentArchiveID() const;
 
     /** Returns extra time before the playback region start reported by the ARA plugin. */
     TimeDuration getHead() const;

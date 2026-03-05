@@ -119,6 +119,14 @@ struct ARAClipPlayer  : private Selectable::Listener
     ExternalPlugin* getPlugin()             { return araInstance != nullptr ? araInstance->plugin.get() : nullptr; }
     const ARAFactory* getARAFactory() const { return araInstance != nullptr ? araInstance->factory : nullptr; }
 
+    juce::String getDocumentArchiveID() const
+    {
+        if (auto f = getARAFactory())
+            return juce::String::fromUTF8 (f->documentArchiveID);
+
+        return {};
+    }
+
     //==============================================================================
     bool initialise (ARAClipPlayer* clipToClone)
     {
@@ -175,6 +183,7 @@ struct ARAClipPlayer  : private Selectable::Listener
     void contentHasChanged()
     {
         CRASH_TRACER
+        T_ARA_DBG ("ARA contentHasChanged: clip=" << clip.getName() << " modID=" << juce::String::toHexString (modificationID));
         updateContent (nullptr);
         updateHeadAndTailTimes();
         owner.sendChangeMessage();
@@ -200,8 +209,7 @@ struct ARAClipPlayer  : private Selectable::Listener
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
 
-        if (juce::MessageManager::getInstance()->isThisTheMessageThread()
-            && getEdit().getTransport().isAllowedToReallocate())
+        if (juce::MessageManager::getInstance()->isThisTheMessageThread())
         {
             contentUpdater = nullptr;
             internalUpdateContent (clipToClone);
@@ -327,11 +335,16 @@ struct ARAClipPlayer  : private Selectable::Listener
                 && playbackRegionAndSource->audioSource != nullptr
                 && playbackRegionAndSource->audioModification != nullptr)
             {
+                auto srcID = getAudioSourcePersistentID();
+                auto modID = getAudioModificationPersistentID();
+                T_ARA_DBG ("ARA storeARAArchiveForCopy: srcID=" << srcID << " modID=" << modID);
+
                 return doc->storeObjectsForCopy (playbackRegionAndSource->audioSource->audioSourceRef,
                                                  playbackRegionAndSource->audioModification->audioModificationRef);
             }
         }
 
+        T_ARA_DBG ("ARA storeARAArchiveForCopy: SKIPPED (no playback region/source/mod)");
         return {};
     }
 
@@ -340,6 +353,9 @@ struct ARAClipPlayer  : private Selectable::Listener
                                     const juce::String& archivedModID,
                                     const juce::String& documentArchiveID = {})
     {
+        T_ARA_DBG ("ARA restoreARAArchiveForPaste: dataSize=" << (int) data.getSize()
+             << " archivedSrcID=" << archivedSourceID << " archivedModID=" << archivedModID);
+
         if (auto doc = getDocument())
         {
             if (playbackRegionAndSource != nullptr
@@ -348,10 +364,20 @@ struct ARAClipPlayer  : private Selectable::Listener
             {
                 auto currentSourceID = getAudioSourcePersistentID();
                 auto currentModID = getAudioModificationPersistentID();
+                T_ARA_DBG ("ARA restoreARAArchiveForPaste: CALLING restore. currentSrcID=" << currentSourceID
+                     << " currentModID=" << currentModID);
 
                 doc->restoreObjectsForPaste (data, archivedSourceID, currentSourceID,
                                              archivedModID, currentModID, documentArchiveID);
             }
+            else
+            {
+                T_ARA_DBG ("ARA restoreARAArchiveForPaste: SKIPPED (null playbackRegionAndSource/source/mod)");
+            }
+        }
+        else
+        {
+            T_ARA_DBG ("ARA restoreARAArchiveForPaste: SKIPPED (no document)");
         }
     }
 
@@ -434,7 +460,10 @@ struct ARAClipPlayer  : private Selectable::Listener
                     }
 
                     if (!typesBeingAnalyzed.empty())
+                    {
+                        T_ARA_DBG ("ARA ContentAnalyser: requesting analysis for " << (int) typesBeingAnalyzed.size() << " content types");
                         dci->requestAudioSourceContentAnalysis (dcRef, audioSourceRef, (ARASize)typesBeingAnalyzed.size(), typesBeingAnalyzed.data());
+                    }
 
                     firstCall = false;
                 }
@@ -585,6 +614,11 @@ private:
 
             HashCode newModificationID = file.getHash()
                                         ^ static_cast<HashCode> (clip.itemID.getRawID());
+
+            T_ARA_DBG ("ARA internalUpdateContent: clip=" << clip.getName()
+                 << " oldModID=" << juce::String::toHexString (modificationID)
+                 << " newModID=" << juce::String::toHexString (newModificationID)
+                 << " willRecreate=" << (modificationID != newModificationID ? 1 : 0));
 
             if (modificationID != newModificationID)
             {
@@ -816,6 +850,14 @@ juce::String ARAFileReader::getAudioModificationPersistentID() const
 {
     if (player != nullptr)
         return player->getAudioModificationPersistentID();
+
+    return {};
+}
+
+juce::String ARAFileReader::getDocumentArchiveID() const
+{
+    if (player != nullptr)
+        return player->getDocumentArchiveID();
 
     return {};
 }
@@ -1130,6 +1172,7 @@ juce::MemoryBlock ARAFileReader::storeARAArchiveForCopy()      { return {}; }
 void ARAFileReader::restoreARAArchiveForPaste (const juce::MemoryBlock&, const juce::String&, const juce::String&, const juce::String&) {}
 juce::String ARAFileReader::getAudioSourcePersistentID() const { return {}; }
 juce::String ARAFileReader::getAudioModificationPersistentID() const { return {}; }
+juce::String ARAFileReader::getDocumentArchiveID() const             { return {}; }
 TimeDuration ARAFileReader::getHead() const                    { return {}; }
 TimeDuration ARAFileReader::getTail() const                    { return {}; }
 
