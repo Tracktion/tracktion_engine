@@ -737,10 +737,32 @@ WaveCompManager::WaveCompManager (WaveAudioClip& owner)
       clip (owner), lastCompFile (clip.edit.engine), compUpdater (new CompUpdater (clip))
 {
     for (auto take : takesTree)
+    {
         if (isTakeComp (take))
-            if (! ProjectItemID::fromProperty (take, IDs::source).isValid())
+        {
+            if (take.getProperty (IDs::source).toString().isEmpty())
+            {
                 if (auto pid = clip.edit.getProjectItemRef().getProjectItemID())
-                    take.setProperty (IDs::source, ProjectItemID::createNewID (pid->getProjectID()).toString(), &owner.edit.getUndoManager());
+                {
+                    take.setProperty (IDs::source,
+                                      ProjectItemID::createNewID (pid->getProjectID()).toString(),
+                                      &owner.edit.getUndoManager());
+                }
+                else if (auto project = getProjectForEdit (clip.edit))
+                {
+                    auto takeIndex = takesTree.indexOf (take);
+                    auto destFile = getDefaultTakeFile (takeIndex);
+
+                    if (destFile != juce::File())
+                        take.setProperty (IDs::source, project->getSourcePathForFile (destFile),
+                                          &owner.edit.getUndoManager());
+                    else
+                        take.setProperty (IDs::source, juce::Uuid().toString(),
+                                          &owner.edit.getUndoManager());
+                }
+            }
+        }
+    }
 }
 
 WaveCompManager::~WaveCompManager() {}
@@ -940,13 +962,8 @@ juce::File WaveCompManager::getDefaultTakeFile (int takeIndex) const
         if (firstTakeItem == nullptr)
             return {};
 
-        int clipNum = 0;
-
-        if (auto ct = clip.getClipTrack())
-            clipNum = ct->getClips().indexOf (&clip) + 1;
-
         juce::String compName;
-        compName << "_clip_" << clipNum << "_comp_" << (takeIndex - getNumTakes() + 2);
+        compName << "_clip_" << clip.itemID.toString() << "_comp_" << (takeIndex - getNumTakes() + 2);
 
         auto firstTakeFile = firstTakeItem->getSourceFile();
         auto baseFileName = firstTakeFile.getFileNameWithoutExtension().upToFirstOccurrenceOf ("_take_", false, false);
@@ -989,14 +1006,29 @@ ProjectItem::Ptr WaveCompManager::getOrCreateProjectItemForTake (juce::ValueTree
 juce::ValueTree WaveCompManager::addNewComp()
 {
     auto newTake = getNewCompTree();
-    auto editPid = clip.edit.getProjectItemRef().getProjectItemID();
 
-    if (! editPid)
+    if (auto editPid = clip.edit.getProjectItemRef().getProjectItemID())
+    {
+        // File-based project: create a new ProjectItemID
+        auto newID = ProjectItemID::createNewID (editPid->getProjectID());
+        newTake.setProperty (IDs::source, newID.toString(), nullptr);
+    }
+    else if (auto project = getProjectForEdit (clip.edit))
+    {
+        // Folder-based project: use expected destination path as the source ref
+        auto newTakeIndex = takesTree.getNumChildren();
+        auto destFile = getDefaultTakeFile (newTakeIndex);
+
+        if (destFile != juce::File())
+            newTake.setProperty (IDs::source, project->getSourcePathForFile (destFile), nullptr);
+        else
+            newTake.setProperty (IDs::source, juce::Uuid().toString(), nullptr);
+    }
+    else
+    {
         return {};
+    }
 
-    auto newID = ProjectItemID::createNewID (editPid->getProjectID());
-
-    newTake.setProperty (IDs::source, newID.toString(), nullptr);
     newTake.setProperty (IDs::isComp, true, nullptr);
 
     // Add last so all the properties are set
