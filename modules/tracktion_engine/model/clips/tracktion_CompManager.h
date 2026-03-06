@@ -250,7 +250,7 @@ public:
     ~WaveCompManager() override;
 
     /** Updates an array of thumbnails so they represent the takes and are in the correct order etc. */
-    void updateThumbnails (juce::Component&, juce::OwnedArray<SmartThumbnail>& thumbnails) const;
+    void updateThumbnails (juce::Component&, juce::OwnedArray<SmartThumbnail>&) const;
 
     /** Returns the current comp file. */
     juce::File getCurrentCompFile() const;

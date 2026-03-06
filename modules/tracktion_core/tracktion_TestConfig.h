@@ -27,6 +27,7 @@
 #define ENGINE_UNIT_TESTS_CLICKNODE                     1
 #define ENGINE_UNIT_TESTS_CLIPBOARD                     1
 #define ENGINE_UNIT_TESTS_CLIPSLOT                      1
+#define ENGINE_UNIT_TESTS_COMP_MANAGER                  1
 #define ENGINE_UNIT_TESTS_CONSTRAINED_CACHED_VALUE      1
 #define ENGINE_UNIT_TESTS_DAWPROJECT                    1
 #define ENGINE_UNIT_TESTS_DELAY_PLUGIN                  1

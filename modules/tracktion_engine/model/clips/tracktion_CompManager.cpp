@@ -959,21 +959,38 @@ juce::File WaveCompManager::getDefaultTakeFile (int takeIndex) const
     {
         auto firstTakeItem = project->getProjectItemFor (clip.getTakes()[0]);
 
-        if (firstTakeItem == nullptr)
-            return {};
-
         juce::String compName;
         compName << "_clip_" << clip.itemID.toString() << "_comp_" << (takeIndex - getNumTakes() + 2);
 
-        auto firstTakeFile = firstTakeItem->getSourceFile();
-        auto baseFileName = firstTakeFile.getFileNameWithoutExtension().upToFirstOccurrenceOf ("_take_", false, false);
-        auto compFileName = baseFileName + compName;
+        if (firstTakeItem != nullptr)
+        {
+            auto firstTakeFile = firstTakeItem->getSourceFile();
+            auto baseFileName = firstTakeFile.getFileNameWithoutExtension().upToFirstOccurrenceOf ("_take_", false, false);
+            auto compFileName = baseFileName + compName;
 
-        return firstTakeFile.existsAsFile()
-                 ? firstTakeFile.getSiblingFile (compFileName)
-                     .getNonexistentSibling().withFileExtension (firstTakeFile.getFileExtension())
-                 : project->getDirectoryForMedia (ProjectItem::Category::recorded)
-                     .getChildFile (compFileName).withFileExtension ("wav");
+            return firstTakeFile.existsAsFile()
+                     ? firstTakeFile.getSiblingFile (compFileName)
+                         .getNonexistentSibling().withFileExtension (firstTakeFile.getFileExtension())
+                     : project->getDirectoryForMedia (ProjectItem::Category::recorded)
+                         .getChildFile (compFileName).withFileExtension ("wav");
+        }
+
+        // First take item not found — use the media directory directly
+        return project->getDirectoryForMedia (ProjectItem::Category::recorded)
+                 .getChildFile (clip.getName() + compName).withFileExtension ("wav");
+    }
+
+    // No project — fall back to the edit file's directory
+    if (clip.edit.editFileRetriever)
+    {
+        if (auto editFile = clip.edit.editFileRetriever(); editFile != juce::File())
+        {
+            juce::String compName;
+            compName << "_clip_" << clip.itemID.toString() << "_comp_" << (takeIndex - getNumTakes() + 2);
+
+            return editFile.getParentDirectory()
+                     .getChildFile (clip.getName() + compName).withFileExtension ("wav");
+        }
     }
 
     return {};
@@ -1019,10 +1036,10 @@ juce::ValueTree WaveCompManager::addNewComp()
         auto newTakeIndex = takesTree.getNumChildren();
         auto destFile = getDefaultTakeFile (newTakeIndex);
 
-        if (destFile != juce::File())
-            newTake.setProperty (IDs::source, project->getSourcePathForFile (destFile), nullptr);
-        else
-            newTake.setProperty (IDs::source, juce::Uuid().toString(), nullptr);
+        if (destFile == juce::File())
+            return {};
+
+        newTake.setProperty (IDs::source, project->getSourcePathForFile (destFile), nullptr);
     }
     else
     {

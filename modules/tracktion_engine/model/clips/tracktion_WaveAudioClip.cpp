@@ -308,12 +308,12 @@ void WaveAudioClip::setCurrentTake (int takeIndex)
     auto take = takesTree.getChild (takeIndex);
     jassert (take.isValid());
 
-    auto takeSourceID = ProjectItemID::fromProperty (take, IDs::source);
-    auto mo = edit.engine.getProjectManager().getProjectItem (takeSourceID);
+    auto takeSourceRef = ProjectItemRef (take.getProperty (IDs::source).toString());
+    auto mo = edit.engine.getProjectManager().getProjectItem (takeSourceRef);
     invalidateCurrentTake();
 
     if (mo != nullptr || getCompManager().isTakeComp (takeIndex))
-        sourceFileReference.setToProjectFileReference (takeSourceID);
+        sourceFileReference.setToProjectFileReference (takeSourceRef);
     else
         takesTree.removeChild (take, getUndoManager());
 
