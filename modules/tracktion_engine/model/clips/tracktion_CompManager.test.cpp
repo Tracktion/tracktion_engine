@@ -273,6 +273,56 @@ TEST_SUITE ("tracktion_engine")
         auto source = compTree.getProperty (IDs::source).toString();
         CHECK (source.isNotEmpty());
     }
+
+    TEST_CASE ("CompManager: multiple comps get unique source strings for folder-based project")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto context = CompManagerTestContext::create (engine, true);
+        REQUIRE (context != nullptr);
+
+        auto& cm = context->clip->getCompManager();
+        auto comp1 = cm.addNewComp();
+        auto comp2 = cm.addNewComp();
+
+        auto source1 = comp1.getProperty (IDs::source).toString();
+        auto source2 = comp2.getProperty (IDs::source).toString();
+
+        CHECK (source1.isNotEmpty());
+        CHECK (source2.isNotEmpty());
+        CHECK (source1 != source2);
+    }
+
+    TEST_CASE ("CompManager: comp take counts for folder-based project")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto context = CompManagerTestContext::create (engine, true);
+        REQUIRE (context != nullptr);
+
+        auto& cm = context->clip->getCompManager();
+
+        auto numTakesBefore = cm.getNumTakes();
+        CHECK (cm.getNumComps() == 0);
+        CHECK (cm.getTotalNumTakes() == numTakesBefore);
+
+        cm.addNewComp();
+
+        CHECK (cm.getNumTakes() == numTakesBefore);
+        CHECK (cm.getNumComps() == 1);
+        CHECK (cm.getTotalNumTakes() == numTakesBefore + 1);
+    }
+
+    TEST_CASE ("CompManager: initial comp has one section spanning full length for folder-based project")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto context = CompManagerTestContext::create (engine, true);
+        REQUIRE (context != nullptr);
+
+        auto& cm = context->clip->getCompManager();
+        auto compTree = cm.addNewComp();
+        CHECK (compTree.getNumChildren() == 1);
+        CHECK (compTree.getChild (0).hasType (IDs::COMPSECTION));
+        CHECK (int (compTree.getChild (0).getProperty (IDs::takeIndex)) == -1);
+    }
 }
 
 } // namespace tracktion::inline engine
