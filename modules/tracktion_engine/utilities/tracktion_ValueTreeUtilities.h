@@ -670,7 +670,7 @@ template<typename ValueType, typename... CachedValues>
 static void copyPropertiesToCachedValues (const juce::ValueTree& v, juce::CachedValue<ValueType>& cachedValue, CachedValues&&... cachedValues)
 {
     if (auto p = v.getPropertyPointer (cachedValue.getPropertyID()))
-        cachedValue = ValueType (*p);
+        cachedValue = p->operator ValueType();
     else
         cachedValue.resetToDefault();
 
