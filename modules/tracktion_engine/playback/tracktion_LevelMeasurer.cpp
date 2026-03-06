@@ -63,8 +63,7 @@ void LevelMeasurer::Client::reset() noexcept
     for (auto& l : audioLevels)
         l = {};
 
-    for (auto& o : overload)
-        o = false;
+    std::fill (overload.begin(), overload.end(), false);
 
     midiLevels = {};
     clearOverload = true;
@@ -97,22 +96,27 @@ DbTimePair LevelMeasurer::Client::getAndClearMidiLevel() noexcept
 DbTimePair LevelMeasurer::Client::getAndClearAudioLevel (int chan) noexcept
 {
     juce::SpinLock::ScopedLockType sl (mutex);
-    jassert (chan >= 0 && chan < maxNumChannels);
-    auto result = audioLevels[chan];
-    audioLevels[chan].dB = -100.0f;
+
+    if (chan < 0 || chan >= (int) audioLevels.size())
+        return {};
+
+    auto result = audioLevels[(size_t) chan];
+    audioLevels[(size_t) chan].dB = -100.0f;
     return result;
 }
 
 void LevelMeasurer::Client::setNumChannelsUsed (int numChannels) noexcept
 {
     juce::SpinLock::ScopedLockType sl (mutex);
+    ensureNumChannels (numChannels);
     numChannelsUsed = numChannels;
 }
 
 void LevelMeasurer::Client::setOverload (int channel, bool hasOverloaded) noexcept
 {
     juce::SpinLock::ScopedLockType sl (mutex);
-    overload[channel] = hasOverloaded;
+    ensureNumChannels (channel + 1);
+    overload[(size_t) channel] = hasOverloaded;
 }
 
 void LevelMeasurer::Client::setClearOverload (bool clear) noexcept
@@ -127,12 +131,22 @@ void LevelMeasurer::Client::setClearPeak (bool clear) noexcept
     clearPeak = clear;
 }
 
+void LevelMeasurer::Client::ensureNumChannels (int needed)
+{
+    if (needed > (int) audioLevels.size())
+    {
+        audioLevels.resize ((size_t) needed);
+        overload.resize ((size_t) needed, false);
+    }
+}
+
 void LevelMeasurer::Client::updateAudioLevel (int channel, DbTimePair newAudioLevel) noexcept
 {
     juce::SpinLock::ScopedLockType sl (mutex);
+    ensureNumChannels (channel + 1);
 
-    if (newAudioLevel.dB >= audioLevels[channel].dB)
-        audioLevels[channel] = newAudioLevel;
+    if (newAudioLevel.dB >= audioLevels[(size_t) channel].dB)
+        audioLevels[(size_t) channel] = newAudioLevel;
 }
 
 void LevelMeasurer::Client::updateMidiLevel (DbTimePair newMidiLevel) noexcept
@@ -152,7 +166,7 @@ void LevelMeasurer::processBuffer (juce::AudioBuffer<float>& buffer, int start, 
     if (clients.isEmpty())
         return;
 
-    auto numChans = std::min ((int) Client::maxNumChannels, buffer.getNumChannels());
+    auto numChans = buffer.getNumChannels();
     numActiveChannels = numChans;
     auto now = juce::Time::getApproximateMillisecondCounter();
 

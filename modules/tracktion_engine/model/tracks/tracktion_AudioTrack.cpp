@@ -530,6 +530,24 @@ juce::String AudioTrack::getTrackPlayabilityWarning() const
         return TRANS("This track contains wave clips which may be inaudible as the audio will be blocked by some of the track's plugins.");
     }
 
+    // Check for clips with different channel counts
+    {
+        int firstChannelCount = -1;
+
+        for (auto c : getClips())
+        {
+            if (auto audioClip = dynamic_cast<AudioClipBase*> (c))
+            {
+                auto numCh = audioClip->getActiveChannelConfiguration().getNumChannels();
+
+                if (firstChannelCount < 0)
+                    firstChannelCount = numCh;
+                else if (numCh != firstChannelCount)
+                    return TRANS("Clips have different channel formats");
+            }
+        }
+    }
+
     return {};
 }
 

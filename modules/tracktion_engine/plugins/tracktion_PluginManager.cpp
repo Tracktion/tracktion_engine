@@ -63,6 +63,7 @@ void PluginManager::initialise()
     createBuiltInType<TextPlugin>();
     createBuiltInType<FreezePointPlugin>();
     createBuiltInType<InsertPlugin>();
+    createBuiltInType<ChannelMapperPlugin>();
 
    #if TRACKTION_ENABLE_REWIRE
     createBuiltInType<ReWirePlugin>();

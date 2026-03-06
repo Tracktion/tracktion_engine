@@ -343,6 +343,7 @@ namespace tracktion::inline engine {
     class GrooveTemplate;
     class MidiOutputDevice;
     class LevelMeterPlugin;
+    class ChannelMapperPlugin;
     class VolumeAndPanPlugin;
     class VCAPlugin;
     class NovationAutomap;
@@ -437,6 +438,7 @@ namespace tracktion::inline engine {
 #include "utilities/tracktion_Oscillators.h"
 #include "utilities/tracktion_ScreenSaverDefeater.h"
 #include "utilities/tracktion_ChannelConfiguration.h"
+#include "utilities/tracktion_ChannelMap.h"
 
 #include "project/tracktion_ProjectItemID.h"
 #include "project/tracktion_ProjectItemRef.h"
@@ -654,6 +656,7 @@ namespace tracktion::inline engine {
 #include "plugins/internal/tracktion_LevelMeter.h"
 #include "plugins/internal/tracktion_FreezePoint.h"
 #include "plugins/internal/tracktion_InsertPlugin.h"
+#include "plugins/internal/tracktion_ChannelMapperPlugin.h"
 #include "plugins/internal/tracktion_ReWirePlugin.h"
 #include "plugins/internal/tracktion_TextPlugin.h"
 

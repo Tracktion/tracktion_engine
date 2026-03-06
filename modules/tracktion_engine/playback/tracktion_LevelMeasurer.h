@@ -64,8 +64,6 @@ public:
         DbTimePair getAndClearMidiLevel() noexcept;
         DbTimePair getAndClearAudioLevel (int chan) noexcept;
 
-        static constexpr auto maxNumChannels = 8;
-
         /** @internal */
         void setNumChannelsUsed (int) noexcept;
         void setOverload (int channel, bool hasOverloaded) noexcept;
@@ -76,8 +74,10 @@ public:
         void updateMidiLevel (DbTimePair) noexcept;
 
     private:
-        DbTimePair audioLevels[maxNumChannels];
-        bool overload[maxNumChannels] = {};
+        void ensureNumChannels (int needed);
+
+        std::vector<DbTimePair> audioLevels;
+        std::vector<bool> overload;
         DbTimePair midiLevels;
         std::atomic<int> numChannelsUsed { 0 };
         bool clearOverload = true;

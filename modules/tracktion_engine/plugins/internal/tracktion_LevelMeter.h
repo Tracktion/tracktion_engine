@@ -30,7 +30,7 @@ public:
     bool canBeDisabled() override                       { return false; }
     bool shouldMeasureCpuUsage() const noexcept final   { return false; }
 
-    int getNumOutputChannelsGivenInputs (int numInputChannels) override     { return juce::jmin (numInputChannels, 2); }
+    int getNumOutputChannelsGivenInputs (int numInputChannels) override     { return numInputChannels; }
 
     juce::String getSelectableDescription() override                        { return TRANS("Level Meter Plugin"); }
     void initialise (const PluginInitialisationInfo&) override;
