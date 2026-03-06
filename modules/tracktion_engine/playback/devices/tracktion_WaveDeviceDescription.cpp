@@ -426,6 +426,12 @@ static juce::String mergeChannelNames (const juce::StringArray& names)
         return names.joinIntoString (" + ");
     }
 
+    if (suffixes.size() > 2)
+    {
+        auto plural = commonPrefix.endsWithChar ('s') ? commonPrefix : commonPrefix + "s";
+        return plural + " " + suffixes[0] + " " + TRANS("to") + " " + suffixes[suffixes.size() - 1];
+    }
+
     return commonPrefix + " " + suffixes.joinIntoString (" + ");
 }
 

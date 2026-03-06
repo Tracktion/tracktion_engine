@@ -1533,17 +1533,60 @@ void WaveInputDevice::setStereoPair (bool stereo)
     engine.getDeviceManager().setDeviceNumChannels (*this, stereo ? 2 : 1);
 }
 
+static bool shouldIncludeChannelCount (uint32_t num, uint32_t totalOptions)
+{
+    if (num <= 8)            return true;
+    if (num == 32)           return true;
+    if (num == 64)           return true;
+    if (num == 128)          return true;
+    if (num == totalOptions) return true;
+    return false;
+}
+
+template <typename DeviceType>
+static void showCustomChannelCountDialog (DeviceManager& dm, DeviceType& device, uint32_t maxChannels)
+{
+    auto aw = std::make_shared<juce::AlertWindow> (TRANS("Custom Channel Count"),
+                                                   TRANS("Enter the number of channels (1 to 123):")
+                                                       .replace ("123", juce::String (maxChannels)),
+                                                   juce::AlertWindow::NoIcon);
+
+    aw->addTextEditor ("channels", juce::String (device.deviceDescription.getNumChannels()));
+    aw->addButton (TRANS("OK"), 1, juce::KeyPress (juce::KeyPress::returnKey));
+    aw->addButton (TRANS("Cancel"), 0, juce::KeyPress (juce::KeyPress::escapeKey));
+
+    aw->enterModalState (true, juce::ModalCallbackFunction::create ([aw, &dm, &device, maxChannels] (int result)
+    {
+        if (result == 1)
+        {
+            auto num = (uint32_t) aw->getTextEditorContents ("channels").getIntValue();
+
+            if (num >= 1 && num <= maxChannels)
+                dm.setDeviceNumChannels (device, num);
+        }
+    }));
+}
+
 juce::PopupMenu WaveInputDevice::createChannelGroupMenu (bool includeSetAllChannelsOptions)
 {
     juce::PopupMenu m;
     auto& dm = engine.getDeviceManager();
-    uint32_t channelNum = 0;
     auto currentNumChannels = deviceDescription.getNumChannels();
+    auto options = dm.getPossibleChannelGroupsForDevice (*this, DeviceManager::maxNumChannelsPerDevice);
+    auto totalOptions = (uint32_t) options.size();
 
-    for (auto& option : dm.getPossibleChannelGroupsForDevice (*this, DeviceManager::maxNumChannelsPerDevice))
+    for (uint32_t num = 1; num <= totalOptions; ++num)
     {
-        auto num = ++channelNum;
-        m.addItem (option, true, num == currentNumChannels, [this, &dm, num] { dm.setDeviceNumChannels (*this, num); });
+        if (shouldIncludeChannelCount (num, totalOptions))
+            m.addItem (options[(int) (num - 1)], true, num == currentNumChannels,
+                       [this, &dm, num] { dm.setDeviceNumChannels (*this, num); });
+    }
+
+    if (totalOptions > 8)
+    {
+        m.addSeparator();
+        m.addItem (TRANS("Custom channel count..."), [this, &dm, totalOptions]
+                   { showCustomChannelCountDialog (dm, *this, totalOptions); });
     }
 
     if (includeSetAllChannelsOptions)

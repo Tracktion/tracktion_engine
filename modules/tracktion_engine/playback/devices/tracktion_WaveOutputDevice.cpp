@@ -150,13 +150,22 @@ juce::PopupMenu WaveOutputDevice::createChannelGroupMenu (bool includeSetAllChan
 {
     juce::PopupMenu m;
     auto& dm = engine.getDeviceManager();
-    uint32_t channelNum = 0;
     auto currentNumChannels = deviceDescription.getNumChannels();
+    auto options = dm.getPossibleChannelGroupsForDevice (*this, DeviceManager::maxNumChannelsPerDevice);
+    auto totalOptions = (uint32_t) options.size();
 
-    for (auto& option : dm.getPossibleChannelGroupsForDevice (*this, DeviceManager::maxNumChannelsPerDevice))
+    for (uint32_t num = 1; num <= totalOptions; ++num)
     {
-        auto num = ++channelNum;
-        m.addItem (option, true, num == currentNumChannels, [this, &dm, num] { dm.setDeviceNumChannels (*this, num); });
+        if (shouldIncludeChannelCount (num, totalOptions))
+            m.addItem (options[(int) (num - 1)], true, num == currentNumChannels,
+                       [this, &dm, num] { dm.setDeviceNumChannels (*this, num); });
+    }
+
+    if (totalOptions > 8)
+    {
+        m.addSeparator();
+        m.addItem (TRANS("Custom channel count..."), [this, &dm, totalOptions]
+                   { showCustomChannelCountDialog (dm, *this, totalOptions); });
     }
 
     if (includeSetAllChannelsOptions)
