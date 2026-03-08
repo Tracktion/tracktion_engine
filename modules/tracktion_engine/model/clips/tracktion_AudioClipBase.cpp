@@ -381,6 +381,18 @@ PatternGenerator* AudioClipBase::getPatternGenerator()
 //==============================================================================
 void AudioClipBase::setParent (ClipOwner* co)
 {
+   #if TRACKTION_ENABLE_ARA
+    if (co == nullptr && isUsingARA())
+    {
+        juce::MessageManager::callAsync ([safeRef = SafeSelectable<AudioClipBase> (this)]
+        {
+            if (auto clip = safeRef.get())
+                if (clip->getParent() == nullptr)
+                    hideARAWindow (*clip);
+        });
+    }
+   #endif
+
     Clip::setParent (co);
 
     pluginList.setTrackAndClip (nullptr, this);
