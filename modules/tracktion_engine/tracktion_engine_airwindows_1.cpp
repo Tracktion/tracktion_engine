@@ -45,6 +45,7 @@
  #pragma clang diagnostic ignored "-Widiomatic-parentheses"
  #pragma clang diagnostic ignored "-Wconditional-uninitialized"
  #pragma clang diagnostic ignored "-Wparentheses"
+ #pragma clang diagnostic ignored "-Wunused-but-set-variable"
 #endif
 
 #if JUCE_WINDOWS
