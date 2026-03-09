@@ -25,6 +25,7 @@
 #define ENGINE_UNIT_TESTS_AUX_SEND                      1
 #define ENGINE_UNIT_TESTS_CHANNELCONFIGURATION          1
 #define ENGINE_UNIT_TESTS_CLICKNODE                     1
+#define ENGINE_UNIT_TESTS_CLIPEFFECTS                   1
 #define ENGINE_UNIT_TESTS_CLIPBOARD                     1
 #define ENGINE_UNIT_TESTS_CLIPSLOT                      1
 #define ENGINE_UNIT_TESTS_COMP_MANAGER                  1
