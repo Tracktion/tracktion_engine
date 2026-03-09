@@ -204,7 +204,7 @@ Project::Ptr convertToFolderBasedProject (Project& project)
             if (item->isEdit())
             {
                 auto editFile = item->getSourceFile();
-                auto edit = loadEditFromFile (project.engine, editFile);
+                auto edit = loadEditFromFile (project.engine, editFile, Edit::forExamining);
 
                 if (edit != nullptr)
                 {

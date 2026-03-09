@@ -91,6 +91,9 @@ juce::File WaveAudioClip::getOriginalFile() const
 
 bool WaveAudioClip::needsRender() const
 {
+    if (! edit.shouldPlay())
+        return false;
+
     return ! isUsingARA()
         && (isReversed || (warpTime && canUseProxy()) || (clipEffects != nullptr && canHaveEffects()))
         && AudioFile (edit.engine, getOriginalFile()).isValid();
