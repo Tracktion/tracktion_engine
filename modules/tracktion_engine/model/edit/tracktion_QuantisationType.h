@@ -32,10 +32,17 @@ public:
     bool isEnabled() const;
 
     static juce::StringArray getAvailableQuantiseTypes (bool translated);
+    /// Returns the list of quantise types, annotated with their musical note equivalents to
+    /// avoid confusion between beat fractions and note names
+    static juce::StringArray getAvailableQuantiseTypes (bool translated, int timeSigDenominator);
+    static juce::StringArray getAvailableQuantiseTypes (bool translated, const Edit&);
+    static juce::String beatFractionToNoteName (double beatFraction, bool isTriplet, int timeSigDenominator);
     static juce::String getDefaultType (bool translated);
 
-    void setType (const juce::String& newTypeName)          { typeName = newTypeName; }
+    void setType (const juce::String& newTypeName);
     juce::String getType (bool translated) const;
+    juce::String getType (bool translated, int timeSigDenominator) const;
+    juce::String getType (bool translated, const Edit&) const;
 
     /** Returns the TimecodeSnapType level for the current quantisation type.
         Because the TimecodeSnapType level means something different if the time sig is
@@ -69,6 +76,10 @@ public:
 private:
     int typeIndex = 0;
     double fractionOfBeat = 0;
+
+    /// Strips the parenthesised note annotation from a quantise type name,
+    /// e.g. "1/2 beat (1/8 note)" -> "1/2 beat"
+    static juce::String stripNoteAnnotation (const juce::String&);
 
     void initialiseCachedValues (juce::UndoManager*);
 
