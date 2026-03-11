@@ -24,13 +24,36 @@ juce::String SourceFileReference::findPathFromFile (Edit& edit, const juce::File
 {
     if (useRelativePath)
     {
-        jassert (edit.editFileRetriever && edit.editFileRetriever().existsAsFile());
-        jassert (edit.filePathResolver);
+        auto editFile = edit.editFileRetriever ? edit.editFileRetriever()
+                                               : getEditFileFromProjectManager (edit);
 
-        if (edit.editFileRetriever && edit.filePathResolver)
-            return newFile.getRelativePathFrom (edit.editFileRetriever());
+        if (editFile != juce::File())
+        {
+            // Files inside the project folder are always relative
+            if (auto proj = getProjectForEdit (edit))
+            {
+                auto projectDir = proj->getProjectFile().getParentDirectory();
 
-        return newFile.getRelativePathFrom (getEditFileFromProjectManager (edit));
+                if (newFile.isAChildOf (projectDir))
+                    return newFile.getRelativePathFrom (editFile);
+            }
+
+            // For external files, use relative only if the path isn't too deep
+            auto relativePath = newFile.getRelativePathFrom (editFile);
+
+            int dotDotCount = 0;
+
+            for (auto part : juce::StringArray::fromTokens (relativePath, "/\\", ""))
+            {
+                if (part == "..")
+                    dotDotCount++;
+                else
+                    break;
+            }
+
+            if (dotDotCount <= 2)
+                return relativePath;
+        }
     }
 
     return newFile.getFullPathName();

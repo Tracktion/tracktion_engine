@@ -1373,4 +1373,53 @@ InputDeviceInstance::Destination* assignTrackAsInput (AudioTrack& destTrack, con
     return res ? *res : nullptr;
 }
 
+void setClipSourceFile (Clip& clip, const juce::File& file)
+{
+    auto& edit = clip.edit;
+    const bool useRelativePath = edit.filePathResolver && edit.editFileRetriever && edit.editFileRetriever().existsAsFile();
+
+    if (useRelativePath)
+        clip.getSourceFileReference().setToDirectFileReference (file, true);
+    else
+        clip.getSourceFileReference().setToProjectFileReference (file, true);
+
+    clip.sourceMediaChanged();
+    clip.propertiesChanged();
+}
+
+void convertAllSourcePaths (Edit& edit, bool useRelativePaths)
+{
+    edit.clipCache.visitItems ([&] (Clip* clip)
+    {
+        if (clip == nullptr)
+            return;
+
+        auto& sfr = clip->getSourceFileReference();
+        auto file = sfr.getFile();
+
+        if (file.existsAsFile())
+            sfr.setToDirectFileReference (file, useRelativePaths);
+
+        // Also handle takes for WaveAudioClips
+        if (auto wac = dynamic_cast<WaveAudioClip*> (clip))
+        {
+            auto takesTree = wac->state.getChildWithName (IDs::TAKES);
+
+            for (int i = 0; i < takesTree.getNumChildren(); ++i)
+            {
+                auto take = takesTree.getChild (i);
+
+                if (take.hasProperty (IDs::source))
+                {
+                    SourceFileReference takeSfr (edit, take, IDs::source);
+                    auto takeFile = takeSfr.getFile();
+
+                    if (takeFile.existsAsFile())
+                        takeSfr.setToDirectFileReference (takeFile, useRelativePaths);
+                }
+            }
+        }
+    });
+}
+
 } // namespace tracktion::inline engine

@@ -552,7 +552,17 @@ WaveAudioClip::Ptr insertWaveClip (ClipOwner& parent, const juce::String& name, 
     auto& edit = parent.getClipOwnerEdit();
 
     auto newState = clip_owner::createNewClipState (name, TrackItem::Type::wave, edit.createNewItemID(), position);
-    newState.setProperty (IDs::source, sourceID.toString(), nullptr);
+
+    // For folder-based projects, resolve to a relative path if possible
+    {
+        const bool useRelativePath = edit.filePathResolver && edit.editFileRetriever && edit.editFileRetriever().existsAsFile();
+        auto file = SourceFileReference::findFileFromString (edit, sourceID.toString());
+
+        if (useRelativePath && file.existsAsFile())
+            newState.setProperty (IDs::source, SourceFileReference::findPathFromFile (edit, file, true), nullptr);
+        else
+            newState.setProperty (IDs::source, sourceID.toString(), nullptr);
+    }
 
     if (auto c = insertClipWithState (parent, newState, name, TrackItem::Type::wave, position, deleteExistingClips, false))
     {

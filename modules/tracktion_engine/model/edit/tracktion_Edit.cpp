@@ -3259,7 +3259,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
         if (auto wc = dynamic_cast<WaveAudioClip*> (audioTrack->insertNewClip (TrackItem::Type::wave, { 0_tp, 1_tp }, nullptr)))
         {
             wc->setUsesProxy (false);
-            wc->getSourceFileReference().setToDirectFileReference (file, false);
+            wc->getSourceFileReference().setToDirectFileReference (file, true);
 
             if (editToMatch != nullptr)
             {
