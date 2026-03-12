@@ -903,17 +903,40 @@ std::unique_ptr<tracktion::graph::Node> createNodeForClips (EditItemID trackID, 
         return false;
     }();
 
+    // Upmix any clip nodes with fewer channels than the max so they sum correctly
+    auto matchChannelCounts = [] (std::vector<std::unique_ptr<Node>>& nodes)
+    {
+        int maxChannels = 0;
+        for (auto& n : nodes)
+            maxChannels = std::max (maxChannels, n->getNodeProperties().numberOfChannels);
+
+        for (auto& n : nodes)
+        {
+            auto ch = n->getNodeProperties().numberOfChannels;
+
+            if (ch > 0 && ch < maxChannels)
+                n = makeNode<ChannelRemappingNode> (std::move (n), ChannelMap::conversion (ch, maxChannels));
+        }
+    };
+
     // If any of the clips have latency, it's impossible to use a CombiningNode as it doesn't
     // continuously process Nodes which means the latency FIFO doesn't get flushed. So just
     // use a normal SummingNode instead
     if (clipsHaveLatency)
     {
-        auto combiner = std::make_unique<SummingNode>();
+        std::vector<std::unique_ptr<Node>> clipNodes;
 
         for (auto clip : clips)
             if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
                 if (auto clipNode = createNodeForClip (*clip, trackMuteState, params, ClipRole::arranger))
-                    combiner->addInput (std::move (clipNode));
+                    clipNodes.push_back (std::move (clipNode));
+
+        matchChannelCounts (clipNodes);
+
+        auto combiner = std::make_unique<SummingNode>();
+
+        for (auto& n : clipNodes)
+            combiner->addInput (std::move (n));
 
         return combiner;
     }
@@ -938,9 +961,14 @@ std::unique_ptr<tracktion::graph::Node> createNodeForClips (EditItemID trackID, 
         }
     }
 
-    auto combiner = std::make_unique<CombiningNode> (trackID, params.processState);
+    struct ClipNodeEntry
+    {
+        std::unique_ptr<Node> node;
+        TimeRange timeRange;
+    };
 
-    // Use a CombiningNode for most clips
+    std::vector<ClipNodeEntry> clipEntries;
+
     for (auto clip : clips)
         if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
             if (auto clipNode = createNodeForClip (*clip, trackMuteState, params, ClipRole::arranger))
@@ -948,8 +976,23 @@ std::unique_ptr<tracktion::graph::Node> createNodeForClips (EditItemID trackID, 
                 auto timeRange = clip->getPosition().time;
                 timeRange = timeRange.withStart (timeRange.getStart() - clip->getHead())
                                      .withEnd (timeRange.getEnd() + clip->getTail());
-                combiner->addInput (std::move (clipNode), timeRange);
+                clipEntries.push_back ({ std::move (clipNode), timeRange });
             }
+
+    // Extract nodes, match channels, then put back
+    std::vector<std::unique_ptr<Node>> nodeVec;
+    for (auto& e : clipEntries)
+        nodeVec.push_back (std::move (e.node));
+
+    matchChannelCounts (nodeVec);
+
+    for (size_t i = 0; i < clipEntries.size(); ++i)
+        clipEntries[i].node = std::move (nodeVec[i]);
+
+    auto combiner = std::make_unique<CombiningNode> (trackID, params.processState);
+
+    for (auto& e : clipEntries)
+        combiner->addInput (std::move (e.node), e.timeRange);
 
     return combiner;
 }
@@ -1249,6 +1292,16 @@ std::unique_ptr<tracktion::graph::Node> createNodeForPlugin (Plugin& plugin, con
 
     node = createSidechainInputNodeForPlugin (plugin, std::move (node));
 
+    // If the input has fewer channels than the plugin expects, pre-convert (e.g. mono→stereo)
+    // so the plugin receives the right number of channels
+    if (incomingChannels < pluginInputChannels
+        && incomingChannels > 0
+        && pluginInputChannels > 0)
+    {
+        node = tracktion::graph::makeNode<ChannelRemappingNode> (std::move (node),
+                                                                 ChannelMap::conversion (incomingChannels, pluginInputChannels));
+    }
+
     // Create the PluginNode
     auto pluginNode = tracktion::graph::makeNode<PluginNode> (std::move (node),
                                                               plugin,
@@ -1257,11 +1310,9 @@ std::unique_ptr<tracktion::graph::Node> createNodeForPlugin (Plugin& plugin, con
                                                               params.forRendering, params.includeBypassedPlugins,
                                                               maxNumChannels);
 
-    // If there's a channel count mismatch, wrap in ChannelRemappingNode to handle:
-    // - Passthrough (input > processor): extra channels pass through unprocessed
-    // - Expansion (input < processor): processor outputs its full channel count
-    // Skip if either config is empty - ChannelRemappingNode requires valid channel configs
-    if (incomingChannels != pluginInputChannels
+    // If input has more channels than the plugin handles, wrap output in passthrough mode
+    // so extra channels pass through unprocessed
+    if (incomingChannels > pluginInputChannels
         && incomingChannels > 0
         && pluginInputChannels > 0)
     {
@@ -1464,7 +1515,6 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioTrack (AudioTrack& at,
     auto trackMuteState = std::make_unique<TrackMuteState> (at, false, processMidiWhenMuted);
 
     std::unique_ptr<Node> node = createClipsNode (at, *clipsMuteState, params);
-
     if (node)
     {
         // When recording, clips should be muted but the plugin should still be audible so use two muting Nodes
@@ -1767,6 +1817,19 @@ std::unique_ptr<tracktion::graph::Node> createNodeForDevice (EditPlaybackContext
 {
     if (auto waveDevice = dynamic_cast<WaveOutputDevice*> (&device))
     {
+        // If the node's channel count doesn't match the device's expected source count,
+        // insert a conversion node so the device ChannelMap sees the right number of channels
+        const int nodeChannels = node->getNodeProperties().numberOfChannels;
+        const int deviceSourceChannels = static_cast<int> (waveDevice->getChannels().size());
+
+        if (nodeChannels != deviceSourceChannels
+            && nodeChannels > 0
+            && deviceSourceChannels > 0)
+        {
+            node = tracktion::graph::makeNode<ChannelRemappingNode> (std::move (node),
+                                                                     ChannelMap::conversion (nodeChannels, deviceSourceChannels));
+        }
+
         ChannelMap channelMap;
         int sourceIndex = 0;
 

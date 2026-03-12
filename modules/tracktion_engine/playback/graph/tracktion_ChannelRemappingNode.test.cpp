@@ -86,6 +86,75 @@ private:
             expect (! map.isIdentity());
             expectEquals (map.getRequiredOutputChannels(), 2);
         }
+
+        beginTest ("ChannelMap - stereo to mono");
+        {
+            auto map = ChannelMap::stereoToMono();
+            expect (! map.isEmpty());
+            expectEquals (static_cast<int> (map.size()), 2);
+            expect (! map.isIdentity());
+            expectEquals (map.getRequiredOutputChannels(), 1);
+        }
+
+        beginTest ("ChannelMap::conversion - same count gives identity");
+        {
+            auto map = ChannelMap::conversion (2, 2);
+            expect (map.isIdentity());
+            expectEquals (static_cast<int> (map.size()), 2);
+            expectEquals (map.getRequiredOutputChannels(), 2);
+        }
+
+        beginTest ("ChannelMap::conversion - mono to stereo");
+        {
+            auto map = ChannelMap::conversion (1, 2);
+            auto ref = ChannelMap::monoToStereo();
+            expectEquals (static_cast<int> (map.size()), static_cast<int> (ref.size()));
+            expectEquals (map.getRequiredOutputChannels(), 2);
+
+            for (size_t i = 0; i < map.entries.size(); ++i)
+            {
+                expectEquals (map.entries[i].first, ref.entries[i].first);
+                expectEquals (map.entries[i].second, ref.entries[i].second);
+            }
+        }
+
+        beginTest ("ChannelMap::conversion - stereo to mono");
+        {
+            auto map = ChannelMap::conversion (2, 1);
+            auto ref = ChannelMap::stereoToMono();
+            expectEquals (static_cast<int> (map.size()), static_cast<int> (ref.size()));
+            expectEquals (map.getRequiredOutputChannels(), 1);
+
+            for (size_t i = 0; i < map.entries.size(); ++i)
+            {
+                expectEquals (map.entries[i].first, ref.entries[i].first);
+                expectEquals (map.entries[i].second, ref.entries[i].second);
+            }
+        }
+
+        beginTest ("ChannelMap::conversion - general upmix 2 to 4");
+        {
+            auto map = ChannelMap::conversion (2, 4);
+            // Should be: 0->0, 1->1, 1->2, 1->3
+            expectEquals (static_cast<int> (map.size()), 4);
+            expectEquals (map.getRequiredOutputChannels(), 4);
+            expectEquals (map.entries[0].first, 0); expectEquals (map.entries[0].second, 0);
+            expectEquals (map.entries[1].first, 1); expectEquals (map.entries[1].second, 1);
+            expectEquals (map.entries[2].first, 1); expectEquals (map.entries[2].second, 2);
+            expectEquals (map.entries[3].first, 1); expectEquals (map.entries[3].second, 3);
+        }
+
+        beginTest ("ChannelMap::conversion - general downmix 4 to 2");
+        {
+            auto map = ChannelMap::conversion (4, 2);
+            // Should be: 0->0, 1->1, 2->1, 3->1
+            expectEquals (static_cast<int> (map.size()), 4);
+            expectEquals (map.getRequiredOutputChannels(), 2);
+            expectEquals (map.entries[0].first, 0); expectEquals (map.entries[0].second, 0);
+            expectEquals (map.entries[1].first, 1); expectEquals (map.entries[1].second, 1);
+            expectEquals (map.entries[2].first, 2); expectEquals (map.entries[2].second, 1);
+            expectEquals (map.entries[3].first, 3); expectEquals (map.entries[3].second, 1);
+        }
     }
 
     //==============================================================================
@@ -158,6 +227,25 @@ private:
             auto& buffer = testContext->buffer;
 
             for (int channel = 0; channel < 6; ++channel)
+            {
+                expectWithinAbsoluteError (buffer.getMagnitude (channel, 0, buffer.getNumSamples()), 1.0f, 0.001f);
+                expectWithinAbsoluteError (buffer.getRMSLevel (channel, 0, buffer.getNumSamples()), 0.707f, 0.001f);
+            }
+        }
+
+        beginTest ("Mono to stereo via conversion factory");
+        {
+            auto sinNode = makeNode<SinNode> (220.0f, 1);
+            auto node = makeNode<ChannelRemappingNode> (std::move (sinNode),
+                                                        ChannelMap::conversion (1, 2));
+
+            expectEquals (node->getNodeProperties().numberOfChannels, 2);
+
+            auto testContext = createBasicTestContext (std::move (node), ts, 2, 5.0);
+            auto& buffer = testContext->buffer;
+
+            // Both channels should have the sin signal
+            for (int channel : { 0, 1 })
             {
                 expectWithinAbsoluteError (buffer.getMagnitude (channel, 0, buffer.getNumSamples()), 1.0f, 0.001f);
                 expectWithinAbsoluteError (buffer.getRMSLevel (channel, 0, buffer.getNumSamples()), 0.707f, 0.001f);

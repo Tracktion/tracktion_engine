@@ -461,19 +461,29 @@ ChannelConfiguration AudioClipBase::getSourceChannelConfiguration()
 
 ChannelConfiguration AudioClipBase::getActiveChannelConfiguration()
 {
+    auto sourceConfig = getSourceChannelConfiguration();
     auto channelMask = channels.get().trim();
 
     if (! channelMask.isEmpty())
     {
-        if (channelMask.equalsIgnoreCase ("r"))    return ChannelConfiguration::right (1);
-        if (channelMask.equalsIgnoreCase ("l"))    return ChannelConfiguration::left (0);
-        if (channelMask.equalsIgnoreCase ("L R"))  return ChannelConfiguration::stereo();
+        ChannelConfiguration result;
 
-        return ChannelConfiguration::fromString (channelMask.toStdString());
+        if (channelMask.equalsIgnoreCase ("r"))         result = ChannelConfiguration::right (1);
+        else if (channelMask.equalsIgnoreCase ("l"))    result = ChannelConfiguration::left (0);
+        else if (channelMask.equalsIgnoreCase ("L R"))  result = ChannelConfiguration::stereo();
+        else result = ChannelConfiguration::fromString (channelMask.toStdString());
+
+        // Don't exceed the source file's actual channel count
+        // (but only if source info is available — numChannels == 0 means not loaded yet)
+        if (sourceConfig.getNumChannels() > 0
+            && result.getNumChannels() > sourceConfig.getNumChannels())
+            return sourceConfig;
+
+        return result;
     }
 
     // Empty config means all source channels are active
-    return getSourceChannelConfiguration();
+    return sourceConfig;
 }
 
 void AudioClipBase::setActiveChannelConfiguration (const ChannelConfiguration& config)

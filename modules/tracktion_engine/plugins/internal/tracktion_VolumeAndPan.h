@@ -60,7 +60,7 @@ public:
     void initialiseWithoutStopping (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;
-    int getNumOutputChannelsGivenInputs (int numInputs) override    { return juce::jmax (2, numInputs); }
+    int getNumOutputChannelsGivenInputs (int numInputs) override    { return numInputs; }
 
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 

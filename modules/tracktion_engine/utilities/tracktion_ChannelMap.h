@@ -45,6 +45,54 @@ struct ChannelMap
         return ChannelMap ({ { 0, 0 }, { 0, 1 } });
     }
 
+    /// Creates a mapping that sums stereo to mono.
+    static ChannelMap stereoToMono()
+    {
+        return ChannelMap ({ { 0, 0 }, { 1, 0 } });
+    }
+
+    /// Creates an appropriate conversion mapping between channel counts.
+    /// Rules:
+    ///   - Same count: identity mapping
+    ///   - Mono to stereo: duplicate channel 0 to both outputs
+    ///   - Stereo to mono: sum both channels to output 0
+    ///   - General upmix: identity for existing channels, duplicate last to fill remaining
+    ///   - General downmix: identity for channels that fit, sum remaining into last dest channel
+    static ChannelMap conversion (int fromChannels, int toChannels)
+    {
+        if (fromChannels == toChannels)
+            return identity (fromChannels);
+
+        if (fromChannels == 1 && toChannels == 2)
+            return monoToStereo();
+
+        if (fromChannels == 2 && toChannels == 1)
+            return stereoToMono();
+
+        ChannelMap map;
+
+        if (fromChannels < toChannels)
+        {
+            // Upmix: identity for existing, duplicate last channel to fill
+            for (int i = 0; i < fromChannels; ++i)
+                map.entries.push_back ({ i, i });
+
+            for (int i = fromChannels; i < toChannels; ++i)
+                map.entries.push_back ({ fromChannels - 1, i });
+        }
+        else
+        {
+            // Downmix: identity for channels that fit, sum remaining into last dest
+            for (int i = 0; i < toChannels; ++i)
+                map.entries.push_back ({ i, i });
+
+            for (int i = toChannels; i < fromChannels; ++i)
+                map.entries.push_back ({ i, toChannels - 1 });
+        }
+
+        return map;
+    }
+
     /// Creates a mapping that duplicates a source to all destination channels.
     static ChannelMap duplicateToChannels (int sourceChannel, int numDestChannels)
     {

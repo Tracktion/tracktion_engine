@@ -62,9 +62,9 @@ tracktion::graph::NodeProperties PluginNode::getNodeProperties()
 
     auto props = input->getNodeProperties();
 
-    // Assume a stereo output here to corretly initialise plugins
-    // We might need to modify this to return a number of channels passed as an argument if there are differences with mono renders
-    props.numberOfChannels = juce::jmax (2, props.numberOfChannels, plugin->getNumOutputChannelsGivenInputs (std::max (2, props.numberOfChannels)));
+    // Use the actual input channel count — channel conversion (e.g. mono→stereo) is handled
+    // upstream by createNodeForPlugin inserting a ChannelRemappingNode when needed
+    props.numberOfChannels = std::max (props.numberOfChannels, plugin->getNumOutputChannelsGivenInputs (props.numberOfChannels));
 
     if (maxNumChannels > 0)
         props.numberOfChannels = std::min (maxNumChannels, props.numberOfChannels);

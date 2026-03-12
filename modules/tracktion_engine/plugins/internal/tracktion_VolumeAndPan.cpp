@@ -242,6 +242,9 @@ void VolumeAndPanPlugin::applyToBuffer (const PluginRenderContext& fc)
         {
             const auto numChansIn = buffer->getNumChannels();
 
+            if (numChansIn < 1)
+                return;
+
             setSmoothedValueTargets (fc.editTime.getStart(), numChansIn > 2);
 
             smoothedGainL.applyGain (buffer->getWritePointer (0, fc.bufferStartSample), fc.bufferNumSamples);
