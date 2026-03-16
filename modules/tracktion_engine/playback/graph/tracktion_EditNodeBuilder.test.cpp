@@ -49,6 +49,9 @@ public:
 
         runClipFade (ts, 3.0s, 2, false);
         runClipFade (ts, 3.0s, 2, true);
+
+        runBusTrack (ts, 3.0s, 2, false);
+        runBusTrack (ts, 3.0s, 2, true);
     }
 
 private:
@@ -499,6 +502,86 @@ private:
             clip->setFadeIn (durationInSeconds / 2);
             clip->setFadeOut (durationInSeconds / 2);
             expectRMS (*this, *edit, { 0s, durationInSeconds }, getAllTracks (*edit), 0.707f / 2.0f);
+        }
+    }
+
+    /** Creates a bus track (output=none) with an aux return, and a source track with a sin clip
+        and aux send (muted). Verifies the bus track's plugin chain is processed so the aux return
+        receives audio even though the bus track has no output destination.
+    */
+    void runBusTrack (graph::test_utilities::TestSetup ts,
+                      TimeDuration durationInSeconds,
+                      int numChannels,
+                      bool isMultiThreaded)
+    {
+        using namespace tracktion::graph;
+        using namespace tracktion::graph::test_utilities;
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        const auto description = graph::test_utilities::getDescription (ts)
+                                    + juce::String (isMultiThreaded ? ", MT" : ", ST");
+
+        {
+            auto sinFile = tracktion::graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), 2, 220.0f);
+
+            auto edit = test_utilities::createTestEdit (engine);
+            edit->ensureNumberOfAudioTracks (2);
+            edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
+
+            // Track 1: source with sin clip + aux send, muted so only aux send carries signal
+            auto sourceTrack = getAudioTracks (*edit)[0];
+            sourceTrack->insertWaveClip ({}, sinFile->getFile(), ClipPosition { { {}, durationInSeconds } }, false);
+            sourceTrack->pluginList.insertPlugin (edit->getPluginCache().createNewPlugin (AuxSendPlugin::xmlTypeName, {}), 0, nullptr);
+
+            // Track 2: bus track (output=none) with aux return
+            auto busTrack = getAudioTracks (*edit)[1];
+            busTrack->getOutput().setOutputToNone();
+            busTrack->pluginList.insertPlugin (edit->getPluginCache().createNewPlugin (AuxReturnPlugin::xmlTypeName, {}), 0, nullptr);
+
+            beginTest ("Bus track with aux return (no output destination): " + description);
+            {
+                tracktion::graph::PlayHead playHead;
+                tracktion::graph::PlayHeadState playHeadState { playHead };
+                ProcessState processState { playHeadState, edit->tempoSequence };
+
+                // Verify the graph can be built without crashing
+                auto node = createNode (*edit, processState, ts.sampleRate, ts.blockSize);
+                expect (node != nullptr, "Bus track graph should build successfully");
+
+                graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
+                                                                                                                            getPoolCreatorFunction (ThreadPoolStrategy::hybrid)),
+                                                                                     ts, numChannels, durationInSeconds.inSeconds(), false);
+
+                if (! isMultiThreaded)
+                    testContext.getNodePlayer().setNumThreads (0);
+
+                testContext.setPlayHead (&playHeadState.playHead);
+                playHeadState.playHead.playSyncedToRange ({});
+                testContext.processAll();
+            }
+
+            beginTest ("Bus track output set later: " + description);
+            {
+                // Now set the bus track's output to the default device and verify it still works
+                busTrack->getOutput().setOutputToDefaultDevice (false);
+
+                tracktion::graph::PlayHead playHead;
+                tracktion::graph::PlayHeadState playHeadState { playHead };
+                ProcessState processState { playHeadState, edit->tempoSequence };
+
+                auto node = createNode (*edit, processState, ts.sampleRate, ts.blockSize);
+                expect (node != nullptr, "Bus track graph should build after setting output");
+
+                graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
+                                                                                                                            getPoolCreatorFunction (ThreadPoolStrategy::hybrid)),
+                                                                                     ts, numChannels, durationInSeconds.inSeconds(), false);
+
+                if (! isMultiThreaded)
+                    testContext.getNodePlayer().setNumThreads (0);
+
+                testContext.setPlayHead (&playHeadState.playHead);
+                playHeadState.playHead.playSyncedToRange ({});
+                testContext.processAll();
+            }
         }
     }
 

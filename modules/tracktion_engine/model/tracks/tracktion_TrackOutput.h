@@ -54,6 +54,8 @@ public:
     bool usesDefaultAudioOut() const;
     /// True if this output is going to the default MIDI out
     bool usesDefaultMIDIOut() const;
+    /// True if this output is set to "none" (bus track mode)
+    bool outputsToNone() const;
 
     /// finds the output device.
     ///
@@ -65,6 +67,12 @@ public:
     void setOutputToDeviceID (const juce::String& deviceID);
     void setOutputToTrack (AudioTrack*);
     void setOutputToDefaultDevice (bool isMidi);
+
+    /** Clears the output so the track routes to nothing (bus track mode).
+        The track's plugin chain will still be processed so send/return
+        and rack routing remain active.
+    */
+    void setOutputToNone();
 
     static void getPossibleOutputDeviceNames (const juce::Array<AudioTrack*>& tracks,
                                               juce::StringArray& s, juce::StringArray& a,

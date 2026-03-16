@@ -1951,6 +1951,30 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
         }
     }
 
+    // Add bus tracks (tracks with no output device/destination that still need
+    // processing for their plugin chain to participate in send/return or rack routing)
+    if (auto defaultDevice = edit.engine.getDeviceManager().getDefaultWaveOutDevice())
+    {
+        for (auto t : getAllTracks (edit))
+        {
+            if (params.allowedTracks != nullptr && ! params.allowedTracks->contains (t))
+                continue;
+
+            if (auto output = getTrackOutput (*t))
+            {
+                if (output->getOutputDevice (false) != nullptr || output->getDestinationTrack() != nullptr)
+                    continue;
+            }
+            else
+            {
+                continue;
+            }
+
+            if (auto node = createNodeForTrack (*t, params))
+                deviceNodes[defaultDevice].push_back (makeNode<SinkNode> (std::move (node)));
+        }
+    }
+
     // Add deviceNodes for any devices only being used by InsertPlugins
     for (auto ins : insertPlugins)
     {
@@ -2078,7 +2102,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (Edit& edit, const Cre
         if (params.allowedTracks != nullptr && ! params.allowedTracks->contains (t))
             continue;
 
-        // Skip tracks that don't output to a device or feed in to other tracks
+        // Skip submix children (they're built by their parent) and tracks with no TrackOutput
         if (auto output = getTrackOutput (*t))
         {
             if (output->getDestinationTrack() != nullptr)

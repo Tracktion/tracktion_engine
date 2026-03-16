@@ -155,6 +155,11 @@ bool TrackOutput::usesDefaultMIDIOut() const
     return outputDevice == DeviceManager::getDefaultMidiOutDeviceName (false);
 }
 
+bool TrackOutput::outputsToNone() const
+{
+    return outputDevice == "(none)";
+}
+
 OutputDevice* TrackOutput::getOutputDevice (bool traceThroughDestTracks) const
 {
     auto& dm = owner.edit.engine.getDeviceManager();
@@ -248,6 +253,11 @@ void TrackOutput::setOutputToDefaultDevice (bool isMidi)
 {
     outputDevice = isMidi ? DeviceManager::getDefaultMidiOutDeviceName (false)
                           : DeviceManager::getDefaultAudioOutDeviceName (false);
+}
+
+void TrackOutput::setOutputToNone()
+{
+    outputDevice = "(none)";
 }
 
 void TrackOutput::getPossibleOutputDeviceNames (const juce::Array<AudioTrack*>& tracks,
