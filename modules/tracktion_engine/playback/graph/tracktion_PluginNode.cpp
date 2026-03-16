@@ -66,8 +66,15 @@ tracktion::graph::NodeProperties PluginNode::getNodeProperties()
     // upstream by createNodeForPlugin inserting a ChannelRemappingNode when needed
     props.numberOfChannels = std::max (props.numberOfChannels, plugin->getNumOutputChannelsGivenInputs (props.numberOfChannels));
 
+    // Ensure audio plugins always get at least their declared minimum channel count,
+    // even when the input node reports 0 channels (e.g. unconnected rack plugin).
+    // MIDI-only plugins (takesAudioInput()==false) are excluded — they legitimately need 0 channels.
+    if (plugin->takesAudioInput())
+        props.numberOfChannels = std::max (props.numberOfChannels,
+                                           plugin->getInputChannelConfiguration().getNumChannels());
+
     if (maxNumChannels > 0)
-        props.numberOfChannels = std::min (maxNumChannels, props.numberOfChannels);
+        props.numberOfChannels = std::min (props.numberOfChannels, maxNumChannels);
 
     props.hasAudio = props.hasAudio || plugin->producesAudioWhenNoAudioInput();
     props.hasMidi  = props.hasMidi || plugin->takesMidiInput();

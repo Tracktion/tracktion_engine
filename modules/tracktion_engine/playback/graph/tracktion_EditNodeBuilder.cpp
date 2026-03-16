@@ -1279,15 +1279,21 @@ std::unique_ptr<tracktion::graph::Node> createNodeForPlugin (Plugin& plugin, con
     // Query how many channels the plugin can handle
     const int pluginInputChannels = plugin.getInputChannelConfiguration().getNumChannels();
 
+    // For pass-through plugins (e.g. LevelMeter, VolumeAndPan), the declared input config
+    // may be stereo but the plugin can handle any channel count. Use the actual output count
+    // for the incoming channels to determine the effective channel capacity.
+    const int effectivePluginChannels = std::max (pluginInputChannels,
+                                                  plugin.getNumOutputChannelsGivenInputs (incomingChannels));
+
     // Determine maxNumChannels for the PluginNode
-    // If the plugin is on a track/clip without sidechain, use the plugin's channel configuration
+    // If the plugin is on a track/clip without sidechain, use the effective channel count
     // Otherwise, no limit (-1)
     int maxNumChannels = -1;
 
     if (plugin.getOwnerTrack() != nullptr || plugin.getOwnerClip() != nullptr)
     {
         if (! plugin.getSidechainSourceID().isValid())
-            maxNumChannels = pluginInputChannels;
+            maxNumChannels = effectivePluginChannels;
     }
 
     node = createSidechainInputNodeForPlugin (plugin, std::move (node));
@@ -1312,9 +1318,9 @@ std::unique_ptr<tracktion::graph::Node> createNodeForPlugin (Plugin& plugin, con
 
     // If input has more channels than the plugin handles, wrap output in passthrough mode
     // so extra channels pass through unprocessed
-    if (incomingChannels > pluginInputChannels
+    if (incomingChannels > effectivePluginChannels
         && incomingChannels > 0
-        && pluginInputChannels > 0)
+        && effectivePluginChannels > 0)
     {
         return tracktion::graph::makeNode<ChannelRemappingNode> (std::move (pluginNode),
                                                                  ChannelConfiguration::discreteChannels (incomingChannels),
@@ -1339,18 +1345,24 @@ std::unique_ptr<tracktion::graph::Node> createNodeForRackInstance (RackInstance&
     auto* inputNode = node.get();
 
     // Send
-    // N.B. the channel indicies from the RackInstance start a 1 so we need to subtract this to get a 0-indexed channel
+    // N.B. the channel indices from the RackInstance start at 1 so we need to subtract this to get a 0-indexed channel
     RackInstanceNode::ChannelMap sendChannelMap;
-    sendChannelMap[0] = { 0, rackInstance.leftInputGoesTo - 1, rackInstance.leftInDb };
-    sendChannelMap[1] = { 1, rackInstance.rightInputGoesTo - 1, rackInstance.rightInDb };
+
+    for (int i = 0; i < rackInstance.getNumChannelMappings(); ++i)
+        sendChannelMap.push_back ({ i, rackInstance.getInputMapping (i) - 1,
+                                    rackInstance.getInputGainParam (i) });
+
     node = makeNode<RackInstanceNode> (rackInstance, std::move (node), std::move (sendChannelMap), processState, sampleRateAndBlockSize);
     node = makeNode<SendNode> (std::move (node), rackInputID);
     node = makeNode<ReturnNode> (makeNode<SinkNode> (std::move (node)), rackOutputID);
 
     // Return
     RackInstanceNode::ChannelMap returnChannelMap;
-    returnChannelMap[0] = { rackInstance.leftOutputComesFrom - 1, 0, rackInstance.leftOutDb };
-    returnChannelMap[1] = { rackInstance.rightOutputComesFrom - 1, 1, rackInstance.rightOutDb };
+
+    for (int i = 0; i < rackInstance.getNumChannelMappings(); ++i)
+        returnChannelMap.push_back ({ rackInstance.getOutputMapping (i) - 1, i,
+                                      rackInstance.getOutputGainParam (i) });
+
     node = makeNode<RackInstanceNode> (rackInstance, std::move (node), std::move (returnChannelMap), processState, sampleRateAndBlockSize);
 
     return makeNode<RackReturnNode> (std::move (node),

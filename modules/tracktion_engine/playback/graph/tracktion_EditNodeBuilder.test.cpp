@@ -99,8 +99,8 @@ private:
                 testContext.processAll();
             }
 
-            rackInstance->leftInputGoesTo = -1;
-            rackInstance->rightOutputComesFrom = -1;
+            rackInstance->setInputMapping (0, -1);
+            rackInstance->setOutputMapping (1, -1);
 
             beginTest ("Unconnected Inputs/Outputs: " + description);
             {

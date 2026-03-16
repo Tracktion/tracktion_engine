@@ -72,6 +72,102 @@ struct RackWetDryAutomatableParam  : public AutomatableParameter
 };
 
 //==============================================================================
+void RackInstance::createChannelMapping (int channelIndex, int defaultInput, int defaultOutput)
+{
+    auto um = getUndoManager();
+    auto mapping = std::make_unique<ChannelMapping>();
+
+    // Find or create the CHANNELMAP child ValueTree for this index
+    juce::ValueTree mapTree;
+
+    for (auto child : state)
+    {
+        if (child.hasType (IDs::CHANNELMAP) && (int) child[IDs::index] == channelIndex)
+        {
+            mapTree = child;
+            break;
+        }
+    }
+
+    if (! mapTree.isValid())
+    {
+        mapTree = juce::ValueTree (IDs::CHANNELMAP);
+        mapTree.setProperty (IDs::index, channelIndex, nullptr);
+        state.addChild (mapTree, -1, um);
+    }
+
+    mapping->inputGoesTo.referTo (mapTree, IDs::inputTo, um, defaultInput);
+    mapping->outputComesFrom.referTo (mapTree, IDs::outputFrom, um, defaultOutput);
+    mapping->inputGainValue.referTo (mapTree, IDs::inputGain, um, 0.0f);
+    mapping->outputGainValue.referTo (mapTree, IDs::outputGain, um, 0.0f);
+
+    auto inputParamID = "ch" + juce::String (channelIndex + 1) + " input level";
+    auto inputParamName = TRANS("Ch") + " " + juce::String (channelIndex + 1) + " " + TRANS("input level");
+    auto outputParamID = "ch" + juce::String (channelIndex + 1) + " output level";
+    auto outputParamName = TRANS("Ch") + " " + juce::String (channelIndex + 1) + " " + TRANS("output level");
+
+    const juce::Range<float> gainRange { (float) rackMinDb, (float) rackMaxDb };
+
+    if (channelIndex == 0)
+    {
+        // Channel 0 input is always "active" (not linked)
+        mapping->inputGainDb = addParam (inputParamID, inputParamName, gainRange);
+        mapping->outputGainDb = addParam (outputParamID, outputParamName, gainRange);
+    }
+    else
+    {
+        addAutomatableParameter (mapping->inputGainDb = new RackInputAutomatableParameter (inputParamID, inputParamName, *this, gainRange));
+        addAutomatableParameter (mapping->outputGainDb = new RackOutputAutomatableParameter (outputParamID, outputParamName, *this, gainRange));
+    }
+
+    mapping->inputGainDb->attachToCurrentValue (mapping->inputGainValue);
+    mapping->outputGainDb->attachToCurrentValue (mapping->outputGainValue);
+
+    channelMappings.add (std::move (mapping));
+}
+
+void RackInstance::migrateFromLegacyFormat()
+{
+    // Check for old-style stereo properties
+    if (! state.hasProperty (IDs::leftTo) && ! state.hasProperty (IDs::rightTo))
+        return;
+
+    // Already has CHANNELMAP children — don't migrate twice
+    for (auto child : state)
+        if (child.hasType (IDs::CHANNELMAP))
+            return;
+
+    auto um = getUndoManager();
+
+    // Create CHANNELMAP children from legacy properties
+    auto createMapTree = [&] (int index, int inputDefault, int outputDefault,
+                              juce::Identifier inputProp, juce::Identifier outputProp,
+                              juce::Identifier inputGainProp, juce::Identifier outputGainProp)
+    {
+        juce::ValueTree mapTree (IDs::CHANNELMAP);
+        mapTree.setProperty (IDs::index, index, nullptr);
+        mapTree.setProperty (IDs::inputTo, (int) state.getProperty (inputProp, inputDefault), nullptr);
+        mapTree.setProperty (IDs::outputFrom, (int) state.getProperty (outputProp, outputDefault), nullptr);
+        mapTree.setProperty (IDs::inputGain, (float) state.getProperty (inputGainProp, 0.0f), nullptr);
+        mapTree.setProperty (IDs::outputGain, (float) state.getProperty (outputGainProp, 0.0f), nullptr);
+        state.addChild (mapTree, -1, um);
+    };
+
+    createMapTree (0, 1, 1, IDs::leftTo, IDs::leftFrom, IDs::leftInDb, IDs::leftOutDb);
+    createMapTree (1, 2, 2, IDs::rightTo, IDs::rightFrom, IDs::rightInDb, IDs::rightOutDb);
+
+    // Remove legacy properties
+    state.removeProperty (IDs::leftTo, um);
+    state.removeProperty (IDs::rightTo, um);
+    state.removeProperty (IDs::leftFrom, um);
+    state.removeProperty (IDs::rightFrom, um);
+    state.removeProperty (IDs::leftInDb, um);
+    state.removeProperty (IDs::rightInDb, um);
+    state.removeProperty (IDs::leftOutDb, um);
+    state.removeProperty (IDs::rightOutDb, um);
+}
+
+//==============================================================================
 RackInstance::RackInstance (PluginCreationInfo info)
     : Plugin (info),
       rackTypeID (EditItemID::fromProperty (state, IDs::rackType)),
@@ -81,31 +177,35 @@ RackInstance::RackInstance (PluginCreationInfo info)
 
     addAutomatableParameter (dryGain = new RackWetDryAutomatableParam ("dry level", TRANS("Dry level"), *this, { 0.0f, 1.0f }));
     addAutomatableParameter (wetGain = new RackWetDryAutomatableParam ("wet level", TRANS("Wet level"), *this, { 0.0f, 1.0f }));
-    leftInDb = addParam ("left input level", TRANS("Left input level"), { (float) RackInstance::rackMinDb, (float) RackInstance::rackMaxDb });
-    addAutomatableParameter (rightInDb = new RackInputAutomatableParameter ("right input level", TRANS("Right input level"), *this, { (float) RackInstance::rackMinDb, (float) RackInstance::rackMaxDb }));
-    leftOutDb = addParam ("left output level", TRANS("Left output level"), { (float) RackInstance::rackMinDb, (float) RackInstance::rackMaxDb });
-    addAutomatableParameter (rightOutDb = new RackOutputAutomatableParameter ("right output level", TRANS("Right output level"), *this, { (float) RackInstance::rackMinDb, (float) RackInstance::rackMaxDb }));
 
     auto um = getUndoManager();
-
     dryValue.referTo (state, IDs::dry, um);
     wetValue.referTo (state, IDs::wet, um, 1.0f);
-    leftInValue.referTo (state, IDs::leftInDb, um);
-    rightInValue.referTo (state, IDs::rightInDb, um);
-    leftOutValue.referTo (state, IDs::leftOutDb, um);
-    rightOutValue.referTo (state, IDs::rightOutDb, um);
-
-    leftInputGoesTo.referTo (state, IDs::leftTo, um, 1);
-    rightInputGoesTo.referTo (state, IDs::rightTo, um, 2);
-    leftOutputComesFrom.referTo (state, IDs::leftFrom, um, 1);
-    rightOutputComesFrom.referTo (state, IDs::rightFrom, um, 2);
-
     dryGain->attachToCurrentValue (dryValue);
     wetGain->attachToCurrentValue (wetValue);
-    leftInDb->attachToCurrentValue (leftInValue);
-    rightInDb->attachToCurrentValue (rightInValue);
-    leftOutDb->attachToCurrentValue (leftOutValue);
-    rightOutDb->attachToCurrentValue (rightOutValue);
+
+    // Migrate old stereo format to CHANNELMAP children
+    migrateFromLegacyFormat();
+
+    // Count existing CHANNELMAP children
+    int numExisting = 0;
+
+    for (auto child : state)
+        if (child.hasType (IDs::CHANNELMAP))
+            ++numExisting;
+
+    if (numExisting > 0)
+    {
+        // Load existing mappings
+        for (int i = 0; i < numExisting; ++i)
+            createChannelMapping (i, i + 1, i + 1);
+    }
+    else
+    {
+        // Default: create stereo mapping
+        createChannelMapping (0, 1, 1);
+        createChannelMapping (1, 2, 2);
+    }
 }
 
 RackInstance::~RackInstance()
@@ -114,10 +214,12 @@ RackInstance::~RackInstance()
 
     dryGain->detachFromCurrentValue();
     wetGain->detachFromCurrentValue();
-    leftInDb->detachFromCurrentValue();
-    rightInDb->detachFromCurrentValue();
-    leftOutDb->detachFromCurrentValue();
-    rightOutDb->detachFromCurrentValue();
+
+    for (auto mapping : channelMappings)
+    {
+        mapping->inputGainDb->detachFromCurrentValue();
+        mapping->outputGainDb->detachFromCurrentValue();
+    }
 }
 
 juce::ValueTree RackInstance::create (RackType& type)
@@ -250,7 +352,41 @@ juce::String RackInstance::getNoPinName()
     return TRANS("<none>");
 }
 
-void RackInstance::setInputName (Channel c, const juce::String& inputName)
+//==============================================================================
+int RackInstance::getNumChannelMappings() const
+{
+    return channelMappings.size();
+}
+
+int RackInstance::getInputMapping (int channelIndex) const
+{
+    if (auto m = channelMappings[channelIndex])
+        return m->inputGoesTo;
+
+    return -1;
+}
+
+int RackInstance::getOutputMapping (int channelIndex) const
+{
+    if (auto m = channelMappings[channelIndex])
+        return m->outputComesFrom;
+
+    return -1;
+}
+
+void RackInstance::setInputMapping (int channelIndex, int rackPinIndex)
+{
+    if (auto m = channelMappings[channelIndex])
+        m->inputGoesTo = rackPinIndex;
+}
+
+void RackInstance::setOutputMapping (int channelIndex, int rackPinIndex)
+{
+    if (auto m = channelMappings[channelIndex])
+        m->outputComesFrom = rackPinIndex;
+}
+
+void RackInstance::setInputMappingByName (int channelIndex, const juce::String& inputName)
 {
     auto index = getInputChoices (false).indexOf (inputName);
 
@@ -260,15 +396,10 @@ void RackInstance::setInputName (Channel c, const juce::String& inputName)
     if (index == 0)
         index = -1;
 
-    switch (c)
-    {
-        case left:  leftInputGoesTo = index;    break;
-        case right: rightInputGoesTo = index;   break;
-        default:    break;
-    }
+    setInputMapping (channelIndex, index);
 }
 
-void RackInstance::setOutputName (Channel c, const juce::String& outputName)
+void RackInstance::setOutputMappingByName (int channelIndex, const juce::String& outputName)
 {
     auto index = getOutputChoices (false).indexOf (outputName);
 
@@ -278,14 +409,120 @@ void RackInstance::setOutputName (Channel c, const juce::String& outputName)
     if (index == 0)
         index = -1;
 
-    switch (c)
+    setOutputMapping (channelIndex, index);
+}
+
+AutomatableParameter::Ptr RackInstance::getInputGainParam (int channelIndex) const
+{
+    if (auto m = channelMappings[channelIndex])
+        return m->inputGainDb;
+
+    return {};
+}
+
+AutomatableParameter::Ptr RackInstance::getOutputGainParam (int channelIndex) const
+{
+    if (auto m = channelMappings[channelIndex])
+        return m->outputGainDb;
+
+    return {};
+}
+
+juce::String RackInstance::getInputMappingName (int channelIndex)
+{
+    if (auto m = channelMappings[channelIndex])
     {
-        case left:  leftOutputComesFrom = index;    break;
-        case right: rightOutputComesFrom = index;   break;
-        default:    break;
+        int pinIndex = m->inputGoesTo;
+
+        if (type == nullptr || pinIndex < 0 || type->getInputNames()[pinIndex].isEmpty())
+            return getNoPinName();
+
+        return juce::String (pinIndex) + ". " + type->getInputNames()[pinIndex];
+    }
+
+    return getNoPinName();
+}
+
+juce::String RackInstance::getOutputMappingName (int channelIndex)
+{
+    if (auto m = channelMappings[channelIndex])
+    {
+        int pinIndex = m->outputComesFrom;
+
+        if (type == nullptr || pinIndex < 0 || type->getOutputNames()[pinIndex].isEmpty())
+            return getNoPinName();
+
+        return juce::String (pinIndex) + ". " + type->getOutputNames()[pinIndex];
+    }
+
+    return getNoPinName();
+}
+
+void RackInstance::setInputLevel (int channelIndex, float v)
+{
+    if (auto m = channelMappings[channelIndex])
+    {
+        m->inputGainDb->setParameter (v, juce::sendNotification);
+
+        if (linkInputs)
+        {
+            for (auto other : channelMappings)
+                if (other != m)
+                    other->inputGainDb->setParameter (v, juce::sendNotification);
+        }
     }
 }
 
+void RackInstance::setOutputLevel (int channelIndex, float v)
+{
+    if (auto m = channelMappings[channelIndex])
+    {
+        m->outputGainDb->setParameter (v, juce::sendNotification);
+
+        if (linkOutputs)
+        {
+            for (auto other : channelMappings)
+                if (other != m)
+                    other->outputGainDb->setParameter (v, juce::sendNotification);
+        }
+    }
+}
+
+void RackInstance::addChannelMapping()
+{
+    int newIndex = channelMappings.size();
+    createChannelMapping (newIndex, -1, -1);
+}
+
+void RackInstance::removeLastChannelMapping()
+{
+    if (channelMappings.size() <= 1)
+        return;
+
+    int lastIndex = channelMappings.size() - 1;
+
+    if (auto m = channelMappings[lastIndex])
+    {
+        m->inputGainDb->detachFromCurrentValue();
+        m->outputGainDb->detachFromCurrentValue();
+    }
+
+    // Remove the CHANNELMAP ValueTree child
+    for (int i = state.getNumChildren(); --i >= 0;)
+    {
+        auto child = state.getChild (i);
+
+        if (child.hasType (IDs::CHANNELMAP) && (int) child[IDs::index] == lastIndex)
+        {
+            state.removeChild (i, getUndoManager());
+            break;
+        }
+    }
+
+    channelMappings.remove (lastIndex);
+}
+
+//==============================================================================
 void RackInstance::initialise (const PluginInitialisationInfo& info)
 {
     if (type != nullptr)
@@ -323,52 +560,6 @@ void RackInstance::applyToBuffer (const PluginRenderContext&)
 juce::String RackInstance::getSelectableDescription()
 {
     return TRANS("Plugin Rack");
-}
-
-void RackInstance::setInputLevel (Channel c, float v)
-{
-    const auto& param = c == left ? leftInDb : rightInDb;
-
-    param->setParameter (v, juce::sendNotification);
-
-    if (linkInputs)
-    {
-        const auto& linkedParam = c == left ? rightInDb : leftInDb;
-        linkedParam->setParameter (v, juce::sendNotification);
-    }
-}
-
-void RackInstance::setOutputLevel (Channel c, float v)
-{
-    const auto& param = c == left ? leftOutDb : rightOutDb;
-
-    param->setParameter (v, juce::sendNotification);
-
-    if (linkOutputs)
-    {
-        const auto& linkedParam = c == left ? rightOutDb : leftOutDb;
-        linkedParam->setParameter (v, juce::sendNotification);
-    }
-}
-
-juce::String RackInstance::getInputName (Channel c)
-{
-    const auto& input = c == left ? leftInputGoesTo : rightInputGoesTo;
-
-    if (type == nullptr || input < 0 || type->getInputNames()[input].isEmpty())
-        return getNoPinName();
-
-    return juce::String (input) + ". " + type->getInputNames()[input];
-}
-
-juce::String RackInstance::getOutputName (Channel c)
-{
-    const auto& ouput = c == left ? leftOutputComesFrom : rightOutputComesFrom;
-
-    if (type == nullptr || ouput < 0 || type->getOutputNames()[ouput].isEmpty())
-        return getNoPinName();
-
-    return juce::String (ouput) + ". " + type->getOutputNames()[ouput];
 }
 
 } // namespace tracktion::inline engine

@@ -864,13 +864,13 @@ void RackType::createInstanceForSideChain (Track& at, const juce::BigInteger& ch
             if (srcPinIndex == -1)
                 srcPinIndex = addInput (-1, leftName);
 
-            rack->setInputName (RackInstance::left, leftName);
-            rack->setOutputName (RackInstance::left, noneName);
+            rack->setInputMappingByName (0, leftName);
+            rack->setOutputMappingByName (0, noneName);
 
             if (! connectRight)
             {
-                rack->setInputName (RackInstance::right, noneName);
-                rack->setOutputName (RackInstance::right, noneName);
+                rack->setInputMappingByName (1, noneName);
+                rack->setOutputMappingByName (1, noneName);
             }
 
             if (srcPinIndex >= 0)
@@ -884,13 +884,13 @@ void RackType::createInstanceForSideChain (Track& at, const juce::BigInteger& ch
             if (srcPinIndex == -1)
                 srcPinIndex = addInput (-1, rightName);
 
-            rack->setInputName (RackInstance::right, rightName);
-            rack->setOutputName (RackInstance::right, noneName);
+            rack->setInputMappingByName (1, rightName);
+            rack->setOutputMappingByName (1, noneName);
 
             if (! connectLeft)
             {
-                rack->setInputName (RackInstance::left, noneName);
-                rack->setOutputName (RackInstance::left, noneName);
+                rack->setInputMappingByName (0, noneName);
+                rack->setOutputMappingByName (0, noneName);
             }
 
             if (srcPinIndex != -1)
