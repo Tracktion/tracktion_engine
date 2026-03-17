@@ -327,6 +327,72 @@ TEST_SUITE("tracktion_engine")
         CHECK (test_utilities::getRMSLevel (render, { 0_tp, fileLength }, 1) > 0.0f);
     }
 
+    TEST_CASE ("Rack instance: rackMacro moveAutomation")
+    {
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine);
+        auto um = &edit->getUndoManager();
+        auto track = getAudioTracks (*edit)[0];
+
+        // Create a rack with a VolumeAndPan plugin
+        VolumeAndPanPlugin::Ptr volPan (dynamic_cast<VolumeAndPanPlugin*> (edit->getPluginCache().getOrCreatePluginFor (VolumeAndPanPlugin::create()).get()));
+        Plugin::Array plugins;
+        plugins.add (volPan);
+        auto rackType = RackType::createTypeToWrapPlugins (plugins, *edit);
+
+        // Add a macro parameter to the rack type
+        auto macro = rackType->getMacroParameterListForWriting().createMacroParameter();
+        REQUIRE (macro != nullptr);
+
+        // Add automation points to the macro curve in the range 1s-3s
+        auto& macroCurve = macro->getCurve();
+        macroCurve.addPoint (1_tp, 0.2f, 0.0, um);
+        macroCurve.addPoint (2_tp, 0.8f, 0.0, um);
+        macroCurve.addPoint (3_tp, 0.4f, 0.0, um);
+        CHECK (macroCurve.getNumPoints() == 3);
+
+        // Insert a RackInstance on the track
+        auto rackInstance = dynamic_cast<RackInstance*> (track->pluginList.insertPlugin (RackInstance::create (*rackType), 0).get());
+        REQUIRE (rackInstance != nullptr);
+
+        // Build a TrackAutomationSection covering the 1s-3s range
+        TrackAutomationSection section;
+        section.position = { 1_tp, 3_tp };
+        section.src = track;
+        section.dst = track;
+
+        juce::Array<TrackAutomationSection> sections;
+        sections.add (section);
+
+        // Move the automation by +2s
+        moveAutomation (sections, 2_td, false);
+
+        // The macro automation points should now be in 3s-5s range
+        CHECK (macroCurve.getNumPoints() >= 2);
+
+        bool foundPointNear3s = false;
+        bool foundPointNear4s = false;
+        bool foundPointNear5s = false;
+
+        for (int i = 0; i < macroCurve.getNumPoints(); ++i)
+        {
+            auto t = macroCurve.getPointTime (i);
+
+            if (std::abs ((t - 3_tp).inSeconds()) < 0.01)
+                foundPointNear3s = true;
+
+            if (std::abs ((t - 4_tp).inSeconds()) < 0.01)
+                foundPointNear4s = true;
+
+            if (std::abs ((t - 5_tp).inSeconds()) < 0.01)
+                foundPointNear5s = true;
+        }
+
+        CHECK (foundPointNear3s);
+        CHECK (foundPointNear4s);
+        CHECK (foundPointNear5s);
+    }
+
     TEST_CASE ("PluginNode: minimum channel count with maxNumChannels")
     {
         // When maxNumChannels > 0, PluginNode should guarantee at least that many channels

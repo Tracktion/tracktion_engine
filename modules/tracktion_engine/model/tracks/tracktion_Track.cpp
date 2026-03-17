@@ -272,6 +272,30 @@ std::vector<AutomatableEditItem*> Track::getAllAutomatableEditItems() const
         if (auto mpl = p->getMacroParameterList())
             items.push_back (mpl);
 
+    for (auto p : plugins)
+    {
+        if (auto ri = dynamic_cast<RackInstance*> (p))
+        {
+            if (auto type = ri->type)
+            {
+                if (auto mpl = type->getMacroParameterList())
+                    items.push_back (mpl);
+
+                for (auto rackPlugin : type->getPlugins())
+                {
+                    items.push_back (rackPlugin);
+
+                    if (auto mpl = rackPlugin->getMacroParameterList())
+                        items.push_back (mpl);
+                }
+
+                for (auto m : type->getModifierList().getModifiers())
+                    if (auto aei = dynamic_cast<AutomatableEditItem*> (m))
+                        items.push_back (aei);
+            }
+        }
+    }
+
     // Deduplicate
     std::sort (items.begin(), items.end());
     items.erase (std::unique (items.begin(), items.end()), items.end());
