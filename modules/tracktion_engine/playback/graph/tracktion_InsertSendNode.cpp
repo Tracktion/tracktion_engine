@@ -117,10 +117,7 @@ tracktion::graph::NodeProperties InsertSendNode::getNodeProperties()
     tracktion::graph::NodeProperties props;
     props.hasAudio = owner.hasAudio();
     props.hasMidi = owner.hasMidi();
-    if (auto at = dynamic_cast<AudioTrack*> (owner.getOwnerTrack()))
-        props.numberOfChannels = props.hasAudio ? at->getChannelConfiguration().getNumChannels() : 0;
-    else
-        props.numberOfChannels = props.hasAudio ? 2 : 0;
+    props.numberOfChannels = props.hasAudio ? 2 : 0;
     props.latencyNumSamples = owner.getLatencyNumSamples();
 
     return props;

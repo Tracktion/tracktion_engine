@@ -1829,19 +1829,6 @@ std::unique_ptr<tracktion::graph::Node> createNodeForDevice (EditPlaybackContext
 {
     if (auto waveDevice = dynamic_cast<WaveOutputDevice*> (&device))
     {
-        // If the node's channel count doesn't match the device's expected source count,
-        // insert a conversion node so the device ChannelMap sees the right number of channels
-        const int nodeChannels = node->getNodeProperties().numberOfChannels;
-        const int deviceSourceChannels = static_cast<int> (waveDevice->getChannels().size());
-
-        if (nodeChannels != deviceSourceChannels
-            && nodeChannels > 0
-            && deviceSourceChannels > 0)
-        {
-            node = tracktion::graph::makeNode<ChannelRemappingNode> (std::move (node),
-                                                                     ChannelMap::conversion (nodeChannels, deviceSourceChannels));
-        }
-
         ChannelMap channelMap;
         int sourceIndex = 0;
 
