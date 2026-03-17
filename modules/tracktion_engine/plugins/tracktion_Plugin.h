@@ -139,6 +139,15 @@ public:
     virtual juce::String getVendor()                              { return "Tracktion"; }
     virtual juce::String getShortName (int /*suggestedLength*/)   { return getName(); }
 
+    /** Returns the custom name if set, otherwise the built-in getName(). */
+    juce::String getDisplayName() const;
+
+    /** Returns the raw custom name (may be empty). */
+    juce::String getCustomName() const;
+
+    /** Sets a custom display name. Trimmed and limited to 64 chars. Empty clears. */
+    void setCustomName (const juce::String&);
+
     /** A unique string to idenitify plugin independant of install location */
     virtual juce::String getIdentifierString()                    { return getPluginType(); }
 
@@ -427,6 +436,7 @@ protected:
     juce::CachedValue<AtomicWrapper<bool>> enabled;
     juce::CachedValue<bool> frozen, processing;
     juce::CachedValue<juce::String> quickParamName;
+    juce::CachedValue<juce::String> customName;
     juce::CachedValue<EditItemID> masterPluginID, sidechainSourceID;
 
     double sampleRate = 44100.0;

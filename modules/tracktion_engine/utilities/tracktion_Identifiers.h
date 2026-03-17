@@ -213,6 +213,7 @@ namespace IDs
     DECLARE_ID (polarity)
     DECLARE_ID (remapOnTempoChange)
     DECLARE_ID (quickParamName)
+    DECLARE_ID (customName)
     DECLARE_ID (masterPluginID)
     DECLARE_ID (sidechainSourceID)
     DECLARE_ID (startTime)

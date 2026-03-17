@@ -90,6 +90,7 @@ Plugin::Plugin (PluginCreationInfo info)
     processing.referTo (state, IDs::process, um, true);
     frozen.referTo (state, IDs::frozen, um);
     quickParamName.referTo (state, IDs::quickParamName, um);
+    customName.referTo (state, IDs::customName, um);
     masterPluginID.referTo (state, IDs::masterPluginID, um);
     sidechainSourceID.referTo (state, IDs::sidechainSourceID, um);
 
@@ -445,7 +446,34 @@ void Plugin::setFrozen (bool shouldBeFrozen)
 
 juce::String Plugin::getTooltip()
 {
-    return getName() + "$genericfilter";
+    return getDisplayName() + "$genericfilter";
+}
+
+juce::String Plugin::getDisplayName() const
+{
+    auto cn = customName.get().trim();
+    return cn.isNotEmpty() ? cn : getName();
+}
+
+juce::String Plugin::getCustomName() const
+{
+    return customName.get();
+}
+
+void Plugin::setCustomName (const juce::String& name)
+{
+    auto trimmed = name.trim();
+
+    if (trimmed.isEmpty())
+    {
+        state.removeProperty (IDs::customName, getUndoManager());
+        return;
+    }
+
+    if (trimmed.length() > 64)
+        trimmed = trimmed.substring (0, 64);
+
+    customName = trimmed;
 }
 
 void Plugin::reset() {}
