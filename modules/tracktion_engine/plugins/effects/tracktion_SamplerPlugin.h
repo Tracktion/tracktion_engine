@@ -55,7 +55,7 @@ public:
     juce::String getSelectableDescription() override    { return TRANS("Sampler"); }
     bool isSynth() override                             { return true; }
 
-    int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }
+    int getNumOutputChannelsGivenInputs (int) override                 { return 2; }
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;

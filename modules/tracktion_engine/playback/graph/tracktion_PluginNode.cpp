@@ -68,8 +68,8 @@ tracktion::graph::NodeProperties PluginNode::getNodeProperties()
 
     // Ensure audio plugins always get at least their declared minimum channel count,
     // even when the input node reports 0 channels (e.g. unconnected rack plugin).
-    // MIDI-only plugins (takesAudioInput()==false) are excluded — they legitimately need 0 channels.
-    if (plugin->takesAudioInput())
+    // Only truly MIDI-only plugins (no audio in, no audio out) are excluded.
+    if (plugin->takesAudioInput() || plugin->producesAudioWhenNoAudioInput())
         props.numberOfChannels = std::max (props.numberOfChannels,
                                            plugin->getInputChannelConfiguration().getNumChannels());
 

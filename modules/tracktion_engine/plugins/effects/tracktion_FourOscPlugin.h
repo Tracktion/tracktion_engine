@@ -178,7 +178,7 @@ public:
     juce::String getShortName (int) override            { return "4OSC"; }
     juce::String getSelectableDescription() override    { return TRANS("4OSC Plugin"); }
 
-    int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }
+    int getNumOutputChannelsGivenInputs (int) override                 { return 2; }
 
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
