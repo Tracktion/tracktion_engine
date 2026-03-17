@@ -113,8 +113,8 @@ private:
 
             for (size_t i = 0; i < map.entries.size(); ++i)
             {
-                expectEquals (map.entries[i].first, ref.entries[i].first);
-                expectEquals (map.entries[i].second, ref.entries[i].second);
+                expectEquals (map.entries[i].source, ref.entries[i].source);
+                expectEquals (map.entries[i].dest, ref.entries[i].dest);
             }
         }
 
@@ -127,8 +127,8 @@ private:
 
             for (size_t i = 0; i < map.entries.size(); ++i)
             {
-                expectEquals (map.entries[i].first, ref.entries[i].first);
-                expectEquals (map.entries[i].second, ref.entries[i].second);
+                expectEquals (map.entries[i].source, ref.entries[i].source);
+                expectEquals (map.entries[i].dest, ref.entries[i].dest);
             }
         }
 
@@ -138,10 +138,10 @@ private:
             // Should be: 0->0, 1->1, 1->2, 1->3
             expectEquals (static_cast<int> (map.size()), 4);
             expectEquals (map.getRequiredOutputChannels(), 4);
-            expectEquals (map.entries[0].first, 0); expectEquals (map.entries[0].second, 0);
-            expectEquals (map.entries[1].first, 1); expectEquals (map.entries[1].second, 1);
-            expectEquals (map.entries[2].first, 1); expectEquals (map.entries[2].second, 2);
-            expectEquals (map.entries[3].first, 1); expectEquals (map.entries[3].second, 3);
+            expectEquals (map.entries[0].source, 0); expectEquals (map.entries[0].dest, 0);
+            expectEquals (map.entries[1].source, 1); expectEquals (map.entries[1].dest, 1);
+            expectEquals (map.entries[2].source, 1); expectEquals (map.entries[2].dest, 2);
+            expectEquals (map.entries[3].source, 1); expectEquals (map.entries[3].dest, 3);
         }
 
         beginTest ("ChannelMap::conversion - general downmix 4 to 2");
@@ -150,10 +150,10 @@ private:
             // Should be: 0->0, 1->1, 2->1, 3->1
             expectEquals (static_cast<int> (map.size()), 4);
             expectEquals (map.getRequiredOutputChannels(), 2);
-            expectEquals (map.entries[0].first, 0); expectEquals (map.entries[0].second, 0);
-            expectEquals (map.entries[1].first, 1); expectEquals (map.entries[1].second, 1);
-            expectEquals (map.entries[2].first, 2); expectEquals (map.entries[2].second, 1);
-            expectEquals (map.entries[3].first, 3); expectEquals (map.entries[3].second, 1);
+            expectEquals (map.entries[0].source, 0); expectEquals (map.entries[0].dest, 0);
+            expectEquals (map.entries[1].source, 1); expectEquals (map.entries[1].dest, 1);
+            expectEquals (map.entries[2].source, 2); expectEquals (map.entries[2].dest, 1);
+            expectEquals (map.entries[3].source, 3); expectEquals (map.entries[3].dest, 1);
         }
     }
 

@@ -86,7 +86,7 @@ public:
     void prepareForNextBlock (TimePosition editTime) override;
     void applyToBuffer (const PluginRenderContext&) override;
 
-    juce::String getSelectableDescription() override    { return TRANS("ReWire Filter"); }
+    juce::String getSelectableDescription() override    { return TRANS("ReWire Plugin"); }
 
     bool takesMidiInput() override                      { return true; }
     bool takesAudioInput() override                     { return true; }

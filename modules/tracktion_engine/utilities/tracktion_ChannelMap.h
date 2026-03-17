@@ -16,17 +16,30 @@ namespace tracktion { inline namespace engine
 //==============================================================================
 /// Represents a mapping from source channels to destination channels.
 ///
-/// Each entry maps a source channel index to a destination channel index.
+/// Each entry maps a source channel index to a destination channel index
+/// with an optional gain factor (default 1.0).
 /// Multiple sources can map to the same destination (they will be summed).
 /// A single source can map to multiple destinations (it will be duplicated).
 struct ChannelMap
 {
+    struct Entry
+    {
+        int source;
+        int dest;
+        float gain = 1.0f;
+    };
+
     /// Creates an empty channel map.
     ChannelMap() = default;
 
-    /// Creates a channel map from a vector of source->dest pairs.
+    /// Creates a channel map from a vector of source->dest pairs (gain defaults to 1.0).
     explicit ChannelMap (std::vector<std::pair<int, int>> mappings)
-        : entries (std::move (mappings)) {}
+    {
+        entries.reserve (mappings.size());
+
+        for (auto& [s, d] : mappings)
+            entries.push_back ({ s, d, 1.0f });
+    }
 
     /// Creates an identity mapping for the given number of channels.
     static ChannelMap identity (int numChannels)
@@ -45,10 +58,13 @@ struct ChannelMap
         return ChannelMap ({ { 0, 0 }, { 0, 1 } });
     }
 
-    /// Creates a mapping that sums stereo to mono.
+    /// Creates a mapping that averages stereo to mono (each channel at 0.5 gain).
     static ChannelMap stereoToMono()
     {
-        return ChannelMap ({ { 0, 0 }, { 1, 0 } });
+        ChannelMap map;
+        map.entries.push_back ({ 0, 0, 0.5f });
+        map.entries.push_back ({ 1, 0, 0.5f });
+        return map;
     }
 
     /// Creates an appropriate conversion mapping between channel counts.
@@ -82,12 +98,16 @@ struct ChannelMap
         }
         else
         {
-            // Downmix: identity for channels that fit, sum remaining into last dest
-            for (int i = 0; i < toChannels; ++i)
+            // Downmix: identity for channels that fit, average remaining into last dest
+            for (int i = 0; i < toChannels - 1; ++i)
                 map.entries.push_back ({ i, i });
 
-            for (int i = toChannels; i < fromChannels; ++i)
-                map.entries.push_back ({ i, toChannels - 1 });
+            // Channels that fold into the last dest channel are averaged
+            const int numFolded = fromChannels - (toChannels - 1);
+            const float foldGain = 1.0f / static_cast<float> (numFolded);
+
+            for (int i = toChannels - 1; i < fromChannels; ++i)
+                map.entries.push_back ({ i, toChannels - 1, foldGain });
         }
 
         return map;
@@ -110,11 +130,11 @@ struct ChannelMap
     /// Returns the number of mappings.
     size_t size() const noexcept                { return entries.size(); }
 
-    /// Returns true if this is an identity mapping (each channel maps to itself).
+    /// Returns true if this is an identity mapping (each channel maps to itself at unity gain).
     bool isIdentity() const noexcept
     {
-        for (const auto& [src, dest] : entries)
-            if (src != dest)
+        for (const auto& e : entries)
+            if (e.source != e.dest || e.gain != 1.0f)
                 return false;
         return true;
     }
@@ -124,14 +144,14 @@ struct ChannelMap
     {
         int maxDest = 0;
 
-        for (const auto& [src, dest] : entries)
-            maxDest = std::max (maxDest, dest + 1);
+        for (const auto& e : entries)
+            maxDest = std::max (maxDest, e.dest + 1);
 
         return maxDest;
     }
 
     /// The source -> destination mappings.
-    std::vector<std::pair<int, int>> entries;
+    std::vector<Entry> entries;
 };
 
 }} // namespace tracktion::inline engine

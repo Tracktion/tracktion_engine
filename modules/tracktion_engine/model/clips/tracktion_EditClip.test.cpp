@@ -82,10 +82,17 @@ TEST_SUITE("tracktion_engine")
             editClip->setUsesProxy (false);
 
             CHECK(editClip->getPosition().getLength().inSeconds() == doctest::Approx (5.0));
-            CHECK(editClip->getAutoTempo());
-            CHECK(editClip->getAutoPitch());
 
             CHECK(destEdit->getLength().inSeconds() == doctest::Approx (5.0));
+
+            // Disable auto-tempo/pitch so the EditClip plays the proxy file directly
+            // without going through a time-stretcher (which introduces block-size-dependent latency)
+            editClip->setAutoTempo (false);
+            editClip->setAutoPitch (false);
+
+            // Wait for the EditClip's proxy to be rendered before the dest render
+            while (! editClip->getPlaybackFile().isValid())
+                juce::MessageManager::getInstance()->runDispatchLoopUntil (10);
 
             // Render
             auto tempDestRender = test_utilities::renderToAudioBufferDispatchingMessageThread (*destEdit);

@@ -70,10 +70,10 @@ void ChannelMapperPlugin::applyToBuffer (const PluginRenderContext& rc)
     juce::AudioBuffer<float> temp (numDestChannels, numSamples);
     temp.clear();
 
-    for (const auto& [src, dst] : currentMap.entries)
+    for (const auto& e : currentMap.entries)
     {
-        if (src < numDestChannels && dst < numDestChannels)
-            temp.addFrom (dst, 0, dest, src, startSample, numSamples);
+        if (e.source < numDestChannels && e.dest < numDestChannels)
+            temp.addFrom (e.dest, 0, dest, e.source, startSample, numSamples, e.gain);
     }
 
     // Copy back
@@ -105,7 +105,7 @@ void ChannelMapperPlugin::setChannelMap (const ChannelMap& newMap)
         if (i > 0)
             s << ",";
 
-        s << newMap.entries[i].first << ":" << newMap.entries[i].second;
+        s << newMap.entries[i].source << ":" << newMap.entries[i].dest;
     }
 
     channelMapState = s;

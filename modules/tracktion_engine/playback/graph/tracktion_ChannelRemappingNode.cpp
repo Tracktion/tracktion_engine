@@ -61,10 +61,10 @@ tracktion::graph::NodeProperties ChannelRemappingNode::getNodeProperties()
         props.numberOfChannels = channelMap.getRequiredOutputChannels();
 
         // Include mapping in hash
-        for (const auto& [src, dest] : channelMap.entries)
+        for (const auto& e : channelMap.entries)
         {
-            hash_combine (props.nodeID, src);
-            hash_combine (props.nodeID, dest);
+            hash_combine (props.nodeID, e.source);
+            hash_combine (props.nodeID, e.dest);
         }
     }
     else // ProcessorPassthrough
@@ -119,13 +119,18 @@ void ChannelRemappingNode::processExplicitMapping (ProcessContext& pc)
     pc.buffers.midi.copyFrom (inputBuffers.midi);
 
     // Remap audio channels - use add() to accumulate (allows multiple sources to one dest)
-    for (const auto& [src, dest] : channelMap.entries)
+    for (const auto& e : channelMap.entries)
     {
-        if (src < static_cast<int> (inputBuffers.audio.getNumChannels())
-            && dest < static_cast<int> (pc.buffers.audio.getNumChannels()))
+        if (e.source < static_cast<int> (inputBuffers.audio.getNumChannels())
+            && e.dest < static_cast<int> (pc.buffers.audio.getNumChannels()))
         {
-            add (pc.buffers.audio.getChannel (static_cast<choc::buffer::ChannelCount> (dest)),
-                 inputBuffers.audio.getChannel (static_cast<choc::buffer::ChannelCount> (src)));
+            auto destChan = pc.buffers.audio.getChannel (static_cast<choc::buffer::ChannelCount> (e.dest));
+            auto srcChan = inputBuffers.audio.getChannel (static_cast<choc::buffer::ChannelCount> (e.source));
+
+            if (e.gain == 1.0f)
+                add (destChan, srcChan);
+            else
+                add (destChan, srcChan, e.gain);
         }
     }
 }
