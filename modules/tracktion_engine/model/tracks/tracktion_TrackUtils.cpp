@@ -398,8 +398,8 @@ void moveAutomation (const juce::Array<TrackAutomationSection>& origSections, Ti
                 if (param->getCurve().getNumPoints() > 0)
                 {
                     TrackAutomationSection::ActiveParameters ap (*param);
-                    ap.curve.setState (param->getCurve().state);
                     ap.curve.setParentState (param->getCurve().parentState);
+                    ap.curve.setState (param->getCurve().state);
                     ap.curve.setParameterID (param->getCurve().getParameterID());
 
                     section.activeParameters.add (ap);
