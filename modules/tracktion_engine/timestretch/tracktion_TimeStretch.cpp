@@ -197,6 +197,8 @@ private:
             case TimeStretcher::ara:                   [[ fallthrough ]];
             case TimeStretcher::rubberbandMelodic:          [[ fallthrough ]];
             case TimeStretcher::rubberbandPercussive:       [[ fallthrough ]];
+            case TimeStretcher::signalsmithDefault:         [[ fallthrough ]];
+            case TimeStretcher::signalsmithCheaper:         [[ fallthrough ]];
             default:
                 jassertfalse;
                 return CElastiqueProV3If::kV3Pro;
@@ -392,6 +394,8 @@ private:
             case TimeStretcher::ara:                   [[ fallthrough ]];
             case TimeStretcher::rubberbandMelodic:          [[ fallthrough ]];
             case TimeStretcher::rubberbandPercussive:       [[ fallthrough ]];
+            case TimeStretcher::signalsmithDefault:         [[ fallthrough ]];
+            case TimeStretcher::signalsmithCheaper:         [[ fallthrough ]];
             default:
                 jassertfalse;
                 return CElastiqueProV3DirectIf::kV3Pro;
@@ -819,6 +823,143 @@ private:
 #endif // TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
 
 //==============================================================================
+#if TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wsign-conversion"
+ #pragma GCC diagnostic ignored "-Wconversion"
+ #pragma GCC diagnostic ignored "-Wshadow"
+ #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+ #pragma GCC diagnostic ignored "-Wunused-parameter"
+ #pragma GCC diagnostic ignored "-Wfloat-conversion"
+ #if __clang__
+  #pragma GCC diagnostic ignored "-Wimplicit-float-conversion"
+  #pragma GCC diagnostic ignored "-Wimplicit-int-float-conversion"
+  #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
+ #endif
+#endif
+
+#if JUCE_WINDOWS
+ #pragma warning (push)
+ #pragma warning (disable: 4244 4267)
+#endif
+
+} // namespace tracktion::inline engine
+#if __has_include(<signalsmith-stretch/signalsmith-stretch.h>)
+ #include <signalsmith-stretch/signalsmith-stretch.h>
+#elif __has_include("../3rd_party/signalsmith-stretch/signalsmith-stretch.h")
+ #include "../3rd_party/signalsmith-stretch/signalsmith-stretch.h"
+#else
+ #error "TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH enabled but not found in the search path!"
+#endif
+namespace tracktion::inline engine {
+
+#if JUCE_WINDOWS
+ #pragma warning (pop)
+#endif
+
+#ifdef __GNUC__
+ #pragma GCC diagnostic pop
+#endif
+
+struct SignalsmithStretcher  : public TimeStretcher::Stretcher
+{
+    SignalsmithStretcher (double sourceSampleRate, int samplesPerBlock, int numChannels_,
+                          TimeStretcher::Mode mode)
+        : numChannels (numChannels_),
+          samplesPerOutputBuffer (samplesPerBlock)
+    {
+        CRASH_TRACER
+
+        if (mode == TimeStretcher::signalsmithCheaper)
+            stretch.presetCheaper (numChannels, static_cast<float> (sourceSampleRate));
+        else
+            stretch.presetDefault (numChannels, static_cast<float> (sourceSampleRate));
+    }
+
+    bool isOk() const override      { return true; }
+
+    void reset() override
+    {
+        stretch.reset();
+        numSamplesToDrop = -1;
+        hasDoneFinalBlock = false;
+    }
+
+    bool setSpeedAndPitch (float speedRatio_, float semitonesUp) override
+    {
+        speedRatio = speedRatio_;
+        stretch.setTransposeSemitones (semitonesUp);
+
+        if (numSamplesToDrop == -1)
+            numSamplesToDrop = stretch.outputLatency();
+
+        return true;
+    }
+
+    int getFramesNeeded() const override
+    {
+        return juce::roundToInt (samplesPerOutputBuffer / speedRatio);
+    }
+
+    int getMaxFramesNeeded() const override
+    {
+        return samplesPerOutputBuffer * 4;
+    }
+
+    int processData (const float* const* inChannels, int numSamples, float* const* outChannels) override
+    {
+        CRASH_TRACER
+
+        if (numSamplesToDrop > 0)
+        {
+            // Generate latency + block output, then drop the latency portion
+            // and copy the remainder to outChannels. This is analogous to
+            // RubberBand's retrieve-and-discard approach.
+            const int totalOutput = numSamplesToDrop + samplesPerOutputBuffer;
+            AudioScratchBuffer outScratch (numChannels, totalOutput);
+            stretch.process (inChannels, numSamples,
+                             outScratch.buffer.getArrayOfWritePointers(), totalOutput);
+
+            const int toCopy = std::min (totalOutput - numSamplesToDrop, samplesPerOutputBuffer);
+
+            for (int c = 0; c < numChannels; ++c)
+                std::copy_n (outScratch.buffer.getReadPointer (c, numSamplesToDrop),
+                             toCopy, outChannels[c]);
+
+            numSamplesToDrop = 0;
+            return toCopy;
+        }
+
+        stretch.process (inChannels, numSamples, outChannels, samplesPerOutputBuffer);
+        return samplesPerOutputBuffer;
+    }
+
+    int flush (float* const* outChannels) override
+    {
+        if (hasDoneFinalBlock)
+            return 0;
+
+        hasDoneFinalBlock = true;
+        stretch.flush (outChannels, samplesPerOutputBuffer);
+        return samplesPerOutputBuffer;
+    }
+
+private:
+    signalsmith::stretch::SignalsmithStretch<float> stretch;
+    int numChannels = 0;
+    const int samplesPerOutputBuffer;
+    float speedRatio = 1.0f;
+    int numSamplesToDrop = -1;
+    bool hasDoneFinalBlock = false;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SignalsmithStretcher)
+};
+
+#endif // TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
+
+//==============================================================================
 TimeStretcher::TimeStretcher() {}
 TimeStretcher::~TimeStretcher() {}
 
@@ -834,6 +975,8 @@ static juce::String getRubberBandPercussive()       { return "RubberBand (" + TR
 static juce::String getElastiqueDirectPro()         { return "Elastique Direct (" + TRANS("Pro") + ")"; }
 static juce::String getElastiqueDirectEfficeint()   { return "Elastique Direct (" + TRANS("Efficient") + ")"; }
 static juce::String getElastiqueDirectMobile()      { return "Elastique Direct (" + TRANS("Mobile") + ")"; }
+static juce::String getSignalsmithDefault()          { return "Signalsmith (" + TRANS("Default") + ")"; }
+static juce::String getSignalsmithCheaper()          { return "Signalsmith (" + TRANS("Cheaper") + ")"; }
 
 TimeStretcher::Mode TimeStretcher::checkModeIsAvailable (Mode m)
 {
@@ -858,7 +1001,16 @@ TimeStretcher::Mode TimeStretcher::checkModeIsAvailable (Mode m)
         case rubberbandMelodic:
         case rubberbandPercussive:
        #endif
+       #if ! TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
+        case signalsmithDefault:
+        case signalsmithCheaper:
+       #endif
             return defaultMode;
+       #if TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
+        case signalsmithDefault:
+        case signalsmithCheaper:
+            return m;
+       #endif
        #if TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
         case soundtouchNormal:
         case soundtouchBetter:
@@ -910,6 +1062,11 @@ juce::StringArray TimeStretcher::getPossibleModes (Engine& e, bool excludeARA)
     s.add (getRubberBandPercussive());
    #endif
 
+   #if TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
+    s.add (getSignalsmithDefault());
+    s.add (getSignalsmithCheaper());
+   #endif
+
    #if TRACKTION_ENABLE_ARA
     if (! excludeARA)
     {
@@ -946,6 +1103,11 @@ TimeStretcher::Mode TimeStretcher::getModeFromName (Engine& e, const juce::Strin
     if (name == getSoundTouchBetter())      return soundtouchBetter;
    #endif
 
+   #if TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
+    if (name == getSignalsmithDefault())    return signalsmithDefault;
+    if (name == getSignalsmithCheaper())    return signalsmithCheaper;
+   #endif
+
    #if TRACKTION_ENABLE_ARA
     // Check if the name matches any ARA-compatible plugin
     for (const auto& desc : e.getPluginManager().getARACompatiblePlugDescriptions())
@@ -972,6 +1134,8 @@ juce::String TimeStretcher::getNameOfMode (const Mode mode)
         case soundtouchBetter:          return getSoundTouchBetter();
         case rubberbandMelodic:         return getRubberBandMelodic();
         case rubberbandPercussive:      return getRubberBandPercussive();
+        case signalsmithDefault:        return getSignalsmithDefault();
+        case signalsmithCheaper:        return getSignalsmithCheaper();
         case ara:                       return getARADefault();
         case disabled:
         case elastiqueTransient:
@@ -1008,7 +1172,7 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
     CRASH_TRACER
     jassert (stretcher == nullptr);
 
-   #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE || TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND || TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
+   #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE || TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND || TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH || TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
     switch (mode)
     {
        #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE
@@ -1059,6 +1223,19 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
        #else
         case rubberbandMelodic:     [[fallthrough]];
         case rubberbandPercussive:
+            break;
+       #endif
+
+       #if TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
+        case signalsmithDefault:
+        case signalsmithCheaper:
+            juce::ignoreUnused (options, realtime);
+            stretcher = std::make_unique<SignalsmithStretcher> (sourceSampleRate, samplesPerBlock, numChannels,
+                                                                mode);
+            break;
+       #else
+        case signalsmithDefault:    [[fallthrough]];
+        case signalsmithCheaper:
             break;
        #endif
 

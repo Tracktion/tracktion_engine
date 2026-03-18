@@ -200,6 +200,14 @@
  #define TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH 0
 #endif
 
+/** Config: TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
+    Enables time-stretching with the Signalsmith Stretch library.
+    This is a header-only library, so no additional linking is required.
+*/
+#ifndef TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
+ #define TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH 0
+#endif
+
 /** Config: TRACKTION_ENABLE_ABLETON_LINK
     Enables Ableton Link support.
     You must have Link in your search path if you enable this.

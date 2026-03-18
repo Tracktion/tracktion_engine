@@ -42,6 +42,14 @@ public:
         }
        #endif
 
+       #if TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
+        {
+            const auto mode = tracktion::engine::TimeStretcher::signalsmithDefault;
+            runPitchShiftTest (mode);
+            runTimestretchTest (mode);
+        }
+       #endif
+
        #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE
         {
             {

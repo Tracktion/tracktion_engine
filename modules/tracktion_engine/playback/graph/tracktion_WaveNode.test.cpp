@@ -409,6 +409,63 @@ private:
                 expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ 1.9_tp, 2.0_tp }, ts.sampleRate), 1.0f, 1.0f);
             }
         }
+
+        // Test each enabled time-stretch algorithm for correct latency compensation.
+        // A clip placed at 1s should produce silence before 1s and signal from 1s onwards,
+        // regardless of the algorithm's internal latency.
+        const TimeStretcher::Mode syncTestModes[] = {
+           #if TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
+            TimeStretcher::Mode::soundtouchBetter,
+           #endif
+           #if TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
+            TimeStretcher::Mode::rubberbandMelodic,
+           #endif
+           #if TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
+            TimeStretcher::Mode::signalsmithDefault,
+           #endif
+           #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE
+            TimeStretcher::Mode::elastiquePro,
+           #endif
+        };
+
+        for (auto mode : syncTestModes)
+        {
+            beginTest ("WaveNodeRealTime sync: " + TimeStretcher::getNameOfMode (mode));
+
+            auto node = std::make_unique<WaveNodeRealTime> (squareAudioFile,
+                                                            TimeRange (1_tp, fileLength),
+                                                            0_td,
+                                                            TimeRange(),
+                                                            LiveClipLevel(),
+                                                            1.0,
+                                                            ChannelConfiguration::discreteChannels (squareAudioFile.getNumChannels()),
+                                                            ChannelConfiguration::discreteChannels (1),
+                                                            processState,
+                                                            EditItemID(),
+                                                            true,
+                                                            ResamplingQuality::lagrange,
+                                                            SpeedFadeDescription(),
+                                                            std::nullopt,
+                                                            mode);
+
+            auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, (fileLength * 3.0).inSeconds());
+
+            // Before clip: should be silent
+            expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ 0s, fileLength }, ts.sampleRate), 0.0f, 0.0f);
+
+            // During clip (middle 80%): should have signal energy.
+            // Use the middle portion to avoid edge effects from windowing/crossfade.
+            auto clipRange = toSamples ({ 1.1_tp, 1.9_tp }, ts.sampleRate);
+            juce::AudioBuffer<float> clipSection (testContext->buffer.getArrayOfWritePointers(),
+                                                  testContext->buffer.getNumChannels(),
+                                                  (int) clipRange.getStart(), (int) clipRange.getLength());
+            float rms = clipSection.getRMSLevel (0, 0, clipSection.getNumSamples());
+            expect (rms > 0.5f,
+                    "Expected signal during clip region, but RMS was " + juce::String (rms, 4));
+
+            // After clip: should be silent
+            expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ toPosition (fileLength) + fileLength, fileLength }, ts.sampleRate), 0.0f, 0.0f);
+        }
     }
 };
 

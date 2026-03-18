@@ -13,7 +13,7 @@ namespace tracktion::inline engine {
 /**
     Handles time/pitch stretching using various supported libraries.
 
-    Currently supported libraries are SoundTouch, RubberBand and Elastique.
+    Currently supported libraries are SoundTouch, RubberBand, Elastique and Signalsmith Stretch.
     These libraries may require additional module config options to enable and
     fall under their own licence terms so make sure to check those before
     distributing any code.
@@ -48,11 +48,15 @@ public:
         elastiqueDirectPro = 12,        /**< Elastique Direct Pro good all round (@see ElastiqueProOptions). */
         elastiqueDirectEfficient = 13,  /**< Elastique Direct lower quality and lower CPU usage. */
         elastiqueDirectMobile = 14,     /**< Elastique Direct lower quality and lower CPU usage, optimised for mobile. */
+        signalsmithDefault = 15,        /**< Signalsmith Stretch default quality preset. */
+        signalsmithCheaper = 16,        /**< Signalsmith Stretch cheaper/faster preset. */
 
        #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE
         defaultMode = elastiquePro      /**< Default mode. */
        #elif TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
         defaultMode = rubberbandMelodic /**< Default mode. */
+       #elif TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
+        defaultMode = signalsmithDefault /**< Default mode. */
        #elif TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
         defaultMode = soundtouchBetter  /**< Default mode. */
        #else
