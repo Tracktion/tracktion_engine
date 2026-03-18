@@ -1562,7 +1562,7 @@ void AudioClipBase::reassignReferencedItem (const ReferencedItem& item,
         else
         {
             auto newFile = newRef.resolve (edit.engine);
-            sourceFileReference.setToDirectFileReference (newFile, true);
+            sourceFileReference.setToFile (newFile, SourceFileReference::PathStyle::chooseBest, false);
         }
     }
     else

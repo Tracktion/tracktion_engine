@@ -754,11 +754,7 @@ WaveCompManager::WaveCompManager (WaveAudioClip& owner)
                     auto destFile = getDefaultTakeFile (takeIndex);
 
                     if (destFile != juce::File())
-                        take.setProperty (IDs::source, project->getSourcePathForFile (destFile),
-                                          &owner.edit.getUndoManager());
-                    else
-                        take.setProperty (IDs::source, juce::Uuid().toString(),
-                                          &owner.edit.getUndoManager());
+                        setSourceFileForTake (takeIndex, destFile);
                 }
             }
         }
@@ -942,6 +938,18 @@ void WaveCompManager::setProjectItemIDForTake (int takeIndex, ProjectItemRef new
         takeTree.setProperty (IDs::source, newID.toString(), getUndoManager());
 }
 
+void WaveCompManager::setSourceFileForTake (int takeIndex, const juce::File& file) const
+{
+    auto takeTree = takesTree.getChild (takeIndex);
+    jassert (takeTree.isValid());
+
+    if (takeTree.isValid())
+    {
+        SourceFileReference sfr (clip.edit, takeTree, IDs::source);
+        sfr.setToFile (file, SourceFileReference::PathStyle::chooseBest, true);
+    }
+}
+
 ProjectItemRef WaveCompManager::getProjectItemRefForTake (int takeIndex) const
 {
     return clip.getTakes()[takeIndex];
@@ -1039,7 +1047,10 @@ juce::ValueTree WaveCompManager::addNewComp()
         if (destFile == juce::File())
             return {};
 
-        newTake.setProperty (IDs::source, project->getSourcePathForFile (destFile), nullptr);
+        {
+            SourceFileReference sfr (clip.edit, newTake, IDs::source);
+            sfr.setToFile (destFile, SourceFileReference::PathStyle::chooseBest, true);
+        }
     }
     else
     {

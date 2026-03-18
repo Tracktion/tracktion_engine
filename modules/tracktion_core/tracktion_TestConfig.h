@@ -56,6 +56,7 @@
 #define ENGINE_UNIT_TESTS_TIMESTRETCHER                 1
 #define ENGINE_UNIT_TESTS_CLIPS                         1
 #define ENGINE_UNIT_TESTS_SELECTABLE                    1
+#define ENGINE_UNIT_TESTS_SOURCE_FILE_REFERENCE         1
 #define ENGINE_UNIT_TESTS_AUDIO_FILE                    1
 #define ENGINE_UNIT_TESTS_AUDIO_FILE_CACHE              1
 #define ENGINE_UNIT_TESTS_VOLPANPLUGIN                  1

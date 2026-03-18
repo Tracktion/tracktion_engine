@@ -1373,20 +1373,6 @@ InputDeviceInstance::Destination* assignTrackAsInput (AudioTrack& destTrack, con
     return res ? *res : nullptr;
 }
 
-void setClipSourceFile (Clip& clip, const juce::File& file)
-{
-    auto& edit = clip.edit;
-    const bool useRelativePath = edit.filePathResolver && edit.editFileRetriever && edit.editFileRetriever().existsAsFile();
-
-    if (useRelativePath)
-        clip.getSourceFileReference().setToDirectFileReference (file, true);
-    else
-        clip.getSourceFileReference().setToProjectFileReference (file, true);
-
-    clip.sourceMediaChanged();
-    clip.propertiesChanged();
-}
-
 void convertAllSourcePaths (Edit& edit, bool useRelativePaths)
 {
     edit.clipCache.visitItems ([&] (Clip* clip)
@@ -1398,7 +1384,10 @@ void convertAllSourcePaths (Edit& edit, bool useRelativePaths)
         auto file = sfr.getFile();
 
         if (file.existsAsFile())
-            sfr.setToDirectFileReference (file, useRelativePaths);
+            sfr.setToFile (file,
+                                       useRelativePaths ? SourceFileReference::PathStyle::alwaysRelative
+                                                        : SourceFileReference::PathStyle::alwaysAbsolute,
+                                       false);
 
         // Also handle takes for WaveAudioClips
         if (auto wac = dynamic_cast<WaveAudioClip*> (clip))
@@ -1415,7 +1404,10 @@ void convertAllSourcePaths (Edit& edit, bool useRelativePaths)
                     auto takeFile = takeSfr.getFile();
 
                     if (takeFile.existsAsFile())
-                        takeSfr.setToDirectFileReference (takeFile, useRelativePaths);
+                        takeSfr.setToFile (takeFile,
+                                                    useRelativePaths ? SourceFileReference::PathStyle::alwaysRelative
+                                                                     : SourceFileReference::PathStyle::alwaysAbsolute,
+                                                    false);
                 }
             }
         }

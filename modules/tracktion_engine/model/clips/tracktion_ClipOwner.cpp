@@ -515,7 +515,7 @@ juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (ClipOwner& parent
         if (source != nullptr)
         {
             auto newState = clip_owner::createNewClipState (name, TrackItem::Type::wave, edit.createNewItemID(), position);
-            newState.setProperty (IDs::source, proj->getSourcePathForFile (sourceFile), nullptr);
+            newState.setProperty (IDs::source, SourceFileReference::findPathFromFile (edit, sourceFile, true), nullptr);
 
             if (auto c = insertClipWithState (parent, newState, name, TrackItem::Type::wave, position, deleteExistingClips, false))
                 if (auto wc = dynamic_cast<WaveAudioClip*> (c))
@@ -526,11 +526,14 @@ juce::ReferenceCountedObjectPtr<WaveAudioClip> insertWaveClip (ClipOwner& parent
         return {};
     }
 
-    // Insert with a relative path if possible, otherwise an absolute
+    // Insert with the appropriate source reference
     {
         auto newState = clip_owner::createNewClipState (name, TrackItem::Type::wave, edit.createNewItemID(), position);
-        const bool useRelativePath = edit.filePathResolver && edit.editFileRetriever && edit.editFileRetriever().existsAsFile();
-        newState.setProperty (IDs::source, SourceFileReference::findPathFromFile (edit, sourceFile, useRelativePath), nullptr);
+
+        {
+            SourceFileReference sfr (edit, newState, IDs::source);
+            sfr.setToFile (sourceFile, SourceFileReference::PathStyle::chooseBest, true);
+        }
 
         if (auto c = insertClipWithState (parent, newState, name, TrackItem::Type::wave, position, deleteExistingClips, false))
         {
@@ -553,15 +556,20 @@ WaveAudioClip::Ptr insertWaveClip (ClipOwner& parent, const juce::String& name, 
 
     auto newState = clip_owner::createNewClipState (name, TrackItem::Type::wave, edit.createNewItemID(), position);
 
-    // For folder-based projects, resolve to a relative path if possible
+    // Set the source reference — uses a file path for folder-based projects,
+    // or keeps the project item ID for file-based projects
     {
-        const bool useRelativePath = edit.filePathResolver && edit.editFileRetriever && edit.editFileRetriever().existsAsFile();
         auto file = SourceFileReference::findFileFromString (edit, sourceID.toString());
 
-        if (useRelativePath && file.existsAsFile())
-            newState.setProperty (IDs::source, SourceFileReference::findPathFromFile (edit, file, true), nullptr);
+        if (file.existsAsFile())
+        {
+            SourceFileReference sfr (edit, newState, IDs::source);
+            sfr.setToFile (file, SourceFileReference::PathStyle::chooseBest, true);
+        }
         else
+        {
             newState.setProperty (IDs::source, sourceID.toString(), nullptr);
+        }
     }
 
     if (auto c = insertClipWithState (parent, newState, name, TrackItem::Type::wave, position, deleteExistingClips, false))

@@ -26,9 +26,6 @@ juce::File getEditFileFromProjectManager (Edit&);
 /** Returns true if the ProjectItemRef is being used for any of the Edit's elements. */
 bool referencesProjectItem (Edit&, ProjectItemRef);
 
-/** Sets a clip's source file, using a relative path for folder-based projects. */
-void setClipSourceFile (Clip&, const juce::File&);
-
 /** Converts all clip source paths in an Edit to relative or absolute paths. */
 void convertAllSourcePaths (Edit&, bool useRelativePaths);
 

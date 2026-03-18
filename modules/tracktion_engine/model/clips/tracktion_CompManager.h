@@ -300,6 +300,7 @@ private:
     std::unique_ptr<CompUpdater> compUpdater;
 
     void setProjectItemIDForTake (int takeIndex, ProjectItemRef) const;
+    void setSourceFileForTake (int takeIndex, const juce::File&) const;
     ProjectItemRef getProjectItemRefForTake (int takeIndex) const;
     AudioFile getSourceFileForTake (int takeIndex) const;
     juce::File getDefaultTakeFile (int index) const;

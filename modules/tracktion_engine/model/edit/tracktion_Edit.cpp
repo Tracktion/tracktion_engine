@@ -832,6 +832,7 @@ void Edit::initialise (const Options& options)
 
     lastSignificantChange.referTo (state, IDs::lastSignificantChange, nullptr,
                                    juce::String::toHexString (juce::Time::getCurrentTime().toMilliseconds()));
+    alwaysUseRelativePaths.referTo (state, IDs::alwaysUseRelativePaths, nullptr, false);
 
     globalMacros = std::make_unique<GlobalMacros> (*this);
     initialiseTempoAndPitch();
@@ -3259,7 +3260,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
         if (auto wc = dynamic_cast<WaveAudioClip*> (audioTrack->insertNewClip (TrackItem::Type::wave, { 0_tp, 1_tp }, nullptr)))
         {
             wc->setUsesProxy (false);
-            wc->getSourceFileReference().setToDirectFileReference (file, true);
+            wc->getSourceFileReference().setToFile (file, SourceFileReference::PathStyle::chooseBest, true);
 
             if (editToMatch != nullptr)
             {

@@ -34,6 +34,7 @@ namespace IDs
     DECLARE_ID (VIDEO)
     DECLARE_ID (videoOffset)
     DECLARE_ID (level)
+    DECLARE_ID (alwaysUseRelativePaths)
     DECLARE_ID (automationLocked)
     DECLARE_ID (recordPunchInOut)
     DECLARE_ID (endToEnd)

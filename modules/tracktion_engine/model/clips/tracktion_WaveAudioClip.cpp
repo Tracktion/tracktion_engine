@@ -169,7 +169,7 @@ void WaveAudioClip::reassignReferencedItem (const ReferencedItem& item,
             auto path = SourceFileReference::findPathFromFile (edit, newFile, true);
 
             if (indexInList == getCurrentTake())
-                sourceFileReference.setToDirectFileReference (newFile, true);
+                sourceFileReference.setToFile (newFile, SourceFileReference::PathStyle::chooseBest, false);
 
             auto take = getTakesTree().getChild (indexInList);
 
@@ -203,7 +203,7 @@ void WaveAudioClip::addTake (const juce::File& f)
 
     {
         SourceFileReference sfr (edit, take, IDs::source);
-        sfr.setToDirectFileReference (f, true);
+        sfr.setToFile (f, SourceFileReference::PathStyle::chooseBest, true);
     }
 
     takesTree.addChild (take, -1, um);

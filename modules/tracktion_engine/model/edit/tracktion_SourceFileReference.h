@@ -31,14 +31,14 @@ public:
     ProjectItemRef getSourceProjectItemRef() const;
     ProjectItem::Ptr getSourceProjectItem() const;
 
-    void setToDirectFileReference (const juce::File&, bool useRelativePath);
+    enum class PathStyle { chooseBest, alwaysRelative, alwaysAbsolute };
 
-    /** Points this source at a new file via a project item.
-        If updateProjectItem is true and there isn't already a media id for this file,
-        it'll create one and add it to the project, or will update the current ProjectItem
-        if it doesn't yet point to a real file.
+    /** Sets this source to reference the given file.
+        If allowProjectItems is true and the edit is in a file-based project,
+        finds or creates a ProjectItem. Otherwise stores a direct file path
+        using the given PathStyle.
     */
-    void setToProjectFileReference (const juce::File&, bool updateProjectItem);
+    void setToFile (const juce::File&, PathStyle, bool allowProjectItems);
 
     void setToProjectFileReference (ProjectItemRef);
 
