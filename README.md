@@ -104,3 +104,4 @@ Tracktion Engine utilises and contains copies of the following libraries. Please
 - [magic_enum](https://www.github.com/Neargye/magic_enum) - MIT
 - [farbot](https://www.github.com/hogliux/farbot) - MIT
 - [doctest](https://www.github.com/doctest/doctest) - MIT
+- [signalsmith-stretch](https://www.github.com/Signalsmith-Audio/signalsmith-stretch) - MIT
