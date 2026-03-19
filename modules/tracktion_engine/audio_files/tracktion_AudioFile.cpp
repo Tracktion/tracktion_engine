@@ -492,6 +492,47 @@ private:
 };
 
 //==============================================================================
+struct MemoryBufferReader  : public FallbackReader
+{
+    MemoryBufferReader (choc::buffer::InterleavedView<const float> buf, double sr)
+        : sourceBuffer (buf)
+    {
+        sampleRate            = sr;
+        numChannels           = static_cast<unsigned int> (buf.getNumChannels());
+        lengthInSamples       = static_cast<juce::int64> (buf.getNumFrames());
+        usesFloatingPointData = true;
+        bitsPerSample         = 32;
+    }
+
+    void setReadTimeout (int) override {}
+
+    bool readSamples (int* const* destSamples, int numDestChannels,
+                      int startOffsetInDestBuffer,
+                      juce::int64 startSampleInFile,
+                      int numSamples) override
+    {
+        auto destOffset = static_cast<choc::buffer::FrameCount> (startOffsetInDestBuffer);
+        auto destEnd = static_cast<choc::buffer::FrameCount> (startOffsetInDestBuffer + numSamples);
+        auto srcStart = static_cast<choc::buffer::FrameCount> (startSampleInFile);
+        auto srcAvailable = sourceBuffer.getNumFrames() - std::min (srcStart, sourceBuffer.getNumFrames());
+
+        // usesFloatingPointData = true, so int** is really float**
+        auto dest = choc::buffer::createChannelArrayView (reinterpret_cast<float* const*> (destSamples),
+                                                          static_cast<choc::buffer::ChannelCount> (numDestChannels),
+                                                          destEnd)
+                        .getFrameRange ({ destOffset, destEnd });
+
+        auto src = sourceBuffer.getFrameRange ({ srcStart, srcStart + std::min (srcAvailable,
+                                                                                static_cast<choc::buffer::FrameCount> (numSamples)) });
+
+        choc::buffer::copyIntersectionAndClearOutside (dest, src);
+        return true;
+    }
+
+    choc::buffer::InterleavedView<const float> sourceBuffer;
+};
+
+//==============================================================================
 struct AudioFileManager::KnownFile
 {
     KnownFile (const AudioFile& f)
@@ -499,8 +540,15 @@ struct AudioFileManager::KnownFile
     {
     }
 
+    KnownFile (const AudioFile& f, AudioFileInfo i,
+               choc::buffer::InterleavedView<const float> buf)
+        : file (f), info (std::move (i)), memoryBuffer (buf)
+    {
+    }
+
     AudioFile file;
     AudioFileInfo info;
+    std::optional<choc::buffer::InterleavedView<const float>> memoryBuffer;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (KnownFile)
 };
@@ -849,8 +897,50 @@ AudioFileInfo AudioFileManager::getInfo (const AudioFile& file)
     return findOrCreateKnown (file).info;
 }
 
+void AudioFileManager::registerMemoryBuffer (const std::string& filename,
+                                             choc::buffer::InterleavedView<const float> buffer,
+                                             double sampleRate)
+{
+    AudioFile af (engine, juce::File (filename));
+
+    AudioFileInfo info (engine);
+    info.wasParsedOk      = true;
+    info.hashCode         = af.getHash();
+    info.sampleRate       = sampleRate;
+    info.lengthInSamples  = static_cast<SampleCount> (buffer.getNumFrames());
+    info.numChannels      = static_cast<int> (buffer.getNumChannels());
+    info.bitsPerSample    = 32;
+    info.isFloatingPoint  = true;
+    info.needsCachedProxy = false;
+
+    const juce::ScopedLock sl (knownFilesLock);
+    knownFiles[af.getHash()] = std::make_unique<KnownFile> (af, std::move (info), buffer);
+}
+
+void AudioFileManager::unregisterMemoryBuffer (const std::string& filename)
+{
+    AudioFile af (engine, juce::File (filename));
+    removeFile (af.getHash());
+}
+
+std::unique_ptr<FallbackReader> AudioFileManager::createMemoryReader (const AudioFile& file) const
+{
+    const juce::ScopedLock sl (knownFilesLock);
+
+    auto it = knownFiles.find (file.getHash());
+
+    if (it != knownFiles.end() && it->second->memoryBuffer.has_value())
+        return std::make_unique<MemoryBufferReader> (*(it->second->memoryBuffer),
+                                                     it->second->info.sampleRate);
+
+    return {};
+}
+
 bool AudioFileManager::checkFileTime (KnownFile& f)
 {
+    if (f.memoryBuffer.has_value())
+        return false;
+
     if (! f.info.wasParsedOk
         || f.info.fileModificationTime != f.file.getFile().getLastModificationTime())
     {

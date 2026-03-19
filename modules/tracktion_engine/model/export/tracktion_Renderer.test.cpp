@@ -65,6 +65,69 @@ TEST_SUITE("tracktion_engine")
         CHECK (thumbnail->getNumSamplesFinished() >= toSamples (fileLength, 44100.0));
         CHECK (thumbnail->getTotalLength() >= fileLength.inSeconds());
     }
+
+    TEST_CASE ("Renderer memory buffer clip")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& afm = engine.getAudioFileManager();
+
+        const choc::buffer::ChannelCount numChannels = 2;
+        const double sampleRate = 44100.0;
+        const auto clipLength = 2_td;
+        const auto numFrames = static_cast<choc::buffer::FrameCount> (toSamples (clipLength, sampleRate));
+
+        // Fill a stereo buffer with a constant value so we can verify it survives rendering
+        const float testValue = 0.5f;
+        choc::buffer::InterleavedBuffer<float> buffer (numChannels, numFrames);
+
+        for (choc::buffer::FrameCount f = 0; f < numFrames; ++f)
+            for (choc::buffer::ChannelCount ch = 0; ch < numChannels; ++ch)
+                buffer.getSample (ch, f) = testValue;
+
+        // Register with a key that matches the juce::File path we'll give the clip
+        const juce::File virtualFile ("/memory/test-buffer.wav");
+        const auto key = virtualFile.getFullPathName().toStdString();
+        afm.registerMemoryBuffer (key, buffer.getView(), sampleRate);
+
+        // Create an edit with one audio track and insert a clip referencing the memory buffer
+        auto edit = test_utilities::createTestEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+        auto clip = insertWaveClip (*track, {}, virtualFile,
+                                    { .time = { 0_tp, clipLength } },
+                                    DeleteExistingClips::no);
+        REQUIRE (clip != nullptr);
+
+        // Render the edit to a file
+        juce::TemporaryFile destFile (".wav");
+        Renderer::Parameters params (*edit);
+        params.destFile = destFile.getFile();
+        params.time = params.time.withLength (clipLength);
+        params.audioFormat = engine.getAudioFileFormatManager().getWavFormat();
+
+        std::atomic<bool> callbackFinished { false };
+        bool renderSucceeded = false;
+
+        auto handle = EditRenderer::render (std::move (params),
+                                            [&] (auto res)
+                                            {
+                                                renderSucceeded = res.has_value();
+                                                callbackFinished = true;
+                                            });
+
+        test_utilities::runDispatchLoopUntilTrue (callbackFinished);
+        CHECK (renderSucceeded);
+
+        // Read back the rendered file and verify samples match the source buffer
+        auto rendered = test_utilities::loadFileInToBuffer (engine, destFile.getFile());
+        REQUIRE (rendered.has_value());
+        CHECK_EQ (rendered->getNumChannels(), static_cast<int> (numChannels));
+        CHECK_EQ (rendered->getNumSamples(), static_cast<int> (numFrames));
+
+        for (int ch = 0; ch < rendered->getNumChannels(); ++ch)
+            CHECK (rendered->getRMSLevel (ch, 0, rendered->getNumSamples()) == doctest::Approx (testValue).epsilon (0.01));
+
+        afm.unregisterMemoryBuffer (key);
+    }
 }
 
 #endif

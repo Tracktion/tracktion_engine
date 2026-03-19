@@ -789,6 +789,11 @@ bool AudioFileCache::hasMappedReader (const AudioFile& af, SampleCount c) const
 AudioFileCache::Reader::Ptr AudioFileCache::createReader (const AudioFile& file)
 {
     CRASH_TRACER
+
+    // Check for registered memory buffer — bypass file I/O entirely
+    if (auto reader = engine.getAudioFileManager().createMemoryReader (file))
+        return new Reader (*this, nullptr, std::move (reader));
+
     const juce::ScopedWriteLock sl (fileListLock);
 
     if (auto f = getOrCreateCachedFile (file))

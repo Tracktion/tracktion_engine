@@ -33,6 +33,19 @@ public:
     void releaseFile (const AudioFile&);
     void releaseAllFiles();
 
+    /// Register a memory buffer as a virtual audio file.
+    /// The buffer data must remain valid for the lifetime of the registration.
+    void registerMemoryBuffer (const std::string& filename,
+                               choc::buffer::InterleavedView<const float> buffer,
+                               double sampleRate);
+
+    /// Unregister a previously registered memory buffer.
+    void unregisterMemoryBuffer (const std::string& filename);
+
+    /// If the given AudioFile is backed by a registered memory buffer, creates a
+    /// FallbackReader for it. Returns nullptr otherwise.
+    std::unique_ptr<FallbackReader> createMemoryReader (const AudioFile&) const;
+
     juce::AudioThumbnailCache& getAudioThumbnailCache()     { return *thumbnailCache; }
 
     Engine& engine;
