@@ -444,6 +444,10 @@ namespace tracktion::inline engine
 
             player.process (inputBuffer);
 
+            auto latencySamples = edit->getCurrentPlaybackContext()->getLatencySamples();
+            if (latencySamples > 0)
+                player.process (latencySamples);
+
             tc.stop (false, true);
 
             auto recordedClip = dynamic_cast<WaveAudioClip*> (destTrack.getClips()[0]);
