@@ -107,12 +107,26 @@ bool shouldUseRelativePath (Edit& edit, const juce::File& audioFile, const juce:
         return false;
 
     // Common ancestor depth check
-    // If both files share a common ancestor at depth > 2 from root
-    // (e.g. /Users/foo/project or C:\Users\foo\project), they're in the same
-    // user workspace -> use relative path
     auto commonAncestor = findCommonAncestor (editFile.getParentDirectory(), audioFile);
+    auto ancestorDepth = getPathDepth (commonAncestor);
 
-    return getPathDepth (commonAncestor) > 2;
+    // Deep common ancestor (e.g. /Users/foo/project) -> same workspace, use relative
+    if (ancestorDepth > 2)
+        return true;
+
+    // Shallow common ancestor (e.g. /tmp) but both files are close to it ->
+    // the relative path is simple and stable, so allow it.
+    // e.g. /tmp/myproject/audio/x.wav and /tmp/myproject/edits/y.edit -> ../audio/x.wav
+    if (ancestorDepth > 0)
+    {
+        auto audioDepth = getPathDepth (audioFile) - ancestorDepth;
+        auto editDepth  = getPathDepth (editFile.getParentDirectory()) - ancestorDepth;
+
+        if (audioDepth <= 3 && editDepth <= 3)
+            return true;
+    }
+
+    return false;
 
 }
 

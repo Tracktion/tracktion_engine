@@ -3427,6 +3427,11 @@ const char* ArchiveTest_trkarch = (const char*) ArchiveTest_trkarch_local;
 const unsigned int ArchiveTest_trkarchSize = 237590;
 
 
+static choc::file::TempFile createTestTempDir()
+{
+    return choc::file::TempFile ("tracktion/" + choc::file::TempFile::createRandomFilename ("tracktion_archive_test", ""));
+}
+
 TEST_SUITE ("tracktion_engine")
 {
     TEST_CASE ("Archive: single Edit archive")
@@ -3434,7 +3439,7 @@ TEST_SUITE ("tracktion_engine")
         auto& engine = *Engine::getEngines()[0];
         auto& pm = engine.getProjectManager();
 
-        choc::file::TempFile tempDir (choc::file::TempFile::createRandomFilename ("tracktion_archive_test", ""));
+        auto tempDir = createTestTempDir();
         auto tempDirFile = juce::File (tempDir.file.string());
 
         // Create a folder-based project
@@ -3523,7 +3528,7 @@ TEST_SUITE ("tracktion_engine")
         auto& engine = *Engine::getEngines()[0];
         auto& pm = engine.getProjectManager();
 
-        choc::file::TempFile tempDir (choc::file::TempFile::createRandomFilename ("tracktion_archive_test", ""));
+        auto tempDir = createTestTempDir();
         auto tempDirFile = juce::File (tempDir.file.string());
 
         // Create a folder-based project with 2 edits
@@ -3601,7 +3606,7 @@ TEST_SUITE ("tracktion_engine")
         auto& engine = *Engine::getEngines()[0];
 
         // Random file should not be an archive
-        choc::file::TempFile tempDir (choc::file::TempFile::createRandomFilename ("tracktion_archive_test", ""));
+        auto tempDir = createTestTempDir();
         auto tempDirFile = juce::File (tempDir.file.string());
 
         auto randomFile = tempDirFile.getChildFile ("random.dat");
@@ -3642,7 +3647,7 @@ TEST_SUITE ("tracktion_engine")
         auto& engine = *Engine::getEngines()[0];
         auto& pm = engine.getProjectManager();
 
-        choc::file::TempFile tempDir (choc::file::TempFile::createRandomFilename ("tracktion_archive_test", ""));
+        auto tempDir = createTestTempDir();
         auto tempDirFile = juce::File (tempDir.file.string());
 
         // 1. Create a file-based project with an edit + audio
@@ -3796,7 +3801,7 @@ TEST_SUITE ("tracktion_engine")
         auto& engine = *Engine::getEngines()[0];
         auto& pm = engine.getProjectManager();
 
-        choc::file::TempFile tempDir (choc::file::TempFile::createRandomFilename ("tracktion_archive_test", ""));
+        auto tempDir = createTestTempDir();
         auto tempDirFile = juce::File (tempDir.file.string());
 
         // 1. Write the embedded binary data to a .trkarch temp file
