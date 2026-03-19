@@ -842,7 +842,7 @@ private:
 
 #if JUCE_WINDOWS
  #pragma warning (push)
- #pragma warning (disable: 4244 4267)
+ #pragma warning (disable: 4127 4244 4267 4305 4456)
 #endif
 
 } // namespace tracktion::inline engine
