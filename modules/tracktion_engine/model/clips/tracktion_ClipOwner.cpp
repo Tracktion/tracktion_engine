@@ -605,13 +605,13 @@ MidiClip::Ptr insertMIDIClip (ClipOwner& parent, TimeRange position)
     return insertMIDIClip (parent, TrackItem::getSuggestedNameForNewItem (TrackItem::Type::midi), position);
 }
 
-EditClip::Ptr insertEditClip (ClipOwner& parent, TimeRange position, ProjectItemRef sourceID)
+EditClip::Ptr insertEditClip (ClipOwner& parent, TimeRange position, ProjectItemRef sourceRef)
 {
     CRASH_TRACER
 
     auto name = TrackItem::getSuggestedNameForNewItem (TrackItem::Type::edit);
     auto newState = clip_owner::createNewClipState (name, TrackItem::Type::edit, parent.getClipOwnerEdit().createNewItemID(), { position, TimeDuration() });
-    newState.setProperty (IDs::source, sourceID.toString(), nullptr);
+    newState.setProperty (IDs::source, sourceRef.toString(), nullptr);
 
     if (auto c = insertClipWithState (parent, newState, name, TrackItem::Type::edit, { position, 0_td }, DeleteExistingClips::no, false))
     {

@@ -401,9 +401,9 @@ MidiClip::Ptr ClipTrack::insertMIDIClip (TimeRange position, SelectionManager* s
     return insertMIDIClip (TrackItem::getSuggestedNameForNewItem (TrackItem::Type::midi), position, sm);
 }
 
-EditClip::Ptr ClipTrack::insertEditClip (TimeRange position, ProjectItemRef sourceID)
+EditClip::Ptr ClipTrack::insertEditClip (TimeRange position, ProjectItemRef sourceRef)
 {
-    return engine::insertEditClip (*this, position, sourceID);
+    return engine::insertEditClip (*this, position, sourceRef);
 }
 
 void ClipTrack::deleteRegion (TimeRange range, SelectionManager* sm)
