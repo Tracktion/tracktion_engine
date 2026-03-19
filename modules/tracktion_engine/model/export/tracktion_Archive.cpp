@@ -149,6 +149,9 @@ bool ArchiveJob::copyToTempDir()
 
     if (auto project = std::get_if<Project*> (&source))
     {
+        // Flush any pending changes before copying
+        (*project)->save();
+
         // Copy the whole project folder to temp
         auto srcDir = (*project)->getDefaultDirectory();
 

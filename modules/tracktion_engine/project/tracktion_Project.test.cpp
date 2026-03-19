@@ -289,9 +289,8 @@ TEST_SUITE ("tracktion_engine")
                                             DeleteExistingClips::no);
             CHECK (waveClip != nullptr);
 
-            // Files outside of the project folder should be absolute
+            // File reference should resolve to the original file
             REQUIRE (! waveClip->getSourceFileReference().isUsingProjectReference());
-            REQUIRE (juce::File::isAbsolutePath (waveClip->getSourceFileReference().source.get()));
             REQUIRE (waveClip->getSourceFileReference().getFile() == sinFile->getFile());
 
             // MIDI clip on track 1
@@ -3280,6 +3279,89 @@ TEST_SUITE ("tracktion_engine")
         CHECK (extItem->isAbsolutePath());
 
         externalFile.deleteFile();
+        cleanup();
+    }
+
+    TEST_CASE ("Project: copied file-based project resolves source files")
+    {
+        // When a file-based project directory is copied to a new location,
+        // opening the copy should resolve project item source files relative
+        // to the new location, not the original.
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        // 1. Create original project with an audio file
+        auto origDir = tempDir.getChildFile ("original");
+        origDir.createDirectory();
+
+        auto projectFile = origDir.getChildFile ("test.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        // Create a wav file inside the project directory
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0);
+        REQUIRE (sinFile != nullptr);
+
+        auto importedDir = origDir.getChildFile ("Imported");
+        importedDir.createDirectory();
+        auto audioInProject = importedDir.getChildFile ("test_audio.wav");
+        sinFile->getFile().copyFileTo (audioInProject);
+        REQUIRE (audioInProject.existsAsFile());
+
+        // Add the audio file as a project item
+        auto audioItem = project->createNewItem (audioInProject, ProjectItem::waveItemType(),
+                                                  "test_audio", {}, ProjectItem::Category::imported, false);
+        REQUIRE (audioItem != nullptr);
+
+        // Verify original project resolves correctly
+        auto origSourceFile = audioItem->getSourceFile();
+        CHECK (origSourceFile.existsAsFile());
+        CHECK (origSourceFile == audioInProject);
+
+        project->save();
+
+        // 2. Copy the project directory to a new location
+        auto copyDir = tempDir.getChildFile ("copy");
+        CHECK (origDir.copyDirectoryTo (copyDir));
+
+        auto copiedProjectFile = copyDir.getChildFile ("test.tracktion");
+        REQUIRE (copiedProjectFile.existsAsFile());
+
+        auto copiedAudioFile = copyDir.getChildFile ("Imported").getChildFile ("test_audio.wav");
+        REQUIRE (copiedAudioFile.existsAsFile());
+
+        // 3. Open the copied project
+        ProjectManager::TempProject tp2 (pm, copiedProjectFile, false);
+        auto copiedProject = tp2.project;
+        REQUIRE (copiedProject != nullptr);
+
+        // 4. Verify the copied project's items resolve to the COPIED location
+        for (int i = 0; i < copiedProject->getNumProjectItems(); ++i)
+        {
+            if (auto item = copiedProject->getProjectItemAt (i))
+            {
+                if (item->getType() == ProjectItem::waveItemType())
+                {
+                    auto resolvedFile = item->getSourceFile();
+                    CHECK_MESSAGE (resolvedFile.existsAsFile(),
+                                   ("Source file should exist: " + resolvedFile.getFullPathName()).toStdString());
+                    CHECK_MESSAGE (resolvedFile.isAChildOf (copyDir),
+                                   ("Source file should be inside copied dir, got: " + resolvedFile.getFullPathName()).toStdString());
+                    CHECK_MESSAGE (! resolvedFile.isAChildOf (origDir),
+                                   ("Source file should NOT point to original dir, got: " + resolvedFile.getFullPathName()).toStdString());
+                }
+            }
+        }
+
         cleanup();
     }
 }

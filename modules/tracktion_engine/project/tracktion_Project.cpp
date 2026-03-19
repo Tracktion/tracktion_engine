@@ -214,7 +214,7 @@ Project::Ptr convertToFolderBasedProject (Project& project)
                         {
                             if (ref.itemRef.isValid())
                             {
-                                if (auto projItem = project.engine.getProjectManager().getProjectItem (ref.itemRef))
+                                if (auto projItem = project.getProjectItemFor (ref.itemRef))
                                     exportable->reassignReferencedItem (ref, ProjectItemRef::fromAbsolutePath (projItem->getSourceFile()), 0.0);
                             }
                         }

@@ -131,6 +131,7 @@ bool FileBasedProject::loadProjectItem (ObjectInfo& o)
         {
             in->setPosition (o.fileOffset);
             o.item = new ProjectItem (owner.engine, ProjectItemID (o.itemID, projectId), in);
+            o.item->ownerProject = &owner;
             return true;
         }
     }

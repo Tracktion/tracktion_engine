@@ -96,7 +96,7 @@ bool shouldUseRelativePath (Edit& edit, const juce::File& audioFile, const juce:
     // Files inside the project folder -> always relative
     if (auto proj = getProjectForEdit (edit))
     {
-        auto projectDir = proj->getProjectFile().getParentDirectory();
+        auto projectDir = proj->getDefaultDirectory();
 
         if (audioFile.isAChildOf (projectDir))
             return true;
