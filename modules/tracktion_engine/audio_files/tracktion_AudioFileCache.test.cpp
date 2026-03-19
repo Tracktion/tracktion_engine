@@ -72,7 +72,7 @@ static AudioFileCacheTests audioFileCacheTests;
 namespace tracktion::inline engine {
 
 //==============================================================================
-class JUCEBufferingAudioReaderWrapper   : public FallbackReader
+class JUCEBufferingAudioReaderWrapper   : public AudioFormatReaderWithTimeout
 {
 public:
     JUCEBufferingAudioReaderWrapper (std::unique_ptr<juce::BufferingAudioReader> sourceReader)
@@ -104,7 +104,7 @@ private:
 
 
 //==============================================================================
-class TracktionBufferedFileReader   : public FallbackReader
+class TracktionBufferedFileReader   : public AudioFormatReaderWithTimeout
 {
 public:
     TracktionBufferedFileReader (std::unique_ptr<BufferedFileReader> sourceReader)
@@ -279,7 +279,7 @@ private:
             auto cacheReader = engine.getAudioFileManager().cache.createReader (af,
                                                                                 [] (juce::AudioFormatReader* sourceReader,
                                                                                     juce::TimeSliceThread& timeSliceThread,
-                                                                                    int samplesToBuffer) -> std::unique_ptr<FallbackReader>
+                                                                                    int samplesToBuffer) -> std::unique_ptr<AudioFormatReaderWithTimeout>
                                                                                 {
                                                                                      return std::make_unique<JUCEBufferingAudioReaderWrapper> (std::make_unique<juce::BufferingAudioReader> (sourceReader,
                                                                                                                                                                                              timeSliceThread,
@@ -313,7 +313,7 @@ private:
 //            auto cacheReader = engine.getAudioFileManager().cache.createReader (af,
 //                                                                                [] (juce::AudioFormatReader* sourceReader,
 //                                                                                    juce::TimeSliceThread& timeSliceThread,
-//                                                                                    int samplesToBuffer) -> std::unique_ptr<FallbackReader>
+//                                                                                    int samplesToBuffer) -> std::unique_ptr<AudioFormatReaderWithTimeout>
 //                                                                                {
 //                                                                                     return std::make_unique<TracktionBufferedFileReader> (std::make_unique<BufferedFileReader> (sourceReader,
 //                                                                                                                                                                                 timeSliceThread,
@@ -349,7 +349,7 @@ private:
             auto cacheReader = engine.getAudioFileManager().cache.createReader (af,
                                                                                 [&] (juce::AudioFormatReader*,
                                                                                      juce::TimeSliceThread&,
-                                                                                     int) -> std::unique_ptr<FallbackReader>
+                                                                                     int) -> std::unique_ptr<AudioFormatReaderWithTimeout>
                                                                                 {
                                                                                      return std::make_unique<MemoryMappedFileReader> (std::move (mappedFileAndReader));
                                                                                 });
@@ -381,7 +381,7 @@ private:
             auto cacheReader = engine.getAudioFileManager().cache.createReader (af,
                                                                                 [] (juce::AudioFormatReader* sourceReader,
                                                                                     juce::TimeSliceThread& timeSliceThread,
-                                                                                    int samplesToBuffer) -> std::unique_ptr<FallbackReader>
+                                                                                    int samplesToBuffer) -> std::unique_ptr<AudioFormatReaderWithTimeout>
                                                                                 {
                                                                                      return std::make_unique<JUCEBufferingAudioReaderWrapper> (std::make_unique<juce::BufferingAudioReader> (sourceReader,
                                                                                                                                                                                              timeSliceThread,
@@ -415,7 +415,7 @@ private:
 //            auto cacheReader = engine.getAudioFileManager().cache.createReader (af,
 //                                                                                [] (juce::AudioFormatReader* sourceReader,
 //                                                                                    juce::TimeSliceThread& timeSliceThread,
-//                                                                                    int samplesToBuffer) -> std::unique_ptr<FallbackReader>
+//                                                                                    int samplesToBuffer) -> std::unique_ptr<AudioFormatReaderWithTimeout>
 //                                                                                {
 //                                                                                     return std::make_unique<TracktionBufferedFileReader> (std::make_unique<BufferedFileReader> (sourceReader,
 //                                                                                                                                                                                 timeSliceThread,

@@ -10,10 +10,10 @@
 
 namespace tracktion::inline engine {
 
-struct FallbackReader  : public juce::AudioFormatReader
+struct AudioFormatReaderWithTimeout  : public juce::AudioFormatReader
 {
     /** Constructor. */
-    FallbackReader();
+    AudioFormatReaderWithTimeout();
 
     /** Subclassed must override this to set the timeout.
         A value of less than 0 means wait forever,
@@ -72,9 +72,9 @@ public:
         AudioFileCache& cache;
         void* file;
         std::atomic<SampleCount> readPos { 0 }, loopStart { 0 }, loopLength { 0 };
-        std::unique_ptr<FallbackReader> fallbackReader;
+        std::unique_ptr<AudioFormatReaderWithTimeout> fallbackReader;
 
-        Reader (AudioFileCache&, void*, std::unique_ptr<FallbackReader>);
+        Reader (AudioFileCache&, void*, std::unique_ptr<AudioFormatReaderWithTimeout>);
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Reader)
     };
@@ -86,15 +86,15 @@ public:
 
     /** @internal */
     Reader::Ptr createReader (const AudioFile&,
-                              const std::function<std::unique_ptr<FallbackReader> (juce::AudioFormatReader* sourceReader,
+                              const std::function<std::unique_ptr<AudioFormatReaderWithTimeout> (juce::AudioFormatReader* sourceReader,
                                                                                    juce::TimeSliceThread& timeSliceThread,
                                                                                    int samplesToBuffer)>&
-                              createFallbackReader);
+                              createAudioFormatReaderWithTimeout);
 
     /** @internal */
-    Reader::Ptr createFallbackReader (const std::function<std::unique_ptr<FallbackReader> (juce::TimeSliceThread& timeSliceThread,
+    Reader::Ptr createAudioFormatReaderWithTimeout (const std::function<std::unique_ptr<AudioFormatReaderWithTimeout> (juce::TimeSliceThread& timeSliceThread,
                                                                                            int samplesToBuffer)>&
-                                      createFallbackReader);
+                                      createAudioFormatReaderWithTimeout);
 
     //==============================================================================
     void setCacheSizeSamples (SampleCount samplesPerFile);

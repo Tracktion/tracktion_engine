@@ -45,7 +45,7 @@ private:
     bool readIntoBuffer (choc::buffer::FrameRange);
 };
 
-class BufferedFileReaderWrapper : public FallbackReader
+class BufferedFileReaderWrapper : public AudioFormatReaderWithTimeout
 {
 public:
     BufferedFileReaderWrapper (std::shared_ptr<BufferedAudioReader> s)

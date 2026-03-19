@@ -43,8 +43,8 @@ public:
     void unregisterMemoryBuffer (const std::string& filename);
 
     /// If the given AudioFile is backed by a registered memory buffer, creates a
-    /// FallbackReader for it. Returns nullptr otherwise.
-    std::unique_ptr<FallbackReader> createMemoryReader (const AudioFile&) const;
+    /// AudioFormatReaderWithTimeout for it. Returns nullptr otherwise.
+    std::unique_ptr<AudioFormatReaderWithTimeout> createMemoryReader (const AudioFile&) const;
 
     juce::AudioThumbnailCache& getAudioThumbnailCache()     { return *thumbnailCache; }
 

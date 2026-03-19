@@ -12,8 +12,8 @@ namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================
-FallbackReader::FallbackReader()
-    : juce::AudioFormatReader (nullptr, "FallbackReader")
+AudioFormatReaderWithTimeout::AudioFormatReaderWithTimeout()
+    : juce::AudioFormatReader (nullptr, "AudioFormatReaderWithTimeout")
 {
 }
 
@@ -815,9 +815,9 @@ AudioFileCache::Reader::Ptr AudioFileCache::createReader (const AudioFile& file)
 }
 
 AudioFileCache::Reader::Ptr AudioFileCache::createReader (const AudioFile& file,
-                                                          const std::function<std::unique_ptr<FallbackReader> (juce::AudioFormatReader* sourceReader,
+                                                          const std::function<std::unique_ptr<AudioFormatReaderWithTimeout> (juce::AudioFormatReader* sourceReader,
                                                                                                                juce::TimeSliceThread& timeSliceThread,
-                                                                                                               int samplesToBuffer)>& createFallbackReader)
+                                                                                                               int samplesToBuffer)>& createAudioFormatReaderWithTimeout)
 {
     CRASH_TRACER
     const juce::ScopedWriteLock sl (fileListLock);
@@ -832,7 +832,7 @@ AudioFileCache::Reader::Ptr AudioFileCache::createReader (const AudioFile& file,
     if (auto reader = AudioFileUtils::createReaderFor (engine, file.getFile()))
     {
         backgroundReaderThread.startThread (juce::Thread::Priority::low);
-        auto fallbackReader = createFallbackReader (reader, backgroundReaderThread,
+        auto fallbackReader = createAudioFormatReaderWithTimeout (reader, backgroundReaderThread,
                                                     48000 * 5);
         return new Reader (*this, nullptr, std::move (fallbackReader));
     }
@@ -840,12 +840,12 @@ AudioFileCache::Reader::Ptr AudioFileCache::createReader (const AudioFile& file,
     return {};
 }
 
-AudioFileCache::Reader::Ptr AudioFileCache::createFallbackReader (const std::function<std::unique_ptr<FallbackReader> (juce::TimeSliceThread& timeSliceThread,
+AudioFileCache::Reader::Ptr AudioFileCache::createAudioFormatReaderWithTimeout (const std::function<std::unique_ptr<AudioFormatReaderWithTimeout> (juce::TimeSliceThread& timeSliceThread,
                                                                                                                        int samplesToBuffer)>&
-                                                                  createFallbackReader)
+                                                                  createAudioFormatReaderWithTimeout)
 {
     backgroundReaderThread.startThread (juce::Thread::Priority::low);
-    auto fallbackReader = createFallbackReader (backgroundReaderThread,
+    auto fallbackReader = createAudioFormatReaderWithTimeout (backgroundReaderThread,
                                                 48000 * 5);
     return new Reader (*this, nullptr, std::move (fallbackReader));
 }
@@ -861,7 +861,7 @@ void AudioFileCache::purgeOrphanReaders()
 }
 
 //==============================================================================
-AudioFileCache::Reader::Reader (AudioFileCache& c, void* f, std::unique_ptr<FallbackReader> fallback)
+AudioFileCache::Reader::Reader (AudioFileCache& c, void* f, std::unique_ptr<AudioFormatReaderWithTimeout> fallback)
     : cache (c), file (f), fallbackReader (std::move (fallback))
 {
     jassert (file != nullptr || fallbackReader != nullptr);

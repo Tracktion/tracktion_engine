@@ -2075,7 +2075,7 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
     {
         if (auto bufferedFileReader = audioFile.engine->getBufferedAudioFileManager().get (audioFile.getFile()))
         {
-            fileCacheReader = audioFile.engine->getAudioFileManager().cache.createFallbackReader ([&bufferedFileReader] (juce::TimeSliceThread&, int) mutable -> std::unique_ptr<FallbackReader>
+            fileCacheReader = audioFile.engine->getAudioFileManager().cache.createAudioFormatReaderWithTimeout ([&bufferedFileReader] (juce::TimeSliceThread&, int) mutable -> std::unique_ptr<AudioFormatReaderWithTimeout>
                                                                                                   {
                                                                                                       return std::make_unique<BufferedFileReaderWrapper> (std::move (bufferedFileReader));
                                                                                                   });

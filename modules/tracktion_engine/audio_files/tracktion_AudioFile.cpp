@@ -492,7 +492,7 @@ private:
 };
 
 //==============================================================================
-struct MemoryBufferReader  : public FallbackReader
+struct MemoryBufferReader  : public AudioFormatReaderWithTimeout
 {
     MemoryBufferReader (choc::buffer::InterleavedView<const float> buf, double sr)
         : sourceBuffer (buf)
@@ -923,7 +923,7 @@ void AudioFileManager::unregisterMemoryBuffer (const std::string& filename)
     removeFile (af.getHash());
 }
 
-std::unique_ptr<FallbackReader> AudioFileManager::createMemoryReader (const AudioFile& file) const
+std::unique_ptr<AudioFormatReaderWithTimeout> AudioFileManager::createMemoryReader (const AudioFile& file) const
 {
     const juce::ScopedLock sl (knownFilesLock);
 
