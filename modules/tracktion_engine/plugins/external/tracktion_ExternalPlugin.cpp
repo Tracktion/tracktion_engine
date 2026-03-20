@@ -1488,7 +1488,26 @@ void ExternalPlugin::processPluginBlock (juce::AudioPluginInstance& pluginInstan
 //==============================================================================
 int ExternalPlugin::getNumOutputChannelsGivenInputs (int)
 {
-    return std::max (1, getNumOutputs());
+    if (auto pi = getAudioPluginInstance())
+        return std::max (1, pi->getMainBusNumOutputChannels());
+
+    return 1;
+}
+
+ChannelConfiguration ExternalPlugin::getMainBusInputChannelConfiguration() const
+{
+    if (auto pi = getAudioPluginInstance())
+        return ChannelConfiguration::canonical (pi->getMainBusNumInputChannels());
+
+    return ChannelConfiguration::stereo();
+}
+
+ChannelConfiguration ExternalPlugin::getMainBusOutputChannelConfiguration() const
+{
+    if (auto pi = getAudioPluginInstance())
+        return ChannelConfiguration::canonical (pi->getMainBusNumOutputChannels());
+
+    return ChannelConfiguration::stereo();
 }
 
 void ExternalPlugin::getChannelNames (juce::StringArray* ins,
@@ -1693,7 +1712,10 @@ bool ExternalPlugin::isDisabled()
     return engine.getEngineBehaviour().isPluginDisabled (identiferString);
 }
 
-int ExternalPlugin::getNumInputs() const
+JUCE_BEGIN_IGNORE_WARNINGS_GCC_LIKE ("-Wdeprecated-declarations")
+JUCE_BEGIN_IGNORE_WARNINGS_MSVC (4996)
+
+int ExternalPlugin::getTotalNumInputChannels() const
 {
     if (auto pi = getAudioPluginInstance())
         return pi->getTotalNumInputChannels();
@@ -1701,13 +1723,16 @@ int ExternalPlugin::getNumInputs() const
     return 0;
 }
 
-int ExternalPlugin::getNumOutputs() const
+int ExternalPlugin::getTotalNumOutputChannels() const
 {
     if (auto pi = getAudioPluginInstance())
         return pi->getTotalNumOutputChannels();
 
     return 0;
 }
+
+JUCE_END_IGNORE_WARNINGS_GCC_LIKE
+JUCE_END_IGNORE_WARNINGS_MSVC
 
 bool ExternalPlugin::setBusesLayout (juce::AudioProcessor::BusesLayout layout)
 {

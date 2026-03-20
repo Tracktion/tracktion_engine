@@ -36,8 +36,8 @@ public:
     bool isSynth() override                             { return true; }
     bool canBeAddedToRack() override                    { return false; }
     int getNumOutputChannelsGivenInputs (int numInputs) override;
-    ChannelConfiguration getInputChannelConfiguration() const override;
-    ChannelConfiguration getOutputChannelConfiguration() const override;
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override;
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override;
     double getLatencySeconds() override;
     bool needsConstantBufferSize() override             { return true; }
 

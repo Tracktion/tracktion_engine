@@ -15,6 +15,11 @@ namespace tracktion::inline engine {
 juce::String createIdentifierString (const juce::PluginDescription&);
 
 
+/** Wraps a juce::AudioPluginInstance (VST2, VST3, AU, etc.) as a tracktion Plugin.
+
+    Handles lifecycle (async loading, state persistence), parameter bridging,
+    bus layout management, and dry/wet mixing for hosted third-party plugins.
+*/
 class ExternalPlugin  : public Plugin
 {
 public:
@@ -27,11 +32,14 @@ public:
 
     void selectableAboutToBeDeleted() override;
 
+    /** Creates the ValueTree state for inserting an ExternalPlugin into an Edit. */
     static juce::ValueTree create (Engine&, const juce::PluginDescription&);
 
     void processingChanged() override;
 
     //==============================================================================
+    // Initialisation & lifecycle
+
     void initialiseFully() override;
     void forceFullReinitialise();
 
@@ -46,10 +54,21 @@ public:
 
     static const char* xmlTypeName;
 
+    //==============================================================================
+    // State persistence
+
     void flushPluginStateToValueTree() override;
+
+    /** Writes the current bus layout to the plugin's ValueTree state. */
     void flushBusesLayoutToValueTree();
+
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
+
+    /** Extracts the raw plugin state blob from the ValueTree. */
     void getPluginStateFromTree (juce::MemoryBlock&);
+
+    //==============================================================================
+    // Processing & runtime overrides
 
     void updateFromMirroredPluginIfNeeded (Plugin&) override;
 
@@ -64,8 +83,16 @@ public:
 
     void applyToBuffer (const PluginRenderContext&) override;
 
+    //==============================================================================
+    // Channel configuration
+    //
+    // Main-bus overrides report only the main I/O bus for track routing.
+    // getChannelNames() reports ALL channels including sidechain.
+
     bool producesAudioWhenNoAudioInput() override   { return isAutomationNeeded() || isSynth() || ! noTail(); }
     int getNumOutputChannelsGivenInputs (int numInputs) override;
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override;
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override;
     void getChannelNames (juce::StringArray* ins, juce::StringArray* outs) override;
 
     bool isVST() const noexcept             { return desc.pluginFormatName == "VST"; }
@@ -99,13 +126,13 @@ public:
     const char* getDebugName() const noexcept   { return debugName.toUTF8(); }
 
     //==============================================================================
-    int getNumInputs() const;
-    int getNumOutputs() const;
+    // Bus layout
 
-    /** Attempts to change the layout of the plugin. */
+    /** Attempts to change the full bus layout of the wrapped plugin.
+        Temporarily stops playback to safely reconfigure. */
     bool setBusesLayout (juce::AudioProcessor::BusesLayout);
 
-    /** Attempts to change the layout of the plugin. */
+    /** Attempts to change a single bus layout. */
     bool setBusLayout (juce::AudioChannelSet, bool isInput, int busIndex);
 
     //==============================================================================
@@ -122,10 +149,16 @@ public:
     //==============================================================================
     const VSTXML* getVSTXML() const noexcept        { return vstXML.get(); }
 
+    //==============================================================================
+    // Plugin instance access
+
+    /** Returns the underlying juce::AudioPluginInstance, or nullptr if not yet loaded. */
     juce::AudioPluginInstance* getAudioPluginInstance() const;
 
+    /** The plugin's description (format, name, manufacturer, file path, etc.). */
     juce::PluginDescription desc;
 
+    /** Dry/wet mix values and their automatable parameters. */
     juce::CachedValue<float> dryValue, wetValue;
     AutomatableParameter::Ptr dryGain, wetGain;
 
@@ -133,6 +166,17 @@ public:
 
     //==============================================================================
     std::unique_ptr<EditorComponent> createEditor() override;
+
+    //==============================================================================
+    // Deprecated
+
+    /** @deprecated Use getAudioPluginInstance()->getTotalNumInputChannels() instead. */
+    [[deprecated ("Use getAudioPluginInstance()->getTotalNumInputChannels() instead")]]
+    int getTotalNumInputChannels() const;
+
+    /** @deprecated Use getAudioPluginInstance()->getTotalNumOutputChannels() instead. */
+    [[deprecated ("Use getAudioPluginInstance()->getTotalNumOutputChannels() instead")]]
+    int getTotalNumOutputChannels() const;
 
 private:
     //==============================================================================
@@ -197,7 +241,7 @@ private:
 };
 
 //==============================================================================
-/** specialised AutomatableParameter for wet/dry.
+/** Specialised AutomatableParameter for wet/dry.
     Having a subclass just lets it label itself more nicely.
  */
 struct PluginWetDryAutomatableParam  : public AutomatableParameter

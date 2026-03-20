@@ -711,9 +711,9 @@ void RackType::checkConnections()
             // Check for connections going to no longer available plugin IO pins
             if (auto ep = dynamic_cast<ExternalPlugin*> (getPluginForID (rc->sourceID)))
             {
-                if (ep->getAudioPluginInstance() != nullptr)
+                if (auto pi = ep->getAudioPluginInstance())
                 {
-                    if (rc->sourcePin < 0 || rc->sourcePin > ep->getNumOutputs())
+                    if (rc->sourcePin < 0 || rc->sourcePin > pi->getTotalNumOutputChannels())
                     {
                         state.removeChild (rc->state, getUndoManager());
                         continue;
@@ -723,9 +723,9 @@ void RackType::checkConnections()
 
             if (auto ep = dynamic_cast<ExternalPlugin*> (getPluginForID (rc->destID)))
             {
-                if (ep->getAudioPluginInstance() != nullptr)
+                if (auto pi = ep->getAudioPluginInstance())
                 {
-                    if (rc->destPin < 0 || rc->destPin > ep->getNumInputs())
+                    if (rc->destPin < 0 || rc->destPin > pi->getTotalNumInputChannels())
                     {
                         state.removeChild (rc->state, getUndoManager());
                         continue;

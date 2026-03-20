@@ -71,7 +71,7 @@ tracktion::graph::NodeProperties PluginNode::getNodeProperties()
     // Only truly MIDI-only plugins (no audio in, no audio out) are excluded.
     if (plugin->takesAudioInput() || plugin->producesAudioWhenNoAudioInput())
         props.numberOfChannels = std::max (props.numberOfChannels,
-                                           plugin->getInputChannelConfiguration().getNumChannels());
+                                           plugin->getMainBusInputChannelConfiguration().getNumChannels());
 
     if (maxNumChannels > 0)
         props.numberOfChannels = std::min (props.numberOfChannels, maxNumChannels);

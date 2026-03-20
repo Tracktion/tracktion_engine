@@ -323,12 +323,12 @@ juce::StringArray Plugin::getInputChannelNames()
     return ins;
 }
 
-ChannelConfiguration Plugin::getInputChannelConfiguration() const
+ChannelConfiguration Plugin::getMainBusInputChannelConfiguration() const
 {
     return ChannelConfiguration::stereo();
 }
 
-ChannelConfiguration Plugin::getOutputChannelConfiguration() const
+ChannelConfiguration Plugin::getMainBusOutputChannelConfiguration() const
 {
     return ChannelConfiguration::stereo();
 }

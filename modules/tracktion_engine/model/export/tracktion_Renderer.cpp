@@ -319,7 +319,9 @@ void Renderer::RenderTask::flushAllPlugins (const Plugin::Array& plugins,
             {
                 ep->reset();
 
-                if (ep->getNumInputs() == 0 && ep->getNumOutputs() == 0)
+                auto pi = ep->getAudioPluginInstance();
+
+                if (pi == nullptr || (pi->getTotalNumInputChannels() == 0 && pi->getTotalNumOutputChannels() == 0))
                     continue;
 
                 auto blockLength = samplesPerBlock / (double) sampleRate;
@@ -327,7 +329,7 @@ void Renderer::RenderTask::flushAllPlugins (const Plugin::Array& plugins,
 
                 for (int j = 0; j < blocks; j++)
                 {
-                    buffer.setSize (std::max (ep->getNumInputs(), ep->getNumOutputs()), samplesPerBlock);
+                    buffer.setSize (std::max (pi->getTotalNumInputChannels(), pi->getTotalNumOutputChannels()), samplesPerBlock);
                     buffer.clear();
                     auto channels = juce::AudioChannelSet::canonicalChannelSet (buffer.getNumChannels());
 

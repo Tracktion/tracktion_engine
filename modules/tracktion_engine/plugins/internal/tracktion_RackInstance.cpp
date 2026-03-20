@@ -376,12 +376,12 @@ int RackInstance::getNumOutputChannelsGivenInputs (int numInputs)
     return std::max (numInputs, numOutputChannels.get());
 }
 
-ChannelConfiguration RackInstance::getInputChannelConfiguration() const
+ChannelConfiguration RackInstance::getMainBusInputChannelConfiguration() const
 {
     return ChannelConfiguration::discreteChannels (numInputChannels);
 }
 
-ChannelConfiguration RackInstance::getOutputChannelConfiguration() const
+ChannelConfiguration RackInstance::getMainBusOutputChannelConfiguration() const
 {
     return ChannelConfiguration::discreteChannels (numOutputChannels);
 }

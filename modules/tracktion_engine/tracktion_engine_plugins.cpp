@@ -55,6 +55,7 @@ using namespace std::literals;
 #include "plugins/external/tracktion_ExternalAutomatableParameter.h"
 #include "plugins/external/tracktion_ExternalPluginBlacklist.h"
 #include "plugins/external/tracktion_ExternalPlugin.cpp"
+#include "plugins/external/tracktion_ExternalPlugin.test.cpp"
 
 #include "plugins/internal/tracktion_AuxReturn.cpp"
 #include "plugins/internal/tracktion_AuxSend.cpp"
