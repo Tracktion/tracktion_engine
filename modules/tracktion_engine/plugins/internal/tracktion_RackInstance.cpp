@@ -206,6 +206,16 @@ RackInstance::RackInstance (PluginCreationInfo info)
         createChannelMapping (0, 1, 1);
         createChannelMapping (1, 2, 2);
     }
+
+    // Default numInputChannels/numOutputChannels to the CHANNELMAP count for backward compat
+    numInputChannels.referTo (state, IDs::numInputChannels, um, channelMappings.size());
+    numOutputChannels.referTo (state, IDs::numOutputChannels, um, channelMappings.size());
+
+    // Ensure enough CHANNELMAPs exist for max(in, out)
+    int needed = std::max (numInputChannels.get(), numOutputChannels.get());
+
+    while (channelMappings.size() < needed)
+        createChannelMapping (channelMappings.size(), -1, -1);
 }
 
 RackInstance::~RackInstance()
@@ -356,6 +366,58 @@ juce::String RackInstance::getNoPinName()
 int RackInstance::getNumChannelMappings() const
 {
     return channelMappings.size();
+}
+
+int RackInstance::getNumInputChannels() const    { return numInputChannels; }
+int RackInstance::getNumOutputChannels() const   { return numOutputChannels; }
+
+int RackInstance::getNumOutputChannelsGivenInputs (int numInputs)
+{
+    return std::max (numInputs, numOutputChannels.get());
+}
+
+ChannelConfiguration RackInstance::getInputChannelConfiguration() const
+{
+    return ChannelConfiguration::discreteChannels (numInputChannels);
+}
+
+ChannelConfiguration RackInstance::getOutputChannelConfiguration() const
+{
+    return ChannelConfiguration::discreteChannels (numOutputChannels);
+}
+
+void RackInstance::trimChannelMappingsToSize (int needed)
+{
+    while (channelMappings.size() > needed)
+        removeLastChannelMapping();
+}
+
+void RackInstance::setNumInputChannels (int num)
+{
+    num = std::max (1, num);
+    numInputChannels = num;
+
+    int needed = std::max (num, numOutputChannels.get());
+
+    while (channelMappings.size() < needed)
+        createChannelMapping (channelMappings.size(), -1, -1);
+
+    trimChannelMappingsToSize (needed);
+    edit.restartPlayback();
+}
+
+void RackInstance::setNumOutputChannels (int num)
+{
+    num = std::max (1, num);
+    numOutputChannels = num;
+
+    int needed = std::max (numInputChannels.get(), num);
+
+    while (channelMappings.size() < needed)
+        createChannelMapping (channelMappings.size(), -1, -1);
+
+    trimChannelMappingsToSize (needed);
+    edit.restartPlayback();
 }
 
 int RackInstance::getInputMapping (int channelIndex) const

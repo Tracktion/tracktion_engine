@@ -35,7 +35,9 @@ public:
     bool producesAudioWhenNoAudioInput() override       { return true; }
     bool isSynth() override                             { return true; }
     bool canBeAddedToRack() override                    { return false; }
-    int getNumOutputChannelsGivenInputs (int numInputs) override  { return numInputs; }
+    int getNumOutputChannelsGivenInputs (int numInputs) override;
+    ChannelConfiguration getInputChannelConfiguration() const override;
+    ChannelConfiguration getOutputChannelConfiguration() const override;
     double getLatencySeconds() override;
     bool needsConstantBufferSize() override             { return true; }
 
@@ -57,6 +59,14 @@ public:
     //==============================================================================
     const EditItemID rackTypeID;
     const RackType::Ptr type;
+
+    /** Number of input/output channels (independent of each other). */
+    juce::CachedValue<int> numInputChannels, numOutputChannels;
+
+    int getNumInputChannels() const;
+    int getNumOutputChannels() const;
+    void setNumInputChannels (int);
+    void setNumOutputChannels (int);
 
     /** Number of channel mappings (dynamically sized). */
     int getNumChannelMappings() const;
@@ -115,6 +125,7 @@ private:
     juce::OwnedArray<ChannelMapping> channelMappings;
 
     void createChannelMapping (int channelIndex, int defaultInput, int defaultOutput);
+    void trimChannelMappingsToSize (int needed);
     void migrateFromLegacyFormat();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RackInstance)

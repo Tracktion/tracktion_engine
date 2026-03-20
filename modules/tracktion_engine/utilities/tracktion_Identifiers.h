@@ -195,6 +195,8 @@ namespace IDs
     DECLARE_ID (outputFrom)
     DECLARE_ID (inputGain)
     DECLARE_ID (outputGain)
+    DECLARE_ID (numInputChannels)
+    DECLARE_ID (numOutputChannels)
     DECLARE_ID (panLaw)
     DECLARE_ID (busNum)
     DECLARE_ID (auxSendSliderPos)

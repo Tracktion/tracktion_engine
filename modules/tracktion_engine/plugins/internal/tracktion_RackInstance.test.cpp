@@ -195,9 +195,52 @@ TEST_SUITE("tracktion_engine")
         auto rackType = RackType::createTypeToWrapPlugins (plugins, *edit);
         auto rackInstance = dynamic_cast<RackInstance*> (track->pluginList.insertPlugin (RackInstance::create (*rackType), 0).get());
 
+        // Default: numOutputChannels == 2 (from default stereo mappings)
         CHECK (rackInstance->getNumOutputChannelsGivenInputs (2) == 2);
         CHECK (rackInstance->getNumOutputChannelsGivenInputs (4) == 4);
         CHECK (rackInstance->getNumOutputChannelsGivenInputs (8) == 8);
+
+        // With numOutputChannels = 4, output should be at least 4
+        rackInstance->setNumOutputChannels (4);
+        CHECK (rackInstance->getNumOutputChannelsGivenInputs (2) == 4);
+        CHECK (rackInstance->getNumOutputChannelsGivenInputs (4) == 4);
+        CHECK (rackInstance->getNumOutputChannelsGivenInputs (8) == 8);
+    }
+
+    TEST_CASE ("Rack instance: separate input/output channel counts")
+    {
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+
+        Plugin::Array plugins;
+        VolumeAndPanPlugin::Ptr volPan (dynamic_cast<VolumeAndPanPlugin*> (edit->getPluginCache().getOrCreatePluginFor (VolumeAndPanPlugin::create()).get()));
+        plugins.add (volPan);
+        auto rackType = RackType::createTypeToWrapPlugins (plugins, *edit);
+        auto rackInstance = dynamic_cast<RackInstance*> (track->pluginList.insertPlugin (RackInstance::create (*rackType), 0).get());
+
+        // Default: both match CHANNELMAP count (2)
+        CHECK (rackInstance->getNumInputChannels() == 2);
+        CHECK (rackInstance->getNumOutputChannels() == 2);
+        CHECK (rackInstance->getNumChannelMappings() == 2);
+
+        // Set output channels to 3
+        rackInstance->setNumOutputChannels (3);
+        CHECK (rackInstance->getNumOutputChannels() == 3);
+        CHECK (rackInstance->getNumInputChannels() == 2);
+        CHECK (rackInstance->getNumChannelMappings() >= 3);
+        CHECK (rackInstance->getNumOutputChannelsGivenInputs (2) == 3);
+
+        // Set input channels to 4 — CHANNELMAP should grow
+        rackInstance->setNumInputChannels (4);
+        CHECK (rackInstance->getNumInputChannels() == 4);
+        CHECK (rackInstance->getNumChannelMappings() >= 4);
+
+        // Minimum is 1
+        rackInstance->setNumInputChannels (0);
+        CHECK (rackInstance->getNumInputChannels() == 1);
+        rackInstance->setNumOutputChannels (-5);
+        CHECK (rackInstance->getNumOutputChannels() == 1);
     }
 
     TEST_CASE ("Rack instance: linked input/output levels")

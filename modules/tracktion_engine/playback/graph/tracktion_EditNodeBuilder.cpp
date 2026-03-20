@@ -1344,24 +1344,32 @@ std::unique_ptr<tracktion::graph::Node> createNodeForRackInstance (RackInstance&
     // The input to the instance is referenced by the dry signal path
     auto* inputNode = node.get();
 
-    // Send
+    // Send — use numInputChannels
     // N.B. the channel indices from the RackInstance start at 1 so we need to subtract this to get a 0-indexed channel
     RackInstanceNode::ChannelMap sendChannelMap;
+    const int numSendChannels = rackInstance.getNumInputChannels();
 
-    for (int i = 0; i < rackInstance.getNumChannelMappings(); ++i)
-        sendChannelMap.push_back ({ i, rackInstance.getInputMapping (i) - 1,
-                                    rackInstance.getInputGainParam (i) });
+    for (int i = 0; i < numSendChannels; ++i)
+    {
+        if (i < rackInstance.getNumChannelMappings())
+            sendChannelMap.push_back ({ i, rackInstance.getInputMapping (i) - 1,
+                                        rackInstance.getInputGainParam (i) });
+    }
 
     node = makeNode<RackInstanceNode> (rackInstance, std::move (node), std::move (sendChannelMap), processState, sampleRateAndBlockSize);
     node = makeNode<SendNode> (std::move (node), rackInputID);
     node = makeNode<ReturnNode> (makeNode<SinkNode> (std::move (node)), rackOutputID);
 
-    // Return
+    // Return — use numOutputChannels
     RackInstanceNode::ChannelMap returnChannelMap;
+    const int numReturnChannels = rackInstance.getNumOutputChannels();
 
-    for (int i = 0; i < rackInstance.getNumChannelMappings(); ++i)
-        returnChannelMap.push_back ({ rackInstance.getOutputMapping (i) - 1, i,
-                                      rackInstance.getOutputGainParam (i) });
+    for (int i = 0; i < numReturnChannels; ++i)
+    {
+        if (i < rackInstance.getNumChannelMappings())
+            returnChannelMap.push_back ({ rackInstance.getOutputMapping (i) - 1, i,
+                                          rackInstance.getOutputGainParam (i) });
+    }
 
     node = makeNode<RackInstanceNode> (rackInstance, std::move (node), std::move (returnChannelMap), processState, sampleRateAndBlockSize);
 
