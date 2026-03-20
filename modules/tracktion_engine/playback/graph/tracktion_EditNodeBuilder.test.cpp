@@ -620,13 +620,13 @@ private:
             pluginsToWrap.add (busTrack->pluginList.getPlugins().getFirst());
             RackType::createTypeToWrapPlugins (pluginsToWrap, *edit);
 
-            beginTest ("Bus track with Rack — aux return receives signal: " + description);
+            beginTest ("Bus track with Rack - aux return receives signal: " + description);
             {
                 // Same as Test A: combined peak=2.0 proves aux return in Rack receives signal
                 expectPeak (*this, *edit, { 0s, durationInSeconds }, getAllTracks (*edit), 2.0f);
             }
 
-            beginTest ("Bus track with Rack — graph builds with no output: " + description);
+            beginTest ("Bus track with Rack - graph builds with no output: " + description);
             {
                 tracktion::graph::PlayHead playHead;
                 tracktion::graph::PlayHeadState playHeadState { playHead };
@@ -647,7 +647,7 @@ private:
                 testContext.processAll();
             }
 
-            beginTest ("Bus track with Rack — output set later: " + description);
+            beginTest ("Bus track with Rack - output set later: " + description);
             {
                 busTrack->getOutput().setOutputToDefaultDevice (false);
 
