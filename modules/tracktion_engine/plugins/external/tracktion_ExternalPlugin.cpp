@@ -260,7 +260,7 @@ void cleanUpDanglingPlugins()
 
 //==============================================================================
 #if JUCE_PLUGINHOST_VST
-struct ExtraVSTCallbacks  : public juce::VSTPluginFormat::ExtraFunctions
+struct ExtraVSTCallbacks  : public juce::AudioPluginExtensions::VSTClient::ExtraFunctions
 {
     ExtraVSTCallbacks (Edit& ed) : edit (ed) {}
 
@@ -1866,10 +1866,13 @@ void ExternalPlugin::completePluginInstanceCreation (std::unique_ptr<juce::Audio
     auto pi = getAudioPluginInstance();
 
    #if JUCE_PLUGINHOST_VST
-    if (auto xml = juce::VSTPluginFormat::getVSTXML (pi))
-        vstXML.reset (VSTXML::createFor (*xml));
+    if (auto vstClient = pi->getVSTClient())
+    {
+        if (auto xml = vstClient->getVSTXML())
+            vstXML.reset (VSTXML::createFor (*xml));
 
-    juce::VSTPluginFormat::setExtraFunctions (pi, new ExtraVSTCallbacks (edit));
+        vstClient->setExtraFunctions (juce::rawToUniquePtr (new ExtraVSTCallbacks (edit)));
+    }
    #endif
 
     pi->setPlayHead (playhead.get());
@@ -2018,7 +2021,7 @@ struct AudioProcessorEditorContentComp  : public Plugin::EditorComponent
         {
             if (auto inst = plugin.getAudioPluginInstance())
             {
-                editor.reset (inst->createEditorIfNeeded());
+                editor.reset (inst->createEditorAndMakeActive());
 
                 if (editor == nullptr)
                     return;

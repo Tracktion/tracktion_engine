@@ -261,12 +261,9 @@ private:
     {
         entrypoint_t* ep = nullptr;
 
-        // Use getPlatformSpecificData() instead of getExtensions() to avoid
-        // triggering JUCE's internal ARA init/uninit cycle in getARAFactory()
-        JUCE_BEGIN_IGNORE_DEPRECATION_WARNINGS
-        if (auto* component = static_cast<Steinberg::Vst::IComponent*> (p.getPlatformSpecificData()))
-            component->queryInterface (entrypoint_t::iid, (void**) &ep);
-        JUCE_END_IGNORE_DEPRECATION_WARNINGS
+        if (auto vst3Client = p.getVST3Client())
+            if (auto* component = vst3Client->getIComponentPtr())
+                component->queryInterface (entrypoint_t::iid, (void**) &ep);
 
         return { ep };
     }

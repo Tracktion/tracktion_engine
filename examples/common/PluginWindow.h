@@ -16,7 +16,7 @@ struct AudioProcessorEditorContentComp : public te::Plugin::EditorComponent
         {
             if (auto pi = plugin.getAudioPluginInstance())
             {
-                editor.reset (pi->createEditorIfNeeded());
+                editor.reset (pi->createEditorAndMakeActive());
 
                 if (editor == nullptr)
                     editor = std::make_unique<GenericAudioProcessorEditor> (*pi);
