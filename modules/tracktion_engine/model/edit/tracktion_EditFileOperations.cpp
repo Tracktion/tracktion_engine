@@ -85,12 +85,12 @@ struct SharedEditFileDataCache
 
         void refresh()
         {
-            editSnapshot->refreshFromProjectManager();
+            editSnapshot->refresh();
         }
 
         Edit& edit;
         juce::Time timeOfLastSave { juce::Time::getCurrentTime() };
-        EditSnapshot::Ptr editSnapshot { EditSnapshot::getEditSnapshot (edit.engine, edit.getProjectItemRef()) };
+        EditSnapshot::Ptr editSnapshot { EditSnapshot::getEditSnapshot (edit.engine, edit.editFileRetriever()) };
     };
 
     SharedEditFileDataCache() = default;
@@ -335,7 +335,7 @@ bool EditFileOperations::saveAs (const juce::File& f, bool forceOverwriteExistin
 
                     jassert (edit.getProjectItemRef() != newItem->getProjectItemRef());
                     edit.setProjectItemRef (newItem->getProjectItemRef());
-                    editSnapshot = EditSnapshot::getEditSnapshot (edit.engine, edit.getProjectItemRef());
+                    editSnapshot = EditSnapshot::getEditSnapshot (edit.engine, newItem->getSourceFile());
 
                     const bool ok = save (true, true, false);
 
@@ -455,6 +455,22 @@ std::unique_ptr<Edit> loadEditForExamining (ProjectManager& pm, ProjectItemRef r
         return edit;
     }
 
+    // Finally try and get the Edit from the project manager
+    if (auto item = pm.getProjectItem (ref))
+    {
+        if (auto p = item->getProject())
+        {
+            auto editFile = ref.resolve (p->engine, p->getDefaultDirectory());
+            auto edit = loadEditFromFile (p->engine, editFile, role, loadContext);
+
+            if (edit)
+                edit->setProjectItemRef (ref);
+
+            return edit;
+        }
+    }
+
+
     return {};
 }
 
@@ -501,7 +517,8 @@ juce::ValueTree createEmptyEdit (Engine& e)
 }
 
 static std::unique_ptr<Edit> createEdit (Engine& engine, const juce::ValueTree& editState,
-                                         Edit::EditFileRetriever editFileRetriever, Edit::EditRole role)
+                                         Edit::EditFileRetriever editFileRetriever, Edit::EditRole role,
+                                         Edit::LoadContext* loadContext)
 {
     if (! editState.isValid())
         return {};
@@ -512,27 +529,29 @@ static std::unique_ptr<Edit> createEdit (Engine& engine, const juce::ValueTree& 
         id = ProjectItemID::createNewID (ProjectID{});
 
     return Edit::createEdit (Edit::Options
-    {
-        engine,
-        editState,
-        id,
-        role,
-        nullptr,
-        Edit::getDefaultNumUndoLevels(),
-        std::move (editFileRetriever),
-        {}
-    });
+                             {
+                                 engine,
+                                 editState,
+                                 id,
+                                 role,
+                                 loadContext,
+                                 Edit::getDefaultNumUndoLevels(),
+                                 std::move (editFileRetriever),
+                                 {}
+                             });
 }
 
-std::unique_ptr<Edit> loadEditFromFile (Engine& engine, const juce::File& editFile, Edit::EditRole role)
+std::unique_ptr<Edit> loadEditFromFile (Engine& engine, const juce::File& editFile, Edit::EditRole role,
+                                        Edit::LoadContext* loadContext)
 {
     auto editState = loadEditFromFile (engine, editFile, ProjectItemID{});
-    return createEdit (engine, editState, [editFile] { return editFile; }, role);
+    return createEdit (engine, editState, [editFile] { return editFile; }, role, loadContext);
 }
 
-std::unique_ptr<Edit> loadEditFromState (Engine& engine, const juce::ValueTree& editState, Edit::EditRole role)
+std::unique_ptr<Edit> loadEditFromState (Engine& engine, const juce::ValueTree& editState, Edit::EditRole role,
+                                         Edit::LoadContext* loadContext)
 {
-    return createEdit (engine, editState, {}, role);
+    return createEdit (engine, editState, {}, role, loadContext);
 }
 
 std::unique_ptr<Edit> createEmptyEdit (Engine& engine, const juce::File& editFile)
@@ -540,16 +559,16 @@ std::unique_ptr<Edit> createEmptyEdit (Engine& engine, const juce::File& editFil
     auto id = ProjectItemID::createNewID (ProjectID{});
 
     return Edit::createEdit (Edit::Options
-    {
-        engine,
-        loadEditFromFile (engine, {}, id),
-        id,
-        Edit::forEditing,
-        nullptr,
-        Edit::getDefaultNumUndoLevels(),
-        [editFile] { return editFile; },
-        {}
-    });
+                             {
+                                 engine,
+                                 loadEditFromFile (engine, {}, id),
+                                 id,
+                                 Edit::forEditing,
+                                 nullptr,
+                                 Edit::getDefaultNumUndoLevels(),
+                                 [editFile] { return editFile; },
+                                 {}
+                             });
 }
 
 } // namespace tracktion::inline engine

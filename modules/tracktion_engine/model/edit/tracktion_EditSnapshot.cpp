@@ -15,12 +15,12 @@ struct EditSnapshotList
 {
     EditSnapshotList() = default;
 
-    EditSnapshot::Ptr getEditSnapshot (const ProjectItemRef& ref)
+    EditSnapshot::Ptr getEditSnapshot (const juce::File& f)
     {
         const juce::ScopedLock sl (getLock());
 
         for (auto s : snapshots)
-            if (s->getProjectItemRef() == ref)
+            if (s->getFile() == f)
                 return s;
 
         return {};
@@ -53,28 +53,28 @@ struct EditSnapshot::ListHolder
 };
 
 //==============================================================================
-EditSnapshot::Ptr EditSnapshot::getEditSnapshot (Engine& engine, ProjectItemRef itemRef)
+EditSnapshot::Ptr EditSnapshot::getEditSnapshot (Engine& engine, juce::File editFile)
 {
-    if (! itemRef.isValid())
+    if (editFile == juce::File())
         return {};
 
     juce::SharedResourcePointer<EditSnapshotList> list;
     const juce::ScopedLock sl (list->getLock());
 
-    if (auto snapshot = list->getEditSnapshot (itemRef))
+    if (auto snapshot = list->getEditSnapshot (editFile))
         return snapshot;
 
-    return new EditSnapshot (engine, itemRef);
+    return new EditSnapshot (engine, editFile);
 }
 
 //==============================================================================
-EditSnapshot::EditSnapshot (Engine& e, ProjectItemRef ref)
+EditSnapshot::EditSnapshot (Engine& e, juce::File f)
     : engine (e),
       listHolder (std::make_unique<ListHolder>()),
-      itemRef (ref)
+      sourceFile (std::move (f))
 {
     listHolder->list->addSnapshot (*this);
-    refreshFromProjectManager();
+    refresh();
 }
 
 EditSnapshot::~EditSnapshot()
@@ -206,26 +206,24 @@ int EditSnapshot::audioToGlobalTrackIndex (int audioIndex) const
 }
 
 //==============================================================================
-void EditSnapshot::refreshFromProjectManager()
-{
-    if (auto pi = engine.getProjectManager().getProjectItem (itemRef))
-        refreshFromProjectItem (pi);
-}
-
-void EditSnapshot::refreshFromProjectItem (ProjectItem::Ptr pi)
+void EditSnapshot::refresh()
 {
     clear();
 
-    if (pi == nullptr)
-        return;
+    auto pi = engine.getProjectManager().getProjectItem (sourceFile);
 
-    sourceFile = pi->getSourceFile();
+    if (pi)
+    {
+        project = pi->getProject();
+        sourceFile = pi->getSourceFile();
+    }
+
     auto newState = loadValueTree (sourceFile, true);
 
     if (! newState.hasType (IDs::EDIT))
         return;
 
-    name = pi->getName();
+    name = pi ? pi->getName() : sourceFile.getFileNameWithoutExtension();
     setState (newState, TimeDuration::fromSeconds (pi->getLength()));
     refreshFromState();
 }
@@ -265,18 +263,25 @@ void EditSnapshot::clear()
 void EditSnapshot::addEditClips (const juce::XmlElement& track)
 {
     for (auto clip : track.getChildIterator())
+    {
         if (clip->hasTagName (IDs::EDITCLIP))
-            editClipRefs.add (ProjectItemRef (clip->getStringAttribute ("source")));
+        {
+            auto source = clip->getStringAttribute ("source");
+            auto file = ProjectItemRef (source).resolve (engine, project ? project->getDefaultDirectory()
+                                                                         : sourceFile.getParentDirectory());
+            editClipRefs.add (file);
+        }
+    }
 }
 
 void EditSnapshot::addClipSources (const juce::XmlElement& track)
 {
     for (auto clip : track.getChildIterator())
     {
-        auto sourceID = clip->getStringAttribute ("source");
-
-        if (sourceID.isNotEmpty())
-            clipSourceRefs.add (ProjectItemRef (sourceID));
+        auto source = clip->getStringAttribute ("source");
+        auto file = ProjectItemRef (source).resolve (engine, project ? project->getDefaultDirectory()
+                                                                     : sourceFile.getParentDirectory());
+        clipSourceRefs.add (file);
     }
 }
 
@@ -299,10 +304,13 @@ void EditSnapshot::addMarkers (const juce::XmlElement& track)
 
 static void addNestedEditObjects (EditSnapshot& baseEdit, juce::ReferenceCountedArray<EditSnapshot>& edits)
 {
-    edits.addIfNotAlreadyThere (&baseEdit);
+    if (edits.contains (&baseEdit))
+        return;
 
-    for (auto itemID : baseEdit.getEditClips())
-        if (auto ptr = EditSnapshot::getEditSnapshot (baseEdit.engine, itemID))
+    edits.add (&baseEdit);
+
+    for (auto editFile : baseEdit.getEditClips())
+        if (auto ptr = EditSnapshot::getEditSnapshot (baseEdit.engine, editFile))
             addNestedEditObjects (*ptr, edits);
 }
 

@@ -13,14 +13,10 @@ namespace tracktion::inline engine {
 //==============================================================================
 struct ClipTrack::CollectionClipList  : public juce::ValueTree::Listener
 {
-    CollectionClipList (ClipTrack& t, juce::ValueTree& v) : ct (t), state (v)
+    CollectionClipList (ClipTrack& t, juce::ValueTree& v)
+        : ct (t), state (v)
     {
         state.addListener (this);
-    }
-
-    ~CollectionClipList() override
-    {
-        state.removeListener (this);
     }
 
     void valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& id) override
@@ -148,7 +144,7 @@ struct ClipTrack::CollectionClipList  : public juce::ValueTree::Listener
     void valueTreeParentChanged (juce::ValueTree&) override {}
 
     ClipTrack& ct;
-    juce::ValueTree& state;
+    juce::ValueTree state;
 
     juce::ReferenceCountedArray<CollectionClip> collectionClips;
 

@@ -78,11 +78,15 @@ public:
 
     juce::CachedValue<bool> copyColourFromMarker, trimToMarker, renderEnabled;
 
+    /** @internal */
+    void editFinishedLoading();
+
 protected:
     void valueTreePropertyChanged (juce::ValueTree&, const juce::Identifier&) override;
 
 private:
     //==============================================================================
+    std::unique_ptr<Edit::LoadFinishedCallback<EditClip>> editLoadedCallback;
     AsyncCaller sourceIdUpdater;
 
     //==============================================================================

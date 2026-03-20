@@ -10,14 +10,14 @@
 
 namespace tracktion::inline engine {
 
-EditClip::EditClip (const juce::ValueTree& v, EditItemID clipID, ClipOwner& targetParent, ProjectItemRef sourceEditID)
+EditClip::EditClip (const juce::ValueTree& v, EditItemID clipID, ClipOwner& targetParent, ProjectItemRef sourceEditRef)
     : AudioClipBase (v, clipID, Type::edit, targetParent),
       waveInfo (getAudioFile().getInfo())
 {
     renderOptions = RenderOptions::forEditClip (*this);
 
     sourceIdUpdater.setFunction ([this] { sourceMediaChanged(); });
-    sourceFileReference.setToProjectFileReference (sourceEditID);
+    sourceFileReference.setToProjectFileReference (sourceEditRef);
 
     auto um = getUndoManager();
     copyColourFromMarker.referTo (state, IDs::copyColour, um, false);
@@ -52,7 +52,10 @@ void EditClip::initialise()
     if (! renderEnabled)
         setUsesProxy (false);
 
-    sourceIdUpdater.triggerAsyncUpdate();
+    if (edit.isLoading())
+        editLoadedCallback = std::make_unique<Edit::LoadFinishedCallback<EditClip>> (*this, edit);
+    else
+        sourceIdUpdater.triggerAsyncUpdate();
 }
 
 void EditClip::cloneFrom (Clip* c)
@@ -183,7 +186,7 @@ void EditClip::sourceMediaChanged()
     const bool resetTracksToDefault = (! edit.isLoading() && ! lastSourceRef.isValid());
 
     lastSourceRef = newRef;
-    editSnapshot = EditSnapshot::getEditSnapshot (edit.engine, newRef);
+    editSnapshot = EditSnapshot::getEditSnapshot (edit.engine, sourceFileReference.getFile());
     const bool invalidSource = editSnapshot == nullptr || ! editSnapshot->isValid();
 
     if (invalidSource)
@@ -306,6 +309,12 @@ HashCode EditClip::generateHash()
     return newHash;
 }
 
+void EditClip::editFinishedLoading()
+{
+    sourceIdUpdater.triggerAsyncUpdate();
+    editLoadedCallback.reset();
+}
+
 void EditClip::setTracksToRender (const juce::Array<EditItemID>& trackIDs)
 {
     if (renderOptions != nullptr)
@@ -359,6 +368,9 @@ void EditClip::updateReferencedEdits()
 void EditClip::updateLoopInfoBasedOnSource (bool updateLength)
 {
     if (editSnapshot == nullptr || ! editSnapshot->isValid())
+        return;
+
+    if (getSourceLength() <= 0.01_td)
         return;
 
     // first try and get info from the source edit

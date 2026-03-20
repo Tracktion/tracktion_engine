@@ -155,13 +155,17 @@ bool Clip::isClipState (const juce::Identifier& i)
 static Clip::Ptr createNewEditClip (const juce::ValueTree& v, EditItemID newClipID, ClipOwner& targetParent)
 {
     auto& edit = targetParent.getClipOwnerEdit();
-    ProjectItemID sourceItemID (v.getProperty (IDs::source).toString());
-    auto sourceItem = edit.engine.getProjectManager().getProjectItem (sourceItemID);
+    auto project = edit.getProjectItemRef().getProject();
+
+    auto sourceString = v.getProperty (IDs::source).toString();
+    auto sourceFile = ProjectItemRef (sourceString).resolve (edit.engine, project ? project->getDefaultDirectory()
+                                                                                  : edit.editFileRetriever().getParentDirectory());
+    auto sourceItem = edit.engine.getProjectManager().getProjectItem (sourceFile);
     juce::String warning;
 
     if (sourceItem != nullptr && sourceItem->getLength() > 0.0)
     {
-        if (auto snapshot = EditSnapshot::getEditSnapshot (edit.engine, sourceItemID))
+        if (auto snapshot = EditSnapshot::getEditSnapshot (edit.engine, sourceItem->getSourceFile()))
         {
             // check for recursion
             auto referencedEdits = snapshot->getNestedEditObjects();
@@ -176,9 +180,9 @@ static Clip::Ptr createNewEditClip (const juce::ValueTree& v, EditItemID newClip
         }
     }
 
-    // If sourceItemID is invalid it means we're creating an empty EditClip
-    if (warning.isEmpty() || ! sourceItemID.isValid())
-        return new EditClip (v, newClipID, targetParent, sourceItemID);
+    // If sourceString is empty it means we're creating an empty EditClip
+    if (warning.isEmpty() || sourceString.isEmpty())
+        return new EditClip (v, newClipID, targetParent, ProjectItemRef (sourceString));
 
     edit.engine.getUIBehaviour().showWarningAlert (TRANS("Can't Import Edit"), TRANS(warning));
     return {};

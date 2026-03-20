@@ -129,6 +129,9 @@ public:
     */
     juce::File findSourceFile (ProjectItemID);
 
+    /** Returns the ProjectItem for the a given file. */
+    ProjectItem::Ptr getProjectItem (juce::File);
+
     //==============================================================================
     /** Saves every project in the folder tree. */
     void saveAllProjects();

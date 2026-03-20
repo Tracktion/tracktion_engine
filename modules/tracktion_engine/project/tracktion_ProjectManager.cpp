@@ -423,6 +423,19 @@ ProjectItem::Ptr ProjectManager::getProjectItem (const ProjectItemRef& ref)
     return {};
 }
 
+ProjectItem::Ptr ProjectManager::getProjectItem (juce::File file)
+{
+    for (auto p : openProjects)
+        if (auto pi = p->getProjectItemForFile (file))
+            return pi;
+
+    for (auto p : getAllProjects())
+        if (auto pi = p->getProjectItemForFile (file))
+            return pi;
+
+    return {};
+}
+
 ProjectItem::Ptr ProjectManager::getProjectItem (ProjectItemID id)
 {
     return getProjectItem (ProjectItemRef (id));

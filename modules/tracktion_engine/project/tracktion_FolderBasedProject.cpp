@@ -315,7 +315,7 @@ ProjectItemRef FolderBasedProject::getProjectItemRef (int index)
         auto f = cachedItems[index]->getSourceFile();
 
         if (f.isAChildOf (folder))
-            return ProjectItemRef::fromPath (f.getRelativePathFrom (folder));
+            return ProjectItemRef::fromPath (f.getRelativePathFrom (folder), owner);
 
         return ProjectItemRef::fromAbsolutePath (f);
     }
@@ -335,7 +335,7 @@ juce::Array<ProjectItemRef> FolderBasedProject::getAllProjectItemRefs() const
         auto f = item->getSourceFile();
 
         if (f.isAChildOf (folder))
-            result.add (ProjectItemRef::fromPath (f.getRelativePathFrom (folder)));
+            result.add (ProjectItemRef::fromPath (f.getRelativePathFrom (folder), owner));
         else
             result.add (ProjectItemRef::fromAbsolutePath (f));
     }

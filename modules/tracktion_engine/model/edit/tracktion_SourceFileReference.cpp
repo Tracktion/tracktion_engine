@@ -181,6 +181,13 @@ bool SourceFileReference::isUsingProjectReference() const
 ProjectItemRef SourceFileReference::getSourceProjectItemRef() const
 {
     jassert (source.get() == state[source.getPropertyID()].toString());
+
+    if (auto pid = ProjectItemID (source.get()); pid.isValid())
+        return pid;
+
+    if (juce::File::isAbsolutePath (source.get()))
+        return ProjectItemRef (source.get());
+
     return ProjectItemRef (source.get());
 }
 
