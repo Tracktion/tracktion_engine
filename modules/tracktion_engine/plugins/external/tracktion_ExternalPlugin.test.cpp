@@ -48,6 +48,7 @@ public:
     const juce::String getName() const override { return "SidechainTestPlugin"; }
     void prepareToPlay (double, int) override {}
     void releaseResources() override {}
+    using juce::AudioProcessor::processBlock;
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override {}
     double getTailLengthSeconds() const override { return 0.0; }
     bool acceptsMidi() const override { return false; }
