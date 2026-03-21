@@ -596,8 +596,8 @@ public:
     {
         timeStretcher.initialise (source->getSampleRate(), chunkSize, numChannels,
                                   mode, elastiqueProOptions, true);
-        inputFifo.setSize (numChannels, timeStretcher.getMaxFramesNeeded());
-        outputFifo.setSize (numChannels, timeStretcher.getMaxFramesNeeded());
+        inputFifo.setSize (numChannels, timeStretcher.getMaxFramesNeeded() + 1);
+        outputFifo.setSize (numChannels, timeStretcher.getMaxFramesNeeded() + 1);
 
         source->setPosition (getReadPosition());
         timeStretcher.reset();
