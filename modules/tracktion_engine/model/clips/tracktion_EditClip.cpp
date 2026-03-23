@@ -278,7 +278,10 @@ void EditClip::updateWaveInfo()
     waveInfo = getAudioFile().getInfo();
     waveInfo.bitsPerSample      = renderOptions->getBitDepth();
     waveInfo.sampleRate         = renderOptions->getSampleRate();
-    waveInfo.numChannels        = renderOptions->getStereo() ? 2 : 1;
+    {
+        auto cc = renderOptions->getChannelConfiguration();
+        waveInfo.numChannels    = cc.isEmpty() ? 2 : cc.getNumChannels();
+    }
     waveInfo.lengthInSamples    = static_cast<SampleCount> (sourceLength * waveInfo.sampleRate);
 
     updateLoopInfoBasedOnSource (false);

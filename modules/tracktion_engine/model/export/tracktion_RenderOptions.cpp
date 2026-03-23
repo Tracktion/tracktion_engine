@@ -107,7 +107,7 @@ void RenderOptions::loadFromUserSettings()
         rmsLevelDb        = storage.getProperty (SettingID::renderRMSLevelDb, -12.0);
         peakLevelDb       = storage.getProperty (SettingID::renderPeakLevelDb, 0.0);
         removeSilence     = storage.getProperty (SettingID::renderTrimSilence, false);
-        stereo            = storage.getProperty (SettingID::renderStereo, true);
+        channelConfigStr  = storage.getProperty (SettingID::renderChannelConfig, juce::String());
         sampleRate        = engine.getDeviceManager().getSampleRate();
         bitDepth          = storage.getProperty (SettingID::renderBits, 16);
         dither            = storage.getProperty (SettingID::renderDither, true);
@@ -123,7 +123,6 @@ void RenderOptions::loadFromUserSettings()
         bitDepth          = storage.getProperty (SettingID::editClipRenderBits, 16);
         dither            = storage.getProperty (SettingID::editClipRenderDither, true);
         realTime          = storage.getProperty (SettingID::editClipRealtime, false);
-        stereo            = storage.getProperty (SettingID::editClipRenderStereo, true);
         normalise         = storage.getProperty (SettingID::editClipRenderNormalise, false);
         adjustBasedOnRMS  = storage.getProperty (SettingID::editClipRenderRMS, false);
         rmsLevelDb        = storage.getProperty (SettingID::editClipRenderRMSLevelDb, -12.0);
@@ -157,7 +156,6 @@ void RenderOptions::saveToUserSettings()
         storage.setProperty (SettingID::editClipRenderBits, bitDepth.get());
         storage.setProperty (SettingID::editClipRenderDither, dither.get());
         storage.setProperty (SettingID::editClipRealtime, realTime.get());
-        storage.setProperty (SettingID::editClipRenderStereo, stereo.get());
         storage.setProperty (SettingID::editClipRenderNormalise, normalise.get());
         storage.setProperty (SettingID::editClipRenderRMS, adjustBasedOnRMS.get());
         storage.setProperty (SettingID::editClipRenderRMSLevelDb, rmsLevelDb.get());
@@ -176,7 +174,7 @@ void RenderOptions::saveToUserSettings()
         storage.setProperty (SettingID::renderPeakLevelDb, peakLevelDb.get());
         storage.setProperty (SettingID::renderTrimSilence, removeSilence.get());
         storage.setProperty (SettingID::renderSampRate, sampleRate.get());
-        storage.setProperty (SettingID::renderStereo, stereo.get());
+        storage.setProperty (SettingID::renderChannelConfig, channelConfigStr.get());
         storage.setProperty (SettingID::renderBits, bitDepth.get());
         storage.setProperty (SettingID::renderDither, dither.get());
         storage.setProperty (SettingID::quality, qualityIndex.get());
@@ -231,7 +229,7 @@ void RenderOptions::relinkCachedValues (juce::UndoManager* um)
     createMidiFile.referTo (state, IDs::renderCreateMidiFile, um, false);
     format.referTo (state, IDs::renderFormat, um, wav);
 
-    stereo.referTo (state, IDs::renderStereo, um, true);
+    channelConfigStr.referTo (state, IDs::renderChannelConfig, um, {});
 
     sampleRate.referTo (state, IDs::renderSampleRate, um, 44100.0);
     bitDepth.referTo (state, IDs::renderBitDepth, um, 32);
@@ -287,6 +285,24 @@ static juce::StringPairArray getMetadata (Edit& edit)
     return metadataList;
 }
 
+ChannelConfiguration RenderOptions::getChannelConfiguration() const
+{
+    auto s = channelConfigStr.get().trim();
+
+    if (s.isEmpty())
+        return {};
+
+    return ChannelConfiguration::fromString (s.toStdString());
+}
+
+void RenderOptions::setChannelConfiguration (const ChannelConfiguration& config)
+{
+    if (config.isEmpty())
+        channelConfigStr = juce::String();
+    else
+        channelConfigStr = juce::String (config.toString());
+}
+
 Renderer::Parameters RenderOptions::getRenderParameters (Edit& edit)
 {
     return getRenderParameters (edit, nullptr, {});
@@ -308,8 +324,20 @@ Renderer::Parameters RenderOptions::getRenderParameters (Edit& edit, SelectionMa
     params.trimSilenceAtEnds        = removeSilence;
     params.shouldNormaliseByRMS     = adjustBasedOnRMS;
     params.normaliseToLevelDb       = (float) (adjustBasedOnRMS ? rmsLevelDb : peakLevelDb);
-    params.canRenderInMono          = true;
-    params.mustRenderInMono         = ! stereo;
+    auto cc = getChannelConfiguration();
+
+    if (! cc.isEmpty())
+    {
+        params.channelConfig        = cc;
+        params.canRenderInMono      = false;
+        params.mustRenderInMono     = cc.isMono();
+    }
+    else
+    {
+        params.canRenderInMono      = true;
+        params.mustRenderInMono     = false;
+    }
+
     params.usePlugins               = (params.createMidiFile || (isTrackRender() || isClipRender() || isEditClipRender())) ? usePlugins : true;
     params.useMasterPlugins         = isRender() ? false : ((params.createMidiFile || (isEditClipRender())) ? usePlugins : true);
     params.realTimeRender           = realTime;
@@ -399,8 +427,22 @@ Renderer::Parameters RenderOptions::getRenderParameters (EditClip& clip)
     params.trimSilenceAtEnds        = removeSilence;
     params.shouldNormaliseByRMS     = adjustBasedOnRMS;
     params.normaliseToLevelDb       = (float) (adjustBasedOnRMS ? rmsLevelDb : peakLevelDb);
-    params.canRenderInMono          = true;
-    params.mustRenderInMono         = ! stereo;
+    {
+        auto cc = getChannelConfiguration();
+
+        if (! cc.isEmpty())
+        {
+            params.channelConfig        = cc;
+            params.canRenderInMono      = false;
+            params.mustRenderInMono     = cc.isMono();
+        }
+        else
+        {
+            params.canRenderInMono      = true;
+            params.mustRenderInMono     = false;
+        }
+    }
+
     params.usePlugins               = usePlugins;
     params.useMasterPlugins         = usePlugins;
     params.realTimeRender           = realTime;
@@ -439,8 +481,22 @@ Renderer::Parameters RenderOptions::getRenderParameters (MidiClip& clip)
     params.trimSilenceAtEnds        = removeSilence;
     params.shouldNormaliseByRMS     = adjustBasedOnRMS;
     params.normaliseToLevelDb       = (float) (adjustBasedOnRMS ? rmsLevelDb : peakLevelDb);
-    params.canRenderInMono          = true;
-    params.mustRenderInMono         = ! stereo;
+    {
+        auto cc = getChannelConfiguration();
+
+        if (! cc.isEmpty())
+        {
+            params.channelConfig        = cc;
+            params.canRenderInMono      = false;
+            params.mustRenderInMono     = cc.isMono();
+        }
+        else
+        {
+            params.canRenderInMono      = true;
+            params.mustRenderInMono     = false;
+        }
+    }
+
     params.usePlugins               = true;
     params.useMasterPlugins         = false;
     params.realTimeRender           = realTime;
@@ -692,7 +748,7 @@ void RenderOptions::setToDefault()
 
     createMidiFile           = false;
     format                   = wav;
-    stereo                   = true;
+    channelConfigStr         = juce::String();
     sampleRate               = 44100.0;
     bitDepth                 = 32;
     qualityIndex             = 5;
@@ -811,7 +867,7 @@ std::unique_ptr<RenderOptions> RenderOptions::forClipRender (juce::Array<Clip*> 
         ro->type = midiNotes ? RenderType::midi
                              : RenderType::clip;
 
-        ro->stereo            = ! areAllClipsMono;
+        ro->setChannelConfiguration (areAllClipsMono ? ChannelConfiguration::mono() : ChannelConfiguration::stereo());
         ro->selectedClips     = false;
         ro->endAllowance      = ro->usePlugins ? findEndAllowance (edit, &ro->tracks, &clips) : TimeDuration();
         ro->removeSilence     = midiNotes;
@@ -1145,7 +1201,7 @@ void RenderOptions::updateHash()
     hash = (tracks.isEmpty() ? 0 : getTracksHash())
            ^ (((HashCode) createMidiFile)        << 0)
            ^ (((HashCode) format)                << 1)
-           ^ (((HashCode) stereo)                << 2)
+           ^ ((HashCode) channelConfigStr.get().hashCode())
            ^ (((HashCode) sampleRate)            << 3)
            ^ (((HashCode) bitDepth)              << 4)
            ^ (((HashCode) qualityIndex)          << 5)

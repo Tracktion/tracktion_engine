@@ -75,6 +75,12 @@ public:
         float normaliseToLevelDb = 0;                           ///< The level to normalise to
         bool canRenderInMono = true;                            ///< If false, the result audio will be forced to stereo
         bool mustRenderInMono = false;                          ///< If true, the resulting audio will be forced to mono
+        ChannelConfiguration channelConfig;                     /**< Output channel configuration. When empty (default),
+                                                                     the channel layout is auto-detected from the node graph.
+                                                                     When set, defines the exact output channel layout including
+                                                                     ordering and semantic roles (e.g. 5.1, 7.1, custom).
+                                                                     The mono overrides above still take priority when set. */
+
         bool usePlugins = true;                                 ///< If false, clip/tracks plugins will be ommited from the render
         bool useMasterPlugins = false;                          ///< If true, master plugins will be included
         bool realTimeRender = false;                            ///< If true, there will be a pause between each rendered block to simulate real-time

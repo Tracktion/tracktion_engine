@@ -361,4 +361,25 @@ juce::String ChannelConfiguration::getDescription() const
     return desc.toString();
 }
 
+juce::String ChannelConfiguration::getMatchingPresetName() const
+{
+    for (const auto& preset : getChannelConfigurationPresets())
+        if (preset.config == *this)
+            return preset.name;
+
+    return TRANS("From Edit");
+}
+
+std::vector<ChannelConfigurationPreset> getChannelConfigurationPresets()
+{
+    return
+    {
+        { TRANS("Mono"),           ChannelConfiguration::mono() },
+        { TRANS("Stereo"),         ChannelConfiguration::stereo() },
+        { TRANS("5.1 Surround"),   ChannelConfiguration::surround5_1() },
+        { TRANS("7.1 Surround"),   ChannelConfiguration::surround7_1() },
+        { TRANS("From Edit"),      {} }
+    };
+}
+
 }} // namespace tracktion { inline namespace engine

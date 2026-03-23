@@ -208,10 +208,7 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
     level->dbGain.referTo (state, IDs::gain, um);
     level->pan.referTo (state, IDs::pan, um);
     level->mute.referTo (state, IDs::mute, um);
-    channels.referTo (state, IDs::channels, um, juce::AudioChannelSet::stereo().getSpeakerArrangementAsString());
-
-    if (channels.get().isEmpty())
-        channels = juce::AudioChannelSet::stereo().getSpeakerArrangementAsString();
+    channels.referTo (state, IDs::channels, um, {});
 
     fadeIn.referTo (state, IDs::fadeIn, um);
     fadeOut.referTo (state, IDs::fadeOut, um);

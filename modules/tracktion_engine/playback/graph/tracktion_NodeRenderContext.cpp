@@ -83,7 +83,7 @@ NodeRenderContext::NodeRenderContext (Renderer::RenderTask& owner_, Renderer::Pa
         r.shouldNormaliseByRMS = false;
     }
 
-    numOutputChans = 2;
+    ChannelConfiguration outputChannelConfig;
 
     {
         auto props = nodePlayer->getNode()->getNodeProperties();
@@ -95,14 +95,43 @@ NodeRenderContext::NodeRenderContext (Renderer::RenderTask& owner_, Renderer::Pa
         }
 
         if (r.mustRenderInMono || (r.canRenderInMono && (props.numberOfChannels < 2)))
-            numOutputChans = 1;
+            outputChannelConfig = ChannelConfiguration::mono();
+        else if (! r.channelConfig.isEmpty())
+            outputChannelConfig = r.channelConfig;
+        else
+            outputChannelConfig = ChannelConfiguration::canonical (juce::jmax (2, (int) props.numberOfChannels));
+    }
+
+    numOutputChans = outputChannelConfig.getNumChannels();
+
+    // Build a channel map from the graph's output order to the requested output order.
+    // Each entry in outputChannelConfig has an indexInDevice which tells us which graph
+    // channel should map to that output position.
+    {
+        auto graphChans = (int) nodePlayer->getNode()->getNodeProperties().numberOfChannels;
+
+        for (int destCh = 0; destCh < numOutputChans; ++destCh)
+        {
+            auto srcCh = outputChannelConfig[(size_t) destCh].indexInDevice;
+
+            if (srcCh >= 0 && srcCh < graphChans)
+                outputChannelMap.entries.push_back ({ srcCh, destCh, 1.0f });
+        }
     }
 
     AudioFileUtils::addBWAVStartToMetadata (r.metadata, toSamples (r.time.getStart(), r.sampleRateForAudio));
 
+    // Try to create writer with channel layout metadata first
     writer = std::make_unique<AudioFileWriter> (AudioFile (*originalParams.engine, r.destFile),
                                                 r.audioFormat, numOutputChans, r.sampleRateForAudio,
-                                                r.bitDepth, r.metadata, r.quality);
+                                                r.bitDepth, r.metadata, r.quality,
+                                                outputChannelConfig.toChannelSet());
+
+    // Some formats don't support certain channel layouts — fall back to just numChannels
+    if (! writer->isOpen())
+        writer = std::make_unique<AudioFileWriter> (AudioFile (*originalParams.engine, r.destFile),
+                                                    r.audioFormat, numOutputChans, r.sampleRateForAudio,
+                                                    r.bitDepth, r.metadata, r.quality);
 
     if (r.destFile != juce::File() && ! writer->isOpen())
     {
@@ -254,15 +283,48 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
     while (! (leafNodesReady || owner.shouldExit()))
         return false;
 
-    juce::AudioBuffer<float> renderingBuffer (numOutputChans, r.blockSizeForAudio + 256);
+    const auto bufferSize = r.blockSizeForAudio + 256;
+    const auto numFrames = (choc::buffer::FrameCount) referenceSampleRange.getLength();
+    const bool needsChannelRemap = ! outputChannelMap.isEmpty() && ! outputChannelMap.isIdentity();
+
+    // Allocate graph buffer (may differ from output if remapping is needed)
+    // Must be large enough for both the graph's output and the remap source channels
+    auto maxSourceChan = [&]
+    {
+        int maxSrc = 0;
+
+        for (const auto& e : outputChannelMap.entries)
+            maxSrc = juce::jmax (maxSrc, e.source + 1);
+
+        return maxSrc;
+    }();
+    const int graphBufferChans = needsChannelRemap ? juce::jmax (maxSourceChan, numOutputChans) : numOutputChans;
+    juce::AudioBuffer<float> renderingBuffer (graphBufferChans, bufferSize);
     renderingBuffer.clear();
     midiBuffer.clear();
 
     auto destView = choc::buffer::createChannelArrayView (renderingBuffer.getArrayOfWritePointers(),
-                                                          (choc::buffer::ChannelCount) renderingBuffer.getNumChannels(),
-                                                          (choc::buffer::FrameCount) referenceSampleRange.getLength());
+                                                          (choc::buffer::ChannelCount) graphBufferChans,
+                                                          numFrames);
 
-    nodePlayer->process ({ (choc::buffer::FrameCount) referenceSampleRange.getLength(), referenceSampleRange, { destView, midiBuffer} });
+    nodePlayer->process ({ numFrames, referenceSampleRange, { destView, midiBuffer} });
+
+    // Remap channels from graph order to requested output order
+    if (needsChannelRemap)
+    {
+        juce::AudioBuffer<float> remappedBuffer (numOutputChans, (int) numFrames);
+        remappedBuffer.clear();
+
+        for (const auto& entry : outputChannelMap.entries)
+            if (entry.source < graphBufferChans && entry.dest < numOutputChans)
+                remappedBuffer.addFrom (entry.dest, 0, renderingBuffer, entry.source, 0, (int) numFrames, entry.gain);
+
+        // Copy remapped data back into renderingBuffer (resized to output channel count)
+        renderingBuffer.setSize (numOutputChans, (int) numFrames, false, false, true);
+
+        for (int ch = 0; ch < numOutputChans; ++ch)
+            renderingBuffer.copyFrom (ch, 0, remappedBuffer, ch, 0, (int) numFrames);
+    }
 
     if (precount <= 0)
     {

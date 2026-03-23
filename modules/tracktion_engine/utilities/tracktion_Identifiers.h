@@ -461,6 +461,7 @@ namespace IDs
     DECLARE_ID (renderCreateMidiFile)
     DECLARE_ID (renderFormat)
     DECLARE_ID (renderStereo)
+    DECLARE_ID (renderChannelConfig)
     DECLARE_ID (renderSampleRate)
     DECLARE_ID (renderBitDepth)
     DECLARE_ID (renderQualityIndex)

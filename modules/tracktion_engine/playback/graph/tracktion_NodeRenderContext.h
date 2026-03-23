@@ -83,6 +83,7 @@ private:
     std::unique_ptr<TracktionNodePlayer> nodePlayer;
 
     int numOutputChans = 0;
+    ChannelMap outputChannelMap;
     std::unique_ptr<AudioFileWriter> writer;
     Plugin::Array plugins;
     juce::Result status;

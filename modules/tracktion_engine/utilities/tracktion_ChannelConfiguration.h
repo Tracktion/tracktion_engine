@@ -192,11 +192,25 @@ public:
     /// Creates a human-readable description of the channels.
     juce::String getDescription() const;
 
+    /// Returns the preset name that matches this configuration, or "From Edit" if no match.
+    juce::String getMatchingPresetName() const;
+
 private:
     //==============================================================================
     // Use SmallVector with capacity for 8 channels to avoid heap allocation
     // for common mono, stereo, and surround configurations
     choc::SmallVector<ChannelIndex, 8> channels;
 };
+
+//==============================================================================
+/// A named channel configuration preset for UI selection.
+struct ChannelConfigurationPreset
+{
+    juce::String name;
+    ChannelConfiguration config;  ///< Empty config means "auto-detect from source"
+};
+
+/// Returns the standard presets for channel layout selection.
+std::vector<ChannelConfigurationPreset> getChannelConfigurationPresets();
 
 }} // namespace tracktion { inline namespace engine

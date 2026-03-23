@@ -128,6 +128,16 @@ TEST_SUITE ("tracktion_engine")
         CHECK (active[0].indexInDevice == 0);
     }
 
+    TEST_CASE ("AudioClipBase: new multichannel clip defaults to all source channels")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto context = AudioClipBaseChannelTestContext::create (engine, 5);
+        REQUIRE (context->clip != nullptr);
+
+        auto active = context->clip->getActiveChannelConfiguration();
+        CHECK (active.getNumChannels() == 5);
+    }
+
     TEST_CASE ("AudioClipBase: setting full source config clears stored string")
     {
         auto& engine = *Engine::getEngines()[0];

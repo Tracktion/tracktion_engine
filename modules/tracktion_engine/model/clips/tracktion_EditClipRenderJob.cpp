@@ -441,7 +441,9 @@ bool EditRenderJob::generateSilence (const juce::File& fileToWriteTo)
     if (os == nullptr || params.audioFormat == nullptr)
         return false;
 
-    const int numChans = params.mustRenderInMono ? 1 : 2;
+    const int numChans = params.mustRenderInMono ? 1
+                                                  : (! params.channelConfig.isEmpty() ? params.channelConfig.getNumChannels()
+                                                                                      : 2);
     std::unique_ptr<juce::AudioFormatWriter> writer (params.audioFormat->createWriterFor (os,
                                                                                           juce::AudioFormatWriterOptions()
                                                                                             .withSampleRate (params.sampleRateForAudio)

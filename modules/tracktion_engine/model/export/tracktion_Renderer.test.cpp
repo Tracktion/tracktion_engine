@@ -66,6 +66,259 @@ TEST_SUITE("tracktion_engine")
         CHECK (thumbnail->getTotalLength() >= fileLength.inSeconds());
     }
 
+    TEST_CASE ("Renderer multichannel export")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& afm = engine.getAudioFileManager();
+
+        // Create a 4-channel source with unique constant values per channel
+        // so we can verify both channel count and ordering in the output.
+        const choc::buffer::ChannelCount numSourceChannels = 4;
+        const double sampleRate = 44100.0;
+        const auto clipLength = 1_td;
+        const auto numFrames = static_cast<choc::buffer::FrameCount> (toSamples (clipLength, sampleRate));
+
+        choc::buffer::InterleavedBuffer<float> sourceBuffer (numSourceChannels, numFrames);
+
+        for (choc::buffer::ChannelCount ch = 0; ch < numSourceChannels; ++ch)
+            for (choc::buffer::FrameCount f = 0; f < numFrames; ++f)
+                sourceBuffer.getSample (ch, f) = (float) (ch + 1) * 0.1f;  // ch0=0.1, ch1=0.2, ch2=0.3, ch3=0.4
+
+        const juce::File virtualFile ("/memory/multichannel-test.wav");
+        const auto key = virtualFile.getFullPathName().toStdString();
+        afm.registerMemoryBuffer (key, sourceBuffer.getView(), sampleRate);
+
+        // Helper: render an edit and return the result buffer
+        auto renderEdit = [&] (Edit& edit, ChannelConfiguration channelConfig, bool mustMono = false)
+            -> std::optional<juce::AudioBuffer<float>>
+        {
+            juce::TemporaryFile destFile (".wav");
+            Renderer::Parameters params (edit);
+            params.destFile = destFile.getFile();
+            params.time = params.time.withLength (clipLength);
+            params.audioFormat = engine.getAudioFileFormatManager().getWavFormat();
+            params.canRenderInMono = false;
+            params.mustRenderInMono = mustMono;
+
+            if (! channelConfig.isEmpty())
+                params.channelConfig = channelConfig;
+
+            std::atomic<bool> callbackFinished { false };
+            bool renderSucceeded = false;
+
+            auto handle = EditRenderer::render (std::move (params),
+                                                [&] (auto res)
+                                                {
+                                                    renderSucceeded = res.has_value();
+                                                    callbackFinished = true;
+                                                });
+
+            test_utilities::runDispatchLoopUntilTrue (callbackFinished);
+
+            if (! renderSucceeded)
+                return {};
+
+            return test_utilities::loadFileInToBuffer (engine, destFile.getFile());
+        };
+
+        // Helper: create an edit with the multichannel clip, all channels active
+        auto createEditWithClip = [&]
+        {
+            auto edit = test_utilities::createTestEdit (engine);
+            auto track = getAudioTracks (*edit)[0];
+            auto clip = insertWaveClip (*track, {}, virtualFile,
+                                        { .time = { 0_tp, clipLength } },
+                                        DeleteExistingClips::no);
+            REQUIRE (clip != nullptr);
+            clip->setActiveChannelConfiguration (ChannelConfiguration::discreteChannels ((int) numSourceChannels));
+            return edit;
+        };
+
+        SUBCASE ("auto-detect from graph preserves channel count and content")
+        {
+            auto edit = createEditWithClip();
+            auto buffer = renderEdit (*edit, {});
+            REQUIRE (buffer.has_value());
+            CHECK_EQ (buffer->getNumChannels(), (int) numSourceChannels);
+
+            // Verify each channel has the expected content
+            for (int ch = 0; ch < (int) numSourceChannels; ++ch)
+            {
+                float expected = (float) (ch + 1) * 0.1f;
+                CHECK (buffer->getRMSLevel (ch, 0, buffer->getNumSamples()) == doctest::Approx (expected).epsilon (0.01));
+            }
+        }
+
+        SUBCASE ("explicit channelConfig with reversed order")
+        {
+            auto edit = createEditWithClip();
+
+            // Request output in reversed order: ch3, ch2, ch1, ch0
+            ChannelConfiguration reversedConfig;
+            reversedConfig.addChannel (ChannelIndex::createMono (3));
+            reversedConfig.addChannel (ChannelIndex::createMono (2));
+            reversedConfig.addChannel (ChannelIndex::createMono (1));
+            reversedConfig.addChannel (ChannelIndex::createMono (0));
+
+            auto buffer = renderEdit (*edit, reversedConfig);
+            REQUIRE (buffer.has_value());
+            CHECK_EQ (buffer->getNumChannels(), 4);
+
+            // Output channel 0 should have graph channel 3's content (0.4)
+            CHECK (buffer->getRMSLevel (0, 0, buffer->getNumSamples()) == doctest::Approx (0.4f).epsilon (0.01));
+            // Output channel 1 should have graph channel 2's content (0.3)
+            CHECK (buffer->getRMSLevel (1, 0, buffer->getNumSamples()) == doctest::Approx (0.3f).epsilon (0.01));
+            // Output channel 2 should have graph channel 1's content (0.2)
+            CHECK (buffer->getRMSLevel (2, 0, buffer->getNumSamples()) == doctest::Approx (0.2f).epsilon (0.01));
+            // Output channel 3 should have graph channel 0's content (0.1)
+            CHECK (buffer->getRMSLevel (3, 0, buffer->getNumSamples()) == doctest::Approx (0.1f).epsilon (0.01));
+        }
+
+        SUBCASE ("fewer output channels than source")
+        {
+            auto edit = createEditWithClip();
+            auto buffer = renderEdit (*edit, ChannelConfiguration::discreteChannels (2));
+            REQUIRE (buffer.has_value());
+            CHECK_EQ (buffer->getNumChannels(), 2);
+
+            // Should have first two channels' content
+            CHECK (buffer->getRMSLevel (0, 0, buffer->getNumSamples()) == doctest::Approx (0.1f).epsilon (0.01));
+            CHECK (buffer->getRMSLevel (1, 0, buffer->getNumSamples()) == doctest::Approx (0.2f).epsilon (0.01));
+        }
+
+        SUBCASE ("mustRenderInMono overrides multichannel")
+        {
+            auto edit = createEditWithClip();
+            auto buffer = renderEdit (*edit, {}, true);
+            REQUIRE (buffer.has_value());
+            CHECK_EQ (buffer->getNumChannels(), 1);
+        }
+
+        afm.unregisterMemoryBuffer (key);
+    }
+
+    TEST_CASE ("Renderer 7.1 surround export")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& afm = engine.getAudioFileManager();
+
+        const choc::buffer::ChannelCount numSourceChannels = 8;
+        const double sampleRate = 44100.0;
+        const auto clipLength = 1_td;
+        const auto numFrames = static_cast<choc::buffer::FrameCount> (toSamples (clipLength, sampleRate));
+
+        choc::buffer::InterleavedBuffer<float> sourceBuffer (numSourceChannels, numFrames);
+
+        for (choc::buffer::ChannelCount ch = 0; ch < numSourceChannels; ++ch)
+            for (choc::buffer::FrameCount f = 0; f < numFrames; ++f)
+                sourceBuffer.getSample (ch, f) = (float) (ch + 1) * 0.05f;
+
+        const juce::File virtualFile ("/memory/7.1-test.wav");
+        const auto key = virtualFile.getFullPathName().toStdString();
+        afm.registerMemoryBuffer (key, sourceBuffer.getView(), sampleRate);
+
+        auto edit = test_utilities::createTestEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+        auto clip = insertWaveClip (*track, {}, virtualFile,
+                                    { .time = { 0_tp, clipLength } },
+                                    DeleteExistingClips::no);
+        REQUIRE (clip != nullptr);
+
+        // Render with explicit 7.1 channel config
+        juce::TemporaryFile destFile (".wav");
+        Renderer::Parameters params (*edit);
+        params.destFile = destFile.getFile();
+        params.time = params.time.withLength (clipLength);
+        params.audioFormat = engine.getAudioFileFormatManager().getWavFormat();
+        params.channelConfig = ChannelConfiguration::surround7_1();
+        params.canRenderInMono = false;
+
+        std::atomic<bool> callbackFinished { false };
+        bool renderSucceeded = false;
+
+        auto handle = EditRenderer::render (std::move (params),
+                                            [&] (auto res)
+                                            {
+                                                renderSucceeded = res.has_value();
+                                                callbackFinished = true;
+                                            });
+
+        test_utilities::runDispatchLoopUntilTrue (callbackFinished);
+        CHECK (renderSucceeded);
+
+        auto buffer = test_utilities::loadFileInToBuffer (engine, destFile.getFile());
+        REQUIRE (buffer.has_value());
+        CHECK_EQ (buffer->getNumChannels(), 8);
+
+        afm.unregisterMemoryBuffer (key);
+    }
+
+    TEST_CASE ("Renderer auto-detects channel count from edit")
+    {
+        // When channelConfig is empty ("From Edit"), the renderer should use
+        // the graph's actual channel count, not default to stereo.
+        auto& engine = *Engine::getEngines()[0];
+        auto& afm = engine.getAudioFileManager();
+
+        const choc::buffer::ChannelCount numSourceChannels = 3;
+        const double sampleRate = 44100.0;
+        const auto clipLength = 1_td;
+        const auto numFrames = static_cast<choc::buffer::FrameCount> (toSamples (clipLength, sampleRate));
+
+        choc::buffer::InterleavedBuffer<float> sourceBuffer (numSourceChannels, numFrames);
+
+        for (choc::buffer::ChannelCount ch = 0; ch < numSourceChannels; ++ch)
+            for (choc::buffer::FrameCount f = 0; f < numFrames; ++f)
+                sourceBuffer.getSample (ch, f) = (float) (ch + 1) * 0.1f;
+
+        const juce::File virtualFile ("/memory/3ch-auto-detect.wav");
+        const auto key = virtualFile.getFullPathName().toStdString();
+        afm.registerMemoryBuffer (key, sourceBuffer.getView(), sampleRate);
+
+        auto edit = test_utilities::createTestEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+        auto clip = insertWaveClip (*track, {}, virtualFile,
+                                    { .time = { 0_tp, clipLength } },
+                                    DeleteExistingClips::no);
+        REQUIRE (clip != nullptr);
+        clip->setActiveChannelConfiguration (ChannelConfiguration::discreteChannels ((int) numSourceChannels));
+
+        // Use RenderOptions with empty channel config = "From Edit" auto-detect
+        auto renderOptions = RenderOptions::forGeneralExporter (*edit);
+        renderOptions->setChannelConfiguration ({});  // "From Edit"
+
+        juce::TemporaryFile destFile (".wav");
+        auto params = renderOptions->getRenderParameters (*edit);
+        params.destFile = destFile.getFile();
+        params.time = params.time.withLength (clipLength);
+        params.audioFormat = engine.getAudioFileFormatManager().getWavFormat();
+
+        std::atomic<bool> callbackFinished { false };
+
+        auto handle = EditRenderer::render (std::move (params),
+                                            [&callbackFinished] (auto res)
+                                            {
+                                                CHECK (res);
+                                                callbackFinished = true;
+                                            });
+
+        test_utilities::runDispatchLoopUntilTrue (callbackFinished);
+        CHECK (callbackFinished);
+
+        auto buffer = test_utilities::loadFileInToBuffer (engine, destFile.getFile());
+        REQUIRE (buffer.has_value());
+        CHECK_EQ (buffer->getNumChannels(), (int) numSourceChannels);
+
+        // Verify per-channel content is preserved
+        for (int ch = 0; ch < (int) numSourceChannels; ++ch)
+        {
+            float expected = (float) (ch + 1) * 0.1f;
+            CHECK (buffer->getRMSLevel (ch, 0, buffer->getNumSamples()) == doctest::Approx (expected).epsilon (0.01));
+        }
+
+        afm.unregisterMemoryBuffer (key);
+    }
+
     TEST_CASE ("Renderer memory buffer clip")
     {
         auto& engine = *Engine::getEngines()[0];

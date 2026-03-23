@@ -124,6 +124,7 @@ enum class SettingID
     renderTrimSilence,
     renderSampRate,
     renderStereo,
+    renderChannelConfig,
     renderBits,
     renderDither,
     quality,

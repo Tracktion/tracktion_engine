@@ -129,7 +129,8 @@ public:
 
     TargetFileFormat getFormat() const noexcept                 { return format; }
     int getBitDepth() const                                     { return bitDepth; }
-    bool getStereo() const                                      { return stereo; }
+    ChannelConfiguration getChannelConfiguration() const;
+    void setChannelConfiguration (const ChannelConfiguration&);
     double getSampleRate() const                                { return sampleRate; }
     bool shouldAddMetadata() const                              { return addMetadata; }
 
@@ -162,7 +163,7 @@ public:
 
     juce::CachedValue<bool> createMidiFile;
     juce::CachedValue<TargetFileFormat> format;
-    juce::CachedValue<bool> stereo;
+    juce::CachedValue<juce::String> channelConfigStr;
     juce::CachedValue<double> sampleRate;
     juce::CachedValue<int> bitDepth, qualityIndex;
     juce::CachedValue<double> rmsLevelDb, peakLevelDb;

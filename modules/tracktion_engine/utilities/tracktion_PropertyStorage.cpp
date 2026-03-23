@@ -125,6 +125,7 @@ juce::StringRef PropertyStorage::settingToString (SettingID setting)
         case SettingID::renderTrimSilence:                  return "renderTrimSilence";
         case SettingID::renderSampRate:                     return "renderSampRate";
         case SettingID::renderStereo:                       return "renderStereo";
+        case SettingID::renderChannelConfig:                return "renderChannelConfig";
         case SettingID::renderBits:                         return "renderBits";
         case SettingID::renderDither:                       return "renderDither";
         case SettingID::quality:                            return "quality";
