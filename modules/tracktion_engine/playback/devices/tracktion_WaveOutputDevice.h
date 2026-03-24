@@ -33,15 +33,13 @@ public:
     void setDithered (bool);
     bool isDithered() const         { return ditheringEnabled; }
 
-    /** Returns the left channel index.
-        N.B. this doesn't take into account if the channels are reversed as the reversing
-        will be applied during the rendering stage.
+    /** Returns the first channel's device index.
+        N.B. this reflects any channel reversal that has been applied.
     */
     int getLeftChannel() const;
 
-    /** Returns the right channel index.
-        N.B. this doesn't take into account if the channels are reversed as the reversing
-        will be applied during the rendering stage.
+    /** Returns the second channel's device index.
+        N.B. this reflects any channel reversal that has been applied.
     */
     int getRightChannel() const;
 
@@ -51,7 +49,7 @@ public:
 
     WaveOutputDeviceInstance* createInstance (EditPlaybackContext&);
 
-    const WaveDeviceDescription deviceDescription;
+    WaveDeviceDescription deviceDescription;
 
 protected:
     juce::String openDevice() override;
@@ -61,11 +59,13 @@ private:
     friend class DeviceManager;
     friend class WaveOutputDeviceInstance;
 
-    const juce::AudioChannelSet channelSet;
+    ChannelConfiguration originalChannels;
+    juce::AudioChannelSet channelSet;
     bool ditheringEnabled, leftRightReversed;
 
     void loadProps();
     void saveProps();
+    void applyChannelOrdering();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveOutputDevice)
 };

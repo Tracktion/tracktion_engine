@@ -37,6 +37,9 @@ public:
     /** @internal */
     bool canContainPlugin (Plugin*) const override;
 
+    /** Returns the channel configuration of the default output device. */
+    ChannelConfiguration getChannelConfiguration() const;
+
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MasterTrack)
 };

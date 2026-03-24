@@ -29,6 +29,7 @@ public:
         runSerializationTests();
         runComparisonTests();
         runIntersectionTests();
+        runReversalTests();
     }
 
 private:
@@ -198,6 +199,102 @@ private:
             auto result = ChannelConfiguration::stereo (0).intersection (ChannelConfiguration::stereo (0));
             expectEquals (result.getNumChannels(), 2);
             expect (result == ChannelConfiguration::stereo (0));
+        }
+    }
+    void runReversalTests()
+    {
+        beginTest ("Reversal - stereo");
+        {
+            auto stereo = ChannelConfiguration::stereo (0);
+            auto rev = stereo.reversed();
+
+            expectEquals (rev.getNumChannels(), 2);
+            // Device indices should be swapped
+            expectEquals (rev[0].indexInDevice, 1);
+            expectEquals (rev[1].indexInDevice, 0);
+            // Channel types should be preserved in original order
+            expect (rev[0].channel == juce::AudioChannelSet::left);
+            expect (rev[1].channel == juce::AudioChannelSet::right);
+        }
+
+        beginTest ("Reversal - 4-channel discrete");
+        {
+            auto discrete = ChannelConfiguration::discreteChannels (4, 0);
+            auto rev = discrete.reversed();
+
+            expectEquals (rev.getNumChannels(), 4);
+            expectEquals (rev[0].indexInDevice, 3);
+            expectEquals (rev[1].indexInDevice, 2);
+            expectEquals (rev[2].indexInDevice, 1);
+            expectEquals (rev[3].indexInDevice, 0);
+        }
+
+        beginTest ("Reversal - mono is unchanged");
+        {
+            auto mono = ChannelConfiguration::mono (5);
+            auto rev = mono.reversed();
+
+            expectEquals (rev.getNumChannels(), 1);
+            expectEquals (rev[0].indexInDevice, 5);
+            expect (rev[0].channel == juce::AudioChannelSet::centre);
+        }
+
+        beginTest ("Reversal - empty is empty");
+        {
+            auto empty = ChannelConfiguration();
+            auto rev = empty.reversed();
+            expect (rev.isEmpty());
+        }
+
+        beginTest ("Reversal - double reversal is identity");
+        {
+            auto original = ChannelConfiguration::surround5_1 (0);
+            auto doubleReversed = original.reversed().reversed();
+            expect (original == doubleReversed);
+        }
+
+        beginTest ("Reversal - preserves channel types");
+        {
+            auto surround = ChannelConfiguration::surround5_1 (0);
+            auto rev = surround.reversed();
+
+            // Channel types should stay in same positions
+            expect (rev[0].channel == juce::AudioChannelSet::left);
+            expect (rev[1].channel == juce::AudioChannelSet::right);
+            expect (rev[2].channel == juce::AudioChannelSet::centre);
+            expect (rev[3].channel == juce::AudioChannelSet::LFE);
+            expect (rev[4].channel == juce::AudioChannelSet::leftSurround);
+            expect (rev[5].channel == juce::AudioChannelSet::rightSurround);
+
+            // Device indices should be reversed
+            expectEquals (rev[0].indexInDevice, 5);
+            expectEquals (rev[1].indexInDevice, 4);
+            expectEquals (rev[2].indexInDevice, 3);
+            expectEquals (rev[3].indexInDevice, 2);
+            expectEquals (rev[4].indexInDevice, 1);
+            expectEquals (rev[5].indexInDevice, 0);
+        }
+
+        beginTest ("Reversal - serialization round-trip");
+        {
+            auto original = ChannelConfiguration::stereo (0).reversed();
+            auto json = original.toJSON();
+            auto restored = ChannelConfiguration::fromJSON (json);
+
+            expectEquals (restored.getNumChannels(), 2);
+            expectEquals (restored[0].indexInDevice, 1);
+            expectEquals (restored[1].indexInDevice, 0);
+            expect (restored[0].channel == juce::AudioChannelSet::left);
+            expect (restored[1].channel == juce::AudioChannelSet::right);
+        }
+
+        beginTest ("Reversal - non-zero start index");
+        {
+            auto stereo = ChannelConfiguration::stereo (4);
+            auto rev = stereo.reversed();
+
+            expectEquals (rev[0].indexInDevice, 5);
+            expectEquals (rev[1].indexInDevice, 4);
         }
     }
 };

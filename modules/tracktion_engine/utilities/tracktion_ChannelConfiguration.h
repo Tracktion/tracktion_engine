@@ -189,6 +189,12 @@ public:
     /// Creates a configuration from a string.
     static ChannelConfiguration fromString (std::string_view);
 
+    /// Returns a new configuration with the device index mapping reversed.
+    /// Channel types are preserved in their original positions, but the
+    /// indexInDevice values are reversed. For example, stereo [{idx:0,L}, {idx:1,R}]
+    /// becomes [{idx:1,L}, {idx:0,R}].
+    ChannelConfiguration reversed() const;
+
     /// Creates a human-readable description of the channels.
     juce::String getDescription() const;
 

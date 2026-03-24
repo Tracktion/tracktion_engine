@@ -32,4 +32,12 @@ juce::String MasterTrack::getName() const             { return TRANS("Master"); 
 juce::String MasterTrack::getSelectableDescription()  { return TRANS("Master Track"); }
 bool MasterTrack::canContainPlugin (Plugin* p) const  { return p->canBeAddedToMaster(); }
 
+ChannelConfiguration MasterTrack::getChannelConfiguration() const
+{
+    if (auto device = edit.engine.getDeviceManager().getDefaultWaveOutDevice())
+        return device->getChannels();
+
+    return ChannelConfiguration::stereo();
+}
+
 } // namespace tracktion::inline engine

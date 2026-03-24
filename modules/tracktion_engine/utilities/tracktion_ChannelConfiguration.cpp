@@ -343,6 +343,32 @@ ChannelConfiguration ChannelConfiguration::fromString (std::string_view s)
     }
 }
 
+ChannelConfiguration ChannelConfiguration::reversed() const
+{
+    const auto numChans = channels.size();
+
+    if (numChans <= 1)
+        return *this;
+
+    // Collect the device indices and reverse them
+    std::vector<int> indices;
+    indices.reserve (numChans);
+
+    for (const auto& c : channels)
+        indices.push_back (c.indexInDevice);
+
+    std::reverse (indices.begin(), indices.end());
+
+    // Build new config: same channel types, reversed device indices
+    ChannelConfiguration result;
+    result.channels.reserve (numChans);
+
+    for (size_t i = 0; i < numChans; ++i)
+        result.channels.push_back (ChannelIndex (indices[i], channels[i].channel));
+
+    return result;
+}
+
 juce::String ChannelConfiguration::getDescription() const
 {
     juce::MemoryOutputStream desc;

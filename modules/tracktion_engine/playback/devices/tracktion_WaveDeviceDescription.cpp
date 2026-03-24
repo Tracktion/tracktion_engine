@@ -48,6 +48,11 @@ void WaveDeviceDescription::setNumChannels (uint32_t firstChannelIndexInDevice, 
     channels.setNumChannels (static_cast<int> (newNumChannels), static_cast<int> (firstChannelIndexInDevice));
 }
 
+void WaveDeviceDescription::setChannelConfiguration (ChannelConfiguration newChannels)
+{
+    channels = std::move (newChannels);
+}
+
 uint32_t WaveDeviceDescription::getNumChannels() const
 {
     return static_cast<uint32_t> (channels.getNumChannels());

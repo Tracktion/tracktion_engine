@@ -32,6 +32,7 @@ struct WaveDeviceDescription
 
     void setNumChannels (uint32_t firstChannelIndexInDevice, uint32_t newNumChannels);
     void setNumChannels (uint32_t newNumChannels);
+    void setChannelConfiguration (ChannelConfiguration newChannels);
     uint32_t getNumChannels() const;
     std::pair<uint32_t, uint32_t> getDeviceChannelRange() const;
 

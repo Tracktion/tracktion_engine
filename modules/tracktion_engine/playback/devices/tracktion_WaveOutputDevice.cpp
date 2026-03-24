@@ -13,6 +13,7 @@ namespace tracktion::inline engine {
 WaveOutputDevice::WaveOutputDevice (Engine& e, const WaveDeviceDescription& desc)
     : OutputDevice (e, desc.name, "waveout_" + juce::String::toHexString (desc.name.hashCode())),
       deviceDescription (desc),
+      originalChannels (desc.channels),
       channelSet (desc.channels.toChannelSet()),
       ditheringEnabled (false),
       leftRightReversed (false)
@@ -64,6 +65,8 @@ void WaveOutputDevice::loadProps()
         ditheringEnabled = n->getBoolAttribute ("dithering", ditheringEnabled);
         leftRightReversed = n->getBoolAttribute ("reversed", leftRightReversed);
     }
+
+    applyChannelOrdering();
 }
 
 void WaveOutputDevice::saveProps()
@@ -84,9 +87,20 @@ void WaveOutputDevice::reverseChannels (bool shouldReverse)
     if (leftRightReversed != shouldReverse)
     {
         leftRightReversed = shouldReverse;
+        applyChannelOrdering();
         changed();
         saveProps();
     }
+}
+
+void WaveOutputDevice::applyChannelOrdering()
+{
+    if (leftRightReversed)
+        deviceDescription.channels = originalChannels.reversed();
+    else
+        deviceDescription.channels = originalChannels;
+
+    channelSet = deviceDescription.channels.toChannelSet();
 }
 
 void WaveOutputDevice::setDithered (bool dither)
