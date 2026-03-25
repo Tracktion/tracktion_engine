@@ -326,7 +326,7 @@ static void addExpressiveNoteToSequence (juce::MidiMessageSequence& seq, const M
 
     // Then note-on
     using namespace NoteHelpers;
-    const auto noteOnVelocity = juce::jlimit (0.0f, 1.0f, note.getVelocity() / 127.0f);
+    const auto noteOnVelocity = juce::jlimit (0.0f, 1.0f, float (note.getVelocity()) / 127.0f);
     seq.addEvent (juce::MidiMessage (createNoteOn (midiChannel, note.getNoteNumber(), noteOnVelocity), downTime));
 
     // Then modulating expression
@@ -334,7 +334,7 @@ static void addExpressiveNoteToSequence (juce::MidiMessageSequence& seq, const M
         addMidiExpressionToSequence (seq, v, clip, tb, midiChannel, noteStartBeat, noteEndBeat);
 
     // Finally note-off
-    const auto noteOffVelocity = state.hasProperty (IDs::lift) ? int (state[IDs::lift]) / 127.0f : 0.0f;
+    const auto noteOffVelocity = state.hasProperty (IDs::lift) ? float (int (state[IDs::lift])) / 127.0f : 0.0f;
     seq.addEvent (juce::MidiMessage (createNoteOff (midiChannel, note.getNoteNumber(), noteOffVelocity), upTime));
 }
 

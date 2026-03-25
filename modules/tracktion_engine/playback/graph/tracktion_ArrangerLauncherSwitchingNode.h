@@ -70,7 +70,7 @@ public:
             for (size_t i = 0; i < numThisTime; ++i)
             {
                 const auto frameNum = numFramesToFade - channelCurrentFadeFrameCountDown;
-                auto alpha = frameNum / static_cast<float> (numFramesToFade);
+                auto alpha = static_cast<float> (frameNum) / static_cast<float> (numFramesToFade);
                 assert (alpha >= 0.0f && alpha <= 1.0f);
 
                 if (fadeType == FadeType::fadeOut)

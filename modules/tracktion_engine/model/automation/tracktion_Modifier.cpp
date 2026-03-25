@@ -27,7 +27,7 @@ public:
     {
         jassert ((size_t) numSamplesDelta < values.size());
 
-        const float delta = (value - lastValue) / numSamplesDelta;
+        const float delta = (value - lastValue) / float (numSamplesDelta);
         float alpha = lastValue;
 
         while (--numSamplesDelta >= 0)

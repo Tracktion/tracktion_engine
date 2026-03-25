@@ -195,8 +195,8 @@ private:
             }
             else
             {
-                entry->range.low  = curEntry / (float) numEntries;
-                entry->range.high = (curEntry + 1) / (float) numEntries;
+                entry->range.low  = float (curEntry) / (float) numEntries;
+                entry->range.high = float (curEntry + 1) / (float) numEntries;
 
                 entry->range.inclusiveLow  = true;
                 entry->range.inclusiveHigh = (curEntry == numEntries - 1);

@@ -38,7 +38,7 @@ struct AudioFileInfo
     double getLengthInSeconds() const noexcept
     {
         if (sampleRate > 0)
-            return lengthInSamples / sampleRate;
+            return static_cast<double> (lengthInSamples) / sampleRate;
 
         return 0.0;
     }

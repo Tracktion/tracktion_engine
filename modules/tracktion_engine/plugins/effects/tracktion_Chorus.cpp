@@ -88,7 +88,7 @@ void ChorusPlugin::applyToBuffer (const PluginRenderContext& fc)
             ph += speed;
 
             int intSweepPos = juce::roundToInt (sweep);
-            const float interp = sweep - intSweepPos;
+            const float interp = sweep - float (intSweepPos);
             intSweepPos = bufPos + lengthInSamples - intSweepPos;
 
             const float out = buf[(intSweepPos - 1) % lengthInSamples] * interp

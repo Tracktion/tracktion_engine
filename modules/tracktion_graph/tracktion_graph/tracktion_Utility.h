@@ -18,7 +18,7 @@ namespace tracktion::inline graph {
 template<typename IntType>
 constexpr double sampleToTime (IntType samplePosition, double sampleRate)
 {
-    return samplePosition / sampleRate;
+    return (double) samplePosition / sampleRate;
 }
 
 /** Converts a time in seconds to a sample number. */

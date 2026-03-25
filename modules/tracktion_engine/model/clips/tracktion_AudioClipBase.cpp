@@ -69,7 +69,7 @@ public:
 
                 startSample += numThisTime;
                 numLeft -= numThisTime;
-                progress = numLeft / (float) numSamples;
+                progress = float (numLeft) / float (numSamples);
             }
 
             bpm = detector.finishAndDetect();
@@ -187,7 +187,7 @@ private:
             samplesToDo -= numThisTime;
             sourceSample += numThisTime;
 
-            progress = juce::jlimit (0.0f, 1.0f, (float) (sourceSample / (double) reader->lengthInSamples));
+            progress = juce::jlimit (0.0f, 1.0f, float (double (sourceSample) / double (reader->lengthInSamples)));
         }
 
         return false;
@@ -847,7 +847,7 @@ void AudioClipBase::copyFadeToAutomation (bool useFadeIn, bool removeClipFade)
         {
             for (int i = 0; i < 10; ++i)
             {
-                auto alpha = i / 9.0f;
+                auto alpha = float (i) / 9.0f;
                 auto time = toPosition (fadeTime.getLength()) * alpha;
 
                 if (! useFadeIn)
@@ -1235,7 +1235,7 @@ LoopInfo AudioClipBase::autoDetectBeatMarkers (const LoopInfo& current, bool aut
             detect.setSensitivity (sens);
             detect.setSampleRate (reader->sampleRate);
 
-            if ((end - start) > reader->sampleRate)
+            if (double (end - start) > reader->sampleRate)
             {
                 auto blockLength = detect.getBlockSize();
                 auto blockSize = choc::buffer::Size::create (reader->numChannels, blockLength);
@@ -1476,7 +1476,7 @@ void AudioClipBase::snapToOriginalBWavTime()
 
     if (bwavTime.isNotEmpty())
     {
-        auto t = TimePosition::fromSeconds (bwavTime.getLargeIntValue() / f.getSampleRate());
+        auto t = TimePosition::fromSeconds (static_cast<double> (bwavTime.getLargeIntValue()) / f.getSampleRate());
 
         setStart (t + getPosition().getOffset(), false, true);
     }
@@ -2082,7 +2082,7 @@ struct StretchSegment
 
         if (segment.hasFadeOut())
         {
-            auto fadeOutStart = (SampleCount) (segment.getSampleRange().getLength() / segment.getStretchRatio()) - crossfadeSamples;
+            auto fadeOutStart = (SampleCount) (static_cast<double> (segment.getSampleRange().getLength()) / segment.getStretchRatio()) - crossfadeSamples;
 
             if (renderedEnd > fadeOutStart)
                 renderFade (fadeOutStart, fadeOutStart + crossfadeSamples + 2, true, numSamples);
@@ -2096,13 +2096,13 @@ struct StretchSegment
 
         if (end > renderedEnd)
         {
-            alpha2 = (renderedEnd - start) / (float) (end - start);
+            alpha2 = static_cast<float> (renderedEnd - start) / (float) (end - start);
             end = renderedEnd;
         }
 
         if (start < readySampleOutputPos)
         {
-            alpha1 = alpha2 * (readySampleOutputPos - start) / (float) (end - start);
+            alpha1 = alpha2 * static_cast<float> (readySampleOutputPos - start) / (float) (end - start);
             start = readySampleOutputPos;
         }
 
@@ -2189,7 +2189,7 @@ bool AudioClipBase::ProxyRenderingInfo::render (Engine& engine, const AudioFile&
         if (! writer.appendBuffer (buffer, samplesPerBlock))
             return false;
 
-        progress = i / (float) numBlocks;
+        progress = static_cast<float> (i) / (float) numBlocks;
     }
 
     return true;
@@ -2247,7 +2247,7 @@ HashCode AudioClipBase::getProxyHash()
         int i = 0;
 
         for (auto& segment : segmentList.getSegments())
-            hash ^= static_cast<HashCode> (segment.getHashCode() * (i++ + 0.1));
+            hash ^= static_cast<HashCode> (static_cast<double> (segment.getHashCode()) * (i++ + 0.1));
     }
 
     return hash;

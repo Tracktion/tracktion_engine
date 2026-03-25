@@ -470,7 +470,7 @@ bool EditRenderJob::generateSilence (const juce::File& fileToWriteTo)
         auto numThisTime = std::min ((int) numToDo, blockSize);
         writer->writeFromAudioSampleBuffer (buffer, 0, numThisTime);
 
-        progress = (float) (numDone / (float) numToDo);
+        progress = float (numDone) / float (numToDo);
         thumbnailToUpdate.addBlock (numDone, buffer, 0, numThisTime);
 
         numDone += numThisTime;

@@ -437,8 +437,8 @@ void AudioFadeCurve::drawFadeCurve (juce::Graphics& g, const AudioFadeCurve::Typ
     }
     else
     {
-        float left  = (clip.getX() & ~3) - 3.0f;
-        float right = clip.getRight() + 5.0f;
+        float left  = float (clip.getX() & ~3) - 3.0f;
+        float right = float (clip.getRight()) + 5.0f;
 
         left  = std::max (left,  std::min (x1, x2));
         right = std::min (right, std::max (x1, x2));

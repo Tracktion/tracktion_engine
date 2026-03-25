@@ -193,8 +193,8 @@ void SlotControlNode::processSplitSection (ProcessContext& pc, LaunchHandle::Spl
             return;
 
         const auto numRefSamples = pc.referenceSampleRange.getLength();
-        const auto startRefSample  = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getStart() * numRefSamples);
-        const auto endRefSample    = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getEnd() * numRefSamples);
+        const auto startRefSample  = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getStart() * static_cast<double> (numRefSamples));
+        const auto endRefSample    = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getEnd() * static_cast<double> (numRefSamples));
 
         const juce::Range subSectionReferenceSampleRange (startRefSample, endRefSample);
 
@@ -330,7 +330,7 @@ void SlotControlNode::processStop (ProcessContext& pc, double timestampForMidiNo
 
                     for (uint32_t i = 0; i < lastSampleFadeLength; ++i)
                     {
-                        auto alpha = i / (float) lastSampleFadeLength;
+                        auto alpha = static_cast<float> (i) / static_cast<float> (lastSampleFadeLength);
                         dest[i] = lastSample * (1.0f - alpha);
                     }
 

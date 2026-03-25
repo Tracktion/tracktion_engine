@@ -325,7 +325,7 @@ public:
     {
         if (auto reader = std::unique_ptr<juce::AudioFormatReader> (tracktion::engine::AudioFileUtils::createReaderFor (engine, file)))
             if (reader->sampleRate > 0.0)
-                return reader->lengthInSamples / reader->sampleRate;
+                return static_cast<double> (reader->lengthInSamples) / reader->sampleRate;
 
         return 0.0;
     }

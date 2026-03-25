@@ -87,7 +87,7 @@ public:
             return;
         }
 
-        const float gainDelta = 1.0f / numSamples;
+        const float gainDelta = 1.0f / float (numSamples);
         float newGain = 0.0f;
         float oldGain = 1.0f;
 

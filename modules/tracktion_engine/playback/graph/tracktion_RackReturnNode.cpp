@@ -130,7 +130,7 @@ void RackReturnNode::process (ProcessContext& pc)
     }
     else
     {
-        const auto step = (wetGain - lastWetGain) / destAudio.getNumFrames();
+        const auto step = (wetGain - lastWetGain) / static_cast<float> (destAudio.getNumFrames());
         applyGainPerFrame (destAudio, [start = lastWetGain, step]() mutable { return start += step; });
 
         lastWetGain = wetGain;

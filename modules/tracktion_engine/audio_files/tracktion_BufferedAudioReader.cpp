@@ -38,7 +38,7 @@ BufferedAudioReader::~BufferedAudioReader()
 float BufferedAudioReader::getProportionComplete() const
 {
     return source->lengthInSamples == 0 ? 0.0f
-            : validEnd.load (std::memory_order_relaxed) / static_cast<float> (sourceLength);
+            : float (validEnd.load (std::memory_order_relaxed)) / float (sourceLength);
 }
 
 bool BufferedAudioReader::readSamples (int* const* destSamples, int numDestChannels, int startOffsetInDestBuffer,

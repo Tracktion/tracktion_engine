@@ -805,7 +805,7 @@ void MackieC4::acceptMidiMessage (int, const juce::MidiMessage& m)
         else if (result.theType == C4RxTypeVPot)
         {
             // pot turned
-            currentPotPos[result.theExt1] = juce::jlimit (0.0f, 1.0f, currentPotPos[result.theExt1]  + result.theExt2 * panPotSpeed);
+            currentPotPos[result.theExt1] = juce::jlimit (0.0f, 1.0f, currentPotPos[result.theExt1]  + static_cast<float> (result.theExt2) * panPotSpeed);
 
             if (mode == PluginMode3)
             {

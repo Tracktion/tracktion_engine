@@ -96,8 +96,8 @@ void ExportJob::copyProjectFilesToTempDir()
 
         for (int i = 0; i < destProject->getNumProjectItems(); ++i)
         {
-            progress = ((archive != nullptr) ? 0.5f : 1.0f) * i
-                          / (float) destProject->getNumProjectItems();
+            progress = ((archive != nullptr) ? 0.5f : 1.0f) * float (i)
+                          / float (destProject->getNumProjectItems());
 
             if (shouldExit())
                 break;
@@ -201,7 +201,7 @@ void ExportJob::copyEditFilesToTempDir()
 
         for (auto ref : exportable->getReferencedItems())
         {
-            progress = ((archive != nullptr ? 0.5f : 1.0f) * numThingsCopied) / totalThingsToCopy;
+            progress = ((archive != nullptr ? 0.5f : 1.0f) * float (numThingsCopied)) / float (totalThingsToCopy);
 
             if (shouldExit())
                 break;
@@ -287,7 +287,7 @@ void ExportJob::createArchiveFromTempFiles()
 
         for (int i = 0; i < filesForDeletion.size(); ++i)
         {
-            progress = 0.5f + 0.5f * i / filesForDeletion.size();
+            progress = 0.5f + 0.5f * float (i) / float (filesForDeletion.size());
 
             if (shouldExit())
                 break;

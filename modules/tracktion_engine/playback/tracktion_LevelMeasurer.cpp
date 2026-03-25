@@ -35,7 +35,7 @@ static void getSumAndDiff (const juce::AudioBuffer<FloatType>& buffer,
             hi = juce::jmax (hi, mag);
         }
 
-        sum = s / buffer.getNumChannels();
+        sum = s / static_cast<FloatType> (buffer.getNumChannels());
         diff = juce::jmax (FloatType(), hi - lo);
     }
 }

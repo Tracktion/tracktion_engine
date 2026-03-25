@@ -637,7 +637,7 @@ double SmartThumbnail::getProportionComplete() const noexcept
     if (auto sampleRate = file.getSampleRate(); sampleRate > 0)
     {
         const auto totalSamples = toSamples (TimePosition::fromSeconds (getTotalLength()), sampleRate);
-        return juce::jlimit (0.0, 1.0, getNumSamplesFinished() / (double) std::max ((SampleCount) 1, totalSamples));
+        return juce::jlimit (0.0, 1.0, double (getNumSamplesFinished()) / double (std::max ((SampleCount) 1, totalSamples)));
     }
 
     return 0.0;

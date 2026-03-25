@@ -671,7 +671,7 @@ void CustomControlSurface::acceptMidiMessage (int, const juce::MidiMessage& m)
         int val;
         lastControllerNote = -1;
         rpnParser.parseControllerMessage (m, lastControllerID, lastControllerChannel, val);
-        lastControllerValue = val / 127.0f;
+        lastControllerValue = static_cast<float> (val) / 127.0f;
     }
 
     if (m.isNoteOn())

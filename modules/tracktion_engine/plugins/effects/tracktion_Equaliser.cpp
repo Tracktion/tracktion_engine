@@ -319,7 +319,7 @@ float EqualiserPlugin::getDBGainAtFrequency (float f)
 
         for (int i = 0; i < sampSize / 2;)
         {
-            curve.addPoint (i / (float)(sampSize / 2),
+            curve.addPoint (float (i) / float (sampSize / 2),
                             gainToDb (juce::jlimit (0.01f, 10.0f, samps[i * 2])));
 
             if (i < sampSize / 8)

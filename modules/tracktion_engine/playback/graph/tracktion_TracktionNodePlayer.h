@@ -145,8 +145,8 @@ private:
         jassert (pc.referenceSampleRange.contains (subReferenceSampleRange));
 
         const auto originalReferenceLength = (double) pc.referenceSampleRange.getLength();
-        const juce::Range<double> proportion ((subReferenceSampleRange.getStart() - pc.referenceSampleRange.getStart()) / originalReferenceLength,
-                                              (subReferenceSampleRange.getEnd() - pc.referenceSampleRange.getStart()) / originalReferenceLength);
+        const juce::Range<double> proportion ((double (subReferenceSampleRange.getStart() - pc.referenceSampleRange.getStart())) / originalReferenceLength,
+                                              (double (subReferenceSampleRange.getEnd() - pc.referenceSampleRange.getStart())) / originalReferenceLength);
 
         const auto startSample  = (choc::buffer::FrameCount) std::llround (proportion.getStart() * pc.numSamples);
         const auto endSample    = (choc::buffer::FrameCount) std::llround (proportion.getEnd() * pc.numSamples);
@@ -217,8 +217,8 @@ private:
         assert (proportion.getEnd() <= 1.0);
         const auto sampleRate = nodePlayer.getSampleRate();
 
-        const auto startReferenceSample = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getStart() * pc.referenceSampleRange.getLength());
-        const auto endReferenceSample   = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getEnd() * pc.referenceSampleRange.getLength());
+        const auto startReferenceSample = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getStart() * double (pc.referenceSampleRange.getLength()));
+        const auto endReferenceSample   = pc.referenceSampleRange.getStart() + (int64_t) std::llround (proportion.getEnd()   * double (pc.referenceSampleRange.getLength()));
         const juce::Range<int64_t> referenceRange (startReferenceSample, endReferenceSample);
 
         const auto startSample  = (choc::buffer::FrameCount) std::llround (proportion.getStart() * pc.numSamples);

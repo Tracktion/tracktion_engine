@@ -464,7 +464,7 @@ void AlphaTrackControlSurface::acceptMidiMessage (int, const juce::MidiMessage& 
         if (stripPos != -1)
         {
             int move = currentStripPos - stripPos;
-            userMovedJogWheel(move / 1.5f);
+            userMovedJogWheel(static_cast<float> (move) / 1.5f);
             jogged = true;
         }
 
@@ -1019,7 +1019,7 @@ void AlphaTrackControlSurface::turnParam (int paramIdx, int delta)
 
     if (param)
     {
-        pos = juce::jlimit (0.0f, 1.0f, pos + delta / 75.0f);
+        pos = juce::jlimit (0.0f, 1.0f, pos + static_cast<float> (delta) / 75.0f);
         param->midiControllerMoved (pos);
         updateDisplay();
     }

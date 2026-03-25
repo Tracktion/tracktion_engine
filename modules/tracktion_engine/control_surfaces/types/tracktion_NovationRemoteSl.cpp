@@ -192,9 +192,9 @@ void NovationRemoteSl::acceptMidiMessage (int, const juce::MidiMessage& m)
                 setRightMode(rmVol);
 
             if (rightMode == rmPan)
-                userMovedPanPot(cn - 0x10, m.getControllerValue() / 127.0f * 2.0f - 1.0f);
+                userMovedPanPot(cn - 0x10, static_cast<float> (m.getControllerValue()) / 127.0f * 2.0f - 1.0f);
             else
-                userMovedFader(cn - 0x10, m.getControllerValue() / 127.0f);
+                userMovedFader(cn - 0x10, static_cast<float> (m.getControllerValue()) / 127.0f);
         }
         // right - mute buttons
         if (cn >= 0x28 && cn <= 0x2f)
@@ -326,7 +326,7 @@ void NovationRemoteSl::acceptMidiMessage (int, const juce::MidiMessage& m)
                 if (std::strlen (param[cn - 0x00].label) > 0)
                 {
                     param[cn - 0x00].value = juce::jlimit (0.0f, 1.0f,
-                                                           param[cn - 0x00].value + (m.getControllerValue() - 64) / 150.0f);
+                                                           param[cn - 0x00].value + static_cast<float> (m.getControllerValue() - 64) / 150.0f);
 
                     userMovedParameterControl (cn - 0x00, param[cn - 0x00].value);
                 }
@@ -340,7 +340,7 @@ void NovationRemoteSl::acceptMidiMessage (int, const juce::MidiMessage& m)
                 if (leftMode == lmParam1)
                     setLeftMode (lmParam2);
 
-                userMovedParameterControl (cn - 0x08 + 8, m.getControllerValue() / 127.0f);
+                userMovedParameterControl (cn - 0x08 + 8, static_cast<float> (m.getControllerValue()) / 127.0f);
             }
         }
         // lock

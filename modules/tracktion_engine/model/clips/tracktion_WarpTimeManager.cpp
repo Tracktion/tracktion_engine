@@ -113,7 +113,7 @@ protected:
             processNextBuffer (scratch.buffer);
 
         numSamplesRead += numToDo;
-        progress = (numSamplesRead / (float) totalNumSamples)
+        progress = (static_cast<float> (numSamplesRead) / (float) totalNumSamples)
             * (findingNormaliseLevel ? 0.5f : 1.0f);
 
         if (findingNormaliseLevel && numSamplesRead >= totalNumSamples)
@@ -217,7 +217,7 @@ private:
 
     TimePosition sampleToSeconds (SampleCount sample) const
     {
-        return TimePosition::fromSeconds (sampleRate > 0.0 ? sample / sampleRate : 0.0);
+        return TimePosition::fromSeconds (sampleRate > 0.0 ? static_cast<double> (sample) / sampleRate : 0.0);
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TransientDetectionJob)

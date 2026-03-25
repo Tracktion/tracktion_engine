@@ -196,7 +196,7 @@ private:
             }
         }
 
-        newTotal = (numJobs > 0) ? (newTotal / numJobs) : 1.0f;
+        newTotal = (numJobs > 0) ? (newTotal / float (numJobs)) : 1.0f;
 
         if (newTotal > totalProgress)
             totalProgress = totalProgress + ((newTotal - totalProgress) / 2.0f);

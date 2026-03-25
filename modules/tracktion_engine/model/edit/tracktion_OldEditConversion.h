@@ -148,7 +148,7 @@ private:
 
                                 auto expression = new juce::XmlElement (IDs::PITCHBEND);
                                 expression->setAttribute (IDs::b, control->getDoubleAttribute (IDs::b));
-                                expression->setAttribute (IDs::v, range.convertFrom0to1 (control->getIntAttribute (IDs::val) / 16383.0f));
+                                expression->setAttribute (IDs::v, range.convertFrom0to1 (float (control->getIntAttribute (IDs::val)) / 16383.0f));
                                 note->addChildElement (expression);
                             }
                             // Channel Pressure
@@ -156,7 +156,7 @@ private:
                             {
                                 auto expression = new juce::XmlElement (IDs::PRESSURE);
                                 expression->setAttribute (IDs::b, control->getDoubleAttribute (IDs::b));
-                                expression->setAttribute (IDs::v, control->getIntAttribute (IDs::val) / 16383.0f);
+                                expression->setAttribute (IDs::v, float (control->getIntAttribute (IDs::val)) / 16383.0f);
                                 note->addChildElement (expression);
                             }
 

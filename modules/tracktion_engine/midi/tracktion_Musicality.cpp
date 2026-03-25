@@ -1534,7 +1534,7 @@ void PatternGenerator::generateArpPattern()
         styleValues.add (arpStyle.get().substring (i, i + 1).getIntValue());
 
     const float lengthFactor = gate / 100.0f;
-    const auto noteLengthBeat = BeatDuration::fromBeats (arpPatternLength / styleValues.size());
+    const auto noteLengthBeat = BeatDuration::fromBeats (arpPatternLength / double (styleValues.size()));
 
     // clear offset before generating clip
     mc->setOffset ({});

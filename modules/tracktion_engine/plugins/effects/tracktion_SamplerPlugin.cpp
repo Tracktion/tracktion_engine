@@ -92,7 +92,7 @@ public:
             }
             else
             {
-                endFade = std::max (0.0f, startFade - numSamps * 0.01f);
+                endFade = std::max (0.0f, startFade - float (numSamps) * 0.01f);
             }
 
             const int numSampsNeeded = 2 + juce::roundToInt ((numSamps + 2) * playbackRatio);

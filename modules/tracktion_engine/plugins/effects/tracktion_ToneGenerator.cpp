@@ -145,7 +145,7 @@ void ToneGeneratorPlugin::initialiseOscilators()
 
             while (f * k < sr / 2)
             {
-                sum += std::pow (-1, (k - 1) / 2.0f) / (k * k) * sin (k * in);
+                sum += std::pow (-1, float (k - 1) / 2.0f) / double (k * k) * sin (float (k) * in);
                 k += 2;
             }
 
@@ -167,7 +167,7 @@ void ToneGeneratorPlugin::initialiseOscilators()
 
             while (f * k < sr / 2)
             {
-                sum += ToneGenHelpers::oddEven (k) * std::sin (k * in) / k;
+                sum += double (ToneGenHelpers::oddEven (k)) * std::sin (float (k) * in) / double (k);
                 k++;
             }
 
@@ -189,7 +189,7 @@ void ToneGeneratorPlugin::initialiseOscilators()
 
             while (f * k < sr / 2)
             {
-                sum += ToneGenHelpers::oddEven (k) * std::sin (k * in) / k;
+                sum += double (ToneGenHelpers::oddEven (k)) * std::sin (float (k) * in) / double (k);
                 k++;
             }
 
@@ -211,7 +211,7 @@ void ToneGeneratorPlugin::initialiseOscilators()
 
             while (f * (2 * i - 1) < sr / 2)
             {
-                sum += std::sin ((2 * i - 1) * in) / ((2 * i - 1));
+                sum += std::sin (float (2 * i - 1) * in) / double (2 * i - 1);
                 i++;
             }
 

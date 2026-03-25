@@ -147,7 +147,7 @@ struct AudioFileUtils
                             numLeft -= numThisTime;
 
                             if (updateProgress)
-                                updateProgress (static_cast<float> (startSample) / reader->lengthInSamples);
+                                updateProgress (static_cast<float> (startSample) / static_cast<float> (reader->lengthInSamples));
 
                             if (numLeft <= 0)
                             {

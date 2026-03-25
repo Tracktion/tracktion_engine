@@ -391,8 +391,8 @@ void StepClip::generateMidiSequenceForChannels (juce::MidiMessageSequence& resul
                             }
                         }
 
-                        const float channelVelScale = c.noteValue / 127.0f;
-                        const float vel = cache->getVelocity (i) / 127.0f;
+                        const float channelVelScale = static_cast<float> (c.noteValue) / 127.0f;
+                        const float vel = static_cast<float> (cache->getVelocity (i)) / 127.0f;
                         jassert (c.channel.get().isValid());
                         auto chan = c.channel.get().getChannelNumber();
                         result.addEvent (juce::MidiMessage::noteOn  (chan, c.noteNumber, vel * channelVelScale), eventStart);

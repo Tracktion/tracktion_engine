@@ -150,7 +150,7 @@ static void addApplyingGainRamp (DestBuffer&& dest, const SourceBuffer& source, 
     auto size = source.getSize();
     CHOC_ASSERT (size == dest.getSize());
 
-    const auto delta = (endGain - startGain) / size.numFrames;
+    const auto delta = (endGain - startGain) / static_cast<float> (size.numFrames);
 
     for (decltype (size.numChannels) chan = 0; chan < size.numChannels; ++chan)
     {

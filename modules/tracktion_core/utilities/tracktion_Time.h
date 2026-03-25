@@ -466,7 +466,7 @@ inline constexpr TimePosition TimePosition::fromSeconds (T positionInSeconds)
 template<typename IntType>
 inline constexpr TimePosition TimePosition::fromSamples (IntType samplePosition, double sampleRate)
 {
-    return TimePosition::fromSeconds (samplePosition / sampleRate);
+    return TimePosition::fromSeconds (static_cast<double> (samplePosition) / sampleRate);
 }
 
 inline constexpr double TimePosition::inSeconds() const
@@ -532,7 +532,7 @@ inline constexpr TimeDuration TimeDuration::fromSeconds (T positionInSeconds)
 template<typename IntType>
 inline constexpr TimeDuration TimeDuration::fromSamples (IntType samplePosition, double sampleRate)
 {
-    return TimeDuration::fromSeconds (samplePosition / sampleRate);
+    return TimeDuration::fromSeconds (double (samplePosition) / sampleRate);
 }
 
 inline constexpr double TimeDuration::inSeconds() const

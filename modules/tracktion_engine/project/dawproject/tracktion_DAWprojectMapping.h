@@ -231,7 +231,7 @@ private:
 /** Velocity conversion between tracktion (0-127 int) and DAWproject (0.0-1.0 normalized). */
 inline float velocityToNormalized (int velocity)
 {
-    return juce::jlimit (0.0f, 1.0f, velocity / 127.0f);
+    return juce::jlimit (0.0f, 1.0f, static_cast<float> (velocity) / 127.0f);
 }
 
 inline int normalizedToVelocity (float normalized)

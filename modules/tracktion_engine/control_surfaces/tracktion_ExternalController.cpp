@@ -1108,7 +1108,7 @@ void ExternalController::updatePadColours()
                                     auto numColours = 19;
                                     auto newHue = col.getHue();
 
-                                    colourIdx = cs.limitedPadColours ? 1 : juce::jlimit (0, numColours - 1, juce::roundToInt (newHue * (numColours - 1) + 1));
+                                    colourIdx = cs.limitedPadColours ? 1 : juce::jlimit (0, numColours - 1, juce::roundToInt (newHue * static_cast<float> (numColours - 1) + 1.0f));
                                     break;
                                 }
                             }
@@ -1144,7 +1144,7 @@ void ExternalController::updatePadColours()
                                 auto numColours = 19;
                                 auto newHue = col.getHue();
 
-                                colourIdx = cs.limitedPadColours ? 1 : juce::jlimit (0, numColours - 1, juce::roundToInt (newHue * (numColours - 1) + 1));
+                                colourIdx = cs.limitedPadColours ? 1 : juce::jlimit (0, numColours - 1, juce::roundToInt (newHue * static_cast<float> (numColours - 1) + 1.0f));
                             }
 
                             if (auto tc = getTransport())

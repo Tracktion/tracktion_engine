@@ -299,9 +299,9 @@ inline void PerformanceMeasurement::Statistics::addResult (double secondsElapsed
 
     // Cycles
     {
-        const auto delta = cyclesElapsed - meanCycles;
+        const auto delta = (double) cyclesElapsed - meanCycles;
         meanCycles += delta / (double) numRuns;
-        const double delta2 = cyclesElapsed - meanCycles;
+        const double delta2 = (double) cyclesElapsed - meanCycles;
         m2Cycles += delta * delta2;
     }
 }

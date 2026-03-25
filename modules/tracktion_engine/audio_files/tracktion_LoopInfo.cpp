@@ -114,7 +114,7 @@ double LoopInfo::getBeatsPerSecond (const AudioFileInfo& wi) const
     if (out <= 0)
         return 2.0;
 
-    auto length = (out - in) / wi.sampleRate;
+    auto length = static_cast<double> (out - in) / wi.sampleRate;
 
     if (length <= 0)
         return 2.0;
@@ -317,7 +317,7 @@ void LoopInfo::init (const juce::AudioFormatReader* afr, const juce::AudioFormat
         setNumerator (afr->metadataValues[RexAudioFormat::rexDenominator].getIntValue());
         const double bpm = afr->metadataValues[RexAudioFormat::rexTempo].getDoubleValue();
         setProp (IDs::bpm, bpm);
-        setProp (IDs::numBeats, bpm * ((afr->lengthInSamples / afr->sampleRate) / 60.0));
+        setProp (IDs::numBeats, bpm * ((static_cast<double> (afr->lengthInSamples) / afr->sampleRate) / 60.0));
 
         juce::StringArray beatPoints;
         beatPoints.addTokens (afr->metadataValues[RexAudioFormat::rexBeatPoints], ";", {});
@@ -339,7 +339,7 @@ void LoopInfo::init (const juce::AudioFormatReader* afr, const juce::AudioFormat
         setNumerator (afr->metadataValues[juce::AiffAudioFormat::appleNumerator].getIntValue());
         const double numBeats = afr->metadataValues[juce::AiffAudioFormat::appleBeats].getDoubleValue();
         setProp (IDs::numBeats, numBeats);
-        setProp (IDs::bpm, (numBeats * 60.0) / (afr->lengthInSamples / afr->sampleRate));
+        setProp (IDs::bpm, (numBeats * 60.0) / (static_cast<double> (afr->lengthInSamples) / afr->sampleRate));
 
         juce::StringArray t;
         t.addTokens (afr->metadataValues[juce::AiffAudioFormat::appleTag], ";", {});
@@ -363,7 +363,7 @@ void LoopInfo::init (const juce::AudioFormatReader* afr, const juce::AudioFormat
             const int rootNote = afr->metadataValues[juce::WavAudioFormat::acidRootSet] == "1"
                                     ? afr->metadataValues[juce::WavAudioFormat::acidRootNote].getIntValue() : -1;
             const double numBeats = afr->metadataValues[juce::WavAudioFormat::acidBeats].getDoubleValue();
-            
+
             if (rootNote == -1)
                 if (auto smplNote = afr->metadataValues["MidiUnityNote"].getIntValue())
                     setRootNote (smplNote);
@@ -374,7 +374,7 @@ void LoopInfo::init (const juce::AudioFormatReader* afr, const juce::AudioFormat
             setDenominator (afr->metadataValues[juce::WavAudioFormat::acidDenominator].getIntValue());
             setNumerator (afr->metadataValues[juce::WavAudioFormat::acidNumerator].getIntValue());
             setNumBeats (afr->metadataValues[juce::WavAudioFormat::acidBeats].getDoubleValue());
-            setProp (IDs::bpm, (numBeats * 60.0) / (afr->lengthInSamples / afr->sampleRate));
+            setProp (IDs::bpm, (numBeats * 60.0) / (static_cast<double> (afr->lengthInSamples) / afr->sampleRate));
         }
     }
     else if (isSameFormat (af, formatManager.getNativeAudioFormat()))
@@ -395,7 +395,7 @@ void LoopInfo::init (const juce::AudioFormatReader* afr, const juce::AudioFormat
 
             if (tempoString.isNotEmpty())
             {
-                const double fileDuration = afr->lengthInSamples / afr->sampleRate;
+                const double fileDuration = static_cast<double> (afr->lengthInSamples) / afr->sampleRate;
                 setNumBeats ((fileDuration / 60.0) * bpm);
             }
 
@@ -403,7 +403,7 @@ void LoopInfo::init (const juce::AudioFormatReader* afr, const juce::AudioFormat
 
             if (beatCount.isNotEmpty() && bpm == 0)
             {
-                const double fileDuration = afr->lengthInSamples / afr->sampleRate;
+                const double fileDuration = static_cast<double> (afr->lengthInSamples) / afr->sampleRate;
                 const int beats = beatCount.getIntValue();
 
                 setProp (IDs::bpm, beats / fileDuration / 60.0);
@@ -441,7 +441,7 @@ void LoopInfo::init (const juce::AudioFormatReader* afr, const juce::AudioFormat
         setDenominator (afr->metadataValues[juce::WavAudioFormat::acidDenominator].getIntValue());
         setNumerator (afr->metadataValues[juce::WavAudioFormat::acidNumerator].getIntValue());
         setNumBeats (afr->metadataValues[juce::WavAudioFormat::acidBeats].getDoubleValue());
-        setProp (IDs::bpm, (numBeats * 60.0) / (afr->lengthInSamples / afr->sampleRate));
+        setProp (IDs::bpm, (numBeats * 60.0) / (static_cast<double> (afr->lengthInSamples) / afr->sampleRate));
     }
     else if (afr->metadataValues.containsKey ("MidiUnityNote"))
     {
@@ -449,7 +449,7 @@ void LoopInfo::init (const juce::AudioFormatReader* afr, const juce::AudioFormat
         if (note > 0)
             setRootNote (note);
     }
-    
+
     if (file != juce::File() && float (state.getProperty (IDs::bpm)) < 0.001f)
         deduceTempo (file, *afr);
 
@@ -482,24 +482,24 @@ std::optional<float> LoopInfo::getFileNameTempo (const juce::String& rawName)
         if (token.containsIgnoreCase ("bpm"))
         {
             token = token.replace ("bpm", "", true).trim();
-            
+
             while (token.startsWith ("0"))
                 token = token.substring (1);
-            
+
             auto val = token.getIntValue();
-            
+
             if (val > 50 && val < 250 && juce::String (val) == token)
                 return float (val);
         }
     }
-    
+
     for (auto token : reverseTokens (name, "_", ""))
     {
         auto val = token.getIntValue();
-        
+
         while (token.startsWith ("0"))
             token = token.substring (1);
-        
+
         if (val > 50 && val < 250 && juce::String (val) == token)
             return float (val);
     }
@@ -541,8 +541,8 @@ std::optional<int> LoopInfo::getFileNameRootNote (const juce::String& rawName)
 
 bool LoopInfo::deduceTempo (const juce::File& file, const juce::AudioFormatReader& afr)
 {
-    auto len = afr.lengthInSamples / afr.sampleRate;
-    if (len <= 1.0 && len > 60.0)
+    auto len = static_cast<double> (afr.lengthInSamples) / afr.sampleRate;
+    if (len <= 1.0 || len > 60.0)
         return false;
 
     auto fn = file.getFileNameWithoutExtension();
@@ -563,7 +563,7 @@ bool LoopInfo::deduceTempo (const juce::File& file, const juce::AudioFormatReade
     setProp (IDs::oneShot, false);
     setDenominator (4);
     setNumerator (4);
-    setProp (IDs::bpm, (beats * 60.0) / (afr.lengthInSamples / afr.sampleRate));
+    setProp (IDs::bpm, (beats * 60.0) / (static_cast<double> (afr.lengthInSamples) / afr.sampleRate));
 
     if (auto root = getFileNameRootNote (fn))
     {

@@ -90,8 +90,8 @@ namespace test_utilities
 
     static inline void fillBufferWithSinData (choc::buffer::ChannelArrayView<float> buffer)
     {
-        auto phaseIncrement = juce::MathConstants<float>::twoPi / buffer.getNumFrames();
-        setAllFrames (buffer, [=] (auto frame) { return std::sin ((float) (frame * phaseIncrement)); });
+        auto phaseIncrement = juce::MathConstants<float>::twoPi / float (buffer.getNumFrames());
+        setAllFrames (buffer, [=] (auto frame) { return std::sin (float (frame) * phaseIncrement); });
     }
 
     static inline auto createSineBuffer (int numChannels, int numFrames, double phaseIncrement)
@@ -304,7 +304,7 @@ namespace test_utilities
     {
         const auto stepNumFrames = toSamples (stepDuration, sampleRate);
         const auto numSteps = duration / stepDuration;
-        const auto valPerStep = static_cast<float> (1.0 / numSteps);
+        const auto valPerStep = static_cast<float> (1.0 / (double) numSteps);
 
         auto buffer = choc::buffer::createChannelArrayBuffer (numChannels, toSamples (duration, sampleRate),
                                                               [=] (auto, auto frame)

@@ -40,11 +40,11 @@ namespace PredefinedWavetable
     static inline float getStepsUpSample (float phase, int totalNumSteps)
     {
         jassert (totalNumSteps > 1);
-        const float stageAmmount = 1.0f / (totalNumSteps - 1);
+        const float stageAmmount = 1.0f / float (totalNumSteps - 1);
 
-        const int stage = juce::jlimit (0, totalNumSteps - 1, (int) std::floor (phase * totalNumSteps));
+        const int stage = juce::jlimit (0, totalNumSteps - 1, (int) std::floor (phase * float (totalNumSteps)));
 
-        return stageAmmount * stage;
+        return stageAmmount * float (stage);
     }
 
     static inline float getStepsDownSample (float phase, int totalNumStages)

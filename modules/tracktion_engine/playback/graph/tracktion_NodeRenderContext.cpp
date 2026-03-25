@@ -182,8 +182,8 @@ NodeRenderContext::~NodeRenderContext()
 {
     CRASH_TRACER
     r.resultMagnitude = owner.params.resultMagnitude = peak;
-    r.resultRMS = owner.params.resultRMS = rmsNumSamps > 0 ? (float) (rmsTotal / rmsNumSamps) : 0.0f;
-    r.resultAudioDuration = owner.params.resultAudioDuration = float (numSamplesWrittenToSource / owner.params.sampleRateForAudio);
+    r.resultRMS = owner.params.resultRMS = rmsNumSamps > 0 ? (float) (rmsTotal / static_cast<double> (rmsNumSamps)) : 0.0f;
+    r.resultAudioDuration = owner.params.resultAudioDuration = float (static_cast<double> (numSamplesWrittenToSource) / owner.params.sampleRateForAudio);
 
     playHead->stop();
     Renderer::RenderTask::setAllPluginsRealtime (plugins, true);

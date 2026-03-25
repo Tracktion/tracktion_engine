@@ -401,7 +401,7 @@ RackType::Ptr RackType::createTypeToWrapPlugins (const Plugin::Array& plugins, E
 
     for (int i = 0; i < plugins.size(); ++i)
         if (auto f = plugins[i])
-            rack->addPlugin (f, juce::Point<float> (1.0f / (plugins.size() + 1) * (i + 1), 0.5f), false);
+            rack->addPlugin (f, juce::Point<float> (1.0f / float (plugins.size() + 1) * float (i + 1), 0.5f), false);
 
     juce::StringArray ins, outs;
     plugins.getFirst()->getChannelNames (&ins, nullptr);

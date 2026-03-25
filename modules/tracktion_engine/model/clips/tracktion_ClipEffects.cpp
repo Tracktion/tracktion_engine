@@ -487,8 +487,8 @@ private:
             sampleRate = writer->getSampleRate();
 
             // round preroll time to nearest block
-            numPreBlocks = (int) std::ceil ((prerollTimeS * sourceInfo.sampleRate) / blockSize);
-            auto prerollTimeRounded = TimeDuration::fromSeconds ((numPreBlocks * blockSizeToUse) / writer->getSampleRate());
+            numPreBlocks = (int) std::ceil ((prerollTimeS * sourceInfo.sampleRate) / static_cast<double> (blockSize));
+            auto prerollTimeRounded = TimeDuration::fromSeconds (static_cast<double> (numPreBlocks * blockSizeToUse) / writer->getSampleRate());
             streamRange = streamRange.withStart (streamRange.getStart() - prerollTimeRounded);
 
             totalSamples = juce::roundToInt (streamRange.getLength().inSeconds() * sampleRate);
@@ -538,7 +538,7 @@ private:
             if (numPreBlocks-- > 0)
                 return juce::ThreadPoolJob::jobNeedsRunningAgain;
 
-            progressToUpdate = juce::jlimit (0.0f, 0.9f, (float) (0.9 * samplesDone / (double) totalSamples));
+            progressToUpdate = juce::jlimit (0.0f, 0.9f, (float) (0.9 * static_cast<double> (samplesDone) / (double) totalSamples));
 
             bool streamEnded = false;
 
@@ -1857,8 +1857,8 @@ struct AggregateJob  : public RenderManager::Job
             }
         }
 
-        const float jobShare = 1.0f / std::max (1, originalNumTasks);
-        progress = (numJobsCompleted * jobShare) + (jobShare * (currentJob != nullptr ? currentJob->progress.load() : 0.0f));
+        const float jobShare = 1.0f / static_cast<float> (std::max (1, originalNumTasks));
+        progress = (static_cast<float> (numJobsCompleted) * jobShare) + (jobShare * (currentJob != nullptr ? currentJob->progress.load() : 0.0f));
 
         return currentJob == nullptr && jobs.isEmpty();
     }

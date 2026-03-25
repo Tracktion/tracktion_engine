@@ -329,13 +329,13 @@ void TranzportControlSurface::acceptMidiMessage (int, const juce::MidiMessage& m
         if (shift)
         {
             if (panMode)
-                userMovedPanPot (0, pan + delta / 75.0f);
+                userMovedPanPot (0, pan + static_cast<float> (delta) / 75.0f);
             else
-                userMovedFader (0, faderPos + delta / 75.0f);
+                userMovedFader (0, faderPos + static_cast<float> (delta) / 75.0f);
         }
         else
         {
-            userMovedJogWheel (delta / (snap ? 20.0f : 1.0f));
+            userMovedJogWheel (static_cast<float> (delta) / (snap ? 20.0f : 1.0f));
         }
     }
 }

@@ -413,7 +413,7 @@ bool AudioFileUtils::reverse (Engine& engine,
         samplesToDo -= numThisTime;
         sourceSample += numThisTime;
 
-        progress = juce::jlimit (0.0f, 1.0f, (float) (sourceSample / (double) reader->lengthInSamples));
+        progress = juce::jlimit (0.0f, 1.0f, float (double (sourceSample) / double (reader->lengthInSamples)));
 
         if (job != nullptr)
             shouldExit = job->shouldExit();

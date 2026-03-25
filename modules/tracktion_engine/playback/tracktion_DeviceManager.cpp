@@ -1415,7 +1415,7 @@ void DeviceManager::prepareToStart()
         maxBlockSize = device->getCurrentBufferSizeSamples();
         currentSampleRate = device->getCurrentSampleRate();
         jassert (currentSampleRate > 0.0);
-        currentLatencyMs  = maxBlockSize * 1000.0f / currentSampleRate;
+        currentLatencyMs  = static_cast<double> (maxBlockSize) * 1000.0 / currentSampleRate;
         outputLatencyTime = device->getOutputLatencyInSamples() / currentSampleRate;
         defaultWaveOutID = engine.getPropertyStorage().getPropertyItem (SettingID::defaultWaveOutDevice, device->getTypeName(), defaultWaveOutID);
         defaultWaveInID  = engine.getPropertyStorage().getPropertyItem (SettingID::defaultWaveInDevice, device->getTypeName(), defaultWaveInID);

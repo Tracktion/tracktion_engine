@@ -213,7 +213,7 @@ private:
     {
         {
             const juce::ScopedLock sl (pendingLock);
-            pendingMessages.add ({ number, channel, value / 127.0f });
+            pendingMessages.add ({ number, channel, static_cast<float> (value) / 127.0f });
         }
 
         triggerAsyncUpdate();

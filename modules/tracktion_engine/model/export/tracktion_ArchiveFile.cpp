@@ -296,7 +296,7 @@ public:
                 break;
             }
 
-            progress = i / (float) archive.getNumFiles();
+            progress = float (i) / float (archive.getNumFiles());
 
             juce::File fileCreated;
 

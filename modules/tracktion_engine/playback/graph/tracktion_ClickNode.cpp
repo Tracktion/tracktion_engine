@@ -24,7 +24,7 @@ namespace
             return {};
 
         auto ratio = r->sampleRate / targetSampleRate;
-        auto targetLength = (int) (r->lengthInSamples / ratio);
+        auto targetLength = (int) (static_cast<double> (r->lengthInSamples) / ratio);
 
         juce::AudioBuffer<float> buf ((int) r->numChannels, targetLength);
 

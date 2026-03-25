@@ -257,7 +257,7 @@ void SpeedRampWaveNode::processSection (ProcessContext& pc, juce::Range<int64_t>
             {
                 for (uint32_t i = 0; i < lastSampleFadeLength; ++i)
                 {
-                    auto alpha = i / (float) lastSampleFadeLength;
+                    auto alpha = static_cast<float> (i) / static_cast<float> (lastSampleFadeLength);
                     dest[i] = alpha * dest[i] + state.lastSample * (1.0f - alpha);
                 }
             }

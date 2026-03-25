@@ -1437,7 +1437,7 @@ Track::Ptr Edit::loadedTrack (Track::Ptr t)
 
     if (const auto total = loadContext->totalNumTracks.load();
         total > 0)
-       loadContext->progress = loadContext->numTracksLoaded.fetch_add (1) / static_cast<float> (total);
+       loadContext->progress = float (loadContext->numTracksLoaded.fetch_add (1)) / float (total);
 
     return t;
 }
@@ -3199,7 +3199,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
                 }
             }
 
-            bool isDrums = forceMidiToDrums || (float (ch10Count) / allCount > 90.0f);
+            bool isDrums = forceMidiToDrums || (float (ch10Count) / float (allCount) > 90.0f);
             auto track = isDrums ? drumTrack : midiTrack;
 
             if (auto mc = track->insertMIDIClip ({ TimePosition(), TimePosition::fromSeconds (1.0) }, nullptr))

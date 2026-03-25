@@ -1724,7 +1724,7 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
 
             for (uint32_t i = 0; i < lastSampleFadeLength; ++i)
             {
-                auto alpha = i / (float) lastSampleFadeLength;
+                auto alpha = static_cast<float> (i) / static_cast<float> (lastSampleFadeLength);
                 dest[i] = state.lastSample * (1.0f - alpha);
             }
         }
@@ -1771,7 +1771,7 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
             {
                 for (uint32_t i = 0; i < lastSampleFadeLength; ++i)
                 {
-                    auto alpha = i / (float) lastSampleFadeLength;
+                    auto alpha = static_cast<float> (i) / static_cast<float> (lastSampleFadeLength);
                     dest[i] = alpha * dest[i] + state.lastSample * (1.0f - alpha);
                 }
             }
@@ -2313,7 +2313,7 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
             {
                 for (uint32_t i = 0; i < lastSampleFadeLength; ++i)
                 {
-                    auto alpha = i / (float) lastSampleFadeLength;
+                    auto alpha = static_cast<float> (i) / static_cast<float> (lastSampleFadeLength);
                     dest[i] = alpha * dest[i] + lastSample * (1.0f - alpha);
                 }
             }

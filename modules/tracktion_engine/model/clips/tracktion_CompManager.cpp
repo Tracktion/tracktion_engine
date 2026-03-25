@@ -1185,7 +1185,7 @@ bool WaveCompManager::renderTake (CompRenderContext& context, Edit& edit, AudioF
         jassert (misses == 0); (void) misses;
 
         samplesDone += samplesToDo;
-        progress = juce::jlimit (0.0f, 0.9f, (float) (0.9 * samplesDone / (double) totalSamples));
+        progress = juce::jlimit (0.0f, 0.9f, (float) (0.9 * static_cast<double> (samplesDone) / (double) totalSamples));
 
         if (job.shouldExit() || ! writer.isOpen())
             return false;
