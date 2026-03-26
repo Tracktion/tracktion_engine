@@ -157,6 +157,22 @@ void LevelMeasurer::Client::updateMidiLevel (DbTimePair newMidiLevel) noexcept
         midiLevels = newMidiLevel;
 }
 
+void LevelMeasurer::Client::updateAllChannels (const ChannelLevel* levels, int numChannels) noexcept
+{
+    juce::SpinLock::ScopedLockType sl (mutex);
+    ensureNumChannels (numChannels);
+    numChannelsUsed = numChannels;
+
+    for (int i = 0; i < numChannels; ++i)
+    {
+        if (levels[i].level.dB >= audioLevels[(size_t) i].dB)
+            audioLevels[(size_t) i] = levels[i].level;
+
+        if (levels[i].overloaded)
+            overload[(size_t) i] = true;
+    }
+}
+
 
 //==============================================================================
 void LevelMeasurer::processBuffer (juce::AudioBuffer<float>& buffer, int start, int numSamples)
@@ -167,71 +183,45 @@ void LevelMeasurer::processBuffer (juce::AudioBuffer<float>& buffer, int start, 
         return;
 
     auto numChans = buffer.getNumChannels();
-    numActiveChannels = numChans;
     auto now = juce::Time::getApproximateMillisecondCounter();
 
-    if (mode == LevelMeasurer::peakMode)
+    // Compute all channel levels first, then batch-update each client with a single lock
+    int resultNumChans;
+
+    if (mode == LevelMeasurer::sumDiffMode)
     {
-        // peak mode
-        for (int i = numChans; --i >= 0;)
-        {
-            auto gain = buffer.getMagnitude (i, start, numSamples);
-            bool overloaded = gain > 0.999f;
-            auto newDB = gainToDb (gain);
-
-            for (auto c : clients)
-            {
-                c->updateAudioLevel (i, { now, newDB });
-
-                if (overloaded)
-                    c->setOverload (i, true);
-
-                c->setNumChannelsUsed (numChans);
-            }
-        }
-    }
-    else if (mode == LevelMeasurer::RMSMode)
-    {
-        // rms mode
-        for (int i = numChans; --i >= 0;)
-        {
-            auto gain = buffer.getRMSLevel (i, start, numSamples);
-            bool overloaded = gain > 0.999f;
-            auto newDB = gainToDb (gain);
-
-            for (auto c : clients)
-            {
-                c->updateAudioLevel (i, { now, newDB });
-
-                if (overloaded)
-                    c->setOverload (i, true);
-
-                c->setNumChannelsUsed (numChans);
-            }
-        }
-    }
-    else
-    {
-        // sum + diff
         float sum, diff;
         getSumAndDiff (buffer, sum, diff, start, numSamples);
 
-        auto sumDB  = gainToDb (sum);
-        auto diffDB = gainToDb (diff);
+        resultNumChans = 2;
 
-        for (auto c : clients)
-        {
-            c->updateAudioLevel (0, { now, sumDB });
-            c->updateAudioLevel (1, { now, diffDB });
+        if ((int) channelLevels.size() < resultNumChans)
+            channelLevels.resize ((size_t) resultNumChans);
 
-            if (sum  > 0.999f) c->setOverload (0, true);
-            if (diff > 0.999f) c->setOverload (1, true);
-
-            c->setNumChannelsUsed (2);
-        }
-
-        numActiveChannels = 2;
+        channelLevels[0] = { { now, gainToDb (sum) },  sum  > 0.999f };
+        channelLevels[1] = { { now, gainToDb (diff) }, diff > 0.999f };
     }
+    else
+    {
+        resultNumChans = numChans;
+
+        if ((int) channelLevels.size() < resultNumChans)
+            channelLevels.resize ((size_t) resultNumChans);
+
+        for (int i = 0; i < resultNumChans; ++i)
+        {
+            auto gain = (mode == LevelMeasurer::peakMode)
+                            ? buffer.getMagnitude (i, start, numSamples)
+                            : buffer.getRMSLevel (i, start, numSamples);
+
+            channelLevels[(size_t) i] = { { now, gainToDb (gain) }, gain > 0.999f };
+        }
+    }
+
+    numActiveChannels = resultNumChans;
+
+    for (auto c : clients)
+        c->updateAllChannels (channelLevels.data(), resultNumChans);
 }
 
 void LevelMeasurer::processMidi (MidiMessageArray& midiBuffer, const float*)

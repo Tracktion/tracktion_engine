@@ -53,6 +53,13 @@ public:
     int getNumActiveChannels() const noexcept           { return numActiveChannels; }
 
     //==============================================================================
+    /** Per-channel measurement result, used to batch updates in a single lock. */
+    struct ChannelLevel
+    {
+        DbTimePair level;
+        bool overloaded = false;
+    };
+
     struct Client
     {
         Client() = default;
@@ -72,6 +79,9 @@ public:
 
         void updateAudioLevel (int channel, DbTimePair) noexcept;
         void updateMidiLevel (DbTimePair) noexcept;
+
+        /** Updates all channel levels and numChannelsUsed under a single lock. */
+        void updateAllChannels (const ChannelLevel* levels, int numChannels) noexcept;
 
     private:
         void ensureNumChannels (int needed);
@@ -102,6 +112,8 @@ private:
 
     juce::Array<Client*> clients;
     RealTimeSpinLock clientsMutex;
+
+    choc::SmallVector<ChannelLevel, 32> channelLevels;
 
     JUCE_DECLARE_WEAK_REFERENCEABLE(LevelMeasurer)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevelMeasurer)
