@@ -183,73 +183,76 @@ void PluginNode::process (ProcessContext& pc)
     auto numSamplesLeft = blockNumSamples;
 
     bool shouldProcessPlugin = canProcessBypassed || plugin->isEnabled();
-    bool isAllNotesOff = inputBuffers.midi.isAllNotesOff;
-
-    if (playHeadState.didPlayheadJump())
-        isAllNotesOff = true;
+    bool isAllNotesOff = inputBuffers.midi.isAllNotesOff || playHeadState.didPlayheadJump();
 
     if (trackMuteState != nullptr)
     {
         if (! trackMuteState->shouldTrackContentsBeProcessed())
         {
             shouldProcessPlugin = shouldProcessPlugin && trackMuteState->shouldTrackBeAudible();
-
-            if (trackMuteState->wasJustMuted())
-                isAllNotesOff = true;
+            isAllNotesOff = isAllNotesOff || trackMuteState->wasJustMuted();
         }
     }
 
-    const auto blockTimeRange = getEditTimeRange();
-    auto inputMidiIter = inputBuffers.midi.begin();
-
-    // Process in blocks
-    for (int subBlockNum = 0;; ++subBlockNum)
+    // Fast path for disabled plugins: skip sub-block loop and pass MIDI straight through
+    if (! shouldProcessPlugin)
     {
-        auto numSamplesThisBlock = std::min (subBlockSize, numSamplesLeft);
+        outputBuffers.midi.copyFrom (inputBuffers.midi);
+        outputBuffers.midi.isAllNotesOff = isAllNotesOff;
+    }
+    else
+    {
+        const auto blockTimeRange = getEditTimeRange();
+        auto inputMidiIter = inputBuffers.midi.begin();
 
-        auto outputAudioBuffer = toAudioBuffer (outputAudioView.getFrameRange (frameRangeWithStartAndLength (numSamplesDone, numSamplesThisBlock)));
-
-        const auto blockPropStart = (numSamplesDone / (double) blockNumSamples);
-        const auto blockPropEnd = ((numSamplesDone + numSamplesThisBlock) / (double) blockNumSamples);
-        const auto subBlockTimeRange = TimeRange (toPosition (blockTimeRange.getLength()) * blockPropStart,
-                                                  toPosition (blockTimeRange.getLength()) * blockPropEnd);
-
-        midiMessageArray.clear();
-        midiMessageArray.isAllNotesOff = isAllNotesOff;
-
-        for (auto end = inputBuffers.midi.end(); inputMidiIter != end; ++inputMidiIter)
+        // Process in blocks
+        for (int subBlockNum = 0;; ++subBlockNum)
         {
-            const auto timestamp = inputMidiIter->getTimeStamp();
+            auto numSamplesThisBlock = std::min (subBlockSize, numSamplesLeft);
 
-            // If the time range is empty, we need to pass through all the MIDI as it means the playhead is stopped
-            if (! subBlockTimeRange.isEmpty()
-                && timestamp >= subBlockTimeRange.getEnd().inSeconds())
-               break;
+            auto outputAudioBuffer = toAudioBuffer (outputAudioView.getFrameRange (frameRangeWithStartAndLength (numSamplesDone, numSamplesThisBlock)));
 
-            midiMessageArray.addMidiMessage (*inputMidiIter,
-                                             timestamp - subBlockTimeRange.getStart().inSeconds(),
-                                             inputMidiIter->mpeSourceID);
-        }
+            const auto blockPropStart = (numSamplesDone / (double) blockNumSamples);
+            const auto blockPropEnd = ((numSamplesDone + numSamplesThisBlock) / (double) blockNumSamples);
+            const auto subBlockTimeRange = TimeRange (toPosition (blockTimeRange.getLength()) * blockPropStart,
+                                                      toPosition (blockTimeRange.getLength()) * blockPropEnd);
 
-        // Process the plugin
-        if (shouldProcessPlugin)
+            midiMessageArray.clear();
+            midiMessageArray.isAllNotesOff = isAllNotesOff;
+
+            for (auto end = inputBuffers.midi.end(); inputMidiIter != end; ++inputMidiIter)
+            {
+                const auto timestamp = inputMidiIter->getTimeStamp();
+
+                // If the time range is empty, we need to pass through all the MIDI as it means the playhead is stopped
+                if (! subBlockTimeRange.isEmpty()
+                    && timestamp >= subBlockTimeRange.getEnd().inSeconds())
+                   break;
+
+                midiMessageArray.addMidiMessage (*inputMidiIter,
+                                                 timestamp - subBlockTimeRange.getStart().inSeconds(),
+                                                 inputMidiIter->mpeSourceID);
+            }
+
+            // Process the plugin
             plugin->applyToBufferWithAutomation (getPluginRenderContext ({ blockTimeRange.getStart() + toDuration (subBlockTimeRange.getStart()),
                                                                            blockTimeRange.getStart() + toDuration (subBlockTimeRange.getEnd()) },
                                                                          outputAudioBuffer));
 
-        // Then copy the buffers to the outputs
-        if (subBlockNum == 0)
-            outputBuffers.midi.swapWith (midiMessageArray);
-        else
-            outputBuffers.midi.mergeFrom (midiMessageArray);
+            // Then copy the buffers to the outputs
+            if (subBlockNum == 0)
+                outputBuffers.midi.swapWith (midiMessageArray);
+            else
+                outputBuffers.midi.mergeFrom (midiMessageArray);
 
-        numSamplesDone += numSamplesThisBlock;
-        numSamplesLeft -= numSamplesThisBlock;
+            numSamplesDone += numSamplesThisBlock;
+            numSamplesLeft -= numSamplesThisBlock;
 
-        if (numSamplesLeft == 0)
-            break;
+            if (numSamplesLeft == 0)
+                break;
 
-        isAllNotesOff = false;
+            isAllNotesOff = false;
+        }
     }
 
     // If the plugin was bypassed, use the delayed audio
@@ -274,8 +277,10 @@ void PluginNode::process (ProcessContext& pc)
         }
     }
 
+   #if TRACKTION_SANITISE_PLUGIN_OUTPUT
     // Some plugins flake and add NaNs so zero these out to avoid killing all the audio downstream
     sanitise (outputAudioView);
+   #endif
 }
 
 //==============================================================================
@@ -291,7 +296,6 @@ void PluginNode::initialisePlugin (double sampleRateToUse, int blockSizeToUse)
 PluginRenderContext PluginNode::getPluginRenderContext (TimeRange editTime, juce::AudioBuffer<float>& destBuffer)
 {
     return { &destBuffer,
-             juce::AudioChannelSet::canonicalChannelSet (destBuffer.getNumChannels()),
              0, destBuffer.getNumSamples(),
              &midiMessageArray, 0.0,
              editTime + automationAdjustmentTime,

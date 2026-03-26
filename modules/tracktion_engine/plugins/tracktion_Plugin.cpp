@@ -11,6 +11,19 @@
 namespace tracktion::inline engine {
 
 PluginRenderContext::PluginRenderContext (juce::AudioBuffer<float>* buffer,
+                                          int bufferStart, int bufferSize,
+                                          MidiMessageArray* midiBuffer, double midiOffset,
+                                          TimeRange editTimeRange, bool playing, bool scrubbing, bool rendering,
+                                          bool shouldAllowBypassedProcessing) noexcept
+    : destBuffer (buffer),
+      bufferStartSample (bufferStart), bufferNumSamples (bufferSize),
+      bufferForMidiMessages (midiBuffer), midiBufferOffset (midiOffset),
+      editTime (editTimeRange),
+      isPlaying (playing), isScrubbing (scrubbing), isRendering (rendering),
+      allowBypassedProcessing (shouldAllowBypassedProcessing)
+{}
+
+PluginRenderContext::PluginRenderContext (juce::AudioBuffer<float>* buffer,
                                           const juce::AudioChannelSet& bufferChannels,
                                           int bufferStart, int bufferSize,
                                           MidiMessageArray* midiBuffer, double midiOffset,
@@ -694,10 +707,12 @@ void Plugin::applyToBufferWithAutomation (const PluginRenderContext& pc)
 {
     SCOPED_REALTIME_CHECK
 
+   #if TRACKTION_ENABLE_PLUGIN_CPU_MEASUREMENT
     std::optional<ScopedCpuMeter> cpuMeter;
 
     if (shouldMeasureCpuUsage())
         cpuMeter.emplace (cpuUsageMs, 0.2);
+   #endif
 
     auto& arm = edit.getAutomationRecordManager();
     jassert (initialiseCount > 0);

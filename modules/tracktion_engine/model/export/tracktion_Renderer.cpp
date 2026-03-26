@@ -331,9 +331,7 @@ void Renderer::RenderTask::flushAllPlugins (const Plugin::Array& plugins,
                 {
                     buffer.setSize (std::max (pi->getTotalNumInputChannels(), pi->getTotalNumOutputChannels()), samplesPerBlock);
                     buffer.clear();
-                    auto channels = juce::AudioChannelSet::canonicalChannelSet (buffer.getNumChannels());
-
-                    ep->applyToBuffer (PluginRenderContext (&buffer, channels, 0, samplesPerBlock,
+                    ep->applyToBuffer (PluginRenderContext (&buffer, 0, samplesPerBlock,
                                                             nullptr, 0.0,
                                                             TimeRange(), false, false, true, true));
 

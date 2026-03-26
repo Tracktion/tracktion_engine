@@ -246,6 +246,18 @@
  #define TRACKTION_CHECK_FOR_SLOW_RENDERING 0
 #endif
 
+/** Config: TRACKTION_ENABLE_PLUGIN_CPU_MEASUREMENT
+    If enabled (default), each plugin's applyToBufferWithAutomation call is
+    wrapped in a ScopedCpuMeter that reads the hi-res timer on entry and exit.
+    This feeds the per-plugin CPU usage display.
+
+    Disable this to eliminate the timer overhead in builds that don't need
+    per-plugin CPU metering (e.g. game engines, embedded, headless renders).
+*/
+#ifndef TRACKTION_ENABLE_PLUGIN_CPU_MEASUREMENT
+ #define TRACKTION_ENABLE_PLUGIN_CPU_MEASUREMENT 1
+#endif
+
 /** Config: TRACKTION_AIR_WINDOWS
     Adds AirWindows effect plugins. Requires compliance with AirWindows MIT license.
  */

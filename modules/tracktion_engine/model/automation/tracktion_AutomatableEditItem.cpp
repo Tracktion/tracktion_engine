@@ -160,6 +160,9 @@ void AutomatableEditItem::updateAutomatableParamPosition (TimePosition time)
 
 void AutomatableEditItem::updateParameterStreams (TimePosition time)
 {
+    if (numActiveParameters.load (std::memory_order_acquire) == 0)
+        return;
+
     const std::scoped_lock sl (activeParameterLock);
 
     for (auto p : activeParameters)

@@ -58,6 +58,19 @@
  #define GRAPH_UNIT_TESTS_QUICK_VALIDATE 0
 #endif
 
+/** Config: TRACKTION_SANITISE_PLUGIN_OUTPUT
+
+    If enabled (default), plugin output buffers are scanned for NaN values after
+    every plugin process call, replacing any NaNs with zeros. This is purely
+    defensive against misbehaving plugins.
+
+    Disable this to eliminate the per-sample overhead in builds where all plugins
+    are known to be well-behaved (e.g. game engines, embedded, headless renders).
+*/
+#ifndef TRACKTION_SANITISE_PLUGIN_OUTPUT
+ #define TRACKTION_SANITISE_PLUGIN_OUTPUT 1
+#endif
+
 //==============================================================================
 //==============================================================================
 #include <cassert>

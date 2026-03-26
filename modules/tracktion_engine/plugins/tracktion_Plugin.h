@@ -50,6 +50,15 @@ struct PluginInitialisationInfo
 struct PluginRenderContext
 {
     PluginRenderContext (juce::AudioBuffer<float>* buffer,
+                         int bufferStart, int bufferSize,
+                         MidiMessageArray* midiBuffer, double midiOffset,
+                         TimeRange editTime, bool playing, bool scrubbing, bool rendering,
+                         bool allowBypassedProcessing) noexcept;
+
+    /** @deprecated Use the constructor without the bufferChannels parameter.
+        The destBufferChannels field was never used by the engine.
+    */
+    PluginRenderContext (juce::AudioBuffer<float>* buffer,
                          const juce::AudioChannelSet& bufferChannels,
                          int bufferStart, int bufferSize,
                          MidiMessageArray* midiBuffer, double midiOffset,
@@ -69,7 +78,7 @@ struct PluginRenderContext
     */
     juce::AudioBuffer<float>* destBuffer = nullptr;
 
-    /** A description of the type of channels in each of the channels in destBuffer. */
+    /** @deprecated This field is not used by the engine and will be removed in a future version. */
     juce::AudioChannelSet destBufferChannels;
 
     /** The index of the start point in the audio buffer from which data must be written. */
