@@ -366,10 +366,10 @@ void HostedAudioDeviceInterface::initialise (const Parameters& p)
             inputLatencyProcessor->setLatencyNumSamples (parameters.inputLatencyNumSamples);
         }
 
-        // Set the stereo channels first and then dispatch this syncronously before
+        // Set devices to mono first and then dispatch synchronously before
         // changing the properties of the devices as they may have changed
         for (auto wi : dm.getWaveInputDevices())
-            wi->setStereoPair (false);
+            dm.setDeviceNumChannels (*wi, 1);
 
         dm.dispatchPendingUpdates();
 

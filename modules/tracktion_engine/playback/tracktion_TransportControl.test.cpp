@@ -95,8 +95,8 @@ public:
         beginTest ("Test device setup");
         {
             expectEquals (deviceManager.getNumWaveInDevices(), params.inputChannels);
-            expect ((deviceManager.getNumWaveOutDevices() == 1 && deviceManager.getWaveOutDevice (0)->isStereoPair())
-                    || (deviceManager.getNumWaveOutDevices() == 2 && ! deviceManager.getWaveOutDevice (0)->isStereoPair()));
+            expect ((deviceManager.getNumWaveOutDevices() == 1 && deviceManager.getWaveOutDevice (0)->getChannels().getNumChannels() == 2)
+                    || (deviceManager.getNumWaveOutDevices() == 2 && deviceManager.getWaveOutDevice (0)->getChannels().getNumChannels() != 2));
         }
 
         test_utilities::TempCurrentWorkingDirectory tempDir;

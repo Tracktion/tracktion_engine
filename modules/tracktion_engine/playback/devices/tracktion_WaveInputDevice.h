@@ -38,7 +38,12 @@ public:
     TimeDuration getRecordAdjustment() const                    { return TimeDuration::fromSeconds (recordAdjustMs / 1000.0); }
     void setRecordAdjustmentMs (double ms);
     double getRecordAdjustmentMs() const                        { return recordAdjustMs; }
+    /** @deprecated Use getChannels().getNumChannels() == 2 instead. */
+    [[deprecated ("Use getChannels().getNumChannels() == 2 instead")]]
     bool isStereoPair() const;
+
+    /** @deprecated Use setChannelConfiguration() instead. */
+    [[deprecated ("Use setChannelConfiguration() instead")]]
     void setStereoPair (bool);
     juce::PopupMenu createChannelGroupMenu (bool includeSetAllChannelsOptions);
     juce::Array<int> getAvailableBitDepths() const;

@@ -33,17 +33,20 @@ public:
     void setDithered (bool);
     bool isDithered() const         { return ditheringEnabled; }
 
-    /** Returns the first channel's device index.
-        N.B. this reflects any channel reversal that has been applied.
-    */
+    /** @deprecated Use getChannels()[0].indexInDevice instead. */
+    [[deprecated ("Use getChannels()[0].indexInDevice instead")]]
     int getLeftChannel() const;
 
-    /** Returns the second channel's device index.
-        N.B. this reflects any channel reversal that has been applied.
-    */
+    /** @deprecated Use getChannels()[1].indexInDevice instead. */
+    [[deprecated ("Use getChannels()[1].indexInDevice instead")]]
     int getRightChannel() const;
 
+    /** @deprecated Use getChannels().getNumChannels() == 2 instead. */
+    [[deprecated ("Use getChannels().getNumChannels() == 2 instead")]]
     bool isStereoPair() const;
+
+    /** @deprecated Use setChannelConfiguration() instead. */
+    [[deprecated ("Use setChannelConfiguration() instead")]]
     void setStereoPair (bool);
     juce::PopupMenu createChannelGroupMenu (bool includeSetAllChannelsOptions);
 

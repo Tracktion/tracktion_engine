@@ -451,6 +451,10 @@ void AudioClipBase::setPan (float p)
 ChannelConfiguration AudioClipBase::getSourceChannelConfiguration()
 {
     auto info = getWaveInfo();
+
+    if (info.channelLayout.size() > 0 && ! info.channelLayout.isDiscreteLayout())
+        return ChannelConfiguration::fromChannelSet (info.channelLayout);
+
     ChannelConfiguration config;
     config.setNumChannels (info.numChannels);
     return config;
@@ -507,8 +511,14 @@ void AudioClipBase::setActiveChannelConfiguration (const ChannelConfiguration& c
 
 ChannelConfiguration AudioClipBase::getOutputChannelConfiguration()
 {
-    // For now, return active channels. In future, this will consider clip effects.
-    return getActiveChannelConfiguration();
+    auto config = getActiveChannelConfiguration();
+
+    if (clipEffects != nullptr)
+        for (auto ce : clipEffects->objects)
+            if (ce->getType() == ClipEffect::EffectType::makeMono)
+                return ChannelConfiguration::mono();
+
+    return config;
 }
 
 //==============================================================================

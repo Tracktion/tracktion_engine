@@ -470,6 +470,66 @@ public:
 
 static TrackFreezeTests trackFreezeTests;
 
+TEST_SUITE ("tracktion_engine")
+{
+    TEST_CASE ("Multichannel track freeze")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& afm = engine.getAudioFileManager();
+
+        // Create a 6-channel source with unique constant values per channel
+        const choc::buffer::ChannelCount numSourceChannels = 6;
+        const double sampleRate = 44100.0;
+        const auto clipLength = 1_td;
+        const auto numFrames = static_cast<choc::buffer::FrameCount> (toSamples (clipLength, sampleRate));
+
+        choc::buffer::InterleavedBuffer<float> sourceBuffer (numSourceChannels, numFrames);
+
+        for (choc::buffer::ChannelCount ch = 0; ch < numSourceChannels; ++ch)
+            for (choc::buffer::FrameCount f = 0; f < numFrames; ++f)
+                sourceBuffer.getSample (ch, f) = (float) (ch + 1) * 0.1f;
+
+        const juce::File virtualFile ("/memory/multichannel-freeze-test.wav");
+        const auto key = virtualFile.getFullPathName().toStdString();
+        afm.registerMemoryBuffer (key, sourceBuffer.getView(), sampleRate);
+
+        auto edit = test_utilities::createTestEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+        auto clip = insertWaveClip (*track, {}, virtualFile,
+                                    { .time = { 0_tp, clipLength } },
+                                    DeleteExistingClips::no);
+        REQUIRE (clip != nullptr);
+        clip->setActiveChannelConfiguration (ChannelConfiguration::discreteChannels ((int) numSourceChannels));
+
+        // Freeze the track
+        track->setFrozen (true, AudioTrack::individualFreeze);
+
+        // Verify the freeze file has the correct channel count
+        const auto freezeFile = AudioFile (engine, TemporaryFileManager::getFreezeFileForTrack (*track));
+        REQUIRE (freezeFile.getFile().exists());
+
+        auto freezeInfo = freezeFile.getInfo();
+        CHECK_EQ (freezeInfo.numChannels, (int) numSourceChannels);
+
+        // Load freeze file and verify per-channel content
+        auto buffer = test_utilities::loadFileInToBuffer (engine, freezeFile.getFile());
+        REQUIRE (buffer.has_value());
+        CHECK_EQ (buffer->getNumChannels(), (int) numSourceChannels);
+
+        for (int ch = 0; ch < (int) numSourceChannels; ++ch)
+        {
+            float expected = (float) (ch + 1) * 0.1f;
+            auto rms = buffer->getRMSLevel (ch, 0, buffer->getNumSamples());
+            CHECK (rms == doctest::Approx (expected).epsilon (0.02));
+        }
+
+        // Cleanup
+        engine.getAudioFileManager().releaseAllFiles();
+        edit->getTempDirectory (false).deleteRecursively();
+        afm.unregisterMemoryBuffer (key);
+    }
+}
+
 #endif
 
 } // namespace tracktion::inline engine
