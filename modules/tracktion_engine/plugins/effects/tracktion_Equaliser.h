@@ -30,6 +30,8 @@ public:
     juce::String getTooltip() override;
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, (int) EQ_CHANS); }
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
 
     juce::String getSelectableDescription() override    { return TRANS("4-Band Equaliser Plugin"); }
 

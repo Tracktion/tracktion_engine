@@ -83,6 +83,7 @@ using namespace std::literals;
 #include "plugins/effects/tracktion_MidiModifier.cpp"
 #include "plugins/effects/tracktion_MidiPatchBay.cpp"
 #include "plugins/effects/tracktion_PatchBay.cpp"
+#include "plugins/effects/tracktion_PatchBay.test.cpp"
 #include "plugins/effects/tracktion_Phaser.cpp"
 #include "plugins/effects/tracktion_PitchShift.cpp"
 #include "plugins/effects/tracktion_Reverb.cpp"

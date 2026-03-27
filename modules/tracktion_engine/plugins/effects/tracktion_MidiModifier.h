@@ -29,6 +29,8 @@ public:
     juce::String getName() const override;
     juce::String getPluginType() override;
     juce::String getShortName (int) override;
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     double getLatencySeconds() override;

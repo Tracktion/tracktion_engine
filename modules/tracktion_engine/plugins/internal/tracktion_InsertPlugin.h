@@ -37,6 +37,8 @@ public:
     bool takesMidiInput() override;
     bool canBeAddedToClip() override;
     bool needsConstantBufferSize() override;
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
 
     void initialise (const PluginInitialisationInfo&) override;
     void initialiseWithoutStopping (const PluginInitialisationInfo&) override;

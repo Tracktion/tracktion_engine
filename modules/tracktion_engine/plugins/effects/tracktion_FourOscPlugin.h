@@ -179,6 +179,8 @@ public:
     juce::String getSelectableDescription() override    { return TRANS("4OSC Plugin"); }
 
     int getNumOutputChannelsGivenInputs (int) override                 { return 2; }
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return ChannelConfiguration::stereo(); }
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return ChannelConfiguration::stereo(); }
 
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;

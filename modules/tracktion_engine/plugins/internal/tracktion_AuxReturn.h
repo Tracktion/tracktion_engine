@@ -24,6 +24,8 @@ public:
     juce::String getShortName (int suggestedMaxLength) override;
     juce::String getSelectableDescription() override                        { return TRANS("Aux Return Plugin"); }
     int getNumOutputChannelsGivenInputs (int numInputChannels) override     { return numInputChannels; }
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
 
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;

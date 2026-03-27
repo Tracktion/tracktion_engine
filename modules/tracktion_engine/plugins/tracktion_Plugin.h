@@ -302,14 +302,16 @@ public:
     virtual void getChannelNames (juce::StringArray* ins, juce::StringArray* outs);
 
     /** Returns the main bus input channel configuration for this plugin.
-        Default implementation returns stereo for backward compatibility.
+        Return {} for no minimum (pass-through plugins).
+        Return ChannelConfiguration::stereo() for plugins that genuinely need stereo.
     */
-    virtual ChannelConfiguration getMainBusInputChannelConfiguration() const;
+    virtual ChannelConfiguration getMainBusInputChannelConfiguration() const = 0;
 
     /** Returns the main bus output channel configuration for this plugin.
-        Default implementation returns stereo for backward compatibility.
+        Return {} for no minimum (pass-through plugins).
+        Return ChannelConfiguration::stereo() for synths that always produce stereo.
     */
-    virtual ChannelConfiguration getMainBusOutputChannelConfiguration() const;
+    virtual ChannelConfiguration getMainBusOutputChannelConfiguration() const = 0;
 
     virtual bool takesAudioInput()                      { return ! isSynth(); }
     virtual bool takesMidiInput()                       { return false; }

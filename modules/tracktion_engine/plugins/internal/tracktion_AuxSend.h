@@ -39,6 +39,8 @@ public:
     juce::String getPluginType() override           { return xmlTypeName; }
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return numInputChannels; }
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
     void initialise (const PluginInitialisationInfo&) override;
     void initialiseWithoutStopping (const PluginInitialisationInfo&) override;
     void deinitialise() override;

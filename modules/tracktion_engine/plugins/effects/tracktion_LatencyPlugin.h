@@ -29,6 +29,9 @@ public:
     juce::String getPluginType() override                   { return xmlTypeName; }
     juce::String getSelectableDescription() override        { return getName(); }
 
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
+
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;

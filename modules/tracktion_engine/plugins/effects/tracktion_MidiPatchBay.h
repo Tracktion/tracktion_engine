@@ -27,6 +27,8 @@ public:
     juce::String getShortName (int) override                                { return TRANS("MIDIPatch"); }
     bool canBeAddedToClip() override                                        { return false; }
     bool canBeAddedToRack() override                                        { return true; }
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;

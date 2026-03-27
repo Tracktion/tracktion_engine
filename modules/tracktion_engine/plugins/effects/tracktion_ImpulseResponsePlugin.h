@@ -71,6 +71,10 @@ public:
     juce::String getSelectableDescription() override;
 
     /** @internal */
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
+    /** @internal */
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
+    /** @internal */
     double getLatencySeconds() override;
     /** @internal */
     void initialise (const PluginInitialisationInfo&) override;

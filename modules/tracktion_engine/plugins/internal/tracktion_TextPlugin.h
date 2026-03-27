@@ -30,6 +30,8 @@ public:
     void deinitialise() override                        {}
     void applyToBuffer (const PluginRenderContext&) override {}
     int getNumOutputChannelsGivenInputs (int numInputChannels) override     { return numInputChannels; }
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
     bool producesAudioWhenNoAudioInput() override       { return false; }
     juce::String getSelectableDescription() override    { return TRANS("Text Plugin"); }
 

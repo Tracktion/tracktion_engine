@@ -45,19 +45,28 @@ public:
     bool canBeAddedToRack() override                    { return false; }
     bool canBeDisabled() override                       { return false; }
 
+    int getNumOutputChannelsGivenInputs (int numInputChannels) override;
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override;
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
+
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
+    void valueTreeParentChanged (juce::ValueTree&) override;
 
     void getChannelNames (juce::StringArray*, juce::StringArray*) override;
     void applyToBuffer (const PluginRenderContext&) override;
 
 private:
+    int getNumInputChannelsFromChain() const;
+    int getNumOutputChannelsFromChain() const;
     struct WireList;
     std::unique_ptr<WireList> list;
+    std::unique_ptr<LambdaValueTreeAllEventListener> parentListener;
     bool recursionCheck = false;
     SafeSelectable<Plugin> inputPlugin, outputPlugin;
 
     void cacheInputAndOutputPlugins();
+    void listenToParentList();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PatchBayPlugin)
 };

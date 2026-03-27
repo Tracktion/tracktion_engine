@@ -61,6 +61,8 @@ public:
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;
     int getNumOutputChannelsGivenInputs (int numInputs) override    { return numInputs; }
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
 
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 

@@ -31,6 +31,8 @@ public:
     bool shouldMeasureCpuUsage() const noexcept final   { return false; }
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override     { return numInputChannels; }
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
 
     juce::String getSelectableDescription() override                        { return TRANS("Level Meter Plugin"); }
     void initialise (const PluginInitialisationInfo&) override;

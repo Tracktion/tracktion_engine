@@ -65,6 +65,8 @@ public:
     juce::String getSelectableDescription() override    { return TRANS("Delay Plugin"); }
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override     { return juce::jmin (numInputChannels, 2); }
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     void reset() override;

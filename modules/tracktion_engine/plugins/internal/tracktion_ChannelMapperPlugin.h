@@ -36,6 +36,8 @@ public:
     bool takesMidiInput() override                                             { return true; }
     bool canBeAddedToClip() override                                           { return false; }
     bool producesAudioWhenNoAudioInput() override                              { return false; }
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override;
 

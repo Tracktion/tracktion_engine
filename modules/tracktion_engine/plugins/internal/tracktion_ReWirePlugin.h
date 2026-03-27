@@ -82,6 +82,8 @@ public:
 
     void getChannelNames (juce::StringArray*, juce::StringArray*) override;
     int getNumOutputChannelsGivenInputs (int) override     { return 2; }
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return ChannelConfiguration::stereo(); }
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return ChannelConfiguration::stereo(); }
 
     void prepareForNextBlock (TimePosition editTime) override;
     void applyToBuffer (const PluginRenderContext&) override;

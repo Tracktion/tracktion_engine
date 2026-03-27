@@ -42,6 +42,8 @@ public:
     bool canBeAddedToFolderTrack()   override           { return true;  }
     bool canBeMoved() override;
 
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;
