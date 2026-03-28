@@ -62,7 +62,6 @@ private:
     struct WireList;
     std::unique_ptr<WireList> list;
     std::unique_ptr<LambdaValueTreeAllEventListener> parentListener;
-    bool recursionCheck = false;
     SafeSelectable<Plugin> inputPlugin, outputPlugin;
 
     void cacheInputAndOutputPlugins();

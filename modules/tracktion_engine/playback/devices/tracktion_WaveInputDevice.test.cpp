@@ -569,6 +569,7 @@ namespace tracktion::inline engine
             CHECK (graph::test_utilities::buffersAreEqual (recordedFileBuffer, squareBuffer,
                                                            juce::Decibels::decibelsToGain (-99.0f)));
         }
+
     }
 #endif
 

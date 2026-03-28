@@ -381,6 +381,282 @@ TEST_SUITE("tracktion_engine")
 
         afm.unregisterMemoryBuffer (key);
     }
+
+    TEST_CASE ("Multichannel clip through stereo plugin preserves passthrough channels")
+    {
+        // Verifies the full signal path: 6-channel clip → stereo VolumeAndPan plugin → 6-channel output.
+        // Channels 0-1 should be processed by the plugin, channels 2-5 should pass through unchanged.
+        auto& engine = *Engine::getEngines()[0];
+        auto& afm = engine.getAudioFileManager();
+
+        const choc::buffer::ChannelCount numSourceChannels = 6;
+        const double sampleRate = 44100.0;
+        const auto clipLength = 1_td;
+        const auto numFrames = static_cast<choc::buffer::FrameCount> (toSamples (clipLength, sampleRate));
+
+        choc::buffer::InterleavedBuffer<float> sourceBuffer (numSourceChannels, numFrames);
+
+        for (choc::buffer::ChannelCount ch = 0; ch < numSourceChannels; ++ch)
+            for (choc::buffer::FrameCount f = 0; f < numFrames; ++f)
+                sourceBuffer.getSample (ch, f) = (float) (ch + 1) * 0.1f;
+
+        const juce::File virtualFile ("/memory/6ch-plugin-passthrough.wav");
+        const auto key = virtualFile.getFullPathName().toStdString();
+        afm.registerMemoryBuffer (key, sourceBuffer.getView(), sampleRate);
+
+        auto edit = test_utilities::createTestEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+        auto clip = insertWaveClip (*track, {}, virtualFile,
+                                    { .time = { 0_tp, clipLength } },
+                                    DeleteExistingClips::no);
+        REQUIRE (clip != nullptr);
+        clip->setActiveChannelConfiguration (ChannelConfiguration::discreteChannels ((int) numSourceChannels));
+
+        // The track already has a VolumeAndPanPlugin at unity gain.
+        // Render and verify all 6 channels survive.
+        juce::TemporaryFile destFile (".wav");
+        Renderer::Parameters params (*edit);
+        params.destFile = destFile.getFile();
+        params.time = params.time.withLength (clipLength);
+        params.audioFormat = engine.getAudioFileFormatManager().getWavFormat();
+        params.canRenderInMono = false;
+
+        std::atomic<bool> callbackFinished { false };
+        bool renderSucceeded = false;
+
+        auto handle = EditRenderer::render (std::move (params),
+                                            [&] (auto res)
+                                            {
+                                                renderSucceeded = res.has_value();
+                                                callbackFinished = true;
+                                            });
+
+        test_utilities::runDispatchLoopUntilTrue (callbackFinished);
+        CHECK (renderSucceeded);
+
+        auto buffer = test_utilities::loadFileInToBuffer (engine, destFile.getFile());
+        REQUIRE (buffer.has_value());
+        CHECK_EQ (buffer->getNumChannels(), (int) numSourceChannels);
+
+        // All 6 channels should have their original content
+        for (int ch = 0; ch < (int) numSourceChannels; ++ch)
+        {
+            float expected = (float) (ch + 1) * 0.1f;
+            auto rms = buffer->getRMSLevel (ch, 0, buffer->getNumSamples());
+            CHECK (rms == doctest::Approx (expected).epsilon (0.02));
+        }
+
+        afm.unregisterMemoryBuffer (key);
+    }
+
+    TEST_CASE ("Multichannel clip with channel subset selection")
+    {
+        // Verifies selecting a subset of channels from a multichannel clip.
+        // Select only first 2 channels from a 4-channel source → expect 2-channel output.
+        auto& engine = *Engine::getEngines()[0];
+        auto& afm = engine.getAudioFileManager();
+
+        const choc::buffer::ChannelCount numSourceChannels = 4;
+        const double sampleRate = 44100.0;
+        const auto clipLength = 1_td;
+        const auto numFrames = static_cast<choc::buffer::FrameCount> (toSamples (clipLength, sampleRate));
+
+        choc::buffer::InterleavedBuffer<float> sourceBuffer (numSourceChannels, numFrames);
+
+        for (choc::buffer::ChannelCount ch = 0; ch < numSourceChannels; ++ch)
+            for (choc::buffer::FrameCount f = 0; f < numFrames; ++f)
+                sourceBuffer.getSample (ch, f) = (float) (ch + 1) * 0.1f;
+
+        const juce::File virtualFile ("/memory/4ch-channel-selection.wav");
+        const auto key = virtualFile.getFullPathName().toStdString();
+        afm.registerMemoryBuffer (key, sourceBuffer.getView(), sampleRate);
+
+        auto edit = test_utilities::createTestEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+        auto clip = insertWaveClip (*track, {}, virtualFile,
+                                    { .time = { 0_tp, clipLength } },
+                                    DeleteExistingClips::no);
+        REQUIRE (clip != nullptr);
+
+        // Select only first 2 channels out of 4
+        clip->setActiveChannelConfiguration (ChannelConfiguration::discreteChannels (2));
+
+        juce::TemporaryFile destFile (".wav");
+        Renderer::Parameters params (*edit);
+        params.destFile = destFile.getFile();
+        params.time = params.time.withLength (clipLength);
+        params.audioFormat = engine.getAudioFileFormatManager().getWavFormat();
+        params.canRenderInMono = false;
+
+        std::atomic<bool> callbackFinished { false };
+        bool renderSucceeded = false;
+
+        auto handle = EditRenderer::render (std::move (params),
+                                            [&] (auto res)
+                                            {
+                                                renderSucceeded = res.has_value();
+                                                callbackFinished = true;
+                                            });
+
+        test_utilities::runDispatchLoopUntilTrue (callbackFinished);
+        CHECK (renderSucceeded);
+
+        auto buffer = test_utilities::loadFileInToBuffer (engine, destFile.getFile());
+        REQUIRE (buffer.has_value());
+
+        // With 2 active channels, output should have 2 channels
+        CHECK_EQ (buffer->getNumChannels(), 2);
+
+        // Output should contain source channels 0 and 1 content
+        CHECK (buffer->getRMSLevel (0, 0, buffer->getNumSamples()) == doctest::Approx (0.1f).epsilon (0.02));
+        CHECK (buffer->getRMSLevel (1, 0, buffer->getNumSamples()) == doctest::Approx (0.2f).epsilon (0.02));
+
+        afm.unregisterMemoryBuffer (key);
+    }
+
+    TEST_CASE ("Multichannel submix routing preserves channels")
+    {
+        // Verifies multichannel signal flows through track-to-track routing:
+        // Track 1 (4ch clip) → output to Track 2 → render → 4 channels preserved.
+        auto& engine = *Engine::getEngines()[0];
+        auto& afm = engine.getAudioFileManager();
+
+        const choc::buffer::ChannelCount numSourceChannels = 4;
+        const double sampleRate = 44100.0;
+        const auto clipLength = 1_td;
+        const auto numFrames = static_cast<choc::buffer::FrameCount> (toSamples (clipLength, sampleRate));
+
+        choc::buffer::InterleavedBuffer<float> sourceBuffer (numSourceChannels, numFrames);
+
+        for (choc::buffer::ChannelCount ch = 0; ch < numSourceChannels; ++ch)
+            for (choc::buffer::FrameCount f = 0; f < numFrames; ++f)
+                sourceBuffer.getSample (ch, f) = (float) (ch + 1) * 0.1f;
+
+        const juce::File virtualFile ("/memory/4ch-submix.wav");
+        const auto key = virtualFile.getFullPathName().toStdString();
+        afm.registerMemoryBuffer (key, sourceBuffer.getView(), sampleRate);
+
+        auto edit = test_utilities::createTestEdit (engine, 2);
+        auto track1 = getAudioTracks (*edit)[0];
+        auto track2 = getAudioTracks (*edit)[1];
+
+        auto clip = insertWaveClip (*track1, {}, virtualFile,
+                                    { .time = { 0_tp, clipLength } },
+                                    DeleteExistingClips::no);
+        REQUIRE (clip != nullptr);
+        clip->setActiveChannelConfiguration (ChannelConfiguration::discreteChannels ((int) numSourceChannels));
+
+        // Route track1 → track2
+        track1->getOutput().setOutputToTrack (track2);
+
+        juce::TemporaryFile destFile (".wav");
+        Renderer::Parameters params (*edit);
+        params.destFile = destFile.getFile();
+        params.time = params.time.withLength (clipLength);
+        params.audioFormat = engine.getAudioFileFormatManager().getWavFormat();
+        params.canRenderInMono = false;
+
+        std::atomic<bool> callbackFinished { false };
+        bool renderSucceeded = false;
+
+        auto handle = EditRenderer::render (std::move (params),
+                                            [&] (auto res)
+                                            {
+                                                renderSucceeded = res.has_value();
+                                                callbackFinished = true;
+                                            });
+
+        test_utilities::runDispatchLoopUntilTrue (callbackFinished);
+        CHECK (renderSucceeded);
+
+        auto buffer = test_utilities::loadFileInToBuffer (engine, destFile.getFile());
+        REQUIRE (buffer.has_value());
+        CHECK_EQ (buffer->getNumChannels(), (int) numSourceChannels);
+
+        for (int ch = 0; ch < (int) numSourceChannels; ++ch)
+        {
+            float expected = (float) (ch + 1) * 0.1f;
+            CHECK (buffer->getRMSLevel (ch, 0, buffer->getNumSamples()) == doctest::Approx (expected).epsilon (0.02));
+        }
+
+        afm.unregisterMemoryBuffer (key);
+    }
+
+    TEST_CASE ("Multichannel aux send and return")
+    {
+        // Verifies multichannel signal flows through aux send/return:
+        // Track 1 has a 4ch clip + aux send. Track 2 has aux return.
+        // Rendered output should contain the 4ch signal from both tracks.
+        auto& engine = *Engine::getEngines()[0];
+        auto& afm = engine.getAudioFileManager();
+
+        const choc::buffer::ChannelCount numSourceChannels = 4;
+        const double sampleRate = 44100.0;
+        const auto clipLength = 1_td;
+        const auto numFrames = static_cast<choc::buffer::FrameCount> (toSamples (clipLength, sampleRate));
+
+        choc::buffer::InterleavedBuffer<float> sourceBuffer (numSourceChannels, numFrames);
+
+        for (choc::buffer::ChannelCount ch = 0; ch < numSourceChannels; ++ch)
+            for (choc::buffer::FrameCount f = 0; f < numFrames; ++f)
+                sourceBuffer.getSample (ch, f) = (float) (ch + 1) * 0.1f;
+
+        const juce::File virtualFile ("/memory/4ch-aux-send.wav");
+        const auto key = virtualFile.getFullPathName().toStdString();
+        afm.registerMemoryBuffer (key, sourceBuffer.getView(), sampleRate);
+
+        auto edit = test_utilities::createTestEdit (engine, 2);
+        edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
+
+        auto sourceTrack = getAudioTracks (*edit)[0];
+        auto returnTrack = getAudioTracks (*edit)[1];
+
+        auto clip = insertWaveClip (*sourceTrack, {}, virtualFile,
+                                    { .time = { 0_tp, clipLength } },
+                                    DeleteExistingClips::no);
+        REQUIRE (clip != nullptr);
+        clip->setActiveChannelConfiguration (ChannelConfiguration::discreteChannels ((int) numSourceChannels));
+
+        // Add aux send on source track and aux return on return track
+        sourceTrack->pluginList.insertPlugin (edit->getPluginCache().createNewPlugin (AuxSendPlugin::xmlTypeName, {}), 0, nullptr);
+        returnTrack->pluginList.insertPlugin (edit->getPluginCache().createNewPlugin (AuxReturnPlugin::xmlTypeName, {}), 0, nullptr);
+
+        juce::TemporaryFile destFile (".wav");
+        Renderer::Parameters params (*edit);
+        params.destFile = destFile.getFile();
+        params.time = params.time.withLength (clipLength);
+        params.audioFormat = engine.getAudioFileFormatManager().getWavFormat();
+        params.canRenderInMono = false;
+
+        std::atomic<bool> callbackFinished { false };
+        bool renderSucceeded = false;
+
+        auto handle = EditRenderer::render (std::move (params),
+                                            [&] (auto res)
+                                            {
+                                                renderSucceeded = res.has_value();
+                                                callbackFinished = true;
+                                            });
+
+        test_utilities::runDispatchLoopUntilTrue (callbackFinished);
+        CHECK (renderSucceeded);
+
+        auto buffer = test_utilities::loadFileInToBuffer (engine, destFile.getFile());
+        REQUIRE (buffer.has_value());
+
+        // Output should have at least 4 channels (source + return both contribute)
+        CHECK_GE (buffer->getNumChannels(), (int) numSourceChannels);
+
+        // Each channel should have signal (source direct + aux return = doubled amplitude)
+        for (int ch = 0; ch < (int) numSourceChannels; ++ch)
+        {
+            auto rms = buffer->getRMSLevel (ch, 0, buffer->getNumSamples());
+            CHECK_GT (rms, 0.0f);
+        }
+
+        afm.unregisterMemoryBuffer (key);
+    }
+
 }
 
 #endif
