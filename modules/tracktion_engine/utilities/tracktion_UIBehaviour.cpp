@@ -55,6 +55,24 @@ int UIBehaviour::showYesNoCancelAlertBox (const juce::String& title, const juce:
    #endif
 }
 
+void UIBehaviour::showOkCancelAlertBoxAsync (const juce::String& title, const juce::String& message,
+                                              const juce::String& ok, const juce::String& cancel,
+                                              std::function<void (bool)> callback)
+{
+    auto options = juce::MessageBoxOptions()
+                     .withIconType (juce::MessageBoxIconType::QuestionIcon)
+                     .withTitle (title)
+                     .withMessage (message)
+                     .withButton (ok.isNotEmpty() ? ok : TRANS("OK"))
+                     .withButton (cancel.isNotEmpty() ? cancel : TRANS("Cancel"));
+
+    juce::AlertWindow::showAsync (options, [cb = std::move (callback)] (int result)
+    {
+        if (cb)
+            cb (result == 1);
+    });
+}
+
 void UIBehaviour::showInfoMessage (const juce::String& message)
 {
     if (auto c = juce::Desktop::getInstance().getMainMouseSource().getComponentUnderMouse())

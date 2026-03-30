@@ -24,7 +24,7 @@ public:
 
     bool save (bool warnOfFailure, bool forceSaveEvenIfNotModified, bool offerToDiscardChanges);
     bool saveAs (const juce::File&, bool forceOverwriteExisting = false);
-    bool saveAs();
+    void saveAs();
 
     bool writeToFile (const juce::File&, bool writeQuickBinaryVersion);
 

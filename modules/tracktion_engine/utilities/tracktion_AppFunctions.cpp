@@ -368,12 +368,10 @@ namespace AppFunctions
         return false;
     }
 
-    bool saveEditAs()
+    void saveEditAs()
     {
         if (auto ed = getCurrentlyFocusedEdit())
-            return EditFileOperations (*ed).saveAs();
-
-        return false;
+            EditFileOperations (*ed).saveAs();
     }
 
     void armOrDisarmAllInputs()

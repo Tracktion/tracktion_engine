@@ -723,7 +723,7 @@ Project::Ptr ProjectManager::createNewProjectInteractively (const juce::String& 
     return {};
 }
 
-void ProjectManager::unpackArchiveAndAddToList (const juce::File& archiveFile, juce::ValueTree folder)
+void ProjectManager::unpackArchiveAndAddToList (const juce::File& archiveFile, const juce::File& destDir, juce::ValueTree folder)
 {
     legacy::TracktionArchiveFile archive (engine, archiveFile);
 
@@ -733,80 +733,57 @@ void ProjectManager::unpackArchiveAndAddToList (const juce::File& archiveFile, j
         return;
     }
 
-    auto text = TRANS("Choose a directory into which the archive \"XZZX\" should be unpacked")
-                  .replace ("XZZX", archiveFile.getFileName()) + "...";
-
-    auto lastPath = engine.getPropertyStorage().getDefaultLoadSaveDirectory ("projectfile");
-
-    if (lastPath.existsAsFile())
-        lastPath = lastPath.getParentDirectory();
-
-    if (! lastPath.isDirectory())
-        lastPath = archiveFile;
-   #if JUCE_MODAL_LOOPS_PERMITTED
-    juce::FileChooser chooser (text, lastPath, "*");
-
-    if (chooser.browseForDirectory())
-   #endif
+    if (! destDir.createDirectory())
     {
-       #if JUCE_MODAL_LOOPS_PERMITTED
-        auto destDir = chooser.getResult();
-       #else
-        auto destDir = lastPath;
-       #endif
+        engine.getUIBehaviour().showWarningMessage (TRANS("Couldn't create this target directory"));
+        return;
+    }
 
-        if (! destDir.createDirectory())
+    auto extractDir = destDir.getNonexistentChildFile (archiveFile.getFileNameWithoutExtension(), {}, false);
+
+    if (! extractDir.createDirectory())
+    {
+        engine.getUIBehaviour().showWarningMessage (TRANS("Couldn't create this target directory"));
+        return;
+    }
+
+    bool wasAborted;
+    juce::Array<juce::File> newFiles;
+
+    if (archive.extractAllAsTask (extractDir, false, newFiles, wasAborted))
+    {
+        if (! wasAborted)
         {
-            engine.getUIBehaviour().showWarningMessage (TRANS("Couldn't create this target directory"));
-            return;
-        }
+            for (int i = newFiles.size(); --i >= 0;)
+                if (! isTracktionProjectFile (newFiles.getReference (i)))
+                    newFiles.remove (i);
 
-        destDir = destDir.getNonexistentChildFile (archiveFile.getFileNameWithoutExtension(), {}, false);
-
-        if (! destDir.createDirectory())
-        {
-            engine.getUIBehaviour().showWarningMessage (TRANS("Couldn't create this target directory"));
-            return;
-        }
-
-        bool wasAborted;
-        juce::Array<juce::File> newFiles;
-
-        if (archive.extractAllAsTask (destDir, false, newFiles, wasAborted))
-        {
-            if (! wasAborted)
+            if (newFiles.isEmpty())
+            {
+                engine.getUIBehaviour().showWarningMessage (TRANS("This archive unpacked ok, but it didn't contain any project files!"));
+            }
+            else
             {
                 for (int i = newFiles.size(); --i >= 0;)
-                    if (! isTracktionProjectFile (newFiles.getReference (i)))
-                        newFiles.remove (i);
-
-                if (newFiles.isEmpty())
-                {
-                    engine.getUIBehaviour().showWarningMessage (TRANS("This archive unpacked ok, but it didn't contain any project files!"));
-                }
-                else
-                {
-                    for (int i = newFiles.size(); --i >= 0;)
-                        if (auto newProj = addProjectToList (newFiles.getReference (i), true, folder))
-                            engine.getUIBehaviour().selectProjectInFocusedWindow (newProj);
-                }
-
-                for (auto& f : newFiles)
-                {
-                    if (auto proj = getProject (f))
-                    {
-                        proj->createDefaultFolders();
-                        proj->refreshFolderStructure();
-                    }
-                }
-
-                saveList();
+                    if (auto newProj = addProjectToList (newFiles.getReference (i), true, folder))
+                        engine.getUIBehaviour().selectProjectInFocusedWindow (newProj);
             }
+
+            for (auto& f : newFiles)
+            {
+                if (auto proj = getProject (f))
+                {
+                    proj->createDefaultFolders();
+                    proj->refreshFolderStructure();
+                }
+            }
+
+            saveList();
         }
-        else
-        {
-            engine.getUIBehaviour().showWarningMessage (TRANS("Errors occurred whilst trying to unpack this archive"));
-        }
+    }
+    else
+    {
+        engine.getUIBehaviour().showWarningMessage (TRANS("Errors occurred whilst trying to unpack this archive"));
     }
 }
 

@@ -1072,49 +1072,48 @@ int CustomControlSurface::getRowBeingListenedTo() const
 
 void CustomControlSurface::showMappingsListForRow (int row)
 {
-   #if JUCE_MODAL_LOOPS_PERMITTED
-    int r = 0;
+    auto callback = [this, row] (int r) mutable
+    {
+        auto cg = commandGroups.find (r);
+
+        if (cg != commandGroups.end())
+        {
+            auto set = cg->second;
+
+            for (int i = 0; i < set->size(); ++i)
+            {
+                if (row >= mappings.size())
+                    mappings.add (new Mapping());
+
+                mappings[row]->function = (*set)[i];
+                row++;
+            }
+
+            sendChangeMessage();
+        }
+        else if (r != 0)
+        {
+            if (row >= mappings.size())
+                mappings.add (new Mapping());
+
+            mappings[row]->function = r;
+
+            sendChangeMessage();
+        }
+    };
+
     auto mouse = juce::Desktop::getInstance().getMainMouseSource();
+
     if (auto underMouse = mouse.getComponentUnderMouse())
     {
         auto pt = mouse.getScreenPosition();
         auto opts = juce::PopupMenu::Options().withTargetComponent (underMouse)
                                               .withTargetScreenArea ({ int (pt.x), int (pt.y), 1, 1 });
-        r = contextMenu.showMenu (opts);
+        contextMenu.showMenuAsync (opts, std::move (callback));
     }
     else
     {
-        r = contextMenu.show();
-    }
-   #else
-    int r = 0;
-   #endif
-
-    auto cg = commandGroups.find (r);
-
-    if (cg != commandGroups.end())
-    {
-        auto set = cg->second;
-
-        for (int i = 0; i < set->size(); ++i)
-        {
-            if (row >= mappings.size())
-                mappings.add (new Mapping());
-
-            mappings[row]->function = (*set)[i];
-            row++;
-        }
-
-        sendChangeMessage();
-    }
-    else if (r != 0)
-    {
-        if (row >= mappings.size())
-            mappings.add (new Mapping());
-
-        mappings[row]->function = r;
-
-        sendChangeMessage();
+        contextMenu.showMenuAsync ({}, std::move (callback));
     }
 }
 

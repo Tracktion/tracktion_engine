@@ -126,6 +126,7 @@ public:
 
     juce::File getDestFile() const noexcept                     { return destFile; }
     juce::String getFileExtension() const;
+    juce::String getCurrentFileExtension();
 
     TargetFileFormat getFormat() const noexcept                 { return format; }
     int getBitDepth() const                                     { return bitDepth; }
@@ -206,7 +207,6 @@ private:
     void updateFileName();
     void updateOptionsForFormat();
     void updateDefaultFilename (Edit*);
-    juce::String getCurrentFileExtension();
 };
 
 } // namespace tracktion::inline engine

@@ -58,7 +58,7 @@ namespace AppFunctions
 
     void toggleEndToEnd();
     bool saveEdit();
-    bool saveEditAs();
+    void saveEditAs();
     void armOrDisarmAllInputs();
     void goToMarkIn();
     void goToMarkOut();

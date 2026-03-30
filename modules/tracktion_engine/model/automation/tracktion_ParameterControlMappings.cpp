@@ -538,48 +538,45 @@ void ParameterControlMappings::showMappingsListForRow (int row)
     juce::Array<ParameterAndIndex> allParams;
     auto m = buildMenu (allParams);
 
-   #if JUCE_MODAL_LOOPS_PERMITTED
-    const int r = m.show();
-   #else
-    const int r = 0;
-   #endif
-
-    if (r >= 50000 && r < 51000)
+    m.showMenuAsync ({}, [this, row, allParams = std::move (allParams)] (int r) mutable
     {
-        savePreset (r - 50000);
-    }
-    else if (r >= 60000 && r < 61000)
-    {
-        loadPreset (r - 60000);
-    }
-    else if (r >= 70000 && r < 71000)
-    {
-        deletePreset (r - 70000);
-    }
-    else if (r != 0)
-    {
-        for (const auto& pair : allParams)
+        if (r >= 50000 && r < 51000)
         {
-            if (pair.index == r && pair.param != nullptr)
-            {
-                while (row >= controllerIDs.size())
-                {
-                    controllerIDs.add (0);
-                    channelIDs.add (0);
-                    parameters.add (nullptr);
-                    parameterFullNames.add ({});
-                }
-
-                parameters.set (row, pair.param);
-                parameterFullNames.set (row, pair.param->getFullName());
-
-                ++row;
-            }
+            savePreset (r - 50000);
         }
+        else if (r >= 60000 && r < 61000)
+        {
+            loadPreset (r - 60000);
+        }
+        else if (r >= 70000 && r < 71000)
+        {
+            deletePreset (r - 70000);
+        }
+        else if (r != 0)
+        {
+            for (const auto& pair : allParams)
+            {
+                if (pair.index == r && pair.param != nullptr)
+                {
+                    while (row >= controllerIDs.size())
+                    {
+                        controllerIDs.add (0);
+                        channelIDs.add (0);
+                        parameters.add (nullptr);
+                        parameterFullNames.add ({});
+                    }
 
-        tellEditAboutChange();
-        sendChangeMessage();
-    }
+                    parameters.set (row, pair.param);
+                    parameterFullNames.set (row, pair.param->getFullName());
+
+                    ++row;
+                }
+            }
+
+            tellEditAboutChange();
+            sendChangeMessage();
+        }
+    });
 }
 
 void ParameterControlMappings::listenToRow (int row)

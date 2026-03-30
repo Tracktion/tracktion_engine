@@ -305,69 +305,66 @@ bool isConsolidated (Project& project)
 
 void consolidateEditInteractive (Edit& edit, std::function<void()> completionCallback)
 {
-    juce::AlertWindow::showOkCancelBox (juce::AlertWindow::WarningIcon,
-                                  TRANS("Consolidate Edit?"),
-                                  TRANS("This will copy any files outside of the Project folder in to it and update the Project items.") + "\n\n"
-                                     + TRANS("N.B. If you have other Edits referencing these project items, they will also be updated to refer to the new copies.") + "\n\n"
-                                     + TRANS("Do you want to proceed?"),
-                                  juce::String(), juce::String(), nullptr,
-                                  juce::ModalCallbackFunction::create ([editRef = makeSafeRef (edit), completionCallback] (int res)
-                                  {
-                                      if (res == 0)
-                                          return;
+    edit.engine.getUIBehaviour().showOkCancelAlertBoxAsync (
+        TRANS("Consolidate Edit?"),
+        TRANS("This will copy any files outside of the Project folder in to it and update the Project items.") + "\n\n"
+            + TRANS("N.B. If you have other Edits referencing these project items, they will also be updated to refer to the new copies.") + "\n\n"
+            + TRANS("Do you want to proceed?"),
+        {}, {},
+        [editRef = makeSafeRef (edit), completionCallback] (bool okPressed)
+        {
+            if (! okPressed)
+                return;
 
-                                      if (auto e = editRef.get())
-                                      {
-                                          const auto [num, error] = consolidateEdit (*e);
+            if (auto e = editRef.get())
+            {
+                const auto [num, error] = consolidateEdit (*e);
 
-                                          juce::AlertWindow::showMessageBoxAsync (juce::AlertWindow::InfoIcon,
-                                                                            TRANS("Finished Consolidating"),
-                                                                            TRANS("XXX external files copied into project.")
-                                                                                .replace ("XXX", juce::String (num)));
+                e->engine.getUIBehaviour().showWarningAlert (TRANS("Finished Consolidating"),
+                                                              TRANS("XXX external files copied into project.")
+                                                                  .replace ("XXX", juce::String (num)));
 
-                                          if (completionCallback)
-                                              completionCallback();
-                                     }
-                                  }));
+                if (completionCallback)
+                    completionCallback();
+            }
+        });
 }
 
 void consolidateProjectInteractive (Project& project, std::function<void()> completionCallback)
 {
-    juce::AlertWindow::showOkCancelBox (juce::AlertWindow::WarningIcon,
-                                  TRANS("Consolidate Project?"),
-                                  TRANS("This will copy any files outside of the Project folder in to it and update the Project items.") + "\n\n"
-                                     + TRANS("N.B. If you have other Edits referencing these project items, they will also be updated to refer to the new copies.") + "\n\n"
-                                     + TRANS("Do you want to proceed?"),
-                                  juce::String(), juce::String(), nullptr,
-                                  juce::ModalCallbackFunction::create ([projectRef = makeSafeRef (project), completionCallback] (int res)
-                                  {
-                                      if (res == 0)
-                                          return;
+    project.engine.getUIBehaviour().showOkCancelAlertBoxAsync (
+        TRANS("Consolidate Project?"),
+        TRANS("This will copy any files outside of the Project folder in to it and update the Project items.") + "\n\n"
+            + TRANS("N.B. If you have other Edits referencing these project items, they will also be updated to refer to the new copies.") + "\n\n"
+            + TRANS("Do you want to proceed?"),
+        {}, {},
+        [projectRef = makeSafeRef (project), completionCallback] (bool okPressed)
+        {
+            if (! okPressed)
+                return;
 
-                                      if (auto p = projectRef.get())
-                                      {
-                                          const auto [num, error] = consolidateProject (*p);
+            if (auto p = projectRef.get())
+            {
+                const auto [num, error] = consolidateProject (*p);
 
-                                          if (error.isNotEmpty())
-                                          {
-                                              juce::AlertWindow::showMessageBoxAsync (juce::AlertWindow::InfoIcon,
-                                                                                TRANS("Unable to Consolidate"),
-                                                                                TRANS("XXX external files copied into project.")
-                                                                                    .replace ("XXX", juce::String (num))
-                                                                                    + "\n\n" + error);
-                                          }
-                                          else
-                                          {
-                                              juce::AlertWindow::showMessageBoxAsync (juce::AlertWindow::InfoIcon,
-                                                                                TRANS("Finished Consolidating"),
-                                                                                TRANS("XXX external files copied into project.")
-                                                                                    .replace ("XXX", juce::String (num)));
-                                          }
+                if (error.isNotEmpty())
+                {
+                    p->engine.getUIBehaviour().showWarningAlert (TRANS("Unable to Consolidate"),
+                                                                  TRANS("XXX external files copied into project.")
+                                                                      .replace ("XXX", juce::String (num))
+                                                                      + "\n\n" + error);
+                }
+                else
+                {
+                    p->engine.getUIBehaviour().showWarningAlert (TRANS("Finished Consolidating"),
+                                                                  TRANS("XXX external files copied into project.")
+                                                                      .replace ("XXX", juce::String (num)));
+                }
 
-                                          if (completionCallback)
-                                              completionCallback();
-                                      }
-                                  }));
+                if (completionCallback)
+                    completionCallback();
+            }
+        });
 }
 
 } // namespace ProjectUtilities

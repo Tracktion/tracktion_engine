@@ -101,10 +101,8 @@ public:
     juce::ReferenceCountedArray<Project> getAllProjects (const juce::ValueTree& folder);
 
     //==============================================================================
-    /** Extracts a .trkx archive and adds any contained projects to the list.
-        Shows a file chooser for the user to select the extraction directory.
-    */
-    void unpackArchiveAndAddToList (const juce::File& archiveFile, juce::ValueTree folder);
+    /** Extracts a .trkx archive into destDir and adds any contained projects to the list. */
+    void unpackArchiveAndAddToList (const juce::File& archiveFile, const juce::File& destDir, juce::ValueTree folder);
 
     //==============================================================================
     /** Finds the project containing the given ref and returns the matching ProjectItem. */

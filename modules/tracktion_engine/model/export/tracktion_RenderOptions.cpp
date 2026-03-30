@@ -1033,60 +1033,11 @@ void RenderOptions::setFilename (juce::String value, bool canPromptToOverwriteEx
     auto recentList = engine.getPropertyStorage().getProperty (SettingID::renderRecentFilesList).toString();
     recent.restoreFromString (recentList);
 
-    juce::File f;
+    // The "$browse" magic string is no longer handled here — UI code should
+    // resolve the file path before calling setFilename().
+    jassert (! value.startsWithIgnoreCase ("$browse"));
 
-   #if JUCE_MODAL_LOOPS_PERMITTED
-    if (value.startsWithIgnoreCase ("$browse"))
-    {
-        enum
-        {
-            cancel = 0,
-            browse,
-            projectDefault,
-            recentOffset
-        };
-
-        juce::PopupMenu m, m2;
-
-        m.addItem (browse, TRANS("Browse") + "...");
-        m.addItem (projectDefault, TRANS("Set to project default"));
-
-        int i = recentOffset;
-
-        for (auto& s : recent.getAllFilenames())
-            m2.addItem (i++, s);
-
-        if (recent.getNumFiles() > 0)
-            m.addSubMenu (TRANS("Recent"), m2);
-
-        auto res = m.show();
-
-        if (res == cancel)
-            return;
-
-        if (res == browse)
-        {
-            juce::FileChooser chooser (TRANS("Select the file to use"), destFile, "*" + getCurrentFileExtension());
-
-            if (! chooser.browseForFileToSave (false))
-                return;
-
-            f = chooser.getResult();
-        }
-        else if (res == projectDefault)
-        {
-            f = juce::File();
-        }
-        else
-        {
-            f = recent.getAllFilenames()[res - recentOffset];
-        }
-    }
-    else
-   #endif
-    {
-        f = juce::File (value);
-    }
+    auto f = juce::File (value);
 
     if (f.existsAsFile()
         #if JUCE_MODAL_LOOPS_PERMITTED

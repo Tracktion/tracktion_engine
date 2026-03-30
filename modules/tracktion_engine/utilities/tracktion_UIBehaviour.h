@@ -88,6 +88,11 @@ public:
                                          const juce::String& no = {},
                                          const juce::String& cancel = {});
 
+    /** Async version of showOkCancelAlertBox. Calls the callback with true for OK, false for cancel. */
+    virtual void showOkCancelAlertBoxAsync (const juce::String& title, const juce::String& message,
+                                             const juce::String& ok, const juce::String& cancel,
+                                             std::function<void (bool)> callback);
+
     /** Should display a temporary information message, usually in the same place. */
     virtual void showInfoMessage (const juce::String& message);
 

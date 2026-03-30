@@ -285,21 +285,22 @@ bool EditFileOperations::save (bool warnOfFailure,
     return true;
 }
 
-bool EditFileOperations::saveAs()
+void EditFileOperations::saveAs()
 {
-   #if JUCE_MODAL_LOOPS_PERMITTED
     CRASH_TRACER
     auto newEditName = getNonExistentSiblingWithIncrementedNumberSuffix (getEditFile(), false);
 
-    juce::FileChooser chooser (TRANS("Save As") + "...",
-                               newEditName,
-                               juce::String ("*") + editFileSuffix);
+    auto fc = std::make_shared<juce::FileChooser> (TRANS("Save As") + "...",
+                                                    newEditName,
+                                                    juce::String ("*") + editFileSuffix);
 
-    if (chooser.browseForFileToSave (false))
-        return saveAs (chooser.getResult().withFileExtension (editFileSuffix));
-   #endif
-
-    return false;
+    fc->launchAsync (juce::FileBrowserComponent::saveMode | juce::FileBrowserComponent::warnAboutOverwriting,
+                     [fc, editRef = makeSafeRef (edit)] (const juce::FileChooser&)
+                     {
+                         if (fc->getResult() != juce::File())
+                             if (auto ed = editRef.get())
+                                 EditFileOperations (*ed).saveAs (fc->getResult().withFileExtension (editFileSuffix));
+                     });
 }
 
 bool EditFileOperations::saveAs (const juce::File& f, bool forceOverwriteExisting)
