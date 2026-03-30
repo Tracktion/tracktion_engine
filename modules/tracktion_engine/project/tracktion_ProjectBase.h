@@ -41,7 +41,6 @@ public:
 
     virtual void refreshProjectPropertiesFromFile() = 0;
     virtual bool isLibraryProject() const = 0;
-    virtual bool askAboutTempoDetect (const juce::File&, bool&) const = 0;
 
     //==============================================================================
     virtual int getNumProjectItems() = 0;

@@ -39,7 +39,6 @@ public:
 
     void refreshProjectPropertiesFromFile() override;
     bool isLibraryProject() const override;
-    bool askAboutTempoDetect (const juce::File&, bool&) const override;
 
     //==============================================================================
     int getNumProjectItems() override;

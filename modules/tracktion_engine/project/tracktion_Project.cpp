@@ -100,8 +100,6 @@ void Project::setProjectProperty (const juce::String& n, const juce::String& v) 
 void Project::refreshProjectPropertiesFromFile()                            { impl->refreshProjectPropertiesFromFile(); }
 bool Project::isLibraryProject() const                                      { return impl->isLibraryProject(); }
 
-bool Project::askAboutTempoDetect (const juce::File& f, bool& s) const      { return impl->askAboutTempoDetect (f, s); }
-
 juce::Array<ProjectItemRef> Project::findOrphanItemRefs()
 {
     juce::Array<ProjectItemRef> refs;

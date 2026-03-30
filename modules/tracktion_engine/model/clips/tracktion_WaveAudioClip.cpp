@@ -358,59 +358,59 @@ juce::StringArray WaveAudioClip::getTakeDescriptions() const
     return s;
 }
 
-void WaveAudioClip::deleteAllUnusedTakesConfirmingWithUser (bool deleteSourceFiles)
+void WaveAudioClip::deleteAllUnusedTakesConfirmingWithUser (bool)
 {
     CRASH_TRACER
 
-   #if JUCE_MODAL_LOOPS_PERMITTED
-    auto showWarning = [] (const juce::String& title, const juce::String& message, bool& delFiles) -> int
+    auto showWarningAsync = [] (const juce::String& title, const juce::String& message,
+                                std::function<void (bool okPressed, bool delFiles)> callback)
     {
-        const std::unique_ptr<juce::AlertWindow> w (juce::LookAndFeel::getDefaultLookAndFeel()
+        auto w = std::shared_ptr<juce::AlertWindow> (juce::LookAndFeel::getDefaultLookAndFeel()
                                                         .createAlertWindow (title, message,
                                                                             {}, {}, {},
                                                                             juce::AlertWindow::QuestionIcon, 0, nullptr));
 
-        juce::ToggleButton delFilesButton (TRANS("Delete Source Files?"));
-        delFilesButton.setSize (400, 20);
-        delFilesButton.setName ({});
-        w->addCustomComponent (&delFilesButton);
+        auto delFilesButton = std::make_shared<juce::ToggleButton> (TRANS("Delete Source Files?"));
+        delFilesButton->setSize (400, 20);
+        delFilesButton->setName ({});
+        w->addCustomComponent (delFilesButton.get());
         w->addTextBlock (TRANS("(This will also delete these from any other Edits in this project)"));
         w->addButton (TRANS("OK"), 1, juce::KeyPress (juce::KeyPress::returnKey));
         w->addButton (TRANS("Cancel"), 2, juce::KeyPress (juce::KeyPress::escapeKey));
 
-        const int res = w->runModalLoop();
-        delFiles = delFilesButton.getToggleState();
-
-        return res;
+        w->enterModalState (true, juce::ModalCallbackFunction::create (
+            [w, delFilesButton, cb = std::move (callback)] (int res)
+            {
+                if (cb)
+                    cb (res == 1, delFilesButton->getToggleState());
+            }));
     };
 
     if (getCompManager().isCurrentTakeComp())
     {
-        if (showWarning (TRANS("Flatten Takes"),
-                         TRANS("This will permanently remove all takes in this clip, replacing it with"
-                               " the current comp. This operation can not be undone.")
-                         + "\n\n"
-                         + TRANS("Are you sure you want to do this?"),
-                         deleteSourceFiles) == 1)
-            getCompManager().flattenTake (getCurrentTake(), deleteSourceFiles);
-
+        showWarningAsync (TRANS("Flatten Takes"),
+                          TRANS("This will permanently remove all takes in this clip, replacing it with"
+                                " the current comp. This operation can not be undone.")
+                          + "\n\n"
+                          + TRANS("Are you sure you want to do this?"),
+                          [this] (bool okPressed, bool delFiles)
+                          {
+                              if (okPressed)
+                                  getCompManager().flattenTake (getCurrentTake(), delFiles);
+                          });
         return;
     }
-   #endif
 
-    bool userIsSure = true;
-
-   #if JUCE_MODAL_LOOPS_PERMITTED
-    userIsSure = (showWarning (TRANS("Delete Unused Takes"),
-                               TRANS("This will permanently delete all wave files that are listed as takes in this "
-                                     "clip, apart from the ones currently being used.")
-                                + "\n\n"
-                                + TRANS("Are you sure you want to do this?"),
-                                deleteSourceFiles) == 1);
-   #endif
-
-    if (userIsSure)
-        deleteAllUnusedTakes (deleteSourceFiles);
+    showWarningAsync (TRANS("Delete Unused Takes"),
+                      TRANS("This will permanently delete all wave files that are listed as takes in this "
+                            "clip, apart from the ones currently being used.")
+                       + "\n\n"
+                       + TRANS("Are you sure you want to do this?"),
+                      [this] (bool okPressed, bool delFiles)
+                      {
+                          if (okPressed)
+                              deleteAllUnusedTakes (delFiles);
+                      });
 }
 
 static bool isTakeInUse (const WaveAudioClip& clip, const ProjectItemRef& takeRef)

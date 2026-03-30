@@ -104,14 +104,14 @@ void ParameterControlMappings::showMappingsEditor (juce::DialogWindow::LaunchOpt
     listenToRow (-1);
     checkForDeletedParams();
 
-   #if JUCE_MODAL_LOOPS_PERMITTED
-    o.runModal();
-   #else
-    juce::ignoreUnused (o);
-   #endif
-
-    listenToRow (-1);
-    setLearntParam (false);
+    auto* dw = o.create();
+    dw->enterModalState (true,
+                         juce::ModalCallbackFunction::create ([this] (int)
+                         {
+                             listenToRow (-1);
+                             setLearntParam (false);
+                         }),
+                         true);
 }
 
 void ParameterControlMappings::handleAsyncUpdate()
@@ -687,65 +687,60 @@ void ParameterControlMappings::savePreset (int index)
 
     pluginNames.sort (true);
 
-   #if JUCE_MODAL_LOOPS_PERMITTED
     auto plugin = plugins[pluginNames[index].getTrailingIntValue()];
 
-    const std::unique_ptr<juce::AlertWindow> w (juce::LookAndFeel::getDefaultLookAndFeel()
-                                                  .createAlertWindow (TRANS("Plugin mapping preset"),
-                                                                      TRANS("Create a new plugin mapping preset"),
-                                                                      {}, {}, {}, juce::AlertWindow::QuestionIcon, 0, nullptr));
+    auto w = std::shared_ptr<juce::AlertWindow> (juce::LookAndFeel::getDefaultLookAndFeel()
+                                                    .createAlertWindow (TRANS("Plugin mapping preset"),
+                                                                        TRANS("Create a new plugin mapping preset"),
+                                                                        {}, {}, {}, juce::AlertWindow::QuestionIcon, 0, nullptr));
 
     w->addTextEditor ("setName", plugin->getName(), TRANS("Name:"));
     w->addButton (TRANS("OK"), 1, juce::KeyPress (juce::KeyPress::returnKey));
     w->addButton (TRANS("Cancel"), 0, juce::KeyPress (juce::KeyPress::escapeKey));
 
-    int res = w->runModalLoop();
-    auto name = w->getTextEditorContents ("setName");
-
-    if (res == 0 || name.trim().isEmpty())
-        return;
-   #else
-    juce::ignoreUnused (index);
-    return;
-   #endif
-
-   #if JUCE_MODAL_LOOPS_PERMITTED
-    auto xml = new juce::XmlElement ("filter");
-    xml->setAttribute ("name", name);
-    xml->setAttribute ("filter", plugin->getName());
-
-    for (int i = 0; i < parameters.size(); ++i)
+    w->enterModalState (true, juce::ModalCallbackFunction::create ([this, w, plugin] (int res)
     {
-        if (auto p = parameters[i])
+        auto name = w->getTextEditorContents ("setName");
+
+        if (res == 0 || name.trim().isEmpty())
+            return;
+
+        auto xml = new juce::XmlElement ("filter");
+        xml->setAttribute ("name", name);
+        xml->setAttribute ("filter", plugin->getName());
+
+        for (int i = 0; i < parameters.size(); ++i)
         {
-            if (p->getPlugin() == plugin)
+            if (auto p = parameters[i])
             {
-                auto mapping = new juce::XmlElement ("mapping");
-                mapping->setAttribute ("controller", controllerIDs[i]);
-                mapping->setAttribute ("channel", channelIDs[i]);
-                mapping->setAttribute ("parameter", p->paramID);
-                xml->addChildElement (mapping);
+                if (p->getPlugin() == plugin)
+                {
+                    auto mapping = new juce::XmlElement ("mapping");
+                    mapping->setAttribute ("controller", controllerIDs[i]);
+                    mapping->setAttribute ("channel", channelIDs[i]);
+                    mapping->setAttribute ("parameter", p->paramID);
+                    xml->addChildElement (mapping);
+                }
             }
         }
-    }
 
-    juce::XmlElement xmlNew ("FILTERMAPPINGPRESETS");
-    xmlNew.addChildElement (xml);
+        juce::XmlElement xmlNew ("FILTERMAPPINGPRESETS");
+        xmlNew.addChildElement (xml);
 
-    if (auto xmlOld = edit.engine.getPropertyStorage().getXmlProperty (SettingID::filterControlMappingPresets))
-        for (auto n : xmlOld->getChildIterator())
-            if (n->getStringAttribute ("name") != name)
-                xmlNew.addChildElement (new juce::XmlElement (*n));
+        if (auto xmlOld = edit.engine.getPropertyStorage().getXmlProperty (SettingID::filterControlMappingPresets))
+            for (auto n : xmlOld->getChildIterator())
+                if (n->getStringAttribute ("name") != name)
+                    xmlNew.addChildElement (new juce::XmlElement (*n));
 
-    edit.engine.getPropertyStorage().setXmlProperty (SettingID::filterControlMappingPresets, xmlNew);
-   #endif
+        edit.engine.getPropertyStorage().setXmlProperty (SettingID::filterControlMappingPresets, xmlNew);
+    }));
 }
 
 void ParameterControlMappings::loadPreset (int index)
 {
-    if (auto xml = edit.engine.getPropertyStorage().getXmlProperty (SettingID::filterControlMappingPresets))
+    if (auto xmlOwner = std::shared_ptr<juce::XmlElement> (edit.engine.getPropertyStorage().getXmlProperty (SettingID::filterControlMappingPresets).release()))
     {
-        if (auto mapping = xml->getChildElement (index))
+        if (auto mapping = xmlOwner->getChildElement (index))
         {
             Plugin::Array matchingPlugins;
 
@@ -768,37 +763,49 @@ void ParameterControlMappings::loadPreset (int index)
 
                 if (matchingPlugins.size() > 1)
                 {
-                   #if JUCE_MODAL_LOOPS_PERMITTED
-                    juce::ComboBox cb;
-                    cb.setSize (200,20);
+                    auto cb = std::make_shared<juce::ComboBox>();
+                    cb->setSize (200, 20);
 
                     for (int i = 0; i < matchingPlugins.size(); ++i)
                         if (auto p = matchingPlugins.getUnchecked (i))
-                            cb.addItem (p->getOwnerTrack() ? p->getOwnerTrack()->getName() + " >> " + p->getName()
-                                                           : p->getName(),
-                                        i + 1);
+                            cb->addItem (p->getOwnerTrack() ? p->getOwnerTrack()->getName() + " >> " + p->getName()
+                                                            : p->getName(),
+                                         i + 1);
 
-                    cb.setSelectedId(1);
+                    cb->setSelectedId (1);
 
-                    const std::unique_ptr<juce::AlertWindow> w (juce::LookAndFeel::getDefaultLookAndFeel()
+                    auto w = std::shared_ptr<juce::AlertWindow> (juce::LookAndFeel::getDefaultLookAndFeel()
                                                                     .createAlertWindow (TRANS("Select plugin"),
                                                                                         TRANS("Select plugin to apply preset to:"),
                                                                                         {}, {}, {},
                                                                                         juce::AlertWindow::QuestionIcon, 0, nullptr));
 
-                    w->addCustomComponent (&cb);
+                    w->addCustomComponent (cb.get());
                     w->addButton (TRANS("OK"), 1, juce::KeyPress (juce::KeyPress::returnKey));
                     w->addButton (TRANS("Cancel"), 0, juce::KeyPress (juce::KeyPress::escapeKey));
 
-                    int res = w->runModalLoop();
+                    w->enterModalState (true, juce::ModalCallbackFunction::create (
+                        [this, w, cb, matchingPlugins, xmlOwner, mapping] (int res)
+                        {
+                            Plugin::Ptr selectedPlugin;
 
-                    if (res == 1)
-                        plugin = matchingPlugins[cb.getSelectedId() - 1];
-                    else
-                        plugin = nullptr;
-                   #else
-                    plugin = nullptr;
-                   #endif
+                            if (res == 1)
+                                selectedPlugin = matchingPlugins[cb->getSelectedId() - 1];
+
+                            if (selectedPlugin != nullptr)
+                            {
+                                for (auto item : mapping->getChildIterator())
+                                {
+                                    controllerIDs.add (item->getStringAttribute ("controller").getIntValue());
+                                    channelIDs.add (item->getStringAttribute ("channel").getIntValue());
+                                    parameters.add (selectedPlugin->getAutomatableParameterByID (item->getStringAttribute ("parameter")));
+                                }
+
+                                tellEditAboutChange();
+                                sendChangeMessage();
+                            }
+                        }));
+                    return;
                 }
 
                 if (plugin != nullptr)

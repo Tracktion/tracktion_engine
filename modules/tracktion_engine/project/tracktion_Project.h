@@ -133,11 +133,6 @@ public:
     /** Returns true if this project is flagged as a library project (a shared sound/media library). */
     bool isLibraryProject() const;
 
-    /** Checks whether automatic tempo detection should be applied to the given file.
-        On return, shouldSetAutoTempo indicates the result. Returns false if the user cancelled.
-    */
-    bool askAboutTempoDetect (const juce::File&, bool& shouldSetAutoTempo) const;
-
     /** Returns refs to items whose source files are not referenced by any edit.
         Always returns an empty array for folder-based projects.
     */

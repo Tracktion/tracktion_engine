@@ -1030,7 +1030,6 @@ bool CustomControlSurface::removeMapping (ActionID id, int controllerID, int not
 //==============================================================================
 void CustomControlSurface::showMappingsEditor (juce::DialogWindow::LaunchOptions& o)
 {
-   #if JUCE_MODAL_LOOPS_PERMITTED
     if (needsMidiChannel && owner->getMidiInputDevice (0).isEmpty())
     {
         engine.getUIBehaviour().showWarningAlert (TRANS("Error"),
@@ -1039,14 +1038,16 @@ void CustomControlSurface::showMappingsEditor (juce::DialogWindow::LaunchOptions
     }
 
     listenToRow (-1);
-    o.runModal();
-    setLearntParam (false);
-    listenToRow (-1);
 
-    manager->saveAllSettings (engine);
-   #else
-    juce::ignoreUnused (o);
-   #endif
+    auto* dw = o.create();
+    dw->enterModalState (true,
+                         juce::ModalCallbackFunction::create ([this] (int)
+                         {
+                             setLearntParam (false);
+                             listenToRow (-1);
+                             manager->saveAllSettings (engine);
+                         }),
+                         true);
 }
 
 int CustomControlSurface::getNumMappings() const

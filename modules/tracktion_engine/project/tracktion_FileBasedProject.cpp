@@ -721,52 +721,6 @@ juce::String FileBasedProject::getSelectableDescription() const
                         : TRANS("Project");
 }
 
-bool FileBasedProject::askAboutTempoDetect (const juce::File& f, bool& shouldSetAutoTempo) const
-{
-   #if JUCE_MODAL_LOOPS_PERMITTED
-    Project::NagMode im = (Project::NagMode) static_cast<int> (owner.engine.getPropertyStorage().getProperty (SettingID::autoTempoDetect, (int) Project::nagAsk));
-
-    shouldSetAutoTempo = owner.engine.getPropertyStorage().getProperty (SettingID::autoTempoMatch, false);
-
-    if (im == Project::nagAutoYes)
-        return true;
-
-    if (im == Project::nagAutoNo)
-        return false;
-
-    juce::ToggleButton autoTempo (TRANS("Set tempo to match project"));
-    autoTempo.setToggleState (shouldSetAutoTempo, juce::dontSendNotification);
-    autoTempo.setSize (200, 20);
-
-    juce::ToggleButton dontAsk (TRANS("Remember my choice"));
-    dontAsk.setSize (200, 20);
-
-    const std::unique_ptr<juce::AlertWindow> w (juce::LookAndFeel::getDefaultLookAndFeel()
-                                                  .createAlertWindow (TRANS("Detect Tempo?"),
-                                                                      TRANS("No tempo information was found in XZZX, would you like to detect it automatically?")
-                                                                        .replace ("XZZX", f.getFileNameWithoutExtension()),
-                                                                      {}, {}, {}, juce::AlertWindow::QuestionIcon, 0, nullptr));
-
-    w->addCustomComponent (&autoTempo);
-    w->addCustomComponent (&dontAsk);
-    w->addButton (TRANS("Yes"), 1, juce::KeyPress (juce::KeyPress::returnKey));
-    w->addButton (TRANS("No"), 0, juce::KeyPress (juce::KeyPress::escapeKey));
-
-    const int res = w->runModalLoop();
-
-    shouldSetAutoTempo = autoTempo.getToggleState();
-    owner.engine.getPropertyStorage().setProperty (SettingID::autoTempoMatch, shouldSetAutoTempo);
-
-    if (dontAsk.getToggleState())
-        owner.engine.getPropertyStorage().setProperty (SettingID::autoTempoDetect, (int) (res == 1 ? Project::nagAutoYes : Project::nagAutoNo));
-
-    return res == 1;
-   #else
-    juce::ignoreUnused (f, shouldSetAutoTempo);
-    return true;
-   #endif
-}
-
 void FileBasedProject::ensureFolderCreated (ProjectItem::Category c)
 {
     auto dir = getDirectoryForMedia (c);
