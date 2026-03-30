@@ -595,13 +595,13 @@ juce::File FileBasedProject::getDirectoryForMedia (ProjectItem::Category categor
 
     switch (category)
     {
-        case ProjectItem::Category::archives:  dir = dir.getChildFile (TRANS("Archived")); break;
-        case ProjectItem::Category::exports:   dir = dir.getChildFile (TRANS("Exported")); break;
-        case ProjectItem::Category::frozen:    dir = dir.getChildFile (TRANS("Frozen")); break;
-        case ProjectItem::Category::imported:  dir = dir.getChildFile (TRANS("Imported")); break;
-        case ProjectItem::Category::recorded:  dir = dir.getChildFile (TRANS("Recorded")); break;
-        case ProjectItem::Category::rendered:  dir = dir.getChildFile (TRANS("Rendered")); break;
-        case ProjectItem::Category::video:     dir = dir.getChildFile (TRANS("Movies")); break;
+        case ProjectItem::Category::archives:  dir = dir.getChildFile ("Archived"); break;
+        case ProjectItem::Category::exports:   dir = dir.getChildFile ("Exported"); break;
+        case ProjectItem::Category::frozen:    dir = dir.getChildFile ("Frozen"); break;
+        case ProjectItem::Category::imported:  dir = dir.getChildFile ("Imported"); break;
+        case ProjectItem::Category::recorded:  dir = dir.getChildFile ("Recorded"); break;
+        case ProjectItem::Category::rendered:  dir = dir.getChildFile ("Rendered"); break;
+        case ProjectItem::Category::video:     dir = dir.getChildFile ("Movies"); break;
 
         case ProjectItem::Category::edit:
         case ProjectItem::Category::none:
