@@ -622,7 +622,8 @@ Renderer::Statistics Renderer::measureStatistics (const juce::String& taskDescri
     return result;
 }
 
-bool Renderer::checkTargetFile (Engine& e, const juce::File& file)
+void Renderer::checkTargetFile (Engine& e, const juce::File& file,
+                                std::function<void (bool)> callback)
 {
     auto& ui = e.getUIBehaviour();
 
@@ -630,33 +631,55 @@ bool Renderer::checkTargetFile (Engine& e, const juce::File& file)
     {
         ui.showWarningAlert (TRANS("Couldn't render"),
                              TRANS("Couldn't write to this file - check that it's not read-only and that you have permission to access it"));
-        return false;
+        if (callback) callback (false);
+        return;
     }
 
     if (! file.getParentDirectory().createDirectory())
     {
         ui.showWarningAlert (TRANS("Rendering"),
                              TRANS("Couldn't render - couldn't create the directory specified"));
-        return false;
+        if (callback) callback (false);
+        return;
     }
 
     if (file.exists())
     {
-        if (! ui.showOkCancelAlertBox (TRANS("Rendering"),
-                                       TRANS("The file\n\nXZZX\n\nalready exists - are you sure you want to overwrite it?")
-                                          .replace ("XZZX", file.getFullPathName()),
-                                       TRANS("Overwrite")))
-            return false;
+        ui.showOkCancelAlertBoxAsync (TRANS("Rendering"),
+                                      TRANS("The file\n\nXZZX\n\nalready exists - are you sure you want to overwrite it?")
+                                        .replace ("XZZX", file.getFullPathName()),
+                                      TRANS("Overwrite"),
+                                      TRANS("Cancel"),
+                                      [file, callback, &ui] (bool okPressed)
+                                      {
+                                          if (! okPressed)
+                                          {
+                                              if (callback) callback (false);
+                                              return;
+                                          }
+
+                                          if (! (file.deleteFile() && file.hasWriteAccess()))
+                                          {
+                                              ui.showWarningAlert (TRANS("Rendering"),
+                                                                   TRANS("Couldn't render - the file chosen didn't have write permission"));
+                                              if (callback) callback (false);
+                                              return;
+                                          }
+
+                                          if (callback) callback (true);
+                                      });
+        return;
     }
 
     if (! (file.deleteFile() && file.hasWriteAccess()))
     {
         ui.showWarningAlert (TRANS("Rendering"),
                              TRANS("Couldn't render - the file chosen didn't have write permission"));
-        return false;
+        if (callback) callback (false);
+        return;
     }
 
-    return true;
+    if (callback) callback (true);
 }
 
 //==============================================================================

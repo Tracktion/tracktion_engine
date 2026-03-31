@@ -39,6 +39,19 @@ namespace test_utilities
    #endif
 
     //==============================================================================
+    /** Calls EditFileOperations::save synchronously for test use.
+        Only safe when no dialogs will be shown (warnOfFailure=false, offerToDiscardChanges=false).
+    */
+    inline bool saveEditSync (Edit& edit, bool warnOfFailure = false,
+                               bool forceSave = true, bool offerToDiscard = false)
+    {
+        bool result = false;
+        EditFileOperations (edit).save (warnOfFailure, forceSave, offerToDiscard,
+                                        [&result] (bool ok) { result = ok; });
+        return result;
+    }
+
+    //==============================================================================
     inline std::optional<juce::AudioBuffer<float>> loadFileInToBuffer (juce::AudioFormatManager& formatManager, const juce::File& f)
     {
         if (auto reader = std::unique_ptr<juce::AudioFormatReader> (formatManager.createReaderFor (f)))

@@ -26,7 +26,7 @@ TEST_SUITE("tracktion_engine")
         {
             auto edit = createEmptyEdit (engine, tempEditFile.getFile());
             edit->ensureNumberOfAudioTracks (100);
-            CHECK(EditFileOperations (*edit).save (false, true, false));
+            CHECK (test_utilities::saveEditSync (*edit));
         }
 
         // Load the on a background thread after pre-loading the ValueTree and check it has the 100 tracks

@@ -3475,7 +3475,7 @@ TEST_SUITE ("tracktion_engine")
             midiClip->getSequence().addNote (60, BeatPosition::fromBeats (0.0),
                                              BeatDuration::fromBeats (1.0), 100, 0, nullptr);
 
-            CHECK (EditFileOperations (*edit).save (false, true, false));
+            CHECK (test_utilities::saveEditSync (*edit));
         }
 
         project->save();
@@ -3674,7 +3674,7 @@ TEST_SUITE ("tracktion_engine")
                                             { { 0_tp, TimePosition::fromSeconds (2.0) } },
                                             DeleteExistingClips::no);
             CHECK (waveClip != nullptr);
-            CHECK (EditFileOperations (*edit).save (false, true, false));
+            CHECK (test_utilities::saveEditSync (*edit));
         }
 
         project->save();

@@ -832,72 +832,90 @@ void AudioClipBase::copyFadeToAutomation (bool useFadeIn, bool removeClipFade)
 
     auto& oldCurve = param->getCurve();
 
-    if (oldCurve.countPointsInRegion (fadeTime) > 0)
+    auto applyFadeCurve = [clipRef = Clip::Ptr (this), param, at, fadeTime, useFadeIn, removeClipFade]
     {
-        if (! ui.showOkCancelAlertBox (TRANS("Overwrite Existing Automation?"),
-                                       TRANS("There is already automation in this region, applying the curve will overwrite it. Is this OK?")))
-            return;
-    }
-
-    AutomationCurve curve (edit, AutomationCurve::TimeBase::time);
-    curve.setParameterID (param->paramID);
-    auto um = getUndoManager();
-
-    auto defaultValue = param->getCurrentBaseValue();
-    auto curveType = useFadeIn ? getFadeInType() : getFadeOutType();
-    auto startValue = useFadeIn ? 0.0f : oldCurve.getValueAt (fadeTime.getStart(), defaultValue);
-    auto endValue   = useFadeIn ? oldCurve.getValueAt (fadeTime.getEnd(), defaultValue) : 0.0f;
-    auto valueLimits = juce::Range<float>::between (startValue, endValue);
-
-    switch (curveType)
-    {
-        case AudioFadeCurve::convex:
-        case AudioFadeCurve::concave:
-        case AudioFadeCurve::sCurve:
+        if (auto clip = dynamic_cast<AudioClipBase*> (clipRef.get()))
         {
-            for (int i = 0; i < 10; ++i)
+            auto& curve_oldCurve = param->getCurve();
+            auto um = clip->getUndoManager();
+
+            AutomationCurve curve (clip->edit, AutomationCurve::TimeBase::time);
+            curve.setParameterID (param->paramID);
+
+            auto defaultValue = param->getCurrentBaseValue();
+            auto curveType = useFadeIn ? clip->getFadeInType() : clip->getFadeOutType();
+            auto startValue = useFadeIn ? 0.0f : curve_oldCurve.getValueAt (fadeTime.getStart(), defaultValue);
+            auto endValue   = useFadeIn ? curve_oldCurve.getValueAt (fadeTime.getEnd(), defaultValue) : 0.0f;
+            auto valueLimits = juce::Range<float>::between (startValue, endValue);
+
+            switch (curveType)
             {
-                auto alpha = float (i) / 9.0f;
-                auto time = toPosition (fadeTime.getLength()) * alpha;
+                case AudioFadeCurve::convex:
+                case AudioFadeCurve::concave:
+                case AudioFadeCurve::sCurve:
+                {
+                    for (int i = 0; i < 10; ++i)
+                    {
+                        auto alpha = float (i) / 9.0f;
+                        auto time = toPosition (fadeTime.getLength()) * alpha;
 
-                if (! useFadeIn)
-                    alpha = 1.0f - alpha;
+                        if (! useFadeIn)
+                            alpha = 1.0f - alpha;
 
-                auto volCurveGain = AudioFadeCurve::alphaToGainForType (curveType, alpha);
-                auto value = valueLimits.getStart() + (volCurveGain * valueLimits.getLength());
-                curve.addPoint (time, (float) value, 0.0f, um);
+                        auto volCurveGain = AudioFadeCurve::alphaToGainForType (curveType, alpha);
+                        auto value = valueLimits.getStart() + (volCurveGain * valueLimits.getLength());
+                        curve.addPoint (time, (float) value, 0.0f, um);
+                    }
+
+                    break;
+                }
+
+                case AudioFadeCurve::linear:
+                default:
+                {
+                    curve.addPoint (TimePosition(), useFadeIn ? valueLimits.getStart() : valueLimits.getLength(), 0.0f, um);
+                    curve.addPoint (toPosition (fadeTime.getLength()), useFadeIn ? valueLimits.getLength() : valueLimits.getStart(), 0.0f, um);
+                    break;
+                }
             }
 
-            break;
+            mergeCurve (curve_oldCurve, fadeTime,
+                        curve, 0_tp,
+                        param->getCurrentBaseValue(), 0_td,
+                        true, true);
+
+            // also need to remove the point just before the first one we added
+            if (useFadeIn && (curve_oldCurve.countPointsInRegion ({ {}, fadeTime.getStart() + (fadeTime.getLength() * 0.09) }) == 2))
+                curve_oldCurve.removePoint (0, um);
+
+            if (removeClipFade)
+            {
+                if (useFadeIn)
+                    clip->setFadeIn ({});
+                else
+                    clip->setFadeOut ({});
+            }
+
+            at->setCurrentlyShownAutoParam (param);
         }
+    };
 
-        case AudioFadeCurve::linear:
-        default:
-        {
-            curve.addPoint (TimePosition(), useFadeIn ? valueLimits.getStart() : valueLimits.getLength(), 0.0f, um);
-            curve.addPoint (toPosition (fadeTime.getLength()), useFadeIn ? valueLimits.getLength() : valueLimits.getStart(), 0.0f, um);
-            break;
-        }
-    }
-
-    mergeCurve (oldCurve, fadeTime,
-                curve, 0_tp,
-                param->getCurrentBaseValue(), 0_td,
-                true, true);
-
-    // also need to remove the point just before the first one we added
-    if (useFadeIn && (oldCurve.countPointsInRegion ({ {}, fadeTime.getStart() + (fadeTime.getLength() * 0.09) }) == 2))
-        oldCurve.removePoint (0, um);
-
-    if (removeClipFade)
+    if (oldCurve.countPointsInRegion (fadeTime) > 0)
     {
-        if (useFadeIn)
-            setFadeIn ({});
-        else
-            setFadeOut ({});
+        ui.showOkCancelAlertBoxAsync (TRANS("Overwrite Existing Automation?"),
+                                      TRANS("There is already automation in this region, applying the curve will overwrite it. Is this OK?"),
+                                      TRANS("OK"),
+                                      TRANS("Cancel"),
+                                      [applyFadeCurve] (bool okPressed)
+                                      {
+                                          if (okPressed)
+                                              applyFadeCurve();
+                                      });
     }
-
-    at->setCurrentlyShownAutoParam (param);
+    else
+    {
+        applyFadeCurve();
+    }
 }
 
 void AudioClipBase::setLoopInfo (const LoopInfo& loopInfo_)
@@ -1347,11 +1365,34 @@ void AudioClipBase::enableEffects (bool enable, bool warn)
     }
     else if (v.isValid())
     {
-        if (! warn || edit.engine.getUIBehaviour().showOkCancelAlertBox (TRANS("Remove Clip Effects"),
-                                                                         TRANS("Are you sure you want to remove all clip effects?")))
+        if (! warn)
         {
             state.removeChild (v, um);
             state.removeProperty (IDs::effectsVisible, um);
+        }
+        else
+        {
+            edit.engine.getUIBehaviour()
+                .showOkCancelAlertBoxAsync (TRANS("Remove Clip Effects"),
+                                            TRANS("Are you sure you want to remove all clip effects?"),
+                                            TRANS("OK"),
+                                            TRANS("Cancel"),
+                                            [clipRef = Clip::Ptr (this)] (bool okPressed)
+                                            {
+                                                if (okPressed)
+                                                    if (auto clip = dynamic_cast<AudioClipBase*> (clipRef.get()))
+                                                    {
+                                                        auto clipState = clip->state;
+                                                        auto effectsChild = clipState.getChildWithName (IDs::EFFECTS);
+
+                                                        if (effectsChild.isValid())
+                                                        {
+                                                            auto clipUm = clip->getUndoManager();
+                                                            clipState.removeChild (effectsChild, clipUm);
+                                                            clipState.removeProperty (IDs::effectsVisible, clipUm);
+                                                        }
+                                                    }
+                                            });
         }
     }
 }

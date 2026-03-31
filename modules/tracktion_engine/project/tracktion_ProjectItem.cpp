@@ -648,12 +648,17 @@ void ProjectItem::setMarkedPoints (const juce::Array<TimePosition>& points)
     }
 }
 
-bool ProjectItem::convertEditFile()
+void ProjectItem::convertEditFile (std::function<void (bool)> callback)
 {
     auto f = getSourceFile();
 
     if (f.hasFileExtension (editFileSuffix))
-        return true;
+    {
+        if (callback)
+            callback (true);
+
+        return;
+    }
 
     auto newFile = f.withFileExtension (editFileSuffix);
 
@@ -662,15 +667,49 @@ bool ProjectItem::convertEditFile()
         juce::String m (TRANS("There appears to already be a converted Edit in the project folder."));
         m << "\n" << TRANS("Do you want to use this, or create a new conversion?");
 
-        if (engine.getUIBehaviour().showOkCancelAlertBox (TRANS("Converted Edit Already Exists"), m,
-                                                          TRANS("Use Existing"),
-                                                          TRANS("Create New")))
-        {
-            setSourceFile (newFile);
-            return true;
-        }
+        auto safeThis = makeSafeRef (*this);
 
-        newFile.copyFileTo (newFile.getNonexistentSibling());
+        engine.getUIBehaviour().showOkCancelAlertBoxAsync (TRANS("Converted Edit Already Exists"), m,
+                                                           TRANS("Use Existing"),
+                                                           TRANS("Create New"),
+                                                           [safeThis, f, newFile, callback] (bool useExisting) mutable
+                                                           {
+                                                               if (auto self = safeThis.get())
+                                                               {
+                                                                   if (useExisting)
+                                                                   {
+                                                                       self->setSourceFile (newFile);
+
+                                                                       if (callback)
+                                                                           callback (true);
+
+                                                                       return;
+                                                                   }
+
+                                                                   newFile.copyFileTo (newFile.getNonexistentSibling());
+
+                                                                   if (f.existsAsFile() && f != newFile)
+                                                                   {
+                                                                       if (! f.copyFileTo (newFile))
+                                                                       {
+                                                                           self->engine.getUIBehaviour().showWarningAlert (TRANS("Unable to Open Edit"),
+                                                                                                                           TRANS("The selected Edit file could not be converted to the current project format.")
+                                                                                                                             + "\n\n"
+                                                                                                                             + TRANS("Please ensure you can write to the Edit directory and try again."));
+                                                                           if (callback)
+                                                                               callback (false);
+
+                                                                           return;
+                                                                       }
+
+                                                                       self->setSourceFile (newFile);
+                                                                   }
+
+                                                                   if (callback)
+                                                                       callback (true);
+                                                               }
+                                                           });
+        return;
     }
 
     if (f.existsAsFile() && f != newFile)
@@ -681,13 +720,17 @@ bool ProjectItem::convertEditFile()
                                                       TRANS("The selected Edit file could not be converted to the current project format.")
                                                         + "\n\n"
                                                         + TRANS("Please ensure you can write to the Edit directory and try again."));
-            return false;
+            if (callback)
+                callback (false);
+
+            return;
         }
 
         setSourceFile (newFile);
     }
 
-    return true;
+    if (callback)
+        callback (true);
 }
 
 double ProjectItem::getLength() const

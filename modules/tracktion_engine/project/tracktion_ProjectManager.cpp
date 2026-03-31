@@ -615,71 +615,103 @@ Project::Ptr ProjectManager::createNewProjectFromTemplate (const juce::String& n
     return proj;
 }
 
-Project::Ptr ProjectManager::createNewProjectInteractively (const juce::String& name,
-                                                            const juce::File& lastPath,
-                                                            juce::ValueTree folderToAddTo,
-                                                            ProjectType projectType)
+void ProjectManager::createNewProjectInteractively (const juce::String& name,
+                                                     const juce::File& lastPath,
+                                                     juce::ValueTree folderToAddTo,
+                                                     ProjectType projectType,
+                                                     std::function<void (Project::Ptr)> callback)
 {
-    if (name.isNotEmpty())
+    if (name.isEmpty())
     {
-        auto& ui = engine.getUIBehaviour();
-        auto fileName = juce::File::createLegalFileName (name);
+        if (callback)
+            callback ({});
 
-        if (projectType == ProjectType::folderBased)
+        return;
+    }
+
+    auto& ui = engine.getUIBehaviour();
+    auto fileName = juce::File::createLegalFileName (name);
+
+    if (projectType == ProjectType::folderBased)
+    {
+        auto projectFolder = lastPath.getChildFile (fileName);
+
+        if (projectFolder.isDirectory())
         {
-            auto projectFolder = lastPath.getChildFile (fileName);
-
-            if (projectFolder.isDirectory())
-            {
-                if (! ui.showOkCancelAlertBox (TRANS("Create project"),
-                                               TRANS("This folder already exists - do you want to open it?"),
-                                               TRANS("Open")))
-                    return {};
-            }
-            else if (! projectFolder.createDirectory().wasOk())
-            {
-                ui.showWarningAlert (TRANS("Create project"),
-                                     TRANS("Couldn't create the project folder")
-                                       + ":\n\n" + projectFolder.getFullPathName());
-                return {};
-            }
-
-            return createNewProject (projectFolder, folderToAddTo, projectType);
+            ui.showOkCancelAlertBoxAsync (TRANS("Create project"),
+                                          TRANS("This folder already exists - do you want to open it?"),
+                                          TRANS("Open"),
+                                          TRANS("Cancel"),
+                                          [this, projectFolder, folderToAddTo, projectType, callback] (bool okPressed)
+                                          {
+                                              if (callback)
+                                                  callback (okPressed ? createNewProject (projectFolder, folderToAddTo, projectType) : Project::Ptr {});
+                                          });
+            return;
         }
 
-        auto projectFile = lastPath.getChildFile (fileName)
-                                   .getChildFile (fileName + projectFileSuffix);
-
-        if (projectFile.exists())
+        if (! projectFolder.createDirectory().wasOk())
         {
-            if (! ui.showOkCancelAlertBox (TRANS("Create project"),
-                                           TRANS("This file already exists - do you want to open it?"),
-                                           TRANS("Open")))
-                return {};
+            ui.showWarningAlert (TRANS("Create project"),
+                                 TRANS("Couldn't create the project folder")
+                                   + ":\n\n" + projectFolder.getFullPathName());
+
+            if (callback)
+                callback ({});
+
+            return;
         }
-        else
-        {
-            auto parentDir = projectFile.getParentDirectory();
 
-            if (! parentDir.exists())
-                parentDir.createDirectory();
+        if (callback)
+            callback (createNewProject (projectFolder, folderToAddTo, projectType));
 
-            if (parentDir.getNumberOfChildFiles (juce::File::findFiles)
-                 + parentDir.getNumberOfChildFiles (juce::File::findDirectories) > 0)
+        return;
+    }
+
+    auto projectFile = lastPath.getChildFile (fileName)
+                               .getChildFile (fileName + projectFileSuffix);
+
+    if (projectFile.exists())
+    {
+        ui.showOkCancelAlertBoxAsync (TRANS("Create project"),
+                                      TRANS("This file already exists - do you want to open it?"),
+                                      TRANS("Open"),
+                                      TRANS("Cancel"),
+                                      [this, projectFile, folderToAddTo, projectType, callback] (bool okPressed)
+                                      {
+                                          if (callback)
+                                              callback (okPressed ? createNewProject (projectFile, folderToAddTo, projectType) : Project::Ptr {});
+                                      });
+        return;
+    }
+
+    auto parentDir = projectFile.getParentDirectory();
+
+    if (! parentDir.exists())
+        parentDir.createDirectory();
+
+    if (parentDir.getNumberOfChildFiles (juce::File::findFiles)
+         + parentDir.getNumberOfChildFiles (juce::File::findDirectories) > 0)
+    {
+        ui.showYesNoCancelAlertBoxAsync (
+            TRANS("Create project"),
+            TRANS("The directory in which you're trying to create this project is not empty.")
+                   + "\n\n"
+                   + TRANS("It's sensible to keep each project in its own directory, so "
+                           "would you like to create a new subdirectory for it called \"XZZX\"?")
+                        .replace ("XZZX", projectFile.getFileNameWithoutExtension()),
+            TRANS("Create a new subdirectory"),
+            TRANS("Use this directory anyway"),
+            TRANS("Cancel"),
+            [this, projectFile, parentDir, folderToAddTo, projectType, callback] (int r) mutable
             {
-                auto r = ui.showYesNoCancelAlertBox (
-                                TRANS("Create project"),
-                                TRANS("The directory in which you're trying to create this project is not empty.")
-                                       + "\n\n"
-                                       + TRANS("It's sensible to keep each project in its own directory, so "
-                                               "would you like to create a new subdirectory for it called \"XZZX\"?")
-                                            .replace ("XZZX", projectFile.getFileNameWithoutExtension()),
-                                TRANS("Create a new subdirectory"),
-                                TRANS("Use this directory anyway"),
-                                TRANS("Cancel"));
-
                 if (r == 0)
-                    return {};
+                {
+                    if (callback)
+                        callback ({});
+
+                    return;
+                }
 
                 if (r == 1)
                 {
@@ -689,38 +721,59 @@ Project::Ptr ProjectManager::createNewProjectInteractively (const juce::String& 
                          && newDir.getNumberOfChildFiles (juce::File::findDirectories)
                               + newDir.getNumberOfChildFiles (juce::File::findFiles) > 0)
                     {
-                        ui.showWarningAlert (TRANS("Create project"),
-                                             TRANS("The directory already existed and wasn't empty, so the project couldn't be created."));
+                        engine.getUIBehaviour().showWarningAlert (TRANS("Create project"),
+                                                                  TRANS("The directory already existed and wasn't empty, so the project couldn't be created."));
+                        if (callback)
+                            callback ({});
 
-                        return {};
+                        return;
                     }
 
                     if (! newDir.createDirectory())
                     {
-                        ui.showWarningAlert (TRANS("Create project"),
-                                             TRANS("Couldn't create the new directory")
-                                               + ":\n\n" + newDir.getFullPathName());
+                        engine.getUIBehaviour().showWarningAlert (TRANS("Create project"),
+                                                                  TRANS("Couldn't create the new directory")
+                                                                    + ":\n\n" + newDir.getFullPathName());
+                        if (callback)
+                            callback ({});
 
-                        return {};
+                        return;
                     }
 
                     projectFile = newDir.getChildFile (projectFile.getFileName());
                 }
-            }
 
-            if (! projectFile.create())
-            {
-                ui.showWarningAlert (TRANS("Create project"),
-                                     TRANS("Couldn't write to the file")
-                                       + ":\n\n" + projectFile.getFullPathName());
-                return {};
-            }
-        }
+                if (! projectFile.create())
+                {
+                    engine.getUIBehaviour().showWarningAlert (TRANS("Create project"),
+                                                              TRANS("Couldn't write to the file")
+                                                                + ":\n\n" + projectFile.getFullPathName());
+                    if (callback)
+                        callback ({});
 
-        return createNewProject (projectFile, folderToAddTo, projectType);
+                    return;
+                }
+
+                if (callback)
+                    callback (createNewProject (projectFile, folderToAddTo, projectType));
+            });
+
+        return;
     }
 
-    return {};
+    if (! projectFile.create())
+    {
+        ui.showWarningAlert (TRANS("Create project"),
+                             TRANS("Couldn't write to the file")
+                               + ":\n\n" + projectFile.getFullPathName());
+        if (callback)
+            callback ({});
+
+        return;
+    }
+
+    if (callback)
+        callback (createNewProject (projectFile, folderToAddTo, projectType));
 }
 
 void ProjectManager::unpackArchiveAndAddToList (const juce::File& archiveFile, const juce::File& destDir, juce::ValueTree folder)

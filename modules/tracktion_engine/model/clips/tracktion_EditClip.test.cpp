@@ -45,7 +45,7 @@ TEST_SUITE("tracktion_engine")
             sourceEditProjectItem = proj.createNewEdit();
             sourceEdit->setProjectItemRef (sourceEditProjectItem->getProjectItemRef());
 
-            CHECK (EditFileOperations (*sourceEdit).save (false, true, false));
+            CHECK (test_utilities::saveEditSync (*sourceEdit));
             CHECK (sourceEditProjectItem);
             CHECK (sourceEditProjectItem->isEdit());
             CHECK (sourceEditProjectItem->getProjectItemRef().isValid());
@@ -67,7 +67,7 @@ TEST_SUITE("tracktion_engine")
             tempSourceRender = test_utilities::renderToAudioBuffer (*sourceEdit);
             CHECK (test_utilities::getRMSLevel (tempSourceRender, { 0_tp, 5_tp }, 0)
                     == doctest::Approx (0.707f).epsilon (0.01));
-            CHECK (EditFileOperations (*sourceEdit).save (false, true, false));
+            CHECK (test_utilities::saveEditSync (*sourceEdit));
         }
 
         // Dest Edit

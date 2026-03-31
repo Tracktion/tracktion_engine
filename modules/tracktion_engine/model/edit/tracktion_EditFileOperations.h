@@ -22,8 +22,11 @@ public:
 
     juce::File getEditFile() const;
 
-    bool save (bool warnOfFailure, bool forceSaveEvenIfNotModified, bool offerToDiscardChanges);
-    bool saveAs (const juce::File&, bool forceOverwriteExisting = false);
+    void save (bool warnOfFailure, bool forceSaveEvenIfNotModified, bool offerToDiscardChanges,
+               std::function<void (bool)> callback = nullptr);
+
+    void saveAs (const juce::File&, bool forceOverwriteExisting, std::function<void (bool)> callback);
+    void saveAs (const juce::File& f)   { saveAs (f, false, nullptr); }
     void saveAs();
 
     bool writeToFile (const juce::File&, bool writeQuickBinaryVersion);

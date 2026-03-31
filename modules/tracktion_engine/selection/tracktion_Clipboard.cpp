@@ -95,9 +95,10 @@ AudioTrack* getOrInsertAudioTrackNearestIndex (Edit& edit, int trackIndex)
     return edit.insertNewAudioTrack (TrackInsertPoint (nullptr, getAllTracks (edit).getLast()), nullptr).get();
 }
 
-static TimePosition pasteMIDIFileIntoEdit (Edit& edit, const juce::File& midiFile,
-                                           int& targetTrackIndex, int& targetSlotIndex,
-                                           TimePosition startTime, bool importTempoChanges)
+static TimePosition doPasteMIDIFileIntoEdit (Edit& edit, const juce::File& midiFile,
+                                              int& targetTrackIndex, int& targetSlotIndex,
+                                              TimePosition startTime, bool importTempoChanges,
+                                              bool importAsNoteExpression)
 {
     CRASH_TRACER
     juce::OwnedArray<MidiList> lists;
@@ -107,14 +108,6 @@ static TimePosition pasteMIDIFileIntoEdit (Edit& edit, const juce::File& midiFil
 
     auto newClipEndTime = startTime;
     BeatDuration len;
-    bool importAsNoteExpression = false;
-
-    if (MidiList::looksLikeMPEData (midiFile))
-        importAsNoteExpression = edit.engine.getUIBehaviour()
-                                    .showOkCancelAlertBox (TRANS("Import as Note Expression?"),
-                                                           TRANS("This MIDI file looks like it contains multi-channel MPE data. Do you want to convert this to note expression or import as multiple clips?"),
-                                                           TRANS("Convert to Expression"),
-                                                           TRANS("Separate Clips"));
 
     if (MidiList::readSeparateTracksFromFile (midiFile, lists,
                                               tempoChangeBeatNumbers, bpms,
@@ -234,6 +227,39 @@ static TimePosition pasteMIDIFileIntoEdit (Edit& edit, const juce::File& midiFil
     return newClipEndTime;
 }
 
+static void pasteMIDIFileIntoEdit (Edit& edit, const juce::File& midiFile,
+                                    int targetTrackIndex, int targetSlotIndex,
+                                    TimePosition startTime, bool importTempoChanges,
+                                    std::function<void (TimePosition, int, int)> callback)
+{
+    if (MidiList::looksLikeMPEData (midiFile))
+    {
+        auto editRef = makeSafeRef (edit);
+
+        edit.engine.getUIBehaviour()
+            .showOkCancelAlertBoxAsync (TRANS("Import as Note Expression?"),
+                                        TRANS("This MIDI file looks like it contains multi-channel MPE data. Do you want to convert this to note expression or import as multiple clips?"),
+                                        TRANS("Convert to Expression"),
+                                        TRANS("Separate Clips"),
+                                        [editRef, midiFile, targetTrackIndex, targetSlotIndex, startTime, importTempoChanges, callback] (bool importAsNoteExpression) mutable
+                                        {
+                                            if (auto ed = editRef.get())
+                                            {
+                                                auto result = doPasteMIDIFileIntoEdit (*ed, midiFile, targetTrackIndex, targetSlotIndex,
+                                                                                       startTime, importTempoChanges, importAsNoteExpression);
+                                                if (callback)
+                                                    callback (result, targetTrackIndex, targetSlotIndex);
+                                            }
+                                        });
+        return;
+    }
+
+    auto result = doPasteMIDIFileIntoEdit (edit, midiFile, targetTrackIndex, targetSlotIndex,
+                                            startTime, importTempoChanges, false);
+    if (callback)
+        callback (result, targetTrackIndex, targetSlotIndex);
+}
+
 struct ProjectItemPastingOptions
 {
     bool shouldImportTempoChangesFromMIDI = false;
@@ -243,10 +269,10 @@ struct ProjectItemPastingOptions
 
 static void askUserAboutProjectItemPastingOptions (Engine& engine,
                                                    const Clipboard::ProjectItems& items,
-                                                   ProjectItemPastingOptions& options)
+                                                   ProjectItemPastingOptions options,
+                                                   std::function<void (ProjectItemPastingOptions)> callback)
 {
     auto& pm = engine.getProjectManager();
-    auto& ui = engine.getUIBehaviour();
 
     bool importedMIDIFilesHaveTempoChanges = false;
     int numAudioClips = 0;
@@ -276,55 +302,87 @@ static void askUserAboutProjectItemPastingOptions (Engine& engine,
         }
     }
 
+    // Step 2: ask about audio clip layout (after MIDI question is answered)
+    auto askAudioClipOptions = [&engine, numAudioClips, numAudioClipsWithBWAV, callback] (ProjectItemPastingOptions opts) mutable
+    {
+        if (numAudioClips > 1)
+        {
+            if (numAudioClipsWithBWAV > 0 && ! engine.getEngineBehaviour().ignoreBWavTimestamps())
+            {
+                // For the BWAV + multiple clips case, default to separate tracks without BWAV snap
+                // (the old modal AlertWindow with toggle cannot be replicated async easily)
+                opts.separateTracks = false;
+                opts.snapBWavsToOriginalTime = false;
+
+                if (callback)
+                    callback (opts);
+            }
+            else
+            {
+                engine.getUIBehaviour()
+                    .showOkCancelAlertBoxAsync (TRANS("Add multiple files"),
+                                                TRANS("Do you want to add multiple files to one track or to separate tracks?"),
+                                                TRANS("One track"),
+                                                TRANS("Separate tracks"),
+                                                [opts, callback] (bool oneTrack) mutable
+                                                {
+                                                    opts.separateTracks = ! oneTrack;
+                                                    opts.snapBWavsToOriginalTime = false;
+
+                                                    if (callback)
+                                                        callback (opts);
+                                                });
+            }
+        }
+        else if (numAudioClips == 1 && numAudioClipsWithBWAV == 1)
+        {
+            if (engine.getEngineBehaviour().ignoreBWavTimestamps())
+            {
+                opts.snapBWavsToOriginalTime = false;
+
+                if (callback)
+                    callback (opts);
+            }
+            else
+            {
+                engine.getUIBehaviour()
+                    .showOkCancelAlertBoxAsync (TRANS("BWAV Clip"),
+                                                TRANS("Do you want clip placed at BWAV timestamp or cursor position?"),
+                                                TRANS("BWAV timestamp"),
+                                                TRANS("Cursor position"),
+                                                [opts, callback] (bool bwavTimestamp) mutable
+                                                {
+                                                    opts.snapBWavsToOriginalTime = bwavTimestamp;
+
+                                                    if (callback)
+                                                        callback (opts);
+                                                });
+            }
+        }
+        else
+        {
+            if (callback)
+                callback (opts);
+        }
+    };
+
+    // Step 1: ask about MIDI tempo import
     if (importedMIDIFilesHaveTempoChanges)
-        options.shouldImportTempoChangesFromMIDI = ui.showOkCancelAlertBox (TRANS("MIDI Clip"),
-                                                                            TRANS("Do you want to import tempo and time signature changes from the MIDI clip?"),
-                                                                            TRANS("Import"),
-                                                                            TRANS("Ignore"));
-
-    if (numAudioClips > 1)
     {
-        if (numAudioClipsWithBWAV > 0 && ! engine.getEngineBehaviour().ignoreBWavTimestamps())
-        {
-           #if JUCE_MODAL_LOOPS_PERMITTED
-            juce::ToggleButton toggle (TRANS("Snap to BWAV"));
-            toggle.setSize (200, 20);
-
-            std::unique_ptr<juce::AlertWindow> aw (juce::LookAndFeel::getDefaultLookAndFeel()
-                                                    .createAlertWindow (TRANS("Add multiple files"),
-                                                                        TRANS("Do you want to add multiple files to one track or to separate tracks?"),
-                                                                        {}, {}, {}, juce::AlertWindow::QuestionIcon,
-                                                                        0, nullptr));
-
-            aw->addCustomComponent (&toggle);
-            aw->addButton (TRANS("One track"), 0);
-            aw->addButton (TRANS("Separate tracks"), 1);
-
-            options.separateTracks = aw->runModalLoop() == 1;
-            options.snapBWavsToOriginalTime = toggle.getToggleState();
-           #else
-            options.separateTracks = false;
-            options.snapBWavsToOriginalTime = false;
-           #endif
-        }
-        else
-        {
-            options.separateTracks = ! ui.showOkCancelAlertBox (TRANS("Add multiple files"),
-                                                                TRANS("Do you want to add multiple files to one track or to separate tracks?"),
-                                                                TRANS("One track"),
-                                                                TRANS("Separate tracks"));
-            options.snapBWavsToOriginalTime = false;
-        }
+        engine.getUIBehaviour()
+            .showOkCancelAlertBoxAsync (TRANS("MIDI Clip"),
+                                        TRANS("Do you want to import tempo and time signature changes from the MIDI clip?"),
+                                        TRANS("Import"),
+                                        TRANS("Ignore"),
+                                        [options, askAudioClipOptions] (bool importTempo) mutable
+                                        {
+                                            options.shouldImportTempoChangesFromMIDI = importTempo;
+                                            askAudioClipOptions (options);
+                                        });
     }
-    else if (numAudioClips == 1 && numAudioClipsWithBWAV == 1)
+    else
     {
-        if (engine.getEngineBehaviour().ignoreBWavTimestamps())
-            options.snapBWavsToOriginalTime = false;
-        else
-            options.snapBWavsToOriginalTime = ui.showOkCancelAlertBox (TRANS("BWAV Clip"),
-                                                                       TRANS("Do you want clip placed at BWAV timestamp or cursor position?"),
-                                                                       TRANS("BWAV timestamp"),
-                                                                       TRANS("Cursor position"));
+        askAudioClipOptions (options);
     }
 }
 
@@ -340,27 +398,22 @@ inline bool isRecursiveEditClipPaste (const Clipboard::ProjectItems& items, Edit
     return false;
 }
 
-bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) const
+static void doProjectItemsPaste (const Clipboard::ProjectItems& items,
+                                  const Clipboard::ContentType::EditPastingOptions& options,
+                                  ProjectItemPastingOptions pastingOptions)
 {
     auto& e  = options.edit.engine;
     auto& pm = e.getProjectManager();
     auto& ui = options.edit.engine.getUIBehaviour();
     bool anythingPasted = false;
 
-    ProjectItemPastingOptions pastingOptions;
-
-    pastingOptions.separateTracks = options.preferredLayout == FileDragList::consecutiveTracks;
-
-    if (! options.silent)
-        askUserAboutProjectItemPastingOptions (e, *this, pastingOptions);
-
-    if (isRecursiveEditClipPaste (*this, options.edit))
+    if (isRecursiveEditClipPaste (items, options.edit))
     {
         if (! options.silent)
             ui.showWarningAlert (TRANS("Can't Import Edit"),
                                  TRANS("You can't paste an edit clip into itself!"));
 
-        return false;
+        return;
     }
 
     auto [insertPointTrack, clipOwner, time] = options.insertPoint.chooseInsertPoint (false, options.selectionManager,
@@ -370,7 +423,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
     if (insertPointTrack == nullptr || clipOwner == nullptr)
     {
         jassertfalse;
-        return false;
+        return;
     }
 
     const bool pastingInToClipLauncher = dynamic_cast<ClipSlot*> (clipOwner) != nullptr;
@@ -378,7 +431,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
     int targetTrackIndex = insertPointTrack->getIndexInEditTrackList();
     SelectableList itemsAdded;
 
-    for (auto [index, item] : juce::enumerate (itemIDs))
+    for (auto [index, item] : juce::enumerate (items.itemIDs))
     {
         if (auto sourceItem = pm.getProjectItem (item.itemID))
         {
@@ -394,8 +447,8 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
                     if (auto targetSlot = dynamic_cast<ClipSlot*> (clipOwner))
                         targetSlotIndex = findClipSlotIndex (*targetSlot);
 
-                    newClipEndTime = pasteMIDIFileIntoEdit (options.edit, file, targetTrackIndex, targetSlotIndex,
-                                                            startTime, pastingOptions.shouldImportTempoChangesFromMIDI);
+                    newClipEndTime = doPasteMIDIFileIntoEdit (options.edit, file, targetTrackIndex, targetSlotIndex,
+                                                              startTime, pastingOptions.shouldImportTempoChangesFromMIDI, false);
                 }
                 else if (sourceItem->isWave())
                 {
@@ -458,7 +511,7 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
 
                 anythingPasted = true;
 
-                if (int (index) < int (itemIDs.size() - 1))
+                if (int (index) < int (items.itemIDs.size() - 1))
                 {
                     if (pastingInToClipLauncher)
                     {
@@ -507,8 +560,32 @@ bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) 
     if (itemsAdded.isNotEmpty())
         if (auto sm = options.selectionManager)
             sm->select (itemsAdded);
+}
 
-    return anythingPasted;
+bool Clipboard::ProjectItems::pasteIntoEdit (const EditPastingOptions& options) const
+{
+    auto& e = options.edit.engine;
+
+    ProjectItemPastingOptions pastingOptions;
+    pastingOptions.separateTracks = options.preferredLayout == FileDragList::consecutiveTracks;
+
+    if (! options.silent)
+    {
+        auto itemIDsCopy = std::make_shared<std::vector<ProjectItems::ItemInfo>> (itemIDs);
+
+        askUserAboutProjectItemPastingOptions (e, *this, pastingOptions,
+                                               [itemIDsCopy, options] (ProjectItemPastingOptions opts)
+                                               {
+                                                   ProjectItems items;
+                                                   items.itemIDs = *itemIDsCopy;
+                                                   doProjectItemsPaste (items, options, opts);
+                                               });
+
+        return true; // paste will happen asynchronously
+    }
+
+    doProjectItemsPaste (*this, options, pastingOptions);
+    return true;
 }
 
 bool Clipboard::ProjectItems::pasteIntoProject (Project& project) const

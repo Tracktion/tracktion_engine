@@ -360,12 +360,10 @@ namespace AppFunctions
             ed->playInStopEnabled = ! ed->playInStopEnabled;
     }
 
-    bool saveEdit()
+    void saveEdit()
     {
         if (auto ed = getCurrentlyFocusedEdit())
-            return EditFileOperations (*ed).save (true, true, false);
-
-        return false;
+            EditFileOperations (*ed).save (true, true, false);
     }
 
     void saveEditAs()

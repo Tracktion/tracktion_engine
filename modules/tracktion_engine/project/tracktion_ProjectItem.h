@@ -118,7 +118,7 @@ public:
     /** copies the full description, categories, properties, etc. */
     void copyAllPropertiesFrom (const ProjectItem& other);
 
-    bool convertEditFile();
+    void convertEditFile (std::function<void (bool)> callback);
 
     double getLength() const;
     void setLength (double length);

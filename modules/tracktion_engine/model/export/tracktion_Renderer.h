@@ -174,7 +174,8 @@ public:
     /** Cheks a file for write access etc. and presents pop-up options to the user
         if problems occur.
     */
-    static bool checkTargetFile (Engine&, const juce::File&);
+    static void checkTargetFile (Engine&, const juce::File&,
+                                  std::function<void (bool)> callback);
 
     /** Deinitialises all the plugins for the Edit. */
     static void turnOffAllPlugins (Edit&);

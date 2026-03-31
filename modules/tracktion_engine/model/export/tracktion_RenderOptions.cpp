@@ -1039,35 +1039,47 @@ void RenderOptions::setFilename (juce::String value, bool canPromptToOverwriteEx
 
     auto f = juce::File (value);
 
-    if (f.existsAsFile()
-        #if JUCE_MODAL_LOOPS_PERMITTED
-          && canPromptToOverwriteExisting
-          && engine.getUIBehaviour().showOkCancelAlertBox (TRANS("File Already Exists"),
+    auto finishSetFilename = [this, f, recent, recentList] () mutable
+    {
+        destFile = f.getFullPathName();
+        updateDefaultFilename (nullptr);
+
+        if (destFile != juce::File())
+        {
+            recent.addFile (destFile);
+            auto newRecentList = recent.toString();
+
+            if (recentList != newRecentList)
+                engine.getPropertyStorage().setProperty (SettingID::renderRecentFilesList, newRecentList);
+        }
+    };
+
+    if (f.existsAsFile() && canPromptToOverwriteExisting)
+    {
+        engine.getUIBehaviour().showOkCancelAlertBoxAsync (TRANS("File Already Exists"),
                                                            TRANS("The file you have chosen already exists, do you want to delete it?")
                                                              + "\n\n"
                                                              + TRANS("If you choose to cancel, a non existent file name will be chosen automatically.")
                                                              + "\n"
-                                                             + "(" + TRANS("This operation can't be undone") + ")")
-         #endif
-        )
-    {
-        AudioFile (engine, f).deleteFile();
+                                                             + "(" + TRANS("This operation can't be undone") + ")",
+                                                           TRANS("OK"),
+                                                           TRANS("Cancel"),
+                                                           [this, f, finishSetFilename] (bool okPressed) mutable
+                                                           {
+                                                               if (okPressed)
+                                                               {
+                                                                   AudioFile (engine, f).deleteFile();
 
-        if (f.existsAsFile())
-            f.moveToTrash();
+                                                                   if (f.existsAsFile())
+                                                                       f.moveToTrash();
+                                                               }
+
+                                                               finishSetFilename();
+                                                           });
+        return;
     }
 
-    destFile = f.getFullPathName();
-    updateDefaultFilename (nullptr);
-
-    if (destFile != juce::File())
-    {
-        recent.addFile (destFile);
-        auto newRecentList = recent.toString();
-
-        if (recentList != newRecentList)
-            engine.getPropertyStorage().setProperty (SettingID::renderRecentFilesList, newRecentList);
-    }
+    finishSetFilename();
 }
 
 //==============================================================================

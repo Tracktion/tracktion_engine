@@ -82,7 +82,7 @@ TEST_SUITE ("tracktion_engine")
             midiClip->getSequence().addNote (67, BeatPosition::fromBeats (2.0),
                                              BeatDuration::fromBeats (2.0), 127, 0, nullptr);
 
-            CHECK (EditFileOperations (*edit).save (false, true, false));
+            CHECK (test_utilities::saveEditSync (*edit));
         }
 
         // -- Edit 2: one audio clip --
@@ -100,7 +100,7 @@ TEST_SUITE ("tracktion_engine")
                                             DeleteExistingClips::no);
             CHECK (waveClip != nullptr);
 
-            CHECK (EditFileOperations (*edit).save (false, true, false));
+            CHECK (test_utilities::saveEditSync (*edit));
         }
 
         project->save();
@@ -304,7 +304,7 @@ TEST_SUITE ("tracktion_engine")
             midiClip->getSequence().addNote (67, BeatPosition::fromBeats (2.0),
                                              BeatDuration::fromBeats (2.0), 127, 0, nullptr);
 
-            CHECK (EditFileOperations (*edit).save (false, true, false));
+            CHECK (test_utilities::saveEditSync (*edit));
         }
 
         // -- Edit 2: one audio clip --
@@ -322,7 +322,7 @@ TEST_SUITE ("tracktion_engine")
                                             DeleteExistingClips::no);
             CHECK (waveClip != nullptr);
 
-            CHECK (EditFileOperations (*edit).save (false, true, false));
+            CHECK (test_utilities::saveEditSync (*edit));
         }
 
         project->save();
@@ -432,7 +432,7 @@ TEST_SUITE ("tracktion_engine")
                                              BeatDuration::fromBeats (2.0), 127, 0, nullptr);
             originalNoteCount = midiClip->getSequence().getNotes().size();
 
-            CHECK (EditFileOperations (*edit).save (false, true, false));
+            CHECK (test_utilities::saveEditSync (*edit));
         }
 
         project->save();
@@ -746,7 +746,7 @@ TEST_SUITE ("tracktion_engine")
             REQUIRE (waveClip->getSourceFileReference().isUsingProjectReference());
             REQUIRE (waveClip->getSourceFileReference().getFile() == sinWavFile);
 
-            CHECK (EditFileOperations (*edit).save (false, true, false));
+            CHECK (test_utilities::saveEditSync (*edit));
         }
 
         project->save();
@@ -948,7 +948,7 @@ TEST_SUITE ("tracktion_engine")
                 CHECK (waveClip->getSourceFileReference().getFile() == wavFile);
             }
 
-            CHECK (EditFileOperations (*edit1).save (false, true, false));
+            CHECK (test_utilities::saveEditSync (*edit1));
 
             // -- Edit 2 (will be closed during the move) --
             {
@@ -966,7 +966,7 @@ TEST_SUITE ("tracktion_engine")
                 REQUIRE (waveClip != nullptr);
                 CHECK (waveClip->getSourceFileReference().getFile() == wavFile);
 
-                CHECK (EditFileOperations (*edit2).save (false, true, false));
+                CHECK (test_utilities::saveEditSync (*edit2));
             }
             // edit2 is now destroyed (simulates a closed edit)
 
@@ -1167,7 +1167,7 @@ TEST_SUITE ("tracktion_engine")
             midiClip->getSequence().addNote (67, BeatPosition::fromBeats (2.0),
                                              BeatDuration::fromBeats (2.0), 127, 0, nullptr);
 
-            CHECK (EditFileOperations (*edit).save (false, true, false));
+            CHECK (test_utilities::saveEditSync (*edit));
         }
 
         project->save();
@@ -1186,7 +1186,7 @@ TEST_SUITE ("tracktion_engine")
         CHECK_FALSE (ProjectUtilities::canConsolidateEdit (*edit));
 
         // Save and reload to verify
-        CHECK (EditFileOperations (*edit).save (false, true, false));
+        CHECK (test_utilities::saveEditSync (*edit));
         edit.reset();
 
         // Reload and verify content
@@ -1291,7 +1291,7 @@ TEST_SUITE ("tracktion_engine")
             midiClip->getSequence().addNote (67, BeatPosition::fromBeats (2.0),
                                              BeatDuration::fromBeats (2.0), 127, 0, nullptr);
 
-            CHECK (EditFileOperations (*edit).save (false, true, false));
+            CHECK (test_utilities::saveEditSync (*edit));
         }
 
         // -- Edit 2: audio clip (same external file) + MIDI clip with 2 notes --
@@ -1317,7 +1317,7 @@ TEST_SUITE ("tracktion_engine")
             midiClip->getSequence().addNote (76, BeatPosition::fromBeats (2.0),
                                              BeatDuration::fromBeats (1.0), 110, 0, nullptr);
 
-            CHECK (EditFileOperations (*edit).save (false, true, false));
+            CHECK (test_utilities::saveEditSync (*edit));
         }
 
         project->save();
@@ -1487,7 +1487,7 @@ TEST_SUITE ("tracktion_engine")
                 CHECK (waveClip->getSourceFileReference().getFile() == wavFile);
             }
 
-            CHECK (EditFileOperations (*edit1).save (false, true, false));
+            CHECK (test_utilities::saveEditSync (*edit1));
 
             // -- Edit 2 (will be closed during the move) --
             {
@@ -1505,7 +1505,7 @@ TEST_SUITE ("tracktion_engine")
                 REQUIRE (waveClip != nullptr);
                 CHECK (waveClip->getSourceFileReference().getFile() == wavFile);
 
-                CHECK (EditFileOperations (*edit2).save (false, true, false));
+                CHECK (test_utilities::saveEditSync (*edit2));
             }
             // edit2 is now destroyed (simulates a closed edit)
 
@@ -2449,7 +2449,7 @@ TEST_SUITE ("tracktion_engine")
         {
             auto edit = createEmptyEdit (engine, editItem->getSourceFile());
             edit->setProjectItemRef (editItem->getProjectItemRef());
-            CHECK (EditFileOperations (*edit).save (false, true, false));
+            CHECK (test_utilities::saveEditSync (*edit));
         }
 
         project->save();
@@ -2588,7 +2588,7 @@ TEST_SUITE ("tracktion_engine")
         {
             auto edit = createEmptyEdit (engine, editItem->getSourceFile());
             edit->setProjectItemRef (editItem->getProjectItemRef());
-            CHECK (EditFileOperations (*edit).save (false, true, false));
+            CHECK (test_utilities::saveEditSync (*edit));
         }
 
         project->save();

@@ -586,13 +586,21 @@ bool MidiClip::isCurrentTakeComp()
 
 void MidiClip::deleteAllUnusedTakesConfirmingWithUser()
 {
-    if (edit.engine.getUIBehaviour()
-            .showOkCancelAlertBox (TRANS("Delete Unused Takes"),
-                                   TRANS("This will permanently delete all unused MIDI takes in this clip.")
-                                     + "\n\n"
-                                     + TRANS("Are you sure you want to do this?"),
-                                   TRANS("Delete")))
-        clearTakes();
+    Clip::Ptr ref (this);
+
+    edit.engine.getUIBehaviour()
+        .showOkCancelAlertBoxAsync (TRANS("Delete Unused Takes"),
+                                    TRANS("This will permanently delete all unused MIDI takes in this clip.")
+                                      + "\n\n"
+                                      + TRANS("Are you sure you want to do this?"),
+                                    TRANS("Delete"),
+                                    TRANS("Cancel"),
+                                    [ref] (bool okPressed)
+                                    {
+                                        if (okPressed)
+                                            if (auto mc = dynamic_cast<MidiClip*> (ref.get()))
+                                                mc->clearTakes();
+                                    });
 }
 
 Clip::Array MidiClip::unpackTakes (bool toNewTracks)

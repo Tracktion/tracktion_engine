@@ -42,7 +42,8 @@ public:
     std::unique_ptr<juce::InputStream> createStoredInputStream (int index) const;
 
     bool extractFile (int index, const juce::File& destDirectory,
-                      juce::File& fileCreated, bool askBeforeOverwriting);
+                      juce::File& fileCreated, bool askBeforeOverwriting,
+                      std::function<void (bool)> callback = nullptr);
     bool extractAll (const juce::File& destDirectory,
                      juce::Array<juce::File>& filesCreated);
     bool extractAllAsTask (const juce::File& destDirectory,

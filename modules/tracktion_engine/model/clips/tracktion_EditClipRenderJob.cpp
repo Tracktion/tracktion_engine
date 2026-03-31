@@ -415,8 +415,12 @@ void EditRenderJob::renderSeparateTracks()
                                                                                 .getFullPathName()));
                 params.tracksToDo = tracksToDo;
 
-                if (Renderer::checkTargetFile (track->edit.engine, params.destFile))
-                    renderPasses.add (new RenderPass (*this, params, getDescription()));
+                Renderer::checkTargetFile (track->edit.engine, params.destFile,
+                                           [this, params = this->params, getDescription] (bool ok) mutable
+                                           {
+                                               if (ok)
+                                                   renderPasses.add (new RenderPass (*this, params, getDescription()));
+                                           });
 
                 // Temporarily create the output file so that it affects the next call to
                 // getNonExistentSiblingWithIncrementedNumberSuffix

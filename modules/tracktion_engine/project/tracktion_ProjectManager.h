@@ -179,10 +179,11 @@ public:
     /** Shows UI dialogs to let the user create a project in a chosen location.
         Handles directory creation, non-empty directory warnings, and naming.
     */
-    Project::Ptr createNewProjectInteractively (const juce::String& suggestedName,
-                                                const juce::File& lastPath,
-                                                juce::ValueTree folderToAddTo,
-                                                ProjectType projectType);
+    void createNewProjectInteractively (const juce::String& suggestedName,
+                                        const juce::File& lastPath,
+                                        juce::ValueTree folderToAddTo,
+                                        ProjectType projectType,
+                                        std::function<void (Project::Ptr)> callback);
 
     /** Extracts a template archive, remaps IDs, and adds the resulting project to the list. */
     Project::Ptr createNewProjectFromTemplate (const juce::String& suggestedName,

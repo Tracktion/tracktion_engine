@@ -177,7 +177,8 @@ std::unique_ptr<juce::InputStream> TracktionArchiveFile::createStoredInputStream
 }
 
 bool TracktionArchiveFile::extractFile (int index, const juce::File& destDirectory,
-                                        juce::File& fileCreated, bool askBeforeOverwriting)
+                                        juce::File& fileCreated, bool askBeforeOverwriting,
+                                        std::function<void (bool)> callback)
 {
     if (! destDirectory.createDirectory())
         return false;
@@ -185,56 +186,80 @@ bool TracktionArchiveFile::extractFile (int index, const juce::File& destDirecto
     auto destFile = destDirectory.getChildFile (getOriginalFileName (index));
     fileCreated = destFile;
 
-    if (askBeforeOverwriting && destFile.existsAsFile())
+    auto doExtract = [this, index, destFile]() -> bool
     {
-        auto r = engine.getUIBehaviour()
-                    .showYesNoCancelAlertBox (TRANS("Unpacking archive"),
-                                              TRANS("The file XZZX already exists - do you want to overwrite it?")
-                                                .replace ("XZZX", destFile.getFullPathName()),
-                                              TRANS("Overwrite"),
-                                              TRANS("Leave existing"));
-
-        if (r == 1)  return true;
-        if (r == 0)  return false;
-    }
-
-    if (destFile.isDirectory()
-         || ! destFile.hasWriteAccess()
-         || ! destFile.deleteFile()
-         || entries[index] == nullptr)
-        return false;
-
-    auto source = createStoredInputStream (index);
-
-    if (source == nullptr)
-        return false;
-
-    auto storedName = entries[index]->storedName;
-
-    if (storedName != entries[index]->originalName)
-    {
-        if (storedName.endsWithIgnoreCase (".flac"))
-            return AudioFileUtils::readFromFormat<juce::FlacAudioFormat> (engine, *source, destFile);
-
-        if (storedName.endsWithIgnoreCase (".ogg"))
-            return AudioFileUtils::readFromFormat<juce::OggVorbisAudioFormat> (engine, *source, destFile);
-
-        if (storedName.endsWithIgnoreCase (".gz"))
-            source = std::make_unique<juce::GZIPDecompressorInputStream> (source.release(), true);
-        else
-            jassertfalse;
-    }
-
-    {
-        juce::FileOutputStream out (destFile);
-
-        if (! out.openedOk())
+        if (destFile.isDirectory()
+             || ! destFile.hasWriteAccess()
+             || ! destFile.deleteFile()
+             || entries[index] == nullptr)
             return false;
 
-        out.writeFromInputStream (*source, -1);
+        auto source = createStoredInputStream (index);
+
+        if (source == nullptr)
+            return false;
+
+        auto storedName = entries[index]->storedName;
+
+        if (storedName != entries[index]->originalName)
+        {
+            if (storedName.endsWithIgnoreCase (".flac"))
+                return AudioFileUtils::readFromFormat<juce::FlacAudioFormat> (engine, *source, destFile);
+
+            if (storedName.endsWithIgnoreCase (".ogg"))
+                return AudioFileUtils::readFromFormat<juce::OggVorbisAudioFormat> (engine, *source, destFile);
+
+            if (storedName.endsWithIgnoreCase (".gz"))
+                source = std::make_unique<juce::GZIPDecompressorInputStream> (source.release(), true);
+            else
+                jassertfalse;
+        }
+
+        {
+            juce::FileOutputStream out (destFile);
+
+            if (! out.openedOk())
+                return false;
+
+            out.writeFromInputStream (*source, -1);
+        }
+
+        return true;
+    };
+
+    if (askBeforeOverwriting && destFile.existsAsFile())
+    {
+        engine.getUIBehaviour()
+            .showYesNoCancelAlertBoxAsync (TRANS("Unpacking archive"),
+                                           TRANS("The file XZZX already exists - do you want to overwrite it?")
+                                             .replace ("XZZX", destFile.getFullPathName()),
+                                           TRANS("Overwrite"),
+                                           TRANS("Leave existing"),
+                                           TRANS("Cancel"),
+                                           [doExtract, callback] (int r)
+                                           {
+                                               if (r == 1)
+                                               {
+                                                   if (callback) callback (true);
+                                                   return;
+                                               }
+
+                                               if (r == 0)
+                                               {
+                                                   if (callback) callback (false);
+                                                   return;
+                                               }
+
+                                               // r == 2 means "leave existing" — extract/overwrite
+                                               if (callback)
+                                                   callback (doExtract());
+                                           });
+
+        // Return true as a placeholder; actual result delivered via callback
+        return true;
     }
 
-    return true;
+    return doExtract();
 }
 
 bool TracktionArchiveFile::extractAll (const juce::File& destDirectory,
