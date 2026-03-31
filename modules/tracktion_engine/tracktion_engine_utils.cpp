@@ -63,6 +63,7 @@ extern "C" char MacGetMacFSRefForREXDLL (FSRef* fsRef)
 
 //==============================================================================
 #include "selection/tracktion_Clipboard.cpp"
+#include "selection/tracktion_Clipboard.test.cpp"
 #include "selection/tracktion_Selectable.test.cpp"
 #include "selection/tracktion_SelectionManager.cpp"
 #include "selection/tracktion_SelectionManager.test.cpp"

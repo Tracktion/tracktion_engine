@@ -668,6 +668,32 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects,
             clip->flushStateToValueTree();
             info.state = clip->state.createCopy();
 
+            // Resolve relative source paths to absolute so cross-project paste works
+            auto resolveSourceToAbsolute = [&ed] (juce::ValueTree& v)
+            {
+                auto sourceStr = v[IDs::source].toString();
+
+                if (sourceStr.isNotEmpty()
+                    && ! juce::File::isAbsolutePath (sourceStr)
+                    && ! ProjectItemRef (sourceStr).isProjectItemID())
+                {
+                    auto resolved = SourceFileReference::findFileFromString (ed, sourceStr);
+
+                    if (resolved.existsAsFile())
+                        v.setProperty (IDs::source, resolved.getFullPathName(), nullptr);
+                }
+            };
+
+            resolveSourceToAbsolute (info.state);
+
+            for (int i = 0; i < info.state.getNumChildren(); ++i)
+            {
+                auto child = info.state.getChild (i);
+
+                if (child.hasProperty (IDs::source))
+                    resolveSourceToAbsolute (child);
+            }
+
             addValueTreeProperties (info.state,
                                     IDs::start, (clippedStart - overallStartTime).inSeconds(),
                                     IDs::length, (clippedEnd - clippedStart).inSeconds(),
@@ -950,6 +976,35 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
     for (auto& clip : clips)
     {
         auto newClipState = clip.state.createCopy();
+
+        // Re-relativize absolute source paths for the destination edit
+        auto adjustSourcePath = [&options] (juce::ValueTree& v)
+        {
+            auto sourceStr = v[IDs::source].toString();
+
+            if (sourceStr.isNotEmpty()
+                && juce::File::isAbsolutePath (sourceStr)
+                && ! ProjectItemRef (sourceStr).isProjectItemID())
+            {
+                juce::File sourceFile (sourceStr);
+
+                if (sourceFile.existsAsFile())
+                    v.setProperty (IDs::source,
+                                   SourceFileReference::findPathFromFile (options.edit, sourceFile, true),
+                                   nullptr);
+            }
+        };
+
+        adjustSourcePath (newClipState);
+
+        for (int i = 0; i < newClipState.getNumChildren(); ++i)
+        {
+            auto child = newClipState.getChild (i);
+
+            if (child.hasProperty (IDs::source))
+                adjustSourcePath (child);
+        }
+
         EditItemID::remapIDs (newClipState, nullptr, options.edit, &remappedIDs);
         fixClipTimes (newClipState, clip, clips, options.edit.tempoSequence, options.startTime);
 
