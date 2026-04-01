@@ -159,7 +159,7 @@ private:
                 const auto timeRange = TimeRange (TimePosition::fromSeconds (durationOfFile) * i, TimeDuration::fromSeconds (durationOfFile));
                 auto waveClip = t->insertWaveClip (file->getFile().getFileName(), file->getFile(),
                                                    {{ timeRange }}, false);
-                waveClip->setGainDB (gainToDb (1.0f / numTracks));
+                waveClip->setGainDB (gainToDb (1.0f / static_cast<float> (numTracks)));
             }
         }
 
