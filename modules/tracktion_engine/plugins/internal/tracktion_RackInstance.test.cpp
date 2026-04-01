@@ -436,22 +436,20 @@ TEST_SUITE("tracktion_engine")
         CHECK (foundPointNear5s);
     }
 
-    TEST_CASE ("PluginNode: minimum channel count with maxNumChannels")
+    TEST_CASE ("PluginNode: maxNumChannels caps channel count")
     {
-        // When maxNumChannels > 0, PluginNode should guarantee at least that many channels
-        // even if the input node reports 0 channels. This prevents crashes in plugins that
-        // unconditionally access channel data.
+        // maxNumChannels is a cap, not a minimum. When input reports 0 channels,
+        // the output should still be 0 — maxNumChannels only limits, never inflates.
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
         auto edit = test_utilities::createTestEdit (engine);
 
-        // Create a VolumeAndPanPlugin (pass-through, returns numInputs from getNumOutputChannelsGivenInputs)
         auto volPan = edit->getPluginCache().getOrCreatePluginFor (VolumeAndPanPlugin::create());
 
         graph::PlayHead playHead;
         PlayHeadState playHeadState (playHead);
         ProcessState processState (playHeadState);
 
-        // Input node with 0 channels
+        // Input node with 0 channels, maxNumChannels = 2 (cap)
         auto pluginNode = tracktion::graph::makeNode<PluginNode> (
             tracktion::graph::makeNode<tracktion::graph::SilentNode> (0),
             volPan,
@@ -461,7 +459,7 @@ TEST_SUITE("tracktion_engine")
             2);  // maxNumChannels = 2
 
         auto props = pluginNode->getNodeProperties();
-        CHECK (props.numberOfChannels >= 2);
+        CHECK (props.numberOfChannels == 0);
     }
 
     TEST_CASE ("Rack instance: setInputMappingByName and setOutputMappingByName")

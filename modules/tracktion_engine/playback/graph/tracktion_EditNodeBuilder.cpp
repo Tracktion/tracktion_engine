@@ -2076,6 +2076,17 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
                     node = makeNode<SharedLevelMeasuringNode> (std::move (previewMeasurer), std::move (node));
         }
 
+        // Convert signal to device channel count at the device boundary
+        if (auto waveDevice = dynamic_cast<WaveOutputDevice*> (device))
+        {
+            const int incomingChannels = node->getNodeProperties().numberOfChannels;
+            const int deviceChannels = (int) waveDevice->getChannels().size();
+
+            if (incomingChannels > 0 && incomingChannels < deviceChannels)
+                node = tracktion::graph::makeNode<ChannelRemappingNode> (std::move (node),
+                                                                         ChannelMap::conversion (incomingChannels, deviceChannels));
+        }
+
         if (edit.isClickTrackDevice (*device))
         {
             auto clickAndTracksNode = makeSummingNode ({ node.release(),
