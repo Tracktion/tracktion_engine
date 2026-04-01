@@ -186,7 +186,7 @@ private:
 
         for (int i = 0; i < dm.getNumWaveInDevices(); i++)
             if (auto wip = dm.getWaveInDevice (i))
-                wip->setStereoPair (false);
+                wip->setChannelConfiguration (te::ChannelConfiguration::mono());
 
         for (int i = 0; i < dm.getNumWaveInDevices(); i++)
         {

@@ -371,7 +371,7 @@ struct Thumbnail    : public Component
             return;
 
         jassert (getWidth() > 0);
-        const float proportion = e.position.x / getWidth();
+        const float proportion = e.position.x / static_cast<float> (getWidth());
         transport.setPosition (toPosition (transport.getLoopRange().getLength()) * proportion);
     }
 
@@ -389,7 +389,7 @@ struct Thumbnail    : public Component
             // Simple quantisation for demo purposes here
             //  1. Quantise the position to jump to
             //  2. Quantise the time to jump to it
-            const float proportion = e.position.x / getWidth();
+            const float proportion = e.position.x / static_cast<float> (getWidth());
             auto positionToJumpTo = toPosition (transport.getLoopRange().getLength()) * proportion;
 
             if (quantisationNumBars)

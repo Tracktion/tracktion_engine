@@ -266,10 +266,10 @@ struct StepEditor   : public Component,
             auto r = getLocalBounds().toFloat();
             const auto pattern (editor.clip.getPattern (0));
             const int numNotes = pattern.getNumNotes();
-            const float w = r.getWidth() / std::max (1, numNotes);
+            const float w = r.getWidth() / static_cast<float> (std::max (1, numNotes));
 
             for (int i = 0; i < numNotes; ++i)
-                noteXes.add ((i + 1) * w);
+                noteXes.add (static_cast<float> (i + 1) * w);
         }
 
         float getPlayheadX() const
@@ -376,7 +376,7 @@ private:
         if (r.isEmpty())
             return -1;
 
-        return (int) std::floor (y / r.getHeight() * numChans);
+        return (int) std::floor (y / r.getHeight() * static_cast<float> (numChans));
     }
 
     Range<float> getChannelYRange (int channelIndex) const
@@ -387,9 +387,9 @@ private:
         if (numChans == 0)
             return {};
 
-        const float h = r.getHeight() / numChans;
+        const float h = r.getHeight() / static_cast<float> (numChans);
 
-        return Range<float>::withStartAndLength (channelIndex * h, h);
+        return Range<float>::withStartAndLength (static_cast<float> (channelIndex) * h, h);
     }
 
     void selectableObjectChanged (te::Selectable*) override

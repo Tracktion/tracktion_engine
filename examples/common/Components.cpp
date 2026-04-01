@@ -446,7 +446,7 @@ void drawMidiClip (juce::Graphics& g, te::MidiClip& mc, juce::Rectangle<int> r, 
 
         double y = (1.0 - double (n->getNoteNumber()) / 127.0) * r.getHeight();
 
-        g.setColour (Colours::white.withAlpha (n->getVelocity() / 127.0f));
+        g.setColour (Colours::white.withAlpha (static_cast<float> (n->getVelocity()) / 127.0f));
         g.drawLine (float (t1), float (y), float (t2), float (y));
     }
 }
@@ -479,7 +479,7 @@ void MidiClipComponent::paint (Graphics& g)
 
                 double y = (1.0 - double (n->getNoteNumber()) / 127.0) * getHeight();
 
-                g.setColour (Colours::white.withAlpha (n->getVelocity() / 127.0f));
+                g.setColour (Colours::white.withAlpha (static_cast<float> (n->getVelocity()) / 127.0f));
                 g.drawLine (float (t1), float (y), float (t2), float (y));
             }
         }

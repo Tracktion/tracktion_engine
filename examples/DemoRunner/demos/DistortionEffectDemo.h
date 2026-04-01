@@ -46,6 +46,9 @@ public:
     void initialise(const PluginInitialisationInfo&) override           {}
     void deinitialise() override                                        {}
 
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override   { return {}; }
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override  { return {}; }
+
     void applyToBuffer (const PluginRenderContext& fc) override
     {
         // Apply a tanh distortion with a gain of 3.0f
