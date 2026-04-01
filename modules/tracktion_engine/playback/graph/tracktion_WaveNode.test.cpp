@@ -607,28 +607,28 @@ TEST_SUITE ("tracktion_engine")
 
         SUBCASE ("mono source, 2 output channels")
         {
-            // Mono source is duplicated to stereo by the channel conversion node
-            // before the track's stereo plugin chain, so both channels have audio
+            // Without a device boundary, the mono signal stays mono through the
+            // plugin chain. Channel duplication happens at the device boundary,
+            // so only channel 0 has audio here.
             auto edit = createEditWithClip (1);
             auto result = renderEdit (*edit, 2);
 
             REQUIRE (result->buffer.getNumChannels() >= 2);
             checkChannel (result->buffer, 0, 1.0f, 0.707f);
-            checkChannel (result->buffer, 1, 1.0f, 0.707f);
+            checkChannel (result->buffer, 1, 0.0f, 0.0f);
         }
 
-        SUBCASE ("4-channel source, 4 output channels (stereo track)")
+        SUBCASE ("4-channel source, 4 output channels")
         {
-            // A default audio track is stereo, so only the first 2 channels
-            // of a 4-channel source are routed to the output
+            // All 4 channels flow through the track's plugin chain
             auto edit = createEditWithClip (4);
             auto result = renderEdit (*edit, 4);
 
             REQUIRE (result->buffer.getNumChannels() >= 4);
             checkChannel (result->buffer, 0, 1.0f, 0.707f);
             checkChannel (result->buffer, 1, 1.0f, 0.707f);
-            checkChannel (result->buffer, 2, 0.0f, 0.0f);
-            checkChannel (result->buffer, 3, 0.0f, 0.0f);
+            checkChannel (result->buffer, 2, 1.0f, 0.707f);
+            checkChannel (result->buffer, 3, 1.0f, 0.707f);
         }
 
         SUBCASE ("4-channel source, 2 output channels")
