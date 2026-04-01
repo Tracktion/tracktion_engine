@@ -227,7 +227,7 @@ static TimePosition doPasteMIDIFileIntoEdit (Edit& edit, const juce::File& midiF
     return newClipEndTime;
 }
 
-static void pasteMIDIFileIntoEdit (Edit& edit, const juce::File& midiFile,
+inline void pasteMIDIFileIntoEdit (Edit& edit, const juce::File& midiFile,
                                     int targetTrackIndex, int targetSlotIndex,
                                     TimePosition startTime, bool importTempoChanges,
                                     std::function<void (TimePosition, int, int)> callback)
@@ -405,8 +405,6 @@ static void doProjectItemsPaste (const Clipboard::ProjectItems& items,
     auto& e  = options.edit.engine;
     auto& pm = e.getProjectManager();
     auto& ui = options.edit.engine.getUIBehaviour();
-    bool anythingPasted = false;
-
     if (isRecursiveEditClipPaste (items, options.edit))
     {
         if (! options.silent)
@@ -508,8 +506,6 @@ static void doProjectItemsPaste (const Clipboard::ProjectItems& items,
                         }
                     }
                 }
-
-                anythingPasted = true;
 
                 if (int (index) < int (items.itemIDs.size() - 1))
                 {

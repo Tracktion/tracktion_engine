@@ -416,10 +416,10 @@ void EditRenderJob::renderSeparateTracks()
                 params.tracksToDo = tracksToDo;
 
                 Renderer::checkTargetFile (track->edit.engine, params.destFile,
-                                           [this, params = this->params, getDescription] (bool ok) mutable
+                                           [this, capturedParams = this->params, getDescription] (bool ok) mutable
                                            {
                                                if (ok)
-                                                   renderPasses.add (new RenderPass (*this, params, getDescription()));
+                                                   renderPasses.add (new RenderPass (*this, capturedParams, getDescription()));
                                            });
 
                 // Temporarily create the output file so that it affects the next call to

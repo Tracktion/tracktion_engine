@@ -377,7 +377,7 @@ void EditFileOperations::saveAs (const juce::File& f, bool forceOverwriteExistin
         return;
     }
 
-    auto doSaveAs = [this, f, callback, editRef = makeSafeRef (edit)]
+    auto doSaveAs = [f, callback, editRef = makeSafeRef (edit)]
     {
         if (auto ed = editRef.get())
         {

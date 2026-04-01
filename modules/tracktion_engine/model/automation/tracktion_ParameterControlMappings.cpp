@@ -538,7 +538,7 @@ void ParameterControlMappings::showMappingsListForRow (int row)
     juce::Array<ParameterAndIndex> allParams;
     auto m = buildMenu (allParams);
 
-    m.showMenuAsync ({}, [this, row, allParams = std::move (allParams)] (int r) mutable
+    m.showMenuAsync ({}, [this, row, movedParams = std::move (allParams)] (int r) mutable
     {
         if (r >= 50000 && r < 51000)
         {
@@ -554,7 +554,7 @@ void ParameterControlMappings::showMappingsListForRow (int row)
         }
         else if (r != 0)
         {
-            for (const auto& pair : allParams)
+            for (const auto& pair : movedParams)
             {
                 if (pair.index == r && pair.param != nullptr)
                 {
