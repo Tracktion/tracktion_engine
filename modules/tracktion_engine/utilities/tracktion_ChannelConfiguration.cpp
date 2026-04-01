@@ -55,6 +55,10 @@ juce::AudioChannelSet::ChannelType channelTypeFromAbbreviatedName (const juce::S
     if (result != cache.map.end())
         return result->second;
 
+    // Discrete channels are serialised as their 1-based number (e.g. "1", "2", ...)
+    if (auto discreteIndex = abbreviatedName.getIntValue(); discreteIndex > 0)
+        return static_cast<juce::AudioChannelSet::ChannelType> (juce::AudioChannelSet::discreteChannel0 + discreteIndex - 1);
+
     return juce::AudioChannelSet::unknown;
 }
 

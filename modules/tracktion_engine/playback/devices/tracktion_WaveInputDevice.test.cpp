@@ -507,7 +507,7 @@ namespace tracktion::inline engine
             tc.stop (false, true);
 
             auto recordedClip = dynamic_cast<WaveAudioClip*> (destTrack.getClips()[0]);
-            CHECK (recordedClip);
+            REQUIRE (recordedClip);
             auto recordedFile = recordedClip->getSourceFileReference().getFile();
             auto recordedFileBuffer = *engine::test_utilities::loadFileInToBuffer (engine, recordedFile);
 
