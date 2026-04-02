@@ -10,6 +10,10 @@
 
 namespace tracktion::inline engine {
 
+// Defined in ExternalPlugin.cpp
+extern void cleanUpDanglingPlugins();
+extern void waitForPluginDeletion (std::function<void()> onComplete);
+
 static Engine* instance = nullptr;
 static juce::Array<Engine*> engines;
 
@@ -77,25 +81,41 @@ void Engine::initialise()
     externalControllerManager->initialise();
 }
 
-Engine::~Engine()
+void Engine::prepareForShutdown (std::function<void()> onReadyToDestroy)
 {
-    // First make sure to clear any edits that are in line to be deleted
     editDeleter.reset();
 
     getProjectManager().saveList();
-
     getExternalControllerManager().shutdown();
     getDeviceManager().closeDevices();
     getBackgroundJobs().stopAndDeleteAllRunningJobs();
-
     temporaryFileManager->cleanUp();
-
     getRenderManager().cleanUp();
+
+    waitForPluginDeletion (std::move (onReadyToDestroy));
+}
+
+Engine::~Engine()
+{
+    // If prepareForShutdown wasn't called, do synchronous cleanup
+    if (editDeleter)
+    {
+        editDeleter.reset();
+
+        getProjectManager().saveList();
+        getExternalControllerManager().shutdown();
+        getDeviceManager().closeDevices();
+        getBackgroundJobs().stopAndDeleteAllRunningJobs();
+        temporaryFileManager->cleanUp();
+        getRenderManager().cleanUp();
+    }
+
     backgroundJobManager.reset();
     deviceManager.reset();
     midiProgramManager.reset();
 
     ARAFileReader::cleanUpOnShutdown();
+    cleanUpDanglingPlugins();
     pluginManager.reset();
 
     temporaryFileManager.reset();

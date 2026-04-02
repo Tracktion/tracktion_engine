@@ -45,6 +45,12 @@ public:
     /** Destructor. */
     ~Engine();
 
+    /** Begins async shutdown: closes edits, releases plugins, and waits for plugin
+        cleanup to complete. Call this before destroying the Engine. The callback is
+        invoked on the message thread when it's safe to destroy the Engine.
+        If not called, the destructor falls back to synchronous cleanup. */
+    void prepareForShutdown (std::function<void()> onReadyToDestroy);
+
     /** Returns the current version of Tracktion Engine. */
     static juce::String getVersion();
 
