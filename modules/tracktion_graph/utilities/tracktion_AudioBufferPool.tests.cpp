@@ -10,44 +10,39 @@
 
 namespace tracktion::inline graph {
 
+} // namespace tracktion::inline graph
+
 #if GRAPH_UNIT_TESTS_AUDIOBUFFERPOOL
 
-class AudioBufferPoolTests  : public juce::UnitTest
+#include "../../3rd_party/doctest/tracktion_doctest.hpp"
+
+namespace tracktion::inline graph {
+
+TEST_SUITE ("tracktion_graph")
 {
-public:
-    AudioBufferPoolTests()
-        : juce::UnitTest ("AudioBufferPool", "tracktion_graph") {}
-
-    //==============================================================================
-    void runTest() override
-    {
-        runAllocationTests();
-    }
-
-private:
-    void runAllocationTests()
+    TEST_CASE ("AudioBufferPool")
     {
         using namespace choc::buffer;
 
-        beginTest ("Allocation");
+        SUBCASE ("Allocation")
         {
             const auto size = Size::create (2, 128);
 
             {
                 AudioBufferPool pool;
                 pool.setCapacity (1);
-                expectEquals<int> ((int) pool.getNumBuffers(), 0);
+                CHECK_EQ ((int) pool.getNumBuffers(), 0);
                 pool.release (ChannelArrayBuffer<float> (size));
-                expectEquals<int> ((int) pool.getNumBuffers(), 1);
-                expectEquals<int> ((int) pool.getAllocatedSize(), (int) SeparateChannelLayout<float>::getBytesNeeded (size));
+                CHECK_EQ ((int) pool.getNumBuffers(), 1);
+                CHECK_EQ ((int) pool.getAllocatedSize(), (int) SeparateChannelLayout<float>::getBytesNeeded (size));
             }
 
             {
                 AudioBufferPool pool (1);
-                expectEquals<int> ((int) pool.getNumBuffers(), 0);
+                CHECK_EQ ((int) pool.getNumBuffers(), 0);
                 pool.release (ChannelArrayBuffer<float> (size));
-                expectEquals<int> ((int) pool.getNumBuffers(), 1);
-                expectEquals<int> ((int) pool.getAllocatedSize(), (int) SeparateChannelLayout<float>::getBytesNeeded (size));
+                CHECK_EQ ((int) pool.getNumBuffers(), 1);
+                CHECK_EQ ((int) pool.getAllocatedSize(), (int) SeparateChannelLayout<float>::getBytesNeeded (size));
             }
 
             {
@@ -58,20 +53,18 @@ private:
 
                 auto buffer = pool.allocate (size);
                 const auto bufferSize = buffer.getSize();
-                expectGreaterOrEqual ((int) bufferSize.numFrames, (int) size.numFrames);
-                expectGreaterOrEqual ((int) bufferSize.numChannels, (int) size.numChannels);
-                expectEquals<int> ((int) pool.getAllocatedSize(), (int) SeparateChannelLayout<float>::getBytesNeeded (size));
+                CHECK_GE ((int) bufferSize.numFrames, (int) size.numFrames);
+                CHECK_GE ((int) bufferSize.numChannels, (int) size.numChannels);
+                CHECK_EQ ((int) pool.getAllocatedSize(), (int) SeparateChannelLayout<float>::getBytesNeeded (size));
 
-                expectEquals<int> ((int) pool.getNumBuffers(), 1);
+                CHECK_EQ ((int) pool.getNumBuffers(), 1);
                 pool.release (std::move (buffer));
-                expectEquals<int> ((int) pool.getNumBuffers(), 2);
+                CHECK_EQ ((int) pool.getNumBuffers(), 2);
             }
         }
     }
-};
-
-static AudioBufferPoolTests audioBufferPoolTests;
-
-#endif
+}
 
 } // namespace tracktion::inline graph
+
+#endif

@@ -358,17 +358,17 @@ void QuantisationType::applyQuantisationToSequence (juce::MidiMessageSequence& m
     }
 }
 
+} // namespace tracktion::inline engine
+
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_QUANTISATION_TYPE
 
-class QuantisationTypeTests  : public juce::UnitTest
-{
-public:
-    QuantisationTypeTests()
-        : juce::UnitTest ("QuantisationType", "tracktion_engine")
-    {
-    }
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
 
-    void runTest() override
+namespace tracktion::inline engine {
+
+TEST_SUITE ("tracktion_engine")
+{
+    TEST_CASE ("QuantisationType")
     {
         auto& engine = *Engine::getEngines()[0];
         auto edit = Edit::createSingleTrackEdit (engine);
@@ -385,17 +385,17 @@ public:
         auto& list = c->getSequence();
         list.copyFrom (originalList, {});
 
-        beginTest ("No quantise");
+        // No quantise
         {
             auto& q = c->getQuantisation();
             auto notes = list.getNotes();
-            expectEquals (q.roundBeatToNearest (notes[0]->getStartBeat()), 0_bp);
-            expectEquals (q.roundBeatToNearest (notes[1]->getStartBeat()), 0.75_bp);
-            expectEquals (q.roundBeatToNearest (notes[2]->getStartBeat()), 1.25_bp);
-            expectEquals (q.roundBeatToNearest (notes[3]->getStartBeat()), 1.75_bp);
+            CHECK_EQ (q.roundBeatToNearest (notes[0]->getStartBeat()), 0_bp);
+            CHECK_EQ (q.roundBeatToNearest (notes[1]->getStartBeat()), 0.75_bp);
+            CHECK_EQ (q.roundBeatToNearest (notes[2]->getStartBeat()), 1.25_bp);
+            CHECK_EQ (q.roundBeatToNearest (notes[3]->getStartBeat()), 1.75_bp);
         }
 
-        beginTest ("1/2 bar");
+        // 1/2 bar
         {
             // Apply the quantise directly to the notes
             QuantisationType q;
@@ -403,10 +403,10 @@ public:
 
             {
                 auto notes = list.getNotes();
-                expectEquals (q.roundBeatToNearest (notes[0]->getStartBeat()), 0_bp);
-                expectEquals (q.roundBeatToNearest (notes[1]->getStartBeat()), 1.0_bp);
-                expectEquals (q.roundBeatToNearest (notes[2]->getStartBeat()), 1.5_bp);
-                expectEquals (q.roundBeatToNearest (notes[3]->getStartBeat()), 2.0_bp);
+                CHECK_EQ (q.roundBeatToNearest (notes[0]->getStartBeat()), 0_bp);
+                CHECK_EQ (q.roundBeatToNearest (notes[1]->getStartBeat()), 1.0_bp);
+                CHECK_EQ (q.roundBeatToNearest (notes[2]->getStartBeat()), 1.5_bp);
+                CHECK_EQ (q.roundBeatToNearest (notes[3]->getStartBeat()), 2.0_bp);
             }
 
             // Apply quatisation to note starts
@@ -419,18 +419,18 @@ public:
                 c->setEnd (edit->tempoSequence.toTime (4_bp), true);
 
                 auto notes = c->getSequenceLooped().getNotes();
-                expectEquals (notes.size(), 6);
+                CHECK_EQ (notes.size(), 6);
 
-                expectEquals (notes[0]->getStartBeat(), 0_bp);
-                expectEquals (notes[1]->getStartBeat(), 1.0_bp);
-                expectEquals (notes[2]->getStartBeat(), 1.5_bp);
-                expectEquals (notes[3]->getStartBeat(), 2.0_bp);
-                expectEquals (notes[4]->getStartBeat(), 3.0_bp);
-                expectEquals (notes[5]->getStartBeat(), 3.5_bp);
+                CHECK_EQ (notes[0]->getStartBeat(), 0_bp);
+                CHECK_EQ (notes[1]->getStartBeat(), 1.0_bp);
+                CHECK_EQ (notes[2]->getStartBeat(), 1.5_bp);
+                CHECK_EQ (notes[3]->getStartBeat(), 2.0_bp);
+                CHECK_EQ (notes[4]->getStartBeat(), 3.0_bp);
+                CHECK_EQ (notes[5]->getStartBeat(), 3.5_bp);
             }
         }
 
-        beginTest ("1 bar");
+        // 1 bar
         {
             // Reset the list to the original
             list.copyFrom (originalList, {});
@@ -446,21 +446,19 @@ public:
 
             {
                 auto notes = c->getSequenceLooped().getNotes();
-                expectEquals (notes.size(), 6);
+                CHECK_EQ (notes.size(), 6);
 
-                expectEquals (notes[0]->getStartBeat(), 0_bp);
-                expectEquals (notes[1]->getStartBeat(), 1.0_bp);
-                expectEquals (notes[2]->getStartBeat(), 1.0_bp);
-                expectEquals (notes[3]->getStartBeat(), 2.0_bp);
-                expectEquals (notes[4]->getStartBeat(), 3.0_bp);
-                expectEquals (notes[5]->getStartBeat(), 3.0_bp);
+                CHECK_EQ (notes[0]->getStartBeat(), 0_bp);
+                CHECK_EQ (notes[1]->getStartBeat(), 1.0_bp);
+                CHECK_EQ (notes[2]->getStartBeat(), 1.0_bp);
+                CHECK_EQ (notes[3]->getStartBeat(), 2.0_bp);
+                CHECK_EQ (notes[4]->getStartBeat(), 3.0_bp);
+                CHECK_EQ (notes[5]->getStartBeat(), 3.0_bp);
             }
         }
     }
-};
-
-static QuantisationTypeTests quantisationTypeTests;
-
-#endif
+}
 
 } // namespace tracktion::inline engine
+
+#endif

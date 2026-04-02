@@ -13,23 +13,21 @@
 
 namespace tracktion::inline graph {
 
+} // namespace tracktion::inline graph
+
 #if GRAPH_UNIT_TESTS_PLAYHEADSTATE
 
-//==============================================================================
-//==============================================================================
-class PlayHeadStateTests : public juce::UnitTest
-{
-public:
-    PlayHeadStateTests()
-        : juce::UnitTest ("PlayHeadStateTests", "tracktion_graph")
-    {
-    }
+#include "../../3rd_party/doctest/tracktion_doctest.hpp"
 
-    void runTest() override
+namespace tracktion::inline graph {
+
+TEST_SUITE ("tracktion_graph")
+{
+    TEST_CASE ("PlayHeadStateTests")
     {
         constexpr int64_t blockSize = 44'100;
 
-        beginTest ("Loop edges");
+        SUBCASE ("Loop edges")
         {
             PlayHead playHead;
             PlayHeadState playHeadState (playHead);
@@ -38,31 +36,31 @@ public:
             auto referenceRange = juce::Range<int64_t>::withStartAndLength (0, blockSize);
             playHeadState.update (referenceRange); // This is reference samples
 
-            expect (! playHeadState.isContiguousWithPreviousBlock());
-            expect (playHeadState.didPlayheadJump());
-            expect (playHeadState.isFirstBlockOfLoop());
-            expect (! playHeadState.isLastBlockOfLoop());
+            CHECK (! playHeadState.isContiguousWithPreviousBlock());
+            CHECK (playHeadState.didPlayheadJump());
+            CHECK (playHeadState.isFirstBlockOfLoop());
+            CHECK (! playHeadState.isLastBlockOfLoop());
 
             referenceRange += blockSize;
             playHead.setReferenceSampleRange (referenceRange);
             playHeadState.update (referenceRange);
 
-            expect (playHeadState.isContiguousWithPreviousBlock());
-            expect (! playHeadState.didPlayheadJump());
-            expect (! playHeadState.isFirstBlockOfLoop());
-            expect (! playHeadState.isLastBlockOfLoop());
+            CHECK (playHeadState.isContiguousWithPreviousBlock());
+            CHECK (! playHeadState.didPlayheadJump());
+            CHECK (! playHeadState.isFirstBlockOfLoop());
+            CHECK (! playHeadState.isLastBlockOfLoop());
 
             referenceRange += blockSize;
             playHead.setReferenceSampleRange (referenceRange);
             playHeadState.update (referenceRange);
 
-            expect (playHeadState.isContiguousWithPreviousBlock());
-            expect (! playHeadState.didPlayheadJump());
-            expect (! playHeadState.isFirstBlockOfLoop());
-            expect (playHeadState.isLastBlockOfLoop());
+            CHECK (playHeadState.isContiguousWithPreviousBlock());
+            CHECK (! playHeadState.didPlayheadJump());
+            CHECK (! playHeadState.isFirstBlockOfLoop());
+            CHECK (playHeadState.isLastBlockOfLoop());
         }
 
-        beginTest ("Not looping");
+        SUBCASE ("Not looping")
         {
             PlayHead playHead;
             PlayHeadState playHeadState (playHead);
@@ -71,34 +69,32 @@ public:
             auto referenceRange = juce::Range<int64_t>::withStartAndLength (0, blockSize);
             playHeadState.update (referenceRange); // This is reference samples
 
-            expect (! playHeadState.isContiguousWithPreviousBlock());
-            expect (playHeadState.didPlayheadJump());
-            expect (! playHeadState.isFirstBlockOfLoop());
-            expect (! playHeadState.isLastBlockOfLoop());
+            CHECK (! playHeadState.isContiguousWithPreviousBlock());
+            CHECK (playHeadState.didPlayheadJump());
+            CHECK (! playHeadState.isFirstBlockOfLoop());
+            CHECK (! playHeadState.isLastBlockOfLoop());
 
             referenceRange += blockSize;
             playHead.setReferenceSampleRange (referenceRange);
             playHeadState.update (referenceRange);
 
-            expect (playHeadState.isContiguousWithPreviousBlock());
-            expect (! playHeadState.didPlayheadJump());
-            expect (! playHeadState.isFirstBlockOfLoop());
-            expect (! playHeadState.isLastBlockOfLoop());
+            CHECK (playHeadState.isContiguousWithPreviousBlock());
+            CHECK (! playHeadState.didPlayheadJump());
+            CHECK (! playHeadState.isFirstBlockOfLoop());
+            CHECK (! playHeadState.isLastBlockOfLoop());
 
             referenceRange += blockSize;
             playHead.setReferenceSampleRange (referenceRange);
             playHeadState.update (referenceRange);
 
-            expect (playHeadState.isContiguousWithPreviousBlock());
-            expect (! playHeadState.didPlayheadJump());
-            expect (! playHeadState.isFirstBlockOfLoop());
-            expect (! playHeadState.isLastBlockOfLoop());
+            CHECK (playHeadState.isContiguousWithPreviousBlock());
+            CHECK (! playHeadState.didPlayheadJump());
+            CHECK (! playHeadState.isFirstBlockOfLoop());
+            CHECK (! playHeadState.isLastBlockOfLoop());
         }
     }
-};
+}
 
-static PlayHeadStateTests playHeadStateTests;
+} // namespace tracktion::inline graph
 
 #endif
-
-}

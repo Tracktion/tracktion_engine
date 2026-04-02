@@ -16,25 +16,13 @@
 
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_AUDIO_FILE_CACHE
 
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+
 namespace tracktion::inline engine {
 
-//==============================================================================
-//==============================================================================
-class AudioFileCacheTests   : public juce::UnitTest
+TEST_SUITE ("tracktion_engine")
 {
-public:
-    AudioFileCacheTests()
-        : juce::UnitTest ("AudioFileCache", "tracktion_engine")
-    {
-    }
-
-    void runTest() override
-    {
-        runCacheReadTest();
-    }
-
-private:
-    void runCacheReadTest()
+    TEST_CASE ("AudioFileCache: Read a sin wav file")
     {
         Engine& engine = *Engine::getEngines().getFirst();
 
@@ -56,12 +44,20 @@ private:
                                       i, ChannelConfiguration::stereo(), 5'000);
         }
 
-        beginTest ("Read a sin wav file");
-        expectAudioBuffer (*this, bufferFromFile, bufferFromCache);
-    }
-};
+        CHECK (bufferFromFile.getNumChannels() == bufferFromCache.getNumChannels());
+        CHECK (bufferFromFile.getNumSamples() == bufferFromCache.getNumSamples());
 
-static AudioFileCacheTests audioFileCacheTests;
+        for (int channel = 0; channel < bufferFromFile.getNumChannels(); ++channel)
+        {
+            auto* aPtr = bufferFromFile.getReadPointer (channel);
+            auto* bPtr = bufferFromCache.getReadPointer (channel);
+
+            auto buffersMatch = std::vector<float> (aPtr, aPtr + bufferFromFile.getNumSamples())
+                                == std::vector<float> (bPtr, bPtr + bufferFromFile.getNumSamples());
+            CHECK (buffersMatch);
+        }
+    }
+}
 
 } // namespace tracktion::inline engine
 

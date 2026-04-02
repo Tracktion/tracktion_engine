@@ -13,97 +13,86 @@
 
 namespace tracktion::inline graph {
 
+} // namespace tracktion::inline graph
+
 #if GRAPH_UNIT_TESTS_PLAYHEAD
 
-//==============================================================================
-//==============================================================================
-class PlayHeadTests : public juce::UnitTest
+#include "../../3rd_party/doctest/tracktion_doctest.hpp"
+
+namespace tracktion::inline graph {
+
+TEST_SUITE ("tracktion_graph")
 {
-public:
-    PlayHeadTests()
-        : juce::UnitTest ("PlayHead", "tracktion_graph")
+    TEST_CASE ("PlayHead")
     {
-    }
-
-    void runTest() override
-    {
-        runBasicTests();
-    }
-
-private:
-    //==============================================================================
-    //==============================================================================
-    void runBasicTests()
-    {
-        beginTest ("SplitTimelineRange");
+        // SplitTimelineRange
         {
             PlayHead playHead;
             playHead.play ({ 0, 1000 }, true);
 
             {
                 const auto tr = referenceSampleRangeToSplitTimelineRange (playHead, { 250, 750 });
-                expect (! tr.isSplit);
-                expectEquals<int64_t> (tr.timelineRange1.getStart(), 250);
-                expectEquals<int64_t> (tr.timelineRange1.getEnd(), 750);
-                expectEquals<int64_t> (tr.timelineRange2.getStart(), 0);
-                expectEquals<int64_t> (tr.timelineRange2.getEnd(), 0);
+                CHECK (! tr.isSplit);
+                CHECK_EQ (tr.timelineRange1.getStart(), (int64_t) 250);
+                CHECK_EQ (tr.timelineRange1.getEnd(), (int64_t) 750);
+                CHECK_EQ (tr.timelineRange2.getStart(), (int64_t) 0);
+                CHECK_EQ (tr.timelineRange2.getEnd(), (int64_t) 0);
             }
 
             {
                 const auto tr = referenceSampleRangeToSplitTimelineRange (playHead, { 750, 1250 });
-                expect (tr.isSplit);
-                expectEquals<int64_t> (tr.timelineRange1.getStart(), 750);
-                expectEquals<int64_t> (tr.timelineRange1.getEnd(), 1000);
-                expectEquals<int64_t> (tr.timelineRange2.getStart(), 0);
-                expectEquals<int64_t> (tr.timelineRange2.getEnd(), 250);
+                CHECK (tr.isSplit);
+                CHECK_EQ (tr.timelineRange1.getStart(), (int64_t) 750);
+                CHECK_EQ (tr.timelineRange1.getEnd(), (int64_t) 1000);
+                CHECK_EQ (tr.timelineRange2.getStart(), (int64_t) 0);
+                CHECK_EQ (tr.timelineRange2.getEnd(), (int64_t) 250);
             }
 
             {
                 playHead.play ({ 0, 1500 }, false);
                 const auto tr = referenceSampleRangeToSplitTimelineRange (playHead, { 500, 1500 });
-                expect (! tr.isSplit);
-                expectEquals<int64_t> (tr.timelineRange1.getStart(), 500);
-                expectEquals<int64_t> (tr.timelineRange1.getEnd(), 1500);
-                expectEquals<int64_t> (tr.timelineRange2.getStart(), 0);
-                expectEquals<int64_t> (tr.timelineRange2.getEnd(), 0);
+                CHECK (! tr.isSplit);
+                CHECK_EQ (tr.timelineRange1.getStart(), (int64_t) 500);
+                CHECK_EQ (tr.timelineRange1.getEnd(), (int64_t) 1500);
+                CHECK_EQ (tr.timelineRange2.getStart(), (int64_t) 0);
+                CHECK_EQ (tr.timelineRange2.getEnd(), (int64_t) 0);
             }
         }
 
-        beginTest ("PlayHead playing");
+        // PlayHead playing
         {
             {
                 PlayHead playHead;
                 playHead.play ({ 0, 10'000 }, false);
                 juce::Range<int64_t> referenceRange;
 
-                expectEquals<int64_t> (playHead.getPosition(), 0);
-                expectEquals<int64_t> (playHead.referenceSamplePositionToTimelinePosition (0), 0);
+                CHECK_EQ (playHead.getPosition(), (int64_t) 0);
+                CHECK_EQ (playHead.referenceSamplePositionToTimelinePosition (0), (int64_t) 0);
 
                 referenceRange += 500;
                 playHead.setReferenceSampleRange (referenceRange);
-                expectEquals<int64_t> (playHead.getPosition(), 500);
-                expectEquals<int64_t> (playHead.referenceSamplePositionToTimelinePosition (0), 0);
+                CHECK_EQ (playHead.getPosition(), (int64_t) 500);
+                CHECK_EQ (playHead.referenceSamplePositionToTimelinePosition (0), (int64_t) 0);
 
                 referenceRange += 1000;
                 playHead.setReferenceSampleRange (referenceRange);
-                expectEquals<int64_t> (playHead.getPosition(), 1500);
-                expectEquals<int64_t> (playHead.referenceSamplePositionToTimelinePosition (0), 0);
+                CHECK_EQ (playHead.getPosition(), (int64_t) 1500);
+                CHECK_EQ (playHead.referenceSamplePositionToTimelinePosition (0), (int64_t) 0);
 
                 playHead.stop();
                 referenceRange += 500;
                 playHead.setReferenceSampleRange (referenceRange);
-                expectEquals<int64_t> (playHead.getPosition(), 1500); // timeline position hasn't moved
-                expectEquals<int64_t> (playHead.referenceSamplePositionToTimelinePosition (0), 1500); // ref position is at the previous timeline pos
+                CHECK_EQ (playHead.getPosition(), (int64_t) 1500);
+                CHECK_EQ (playHead.referenceSamplePositionToTimelinePosition (0), (int64_t) 1500);
 
                 playHead.play();
-                expectEquals<int64_t> (playHead.getPosition(), 1500);
-                // ref position is now synced to the last timeline pos (2000)
-                expectEquals<int64_t> (playHead.referenceSamplePositionToTimelinePosition (0), -500);
-                expectEquals<int64_t> (playHead.getPosition(), 1500);
+                CHECK_EQ (playHead.getPosition(), (int64_t) 1500);
+                CHECK_EQ (playHead.referenceSamplePositionToTimelinePosition (0), (int64_t) -500);
+                CHECK_EQ (playHead.getPosition(), (int64_t) 1500);
                 referenceRange += 500;
                 playHead.setReferenceSampleRange (referenceRange);
-                expectEquals<int64_t> (playHead.getPosition(), 2000);
-                expectEquals<int64_t> (playHead.referenceSamplePositionToTimelinePosition (0), -500);
+                CHECK_EQ (playHead.getPosition(), (int64_t) 2000);
+                CHECK_EQ (playHead.referenceSamplePositionToTimelinePosition (0), (int64_t) -500);
             }
 
             {
@@ -117,33 +106,33 @@ private:
                     playHead.setReferenceSampleRange ({ referencePos, referencePos });
                 };
 
-                expectEquals<int64_t> (playHead.getPosition(), 0);
+                CHECK_EQ (playHead.getPosition(), (int64_t) 0);
                 incrementReferencePos (1000);
-                expectEquals<int64_t> (playHead.getPosition(), 1000);
-                expectEquals<int64_t> (playHead.referenceSamplePositionToTimelinePosition (referencePos), playHead.getPosition());
+                CHECK_EQ (playHead.getPosition(), (int64_t) 1000);
+                CHECK_EQ (playHead.referenceSamplePositionToTimelinePosition (referencePos), playHead.getPosition());
 
                 {
                     const auto tr = referenceSampleRangeToSplitTimelineRange (playHead, { referencePos, referencePos + 500 });
 
-                    expect (! tr.isSplit);
-                    expectEquals<int64_t> (tr.timelineRange1.getStart(), 1000);
-                    expectEquals<int64_t> (tr.timelineRange1.getEnd(), 1500);
-                    expectEquals<int64_t> (tr.timelineRange2.getStart(), 0);
-                    expectEquals<int64_t> (tr.timelineRange2.getEnd(), 0);
+                    CHECK (! tr.isSplit);
+                    CHECK_EQ (tr.timelineRange1.getStart(), (int64_t) 1000);
+                    CHECK_EQ (tr.timelineRange1.getEnd(), (int64_t) 1500);
+                    CHECK_EQ (tr.timelineRange2.getStart(), (int64_t) 0);
+                    CHECK_EQ (tr.timelineRange2.getEnd(), (int64_t) 0);
                 }
 
                 incrementReferencePos (500);
-                expectEquals<int64_t> (playHead.getPosition(), 1500);
-                expectEquals<int64_t> (playHead.referenceSamplePositionToTimelinePosition (referencePos), playHead.getPosition());
+                CHECK_EQ (playHead.getPosition(), (int64_t) 1500);
+                CHECK_EQ (playHead.referenceSamplePositionToTimelinePosition (referencePos), playHead.getPosition());
 
                 {
                     const auto tr = referenceSampleRangeToSplitTimelineRange (playHead, { referencePos, referencePos + 1000 });
 
-                    expect (tr.isSplit);
-                    expectEquals<int64_t> (tr.timelineRange1.getStart(), 1500);
-                    expectEquals<int64_t> (tr.timelineRange1.getEnd(), 2000);
-                    expectEquals<int64_t> (tr.timelineRange2.getStart(), 0);
-                    expectEquals<int64_t> (tr.timelineRange2.getEnd(), 500);
+                    CHECK (tr.isSplit);
+                    CHECK_EQ (tr.timelineRange1.getStart(), (int64_t) 1500);
+                    CHECK_EQ (tr.timelineRange1.getEnd(), (int64_t) 2000);
+                    CHECK_EQ (tr.timelineRange2.getStart(), (int64_t) 0);
+                    CHECK_EQ (tr.timelineRange2.getEnd(), (int64_t) 500);
                 }
             }
 
@@ -158,33 +147,33 @@ private:
                     playHead.setReferenceSampleRange ({ referencePos, referencePos });
                 };
 
-                expectEquals<int64_t> (playHead.getPosition(), 1'000);
+                CHECK_EQ (playHead.getPosition(), (int64_t) 1'000);
                 incrementReferencePos (1'000);
-                expectEquals<int64_t> (playHead.getPosition(), 2'000);
-                expectEquals<int64_t> (playHead.referenceSamplePositionToTimelinePosition (referencePos), playHead.getPosition());
+                CHECK_EQ (playHead.getPosition(), (int64_t) 2'000);
+                CHECK_EQ (playHead.referenceSamplePositionToTimelinePosition (referencePos), playHead.getPosition());
 
                 {
                     const auto tr = referenceSampleRangeToSplitTimelineRange (playHead, { referencePos, referencePos + 500 });
 
-                    expect (! tr.isSplit);
-                    expectEquals<int64_t> (tr.timelineRange1.getStart(), 2'000);
-                    expectEquals<int64_t> (tr.timelineRange1.getEnd(), 2'500);
-                    expectEquals<int64_t> (tr.timelineRange2.getStart(), 0);
-                    expectEquals<int64_t> (tr.timelineRange2.getEnd(), 0);
+                    CHECK (! tr.isSplit);
+                    CHECK_EQ (tr.timelineRange1.getStart(), (int64_t) 2'000);
+                    CHECK_EQ (tr.timelineRange1.getEnd(), (int64_t) 2'500);
+                    CHECK_EQ (tr.timelineRange2.getStart(), (int64_t) 0);
+                    CHECK_EQ (tr.timelineRange2.getEnd(), (int64_t) 0);
                 }
 
                 incrementReferencePos (500);
-                expectEquals<int64_t> (playHead.getPosition(), 2'500);
-                expectEquals<int64_t> (playHead.referenceSamplePositionToTimelinePosition (referencePos), playHead.getPosition());
+                CHECK_EQ (playHead.getPosition(), (int64_t) 2'500);
+                CHECK_EQ (playHead.referenceSamplePositionToTimelinePosition (referencePos), playHead.getPosition());
 
                 {
                     const auto tr = referenceSampleRangeToSplitTimelineRange (playHead, { referencePos, referencePos + 1'000 });
 
-                    expect (tr.isSplit);
-                    expectEquals<int64_t> (tr.timelineRange1.getStart(), 2'500);
-                    expectEquals<int64_t> (tr.timelineRange1.getEnd(), 3'000);
-                    expectEquals<int64_t> (tr.timelineRange2.getStart(), 1'000);
-                    expectEquals<int64_t> (tr.timelineRange2.getEnd(), 1'500);
+                    CHECK (tr.isSplit);
+                    CHECK_EQ (tr.timelineRange1.getStart(), (int64_t) 2'500);
+                    CHECK_EQ (tr.timelineRange1.getEnd(), (int64_t) 3'000);
+                    CHECK_EQ (tr.timelineRange2.getStart(), (int64_t) 1'000);
+                    CHECK_EQ (tr.timelineRange2.getEnd(), (int64_t) 1'500);
                 }
             }
 
@@ -192,21 +181,19 @@ private:
                 PlayHead playHead;
                 playHead.play ({ 1'000, 3'000 }, true);
                 playHead.setRollInToLoop (500);
-                expect (playHead.isPlaying());
-                expect (playHead.isLooping());
-                expect (playHead.isRollingIntoLoop());
+                CHECK (playHead.isPlaying());
+                CHECK (playHead.isLooping());
+                CHECK (playHead.isRollingIntoLoop());
 
-                expectEquals<int64_t> (playHead.getPosition(), 500);
+                CHECK_EQ (playHead.getPosition(), (int64_t) 500);
                 playHead.setReferenceSampleRange ({ 500, 500 });
-                expectEquals<int64_t> (playHead.getPosition(), 1'000);
-                expect (! playHead.isRollingIntoLoop());
+                CHECK_EQ (playHead.getPosition(), (int64_t) 1'000);
+                CHECK (! playHead.isRollingIntoLoop());
             }
         }
     }
-};
+}
 
-static PlayHeadTests playHeadTests;
+} // namespace tracktion::inline graph
 
 #endif
-
-}

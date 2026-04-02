@@ -10,29 +10,17 @@
 
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_CLIPSLOT
 
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
  #include "../../../tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
 
 namespace tracktion::inline engine {
 
-//==============================================================================
-//==============================================================================
-class ClipSlotTests : public juce::UnitTest
+TEST_SUITE ("tracktion_engine")
 {
-public:
-    ClipSlotTests()
-        : juce::UnitTest ("ClipSlot", "tracktion_engine")
-    {
-    }
-
-    void runTest() override
+    TEST_CASE ("ClipSlot")
     {
         auto& engine = *Engine::getEngines()[0];
-        runBasicClipSlotTests (engine);
-    }
 
-private:
-    void runBasicClipSlotTests (Engine& engine)
-    {
         auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0, 2, 220.0f);
 
         auto edit = test_utilities::createTestEdit (engine, 1);
@@ -40,47 +28,45 @@ private:
         auto& clipSlots = track->getClipSlotList();
         auto& sceneList = edit->getSceneList();
 
-        beginTest ("Basic ClipSlot");
+        // Basic ClipSlot
         {
-            expectEquals (clipSlots.getClipSlots().size(), 0);
+            CHECK_EQ (clipSlots.getClipSlots().size(), 0);
 
             clipSlots.ensureNumberOfSlots (1);
-            expectEquals (clipSlots.getClipSlots().size(), 1);
+            CHECK_EQ (clipSlots.getClipSlots().size(), 1);
 
             auto clipSlot = clipSlots.getClipSlots()[0];
-            expect (findClipSlotForID (*edit, clipSlot->itemID) != nullptr);
+            CHECK (findClipSlotForID (*edit, clipSlot->itemID) != nullptr);
             auto wac = insertWaveClip (*clipSlot, {}, sinFile->getFile(), {}, DeleteExistingClips::no);
-            expect (wac != nullptr);
+            CHECK (wac != nullptr);
 
-            expect (clipSlot->getClip() == wac.get());
-            expect (clipSlot->getClip()->getSourceFileReference().getFile() == sinFile->getFile());
+            CHECK (clipSlot->getClip() == wac.get());
+            CHECK (clipSlot->getClip()->getSourceFileReference().getFile() == sinFile->getFile());
         }
 
-        beginTest ("Scenes");
+        // Scenes
         {
             sceneList.ensureNumberOfScenes (clipSlots.getClipSlots().size());
-            expectEquals (sceneList.getNumScenes(), 1);
+            CHECK_EQ (sceneList.getNumScenes(), 1);
         }
 
-        beginTest ("New track");
+        // New track
         {
             auto newTrack = edit->insertNewAudioTrack (TrackInsertPoint ({}), nullptr);
-            expectEquals (newTrack->getClipSlotList().getClipSlots().size(), sceneList.getNumScenes());
+            CHECK_EQ (newTrack->getClipSlotList().getClipSlots().size(), sceneList.getNumScenes());
         }
 
-        beginTest ("Delete all tracks");
+        // Delete all tracks
         {
             for (auto at : getAudioTracks (*edit))
                 edit->deleteTrack (at);
 
             auto newTrack = edit->insertNewAudioTrack (TrackInsertPoint ({}), nullptr);
-            expectEquals (sceneList.getNumScenes(), 1);
-            expectEquals (newTrack->getClipSlotList().getClipSlots().size(), edit->getSceneList().getNumScenes());
+            CHECK_EQ (sceneList.getNumScenes(), 1);
+            CHECK_EQ (newTrack->getClipSlotList().getClipSlots().size(), edit->getSceneList().getNumScenes());
         }
     }
-};
-
-static ClipSlotTests clipSlotTests;
+}
 
 } // namespace tracktion::inline engine
 

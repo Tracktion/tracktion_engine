@@ -225,25 +225,10 @@ TEST_SUITE("tracktion_engine")
     }
 }
 
-//==============================================================================
-//==============================================================================
-class EditTests : public juce::UnitTest
+TEST_SUITE ("tracktion_engine")
 {
-public:
-    EditTests()
-        : juce::UnitTest ("Edit", "tracktion_engine")
-    {}
-
-    void runTest() override
+    TEST_CASE ("Edit: File preview Edit")
     {
-        testFilePreviewing();
-    }
-
-private:
-    void testFilePreviewing()
-    {
-        beginTest ("File preview Edit");
-
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
 
         auto editToMatch = Edit::createSingleTrackEdit (engine);
@@ -253,12 +238,10 @@ private:
 
         auto edit = Edit::createEditForPreviewingFile (engine, sinFile->getFile(), editToMatch.get(),
                                                        true, true, &couldMatchTempo, {});
-        expect (edit != nullptr);
-        expect (! couldMatchTempo);
+        CHECK (edit != nullptr);
+        CHECK (! couldMatchTempo);
     }
-};
-
-static EditTests editTests;
+}
 
 } // namespace tracktion::inline engine
 

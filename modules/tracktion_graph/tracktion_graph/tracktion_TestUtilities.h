@@ -14,6 +14,10 @@
 #include <juce_audio_formats/juce_audio_formats.h>
 #include "../../tracktion_engine/audio_files/formats/tracktion_FloatAudioFileFormat.h"
 
+#if TRACKTION_UNIT_TESTS
+ #include "../../3rd_party/doctest/tracktion_doctest.hpp"
+#endif
+
 namespace tracktion::inline graph {
 
 //==============================================================================
@@ -493,6 +497,131 @@ namespace test_utilities
     }
 
     //==============================================================================
+    // Doctest-compatible overloads (no juce::UnitTest& parameter)
+    //==============================================================================
+   #ifdef DOCTEST_LIBRARY_INCLUDED
+
+    static inline void logMidiMessageSequence (const juce::MidiMessageSequence& seq)
+    {
+        for (int i = 0; i < seq.getNumEvents(); ++i)
+            MESSAGE ((seq.getEventPointer (i)->message.getDescription() + " - " + juce::String (seq.getEventPointer (i)->message.getTimeStamp())).toStdString());
+    }
+
+    static inline void expectMidiMessageSequence (const juce::MidiMessageSequence& actual, const juce::MidiMessageSequence& expected)
+    {
+        CHECK_EQ (actual.getNumEvents(), expected.getNumEvents());
+
+        bool sequencesTheSame = true;
+
+        for (int i = 0; i < std::min (actual.getNumEvents(), expected.getNumEvents()); ++i)
+        {
+            auto event1 = actual.getEventPointer (i);
+            auto event2 = expected.getEventPointer (i);
+
+            auto desc1 = event1->message.getDescription();
+            auto desc2 = event2->message.getDescription();
+
+            if (desc1 != desc2)
+            {
+                MESSAGE ((juce::String ("Event at index 123 is:\n\tactual: XXX\n\texpected is: YYY")
+                                .replace ("123", juce::String (i)).replace ("XXX", desc1).replace ("YYY", desc2)).toStdString());
+                sequencesTheSame = false;
+            }
+        }
+
+        for (int i = actual.getNumEvents(); i < expected.getNumEvents(); ++i)
+        {
+            auto event2 = expected.getEventPointer (i);
+            auto desc2 = event2->message.getDescription();
+            MESSAGE ((juce::String ("Missing event at index 123 is:\n\texpected is: YYY, TTT")
+                            .replace ("123", juce::String (i)).replace ("YYY", desc2).replace ("TTT", juce::String (event2->message.getTimeStamp()))).toStdString());
+        }
+
+        for (int i = expected.getNumEvents(); i < actual.getNumEvents(); ++i)
+        {
+            auto event2 = actual.getEventPointer (i);
+            auto desc2 = event2->message.getDescription();
+            MESSAGE ((juce::String ("Extra event at index 123 is:\n\tactual is: YYY, TTT")
+                            .replace ("123", juce::String (i)).replace ("YYY", desc2).replace ("TTT", juce::String (event2->message.getTimeStamp()))).toStdString());
+        }
+
+        CHECK_MESSAGE (sequencesTheSame, "MIDI sequence contents not equal");
+
+        if (! sequencesTheSame)
+        {
+            MESSAGE ("Actual:");
+            logMidiMessageSequence (actual);
+            MESSAGE ("Expected:");
+            logMidiMessageSequence (expected);
+        }
+    }
+
+    static inline void expectMidiBuffer (const juce::MidiBuffer& buffer, double sampleRate, const juce::MidiMessageSequence& seq)
+    {
+        expectMidiMessageSequence (createMidiMessageSequence (buffer, sampleRate), seq);
+    }
+
+    static inline void expectAudioBuffer (const juce::AudioBuffer<float>& buffer, int channel, float mag, float rms)
+    {
+        CHECK (std::abs (buffer.getMagnitude (channel, 0, buffer.getNumSamples()) - mag) <= 0.01f);
+        CHECK (std::abs (buffer.getRMSLevel (channel, 0, buffer.getNumSamples()) - rms) <= 0.01f);
+    }
+
+    static inline void expectAudioBuffer (juce::AudioBuffer<float>& buffer, int channel, int numSampleToSplitAt,
+                                          float mag1, float rms1, float mag2, float rms2)
+    {
+        {
+            juce::AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(), buffer.getNumChannels(),
+                                                    0, numSampleToSplitAt);
+            expectAudioBuffer (trimmedBuffer, channel, mag1, rms1);
+        }
+
+        {
+            juce::AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(),
+                                                    buffer.getNumChannels(),
+                                                    numSampleToSplitAt, buffer.getNumSamples() - numSampleToSplitAt);
+            expectAudioBuffer (trimmedBuffer, channel, mag2, rms2);
+        }
+    }
+
+    template<typename IntType>
+    static inline void expectAudioBuffer (juce::AudioBuffer<float>& buffer, int channel, juce::Range<IntType> sampleRange,
+                                          float mag, float rms)
+    {
+        juce::AudioBuffer<float> trimmedBuffer (buffer.getArrayOfWritePointers(),
+                                                buffer.getNumChannels(),
+                                                (int) sampleRange.getStart(), (int) sampleRange.getLength());
+        expectAudioBuffer (trimmedBuffer, channel, mag, rms);
+    }
+
+    static inline void expectAudioBuffer (const juce::AudioBuffer<float>& a, const juce::AudioBuffer<float>& b)
+    {
+        CHECK (a.getNumChannels() == b.getNumChannels());
+        CHECK (a.getNumSamples() == b.getNumSamples());
+
+        for (int channel = 0; channel < a.getNumChannels(); ++channel)
+        {
+            auto* aPtr = a.getReadPointer (channel);
+            auto* bPtr = b.getReadPointer (channel);
+
+            bool equal = std::vector<float> (aPtr, aPtr + a.getNumSamples())
+                       == std::vector<float> (bPtr, bPtr + b.getNumSamples());
+            CHECK (equal);
+        }
+    }
+
+    static inline void expectUniqueNodeIDs (Node& node, bool ignoreZeroIDs)
+    {
+        auto areUnique = node_player_utils::areNodeIDsUnique (node, ignoreZeroIDs);
+        CHECK_MESSAGE (areUnique, "nodeIDs are not unique");
+
+        if (! areUnique)
+            visitNodes (node, [&] (Node& n) { MESSAGE ((juce::String (typeid (n).name()) + " - " + juce::String (n.getNodeProperties().nodeID)).toStdString()); }, false);
+    }
+
+   #endif // DOCTEST_LIBRARY_INCLUDED
+
+    //==============================================================================
     inline std::optional<std::pair<choc::buffer::FrameCount, float>> findFirstNonZeroSample (choc::buffer::MonoView<float> buffer)
     {
         auto size = buffer.getSize();
@@ -539,6 +668,27 @@ namespace test_utilities
 
         return setups;
     }
+
+   #ifdef DOCTEST_LIBRARY_INCLUDED
+    /** Returns a set of TestSetups to be used for testing (doctest version). */
+    static inline std::vector<TestSetup> getTestSetups()
+    {
+        std::vector<TestSetup> setups;
+
+       #if JUCE_DEBUG || GRAPH_UNIT_TESTS_QUICK_VALIDATE
+        for (double sampleRate : { 44100.0, 96000.0 })
+            for (int blockSize : { 64, 512 })
+       #else
+        for (double sampleRate : { 44100.0, 48000.0, 96000.0 })
+            for (int blockSize : { 64, 256, 512, 1024 })
+       #endif
+        for (bool randomiseBlockSizes : { false, true })
+            setups.push_back ({ sampleRate, blockSize, randomiseBlockSizes,
+                                juce::Random (static_cast<juce::int64> (doctest::getContextOptions()->rand_seed)) });
+
+        return setups;
+    }
+   #endif // DOCTEST_LIBRARY_INCLUDED
 
     //==============================================================================
     struct TestContext

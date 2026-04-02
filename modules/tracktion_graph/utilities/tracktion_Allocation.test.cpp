@@ -13,32 +13,27 @@
 
 namespace tracktion::inline graph {
 
+} // namespace tracktion::inline graph
+
 #if GRAPH_UNIT_TESTS_ALLOCATION
 
-class AllocationTests    : public juce::UnitTest
+#include "../../3rd_party/doctest/tracktion_doctest.hpp"
+
+namespace tracktion::inline graph {
+
+TEST_SUITE ("tracktion_graph")
 {
-public:
-    AllocationTests()
-        : juce::UnitTest ("Allocation", "tracktion_graph") {}
-
-    //==============================================================================
-    void runTest() override
+    TEST_CASE ("Allocation")
     {
-        runRPMallocTests();
-    }
-
-private:
-    void runRPMallocTests()
-    {
-        beginTest ("rpmalloc single thread");
+        SUBCASE ("rpmalloc single thread")
         {
-            expectEquals (rpmalloc_initialize(), 0, "rpmalloc_initialize failed");
+            CHECK_EQ (rpmalloc_initialize(), 0);
 
             {
                 constexpr size_t numFloats = 256;
                 constexpr size_t numBytes = numFloats * sizeof (float);
                 auto data = static_cast<float*> (rpmalloc (numBytes));
-                expect (data != nullptr);
+                CHECK (data != nullptr);
 
                 std::fill_n (data, numFloats, 0.7f);
 
@@ -49,7 +44,7 @@ private:
                 constexpr size_t numFloats = 256;
                 constexpr size_t numBytes = numFloats * sizeof (float);
                 auto data = static_cast<float*> (rpmalloc (numBytes));
-                expect (data != nullptr);
+                CHECK (data != nullptr);
 
                 std::fill_n (data, numFloats, 0.7f);
 
@@ -59,9 +54,9 @@ private:
             rpmalloc_finalize();
         }
 
-        beginTest ("rpmalloc multi thread");
+        SUBCASE ("rpmalloc multi thread")
         {
-            expectEquals (rpmalloc_initialize(), 0, "rpmalloc_initialize failed");
+            CHECK_EQ (rpmalloc_initialize(), 0);
 
             constexpr size_t numInts = 256;
             constexpr size_t numBytes = numInts * sizeof (float);
@@ -72,10 +67,10 @@ private:
                                 rpmalloc_thread_initialize();
 
                                 data1 = static_cast<int*> (rpmalloc (numBytes));
-                                expect (data1 != nullptr);
+                                CHECK (data1 != nullptr);
                                 std::fill_n (data1, numInts, 42);
-                                expectEquals (*data1, 42);
-                                expectEquals (data1[numInts - 1], 42);
+                                CHECK_EQ (*data1, 42);
+                                CHECK_EQ (data1[numInts - 1], 42);
 
                                 rpmalloc_thread_finalize();
                             });
@@ -86,86 +81,86 @@ private:
                                 rpmalloc_thread_initialize();
 
                                 data2 = static_cast<int*> (rpmalloc (numBytes));
-                                expect (data2 != nullptr);
+                                CHECK (data2 != nullptr);
                                 std::fill_n (data2, numInts, 42);
-                                expectEquals (*data2, 42);
-                                expectEquals (data2[numInts - 1], 42);
+                                CHECK_EQ (*data2, 42);
+                                CHECK_EQ (data2[numInts - 1], 42);
 
-                                expectEquals (*data1, 42);
-                                expectEquals (data1[numInts - 1], 42);
+                                CHECK_EQ (*data1, 42);
+                                CHECK_EQ (data1[numInts - 1], 42);
                                 rpfree (data1);
 
                                 rpmalloc_thread_finalize();
                             });
 
             t2.join();
-            expectEquals (*data2, 42);
-            expectEquals (data2[numInts - 1], 42);
+            CHECK_EQ (*data2, 42);
+            CHECK_EQ (data2[numInts - 1], 42);
             rpfree (data2);
 
             rpmalloc_finalize();
         }
 
-        beginTest ("rpallocator");
+        SUBCASE ("rpallocator")
         {
             std::vector<int, rpallocator<int>> intVec (1024, 0);
             std::fill (intVec.begin(), intVec.end(), 42);
-            expectEquals (*intVec.begin(), 42);
-            expectEquals (intVec[intVec.size() - 1], 42);
+            CHECK_EQ (*intVec.begin(), 42);
+            CHECK_EQ (intVec[intVec.size() - 1], 42);
 
             intVec.push_back (43);
-            expectEquals (*intVec.begin(), 42);
-            expectEquals (intVec[intVec.size() - 1], 43);
+            CHECK_EQ (*intVec.begin(), 42);
+            CHECK_EQ (intVec[intVec.size() - 1], 43);
         }
 
-        beginTest ("rpallocator cross-thread");
+        SUBCASE ("rpallocator cross-thread")
         {
             std::vector<int, rpallocator<int>> intVec1 (1024, 1);
 
-            std::thread t1 ([this, &intVec1]
+            std::thread t1 ([&intVec1]
                             {
-                                expectEquals (*intVec1.begin(), 1);
-                                expectEquals (intVec1[intVec1.size() - 1], 1);
+                                CHECK_EQ (*intVec1.begin(), 1);
+                                CHECK_EQ (intVec1[intVec1.size() - 1], 1);
 
                                 std::vector<int, rpallocator<int>> intVec2 (1024, 2);
-                                expectEquals (*intVec2.begin(), 2);
-                                expectEquals (intVec2[intVec2.size() - 1], 2);
+                                CHECK_EQ (*intVec2.begin(), 2);
+                                CHECK_EQ (intVec2[intVec2.size() - 1], 2);
 
                                 intVec1.push_back (43);
-                                expectEquals (*intVec1.begin(), 1);
-                                expectEquals (intVec1[intVec1.size() - 1], 43);
+                                CHECK_EQ (*intVec1.begin(), 1);
+                                CHECK_EQ (intVec1[intVec1.size() - 1], 43);
                             });
 
-            std::thread t2 ([this, &intVec1, &t1]
+            std::thread t2 ([&intVec1, &t1]
                             {
                                 t1.join();
 
                                 intVec1.push_back (44);
-                                expectEquals (*intVec1.begin(), 1);
-                                expectEquals (intVec1[intVec1.size() - 1], 44);
+                                CHECK_EQ (*intVec1.begin(), 1);
+                                CHECK_EQ (intVec1[intVec1.size() - 1], 44);
                             });
 
             t2.join();
             intVec1.push_back (45);
-            expectEquals (*intVec1.begin(), 1);
-            expectEquals (intVec1[intVec1.size() - 3], 43);
-            expectEquals (intVec1[intVec1.size() - 2], 44);
-            expectEquals (intVec1[intVec1.size() - 1], 45);
+            CHECK_EQ (*intVec1.begin(), 1);
+            CHECK_EQ (intVec1[intVec1.size() - 3], 43);
+            CHECK_EQ (intVec1[intVec1.size() - 2], 44);
+            CHECK_EQ (intVec1[intVec1.size() - 1], 45);
 
-            std::thread t3 ([this, &intVec1]
+            std::thread t3 ([&intVec1]
                             {
                                 intVec1.clear();
-                                expect (intVec1.size() == 0);
-                                expect (intVec1.capacity() > 0);
+                                CHECK (intVec1.size() == 0);
+                                CHECK (intVec1.capacity() > 0);
                                 intVec1.shrink_to_fit();
-                                expect (intVec1.capacity() == 0);
+                                CHECK (intVec1.capacity() == 0);
                             });
             t3.join();
-            expect (intVec1.size() == 0);
-            expect (intVec1.capacity() == 0);
+            CHECK (intVec1.size() == 0);
+            CHECK (intVec1.capacity() == 0);
         }
 
-        beginTest ("rpallocator multi-thread");
+        SUBCASE ("rpallocator multi-thread")
         {
             // Create 20 threads
             // Randomly push or pop ints in to a vector
@@ -214,13 +209,11 @@ private:
             for (auto& thread : pool)
                 thread.join();
 
-            expect (true);
+            CHECK (true);
         }
     }
-};
-
-static AllocationTests allocationTests;
-
-#endif
+}
 
 } // namespace tracktion::inline graph
+
+#endif
