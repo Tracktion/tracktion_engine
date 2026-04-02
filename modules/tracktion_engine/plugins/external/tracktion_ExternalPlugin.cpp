@@ -199,15 +199,14 @@ struct AsyncPluginDeleter  : private juce::Timer,
         }
     }
 
-    bool releaseNextDanglingPlugin()
+    /** Sets a callback to be invoked when all queued plugins have been deleted.
+        If the queue is already empty, calls the callback immediately. */
+    void callOnceEmpty (std::function<void()> cb)
     {
-        if (plugins.size() > 0)
-        {
-            timerCallback();
-            return true;
-        }
+        onEmptyCallback = std::move (cb);
 
-        return false;
+        if (plugins.isEmpty() && onEmptyCallback)
+            onEmptyCallback();
     }
 
     void timerCallback() override
@@ -215,6 +214,10 @@ struct AsyncPluginDeleter  : private juce::Timer,
         if (plugins.isEmpty())
         {
             stopTimer();
+
+            if (onEmptyCallback)
+                onEmptyCallback();
+
             return;
         }
 
@@ -234,6 +237,7 @@ struct AsyncPluginDeleter  : private juce::Timer,
 private:
     juce::OwnedArray<juce::AudioPluginInstance> plugins;
     bool recursive = false;
+    std::function<void()> onEmptyCallback;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AsyncPluginDeleter)
 };
@@ -242,20 +246,15 @@ JUCE_IMPLEMENT_SINGLETON (AsyncPluginDeleter)
 
 void cleanUpDanglingPlugins()
 {
-   #if JUCE_MODAL_LOOPS_PERMITTED
-    if (auto d = AsyncPluginDeleter::getInstanceWithoutCreating())
-    {
-        for (int count = 400; --count > 0 && d->releaseNextDanglingPlugin();)
-        {
-            juce::Component modal;
-            modal.enterModalState (false);
-
-            juce::MessageManager::getInstance()->runDispatchLoopUntil (10);
-        }
-    }
-   #endif
-
     AsyncPluginDeleter::deleteInstance();
+}
+
+void waitForPluginDeletion (std::function<void()> onComplete)
+{
+    if (auto d = AsyncPluginDeleter::getInstanceWithoutCreating())
+        d->callOnceEmpty (std::move (onComplete));
+    else if (onComplete)
+        onComplete();
 }
 
 //==============================================================================
