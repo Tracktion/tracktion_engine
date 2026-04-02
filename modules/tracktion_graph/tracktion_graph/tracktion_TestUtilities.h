@@ -14,7 +14,7 @@
 #include <juce_audio_formats/juce_audio_formats.h>
 #include "../../tracktion_engine/audio_files/formats/tracktion_FloatAudioFileFormat.h"
 
-#if TRACKTION_UNIT_TESTS
+#if TRACKTION_UNIT_TESTS || TRACKTION_BENCHMARKS
  #include "../../3rd_party/doctest/tracktion_doctest.hpp"
 #endif
 
