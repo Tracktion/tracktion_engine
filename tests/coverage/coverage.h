@@ -60,7 +60,9 @@ int main (int argc, char** argv)
     CoutLogger logger;
     Logger::setCurrentLogger (&logger);
 
-    tracktion_engine::Engine engine { ProjectInfo::projectName, std::make_unique<TestUIBehaviour>(), std::make_unique<TestEngineBehaviour>() };
+    tracktion_engine::Engine engine { std::make_unique<TestPropertyStorage> (ProjectInfo::projectName),
+                                      std::make_unique<TestUIBehaviour>(),
+                                      std::make_unique<TestEngineBehaviour>() };
 
     int numFailures = 0;
 

@@ -78,6 +78,40 @@ public:
 
 //==============================================================================
 //==============================================================================
+class TestPropertyStorage : public PropertyStorage
+{
+public:
+    TestPropertyStorage (juce::StringRef appName_)
+        : PropertyStorage (appName_)
+    {
+        getAppCacheFolder().deleteRecursively (false);
+        getAppPrefsFolder().deleteRecursively (false);
+    }
+
+    ~TestPropertyStorage() override
+    {
+        getAppCacheFolder().deleteRecursively (false);
+        getAppPrefsFolder().deleteRecursively (false);
+    }
+
+    //==============================================================================
+    void removeProperty (SettingID) override {}
+    juce::var getProperty (SettingID, const juce::var& defaultValue) override { return defaultValue; }
+    void setProperty (SettingID, const juce::var&) override {}
+    std::unique_ptr<juce::XmlElement> getXmlProperty (SettingID) override { return {}; }
+    void setXmlProperty (SettingID, const juce::XmlElement&) override {}
+
+    //==============================================================================
+    void removePropertyItem (SettingID, juce::StringRef) override {}
+    juce::var getPropertyItem (SettingID, juce::StringRef, const juce::var& defaultValue) override { return defaultValue; }
+    void setPropertyItem (SettingID, juce::StringRef, const juce::var&) override {}
+    std::unique_ptr<juce::XmlElement> getXmlPropertyItem (SettingID, juce::StringRef) override { return {}; }
+    void setXmlPropertyItem (SettingID, juce::StringRef, const juce::XmlElement&) override {}
+};
+
+
+//==============================================================================
+//==============================================================================
 struct CoutLogger : public Logger
 {
     void logMessage (const String& message) override
