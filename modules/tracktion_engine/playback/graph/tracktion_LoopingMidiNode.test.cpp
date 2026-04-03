@@ -118,7 +118,7 @@ TEST_CASE ("LoopingMidiNode")
         MESSAGE (juce::String ("Test setup: sample rate SR, block size BS, random blocks RND")
                     .replace ("SR", juce::String (setup.sampleRate))
                     .replace ("BS", juce::String (setup.blockSize))
-                    .replace ("RND", setup.randomiseBlockSizes ? "Y" : "N").toRawUTF8());
+                    .replace ("RND", setup.randomiseBlockSizes ? "Y" : "N").toStdString());
 
         // runMidiTests
         {

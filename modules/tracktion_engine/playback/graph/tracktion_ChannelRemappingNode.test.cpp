@@ -141,7 +141,7 @@ TEST_CASE ("ChannelRemappingNode")
     {
         MESSAGE (juce::String ("Test setup: sample rate SR, block size BS")
                     .replace ("SR", juce::String (setup.sampleRate))
-                    .replace ("BS", juce::String (setup.blockSize)).toRawUTF8());
+                    .replace ("BS", juce::String (setup.blockSize)).toStdString());
 
         auto ts = setup;
 
