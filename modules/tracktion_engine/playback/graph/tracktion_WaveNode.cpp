@@ -596,6 +596,7 @@ public:
     {
         timeStretcher.initialise (source->getSampleRate(), chunkSize, numChannels,
                                   mode, elastiqueProOptions, true);
+        latencySamples = timeStretcher.getLatencySamples();
         inputFifo.setSize (numChannels, timeStretcher.getMaxFramesNeeded() + 1);
         outputFifo.setSize (numChannels, timeStretcher.getMaxFramesNeeded() + 1);
 
@@ -604,6 +605,7 @@ public:
         setSpeedAndPitch (playbackSpeedRatio, semitonesShift);
         inputFifo.reset();
         outputFifo.reset();
+        primeStretcher();
     }
 
     SampleCount getPosition() override
@@ -623,6 +625,7 @@ public:
         setSpeedAndPitch (playbackSpeedRatio, semitonesShift);
         inputFifo.reset();
         outputFifo.reset();
+        primeStretcher();
     }
 
     void setPosition (TimePosition t) override
@@ -676,26 +679,8 @@ public:
                 break;
             }
 
-            const auto numThisTime = timeStretcher.getFramesNeeded();
-
-            if (numThisTime > 0)
-            {
-                // Read samples from source and push to fifo
-                AudioScratchBuffer scratchBuffer (numChannels, numThisTime);
-                scratchBuffer.buffer.clear();
-                auto scratchView = toBufferView (scratchBuffer.buffer);
-
-                if (! source->readSamples (scratchView))
-                    return false;
-
-                inputFifo.write (scratchBuffer.buffer);
-            }
-
-            // Push into time-stretcher and read output samples to out fifo
-            assert (inputFifo.getNumReady() >= numThisTime);
-            assert (outputFifo.getFreeSpace() >= numThisTime);
-            assert (outputFifo.getFreeSpace() >= chunkSize);
-            timeStretcher.processData (inputFifo, numThisTime, outputFifo);
+            if (! feedAndProcess())
+                return false;
         }
 
         readPosition += numFramesToDo * playbackSpeedRatio;
@@ -705,6 +690,7 @@ public:
 
     static constexpr int chunkSize = 256;
     const int numChannels;
+    int latencySamples = 0;
     TimeStretcher timeStretcher;
     AudioFifo inputFifo { numChannels, chunkSize }, outputFifo { numChannels, chunkSize };
     double playbackSpeedRatio = 1.0, semitonesShift = 0.0, readPosition = 0.0;
@@ -712,6 +698,61 @@ public:
     SampleCount getReadPosition() const
     {
         return static_cast<SampleCount> (readPosition + 0.5);
+    }
+
+    // Reads source audio, feeds it to the stretcher, and produces output into the FIFO
+    bool feedAndProcess()
+    {
+        const auto numThisTime = timeStretcher.getFramesNeeded();
+
+        if (numThisTime > 0)
+        {
+            AudioScratchBuffer scratchBuffer (numChannels, numThisTime);
+            scratchBuffer.buffer.clear();
+            auto scratchView = toBufferView (scratchBuffer.buffer);
+
+            if (! source->readSamples (scratchView))
+                return false;
+
+            inputFifo.write (scratchBuffer.buffer);
+        }
+
+        assert (inputFifo.getNumReady() >= numThisTime);
+        assert (outputFifo.getFreeSpace() >= numThisTime);
+        assert (outputFifo.getFreeSpace() >= chunkSize);
+        timeStretcher.processData (inputFifo, numThisTime, outputFifo);
+
+        return true;
+    }
+
+    // Pre-feeds real audio into the stretcher and discards the initial output
+    // to handle the stretcher's startup latency locally
+    void primeStretcher()
+    {
+        if (latencySamples <= 0)
+            return;
+
+        // Back up the source to provide real audio context for the warmup
+        auto backupPos = std::max (SampleCount (0), static_cast<SampleCount> (readPosition) - latencySamples);
+        source->setPosition (backupPos);
+
+        // Feed real audio and discard output until we've passed the latency region
+        int outputDiscarded = 0;
+
+        while (outputDiscarded < latencySamples)
+        {
+            feedAndProcess();
+
+            const int available = outputFifo.getNumReady();
+            const int toDiscard = std::min (latencySamples - outputDiscarded, available);
+
+            if (toDiscard > 0)
+            {
+                AudioScratchBuffer discardBuf (numChannels, toDiscard);
+                outputFifo.read (discardBuf.buffer, 0, toDiscard);
+                outputDiscarded += toDiscard;
+            }
+        }
     }
 };
 
@@ -727,10 +768,12 @@ public:
     {
         timeStretcher.initialise (source->getSampleRate(), chunkSize, numChannels,
                                   mode, elastiqueProOptions, true);
+        latencySamples = timeStretcher.getLatencySamples();
 
         source->setPosition (getReadPosition());
         timeStretcher.reset();
         setSpeedAndPitch (playbackSpeedRatio, semitonesShift);
+        primeStretcher();
     }
 
     SampleCount getPosition() override
@@ -748,6 +791,7 @@ public:
         source->setPosition (t);
         timeStretcher.reset();
         setSpeedAndPitch (playbackSpeedRatio, semitonesShift);
+        primeStretcher();
     }
 
     void setPosition (TimePosition t) override
@@ -828,6 +872,7 @@ public:
     }
 
     const int numChannels, chunkSize = 1024;
+    int latencySamples = 0;
     ReadAheadTimeStretcher timeStretcher { 3 };
     double playbackSpeedRatio = 1.0, semitonesShift = 0.0, readPosition = 0.0;
 
@@ -850,6 +895,33 @@ public:
             return false;
 
         return timeStretcher.pushData (scratchBuffer.buffer.getArrayOfReadPointers(), numSourceFrames) == numSourceFrames;
+    }
+
+    // Pre-feeds real audio into the stretcher and discards initial output
+    // to handle the stretcher's startup latency locally
+    void primeStretcher()
+    {
+        if (latencySamples <= 0)
+            return;
+
+        auto backupPos = std::max (SampleCount (0), static_cast<SampleCount> (readPosition) - latencySamples);
+        source->setPosition (backupPos);
+
+        int outputDiscarded = 0;
+
+        while (outputDiscarded < latencySamples)
+        {
+            if (const auto numToPush = timeStretcher.getFramesRecomended(); numToPush > 0)
+                readSourceAndPushFrames (numToPush);
+
+            AudioScratchBuffer discardBuf (numChannels, chunkSize);
+            const int numRead = timeStretcher.popData (discardBuf.buffer.getArrayOfWritePointers(), chunkSize);
+
+            if (numRead <= 0)
+                break;
+
+            outputDiscarded += numRead;
+        }
     }
 };
 
@@ -2026,7 +2098,6 @@ tracktion::graph::NodeProperties WaveNodeRealTime::getNodeProperties()
     props.hasMidi = false;
     props.numberOfChannels = destChannels.getNumChannels();
     props.nodeID = (size_t) editItemID.getRawID();
-
     return props;
 }
 

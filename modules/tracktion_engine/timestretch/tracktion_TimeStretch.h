@@ -176,6 +176,16 @@ public:
     */
     int flush (float* const* outChannels);
 
+    /** Returns the latency in samples introduced by the stretching algorithm.
+        This can be used to report latency to the audio graph for compensation.
+    */
+    int getLatencySamples() const;
+
+    /** Returns the latency for a given mode and sample rate without creating a full stretcher.
+        Useful for reporting latency to the graph before the stretcher is initialised.
+    */
+    static int getLatencySamplesForMode (Mode, double sampleRate, bool realtime);
+
     /** @internal */
     struct Stretcher;
 
