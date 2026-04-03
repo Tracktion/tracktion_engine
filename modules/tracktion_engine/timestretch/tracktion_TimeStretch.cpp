@@ -86,6 +86,7 @@ struct TimeStretcher::Stretcher
     virtual int getMaxFramesNeeded() const = 0;
     virtual int processData (const float* const* inChannels, int numSamples, float* const* outChannels) = 0;
     virtual int flush (float* const* outChannels) = 0;
+    virtual int getLatencySamples() const { return 0; }
 };
 
 //==============================================================================
@@ -866,16 +867,18 @@ namespace tracktion::inline engine {
 struct SignalsmithStretcher  : public TimeStretcher::Stretcher
 {
     SignalsmithStretcher (double sourceSampleRate, int samplesPerBlock, int numChannels_,
-                          TimeStretcher::Mode mode)
+                          TimeStretcher::Mode mode, bool realtime)
         : numChannels (numChannels_),
           samplesPerOutputBuffer (samplesPerBlock)
     {
         CRASH_TRACER
 
+        const bool splitComputation = realtime;
+
         if (mode == TimeStretcher::signalsmithCheaper)
-            stretch.presetCheaper (numChannels, static_cast<float> (sourceSampleRate));
+            stretch.presetCheaper (numChannels, static_cast<float> (sourceSampleRate), splitComputation);
         else
-            stretch.presetDefault (numChannels, static_cast<float> (sourceSampleRate));
+            stretch.presetDefault (numChannels, static_cast<float> (sourceSampleRate), splitComputation);
     }
 
     bool isOk() const override      { return true; }
@@ -883,7 +886,6 @@ struct SignalsmithStretcher  : public TimeStretcher::Stretcher
     void reset() override
     {
         stretch.reset();
-        numSamplesToDrop = -1;
         hasDoneFinalBlock = false;
     }
 
@@ -891,10 +893,6 @@ struct SignalsmithStretcher  : public TimeStretcher::Stretcher
     {
         speedRatio = speedRatio_;
         stretch.setTransposeSemitones (semitonesUp);
-
-        if (numSamplesToDrop == -1)
-            numSamplesToDrop = stretch.outputLatency();
-
         return true;
     }
 
@@ -911,27 +909,6 @@ struct SignalsmithStretcher  : public TimeStretcher::Stretcher
     int processData (const float* const* inChannels, int numSamples, float* const* outChannels) override
     {
         CRASH_TRACER
-
-        if (numSamplesToDrop > 0)
-        {
-            // Generate latency + block output, then drop the latency portion
-            // and copy the remainder to outChannels. This is analogous to
-            // RubberBand's retrieve-and-discard approach.
-            const int totalOutput = numSamplesToDrop + samplesPerOutputBuffer;
-            AudioScratchBuffer outScratch (numChannels, totalOutput);
-            stretch.process (inChannels, numSamples,
-                             outScratch.buffer.getArrayOfWritePointers(), totalOutput);
-
-            const int toCopy = std::min (totalOutput - numSamplesToDrop, samplesPerOutputBuffer);
-
-            for (int c = 0; c < numChannels; ++c)
-                std::copy_n (outScratch.buffer.getReadPointer (c, numSamplesToDrop),
-                             toCopy, outChannels[c]);
-
-            numSamplesToDrop = 0;
-            return toCopy;
-        }
-
         stretch.process (inChannels, numSamples, outChannels, samplesPerOutputBuffer);
         return samplesPerOutputBuffer;
     }
@@ -946,12 +923,16 @@ struct SignalsmithStretcher  : public TimeStretcher::Stretcher
         return samplesPerOutputBuffer;
     }
 
+    int getLatencySamples() const override
+    {
+        return stretch.inputLatency() + stretch.outputLatency();
+    }
+
 private:
     signalsmith::stretch::SignalsmithStretch<float> stretch;
     int numChannels = 0;
     const int samplesPerOutputBuffer;
     float speedRatio = 1.0f;
-    int numSamplesToDrop = -1;
     bool hasDoneFinalBlock = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SignalsmithStretcher)
@@ -1229,9 +1210,9 @@ void TimeStretcher::initialise (double sourceSampleRate, int samplesPerBlock,
        #if TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
         case signalsmithDefault:
         case signalsmithCheaper:
-            juce::ignoreUnused (options, realtime);
+            juce::ignoreUnused (options);
             stretcher = std::make_unique<SignalsmithStretcher> (sourceSampleRate, samplesPerBlock, numChannels,
-                                                                mode);
+                                                                mode, realtime);
             break;
        #else
         case signalsmithDefault:    [[fallthrough]];
@@ -1323,6 +1304,18 @@ int TimeStretcher::flush (float* const* outChannels)
         return stretcher->flush (outChannels);
 
     return 0;
+}
+
+int TimeStretcher::getLatencySamples() const
+{
+    return stretcher ? stretcher->getLatencySamples() : 0;
+}
+
+int TimeStretcher::getLatencySamplesForMode (Mode mode, double sampleRate, bool realtime)
+{
+    TimeStretcher temp;
+    temp.initialise (sampleRate, 256, 1, mode, {}, realtime);
+    return temp.getLatencySamples();
 }
 
 } // namespace tracktion::inline engine

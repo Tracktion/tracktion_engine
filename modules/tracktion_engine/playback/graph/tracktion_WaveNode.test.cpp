@@ -370,7 +370,7 @@ namespace wavenode_test_helpers
             TimeStretcher::Mode::rubberbandMelodic,
            #endif
            #if TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
-             TimeStretcher::Mode::signalsmithDefault,
+            TimeStretcher::Mode::signalsmithDefault,
            #endif
            #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE
             TimeStretcher::Mode::elastiquePro,
