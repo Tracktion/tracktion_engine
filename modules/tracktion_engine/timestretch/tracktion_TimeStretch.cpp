@@ -876,6 +876,11 @@ struct SignalsmithStretcher  : public TimeStretcher::Stretcher
             stretch.presetCheaper (numChannels, static_cast<float> (sourceSampleRate));
         else
             stretch.presetDefault (numChannels, static_cast<float> (sourceSampleRate));
+
+        numSamplesToSkip = stretch.inputLatency() + stretch.outputLatency();
+
+        if (numSamplesToSkip > 0)
+            compensationBuffer.setSize (numChannels, samplesPerOutputBuffer + numSamplesToSkip);
     }
 
     bool isOk() const override      { return true; }
@@ -883,53 +888,49 @@ struct SignalsmithStretcher  : public TimeStretcher::Stretcher
     void reset() override
     {
         stretch.reset();
-        numSamplesToDrop = -1;
         hasDoneFinalBlock = false;
+        numSamplesToSkip = stretch.inputLatency() + stretch.outputLatency();
     }
 
     bool setSpeedAndPitch (float speedRatio_, float semitonesUp) override
     {
         speedRatio = speedRatio_;
         stretch.setTransposeSemitones (semitonesUp);
-
-        if (numSamplesToDrop == -1)
-            numSamplesToDrop = stretch.outputLatency();
-
         return true;
     }
 
     int getFramesNeeded() const override
     {
-        return juce::roundToInt (samplesPerOutputBuffer / speedRatio);
+        const int skip = std::max (0, numSamplesToSkip);
+        return juce::roundToInt ((samplesPerOutputBuffer + skip) / speedRatio);
     }
 
     int getMaxFramesNeeded() const override
     {
-        return samplesPerOutputBuffer * 4;
+        const int skip = std::max (0, numSamplesToSkip);
+        return samplesPerOutputBuffer * 4 + skip;
     }
 
     int processData (const float* const* inChannels, int numSamples, float* const* outChannels) override
     {
         CRASH_TRACER
 
-        if (numSamplesToDrop > 0)
+        if (numSamplesToSkip > 0)
         {
-            // Generate latency + block output, then drop the latency portion
-            // and copy the remainder to outChannels. This is analogous to
-            // RubberBand's retrieve-and-discard approach.
-            const int totalOutput = numSamplesToDrop + samplesPerOutputBuffer;
-            AudioScratchBuffer outScratch (numChannels, totalOutput);
+            // Produce extra output to skip past the STFT pipeline latency in one go,
+            // then return only the aligned portion
+            const int totalOutput = samplesPerOutputBuffer + numSamplesToSkip;
+
             stretch.process (inChannels, numSamples,
-                             outScratch.buffer.getArrayOfWritePointers(), totalOutput);
+                             compensationBuffer.getArrayOfWritePointers(), totalOutput);
 
-            const int toCopy = std::min (totalOutput - numSamplesToDrop, samplesPerOutputBuffer);
+            for (int ch = 0; ch < numChannels; ++ch)
+                juce::FloatVectorOperations::copy (outChannels[ch],
+                                                   compensationBuffer.getReadPointer (ch, numSamplesToSkip),
+                                                   samplesPerOutputBuffer);
 
-            for (int c = 0; c < numChannels; ++c)
-                std::copy_n (outScratch.buffer.getReadPointer (c, numSamplesToDrop),
-                             toCopy, outChannels[c]);
-
-            numSamplesToDrop = 0;
-            return toCopy;
+            numSamplesToSkip = 0;
+            return samplesPerOutputBuffer;
         }
 
         stretch.process (inChannels, numSamples, outChannels, samplesPerOutputBuffer);
@@ -951,8 +952,9 @@ private:
     int numChannels = 0;
     const int samplesPerOutputBuffer;
     float speedRatio = 1.0f;
-    int numSamplesToDrop = -1;
     bool hasDoneFinalBlock = false;
+    int numSamplesToSkip = -1;
+    juce::AudioBuffer<float> compensationBuffer;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SignalsmithStretcher)
 };
