@@ -31,6 +31,7 @@ public:
             const auto mode = tracktion::engine::TimeStretcher::soundtouchBetter;
             runPitchShiftTest (mode);
             runTimestretchTest (mode);
+            runLatencyTest (mode);
         }
        #endif
 
@@ -39,6 +40,7 @@ public:
             const auto mode = tracktion::engine::TimeStretcher::rubberbandMelodic;
             runPitchShiftTest (mode);
             runTimestretchTest (mode);
+            runLatencyTest (mode);
         }
        #endif
 
@@ -47,6 +49,8 @@ public:
             const auto mode = tracktion::engine::TimeStretcher::signalsmithDefault;
             runPitchShiftTest (mode);
             runTimestretchTest (mode);
+            runLatencyTest (mode);
+            runSmallBlockLatencyTest (mode);
         }
        #endif
 
@@ -56,12 +60,14 @@ public:
                 const auto mode = tracktion::engine::TimeStretcher::elastiquePro;
                 runPitchShiftTest (mode);
                 runTimestretchTest (mode);
+                runLatencyTest (mode);
             }
 
             {
                 const auto mode = tracktion::engine::TimeStretcher::elastiqueDirectPro;
                 runPitchShiftTest (mode);
                 runTimestretchTest (mode);
+                runLatencyTest (mode);
             }
         }
        #endif
@@ -133,21 +139,28 @@ private:
         const float expectedPitchValue = sourcePitch * tracktion::engine::Pitch::semitonesToRatio (semitonesUp);
         const int expectedSize = (int) std::ceil (sourceBuffer.getNumSamples() * stretchRatio);
 
-        // Check number of zero crossings and estimate pitch
-        const int numZeroCrossingsShifted = getNumZeroCrossings (resultBuffer);
-        const float shiftedPitch = getPitchFromNumZeroCrossings (numZeroCrossingsShifted, resultBuffer.getNumSamples(), sampleRate);
+        // Check number of zero crossings and estimate pitch.
+        // Use the middle 50% to avoid startup/shutdown artefacts from stretcher latency.
+        const int trimStart = resultBuffer.getNumSamples() / 4;
+        const int trimLength = resultBuffer.getNumSamples() / 2;
+        juce::AudioBuffer<float> trimmedResult (const_cast<float* const*> (resultBuffer.getArrayOfReadPointers()),
+                                                 resultBuffer.getNumChannels(),
+                                                 trimStart, trimLength);
+        const int numZeroCrossingsShifted = getNumZeroCrossings (trimmedResult);
+        const float shiftedPitch = getPitchFromNumZeroCrossings (numZeroCrossingsShifted, trimmedResult.getNumSamples(), sampleRate);
 
         // Compare shiftedPitch to expectedPitchValue with a 6% tolerance
         expectWithinAbsoluteError (shiftedPitch, expectedPitchValue, expectedPitchValue * 0.06f);
 
-        // Compare expectedSize with the actual size of the results 5% tolerance
-        expectWithinAbsoluteError (resultBuffer.getNumSamples(), expectedSize, juce::roundToInt (expectedSize * 0.05f));
+        // Compare expectedSize with the actual size of the results
+        // 10% tolerance accounts for latency compensation consuming extra input
+        expectWithinAbsoluteError (resultBuffer.getNumSamples(), expectedSize, juce::roundToInt (expectedSize * 0.10f));
     }
 
     //==============================================================================
     static juce::AudioBuffer<float> createSinBuffer (double sampleRate, int numChannels, float pitch)
     {
-        juce::AudioBuffer<float> sinBuffer (numChannels, (int) sampleRate);
+        juce::AudioBuffer<float> sinBuffer (numChannels, (int) sampleRate * 3);
 
         double currentAngle = 0.0, angleDelta = 0.0;
         float originalPitch = pitch; //A4
@@ -263,6 +276,186 @@ private:
         }
 
         return numZeroCrossings;
+    }
+
+    //==============================================================================
+    /** Creates a stereo buffer where the first half is a sine at freq1
+        and the second half is a sine at freq2. */
+    static juce::AudioBuffer<float> createFreqChangeBuffer (double sampleRate, int numChannels,
+                                                             float freq1, float freq2)
+    {
+        const int totalSamples = (int) sampleRate; // 1 second
+        juce::AudioBuffer<float> buffer (numChannels, totalSamples);
+        const int changePoint = totalSamples / 2;
+
+        double angle = 0.0;
+        auto chan = buffer.getWritePointer (0);
+
+        for (int s = 0; s < totalSamples; ++s)
+        {
+            float freq = (s < changePoint) ? freq1 : freq2;
+            chan[s] = (float) std::sin (angle);
+            angle += (freq / sampleRate) * 2.0 * juce::MathConstants<double>::pi;
+        }
+
+        for (int c = 1; c < numChannels; ++c)
+            buffer.copyFrom (c, 0, buffer, 0, 0, totalSamples);
+
+        return buffer;
+    }
+
+    /** Finds the sample where the frequency transitions from freq1 to freq2
+        by measuring zero-crossing intervals in a sliding window. */
+    static int findFreqTransition (const juce::AudioBuffer<float>& buffer, double sampleRate,
+                                   float freq1, float freq2)
+    {
+        const auto* data = buffer.getReadPointer (0);
+        const int numSamples = buffer.getNumSamples();
+
+        // Measure local pitch using zero-crossing intervals in a sliding window
+        const int windowSize = (int) (sampleRate / std::min (freq1, freq2)) * 4; // ~4 cycles of lower freq
+        const float midFreq = (freq1 + freq2) * 0.5f;
+
+        for (int pos = windowSize; pos < numSamples - windowSize; ++pos)
+        {
+            // Count zero crossings in a window centered at pos
+            int crossings = 0;
+
+            for (int i = pos; i < pos + windowSize - 1; ++i)
+            {
+                if ((data[i] > 0.0f && data[i + 1] <= 0.0f)
+                    || (data[i] < 0.0f && data[i + 1] >= 0.0f))
+                    ++crossings;
+            }
+
+            float localPitch = ((float) crossings / 2.0f) / ((float) windowSize / (float) sampleRate);
+
+            if (localPitch > midFreq)
+                return pos;
+        }
+
+        return -1; // transition not found
+    }
+
+    void runSmallBlockLatencyTest (tracktion::engine::TimeStretcher::Mode mode)
+    {
+        beginTest ("Latency (small blocks): " + tracktion::engine::TimeStretcher::getNameOfMode (mode));
+
+        const double sampleRate = 44100.0;
+        const int numChannels = 2;
+        const int blockSize = 64;
+
+        tracktion::engine::TimeStretcher stretcher;
+        stretcher.initialise (sampleRate, blockSize, numChannels, mode, {}, true);
+        stretcher.setSpeedAndPitch (1.0f, 0.0f);
+
+        // getFramesNeeded must not spike due to latency compensation —
+        // a spike overflows FIFOs in ReadAheadTimeStretcher and crashes
+        const int framesNeeded = stretcher.getFramesNeeded();
+        expect (framesNeeded <= blockSize * 4,
+                "getFramesNeeded spike on first call: " + juce::String (framesNeeded)
+                + " (expected <= " + juce::String (blockSize * 4) + ")");
+
+        const int maxFrames = stretcher.getMaxFramesNeeded();
+        expect (maxFrames <= blockSize * 8,
+                "getMaxFramesNeeded inflated: " + juce::String (maxFrames)
+                + " (expected <= " + juce::String (blockSize * 8) + ")");
+
+        // Also verify latency-compensated timing with small blocks
+        const float freq1 = 220.0f;
+        const float freq2 = 880.0f;
+        const int reportedLatency = stretcher.getLatencySamples();
+
+        const auto sourceBuffer = createFreqChangeBuffer (sampleRate, numChannels, freq1, freq2);
+        const int expectedTransition = sourceBuffer.getNumSamples() / 2;
+
+        const auto resultBuffer = processBuffer (stretcher, sourceBuffer, blockSize, 1.0f, false);
+
+        // Trim by reported latency before measuring (same as runLatencyTest)
+        const int trimStart = std::min (reportedLatency, resultBuffer.getNumSamples());
+        const int trimLength = resultBuffer.getNumSamples() - trimStart;
+
+        if (trimLength > 0)
+        {
+            juce::AudioBuffer<float> trimmedResult (const_cast<float* const*> (resultBuffer.getArrayOfReadPointers()),
+                                                     resultBuffer.getNumChannels(),
+                                                     trimStart, trimLength);
+
+            const int measuredTransition = findFreqTransition (trimmedResult, sampleRate, freq1, freq2);
+
+            expect (measuredTransition >= 0,
+                    "Frequency transition not found in output for " + tracktion::engine::TimeStretcher::getNameOfMode (mode));
+
+            if (measuredTransition >= 0)
+            {
+                const int toleranceSamples = 1200;
+
+                logMessage ("  " + tracktion::engine::TimeStretcher::getNameOfMode (mode)
+                            + " (small blocks): transition at " + juce::String (measuredTransition)
+                            + ", expected " + juce::String (expectedTransition));
+
+                expectWithinAbsoluteError (measuredTransition, expectedTransition, toleranceSamples);
+            }
+        }
+    }
+
+    void runLatencyTest (tracktion::engine::TimeStretcher::Mode mode)
+    {
+        beginTest ("Reported latency: " + tracktion::engine::TimeStretcher::getNameOfMode (mode));
+
+        const double sampleRate = 44100.0;
+        const int numChannels = 2;
+        const int blockSize = 441;
+        const float freq1 = 220.0f;
+        const float freq2 = 880.0f;
+
+        tracktion::engine::TimeStretcher stretcher;
+        stretcher.initialise (sampleRate, blockSize, numChannels, mode, {}, true);
+        stretcher.setSpeedAndPitch (1.0f, 0.0f);
+
+        const int reportedLatency = stretcher.getLatencySamples();
+
+        // Process with no caller-level compensation
+        const auto sourceBuffer = createFreqChangeBuffer (sampleRate, numChannels, freq1, freq2);
+        const int expectedTransition = sourceBuffer.getNumSamples() / 2;
+
+        const auto resultBuffer = processBuffer (stretcher, sourceBuffer, blockSize, 1.0f,
+                                                  mode == tracktion::engine::TimeStretcher::elastiquePro
+                                                  || mode == tracktion::engine::TimeStretcher::elastiqueDirectPro
+                                                  || mode == tracktion::engine::TimeStretcher::rubberbandMelodic
+                                                  || mode == tracktion::engine::TimeStretcher::rubberbandPercussive);
+
+        // Skip the reported latency and check the transition appears at the expected position
+        // This verifies the reported latency is correct
+        const int trimStart = std::min (reportedLatency, resultBuffer.getNumSamples());
+        const int trimLength = resultBuffer.getNumSamples() - trimStart;
+
+        if (trimLength <= 0)
+        {
+            expect (false, "Output too short to verify latency for " + tracktion::engine::TimeStretcher::getNameOfMode (mode));
+            return;
+        }
+
+        juce::AudioBuffer<float> trimmedResult (const_cast<float* const*> (resultBuffer.getArrayOfReadPointers()),
+                                                 resultBuffer.getNumChannels(),
+                                                 trimStart, trimLength);
+
+        const int measuredTransition = findFreqTransition (trimmedResult, sampleRate, freq1, freq2);
+
+        expect (measuredTransition >= 0,
+                "Frequency transition not found in output for " + tracktion::engine::TimeStretcher::getNameOfMode (mode));
+
+        if (measuredTransition >= 0)
+        {
+            const int toleranceSamples = 1200; // ~27ms at 44100 Hz
+
+            logMessage ("  " + tracktion::engine::TimeStretcher::getNameOfMode (mode)
+                        + ": reported latency = " + juce::String (reportedLatency)
+                        + ", transition at " + juce::String (measuredTransition)
+                        + " (expected " + juce::String (expectedTransition) + ")");
+
+            expectWithinAbsoluteError (measuredTransition, expectedTransition, toleranceSamples);
+        }
     }
 };
 

@@ -157,6 +157,11 @@ bool ReadAheadTimeStretcher::setSpeedAndPitch (float speedRatio, float semitones
     return true;
 }
 
+int ReadAheadTimeStretcher::getLatencySamples() const
+{
+    return stretcher.getLatencySamples();
+}
+
 int ReadAheadTimeStretcher::getMaxFramesNeeded() const
 {
     // N.B. This should be thread safe as its constant in the stretcher implementations

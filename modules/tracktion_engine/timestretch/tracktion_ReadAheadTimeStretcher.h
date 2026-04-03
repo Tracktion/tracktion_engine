@@ -56,6 +56,9 @@ public:
     */
     bool setSpeedAndPitch (float speedRatio, float semitones);
 
+    /** Returns the latency in samples introduced by the stretching algorithm. */
+    int getLatencySamples() const;
+
     /** Returns the maximum number of frames that will ever be returned by getFramesNeeded.
         This can be used to size FIFOs for real-time use accordingly.
     */

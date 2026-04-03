@@ -2026,6 +2026,9 @@ tracktion::graph::NodeProperties WaveNodeRealTime::getNodeProperties()
     props.hasMidi = false;
     props.numberOfChannels = destChannels.getNumChannels();
     props.nodeID = (size_t) editItemID.getRawID();
+    props.latencyNumSamples = TimeStretcher::getLatencySamplesForMode (timeStretcherMode,
+                                                                       audioFile.getSampleRate(),
+                                                                       ! isOfflineRender);
 
     return props;
 }
