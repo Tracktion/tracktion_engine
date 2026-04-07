@@ -13,7 +13,7 @@ namespace tracktion::inline graph {
 
 } // namespace tracktion::inline graph
 
-#if GRAPH_UNIT_TESTS_NODEVISITING
+#if TRACKTION_UNIT_TESTS && GRAPH_UNIT_TESTS_NODEVISITING
 
 #include "../../3rd_party/doctest/tracktion_doctest.hpp"
 

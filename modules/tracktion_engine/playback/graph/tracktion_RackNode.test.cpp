@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#if GRAPH_UNIT_TESTS_RACKNODE
+#if TRACKTION_UNIT_TESTS && GRAPH_UNIT_TESTS_RACKNODE
 
 #include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
 
@@ -637,6 +637,6 @@ TEST_CASE ("RackNode")
 
 } // TEST_SUITE
 
-#endif //TRACKTION_UNIT_TESTS
-
 } // namespace tracktion::inline engine
+
+#endif //TRACKTION_UNIT_TESTS

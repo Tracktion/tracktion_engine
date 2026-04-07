@@ -10,7 +10,7 @@
 
 #pragma once
 
-#if GRAPH_UNIT_TESTS_CONNECTEDNODE
+#if TRACKTION_UNIT_TESTS && GRAPH_UNIT_TESTS_CONNECTEDNODE
 
 #include "tracktion_ConnectedNode.h"
 #include "../../../3rd_party/doctest/tracktion_doctest.hpp"

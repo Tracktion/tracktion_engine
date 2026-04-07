@@ -10,6 +10,8 @@
 
 #pragma once
 
+#if TRACKTION_UNIT_TESTS || TRACKTION_BENCHMARKS
+
 #include <tracktion_core/utilities/tracktion_Benchmark.h>
 
 #define DOCTEST_CONFIG_IMPLEMENT
@@ -257,3 +259,4 @@ namespace TestRunner
     }
 }
 
+#endif //TRACKTION_UNIT_TESTS || TRACKTION_BENCHMARKS

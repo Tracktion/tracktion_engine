@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#if TRACKTION_UNIT_TESTS_TIME
+#if TRACKTION_UNIT_TESTS && TRACKTION_UNIT_TESTS_TIME
 
 #include "tracktion_Time.h"
 

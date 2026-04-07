@@ -8,7 +8,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#if ENGINE_UNIT_TESTS_CHANNELCONFIGURATION
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_CHANNELCONFIGURATION
 
 #include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
 

@@ -8,7 +8,9 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+#if TRACKTION_BENCHMARKS
+ #include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+#endif
 
 namespace tracktion::inline engine {
 

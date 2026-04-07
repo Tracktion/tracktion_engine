@@ -11,11 +11,7 @@
 #pragma once
 
 
-namespace tracktion::inline graph {
-
-} // namespace tracktion::inline graph
-
-#if GRAPH_UNIT_TESTS_PLAYHEADSTATE
+#if TRACKTION_UNIT_TESTS && GRAPH_UNIT_TESTS_PLAYHEADSTATE
 
 #include "../../3rd_party/doctest/tracktion_doctest.hpp"
 

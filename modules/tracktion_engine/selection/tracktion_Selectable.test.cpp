@@ -9,7 +9,7 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#if ENGINE_UNIT_TESTS_SELECTABLE
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_SELECTABLE
 
 #include "../utilities/tracktion_TestUtilities.h"
 #include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>

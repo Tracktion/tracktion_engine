@@ -8,15 +8,11 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+
+
+#if TRACKTION_UNIT_TESTS && GRAPH_UNIT_TESTS_ALLOCATION
+
 #include "../../3rd_party/rpmalloc/rpallocator.h"
-
-
-namespace tracktion::inline graph {
-
-} // namespace tracktion::inline graph
-
-#if GRAPH_UNIT_TESTS_ALLOCATION
-
 #include "../../3rd_party/doctest/tracktion_doctest.hpp"
 
 namespace tracktion::inline graph {
