@@ -106,38 +106,30 @@ void DelayPlugin::restorePluginStateFromValueTree (const juce::ValueTree& v)
         p->updateFromAttachedValue();
 }
 
+} // namespace tracktion::inline engine
+
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_DELAY_PLUGIN
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+namespace tracktion::inline engine {
 
-//==============================================================================
-//==============================================================================
-class DelayPluginTests : public juce::UnitTest
+TEST_SUITE ("tracktion_engine")
 {
-public:
-    DelayPluginTests() : juce::UnitTest ("DelayPlugin", "Tracktion") {}
-
-    //==============================================================================
-    void runTest() override
-    {
-        runRestoreStateTests();
-    }
-
-private:
-    void runRestoreStateTests()
+    TEST_CASE ("DelayPlugin")
     {
         auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
 
-        beginTest ("Delay plugin instantiation");
+        SUBCASE ("Delay plugin instantiation")
         {
             Plugin::Ptr pluginPtr = edit->getPluginCache().createNewPlugin (DelayPlugin::xmlTypeName, {});
             auto delay = dynamic_cast<DelayPlugin*> (pluginPtr.get());
-            expect (delay != nullptr);
+            CHECK (delay != nullptr);
         }
 
-        beginTest ("Restore feedback parameter from ValueTree");
+        SUBCASE ("Restore feedback parameter from ValueTree")
         {
             Plugin::Ptr pluginPtr = edit->getPluginCache().createNewPlugin (DelayPlugin::xmlTypeName, {});
             auto delay = dynamic_cast<DelayPlugin*> (pluginPtr.get());
-            expect (delay != nullptr);
+            CHECK (delay != nullptr);
 
             float desiredValue = -30.0f;
 
@@ -150,16 +142,13 @@ private:
 
             auto feedbackParam = delay->feedbackDb;
 
-            expectWithinAbsoluteError (feedbackParam->getCurrentExplicitValue(), desiredValue, 0.001f);
-            expectWithinAbsoluteError (feedbackParam->getCurrentValue(), desiredValue, 0.001f);
-            expectWithinAbsoluteError (feedbackParam->getCurrentValue(), feedbackParam->getCurrentExplicitValue(), 0.001f);
-            expect (! pluginPtr->state.hasProperty (IDs::parameters), "State has erroneous parameters property");
+            CHECK (std::abs (feedbackParam->getCurrentExplicitValue() - desiredValue) <= 0.001f);
+            CHECK (std::abs (feedbackParam->getCurrentValue() - desiredValue) <= 0.001f);
+            CHECK (std::abs (feedbackParam->getCurrentValue() - feedbackParam->getCurrentExplicitValue()) <= 0.001f);
+            CHECK_MESSAGE (! pluginPtr->state.hasProperty (IDs::parameters), "State has erroneous parameters property");
         }
     }
-};
-
-static DelayPluginTests delayPluginTests;
-
-#endif // TRACKTION_UNIT_TESTS
+}
 
 } // namespace tracktion::inline engine
+#endif // TRACKTION_UNIT_TESTS

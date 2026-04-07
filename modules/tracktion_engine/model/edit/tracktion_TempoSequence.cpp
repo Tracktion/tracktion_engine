@@ -815,141 +815,132 @@ void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
             a.curve.setPointPosition (i, tempoSequence.toTime (a.beats.getUnchecked (i)), um);
 }
 
+} // namespace tracktion::inline engine
+
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_TEMPO_SEQUENCE
 
-//==============================================================================
-//==============================================================================
-class TempoSequenceTests : public juce::UnitTest
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+
+namespace tracktion::inline engine {
+
+static void checkBarsAndBeats (tempo::Sequence::Position& pos, int bars, int beats)
 {
-public:
-    TempoSequenceTests() : juce::UnitTest ("TempoSequence", "Tracktion") {}
+    auto barsBeats = pos.getBarsBeats();
+    CHECK_EQ (barsBeats.bars, bars);
+    CHECK_EQ (barsBeats.getWholeBeats(), beats);
+}
 
-    //==============================================================================
-    void runTest() override
-    {
-        runPositionTests();
-        runModificationTests();
-    }
+static void checkTempoSetting (TempoSetting& tempo, double startTime, double bpm, float curve)
+{
+    CHECK (std::abs (tempo.getStartTime().inSeconds() - startTime) <= 0.001);
+    CHECK (std::abs (tempo.getBpm() - bpm) <= 0.001);
+    CHECK (std::abs (tempo.getCurve() - curve) <= 0.001f);
+}
 
-private:
-    void expectBarsAndBeats (tempo::Sequence::Position& pos, int bars, int beats)
-    {
-        auto barsBeats = pos.getBarsBeats();
-        expectEquals (barsBeats.bars, bars);
-        expectEquals (barsBeats.getWholeBeats(), beats);
-    }
-
-    void expectTempoSetting (TempoSetting& tempo, double startTime, double bpm, float curve)
-    {
-        expectWithinAbsoluteError (tempo.getStartTime().inSeconds(), startTime, 0.001);
-        expectWithinAbsoluteError (tempo.getBpm(), bpm, 0.001);
-        expectWithinAbsoluteError (tempo.getCurve(), curve, 0.001f);
-    }
-
-    void runPositionTests()
+TEST_SUITE ("tracktion_engine")
+{
+    TEST_CASE ("TempoSequence: Position tests")
     {
         auto edit = Edit::createSingleTrackEdit (*Engine::getEngines().getFirst());
 
-        beginTest ("Defaults");
+        // Defaults
         {
             auto pos = createPosition (edit->tempoSequence);
 
-            expectEquals (pos.getTempo(), 120.0);
-            expectEquals (pos.getTimeSignature().numerator, 4);
-            expectEquals (pos.getTimeSignature().denominator, 4);
-            expectEquals (pos.getPPQTimeOfBarStart(), 0.0);
-            expectEquals (pos.getBarsBeats().numerator, 4);
+            CHECK_EQ (pos.getTempo(), 120.0);
+            CHECK_EQ (pos.getTimeSignature().numerator, 4);
+            CHECK_EQ (pos.getTimeSignature().denominator, 4);
+            CHECK_EQ (pos.getPPQTimeOfBarStart(), 0.0);
+            CHECK_EQ (pos.getBarsBeats().numerator, 4);
         }
 
-        beginTest ("Positive sequences");
+        // Positive sequences
         {
             auto pos = createPosition (edit->tempoSequence);
             pos.set (0_tp);
 
-            expectBarsAndBeats (pos, 0, 0);
+            checkBarsAndBeats (pos, 0, 0);
             pos.add (1_bd);
-            expectBarsAndBeats (pos, 0, 1);
+            checkBarsAndBeats (pos, 0, 1);
             pos.add (1_bd);
-            expectBarsAndBeats (pos, 0, 2);
+            checkBarsAndBeats (pos, 0, 2);
             pos.add (1_bd);
-            expectBarsAndBeats (pos, 0, 3);
+            checkBarsAndBeats (pos, 0, 3);
             pos.add (1_bd);
-            expectBarsAndBeats (pos, 1, 0);
+            checkBarsAndBeats (pos, 1, 0);
 
             pos.addBars (1);
-            expectBarsAndBeats (pos, 2, 0);
+            checkBarsAndBeats (pos, 2, 0);
             pos.add (1_bd);
-            expectBarsAndBeats (pos, 2, 1);
+            checkBarsAndBeats (pos, 2, 1);
             pos.add (1_bd);
-            expectBarsAndBeats (pos, 2, 2);
+            checkBarsAndBeats (pos, 2, 2);
             pos.add (1_bd);
-            expectBarsAndBeats (pos, 2, 3);
+            checkBarsAndBeats (pos, 2, 3);
         }
 
-        beginTest ("Negative sequences");
+        // Negative sequences
         {
             auto pos = createPosition (edit->tempoSequence);
             pos.set (0_tp);
             pos.addBars (-2);
 
-            expectBarsAndBeats (pos, -2, 0);
+            checkBarsAndBeats (pos, -2, 0);
             pos.add (1_bd);
-            expectBarsAndBeats (pos, -2, 1);
+            checkBarsAndBeats (pos, -2, 1);
             pos.add (1_bd);
-            expectBarsAndBeats (pos, -2, 2);
+            checkBarsAndBeats (pos, -2, 2);
             pos.add (1_bd);
-            expectBarsAndBeats (pos, -2, 3);
+            checkBarsAndBeats (pos, -2, 3);
             pos.add (1_bd);
-            expectBarsAndBeats (pos, -1, 0);
+            checkBarsAndBeats (pos, -1, 0);
             pos.add (1_bd);
-            expectBarsAndBeats (pos, -1, 1);
+            checkBarsAndBeats (pos, -1, 1);
             pos.add (1_bd);
-            expectBarsAndBeats (pos, -1, 2);
+            checkBarsAndBeats (pos, -1, 2);
             pos.add (1_bd);
-            expectBarsAndBeats (pos, -1, 3);
+            checkBarsAndBeats (pos, -1, 3);
             pos.add (1_bd);
-            expectBarsAndBeats (pos, 0, 0);
+            checkBarsAndBeats (pos, 0, 0);
             pos.add (1_bd);
-            expectBarsAndBeats (pos, 0, 1);
+            checkBarsAndBeats (pos, 0, 1);
             pos.add (1_bd);
-            expectBarsAndBeats (pos, 0, 2);
+            checkBarsAndBeats (pos, 0, 2);
             pos.add (1_bd);
-            expectBarsAndBeats (pos, 0, 3);
+            checkBarsAndBeats (pos, 0, 3);
             pos.add (1_bd);
-            expectBarsAndBeats (pos, 1, 0);
+            checkBarsAndBeats (pos, 1, 0);
             pos.add (1_bd);
         }
     }
 
-    void runModificationTests()
+    TEST_CASE ("TempoSequence: Modification tests")
     {
         using namespace std::literals;
         auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
         auto& ts = edit->tempoSequence;
 
-        beginTest ("Insertions");
+        // Insertions
         {
-            expectWithinAbsoluteError (ts.getTempoAt (0_tp).getBpm(), 120.0, 0.001);
-            expectWithinAbsoluteError (ts.getTempoAt (0_tp).getCurve(), 1.0f, 0.001f);
+            CHECK (std::abs (ts.getTempoAt (0_tp).getBpm() - 120.0) <= 0.001);
+            CHECK (std::abs (ts.getTempoAt (0_tp).getCurve() - 1.0f) <= 0.001f);
 
             ts.insertTempo (4_bp, 120, 0.0);
             ts.insertTempo (4_bp, 300, 0.0);
             ts.insertTempo (8_bp, 300, 0.0);
 
-            expectTempoSetting (*ts.getTempo (0), 0.0, 120.0, 1.0f);
-            expectTempoSetting (*ts.getTempo (1), 2.0, 120.0, 0.0f);
-            expectTempoSetting (*ts.getTempo (2), 2.0, 300.0, 0.0f);
-            expectTempoSetting (*ts.getTempo (3), 2.8, 300.0, 0.0f);
+            checkTempoSetting (*ts.getTempo (0), 0.0, 120.0, 1.0f);
+            checkTempoSetting (*ts.getTempo (1), 2.0, 120.0, 0.0f);
+            checkTempoSetting (*ts.getTempo (2), 2.0, 300.0, 0.0f);
+            checkTempoSetting (*ts.getTempo (3), 2.8, 300.0, 0.0f);
 
-            expectTempoSetting (ts.getTempoAt (0_tp), 0.0, 120.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (2.0s), 2.0, 300.0, 0.0f);
-            expectTempoSetting (ts.getTempoAt (3.0s), 2.8, 300.0, 0.0f);
+            checkTempoSetting (ts.getTempoAt (0_tp), 0.0, 120.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (2.0s), 2.0, 300.0, 0.0f);
+            checkTempoSetting (ts.getTempoAt (3.0s), 2.8, 300.0, 0.0f);
         }
     }
-};
-
-static TempoSequenceTests tempoSequenceTests;
-
-#endif
+}
 
 } // namespace tracktion::inline engine
+
+#endif

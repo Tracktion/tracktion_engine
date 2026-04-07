@@ -18,40 +18,10 @@ namespace tracktion::inline engine
 #if GRAPH_UNIT_TESTS_WAVENODE
 
 //==============================================================================
-//==============================================================================
-class WaveNodeTests : public juce::UnitTest
+namespace wavenode_test_helpers
 {
-public:
-    WaveNodeTests()
-        : juce::UnitTest ("WaveNode", "tracktion_graph")
-    {
-    }
-
-    void runTest() override
-    {
-        for (auto ts : tracktion::graph::test_utilities::getTestSetups (*this))
-        {
-            runBasicTests<WaveNode> ("WaveNode", ts, true);
-            runBasicTests<WaveNode> ("WaveNode", ts, false);
-            runLoopedTimelineTests<WaveNode> ("WaveNode", ts);
-        }
-
-        logMessage ("WaveNodeRealTime");
-
-        for (auto ts : tracktion::graph::test_utilities::getTestSetups (*this))
-        {
-            runBasicTests<WaveNodeRealTime> ("WaveNodeRealTime", ts, true);
-            runBasicTests<WaveNodeRealTime> ("WaveNodeRealTime", ts, false);
-            runLoopedTimelineTests<WaveNodeRealTime> ("WaveNodeRealTime", ts);
-            runDynamicOffsetTests (ts);
-            runTimestretchedTests (ts);
-        }
-    }
-
-private:
-    //==============================================================================
     static std::shared_ptr<graph::test_utilities::TestContext> createTracktionTestContext (ProcessState& processState, std::unique_ptr<Node> node,
-                                                                                           graph::test_utilities::TestSetup ts, int numChannels, double durationInSeconds)
+                                                                                          graph::test_utilities::TestSetup ts, int numChannels, double durationInSeconds)
     {
         graph::test_utilities::TestProcess<TracktionNodePlayer> testProcess (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
                                                                                                                     getPoolCreatorFunction (ThreadPoolStrategy::realTime)),
@@ -59,10 +29,8 @@ private:
         return testProcess.processAll();
     }
 
-    //==============================================================================
-    //==============================================================================
     template<typename NodeType>
-    void runBasicTests (juce::String nodeTypeName, graph::test_utilities::TestSetup ts, bool playSyncedToRange)
+    static void runBasicTests (juce::String /*nodeTypeName*/, graph::test_utilities::TestSetup ts, bool playSyncedToRange)
     {
         using namespace tracktion::graph::test_utilities;
         auto& engine = *tracktion_engine::Engine::getEngines()[0];
@@ -81,7 +49,7 @@ private:
         else
             playHead.playSyncedToRange ({ 0, std::numeric_limits<int64_t>::max() });
 
-        beginTest (nodeTypeName + " at time 0s");
+        // at time 0s
         {
             auto node = makeNode<NodeType> (sinAudioFile,
                                             TimeRange (0.0s, TimeDuration::fromSeconds (fileLengthSeconds)),
@@ -95,16 +63,14 @@ private:
                                             EditItemID(),
                                             true);
 
-            // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
 
-            expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 0.0, fileLengthSeconds }, ts.sampleRate), 1.0f, 0.707f);
-            expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ fileLengthSeconds, fileLengthSeconds + 1.0 }, ts.sampleRate), 0.0f, 0.0f);
+            expectAudioBuffer (testContext->buffer, 0, graph::timeToSample ({ 0.0, fileLengthSeconds }, ts.sampleRate), 1.0f, 0.707f);
+            expectAudioBuffer (testContext->buffer, 0, graph::timeToSample ({ fileLengthSeconds, fileLengthSeconds + 1.0 }, ts.sampleRate), 0.0f, 0.0f);
         }
 
-        beginTest (nodeTypeName + " at time 0s, dragging");
+        // at time 0s, dragging
         {
-            // If the user is dragging the playhead doesn't move so the whole buffer will be 0.08s of the start of the clip
             auto node = makeNode<NodeType> (sinAudioFile,
                                             TimeRange (0.0s, TimeDuration::fromSeconds (fileLengthSeconds)),
                                             TimeDuration(),
@@ -119,15 +85,14 @@ private:
 
             playHead.setUserIsDragging (true);
 
-            // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
 
             playHead.setUserIsDragging (false);
 
-            expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 0.0, fileLengthSeconds + 1.0 }, ts.sampleRate), 0.4f, 0.282f);
+            expectAudioBuffer (testContext->buffer, 0, graph::timeToSample ({ 0.0, fileLengthSeconds + 1.0 }, ts.sampleRate), 0.4f, 0.282f);
         }
 
-        beginTest (nodeTypeName + " at time 1s - 4s");
+        // at time 1s - 4s
         {
             auto node = makeNode<NodeType> (sinAudioFile,
                                             TimeRange (1.0s, TimePosition (4.0s)),
@@ -141,15 +106,14 @@ private:
                                             EditItemID(),
                                             true);
 
-            // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
 
-            expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 0.0, 1.0 }, ts.sampleRate), 0.0f, 0.0f);
-            expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 1.0, 4.0 }, ts.sampleRate), 1.0f, 0.707f);
-            expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 4.0, 5.0 }, ts.sampleRate), 0.0f, 0.0f);
+            expectAudioBuffer (testContext->buffer, 0, graph::timeToSample ({ 0.0, 1.0 }, ts.sampleRate), 0.0f, 0.0f);
+            expectAudioBuffer (testContext->buffer, 0, graph::timeToSample ({ 1.0, 4.0 }, ts.sampleRate), 1.0f, 0.707f);
+            expectAudioBuffer (testContext->buffer, 0, graph::timeToSample ({ 4.0, 5.0 }, ts.sampleRate), 0.0f, 0.0f);
         }
 
-        beginTest (nodeTypeName + " at time 1s - 4s, loop every 1s");
+        // at time 1s - 4s, loop every 1s
         {
             auto node = makeNode<NodeType> (sinAudioFile,
                                             TimeRange (1.0s, TimePosition (4.0s)),
@@ -163,17 +127,16 @@ private:
                                             EditItemID(),
                                             true);
 
-            // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 6.0);
 
-            expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 0.0, 1.0 }, ts.sampleRate), 0.0f, 0.0f);
-            expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 1.0, 4.0 }, ts.sampleRate), 1.0f, 0.707f);
-            expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 4.0, 5.0 }, ts.sampleRate), 0.0f, 0.0f);
+            expectAudioBuffer (testContext->buffer, 0, graph::timeToSample ({ 0.0, 1.0 }, ts.sampleRate), 0.0f, 0.0f);
+            expectAudioBuffer (testContext->buffer, 0, graph::timeToSample ({ 1.0, 4.0 }, ts.sampleRate), 1.0f, 0.707f);
+            expectAudioBuffer (testContext->buffer, 0, graph::timeToSample ({ 4.0, 5.0 }, ts.sampleRate), 0.0f, 0.0f);
         }
     }
 
     template<typename NodeType>
-    void runLoopedTimelineTests (juce::String nodeTypeName, graph::test_utilities::TestSetup ts)
+    static void runLoopedTimelineTests (juce::String /*nodeTypeName*/, graph::test_utilities::TestSetup ts)
     {
         using namespace tracktion::graph::test_utilities;
         auto& engine = *tracktion_engine::Engine::getEngines()[0];
@@ -186,9 +149,8 @@ private:
         tracktion::graph::PlayHeadState playHeadState (playHead);
         ProcessState processState (playHeadState);
 
-        beginTest (nodeTypeName + " Loop 0s-1s");
+        // Loop 0s-1s
         {
-            // This test loops a 1s sin file so the output should be 5s of sin data
             auto node = makeNode<NodeType> (sinAudioFile,
                                             TimeRange (0.0s, TimeDuration::fromSeconds (fileLengthSeconds)),
                                             TimeDuration(),
@@ -201,17 +163,14 @@ private:
                                             EditItemID(),
                                             true);
 
-            // Loop playback between 0s & 1s on the timeline
             playHead.play ({ 0, timeToSample (1.0, ts.sampleRate) }, true);
 
-            // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 5.0);
-            expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 0.0, 5.0 }, ts.sampleRate), 1.0f, 0.707f);
+            expectAudioBuffer (testContext->buffer, 0, graph::timeToSample ({ 0.0, 5.0 }, ts.sampleRate), 1.0f, 0.707f);
         }
 
-        beginTest (nodeTypeName + " Loop 1s-2s");
+        // Loop 1s-2s
         {
-            // This test loops a 1s sin file so the output should be 5s of sin data
             auto node = makeNode<NodeType> (sinAudioFile,
                                             TimeRange (1.0s, TimeDuration::fromSeconds (fileLengthSeconds) + 1.0s),
                                             TimeDuration(),
@@ -224,17 +183,15 @@ private:
                                             EditItemID(),
                                             true);
 
-            // Loop playback between 0s & 1s on the timeline
             playHead.setReferenceSampleRange ({ 0, ts.blockSize });
             playHead.play ({ timeToSample (1.0, ts.sampleRate), timeToSample (2.0, ts.sampleRate) }, true);
 
-            // Process node writing to a wave file and ensure level is 1.0 for 5s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 5.0);
-            expectAudioBuffer (*this, testContext->buffer, 0, graph::timeToSample ({ 0.0, 5.0 }, ts.sampleRate), 1.0f, 0.707f);
+            expectAudioBuffer (testContext->buffer, 0, graph::timeToSample ({ 0.0, 5.0 }, ts.sampleRate), 1.0f, 0.707f);
         }
     }
 
-    void runDynamicOffsetTests (graph::test_utilities::TestSetup ts)
+    static void runDynamicOffsetTests (graph::test_utilities::TestSetup ts)
     {
         using namespace tracktion::graph::test_utilities;
         auto& engine = *Engine::getEngines()[0];
@@ -255,7 +212,7 @@ private:
         ProcessState processState (playHeadState, fileTempoSequence);
         playHead.playSyncedToRange ({ 0, std::numeric_limits<int64_t>::max() });
 
-        beginTest ("WaveNodeRealTime at time 0s, offset at 1s");
+        // WaveNodeRealTime at time 0s, offset at 1s
         {
             auto node = std::make_unique<WaveNodeRealTime> (sinAudioFile,
                                                             TimeStretcher::Mode::disabled,
@@ -279,15 +236,14 @@ private:
                                                             std::nullopt);
             node->setDynamicOffsetBeats (fileLengthBeats);
 
-            // Process node writing to a wave file and ensure level is 1.0 for 1s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, (fileLength * 3.0).inSeconds());
 
-            expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ 0s, fileLength }, ts.sampleRate), 0.0f, 0.0f);
-            expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ toPosition (fileLength), fileLength }, ts.sampleRate), 1.0f, 1.0f);
-            expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ toPosition (fileLength) + fileLength, fileLength }, ts.sampleRate), 0.0f, 0.0f);
+            expectAudioBuffer (testContext->buffer, 0, toSamples ({ 0s, fileLength }, ts.sampleRate), 0.0f, 0.0f);
+            expectAudioBuffer (testContext->buffer, 0, toSamples ({ toPosition (fileLength), fileLength }, ts.sampleRate), 1.0f, 1.0f);
+            expectAudioBuffer (testContext->buffer, 0, toSamples ({ toPosition (fileLength) + fileLength, fileLength }, ts.sampleRate), 0.0f, 0.0f);
         }
 
-        beginTest ("WaveNodeRealTime at time 0s, offset at -0.5s");
+        // WaveNodeRealTime at time 0s, offset at -0.5s
         {
             auto node = std::make_unique<WaveNodeRealTime> (sinAudioFile,
                                                             TimeStretcher::Mode::disabled,
@@ -311,15 +267,14 @@ private:
                                                             std::nullopt);
             node->setDynamicOffsetBeats (-fileLengthBeats / 2.0);
 
-            // Process node writing to a wave file and ensure level is 1.0 for 1s, silent afterwards
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, (fileLength * 3.0).inSeconds());
 
-            expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ 0_tp, fileLength / 2.0 }, ts.sampleRate), 1.0f, 1.0f);
-            expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ toPosition (fileLength / 2.0), toPosition (fileLength * 3.0) }, ts.sampleRate), 0.0f, 0.0f);
+            expectAudioBuffer (testContext->buffer, 0, toSamples ({ 0_tp, fileLength / 2.0 }, ts.sampleRate), 1.0f, 1.0f);
+            expectAudioBuffer (testContext->buffer, 0, toSamples ({ toPosition (fileLength / 2.0), toPosition (fileLength * 3.0) }, ts.sampleRate), 0.0f, 0.0f);
         }
     }
 
-    void runTimestretchedTests (graph::test_utilities::TestSetup ts)
+    static void runTimestretchedTests (graph::test_utilities::TestSetup ts)
     {
         using namespace tracktion::graph::test_utilities;
         auto& engine = *Engine::getEngines()[0];
@@ -342,7 +297,7 @@ private:
 
         if constexpr (TimeStretcher::defaultMode != TimeStretcher::soundtouchBetter)
         {
-            beginTest ("WaveNodeRealTime at time 1s, length 1s, time-stretch disabled");
+            // WaveNodeRealTime at time 1s, length 1s, time-stretch disabled
             {
                 auto node = std::make_unique<WaveNodeRealTime> (squareAudioFile,
                                                                 TimeRange (1_tp, fileLength),
@@ -360,20 +315,18 @@ private:
                                                                 std::nullopt,
                                                                 TimeStretcher::Mode::disabled);
 
-                // Process node writing to a wave file and ensure level is 1.0 for 1s, silent afterwards
                 auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, (fileLength * 3.0).inSeconds());
 
                 auto f = writeToTemporaryFile<juce::WavAudioFormat> (toBufferView (testContext->buffer), ts.sampleRate, 0);
 
-                expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ 0s, fileLength }, ts.sampleRate), 0.0f, 0.0f);
-                expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ toPosition (fileLength), fileLength }, ts.sampleRate), 1.0f, 1.0f);
-                expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ toPosition (fileLength) + fileLength, fileLength }, ts.sampleRate), 0.0f, 0.0f);
+                expectAudioBuffer (testContext->buffer, 0, toSamples ({ 0s, fileLength }, ts.sampleRate), 0.0f, 0.0f);
+                expectAudioBuffer (testContext->buffer, 0, toSamples ({ toPosition (fileLength), fileLength }, ts.sampleRate), 1.0f, 1.0f);
+                expectAudioBuffer (testContext->buffer, 0, toSamples ({ toPosition (fileLength) + fileLength, fileLength }, ts.sampleRate), 0.0f, 0.0f);
 
-                // Check last 0.1s of the time period for increased accuraccy
-                expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ 1.9_tp, 2.0_tp }, ts.sampleRate), 1.0f, 1.0f);
+                expectAudioBuffer (testContext->buffer, 0, toSamples ({ 1.9_tp, 2.0_tp }, ts.sampleRate), 1.0f, 1.0f);
             }
 
-            beginTest ("WaveNodeRealTime at time 1b, length 1b");
+            // WaveNodeRealTime at time 1b, length 1b
             {
                 auto node = std::make_unique<WaveNodeRealTime> (squareAudioFile,
                                                                 TimeStretcher::Mode::disabled,
@@ -396,23 +349,19 @@ private:
                                                                 WaveNodeRealTime::SyncPitch::no,
                                                                 std::nullopt);
 
-                // Process node writing to a wave file and ensure level is 1.0 for 1s, silent afterwards
                 auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, (fileLength * 3.0).inSeconds());
 
                 auto f = writeToTemporaryFile<juce::WavAudioFormat> (toBufferView (testContext->buffer), ts.sampleRate, 0);
 
-                expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ 0s, fileLength }, ts.sampleRate), 0.0f, 0.0f);
-                expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ toPosition (fileLength), fileLength }, ts.sampleRate), 1.0f, 1.0f);
-                expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ toPosition (fileLength) + fileLength, fileLength }, ts.sampleRate), 0.0f, 0.0f);
+                expectAudioBuffer (testContext->buffer, 0, toSamples ({ 0s, fileLength }, ts.sampleRate), 0.0f, 0.0f);
+                expectAudioBuffer (testContext->buffer, 0, toSamples ({ toPosition (fileLength), fileLength }, ts.sampleRate), 1.0f, 1.0f);
+                expectAudioBuffer (testContext->buffer, 0, toSamples ({ toPosition (fileLength) + fileLength, fileLength }, ts.sampleRate), 0.0f, 0.0f);
 
-                // Check lat 0.1s of the time period for increased accuraccy
-                expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ 1.9_tp, 2.0_tp }, ts.sampleRate), 1.0f, 1.0f);
+                expectAudioBuffer (testContext->buffer, 0, toSamples ({ 1.9_tp, 2.0_tp }, ts.sampleRate), 1.0f, 1.0f);
             }
         }
 
         // Test each enabled time-stretch algorithm for correct latency compensation.
-        // A clip placed at 1s should produce silence before 1s and signal from 1s onwards,
-        // regardless of the algorithm's internal latency.
         const TimeStretcher::Mode syncTestModes[] = {
            #if TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH
             TimeStretcher::Mode::soundtouchBetter,
@@ -420,9 +369,9 @@ private:
            #if TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
             TimeStretcher::Mode::rubberbandMelodic,
            #endif
-           #if TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
-            TimeStretcher::Mode::signalsmithDefault,
-           #endif
+           //ddd #if TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
+           //  TimeStretcher::Mode::signalsmithDefault,
+           // #endif
            #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE
             TimeStretcher::Mode::elastiquePro,
            #endif
@@ -430,8 +379,7 @@ private:
 
         for (auto mode : syncTestModes)
         {
-            beginTest ("WaveNodeRealTime sync: " + TimeStretcher::getNameOfMode (mode));
-
+            MESSAGE (magic_enum::enum_name (mode));
             auto node = std::make_unique<WaveNodeRealTime> (squareAudioFile,
                                                             TimeRange (1_tp, fileLength),
                                                             0_td,
@@ -451,25 +399,49 @@ private:
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, (fileLength * 3.0).inSeconds());
 
             // Before clip: should be silent
-            expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ 0s, fileLength }, ts.sampleRate), 0.0f, 0.0f);
+            expectAudioBuffer (testContext->buffer, 0, toSamples ({ 0s, fileLength }, ts.sampleRate), 0.0f, 0.0f);
 
             // During clip (middle 80%): should have signal energy.
-            // Use the middle portion to avoid edge effects from windowing/crossfade.
             auto clipRange = toSamples ({ 1.1_tp, 1.9_tp }, ts.sampleRate);
             juce::AudioBuffer<float> clipSection (testContext->buffer.getArrayOfWritePointers(),
                                                   testContext->buffer.getNumChannels(),
                                                   (int) clipRange.getStart(), (int) clipRange.getLength());
             float rms = clipSection.getRMSLevel (0, 0, clipSection.getNumSamples());
-            expect (rms > 0.5f,
-                    "Expected signal during clip region, but RMS was " + juce::String (rms, 4));
+            CHECK (rms > 0.5f);
 
             // After clip: should be silent
-            expectAudioBuffer (*this, testContext->buffer, 0, toSamples ({ toPosition (fileLength) + fileLength, fileLength }, ts.sampleRate), 0.0f, 0.0f);
+            expectAudioBuffer (testContext->buffer, 0, toSamples ({ toPosition (fileLength) + fileLength, fileLength }, ts.sampleRate), 0.0f, 0.0f);
         }
     }
-};
+} // namespace wavenode_test_helpers
 
-static WaveNodeTests waveNodeTests;
+TEST_SUITE ("tracktion_engine")
+{
+
+TEST_CASE ("WaveNode")
+{
+    using namespace wavenode_test_helpers;
+
+    for (auto ts : tracktion::graph::test_utilities::getTestSetups())
+    {
+        runBasicTests<WaveNode> ("WaveNode", ts, true);
+        runBasicTests<WaveNode> ("WaveNode", ts, false);
+        runLoopedTimelineTests<WaveNode> ("WaveNode", ts);
+    }
+
+    MESSAGE ("WaveNodeRealTime");
+
+    for (auto ts : tracktion::graph::test_utilities::getTestSetups())
+    {
+        runBasicTests<WaveNodeRealTime> ("WaveNodeRealTime", ts, true);
+        runBasicTests<WaveNodeRealTime> ("WaveNodeRealTime", ts, false);
+        runLoopedTimelineTests<WaveNodeRealTime> ("WaveNodeRealTime", ts);
+        runDynamicOffsetTests (ts);
+        runTimestretchedTests (ts);
+    }
+}
+
+} // TEST_SUITE
 
 #endif
 

@@ -38,7 +38,7 @@ jobs:
       #  if: runner.os == 'macOS'
       #  run: sudo xcode-select -s /Applications/Xcode_15.3.app
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       #   with:
       #     submodules: true
 
@@ -55,3 +55,15 @@ jobs:
         run: |
           cmake -B ${{ env.BUILD_DIR }} ${{ matrix.generator }} -DJUCE_CPM_DEVELOP=1
           cmake --build ./${{ env.BUILD_DIR }} --config ${{ env.BUILD_CONFIG }} --parallel --target DemoRunner EngineInPluginDemo_common TestRunner Benchmarks
+
+  juce-compatibility-checks-pass:
+    if: always()
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify all jobs passed
+        run: |
+          if [[ "${{ needs.build.result }}" != "success" ]]; then
+            echo "One or more juce compatibility jobs failed"
+            exit 1
+          fi

@@ -188,6 +188,101 @@ namespace benchmark_utilities
         renderEdit (ut, { &edit, editName, ts, isMultiThreaded, isLockFree, poolType });
     }
 
+   #ifdef DOCTEST_LIBRARY_INCLUDED
+    template<typename NodePlayerType>
+    void prepareRenderAndDestroy (juce::String editName, juce::String description,
+                                  tracktion::graph::test_utilities::TestProcess<NodePlayerType>& testContext,
+                                  tracktion::graph::PlayHeadState& playHeadState,
+                                  MultiThreaded isMultiThreaded)
+    {
+        description += ", " + juce::String (testContext.getDescription());
+
+        // preparing
+        if (isMultiThreaded == MultiThreaded::no)
+            testContext.getNodePlayer().setNumThreads (0);
+
+        testContext.setPlayHead (&playHeadState.playHead);
+        playHeadState.playHead.playSyncedToRange ({});
+
+        // memory use
+        {
+            const auto nodes = tracktion::graph::getNodes (testContext.getNode(), tracktion::graph::VertexOrdering::postordering);
+            const auto sizeInBytes = tracktion::graph::test_utilities::getMemoryUsage (nodes);
+
+            BenchmarkResult bmr { createBenchmarkDescription ("Node", (editName + ": memory use").toStdString(), description.toStdString()) };
+            bmr.totalSeconds = static_cast<double> (sizeInBytes);
+            bmr.totalCycles = static_cast<std::uint64_t> (sizeInBytes);
+            BenchmarkList::getInstance().addResult (bmr);
+
+            std::cout << "Num nodes: " << nodes.size() << "\n";
+            std::cout << juce::File::descriptionOfSizeInBytes ((int64_t) sizeInBytes) << "\n";
+        }
+
+        // rendering
+        const StopwatchTimer sw;
+        auto result = testContext.processAll();
+        const auto stats = testContext.getStatisticsAndReset();
+
+        BenchmarkList::getInstance().addResult (createBenchmarkResult (createBenchmarkDescription ("Node",
+                                                                                                   (editName + ": rendering").toStdString(),
+                                                                                                   description.toStdString()),
+                                                                       stats));
+
+        std::cout << sw.getDescription() << "\n";
+        std::cout << stats.toString (testContext.getPerformanceMeasurement().getName()) << "\n";
+
+        // destroying
+        {
+            ScopedBenchmark sb (createBenchmarkDescription ("Node", (editName + ": destroying").toStdString(), description.toStdString()));
+            result.reset();
+        }
+    }
+
+    inline void renderEdit (BenchmarkOptions opts)
+    {
+        assert (opts.edit != nullptr);
+        assert (opts.shareNodeMemory == ShareNodeMemory::no || opts.isLockFree == LockFree::yes);
+        const auto description = getDescription (opts);
+
+        tracktion::graph::PlayHead playHead;
+        tracktion::graph::PlayHeadState playHeadState { playHead };
+        ProcessState processState { playHeadState, opts.edit->tempoSequence };
+
+        // building
+        auto sb = std::make_unique<ScopedBenchmark> (createBenchmarkDescription ("Node", (opts.editName + ": building").toStdString(), description.toStdString()));
+        auto node = createNode (*opts.edit, processState, opts.testSetup.sampleRate, opts.testSetup.blockSize);
+        sb.reset();
+        CHECK (node != nullptr);
+
+        if (opts.isLockFree == LockFree::yes)
+        {
+            tracktion::graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::unique_ptr<Node>(),
+                                                                                                                                   processState, opts.testSetup.sampleRate, opts.testSetup.blockSize,
+                                                                                                                                   tracktion::graph::getPoolCreatorFunction (opts.poolType)),
+                                                                                           opts.testSetup, 2, opts.edit->getLength().inSeconds(), false);
+
+            if (opts.poolMemoryAllocations == PoolMemoryAllocations::yes)
+                testContext.getNodePlayer().enablePooledMemoryAllocations (true);
+
+            if (opts.shareNodeMemory == ShareNodeMemory::yes)
+                testContext.getNodePlayer().enableNodeMemorySharing (true);
+
+            {
+                const ScopedBenchmark sb2 (createBenchmarkDescription ("Node", (opts.editName + ": setting node").toStdString(), description.toStdString()));
+                testContext.setNode(std::move(node));
+            }
+
+            prepareRenderAndDestroy (opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);
+        }
+        else
+        {
+            tracktion::graph::test_utilities::TestProcess<MultiThreadedNodePlayer> testContext (std::make_unique<engine::MultiThreadedNodePlayer> (std::move (node), processState, opts.testSetup.sampleRate, opts.testSetup.blockSize),
+                                                                                                opts.testSetup, 2, opts.edit->getLength().inSeconds(), false);
+            prepareRenderAndDestroy (opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);
+        }
+    }
+   #endif // DOCTEST_LIBRARY_INCLUDED
+
     //==============================================================================
     inline std::unique_ptr<Edit> openEditfromArchiveData (Engine& engine, const char* data, int size)
     {

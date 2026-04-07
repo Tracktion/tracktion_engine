@@ -14,138 +14,161 @@
 
 #if TRACKTION_UNIT_TESTS && TRACKTION_UNIT_TESTS_TIME
 
+#include "../../3rd_party/doctest/tracktion_doctest.hpp"
+
 namespace tracktion::inline core {
 
-//==============================================================================
-//==============================================================================
-class TempoTests    : public juce::UnitTest
+namespace
 {
-public:
-    TempoTests()
-        : juce::UnitTest ("Tempo", "tracktion_core")
+    void checkTempoConversion (const tempo::Sequence& seq, BeatPosition b, TimePosition t)
     {
+        {
+            const auto beats = seq.toBeats (t);
+            const auto diff = std::abs (beats.inBeats() - b.inBeats());
+            CHECK_MESSAGE (diff <= 0.001,
+                           (juce::String ("Converting TTTs to beats. Expected EEE beats, calculated CCC beats")
+                                .replace ("TTT", juce::String (t.inSeconds())).replace ("EEE", juce::String (b.inBeats())).replace ("CCC", juce::String (beats.inBeats()))).toStdString());
+        }
+
+        {
+            const auto time = seq.toTime (b);
+            const auto diff = std::abs (time.inSeconds() - t.inSeconds());
+            CHECK_MESSAGE (diff <= 0.001,
+                           (juce::String ("Converting BBB beats to time. Expected EEEs, calculated CCCs")
+                                .replace ("BBB", juce::String (b.inBeats())).replace ("EEE", juce::String (t.inSeconds())).replace ("CCC", juce::String (time.inSeconds()))).toStdString());
+        }
     }
 
-    void runTest() override
+    void checkBarsAndBeats (tempo::Sequence::Position& pos, int bars, int beats)
+    {
+        auto barsBeats = pos.getBarsBeats();
+        CHECK_EQ (barsBeats.bars, bars);
+        CHECK_EQ (barsBeats.getWholeBeats(), beats);
+    }
+}
+
+TEST_SUITE ("tracktion_core")
+{
+    TEST_CASE ("Tempo")
     {
         using namespace tempo;
 
-        beginTest ("BPM conversions");
+        SUBCASE ("BPM conversions")
         {
-            juce::UnitTest::expect (TimePosition (4s) * BeatsPerMinute { 60.0 } == BeatPosition::fromBeats (4));
-            juce::UnitTest::expect (BeatsPerMinute { 120.0 } * TimePosition (4s) == BeatPosition::fromBeats (8));
-            juce::UnitTest::expect (TimeDuration (1min) * BeatsPerMinute { 60.0 } == BeatDuration::fromBeats (60));
-            juce::UnitTest::expect (BeatsPerMinute { 120.0 } * TimeDuration (1min) == BeatDuration::fromBeats (120));
+            CHECK (TimePosition (4s) * BeatsPerMinute { 60.0 } == BeatPosition::fromBeats (4));
+            CHECK (BeatsPerMinute { 120.0 } * TimePosition (4s) == BeatPosition::fromBeats (8));
+            CHECK (TimeDuration (1min) * BeatsPerMinute { 60.0 } == BeatDuration::fromBeats (60));
+            CHECK (BeatsPerMinute { 120.0 } * TimeDuration (1min) == BeatDuration::fromBeats (120));
 
-            juce::UnitTest::expect (TimePosition (4s) * BeatsPerSecond { 1.0 } == BeatPosition::fromBeats (4));
-            juce::UnitTest::expect (BeatsPerSecond { 2.0 } * TimePosition (4s) == BeatPosition::fromBeats (8));
-            juce::UnitTest::expect (TimeDuration (1min) * BeatsPerSecond { 1.0 } == BeatDuration::fromBeats (60));
-            juce::UnitTest::expect (BeatsPerSecond { 2.0 } * TimeDuration (1min) == BeatDuration::fromBeats (120));
+            CHECK (TimePosition (4s) * BeatsPerSecond { 1.0 } == BeatPosition::fromBeats (4));
+            CHECK (BeatsPerSecond { 2.0 } * TimePosition (4s) == BeatPosition::fromBeats (8));
+            CHECK (TimeDuration (1min) * BeatsPerSecond { 1.0 } == BeatDuration::fromBeats (60));
+            CHECK (BeatsPerSecond { 2.0 } * TimeDuration (1min) == BeatDuration::fromBeats (120));
 
-            juce::UnitTest::expect (BeatPosition::fromBeats (4) * SecondsPerBeat { 1.0 } == TimePosition (4s));
-            juce::UnitTest::expect (SecondsPerBeat { 0.5 } * BeatPosition::fromBeats (8) == TimePosition (4s));
-            juce::UnitTest::expect (BeatDuration::fromBeats (60) * SecondsPerBeat { 1.0 } == TimeDuration (1min));
-            juce::UnitTest::expect (SecondsPerBeat { 0.5 } * BeatDuration::fromBeats (120) == TimeDuration (1min));
+            CHECK (BeatPosition::fromBeats (4) * SecondsPerBeat { 1.0 } == TimePosition (4s));
+            CHECK (SecondsPerBeat { 0.5 } * BeatPosition::fromBeats (8) == TimePosition (4s));
+            CHECK (BeatDuration::fromBeats (60) * SecondsPerBeat { 1.0 } == TimeDuration (1min));
+            CHECK (SecondsPerBeat { 0.5 } * BeatDuration::fromBeats (120) == TimeDuration (1min));
         }
 
-        beginTest ("60bpm 4/4");
+        SUBCASE ("60bpm 4/4")
         {
             Sequence seq ({{ BeatPosition(), 60.0, 0.0f }},
                           {{ BeatPosition(), 4, 4, false }},
                           tempo::LengthOfOneBeat::dependsOnTimeSignature);
 
-            juce::UnitTest::expect (seq.getKeyAt (0s) == Key());
-            juce::UnitTest::expect (seq.getKeyAt (1s) == Key());
+            CHECK (seq.getKeyAt (0s) == Key());
+            CHECK (seq.getKeyAt (1s) == Key());
 
-            expect (seq, {}, {});
-            expect (seq, BeatPosition::fromBeats (1), 1s);
-            expect (seq, BeatPosition::fromBeats (4), 4s);
-            expect (seq, BeatPosition::fromBeats (60), 1min);
-            expect (seq, BeatPosition::fromBeats (120), 2min);
+            checkTempoConversion (seq, {}, {});
+            checkTempoConversion (seq, BeatPosition::fromBeats (1), 1s);
+            checkTempoConversion (seq, BeatPosition::fromBeats (4), 4s);
+            checkTempoConversion (seq, BeatPosition::fromBeats (60), 1min);
+            checkTempoConversion (seq, BeatPosition::fromBeats (120), 2min);
         }
 
-        beginTest ("60bpm 4/8");
+        SUBCASE ("60bpm 4/8")
         {
             Sequence seq ({{ BeatPosition(), 60.0, 0.0f }},
                           {{ BeatPosition(), 4, 8, false }},
                           tempo::LengthOfOneBeat::dependsOnTimeSignature);
 
-            expect (seq, {}, {});
-            expect (seq, BeatPosition::fromBeats (1), 0.5s);
-            expect (seq, BeatPosition::fromBeats (4), 2s);
-            expect (seq, BeatPosition::fromBeats (120), 1min);
-            expect (seq, BeatPosition::fromBeats (240), 2min);
+            checkTempoConversion (seq, {}, {});
+            checkTempoConversion (seq, BeatPosition::fromBeats (1), 0.5s);
+            checkTempoConversion (seq, BeatPosition::fromBeats (4), 2s);
+            checkTempoConversion (seq, BeatPosition::fromBeats (120), 1min);
+            checkTempoConversion (seq, BeatPosition::fromBeats (240), 2min);
         }
 
-        beginTest ("60bpm 4/8 isAlwaysACrotchet");
+        SUBCASE ("60bpm 4/8 isAlwaysACrotchet")
         {
             Sequence seq ({{ BeatPosition(), 60.0, 0.0f }},
                           {{ BeatPosition(), 4, 8, false }},
                           tempo::LengthOfOneBeat::isAlwaysACrotchet);
 
-            expect (seq, {}, {});
-            expect (seq, BeatPosition::fromBeats (1), 1s);
-            expect (seq, BeatPosition::fromBeats (4), 4s);
-            expect (seq, BeatPosition::fromBeats (60), 1min);
-            expect (seq, BeatPosition::fromBeats (120), 2min);
+            checkTempoConversion (seq, {}, {});
+            checkTempoConversion (seq, BeatPosition::fromBeats (1), 1s);
+            checkTempoConversion (seq, BeatPosition::fromBeats (4), 4s);
+            checkTempoConversion (seq, BeatPosition::fromBeats (60), 1min);
+            checkTempoConversion (seq, BeatPosition::fromBeats (120), 2min);
         }
 
-        beginTest ("120bpm 4/4");
+        SUBCASE ("120bpm 4/4")
         {
             Sequence seq ({{ BeatPosition(), 120.0, 0.0f }},
                           {{ BeatPosition(), 4, 4, false }},
                           tempo::LengthOfOneBeat::dependsOnTimeSignature);
 
-            expect (seq, {}, {});
-            expect (seq, BeatPosition::fromBeats (1), 0.5s);
-            expect (seq, BeatPosition::fromBeats (4), 2s);
-            expect (seq, BeatPosition::fromBeats (8), 4s);
-            expect (seq, BeatPosition::fromBeats (120), 1min);
-            expect (seq, BeatPosition::fromBeats (240), 2min);
+            checkTempoConversion (seq, {}, {});
+            checkTempoConversion (seq, BeatPosition::fromBeats (1), 0.5s);
+            checkTempoConversion (seq, BeatPosition::fromBeats (4), 2s);
+            checkTempoConversion (seq, BeatPosition::fromBeats (8), 4s);
+            checkTempoConversion (seq, BeatPosition::fromBeats (120), 1min);
+            checkTempoConversion (seq, BeatPosition::fromBeats (240), 2min);
         }
 
-        beginTest ("120bpm 8/8");
+        SUBCASE ("120bpm 8/8")
         {
             Sequence seq ({{ BeatPosition(), 120.0, 0.0f }},
                           {{ BeatPosition(), 8, 8, false }},
                           tempo::LengthOfOneBeat::dependsOnTimeSignature);
 
-            expect (seq, {}, {});
-            expect (seq, BeatPosition::fromBeats (1), 0.25s);
-            expect (seq, BeatPosition::fromBeats (4), 1s);
-            expect (seq, BeatPosition::fromBeats (8), 2s);
-            expect (seq, BeatPosition::fromBeats (120), 0.5min);
-            expect (seq, BeatPosition::fromBeats (240), 1min);
+            checkTempoConversion (seq, {}, {});
+            checkTempoConversion (seq, BeatPosition::fromBeats (1), 0.25s);
+            checkTempoConversion (seq, BeatPosition::fromBeats (4), 1s);
+            checkTempoConversion (seq, BeatPosition::fromBeats (8), 2s);
+            checkTempoConversion (seq, BeatPosition::fromBeats (120), 0.5min);
+            checkTempoConversion (seq, BeatPosition::fromBeats (240), 1min);
         }
 
-        beginTest ("0b: 120bpm 4/4 c=0, 4b: 60bpm 4/4");
+        SUBCASE ("0b: 120bpm 4/4 c=0, 4b: 60bpm 4/4")
         {
             Sequence seq ({{ BeatPosition(), 120.0, 0.0f },
                            { BeatPosition::fromBeats (4), 60.0, 0.0f } },
                           {{ BeatPosition(), 4, 4, false }},
                           tempo::LengthOfOneBeat::dependsOnTimeSignature);
 
-            expect (seq, {}, {});
-            expect (seq, BeatPosition::fromBeats (1), 0.525s);
-            expect (seq, BeatPosition::fromBeats (4), 2.711s);
-            expect (seq, BeatPosition::fromBeats (8), 6.711s);
+            checkTempoConversion (seq, {}, {});
+            checkTempoConversion (seq, BeatPosition::fromBeats (1), 0.525s);
+            checkTempoConversion (seq, BeatPosition::fromBeats (4), 2.711s);
+            checkTempoConversion (seq, BeatPosition::fromBeats (8), 6.711s);
         }
 
-        beginTest ("0b: 120bpm 4/4 c=-1, 4b: 60bpm 4/4");
+        SUBCASE ("0b: 120bpm 4/4 c=-1, 4b: 60bpm 4/4")
         {
             Sequence seq ({{ BeatPosition(), 120.0, -1.0f },
                            { BeatPosition::fromBeats (4), 60.0, 0.0f } },
                           {{ BeatPosition(), 4, 4, false }},
                           tempo::LengthOfOneBeat::dependsOnTimeSignature);
 
-            expect (seq, {}, {});
-            expect (seq, BeatPosition::fromBeats (1), 1s);
-            expect (seq, BeatPosition::fromBeats (4), 4s);
-            expect (seq, BeatPosition::fromBeats (60), 1min);
-            expect (seq, BeatPosition::fromBeats (120), 2min);
+            checkTempoConversion (seq, {}, {});
+            checkTempoConversion (seq, BeatPosition::fromBeats (1), 1s);
+            checkTempoConversion (seq, BeatPosition::fromBeats (4), 4s);
+            checkTempoConversion (seq, BeatPosition::fromBeats (60), 1min);
+            checkTempoConversion (seq, BeatPosition::fromBeats (120), 2min);
         }
 
-        beginTest ("0b: 120bpm 4/4 c=-1 p=60 s=0, 4b: 60bpm 4/4 p=42 s=1");
+        SUBCASE ("0b: 120bpm 4/4 c=-1 p=60 s=0, 4b: 60bpm 4/4 p=42 s=1")
         {
             Sequence seq ({{ BeatPosition(), 120.0, -1.0f },
                            { BeatPosition::fromBeats (4), 60.0, 0.0f } },
@@ -154,83 +177,40 @@ public:
                            { BeatPosition::fromBeats (4), { 42, 1 } } },
                           tempo::LengthOfOneBeat::dependsOnTimeSignature);
 
-            expect (seq, {}, {});
-            expect (seq, BeatPosition::fromBeats (1), 1s);
-            expect (seq, BeatPosition::fromBeats (4), 4s);
-            expect (seq, BeatPosition::fromBeats (60), 1min);
-            expect (seq, BeatPosition::fromBeats (120), 2min);
+            checkTempoConversion (seq, {}, {});
+            checkTempoConversion (seq, BeatPosition::fromBeats (1), 1s);
+            checkTempoConversion (seq, BeatPosition::fromBeats (4), 4s);
+            checkTempoConversion (seq, BeatPosition::fromBeats (60), 1min);
+            checkTempoConversion (seq, BeatPosition::fromBeats (120), 2min);
 
-            juce::UnitTest::expect (seq.getKeyAt (0s) == Key());
-            juce::UnitTest::expect (seq.getKeyAt (1s) == Key());
-            juce::UnitTest::expect (seq.getKeyAt (seq.toTime (BeatPosition::fromBeats (3.0))) == Key());
-            juce::UnitTest::expect (seq.getKeyAt (seq.toTime (BeatPosition::fromBeats (4.0))) == Key { 42, 1 });
-            juce::UnitTest::expect (seq.getKeyAt (seq.toTime (BeatPosition::fromBeats (8.0))) == Key { 42, 1 });
+            CHECK (seq.getKeyAt (0s) == Key());
+            CHECK (seq.getKeyAt (1s) == Key());
+            CHECK (seq.getKeyAt (seq.toTime (BeatPosition::fromBeats (3.0))) == Key());
+            CHECK (seq.getKeyAt (seq.toTime (BeatPosition::fromBeats (4.0))) == Key { 42, 1 });
+            CHECK (seq.getKeyAt (seq.toTime (BeatPosition::fromBeats (8.0))) == Key { 42, 1 });
         }
     }
 
-    void expect (const tempo::Sequence& seq, BeatPosition b, TimePosition t)
+    TEST_CASE ("tempo::Sequence")
     {
-        {
-            const auto beats = seq.toBeats (t);
-            const auto diff = std::abs (beats.inBeats() - b.inBeats());
-            juce::UnitTest::expect (diff <= 0.001,
-                                    juce::String ("Converting TTTs to beats. Expected EEE beats, calculated CCC beats")
-                                        .replace ("TTT", juce::String (t.inSeconds())).replace ("EEE", juce::String (b.inBeats())).replace ("CCC", juce::String (beats.inBeats())));
-        }
-
-        {
-            const auto time = seq.toTime (b);
-            const auto diff = std::abs (time.inSeconds() - t.inSeconds());
-            juce::UnitTest::expect (diff <= 0.001,
-                                    juce::String ("Converting BBB beats to time. Expected EEEs, calculated CCCs")
-                                        .replace ("BBB", juce::String (b.inBeats())).replace ("EEE", juce::String (t.inSeconds())).replace ("CCC", juce::String (time.inSeconds())));
-        }
-    }
-};
-
-static TempoTests tempoTests;
-
-//==============================================================================
-//==============================================================================
-class SequenceTests : public juce::UnitTest
-{
-public:
-    SequenceTests() : juce::UnitTest ("tempo::Sequence", "Tracktion") {}
-
-    //==============================================================================
-    void runTest() override
-    {
-        runPositionTests();
-    }
-
-private:
-    void expectBarsAndBeats (tempo::Sequence::Position& pos, int bars, int beats)
-    {
-        auto barsBeats = pos.getBarsBeats();
-        expectEquals (barsBeats.bars, bars);
-        expectEquals (barsBeats.getWholeBeats(), beats);
-    }
-
-    void runPositionTests()
-    {
-        beginTest ("Defaults");
+        SUBCASE ("Defaults")
         {
             tempo::Sequence seq ({{ BeatPosition(), 120.0, 0.0f }},
                                  {{ BeatPosition(), 4, 4, false }},
                                  tempo::LengthOfOneBeat::dependsOnTimeSignature);
             tempo::Sequence::Position pos (seq);
 
-            expect (pos.getTime() == TimePosition());
-            expect (pos.getBeats() == BeatPosition());
+            CHECK (pos.getTime() == TimePosition());
+            CHECK (pos.getBeats() == BeatPosition());
 
             const auto barsBeats = pos.getBarsBeats();
-            expect (barsBeats.bars == 0);
-            expect (barsBeats.beats == BeatDuration());
-            expect (barsBeats.getWholeBeats() == 0);
-            expect (barsBeats.getFractionalBeats() == BeatDuration());
+            CHECK (barsBeats.bars == 0);
+            CHECK (barsBeats.beats == BeatDuration());
+            CHECK (barsBeats.getWholeBeats() == 0);
+            CHECK (barsBeats.getFractionalBeats() == BeatDuration());
         }
 
-        beginTest ("Simple sequence");
+        SUBCASE ("Simple sequence")
         {
             tempo::Sequence seq ({{ BeatPosition(), 120.0, 0.0f }},
                                  {{ BeatPosition(), 4, 4, false }},
@@ -238,43 +218,43 @@ private:
             tempo::Sequence::Position pos (seq);
 
             pos.set (2s);
-            expect (pos.getTime() == TimePosition (2s));
-            expect (pos.getBeats() == BeatPosition::fromBeats (4));
-            expect (pos.getBarsBeats().bars == 1);
-            expect (pos.getBarsBeats().beats == BeatDuration::fromBeats (0));
+            CHECK (pos.getTime() == TimePosition (2s));
+            CHECK (pos.getBeats() == BeatPosition::fromBeats (4));
+            CHECK (pos.getBarsBeats().bars == 1);
+            CHECK (pos.getBarsBeats().beats == BeatDuration::fromBeats (0));
 
             pos.add (2s);
-            expect (pos.getTime() == TimePosition (4s));
-            expect (pos.getBeats() == BeatPosition::fromBeats (8));
-            expect (pos.getBarsBeats().bars == 2);
-            expect (pos.getBarsBeats().beats == BeatDuration::fromBeats (0));
+            CHECK (pos.getTime() == TimePosition (4s));
+            CHECK (pos.getBeats() == BeatPosition::fromBeats (8));
+            CHECK (pos.getBarsBeats().bars == 2);
+            CHECK (pos.getBarsBeats().beats == BeatDuration::fromBeats (0));
 
             pos.set (BeatPosition::fromBeats (12));
-            expect (pos.getTime() == TimePosition (6s));
-            expect (pos.getBeats() == BeatPosition::fromBeats (12));
-            expect (pos.getBarsBeats().bars == 3);
-            expect (pos.getBarsBeats().beats == BeatDuration::fromBeats (0));
+            CHECK (pos.getTime() == TimePosition (6s));
+            CHECK (pos.getBeats() == BeatPosition::fromBeats (12));
+            CHECK (pos.getBarsBeats().bars == 3);
+            CHECK (pos.getBarsBeats().beats == BeatDuration::fromBeats (0));
 
             pos.add (BeatDuration::fromBeats (2));
-            expect (pos.getTime() == TimePosition (7s));
-            expect (pos.getBeats() == BeatPosition::fromBeats (14));
-            expect (pos.getBarsBeats().bars == 3);
-            expect (pos.getBarsBeats().beats == BeatDuration::fromBeats (2));
+            CHECK (pos.getTime() == TimePosition (7s));
+            CHECK (pos.getBeats() == BeatPosition::fromBeats (14));
+            CHECK (pos.getBarsBeats().bars == 3);
+            CHECK (pos.getBarsBeats().beats == BeatDuration::fromBeats (2));
 
             pos.addBars (1);
-            expect (pos.getTime() == TimePosition (9s));
-            expect (pos.getBeats() == BeatPosition::fromBeats (18));
-            expect (pos.getBarsBeats().bars == 4);
-            expect (pos.getBarsBeats().beats == BeatDuration::fromBeats (2));
+            CHECK (pos.getTime() == TimePosition (9s));
+            CHECK (pos.getBeats() == BeatPosition::fromBeats (18));
+            CHECK (pos.getBarsBeats().bars == 4);
+            CHECK (pos.getBarsBeats().beats == BeatDuration::fromBeats (2));
 
             pos.set (tempo::BarsAndBeats ({ 5, BeatDuration::fromBeats (1) }));
-            expect (pos.getTime() == TimePosition (10.5s));
-            expect (pos.getBeats() == BeatPosition::fromBeats (21));
-            expect (pos.getBarsBeats().bars == 5);
-            expect (pos.getBarsBeats().beats == BeatDuration::fromBeats (1));
+            CHECK (pos.getTime() == TimePosition (10.5s));
+            CHECK (pos.getBeats() == BeatPosition::fromBeats (21));
+            CHECK (pos.getBarsBeats().bars == 5);
+            CHECK (pos.getBarsBeats().beats == BeatDuration::fromBeats (1));
         }
 
-        beginTest ("Positive sequences");
+        SUBCASE ("Positive sequences")
         {
             tempo::Sequence seq ({{ BeatPosition(), 120.0, 0.0f }},
                                  {{ BeatPosition(), 4, 4, false }},
@@ -282,27 +262,27 @@ private:
             tempo::Sequence::Position pos (seq);
             pos.set (TimePosition());
 
-            expectBarsAndBeats (pos, 0, 0);
+            checkBarsAndBeats (pos, 0, 0);
             pos.add (BeatDuration::fromBeats (1.0));
-            expectBarsAndBeats (pos, 0, 1);
+            checkBarsAndBeats (pos, 0, 1);
             pos.add (BeatDuration::fromBeats (1.0));
-            expectBarsAndBeats (pos, 0, 2);
+            checkBarsAndBeats (pos, 0, 2);
             pos.add (BeatDuration::fromBeats (1.0));
-            expectBarsAndBeats (pos, 0, 3);
+            checkBarsAndBeats (pos, 0, 3);
             pos.add (BeatDuration::fromBeats (1.0));
-            expectBarsAndBeats (pos, 1, 0);
+            checkBarsAndBeats (pos, 1, 0);
 
             pos.addBars (1);
-            expectBarsAndBeats (pos, 2, 0);
+            checkBarsAndBeats (pos, 2, 0);
             pos.add (BeatDuration::fromBeats (1.0));
-            expectBarsAndBeats (pos, 2, 1);
+            checkBarsAndBeats (pos, 2, 1);
             pos.add (BeatDuration::fromBeats (1.0));
-            expectBarsAndBeats (pos, 2, 2);
+            checkBarsAndBeats (pos, 2, 2);
             pos.add (BeatDuration::fromBeats (1.0));
-            expectBarsAndBeats (pos, 2, 3);
+            checkBarsAndBeats (pos, 2, 3);
         }
 
-        beginTest ("Negative sequences");
+        SUBCASE ("Negative sequences")
         {
             tempo::Sequence seq ({{ BeatPosition(), 120.0, 0.0f }},
                                  {{ BeatPosition(), 4, 4, false }},
@@ -311,35 +291,35 @@ private:
             pos.set (TimePosition());
             pos.addBars (-2);
 
-            expectBarsAndBeats (pos, -2, 0);
+            checkBarsAndBeats (pos, -2, 0);
             pos.add (BeatDuration::fromBeats (1.0));
-            expectBarsAndBeats (pos, -2, 1);
+            checkBarsAndBeats (pos, -2, 1);
             pos.add (BeatDuration::fromBeats (1.0));
-            expectBarsAndBeats (pos, -2, 2);
+            checkBarsAndBeats (pos, -2, 2);
             pos.add (BeatDuration::fromBeats (1.0));
-            expectBarsAndBeats (pos, -2, 3);
+            checkBarsAndBeats (pos, -2, 3);
             pos.add (BeatDuration::fromBeats (1.0));
-            expectBarsAndBeats (pos, -1, 0);
+            checkBarsAndBeats (pos, -1, 0);
             pos.add (BeatDuration::fromBeats (1.0));
-            expectBarsAndBeats (pos, -1, 1);
+            checkBarsAndBeats (pos, -1, 1);
             pos.add (BeatDuration::fromBeats (1.0));
-            expectBarsAndBeats (pos, -1, 2);
+            checkBarsAndBeats (pos, -1, 2);
             pos.add (BeatDuration::fromBeats (1.0));
-            expectBarsAndBeats (pos, -1, 3);
+            checkBarsAndBeats (pos, -1, 3);
             pos.add (BeatDuration::fromBeats (1.0));
-            expectBarsAndBeats (pos, 0, 0);
+            checkBarsAndBeats (pos, 0, 0);
             pos.add (BeatDuration::fromBeats (1.0));
-            expectBarsAndBeats (pos, 0, 1);
+            checkBarsAndBeats (pos, 0, 1);
             pos.add (BeatDuration::fromBeats (1.0));
-            expectBarsAndBeats (pos, 0, 2);
+            checkBarsAndBeats (pos, 0, 2);
             pos.add (BeatDuration::fromBeats (1.0));
-            expectBarsAndBeats (pos, 0, 3);
+            checkBarsAndBeats (pos, 0, 3);
             pos.add (BeatDuration::fromBeats (1.0));
-            expectBarsAndBeats (pos, 1, 0);
+            checkBarsAndBeats (pos, 1, 0);
             pos.add (BeatDuration::fromBeats (1.0));
         }
 
-        beginTest ("Next changes");
+        SUBCASE ("Next changes")
         {
             tempo::Sequence seq ({{ BeatPosition(), 120.0, 1.0f },
                                   { BeatPosition::fromBeats (4), 60.0, 0.0f } },
@@ -347,15 +327,15 @@ private:
                                  tempo::LengthOfOneBeat::dependsOnTimeSignature);
             tempo::Sequence::Position pos (seq);
 
-            expect (pos.getTimeOfNextChange() == 2s);
-            expect (pos.getBeatOfNextChange() == BeatPosition::fromBeats (4));
+            CHECK (pos.getTimeOfNextChange() == 2s);
+            CHECK (pos.getBeatOfNextChange() == BeatPosition::fromBeats (4));
 
             pos.set (BeatPosition::fromBeats (10));
-            expect (pos.getTimeOfNextChange() == 2s);
-            expect (pos.getBeatOfNextChange() == BeatPosition::fromBeats (4));
+            CHECK (pos.getTimeOfNextChange() == 2s);
+            CHECK (pos.getBeatOfNextChange() == BeatPosition::fromBeats (4));
         }
 
-        beginTest ("Multple change sequence");
+        SUBCASE ("Multple change sequence")
         {
             {
                 tempo::Sequence seq ({{ BeatPosition(), 120.0, 0.0f },
@@ -365,20 +345,20 @@ private:
                 tempo::Sequence::Position pos (seq);
 
                 pos.set (0.525s);
-                expectWithinAbsoluteError (pos.getBeats().inBeats(), BeatPosition::fromBeats (1).inBeats(), 0.001);
+                CHECK (std::abs (pos.getBeats().inBeats() - BeatPosition::fromBeats (1).inBeats()) <= 0.001);
                 pos.add (2.186s);
-                expectWithinAbsoluteError (pos.getBeats().inBeats(), BeatPosition::fromBeats (4).inBeats(), 0.001);
+                CHECK (std::abs (pos.getBeats().inBeats() - BeatPosition::fromBeats (4).inBeats()) <= 0.001);
                 pos.addBars (1);
-                expectWithinAbsoluteError (pos.getTime().inSeconds(), 6.711, 0.001);
+                CHECK (std::abs (pos.getTime().inSeconds() - 6.711) <= 0.001);
 
                 pos.set (BeatPosition::fromBeats (1));
-                expectWithinAbsoluteError (pos.getTime().inSeconds(), TimePosition (0.525s).inSeconds(), 0.001);
+                CHECK (std::abs (pos.getTime().inSeconds() - TimePosition (0.525s).inSeconds()) <= 0.001);
                 pos.add (BeatPosition::fromBeats (4) - pos.getBeats());
-                expectWithinAbsoluteError (pos.getTime().inSeconds(), TimePosition (2.711s).inSeconds(), 0.001);
+                CHECK (std::abs (pos.getTime().inSeconds() - TimePosition (2.711s).inSeconds()) <= 0.001);
                 pos.add (TimeDuration (4s));
-                expectWithinAbsoluteError (pos.getBeats().inBeats(), BeatPosition::fromBeats (8).inBeats(), 0.001);
+                CHECK (std::abs (pos.getBeats().inBeats() - BeatPosition::fromBeats (8).inBeats()) <= 0.001);
 
-                expect (pos.getBeatOfNextChange() == BeatPosition::fromBeats (4));
+                CHECK (pos.getBeatOfNextChange() == BeatPosition::fromBeats (4));
             }
 
             {
@@ -389,13 +369,13 @@ private:
                 tempo::Sequence::Position pos (seq);
 
                 pos.set (1s);
-                expect (pos.getBeats() == BeatPosition::fromBeats (1));
+                CHECK (pos.getBeats() == BeatPosition::fromBeats (1));
                 pos.add (3s);
-                expect (pos.getBeats() == BeatPosition::fromBeats (4));
+                CHECK (pos.getBeats() == BeatPosition::fromBeats (4));
                 pos.add (BeatDuration::fromBeats (56));
-                expect (pos.getTime() == 1min);
+                CHECK (pos.getTime() == 1min);
                 pos.add (1min);
-                expect (pos.getTime() == 2min);
+                CHECK (pos.getTime() == 2min);
             }
 
             {
@@ -408,25 +388,23 @@ private:
 
                 tempo::Sequence::Position pos (seq);
 
-                expect (pos.getKey() == tempo::Key());
+                CHECK (pos.getKey() == tempo::Key());
                 pos.set (1s);
-                expect (pos.getBeats() == BeatPosition::fromBeats (1));
-                expect (pos.getKey() == tempo::Key());
+                CHECK (pos.getBeats() == BeatPosition::fromBeats (1));
+                CHECK (pos.getKey() == tempo::Key());
                 pos.add (3s);
-                expect (pos.getBeats() == BeatPosition::fromBeats (4));
-                expect (pos.getKey() == tempo::Key { 42, 1 });
+                CHECK (pos.getBeats() == BeatPosition::fromBeats (4));
+                CHECK (pos.getKey() == tempo::Key { 42, 1 });
                 pos.add (BeatDuration::fromBeats (56));
-                expect (pos.getKey() == tempo::Key { 42, 1 });
-                expect (pos.getTime() == 1min);
+                CHECK (pos.getKey() == tempo::Key { 42, 1 });
+                CHECK (pos.getTime() == 1min);
                 pos.add (1min);
-                expect (pos.getTime() == 2min);
-                expect (pos.getKey() == tempo::Key { 42, 1 });
+                CHECK (pos.getTime() == 2min);
+                CHECK (pos.getKey() == tempo::Key { 42, 1 });
             }
         }
     }
-};
-
-static SequenceTests sequenceTests;
+}
 
 } // namespace tracktion::inline core
 #endif //TRACKTION_UNIT_TESTS_TIME

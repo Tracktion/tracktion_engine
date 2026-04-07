@@ -1542,68 +1542,42 @@ bool Clipboard::TempoChanges::pasteTempoSequence (TempoSequence& ts, TimeRange t
     return true;
 }
 
+} // namespace tracktion::inline engine
+
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_CLIPBOARD
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+namespace tracktion::inline engine {
 
-//==============================================================================
-//==============================================================================
-class ClipboardTempoTests   : public juce::UnitTest
+static void checkTempoSetting (TempoSetting& tempo, double bpm, float curve)
 {
-public:
-    ClipboardTempoTests() : juce::UnitTest ("ClipboardTempoTests", "Tracktion") {}
+    CHECK (std::abs (tempo.getBpm() - bpm) <= 0.001);
+    CHECK (std::abs (tempo.getCurve() - curve) <= 0.001f);
+}
 
-    //==============================================================================
-    void runTest() override
+TEST_SUITE ("tracktion_engine")
+{
+    TEST_CASE ("ClipboardTempoTests")
     {
-        runCopyTests();
-        runCopyTestsUsingBeatInsertion();
-        runTrackCopyPasteTests();
-    }
-
-private:
-    template<typename TimeType>
-    void expectEquals (TimeType t, double t2)
-    {
-        juce::UnitTest::expectEquals (t.inSeconds(), t2);
-    }
-
-    void expectEquals (BeatPosition t, double t2)
-    {
-        juce::UnitTest::expectEquals (t.inBeats(), t2);
-    }
-
-    void expectEquals (BeatDuration t, double t2)
-    {
-        juce::UnitTest::expectEquals (t.inBeats(), t2);
-    }
-
-    void expectTempoSetting (TempoSetting& tempo, double bpm, float curve)
-    {
-        expectWithinAbsoluteError (tempo.getBpm(), bpm, 0.001);
-        expectWithinAbsoluteError (tempo.getCurve(), curve, 0.001f);
-    }
-
-    void runCopyTests()
-    {
-        auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
-        auto& ts = edit->tempoSequence;
-
-        beginTest ("Simple copy/paste");
+        SUBCASE ("Simple copy/paste")
         {
+            auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
+            auto& ts = edit->tempoSequence;
+
             ts.getTempo (0)->setBpm (120.0);
 
             // N.B. bars start at 0!
-            expectEquals (ts.toBeats ({ 0, {} }), 0.0);
-            expectEquals (ts.toTime ({ 0, {} }), 0.0);
-            expectEquals (ts.toBeats ({ 8, {} }), 32.0);
-            expectEquals (ts.toTime ({ 8, {} }), 16.0);
+            CHECK_EQ (ts.toBeats ({ 0, {} }).inBeats(), 0.0);
+            CHECK_EQ (ts.toTime ({ 0, {} }).inSeconds(), 0.0);
+            CHECK_EQ (ts.toBeats ({ 8, {} }).inBeats(), 32.0);
+            CHECK_EQ (ts.toTime ({ 8, {} }).inSeconds(), 16.0);
 
             ts.insertTempo (ts.toBeats ({ 5, {} }), 60.0, 1.0f);
             ts.insertTempo (ts.toBeats ({ 9, {} }), 120.0, 1.0f);
 
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 4, {} })), 120.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 6, {} })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 8, {} })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 10, {} })), 120.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 4, {} })), 120.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 6, {} })), 60.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 8, {} })), 60.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 10, {} })), 120.0, 1.0f);
 
             const BeatRange beatRangeToCopy (ts.toBeats ({ 6, {} }), ts.toBeats ({ 8, {} }));
             const auto timeRangeToCopy = ts.toTime (beatRangeToCopy);
@@ -1622,49 +1596,46 @@ private:
 
             const auto numBeatsInserted = beatRangeToInsert.getLength();
             const int numBarsInserted = juce::roundToInt (numBeatsInserted.inBeats() / tempoAtInsertionPoint.getMatchingTimeSig().denominator);
-            expectWithinAbsoluteError (numBeatsInserted.inBeats(), 8.0, 0.0001);
-            expect (numBarsInserted == 2);
+            CHECK (std::abs (numBeatsInserted.inBeats() - 8.0) <= 0.0001);
+            CHECK (numBarsInserted == 2);
 
             // Ensure tempos are correct at original region
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 4 + numBarsInserted, {} })), 120.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 6 + numBarsInserted, {} })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 8 + numBarsInserted, {} })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 10 + numBarsInserted, {} })), 120.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 4 + numBarsInserted, {} })), 120.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 6 + numBarsInserted, {} })), 60.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 8 + numBarsInserted, {} })), 60.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 10 + numBarsInserted, {} })), 120.0, 1.0f);
 
             // Paste tempo changes
             tempoChanges.pasteTempoSequence (ts, TimeRange (timeToInsertAt, lengthInTimeToInsert));
 
             // Ensure tempos are correct at inserted region
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 0, {} })), 120.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 1, BeatDuration::fromBeats (3) })), 120.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 2, {} })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 3, BeatDuration::fromBeats (3) })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 4, {} })), 120.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 0, {} })), 120.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 1, BeatDuration::fromBeats (3) })), 120.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 2, {} })), 60.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 3, BeatDuration::fromBeats (3) })), 60.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 4, {} })), 120.0, 1.0f);
         }
-    }
 
-    void runCopyTestsUsingBeatInsertion()
-    {
-        auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
-        auto& ts = edit->tempoSequence;
-
-        beginTest ("Simple copy/paste");
+        SUBCASE ("Simple copy/paste using beat insertion")
         {
+            auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
+            auto& ts = edit->tempoSequence;
+
             ts.getTempo (0)->setBpm (120.0);
 
             // N.B. bars start at 0!
-            expectEquals (ts.toBeats ({ 0, {} }), 0.0);
-            expectEquals (ts.toTime ({ 0, {} }), 0.0);
-            expectEquals (ts.toBeats ({ 8, {} }), 32.0);
-            expectEquals (ts.toTime ({ 8, {} }), 16.0);
+            CHECK_EQ (ts.toBeats ({ 0, {} }).inBeats(), 0.0);
+            CHECK_EQ (ts.toTime ({ 0, {} }).inSeconds(), 0.0);
+            CHECK_EQ (ts.toBeats ({ 8, {} }).inBeats(), 32.0);
+            CHECK_EQ (ts.toTime ({ 8, {} }).inSeconds(), 16.0);
 
             ts.insertTempo (ts.toBeats ({ 5, {} }), 60.0, 1.0f);
             ts.insertTempo (ts.toBeats ({ 9, {} }), 120.0, 1.0f);
 
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 4, {} })), 120.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 6, {} })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 8, {} })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 10, {} })), 120.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 4, {} })), 120.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 6, {} })), 60.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 8, {} })), 60.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 10, {} })), 120.0, 1.0f);
 
             const BeatRange beatRangeToCopy (ts.toBeats ({ 6, {} }), ts.toBeats ({ 8, {} }));
             const auto timeRangeToCopy = ts.toTime (beatRangeToCopy);
@@ -1680,37 +1651,34 @@ private:
 
             const auto numBeatsInserted = beatRangeToInsert.getLength();
             const int numBarsInserted = juce::roundToInt (numBeatsInserted.inBeats() / tempoAtInsertionPoint.getMatchingTimeSig().denominator);
-            expectWithinAbsoluteError (numBeatsInserted.inBeats(), 8.0, 0.0001);
-            expect (numBarsInserted == 2);
+            CHECK (std::abs (numBeatsInserted.inBeats() - 8.0) <= 0.0001);
+            CHECK (numBarsInserted == 2);
 
             // Ensure tempos are correct at original region
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 4 + numBarsInserted, {} })), 120.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 6 + numBarsInserted, {} })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 8 + numBarsInserted, {} })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 10 + numBarsInserted, {} })), 120.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 4 + numBarsInserted, {} })), 120.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 6 + numBarsInserted, {} })), 60.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 8 + numBarsInserted, {} })), 60.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 10 + numBarsInserted, {} })), 120.0, 1.0f);
 
             // Paste tempo changes
             tempoChanges.pasteTempoSequence (ts, TimeRange (timeToInsertAt, ts.toTime (beatRangeToInsert.getEnd())));
 
             // Ensure tempos are correct at inserted region
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 0, {} })), 120.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 1, BeatDuration::fromBeats (3) })), 120.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 2, {} })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 3, BeatDuration::fromBeats (3) })), 60.0, 1.0f);
-            expectTempoSetting (ts.getTempoAt (ts.toBeats ({ 4, {} })), 120.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 0, {} })), 120.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 1, BeatDuration::fromBeats (3) })), 120.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 2, {} })), 60.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 3, BeatDuration::fromBeats (3) })), 60.0, 1.0f);
+            checkTempoSetting (ts.getTempoAt (ts.toBeats ({ 4, {} })), 120.0, 1.0f);
         }
-    }
 
-    void runTrackCopyPasteTests()
-    {
-        beginTest ("Root tracks copy/paste");
+        SUBCASE ("Root tracks copy/paste")
         {
             auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
             edit->ensureNumberOfAudioTracks (3);
 
             {
                 auto tracks = getAudioTracks(*edit);
-                juce::UnitTest::expectEquals (tracks.size(), 3);
+                CHECK_EQ (tracks.size(), 3);
                 tracks[0]->setName ("First");
                 tracks[1]->setName ("Second");
                 tracks[2]->setName ("Third");
@@ -1728,29 +1696,29 @@ private:
                 EditInsertPoint insertPoint (*edit);
                 Clipboard::ContentType::EditPastingOptions opts (*edit, insertPoint);
                 opts.startTrack = tracks[2];
-                expect (clipboardTracks.pasteIntoEdit (opts));
+                CHECK (clipboardTracks.pasteIntoEdit (opts));
             }
 
             {
                 auto tracks = getAudioTracks(*edit);
-                juce::UnitTest::expectEquals (tracks.size(), 6);
-                juce::UnitTest::expectEquals<juce::String> (tracks[0]->getName(), "First Original");
-                juce::UnitTest::expectEquals<juce::String> (tracks[1]->getName(), "Second Original");
-                juce::UnitTest::expectEquals<juce::String> (tracks[2]->getName(), "Third Original");
-                juce::UnitTest::expectEquals<juce::String> (tracks[3]->getName(), "First");
-                juce::UnitTest::expectEquals<juce::String> (tracks[4]->getName(), "Second");
-                juce::UnitTest::expectEquals<juce::String> (tracks[5]->getName(), "Third");
+                CHECK_EQ (tracks.size(), 6);
+                CHECK_EQ (tracks[0]->getName(), juce::String ("First Original"));
+                CHECK_EQ (tracks[1]->getName(), juce::String ("Second Original"));
+                CHECK_EQ (tracks[2]->getName(), juce::String ("Third Original"));
+                CHECK_EQ (tracks[3]->getName(), juce::String ("First"));
+                CHECK_EQ (tracks[4]->getName(), juce::String ("Second"));
+                CHECK_EQ (tracks[5]->getName(), juce::String ("Third"));
             }
         }
 
-        beginTest ("Root tracks paste in to folder");
+        SUBCASE ("Root tracks paste in to folder")
         {
             auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
 
             {
                 edit->ensureNumberOfAudioTracks (3);
                 auto tracks = getAudioTracks (*edit);
-                juce::UnitTest::expectEquals (tracks.size(), 3);
+                CHECK_EQ (tracks.size(), 3);
                 tracks[0]->setName ("First");
                 tracks[1]->setName ("Second");
                 tracks[2]->setName ("Third");
@@ -1773,29 +1741,29 @@ private:
                 EditInsertPoint insertPoint (*edit);
                 Clipboard::ContentType::EditPastingOptions opts (*edit, insertPoint);
                 opts.startTrack = ft;
-                expect (clipboardTracks.pasteIntoEdit (opts));
+                CHECK (clipboardTracks.pasteIntoEdit (opts));
             }
 
             {
                 auto tracks = getAudioTracks (*edit);
-                juce::UnitTest::expectEquals (tracks.size(), 6);
-                juce::UnitTest::expectEquals<juce::String> (tracks[0]->getName(), "First Original");
-                juce::UnitTest::expectEquals<juce::String> (tracks[1]->getName(), "Second Original");
-                juce::UnitTest::expectEquals<juce::String> (tracks[2]->getName(), "Third Original");
-                juce::UnitTest::expectEquals<juce::String> (tracks[3]->getName(), "First");
-                juce::UnitTest::expectEquals<juce::String> (tracks[4]->getName(), "Second");
-                juce::UnitTest::expectEquals<juce::String> (tracks[5]->getName(), "Third");
+                CHECK_EQ (tracks.size(), 6);
+                CHECK_EQ (tracks[0]->getName(), juce::String ("First Original"));
+                CHECK_EQ (tracks[1]->getName(), juce::String ("Second Original"));
+                CHECK_EQ (tracks[2]->getName(), juce::String ("Third Original"));
+                CHECK_EQ (tracks[3]->getName(), juce::String ("First"));
+                CHECK_EQ (tracks[4]->getName(), juce::String ("Second"));
+                CHECK_EQ (tracks[5]->getName(), juce::String ("Third"));
             }
         }
 
-        beginTest ("Tracks inside folder copy/paste");
+        SUBCASE ("Tracks inside folder copy/paste")
         {
             auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
 
             {
                 edit->ensureNumberOfAudioTracks (3);
                 auto tracks = getAudioTracks(*edit);
-                juce::UnitTest::expectEquals (tracks.size(), 3);
+                CHECK_EQ (tracks.size(), 3);
                 tracks[0]->setName ("First");
                 tracks[1]->setName ("Second");
                 tracks[2]->setName ("Third");
@@ -1812,10 +1780,10 @@ private:
 
             {
                 auto subTracks = ft->getInputTracks();
-                juce::UnitTest::expectEquals (subTracks.size(), 3);
-                juce::UnitTest::expectEquals<juce::String> (subTracks[0]->getName(), "First");
-                juce::UnitTest::expectEquals<juce::String> (subTracks[1]->getName(), "Second");
-                juce::UnitTest::expectEquals<juce::String> (subTracks[2]->getName(), "Third");
+                CHECK_EQ (subTracks.size(), 3);
+                CHECK_EQ (subTracks[0]->getName(), juce::String ("First"));
+                CHECK_EQ (subTracks[1]->getName(), juce::String ("Second"));
+                CHECK_EQ (subTracks[2]->getName(), juce::String ("Third"));
             }
 
             {
@@ -1833,26 +1801,27 @@ private:
                 EditInsertPoint insertPoint (*edit);
                 Clipboard::ContentType::EditPastingOptions opts (*edit, insertPoint);
                 opts.startTrack = subTracks[2];
-                expect (clipboardTracks.pasteIntoEdit (opts));
+                CHECK (clipboardTracks.pasteIntoEdit (opts));
             }
 
             {
                 auto subTracks = ft->getInputTracks();
-                juce::UnitTest::expectEquals (subTracks.size(), 6);
-                juce::UnitTest::expectEquals<juce::String> (subTracks[0]->getName(), "First Original");
-                juce::UnitTest::expectEquals<juce::String> (subTracks[1]->getName(), "Second Original");
-                juce::UnitTest::expectEquals<juce::String> (subTracks[2]->getName(), "Third Original");
-                juce::UnitTest::expectEquals<juce::String> (subTracks[3]->getName(), "First");
-                juce::UnitTest::expectEquals<juce::String> (subTracks[4]->getName(), "Second");
-                juce::UnitTest::expectEquals<juce::String> (subTracks[5]->getName(), "Third");
+                CHECK_EQ (subTracks.size(), 6);
+                CHECK_EQ (subTracks[0]->getName(), juce::String ("First Original"));
+                CHECK_EQ (subTracks[1]->getName(), juce::String ("Second Original"));
+                CHECK_EQ (subTracks[2]->getName(), juce::String ("Third Original"));
+                CHECK_EQ (subTracks[3]->getName(), juce::String ("First"));
+                CHECK_EQ (subTracks[4]->getName(), juce::String ("Second"));
+                CHECK_EQ (subTracks[5]->getName(), juce::String ("Third"));
             }
         }
     }
-};
+}
 
-static ClipboardTempoTests clipboardTempoTests;
-
+} // namespace tracktion::inline engine
 #endif
+
+namespace tracktion::inline engine {
 
 //==============================================================================
 //==============================================================================

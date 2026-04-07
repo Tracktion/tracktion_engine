@@ -11,246 +11,220 @@
 
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_LAUNCH_HANDLE
 
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
 #include "../../../tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
 
 namespace tracktion::inline engine
 {
 
-//==============================================================================
-//==============================================================================
-class LaunchHandleTests : public juce::UnitTest
+TEST_SUITE ("tracktion_engine")
 {
-public:
-    LaunchHandleTests()
-        : juce::UnitTest ("LaunchHandle", "tracktion_engine")
+
+TEST_CASE ("LaunchHandle: Non-quantised launching")
+{
+    LaunchHandle h;
+    CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
+    CHECK (! h.getQueuedStatus());
+
+    h.play ({});
+    CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
+    CHECK (h.getQueuedStatus() == LaunchHandle::QueueState::playQueued);
+
+    SyncRange syncRange;
+    auto advanceSync = [&syncRange] (auto duration)
+                       {
+                           auto newEnd = syncRange.end;
+                           newEnd.monotonicBeat.v = newEnd.monotonicBeat.v + duration;
+                           newEnd.beat = newEnd.beat + duration;
+                           syncRange = SyncRange { syncRange.end, newEnd };
+
+                           return syncRange;
+                       };
+
     {
+        auto s = h.advance (advanceSync (0.5_bd));
+        CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
+        CHECK (! h.getQueuedStatus());
+        CHECK (getBeatRange (syncRange) == BeatRange (0_bp, 0.5_bp));
+        CHECK (getMonotonicBeatRange (syncRange).v == BeatRange (0_bp, 0.5_bp));
+
+        CHECK (! s.isSplit);
+        CHECK (s.playing1);
+        CHECK (s.range1 == BeatRange (0_bp, 0.5_bp));
+        CHECK (! s.playing2);
+        CHECK (s.range2.isEmpty());
     }
 
-    void runTest() override
     {
-        runBasicLauchHandleTests();
-        runQuantisedLauchHandleTests();
-        legatoLauchHandleTests();
+        auto s = h.advance (advanceSync (0.5_bd));
+        CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
+        CHECK (! h.getQueuedStatus());
+
+        CHECK (! s.isSplit);
+        CHECK (s.playing1);
+        CHECK (s.range1 == BeatRange (0.5_bp, 1.0_bp));
+        CHECK (! s.playing2);
+        CHECK (s.range2.isEmpty());
     }
 
-private:
-    void runBasicLauchHandleTests()
+    h.stop ({});
+    CHECK (h.getQueuedStatus() == LaunchHandle::QueueState::stopQueued);
+    CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
+
     {
-        beginTest ("Non-quantised launching");
+        auto s = h.advance (advanceSync (0.5_bd));
+        CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
+        CHECK (! h.getQueuedStatus());
 
-        {
-            LaunchHandle h;
-            expect (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
-            expect (! h.getQueuedStatus());
+        CHECK (! s.isSplit);
+        CHECK (! s.playing1);
+        CHECK (s.range1 == BeatRange (1.0_bp, 1.5_bp));
+        CHECK (! s.playing2);
+        CHECK (s.range2.isEmpty());
+    }
+}
 
-            h.play ({});
-            expect (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
-            expect (h.getQueuedStatus() == LaunchHandle::QueueState::playQueued);
+TEST_CASE ("LaunchHandle: Quantised launching")
+{
+    LaunchHandle h;
+    CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
+    CHECK (! h.getQueuedStatus());
 
-            SyncRange syncRange;
-            auto advanceSync = [&syncRange] (auto duration)
-                               {
-                                   auto newEnd = syncRange.end;
-                                   newEnd.monotonicBeat.v = newEnd.monotonicBeat.v + duration;
-                                   newEnd.beat = newEnd.beat + duration;
-                                   syncRange = SyncRange { syncRange.end, newEnd };
+    SyncRange syncRange;
+    auto advanceHandle = [&h, &syncRange] (auto duration)
+    {
+        auto newEnd = syncRange.end;
+        newEnd.monotonicBeat.v = newEnd.monotonicBeat.v + duration;
+        newEnd.beat = newEnd.beat + duration;
+        syncRange = SyncRange { syncRange.end, newEnd };
 
-                                   return syncRange;
-                               };
+        return h.advance (syncRange);
+    };
 
-            {
-                auto s = h.advance (advanceSync (0.5_bd));
-                expect (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
-                expect (! h.getQueuedStatus());
-                expect (getBeatRange (syncRange) == BeatRange (0_bp, 0.5_bp));
-                expect (getMonotonicBeatRange (syncRange).v == BeatRange (0_bp, 0.5_bp));
+    h.play (MonotonicBeat { 0.25_bp });
+    CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
+    CHECK (h.getQueuedStatus() == LaunchHandle::QueueState::playQueued);
 
-                expect (! s.isSplit);
-                expect (s.playing1);
-                expect (s.range1 == BeatRange (0_bp, 0.5_bp));
-                expect (! s.playing2);
-                expect (s.range2.isEmpty());
-            }
+    {
+        auto s = advanceHandle (0.5_bd);
+        CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
+        CHECK (! h.getQueuedStatus());
 
-            {
-                auto s = h.advance (advanceSync (0.5_bd));
-                expect (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
-                expect (! h.getQueuedStatus());
-
-                expect (! s.isSplit);
-                expect (s.playing1);
-                expect (s.range1 == BeatRange (0.5_bp, 1.0_bp));
-                expect (! s.playing2);
-                expect (s.range2.isEmpty());
-            }
-
-            h.stop ({});
-            expect (h.getQueuedStatus() == LaunchHandle::QueueState::stopQueued);
-            expect (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
-
-            {
-                auto s = h.advance (advanceSync (0.5_bd));
-                expect (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
-                expect (! h.getQueuedStatus());
-
-                expect (! s.isSplit);
-                expect (! s.playing1);
-                expect (s.range1 == BeatRange (1.0_bp, 1.5_bp));
-                expect (! s.playing2);
-                expect (s.range2.isEmpty());
-            }
-        }
+        CHECK (s.isSplit);
+        CHECK (! s.playing1);
+        CHECK (s.range1 == BeatRange (0_bp, 0.25_bp));
+        CHECK (s.playing2);
+        CHECK (s.range2 == BeatRange (0.25_bp, 0.5_bp));
     }
 
-    void runQuantisedLauchHandleTests()
     {
-        beginTest ("Quantised launching");
+        auto s = advanceHandle (0.5_bd);
+        CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
+        CHECK (! h.getQueuedStatus());
 
-        {
-            LaunchHandle h;
-            expect (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
-            expect (! h.getQueuedStatus());
-
-            SyncRange syncRange;
-            auto advanceHandle = [&h, &syncRange] (auto duration)
-            {
-                auto newEnd = syncRange.end;
-                newEnd.monotonicBeat.v = newEnd.monotonicBeat.v + duration;
-                newEnd.beat = newEnd.beat + duration;
-                syncRange = SyncRange { syncRange.end, newEnd };
-
-                return h.advance (syncRange);
-            };
-
-            h.play (MonotonicBeat { 0.25_bp });
-            expect (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
-            expect (h.getQueuedStatus() == LaunchHandle::QueueState::playQueued);
-
-            {
-                auto s = advanceHandle (0.5_bd);
-                expect (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
-                expect (! h.getQueuedStatus());
-
-                expect (s.isSplit);
-                expect (! s.playing1);
-                expect (s.range1 == BeatRange (0_bp, 0.25_bp));
-                expect (s.playing2);
-                expect (s.range2 == BeatRange (0.25_bp, 0.5_bp));
-            }
-
-            {
-                auto s = advanceHandle (0.5_bd);
-                expect (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
-                expect (! h.getQueuedStatus());
-
-                expect (! s.isSplit);
-                expect (s.playing1);
-                expect (s.range1 == BeatRange (0.5_bp, 1.0_bp));
-                expect (! s.playing2);
-                expect (s.range2.isEmpty());
-            }
-
-            h.stop (MonotonicBeat { 1.25_bp });
-            expect (h.getQueuedStatus() == LaunchHandle::QueueState::stopQueued);
-            expect (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
-
-            {
-                auto s = advanceHandle (0.5_bd);
-                expect (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
-                expect (! h.getQueuedStatus());
-
-                expect (s.isSplit);
-                expect (s.playing1);
-                expect (s.range1 == BeatRange (1.0_bp, 1.25_bp));
-                expect (! s.playing2);
-                expect (s.range2 == BeatRange (1.25_bp, 1.5_bp));
-            }
-        }
+        CHECK (! s.isSplit);
+        CHECK (s.playing1);
+        CHECK (s.range1 == BeatRange (0.5_bp, 1.0_bp));
+        CHECK (! s.playing2);
+        CHECK (s.range2.isEmpty());
     }
 
-    void legatoLauchHandleTests()
+    h.stop (MonotonicBeat { 1.25_bp });
+    CHECK (h.getQueuedStatus() == LaunchHandle::QueueState::stopQueued);
+    CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
+
     {
-        beginTest ("Legato launching");
-        {
-            LaunchHandle sourceHandle, destHandle;
+        auto s = advanceHandle (0.5_bd);
+        CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
+        CHECK (! h.getQueuedStatus());
 
-            SyncRange syncRange;
-            auto advancePlayhead = [&] (auto duration)
-            {
-                auto newEnd = syncRange.end;
-                newEnd.monotonicBeat.v = newEnd.monotonicBeat.v + duration;
-                newEnd.beat = newEnd.beat + duration;
-                syncRange = SyncRange { syncRange.end, newEnd };
-            };
-
-
-            // Init status
-            expect (sourceHandle.getPlayingStatus() == LaunchHandle::PlayState::stopped);
-            expect (! sourceHandle.getQueuedStatus());
-
-            expect (destHandle.getPlayingStatus() == LaunchHandle::PlayState::stopped);
-            expect (! destHandle.getQueuedStatus());
-
-            // Start source
-            {
-                sourceHandle.play (MonotonicBeat { 1_bp });
-                expect (sourceHandle.getPlayingStatus() == LaunchHandle::PlayState::stopped);
-                expect (sourceHandle.getQueuedStatus() == LaunchHandle::QueueState::playQueued);
-            }
-
-            // Advance timeline
-            {
-                advancePlayhead (3_bd);
-                sourceHandle.advance (syncRange);
-                destHandle.advance (syncRange);
-            }
-
-            // Switch at 4 bp
-            {
-                const auto switchBeat = MonotonicBeat { 4_bp };
-                destHandle.playSynced (sourceHandle, switchBeat);
-                sourceHandle.stop (switchBeat);
-            }
-
-            // Advance source another 2 bd
-            {
-                advancePlayhead (2_bd);
-                auto s = sourceHandle.advance (syncRange);
-                expect (sourceHandle.getPlayingStatus() == LaunchHandle::PlayState::stopped);
-                expect (! sourceHandle.getQueuedStatus());
-
-                expect (s.isSplit);
-                expect (s.playing1);
-                expect (s.range1 == BeatRange (3_bp, 4_bp));
-                expect (s.playStartTime1 == 1_bp);
-                expect (! s.playing2);
-                expect (s.range2 == BeatRange (4_bp, 5_bp));
-                expect (! s.playStartTime2);
-            }
-
-            // Advance dest the same 2 bd
-            {
-                auto s = destHandle.advance (syncRange);
-                expect (destHandle.getPlayingStatus() == LaunchHandle::PlayState::playing);
-                expect (! destHandle.getQueuedStatus());
-
-                expect (s.isSplit);
-                expect (! s.playing1);
-                expect (s.range1 == BeatRange (3_bp, 4_bp));
-                expect (! s.playStartTime1);
-                expect (s.playing2);
-                expect (s.range2 == BeatRange (4_bp, 5_bp));
-                expect (s.playStartTime2 == 1_bp);
-
-                expect (destHandle.getPlayedRange()->getStart() == 1_bp);
-                expect (destHandle.getPlayedMonotonicRange()->v.getStart() == 1_bp);
-            }
-        }
+        CHECK (s.isSplit);
+        CHECK (s.playing1);
+        CHECK (s.range1 == BeatRange (1.0_bp, 1.25_bp));
+        CHECK (! s.playing2);
+        CHECK (s.range2 == BeatRange (1.25_bp, 1.5_bp));
     }
-};
+}
 
-static LaunchHandleTests launchHandleTests;
+TEST_CASE ("LaunchHandle: Legato launching")
+{
+    LaunchHandle sourceHandle, destHandle;
 
-} // namespace tracktion::namespace engine
+    SyncRange syncRange;
+    auto advancePlayhead = [&] (auto duration)
+    {
+        auto newEnd = syncRange.end;
+        newEnd.monotonicBeat.v = newEnd.monotonicBeat.v + duration;
+        newEnd.beat = newEnd.beat + duration;
+        syncRange = SyncRange { syncRange.end, newEnd };
+    };
+
+
+    // Init status
+    CHECK (sourceHandle.getPlayingStatus() == LaunchHandle::PlayState::stopped);
+    CHECK (! sourceHandle.getQueuedStatus());
+
+    CHECK (destHandle.getPlayingStatus() == LaunchHandle::PlayState::stopped);
+    CHECK (! destHandle.getQueuedStatus());
+
+    // Start source
+    {
+        sourceHandle.play (MonotonicBeat { 1_bp });
+        CHECK (sourceHandle.getPlayingStatus() == LaunchHandle::PlayState::stopped);
+        CHECK (sourceHandle.getQueuedStatus() == LaunchHandle::QueueState::playQueued);
+    }
+
+    // Advance timeline
+    {
+        advancePlayhead (3_bd);
+        sourceHandle.advance (syncRange);
+        destHandle.advance (syncRange);
+    }
+
+    // Switch at 4 bp
+    {
+        const auto switchBeat = MonotonicBeat { 4_bp };
+        destHandle.playSynced (sourceHandle, switchBeat);
+        sourceHandle.stop (switchBeat);
+    }
+
+    // Advance source another 2 bd
+    {
+        advancePlayhead (2_bd);
+        auto s = sourceHandle.advance (syncRange);
+        CHECK (sourceHandle.getPlayingStatus() == LaunchHandle::PlayState::stopped);
+        CHECK (! sourceHandle.getQueuedStatus());
+
+        CHECK (s.isSplit);
+        CHECK (s.playing1);
+        CHECK (s.range1 == BeatRange (3_bp, 4_bp));
+        CHECK (s.playStartTime1 == 1_bp);
+        CHECK (! s.playing2);
+        CHECK (s.range2 == BeatRange (4_bp, 5_bp));
+        CHECK (! s.playStartTime2);
+    }
+
+    // Advance dest the same 2 bd
+    {
+        auto s = destHandle.advance (syncRange);
+        CHECK (destHandle.getPlayingStatus() == LaunchHandle::PlayState::playing);
+        CHECK (! destHandle.getQueuedStatus());
+
+        CHECK (s.isSplit);
+        CHECK (! s.playing1);
+        CHECK (s.range1 == BeatRange (3_bp, 4_bp));
+        CHECK (! s.playStartTime1);
+        CHECK (s.playing2);
+        CHECK (s.range2 == BeatRange (4_bp, 5_bp));
+        CHECK (s.playStartTime2 == 1_bp);
+
+        CHECK (destHandle.getPlayedRange()->getStart() == 1_bp);
+        CHECK (destHandle.getPlayedMonotonicRange()->v.getStart() == 1_bp);
+    }
+}
+
+} // TEST_SUITE
+
+} // namespace tracktion::inline engine
 
 #endif

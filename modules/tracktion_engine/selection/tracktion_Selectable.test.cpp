@@ -9,61 +9,47 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#if ENGINE_UNIT_TESTS_SELECTABLE
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_SELECTABLE
 
 #include "../utilities/tracktion_TestUtilities.h"
-
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
 
 namespace tracktion::inline engine {
 
-//==============================================================================
-//==============================================================================
-class SelectableTests   : public juce::UnitTest
+TEST_SUITE ("tracktion_engine")
 {
-public:
-    SelectableTests()
-        : juce::UnitTest ("Selectable", "tracktion_engine")
-    {
-    }
-
-    void runTest() override
+    TEST_CASE ("Selectable")
     {
         auto& engine = *Engine::getEngines()[0];
-        runSafeSelectableTests (engine);
+
+        SUBCASE ("Safe selectable")
+        {
+            auto edit = test_utilities::createTestEdit (engine);
+            auto track = getAudioTracks (*edit)[0];
+            auto plugin = track->getVolumePlugin();
+
+            auto safeEdit = makeSafeRef (*edit);
+            auto safeTrack = makeSafeRef (*track);
+            auto safePlugin = makeSafeRef (*plugin);
+
+            CHECK (safeEdit.get() != nullptr);
+            CHECK (safeTrack.get() != nullptr);
+            CHECK (safePlugin.get() != nullptr);
+
+            CHECK (safeEdit == edit.get());
+            CHECK (safeTrack == track);
+            CHECK (safePlugin.get() == plugin);
+
+            edit->deleteTrack (safeTrack);
+            CHECK (safeTrack.get() == nullptr);
+
+            edit.reset();
+            CHECK (safeEdit == nullptr);
+            CHECK (safeTrack == nullptr);
+            CHECK (safePlugin == nullptr);
+        }
     }
-
-private:
-    void runSafeSelectableTests (Engine& engine)
-    {
-        beginTest ("Safe selectable");
-
-        auto edit = test_utilities::createTestEdit (engine);
-        auto track = getAudioTracks (*edit)[0];
-        auto plugin = track->getVolumePlugin();
-
-        auto safeEdit = makeSafeRef (*edit);
-        auto safeTrack = makeSafeRef (*track);
-        auto safePlugin = makeSafeRef (*plugin);
-
-        expect (safeEdit.get() != nullptr);
-        expect (safeTrack.get() != nullptr);
-        expect (safePlugin.get() != nullptr);
-
-        expect (safeEdit == edit.get());
-        expect (safeTrack == track);
-        expect (safePlugin.get() == plugin);
-
-        edit->deleteTrack (safeTrack);
-        expect (safeTrack.get() == nullptr);
-
-        edit.reset();
-        expect (safeEdit == nullptr);
-        expect (safeTrack == nullptr);
-        expect (safePlugin == nullptr);
-    }
-};
-
-static SelectableTests selectableTests;
+}
 
 } // namespace tracktion::inline engine
 

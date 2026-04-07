@@ -539,22 +539,35 @@ void AudioScratchBuffer::initialise()
 }
 
 
-//==============================================================================
-//==============================================================================
+} // namespace tracktion::inline engine
+
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_PAN_LAW
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+namespace tracktion::inline engine {
 
-class PanLawTests : public juce::UnitTest
+static void testPanLaw (PanLaw pl, float gain, float pan,
+                        float expectedLeftGain, float expectedRightGain)
 {
-public:
-    PanLawTests() : juce::UnitTest ("PanLaw", "tracktion_engine") {}
+    CHECK_GE (gain, 0.0f);
+    CHECK_GE (pan, -1.0f);
+    CHECK_LE (pan, 1.0f);
 
-    //==============================================================================
-    void runTest() override
+    float leftGain = 0.0;
+    float rightGain = 0.0;
+    getGainsFromVolumeFaderPositionAndPan (gainToVolumeFaderPosition (gain), pan, pl,
+                                           leftGain, rightGain);
+    CHECK (std::abs (leftGain - expectedLeftGain) <= 0.01f);
+    CHECK (std::abs (rightGain - expectedRightGain) <= 0.01f);
+}
+
+TEST_SUITE ("tracktion_engine")
+{
+    TEST_CASE ("PanLaw")
     {
         // N.B. Linear pan boosts L/R signals when panned (up to +6dB)
         // Equal power modes are 0dB hard L/R
 
-        beginTest ("Linear");
+        SUBCASE ("Linear")
         {
             testPanLaw (PanLawLinear, 0.0f, 0.0f, 0.0f, 0.0f);  // Zero
             testPanLaw (PanLawLinear, 1.0f, 0.0f, 1.0f, 1.0f);  // Unity
@@ -569,7 +582,7 @@ public:
             testPanLaw (PanLawLinear, 1.0f, 0.5f, 0.5f, 1.5f);  // 1 right
         }
 
-        beginTest ("-2.5dB");
+        SUBCASE ("-2.5dB")
         {
             const auto centreGain = juce::Decibels::decibelsToGain (-2.5f);
             testPanLaw (PanLaw2point5dBCenter, 0.0f, 0.0f, 0.0f, 0.0f);                 // Zero
@@ -578,7 +591,7 @@ public:
             testPanLaw (PanLaw2point5dBCenter, 1.0f, 1.0f, 0.0f, 1.0f);                 // Hard right
         }
 
-        beginTest ("-3dB");
+        SUBCASE ("-3dB")
         {
             const auto centreGain = juce::Decibels::decibelsToGain (-3.0f);
             testPanLaw (PanLaw3dBCenter, 0.0f, 0.0f, 0.0f, 0.0f);                 // Zero
@@ -587,7 +600,7 @@ public:
             testPanLaw (PanLaw3dBCenter, 1.0f, 1.0f, 0.0f, 1.0f);                 // Hard right
         }
 
-        beginTest ("-4.5dB");
+        SUBCASE ("-4.5dB")
         {
             const auto centreGain = juce::Decibels::decibelsToGain (-4.5f);
             testPanLaw (PanLaw4point5dBCenter, 0.0f, 0.0f, 0.0f, 0.0f);             // Zero
@@ -596,7 +609,7 @@ public:
             testPanLaw (PanLaw4point5dBCenter, 1.0f, 1.0f, 0.0f, 1.0f);             // Hard right
         }
 
-        beginTest ("-6dB");
+        SUBCASE ("-6dB")
         {
             const auto centreGain = juce::Decibels::decibelsToGain (-6.0f);
             testPanLaw (PanLaw6dBCenter, 0.0f, 0.0f, 0.0f, 0.0f);               // Zero
@@ -605,26 +618,7 @@ public:
             testPanLaw (PanLaw6dBCenter, 1.0f, 1.0f, 0.0f, 1.0f);               // Hard right
         }
     }
-
-private:
-    void testPanLaw (PanLaw pl, float gain, float pan,
-                     float expectedLeftGain, float expectedRightGain)
-    {
-        expectGreaterOrEqual (gain, 0.0f);
-        expectGreaterOrEqual (pan, -1.0f);
-        expectLessOrEqual (pan, 1.0f);
-
-        float leftGain = 0.0;
-        float rightGain = 0.0;
-        getGainsFromVolumeFaderPositionAndPan (gainToVolumeFaderPosition (gain), pan, pl,
-                                               leftGain, rightGain);
-        expectWithinAbsoluteError (leftGain, expectedLeftGain, 0.01f);
-        expectWithinAbsoluteError (rightGain, expectedRightGain, 0.01f);
-    }
-};
-
-static PanLawTests panLawTests;
-
-#endif // TRACKTION_UNIT_TESTS
+}
 
 } // namespace tracktion::inline engine
+#endif // TRACKTION_UNIT_TESTS

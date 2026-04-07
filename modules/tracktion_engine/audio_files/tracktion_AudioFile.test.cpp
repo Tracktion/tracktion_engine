@@ -174,31 +174,15 @@ TEST_SUITE ("tracktion_engine")
 }
 
 
-//==============================================================================
-//==============================================================================
-class AudioFileTests    : public juce::UnitTest
+TEST_SUITE ("tracktion_engine")
 {
-public:
-    AudioFileTests()
-        : juce::UnitTest ("AudioFile", "tracktion_engine")
-    {
-    }
-
-    void runTest() override
-    {
-        runFileInfoTest();
-    }
-
-private:
-    void runFileInfoTest()
+    TEST_CASE ("AudioFileInfo update after writing")
     {
         // Create a file
         // Get the info
         // Write to it
         // Get info again
         // Check length and sample rate
-
-        beginTest ("AudioFileInfo update after writing");
 
         auto& engine = *Engine::getEngines().getFirst();
 
@@ -213,9 +197,9 @@ private:
         // Check file is invalid
         {
             auto info = audioFile.getInfo();
-            expectEquals (info.sampleRate, 0.0);
-            expectEquals<SampleCount> (info.lengthInSamples, 0);
-            expectEquals (info.getLengthInSeconds(), 0.0);
+            CHECK_EQ (info.sampleRate, 0.0);
+            CHECK_EQ (info.lengthInSamples, static_cast<SampleCount> (0));
+            CHECK_EQ (info.getLengthInSeconds(), 0.0);
         }
 
         // Write 1s silence
@@ -223,7 +207,7 @@ private:
             const auto numSamplesToWrite = static_cast<int> (sampleRate);
 
             AudioFileWriter writer (audioFile, &format, numChannels, sampleRate, bitDepth, {}, 0);
-            expect (writer.isOpen());
+            CHECK (writer.isOpen());
 
             if (writer.isOpen())
             {
@@ -236,14 +220,12 @@ private:
         // Check file is now valid
         {
             auto info = audioFile.getInfo();
-            expectEquals (info.sampleRate, sampleRate);
-            expectEquals (info.lengthInSamples, static_cast<SampleCount> (sampleRate));
-            expectEquals (info.getLengthInSeconds(), 1.0);
+            CHECK_EQ (info.sampleRate, sampleRate);
+            CHECK_EQ (info.lengthInSamples, static_cast<SampleCount> (sampleRate));
+            CHECK_EQ (info.getLengthInSeconds(), 1.0);
         }
     }
-};
-
-static AudioFileTests audioFileTests;
+}
 
 } // namespace tracktion::inline engine
 

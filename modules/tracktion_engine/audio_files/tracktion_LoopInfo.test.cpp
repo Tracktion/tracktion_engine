@@ -10,27 +10,61 @@
 
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_LOOP_INFO
 
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
 #include "../../tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
 #include "../utilities/tracktion_TestUtilities.h"
 
 namespace tracktion::inline engine {
 
-//==============================================================================
-//==============================================================================
-class LoopInfoTests : public juce::UnitTest
+TEST_SUITE ("tracktion_engine")
 {
-public:
-    LoopInfoTests()
-        : juce::UnitTest ("LoopInfo", "tracktion_engine")
+    TEST_CASE ("LoopInfo: JUCE undo behaviour")
     {
+        juce::UndoManager um;
+        juce::ValueTree v ("ROOT"), c ("CHILD");
+
+        um.beginNewTransaction();
+        CHECK (! um.canUndo());
+        CHECK (! um.canRedo());
+
+        v.setProperty ("prop1", 42, &um);
+        CHECK (um.canUndo());
+        CHECK (! um.canRedo());
+
+        um.beginNewTransaction();
+        v.appendChild (c, &um);
+
+        CHECK_EQ (static_cast<int> (v["prop1"]), 42);
+        CHECK_EQ (v.getNumChildren(), 1);
+
+        um.undo();
+        CHECK_EQ (static_cast<int> (v["prop1"]), 42);
+        CHECK_EQ (v.getNumChildren(), 0);
+        CHECK (um.canUndo());
+        CHECK (um.canRedo());
+
+        um.undo();
+        CHECK (! v.hasProperty ("prop1"));
+        CHECK_EQ (static_cast<int> (v["prop1"]), 0);
+        CHECK_EQ (v.getNumChildren(), 0);
+        CHECK (! um.canUndo());
+        CHECK (um.canRedo());
+
+        um.redo();
+        CHECK_EQ (static_cast<int> (v["prop1"]), 42);
+        CHECK_EQ (v.getNumChildren(), 0);
+        CHECK (um.canUndo());
+        CHECK (um.canRedo());
+
+        um.redo();
+        CHECK_EQ (static_cast<int> (v["prop1"]), 42);
+        CHECK_EQ (v.getNumChildren(), 1);
+        CHECK (um.canUndo());
+        CHECK (! um.canRedo());
     }
 
-    void runTest() override
+    TEST_CASE ("LoopInfo: Undo behaviour")
     {
-        runJUCEUndoTest();
-
-        beginTest ("Undo behaviour");
-
         using namespace tracktion::graph::test_utilities;
         using namespace tracktion::engine::test_utilities;
 
@@ -59,107 +93,60 @@ public:
 
         // Starting new undo transaction
         um.beginNewTransaction();
-        expect  (! um.canUndo());
-        expect  (! um.canRedo());
+        CHECK (! um.canUndo());
+        CHECK (! um.canRedo());
 
         // Adding a clip with numBeats = 2 in LOOPINFO
         track->insertClipWithState (newClipState);
-        expect (um.canUndo());
+        CHECK (um.canUndo());
 
         if (auto acb = dynamic_cast<AudioClipBase*> (track->getClips().getFirst()))
         {
             LoopInfo& li = acb->getLoopInfo();
-            expectEquals (li.getNumBeats(), 3.0);
+            CHECK_EQ (li.getNumBeats(), 3.0);
 
             // Starting new undo transaction
             um.beginNewTransaction();
 
             li.setNumBeats (4.0);
-            expectEquals (li.getNumBeats(), 4.0);
+            CHECK_EQ (li.getNumBeats(), 4.0);
         }
 
         // Calling undo() twice
-        expect (um.canUndo());
+        CHECK (um.canUndo());
         um.undo();
 
         // Check setting num beats was undone
         if (auto acb = dynamic_cast<AudioClipBase*> (track->getClips().getFirst()))
         {
             LoopInfo& li = acb->getLoopInfo();
-            expectEquals (li.getNumBeats(), 3.0);
+            CHECK_EQ (li.getNumBeats(), 3.0);
         }
 
-        expectEquals (um.getNumActionsInCurrentTransaction(), 0);
-        expect (um.canUndo());
+        CHECK_EQ (um.getNumActionsInCurrentTransaction(), 0);
+        CHECK (um.canUndo());
         um.undo();
-        expect (! um.canUndo());
-        expect (dynamic_cast<AudioClipBase*> (track->getClips().getFirst()) == nullptr);
+        CHECK (! um.canUndo());
+        CHECK (dynamic_cast<AudioClipBase*> (track->getClips().getFirst()) == nullptr);
 
         // Calling redo() twice
-        expect (um.canRedo());
+        CHECK (um.canRedo());
         um.redo();
-        expect (um.canRedo());
+        CHECK (um.canRedo());
         um.redo();
-        expect (! um.canRedo());
+        CHECK (! um.canRedo());
 
         if (auto acb = dynamic_cast<AudioClipBase*>(track->getClips().getFirst()))
         {
             LoopInfo& li = acb->getLoopInfo();
-            expectEquals (li.getNumBeats(), 4.0);
+            CHECK_EQ (li.getNumBeats(), 4.0);
         }
         else
         {
-            expect (false, "No audio clip on track!");
+            CHECK_MESSAGE (false, "No audio clip on track!");
         }
     }
-
-    void runJUCEUndoTest()
-    {
-        juce::UndoManager um;
-        juce::ValueTree v ("ROOT"), c ("CHILD");
-
-        um.beginNewTransaction();
-        expect (! um.canUndo());
-        expect (! um.canRedo());
-
-        v.setProperty ("prop1", 42, &um);
-        expect (um.canUndo());
-        expect (! um.canRedo());
-
-        um.beginNewTransaction();
-        v.appendChild (c, &um);
-
-        expectEquals (static_cast<int> (v["prop1"]), 42);
-        expectEquals (v.getNumChildren(), 1);
-
-        um.undo();
-        expectEquals (static_cast<int> (v["prop1"]), 42);
-        expectEquals (v.getNumChildren(), 0);
-        expect (um.canUndo());
-        expect (um.canRedo());
-
-        um.undo();
-        expect (! v.hasProperty ("prop1"));
-        expectEquals (static_cast<int> (v["prop1"]), 0);
-        expectEquals (v.getNumChildren(), 0);
-        expect (! um.canUndo());
-        expect (um.canRedo());
-
-        um.redo();
-        expectEquals (static_cast<int> (v["prop1"]), 42);
-        expectEquals (v.getNumChildren(), 0);
-        expect (um.canUndo());
-        expect (um.canRedo());
-
-        um.redo();
-        expectEquals (static_cast<int> (v["prop1"]), 42);
-        expectEquals (v.getNumChildren(), 1);
-        expect (um.canUndo());
-        expect (! um.canRedo());
-    }
-};
-
-static LoopInfoTests loopInfoTests;
+}
 
 } // namespace tracktion::inline engine
 

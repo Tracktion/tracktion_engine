@@ -14,49 +14,45 @@
 
 namespace tracktion::inline graph {
 
-#if GRAPH_UNIT_TESTS_SEMAPHORE
+} // namespace tracktion::inline graph
 
-class SemaphoreTests    : public juce::UnitTest
+#if TRACKTION_UNIT_TESTS && GRAPH_UNIT_TESTS_SEMAPHORE
+
+#include "../../3rd_party/doctest/tracktion_doctest.hpp"
+
+namespace tracktion::inline graph {
+
+namespace
 {
-public:
-    SemaphoreTests()
-        : juce::UnitTest ("Semaphore", "tracktion_graph") {}
-
-    //==============================================================================
-    void runTest() override
-    {
-        runSemaphoreTests<Semaphore> ("Semaphore");
-        runSemaphoreTests<LightweightSemaphore> ("LightweightSemaphore");
-    }
-
-private:
     template<typename SemaphoreType>
     void runSemaphoreTests (juce::String semaphoreName)
     {
-        beginTest (juce::String ("Semaphore basic tests").replace ("Semaphore", semaphoreName));
+        auto basicName = juce::String ("Semaphore basic tests").replace ("Semaphore", semaphoreName).toStdString();
+        SUBCASE (basicName.c_str())
         {
             {
                 SemaphoreType event (1);
-                expect (event.wait()); // Count of 1 doesn't block
+                CHECK (event.wait()); // Count of 1 doesn't block
             }
 
             {
                 SemaphoreType event (2);
                 event.wait();
-                expect (event.timed_wait (100)); // Count of 2 doesn't block
-                // expect (! event.wait()); // 3rd wait would block
+                CHECK (event.timed_wait (100)); // Count of 2 doesn't block
+                // CHECK (! event.wait()); // 3rd wait would block
             }
 
             {
                 SemaphoreType event (2);
-                expect (event.wait());
-                expect (event.wait());
-                expect (! event.try_wait()); // 3rd wait fails
-                expect (! event.timed_wait (100)); // Timed wait fails
+                CHECK (event.wait());
+                CHECK (event.wait());
+                CHECK (! event.try_wait()); // 3rd wait fails
+                CHECK (! event.timed_wait (100)); // Timed wait fails
             }
         }
 
-        beginTest (juce::String ("Semaphore wakeup tests").replace ("Semaphore", semaphoreName));
+        auto wakeupName = juce::String ("Semaphore wakeup tests").replace ("Semaphore", semaphoreName).toStdString();
+        SUBCASE (wakeupName.c_str())
         {
             constexpr int numThreads = 10;
             std::atomic<int> counter { 0 }, numThreadsRunning { 0 };
@@ -74,7 +70,7 @@ private:
                                           event.wait();
 
                                           auto signalDuration = std::chrono::steady_clock::now() - signalTime;
-                                          logMessage (juce::String (std::chrono::duration_cast<std::chrono::microseconds> (signalDuration).count()) + "us");
+                                          MESSAGE ((juce::String (std::chrono::duration_cast<std::chrono::microseconds> (signalDuration).count()) + "us").toStdString());
 
                                           ++counter;
                                       });
@@ -100,16 +96,27 @@ private:
             for (auto& t : threads)
                 t.join();
 
-            expectEquals (counter.load(), numThreads);
+            CHECK_EQ (counter.load(), numThreads);
         }
     }
-};
+}
 
-static SemaphoreTests semaphoreTests;
+TEST_SUITE ("tracktion_graph")
+{
+    TEST_CASE ("Semaphore")
+    {
+        runSemaphoreTests<Semaphore> ("Semaphore");
+        runSemaphoreTests<LightweightSemaphore> ("LightweightSemaphore");
+    }
+}
+
+} // namespace tracktion::inline graph
 
 #endif
 
 #if TRACKTION_BENCHMARKS && GRAPH_BENCHMARKS_THREADS
+
+namespace tracktion::inline graph {
 
 //==============================================================================
 //==============================================================================
@@ -437,6 +444,6 @@ private:
 };
 
 static ThreadSignallingBenchmarks threadSignallingBenchmarks;
-#endif
 
 } // namespace tracktion::inline graph
+#endif

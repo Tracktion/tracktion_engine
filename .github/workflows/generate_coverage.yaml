@@ -113,3 +113,15 @@ jobs:
         with:
           files: ./tests/coverage/build/coverage.info
           token: ${{ secrets.CODECOV_TOKEN_V5 }}
+
+  coverage-checks-pass:
+    if: always()
+    needs: [build-and-deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify all jobs passed
+        run: |
+          if [[ "${{ needs.build-and-deploy.result }}" != "success" ]]; then
+            echo "One or more coverage jobs failed"
+            exit 1
+          fi

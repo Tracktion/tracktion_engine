@@ -8,24 +8,20 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#if GRAPH_UNIT_TESTS_SAMPLECONVERSION
+#if TRACKTION_UNIT_TESTS && GRAPH_UNIT_TESTS_SAMPLECONVERSION
+
+#include "../../3rd_party/doctest/tracktion_doctest.hpp"
 
 namespace tracktion::inline graph {
 
-class SampleConversionTests : public juce::UnitTest
+TEST_SUITE ("tracktion_graph")
 {
-public:
-    SampleConversionTests()
-        : juce::UnitTest ("SampleConversion", "tracktion_graph")
-    {
-    }
-
-    void runTest() override
+    TEST_CASE ("SampleConversion")
     {
         constexpr double sampleRate = 44100.0;
         using STR = juce::String;
 
-        beginTest ("Sample to time and back");
+        SUBCASE ("Sample to time and back")
         {
             for (int64_t i = 0; i < int64_t (sampleRate) * 2; ++i)
             {
@@ -33,12 +29,12 @@ public:
                 auto sample = timeToSample (time, sampleRate);
 
                 if (i != sample)
-                    expect (false, juce::String ("Sample to time and back not equal s1=S1, t=TIME, s2=S2")
-                                    .replace ("S1", STR (i)).replace ("TIME", STR (time)).replace ("S2", STR (sample)));
+                    CHECK_MESSAGE (false, (juce::String ("Sample to time and back not equal s1=S1, t=TIME, s2=S2")
+                                    .replace ("S1", STR (i)).replace ("TIME", STR (time)).replace ("S2", STR (sample))).toStdString());
             }
         }
 
-        beginTest ("Time to samples and back");
+        SUBCASE ("Time to samples and back")
         {
             constexpr double startTime = 0.0;
             constexpr double endTime = 2.0;
@@ -51,14 +47,12 @@ public:
                 auto time = sampleToTime (sample, sampleRate);
 
                 if (! juce::isWithin (t, time, minTimeDiff))
-                    expect (false, juce::String ("Time to sample and back not equal t1=TIME1, s=S1 t=TIME2")
-                                    .replace ("TIME1", STR (t)).replace ("S1", STR (sample)).replace ("TIME2", STR (time)));
+                    CHECK_MESSAGE (false, (juce::String ("Time to sample and back not equal t1=TIME1, s=S1 t=TIME2")
+                                    .replace ("TIME1", STR (t)).replace ("S1", STR (sample)).replace ("TIME2", STR (time))).toStdString());
             }
         }
     }
-};
-
-static SampleConversionTests sampleConversionTests;
+}
 
 }
 

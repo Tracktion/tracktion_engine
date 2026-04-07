@@ -10,64 +10,51 @@
 
 #if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_LAUNCH_QUANTISATION
 
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
 #include "../../../tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
 
 namespace tracktion::inline engine {
 
-//==============================================================================
-//==============================================================================
-class LaunchQuantisationTests : public juce::UnitTest
+TEST_SUITE ("tracktion_engine")
 {
-public:
-    LaunchQuantisationTests()
-        : juce::UnitTest ("LaunchQuantisation", "tracktion_engine")
-    {
-    }
-
-    void runTest() override
+    TEST_CASE ("LaunchQuantisation")
     {
         auto& engine = *Engine::getEngines()[0];
-        runBasicLaunchQuantisationTests (engine);
-    }
 
-private:
-    void runBasicLaunchQuantisationTests (Engine& engine)
-    {
-        beginTest ("Type fractions");
-
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::none),           0.0,            0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::eightBars),      8.0,            0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::fourBars),       4.0,            0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::twoBars),        2.0,            0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::bar),            1.0,            0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::halfT),          0.3333333333,   0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::half),           0.5,            0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::halfD),          0.75,           0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::quarterT),       0.1666666667,   0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::quarter),        0.25,           0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::quarterD),       0.375,          0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::eighthT),        0.08333333333,  0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::eighth),         0.125,          0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::eighthD),        0.1875,         0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::sixteenthT),     0.04166666667,  0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::sixteenth),      0.0625,         0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::sixteenthD),     0.09375,        0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::thirtySecondT),  0.02083333333,  0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::thirtySecond),   0.03125,        0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::thirtySecondD),  0.046875,       0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::sixtyFourthT),   0.01041666667,  0.000001);
-        expectWithinAbsoluteError (toBarFraction (LaunchQType::sixtyFourth),    0.015625,       0.000001);
+        // Type fractions
+        CHECK (std::abs (toBarFraction (LaunchQType::none)           - 0.0)            <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::eightBars)      - 8.0)            <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::fourBars)       - 4.0)            <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::twoBars)        - 2.0)            <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::bar)            - 1.0)            <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::halfT)          - 0.3333333333)   <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::half)           - 0.5)            <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::halfD)          - 0.75)           <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::quarterT)       - 0.1666666667)   <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::quarter)        - 0.25)           <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::quarterD)       - 0.375)          <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::eighthT)        - 0.08333333333)  <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::eighth)         - 0.125)          <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::eighthD)        - 0.1875)         <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::sixteenthT)     - 0.04166666667)  <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::sixteenth)      - 0.0625)         <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::sixteenthD)     - 0.09375)        <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::thirtySecondT)  - 0.02083333333)  <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::thirtySecond)   - 0.03125)        <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::thirtySecondD)  - 0.046875)       <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::sixtyFourthT)   - 0.01041666667)  <= 0.000001);
+        CHECK (std::abs (toBarFraction (LaunchQType::sixtyFourth)    - 0.015625)       <= 0.000001);
 
         auto edit = test_utilities::createTestEdit (engine, 1);
         const auto& ts = edit->tempoSequence;
 
-        auto expectNext = [this, &ts] (auto current, auto next, LaunchQType q)
+        auto expectNext = [&ts] (auto current, auto next, LaunchQType q)
                          {
                              const auto n = getNext (q, ts, current);
-                             expectWithinAbsoluteError (n.inBeats(), next.inBeats(), 0.000001);
+                             CHECK (std::abs (n.inBeats() - next.inBeats()) <= 0.000001);
                          };
 
-        beginTest ("Eight Bars");
+        // Eight Bars
         {
             auto expectQ = [&] (auto c, auto n) { expectNext (c, n, LaunchQType::eightBars); };
 
@@ -82,7 +69,7 @@ private:
             expectQ (65_bp, 96_bp);
         }
 
-        beginTest ("Four Bars");
+        // Four Bars
         {
             auto expectQ = [&] (auto c, auto n) { expectNext (c, n, LaunchQType::fourBars); };
 
@@ -95,7 +82,7 @@ private:
             expectQ (32_bp, 32_bp);
         }
 
-        beginTest ("Two Bars");
+        // Two Bars
         {
             auto expectQ = [&] (auto c, auto n) { expectNext (c, n, LaunchQType::twoBars); };
 
@@ -111,7 +98,7 @@ private:
             expectQ (9_bp, 16_bp);
         }
 
-        beginTest ("Bar");
+        // Bar
         {
             auto expectQ = [&] (auto c, auto n) { expectNext (c, n, LaunchQType::bar); };
 
@@ -127,7 +114,7 @@ private:
             expectQ (9_bp, 12_bp);
         }
 
-        beginTest ("Half");
+        // Half
         {
             auto expectQ = [&] (auto c, auto n) { expectNext (c, n, LaunchQType::half); };
 
@@ -151,7 +138,7 @@ private:
             expectQ (9_bp,      10_bp);
         }
 
-        beginTest ("Quarter");
+        // Quarter
         {
             auto expectQ = [&] (auto c, auto n) { expectNext (c, n, LaunchQType::quarter); };
 
@@ -175,9 +162,7 @@ private:
             expectQ (3.9_bp, 4_bp);
         }
     }
-};
-
-static LaunchQuantisationTests launchQuantisationTests;
+}
 
 } // namespace tracktion::inline engine
 

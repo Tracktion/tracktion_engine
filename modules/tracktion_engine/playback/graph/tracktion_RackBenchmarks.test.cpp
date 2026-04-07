@@ -13,6 +13,7 @@
 #if TRACKTION_BENCHMARKS && ENGINE_BENCHMARKS_RACKS
 
 #include "tracktion_BenchmarkUtilities.h"
+#include "../../utilities/tracktion_TestUtilities.h"
 
 
 namespace tracktion::inline engine {

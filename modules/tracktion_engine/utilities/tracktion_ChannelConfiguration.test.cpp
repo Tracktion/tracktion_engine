@@ -8,298 +8,271 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-#if ENGINE_UNIT_TESTS_CHANNELCONFIGURATION
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_CHANNELCONFIGURATION
+
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
 
 namespace tracktion { inline namespace engine
 {
 
-//==============================================================================
-class ChannelConfigurationTests : public juce::UnitTest
+TEST_SUITE ("tracktion_engine")
 {
-public:
-    ChannelConfigurationTests()
-        : juce::UnitTest ("ChannelConfiguration", "tracktion_engine")
+    TEST_CASE ("ChannelConfiguration")
     {
-    }
-
-    void runTest() override
-    {
-        runFactoryMethodTests();
-        runQueryTests();
-        runSerializationTests();
-        runComparisonTests();
-        runIntersectionTests();
-        runReversalTests();
-    }
-
-private:
-    void runFactoryMethodTests()
-    {
-        beginTest ("Factory methods");
-
+        SUBCASE ("Factory methods")
         {
-            auto mono = ChannelConfiguration::mono (5);
-            expectEquals (mono.getNumChannels(), 1);
-            expectEquals (mono[0].indexInDevice, 5);
-            expect (mono[0].channel == juce::AudioChannelSet::centre);
+            {
+                auto mono = ChannelConfiguration::mono (5);
+                CHECK_EQ (mono.getNumChannels(), 1);
+                CHECK_EQ (mono[0].indexInDevice, 5);
+                CHECK (mono[0].channel == juce::AudioChannelSet::centre);
+            }
+
+            {
+                auto stereo = ChannelConfiguration::stereo (2);
+                CHECK_EQ (stereo.getNumChannels(), 2);
+                CHECK_EQ (stereo[0].indexInDevice, 2);
+                CHECK_EQ (stereo[1].indexInDevice, 3);
+                CHECK (stereo[0].channel == juce::AudioChannelSet::left);
+                CHECK (stereo[1].channel == juce::AudioChannelSet::right);
+            }
+
+            {
+                auto surround = ChannelConfiguration::surround5_1 (0);
+                CHECK_EQ (surround.getNumChannels(), 6);
+                CHECK (surround[0].channel == juce::AudioChannelSet::left);
+                CHECK (surround[1].channel == juce::AudioChannelSet::right);
+                CHECK (surround[2].channel == juce::AudioChannelSet::centre);
+                CHECK (surround[3].channel == juce::AudioChannelSet::LFE);
+                CHECK (surround[4].channel == juce::AudioChannelSet::leftSurround);
+                CHECK (surround[5].channel == juce::AudioChannelSet::rightSurround);
+            }
+
+            {
+                auto surround71 = ChannelConfiguration::surround7_1 (0);
+                CHECK_EQ (surround71.getNumChannels(), 8);
+            }
+
+            {
+                auto discrete = ChannelConfiguration::discreteChannels (16, 0);
+                CHECK_EQ (discrete.getNumChannels(), 16);
+
+                for (int i = 0; i < 16; ++i)
+                    CHECK_EQ (discrete[static_cast<size_t> (i)].indexInDevice, i);
+            }
         }
 
+        SUBCASE ("Query methods")
         {
-            auto stereo = ChannelConfiguration::stereo (2);
-            expectEquals (stereo.getNumChannels(), 2);
-            expectEquals (stereo[0].indexInDevice, 2);
-            expectEquals (stereo[1].indexInDevice, 3);
-            expect (stereo[0].channel == juce::AudioChannelSet::left);
-            expect (stereo[1].channel == juce::AudioChannelSet::right);
+            auto mono = ChannelConfiguration::mono();
+            CHECK (mono.isMono());
+            CHECK (! mono.isStereo());
+            CHECK (mono.isMonoOrStereo());
+            CHECK (! mono.isMultichannel());
+
+            auto stereo = ChannelConfiguration::stereo();
+            CHECK (! stereo.isMono());
+            CHECK (stereo.isStereo());
+            CHECK (stereo.isMonoOrStereo());
+            CHECK (! stereo.isMultichannel());
+
+            auto surround = ChannelConfiguration::surround5_1();
+            CHECK (! surround.isMono());
+            CHECK (! surround.isStereo());
+            CHECK (! surround.isMonoOrStereo());
+            CHECK (surround.isMultichannel());
+
+            {
+                auto config = ChannelConfiguration::stereo (4);
+                auto range = config.getChannelRange();
+                CHECK_EQ (range.first, 4);
+                CHECK_EQ (range.second, 6);
+            }
         }
 
+        SUBCASE ("Serialization")
         {
-            auto surround = ChannelConfiguration::surround5_1 (0);
-            expectEquals (surround.getNumChannels(), 6);
-            expect (surround[0].channel == juce::AudioChannelSet::left);
-            expect (surround[1].channel == juce::AudioChannelSet::right);
-            expect (surround[2].channel == juce::AudioChannelSet::centre);
-            expect (surround[3].channel == juce::AudioChannelSet::LFE);
-            expect (surround[4].channel == juce::AudioChannelSet::leftSurround);
-            expect (surround[5].channel == juce::AudioChannelSet::rightSurround);
+            {
+                auto original = ChannelConfiguration::stereo (2);
+                auto json = original.toJSON();
+                auto restored = ChannelConfiguration::fromJSON (json);
+
+                CHECK_EQ (restored.getNumChannels(), 2);
+                CHECK_EQ (restored[0].indexInDevice, 2);
+                CHECK_EQ (restored[1].indexInDevice, 3);
+                CHECK (restored[0].channel == juce::AudioChannelSet::left);
+                CHECK (restored[1].channel == juce::AudioChannelSet::right);
+            }
+
+            {
+                auto original = ChannelConfiguration::surround5_1 (0);
+                auto str = original.toString();
+                auto restored = ChannelConfiguration::fromString (str);
+
+                CHECK_EQ (restored.getNumChannels(), 6);
+                CHECK (original == restored);
+            }
+
+            {
+                auto empty = ChannelConfiguration::fromString ("invalid json");
+                CHECK (empty.isEmpty());
+            }
         }
 
+        SUBCASE ("Comparison")
         {
-            auto surround71 = ChannelConfiguration::surround7_1 (0);
-            expectEquals (surround71.getNumChannels(), 8);
+            auto stereo1 = ChannelConfiguration::stereo (0);
+            auto stereo2 = ChannelConfiguration::stereo (0);
+            auto stereo3 = ChannelConfiguration::stereo (2);
+
+            CHECK (stereo1 == stereo2);
+            CHECK (stereo1 != stereo3);
+
+            auto mono = ChannelConfiguration::mono();
+            CHECK (stereo1 != mono);
         }
 
+        SUBCASE ("Intersection")
         {
-            auto discrete = ChannelConfiguration::discreteChannels (16, 0);
-            expectEquals (discrete.getNumChannels(), 16);
+            {
+                // Partial overlap: stereo(0) channels 0,1 intersected with discrete 4 channels 0-3
+                auto result = ChannelConfiguration::stereo (0).intersection (ChannelConfiguration::discreteChannels (4, 0));
+                CHECK_EQ (result.getNumChannels(), 2);
+            }
 
-            for (int i = 0; i < 16; ++i)
-                expectEquals (discrete[static_cast<size_t> (i)].indexInDevice, i);
-        }
-    }
+            {
+                // No overlap: stereo(4) channels 4,5 vs discrete 2 channels 0,1
+                auto result = ChannelConfiguration::stereo (4).intersection (ChannelConfiguration::discreteChannels (2, 0));
+                CHECK (result.isEmpty());
+            }
 
-    void runQueryTests()
-    {
-        beginTest ("Query methods");
+            {
+                // Subset: mono(0) is a subset of stereo(0)
+                auto result = ChannelConfiguration::mono (0).intersection (ChannelConfiguration::stereo (0));
+                CHECK_EQ (result.getNumChannels(), 1);
+            }
 
-        auto mono = ChannelConfiguration::mono();
-        expect (mono.isMono());
-        expect (! mono.isStereo());
-        expect (mono.isMonoOrStereo());
-        expect (! mono.isMultichannel());
+            {
+                // Empty left operand
+                auto result = ChannelConfiguration().intersection (ChannelConfiguration::stereo());
+                CHECK (result.isEmpty());
+            }
 
-        auto stereo = ChannelConfiguration::stereo();
-        expect (! stereo.isMono());
-        expect (stereo.isStereo());
-        expect (stereo.isMonoOrStereo());
-        expect (! stereo.isMultichannel());
+            {
+                // Empty right operand
+                auto result = ChannelConfiguration::stereo().intersection (ChannelConfiguration());
+                CHECK (result.isEmpty());
+            }
 
-        auto surround = ChannelConfiguration::surround5_1();
-        expect (! surround.isMono());
-        expect (! surround.isStereo());
-        expect (! surround.isMonoOrStereo());
-        expect (surround.isMultichannel());
+            {
+                // Both empty
+                auto result = ChannelConfiguration().intersection (ChannelConfiguration());
+                CHECK (result.isEmpty());
+            }
 
-        {
-            auto config = ChannelConfiguration::stereo (4);
-            auto range = config.getChannelRange();
-            expectEquals (range.first, 4);
-            expectEquals (range.second, 6);
-        }
-    }
-
-    void runSerializationTests()
-    {
-        beginTest ("Serialization");
-
-        {
-            auto original = ChannelConfiguration::stereo (2);
-            auto json = original.toJSON();
-            auto restored = ChannelConfiguration::fromJSON (json);
-
-            expectEquals (restored.getNumChannels(), 2);
-            expectEquals (restored[0].indexInDevice, 2);
-            expectEquals (restored[1].indexInDevice, 3);
-            expect (restored[0].channel == juce::AudioChannelSet::left);
-            expect (restored[1].channel == juce::AudioChannelSet::right);
+            {
+                // Identical configs
+                auto result = ChannelConfiguration::stereo (0).intersection (ChannelConfiguration::stereo (0));
+                CHECK_EQ (result.getNumChannels(), 2);
+                CHECK (result == ChannelConfiguration::stereo (0));
+            }
         }
 
-        {
-            auto original = ChannelConfiguration::surround5_1 (0);
-            auto str = original.toString();
-            auto restored = ChannelConfiguration::fromString (str);
-
-            expectEquals (restored.getNumChannels(), 6);
-            expect (original == restored);
-        }
-
-        {
-            auto empty = ChannelConfiguration::fromString ("invalid json");
-            expect (empty.isEmpty());
-        }
-    }
-
-    void runComparisonTests()
-    {
-        beginTest ("Comparison");
-
-        auto stereo1 = ChannelConfiguration::stereo (0);
-        auto stereo2 = ChannelConfiguration::stereo (0);
-        auto stereo3 = ChannelConfiguration::stereo (2);
-
-        expect (stereo1 == stereo2);
-        expect (stereo1 != stereo3);
-
-        auto mono = ChannelConfiguration::mono();
-        expect (stereo1 != mono);
-    }
-
-    void runIntersectionTests()
-    {
-        beginTest ("Intersection");
-
-        {
-            // Partial overlap: stereo(0) channels 0,1 intersected with discrete 4 channels 0-3
-            auto result = ChannelConfiguration::stereo (0).intersection (ChannelConfiguration::discreteChannels (4, 0));
-            expectEquals (result.getNumChannels(), 2);
-        }
-
-        {
-            // No overlap: stereo(4) channels 4,5 vs discrete 2 channels 0,1
-            auto result = ChannelConfiguration::stereo (4).intersection (ChannelConfiguration::discreteChannels (2, 0));
-            expect (result.isEmpty());
-        }
-
-        {
-            // Subset: mono(0) is a subset of stereo(0)
-            auto result = ChannelConfiguration::mono (0).intersection (ChannelConfiguration::stereo (0));
-            expectEquals (result.getNumChannels(), 1);
-        }
-
-        {
-            // Empty left operand
-            auto result = ChannelConfiguration().intersection (ChannelConfiguration::stereo());
-            expect (result.isEmpty());
-        }
-
-        {
-            // Empty right operand
-            auto result = ChannelConfiguration::stereo().intersection (ChannelConfiguration());
-            expect (result.isEmpty());
-        }
-
-        {
-            // Both empty
-            auto result = ChannelConfiguration().intersection (ChannelConfiguration());
-            expect (result.isEmpty());
-        }
-
-        {
-            // Identical configs
-            auto result = ChannelConfiguration::stereo (0).intersection (ChannelConfiguration::stereo (0));
-            expectEquals (result.getNumChannels(), 2);
-            expect (result == ChannelConfiguration::stereo (0));
-        }
-    }
-    void runReversalTests()
-    {
-        beginTest ("Reversal - stereo");
+        SUBCASE ("Reversal - stereo")
         {
             auto stereo = ChannelConfiguration::stereo (0);
             auto rev = stereo.reversed();
 
-            expectEquals (rev.getNumChannels(), 2);
+            CHECK_EQ (rev.getNumChannels(), 2);
             // Device indices should be swapped
-            expectEquals (rev[0].indexInDevice, 1);
-            expectEquals (rev[1].indexInDevice, 0);
+            CHECK_EQ (rev[0].indexInDevice, 1);
+            CHECK_EQ (rev[1].indexInDevice, 0);
             // Channel types should be preserved in original order
-            expect (rev[0].channel == juce::AudioChannelSet::left);
-            expect (rev[1].channel == juce::AudioChannelSet::right);
+            CHECK (rev[0].channel == juce::AudioChannelSet::left);
+            CHECK (rev[1].channel == juce::AudioChannelSet::right);
         }
 
-        beginTest ("Reversal - 4-channel discrete");
+        SUBCASE ("Reversal - 4-channel discrete")
         {
             auto discrete = ChannelConfiguration::discreteChannels (4, 0);
             auto rev = discrete.reversed();
 
-            expectEquals (rev.getNumChannels(), 4);
-            expectEquals (rev[0].indexInDevice, 3);
-            expectEquals (rev[1].indexInDevice, 2);
-            expectEquals (rev[2].indexInDevice, 1);
-            expectEquals (rev[3].indexInDevice, 0);
+            CHECK_EQ (rev.getNumChannels(), 4);
+            CHECK_EQ (rev[0].indexInDevice, 3);
+            CHECK_EQ (rev[1].indexInDevice, 2);
+            CHECK_EQ (rev[2].indexInDevice, 1);
+            CHECK_EQ (rev[3].indexInDevice, 0);
         }
 
-        beginTest ("Reversal - mono is unchanged");
+        SUBCASE ("Reversal - mono is unchanged")
         {
             auto mono = ChannelConfiguration::mono (5);
             auto rev = mono.reversed();
 
-            expectEquals (rev.getNumChannels(), 1);
-            expectEquals (rev[0].indexInDevice, 5);
-            expect (rev[0].channel == juce::AudioChannelSet::centre);
+            CHECK_EQ (rev.getNumChannels(), 1);
+            CHECK_EQ (rev[0].indexInDevice, 5);
+            CHECK (rev[0].channel == juce::AudioChannelSet::centre);
         }
 
-        beginTest ("Reversal - empty is empty");
+        SUBCASE ("Reversal - empty is empty")
         {
             auto empty = ChannelConfiguration();
             auto rev = empty.reversed();
-            expect (rev.isEmpty());
+            CHECK (rev.isEmpty());
         }
 
-        beginTest ("Reversal - double reversal is identity");
+        SUBCASE ("Reversal - double reversal is identity")
         {
             auto original = ChannelConfiguration::surround5_1 (0);
             auto doubleReversed = original.reversed().reversed();
-            expect (original == doubleReversed);
+            CHECK (original == doubleReversed);
         }
 
-        beginTest ("Reversal - preserves channel types");
+        SUBCASE ("Reversal - preserves channel types")
         {
             auto surround = ChannelConfiguration::surround5_1 (0);
             auto rev = surround.reversed();
 
             // Channel types should stay in same positions
-            expect (rev[0].channel == juce::AudioChannelSet::left);
-            expect (rev[1].channel == juce::AudioChannelSet::right);
-            expect (rev[2].channel == juce::AudioChannelSet::centre);
-            expect (rev[3].channel == juce::AudioChannelSet::LFE);
-            expect (rev[4].channel == juce::AudioChannelSet::leftSurround);
-            expect (rev[5].channel == juce::AudioChannelSet::rightSurround);
+            CHECK (rev[0].channel == juce::AudioChannelSet::left);
+            CHECK (rev[1].channel == juce::AudioChannelSet::right);
+            CHECK (rev[2].channel == juce::AudioChannelSet::centre);
+            CHECK (rev[3].channel == juce::AudioChannelSet::LFE);
+            CHECK (rev[4].channel == juce::AudioChannelSet::leftSurround);
+            CHECK (rev[5].channel == juce::AudioChannelSet::rightSurround);
 
             // Device indices should be reversed
-            expectEquals (rev[0].indexInDevice, 5);
-            expectEquals (rev[1].indexInDevice, 4);
-            expectEquals (rev[2].indexInDevice, 3);
-            expectEquals (rev[3].indexInDevice, 2);
-            expectEquals (rev[4].indexInDevice, 1);
-            expectEquals (rev[5].indexInDevice, 0);
+            CHECK_EQ (rev[0].indexInDevice, 5);
+            CHECK_EQ (rev[1].indexInDevice, 4);
+            CHECK_EQ (rev[2].indexInDevice, 3);
+            CHECK_EQ (rev[3].indexInDevice, 2);
+            CHECK_EQ (rev[4].indexInDevice, 1);
+            CHECK_EQ (rev[5].indexInDevice, 0);
         }
 
-        beginTest ("Reversal - serialization round-trip");
+        SUBCASE ("Reversal - serialization round-trip")
         {
             auto original = ChannelConfiguration::stereo (0).reversed();
             auto json = original.toJSON();
             auto restored = ChannelConfiguration::fromJSON (json);
 
-            expectEquals (restored.getNumChannels(), 2);
-            expectEquals (restored[0].indexInDevice, 1);
-            expectEquals (restored[1].indexInDevice, 0);
-            expect (restored[0].channel == juce::AudioChannelSet::left);
-            expect (restored[1].channel == juce::AudioChannelSet::right);
+            CHECK_EQ (restored.getNumChannels(), 2);
+            CHECK_EQ (restored[0].indexInDevice, 1);
+            CHECK_EQ (restored[1].indexInDevice, 0);
+            CHECK (restored[0].channel == juce::AudioChannelSet::left);
+            CHECK (restored[1].channel == juce::AudioChannelSet::right);
         }
 
-        beginTest ("Reversal - non-zero start index");
+        SUBCASE ("Reversal - non-zero start index")
         {
             auto stereo = ChannelConfiguration::stereo (4);
             auto rev = stereo.reversed();
 
-            expectEquals (rev[0].indexInDevice, 5);
-            expectEquals (rev[1].indexInDevice, 4);
+            CHECK_EQ (rev[0].indexInDevice, 5);
+            CHECK_EQ (rev[1].indexInDevice, 4);
         }
     }
-};
-
-static ChannelConfigurationTests channelConfigurationTests;
+}
 
 }} // namespace tracktion { inline namespace engine
 
