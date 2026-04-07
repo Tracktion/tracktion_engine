@@ -55,3 +55,15 @@ jobs:
         run: |
           cmake -B ${{ env.BUILD_DIR }} ${{ matrix.generator }} -DJUCE_CPM_DEVELOP=1
           cmake --build ./${{ env.BUILD_DIR }} --config ${{ env.BUILD_CONFIG }} --parallel --target DemoRunner EngineInPluginDemo_common TestRunner Benchmarks
+
+  juce-compatibility-checks-pass:
+    if: always()
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify all jobs passed
+        run: |
+          if [[ "${{ needs.build.result }}" != "success" ]]; then
+            echo "One or more juce compatibility jobs failed"
+            exit 1
+          fi

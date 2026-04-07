@@ -167,3 +167,16 @@ jobs:
           echo "TRACKTION_ONLY_WARNING_LINES:\n"
           echo "$TRACKTION_ONLY_WARNING_LINES"
           if [[ "$TRACKTION_ONLY_WARNING_LINES" != "" ]]; then exit 1; fi
+
+  # Gate job for branch protection
+  build-checks-pass:
+    if: always()
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify all jobs passed
+        run: |
+          if [[ "${{ needs.test.result }}" != "success" ]]; then
+            echo "One or more test jobs failed"
+            exit 1
+          fi
