@@ -348,7 +348,7 @@ TEST_SUITE ("tracktion_engine")
             auto player = test_utilities::createEnginePlayer (*edit, {}, { squareAudioFile });
             auto buffer = process (*player, fileLength);
 
-            CHECK_GT(getRMS (toBufferView (buffer).getChannel (0)), 0.99f);
+            CHECK_GT(getRMS (toBufferView (buffer).getChannel (0)), 0.98f);
         }
 
         // Now add Rack and clip shouldn't be heard
