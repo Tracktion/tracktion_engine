@@ -905,7 +905,7 @@ struct SignalsmithStretcher  : public TimeStretcher::Stretcher
 
     int getMaxFramesNeeded() const override
     {
-        return samplesPerOutputBuffer * 4;
+        return stretch.inputLatency() + stretch.outputLatency();
     }
 
     int processData (const float* const* inChannels, int numSamples, float* const* outChannels) override
@@ -1308,9 +1308,11 @@ int TimeStretcher::processData (AudioFifo& inFifo, int numSamples, AudioFifo& ou
     auto inChannels = inBuffer.buffer.getArrayOfReadPointers();
     auto outChannels = outBuffer.buffer.getArrayOfWritePointers();
 
-    inFifo.read (inBuffer.buffer, 0, numSamples);
+    [[maybe_unused]] bool rIn = inFifo.read (inBuffer.buffer, 0, numSamples);
+    jassert (rIn);
     const int numOutputFrames = stretcher->processData (inChannels, numSamples, outChannels);
-    outFifo.write (outBuffer.buffer, 0, numOutputFrames);
+    [[maybe_unused]] bool rOut = outFifo.write (outBuffer.buffer, 0, numOutputFrames);
+    jassert (rOut);
 
     return numOutputFrames;
 }
