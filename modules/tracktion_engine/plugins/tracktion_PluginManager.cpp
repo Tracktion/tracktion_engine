@@ -358,9 +358,6 @@ Plugin::Ptr PluginManager::createNewPlugin (Edit& ed, const juce::String& type, 
             auto v = createValueTree (IDs::PLUGIN,
                                       IDs::type, type);
 
-            if (ed.engine.getPluginManager().areGUIsLockedByDefault())
-                v.setProperty (IDs::windowLocked, true, nullptr);
-
             if (auto p = builtIn->create (PluginCreationInfo (ed, v, true)))
                 return p;
         }
@@ -386,16 +383,6 @@ juce::Array<juce::PluginDescription> PluginManager::getARACompatiblePlugDescript
     }
 
     return descs;
-}
-
-bool PluginManager::areGUIsLockedByDefault()
-{
-    return engine.getPropertyStorage().getProperty (SettingID::filterGui, true);
-}
-
-void PluginManager::setGUIsLockedByDefault (bool b)
-{
-    engine.getPropertyStorage().setProperty (SettingID::filterGui, b);
 }
 
 bool PluginManager::doubleClickToOpenWindows()

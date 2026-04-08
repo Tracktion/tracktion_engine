@@ -28,9 +28,6 @@ public:
     static bool startChildProcessPluginScan (const juce::String& commandLine);
 
     //==============================================================================
-    bool areGUIsLockedByDefault();
-    void setGUIsLockedByDefault (bool);
-
     bool doubleClickToOpenWindows();
     void setDoubleClickToOpenWindows (bool);
 

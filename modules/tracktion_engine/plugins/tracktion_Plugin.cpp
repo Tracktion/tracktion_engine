@@ -123,8 +123,6 @@ Plugin::Plugin (PluginCreationInfo info)
     }
    #endif
 
-    windowState->windowLocked = state [IDs::windowLocked];
-
     if (state.hasProperty (IDs::windowX))
         windowState->lastWindowBounds = juce::Rectangle<int> (state[IDs::windowX],
                                                               state[IDs::windowY], 1, 1);
@@ -973,7 +971,6 @@ void Plugin::flushPluginStateToValueTree()
 
         state.setProperty (IDs::windowX, windowState->lastWindowBounds->getX(), um);
         state.setProperty (IDs::windowY, windowState->lastWindowBounds->getY(), um);
-        state.setProperty (IDs::windowLocked, windowState->windowLocked, um);
     }
 }
 

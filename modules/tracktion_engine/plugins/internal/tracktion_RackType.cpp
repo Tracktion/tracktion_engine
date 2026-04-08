@@ -202,9 +202,6 @@ RackType::RackType (Edit& ed, const juce::ValueTree& v)
         auto ws = createValueTree (IDs::WINDOWSTATE,
                                    IDs::windowPos, state[IDs::windowPos]);
 
-        if (state.hasProperty (IDs::windowLocked))
-            ws.setProperty (IDs::windowLocked, state[IDs::windowLocked], nullptr);
-
         state.addChild (ws, -1, nullptr);
     }
 
@@ -365,8 +362,6 @@ void RackType::loadWindowPosition()
         if (ws->state.hasProperty (IDs::windowPos))
             ws->lastWindowBounds = juce::Rectangle<int>::fromString (ws->state[IDs::windowPos].toString());
 
-        if (ws->state.hasProperty (IDs::windowLocked))
-            ws->windowLocked = ws->state[IDs::windowLocked];
     }
 }
 
@@ -378,7 +373,6 @@ void RackType::saveWindowPosition()
         {
             auto windowState = ws->lastWindowBounds->toString();
             ws->state.setProperty (IDs::windowPos, windowState.isEmpty() ? juce::var() : juce::var (windowState), nullptr);
-            ws->state.setProperty (IDs::windowLocked, ws->windowLocked, nullptr);
         }
     }
 }
@@ -1441,7 +1435,7 @@ void RackType::valueTreeParentChanged (juce::ValueTree&)
 void RackType::valueTreePropertyChanged (juce::ValueTree& v, const juce::Identifier& ident)
 {
     if (v.hasType (IDs::PLUGININSTANCE) || v.hasType (IDs::CONNECTION))
-        if (ident != IDs::x && ident != IDs::y && ident != IDs::windowLocked && ident != IDs::windowPos)
+        if (ident != IDs::x && ident != IDs::y && ident != IDs::windowPos)
             triggerUpdate();
 
     if (v == state && ident == IDs::name)
