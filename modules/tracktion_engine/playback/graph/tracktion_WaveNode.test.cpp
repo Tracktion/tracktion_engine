@@ -369,9 +369,9 @@ namespace wavenode_test_helpers
            #if TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
             TimeStretcher::Mode::rubberbandMelodic,
            #endif
-           //ddd #if TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
-           //  TimeStretcher::Mode::signalsmithDefault,
-           // #endif
+           #if TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
+             TimeStretcher::Mode::signalsmithDefault,
+           #endif
            #if TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE
             TimeStretcher::Mode::elastiquePro,
            #endif
