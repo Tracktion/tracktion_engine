@@ -165,7 +165,6 @@ namespace IDs
     DECLARE_ID (windowPos)
     DECLARE_ID (windowX)
     DECLARE_ID (windowY)
-    DECLARE_ID (windowLocked)
     DECLARE_ID (src)
     DECLARE_ID (dst)
     DECLARE_ID (srcPin)

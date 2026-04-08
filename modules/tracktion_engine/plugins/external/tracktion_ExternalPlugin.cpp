@@ -662,7 +662,7 @@ ExternalPlugin::ExternalPlugin (PluginCreationInfo info)  : Plugin (info)
     initialiseFully();
 }
 
-juce::ValueTree ExternalPlugin::create (Engine& e, const juce::PluginDescription& desc)
+juce::ValueTree ExternalPlugin::create (Engine&, const juce::PluginDescription& desc)
 {
     auto v = createValueTree (IDs::PLUGIN,
                               IDs::type, xmlTypeName,
@@ -671,9 +671,6 @@ juce::ValueTree ExternalPlugin::create (Engine& e, const juce::PluginDescription
                               IDs::filename, desc.fileOrIdentifier,
                               IDs::name, desc.name,
                               IDs::manufacturer, desc.manufacturerName);
-
-    if (e.getPluginManager().areGUIsLockedByDefault())
-        v.setProperty (IDs::windowLocked, true, nullptr);
 
     return v;
 }
