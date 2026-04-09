@@ -68,7 +68,7 @@ struct RackWetDryAutomatableParam  : public AutomatableParameter
     }
 
     juce::String valueToString (float value) override        { return juce::Decibels::toString (juce::Decibels::gainToDecibels (value), 1); }
-    float stringToValue (const juce::String& s) override     { return dbStringToDb (s); }
+    float stringToValue (const juce::String& s) override     { return juce::Decibels::decibelsToGain (dbStringToDb (s)); }
 };
 
 //==============================================================================
