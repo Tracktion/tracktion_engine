@@ -72,8 +72,8 @@ public:
     void parameterChanged (int parameterNumber, const ParameterSetting&) override;
     void clearParameter (int parameterNumber) override;
     void faderBankChanged (int newStartChannelNumber, const juce::StringArray& trackNames) override;
-    void channelLevelChanged (int channel, float l, float r) override;
-    void masterLevelsChanged (float leftLevel, float rightLevel) override;
+    void channelLevelChanged (int channel, std::span<const float> levels) override;
+    void masterLevelsChanged (std::span<const float> levels) override;
     void updateTCDisplay (const char* newDigits);
     void timecodeChanged (int barsOrHours, int beatsOrMinutes, int ticksOrSeconds,
                           int millisecs, bool isBarsBeats, bool isFrames) override;

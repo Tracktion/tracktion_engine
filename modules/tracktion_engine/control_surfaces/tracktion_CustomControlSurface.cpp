@@ -821,7 +821,7 @@ void CustomControlSurface::faderBankChanged (int newStartChannelNumber, const ju
     }
 }
 
-void CustomControlSurface::channelLevelChanged (int, float, float) {}
+void CustomControlSurface::channelLevelChanged (int, std::span<const float>) {}
 
 void CustomControlSurface::trackSelectionChanged (int faderIndex, bool isSelected)
 {
@@ -833,7 +833,7 @@ void CustomControlSurface::trackRecordEnabled (int faderIndex, bool recordEnable
     sendCommandToControllerForActionID (armTrackId + faderIndex, recordEnabled);
 }
 
-void CustomControlSurface::masterLevelsChanged (float, float) {}
+void CustomControlSurface::masterLevelsChanged (std::span<const float>) {}
 
 void CustomControlSurface::timecodeChanged (int barsOrHours, int beatsOrMinutes,
                                             int ticksOrSeconds, int millisecs, bool isBarsBeats, bool isFrames)
