@@ -194,21 +194,50 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(EditTreeWatcher)
 };
 
+struct ExternalControllerManager::MasterLevelClientState
+{
+    LevelMeasurer::Client client;
+    LevelMeasurer* measurer = nullptr;
+};
+
 //==============================================================================
 ExternalControllerManager::ExternalControllerManager (Engine& e) : engine (e)
 {
     blinkTimer = std::make_unique<BlinkTimer> (*this);
+    masterLevelState = std::make_unique<MasterLevelClientState>();
+
     masterLevelsTimer.setCallback ([this]
     {
         if (currentEdit == nullptr)
             return;
 
         auto ctx = currentEdit->getCurrentPlaybackContext();
-        if (ctx == nullptr)
-            return;
 
-        auto l = ctx->masterLevels.getLevelCache();
-        masterLevelsChanged (dbToGain (l.first), dbToGain (l.second));
+        if (ctx == nullptr)
+        {
+            if (masterLevelState->measurer != nullptr)
+            {
+                masterLevelState->measurer->removeClient (masterLevelState->client);
+                masterLevelState->measurer = nullptr;
+            }
+
+            return;
+        }
+
+        if (&ctx->masterLevels != masterLevelState->measurer)
+        {
+            if (masterLevelState->measurer != nullptr)
+                masterLevelState->measurer->removeClient (masterLevelState->client);
+
+            masterLevelState->measurer = &ctx->masterLevels;
+            masterLevelState->measurer->addClient (masterLevelState->client);
+        }
+
+        auto dBL = masterLevelState->client.getAndClearAudioLevel (0).dB;
+        auto dBR = masterLevelState->client.getNumChannelsUsed() > 1
+                       ? masterLevelState->client.getAndClearAudioLevel (1).dB : dBL;
+
+        masterLevelsChanged (dbToGain (dBL), dbToGain (dBR));
     });
 }
 
@@ -306,6 +335,12 @@ void ExternalControllerManager::setCurrentEdit (Edit* newEdit, SelectionManager*
 
         if (currentEdit != nullptr)
             currentEdit->getTransport().removeChangeListener (this);
+
+        if (masterLevelState->measurer != nullptr)
+        {
+            masterLevelState->measurer->removeClient (masterLevelState->client);
+            masterLevelState->measurer = nullptr;
+        }
 
         currentEdit = newEdit;
 
