@@ -278,10 +278,6 @@ void LevelMeasurer::clear()
 
     for (auto c : clients)
         c->reset();
-
-    levelCacheL = -100.0f;
-    levelCacheR = -100.0f;
-    numActiveChannels = 1;
 }
 
 void LevelMeasurer::setMode (LevelMeasurer::Mode m)
@@ -332,7 +328,7 @@ void SharedLevelMeasurer::setSize (int channels, int numSamples)
 
 void SharedLevelMeasurer::addBuffer (const juce::AudioBuffer<float>& inBuffer, int startSample, int numSamples)
 {
-    setSize (2, numSamples);
+    setSize (inBuffer.getNumChannels(), numSamples);
 
     juce::SpinLock::ScopedLockType lock (spinLock);
 

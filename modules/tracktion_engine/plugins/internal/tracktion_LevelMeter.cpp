@@ -34,6 +34,7 @@ const char* LevelMeterPlugin::xmlTypeName = "level";
 void LevelMeterPlugin::initialise (const PluginInitialisationInfo& info)
 {
     measurer.clear();
+    measurer.addClient (controllerLevelClient);
     initialiseWithoutStopping (info);
 }
 
@@ -54,6 +55,7 @@ void LevelMeterPlugin::initialiseWithoutStopping (const PluginInitialisationInfo
 
 void LevelMeterPlugin::deinitialise()
 {
+    measurer.removeClient (controllerLevelClient);
     measurer.clear();
     stopTimer();
 }
@@ -80,8 +82,11 @@ void LevelMeterPlugin::timerCallback()
 
         if (ecm.isAttachedToEdit (edit))
         {
-            auto l = measurer.getLevelCache();
-            ecm.channelLevelChanged (controllerTrack, dbToGain (l.first), dbToGain (l.second));
+            auto dBL = controllerLevelClient.getAndClearAudioLevel (0).dB;
+            auto dBR = controllerLevelClient.getNumChannelsUsed() > 1
+                           ? controllerLevelClient.getAndClearAudioLevel (1).dB : dBL;
+
+            ecm.channelLevelChanged (controllerTrack, dbToGain (dBL), dbToGain (dBR));
         }
     }
 }

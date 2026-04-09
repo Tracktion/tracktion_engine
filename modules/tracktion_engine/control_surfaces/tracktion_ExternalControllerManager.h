@@ -220,6 +220,9 @@ private:
 
     LambdaTimer masterLevelsTimer;
 
+    struct MasterLevelClientState;
+    std::unique_ptr<MasterLevelClientState> masterLevelState;
+
     ExternalController* addNewController (ControlSurface*);
 
     juce::Array<ExternalController*> getActiveDevices() const;

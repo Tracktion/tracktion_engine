@@ -50,6 +50,7 @@ public:
 
 private:
     int controllerTrack = -1;
+    LevelMeasurer::Client controllerLevelClient;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevelMeterPlugin)
 };
