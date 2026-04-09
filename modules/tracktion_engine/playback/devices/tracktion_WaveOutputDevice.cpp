@@ -113,6 +113,30 @@ void WaveOutputDevice::setDithered (bool dither)
     }
 }
 
+void WaveOutputDevice::updateLevelMeasurer (float* const* outputChannelData, int totalNumOutputChannels, int numSamples)
+{
+    auto& channels = getChannels();
+    auto numDeviceChannels = (int) channels.getNumChannels();
+
+    if (numDeviceChannels <= 0)
+        return;
+
+    meterChannelPtrs.resize ((size_t) numDeviceChannels);
+
+    for (int i = 0; i < numDeviceChannels; ++i)
+    {
+        auto idx = channels[(size_t) i].indexInDevice;
+
+        if (idx >= 0 && idx < totalNumOutputChannels)
+            meterChannelPtrs[(size_t) i] = outputChannelData[idx];
+        else
+            meterChannelPtrs[(size_t) i] = nullptr;
+    }
+
+    juce::AudioBuffer<float> buf (meterChannelPtrs.data(), numDeviceChannels, numSamples);
+    levelMeasurer.processBuffer (buf, 0, numSamples);
+}
+
 //==============================================================================
 WaveOutputDeviceInstance* WaveOutputDevice::createInstance (EditPlaybackContext& c)
 {

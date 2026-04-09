@@ -52,7 +52,10 @@ public:
 
     WaveOutputDeviceInstance* createInstance (EditPlaybackContext&);
 
+    void updateLevelMeasurer (float* const* outputChannelData, int totalNumOutputChannels, int numSamples);
+
     WaveDeviceDescription deviceDescription;
+    LevelMeasurer levelMeasurer;
 
 protected:
     juce::String openDevice() override;
@@ -65,6 +68,7 @@ private:
     ChannelConfiguration originalChannels;
     juce::AudioChannelSet channelSet;
     bool ditheringEnabled, leftRightReversed;
+    choc::SmallVector<float*, 8> meterChannelPtrs;
 
     void loadProps();
     void saveProps();
