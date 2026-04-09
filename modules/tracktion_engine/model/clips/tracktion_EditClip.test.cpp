@@ -92,7 +92,7 @@ TEST_SUITE("tracktion_engine")
 
             // Wait for the EditClip's proxy to be rendered before the dest render
             while (! editClip->getPlaybackFile().isValid())
-                juce::MessageManager::getInstance()->runDispatchLoopUntil (10);
+                test_utilities::runDispatchLoop (10);
 
             // Render
             auto tempDestRender = test_utilities::renderToAudioBufferDispatchingMessageThread (*destEdit);

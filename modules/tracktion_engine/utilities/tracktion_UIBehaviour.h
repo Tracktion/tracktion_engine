@@ -41,8 +41,17 @@ public:
     virtual bool perform (const juce::ApplicationCommandTarget::InvocationInfo&)    { return false; }
 
     //==============================================================================
-    /** Should show the new plugin window and creates the Plugin the user selects. */
+    /** Should show the new plugin window and creates the Plugin the user selects.
+        @deprecated Use the async callback version instead.
+    */
     virtual Plugin::Ptr showMenuAndCreatePlugin (Plugin::Type, Edit&)               { return {}; }
+
+    /** Async version — shows the plugin menu and calls back with the created plugin (or nullptr). */
+    virtual void showMenuAndCreatePluginAsync (Plugin::Type types, Edit& edit, std::function<void (Plugin::Ptr)> callback)
+    {
+        if (callback)
+            callback (showMenuAndCreatePlugin (types, edit));
+    }
 
     /** Must create a suitable Component plugin window for the given PluginWindowState.
         The type of state should be checked and used accordingly e.g. Plugin::WindowState

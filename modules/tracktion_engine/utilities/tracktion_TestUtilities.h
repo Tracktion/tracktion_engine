@@ -39,6 +39,16 @@ namespace test_utilities
    #endif
 
     //==============================================================================
+    inline void runDispatchLoop (int milliseconds)
+    {
+       #if JUCE_MODAL_LOOPS_PERMITTED
+        juce::MessageManager::getInstance()->runDispatchLoopUntil (milliseconds);
+       #else
+        juce::Thread::sleep (milliseconds);
+       #endif
+    }
+
+    //==============================================================================
     /** Calls EditFileOperations::save synchronously for test use.
         Only safe when no dialogs will be shown (warnOfFailure=false, offerToDiscardChanges=false).
     */
