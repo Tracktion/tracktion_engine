@@ -1335,6 +1335,10 @@ void DeviceManager::audioDeviceIOCallbackInternal (const float* const* inputChan
                             if (! std::isnormal (dest[j]))
                                 dest[j] = 0;
 
+            for (auto wo : waveOutputs)
+                if (wo->isEnabled())
+                    wo->updateLevelMeasurer (outputChannelData, totalNumOutputChannels, numSamples);
+
             streamTime = blockStreamTime.getEnd();
             currentCpuUsage = deviceManager.getCpuUsage();
         }
