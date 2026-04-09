@@ -233,11 +233,13 @@ ExternalControllerManager::ExternalControllerManager (Engine& e) : engine (e)
             masterLevelState->measurer->addClient (masterLevelState->client);
         }
 
-        auto dBL = masterLevelState->client.getAndClearAudioLevel (0).dB;
-        auto dBR = masterLevelState->client.getNumChannelsUsed() > 1
-                       ? masterLevelState->client.getAndClearAudioLevel (1).dB : dBL;
+        auto numChans = masterLevelState->client.getNumChannelsUsed();
+        float gains[32];
 
-        masterLevelsChanged (dbToGain (dBL), dbToGain (dBR));
+        for (int i = 0; i < numChans; ++i)
+            gains[i] = dbToGain (masterLevelState->client.getAndClearAudioLevel (i).dB);
+
+        masterLevelsChanged ({ gains, (size_t) numChans });
     });
 }
 
@@ -741,7 +743,7 @@ void ExternalControllerManager::automationModeChanged (bool isReading, bool isWr
     FOR_EACH_ACTIVE_DEVICE (automationModeChanged (isReading, isWriting));
 }
 
-void ExternalControllerManager::channelLevelChanged (int channel, float l, float r)
+void ExternalControllerManager::channelLevelChanged (int channel, std::span<const float> levels)
 {
     CRASH_TRACER
     // This is an optimisation that avoids calling mapTrackNumToChannelNum if there are no enabled/active devices
@@ -758,13 +760,13 @@ void ExternalControllerManager::channelLevelChanged (int channel, float l, float
         return *channelNum;
     };
 
-    FOR_EACH_ACTIVE_DEVICE (channelLevelChanged (getChannelNum(), l, r));
+    FOR_EACH_ACTIVE_DEVICE (channelLevelChanged (getChannelNum(), levels));
 }
 
-void ExternalControllerManager::masterLevelsChanged (float leftLevel, float rightLevel)
+void ExternalControllerManager::masterLevelsChanged (std::span<const float> levels)
 {
     CRASH_TRACER
-    FOR_EACH_ACTIVE_DEVICE (masterLevelsChanged (leftLevel, rightLevel));
+    FOR_EACH_ACTIVE_DEVICE (masterLevelsChanged (levels));
 }
 
 void ExternalControllerManager::timecodeChanged (int barsOrHours, int beatsOrMinutes, int ticksOrSeconds,

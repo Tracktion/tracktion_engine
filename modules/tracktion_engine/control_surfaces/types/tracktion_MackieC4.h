@@ -34,7 +34,7 @@ public:
     void faderBankChanged (int newStartChannelNumber, const juce::StringArray& trackNames) override;
     void moveAux (int channelNum, int auxNum, const char* bus, float newPos) override;
     void clearAux (int channel, int auxNum) override;
-    void channelLevelChanged (int channel, float l, float r) override;
+    void channelLevelChanged (int channel, std::span<const float> levels) override;
     void updateSoloAndMute (int channelNum, Track::MuteAndSoloLightState, bool isBright) override;
     void soloCountChanged (bool) override;
     void trackSelectionChanged (int channel, bool isSelected) override;
@@ -47,7 +47,7 @@ public:
     void loopOnOffChanged (bool isLoopOn) override;
     void slaveOnOffChanged (bool isSlaving) override;
     void punchOnOffChanged (bool isPunching) override;
-    void masterLevelsChanged (float leftLevel, float rightLevel) override;
+    void masterLevelsChanged (std::span<const float> levels) override;
     void timecodeChanged (int barsOrHours, int beatsOrMinutes, int ticksOrSeconds, int millisecs, bool isBarsBeats, bool isFrames) override;
     void trackRecordEnabled (int channel, bool isEnabled) override;
     bool canChangeSelectedPlugin() override;

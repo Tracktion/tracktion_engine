@@ -142,9 +142,8 @@ public:
 
     // if the device has per-channel level meters, this should update one of them.
     // the channel number is the physical channel on the device, regardless of bank selection
-    // if the channel is mono then l == r
-    // level is 0 to 1.0
-    virtual void channelLevelChanged ([[maybe_unused]] int channel, [[maybe_unused]] float l, [[maybe_unused]] float r) {}
+    // levels are 0 to 1.0, one per channel
+    virtual void channelLevelChanged ([[maybe_unused]] int channel, [[maybe_unused]] std::span<const float> levels) {}
 
     // when a track is selected or deselected
     virtual void trackSelectionChanged ([[maybe_unused]] int channel, [[maybe_unused]] bool isSelected) {}
@@ -152,8 +151,8 @@ public:
     virtual void trackRecordEnabled ([[maybe_unused]] int channel, [[maybe_unused]] bool isEnabled) {}
 
     // if the device has a master level readout, this should update it.
-    virtual void masterLevelsChanged ([[maybe_unused]] float leftLevel,
-                                      [[maybe_unused]] float rightLevel) {}
+    // levels are 0 to 1.0, one per channel
+    virtual void masterLevelsChanged ([[maybe_unused]] std::span<const float> levels) {}
 
     // tells the device that the playback position has changed, so if it has a timecode
     // display, it should update it.

@@ -974,17 +974,21 @@ void MackieC4::clearAux (int channel, int)
     }
 }
 
-void MackieC4::channelLevelChanged (int channel, float l, float r)
+void MackieC4::channelLevelChanged (int channel, std::span<const float> levels)
 {
     if (mode == MixerMode)
     {
         CRASH_TRACER
 
+        float peak = 0.0f;
+        for (auto v : levels)
+            peak = std::max (peak, v);
+
         char midi[256];
         int midiLen = 0;
 
         if (c4->C4LCDSetMeterLevelTxString (midi, &midiLen, channel * 2 + 1,
-                                            juce::jlimit (0, 12, (juce::roundToInt (12.0f * std::max (l, r))))))
+                                            juce::jlimit (0, 12, (juce::roundToInt (12.0f * peak)))))
             sendMidiCommandToController (0, midi, midiLen);
     }
 }
@@ -1003,7 +1007,7 @@ void MackieC4::loopOnOffChanged (bool)                { updateButtonLights(); }
 void MackieC4::slaveOnOffChanged (bool)               { updateButtonLights(); }
 void MackieC4::punchOnOffChanged (bool)               { updateButtonLights(); }
 
-void MackieC4::masterLevelsChanged (float, float) {}
+void MackieC4::masterLevelsChanged (std::span<const float>) {}
 void MackieC4::timecodeChanged (int, int, int, int, bool, bool) {}
 void MackieC4::trackRecordEnabled (int, bool) {}
 

@@ -220,10 +220,10 @@ public:
     void automationReadModeChanged (bool isReading) override;
     void automationWriteModeChanged (bool isWriting) override;
     void faderBankChanged (int newStartChannelNumber, const juce::StringArray& trackNames) override;
-    void channelLevelChanged (int channel, float l, float r) override;
+    void channelLevelChanged (int channel, std::span<const float> levels) override;
     void trackSelectionChanged (int channel, bool isSelected) override;
     void trackRecordEnabled (int channel, bool isEnabled) override;
-    void masterLevelsChanged (float leftLevel, float rightLevel) override;
+    void masterLevelsChanged (std::span<const float> levels) override;
     void timecodeChanged (int barsOrHours, int beatsOrMinutes, int ticksOrSeconds, int millisecs, bool isBarsBeats, bool isFrames) override;
     void clickOnOffChanged (bool isClickOn) override;
     void snapOnOffChanged (bool isSnapOn) override;

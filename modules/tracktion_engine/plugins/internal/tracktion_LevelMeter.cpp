@@ -82,11 +82,13 @@ void LevelMeterPlugin::timerCallback()
 
         if (ecm.isAttachedToEdit (edit))
         {
-            auto dBL = controllerLevelClient.getAndClearAudioLevel (0).dB;
-            auto dBR = controllerLevelClient.getNumChannelsUsed() > 1
-                           ? controllerLevelClient.getAndClearAudioLevel (1).dB : dBL;
+            auto numChans = controllerLevelClient.getNumChannelsUsed();
+            float gains[32];
 
-            ecm.channelLevelChanged (controllerTrack, dbToGain (dBL), dbToGain (dBR));
+            for (int i = 0; i < numChans; ++i)
+                gains[i] = dbToGain (controllerLevelClient.getAndClearAudioLevel (i).dB);
+
+            ecm.channelLevelChanged (controllerTrack, { gains, (size_t) numChans });
         }
     }
 }
