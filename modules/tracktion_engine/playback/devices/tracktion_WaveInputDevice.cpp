@@ -1750,16 +1750,26 @@ void WaveInputDevice::consumeNextAudioBlock (const float* const* allChannels, in
 {
     if (enabled)
     {
-        bool isFirst = true;
         const juce::ScopedLock sl (instanceLock);
 
-        // do this first, as writing to file trashes the buffer
-        for (auto i : instances)
+        if (instances.isEmpty())
         {
-            i->acceptInputBuffer (allChannels, numChannels, numSamples, streamTime,
-                                  isFirst ? &levelMeasurer : nullptr,
-                                  (! retrospectiveRecordLock) ? retrospectiveBuffer.get() : nullptr, isFirst);
-            isFirst = false;
+            // When no instances exist, still feed the level measurer in case it's being monitored
+            juce::AudioBuffer<float> buf (const_cast<float* const*> (allChannels), numChannels, numSamples);
+            levelMeasurer.processBuffer (buf, 0, numSamples);
+        }
+        else
+        {
+            bool isFirst = true;
+
+            for (auto i : instances)
+            {
+                i->acceptInputBuffer (allChannels, numChannels, numSamples, streamTime,
+                                     isFirst ? &levelMeasurer : nullptr,
+                                     (! retrospectiveRecordLock) ? retrospectiveBuffer.get() : nullptr,
+                                     isFirst);
+                isFirst = false;
+            }
         }
     }
 }
