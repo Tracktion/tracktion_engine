@@ -229,7 +229,7 @@ TEST_SUITE ("tracktion_engine")
         parentTree.moveChild (pbIndex, rackIndex, nullptr);
 
         // Pump the message manager so async change notifications fire
-        juce::MessageManager::getInstance()->runDispatchLoopUntil (50);
+        test_utilities::runDispatchLoop (50);
 
         CHECK (changeListener.notified);
 
