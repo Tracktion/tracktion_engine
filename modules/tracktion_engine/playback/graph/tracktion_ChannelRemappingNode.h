@@ -61,6 +61,8 @@ public:
     ///                         been created with its input. This node takes ownership.
     /// @param inputConfig      The channel configuration of the original input.
     /// @param processorConfig  The channel configuration the processor handles.
+    ///                         An empty config means the processor handles all input
+    ///                         channels (pass-through), so no remapping is needed.
     ChannelRemappingNode (std::unique_ptr<tracktion::graph::Node> processorNode,
                           ChannelConfiguration inputConfig,
                           ChannelConfiguration processorConfig);

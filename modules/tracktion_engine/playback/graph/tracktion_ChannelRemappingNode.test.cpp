@@ -238,6 +238,23 @@ TEST_CASE ("ChannelRemappingNode")
             }
         }
 
+        // Processor passthrough mode - empty processorConfig means "handles all channels"
+        {
+            auto sinNode = makeNode<SinNode> (220.0f, 4);
+            auto node = makeNode<ChannelRemappingNode> (std::move (sinNode),
+                                                        ChannelConfiguration::discreteChannels (4),
+                                                        ChannelConfiguration {}); // empty = pass-through
+
+            // Should treat processor as handling all 4 channels
+            CHECK_EQ (node->getNodeProperties().numberOfChannels, 4);
+
+            auto testContext = createBasicTestContext (std::move (node), ts, 4, 5.0);
+            auto& buffer = testContext->buffer;
+
+            for (int channel = 0; channel < 4; ++channel)
+                CHECK (std::abs (buffer.getMagnitude (channel, 0, buffer.getNumSamples()) - 1.0f) <= 0.001f);
+        }
+
         // Phase cancellation - mono sins summed to mono
         {
             // Two mono sins with opposite phase that cancel

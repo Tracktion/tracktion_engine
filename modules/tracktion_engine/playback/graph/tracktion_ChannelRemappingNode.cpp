@@ -35,7 +35,11 @@ ChannelRemappingNode::ChannelRemappingNode (std::unique_ptr<tracktion::graph::No
 {
     jassert (input != nullptr);
     jassert (! inputChannelConfig.isEmpty());
-    jassert (! processorChannelConfig.isEmpty());
+
+    // An empty processorConfig means "pass-through: handles all channels",
+    // so treat it as matching the input config
+    if (processorChannelConfig.isEmpty())
+        processorChannelConfig = inputChannelConfig;
 
     // Cache the original input node - it's the first direct input of the processor
     // We need this for passthrough mode to access channels beyond what the processor handles
