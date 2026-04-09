@@ -183,6 +183,7 @@ private:
     void selectionChanged();
     void clearList();
 
+    JUCE_DECLARE_WEAK_REFERENCEABLE (SelectionManager)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SelectionManager)
 };
 
