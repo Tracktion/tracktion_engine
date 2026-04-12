@@ -77,7 +77,7 @@ private:
     void initialiseFromDeviceDefault();
     bool initialiseFromState (const juce::XmlElement&);
     bool initialiseFromLegacyState (const juce::XmlElement&);
-    bool setAllToNumChannels (std::vector<WaveDeviceDescription>&, uint32_t numChannels, bool isInput);
+    bool setAllToNumChannels (std::vector<WaveDeviceDescription>&, uint32_t numChannels);
     void sanityCheckList();
     WaveDeviceDescription* findMatchingDevice (const WaveDeviceDescription&, bool isInput);
 };
