@@ -386,7 +386,7 @@ static void ensureFullChannelCoverage (std::vector<WaveDeviceDescription>& group
         return false;
     };
 
-    while (fixFirstNonContiguousGroup())
+    for (int safety = 0; safety < 1000 && fixFirstNonContiguousGroup(); ++safety)
     {}
 }
 
@@ -488,27 +488,27 @@ void WaveDeviceDescriptionList::sanityCheckList()
 uint32_t WaveDeviceDescriptionList::getTotalInputChannelCount() const  { return countTotalSourceChannels (inputs); }
 uint32_t WaveDeviceDescriptionList::getTotalOutputChannelCount() const { return countTotalSourceChannels (outputs); }
 
-bool WaveDeviceDescriptionList::setAllToNumChannels (std::vector<WaveDeviceDescription>& devices, uint32_t numChannels, bool isInput)
+bool WaveDeviceDescriptionList::setAllToNumChannels (std::vector<WaveDeviceDescription>& devices, uint32_t numChannels)
 {
-    auto setFirst = [&]
-    {
-        for (auto& device : devices)
-            if (device.getNumChannels() != numChannels)
-                return setChannelCountInDevice (device, isInput, numChannels);
-
-        return false;
-    };
-
     bool anyChanged = false;
 
-    while (setFirst())
-        anyChanged = true;
+    for (auto& device : devices)
+    {
+        if (device.getNumChannels() != numChannels)
+        {
+            device.setNumChannels (numChannels);
+            anyChanged = true;
+        }
+    }
+
+    if (anyChanged)
+        sanityCheckList();
 
     return anyChanged;
 }
 
-bool WaveDeviceDescriptionList::setAllInputsToNumChannels (uint32_t numChannels)  { return setAllToNumChannels (inputs, numChannels, true); }
-bool WaveDeviceDescriptionList::setAllOutputsToNumChannels (uint32_t numChannels) { return setAllToNumChannels (outputs, numChannels, false); }
+bool WaveDeviceDescriptionList::setAllInputsToNumChannels (uint32_t numChannels)  { return setAllToNumChannels (inputs, numChannels); }
+bool WaveDeviceDescriptionList::setAllOutputsToNumChannels (uint32_t numChannels) { return setAllToNumChannels (outputs, numChannels); }
 
 bool WaveDeviceDescriptionList::setChannelCountInDevice (const WaveDeviceDescription& d, bool isInput, uint32_t newNumChannels)
 {
