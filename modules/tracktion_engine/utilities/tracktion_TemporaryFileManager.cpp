@@ -24,6 +24,45 @@ static juce::File getDefaultTempFolder (Engine& engine)
     return engine.getPropertyStorage().getAppCacheFolder().getChildFile ("Temporary");
 }
 
+static bool isDangerousPath (const juce::File& f)
+{
+    if (! f.isDirectory() && ! f.getParentDirectory().isDirectory())
+        return false;
+
+    // Root directory
+    if (f.getParentDirectory() == f)
+        return true;
+
+    using SL = juce::File::SpecialLocationType;
+
+    for (auto loc : { SL::userHomeDirectory,
+                      SL::userDesktopDirectory,
+                      SL::userDocumentsDirectory,
+                      SL::userMusicDirectory,
+                      SL::userMoviesDirectory,
+                      SL::userPicturesDirectory,
+                      SL::userApplicationDataDirectory,
+                      SL::globalApplicationsDirectory
+                     #if JUCE_WINDOWS
+                      , SL::windowsSystemDirectory
+                     #endif
+                    })
+    {
+        auto special = juce::File::getSpecialLocation (loc);
+
+        if (special == f)
+            return true;
+    }
+
+    // Also check Downloads (no JUCE constant for this)
+    auto downloads = juce::File::getSpecialLocation (SL::userHomeDirectory).getChildFile ("Downloads");
+
+    if (downloads == f)
+        return true;
+
+    return false;
+}
+
 const juce::File& TemporaryFileManager::getTempDirectory() const
 {
     return tempDir;
@@ -31,6 +70,12 @@ const juce::File& TemporaryFileManager::getTempDirectory() const
 
 bool TemporaryFileManager::setTempDirectory (const juce::File& newFile)
 {
+    if (isDangerousPath (newFile))
+    {
+        TRACKTION_LOG_ERROR ("Refusing to set temp directory to a system folder: " + newFile.getFullPathName());
+        return false;
+    }
+
     auto defaultDir = getDefaultTempFolder (engine);
 
     if (newFile == defaultDir)
@@ -70,6 +115,13 @@ void TemporaryFileManager::updateDir()
     else
         tempDir = defaultDir.getSiblingFile (userFolder);
 
+    if (isDangerousPath (tempDir))
+    {
+        TRACKTION_LOG_ERROR ("Temp directory resolved to a system folder: " + tempDir.getFullPathName() + " — resetting to default");
+        ressetToDefaultLocation();
+        return;
+    }
+
     if (! wasTempFolderSuccessfullyCreated())
     {
         tempDir = defaultDir;
@@ -103,20 +155,8 @@ int TemporaryFileManager::getMaxNumTempFiles() const
     return 1000;
 }
 
-static bool shouldDeleteTempFile (const juce::File& f, bool spaceIsShort)
-{
-    auto fileName = f.getFileName();
-
-    if (fileName.startsWith ("preview_"))
-        return false;
-
-    if (fileName.startsWith ("temp_"))
-        return true;
-
-    auto daysOld = (juce::Time::getCurrentTime() - f.getLastAccessTime()).inDays();
-
-    return daysOld > 60.0 || (spaceIsShort && daysOld > 1.0);
-}
+static bool isRecognisedTempFile (const juce::File&);
+static bool shouldDeleteTempFile (const juce::File&, bool);
 
 static void deleteEditPreviewsNotInUse (Engine& engine, juce::Array<juce::File>& files)
 {
@@ -146,7 +186,18 @@ void TemporaryFileManager::cleanUp()
     CRASH_TRACER
     TRACKTION_LOG ("Cleaning up temp files..");
 
-    auto tempFiles = tempDir.findChildFiles (juce::File::findFiles, true);
+    if (isDangerousPath (tempDir))
+    {
+        TRACKTION_LOG_ERROR ("Skipping temp cleanup — temp directory is a system folder: " + tempDir.getFullPathName());
+        return;
+    }
+
+    // Only search immediate children and one level of known subdirs (edit_*, thumbnails)
+    // to avoid catastrophic enumeration if the temp dir is misconfigured
+    auto tempFiles = tempDir.findChildFiles (juce::File::findFiles, false);
+
+    for (auto entry : juce::RangedDirectoryIterator (tempDir, false, "*", juce::File::findDirectories))
+        tempFiles.addArray (entry.getFile().findChildFiles (juce::File::findFiles, false));
 
     deleteEditPreviewsNotInUse (engine, tempFiles);
 
@@ -203,6 +254,47 @@ static juce::String getFileProxyPrefix()                { return "proxy_"; }
 static juce::String getDeviceFreezePrefix (Edit& edit)  { return "freeze_" + edit.getProjectItemRef().toIDForFilename() + "_"; }
 static juce::String getTrackFreezePrefix()              { return "trackFreeze_"; }
 static juce::String getCompPrefix()                     { return "comp_"; }
+
+static bool isRecognisedTempFile (const juce::File& f)
+{
+    auto fileName = f.getFileName();
+
+    if (fileName.startsWith ("temp_")
+         || fileName.startsWith ("preview_")
+         || fileName.startsWith (getClipProxyPrefix())
+         || fileName.startsWith (getFileProxyPrefix())
+         || fileName.startsWith (getTrackFreezePrefix())
+         || fileName.startsWith ("freeze_")
+         || fileName.startsWith (getCompPrefix())
+         || fileName.startsWith (RenderManager::getFileRenderPrefix()))
+        return true;
+
+    // Files inside edit_* or thumbnails subdirectories are temp files
+    auto parentName = f.getParentDirectory().getFileName();
+
+    if (parentName.startsWith ("edit_") || parentName == "thumbnails")
+        return true;
+
+    return false;
+}
+
+static bool shouldDeleteTempFile (const juce::File& f, bool spaceIsShort)
+{
+    if (! isRecognisedTempFile (f))
+        return false;
+
+    auto fileName = f.getFileName();
+
+    if (fileName.startsWith ("preview_"))
+        return false;
+
+    if (fileName.startsWith ("temp_"))
+        return true;
+
+    auto daysOld = (juce::Time::getCurrentTime() - f.getLastAccessTime()).inDays();
+
+    return daysOld > 60.0 || (spaceIsShort && daysOld > 1.0);
+}
 
 static AudioFile getCachedEditFile (Edit& edit, const juce::String& prefix, HashCode hash)
 {
