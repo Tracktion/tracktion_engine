@@ -27,8 +27,8 @@ public:
     bool isSynth() override                             { return true; }
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmax (1, numInputChannels); }
-    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
-    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return ChannelConfiguration::stereo(); }
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return ChannelConfiguration::stereo(); }
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;

@@ -29,8 +29,8 @@ public:
     void deinitialise() override;
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override  { return juce::jmin (numInputChannels, 2); }
-    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
-    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return ChannelConfiguration::stereo(); }
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return ChannelConfiguration::stereo(); }
     void applyToBuffer (const PluginRenderContext&) override;
 
     bool isLowPass() const noexcept                     { return mode.get() != "highpass"; }

@@ -27,8 +27,8 @@ public:
     void deinitialise() override;
     void reset() override;
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }
-    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
-    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return ChannelConfiguration::stereo(); }
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return ChannelConfiguration::stereo(); }
     void applyToBuffer (const PluginRenderContext&) override;
     juce::String getSelectableDescription() override    { return TRANS("Reverb Plugin"); }
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
