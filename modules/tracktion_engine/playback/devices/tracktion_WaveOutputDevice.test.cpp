@@ -232,6 +232,85 @@ namespace tracktion::inline engine
             CHECK (device->getChannels()[0].indexInDevice == originalIndex);
             CHECK (! device->isReversed()); // mono device should reject reversal
         }
+
+        TEST_CASE ("WaveOutputDevice: waveOutputs iteration is safe during device list rebuild")
+        {
+            // Verifies that waveOutputs and activeOutputChannels are protected by
+            // contextLock during the audio callback. These arrays are iterated on the
+            // audio thread while handleAsyncUpdate can swap and destroy them on the
+            // message thread. Without the lock held, this is a use-after-free.
+            auto& engine = *Engine::getEngines()[0];
+            auto& dm = engine.getDeviceManager();
+            auto& audioIO = dm.getHostedAudioDeviceInterface();
+
+            HostedAudioDeviceInterface::Parameters params { .sampleRate = 44100.0, .blockSize = 512,
+                                                            .inputChannels = 0, .outputChannels = 2,
+                                                            .inputNames = {}, .outputNames = {} };
+
+            audioIO.initialise (params);
+            audioIO.prepareToPlay (params.sampleRate, params.blockSize);
+            dm.dispatchPendingUpdates();
+
+            // Capture pointers to the current WaveOutputDevice objects
+            auto devicesBefore = dm.getWaveOutputDevices();
+            REQUIRE (! devicesBefore.empty());
+            auto firstDeviceBefore = devicesBefore[0];
+
+            // Trigger a device list rebuild — this creates new objects and destroys old ones
+            dm.setAllWaveOutputsToNumChannels (4);
+            dm.dispatchPendingUpdates();
+
+            auto devicesAfter = dm.getWaveOutputDevices();
+            REQUIRE (! devicesAfter.empty());
+
+            // The old device pointers are now dangling — new objects were created
+            CHECK (firstDeviceBefore != devicesAfter[0]);
+
+            // Now test the concurrent scenario: audio processing + device swaps
+            std::atomic<bool> shouldStop { false };
+            std::atomic<bool> hasStarted { false };
+            std::atomic<int> blocksProcessed { 0 };
+
+            juce::AudioBuffer<float> silenceBuffer (params.outputChannels, params.blockSize);
+            silenceBuffer.clear();
+            juce::MidiBuffer emptyMidi;
+
+            std::thread audioThread ([&]
+            {
+                hasStarted = true;
+
+                while (! shouldStop.load (std::memory_order_relaxed))
+                {
+                    audioIO.processBlock (silenceBuffer, emptyMidi);
+                    blocksProcessed.fetch_add (1, std::memory_order_relaxed);
+                    std::this_thread::yield();
+                }
+            });
+
+            while (! hasStarted)
+                std::this_thread::yield();
+
+            // Repeatedly trigger device list rebuilds while audio is processing.
+            // Under TSan/ASan, this will detect the race if waveOutputs iteration
+            // is not protected by the contextLock.
+            for (int i = 0; i < 5000; ++i)
+            {
+                dm.setAllWaveOutputsToNumChannels ((i % 2 == 0) ? 4u : 2u);
+                dm.dispatchPendingUpdates();
+            }
+
+            shouldStop = true;
+            audioThread.join();
+
+            CHECK (blocksProcessed.load() > 0);
+
+            // Restore original state
+            dm.setAllWaveOutputsToNumChannels (2);
+            dm.dispatchPendingUpdates();
+
+            dm.deviceManager.closeAudioDevice();
+            dm.removeHostedAudioDeviceInterface();
+        }
     }
 #endif
 
