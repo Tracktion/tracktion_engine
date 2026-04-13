@@ -197,7 +197,7 @@ private:
 struct ExternalControllerManager::MasterLevelClientState
 {
     LevelMeasurer::Client client;
-    LevelMeasurer* measurer = nullptr;
+    juce::WeakReference<LevelMeasurer> measurer;
 };
 
 //==============================================================================
@@ -215,19 +215,17 @@ ExternalControllerManager::ExternalControllerManager (Engine& e) : engine (e)
 
         if (ctx == nullptr)
         {
-            if (masterLevelState->measurer != nullptr)
-            {
-                masterLevelState->measurer->removeClient (masterLevelState->client);
-                masterLevelState->measurer = nullptr;
-            }
+            if (auto m = masterLevelState->measurer.get())
+                m->removeClient (masterLevelState->client);
 
+            masterLevelState->measurer = nullptr;
             return;
         }
 
-        if (&ctx->masterLevels != masterLevelState->measurer)
+        if (&ctx->masterLevels != masterLevelState->measurer.get())
         {
-            if (masterLevelState->measurer != nullptr)
-                masterLevelState->measurer->removeClient (masterLevelState->client);
+            if (auto m = masterLevelState->measurer.get())
+                m->removeClient (masterLevelState->client);
 
             masterLevelState->measurer = &ctx->masterLevels;
             masterLevelState->measurer->addClient (masterLevelState->client);
@@ -338,9 +336,9 @@ void ExternalControllerManager::setCurrentEdit (Edit* newEdit, SelectionManager*
         if (currentEdit != nullptr)
             currentEdit->getTransport().removeChangeListener (this);
 
-        if (masterLevelState->measurer != nullptr)
+        if (auto m = masterLevelState->measurer.get())
         {
-            masterLevelState->measurer->removeClient (masterLevelState->client);
+            m->removeClient (masterLevelState->client);
             masterLevelState->measurer = nullptr;
         }
 
