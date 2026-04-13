@@ -397,16 +397,21 @@ namespace
                     continue;
 
                 const int busIdx = v[IDs::index];
-                maxNumBuses = std::max (maxNumBuses, busIdx + 1);
 
-                // The number of buses on busesLayout may not be in sync with the plugin after adding buses
-                // because adding an input bus could also add an output bus
                 for (int actualIdx = plugin.getBusCount (isInput) - 1; actualIdx < busIdx; ++actualIdx)
                     if (! plugin.addBus (isInput))
                         break;
 
+                // If the plugin couldn't add enough buses, skip this entry
+                if (busIdx >= plugin.getBusCount (isInput))
+                    continue;
+
+                maxNumBuses = std::max (maxNumBuses, busIdx + 1);
+
+                // The number of buses in targetBuses may not be in sync with the plugin
+                // because addBus may have been called on the other direction previously
                 for (int actualIdx = targetBuses.size() - 1; actualIdx < busIdx; ++actualIdx)
-                    targetBuses.add (plugin.getChannelLayoutOfBus (isInput, busIdx));
+                    targetBuses.add (plugin.getChannelLayoutOfBus (isInput, actualIdx + 1));
 
                 const auto layout = v[IDs::layout].toString();
 
@@ -416,13 +421,16 @@ namespace
         }
 
         // If the plugin has more buses than specified in the xml, then try to remove them!
-        while (maxNumBuses < targetBuses.size())
-        {
+        while (plugin.getBusCount (isInput) > maxNumBuses)
             if (! plugin.removeBus (isInput))
                 break;
 
+        // Sync targetBuses to match the plugin's actual bus count
+        while (targetBuses.size() > plugin.getBusCount (isInput))
             targetBuses.removeLast();
-        }
+
+        while (targetBuses.size() < plugin.getBusCount (isInput))
+            targetBuses.add (plugin.getChannelLayoutOfBus (isInput, targetBuses.size()));
     }
 
     juce::AudioProcessor::BusesLayout readBusesLayout (const juce::var& layout, juce::AudioProcessor& plugin)

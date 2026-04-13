@@ -139,6 +139,145 @@ TEST_SUITE ("tracktion_engine")
         pm.knownPluginList.removeType (pluginDesc);
         pm.createPluginInstance = prevCallback;
     }
+
+    //==============================================================================
+    TEST_CASE ("ExternalPlugin: restoring layout with more buses than plugin supports")
+    {
+        // SidechainTestPlugin has fixed bus count (no addBus support).
+        // Simulates a saved edit where the plugin previously had extra buses
+        // (e.g. plugin version changed, or format changed between VST3/AU).
+        SidechainTestPlugin testProc;
+
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getPluginManager();
+        auto prevCallback = pm.createPluginInstance;
+
+        pm.createPluginInstance =
+            [&] (const juce::PluginDescription& d, double, int, juce::String&)
+            -> std::unique_ptr<juce::AudioPluginInstance>
+            {
+                if (d.name == "SidechainTestPlugin")
+                    return std::make_unique<SidechainTestPlugin>();
+
+                return nullptr;
+            };
+
+        auto pluginDesc = testProc.getPluginDescription();
+        pm.knownPluginList.addType (pluginDesc);
+
+        auto edit = test_utilities::createTestEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+
+        auto pluginState = ExternalPlugin::create (engine, pluginDesc);
+
+        // Fabricate a saved layout with 4 input buses — the plugin only has 2.
+        // This happens when an edit was saved with a plugin version that supported
+        // more buses, or when the plugin format changed.
+        juce::ValueTree layoutTree (IDs::LAYOUT);
+
+        juce::ValueTree inputs (IDs::INPUTS);
+
+        for (int i = 0; i < 4; ++i)
+            inputs.addChild (createValueTree (IDs::BUS, IDs::index, i, IDs::layout, "stereo"), -1, nullptr);
+
+        juce::ValueTree outputs (IDs::OUTPUTS);
+
+        for (int i = 0; i < 4; ++i)
+            outputs.addChild (createValueTree (IDs::BUS, IDs::index, i, IDs::layout, "stereo"), -1, nullptr);
+
+        layoutTree.addChild (inputs, -1, nullptr);
+        layoutTree.addChild (outputs, -1, nullptr);
+
+        juce::MemoryBlock mb;
+        {
+            juce::MemoryOutputStream os (mb, false);
+            layoutTree.writeToStream (os);
+        }
+
+        pluginState.setProperty (IDs::layout, mb, nullptr);
+
+        // Without the fix, readBusLayout populates targetBuses for bus indices
+        // that addBus failed to create, causing a size mismatch in setBusesLayout.
+        auto pluginRef = track->pluginList.insertPlugin (pluginState, 0);
+        auto externalPlugin = dynamic_cast<ExternalPlugin*> (pluginRef.get());
+        REQUIRE (externalPlugin != nullptr);
+
+        externalPlugin->initialiseFully();
+        CHECK (externalPlugin->getAudioPluginInstance() != nullptr);
+
+        // Plugin should keep its original bus count since addBus isn't supported
+        if (auto pi = externalPlugin->getAudioPluginInstance())
+        {
+            CHECK_EQ (pi->getBusCount (true), 2);
+            CHECK_EQ (pi->getBusCount (false), 2);
+        }
+
+        pm.knownPluginList.removeType (pluginDesc);
+        pm.createPluginInstance = prevCallback;
+    }
+
+    TEST_CASE ("ExternalPlugin: restoring layout with fewer buses than plugin default")
+    {
+        // SidechainTestPlugin defaults to 2 input + 2 output buses.
+        // Saved state only lists 1 of each — the plugin can't remove the extras
+        // because canRemoveBus returns false by default.
+        SidechainTestPlugin testProc;
+        CHECK_EQ (testProc.getBusCount (true), 2);
+        CHECK_EQ (testProc.getBusCount (false), 2);
+
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getPluginManager();
+        auto prevCallback = pm.createPluginInstance;
+
+        pm.createPluginInstance =
+            [&] (const juce::PluginDescription& d, double, int, juce::String&)
+            -> std::unique_ptr<juce::AudioPluginInstance>
+            {
+                if (d.name == "SidechainTestPlugin")
+                    return std::make_unique<SidechainTestPlugin>();
+
+                return nullptr;
+            };
+
+        auto pluginDesc = testProc.getPluginDescription();
+        pm.knownPluginList.addType (pluginDesc);
+
+        auto edit = test_utilities::createTestEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+
+        auto pluginState = ExternalPlugin::create (engine, pluginDesc);
+
+        // Saved layout with only 1 input + 1 output bus (plugin defaults to 2 each)
+        juce::ValueTree layoutTree (IDs::LAYOUT);
+
+        juce::ValueTree inputs (IDs::INPUTS);
+        inputs.addChild (createValueTree (IDs::BUS, IDs::index, 0, IDs::layout, "stereo"), -1, nullptr);
+
+        juce::ValueTree outputs (IDs::OUTPUTS);
+        outputs.addChild (createValueTree (IDs::BUS, IDs::index, 0, IDs::layout, "stereo"), -1, nullptr);
+
+        layoutTree.addChild (inputs, -1, nullptr);
+        layoutTree.addChild (outputs, -1, nullptr);
+
+        juce::MemoryBlock mb;
+        {
+            juce::MemoryOutputStream os (mb, false);
+            layoutTree.writeToStream (os);
+        }
+
+        pluginState.setProperty (IDs::layout, mb, nullptr);
+
+        // Without the fix, targetBuses has 1 entry but plugin has 2 buses → assertion
+        auto pluginRef = track->pluginList.insertPlugin (pluginState, 0);
+        auto externalPlugin = dynamic_cast<ExternalPlugin*> (pluginRef.get());
+        REQUIRE (externalPlugin != nullptr);
+
+        externalPlugin->initialiseFully();
+        CHECK (externalPlugin->getAudioPluginInstance() != nullptr);
+
+        pm.knownPluginList.removeType (pluginDesc);
+        pm.createPluginInstance = prevCallback;
+    }
 }
 
 #endif // ENGINE_UNIT_TESTS_EXTERNALPLUGIN
