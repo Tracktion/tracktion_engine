@@ -579,15 +579,15 @@ TEST_SUITE ("tracktion_engine")
 
         SUBCASE ("mono source, 2 output channels")
         {
-            // Without a device boundary, the mono signal stays mono through the
-            // plugin chain. Channel duplication happens at the device boundary,
-            // so only channel 0 has audio here.
+            // The track's VolumeAndPanPlugin declares a minimum of 2 input channels,
+            // so the audio graph widens the mono signal to stereo (duplicating ch0
+            // into ch1) before it reaches the plugin chain.
             auto edit = createEditWithClip (1);
             auto result = renderEdit (*edit, 2);
 
             REQUIRE (result->buffer.getNumChannels() >= 2);
             checkChannel (result->buffer, 0, 1.0f, 0.707f);
-            checkChannel (result->buffer, 1, 0.0f, 0.0f);
+            checkChannel (result->buffer, 1, 1.0f, 0.707f);
         }
 
         SUBCASE ("4-channel source, 4 output channels")
