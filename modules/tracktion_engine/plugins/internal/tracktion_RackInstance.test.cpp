@@ -440,10 +440,13 @@ TEST_SUITE("tracktion_engine")
     {
         // maxNumChannels is a cap, not a minimum. When input reports 0 channels,
         // the output should still be 0 — maxNumChannels only limits, never inflates.
+        // Use LevelMeter here because it has an empty input channel configuration
+        // (plugins that declare a minimum input, like VolumeAndPan, will floor-elevate
+        // the 0-channel input to their declared min — that's a separate code path).
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
         auto edit = test_utilities::createTestEdit (engine);
 
-        auto volPan = edit->getPluginCache().getOrCreatePluginFor (VolumeAndPanPlugin::create());
+        auto plugin = edit->getPluginCache().getOrCreatePluginFor (LevelMeterPlugin::create());
 
         graph::PlayHead playHead;
         PlayHeadState playHeadState (playHead);
@@ -452,7 +455,7 @@ TEST_SUITE("tracktion_engine")
         // Input node with 0 channels, maxNumChannels = 2 (cap)
         auto pluginNode = tracktion::graph::makeNode<PluginNode> (
             tracktion::graph::makeNode<tracktion::graph::SilentNode> (0),
-            volPan,
+            plugin,
             44100.0, 512,
             nullptr, processState,
             false, false,
