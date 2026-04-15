@@ -57,6 +57,7 @@
 #if __has_include(<choc/audio/choc_SampleBuffers.h>)
  #include <choc/audio/choc_SampleBuffers.h>
  #include <choc/audio/choc_MIDI.h>
+ #include <choc/audio/choc_Oscillators.h>
  #include <choc/containers/choc_SingleReaderSingleWriterFIFO.h>
  #include <choc/containers/choc_NonAllocatingStableSort.h>
  #include <choc/containers/choc_ZipFile.h>
@@ -67,6 +68,7 @@
 #else
  #include "../3rd_party/choc/choc/audio/choc_SampleBuffers.h"
  #include "../3rd_party/choc/choc/audio/choc_MIDI.h"
+ #include "../3rd_party/choc/choc/audio/choc_Oscillators.h"
  #include "../3rd_party/choc/choc/containers/choc_SingleReaderSingleWriterFIFO.h"
  #include "../3rd_party/choc/choc/containers/choc_NonAllocatingStableSort.h"
  #include "../3rd_party/choc/choc/containers/choc_ZipFile.h"
