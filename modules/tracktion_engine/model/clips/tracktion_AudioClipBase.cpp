@@ -2496,13 +2496,20 @@ void AudioClipBase::valueTreePropertyChanged (juce::ValueTree& tree, const juce:
         }
         else if (id == IDs::araPluginDescription)
         {
-            if (isUsingARA())
+            // Tear the proxy down; a rebuild only makes sense if a valid
+            // new description is actually present and we're not currently
+            // inside an undo/redo (which would re-enter UndoManager::perform
+            // via the synchronous ExternalPlugin construction).
+            araProxy.reset();
+
+            if (isUsingARA()
+                && state.hasProperty (IDs::araPluginDescription)
+                && ! edit.getUndoManager().isPerformingUndoRedo())
             {
-                // Reset the proxy to load a new plugin
-                araProxy.reset();
                 loadARAState();
-                changed();
             }
+
+            changed();
         }
         else
         {
