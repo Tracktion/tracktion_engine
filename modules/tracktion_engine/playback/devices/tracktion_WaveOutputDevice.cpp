@@ -127,14 +127,77 @@ void WaveOutputDevice::updateLevelMeasurer (float* const* outputChannelData, int
     {
         auto idx = channels[(size_t) i].indexInDevice;
 
-        if (idx >= 0 && idx < totalNumOutputChannels)
-            meterChannelPtrs[(size_t) i] = outputChannelData[idx];
-        else
-            meterChannelPtrs[(size_t) i] = nullptr;
+        if (idx < 0 || idx >= totalNumOutputChannels || outputChannelData[idx] == nullptr)
+            return;
+
+        meterChannelPtrs[(size_t) i] = outputChannelData[idx];
     }
 
     juce::AudioBuffer<float> buf (meterChannelPtrs.data(), numDeviceChannels, numSamples);
     levelMeasurer.processBuffer (buf, 0, numSamples);
+}
+
+void WaveOutputDevice::startTestTone()
+{
+    const auto sampleRate = engine.getDeviceManager().getSampleRate();
+
+    if (sampleRate <= 0)
+        return;
+
+    testTonePendingSampleRate.store ((float) sampleRate, std::memory_order_relaxed);
+    testTonePendingTotalSamples.store (juce::roundToInt (sampleRate), std::memory_order_relaxed);
+    testToneStartRequested.store (true, std::memory_order_release);
+}
+
+void WaveOutputDevice::renderTestTone (float* const* outputChannelData, int totalNumOutputChannels, int numSamples)
+{
+    if (testToneStartRequested.exchange (false, std::memory_order_acquire))
+    {
+        testToneTotalSamples = testTonePendingTotalSamples.load (std::memory_order_relaxed);
+        testToneSampleIndex = 0;
+        testToneSine.resetPhase();
+        testToneSine.setFrequency (440.0f, testTonePendingSampleRate.load (std::memory_order_relaxed));
+    }
+
+    if (testToneSampleIndex < 0)
+        return;
+
+    constexpr float amplitude = 0.5f;
+    const int total = testToneTotalSamples;
+    const int fadeInSamples = juce::jmax (1, total / 10);
+    const int fadeOutStart  = total - juce::jmax (1, total / 4);
+
+    auto& channels = getChannels();
+    const auto numDeviceChannels = (int) channels.getNumChannels();
+
+    const int samplesAvailable = juce::jmin (numSamples, total - testToneSampleIndex);
+
+    for (int s = 0; s < samplesAvailable; ++s)
+    {
+        const int i = testToneSampleIndex + s;
+        float env = 1.0f;
+
+        if (i < fadeInSamples)
+            env = (float) i / (float) fadeInSamples;
+        else if (i >= fadeOutStart)
+            env = (float) (total - i) / (float) (total - fadeOutStart);
+
+        const float sample = amplitude * env * testToneSine.getSample();
+
+        for (int c = 0; c < numDeviceChannels; ++c)
+        {
+            const auto idx = channels[(size_t) c].indexInDevice;
+
+            if (idx >= 0 && idx < totalNumOutputChannels)
+                if (auto* dest = outputChannelData[idx])
+                    dest[s] += sample;
+        }
+    }
+
+    testToneSampleIndex += samplesAvailable;
+
+    if (testToneSampleIndex >= total)
+        testToneSampleIndex = -1;
 }
 
 //==============================================================================

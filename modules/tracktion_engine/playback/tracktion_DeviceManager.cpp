@@ -1335,8 +1335,13 @@ void DeviceManager::audioDeviceIOCallbackInternal (const float* const* inputChan
                                     dest[j] = 0;
 
                 for (auto wo : waveOutputs)
+                {
                     if (wo->isEnabled())
+                    {
+                        wo->renderTestTone (outputChannelData, totalNumOutputChannels, numSamples);
                         wo->updateLevelMeasurer (outputChannelData, totalNumOutputChannels, numSamples);
+                    }
+                }
             }
 
             streamTime = blockStreamTime.getEnd();

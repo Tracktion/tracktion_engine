@@ -54,6 +54,12 @@ public:
 
     void updateLevelMeasurer (float* const* outputChannelData, int totalNumOutputChannels, int numSamples);
 
+    /** Starts a gentle 1 second 440 Hz sine test tone playing through this device's channels. */
+    void startTestTone();
+
+    /** Called on the audio thread — mixes any in-progress test tone into the device's output channels. */
+    void renderTestTone (float* const* outputChannelData, int totalNumOutputChannels, int numSamples);
+
     WaveDeviceDescription deviceDescription;
     LevelMeasurer levelMeasurer;
 
@@ -69,6 +75,15 @@ private:
     juce::AudioChannelSet channelSet;
     bool ditheringEnabled, leftRightReversed;
     choc::SmallVector<float*, 8> meterChannelPtrs;
+
+    // Test tone state — pending* atomics are written by the message thread; the
+    // remaining members are touched only on the audio thread.
+    std::atomic<bool> testToneStartRequested { false };
+    std::atomic<int>   testTonePendingTotalSamples { 0 };
+    std::atomic<float> testTonePendingSampleRate   { 0.0f };
+    int testToneSampleIndex = -1;
+    int testToneTotalSamples = 0;
+    choc::oscillator::Sine<float> testToneSine;
 
     void loadProps();
     void saveProps();
