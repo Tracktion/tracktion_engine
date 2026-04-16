@@ -44,7 +44,8 @@ public:
     enum class SetNameMode
     {
         doDefault,
-        forceRename,
+        doDefaultSynchronous,
+        forceRenameSynchronous,
         forceNoRename
     };
 

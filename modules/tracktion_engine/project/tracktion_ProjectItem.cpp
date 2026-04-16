@@ -485,14 +485,16 @@ void ProjectItem::setName (const juce::String& n, SetNameMode mode)
             auto src = getSourceFile();
 
             bool shouldRename = false;
+            const bool isSync = (mode == SetNameMode::doDefaultSynchronous
+                              || mode == SetNameMode::forceRenameSynchronous);
 
             auto mrm = (ProjectItem::RenameMode) static_cast<int> (engine.getPropertyStorage().getProperty (SettingID::renameMode, (int) RenameMode::local));
 
-            if (mode == SetNameMode::forceNoRename)     shouldRename = false;
-            else if (mode == SetNameMode::forceRename)  shouldRename = true;
-            else if (mrm == RenameMode::always)         shouldRename = true;
-            else if (mrm == RenameMode::never)          shouldRename = false;
-            else if (mrm == RenameMode::local)          shouldRename = src.isAChildOf (pp->getDefaultDirectory());
+            if (mode == SetNameMode::forceNoRename)                 shouldRename = false;
+            else if (mode == SetNameMode::forceRenameSynchronous)   shouldRename = true;
+            else if (mrm == RenameMode::always)                     shouldRename = true;
+            else if (mrm == RenameMode::never)                      shouldRename = false;
+            else if (mrm == RenameMode::local)                      shouldRename = src.isAChildOf (pp->getDefaultDirectory());
 
             if (shouldRename)
             {
@@ -502,7 +504,10 @@ void ProjectItem::setName (const juce::String& n, SetNameMode mode)
                 jassert (newDstFile.hasFileExtension (src.getFileExtension()));
                 jassert (newDstFile.getFileNameWithoutExtension() == legalFileName);
 
-                startTimer (1);
+                if (isSync)
+                    timerCallback();
+                else
+                    startTimer (1);
             }
             else
             {
