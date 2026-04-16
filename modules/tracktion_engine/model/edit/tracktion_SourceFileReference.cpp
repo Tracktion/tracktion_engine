@@ -185,18 +185,18 @@ ProjectItemRef SourceFileReference::getSourceProjectItemRef() const
     if (auto pid = ProjectItemID (source.get()); pid.isValid())
         return pid;
 
-    if (juce::File::isAbsolutePath (source.get()))
-        return ProjectItemRef (source.get());
+    if (auto project = getProjectForEdit (edit))
+        return ProjectItemRef (source.get(), *project);
 
-    return ProjectItemRef (source.get());
+    return {};
 }
 
 ProjectItem::Ptr SourceFileReference::getSourceProjectItem() const
 {
     jassert (source.get() == state[source.getPropertyID()].toString());
-    ProjectItemRef ref (source.get());
+    auto ref = getSourceProjectItemRef();
 
-    if (ref.isProjectItemID())
+    if (ref.isValid())
         return edit.engine.getProjectManager().getProjectItem (ref);
 
     return {};
