@@ -376,6 +376,14 @@ void ProjectItem::setSourceFile (const juce::File& f, FileMode mode)
         else
             file = f.getFullPathName();
 
+        if (! itemRef.isProjectItemID())
+        {
+            if (ownerProject)
+                itemRef = ProjectItemRef (f.getFullPathName(), *ownerProject);
+            else
+                jassertfalse;
+        }
+
         sourceFile = juce::File();
 
         changed();

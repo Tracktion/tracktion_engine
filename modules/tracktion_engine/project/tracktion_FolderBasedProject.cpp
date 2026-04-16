@@ -540,7 +540,9 @@ void FolderBasedProject::sourceFileMoved (const juce::File& oldFile, const juce:
                     if (ed != nullptr)
                     {
                         reassignInEdit (*ed);
-                        EditFileOperations (*ed).save (false, true, false);
+                        EditFileOperations saveOps (*ed);
+                        jassert (saveOps.getEditFile() == editFile);
+                        saveOps.save (false, true, false);
                     }
                 }
             }
