@@ -591,7 +591,7 @@ Project::Ptr ProjectManager::createNewProjectFromTemplate (const juce::String& n
 
                         if (mo->isEdit())
                             mo->setName (name + " " + TRANS("Edit") + " " + juce::String (editNum++),
-                                         ProjectItem::SetNameMode::forceRename);
+                                         ProjectItem::SetNameMode::forceRenameSynchronous);
                     }
 
                     proj->createDefaultFolders();
