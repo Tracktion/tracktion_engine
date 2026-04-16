@@ -1858,8 +1858,9 @@ TEST_SUITE ("tracktion_engine")
         createFile ("Movies", "video.mp4");
         createFile ("Other", "misc.wav");
 
-        // Also a root-level wav and edit
+        // Also a root-level wav, video and edit
         projectFolder.getChildFile ("root.wav").create();
+        projectFolder.getChildFile ("root.mp4").create();
         projectFolder.getChildFile ("my_edit.tracktionedit").create();
 
         ProjectManager::TempProject tp (pm, projectFolder, false);
@@ -1900,10 +1901,15 @@ TEST_SUITE ("tracktion_engine")
         REQUIRE (otherItem != nullptr);
         CHECK (otherItem->getCategory() == ProjectItem::Category::none);
 
-        // Root-level wav maps to Category::none
+        // Root-level audio maps to Category::recorded so that it appears in the media list
         auto rootWav = project->getProjectItemForFile (projectFolder.getChildFile ("root.wav"));
         REQUIRE (rootWav != nullptr);
-        CHECK (rootWav->getCategory() == ProjectItem::Category::none);
+        CHECK (rootWav->getCategory() == ProjectItem::Category::recorded);
+
+        // Root-level video maps to Category::video
+        auto rootVideo = project->getProjectItemForFile (projectFolder.getChildFile ("root.mp4"));
+        REQUIRE (rootVideo != nullptr);
+        CHECK (rootVideo->getCategory() == ProjectItem::Category::video);
 
         // Root-level edit maps to Category::edit
         auto rootEdit = project->getProjectItemForFile (projectFolder.getChildFile ("my_edit.tracktionedit"));

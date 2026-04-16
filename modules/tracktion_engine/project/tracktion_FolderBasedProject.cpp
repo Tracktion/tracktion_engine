@@ -127,7 +127,10 @@ ProjectItem::Category FolderBasedProject::inferCategory (const juce::File& f, co
         if (f.hasFileExtension (".tracktionedit;.trkedit"))
             return ProjectItem::Category::edit;
 
-        return ProjectItem::Category::none;
+        if (f.hasFileExtension (".mp4;.mov"))
+            return ProjectItem::Category::video;
+
+        return ProjectItem::Category::recorded;
     }
 
     auto dirName = parent.getFileName().toLowerCase();
