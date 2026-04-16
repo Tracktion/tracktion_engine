@@ -52,8 +52,8 @@ public:
     //==============================================================================
     juce::String getSelectableDescription() override;
     int getNumOutputChannelsGivenInputs (int numInputChannels) override;
-    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
-    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
+    ChannelConfiguration getMainBusInputChannelConfiguration() const override;
+    ChannelConfiguration getMainBusOutputChannelConfiguration() const override;
 
     //==============================================================================
     void initialise (const PluginInitialisationInfo&) override;

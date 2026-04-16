@@ -644,6 +644,73 @@ TEST_CASE ("Edit Node Builder")
     runBusTrack (3.0s, 2, true);
 }
 
+TEST_CASE ("Plugin on empty track does not crash with 0-channel buffer")
+{
+    using namespace tracktion::graph::test_utilities;
+    using namespace editnode_test_helpers;
+
+    tracktion::graph::test_utilities::TestSetup ts;
+    ts.sampleRate = 44100.0;
+    ts.blockSize = 256;
+
+    auto& engine = *tracktion::engine::Engine::getEngines()[0];
+
+    auto renderEmptyTrackWithPlugin = [&] (const juce::String& pluginTypeName)
+    {
+        auto edit = test_utilities::createTestEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+        REQUIRE (track->getClips().isEmpty());
+
+        track->pluginList.insertPlugin (edit->getPluginCache().createNewPlugin (pluginTypeName, {}), 0, nullptr);
+
+        tracktion::graph::PlayHead playHead;
+        tracktion::graph::PlayHeadState playHeadState { playHead };
+        ProcessState processState { playHeadState, edit->tempoSequence };
+
+        auto node = createNode (*edit, processState, ts.sampleRate, ts.blockSize);
+        graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (
+            std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
+                                                   getPoolCreatorFunction (ThreadPoolStrategy::hybrid)),
+            ts, 2, 1.0, true);
+
+        testContext.getNodePlayer().setNumThreads (0);
+        testContext.setPlayHead (&playHeadState.playHead);
+        playHeadState.playHead.playSyncedToRange ({});
+        auto result = testContext.processAll();
+
+        // Empty track with no clips should render as silence without crashing
+        expectAudioBuffer (result->buffer, 0, 0.0f, 0.0f);
+        expectAudioBuffer (result->buffer, 1, 0.0f, 0.0f);
+    };
+
+    // Every internal plugin declared with {} in getMainBusInputChannelConfiguration()
+    // — plus one declared-stereo plugin as a control — exercised in an audio chain
+    // on a track with no clips. None of these should crash or assert.
+    const juce::StringArray pluginTypeNames
+    {
+        AuxSendPlugin::xmlTypeName,
+        AuxReturnPlugin::xmlTypeName,
+        VCAPlugin::xmlTypeName,
+        FreezePointPlugin::xmlTypeName,
+        InsertPlugin::xmlTypeName,
+        TextPlugin::xmlTypeName,
+        ChannelMapperPlugin::xmlTypeName,
+        LevelMeterPlugin::xmlTypeName,
+        MidiPatchBayPlugin::xmlTypeName,
+        MidiModifierPlugin::xmlTypeName,
+        ReverbPlugin::xmlTypeName,               // control: declared stereo
+        VolumeAndPanPlugin::xmlTypeName,         // control: declared stereo
+    };
+
+    for (auto& name : pluginTypeNames)
+    {
+        SUBCASE (name.toRawUTF8())
+        {
+            renderEmptyTrackWithPlugin (name);
+        }
+    }
+}
+
 } // TEST_SUITE
 
 } // namespace tracktion::inline engine
