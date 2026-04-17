@@ -28,7 +28,7 @@ TEST_SUITE ("tracktion_engine")
 
         // The plugin declares a minimum of 2 input channels so the graph widens
         // mono upstream via a ChannelRemappingNode.
-        CHECK (vp->getMainBusInputChannelConfiguration().getNumChannels() == 2);
+        CHECK (vp->getBusses().inputs.front().getNumChannels() == 2);
 
         // Output channel count tracks the input for any channel count >= declared min.
         CHECK (vp->getNumOutputChannelsGivenInputs (2) == 2);
@@ -143,7 +143,7 @@ TEST_SUITE ("tracktion_engine")
 
         // Through-rack the plugin should still report pass-through for 4 channels.
         CHECK (volPan->getNumOutputChannelsGivenInputs (4) == 4);
-        CHECK (volPan->getMainBusInputChannelConfiguration().getNumChannels() == 2);
+        CHECK (volPan->getBusses().inputs.front().getNumChannels() == 2);
     }
 }
 

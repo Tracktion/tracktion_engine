@@ -82,11 +82,6 @@ int PatchBayPlugin::getNumOutputChannelsGivenInputs (int numInputChannels)
     return maxChan;
 }
 
-ChannelConfiguration PatchBayPlugin::getMainBusInputChannelConfiguration() const
-{
-    return {};
-}
-
 int PatchBayPlugin::getNumInputChannelsFromChain() const
 {
     auto track = dynamic_cast<AudioTrack*> (getOwnerTrack());
@@ -129,10 +124,10 @@ int PatchBayPlugin::getNumOutputChannelsFromChain() const
 
         if (foundSelf)
         {
-            auto busConfig = p->getMainBusInputChannelConfiguration();
+            auto busses = p->getBusses();
 
-            if (! busConfig.isEmpty())
-                return std::max (numInputChans, busConfig.getNumChannels());
+            if (! busses.inputs.empty() && ! busses.inputs.front().isEmpty())
+                return std::max (numInputChans, busses.inputs.front().getNumChannels());
 
             return numInputChans;
         }

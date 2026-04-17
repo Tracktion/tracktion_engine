@@ -46,8 +46,7 @@ public:
     bool canBeDisabled() override                       { return false; }
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override;
-    ChannelConfiguration getMainBusInputChannelConfiguration() const override;
-    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
+    BusLayout getBusses() const override   { return BusLayout::singlePassThrough(); }
 
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;

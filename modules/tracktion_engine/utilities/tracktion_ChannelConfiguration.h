@@ -71,6 +71,13 @@ public:
     //==============================================================================
     // Factory methods for common configurations
 
+    /// Creates an empty configuration — a bus that imposes no channel-count
+    /// requirement. Use this for buses that should pass audio through at whatever
+    /// channel count the graph happens to be running at (e.g. VolumeAndPan's
+    /// output, LevelMeter, VCA). Equivalent to a default-constructed instance,
+    /// but more self-documenting at the call site.
+    static ChannelConfiguration none()                      { return {}; }
+
     /// Creates a mono configuration with a single channel.
     static ChannelConfiguration mono (int deviceChannelIndex = 0);
 

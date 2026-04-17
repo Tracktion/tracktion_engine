@@ -41,7 +41,6 @@ void MidiModifierPlugin::deinitialise()                                         
 double MidiModifierPlugin::getLatencySeconds()                                     { return 0.0; }
 int MidiModifierPlugin::getNumOutputChannelsGivenInputs (int)                      { return 0; }
 void MidiModifierPlugin::getChannelNames (juce::StringArray*, juce::StringArray*)  {}
-bool MidiModifierPlugin::takesAudioInput()                                         { return false; }
 bool MidiModifierPlugin::canBeAddedToClip()                                        { return false; }
 
 void MidiModifierPlugin::applyToBuffer (const PluginRenderContext& fc)

@@ -1498,20 +1498,27 @@ int ExternalPlugin::getNumOutputChannelsGivenInputs (int)
     return 1;
 }
 
-ChannelConfiguration ExternalPlugin::getMainBusInputChannelConfiguration() const
+Plugin::BusLayout ExternalPlugin::getBusses() const
 {
+    BusLayout layout;
+
     if (auto pi = getAudioPluginInstance())
-        return ChannelConfiguration::canonical (pi->getMainBusNumInputChannels());
+    {
+        for (int i = 0, n = pi->getBusCount (true); i < n; ++i)
+            if (auto bus = pi->getBus (true, i))
+                layout.inputs.push_back (ChannelConfiguration::canonical (bus->getNumberOfChannels()));
 
-    return ChannelConfiguration::stereo();
-}
+        for (int i = 0, n = pi->getBusCount (false); i < n; ++i)
+            if (auto bus = pi->getBus (false, i))
+                layout.outputs.push_back (ChannelConfiguration::canonical (bus->getNumberOfChannels()));
+    }
+    else
+    {
+        layout.inputs.push_back (ChannelConfiguration::stereo());
+        layout.outputs.push_back (ChannelConfiguration::stereo());
+    }
 
-ChannelConfiguration ExternalPlugin::getMainBusOutputChannelConfiguration() const
-{
-    if (auto pi = getAudioPluginInstance())
-        return ChannelConfiguration::canonical (pi->getMainBusNumOutputChannels());
-
-    return ChannelConfiguration::stereo();
+    return layout;
 }
 
 void ExternalPlugin::getChannelNames (juce::StringArray* ins,
@@ -1723,14 +1730,6 @@ int ExternalPlugin::getTotalNumInputChannels() const
 {
     if (auto pi = getAudioPluginInstance())
         return pi->getTotalNumInputChannels();
-
-    return 0;
-}
-
-int ExternalPlugin::getTotalNumOutputChannels() const
-{
-    if (auto pi = getAudioPluginInstance())
-        return pi->getTotalNumOutputChannels();
 
     return 0;
 }

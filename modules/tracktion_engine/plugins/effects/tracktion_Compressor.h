@@ -30,8 +30,7 @@ public:
     juce::String getPluginType() override                               { return xmlTypeName; }
     juce::String getShortName (int) override                            { return TRANS("Comp"); }
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return juce::jmin (numInputChannels, 2); }
-    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return ChannelConfiguration::stereo(); }
-    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return ChannelConfiguration::stereo(); }
+    BusLayout getBusses() const override   { return BusLayout::singleStereoInOut(); }
     void getChannelNames (juce::StringArray*, juce::StringArray*) override;
 
     void initialise (const PluginInitialisationInfo&) override;

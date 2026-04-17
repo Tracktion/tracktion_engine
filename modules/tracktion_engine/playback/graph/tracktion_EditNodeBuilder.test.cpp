@@ -683,9 +683,9 @@ TEST_CASE ("Plugin on empty track does not crash with 0-channel buffer")
         expectAudioBuffer (result->buffer, 1, 0.0f, 0.0f);
     };
 
-    // Every internal plugin declared with {} in getMainBusInputChannelConfiguration()
-    // — plus one declared-stereo plugin as a control — exercised in an audio chain
-    // on a track with no clips. None of these should crash or assert.
+    // Every internal plugin declared with {} inputs in getBusses() — plus one
+    // declared-stereo plugin as a control — exercised in an audio chain on a
+    // track with no clips. None of these should crash or assert.
     const juce::StringArray pluginTypeNames
     {
         AuxSendPlugin::xmlTypeName,

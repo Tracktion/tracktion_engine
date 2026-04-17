@@ -27,13 +27,11 @@ public:
     juce::String getShortName (int) override                                { return TRANS("MIDIPatch"); }
     bool canBeAddedToClip() override                                        { return false; }
     bool canBeAddedToRack() override                                        { return true; }
-    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
-    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
+    BusLayout getBusses() const override   { return {}; }
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     void applyToBuffer (const PluginRenderContext&) override;
     juce::String getSelectableDescription() override                        { return TRANS("MIDI Patch Bay Plugin"); }
-    bool takesAudioInput() override                                         { return false; }
     int getNumOutputChannelsGivenInputs (int) override                      { return 0; }
     void getChannelNames (juce::StringArray*, juce::StringArray*) override  {}
 

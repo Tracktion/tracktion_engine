@@ -71,9 +71,7 @@ public:
     juce::String getSelectableDescription() override;
 
     /** @internal */
-    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return ChannelConfiguration::stereo(); }
-    /** @internal */
-    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return ChannelConfiguration::stereo(); }
+    BusLayout getBusses() const override   { return BusLayout::singleStereoInOut(); }
     /** @internal */
     double getLatencySeconds() override;
     /** @internal */

@@ -46,8 +46,7 @@ public:
     void initialise(const PluginInitialisationInfo&) override           {}
     void deinitialise() override                                        {}
 
-    ChannelConfiguration getMainBusInputChannelConfiguration() const override   { return {}; }
-    ChannelConfiguration getMainBusOutputChannelConfiguration() const override  { return {}; }
+    BusLayout getBusses() const override   { return BusLayout::singlePassThrough(); }
 
     void applyToBuffer (const PluginRenderContext& fc) override
     {

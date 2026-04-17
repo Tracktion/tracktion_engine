@@ -118,16 +118,18 @@ TEST_SUITE ("tracktion_engine")
             CHECK_EQ (externalPlugin->getNumOutputChannelsGivenInputs (2), 2);
         }
 
-        SUBCASE ("getMainBusInputChannelConfiguration returns main bus inputs only")
+        SUBCASE ("getBusses() reports all input buses including sidechain")
         {
-            // Should return 2 (main bus stereo), not 3 (total including sidechain)
-            CHECK_EQ (externalPlugin->getMainBusInputChannelConfiguration().getNumChannels(), 2);
+            auto busses = externalPlugin->getBusses();
+            CHECK_EQ (busses.inputs.size(), 2u);                              // main + sidechain
+            CHECK_EQ (busses.inputs.front().getNumChannels(), 2);             // main stereo
         }
 
-        SUBCASE ("getMainBusOutputChannelConfiguration returns main bus outputs only")
+        SUBCASE ("getBusses() reports all output buses including SC monitor")
         {
-            // Should return 2 (main bus stereo), not 3 (total including SC monitor)
-            CHECK_EQ (externalPlugin->getMainBusOutputChannelConfiguration().getNumChannels(), 2);
+            auto busses = externalPlugin->getBusses();
+            CHECK_EQ (busses.outputs.size(), 2u);                             // main + SC monitor
+            CHECK_EQ (busses.outputs.front().getNumChannels(), 2);            // main stereo
         }
 
         SUBCASE ("canSidechain still detects the sidechain bus")

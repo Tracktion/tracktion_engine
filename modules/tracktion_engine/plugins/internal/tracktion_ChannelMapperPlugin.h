@@ -32,12 +32,10 @@ public:
     juce::String getPluginType() override                                      { return xmlTypeName; }
     juce::String getShortName (int) override                                   { return "ChMap"; }
     juce::String getSelectableDescription() override                           { return TRANS("Channel Mapper Plugin"); }
-    bool takesAudioInput() override                                            { return true; }
     bool takesMidiInput() override                                             { return true; }
     bool canBeAddedToClip() override                                           { return false; }
     bool producesAudioWhenNoAudioInput() override                              { return false; }
-    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
-    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
+    BusLayout getBusses() const override   { return BusLayout::singlePassThrough(); }
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override;
 
