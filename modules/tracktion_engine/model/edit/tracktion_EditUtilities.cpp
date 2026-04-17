@@ -74,9 +74,26 @@ juce::File getEditFileFromProjectManager (Edit& edit)
 
 bool referencesProjectItem (Edit& edit, ProjectItemRef itemRef)
 {
+    // Fast path: identical raw value (covers ProjectItemID matches and byte-identical paths).
     for (auto e : Exportable::addAllExportables (edit))
         for (auto& i : e->getReferencedItems())
             if (i.itemRef == itemRef)
+                return true;
+
+    // Slow path: resolve both sides to an absolute file and compare.
+    // Needed for folder-based projects where the project ref is relative to the
+    // project folder, but clip refs are stored relative to the edit folder.
+    auto& engine = edit.engine;
+    const auto targetFile = itemRef.resolve (engine);
+
+    if (targetFile == juce::File())
+        return false;
+
+    const auto editFolder = getEditFileFromProjectManager (edit).getParentDirectory();
+
+    for (auto e : Exportable::addAllExportables (edit))
+        for (auto& i : e->getReferencedItems())
+            if (i.itemRef.resolve (engine, editFolder) == targetFile)
                 return true;
 
     return false;
