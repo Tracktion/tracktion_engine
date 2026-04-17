@@ -25,8 +25,7 @@ public:
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     int getNumOutputChannelsGivenInputs (int numInputChannels) override  { return juce::jmin (numInputChannels, 2); }
-    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return ChannelConfiguration::stereo(); }
-    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return ChannelConfiguration::stereo(); }
+    BusLayout getBusses() const override   { return BusLayout::singleStereoInOut(); }
     void applyToBuffer (const PluginRenderContext&) override;
     juce::String getSelectableDescription() override;
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;

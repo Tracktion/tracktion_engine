@@ -52,8 +52,7 @@ public:
     //==============================================================================
     juce::String getSelectableDescription() override;
     int getNumOutputChannelsGivenInputs (int numInputChannels) override;
-    ChannelConfiguration getMainBusInputChannelConfiguration() const override;
-    ChannelConfiguration getMainBusOutputChannelConfiguration() const override;
+    BusLayout getBusses() const override;
 
     //==============================================================================
     void initialise (const PluginInitialisationInfo&) override;
@@ -63,7 +62,6 @@ public:
     void resetToDefault();
 
     //==============================================================================
-    bool takesAudioInput() override                  { return true; }
     bool takesMidiInput() override                   { return true; }
     bool producesAudioWhenNoAudioInput() override    { return true; }
     bool canBeAddedToClip() override                 { return true; }

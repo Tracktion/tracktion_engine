@@ -91,8 +91,7 @@ public:
 
     bool producesAudioWhenNoAudioInput() override   { return isAutomationNeeded() || isSynth() || ! noTail(); }
     int getNumOutputChannelsGivenInputs (int numInputs) override;
-    ChannelConfiguration getMainBusInputChannelConfiguration() const override;
-    ChannelConfiguration getMainBusOutputChannelConfiguration() const override;
+    BusLayout getBusses() const override;
     void getChannelNames (juce::StringArray* ins, juce::StringArray* outs) override;
 
     bool isVST() const noexcept             { return desc.pluginFormatName == "VST"; }
@@ -173,10 +172,6 @@ public:
     /** @deprecated Use getAudioPluginInstance()->getTotalNumInputChannels() instead. */
     [[deprecated ("Use getAudioPluginInstance()->getTotalNumInputChannels() instead")]]
     int getTotalNumInputChannels() const;
-
-    /** @deprecated Use getAudioPluginInstance()->getTotalNumOutputChannels() instead. */
-    [[deprecated ("Use getAudioPluginInstance()->getTotalNumOutputChannels() instead")]]
-    int getTotalNumOutputChannels() const;
 
 private:
     //==============================================================================

@@ -99,7 +99,6 @@ juce::String InsertPlugin::getPluginType()                                   { r
 juce::String InsertPlugin::getShortName (int)                                { return TRANS("Insert"); }
 double InsertPlugin::getLatencySeconds()                                     { return latencySeconds; }
 void InsertPlugin::getChannelNames (juce::StringArray*, juce::StringArray*)  {}
-bool InsertPlugin::takesAudioInput()                                         { return true; }
 bool InsertPlugin::takesMidiInput()                                          { return true; }
 bool InsertPlugin::canBeAddedToClip()                                        { return false; }
 bool InsertPlugin::needsConstantBufferSize()                                 { return true; }

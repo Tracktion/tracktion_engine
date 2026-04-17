@@ -1277,7 +1277,9 @@ std::unique_ptr<tracktion::graph::Node> createNodeForPlugin (Plugin& plugin, con
     const int incomingChannels = node->getNodeProperties().numberOfChannels;
 
     // Query how many channels the plugin can handle
-    const int pluginInputChannels = plugin.getMainBusInputChannelConfiguration().getNumChannels();
+    const auto busses = plugin.getBusses();
+    const auto mainInputBus = busses.inputs.empty() ? ChannelConfiguration{} : busses.inputs.front();
+    const int pluginInputChannels = mainInputBus.getNumChannels();
 
     // For pass-through plugins (e.g. LevelMeter, VolumeAndPan), the declared input config
     // may be stereo but the plugin can handle any channel count. Use the actual output count
@@ -1324,7 +1326,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForPlugin (Plugin& plugin, con
     {
         return tracktion::graph::makeNode<ChannelRemappingNode> (std::move (pluginNode),
                                                                  ChannelConfiguration::discreteChannels (incomingChannels),
-                                                                 plugin.getMainBusInputChannelConfiguration());
+                                                                 mainInputBus);
     }
 
     return pluginNode;

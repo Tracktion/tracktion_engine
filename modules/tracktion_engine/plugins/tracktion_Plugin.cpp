@@ -155,6 +155,24 @@ int Plugin::getNumOutputChannelsGivenInputs (int)
     return outs.size();
 }
 
+Plugin::BusLayout Plugin::BusLayout::singleInOut (ChannelConfiguration mainInput, ChannelConfiguration mainOutput)
+{
+    BusLayout layout;
+    layout.inputs.push_back (std::move (mainInput));
+    layout.outputs.push_back (std::move (mainOutput));
+    return layout;
+}
+
+Plugin::BusLayout Plugin::BusLayout::singleStereoInOut()
+{
+    return singleInOut (ChannelConfiguration::stereo(), ChannelConfiguration::stereo());
+}
+
+Plugin::BusLayout Plugin::BusLayout::singlePassThrough()
+{
+    return singleInOut (ChannelConfiguration::none(), ChannelConfiguration::none());
+}
+
 int Plugin::getNumWires() const
 {
     if (sidechainWireList != nullptr)

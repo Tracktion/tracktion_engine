@@ -29,8 +29,7 @@ public:
     juce::String getPluginType() override                   { return xmlTypeName; }
     juce::String getSelectableDescription() override        { return getName(); }
 
-    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return ChannelConfiguration::stereo(); }
-    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return ChannelConfiguration::stereo(); }
+    BusLayout getBusses() const override   { return BusLayout::singleStereoInOut(); }
 
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;

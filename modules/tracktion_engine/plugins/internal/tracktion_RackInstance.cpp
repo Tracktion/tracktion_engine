@@ -376,14 +376,10 @@ int RackInstance::getNumOutputChannelsGivenInputs (int numInputs)
     return std::max (numInputs, numOutputChannels.get());
 }
 
-ChannelConfiguration RackInstance::getMainBusInputChannelConfiguration() const
+Plugin::BusLayout RackInstance::getBusses() const
 {
-    return ChannelConfiguration::discreteChannels (numInputChannels);
-}
-
-ChannelConfiguration RackInstance::getMainBusOutputChannelConfiguration() const
-{
-    return ChannelConfiguration::discreteChannels (numOutputChannels);
+    return BusLayout::singleInOut (ChannelConfiguration::discreteChannels (numInputChannels),
+                                   ChannelConfiguration::discreteChannels (numOutputChannels));
 }
 
 void RackInstance::trimChannelMappingsToSize (int needed)

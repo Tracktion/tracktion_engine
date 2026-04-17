@@ -78,14 +78,10 @@ int AirWindowsPlugin::getNumOutputChannelsGivenInputs (int)
     return impl->getNumOutputs();
 }
 
-ChannelConfiguration AirWindowsPlugin::getMainBusInputChannelConfiguration() const
+Plugin::BusLayout AirWindowsPlugin::getBusses() const
 {
-    return ChannelConfiguration::canonical (impl->getNumInputs());
-}
-
-ChannelConfiguration AirWindowsPlugin::getMainBusOutputChannelConfiguration() const
-{
-    return ChannelConfiguration::canonical (impl->getNumOutputs());
+    return BusLayout::singleInOut (ChannelConfiguration::canonical (impl->getNumInputs()),
+                                   ChannelConfiguration::canonical (impl->getNumOutputs()));
 }
 
 juce::String AirWindowsPlugin::getSelectableDescription()

@@ -33,12 +33,10 @@ public:
     juce::String getShortName (int) override;
     double getLatencySeconds() override;
     void getChannelNames (juce::StringArray*, juce::StringArray*) override;
-    bool takesAudioInput() override;
     bool takesMidiInput() override;
     bool canBeAddedToClip() override;
     bool needsConstantBufferSize() override;
-    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
-    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
+    BusLayout getBusses() const override   { return BusLayout::singlePassThrough(); }
 
     void initialise (const PluginInitialisationInfo&) override;
     void initialiseWithoutStopping (const PluginInitialisationInfo&) override;

@@ -39,8 +39,7 @@ public:
     juce::String getPluginType() override           { return xmlTypeName; }
 
     int getNumOutputChannelsGivenInputs (int numInputChannels) override { return numInputChannels; }
-    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
-    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
+    BusLayout getBusses() const override   { return BusLayout::singlePassThrough(); }
     void initialise (const PluginInitialisationInfo&) override;
     void initialiseWithoutStopping (const PluginInitialisationInfo&) override;
     void deinitialise() override;
@@ -48,7 +47,6 @@ public:
 
     juce::String getSelectableDescription() override { return TRANS("Aux Send Plugin"); }
 
-    bool takesAudioInput() override                  { return true; }
     bool canBeAddedToClip() override                 { return false; }
     bool canBeAddedToRack() override                 { return false; }
     bool needsConstantBufferSize() override          { return true; }

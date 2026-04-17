@@ -301,19 +301,56 @@ public:
         output channels. Either pointer may be nullptr if not needed. */
     virtual void getChannelNames (juce::StringArray* ins, juce::StringArray* outs);
 
-    /** Returns the main bus input channel configuration for this plugin.
-        Return {} for no minimum (pass-through plugins).
-        Return ChannelConfiguration::stereo() for plugins that genuinely need stereo.
-    */
-    virtual ChannelConfiguration getMainBusInputChannelConfiguration() const = 0;
+    /** Describes the full input/output bus topology of a plugin.
+        The first entry in each list (if present) is the main bus; additional entries
+        represent sidechain, aux, or multi-out buses.
 
-    /** Returns the main bus output channel configuration for this plugin.
-        Return {} for no minimum (pass-through plugins).
-        Return ChannelConfiguration::stereo() for synths that always produce stereo.
-    */
-    virtual ChannelConfiguration getMainBusOutputChannelConfiguration() const = 0;
+        Empty `inputs`/`outputs` means the plugin has no audio bus in that direction (a
+        MIDI-only plugin, or a pure synth with no audio input, etc.). A bus that exists
+        but imposes no channel-count requirement — i.e. pass-through — uses
+        `ChannelConfiguration::none()`.
 
-    virtual bool takesAudioInput()                      { return ! isSynth(); }
+            return {};                                                                       // MIDI plugin (no audio buses either side)
+            return BusLayout::singleStereoInOut();  // typical stereo effect
+            return BusLayout::singleInOut (ChannelConfiguration::stereo(), ChannelConfiguration::none());    // stereo in, pass-through out
+    */
+    struct BusLayout
+    {
+        choc::SmallVector<ChannelConfiguration, 4> inputs;
+        choc::SmallVector<ChannelConfiguration, 4> outputs;
+
+        /** Returns a layout with one main input bus and one main output bus. Use this
+            for the common single-in-single-out case. Multi-bus plugins (sidechain,
+            aux, multi-out) should construct a BusLayout and populate `inputs`/`outputs`
+            directly. */
+        static BusLayout singleInOut (ChannelConfiguration mainInput, ChannelConfiguration mainOutput);
+
+        /** Shorthand for `singleInOut (ChannelConfiguration::stereo(), ChannelConfiguration::stereo())`.
+            Use for plugins that always work in stereo (the vast majority of stereo effects). */
+        static BusLayout singleStereoInOut();
+
+        /** Shorthand for `singleInOut (ChannelConfiguration::none(), ChannelConfiguration::none())`.
+            Use for plugins that have one audio bus each side but impose no channel-count
+            requirement — e.g. VCA, LevelMeter, ChannelMapper, AuxSend/AuxReturn, Insert. */
+        static BusLayout singlePassThrough();
+    };
+
+    /** Returns the full input/output bus layout of this plugin.
+
+        Every concrete plugin must declare its bus topology here. Multi-out plugins
+        (e.g. ExternalPlugin hosting a VST3 with multiple output buses) report each
+        output bus as a separate entry in the returned layout's `outputs` list; the
+        first entry is the main bus.
+
+        Consumers that only need the main bus can use e.g. `getBusses().outputs.front()`.
+    */
+    virtual BusLayout getBusses() const = 0;
+
+    /** Returns true if this plugin should be fed audio from upstream in the chain.
+        The default derives from the bus layout: a non-synth that declares at least
+        one audio input bus takes audio. Synths that also accept audio input (e.g.
+        for wet/dry mix) should override to return true explicitly. */
+    virtual bool takesAudioInput()                      { return ! isSynth() && ! getBusses().inputs.empty(); }
     virtual bool takesMidiInput()                       { return false; }
     virtual bool isSynth()                              { return false; }
 

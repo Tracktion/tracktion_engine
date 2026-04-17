@@ -29,14 +29,12 @@ public:
     juce::String getName() const override;
     juce::String getPluginType() override;
     juce::String getShortName (int) override;
-    ChannelConfiguration getMainBusInputChannelConfiguration() const override  { return {}; }
-    ChannelConfiguration getMainBusOutputChannelConfiguration() const override { return {}; }
+    BusLayout getBusses() const override   { return {}; }
     void initialise (const PluginInitialisationInfo&) override;
     void deinitialise() override;
     double getLatencySeconds() override;
     int getNumOutputChannelsGivenInputs (int) override;
     void getChannelNames (juce::StringArray*, juce::StringArray*) override;
-    bool takesAudioInput() override;
     bool canBeAddedToClip() override;
 
     void applyToBuffer (const PluginRenderContext&) override;
