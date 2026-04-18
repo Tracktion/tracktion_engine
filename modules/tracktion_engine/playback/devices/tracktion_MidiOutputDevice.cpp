@@ -272,6 +272,8 @@ MidiOutputDevice::MidiOutputDevice (Engine& e, juce::MidiDeviceInfo info)
 
     loadProps();
     shouldSendAllControllersOffMessages = getControllerOffMessagesSent (engine);
+
+    levelMeasurer.setShowMidi (true);
 }
 
 MidiOutputDevice::~MidiOutputDevice()
@@ -498,6 +500,9 @@ void MidiOutputDevice::fireMessage (const juce::MidiMessage& message)
     if (! message.isMetaEvent())
     {
         sendMessageNow (message);
+
+        if (message.isNoteOn())
+            levelMeasurer.processMidiLevel (message.getFloatVelocity());
 
         if (message.isNoteOnOrOff())
         {

@@ -81,6 +81,9 @@ public:
 
     MidiProgramManager& getMidiProgramManager() const   { return engine.getMidiProgramManager(); }
 
+    /** Measures MIDI activity for outgoing messages so the UI can show a meter. */
+    LevelMeasurer levelMeasurer;
+
 protected:
     //==============================================================================
     friend class MidiOutputDeviceInstance;
