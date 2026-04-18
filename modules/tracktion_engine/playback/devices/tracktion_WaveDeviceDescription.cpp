@@ -285,12 +285,9 @@ bool WaveDeviceDescriptionList::updateForDevice (juce::AudioIODevice& device)
     auto inputChannelNames  = device.getInputChannelNames();
     auto outputChannelNames = device.getOutputChannelNames();
 
-    if (inputChannelNames.size() != deviceInputChannelNames.size()
-         || outputChannelNames.size() != deviceOutputChannelNames.size())
+    if (inputChannelNames != deviceInputChannelNames
+         || outputChannelNames != deviceOutputChannelNames)
         return false;
-
-    deviceInputChannelNames = inputChannelNames;
-    deviceOutputChannelNames = outputChannelNames;
 
     sanityCheckList();
     return true;
