@@ -487,19 +487,28 @@ uint32_t WaveDeviceDescriptionList::getTotalOutputChannelCount() const { return 
 
 bool WaveDeviceDescriptionList::setAllToNumChannels (std::vector<WaveDeviceDescription>& devices, uint32_t numChannels)
 {
-    bool anyChanged = false;
+    auto& channelNames = (&devices == &inputs) ? deviceInputChannelNames : deviceOutputChannelNames;
+    auto totalChannels = (uint32_t) channelNames.size();
 
-    for (auto& device : devices)
-    {
-        if (device.getNumChannels() != numChannels)
-        {
-            device.setNumChannels (numChannels);
-            anyChanged = true;
-        }
-    }
+    std::vector<WaveDeviceDescription> newDevices;
+
+    for (uint32_t ch = 0; ch < totalChannels; ch += numChannels)
+        newDevices.push_back (WaveDeviceDescription::withNumChannels ({}, ch,
+                                                                      std::min (numChannels, totalChannels - ch),
+                                                                      true));
+
+    bool anyChanged = newDevices.size() != devices.size();
+
+    if (! anyChanged)
+        for (size_t i = 0; i < newDevices.size(); ++i)
+            if (newDevices[i].channels != devices[i].channels)
+                { anyChanged = true; break; }
 
     if (anyChanged)
+    {
+        devices = std::move (newDevices);
         sanityCheckList();
+    }
 
     return anyChanged;
 }
