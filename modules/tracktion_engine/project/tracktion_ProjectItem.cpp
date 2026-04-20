@@ -241,11 +241,16 @@ ProjectItem::ProjectItem (Engine& e, const juce::File& src,
      itemRef (ProjectItemRef (src.getFullPathName(), owner)),
      type (type_),
      objectName (name_),
+     description ("|MediaObjectCategory|" + juce::String ((int) category_)),
      file (src.getFullPathName()),
      sourceFile (src),
      ownerProject (&owner)
 {
-    setCategory (category_);
+    // Category is encoded directly into 'description' above rather than going
+    // via setCategory()/sendChange(). Freshly-scanned items have no listeners,
+    // and firing a change here would propagate to the owning Project and
+    // retrigger any UI that reloads on project-changed notifications, creating
+    // an infinite scan/reload cycle for folder-based projects.
 }
 
 ProjectItem::ProjectItem (Engine& e, ProjectItemRef ref, juce::InputStream* in)
