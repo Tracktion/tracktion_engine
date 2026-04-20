@@ -311,6 +311,40 @@ namespace tracktion::inline engine
             dm.deviceManager.closeAudioDevice();
             dm.removeHostedAudioDeviceInterface();
         }
+        TEST_CASE ("WaveOutputDevice: setAllWaveOutputsToNumChannels reassigns contiguous stereo pairs")
+        {
+            auto& engine = *Engine::getEngines()[0];
+            test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512,
+                                                           .inputChannels = 0, .outputChannels = 4,
+                                                           .inputNames = {}, .outputNames = {} });
+
+            auto& dm = engine.getDeviceManager();
+
+            // Set all groups to mono
+            dm.setAllWaveOutputsToNumChannels (1);
+            {
+                auto devices = dm.getWaveOutputDevices();
+                REQUIRE (devices.size() == 4);
+
+                for (size_t i = 0; i < 4; ++i)
+                    CHECK (devices[i]->getChannels().getNumChannels() == 1);
+            }
+
+            // Set all to stereo pairs — all groups must become stereo, not just the first
+            dm.setAllWaveOutputsToNumChannels (2);
+            {
+                auto devices = dm.getWaveOutputDevices();
+                REQUIRE (devices.size() == 2);
+
+                CHECK (devices[0]->getChannels().getNumChannels() == 2);
+                CHECK (devices[0]->getChannels()[0].indexInDevice == 0);
+                CHECK (devices[0]->getChannels()[1].indexInDevice == 1);
+
+                CHECK (devices[1]->getChannels().getNumChannels() == 2);
+                CHECK (devices[1]->getChannels()[0].indexInDevice == 2);
+                CHECK (devices[1]->getChannels()[1].indexInDevice == 3);
+            }
+        }
     }
 #endif
 
