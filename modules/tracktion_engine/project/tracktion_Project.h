@@ -265,6 +265,15 @@ public:
     */
     void sourceFileMoved (const juce::File& oldFile, const juce::File& newFile);
 
+    /** Controls when reload() actually re-reads the backing store.
+        @see ProjectBase::ReloadMode */
+    using ReloadMode = ProjectBase::ReloadMode;
+
+    /** Invalidates any cached project item list so the next call to getAllProjectItems()
+        re-reads the backing store. For folder-based projects this clears the directory
+        scan cache; for file-based projects this is a no-op. */
+    void reload (ReloadMode = ReloadMode::lazy);
+
     using Ptr = juce::ReferenceCountedObjectPtr<Project>;
 
     /** The Engine instance this project belongs to. */

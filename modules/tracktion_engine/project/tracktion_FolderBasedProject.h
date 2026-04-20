@@ -73,8 +73,8 @@ public:
     void sourceFileMoved (const juce::File& oldFile, const juce::File& newFile) override;
 
     /** Clears the cached items so the folder is rescanned on next access.
-        If lazy is false, immediately rescans. */
-    void reload (bool lazy = true);
+        Pass ReloadMode::immediate to rescan straight away. */
+    void reload (ReloadMode = ReloadMode::lazy) override;
 
 private:
     juce::File folder;

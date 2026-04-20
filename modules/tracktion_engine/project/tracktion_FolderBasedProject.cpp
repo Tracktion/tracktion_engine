@@ -553,16 +553,16 @@ void FolderBasedProject::sourceFileMoved (const juce::File& oldFile, const juce:
     }
 
     // 3. Refresh cached items so the moved file is correctly indexed
-    reload (true);
+    reload (ReloadMode::lazy);
 }
 
-void FolderBasedProject::reload (bool lazy)
+void FolderBasedProject::reload (ReloadMode mode)
 {
     const juce::ScopedLock sl (itemLock);
     cachedItems.clear();
     itemsScanned = false;
 
-    if (! lazy)
+    if (mode == ReloadMode::immediate)
         scanFolder();
 }
 
