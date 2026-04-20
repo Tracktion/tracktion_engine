@@ -172,6 +172,7 @@ juce::String Project::getSelectableDescription()                            { re
 void Project::lockFile()                                                    { impl->lockFile(); }
 void Project::unlockFile()                                                  { impl->unlockFile(); }
 void Project::sourceFileMoved (const juce::File& o, const juce::File& n)    { impl->sourceFileMoved (o, n); }
+void Project::reload (ReloadMode mode)                                      { impl->reload (mode); }
 
 //==============================================================================
 Project::Ptr convertToFolderBasedProject (Project& project)

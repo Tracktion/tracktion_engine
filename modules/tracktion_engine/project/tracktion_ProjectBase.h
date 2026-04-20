@@ -22,6 +22,13 @@ public:
     ProjectBase (Project& o) : owner (o) {}
     virtual ~ProjectBase() = default;
 
+    /** Controls when a reload() actually re-reads the backing store. */
+    enum class ReloadMode
+    {
+        lazy,       /**< Invalidate any cache; rescan on the next access. */
+        immediate   /**< Invalidate any cache and rescan straight away. */
+    };
+
     //==============================================================================
     virtual bool save() = 0;
     virtual bool isValid() const = 0;
@@ -75,6 +82,10 @@ public:
     virtual void changed() = 0;
     virtual void lockFile() {}
     virtual void unlockFile() {}
+
+    /** Invalidates any cached item list so the next access rescans the backing store.
+        Default is a no-op; folder-based projects override this to clear their cache. */
+    virtual void reload (ReloadMode /*mode*/ = ReloadMode::lazy) {}
 
     /** Updates all edit source references after a file has been moved/renamed. */
     virtual void sourceFileMoved (const juce::File& oldFile, const juce::File& newFile) = 0;
