@@ -535,14 +535,32 @@ Project::Ptr ProjectManager::createNewProjectFromTemplate (const juce::String& n
     if (! extractPath.createDirectory())
         return {};
 
-    legacy::TracktionArchiveFile archive (engine, archiveFile);
-
     Project::Ptr proj;
     bool aborted = false;
     juce::Array<juce::File> filesCreated;
 
-    if (! archive.extractAllAsTask (extractPath, false, filesCreated, aborted))
-        TRACKTION_LOG_ERROR("Unable to extract all files from archive: " + archiveFile.getFullPathName());
+    if (isLegacyArchive (engine, archiveFile))
+    {
+        legacy::TracktionArchiveFile archive (engine, archiveFile);
+
+        if (! archive.extractAllAsTask (extractPath, false, filesCreated, aborted))
+            TRACKTION_LOG_ERROR("Unable to extract all files from archive: " + archiveFile.getFullPathName());
+    }
+    else
+    {
+        juce::ZipFile zip (archiveFile);
+        auto result = zip.uncompressTo (extractPath, true);
+
+        if (result.failed())
+        {
+            TRACKTION_LOG_ERROR("Unable to extract all files from archive: " + archiveFile.getFullPathName()
+                                + " - " + result.getErrorMessage());
+        }
+        else
+        {
+            extractPath.findChildFiles (filesCreated, juce::File::findFiles, true);
+        }
+    }
 
     if (! aborted)
     {
