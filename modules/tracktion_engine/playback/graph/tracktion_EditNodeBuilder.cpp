@@ -2067,6 +2067,17 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
             if (edit.engine.getDeviceManager().getDefaultWaveOutDeviceID() == device->getDeviceID())
             {
                 node = createMasterPluginsNode (edit, playHeadState, std::move (node), params);
+
+                if (auto waveDevice = dynamic_cast<WaveOutputDevice*> (device))
+                {
+                    const int deviceChannels = (int) waveDevice->getChannels().size();
+                    const int incomingChannels = node->getNodeProperties().numberOfChannels;
+
+                    if (incomingChannels > deviceChannels)
+                        node = tracktion::graph::makeNode<ChannelRemappingNode> (std::move (node),
+                                                                                 ChannelMap::conversion (incomingChannels, deviceChannels));
+                }
+
                 node = makeNode<LevelMeasuringNode> (std::move (node), epc.masterLevels);
             }
 
