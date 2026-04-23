@@ -258,15 +258,21 @@ juce::PopupMenu WaveOutputDevice::createChannelGroupMenu (bool includeSetAllChan
     for (uint32_t num = 1; num <= totalOptions; ++num)
     {
         if (shouldIncludeChannelCount (num, totalOptions))
-            m.addItem (options[(int) (num - 1)], true, num == currentNumChannels,
+            m.addItem (getChannelCountLabel (num), true, num == currentNumChannels,
                        [this, &dm, num] { dm.setDeviceNumChannels (*this, num); });
     }
 
-    if (totalOptions > 8)
+    juce::PopupMenu otherMenu;
+
+    for (uint32_t num = 1; num <= totalOptions; ++num)
+        if (! shouldIncludeChannelCount (num, totalOptions))
+            otherMenu.addItem (getChannelCountLabel (num), true, num == currentNumChannels,
+                               [this, &dm, num] { dm.setDeviceNumChannels (*this, num); });
+
+    if (otherMenu.getNumItems() > 0)
     {
         m.addSeparator();
-        m.addItem (TRANS("Custom channel count..."), [this, &dm, totalOptions]
-                   { showCustomChannelCountDialog (dm, *this, totalOptions); });
+        m.addSubMenu (TRANS("Other"), otherMenu);
     }
 
     if (includeSetAllChannelsOptions)
