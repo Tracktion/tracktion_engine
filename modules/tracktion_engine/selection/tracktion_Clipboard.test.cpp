@@ -162,6 +162,68 @@ TEST_SUITE ("tracktion_engine")
         edit.reset();
         projectDir.deleteRecursively (false);
     }
+
+    TEST_CASE ("Clipboard: pasteIntoEdit creates a clip from an external path-based ref with no ProjectItem")
+    {
+        // Reproduces the drag-and-drop "Don't Copy" path: an external file's
+        // ProjectItemRef goes through the paste flow without any corresponding
+        // ProjectItem registered in the ProjectManager.
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+        auto cleanup = [&tempDir] { tempDir.deleteRecursively (false); };
+
+        // External wav file (no project context)
+        auto externalWav = tempDir.getChildFile ("external_audio.wav");
+        REQUIRE (createTestWavFile (externalWav));
+        REQUIRE (externalWav.existsAsFile());
+
+        auto edit = test_utilities::createTestEdit (engine);
+        REQUIRE (edit != nullptr);
+
+        // Inner scope so all Ptrs into the Edit are destroyed before edit.reset().
+        {
+            auto track = getAudioTracks (*edit)[0];
+            REQUIRE (track != nullptr);
+
+            // Build a Clipboard::ProjectItems with a path-based ref, without ever
+            // calling createNewItem — this is exactly what the fixed import flow
+            // ends up doing once the transient ProjectItem has been destroyed.
+            Clipboard::ProjectItems content;
+            content.itemIDs.push_back ({ ProjectItemRef::fromAbsolutePath (externalWav), {} });
+
+            // Sanity: confirm the ref does NOT resolve to a ProjectItem
+            REQUIRE (pm.getProjectItem (content.itemIDs[0].itemID) == nullptr);
+            REQUIRE (content.itemIDs[0].itemID.isAbsolutePath());
+            REQUIRE (track->getClips().isEmpty());
+
+            EditInsertPoint insertPoint (*edit);
+            insertPoint.setNextInsertPoint (0_tp, juce::ReferenceCountedObjectPtr<Track> (track));
+
+            Clipboard::ContentType::EditPastingOptions opts (*edit, insertPoint);
+            opts.silent = true;          // keep paste synchronous
+            opts.startTrack = track;
+            opts.startTime = 0_tp;
+
+            CHECK (content.pasteIntoEdit (opts));
+
+            // The track should now contain a single WaveAudioClip referencing the external file
+            auto clips = track->getClips();
+            REQUIRE (clips.size() == 1);
+
+            auto wave = dynamic_cast<WaveAudioClip*> (clips[0]);
+            REQUIRE (wave != nullptr);
+
+            CHECK (wave->getOriginalFile() == externalWav);
+            CHECK (wave->getPosition().getStart() == 0_tp);
+            CHECK (wave->getPosition().getLength().inSeconds() > 0.0);
+        }
+
+        edit.reset();
+        cleanup();
+    }
 }
 
 } // namespace tracktion::inline engine
