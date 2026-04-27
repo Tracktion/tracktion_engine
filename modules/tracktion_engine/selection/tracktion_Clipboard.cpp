@@ -267,37 +267,84 @@ struct ProjectItemPastingOptions
     bool snapBWavsToOriginalTime = false;
 };
 
+// Bundles the metadata needed to paste a clip from either a persistent ProjectItem
+// or a path-based ProjectItemRef (used for external files in folder-based projects,
+// where no persistent ProjectItem exists).
+struct ResolvedSourceItem
+{
+    juce::File file;
+    juce::String name;
+    juce::String type;
+    double length = 0.0;
+    ProjectItemRef refForClip;
+    ProjectItem::Ptr sourceItem;
+
+    bool isWave() const { return type == ProjectItem::waveItemType(); }
+    bool isMidi() const { return type == ProjectItem::midiItemType(); }
+    bool isEdit() const { return type == ProjectItem::editItemType(); }
+};
+
+static std::optional<ResolvedSourceItem> resolveSourceItem (Engine& engine, const ProjectItemRef& ref)
+{
+    ResolvedSourceItem r;
+    r.refForClip = ref;
+
+    if ((r.sourceItem = engine.getProjectManager().getProjectItem (ref)) != nullptr)
+    {
+        r.file       = r.sourceItem->getSourceFile();
+        r.name       = r.sourceItem->getName();
+        r.type       = r.sourceItem->getType();
+        r.refForClip = r.sourceItem->getProjectItemRef();
+        return r;
+    }
+
+    if (ref.isAbsolutePath())
+    {
+        r.file = juce::File (ref.toString());
+
+        if (! r.file.existsAsFile())
+            return {};
+
+        r.name = r.file.getFileNameWithoutExtension();
+
+        if (isMidiFile (r.file))                                         r.type = ProjectItem::midiItemType();
+        else if (isTracktionEditFile (r.file))                           r.type = ProjectItem::editItemType();
+        else if (engine.getAudioFileFormatManager().canOpen (r.file))    r.type = ProjectItem::waveItemType();
+        else                                                              return {};
+
+        return r;
+    }
+
+    return {};
+}
+
 static void askUserAboutProjectItemPastingOptions (Engine& engine,
                                                    const Clipboard::ProjectItems& items,
                                                    ProjectItemPastingOptions options,
                                                    std::function<void (ProjectItemPastingOptions)> callback)
 {
-    auto& pm = engine.getProjectManager();
-
     bool importedMIDIFilesHaveTempoChanges = false;
     int numAudioClips = 0;
     int numAudioClipsWithBWAV = 0;
 
     for (auto& item : items.itemIDs)
     {
-        if (auto source = pm.getProjectItem (item.itemID))
+        if (auto source = resolveSourceItem (engine, item.itemID))
         {
-            auto file = source->getSourceFile();
+            if (! source->file.exists())
+                continue;
 
-            if (file.exists())
+            if (source->isMidi())
             {
-                if (source->isMidi())
-                {
-                    if (! importedMIDIFilesHaveTempoChanges)
-                        importedMIDIFilesHaveTempoChanges = MidiList::fileHasTempoChanges (file);
-                }
-                else if (source->isWave())
-                {
-                    ++numAudioClips;
+                if (! importedMIDIFilesHaveTempoChanges)
+                    importedMIDIFilesHaveTempoChanges = MidiList::fileHasTempoChanges (source->file);
+            }
+            else if (source->isWave())
+            {
+                ++numAudioClips;
 
-                    if (AudioFile (engine, file).getMetadata()[juce::WavAudioFormat::bwavTimeReference].isNotEmpty())
-                        ++numAudioClipsWithBWAV;
-                }
+                if (AudioFile (engine, source->file).getMetadata()[juce::WavAudioFormat::bwavTimeReference].isNotEmpty())
+                    ++numAudioClipsWithBWAV;
             }
         }
     }
@@ -403,7 +450,6 @@ static void doProjectItemsPaste (const Clipboard::ProjectItems& items,
                                   ProjectItemPastingOptions pastingOptions)
 {
     auto& e  = options.edit.engine;
-    auto& pm = e.getProjectManager();
     auto& ui = options.edit.engine.getUIBehaviour();
     if (isRecursiveEditClipPaste (items, options.edit))
     {
@@ -431,35 +477,43 @@ static void doProjectItemsPaste (const Clipboard::ProjectItems& items,
 
     for (auto [index, item] : juce::enumerate (items.itemIDs))
     {
-        if (auto sourceItem = pm.getProjectItem (item.itemID))
+        if (auto source = resolveSourceItem (e, item.itemID))
         {
-            auto file = sourceItem->getSourceFile();
             auto newClipEndTime = startTime;
 
-            if (file.exists())
+            if (source->file.exists())
             {
-                if (sourceItem->isMidi())
+                if (source->isMidi())
                 {
                     int targetSlotIndex = -1;
 
                     if (auto targetSlot = dynamic_cast<ClipSlot*> (clipOwner))
                         targetSlotIndex = findClipSlotIndex (*targetSlot);
 
-                    newClipEndTime = doPasteMIDIFileIntoEdit (options.edit, file, targetTrackIndex, targetSlotIndex,
+                    newClipEndTime = doPasteMIDIFileIntoEdit (options.edit, source->file, targetTrackIndex, targetSlotIndex,
                                                               startTime, pastingOptions.shouldImportTempoChangesFromMIDI, false);
                 }
-                else if (sourceItem->isWave())
+                else if (source->isWave())
                 {
-                    sourceItem->verifyLength();
-                    jassert (sourceItem->getLength() > 0);
+                    if (source->sourceItem != nullptr)
+                    {
+                        source->sourceItem->verifyLength();
+                        source->length = source->sourceItem->getLength();
+                    }
+                    else
+                    {
+                        source->length = AudioFile (e, source->file).getLength();
+                    }
+
+                    jassert (source->length > 0);
 
                     if (auto clipSlot = dynamic_cast<ClipSlot*> (clipOwner->getClipOwnerSelectable()))
                         if (auto existingClip = clipSlot->getClip())
                             existingClip->removeFromParent();
 
                     if (auto newClip = insertWaveClip (*clipOwner,
-                                                       sourceItem->getName(), sourceItem->getProjectItemRef(),
-                                                       { { startTime, TimePosition::fromSeconds (startTime.inSeconds() + sourceItem->getLength()) }, 0_td },
+                                                       source->name, source->refForClip,
+                                                       { { startTime, TimePosition::fromSeconds (startTime.inSeconds() + source->length) }, 0_td },
                                                        DeleteExistingClips::no))
                     {
                         newClipEndTime = newClip->getPosition().getEnd();
@@ -482,14 +536,19 @@ static void doProjectItemsPaste (const Clipboard::ProjectItems& items,
                     }
 
                 }
-                else if (sourceItem->isEdit())
+                else if (source->isEdit())
                 {
-                    sourceItem->verifyLength();
-                    jassert (sourceItem->getLength() > 0);
+                    if (source->sourceItem != nullptr)
+                    {
+                        source->sourceItem->verifyLength();
+                        source->length = source->sourceItem->getLength();
+                    }
+
+                    jassert (source->length > 0);
 
                     if (auto newClip = insertEditClip (*clipOwner,
-                                                       { startTime, startTime + TimeDuration::fromSeconds (sourceItem->getLength()) },
-                                                         sourceItem->getProjectItemRef()))
+                                                       { startTime, startTime + TimeDuration::fromSeconds (source->length) },
+                                                         source->refForClip))
                     {
                         newClipEndTime = newClip->getPosition().getEnd();
                         itemsAdded.add (newClip.get());

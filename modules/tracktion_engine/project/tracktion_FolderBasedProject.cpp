@@ -370,11 +370,16 @@ ProjectItem::Ptr FolderBasedProject::createNewItem (const juce::File& fileToRefe
         if (existing->getType() == type)
             return existing;
 
-    auto item = new ProjectItem (owner.engine, fileToReference, type, name, cat, owner);
+    // Hold a strong reference to the new item before calling changed(). A
+    // change-listener may synchronously call reload(), which clears cachedItems
+    // and would drop the only reference to the new item — leaving 'item' as a
+    // dangling pointer and causing the implicit conversion to Ptr at 'return'
+    // to operate on freed memory.
+    ProjectItem::Ptr item (new ProjectItem (owner.engine, fileToReference, type, name, cat, owner));
 
     {
         const juce::ScopedLock sl (itemLock);
-        cachedItems.add (item);
+        cachedItems.add (item.get());
     }
 
     changed();
