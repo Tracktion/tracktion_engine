@@ -227,6 +227,10 @@ void FolderBasedProject::createNewProjectId()
     // No-op: folder-based projects don't use project IDs
 }
 
+void FolderBasedProject::setNewProjectId (ProjectID)
+{
+}
+
 juce::String FolderBasedProject::getProjectProperty (const juce::String& name) const
 {
     const juce::ScopedLock sl (propertyLock);

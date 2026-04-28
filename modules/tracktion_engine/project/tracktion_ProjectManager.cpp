@@ -573,16 +573,6 @@ Project::Ptr ProjectManager::createNewProjectFromTemplate (const juce::String& n
                 // Always open as file-based first for ID remapping
                 auto p = createNewProject (f);
 
-                auto oldID = p->getProjectID();
-                p->createNewProjectId();
-
-                {
-                    auto newID = p->getProjectID();
-                    p->redirectIDsFromProject (oldID, newID);
-                    p->setName (name);
-                    p->save();
-                }
-
                 if (projectType == ProjectType::folderBased)
                 {
                     proj = convertToFolderBasedProject (*p);
@@ -593,6 +583,19 @@ Project::Ptr ProjectManager::createNewProjectFromTemplate (const juce::String& n
                 }
                 else
                 {
+                    auto oldID = p->getProjectID();
+                    auto newID = FileBasedProject::generateNewProjectId (p->projectManager);
+
+                    {
+                        // If this is an old style project, we need to make it available to the ProjectManager
+                        // as some internal plugins use that to resolve file paths
+                        p->redirectIDsFromProject (oldID, newID);
+                        p->setNewProjectId (newID);
+
+                        p->setName (name);
+                        p->save();
+                    }
+
                     auto newFileName = p->getProjectFile();
                     p = nullptr;
                     proj = addProjectToList (newFileName, true, folder);

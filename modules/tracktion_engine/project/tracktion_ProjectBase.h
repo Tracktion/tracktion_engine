@@ -42,6 +42,7 @@ public:
 
     virtual void setName (const juce::String&) = 0;
     virtual void createNewProjectId() = 0;
+    virtual void setNewProjectId (ProjectID) = 0;
 
     virtual juce::String getProjectProperty (const juce::String&) const = 0;
     virtual void setProjectProperty (const juce::String&, const juce::String&) = 0;
