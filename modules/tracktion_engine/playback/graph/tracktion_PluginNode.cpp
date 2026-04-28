@@ -76,6 +76,16 @@ tracktion::graph::NodeProperties PluginNode::getNodeProperties()
         if (! pluginBusses.inputs.empty())
             props.numberOfChannels = std::max (props.numberOfChannels,
                                                pluginBusses.inputs.front().getNumChannels());
+
+        if (! pluginBusses.outputs.empty())
+        {
+            int totalOutputChans = 0;
+
+            for (const auto& bus : pluginBusses.outputs)
+                totalOutputChans += bus.getNumChannels();
+
+            props.numberOfChannels = std::max (props.numberOfChannels, totalOutputChans);
+        }
     }
 
     if (maxNumChannels > 0)

@@ -18,6 +18,51 @@ using namespace tracktion::graph;
 using namespace tracktion::graph::test_utilities;
 
 //==============================================================================
+class MultiOutTestPlugin  : public juce::AudioPluginInstance
+{
+public:
+    MultiOutTestPlugin()
+        : juce::AudioPluginInstance (BusesProperties()
+                                        .withInput  ("Main",  juce::AudioChannelSet::stereo(), true)
+                                        .withOutput ("Main",  juce::AudioChannelSet::stereo(), true)
+                                        .withOutput ("Bus 2", juce::AudioChannelSet::stereo(), true)
+                                        .withOutput ("Bus 3", juce::AudioChannelSet::stereo(), true))
+    {}
+
+    void fillInPluginDescription (juce::PluginDescription& d) const override
+    {
+        d.name = "MultiOutTestPlugin";
+        d.pluginFormatName = "Test";
+        d.fileOrIdentifier = "MultiOutTestPlugin";
+        d.numInputChannels = getTotalNumInputChannels();
+        d.numOutputChannels = getTotalNumOutputChannels();
+        d.isInstrument = false;
+    }
+
+    const juce::String getName() const override                         { return "MultiOutTestPlugin"; }
+    void prepareToPlay (double, int) override                           {}
+    void releaseResources() override                                    {}
+    using juce::AudioProcessor::processBlock;
+    void processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer&) override
+    {
+        for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
+            juce::FloatVectorOperations::fill (buffer.getWritePointer (ch), 0.5f, buffer.getNumSamples());
+    }
+    double getTailLengthSeconds() const override                        { return 0.0; }
+    bool acceptsMidi() const override                                   { return false; }
+    bool producesMidi() const override                                  { return false; }
+    juce::AudioProcessorEditor* createEditor() override                 { return nullptr; }
+    bool hasEditor() const override                                     { return false; }
+    int getNumPrograms() override                                       { return 1; }
+    int getCurrentProgram() override                                    { return 0; }
+    void setCurrentProgram (int) override                               {}
+    const juce::String getProgramName (int) override                    { return {}; }
+    void changeProgramName (int, const juce::String&) override          {}
+    void getStateInformation (juce::MemoryBlock&) override              {}
+    void setStateInformation (const void*, int) override                {}
+};
+
+//==============================================================================
 namespace racknode_test_helpers
 {
     template<typename NodePlayerType>
@@ -633,6 +678,74 @@ TEST_CASE ("RackNode")
 
     racknode_test_helpers::runAllTests<tracktion::graph::NodePlayer>();
     racknode_test_helpers::runAllTests<tracktion::graph::LockFreeMultiThreadedNodePlayer>();
+}
+
+TEST_CASE ("RackNode: ExternalPlugin multi-bus outputs all route correctly")
+{
+    MultiOutTestPlugin testProc;
+    CHECK_EQ (testProc.getTotalNumOutputChannels(), 6);
+    CHECK_EQ (testProc.getMainBusNumOutputChannels(), 2);
+
+    auto& engine = *tracktion::engine::Engine::getEngines()[0];
+    auto& pm = engine.getPluginManager();
+    auto prevCallback = pm.createPluginInstance;
+
+    pm.createPluginInstance =
+        [&] (const juce::PluginDescription& d, double, int, juce::String&)
+        -> std::unique_ptr<juce::AudioPluginInstance>
+        {
+            if (d.name == "MultiOutTestPlugin")
+                return std::make_unique<MultiOutTestPlugin>();
+            return nullptr;
+        };
+
+    auto pluginDesc = testProc.getPluginDescription();
+    pm.knownPluginList.addType (pluginDesc);
+
+    auto edit = test_utilities::createTestEdit (engine);
+    auto track = getAudioTracks (*edit)[0];
+
+    auto pluginState = ExternalPlugin::create (engine, pluginDesc);
+    auto pluginRef = track->pluginList.insertPlugin (pluginState, 0);
+    auto externalPlugin = dynamic_cast<ExternalPlugin*> (pluginRef.get());
+    REQUIRE (externalPlugin != nullptr);
+    externalPlugin->initialiseFully();
+    REQUIRE (externalPlugin->getAudioPluginInstance() != nullptr);
+
+    auto rack = edit->getRackList().addNewRack();
+    rack->addPlugin (externalPlugin, {}, false);
+
+    rack->addOutput (3, "Bus 2 L");
+    rack->addOutput (4, "Bus 2 R");
+    rack->addOutput (5, "Bus 3 L");
+    rack->addOutput (6, "Bus 3 R");
+
+    for (int ch = 1; ch <= 6; ++ch)
+        rack->addConnection (externalPlugin->itemID, ch, {}, ch);
+
+    TestSetup ts { 44100.0, 512, false, {} };
+
+    graph::PlayHead ph;
+    PlayHeadState phs (ph);
+    ProcessState ps (phs);
+
+    auto rackNode = RackNodeBuilder::createRackNode (*rack, ts.sampleRate, ts.blockSize,
+                                                     makeNode<SilentNode> (2), ps, true);
+    auto rackProcessor = std::make_unique<RackNodePlayer<tracktion::graph::NodePlayer>> (
+        std::move (rackNode), ts.sampleRate, ts.blockSize);
+    auto testContext = createTestContext (std::move (rackProcessor), ts, 6, 5.0);
+
+    // All 6 output channels must carry signal (0.5f DC).
+    // Before the fix, channels 2-5 are silent: PluginNode only allocates 2 channels,
+    // so applyToBuffer discards buses 2 and 3.
+    for (int c : { 0, 1, 2, 3, 4, 5 })
+        expectAudioBuffer (testContext->buffer, c, 0.5f, 0.5f);
+
+    pm.knownPluginList.removeType (pluginDesc);
+    pm.createPluginInstance = prevCallback;
+
+    engine.getAudioFileManager().releaseAllFiles();
+    edit->getTempDirectory (false).deleteRecursively();
 }
 
 } // TEST_SUITE
