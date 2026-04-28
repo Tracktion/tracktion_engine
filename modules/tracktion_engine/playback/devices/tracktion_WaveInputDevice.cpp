@@ -1748,8 +1748,15 @@ void WaveInputDevice::consumeNextAudioBlock (const float* const* allChannels, in
 
         if (instances.isEmpty())
         {
-            // When no instances exist, still feed the level measurer in case it's being monitored
-            juce::AudioBuffer<float> buf (const_cast<float* const*> (allChannels), numChannels, numSamples);
+            auto& groupChannelSet = getChannelSet();
+            juce::AudioBuffer<float> buf (groupChannelSet.size(), numSamples);
+            buf.clear();
+
+            for (const auto& ci : getChannels())
+                if (juce::isPositiveAndBelow (ci.indexInDevice, numChannels))
+                    juce::FloatVectorOperations::copy (buf.getWritePointer (groupChannelSet.getChannelIndexForType (ci.channel)),
+                                                       allChannels[ci.indexInDevice], numSamples);
+
             levelMeasurer.processBuffer (buf, 0, numSamples);
         }
         else
