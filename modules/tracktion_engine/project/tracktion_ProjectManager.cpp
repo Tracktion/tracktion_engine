@@ -799,14 +799,6 @@ void ProjectManager::createNewProjectInteractively (const juce::String& name,
 
 void ProjectManager::unpackArchiveAndAddToList (const juce::File& archiveFile, const juce::File& destDir, juce::ValueTree folder)
 {
-    legacy::TracktionArchiveFile archive (engine, archiveFile);
-
-    if (! archive.isValidArchive())
-    {
-        engine.getUIBehaviour().showWarningMessage (TRANS("This file wasn't a valid tracktion archive file"));
-        return;
-    }
-
     if (! destDir.createDirectory())
     {
         engine.getUIBehaviour().showWarningMessage (TRANS("Couldn't create this target directory"));
@@ -821,44 +813,81 @@ void ProjectManager::unpackArchiveAndAddToList (const juce::File& archiveFile, c
         return;
     }
 
-    bool wasAborted;
     juce::Array<juce::File> newFiles;
 
-    if (archive.extractAllAsTask (extractDir, false, newFiles, wasAborted))
+    if (isLegacyArchive (engine, archiveFile))
     {
-        if (! wasAborted)
+        legacy::TracktionArchiveFile archive (engine, archiveFile);
+
+        bool wasAborted = false;
+
+        if (! archive.extractAllAsTask (extractDir, false, newFiles, wasAborted))
         {
-            for (int i = newFiles.size(); --i >= 0;)
-                if (! isTracktionProjectFile (newFiles.getReference (i)))
-                    newFiles.remove (i);
+            engine.getUIBehaviour().showWarningMessage (TRANS("This file wasn't a valid tracktion archive file"));
+            return;
+        }
 
-            if (newFiles.isEmpty())
-            {
-                engine.getUIBehaviour().showWarningMessage (TRANS("This archive unpacked ok, but it didn't contain any project files!"));
-            }
-            else
-            {
-                for (int i = newFiles.size(); --i >= 0;)
-                    if (auto newProj = addProjectToList (newFiles.getReference (i), true, folder))
-                        engine.getUIBehaviour().selectProjectInFocusedWindow (newProj);
-            }
+        if (wasAborted)
+            return;
 
-            for (auto& f : newFiles)
-            {
-                if (auto proj = getProject (f))
-                {
-                    proj->createDefaultFolders();
-                    proj->refreshFolderStructure();
-                }
-            }
+        for (int i = newFiles.size(); --i >= 0;)
+            if (! isTracktionProjectFile (newFiles.getReference (i)))
+                newFiles.remove (i);
 
-            saveList();
+        if (newFiles.isEmpty())
+        {
+            engine.getUIBehaviour().showWarningMessage (TRANS("This archive unpacked ok, but it didn't contain any project files!"));
+            return;
         }
     }
     else
     {
-        engine.getUIBehaviour().showWarningMessage (TRANS("Errors occurred whilst trying to unpack this archive"));
+        juce::ZipFile zip (archiveFile);
+
+        if (zip.getNumEntries() == 0 || ! zip.uncompressTo (extractDir, true).wasOk())
+        {
+            engine.getUIBehaviour().showWarningMessage (TRANS("This file wasn't a valid tracktion archive file"));
+            return;
+        }
+
+        // Folder-based project: the extracted directory itself is the project
+        if (isTracktionProjectFolder (extractDir))
+        {
+            if (auto newProj = addProjectToList (extractDir, true, folder))
+                engine.getUIBehaviour().selectProjectInFocusedWindow (newProj);
+
+            saveList();
+            return;
+        }
+
+        // File-based project: collect .tracktion files from the extraction
+        extractDir.findChildFiles (newFiles, juce::File::findFiles, true);
+
+        for (int i = newFiles.size(); --i >= 0;)
+            if (! isTracktionProjectFile (newFiles.getReference (i)))
+                newFiles.remove (i);
+
+        if (newFiles.isEmpty())
+        {
+            engine.getUIBehaviour().showWarningMessage (TRANS("This archive unpacked ok, but it didn't contain any project files!"));
+            return;
+        }
     }
+
+    for (int i = newFiles.size(); --i >= 0;)
+        if (auto newProj = addProjectToList (newFiles.getReference (i), true, folder))
+            engine.getUIBehaviour().selectProjectInFocusedWindow (newProj);
+
+    for (auto& f : newFiles)
+    {
+        if (auto proj = getProject (f))
+        {
+            proj->createDefaultFolders();
+            proj->refreshFolderStructure();
+        }
+    }
+
+    saveList();
 }
 
 juce::StringArray ProjectManager::getRecentProjects (bool printableFormat)

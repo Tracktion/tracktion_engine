@@ -21,7 +21,8 @@ bool isTracktionPresetFile (const juce::File&);
 const char* const projectFileSuffix = ".tracktion";
 const char* const editFileSuffix = ".tracktionedit";
 const char* const legacyEditFileSuffix = ".trkedit";
-const char* const archiveFileSuffix = ".trkarch";
+const char* const legacyArchiveFileSuffix = ".trkarch";
+const char* const archiveFileSuffix_v2 = ".zip";
 
 const char* const soundFileWildCard = "*.wav;*.aiff;*.aif;*.ogg;*.mp3;*.flac;*.au;*.voc;*.caf;*.w64;*.rx2;*.rcy;*.rex;*.wfaf";
 const char* const soundFileAndMidiWildCard = "*.wav;*.aiff;*.aif;*.ogg;*.mp3;*.mid;*.midi;*.flac;*.au;*.voc;*.caf;*.w64;*.rx2;*.rcy;*.rex;*.wfaf";
