@@ -65,6 +65,12 @@ int importExternalFiles (Project& proj, juce::Array<ProjectItemRef> refsToImport
     {
         if (auto item = pm.getProjectItem (ref))
         {
+            // Only mutate items that actually belong to `proj`. Path-based refs
+            // without an owner can match items in any open project, so guard
+            // against accidentally rewriting another project's source paths.
+            if (item->getProject().get() != &proj)
+                continue;
+
             const auto src = item->getSourceFile();
 
             if (src.isAChildOf (projectDir))

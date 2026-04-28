@@ -73,7 +73,6 @@ private:
     // Temp state
     choc::file::TempFile tempDir;
     Project::Ptr tempProject;
-    std::vector<std::unique_ptr<Edit>> tempEdits;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ArchiveJob)
 };
