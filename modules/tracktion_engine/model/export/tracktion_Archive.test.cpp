@@ -3523,6 +3523,103 @@ TEST_SUITE ("tracktion_engine")
         CHECK (extractedFiles.size() > 0);
     }
 
+    TEST_CASE ("Archive: single Edit archive doesn't corrupt the open Edit")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = createTestTempDir();
+        auto tempDirFile = juce::File (tempDir.file.string());
+
+        // Audio file lives in the project's Imported/ folder, so the clip's
+        // source string is a path-based ref ("Imported/external.wav") with
+        // no owner — exactly the case that triggers the cross-project lookup
+        // collision in ProjectManager::getProjectItem during consolidate.
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile != nullptr);
+
+        auto projectFolder = tempDirFile.getChildFile ("test_project_open_edit");
+        ProjectManager::TempProject tp (pm, projectFolder, true, ProjectType::folderBased);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        auto importedDir = project->getDirectoryForMedia (ProjectItem::Category::imported);
+        auto projectAudio = importedDir.getChildFile ("external.wav");
+        REQUIRE (sinFile->getFile().copyFileTo (projectAudio));
+
+        auto editItem = project->createNewEdit();
+        REQUIRE (editItem != nullptr);
+
+        // Build the Edit and keep it alive across the archive call so it
+        // stays in engine.getActiveEdits() — that's the precondition for
+        // the cascading sourceFileMoved -> save corruption.
+        auto edit = createEmptyEdit (engine, editItem->getSourceFile());
+        edit->setProjectItemRef (editItem->getProjectItemRef());
+        edit->ensureNumberOfAudioTracks (1);
+
+        auto audioTracks = getAudioTracks (*edit);
+        REQUIRE (audioTracks.size() >= 1);
+
+        auto waveClip = insertWaveClip (*audioTracks[0], "TestWave",
+                                        projectAudio,
+                                        { { 0_tp, TimePosition::fromSeconds (2.0) } },
+                                        DeleteExistingClips::no);
+        REQUIRE (waveClip != nullptr);
+        REQUIRE (test_utilities::saveEditSync (*edit));
+        project->save();
+
+        // Snapshot the clip's source-file resolution before archiving.
+        const auto originalSourceString = waveClip->getSourceFileReference().source.get();
+        const auto originalResolvedFile = waveClip->getSourceFileReference().getFile();
+        REQUIRE (originalResolvedFile == projectAudio);
+
+        auto archiveFile = tempDirFile.getChildFile ("open_edit_archive.zip");
+        ArchiveJob job (editItem.get(),
+                        archiveFile,
+                        ArchiveJob::CompressionLevel::normal);
+        job.runJob();
+
+        CHECK_MESSAGE (job.getError().isEmpty(), job.getError().toStdString());
+        CHECK (archiveFile.existsAsFile());
+
+        const auto sysTempDir = juce::File::getSpecialLocation (juce::File::tempDirectory).getFullPathName();
+
+        // a) The clip's stored source string must not have been rewritten
+        //    to a temp-dir path.
+        const auto sourceAfter = waveClip->getSourceFileReference().source.get();
+        CHECK (sourceAfter == originalSourceString);
+        CHECK_FALSE (sourceAfter.contains ("tracktion_archive_"));
+        CHECK_FALSE (sourceAfter.contains (sysTempDir));
+
+        // b) The clip still resolves to the original file in the project.
+        CHECK (waveClip->getSourceFileReference().getFile() == projectAudio);
+
+        // c) The original ProjectItem still points at the original file.
+        if (auto item = project->getProjectItemForFile (projectAudio))
+            CHECK (item->getSourceFile() == projectAudio);
+
+        // d) Re-load the saved Edit from disk and verify the on-disk source
+        //    string wasn't corrupted (FolderBasedProject::sourceFileMoved
+        //    saves the open Edit, so any corruption persists across reloads).
+        {
+            auto reloaded = loadEditForExamining (pm, editItem->getProjectItemRef());
+            REQUIRE (reloaded != nullptr);
+
+            for (auto t : getAudioTracks (*reloaded))
+            {
+                for (auto c : t->getClips())
+                {
+                    if (auto wc = dynamic_cast<WaveAudioClip*> (c))
+                    {
+                        const auto reloadedSource = wc->getSourceFileReference().source.get();
+                        CHECK_FALSE (reloadedSource.contains ("tracktion_archive_"));
+                        CHECK_FALSE (reloadedSource.contains (sysTempDir));
+                    }
+                }
+            }
+        }
+    }
+
     TEST_CASE ("Archive: Project archive with multiple Edits")
     {
         auto& engine = *Engine::getEngines()[0];

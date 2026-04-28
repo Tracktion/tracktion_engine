@@ -317,8 +317,27 @@ bool ArchiveJob::copyToTempDir()
                     return false;
 
                 auto& f = filesToCopy[(size_t) i];
-                auto destMedia = projectDir.getChildFile (f.mediaSrc.getFileName())
-                                           .getNonexistentSibling (true);
+
+                auto srcProject = (*projectItem)->getProject();
+                auto srcProjectDir = srcProject != nullptr ? srcProject->getDefaultDirectory()
+                                                           : juce::File();
+
+                juce::File destMedia;
+
+                if (srcProjectDir != juce::File() && f.mediaSrc.isAChildOf (srcProjectDir))
+                {
+                    // Preserve the source project's layout (e.g. "Imported/foo.ogg",
+                    // "Recorded/take 3.wav", or any custom subfolder structure).
+                    auto relPath = f.mediaSrc.getRelativePathFrom (srcProjectDir);
+                    destMedia = projectDir.getChildFile (relPath).getNonexistentSibling (true);
+                    destMedia.getParentDirectory().createDirectory();
+                }
+                else
+                {
+                    // External file — drop it into the appropriate category folder.
+                    auto mediaDir = tempProject->getDirectoryForMedia (f.itemCategory);
+                    destMedia = mediaDir.getChildFile (f.mediaSrc.getFileName()).getNonexistentSibling (true);
+                }
 
                 if (f.mediaSrc.copyFileTo (destMedia))
                 {
@@ -334,40 +353,47 @@ bool ArchiveJob::copyToTempDir()
                 progress = 0.1f + (0.2f * (float) (i + 1) / (float) totalFiles);
             }
 
-            {
-                auto destEdit = loadEditForExamining (engine.getProjectManager(),
-                                                      destEditItem->getProjectItemRef());
+            // Reassign refs on the dest Edit, then let it destruct on the
+            // message thread before consolidate() runs.
+            bool destEditLoadFailed = false;
 
-                if (destEdit == nullptr)
-                {
-                    errorMessage = TRANS("Couldn't create new edit");
-                    return false;
-                }
+            juce::MessageManager::callSync ([&engine, &destEditItem, &exportablesToUpdate, &destEditLoadFailed]
+                                            {
+                                                auto destEdit = loadEditForExamining (engine.getProjectManager(),
+                                                                                      destEditItem->getProjectItemRef());
 
-                // Fix up the references
-                juce::MessageManager::callSync ([&exportablesToUpdate, &destEdit]
+                                                if (destEdit == nullptr)
                                                 {
-                                                    for (auto destExportable : Exportable::addAllExportables (*destEdit))
+                                                    destEditLoadFailed = true;
+                                                    return;
+                                                }
+
+                                                for (auto destExportable : Exportable::addAllExportables (*destEdit))
+                                                {
+                                                    for (const auto& destReferencedItem : destExportable->getReferencedItems())
                                                     {
-                                                        for (const auto& destReferencedItem : destExportable->getReferencedItems())
+                                                        if (auto foundRef = std::ranges::find (exportablesToUpdate, destReferencedItem.itemRef, &ExportableUpdate::oldRef);
+                                                            foundRef != exportablesToUpdate.end())
                                                         {
-                                                            if (auto foundRef = std::ranges::find (exportablesToUpdate, destReferencedItem.itemRef, &ExportableUpdate::oldRef);
-                                                                foundRef != exportablesToUpdate.end())
-                                                            {
-                                                                std::cout << "Reassigning:\n"
-                                                                          << "\t" << destReferencedItem.itemRef.toString() << "\n"
-                                                                          << "\t" << foundRef->newRef.toString() << std::endl;
-                                                                destExportable->reassignReferencedItem (destReferencedItem, foundRef->newRef, 0.0);
-                                                            }
+                                                            std::cout << "Reassigning:\n"
+                                                                      << "\t" << destReferencedItem.itemRef.toString() << "\n"
+                                                                      << "\t" << foundRef->newRef.toString() << std::endl;
+                                                            destExportable->reassignReferencedItem (destReferencedItem, foundRef->newRef, 0.0);
                                                         }
                                                     }
-                                                });
+                                                }
+                                                // destEdit destructs here on the message thread.
+                                            });
 
-                tempEdits.push_back (std::move (destEdit));
+            if (destEditLoadFailed)
+            {
+                errorMessage = TRANS("Couldn't create new edit");
+                return false;
             }
-
-            tempEdits.push_back (std::move (edit));
         }
+
+        // Destroy the original `edit` on the message thread before continuing.
+        juce::MessageManager::callSync ([&edit] { edit.reset(); });
 
         tempProject->save();
     }
