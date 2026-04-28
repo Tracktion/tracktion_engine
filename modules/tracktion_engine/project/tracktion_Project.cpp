@@ -173,6 +173,7 @@ void Project::lockFile()                                                    { im
 void Project::unlockFile()                                                  { impl->unlockFile(); }
 void Project::sourceFileMoved (const juce::File& o, const juce::File& n)    { impl->sourceFileMoved (o, n); }
 void Project::reload (ReloadMode mode)                                      { impl->reload (mode); }
+void Project::setNewProjectId (ProjectID newID)                             { impl->setNewProjectId (newID); }
 
 //==============================================================================
 Project::Ptr convertToFolderBasedProject (Project& project)

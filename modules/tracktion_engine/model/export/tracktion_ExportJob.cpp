@@ -92,7 +92,8 @@ void ExportJob::copyProjectFilesToTempDir()
         newProjectFile.setReadOnly (false);
 
         auto destProject = srcProject->projectManager.createNewProject (newProjectFile);
-        destProject->createNewProjectId();
+        const auto oldId = destProject->getProjectID();
+        const auto newId = FileBasedProject::generateNewProjectId (srcProject->projectManager);
 
         for (int i = 0; i < destProject->getNumProjectItems(); ++i)
         {
@@ -138,9 +139,13 @@ void ExportJob::copyProjectFilesToTempDir()
             }
         }
 
-        callBlocking ([this, &destProject]()
+        callBlocking ([&destProject, oldId, newId]()
                       {
-                          destProject->redirectIDsFromProject (srcProject->getProjectID(), destProject->getProjectID());
+                          // Redirect first while destProject is still registered with oldId so any
+                          // plugins (e.g. Sampler) loaded by redirectIDsFromProject can resolve their
+                          // baked-in ProjectItemIDs. Only swap the project ID afterwards.
+                          destProject->redirectIDsFromProject (oldId, newId);
+                          destProject->setNewProjectId (newId);
                           destProject->save();
                       });
     }

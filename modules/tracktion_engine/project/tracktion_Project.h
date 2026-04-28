@@ -282,6 +282,9 @@ public:
     /** The ProjectManager that owns this project. */
     ProjectManager& projectManager;
 
+    /** @internal */
+    void setNewProjectId (ProjectID);
+
 private:
     friend class ProjectBase;
     friend class FileBasedProject;

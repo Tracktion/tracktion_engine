@@ -33,6 +33,7 @@ public:
 
     void setName (const juce::String&) override;
     void createNewProjectId() override;
+    void setNewProjectId (ProjectID) override;
 
     juce::String getProjectProperty (const juce::String&) const override;
     void setProjectProperty (const juce::String&, const juce::String&) override;

@@ -14,6 +14,20 @@ namespace tracktion::inline engine {
 static const char* fileBasedProjectMagicNumberV1 = "TP01";
 
 //==============================================================================
+ProjectID FileBasedProject::generateNewProjectId (ProjectManager& projectManager)
+{
+    auto newID = ProjectID (juce::Random::getSystemRandom().nextInt (9999999));
+
+    while (projectManager.getProject (newID))
+    {
+        jassertfalse;
+        newID = ProjectID (juce::Random::getSystemRandom().nextInt (9999999));
+    }
+
+    return newID;
+}
+
+//==============================================================================
 FileBasedProject::FileBasedProject (Project& o, const juce::File& projectFile)
    : ProjectBase (o), file (projectFile)
 {
@@ -321,13 +335,13 @@ void FileBasedProject::setName (const juce::String& newName)
 
 void FileBasedProject::createNewProjectId()
 {
-    auto newID = ProjectID (juce::Random::getSystemRandom().nextInt (9999999));
+    setNewProjectId (generateNewProjectId (owner.projectManager));
+}
 
-    while (owner.projectManager.getProject (newID))
-    {
-        jassertfalse;
-        newID = ProjectID (juce::Random::getSystemRandom().nextInt (9999999));
-    }
+void FileBasedProject::setNewProjectId (ProjectID newID)
+{
+    if (projectId == newID)
+        return;
 
     projectId = newID;
     hasChanged = true;
