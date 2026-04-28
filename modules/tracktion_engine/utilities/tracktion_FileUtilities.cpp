@@ -57,7 +57,7 @@ juce::File getNonExistentSiblingWithIncrementedNumberSuffix (const juce::File& f
 //==============================================================================
 bool isMidiFile (const juce::File& f)             { return f.hasFileExtension ("mid;rmi;rmid;midi"); }
 bool isTracktionEditFile (const juce::File& f)    { return f.hasFileExtension (editFileSuffix) || f.hasFileExtension (legacyEditFileSuffix); }
-bool isTracktionArchiveFile (const juce::File& f) { return f.hasFileExtension (archiveFileSuffix); }
+bool isTracktionArchiveFile (const juce::File& f) { return f.hasFileExtension (archiveFileSuffix_v2) || f.hasFileExtension (legacyArchiveFileSuffix); }
 bool isTracktionProjectFile (const juce::File& f) { return f.hasFileExtension (projectFileSuffix); }
 bool isTracktionPresetFile (const juce::File& f)  { return f.hasFileExtension (presetFileSuffix); }
 
