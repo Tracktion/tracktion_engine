@@ -1348,6 +1348,19 @@ std::unique_ptr<tracktion::graph::Node> createNodeForRackInstance (RackInstance&
     // The input to the instance is referenced by the dry signal path
     auto* inputNode = node.get();
 
+    // Expand incoming channels to match the Rack's expected input count (e.g. mono→stereo),
+    // mirroring the same logic applied to regular plugins in createNodeForPlugin().
+    const int incomingChannels = node->getNodeProperties().numberOfChannels;
+    const int rackInputChannels = rackInstance.getNumInputChannels();
+
+    if (incomingChannels < rackInputChannels
+        && incomingChannels > 0
+        && rackInputChannels > 0)
+    {
+        node = tracktion::graph::makeNode<ChannelRemappingNode> (std::move (node),
+                                                                 ChannelMap::conversion (incomingChannels, rackInputChannels));
+    }
+
     // Send — use numInputChannels
     // N.B. the channel indices from the RackInstance start at 1 so we need to subtract this to get a 0-indexed channel
     RackInstanceNode::ChannelMap sendChannelMap;

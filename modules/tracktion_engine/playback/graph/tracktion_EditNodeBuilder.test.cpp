@@ -240,6 +240,50 @@ TEST_CASE ("Edit Node Builder")
         }
     };
 
+    auto runMonoRackRendering = [&] (TimeDuration durationInSeconds, int numChannels, bool isMultiThreaded)
+    {
+        MESSAGE ((graph::test_utilities::getDescription (ts) + juce::String (isMultiThreaded ? ", MT" : ", ST")).toStdString());
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+
+        {
+            auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, durationInSeconds.inSeconds(), 1, 220.0f);
+
+            auto edit = test_utilities::createTestEdit (engine);
+            edit->ensureNumberOfAudioTracks (1);
+            edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
+            auto track = getAudioTracks (*edit)[0];
+
+            track->insertWaveClip ({}, sinFile->getFile(), ClipPosition { { {}, durationInSeconds } }, false);
+
+            Plugin::Array plugins;
+            plugins.add (track->getVolumePlugin());
+            auto rack = RackType::createTypeToWrapPlugins (plugins, *edit);
+            track->pluginList.insertPlugin (RackInstance::create (*rack), 0);
+
+            tracktion::graph::PlayHead playHead;
+            tracktion::graph::PlayHeadState playHeadState { playHead };
+            ProcessState processState { playHeadState, edit->tempoSequence };
+
+            auto node = createNode (*edit, processState, ts.sampleRate, ts.blockSize);
+            graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (
+                std::make_unique<TracktionNodePlayer> (std::move (node), processState,
+                                                       ts.sampleRate, ts.blockSize,
+                                                       getPoolCreatorFunction (ThreadPoolStrategy::realTime)),
+                ts, numChannels, durationInSeconds.inSeconds(), true);
+
+            if (! isMultiThreaded)
+                testContext.getNodePlayer().setNumThreads (0);
+
+            testContext.setPlayHead (&playHeadState.playHead);
+            playHeadState.playHead.playSyncedToRange ({});
+            auto result = testContext.processAll();
+
+            // Mono signal must be present on both channels after passing through the Rack
+            expectAudioBuffer (result->buffer, 0, 1.0f, 0.707f);
+            expectAudioBuffer (result->buffer, 1, 1.0f, 0.707f);
+        }
+    };
+
     auto runSubmix = [&] (TimeDuration durationInSeconds, int numChannels, bool isMultiThreaded)
     {
         auto& engine = *engine::Engine::getEngines()[0];
@@ -630,6 +674,9 @@ TEST_CASE ("Edit Node Builder")
 
     runRackRendering (3.0s, 2, false);
     runRackRendering (3.0s, 2, true);
+
+    runMonoRackRendering (3.0s, 2, false);
+    runMonoRackRendering (3.0s, 2, true);
 
     runSubmix (3.0s, 2, false);
     runSubmix (3.0s, 2, true);
