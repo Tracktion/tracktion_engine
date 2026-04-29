@@ -444,6 +444,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
             speed = clip.getSpeedRatio();
         }
 
+        const auto channelConfig = clip.getOutputChannelConfiguration();
+
         if ((clip.getFadeInBehaviour() == AudioClipBase::speedRamp && clip.getFadeIn() != 0_td)
             || (clip.getFadeOutBehaviour() == AudioClipBase::speedRamp && clip.getFadeOut() != 0_td))
         {
@@ -476,8 +478,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                                   loopRange,
                                                                   clip.getLiveClipLevel(),
                                                                   speed,
-                                                                  clip.getActiveChannelConfiguration(),
-                                                                  ChannelConfiguration::discreteChannels (clip.getActiveChannelConfiguration().getNumChannels()),
+                                                                  channelConfig,
+                                                                  ChannelConfiguration::discreteChannels (channelConfig.getNumChannels()),
                                                                   params.processState,
                                                                   idToUse,
                                                                   params.forRendering,
@@ -491,8 +493,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                          loopRange,
                                                          clip.getLiveClipLevel(),
                                                          speed,
-                                                         clip.getActiveChannelConfiguration(),
-                                                         ChannelConfiguration::discreteChannels (clip.getActiveChannelConfiguration().getNumChannels()),
+                                                         channelConfig,
+                                                         ChannelConfiguration::discreteChannels (channelConfig.getNumChannels()),
                                                          params.processState,
                                                          idToUse,
                                                          params.forRendering);
