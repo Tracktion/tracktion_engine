@@ -19,6 +19,85 @@ namespace tracktion::inline engine
 
 TEST_SUITE ("tracktion_engine")
 {
+    TEST_CASE ("ClipEffects: MakeMono renders both output channels")
+    {
+        auto& engine = *Engine::getEngines()[0];
+
+        // A project-backed edit is required so insertWaveClip creates a ProjectItem
+        // reference for the source. Without it, getWaveInfo() falls through to
+        // getAudioFile().getInfo() (which reads the already-rendered mono proxy) and
+        // getActiveChannelConfiguration() accidentally returns mono — masking the bug.
+        // With a project item, getWaveInfo() always returns the original stereo info
+        // even after the proxy is rendered, so the mismatch is exposed.
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+        auto projectFile = tempDir.getChildFile ("test.tracktion");
+
+        auto& pm = engine.getProjectManager();
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        REQUIRE (tp.project != nullptr);
+
+        auto editItem = tp.project->createNewEdit();
+        REQUIRE (editItem != nullptr);
+
+        auto edit = createEmptyEdit (engine, editItem->getSourceFile());
+        REQUIRE (edit != nullptr);
+        edit->setProjectItemRef (editItem->getProjectItemRef());
+
+        edit->ensureNumberOfAudioTracks (1);
+        edit->tempoSequence.getTempo (0)->setBpm (60.0);
+        edit->getMasterVolumePlugin()->setVolumeDb (0.0);
+
+        auto track = getAudioTracks (*edit)[0];
+
+        // Short clip to keep render fast
+        auto stereoFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 0.1, 2);
+        auto clip = insertWaveClip (*track, {}, stereoFile->getFile(),
+                                    { .time = { 0_tp, 0.1_tp } },
+                                    DeleteExistingClips::no);
+        REQUIRE (clip != nullptr);
+
+        // Enable clip effects and add MakeMono
+        clip->enableEffects (true, false);
+        auto effectsState = clip->state.getChildWithName (IDs::EFFECTS);
+        REQUIRE (effectsState.isValid());
+
+        auto makeMonoState = createValueTree (IDs::EFFECT,
+                                              IDs::type, juce::VariantConverter<ClipEffect::EffectType>::toVar (ClipEffect::EffectType::makeMono));
+        effectsState.addChild (makeMonoState, -1, nullptr);
+
+        // Determine the expected proxy path and trigger the render job directly
+        auto proxyFile = RenderManager::getAudioFileForHash (engine, edit->getTempDirectory (false), clip->getHash());
+        auto job = clip->getRenderJob (proxyFile);
+        REQUIRE (job != nullptr);
+
+        // Process one tick so the 'started' message submits the job to the thread pool
+        juce::MessageManager::getInstance()->runDispatchLoopUntil (1);
+
+        // Spin until the job completes — fast for a 0.1s clip, no fixed delay
+        while (engine.getRenderManager().getNumJobs() > 0)
+            juce::MessageManager::getInstance()->runDispatchLoopUntil (1);
+
+        REQUIRE (proxyFile.getFile().existsAsFile());
+
+        // sourceMediaChanged() calls updateSourceFile() when needsRender() is true,
+        // which points the clip's current source at the rendered proxy
+        clip->sourceMediaChanged();
+
+        auto result = test_utilities::renderToAudioBuffer (*edit);
+        REQUIRE (result.buffer.getNumChannels() == 2);
+
+        auto leftRMS  = result.buffer.getRMSLevel (0, 0, result.buffer.getNumSamples());
+        auto rightRMS = result.buffer.getRMSLevel (1, 0, result.buffer.getNumSamples());
+
+        // Both channels must carry the mono mix — with the node-builder bug,
+        // only left has signal because WaveNode reads a stereo config from a mono file
+        CHECK (leftRMS  > 0.01f);
+        CHECK (rightRMS > 0.01f);
+
+        tempDir.deleteRecursively (false);
+    }
+
     TEST_CASE ("ClipEffects: copy paste remaps plugin IDs")
     {
         auto& engine = *Engine::getEngines()[0];
