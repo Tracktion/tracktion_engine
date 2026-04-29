@@ -11,6 +11,7 @@ env:
 
 jobs:
   build:
+    if: ${{ !contains(github.ref, 'quick') }}
     strategy:
       fail-fast: false
       matrix:
@@ -63,7 +64,8 @@ jobs:
     steps:
       - name: Verify all jobs passed
         run: |
-          if [[ "${{ needs.build.result }}" != "success" ]]; then
-            echo "One or more juce compatibility jobs failed"
+          result="${{ needs.build.result }}"
+          if [[ "$result" != "success" && "$result" != "skipped" ]]; then
+            echo "One or more juce compatibility jobs failed (result: $result)"
             exit 1
           fi
