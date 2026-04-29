@@ -564,69 +564,78 @@ Project::Ptr ProjectManager::createNewProjectFromTemplate (const juce::String& n
 
     if (! aborted)
     {
-        for (auto& f : filesCreated)
+        // New-style archives produce a folder-based project: extractPath itself is the project
+        if (isTracktionProjectFolder (extractPath))
         {
-            if (isTracktionProjectFile (f))
+            const juce::ScopedLock sl (lock);
+            proj = addProjectToList (extractPath, true, folder);
+        }
+        else
+        {
+            for (auto& f : filesCreated)
             {
-                const juce::ScopedLock sl (lock);
-
-                // Always open as file-based first for ID remapping
-                auto p = createNewProject (f);
-
-                if (projectType == ProjectType::folderBased)
+                if (isTracktionProjectFile (f))
                 {
-                    proj = convertToFolderBasedProject (*p);
-                    p = nullptr;
+                    const juce::ScopedLock sl (lock);
 
-                    if (proj != nullptr)
-                        addProjectToList (proj->getDefaultDirectory(), true, folder);
-                }
-                else
-                {
-                    auto oldID = p->getProjectID();
-                    auto newID = FileBasedProject::generateNewProjectId (p->projectManager);
+                    // Always open as file-based first for ID remapping
+                    auto p = createNewProject (f);
 
+                    if (projectType == ProjectType::folderBased)
                     {
-                        // If this is an old style project, we need to make it available to the ProjectManager
-                        // as some internal plugins use that to resolve file paths
-                        p->redirectIDsFromProject (oldID, newID);
-                        p->setNewProjectId (newID);
+                        proj = convertToFolderBasedProject (*p);
+                        p = nullptr;
 
-                        p->setName (name);
-                        p->save();
+                        if (proj != nullptr)
+                            addProjectToList (proj->getDefaultDirectory(), true, folder);
+                    }
+                    else
+                    {
+                        auto oldID = p->getProjectID();
+                        auto newID = FileBasedProject::generateNewProjectId (p->projectManager);
+
+                        {
+                            // If this is an old style project, we need to make it available to the ProjectManager
+                            // as some internal plugins use that to resolve file paths
+                            p->redirectIDsFromProject (oldID, newID);
+                            p->setNewProjectId (newID);
+
+                            p->setName (name);
+                            p->save();
+                        }
+
+                        auto newFileName = p->getProjectFile();
+                        p = nullptr;
+                        proj = addProjectToList (newFileName, true, folder);
                     }
 
-                    auto newFileName = p->getProjectFile();
-                    p = nullptr;
-                    proj = addProjectToList (newFileName, true, folder);
+                    break;
                 }
-
-                if (proj != nullptr)
-                {
-                    engine.getUIBehaviour().selectProjectInFocusedWindow (proj);
-                    int editNum = 1;
-
-                    for (int i = 0; i < proj->getNumProjectItems(); ++i)
-                    {
-                        auto mo = proj->getProjectItemAt (i);
-
-                        if (mo->isEdit())
-                            mo->setName (name + " " + TRANS("Edit") + " " + juce::String (editNum++),
-                                         ProjectItem::SetNameMode::forceRenameSynchronous);
-                    }
-
-                    proj->createDefaultFolders();
-                    proj->refreshFolderStructure();
-                    saveList();
-
-                   #if JUCE_DEBUG
-                    for (int i = 0; i < proj->getNumProjectItems(); ++i)
-                        jassert (proj->getProjectItemAt (i));
-                   #endif
-                }
-
-                break;
             }
+        }
+
+        if (proj != nullptr)
+        {
+            engine.getUIBehaviour().selectProjectInFocusedWindow (proj);
+            int editNum = 1;
+
+            for (int i = 0; i < proj->getNumProjectItems(); ++i)
+            {
+                auto mo = proj->getProjectItemAt (i);
+
+                if (mo->isEdit())
+                    mo->setName (name + " " + TRANS("Edit") + " " + juce::String (editNum++),
+                                 ProjectItem::SetNameMode::forceRenameSynchronous);
+            }
+
+            proj->createDefaultFolders();
+            proj->refreshFolderStructure();
+            saveList();
+
+           #if JUCE_DEBUG
+            for (int i = 0; i < proj->getNumProjectItems(); ++i)
+                jassert (proj->getProjectItemAt (i));
+           #endif
         }
     }
 
