@@ -497,7 +497,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                          ChannelConfiguration::discreteChannels (channelConfig.getNumChannels()),
                                                          params.processState,
                                                          idToUse,
-                                                         params.forRendering);
+                                                         params.forRendering,
+                                                         params.forRendering ? nullptr : clip.getPlayhead());
         }
     }
     else
@@ -572,7 +573,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                     .syncPitch = syncPitch,
                     .chordPitchSequence = getChordTrackSequenceIfRequired (clip),
                     .pitchChangeSemitones = clip.getPitchChange(),
-                    .readAhead = readAhead
+                    .readAhead = readAhead,
+                    .playhead = params.forRendering ? nullptr : clip.getPlayhead()
                 };
                 node = makeNode<WaveNodeRealTime> (std::move (config));
             }
@@ -595,7 +597,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                    seq, syncTempo, syncPitch,
                                                    getChordTrackSequenceIfRequired (clip),
                                                    clip.getPitchChange(),
-                                                   readAhead);
+                                                   readAhead,
+                                                   params.forRendering ? nullptr : clip.getPlayhead());
             }
         }
         else
@@ -617,7 +620,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                                                speedFadeDesc, std::move (editTempoPosition),
                                                timeStretcherMode, timeStretcherOpts,
                                                clip.getPitchChange(),
-                                               readAhead);
+                                               readAhead,
+                                               params.forRendering ? nullptr : clip.getPlayhead());
         }
     }
 

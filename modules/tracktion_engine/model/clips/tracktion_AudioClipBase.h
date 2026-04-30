@@ -11,6 +11,51 @@
 namespace tracktion::inline engine {
 
 //==============================================================================
+/** Holds a playhead for an AudioClipBase.
+    This is automatically updated by the playback graph so the UI should only read from it.
+    The position is the time relative to the clip's source file (i.e. from the offset to
+    the clip end, wrapped within the loop section when looping).
+    [[ thread_safe ]]
+*/
+struct AudioClipPlayhead
+{
+    /** Returns the last played position relative to the clip's source if it has been
+        updated within the staleness window (default 100ms).
+        If no position has been written recently, returns std::nullopt so the UI can hide
+        the playhead when the clip stops playing.
+    */
+    std::optional<TimePosition> getPosition (uint32_t maxAgeMs = 50) const
+    {
+        const auto s = state.load();
+
+        if (! s.position.has_value())
+            return std::nullopt;
+
+        if (juce::Time::getMillisecondCounter() - s.lastUpdateMs > maxAgeMs)
+            return std::nullopt;
+
+        return s.position;
+    }
+
+    /** Sets the current played position and stamps it with the current time.
+        This is called from the playback graph and shouldn't be called by user code.
+    */
+    void setPosition (std::optional<TimePosition> p)
+    {
+        state.store ({ p, juce::Time::getMillisecondCounter() });
+    }
+
+private:
+    struct State
+    {
+        std::optional<TimePosition> position;
+        uint32_t lastUpdateMs = 0;
+    };
+
+    std::atomic<State> state;
+};
+
+//==============================================================================
 /**
     Base class for Clips that produce some kind of audio e.g. WaveAudioClip or
     EditClip. This class contains the common functionality such as gains, fades,
@@ -146,6 +191,12 @@ public:
 
     /** Returns a LiveClipLevel which can be used to read the gain, pan and mute statuses. */
     LiveClipLevel getLiveClipLevel();
+
+    /** Returns a shared playhead which is updated by the playback graph to track the
+        current position being played within the clip's source file.
+        This can be used by the UI to draw a transport indicator over the clip's waveform.
+    */
+    std::shared_ptr<AudioClipPlayhead> getPlayhead() const noexcept    { return playhead; }
 
     //==============================================================================
     /** Returns the source file's channel configuration.
@@ -647,6 +698,7 @@ protected:
 
     //==============================================================================
     std::shared_ptr<ClipLevel> level { std::make_shared<ClipLevel>() };
+    std::shared_ptr<AudioClipPlayhead> playhead { std::make_shared<AudioClipPlayhead>() };
     juce::CachedValue<juce::String> channels;
 
     juce::CachedValue<TimeDuration> fadeIn, fadeOut;
