@@ -1598,7 +1598,8 @@ WaveNode::WaveNode (const AudioFile& af,
                     const ChannelConfiguration& destChannelsToFill,
                     ProcessState& ps,
                     EditItemID itemIDToUse,
-                    bool isRendering)
+                    bool isRendering,
+                    std::shared_ptr<AudioClipPlayhead> playheadToUse)
    : TracktionEngineNode (ps),
      editPosition (editTime),
      loopSection (TimePosition::fromSeconds (loop.getStart().inSeconds() * speed),
@@ -1609,6 +1610,7 @@ WaveNode::WaveNode (const AudioFile& af,
      isOfflineRender (isRendering),
      audioFile (af),
      clipLevel (level),
+     playhead (std::move (playheadToUse)),
      sourceChannels (channelSetToUse),
      destChannels (destChannelsToFill)
 {
@@ -1749,6 +1751,20 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
     const auto fileStart       = editTimeToFileSample (sectionEditTime.getStart());
     const auto fileEnd         = editTimeToFileSample (sectionEditTime.getEnd());
     const auto numFileSamples  = (int) (fileEnd - fileStart);
+
+    if (playhead != nullptr)
+    {
+        auto fileTime = TimePosition::fromSamples (fileStart, audioFileSampleRate);
+
+        if (! loopSection.isEmpty() && fileTime >= loopSection.getStart())
+        {
+            const auto loopLen = loopSection.getLength().inSeconds();
+            const auto pastStart = (fileTime - loopSection.getStart()).inSeconds();
+            fileTime = loopSection.getStart() + TimeDuration::fromSeconds (std::fmod (pastStart, loopLen));
+        }
+
+        playhead->setPosition (fileTime);
+    }
 
     reader->setReadPosition (fileStart);
 
@@ -1891,7 +1907,8 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
                                     TimeStretcher::Mode mode,
                                     TimeStretcher::ElastiqueProOptions options,
                                     float pitchChange,
-                                    ReadAhead readAhead_)
+                                    ReadAhead readAhead_,
+                                    std::shared_ptr<AudioClipPlayhead> playheadToUse)
     : TracktionEngineNode (ps),
       editPositionTime (editTime),
       loopSectionTime (loop.rescaled (loop.getStart(), speed)),
@@ -1906,6 +1923,7 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
       timeStretcherMode (utils::replaceElastiqueWithDirectModeIfNotRendering (mode, isRendering)),
       elastiqueProOptions (options),
       clipLevel (level),
+      playhead (std::move (playheadToUse)),
       channelsToUse (channelSetToUse),
       destChannels (destChannelsToFill),
       pitchChangeSemitones (pitchChange),
@@ -1947,6 +1965,7 @@ WaveNodeRealTime::WaveNodeRealTime (BeatConfig c)
       timeStretcherMode (utils::replaceElastiqueWithDirectModeIfNotRendering (c.timeStretchMode, isOfflineRender)),
       elastiqueProOptions (c.elastiqueProOptions),
       clipLevel (c.liveClipLevel),
+      playhead (std::move (c.playhead)),
       channelsToUse (c.sourceChannelsToUse),
       destChannels (c.destChannelsToFill),
       pitchChangeSemitones (c.pitchChangeSemitones),
@@ -2016,7 +2035,8 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
                                     SyncPitch syncPitch_,
                                     std::optional<tempo::Sequence> chordPitchSequence_,
                                     float pitchChange,
-                                    ReadAhead readAhead_)
+                                    ReadAhead readAhead_,
+                                    std::shared_ptr<AudioClipPlayhead> playheadToUse)
     : TracktionEngineNode (ps),
       editPositionBeats (editTime),
       loopSectionBeats (loop),
@@ -2031,6 +2051,7 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
       timeStretcherMode (utils::replaceElastiqueWithDirectModeIfNotRendering (mode, isRendering)),
       elastiqueProOptions (options),
       clipLevel (level),
+      playhead (std::move (playheadToUse)),
       channelsToUse (channelSetToUse),
       destChannels (destChannelsToFill),
       pitchChangeSemitones (pitchChange),
@@ -2327,6 +2348,37 @@ void WaveNodeRealTime::processSection (ProcessContext& pc)
 
         return false;
     }();
+
+    if (playhead != nullptr)
+    {
+        if (editReader->isTimeBased())
+        {
+            auto fileTime = (sectionEditTime.getStart() - toDuration (editPositionTime.getStart()) + offsetTime) * speedRatio;
+
+            if (! loopSectionTime.isEmpty() && fileTime >= loopSectionTime.getStart())
+            {
+                const auto loopLen = loopSectionTime.getLength().inSeconds();
+                const auto pastStart = (fileTime - loopSectionTime.getStart()).inSeconds();
+                fileTime = loopSectionTime.getStart() + TimeDuration::fromSeconds (std::fmod (pastStart, loopLen));
+            }
+
+            playhead->setPosition (fileTime);
+        }
+        else if (fileTempoSequence != nullptr)
+        {
+            const auto offsetIntoClip = sectionEditBeats.getStart() - editPositionBeats.getStart() - *dynamicOffsetBeats;
+            auto sourceBeats = BeatPosition::fromBeats (offsetIntoClip.inBeats() + offsetBeats.inBeats());
+
+            if (! loopSectionBeats.isEmpty() && sourceBeats >= loopSectionBeats.getStart())
+            {
+                const auto loopLen = loopSectionBeats.getLength().inBeats();
+                const auto pastStart = (sourceBeats - loopSectionBeats.getStart()).inBeats();
+                sourceBeats = loopSectionBeats.getStart() + BeatDuration::fromBeats (std::fmod (pastStart, loopLen));
+            }
+
+            playhead->setPosition (fileTempoSequence->toTime (sourceBeats));
+        }
+    }
 
     auto destBuffer = pc.buffers.audio;
     const auto numFrames = destBuffer.getNumFrames();
