@@ -2651,6 +2651,12 @@ void AudioClipBase::updateClipEffectsState()
 
         if (auto sourceItem = sourceFileReference.getSourceProjectItem())
             setCurrentSourceFile (sourceItem->getSourceFile());
+        else
+            setCurrentSourceFile (getOriginalFile());
+
+        // Force a re-parse of the source file's info and notify any SmartThumbnails listening to it,
+        // so stale cached info (e.g. channel count from the previous render-with-effects file) is refreshed.
+        edit.engine.getAudioFileManager().forceFileUpdate (AudioFile (edit.engine, getCurrentSourceFile()));
 
         changed();
     }
