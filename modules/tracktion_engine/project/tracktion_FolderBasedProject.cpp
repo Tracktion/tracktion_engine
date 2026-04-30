@@ -218,7 +218,7 @@ void FolderBasedProject::setName (const juce::String& newName)
 
         owner.projectManager.updateProjectFile (owner, folder);
         owner.projectManager.saveList();
-        owner.engine.getUIBehaviour().updateAllProjectItemLists();
+        owner.changed();
     }
 }
 
