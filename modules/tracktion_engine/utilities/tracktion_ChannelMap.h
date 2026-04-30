@@ -98,16 +98,9 @@ struct ChannelMap
         }
         else
         {
-            // Downmix: identity for channels that fit, average remaining into last dest
-            for (int i = 0; i < toChannels - 1; ++i)
+            // Downmix: identity for channels that fit, discard any extras
+            for (int i = 0; i < toChannels; ++i)
                 map.entries.push_back ({ i, i });
-
-            // Channels that fold into the last dest channel are averaged
-            const int numFolded = fromChannels - (toChannels - 1);
-            const float foldGain = 1.0f / static_cast<float> (numFolded);
-
-            for (int i = toChannels - 1; i < fromChannels; ++i)
-                map.entries.push_back ({ i, toChannels - 1, foldGain });
         }
 
         return map;
