@@ -124,16 +124,25 @@ TEST_CASE ("ChannelRemappingNode")
         CHECK_EQ (map.entries[3].source, 1); CHECK_EQ (map.entries[3].dest, 3);
     }
 
-    // ChannelMap::conversion - general downmix 4 to 2
+    // ChannelMap::conversion - general downmix 4 to 2 (extras discarded)
     {
         auto map = ChannelMap::conversion (4, 2);
-        // Should be: 0->0, 1->1, 2->1, 3->1
-        CHECK_EQ (static_cast<int> (map.size()), 4);
+        // Should be: 0->0, 1->1 (extras 2 and 3 discarded so existing channels keep unity gain)
+        CHECK_EQ (static_cast<int> (map.size()), 2);
         CHECK_EQ (map.getRequiredOutputChannels(), 2);
-        CHECK_EQ (map.entries[0].source, 0); CHECK_EQ (map.entries[0].dest, 0);
-        CHECK_EQ (map.entries[1].source, 1); CHECK_EQ (map.entries[1].dest, 1);
-        CHECK_EQ (map.entries[2].source, 2); CHECK_EQ (map.entries[2].dest, 1);
-        CHECK_EQ (map.entries[3].source, 3); CHECK_EQ (map.entries[3].dest, 1);
+        CHECK (map.isIdentity());
+        CHECK_EQ (map.entries[0].source, 0); CHECK_EQ (map.entries[0].dest, 0); CHECK_EQ (map.entries[0].gain, 1.0f);
+        CHECK_EQ (map.entries[1].source, 1); CHECK_EQ (map.entries[1].dest, 1); CHECK_EQ (map.entries[1].gain, 1.0f);
+    }
+
+    // ChannelMap::conversion - downmix 3 to 2 (extras discarded — regression test for sidechain bug)
+    {
+        auto map = ChannelMap::conversion (3, 2);
+        CHECK_EQ (static_cast<int> (map.size()), 2);
+        CHECK_EQ (map.getRequiredOutputChannels(), 2);
+        CHECK (map.isIdentity());
+        CHECK_EQ (map.entries[0].source, 0); CHECK_EQ (map.entries[0].dest, 0); CHECK_EQ (map.entries[0].gain, 1.0f);
+        CHECK_EQ (map.entries[1].source, 1); CHECK_EQ (map.entries[1].dest, 1); CHECK_EQ (map.entries[1].gain, 1.0f);
     }
 
     // Explicit mapping tests
