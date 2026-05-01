@@ -1294,15 +1294,16 @@ std::unique_ptr<tracktion::graph::Node> createNodeForPlugin (Plugin& plugin, con
                                                   plugin.getNumOutputChannelsGivenInputs (incomingChannels));
 
     // Determine maxNumChannels for the PluginNode
-    // If the plugin is on a track/clip without sidechain, use the effective channel count
-    // Otherwise, no limit (-1)
+    // If the plugin is on a track/clip without sidechain, use the effective channel count.
+    // If a sidechain is connected we leave it unlimited so the plugin can still process
+    // the wider input buffer (main + sidechain channels). The sidechain channels are
+    // then trimmed off the output below by wrapping the PluginNode in a ChannelRemappingNode.
     int maxNumChannels = -1;
+    const bool usesSidechain = plugin.getSidechainSourceID().isValid();
 
-    if (plugin.getOwnerTrack() != nullptr || plugin.getOwnerClip() != nullptr)
-    {
-        if (! plugin.getSidechainSourceID().isValid())
+    if (! usesSidechain)
+        if (plugin.getOwnerTrack() != nullptr || plugin.getOwnerClip() != nullptr)
             maxNumChannels = effectivePluginChannels;
-    }
 
     node = createSidechainInputNodeForPlugin (plugin, std::move (node));
 
@@ -1334,6 +1335,13 @@ std::unique_ptr<tracktion::graph::Node> createNodeForPlugin (Plugin& plugin, con
                                                                  ChannelConfiguration::discreteChannels (incomingChannels),
                                                                  mainInputBus);
     }
+
+    // When a sidechain is connected, the plugin processes a wider buffer that
+    // includes the sidechain channels as inputs. Trim those off the output so
+    // only the main-bus channels propagate to downstream nodes.
+    if (usesSidechain && effectivePluginChannels > 0)
+        return tracktion::graph::makeNode<ChannelRemappingNode> (std::move (pluginNode),
+                                                                 ChannelMap::identity (effectivePluginChannels));
 
     return pluginNode;
 }
