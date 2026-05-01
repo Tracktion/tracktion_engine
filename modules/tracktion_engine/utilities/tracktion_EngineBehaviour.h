@@ -24,6 +24,15 @@ struct EditLimits
 };
 
 /**
+    Defaults applied to newly created Edits.
+    @see EngineBehaviour::getEditDefaults
+*/
+struct EditDefaults
+{
+    TimecodeType timecodeType = TimecodeType::barsBeats;   /**< The timecode display format new Edits start with. */
+};
+
+/**
     Provides custom handlers to control various aspects of the engine's behaviour.
     Create a subclass of EngineBehaviour to customise how the engine operates
 */
@@ -160,6 +169,9 @@ public:
 
     /// Should return the maximum number of elements that can be added to an Edit.
     virtual EditLimits getEditLimits()                                              { return {}; }
+
+    /// Returns the defaults applied to newly created Edits.
+    virtual EditDefaults getEditDefaults()                                          { return {}; }
 
     virtual juce::ReferenceCountedObjectPtr<RackType> createPresetRackType (int /*index*/, Edit&)     { return {}; }
 

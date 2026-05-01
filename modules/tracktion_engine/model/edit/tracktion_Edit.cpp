@@ -923,7 +923,8 @@ void Edit::initialiseTempoAndPitch()
 
 void Edit::initialiseTimecode (juce::ValueTree& transportState)
 {
-    timecodeFormat.referTo (state, IDs::timecodeFormat, nullptr);
+    timecodeFormat.referTo (state, IDs::timecodeFormat, nullptr,
+                            engine.getEngineBehaviour().getEditDefaults().timecodeType);
 
     recordingPunchInOut.referTo (transportState, IDs::recordPunchInOut, nullptr);
     playInStopEnabled.referTo (transportState, IDs::endToEnd, nullptr, true);
