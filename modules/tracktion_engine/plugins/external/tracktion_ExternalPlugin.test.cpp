@@ -10,6 +10,8 @@
 
 #if TRACKTION_UNIT_TESTS
 
+#include "../../playback/graph/tracktion_EditNodeBuilder.h"
+#include "../../playback/graph/tracktion_PluginNode.h"
 #include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
 
 namespace tracktion::inline engine
@@ -136,6 +138,98 @@ TEST_SUITE ("tracktion_engine")
         {
             CHECK (externalPlugin->canSidechain());
         }
+
+        // Restore previous state
+        pm.knownPluginList.removeType (pluginDesc);
+        pm.createPluginInstance = prevCallback;
+    }
+
+    //==============================================================================
+    TEST_CASE ("PluginNode: sidechain channels do not propagate to downstream nodes")
+    {
+        // When a plugin with a sidechain is on a track, downstream nodes (e.g. a
+        // level meter inserted after the plugin) must see only the plugin's
+        // main-bus output channels — not main + sidechain.
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getPluginManager();
+        auto prevCallback = pm.createPluginInstance;
+
+        SidechainTestPlugin testProc;
+
+        pm.createPluginInstance =
+            [&] (const juce::PluginDescription& d, double, int, juce::String&)
+            -> std::unique_ptr<juce::AudioPluginInstance>
+            {
+                if (d.name == "SidechainTestPlugin")
+                    return std::make_unique<SidechainTestPlugin>();
+
+                return nullptr;
+            };
+
+        auto pluginDesc = testProc.getPluginDescription();
+        pm.knownPluginList.addType (pluginDesc);
+
+        auto edit = test_utilities::createTestEdit (engine);
+        edit->ensureNumberOfAudioTracks (2);
+        auto pluginTrack = getAudioTracks (*edit)[0];
+        auto sidechainSourceTrack = getAudioTracks (*edit)[1];
+
+        auto pluginState = ExternalPlugin::create (engine, pluginDesc);
+        auto pluginRef = pluginTrack->pluginList.insertPlugin (pluginState, 0);
+        auto externalPlugin = dynamic_cast<ExternalPlugin*> (pluginRef.get());
+        REQUIRE (externalPlugin != nullptr);
+
+        externalPlugin->initialiseFully();
+        REQUIRE (externalPlugin->getAudioPluginInstance() != nullptr);
+
+        // Connect the sidechain source so the plugin reports it has a valid sidechain
+        externalPlugin->setSidechainSourceID (sidechainSourceTrack->itemID);
+        REQUIRE (externalPlugin->getSidechainSourceID().isValid());
+
+        // Build the playback graph
+        tracktion::graph::PlayHead playHead;
+        tracktion::graph::PlayHeadState playHeadState { playHead };
+        ProcessState processState { playHeadState, edit->tempoSequence };
+        CreateNodeParams params { processState };
+        params.sampleRate = 44100.0;
+        params.blockSize = 256;
+        params.forRendering = true;
+
+        auto rootNode = createNodeForEdit (*edit, params);
+        REQUIRE (rootNode != nullptr);
+
+        // Find the PluginNode wrapping our SidechainTestPlugin, then locate the
+        // node directly downstream of it (its parent in the graph). Downstream
+        // consumers see that parent's channel count — that is what the bug
+        // reported as 3 (main + sidechain) instead of 2 (main only).
+        PluginNode* matchingPluginNode = nullptr;
+        tracktion::graph::Node* downstreamOfPlugin = nullptr;
+
+        tracktion::graph::visitNodes (*rootNode,
+                                      [&] (tracktion::graph::Node& n)
+                                      {
+                                          if (auto pn = dynamic_cast<PluginNode*> (&n))
+                                              if (&pn->getPlugin() == externalPlugin)
+                                                  matchingPluginNode = pn;
+                                      },
+                                      true);
+
+        REQUIRE (matchingPluginNode != nullptr);
+
+        tracktion::graph::visitNodes (*rootNode,
+                                      [&] (tracktion::graph::Node& n)
+                                      {
+                                          for (auto* in : n.getDirectInputNodes())
+                                              if (in == matchingPluginNode)
+                                                  downstreamOfPlugin = &n;
+                                      },
+                                      true);
+
+        REQUIRE (downstreamOfPlugin != nullptr);
+
+        // The plugin's main output bus is stereo; the sidechain monitor bus
+        // (mono) must NOT appear in the channel count downstream.
+        CHECK_EQ (downstreamOfPlugin->getNodeProperties().numberOfChannels, 2);
 
         // Restore previous state
         pm.knownPluginList.removeType (pluginDesc);
