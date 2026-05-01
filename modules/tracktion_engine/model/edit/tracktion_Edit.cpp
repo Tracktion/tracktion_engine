@@ -3342,6 +3342,9 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingClip (Clip& clip)
     {
         if (auto c = track->insertClipWithState (clip.state.createCopy()))
         {
+            if (! clip.isMidi() && clip.getSourceFileReference().getSourceProjectItemRef().isRelativePath())
+                c->getSourceFileReference().setToFile (clip.getSourceFileReference().getFile(), SourceFileReference::PathStyle::alwaysAbsolute, false);
+
             CRASH_TRACER
             jassert (c->getPosition() == clip.getPosition());
             jassert (c->getLoopStart() == clip.getLoopStart());
