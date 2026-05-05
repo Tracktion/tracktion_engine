@@ -49,6 +49,9 @@ private:
     juce::XmlElement* createClipsElement (juce::XmlElement& parent, ClipTrack& track);
     juce::XmlElement* createMarkersElement (juce::XmlElement& parent);
 
+    // Scenes (clip launcher) export
+    juce::XmlElement* createScenes (juce::XmlElement& parent);
+
     // Clip export
     juce::XmlElement* createClipElement (juce::XmlElement& parent, Clip& clip);
     void exportAudioClip (juce::XmlElement& clipElement, WaveAudioClip& clip);

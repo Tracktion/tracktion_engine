@@ -23,6 +23,8 @@ namespace xml
     static constexpr auto Structure = "Structure";
     static constexpr auto Arrangement = "Arrangement";
     static constexpr auto Scenes = "Scenes";
+    static constexpr auto Scene = "Scene";
+    static constexpr auto Content = "Content";
 
     // Structure elements
     static constexpr auto Track = "Track";
