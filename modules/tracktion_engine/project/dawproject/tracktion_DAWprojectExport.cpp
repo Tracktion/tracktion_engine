@@ -36,6 +36,9 @@ tl::expected<std::unique_ptr<juce::XmlElement>, juce::String> DAWprojectExporter
     // Arrangement element
     createArrangement (*project);
 
+    // Scenes element (clip launcher)
+    createScenes (*project);
+
     return project;
 }
 
@@ -358,6 +361,69 @@ juce::XmlElement* DAWprojectExporter::createMarkersElement (juce::XmlElement& pa
     }
 
     return markers;
+}
+
+//==============================================================================
+juce::XmlElement* DAWprojectExporter::createScenes (juce::XmlElement& parent)
+{
+    auto& sceneList = edit.getSceneList();
+    auto scenes = sceneList.getScenes();
+
+    if (scenes.isEmpty())
+        return nullptr;
+
+    auto* scenesElement = addChildElement (parent, xml::Scenes);
+
+    int sceneIndex = 0;
+    for (auto* scene : scenes)
+    {
+        auto* sceneElement = addChildElement (*scenesElement, xml::Scene);
+        sceneElement->setAttribute (xml::id, idGenerator.generateID());
+
+        if (scene->name.get().isNotEmpty())
+            sceneElement->setAttribute (xml::name, scene->name.get());
+
+        if (! scene->colour.get().isTransparent())
+            sceneElement->setAttribute (xml::color, colourToDAWprojectString (scene->colour.get()));
+
+        auto* contentElement = addChildElement (*sceneElement, xml::Content);
+        auto* topLanes = addChildElement (*contentElement, xml::Lanes);
+        topLanes->setAttribute (xml::timeUnit, xml::seconds);
+
+        for (auto* track : getAllTracks (edit))
+        {
+            auto* audioTrack = dynamic_cast<AudioTrack*> (track);
+            if (audioTrack == nullptr)
+                continue;
+
+            auto trackIt = trackToId.find (track);
+            if (trackIt == trackToId.end())
+                continue;
+
+            auto slots = audioTrack->getClipSlotList().getClipSlots();
+            if (sceneIndex >= slots.size())
+                continue;
+
+            auto* slot = slots[sceneIndex];
+            if (slot == nullptr)
+                continue;
+
+            auto* slotClip = slot->getClip();
+            if (slotClip == nullptr)
+                continue;
+
+            auto* trackLanes = addChildElement (*topLanes, xml::Lanes);
+            trackLanes->setAttribute (xml::track, trackIt->second);
+            trackLanes->setAttribute (xml::timeUnit, xml::seconds);
+
+            auto* clipsElement = addChildElement (*trackLanes, xml::Clips);
+            createClipElement (*clipsElement, *slotClip);
+        }
+
+        ++sceneIndex;
+    }
+
+    return scenesElement;
 }
 
 //==============================================================================

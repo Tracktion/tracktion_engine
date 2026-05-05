@@ -44,11 +44,15 @@ private:
     // Arrangement parsing
     void parseArrangement (const juce::XmlElement& arrangementElement, Edit& edit);
     void parseLanes (const juce::XmlElement& lanesElement, Edit& edit, Track* track, bool positionIsBeats = false);
-    void parseClips (const juce::XmlElement& clipsElement, Edit& edit, ClipTrack& track, bool positionIsBeats = false);
+    void parseClips (const juce::XmlElement& clipsElement, Edit& edit, ClipOwner& target, bool positionIsBeats = false);
     void parseMarkers (const juce::XmlElement& markersElement, Edit& edit);
 
+    // Scenes / clip-launcher parsing
+    void parseScenes (const juce::XmlElement& scenesElement, Edit& edit);
+    void parseSceneContent (const juce::XmlElement& contentElement, Edit& edit, int sceneIndex);
+
     // Clip parsing
-    Clip::Ptr parseClip (const juce::XmlElement& clipElement, Edit& edit, ClipTrack& track, bool positionIsBeats = false);
+    Clip::Ptr parseClip (const juce::XmlElement& clipElement, Edit& edit, ClipOwner& target, bool positionIsBeats = false);
     void parseAudioClip (const juce::XmlElement& clipElement, WaveAudioClip& clip);
     void parseMidiClip (const juce::XmlElement& clipElement, MidiClip& clip);
     void parseNotes (const juce::XmlElement& notesElement, MidiClip& clip);
@@ -62,7 +66,7 @@ private:
     void parseAutomationPoints (const juce::XmlElement& pointsElement, AutomatableParameter& param);
 
     // Audio file handling
-    juce::File resolveAudioFile (const juce::String& path);
+    juce::File resolveAudioFile (const juce::String& path, bool external);
     void extractAudioFiles (juce::ZipFile& zipFile, const juce::File& destDir);
 
     //==============================================================================
@@ -76,6 +80,7 @@ private:
     ParseOptions options;
     IDRefResolver idResolver;
     juce::File audioFileDirectory;
+    juce::File sourceFileDirectory;
 
     // Maps DAWproject track IDs to created tracks
     std::unordered_map<juce::String, Track*> idToTrack;
