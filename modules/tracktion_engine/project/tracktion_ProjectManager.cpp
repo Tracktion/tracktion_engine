@@ -538,8 +538,9 @@ Project::Ptr ProjectManager::createNewProjectFromTemplate (const juce::String& n
     Project::Ptr proj;
     bool aborted = false;
     juce::Array<juce::File> filesCreated;
+    const bool isLegacy = isLegacyArchive (engine, archiveFile);
 
-    if (isLegacyArchive (engine, archiveFile))
+    if (isLegacy)
     {
         legacy::TracktionArchiveFile archive (engine, archiveFile);
 
@@ -564,8 +565,10 @@ Project::Ptr ProjectManager::createNewProjectFromTemplate (const juce::String& n
 
     if (! aborted)
     {
-        // New-style archives produce a folder-based project: extractPath itself is the project
-        if (isTracktionProjectFolder (extractPath))
+        // New-style archives produce a folder-based project: extractPath itself is the project.
+        // Legacy archives must always go through the file-based flow below so that ID remapping
+        // and the optional conversion to a folder-based project happen.
+        if (! isLegacy && isTracktionProjectFolder (extractPath))
         {
             const juce::ScopedLock sl (lock);
             proj = addProjectToList (extractPath, true, folder);
@@ -588,6 +591,8 @@ Project::Ptr ProjectManager::createNewProjectFromTemplate (const juce::String& n
 
                         if (proj != nullptr)
                             addProjectToList (proj->getDefaultDirectory(), true, folder);
+
+                        f.deleteFile();
                     }
                     else
                     {
