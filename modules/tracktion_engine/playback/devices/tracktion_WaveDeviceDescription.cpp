@@ -120,6 +120,7 @@ bool WaveDeviceDescriptionList::initialiseFromCustomBehaviour (juce::AudioIODevi
     {
         eb.describeWaveDevices (inputs, device, true);
         eb.describeWaveDevices (outputs, device, false);
+        wasInitialisedFromCustomBehaviour = true;
         return true;
     }
 
@@ -251,17 +252,26 @@ juce::XmlElement WaveDeviceDescriptionList::toXML() const
     return xml;
 }
 
+static void refreshNamesInList (std::vector<WaveDeviceDescription>&, juce::StringArray channelNames, bool isInput);
+
 void WaveDeviceDescriptionList::initialise (Engine& engine, juce::AudioIODevice& device, const juce::XmlElement* state)
 {
     deviceName = device.getName();
     deviceInputChannelNames = device.getInputChannelNames();
     deviceOutputChannelNames = device.getOutputChannelNames();
+    wasInitialisedFromCustomBehaviour = false;
+
+    if (initialiseFromCustomBehaviour (device, engine.getEngineBehaviour()))
+    {
+        // The host's describeWaveDevices result is authoritative — don't run
+        // ensureFullChannelCoverage over it. Just refresh display names.
+        refreshNamesInList (inputs,  deviceInputChannelNames,  true);
+        refreshNamesInList (outputs, deviceOutputChannelNames, false);
+        return;
+    }
 
     [&]
     {
-        if (initialiseFromCustomBehaviour (device, engine.getEngineBehaviour()))
-            return;
-
         if (state != nullptr)
         {
             if (initialiseFromLegacyState (*state))
@@ -289,7 +299,16 @@ bool WaveDeviceDescriptionList::updateForDevice (juce::AudioIODevice& device)
          || outputChannelNames != deviceOutputChannelNames)
         return false;
 
-    sanityCheckList();
+    if (wasInitialisedFromCustomBehaviour)
+    {
+        refreshNamesInList (inputs,  deviceInputChannelNames,  true);
+        refreshNamesInList (outputs, deviceOutputChannelNames, false);
+    }
+    else
+    {
+        sanityCheckList();
+    }
+
     return true;
 }
 
