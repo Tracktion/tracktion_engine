@@ -72,6 +72,7 @@ struct WaveDeviceDescriptionList
 
 private:
     juce::StringArray deviceInputChannelNames, deviceOutputChannelNames;
+    bool wasInitialisedFromCustomBehaviour = false;
 
     bool initialiseFromCustomBehaviour (juce::AudioIODevice&, EngineBehaviour&);
     void initialiseFromDeviceDefault();
