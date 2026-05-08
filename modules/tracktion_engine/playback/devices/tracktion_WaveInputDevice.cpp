@@ -498,8 +498,17 @@ public:
             }
         }
 
-        if (hasAddedContexts && ! edit.getTransport().isPlaying())
-            edit.getTransport().play (false);
+        if (hasAddedContexts)
+        {
+            // Close the meter gate so the user gets the same "waiting for trigger"
+            // visual feedback during recording as they do when auditioning the
+            // trigger level on the audio devices settings page.
+            if (getWaveInput().recordTriggerDb > -50.0f)
+                getWaveInput().setMeterGateClosed (true);
+
+            if (! edit.getTransport().isPlaying())
+                edit.getTransport().play (false);
+        }
 
         // Remove now empty contents and return the rest
         return std::move (erase_if_null (newContexts));
@@ -1203,7 +1212,7 @@ public:
             inputBuffer.applyGain (0, numSamples, dbToGain (inputGainDb));
 
         if (measurerToUpdate != nullptr)
-            measurerToUpdate->processBuffer (inputBuffer, 0, numSamples);
+            getWaveInput().feedLevelMeasurerThroughGate (inputBuffer, 0, numSamples);
 
         if (retrospectiveBuffer != nullptr)
         {
@@ -1637,6 +1646,38 @@ void WaveInputDevice::setRecordTriggerDb (float newDB)
     }
 }
 
+void WaveInputDevice::setMeterGateClosed (bool shouldBeClosed)
+{
+    if (meterGateClosed.exchange (shouldBeClosed, std::memory_order_relaxed) != shouldBeClosed)
+        changed();
+}
+
+bool WaveInputDevice::isAnyRecordingActive() const
+{
+    const juce::ScopedLock sl (instanceLock);
+
+    for (auto i : instances)
+        if (i->isRecording())
+            return true;
+
+    return false;
+}
+
+void WaveInputDevice::feedLevelMeasurerThroughGate (juce::AudioBuffer<float>& buf, int start, int numSamples)
+{
+    if (meterGateClosed.load (std::memory_order_relaxed))
+    {
+        // Use the same convention as WaveRecordingContext: a trigger of -50dB or below means "no gate".
+        if (recordTriggerDb <= -50.0f
+            || gainToDb (buf.getMagnitude (start, numSamples)) > recordTriggerDb)
+            meterGateClosed.store (false, std::memory_order_relaxed);
+        else
+            return;
+    }
+
+    levelMeasurer.processBuffer (buf, start, numSamples);
+}
+
 juce::String WaveInputDevice::getFilenameMask() const
 {
     if (filenameMask.isNotEmpty())
@@ -1757,7 +1798,10 @@ void WaveInputDevice::consumeNextAudioBlock (const float* const* allChannels, in
                     juce::FloatVectorOperations::copy (buf.getWritePointer (groupChannelSet.getChannelIndexForType (ci.channel)),
                                                        allChannels[ci.indexInDevice], numSamples);
 
-            levelMeasurer.processBuffer (buf, 0, numSamples);
+            if (inputGainDb > 0.01f || inputGainDb < -0.01f)
+                buf.applyGain (0, numSamples, dbToGain (inputGainDb));
+
+            feedLevelMeasurerThroughGate (buf, 0, numSamples);
         }
         else
         {
