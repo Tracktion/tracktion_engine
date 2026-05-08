@@ -55,6 +55,19 @@ public:
     void setRecordTriggerDb (float);
     float getRecordTriggerDb() const                            { return recordTriggerDb; }
 
+    /** Closes or opens the input meter gate. When closed, the level meter is
+        suppressed until the input level exceeds the Record Trigger Level, at
+        which point the gate opens automatically and stays open until closed
+        again. This lets the user audition the trigger threshold without
+        actually recording. Also closed automatically when recording starts on
+        a context whose trigger level is meaningful. */
+    void setMeterGateClosed (bool);
+    bool isMeterGateClosed() const noexcept                     { return meterGateClosed.load (std::memory_order_relaxed); }
+
+    /** True if any of this device's instances currently has an active
+        recording context. Safe to call from the message thread. */
+    bool isAnyRecordingActive() const;
+
     juce::String getFilenameMask() const;
     void setFilenameMask (const juce::String&);
     void setFilenameMaskToDefault();
@@ -98,7 +111,10 @@ private:
     int bitDepth = 0, mergeMode = 0;
     float recordTriggerDb = 0;
     double recordAdjustMs = 0;
+    std::atomic<bool> meterGateClosed { false };
     std::unique_ptr<RetrospectiveRecordBuffer> retrospectiveBuffer;
+
+    void feedLevelMeasurerThroughGate (juce::AudioBuffer<float>&, int start, int numSamples);
 
     void loadProps();
     void saveProps() override;
