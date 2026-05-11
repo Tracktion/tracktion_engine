@@ -360,8 +360,12 @@ void RackType::loadWindowPosition()
     for (auto* ws : getWindowStates())
     {
         if (ws->state.hasProperty (IDs::windowPos))
-            ws->lastWindowBounds = juce::Rectangle<int>::fromString (ws->state[IDs::windowPos].toString());
+        {
+            auto s = ws->state[IDs::windowPos].toString();
 
+            if (s.isNotEmpty())
+                ws->lastWindowBounds = juce::Rectangle<int>::fromString (s);
+        }
     }
 }
 
