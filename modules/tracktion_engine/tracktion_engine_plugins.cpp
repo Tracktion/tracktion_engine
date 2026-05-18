@@ -63,6 +63,7 @@ using namespace std::literals;
 #include "plugins/internal/tracktion_InsertPlugin.cpp"
 #include "plugins/internal/tracktion_ChannelMapperPlugin.cpp"
 #include "plugins/internal/tracktion_LevelMeter.cpp"
+#include "plugins/internal/tracktion_LevelMeter.test.cpp"
 #include "plugins/internal/tracktion_RackInstance.cpp"
 #include "plugins/internal/tracktion_RackInstance.test.cpp"
 #include "plugins/internal/tracktion_RackType.cpp"
