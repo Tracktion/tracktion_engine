@@ -50,6 +50,11 @@ public:
 private:
     int controllerTrack = -1;
     LevelMeasurer::Client controllerLevelClient;
+    std::vector<float> controllerGainsBuffer;
+
+   #if TRACKTION_UNIT_TESTS
+    friend struct LevelMeterPluginTestAccess;
+   #endif
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevelMeterPlugin)
 };

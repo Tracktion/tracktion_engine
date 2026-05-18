@@ -82,13 +82,16 @@ void LevelMeterPlugin::timerCallback()
 
         if (ecm.isAttachedToEdit (edit))
         {
-            auto numChans = controllerLevelClient.getNumChannelsUsed();
-            float gains[32];
+            // Grow on demand so we can support any channel count (e.g. ambisonic
+            // tracks). This runs on the message thread at 50 Hz, so the resize is
+            // not a realtime concern; in steady state the capacity is preserved.
+            const auto numChans = controllerLevelClient.getNumChannelsUsed();
+            controllerGainsBuffer.resize ((size_t) numChans);
 
             for (int i = 0; i < numChans; ++i)
-                gains[i] = dbToGain (controllerLevelClient.getAndClearAudioLevel (i).dB);
+                controllerGainsBuffer[(size_t) i] = dbToGain (controllerLevelClient.getAndClearAudioLevel (i).dB);
 
-            ecm.channelLevelChanged (controllerTrack, { gains, (size_t) numChans });
+            ecm.channelLevelChanged (controllerTrack, { controllerGainsBuffer.data(), (size_t) numChans });
         }
     }
 }
