@@ -120,6 +120,10 @@ namespace test_utilities
         {
             tempDir.createDirectory();
             tempDir.setAsCurrentWorkingDirectory();
+            // Re-read the CWD so tempDir holds the OS-canonical path
+            // (macOS resolves /var → /private/var, which would otherwise
+            // cause string comparisons against getCurrentWorkingDirectory() to fail).
+            tempDir = juce::File::getCurrentWorkingDirectory();
         }
 
         ~TempCurrentWorkingDirectory()
