@@ -641,9 +641,9 @@ TEST_SUITE ("tracktion_engine")
     {
         juce::ZipFile::Builder builder;
 
-        auto* projectStream = new juce::MemoryInputStream (projectXml.toRawUTF8(),
-                                                            projectXml.getNumBytesAsUTF8(), false);
-        builder.addEntry (projectStream, 9, "project.xml", juce::Time::getCurrentTime());
+        auto projectStream = std::make_unique<juce::MemoryInputStream> (projectXml.toRawUTF8(),
+                                                                        projectXml.getNumBytesAsUTF8(), false);
+        builder.addEntry (std::move (projectStream), 9, "project.xml", juce::Time::getCurrentTime());
 
         for (const auto& [archivePath, sourceFile] : audioEntries)
             builder.addFile (sourceFile, 9, archivePath);

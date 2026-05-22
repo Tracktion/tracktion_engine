@@ -82,13 +82,13 @@ juce::Result DAWprojectExporter::writeToFile (const juce::File& file)
     // Add project.xml
     auto projectXmlString = projectXml.toString();
     auto projectXmlData = juce::MemoryBlock (projectXmlString.toRawUTF8(), projectXmlString.getNumBytesAsUTF8());
-    zipBuilder.addEntry (new juce::MemoryInputStream (projectXmlData, false),
+    zipBuilder.addEntry (std::make_unique<juce::MemoryInputStream> (projectXmlData, false),
                          9, "project.xml", juce::Time::getCurrentTime());
 
     // Add metadata.xml
     auto metadataXmlString = metadataXml->toString();
     auto metadataXmlData = juce::MemoryBlock (metadataXmlString.toRawUTF8(), metadataXmlString.getNumBytesAsUTF8());
-    zipBuilder.addEntry (new juce::MemoryInputStream (metadataXmlData, false),
+    zipBuilder.addEntry (std::make_unique<juce::MemoryInputStream> (metadataXmlData, false),
                          9, "metadata.xml", juce::Time::getCurrentTime());
 
     // Add audio files
@@ -748,7 +748,7 @@ void DAWprojectExporter::writePluginStates (juce::ZipFile::Builder& zipBuilder)
 
     for (const auto& entry : pluginStatesToEmbed)
     {
-        zipBuilder.addEntry (new juce::MemoryInputStream (entry.state, false),
+        zipBuilder.addEntry (std::make_unique<juce::MemoryInputStream> (entry.state, false),
                              9, entry.archivePath, juce::Time::getCurrentTime());
     }
 }
