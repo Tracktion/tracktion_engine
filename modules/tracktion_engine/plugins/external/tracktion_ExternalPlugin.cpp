@@ -788,8 +788,20 @@ void ExternalPlugin::buildParameterList()
                 // Just use the index for the ID for now until this has been added to JUCE
                 auto parameterID = juce::String (i);
 
-                if (auto paramWithID = dynamic_cast<juce::AudioProcessorParameterWithID*> (parameter))
+                if (isCmajorPatchPluginFormat (desc))
+                {
+                    // Cmajor patches are new, so no existing automation is keyed on the
+                    // index — use the plugin's own (HostedAudioProcessorParameter) id for
+                    // stability. Don't broaden this to other formats: VST3/AU/LV2 return
+                    // their native ids from getParameterID(), and switching them off the
+                    // historical index id would orphan automation in existing edits.
+                    if (auto hosted = dynamic_cast<juce::HostedAudioProcessorParameter*> (parameter))
+                        parameterID = hosted->getParameterID();
+                }
+                else if (auto paramWithID = dynamic_cast<juce::AudioProcessorParameterWithID*> (parameter))
+                {
                     parameterID = paramWithID->paramID;
+                }
 
                 auto p = new ExternalAutomatableParameter (parameterID, nm, *this, i, { 0.0f, 1.0f });
                 addAutomatableParameter (*p);
