@@ -712,8 +712,20 @@ void ExternalPlugin::forceFullReinitialise()
     TransportControl::ScopedPlaybackRestarter restarter (edit.getTransport());
     engine.getUIBehaviour().recreatePluginWindowContentAsync (*this);
     edit.getTransport().stop (false, true);
+
+    const bool hadInstance = hasLoadedInstance;
+
     fullyInitialised = false;
     initialiseFully();
+
+    // initialiseFully()/doFullInitialisation() only (re)build the parameter list as
+    // part of *creating* an instance; when the instance already exists that step is
+    // skipped. Refresh the list here so parameters published after creation become
+    // visible — e.g. a Cmajor patch whose endpoints appear once its async JIT build
+    // completes (initialiseFully() leaves the existing instance in place).
+    if (hadInstance)
+        buildParameterList();
+
     changed();
 
     if (isInstancePrepared)
