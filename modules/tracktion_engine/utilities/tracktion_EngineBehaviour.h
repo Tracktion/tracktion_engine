@@ -187,6 +187,13 @@ public:
     /// If you have any special plugins that access items in the Edit, you need to reassign them
     virtual void reassignReferencedItem (ExternalPlugin&, const Exportable::ReferencedItem&, ProjectItemRef, double)  {}
 
+    /// Return any extra loose files the Edit depends on that aren't tracked as
+    /// ProjectItems (e.g. plugin patch files living in a project subfolder).
+    /// These are bundled when archiving a single Edit so they survive the
+    /// round-trip. Paths should live under the source project's directory so the
+    /// archive can recreate their relative layout.
+    virtual juce::Array<juce::File> getExtraFilesToArchive (Edit&)                   { return {}; }
+
     /// If this returns false, ClipSlot Clips won't be included in the playback graph
     /// and arranger track clips will always be audible.
     virtual bool areClipSlotsEnabled()                                              { return true; }
