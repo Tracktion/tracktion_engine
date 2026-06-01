@@ -406,6 +406,13 @@ bool ArchiveJob::copyToTempDir()
                                                         }
                                                     }
                                                 }
+
+                                                // Persist the reassigned references before destEdit destructs:
+                                                // consolidate() reloads each edit from disk, so without this save it
+                                                // would see the original (pre-relocation) references and re-resolve
+                                                // them against their source locations instead of the archived copies.
+                                                EditFileOperations (*destEdit).writeToFile (destEditItem->getSourceFile(), false);
+
                                                 // destEdit destructs here on the message thread.
                                             });
 
