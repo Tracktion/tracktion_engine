@@ -45,6 +45,9 @@ public:
     void playNotes (const juce::BigInteger& keysDown);
     void allNotesOff();
 
+    /// If the state has changed and an update is pending, do it synchronously now
+    void flushPendingUpdates();
+
     //==============================================================================
     static const char* getPluginName()                  { return NEEDS_TRANS("Sampler"); }
     static const char* xmlTypeName;

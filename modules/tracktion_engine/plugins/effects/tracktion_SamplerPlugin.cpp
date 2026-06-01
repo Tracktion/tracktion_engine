@@ -162,6 +162,12 @@ void SamplerPlugin::valueTreeChanged()
     Plugin::valueTreeChanged();
 }
 
+void SamplerPlugin::flushPendingUpdates()
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    handleUpdateNowIfNeeded();
+}
+
 void SamplerPlugin::handleAsyncUpdate()
 {
     juce::OwnedArray<SamplerSound> newSounds;
