@@ -86,7 +86,9 @@ struct CombiningNode::TimedNode
 
     void process (ProcessContext& pc)
     {
+       #if JUCE_DEBUG
         jassert (hasPrefetched);
+       #endif
 
         // Process all the Nodes
         for (auto n : nodesToProcess)
