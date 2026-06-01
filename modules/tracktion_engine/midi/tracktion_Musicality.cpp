@@ -154,7 +154,7 @@ juce::String Chord::getName() const
         case majorNinthChord:               return TRANS("Major Ninth");
         case dominantNinthChord:            return TRANS("Dominant Ninth");
         case minorMajorNinthChord:          return TRANS("Minor Major Ninth");
-        case minorDominantNinthChord:       return TRANS("Minor Dominant Ninth");
+        case minorDominantNinthChord:       return TRANS("Minor Ninth");
         case augmentedMajorNinthChord:      return TRANS("Augmented Major Ninth");
         case augmentedDominantNinthChord:   return TRANS("Augmented Dominant Ninth");
         case halfDiminishedNinthChord:      return TRANS("Half Diminished Ninth");
@@ -190,7 +190,7 @@ juce::String Chord::getShortName() const
         case majorNinthChord:               return TRANS("major 9");
         case dominantNinthChord:            return TRANS("dom 9");
         case minorMajorNinthChord:          return TRANS("min maj 9");
-        case minorDominantNinthChord:       return TRANS("min dom 9");
+        case minorDominantNinthChord:       return TRANS("min 9");
         case augmentedMajorNinthChord:      return TRANS("aug maj 9");
         case augmentedDominantNinthChord:   return TRANS("aug dom 9");
         case halfDiminishedNinthChord:      return TRANS("half dim 9");
@@ -310,30 +310,35 @@ Scale::Scale (ScaleType type_) : type (type_)
             triads = generateTriads (0);
             sixths = generateSixths (0);
             sevenths = generateSevenths (0);
+            ninths = generateNinths (0);
             break;
         case dorian:
             steps = { Whole, Half, Whole, Whole, Whole, Half, Whole };
             triads = generateTriads (1);
             sixths = generateSixths (1);
             sevenths = generateSevenths (1);
+            ninths = generateNinths (1);
             break;
         case phrygian:
             steps = { Half, Whole, Whole, Whole, Half, Whole, Whole };
             triads = generateTriads (2);
             sixths = generateSixths (2);
             sevenths = generateSevenths (2);
+            ninths = generateNinths (2);
             break;
         case lydian:
             steps = { Whole, Whole, Whole, Half, Whole, Whole, Half };
             triads = generateTriads (3);
             sixths = generateSixths (3);
             sevenths = generateSevenths (3);
+            ninths = generateNinths (3);
             break;
         case mixolydian:
             steps = { Whole, Whole, Half, Whole, Whole, Half, Whole };
             triads = generateTriads (4);
             sixths = generateSixths (4);
             sevenths = generateSevenths (4);
+            ninths = generateNinths (4);
             break;
         case minor:
         case aeolian:
@@ -341,24 +346,28 @@ Scale::Scale (ScaleType type_) : type (type_)
             triads = generateTriads (5);
             sixths = generateSixths (5);
             sevenths = generateSevenths (5);
+            ninths = generateNinths (5);
             break;
         case locrian:
             steps = { Half, Whole, Whole, Half, Whole, Whole, Whole };
             triads = generateTriads (6);
             sixths = generateSixths (6);
             sevenths = generateSevenths (6);
+            ninths = generateNinths (6);
             break;
         case melodicMinor:
             steps = { Whole, Half, Whole, Whole, Whole, Whole, Half };
             triads = { Chord::minorTriad, Chord::minorTriad, Chord::augmentedTriad, Chord::majorTriad, Chord::majorTriad, Chord::diminishedTriad, Chord::diminishedTriad };
             sixths = { Chord::invalidChord, Chord::invalidChord, Chord::invalidChord, Chord::invalidChord, Chord::invalidChord, Chord::invalidChord, Chord::invalidChord };
             sevenths = { Chord::minorMajorSeventhChord, Chord::minorSeventhChord, Chord::augmentedSeventhChord, Chord::dominatSeventhChord, Chord::dominatSeventhChord, Chord::halfDiminishedSeventhChord, Chord::halfDiminishedSeventhChord };
+            ninths = { Chord::invalidChord, Chord::invalidChord, Chord::invalidChord, Chord::invalidChord, Chord::invalidChord, Chord::invalidChord, Chord::invalidChord };
             break;
         case harmonicMinor:
             steps = { Whole, Half, Whole, Whole, Half, WholeHalf, Half };
             triads = { Chord::minorTriad, Chord::diminishedTriad, Chord::augmentedTriad, Chord::minorTriad, Chord::majorTriad, Chord::majorTriad, Chord::diminishedTriad };
             sixths = { Chord::invalidChord, Chord::invalidChord, Chord::invalidChord, Chord::invalidChord, Chord::invalidChord, Chord::invalidChord, Chord::invalidChord };
             sevenths = { Chord::minorMajorSeventhChord, Chord::halfDiminishedSeventhChord, Chord::augmentedSeventhChord, Chord::minorSeventhChord, Chord::dominatSeventhChord, Chord::majorSeventhChord, Chord::diminishedSeventhChord };
+            ninths = { Chord::invalidChord, Chord::invalidChord, Chord::invalidChord, Chord::invalidChord, Chord::invalidChord, Chord::invalidChord, Chord::invalidChord };
             break;
     }
 }
@@ -467,6 +476,18 @@ juce::Array<Chord> Scale::generateSevenths (int offset) const
 {
     juce::Array<Chord> res;
     juce::Array<Chord> base { Chord::majorSeventhChord, Chord::minorSeventhChord, Chord::minorSeventhChord, Chord::majorSeventhChord, Chord::dominatSeventhChord, Chord::minorSeventhChord, Chord::halfDiminishedSeventhChord };
+
+    for (int i = 0; i < base.size(); i++)
+        res.add (base[(i + offset) % base.size()]);
+
+    return res;
+}
+
+juce::Array<Chord> Scale::generateNinths (int offset) const
+{
+    juce::Array<Chord> res;
+    // iii has no diatonic ninth that maps to a named chord (m7b9), so it is left invalid
+    juce::Array<Chord> base { Chord::majorNinthChord, Chord::minorDominantNinthChord, Chord::invalidChord, Chord::majorNinthChord, Chord::dominantNinthChord, Chord::minorDominantNinthChord, Chord::halfDiminishedMinorNinthChord };
 
     for (int i = 0; i < base.size(); i++)
         res.add (base[(i + offset) % base.size()]);
@@ -627,7 +648,7 @@ bool PatternGenerator::ProgressionItem::operator== (const ProgressionItem& other
 void PatternGenerator::ProgressionItem::setChordName (juce::String name)
 {
     if (isRoman (name))
-        chordName = name.toLowerCase().retainCharacters ("iv7");
+        chordName = name.toLowerCase().retainCharacters ("iv679");
     else
         chordName = name;
 
@@ -663,7 +684,13 @@ Chord PatternGenerator::ProgressionItem::getChord (const Scale& scale) const
         auto progressionsOpts = Scale::getIntervalNames();
         auto interval = progressionsOpts.indexOf (chordName.get().retainCharacters ("iv")); // find where progression we are
 
-        return chordName.get().contains ("7") ? scale.getSevenths()[interval] : scale.getTriads()[interval];
+        const auto name = chordName.get();
+
+        if (name.contains ("9")) return scale.getNinths()[interval];
+        if (name.contains ("7")) return scale.getSevenths()[interval];
+        if (name.contains ("6")) return scale.getSixths()[interval];
+
+        return scale.getTriads()[interval];
     }
 
     if (pitches.get().isNotEmpty())
@@ -1040,6 +1067,20 @@ juce::StringArray PatternGenerator::getPossibleTriadNames() const
     return res;
 }
 
+juce::StringArray PatternGenerator::getPossibleSixthNames() const
+{
+    juce::StringArray res;
+    auto scale = getScaleAtBeat (BeatPosition());
+    auto sixths = scale.getSixths();
+
+    // Empty entry for degrees with no diatonic sixth; index stays aligned with the interval
+    for (int interval = int (Scale::Intervals::i); interval <= int (Scale::Intervals::vii); interval++)
+        res.add (sixths[interval].isValid() ? scale.getIntervalName ((Scale::Intervals) interval) + "6"
+                                            : juce::String());
+
+    return res;
+}
+
 juce::StringArray PatternGenerator::getPossibleSeventhNames() const
 {
     juce::StringArray res;
@@ -1047,6 +1088,20 @@ juce::StringArray PatternGenerator::getPossibleSeventhNames() const
 
     for (int interval = int (Scale::Intervals::i); interval <= int (Scale::Intervals::vii); interval++)
         res.add (scale.getIntervalName ((Scale::Intervals) interval) + "7");
+
+    return res;
+}
+
+juce::StringArray PatternGenerator::getPossibleNinthNames() const
+{
+    juce::StringArray res;
+    auto scale = getScaleAtBeat (BeatPosition());
+    auto ninths = scale.getNinths();
+
+    // Empty entry for degrees with no diatonic ninth; index stays aligned with the interval
+    for (int interval = int (Scale::Intervals::i); interval <= int (Scale::Intervals::vii); interval++)
+        res.add (ninths[interval].isValid() ? scale.getIntervalName ((Scale::Intervals) interval) + "9"
+                                            : juce::String());
 
     return res;
 }
@@ -1059,8 +1114,9 @@ juce::String PatternGenerator::formatChordName (juce::String simplifiedChordName
         auto scale = getScaleAtBeat (BeatPosition());
         auto intervalStr = scale.getIntervalName (interval);
 
-        if (simplifiedChordName.contains ("7"))
-            return intervalStr + "7";
+        if (simplifiedChordName.contains ("9")) return intervalStr + "9";
+        if (simplifiedChordName.contains ("7")) return intervalStr + "7";
+        if (simplifiedChordName.contains ("6")) return intervalStr + "6";
 
         return intervalStr;
     }
@@ -1103,7 +1159,7 @@ void PatternGenerator::setChordProgressionFromChordNames (juce::StringArray prog
     {
         // store in simplest form
         if (isRoman (itmName))
-            itmName = itmName.toLowerCase().retainCharacters ("iv7");
+            itmName = itmName.toLowerCase().retainCharacters ("iv679");
 
         juce::ValueTree item (IDs::PROGRESSIONITEM);
         item.setProperty (IDs::name, itmName, &um);
@@ -1404,7 +1460,7 @@ void PatternGenerator::insertChordIntoProgression (int idx, juce::String chordNa
         auto& um = clip.edit.getUndoManager();
 
         if (isRoman (chordName))
-            chordName = chordName.toLowerCase().retainCharacters ("iv7");
+            chordName = chordName.toLowerCase().retainCharacters ("iv679");
 
         juce::ValueTree item (IDs::PROGRESSIONITEM);
         item.setProperty (IDs::name, chordName, &um);
@@ -1422,7 +1478,7 @@ void PatternGenerator::insertChordIntoProgression (int idx, juce::String chordNa
         auto& um = clip.edit.getUndoManager();
 
         if (isRoman (chordName))
-            chordName = chordName.toLowerCase().retainCharacters ("iv7");
+            chordName = chordName.toLowerCase().retainCharacters ("iv679");
 
         auto item = createValueTree (IDs::PROGRESSIONITEM,
                                      IDs::name,    chordName,
