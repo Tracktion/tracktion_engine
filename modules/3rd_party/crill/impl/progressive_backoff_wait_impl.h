@@ -77,7 +77,13 @@ namespace crill::impl
                 if (pred())
                     return;
 
+              #if defined (__GNUC__) && ! defined (__clang__)
+                // GCC's <arm_acle.h> does not provide the __wfe() ACLE intrinsic,
+                // so emit the instruction directly. (Clang/Apple toolchains do.)
+                __asm__ __volatile__ ("wfe");
+              #else
                 __wfe();
+              #endif
             }
 
             // waiting longer than we should, let's give other threads a chance to recover
