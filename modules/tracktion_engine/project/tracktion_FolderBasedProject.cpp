@@ -75,15 +75,23 @@ void FolderBasedProject::ensureScanned() const
         scanFolder();
 }
 
+// All video extensions Waveform can import. Kept in sync with
+// VideoEngine::getVideoFileExtensions(). Includes the intermediate .avi that
+// imported videos are transcoded to, so video items are re-indexed on rescan.
+static const char* const videoFileExtensions = ".mov;.avi;.webm;.wmv;.mp4;.m4v;.mpg;.mp2;.mpeg;.mpe;.mpv;.mkv";
+
 void FolderBasedProject::scanFolder() const
 {
     cachedItems.clear();
 
-    auto files = folder.findChildFiles (juce::File::findFiles, true,
-                                        "*.tracktionedit;*.trkedit;"
-                                        "*.wav;*.aiff;*.aif;*.mp3;*.ogg;*.flac;"
-                                        "*.mid;*.midi;"
-                                        "*.mp4;*.mov");
+    juce::String wildcards = "*.tracktionedit;*.trkedit;"
+                             "*.wav;*.aiff;*.aif;*.mp3;*.ogg;*.flac;"
+                             "*.mid;*.midi";
+
+    for (auto& ext : juce::StringArray::fromTokens (videoFileExtensions, ";", ""))
+        wildcards += ";*" + ext;
+
+    auto files = folder.findChildFiles (juce::File::findFiles, true, wildcards);
 
     for (auto& f : files)
     {
@@ -150,7 +158,7 @@ juce::String FolderBasedProject::inferType (const juce::File& f)
     if (f.hasFileExtension (".mid;.midi"))
         return ProjectItem::midiItemType();
 
-    if (f.hasFileExtension (".mp4;.mov"))
+    if (f.hasFileExtension (videoFileExtensions))
         return ProjectItem::videoItemType();
 
     return {};
@@ -162,10 +170,14 @@ ProjectItem::Category FolderBasedProject::inferCategory (const juce::File& f, co
 
     if (parent == root)
     {
-        if (f.hasFileExtension (".tracktionedit;.trkedit"))
+        // Classify root-level files by their inferred type so the extension
+        // lists stay defined in one place (inferType).
+        auto type = inferType (f);
+
+        if (type == ProjectItem::editItemType())
             return ProjectItem::Category::edit;
 
-        if (f.hasFileExtension (".mp4;.mov"))
+        if (type == ProjectItem::videoItemType())
             return ProjectItem::Category::video;
 
         return ProjectItem::Category::recorded;
