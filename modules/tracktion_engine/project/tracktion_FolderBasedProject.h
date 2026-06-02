@@ -95,6 +95,12 @@ private:
     static juce::String inferType (const juce::File&);
     static ProjectItem::Category inferCategory (const juce::File&, const juce::File& root);
 
+    // Per-item descriptions are persisted in project_info.json, keyed by the
+    // item's path, because folder-based ProjectItems are recreated on every scan
+    // and so have nowhere else to store their description.
+    juce::String getItemDescriptionKey (const juce::File&) const;
+    void syncItemDescriptionsToProperties();
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FolderBasedProject)
 };
 

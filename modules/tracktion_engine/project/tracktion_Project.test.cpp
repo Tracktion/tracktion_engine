@@ -1111,6 +1111,75 @@ TEST_SUITE ("tracktion_engine")
         cleanup();
     }
 
+    TEST_CASE ("FolderBasedProject: item description persists across rescan and reload")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFolder = tempDir.getChildFile ("desc_item_folder");
+        projectFolder.createDirectory();
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+        REQUIRE (project->isValid());
+
+        // Create an edit in the project
+        auto editItem = project->createNewEdit();
+        REQUIRE (editItem != nullptr);
+        auto editFile = editItem->getSourceFile();
+
+        // Set a description on the edit item
+        editItem->setDescription ("My edit description");
+        CHECK (editItem->getDescription() == "My edit description");
+
+        // Setting the category must not clobber the user description
+        CHECK (editItem->getCategory() == ProjectItem::Category::edit);
+
+        // Persist to disk, re-read properties from disk, and force a rescan
+        // (this simulates clicking away from the Edit and back again)
+        project->save();
+        project->refreshProjectPropertiesFromFile();
+        project->reload (Project::ReloadMode::immediate);
+
+        auto reloaded = project->getProjectItemForFile (editFile);
+        REQUIRE (reloaded != nullptr);
+        CHECK (reloaded->getDescription() == "My edit description");
+        CHECK (reloaded->getCategory() == ProjectItem::Category::edit);
+
+        // Simulate an app restart: open a fresh project on the same folder so the
+        // description is read back from project_info.json
+        {
+            ProjectManager::TempProject tp2 (pm, projectFolder, false);
+            auto project2 = tp2.project;
+            REQUIRE (project2 != nullptr);
+
+            auto item2 = project2->getProjectItemForFile (editFile);
+            REQUIRE (item2 != nullptr);
+            CHECK (item2->getDescription() == "My edit description");
+        }
+
+        // Clearing the description should remove it on the next save/reload
+        reloaded->setDescription ({});
+        project->save();
+        project->refreshProjectPropertiesFromFile();
+        project->reload (Project::ReloadMode::immediate);
+
+        auto cleared = project->getProjectItemForFile (editFile);
+        REQUIRE (cleared != nullptr);
+        CHECK (cleared->getDescription().isEmpty());
+
+        cleanup();
+    }
+
     TEST_CASE ("ProjectUtilities: consolidate single Edit")
     {
         auto& engine = *Engine::getEngines()[0];

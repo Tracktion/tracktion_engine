@@ -110,7 +110,14 @@ public:
     void setNamedProperty (const juce::String& name, const juce::String& value);
 
     juce::String getDescription() const;
-    void setDescription (const juce::String& newDesc);
+
+    /** Sets the user-visible description text.
+        Pass juce::dontSendNotification to update it without broadcasting a change
+        - used when restoring a persisted description during a folder scan, where
+        firing a change would propagate to the owning project and retrigger the
+        scan. */
+    void setDescription (const juce::String& newDesc,
+                         juce::NotificationType = juce::sendNotification);
 
     /** optional set of interesting time markers, for wave files */
     juce::Array<TimePosition> getMarkedPoints() const;

@@ -577,7 +577,7 @@ juce::String ProjectItem::getDescription() const
     return description.upToFirstOccurrenceOf ("|", false, false);
 }
 
-void ProjectItem::setDescription (const juce::String& newDesc)
+void ProjectItem::setDescription (const juce::String& newDesc, juce::NotificationType notify)
 {
     if (newDesc != getDescription())
     {
@@ -587,7 +587,8 @@ void ProjectItem::setDescription (const juce::String& newDesc)
         else
             description = newDesc.removeCharacters ("|");
 
-        sendChange();
+        if (notify != juce::dontSendNotification)
+            sendChange();
     }
 }
 
