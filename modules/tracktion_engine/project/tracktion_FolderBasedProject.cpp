@@ -95,10 +95,48 @@ void FolderBasedProject::scanFolder() const
         auto category = inferCategory (f, folder);
         auto name = f.getFileNameWithoutExtension();
 
-        cachedItems.add (new ProjectItem (owner.engine, f, type, name, category, owner));
+        ProjectItem::Ptr item (new ProjectItem (owner.engine, f, type, name, category, owner));
+
+        // Restore any persisted user description for this item (see save()).
+        auto storedDesc = getProjectProperty (getItemDescriptionKey (f));
+
+        if (storedDesc.isNotEmpty())
+            item->setDescription (storedDesc, juce::dontSendNotification);
+
+        cachedItems.add (item.get());
     }
 
     itemsScanned = true;
+}
+
+juce::String FolderBasedProject::getItemDescriptionKey (const juce::File& f) const
+{
+    auto path = f.isAChildOf (folder) ? f.getRelativePathFrom (folder)
+                                      : f.getFullPathName();
+    return "itemDesc:" + path;
+}
+
+void FolderBasedProject::syncItemDescriptionsToProperties()
+{
+    const juce::ScopedLock sl (itemLock);
+
+    // Only sync once items have been scanned, otherwise cachedItems is empty and
+    // we'd wipe descriptions that haven't been loaded into memory yet.
+    if (! itemsScanned)
+        return;
+
+    const juce::ScopedLock sl2 (propertyLock);
+
+    for (auto& item : cachedItems)
+    {
+        auto key = getItemDescriptionKey (item->getSourceFile());
+        auto desc = item->getDescription();
+
+        if (desc.isNotEmpty())
+            properties.set (key, desc);
+        else
+            properties.remove (key);
+    }
 }
 
 juce::String FolderBasedProject::inferType (const juce::File& f)
@@ -149,6 +187,7 @@ ProjectItem::Category FolderBasedProject::inferCategory (const juce::File& f, co
 //==============================================================================
 bool FolderBasedProject::save()
 {
+    syncItemDescriptionsToProperties();
     return savePropertiesToFile();
 }
 
