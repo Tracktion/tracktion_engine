@@ -304,7 +304,11 @@ bool ModifierList::isSuitableType (const juce::ValueTree& v) const
 Modifier* ModifierList::createNewObject (const juce::ValueTree& v)
 {
     CRASH_TRACER
-    auto m = findModifierForID (edit, EditItemID::readOrCreateNewID (edit, v));
+    // Look up the cache rather than the lists so that a Modifier being moved between
+    // tracks (momentarily removed from one list and not yet added to another, but still
+    // alive) is reused instead of being duplicated
+    const auto id = EditItemID::readOrCreateNewID (edit, v);
+    Modifier::Ptr m = dynamic_cast<Modifier*> (edit.automatableEditItemCache.findItem (id));
 
     if (m == nullptr)
     {
