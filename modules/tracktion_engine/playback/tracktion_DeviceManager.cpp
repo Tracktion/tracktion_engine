@@ -695,6 +695,86 @@ void DeviceManager::rescanWaveDeviceList()
     }
 }
 
+//==============================================================================
+static constexpr char waveLayoutPresetsTag[] = "AUDIODEVICE_LAYOUT_PRESETS";
+static constexpr char waveLayoutPresetTag[]  = "PRESET";
+
+juce::XmlElement DeviceManager::getCurrentWaveDeviceLayout() const
+{
+    return deviceDescriptionList.toXML();
+}
+
+void DeviceManager::applyWaveDeviceLayout (const juce::XmlElement& layoutXml)
+{
+    if (auto device = deviceManager.getCurrentAudioDevice())
+    {
+        auto newList = deviceDescriptionList;
+        newList.initialise (engine, *device, &layoutXml);
+
+        if (newList != deviceDescriptionList)
+        {
+            deviceDescriptionList = newList;
+            deviceListChanged (false);
+        }
+    }
+}
+
+juce::StringArray DeviceManager::getWaveDeviceLayoutPresetNames()
+{
+    juce::StringArray names;
+
+    if (auto presets = engine.getPropertyStorage().getXmlProperty (SettingID::audioDeviceLayoutPresets))
+        for (auto* p : presets->getChildWithTagNameIterator (waveLayoutPresetTag))
+            names.add (p->getStringAttribute ("name"));
+
+    return names;
+}
+
+void DeviceManager::saveWaveDeviceLayoutPreset (const juce::String& name)
+{
+    if (name.isEmpty())
+        return;
+
+    auto& storage = engine.getPropertyStorage();
+    auto presets = storage.getXmlProperty (SettingID::audioDeviceLayoutPresets);
+
+    if (presets == nullptr)
+        presets = std::make_unique<juce::XmlElement> (waveLayoutPresetsTag);
+
+    if (auto existing = presets->getChildByAttribute ("name", name))
+        presets->removeChildElement (existing, true);
+
+    auto preset = presets->createNewChildElement (waveLayoutPresetTag);
+    preset->setAttribute ("name", name);
+    preset->addChildElement (new juce::XmlElement (getCurrentWaveDeviceLayout()));
+
+    storage.setXmlProperty (SettingID::audioDeviceLayoutPresets, *presets);
+    sendChangeMessage();
+}
+
+void DeviceManager::loadWaveDeviceLayoutPreset (const juce::String& name)
+{
+    if (auto presets = engine.getPropertyStorage().getXmlProperty (SettingID::audioDeviceLayoutPresets))
+        if (auto preset = presets->getChildByAttribute ("name", name))
+            if (auto layout = preset->getChildByName ("AUDIODEVICE_LAYOUT"))
+                applyWaveDeviceLayout (*layout);
+}
+
+void DeviceManager::deleteWaveDeviceLayoutPreset (const juce::String& name)
+{
+    auto& storage = engine.getPropertyStorage();
+
+    if (auto presets = storage.getXmlProperty (SettingID::audioDeviceLayoutPresets))
+    {
+        if (auto existing = presets->getChildByAttribute ("name", name))
+        {
+            presets->removeChildElement (existing, true);
+            storage.setXmlProperty (SettingID::audioDeviceLayoutPresets, *presets);
+            sendChangeMessage();
+        }
+    }
+}
+
 void DeviceManager::deviceListChanged (bool reloadAllDevices)
 {
     triggerAsyncUpdate();

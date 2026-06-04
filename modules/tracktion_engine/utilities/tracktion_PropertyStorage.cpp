@@ -16,6 +16,7 @@ juce::StringRef PropertyStorage::settingToString (SettingID setting)
     {
         case SettingID::audio_device_setup:                 return "audio_device_setup";
         case SettingID::audiosettings:                      return "audiosettings";
+        case SettingID::audioDeviceLayoutPresets:           return "audioDeviceLayoutPresets";
         case SettingID::addAntiDenormalNoise:               return "addAntiDenormalNoiseXXX";    // This setting is obsolete (hopefully)
         case SettingID::autoFreeze:                         return "autoFreeze";
         case SettingID::autoTempoMatch:                     return "AutoTempoMatch";

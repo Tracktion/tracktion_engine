@@ -144,6 +144,35 @@ public:
     juce::StringArray getPossibleChannelGroupsForDevice (WaveInputDevice&, uint32_t maxNumChannels) const;
 
     //==============================================================================
+    /** Wave device channel-grouping layout presets.
+
+        The way a physical device's channels are grouped into WaveInputDevice and
+        WaveOutputDevice instances is normally stored per-device-type and lost when
+        the device changes. These methods let that grouping be captured as a named
+        preset (stored in the global PropertyStorage) and recalled at any time, even
+        onto a different device - the recalled layout is fitted to whatever device is
+        currently active.
+    */
+
+    /** Returns the current channel grouping as an XML layout (an AUDIODEVICE_LAYOUT element). */
+    juce::XmlElement getCurrentWaveDeviceLayout() const;
+
+    /** Applies a previously captured layout to the current device, rebuilding the wave devices. */
+    void applyWaveDeviceLayout (const juce::XmlElement&);
+
+    /** Returns the names of all stored channel-layout presets. */
+    juce::StringArray getWaveDeviceLayoutPresetNames();
+
+    /** Stores the current channel grouping as a named preset (overwriting any preset with the same name). */
+    void saveWaveDeviceLayoutPreset (const juce::String& name);
+
+    /** Recalls a named preset and applies it to the current device. */
+    void loadWaveDeviceLayoutPreset (const juce::String& name);
+
+    /** Deletes a named preset. */
+    void deleteWaveDeviceLayoutPreset (const juce::String& name);
+
+    //==============================================================================
     int getNumMidiOutDevices() const                            { return (int) midiOutputs.size(); }
     MidiOutputDevice* getMidiOutDevice (int index) const        { return index >= 0 && index < (int) midiOutputs.size() ? midiOutputs[(size_t) index].get() : nullptr; }
 
