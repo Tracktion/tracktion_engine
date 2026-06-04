@@ -17,6 +17,7 @@ enum class SettingID
     addAntiDenormalNoise,
     audio_device_setup,
     audiosettings,
+    audioDeviceLayoutPresets,
     autoFreeze,
     autoTempoMatch,
     autoTempoDetect,
