@@ -191,29 +191,28 @@ private:
 
             if (factory != nullptr)
             {
-                if (canBeUsedAsTimeStretchEngine (*factory))
-                {
-                    ARAAssertFunction* assertFuncPtr = nullptr;
-                   #if JUCE_LOG_ASSERTIONS || JUCE_DEBUG
-                    static ARAAssertFunction assertFunction = assertCallback;
-                    assertFuncPtr = &assertFunction;
-                   #endif
+                ARAAssertFunction* assertFuncPtr = nullptr;
+               #if JUCE_LOG_ASSERTIONS || JUCE_DEBUG
+                static ARAAssertFunction assertFunction = assertCallback;
+                assertFuncPtr = &assertFunction;
+               #endif
 
-                    const SizedStruct<ARA_STRUCT_MEMBER (ARAInterfaceConfiguration, assertFunctionAddress)> interfaceConfig =
-                    {
-                        std::min<ARAAPIGeneration> (factory->highestSupportedApiGeneration, kARAAPIGeneration_2_0_Final),
-                        assertFuncPtr
-                    };
-
-                    initGuard = std::make_unique<ARAFactoryInitGuard> (factory, &interfaceConfig);
-                }
-                else
+                const SizedStruct<ARA_STRUCT_MEMBER (ARAInterfaceConfiguration, assertFunctionAddress)> interfaceConfig =
                 {
-                    TRACKTION_LOG_ERROR ("ARA-compatible plugin could not be used for time-stretching!");
-                    jassertfalse;
-                    factory = nullptr;
-                    plugin = nullptr;
-                }
+                    std::min<ARAAPIGeneration> (factory->highestSupportedApiGeneration, kARAAPIGeneration_2_0_Final),
+                    assertFuncPtr
+                };
+
+                initGuard = std::make_unique<ARAFactoryInitGuard> (factory, &interfaceConfig);
+
+                // Plugins that can't time-stretch (analysis/alignment tools such as MTrackAlign or
+                // ReChoir, or the ARA SDK example plugin) are still hosted: the playback region is
+                // configured with the plugin's own supportedPlaybackTransformationFlags (see
+                // ARAPlaybackRegion in tracktion_ARAWrapperInterfaces.h), so a non-time-stretch plugin
+                // simply renders pass-through. Previously these were rejected outright, which made
+                // editor-only ARA plugins unusable.
+                if (! canBeUsedAsTimeStretchEngine (*factory))
+                    TRACKTION_LOG ("ARA plugin does not support time-stretching - hosting in pass-through mode");
             }
             else
             {
