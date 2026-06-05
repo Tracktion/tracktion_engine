@@ -152,7 +152,13 @@ private:
         if (sourceInfo.metadata.getValue ("MetaDataSource", "None") == "AIFF")
             sourceInfo.metadata.clear();
 
-        AudioFileWriter writer (tempFile, engine.getAudioFileFormatManager().getWavFormat(),
+        auto wavFormat = engine.getAudioFileFormatManager().getWavFormat();
+
+        // If the specific format is supported, fallback to a discrete layout for proxies which is always supported
+        if (! wavFormat->isChannelLayoutSupported (sourceInfo.channelLayout))
+            sourceInfo.channelLayout = juce::AudioChannelSet::discreteChannels (sourceInfo.channelLayout.size());
+
+        AudioFileWriter writer (tempFile, wavFormat,
                                 sourceInfo.numChannels, sourceInfo.sampleRate,
                                 std::max (16, sourceInfo.bitsPerSample),
                                 sourceInfo.metadata, 0,
