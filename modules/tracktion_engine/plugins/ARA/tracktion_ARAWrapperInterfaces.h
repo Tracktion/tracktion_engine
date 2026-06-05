@@ -340,6 +340,30 @@ public:
             return;
         }
 
+        // Don't hand archive data to the plug-in unless it declares the archive's format compatible.
+        // Restoring foreign/incompatible archive data (a cross-plug-in paste, or a corrupt project/
+        // clipboard) is undefined per the ARA spec - well-behaved plug-ins return false, but some abort.
+        // The host can cheaply reject obviously-incompatible data by matching the supplied
+        // documentArchiveID against the plug-in factory's own ID and its declared compatible IDs.
+        if (documentArchiveID.isNotEmpty() && wrapper != nullptr && wrapper->factory != nullptr)
+        {
+            const auto& f = *wrapper->factory;
+            bool compatible = (juce::String::fromUTF8 (f.documentArchiveID) == documentArchiveID);
+
+            for (ARASize i = 0; ! compatible && i < f.compatibleDocumentArchiveIDsCount; ++i)
+                if (f.compatibleDocumentArchiveIDs != nullptr
+                     && juce::String::fromUTF8 (f.compatibleDocumentArchiveIDs[i]) == documentArchiveID)
+                    compatible = true;
+
+            if (! compatible)
+            {
+                TRACKTION_LOG_ERROR ("ARA restoreObjectsForPaste: refusing archive with incompatible "
+                                     "documentArchiveID '" + documentArchiveID + "' (plug-in archive ID '"
+                                     + juce::String::fromUTF8 (f.documentArchiveID) + "')");
+                return;
+            }
+        }
+
         juce::MemoryBlock dataCopy (data);
 
         // Flush so the plugin acknowledges the newly created modification before restoring into it
