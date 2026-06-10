@@ -147,7 +147,12 @@ public:
     void setIncludePlugins (bool includePlugins)                { usePlugins = includePlugins; }
     void setAddRenderOption (AddRenderOptions options)          { addRenderOptions = options; }
     void setEndAllowance (TimeDuration time)                    { endAllowance = time; }
-    void setFilename (juce::String, bool canPromptToOverwriteExisting);
+    /** Sets the destination file. As this may need to asynchronously prompt to
+        overwrite an existing file, the optional callback is invoked once the
+        filename has actually been updated.
+    */
+    void setFilename (juce::String, bool canPromptToOverwriteExisting,
+                      std::function<void()> onComplete = nullptr);
     void updateHash();
 
     //==============================================================================

@@ -781,7 +781,15 @@ void RenderOptions::updateLastUsedRenderPath (RenderOptions& renderOptions, cons
     auto lastEditID = storage.getProperty (SettingID::lastEditRender).toString();
 
     if (itemID == lastEditID)
-        renderOptions.destFile = storage.getDefaultLoadSaveDirectory ("exportRender");
+    {
+        // Track/clip renders and whole-edit exports remember their paths separately
+        // so a render can't redirect an export away from its category default dir
+        auto lastPath = storage.getDefaultLoadSaveDirectory (renderOptions.isRender() ? "renderPath"
+                                                                                      : "exportPath");
+
+        if (lastPath.existsAsFile())
+            renderOptions.destFile = lastPath;
+    }
 
     storage.setProperty (SettingID::lastEditRender, itemID);
 }
@@ -836,7 +844,6 @@ std::unique_ptr<RenderOptions> RenderOptions::forClipRender (juce::Array<Clip*> 
 
         std::unique_ptr<RenderOptions> ro (new RenderOptions (edit.engine));
         ro->setToDefault();
-        updateLastUsedRenderPath (*ro, edit.getProjectItemRef().toString());
 
         ro->allowedClips = clips;
         bool areAllClipsMono = true;
@@ -866,6 +873,9 @@ std::unique_ptr<RenderOptions> RenderOptions::forClipRender (juce::Array<Clip*> 
 
         ro->type = midiNotes ? RenderType::midi
                              : RenderType::clip;
+
+        // Must be called after the type has been set so the right last-path key is used
+        updateLastUsedRenderPath (*ro, edit.getProjectItemRef().toString());
 
         ro->setChannelConfiguration (areAllClipsMono ? ChannelConfiguration::mono() : ChannelConfiguration::stereo());
         ro->selectedClips     = false;
@@ -913,7 +923,7 @@ RenderOptions::~RenderOptions()
     state.removeListener (this);
 
     if (! isEditClipRender())
-        engine.getPropertyStorage().setDefaultLoadSaveDirectory ("exportRender", destFile);
+        engine.getPropertyStorage().setDefaultLoadSaveDirectory (isRender() ? "renderPath" : "exportPath", destFile);
 }
 
 void RenderOptions::setUINeedsRefresh()
@@ -1027,7 +1037,8 @@ void RenderOptions::setSelected (bool onlySelectedTrackAndClips)
     selectedClips = onlySelectedTrackAndClips;
 }
 
-void RenderOptions::setFilename (juce::String value, bool canPromptToOverwriteExisting)
+void RenderOptions::setFilename (juce::String value, bool canPromptToOverwriteExisting,
+                                 std::function<void()> onComplete)
 {
     juce::RecentlyOpenedFilesList recent;
     auto recentList = engine.getPropertyStorage().getProperty (SettingID::renderRecentFilesList).toString();
@@ -1039,7 +1050,7 @@ void RenderOptions::setFilename (juce::String value, bool canPromptToOverwriteEx
 
     auto f = juce::File (value);
 
-    auto finishSetFilename = [this, f, recent, recentList] () mutable
+    auto finishSetFilename = [this, f, recent, recentList, callback = std::move (onComplete)] () mutable
     {
         destFile = f.getFullPathName();
         updateDefaultFilename (nullptr);
@@ -1052,6 +1063,9 @@ void RenderOptions::setFilename (juce::String value, bool canPromptToOverwriteEx
             if (recentList != newRecentList)
                 engine.getPropertyStorage().setProperty (SettingID::renderRecentFilesList, newRecentList);
         }
+
+        if (callback != nullptr)
+            callback();
     };
 
     if (f.existsAsFile() && canPromptToOverwriteExisting)
@@ -1248,7 +1262,11 @@ void RenderOptions::updateDefaultFilename (Edit* edit)
                                                           : ProjectItem::Category::exports;
         juce::String nameStem;
 
-        if (selectedTracks || selectedClips)
+        // Keep a filename the user has typed without the correct extension
+        if (destFile != juce::File() && ! destFile.isDirectory() && ! destFile.existsAsFile())
+            nameStem = destFile.getFileNameWithoutExtension().trim();
+
+        if (nameStem.isEmpty() && (selectedTracks || selectedClips))
         {
             if (auto sm = engine.getUIBehaviour().getCurrentlyFocusedSelectionManager())
             {
@@ -1278,8 +1296,18 @@ void RenderOptions::updateDefaultFilename (Edit* edit)
             }
         }
 
-        const auto dir = destFile.existsAsFile() ? destFile.getParentDirectory()
-                                                 : engine.getPropertyStorage().getDefaultLoadSaveDirectory (category);
+        // Prefer the directory the user has chosen or typed, only falling back to
+        // the category default when the current path doesn't point anywhere usable
+        juce::File dir;
+
+        if (destFile.isDirectory())
+            dir = destFile;
+        else if (destFile.existsAsFile())
+            dir = destFile.getParentDirectory();
+        else if (destFile != juce::File() && destFile.getParentDirectory().isDirectory())
+            dir = destFile.getParentDirectory();
+        else
+            dir = engine.getPropertyStorage().getDefaultLoadSaveDirectory (category);
 
         destFile = dir.getChildFile (juce::File::createLegalFileName (nameStem)
                                        + getCurrentFileExtension());
