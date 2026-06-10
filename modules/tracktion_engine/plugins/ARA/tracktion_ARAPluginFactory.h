@@ -85,6 +85,16 @@ public:
         return *it->second;
     }
 
+    /** Returns the factory for a plugin type if one has already been created,
+        without creating one. */
+    static ARAPluginFactory* getExistingInstance (const juce::PluginDescription& desc)
+    {
+        auto& registry = getRegistry();
+        auto it = registry.find (desc.createIdentifierString());
+
+        return it != registry.end() ? it->second.get() : nullptr;
+    }
+
     /** Picks the preferred default ARA plugin description for legacy clips.
         Prefers Melodyne since legacy clips were always Melodyne. */
     static juce::PluginDescription findPreferredDefault (const juce::Array<juce::PluginDescription>& descs)

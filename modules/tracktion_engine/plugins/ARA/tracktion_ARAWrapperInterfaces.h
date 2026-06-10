@@ -551,11 +551,12 @@ static ARADocument* createDocumentInternal (Edit& edit, const juce::PluginDescri
             &MusicalContextWrapper::destroyContentReader
         };
 
-        static const SizedStruct<ARA_STRUCT_MEMBER (ARAModelUpdateControllerInterface, notifyAudioModificationContentChanged)>  modelUpdating =
+        static const SizedStruct<ARA_STRUCT_MEMBER (ARAModelUpdateControllerInterface, notifyPlaybackRegionContentChanged)>  modelUpdating =
         {
             &ModelUpdateFunctions::notifyAudioSourceAnalysisProgress,
             &ModelUpdateFunctions::notifyAudioSourceContentChanged,
-            &ModelUpdateFunctions::notifyAudioModificationContentChanged
+            &ModelUpdateFunctions::notifyAudioModificationContentChanged,
+            &ModelUpdateFunctions::notifyPlaybackRegionContentChanged
         };
 
         static const SizedStruct<ARA_STRUCT_MEMBER (ARAPlaybackControllerInterface, requestEnableCycle)>  playback =
@@ -885,9 +886,10 @@ private:
                                       : BeatPosition::fromBeats (std::numeric_limits<float>::max());
             auto endBeatOfPreviousClip = rangeStartBeat;
 
-            // construct a "no chord" for representing gaps in the chord track
+            // construct a "no chord" for representing gaps in the chord track.
+            // All intervals unused marks it as undefined; the name must be left
+            // null as it's "the name as displayed in the host", and we don't show one
             ARAContentChord noChord{};
-            noChord.name = chordNames.insert ("NoChord").first->toRawUTF8();
 
             double lastEmittedPosition = -std::numeric_limits<double>::max();
 
@@ -935,7 +937,7 @@ private:
                             auto chordIntervals = MusicalContextFunctions::getChordARAIntervalUsage (itm->getChord (scale));
                             memcpy (item.intervals, chordIntervals.data(), sizeof (item.intervals));
 
-                            item.name = chordNames.insert (itm->getChordSymbol()).first->toRawUTF8();
+                            item.name = chordNames.insert (MusicalContextFunctions::convertAccidentalsToUnicode (itm->getChordSymbol())).first->toRawUTF8();
 
                             item.position = position;
                             items.add (item);
@@ -1005,7 +1007,7 @@ private:
                                                                      pitchSetting->accidentalsSharp, false, 0)
                                     + " " + scale.getName();
 
-                item.name = scaleNames.insert (scaleName).first->toRawUTF8();
+                item.name = scaleNames.insert (MusicalContextFunctions::convertAccidentalsToUnicode (scaleName)).first->toRawUTF8();
 
                 item.position = pitchSetting->getStartBeatNumber().inBeats();
                 items.add (item);
@@ -1320,23 +1322,21 @@ public:
                                                            &playbackRegionProperties);
     }
 
-    /** Creates a playback region with explicit time ranges (for loop iterations). */
+    /** Creates a playback region for one loop iteration of a looping clip.
+        The time ranges are recomputed from the current clip state whenever the
+        properties are requested, so they stay correct as the clip is moved or resized. */
     PlaybackRegionWrapper (ARADocument& d,
                            AudioClipBase& audioClip,
                            const ARAFactory& factory,
                            const AudioModificationWrapper& audioModification,
-                           double modStartSecs, double modDurationSecs,
-                           double playbackStartSecs, double playbackDurationSecs)
+                           int loopIterationIndex)
       : doc (d),
         clip (audioClip),
         trackID (audioClip.getTrack()->itemID),
         flags (factory.supportedPlaybackTransformationFlags),
         audioModificationRef (audioModification.audioModificationRef),
-        hasExplicitTimes (true),
-        explicitModStart (modStartSecs),
-        explicitModDuration (modDurationSecs),
-        explicitPlaybackStart (playbackStartSecs),
-        explicitPlaybackDuration (playbackDurationSecs)
+        isLoopIteration (true),
+        loopIteration (loopIterationIndex)
     {
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
@@ -1382,15 +1382,24 @@ public:
     {
         auto regionSequenceRef = doc.regionSequences[trackID]->regionSequenceRef;
 
-        if (hasExplicitTimes)
+        if (isLoopIteration)
         {
+            // Recompute this iteration's times from the current clip state so that
+            // updateRange() sends fresh values after the clip is moved or resized
+            auto pos = clip.getPosition();
+            auto speedRatio = clip.getSpeedRatio();
+            auto loopLengthSecs = clip.getLoopLength().inSeconds();
+            auto iterStart = loopIteration * loopLengthSecs;
+            auto iterDuration = std::max (0.0, std::min (loopLengthSecs,
+                                                         pos.getLength().inSeconds() - iterStart));
+
             return
             {
                 flags,
-                explicitModStart,
-                explicitModDuration,
-                explicitPlaybackStart,
-                explicitPlaybackDuration,
+                clip.getLoopStart().inSeconds() * speedRatio,     // Start in modification time
+                iterDuration * speedRatio,                        // Duration in modification time
+                pos.getStart().inSeconds() + iterStart,           // Start in playback time
+                iterDuration,                                     // Duration in playback time
                 doc.musicalContext->musicalContextRef,
                 regionSequenceRef,
                 name.toRawUTF8(),
@@ -1431,11 +1440,8 @@ private:
     ARAColor colour;
     const ARAPlaybackTransformationFlags flags;
     ARAAudioModificationRef audioModificationRef = nullptr;
-    bool hasExplicitTimes = false;
-    double explicitModStart = 0.0;
-    double explicitModDuration = 0.0;
-    double explicitPlaybackStart = 0.0;
-    double explicitPlaybackDuration = 0.0;
+    const bool isLoopIteration = false;
+    const int loopIteration = 0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlaybackRegionWrapper)
 };
@@ -1542,35 +1548,22 @@ public:
 
         if (clip.isLooping())
         {
-            auto pos = clip.getPosition();
-            auto speedRatio = clip.getSpeedRatio();
-            auto loopStartSecs = clip.getLoopStart().inSeconds();
             auto loopLengthSecs = clip.getLoopLength().inSeconds();
 
             if (loopLengthSecs <= 0.0)
                 return;
 
-            auto clipStartSecs = pos.getStart().inSeconds();
-            auto clipLengthSecs = pos.getLength().inSeconds();
-            auto remaining = clipLengthSecs;
+            auto remaining = clip.getPosition().getLength().inSeconds();
             int iteration = 0;
 
             while (remaining > 0.0)
             {
-                auto iterDuration = std::min (loopLengthSecs, remaining);
-
-                auto modStart = loopStartSecs * speedRatio;
-                auto modDuration = iterDuration * speedRatio;
-                auto playbackStart = clipStartSecs + (iteration * loopLengthSecs);
-                auto playbackDuration = iterDuration;
-
                 auto pr = std::make_unique<PlaybackRegionWrapper> (araDoc, clip, araFactory, *audioModification,
-                                                                   modStart, modDuration,
-                                                                   playbackStart, playbackDuration);
+                                                                   iteration);
                 addPlaybackRegion (*pr);
                 playbackRegions.push_back (std::move (pr));
 
-                remaining -= iterDuration;
+                remaining -= loopLengthSecs;
                 ++iteration;
             }
         }

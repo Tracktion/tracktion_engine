@@ -156,11 +156,48 @@ struct ModelUpdateFunctions
         if (auto e = (Edit*) hostRef)
             notifyARAContentChanged (*e);
     }
+
+    static void ARA_CALL notifyPlaybackRegionContentChanged (ARAModelUpdateControllerHostRef hostRef,
+                                                             ARAPlaybackRegionHostRef,
+                                                             const ARAContentTimeRange*,
+                                                             ARAContentUpdateFlags)
+    {
+        CRASH_TRACER
+        if (auto e = (Edit*) hostRef)
+            notifyARAContentChanged (*e);
+    }
 };
 
 //==============================================================================
 struct MusicalContextFunctions
 {
+    /** Converts ASCII accidentals to the Unicode flat/sharp symbols that ARA
+        content name strings must use (see ARAInterface.h: 0x266d and 0x266f). */
+    static juce::String convertAccidentalsToUnicode (const juce::String& name)
+    {
+        if (! (name.containsChar ('#') || name.containsChar ('b')))
+            return name;
+
+        auto isNoteLetter = [] (juce::juce_wchar c)  { return c >= 'A' && c <= 'G'; };
+
+        juce::String result;
+
+        for (int i = 0; i < name.length(); ++i)
+        {
+            auto c = name[i];
+
+            if (c == '#')
+                result += juce::String::charToString (0x266f); // sharp symbol
+            else if (c == 'b' && i > 0 && (isNoteLetter (name[i - 1])
+                                            || juce::CharacterFunctions::isDigit (name[i + 1])))
+                result += juce::String::charToString (0x266d); // flat symbol
+            else
+                result += juce::String::charToString (c);
+        }
+
+        return result;
+    }
+
     static ARA::ARACircleOfFifthsIndex getCircleOfFifthsIndexforMIDINote (int note, bool useSharps)
     {
         static const ARA::ARACircleOfFifthsIndex sharpNoteIndices[] = { 0, 7, 2, 9, 4, -1, 6, 1, 8, 3, 10, 5 };

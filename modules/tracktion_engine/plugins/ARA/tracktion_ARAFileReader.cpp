@@ -812,6 +812,12 @@ void ARAFileReader::sourceClipChanged()
                 doc->musicalContext->update();
             }
         }
+
+        // The plugin won't notify us about content changes we caused ourselves,
+        // so re-read head/tail times and tell listeners to refresh any cached
+        // content (e.g. the notes shown in the arrangement)
+        player->updateHeadAndTailTimes();
+        sendChangeMessage();
     }
 }
 
@@ -1225,17 +1231,43 @@ juce::PluginDescription ARAFileReader::findPluginForARAArchiveID (Engine& engine
 
     for (auto& desc : araDescs)
     {
-        auto& factory = ARAClipPlayer::ARAPluginFactory::getInstance (engine, desc);
-
-        if (factory.factory == nullptr)
+        if (! desc.hasARAExtension)
             continue;
 
-        if (archiveID == juce::String::fromUTF8 (factory.factory->documentArchiveID))
+        const ARAFactory* araFactory = nullptr;
+        juce::ARAFactoryResult result;
+
+        if (auto existing = ARAClipPlayer::ARAPluginFactory::getExistingInstance (desc))
+        {
+            // A live factory means this plugin is (or was) in use and has already
+            // initialised ARA for its module - read the IDs from it, as initialising
+            // the module a second time via the lookup below is invalid
+            araFactory = existing->factory;
+        }
+        else
+        {
+            // Otherwise read the ARAFactory from the module-level IMainFactory rather
+            // than going through ARAPluginFactory: that would instantiate a full plugin
+            // component of every installed ARA plugin just to inspect its archive IDs,
+            // which is slow and exposes us to third-party shutdown bugs (leaked host
+            // references, lingering background threads etc.)
+            engine.getPluginManager().pluginFormatManager
+                .createARAFactoryAsync (desc, [&result] (juce::ARAFactoryResult r) { result = std::move (r); });
+
+            // The callback is synchronous for VST3; if a format ever completes
+            // asynchronously the factory will be null here and the plugin is skipped
+            araFactory = result.araFactory.get();
+        }
+
+        if (araFactory == nullptr)
+            continue;
+
+        if (archiveID == juce::String::fromUTF8 (araFactory->documentArchiveID))
             return desc;
 
-        for (ARASize i = 0; i < factory.factory->compatibleDocumentArchiveIDsCount; ++i)
+        for (ARASize i = 0; i < araFactory->compatibleDocumentArchiveIDsCount; ++i)
         {
-            if (archiveID == juce::String::fromUTF8 (factory.factory->compatibleDocumentArchiveIDs[i]))
+            if (archiveID == juce::String::fromUTF8 (araFactory->compatibleDocumentArchiveIDs[i]))
                 return desc;
         }
     }

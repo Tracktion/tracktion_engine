@@ -1707,6 +1707,11 @@ bool AudioClipBase::setupARA (bool dontPopupErrorMessages)
    #if TRACKTION_ENABLE_ARA
     if (isUsingARA())
     {
+        // If a previous setup attempt failed (e.g. the plugin wasn't available yet),
+        // discard the dead reader so we can try again
+        if (araProxy != nullptr && ! araProxy->isValid())
+            araProxy = nullptr;
+
         if (araProxy == nullptr)
         {
             TRACKTION_LOG ("Created ARA reader!");

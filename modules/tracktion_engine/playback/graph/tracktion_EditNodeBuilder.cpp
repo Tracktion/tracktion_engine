@@ -1103,7 +1103,7 @@ std::unique_ptr<tracktion::graph::Node> createARAClipsNode (const juce::Array<Cl
     for (auto clip : clips)
         if (params.allowedClips == nullptr || params.allowedClips->contains (clip))
             if (auto acb = dynamic_cast<AudioClipBase*> (clip))
-                if (acb->isUsingARA() && acb->getARAProxy() != nullptr)
+                if (acb->isUsingARA())
                     araClips.add (acb);
 
     if (araClips.size() == 0)
