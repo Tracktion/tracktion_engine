@@ -82,7 +82,12 @@ static const char* const videoFileExtensions = ".mov;.avi;.webm;.wmv;.mp4;.m4v;.
 
 void FolderBasedProject::scanFolder() const
 {
-    cachedItems.clear();
+    // Keep items for files outside the project folder (e.g. renders to a custom
+    // directory) — scanning can't rediscover them, so clearing them here would
+    // orphan externally-referenced material for the rest of the session
+    for (int i = cachedItems.size(); --i >= 0;)
+        if (cachedItems.getReference (i)->getSourceFile().isAChildOf (folder))
+            cachedItems.remove (i);
 
     juce::String wildcards = "*.tracktionedit;*.trkedit;"
                              "*.wav;*.aiff;*.aif;*.mp3;*.ogg;*.flac;"
@@ -619,7 +624,9 @@ void FolderBasedProject::sourceFileMoved (const juce::File& oldFile, const juce:
 void FolderBasedProject::reload (ReloadMode mode)
 {
     const juce::ScopedLock sl (itemLock);
-    cachedItems.clear();
+
+    // In-folder items are cleared and rebuilt by scanFolder(), which also
+    // preserves items for files outside the project folder
     itemsScanned = false;
 
     if (mode == ReloadMode::immediate)

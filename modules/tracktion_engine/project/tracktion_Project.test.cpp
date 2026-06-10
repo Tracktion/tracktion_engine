@@ -2189,6 +2189,51 @@ TEST_SUITE ("tracktion_engine")
         cleanup();
     }
 
+    TEST_CASE ("FolderBasedProject: items for files outside the project folder survive rescans")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFolder = tempDir.getChildFile ("external_item_test");
+        projectFolder.createDirectory();
+
+        // A file outside the project folder, e.g. a render to a custom directory
+        auto externalFile = tempDir.getChildFile ("external_render.wav");
+        externalFile.create();
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        const auto numItemsBefore = project->getNumProjectItems();
+
+        auto item = project->createNewItem (externalFile, ProjectItem::waveItemType(),
+                                            "external", {}, ProjectItem::Category::exports, true);
+        REQUIRE (item != nullptr);
+        CHECK (item->getProjectItemRef().isValid());
+        CHECK (project->getNumProjectItems() == numItemsBefore + 1);
+
+        // A rescan can't rediscover the external file, so the item must be preserved
+        project->reload (Project::ReloadMode::immediate);
+        CHECK (project->getNumProjectItems() == numItemsBefore + 1);
+        CHECK (project->getProjectItemForFile (externalFile) != nullptr);
+
+        // And it can still be removed cleanly afterwards (e.g. a cancelled render)
+        CHECK (project->removeProjectItem (item->getProjectItemRef(), false));
+        CHECK (project->getNumProjectItems() == numItemsBefore);
+        CHECK (project->getProjectItemForFile (externalFile) == nullptr);
+
+        cleanup();
+    }
+
     TEST_CASE ("FolderBasedProject: project properties persistence")
     {
         auto& engine = *Engine::getEngines()[0];
