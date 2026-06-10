@@ -1050,7 +1050,7 @@ void RenderOptions::setFilename (juce::String value, bool canPromptToOverwriteEx
 
     auto f = juce::File (value);
 
-    auto finishSetFilename = [this, f, recent, recentList, onComplete = std::move (onComplete)] () mutable
+    auto finishSetFilename = [this, f, recent, recentList, callback = std::move (onComplete)] () mutable
     {
         destFile = f.getFullPathName();
         updateDefaultFilename (nullptr);
@@ -1064,8 +1064,8 @@ void RenderOptions::setFilename (juce::String value, bool canPromptToOverwriteEx
                 engine.getPropertyStorage().setProperty (SettingID::renderRecentFilesList, newRecentList);
         }
 
-        if (onComplete != nullptr)
-            onComplete();
+        if (callback != nullptr)
+            callback();
     };
 
     if (f.existsAsFile() && canPromptToOverwriteExisting)
