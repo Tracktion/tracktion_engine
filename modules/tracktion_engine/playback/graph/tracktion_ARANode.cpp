@@ -187,6 +187,14 @@ void ARANode::process (ProcessContext& pc)
     {
         if (auto pluginInstance = plugin->getAudioPluginInstance())
         {
+            // The message thread deactivates the renderer (releaseResources/prepareToPlay)
+            // around ARA playback-region changes - never render concurrently with that.
+            // Try-lock so the audio thread outputs silence for the block rather than blocking.
+            const juce::ScopedTryLock stl (araProxy->getProcessLock());
+
+            if (! stl.isLocked())
+                return;
+
             if (pluginInstance->getPlayHead() != playhead.get())
                 pluginInstance->setPlayHead (playhead.get()); //This is needed in case the ExternalPlugin back-end has swapped the playhead out
 

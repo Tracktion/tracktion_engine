@@ -189,14 +189,36 @@ struct ARAClipPlayer  : private Selectable::Listener
         owner.sendChangeMessage();
     }
 
-    void selectableObjectChanged (Selectable*) override
+    void musicalContextContentChanged()
     {
+        // The key/chord (or other pitch-related) content changed: only the
+        // harmonic scope of the musical context needs re-reading
         if (auto doc = getDocument())
         {
             if (doc->musicalContext != nullptr)
             {
                 const ARADocument::ScopedEdit scope (*doc, true);
-                doc->musicalContext->update();
+                doc->musicalContext->update (kARAContentUpdateSignalScopeRemainsUnchanged
+                                              | kARAContentUpdateNoteScopeRemainsUnchanged
+                                              | kARAContentUpdateTuningScopeRemainsUnchanged
+                                              | kARAContentUpdateTimingScopeRemainsUnchanged);
+            }
+        }
+    }
+
+    void selectableObjectChanged (Selectable*) override
+    {
+        // The tempo sequence changed: only the timing scope of the musical
+        // context needs re-reading
+        if (auto doc = getDocument())
+        {
+            if (doc->musicalContext != nullptr)
+            {
+                const ARADocument::ScopedEdit scope (*doc, true);
+                doc->musicalContext->update (kARAContentUpdateSignalScopeRemainsUnchanged
+                                              | kARAContentUpdateNoteScopeRemainsUnchanged
+                                              | kARAContentUpdateTuningScopeRemainsUnchanged
+                                              | kARAContentUpdateHarmonicScopeRemainsUnchanged);
             }
         }
     }
@@ -485,7 +507,7 @@ struct ARAClipPlayer  : private Selectable::Listener
     private:
         const ARAClipPlayer& pimpl;
         std::vector<ARAContentType> typesBeingAnalyzed;
-        volatile bool analysingContent = false;
+        std::atomic<bool> analysingContent { false };
         bool firstCall = true;
 
         ContentAnalyser() = delete;
@@ -586,6 +608,15 @@ private:
         jassert (araInstance->factory != nullptr);
         jassert (araInstance->extensionInstance != nullptr);
 
+        // Don't deactivate the renderer while the audio thread is rendering it -
+        // ARANode::process try-locks this and outputs silence while we hold it
+        const juce::ScopedLock sl (owner.getProcessLock());
+
+        // ARA requires renderer deactivation before adding/removing playback regions
+        if (auto p = getPlugin())
+            if (auto pi = p->getAudioPluginInstance())
+                pi->releaseResources();
+
         auto oldTrack = std::move (playbackRegionAndSource);
 
         playbackRegionAndSource = std::make_unique<PlaybackRegionAndSource> (*getDocument(), clip, *araInstance->factory,
@@ -593,11 +624,14 @@ private:
                                                                              juce::String::toHexString (modificationID),
                                                                              clipToClone != nullptr ? clipToClone->playbackRegionAndSource.get() : nullptr);
 
-        if (oldTrack != nullptr)
-        {
-            const ScopedDocumentEditor sde (*this, false);
-            oldTrack = nullptr;
-        }
+        // NB: the caller already holds a ScopedDocumentEditor, so the old regions are
+        // destroyed without opening a nested editing cycle (plugins assert on nesting)
+        oldTrack = nullptr;
+
+        if (auto p = getPlugin())
+            if (auto pi = p->getAudioPluginInstance())
+                if (pi->getSampleRate() > 0 && pi->getBlockSize() > 0)
+                    pi->prepareToPlay (pi->getSampleRate(), pi->getBlockSize());
     }
 
     void internalUpdateContent (ARAClipPlayer* clipToClone)
@@ -649,6 +683,10 @@ private:
                     if (needsRebuild)
                     {
                         const ScopedDocumentEditor sde (*this, true);
+
+                        // Don't deactivate the renderer while the audio thread is rendering
+                        // it - ARANode::process try-locks this and outputs silence meanwhile
+                        const juce::ScopedLock sl (owner.getProcessLock());
 
                         // ARA requires renderer deactivation before adding/removing regions
                         if (auto p = getPlugin())
@@ -705,14 +743,21 @@ private:
     //==============================================================================
     struct ModelUpdater  : private juce::Timer
     {
-        ModelUpdater (ARADocument& d) : document (d) { startTimer (3000); }
+        // Polled often enough that plugin-side analysis/content updates feel responsive
+        // without burning CPU - this used to be 3s, which made the arrangement's note
+        // display lag noticeably behind the plugin
+        ModelUpdater (ARADocument& d) : document (d) { startTimer (250); }
 
         ARADocument& document;
 
         void timerCallback() override
         {
             CRASH_TRACER
-            if (document.dci != nullptr && document.dcRef != nullptr)
+
+            // notifyModelUpdates must only be called while not editing nor restoring.
+            // Editing cycles are synchronous on the message thread so can't overlap the
+            // timer, but restoring spans message-loop iterations - guard against it
+            if (document.dci != nullptr && document.dcRef != nullptr && document.canEdit (true))
                 document.dci->notifyModelUpdates (document.dcRef);
         }
 
@@ -801,18 +846,25 @@ void ARAFileReader::sourceClipChanged()
 {
     if (player != nullptr)
     {
+        // NB: deliberately no musical-context update here - this is called for *any*
+        // clip property change (name, colour, drag...), and spamming the plugin with
+        // "everything changed" makes it constantly rebuild its model. Tempo changes
+        // reach the context via the tempo-sequence listener and key/chord changes
+        // via musicalContextContentChanged().
         player->updateContent (nullptr);
 
-        // Also update musical context (e.g. when chord track changes)
-        if (auto doc = player->getDocument())
-        {
-            if (doc->musicalContext != nullptr)
-            {
-                const ARAClipPlayer::ARADocument::ScopedEdit scope (*doc, true);
-                doc->musicalContext->update();
-            }
-        }
+        // The plugin won't notify us about content changes we caused ourselves,
+        // so re-read head/tail times and tell listeners to refresh any cached
+        // content (e.g. the notes shown in the arrangement)
+        player->updateHeadAndTailTimes();
+        sendChangeMessage();
     }
+}
+
+void ARAFileReader::musicalContextContentChanged()
+{
+    if (player != nullptr)
+        player->musicalContextContentChanged();
 }
 
 void ARAFileReader::contentHasChanged()
@@ -992,6 +1044,11 @@ struct ARADocumentHolder::Pimpl
                 // Create a temporary ARADOCUMENT-typed tree with the data property
                 juce::ValueTree tempState (IDs::ARADOCUMENT);
                 tempState.setProperty ("data", pluginState.getProperty ("data"), nullptr);
+
+                if (pluginState.hasProperty (IDs::araDocumentArchiveID))
+                    tempState.setProperty (IDs::araDocumentArchiveID,
+                                           pluginState.getProperty (IDs::araDocumentArchiveID), nullptr);
+
                 doc->beginRestoringState (tempState);
             }
             else if (state.hasProperty ("data"))
@@ -1036,6 +1093,34 @@ struct ARADocumentHolder::Pimpl
 
             auto oldModID = juce::String::toHexString (fileHash ^ lastModTime ^ clipRawID ^ trackRawID);
             auto newModID = juce::String::toHexString (fileHash ^ clipRawID);
+
+            // Saved-ID group: the IDs persisted with the clip at save time take priority -
+            // if they differ from the current ones (e.g. the source file moved, which
+            // changes the path-derived hash), map the archived IDs to the current ones
+            {
+                auto storedSourceID = c->state.getProperty (IDs::araSourceID).toString();
+                auto storedModID = c->state.getProperty (IDs::araModID).toString();
+
+                if (storedSourceID.isNotEmpty()
+                     && (storedSourceID != hashString
+                          || (storedModID.isNotEmpty() && storedModID != newModID)))
+                {
+                    auto srcDedupKey = storedSourceID + "|" + hashString;
+
+                    if (! seenSourceMappings.contains (srcDedupKey))
+                    {
+                        seenSourceMappings.add (srcDedupKey);
+
+                        ARAClipPlayer::PersistentIDMappingGroup group;
+                        group.sourceMapping = { storedSourceID, hashString };
+
+                        if (storedModID.isNotEmpty() && storedModID != newModID)
+                            group.modificationMappings.add ({ storedModID, newModID });
+
+                        mappingGroups.add (std::move (group));
+                    }
+                }
+            }
 
             // Per-clip group: old source ID → new source ID, with this clip's mod mapping
             {
@@ -1219,23 +1304,75 @@ ARAClipPlayer::ARADocument* ARAClipPlayer::getDocument() const
     return {};
 }
 
-juce::PluginDescription ARAFileReader::findPluginForARAArchiveID (Engine& engine, const juce::String& archiveID)
+juce::PluginDescription ARAFileReader::findPluginForARAArchiveID (Engine& engine, const juce::String& archiveID,
+                                                                  const juce::String& suggestedPlugInName)
 {
     auto araDescs = engine.getPluginManager().getARACompatiblePlugDescriptions();
 
+    // If the file says which plugin wrote the archive, only consider matching plugins.
+    // Checking a plugin's archive IDs means loading its module, which runs third-party
+    // module code - some plugins start background threads that don't survive teardown,
+    // so we mustn't load every installed ARA plugin on the off-chance it matches.
+    if (suggestedPlugInName.isNotEmpty())
+    {
+        juce::Array<juce::PluginDescription> matching;
+
+        for (auto& d : araDescs)
+            if (d.name.equalsIgnoreCase (suggestedPlugInName))
+                matching.add (d);
+
+        araDescs = matching;
+    }
+
     for (auto& desc : araDescs)
     {
-        auto& factory = ARAClipPlayer::ARAPluginFactory::getInstance (engine, desc);
-
-        if (factory.factory == nullptr)
+        if (! desc.hasARAExtension)
             continue;
 
-        if (archiveID == juce::String::fromUTF8 (factory.factory->documentArchiveID))
+        const ARAFactory* araFactory = nullptr;
+
+        if (auto existing = ARAClipPlayer::ARAPluginFactory::getExistingInstance (desc))
+        {
+            // A live factory means this plugin is (or was) in use and has already
+            // initialised ARA for its module - read the IDs from it, as initialising
+            // the module a second time via the lookup below is invalid
+            araFactory = existing->factory;
+        }
+        else
+        {
+            // Otherwise read the ARAFactory from the module-level IMainFactory rather
+            // than going through ARAPluginFactory: that would instantiate a full plugin
+            // component just to inspect its archive IDs.
+            // The result is cached for the session: releasing it would call the module's
+            // bundleExit mid-session, tearing down module state while any background
+            // threads the plugin started are still running.
+            auto& cache = ARAClipPlayer::ARAPluginFactory::getLookupCache();
+            auto key = desc.createIdentifierString();
+            auto cached = cache.find (key);
+
+            if (cached == cache.end())
+            {
+                juce::ARAFactoryResult result;
+                engine.getPluginManager().pluginFormatManager
+                    .createARAFactoryAsync (desc, [&result] (juce::ARAFactoryResult r) { result = std::move (r); });
+
+                // The callback is synchronous for VST3; if a format ever completes
+                // asynchronously the factory will be null here and the plugin is skipped
+                cached = cache.emplace (key, std::move (result)).first;
+            }
+
+            araFactory = cached->second.araFactory.get();
+        }
+
+        if (araFactory == nullptr)
+            continue;
+
+        if (archiveID == juce::String::fromUTF8 (araFactory->documentArchiveID))
             return desc;
 
-        for (ARASize i = 0; i < factory.factory->compatibleDocumentArchiveIDsCount; ++i)
+        for (ARASize i = 0; i < araFactory->compatibleDocumentArchiveIDsCount; ++i)
         {
-            if (archiveID == juce::String::fromUTF8 (factory.factory->compatibleDocumentArchiveIDs[i]))
+            if (archiveID == juce::String::fromUTF8 (araFactory->compatibleDocumentArchiveIDs[i]))
                 return desc;
         }
     }
@@ -1264,6 +1401,7 @@ void ARAFileReader::hidePluginWindow()                         {}
 bool ARAFileReader::isAnalysingContent()                       { return false; }
 juce::MidiMessageSequence ARAFileReader::getAnalysedMIDISequence()   { return {}; }
 void ARAFileReader::sourceClipChanged()                        {}
+void ARAFileReader::musicalContextContentChanged()             {}
 void ARAFileReader::contentHasChanged()                        {}
 juce::MemoryBlock ARAFileReader::storeARAArchiveForCopy()      { return {}; }
 void ARAFileReader::restoreARAArchiveForPaste (const juce::MemoryBlock&, const juce::String&, const juce::String&, const juce::String&) {}
@@ -1273,7 +1411,7 @@ juce::String ARAFileReader::getDocumentArchiveID() const             { return {}
 TimeDuration ARAFileReader::getHead() const                    { return {}; }
 TimeDuration ARAFileReader::getTail() const                    { return {}; }
 
-juce::PluginDescription ARAFileReader::findPluginForARAArchiveID (Engine&, const juce::String&) { return {}; }
+juce::PluginDescription ARAFileReader::findPluginForARAArchiveID (Engine&, const juce::String&, const juce::String&) { return {}; }
 
 ARADocumentHolder::ARADocumentHolder (Edit& e, const juce::ValueTree&) : edit (e) { juce::ignoreUnused (edit); }
 ARADocumentHolder::~ARADocumentHolder() {}
@@ -1428,7 +1566,7 @@ ARAIXMLResult detectARAFromIXMLChunks (Engine& engine, const juce::File& sourceF
         if (! chunk.openAutomatically)
             continue;
 
-        auto desc = ARAFileReader::findPluginForARAArchiveID (engine, chunk.documentArchiveID);
+        auto desc = ARAFileReader::findPluginForARAArchiveID (engine, chunk.documentArchiveID, chunk.suggestedPlugInName);
 
         if (desc.name.isNotEmpty())
         {

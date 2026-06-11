@@ -54,8 +54,12 @@ public:
     /** Parses ARA audio file chunks from a raw iXML string. */
     static juce::Array<ARAChunkInfo> parseARAAudioFileChunksFromIXML (const juce::String& ixmlString);
 
-    /** Finds an installed ARA plugin whose factory matches the given archive ID. */
-    static juce::PluginDescription findPluginForARAArchiveID (Engine&, const juce::String& archiveID);
+    /** Finds an installed ARA plugin whose factory matches the given archive ID.
+        If suggestedPlugInName is given (e.g. from an ARA audio file chunk), only
+        plugins with that name are considered - this avoids loading the module of
+        every installed ARA plugin just to compare archive IDs. */
+    static juce::PluginDescription findPluginForARAArchiveID (Engine&, const juce::String& archiveID,
+                                                              const juce::String& suggestedPlugInName = {});
 
     //==============================================================================
     bool isValid() const noexcept                       { return player != nullptr; }
@@ -68,6 +72,10 @@ public:
     juce::MidiMessageSequence getAnalysedMIDISequence();
 
     void sourceClipChanged();
+
+    /** Notifies the plugin that the edit's key/chord content has changed.
+        Tempo changes are picked up automatically via the tempo sequence. */
+    void musicalContextContentChanged();
 
     /** Notifies that the ARA content has changed (e.g. notes edited in Melodyne).
         This re-reads the content and broadcasts a change message. */
@@ -102,9 +110,15 @@ public:
     /** Returns extra time after the playback region end reported by the ARA plugin. */
     TimeDuration getTail() const;
 
+    /** Serialises audio-thread rendering of the plugin against message-thread renderer
+        deactivation (ARA playback-region changes require the plugin to not be in
+        render-state). The audio thread try-locks this and outputs silence if held. */
+    juce::CriticalSection& getProcessLock() noexcept    { return processLock; }
+
 private:
     std::unique_ptr<ARAClipPlayer> player;
     juce::MidiBuffer midiBuffer;
+    juce::CriticalSection processLock;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ARAFileReader)
 };

@@ -381,6 +381,8 @@ namespace IDs
     DECLARE_ID (araArchiveSourceID)
     DECLARE_ID (araArchiveModID)
     DECLARE_ID (araDocumentArchiveID)
+    DECLARE_ID (araSourceID)
+    DECLARE_ID (araModID)
     DECLARE_ID (MELODYNEFILEREADER)
     DECLARE_ID (ARAFILEREADER)
     DECLARE_ID (ARADOCUMENT)
