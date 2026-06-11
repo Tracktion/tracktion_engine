@@ -73,6 +73,10 @@ public:
 
     void sourceClipChanged();
 
+    /** Notifies the plugin that the edit's key/chord content has changed.
+        Tempo changes are picked up automatically via the tempo sequence. */
+    void musicalContextContentChanged();
+
     /** Notifies that the ARA content has changed (e.g. notes edited in Melodyne).
         This re-reads the content and broadcasts a change message. */
     void contentHasChanged();

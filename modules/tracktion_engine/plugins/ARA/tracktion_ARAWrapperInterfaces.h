@@ -639,14 +639,29 @@ public:
             document.dci->destroyMusicalContext (document.dcRef, musicalContextRef);
     }
 
-    void update()
+    void update (ARAContentUpdateFlags flags = kARAContentUpdateEverythingChanged)
     {
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
 
+        // While restoring an archive, beginEditing/endEditing are no-ops, so sending
+        // a content update here would land outside an editing cycle
+        if (! document.canEdit (true))
+            return;
+
         if (document.dci != nullptr && musicalContextRef != nullptr)
             document.dci->updateMusicalContextContent (document.dcRef, musicalContextRef,
-                                                       nullptr, kARAContentUpdateEverythingChanged);
+                                                       nullptr, flags);
+    }
+
+    /** Converts an edit beat position to ARA quarter notes.
+        NB: a tracktion beat is the time-signature denominator note, which is only a
+        quarter note in x/4 signatures - ARA positions must always be in quarters. */
+    static ARAQuarterPosition beatsToQuarters (Edit& ed, BeatPosition beat)
+    {
+        tempo::Sequence::Position pos (ed.tempoSequence.getInternalSequence());
+        pos.set (ed.tempoSequence.toTime (beat));
+        return pos.getPPQTime();
     }
 
     SizedStruct<ARA_STRUCT_MEMBER (ARAMusicalContextProperties, color)> getMusicalContextProperties()
@@ -813,7 +828,8 @@ private:
             for (int t = beginTimeSig; t < endTimeSig; t++)
             {
                 auto timeSig = ed.tempoSequence.getTimeSig (t);
-                ARAContentBarSignature item = { timeSig->numerator, timeSig->denominator, (ARAQuarterPosition)timeSig->getStartBeat().inBeats() };
+                ARAContentBarSignature item = { timeSig->numerator, timeSig->denominator,
+                                                beatsToQuarters (ed, timeSig->getStartBeat()) };
                 items.add (item);
             }
         }
@@ -831,9 +847,9 @@ private:
             tempo::Sequence::Position tempoPosition (ed.tempoSequence.getInternalSequence());
             tempoPosition.set (range ? TimePosition::fromSeconds (range->start) : 0_tp);
 
-            // Add first item
+            // Add first item. NB: ARA positions are quarter notes, not tracktion beats
             {
-                ARAContentTempoEntry item = { tempoPosition.getTime().inSeconds(), tempoPosition.getBeats().inBeats() };
+                ARAContentTempoEntry item = { tempoPosition.getTime().inSeconds(), tempoPosition.getPPQTime() };
                 items.add (item);
             }
 
@@ -848,7 +864,7 @@ private:
 
                 const auto time = tempoPosition.getTime();
 
-                ARAContentTempoEntry item = { time.inSeconds(), tempoPosition.getBeats().inBeats() };
+                ARAContentTempoEntry item = { time.inSeconds(), tempoPosition.getPPQTime() };
                 items.add (item);
 
                 if (range && time >= TimePosition::fromSeconds (range->start + range->duration))
@@ -856,7 +872,9 @@ private:
             }
 
             // if the last tempo setting is included, extrapolate a new entry
-            // so that plug-ins can calculate tempo at the range boundary
+            // so that plug-ins can calculate tempo at the range boundary.
+            // The stored bpm is quarter notes per minute, so extending by one
+            // minute advances the quarter position by exactly the bpm
             if (foundLastTempo)
             {
                 auto extrapolatedTempoEntry = items.getLast();
@@ -903,7 +921,7 @@ private:
                     // insert a no chord between gaps in chord clips
                     if (endBeatOfPreviousClip < chordStartBeat)
                     {
-                        auto gapPosition = endBeatOfPreviousClip.inBeats();
+                        auto gapPosition = beatsToQuarters (ed, endBeatOfPreviousClip);
 
                         if (gapPosition > lastEmittedPosition)
                         {
@@ -922,7 +940,7 @@ private:
                     for (auto itm : ptnGen->getChordProgression())
                     {
                         auto timelineBeat = patternBeat + toDuration (chordStartBeat);
-                        auto position = timelineBeat.inBeats();
+                        auto position = beatsToQuarters (ed, timelineBeat);
 
                         if (position > lastEmittedPosition)
                         {
@@ -930,11 +948,16 @@ private:
 
                             bool sharp = ed.pitchSequence.getPitchAtBeat (timelineBeat).accidentalsSharp;
                             Scale scale = ptnGen->getScaleAtBeat (patternBeat);
+                            Chord chord = itm->getChord (scale);
                             int rootNote = itm->getRootNote (ptnGen->getNoteAtBeat (patternBeat), scale);
                             item.root = MusicalContextFunctions::getCircleOfFifthsIndexforMIDINote (rootNote, sharp);
-                            item.bass = item.root;
 
-                            auto chordIntervals = MusicalContextFunctions::getChordARAIntervalUsage (itm->getChord (scale));
+                            // The bass is the lowest note of the chord in its current inversion
+                            auto invertedSteps = chord.getSteps (itm->inversion);
+                            auto bassNote = rootNote + (invertedSteps.isEmpty() ? 0 : invertedSteps.getFirst());
+                            item.bass = MusicalContextFunctions::getCircleOfFifthsIndexforMIDINote (((bassNote % 12) + 12) % 12, sharp);
+
+                            auto chordIntervals = MusicalContextFunctions::getChordARAIntervalUsage (chord);
                             memcpy (item.intervals, chordIntervals.data(), sizeof (item.intervals));
 
                             item.name = chordNames.insert (MusicalContextFunctions::convertAccidentalsToUnicode (itm->getChordSymbol())).first->toRawUTF8();
@@ -953,7 +976,7 @@ private:
             // add the no chord here
             if (items.isEmpty() || endBeatOfPreviousClip < rangeEndBeat)
             {
-                auto trailPosition = endBeatOfPreviousClip.inBeats();
+                auto trailPosition = beatsToQuarters (ed, endBeatOfPreviousClip);
 
                 if (items.isEmpty() || trailPosition > lastEmittedPosition)
                 {
@@ -1009,7 +1032,7 @@ private:
 
                 item.name = scaleNames.insert (MusicalContextFunctions::convertAccidentalsToUnicode (scaleName)).first->toRawUTF8();
 
-                item.position = pitchSetting->getStartBeatNumber().inBeats();
+                item.position = beatsToQuarters (ed, pitchSetting->getStartBeatNumber());
                 items.add (item);
             }
         }

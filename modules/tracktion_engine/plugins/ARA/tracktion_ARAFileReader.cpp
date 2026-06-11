@@ -189,14 +189,36 @@ struct ARAClipPlayer  : private Selectable::Listener
         owner.sendChangeMessage();
     }
 
-    void selectableObjectChanged (Selectable*) override
+    void musicalContextContentChanged()
     {
+        // The key/chord (or other pitch-related) content changed: only the
+        // harmonic scope of the musical context needs re-reading
         if (auto doc = getDocument())
         {
             if (doc->musicalContext != nullptr)
             {
                 const ARADocument::ScopedEdit scope (*doc, true);
-                doc->musicalContext->update();
+                doc->musicalContext->update (kARAContentUpdateSignalScopeRemainsUnchanged
+                                              | kARAContentUpdateNoteScopeRemainsUnchanged
+                                              | kARAContentUpdateTuningScopeRemainsUnchanged
+                                              | kARAContentUpdateTimingScopeRemainsUnchanged);
+            }
+        }
+    }
+
+    void selectableObjectChanged (Selectable*) override
+    {
+        // The tempo sequence changed: only the timing scope of the musical
+        // context needs re-reading
+        if (auto doc = getDocument())
+        {
+            if (doc->musicalContext != nullptr)
+            {
+                const ARADocument::ScopedEdit scope (*doc, true);
+                doc->musicalContext->update (kARAContentUpdateSignalScopeRemainsUnchanged
+                                              | kARAContentUpdateNoteScopeRemainsUnchanged
+                                              | kARAContentUpdateTuningScopeRemainsUnchanged
+                                              | kARAContentUpdateHarmonicScopeRemainsUnchanged);
             }
         }
     }
@@ -812,17 +834,12 @@ void ARAFileReader::sourceClipChanged()
 {
     if (player != nullptr)
     {
+        // NB: deliberately no musical-context update here - this is called for *any*
+        // clip property change (name, colour, drag...), and spamming the plugin with
+        // "everything changed" makes it constantly rebuild its model. Tempo changes
+        // reach the context via the tempo-sequence listener and key/chord changes
+        // via musicalContextContentChanged().
         player->updateContent (nullptr);
-
-        // Also update musical context (e.g. when chord track changes)
-        if (auto doc = player->getDocument())
-        {
-            if (doc->musicalContext != nullptr)
-            {
-                const ARAClipPlayer::ARADocument::ScopedEdit scope (*doc, true);
-                doc->musicalContext->update();
-            }
-        }
 
         // The plugin won't notify us about content changes we caused ourselves,
         // so re-read head/tail times and tell listeners to refresh any cached
@@ -830,6 +847,12 @@ void ARAFileReader::sourceClipChanged()
         player->updateHeadAndTailTimes();
         sendChangeMessage();
     }
+}
+
+void ARAFileReader::musicalContextContentChanged()
+{
+    if (player != nullptr)
+        player->musicalContextContentChanged();
 }
 
 void ARAFileReader::contentHasChanged()
@@ -1333,6 +1356,7 @@ void ARAFileReader::hidePluginWindow()                         {}
 bool ARAFileReader::isAnalysingContent()                       { return false; }
 juce::MidiMessageSequence ARAFileReader::getAnalysedMIDISequence()   { return {}; }
 void ARAFileReader::sourceClipChanged()                        {}
+void ARAFileReader::musicalContextContentChanged()             {}
 void ARAFileReader::contentHasChanged()                        {}
 juce::MemoryBlock ARAFileReader::storeARAArchiveForCopy()      { return {}; }
 void ARAFileReader::restoreARAArchiveForPaste (const juce::MemoryBlock&, const juce::String&, const juce::String&, const juce::String&) {}
