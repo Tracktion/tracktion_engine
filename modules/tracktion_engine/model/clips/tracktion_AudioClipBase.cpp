@@ -282,11 +282,34 @@ AudioClipBase::~AudioClipBase()
         renderJob->removeListener (this);
 }
 
+void AudioClipBase::captureARAStateToValueTree()
+{
+   #if TRACKTION_ENABLE_ARA
+    if (auto proxy = getARAProxy(); proxy != nullptr && proxy->isValid())
+    {
+        auto araData = proxy->storeARAArchiveForCopy();
+
+        if (araData.getSize() > 0)
+        {
+            // NB: written without the undo manager - undo re-adds the same state tree
+            // object, so the archive travels with it and setupARA() restores it
+            state.setProperty (IDs::araArchive, araData.toBase64Encoding(), nullptr);
+            state.setProperty (IDs::araArchiveSourceID, proxy->getAudioSourcePersistentID(), nullptr);
+            state.setProperty (IDs::araArchiveModID, proxy->getAudioModificationPersistentID(), nullptr);
+            state.setProperty (IDs::araDocumentArchiveID, proxy->getDocumentArchiveID(), nullptr);
+        }
+    }
+   #endif
+}
+
 void AudioClipBase::tearDownARA()
 {
    #if TRACKTION_ENABLE_ARA
     if (araProxy != nullptr)
     {
+        // Preserve the plugin's edits so switching back to ARA (or undoing) can restore them
+        captureARAStateToValueTree();
+
         jassert (araProxy->getReferenceCount() == 1);
         araProxy = nullptr;
     }
@@ -370,6 +393,17 @@ void AudioClipBase::flushStateToValueTree()
 
     if (clipEffects != nullptr)
         clipEffects->flushStateToValueTree();
+
+   #if TRACKTION_ENABLE_ARA
+    // Persist the ARA IDs used for this save, so reloading can map them to the
+    // current IDs even if they've changed (e.g. the source file moved, which
+    // changes the path-hash-derived audio source ID)
+    if (auto proxy = getARAProxy(); proxy != nullptr && proxy->isValid())
+    {
+        state.setProperty (IDs::araSourceID, proxy->getAudioSourcePersistentID(), nullptr);
+        state.setProperty (IDs::araModID, proxy->getAudioModificationPersistentID(), nullptr);
+    }
+   #endif
 }
 
 PatternGenerator* AudioClipBase::getPatternGenerator()
@@ -1722,10 +1756,44 @@ bool AudioClipBase::setupARA (bool dontPopupErrorMessages)
         {
             TRACKTION_LOG ("Created ARA reader!");
             araProxy = new ARAFileReader (edit, *this);
+
+            // If the clip state carries a pending ARA archive (a deleted clip brought
+            // back by undo, or a clip whose ARA mode was switched off and on again),
+            // restore the plugin's edits into the new proxy
+            if (araProxy->isValid() && state.hasProperty (IDs::araArchive))
+            {
+                juce::MemoryBlock araData;
+                araData.fromBase64Encoding (state.getProperty (IDs::araArchive).toString());
+
+                auto sourceID = state.getProperty (IDs::araArchiveSourceID).toString();
+                auto modID = state.getProperty (IDs::araArchiveModID).toString();
+                auto docArchiveID = state.getProperty (IDs::araDocumentArchiveID).toString();
+
+                state.removeProperty (IDs::araArchive, nullptr);
+                state.removeProperty (IDs::araArchiveSourceID, nullptr);
+                state.removeProperty (IDs::araArchiveModID, nullptr);
+                state.removeProperty (IDs::araDocumentArchiveID, nullptr);
+
+                if (araData.getSize() > 0)
+                    araProxy->restoreARAArchiveForPaste (araData, sourceID, modID, docArchiveID);
+            }
         }
 
         if (araProxy != nullptr && araProxy->isValid())
+        {
+            // If a pending archive is still attached to a live proxy (e.g. the clip
+            // object was reused from the cache after an undo), it's a stale duplicate
+            // of the proxy's live state - drop it so it doesn't linger in saved edits
+            if (state.hasProperty (IDs::araArchive))
+            {
+                state.removeProperty (IDs::araArchive, nullptr);
+                state.removeProperty (IDs::araArchiveSourceID, nullptr);
+                state.removeProperty (IDs::araArchiveModID, nullptr);
+                state.removeProperty (IDs::araDocumentArchiveID, nullptr);
+            }
+
             return true;
+        }
 
         if (! dontPopupErrorMessages)
         {

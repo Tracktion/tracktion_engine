@@ -582,6 +582,11 @@ public:
     AudioClipBase* getOverlappingClip (ClipDirection) const;
 
     //==============================================================================
+    /** Stores the ARA plugin's current edits (e.g. Melodyne notes) as an archive in
+        the clip's state tree, so they can be restored by setupARA() after the clip
+        is re-created (undo of a deletion, switching ARA mode off and on, etc). */
+    void captureARAStateToValueTree();
+
     /** Releases the ARA proxy. Called during track destruction to ensure
         ARA cleanup happens while the track is still alive. */
     void tearDownARA();

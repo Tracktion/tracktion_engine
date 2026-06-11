@@ -1032,6 +1032,11 @@ struct ARADocumentHolder::Pimpl
                 // Create a temporary ARADOCUMENT-typed tree with the data property
                 juce::ValueTree tempState (IDs::ARADOCUMENT);
                 tempState.setProperty ("data", pluginState.getProperty ("data"), nullptr);
+
+                if (pluginState.hasProperty (IDs::araDocumentArchiveID))
+                    tempState.setProperty (IDs::araDocumentArchiveID,
+                                           pluginState.getProperty (IDs::araDocumentArchiveID), nullptr);
+
                 doc->beginRestoringState (tempState);
             }
             else if (state.hasProperty ("data"))
@@ -1076,6 +1081,34 @@ struct ARADocumentHolder::Pimpl
 
             auto oldModID = juce::String::toHexString (fileHash ^ lastModTime ^ clipRawID ^ trackRawID);
             auto newModID = juce::String::toHexString (fileHash ^ clipRawID);
+
+            // Saved-ID group: the IDs persisted with the clip at save time take priority -
+            // if they differ from the current ones (e.g. the source file moved, which
+            // changes the path-derived hash), map the archived IDs to the current ones
+            {
+                auto storedSourceID = c->state.getProperty (IDs::araSourceID).toString();
+                auto storedModID = c->state.getProperty (IDs::araModID).toString();
+
+                if (storedSourceID.isNotEmpty()
+                     && (storedSourceID != hashString
+                          || (storedModID.isNotEmpty() && storedModID != newModID)))
+                {
+                    auto srcDedupKey = storedSourceID + "|" + hashString;
+
+                    if (! seenSourceMappings.contains (srcDedupKey))
+                    {
+                        seenSourceMappings.add (srcDedupKey);
+
+                        ARAClipPlayer::PersistentIDMappingGroup group;
+                        group.sourceMapping = { storedSourceID, hashString };
+
+                        if (storedModID.isNotEmpty() && storedModID != newModID)
+                            group.modificationMappings.add ({ storedModID, newModID });
+
+                        mappingGroups.add (std::move (group));
+                    }
+                }
+            }
 
             // Per-clip group: old source ID → new source ID, with this clip's mod mapping
             {

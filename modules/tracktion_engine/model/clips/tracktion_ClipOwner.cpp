@@ -77,7 +77,15 @@ struct ClipOwner::ClipList : public ValueTreeObjectList<Clip>,
             edit.engine.getEngineBehaviour().newClipAdded (*c, edit.getTransport().isRecordingStopping());
     }
 
-    void objectRemoved (Clip* c) override       { objectAddedOrRemoved (c); }
+    void objectRemoved (Clip* c) override
+    {
+        // Preserve any ARA plugin edits in the clip's state tree before the clip
+        // object goes away, so undoing the removal can restore them
+        if (auto acb = dynamic_cast<AudioClipBase*> (c))
+            acb->captureARAStateToValueTree();
+
+        objectAddedOrRemoved (c);
+    }
     void objectOrderChanged() override          { objectAddedOrRemoved (nullptr); }
 
     void objectAddedOrRemoved (Clip* c)

@@ -127,7 +127,16 @@ public:
             out.flush();
 
             if (data.getSize() > 0)
+            {
                 v.setProperty ("data", data.toBase64Encoding(), nullptr);
+
+                // Store the format ID the plugin used for this archive: if the plugin
+                // later changes its archive format, restore must report the ID the
+                // archive was saved with, not the factory's current one
+                if (wrapper != nullptr && wrapper->factory != nullptr)
+                    v.setProperty (IDs::araDocumentArchiveID,
+                                   juce::String::fromUTF8 (wrapper->factory->documentArchiveID), nullptr);
+            }
         }
     }
 
@@ -142,6 +151,29 @@ public:
         jassert (state.hasType (IDs::ARADOCUMENT));
 
         auto data = state.getProperty ("data").toString();
+        auto savedArchiveID = state.getProperty (IDs::araDocumentArchiveID).toString();
+
+        // Refuse archives whose format the plugin doesn't declare compatible -
+        // restoring foreign/incompatible data is undefined and some plugins abort
+        if (data.isNotEmpty() && savedArchiveID.isNotEmpty()
+             && wrapper != nullptr && wrapper->factory != nullptr)
+        {
+            const auto& f = *wrapper->factory;
+            bool compatible = (juce::String::fromUTF8 (f.documentArchiveID) == savedArchiveID);
+
+            for (ARASize i = 0; ! compatible && i < f.compatibleDocumentArchiveIDsCount; ++i)
+                if (f.compatibleDocumentArchiveIDs != nullptr
+                     && juce::String::fromUTF8 (f.compatibleDocumentArchiveIDs[i]) == savedArchiveID)
+                    compatible = true;
+
+            if (! compatible)
+            {
+                TRACKTION_LOG_ERROR ("ARA: not restoring document archive with incompatible ID '"
+                                     + savedArchiveID + "' (plug-in archive ID '"
+                                     + juce::String::fromUTF8 (f.documentArchiveID) + "')");
+                data = {};
+            }
+        }
 
         if (data.isNotEmpty())
         {
@@ -149,10 +181,12 @@ public:
 
             lastArchiveState = std::make_unique<juce::MemoryBlock>();
             lastArchiveState->fromBase64Encoding (data);
+            lastArchiveDocumentArchiveID = savedArchiveID;
         }
         else
         {
             lastArchiveState = nullptr;
+            lastArchiveDocumentArchiveID = {};
         }
     }
 
@@ -163,6 +197,10 @@ public:
 
         if (lastArchiveState)
         {
+            // While restoring, getDocumentArchiveID must report the ID stored with
+            // the archive rather than the factory's current one
+            ArchivingFunctions::documentArchiveIDOverride = lastArchiveDocumentArchiveID;
+
             if (groups.isEmpty())
             {
                 dci->restoreObjectsFromArchive (dcRef, toHostRef (lastArchiveState.get()), nullptr);
@@ -242,6 +280,8 @@ public:
                 }
             }
 
+            ArchivingFunctions::documentArchiveIDOverride = {};
+            lastArchiveDocumentArchiveID = {};
             lastArchiveState = nullptr; // Make sure this is deleted before the call to endEditing or it won't get passed to the document
 
             endEditing (true);
@@ -462,6 +502,7 @@ public:
     std::map<juce::String, std::shared_ptr<AudioSourceWrapper>> audioSources;
     std::map<juce::String, int> audioSourceRefCount;
     std::unique_ptr<juce::MemoryBlock> lastArchiveState;
+    juce::String lastArchiveDocumentArchiveID;
 
 private:
     std::unique_ptr<ARAInstance> wrapper;
