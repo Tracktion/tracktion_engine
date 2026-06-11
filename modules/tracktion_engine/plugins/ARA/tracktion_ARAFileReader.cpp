@@ -608,6 +608,10 @@ private:
         jassert (araInstance->factory != nullptr);
         jassert (araInstance->extensionInstance != nullptr);
 
+        // Don't deactivate the renderer while the audio thread is rendering it -
+        // ARANode::process try-locks this and outputs silence while we hold it
+        const juce::ScopedLock sl (owner.getProcessLock());
+
         // ARA requires renderer deactivation before adding/removing playback regions
         if (auto p = getPlugin())
             if (auto pi = p->getAudioPluginInstance())
@@ -680,6 +684,10 @@ private:
                     {
                         const ScopedDocumentEditor sde (*this, true);
 
+                        // Don't deactivate the renderer while the audio thread is rendering
+                        // it - ARANode::process try-locks this and outputs silence meanwhile
+                        const juce::ScopedLock sl (owner.getProcessLock());
+
                         // ARA requires renderer deactivation before adding/removing regions
                         if (auto p = getPlugin())
                             if (auto pi = p->getAudioPluginInstance())
@@ -745,7 +753,11 @@ private:
         void timerCallback() override
         {
             CRASH_TRACER
-            if (document.dci != nullptr && document.dcRef != nullptr)
+
+            // notifyModelUpdates must only be called while not editing nor restoring.
+            // Editing cycles are synchronous on the message thread so can't overlap the
+            // timer, but restoring spans message-loop iterations - guard against it
+            if (document.dci != nullptr && document.dcRef != nullptr && document.canEdit (true))
                 document.dci->notifyModelUpdates (document.dcRef);
         }
 

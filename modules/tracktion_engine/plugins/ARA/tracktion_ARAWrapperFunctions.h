@@ -8,9 +8,18 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
+/** Per-document state for the archiving controller: the factory the document belongs to,
+    plus an override so getDocumentArchiveID can report the ID an archive was saved with
+    while it's being restored. One per ARADocument - a process-wide value would report
+    the wrong ID if two documents ever restored at overlapping times. */
+struct ArchivingState
+{
+    const ARAFactory* factory = nullptr;
+    juce::String documentArchiveIDOverride;
+};
+
 struct ArchivingFunctions
 {
-    static inline juce::String documentArchiveIDOverride;
 
     static ARASize ARA_CALL getArchiveSize (ARAArchivingControllerHostRef,
                                             ARAArchiveReaderHostRef ref)
@@ -79,11 +88,14 @@ struct ArchivingFunctions
 
     static ARAPersistentID ARA_CALL getDocumentArchiveID (ARAArchivingControllerHostRef ref, ARAArchiveReaderHostRef)
     {
-        if (documentArchiveIDOverride.isNotEmpty())
-            return documentArchiveIDOverride.toRawUTF8();
+        if (auto s = (ArchivingState*) ref)
+        {
+            if (s->documentArchiveIDOverride.isNotEmpty())
+                return s->documentArchiveIDOverride.toRawUTF8();
 
-        if (auto f = (const ARAFactory*) ref)
-            return f->documentArchiveID;
+            if (s->factory != nullptr)
+                return s->factory->documentArchiveID;
+        }
 
         return "com.celemony.ara.chunk.1"; // fallback
     }

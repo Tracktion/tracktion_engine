@@ -42,12 +42,14 @@ public:
                  ARAInstance* validPluginWrapper,
                  const ARAPlugInExtensionInstance&,
                  const ARADocumentControllerInstance& dc,
-                 ARADocumentControllerHostInstance* dchi)
+                 ARADocumentControllerHostInstance* dchi,
+                 ArchivingState* archState)
       : edit (sourceEdit),
         dci (dc.documentControllerInterface),
         dcRef (dc.documentControllerRef),
         wrapper (validPluginWrapper),
-        hostInstance (dchi)
+        hostInstance (dchi),
+        archivingState (archState)
     {
         CRASH_TRACER
         jassert (wrapper != nullptr);
@@ -199,7 +201,7 @@ public:
         {
             // While restoring, getDocumentArchiveID must report the ID stored with
             // the archive rather than the factory's current one
-            ArchivingFunctions::documentArchiveIDOverride = lastArchiveDocumentArchiveID;
+            archivingState->documentArchiveIDOverride = lastArchiveDocumentArchiveID;
 
             if (groups.isEmpty())
             {
@@ -280,7 +282,7 @@ public:
                 }
             }
 
-            ArchivingFunctions::documentArchiveIDOverride = {};
+            archivingState->documentArchiveIDOverride = {};
             lastArchiveDocumentArchiveID = {};
             lastArchiveState = nullptr; // Make sure this is deleted before the call to endEditing or it won't get passed to the document
 
@@ -442,11 +444,11 @@ public:
         }
 
         beginEditing (true);
-        ArchivingFunctions::documentArchiveIDOverride = documentArchiveID;
+        archivingState->documentArchiveIDOverride = documentArchiveID;
         auto restoreResult = dci->restoreObjectsFromArchive (dcRef, toHostRef (&dataCopy), &filter);
         T_ARA_DBG ("ARA restoreObjectsFromArchive returned: " << (restoreResult ? "TRUE" : "FALSE"));
         juce::ignoreUnused (restoreResult);
-        ArchivingFunctions::documentArchiveIDOverride = {};
+        archivingState->documentArchiveIDOverride = {};
         endEditing (true);
     }
 
@@ -507,6 +509,7 @@ public:
 private:
     std::unique_ptr<ARAInstance> wrapper;
     std::unique_ptr<ARADocumentControllerHostInstance> hostInstance;
+    std::unique_ptr<ArchivingState> archivingState;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ARADocument)
 };
@@ -611,9 +614,13 @@ static ARADocument* createDocumentInternal (Edit& edit, const juce::PluginDescri
 
         //NB: Can't be a stack object since it doesn't get copied when passed into the document instance!
         std::unique_ptr<ARADocumentControllerHostInstance> hostInstance (new SizedStruct<ARA_STRUCT_MEMBER (ARADocumentControllerHostInstance, playbackControllerInterface)>());
+
+        auto archivingState = std::make_unique<ArchivingState>();
+        archivingState->factory = factory;
+
         hostInstance->audioAccessControllerHostRef      = nullptr;
         hostInstance->audioAccessControllerInterface    = &audioAccess;
-        hostInstance->archivingControllerHostRef        = (ARAArchivingControllerHostRef) factory;
+        hostInstance->archivingControllerHostRef        = (ARAArchivingControllerHostRef) archivingState.get();
         hostInstance->archivingControllerInterface      = &hostArchiving;
         hostInstance->contentAccessControllerHostRef    = toHostRef (&edit);
         hostInstance->contentAccessControllerInterface  = &content;
@@ -637,7 +644,7 @@ static ARADocument* createDocumentInternal (Edit& edit, const juce::PluginDescri
             if (auto wrapper = std::unique_ptr<ARAInstance> (pluginFactory.createInstance (*plugin, dci->documentControllerRef)))
             {
                 auto d = new ARADocument (edit, wrapper.get(), *wrapper->extensionInstance,
-                                          *dci, hostInstance.release());
+                                          *dci, hostInstance.release(), archivingState.release());
                 wrapper.release();
                 return d;
             }

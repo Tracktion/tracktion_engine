@@ -110,9 +110,15 @@ public:
     /** Returns extra time after the playback region end reported by the ARA plugin. */
     TimeDuration getTail() const;
 
+    /** Serialises audio-thread rendering of the plugin against message-thread renderer
+        deactivation (ARA playback-region changes require the plugin to not be in
+        render-state). The audio thread try-locks this and outputs silence if held. */
+    juce::CriticalSection& getProcessLock() noexcept    { return processLock; }
+
 private:
     std::unique_ptr<ARAClipPlayer> player;
     juce::MidiBuffer midiBuffer;
+    juce::CriticalSection processLock;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ARAFileReader)
 };
