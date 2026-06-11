@@ -1236,9 +1236,25 @@ ARAClipPlayer::ARADocument* ARAClipPlayer::getDocument() const
     return {};
 }
 
-juce::PluginDescription ARAFileReader::findPluginForARAArchiveID (Engine& engine, const juce::String& archiveID)
+juce::PluginDescription ARAFileReader::findPluginForARAArchiveID (Engine& engine, const juce::String& archiveID,
+                                                                  const juce::String& suggestedPlugInName)
 {
     auto araDescs = engine.getPluginManager().getARACompatiblePlugDescriptions();
+
+    // If the file says which plugin wrote the archive, only consider matching plugins.
+    // Checking a plugin's archive IDs means loading its module, which runs third-party
+    // module code - some plugins start background threads that don't survive teardown,
+    // so we mustn't load every installed ARA plugin on the off-chance it matches.
+    if (suggestedPlugInName.isNotEmpty())
+    {
+        juce::Array<juce::PluginDescription> matching;
+
+        for (auto& d : araDescs)
+            if (d.name.equalsIgnoreCase (suggestedPlugInName))
+                matching.add (d);
+
+        araDescs = matching;
+    }
 
     for (auto& desc : araDescs)
     {
@@ -1246,7 +1262,6 @@ juce::PluginDescription ARAFileReader::findPluginForARAArchiveID (Engine& engine
             continue;
 
         const ARAFactory* araFactory = nullptr;
-        juce::ARAFactoryResult result;
 
         if (auto existing = ARAClipPlayer::ARAPluginFactory::getExistingInstance (desc))
         {
@@ -1259,15 +1274,26 @@ juce::PluginDescription ARAFileReader::findPluginForARAArchiveID (Engine& engine
         {
             // Otherwise read the ARAFactory from the module-level IMainFactory rather
             // than going through ARAPluginFactory: that would instantiate a full plugin
-            // component of every installed ARA plugin just to inspect its archive IDs,
-            // which is slow and exposes us to third-party shutdown bugs (leaked host
-            // references, lingering background threads etc.)
-            engine.getPluginManager().pluginFormatManager
-                .createARAFactoryAsync (desc, [&result] (juce::ARAFactoryResult r) { result = std::move (r); });
+            // component just to inspect its archive IDs.
+            // The result is cached for the session: releasing it would call the module's
+            // bundleExit mid-session, tearing down module state while any background
+            // threads the plugin started are still running.
+            auto& cache = ARAClipPlayer::ARAPluginFactory::getLookupCache();
+            auto key = desc.createIdentifierString();
+            auto cached = cache.find (key);
 
-            // The callback is synchronous for VST3; if a format ever completes
-            // asynchronously the factory will be null here and the plugin is skipped
-            araFactory = result.araFactory.get();
+            if (cached == cache.end())
+            {
+                juce::ARAFactoryResult result;
+                engine.getPluginManager().pluginFormatManager
+                    .createARAFactoryAsync (desc, [&result] (juce::ARAFactoryResult r) { result = std::move (r); });
+
+                // The callback is synchronous for VST3; if a format ever completes
+                // asynchronously the factory will be null here and the plugin is skipped
+                cached = cache.emplace (key, std::move (result)).first;
+            }
+
+            araFactory = cached->second.araFactory.get();
         }
 
         if (araFactory == nullptr)
@@ -1316,7 +1342,7 @@ juce::String ARAFileReader::getDocumentArchiveID() const             { return {}
 TimeDuration ARAFileReader::getHead() const                    { return {}; }
 TimeDuration ARAFileReader::getTail() const                    { return {}; }
 
-juce::PluginDescription ARAFileReader::findPluginForARAArchiveID (Engine&, const juce::String&) { return {}; }
+juce::PluginDescription ARAFileReader::findPluginForARAArchiveID (Engine&, const juce::String&, const juce::String&) { return {}; }
 
 ARADocumentHolder::ARADocumentHolder (Edit& e, const juce::ValueTree&) : edit (e) { juce::ignoreUnused (edit); }
 ARADocumentHolder::~ARADocumentHolder() {}
@@ -1471,7 +1497,7 @@ ARAIXMLResult detectARAFromIXMLChunks (Engine& engine, const juce::File& sourceF
         if (! chunk.openAutomatically)
             continue;
 
-        auto desc = ARAFileReader::findPluginForARAArchiveID (engine, chunk.documentArchiveID);
+        auto desc = ARAFileReader::findPluginForARAArchiveID (engine, chunk.documentArchiveID, chunk.suggestedPlugInName);
 
         if (desc.name.isNotEmpty())
         {

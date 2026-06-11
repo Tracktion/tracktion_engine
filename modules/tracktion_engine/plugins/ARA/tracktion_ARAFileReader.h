@@ -54,8 +54,12 @@ public:
     /** Parses ARA audio file chunks from a raw iXML string. */
     static juce::Array<ARAChunkInfo> parseARAAudioFileChunksFromIXML (const juce::String& ixmlString);
 
-    /** Finds an installed ARA plugin whose factory matches the given archive ID. */
-    static juce::PluginDescription findPluginForARAArchiveID (Engine&, const juce::String& archiveID);
+    /** Finds an installed ARA plugin whose factory matches the given archive ID.
+        If suggestedPlugInName is given (e.g. from an ARA audio file chunk), only
+        plugins with that name are considered - this avoids loading the module of
+        every installed ARA plugin just to compare archive IDs. */
+    static juce::PluginDescription findPluginForARAArchiveID (Engine&, const juce::String& archiveID,
+                                                              const juce::String& suggestedPlugInName = {});
 
     //==============================================================================
     bool isValid() const noexcept                       { return player != nullptr; }

@@ -129,6 +129,16 @@ public:
     {
         CRASH_TRACER
         getRegistry().clear();
+        getLookupCache().clear();
+    }
+
+    /** Factories loaded for archive-ID lookups, kept for the session so their modules
+        aren't torn down (bundleExit) while plugin background threads may be running.
+        Keyed by plugin identifier string. */
+    static std::map<juce::String, juce::ARAFactoryResult>& getLookupCache()
+    {
+        static std::map<juce::String, juce::ARAFactoryResult> cache;
+        return cache;
     }
 
     ExternalPlugin::Ptr createPlugin (Edit& ed)
@@ -188,6 +198,10 @@ private:
     std::unique_ptr<juce::AudioPluginInstance> plugin;
     std::unique_ptr<ARAFactoryInitGuard> initGuard;
 
+    // Holds a shared reference to a factory that was first initialised by an
+    // archive-ID lookup (see getLookupCache()), instead of initGuard
+    juce::ARAFactoryWrapper adoptedARAFactory;
+
     ARAPluginFactory (Engine& engine, const juce::PluginDescription& desc)
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
@@ -201,19 +215,35 @@ private:
 
             if (factory != nullptr)
             {
-                ARAAssertFunction* assertFuncPtr = nullptr;
-               #if JUCE_LOG_ASSERTIONS || JUCE_DEBUG
-                static ARAAssertFunction assertFunction = assertCallback;
-                assertFuncPtr = &assertFunction;
-               #endif
-
-                const SizedStruct<ARA_STRUCT_MEMBER (ARAInterfaceConfiguration, assertFunctionAddress)> interfaceConfig =
+                // If an archive-ID lookup already initialised this module's factory,
+                // share that initialisation - ARA forbids initialising a module twice
+                for (auto& [key, cached] : getLookupCache())
                 {
-                    std::min<ARAAPIGeneration> (factory->highestSupportedApiGeneration, kARAAPIGeneration_2_0_Final),
-                    assertFuncPtr
-                };
+                    juce::ignoreUnused (key);
 
-                initGuard = std::make_unique<ARAFactoryInitGuard> (factory, &interfaceConfig);
+                    if (cached.araFactory.get() == factory)
+                    {
+                        adoptedARAFactory = cached.araFactory;
+                        break;
+                    }
+                }
+
+                if (adoptedARAFactory.get() == nullptr)
+                {
+                    ARAAssertFunction* assertFuncPtr = nullptr;
+                   #if JUCE_LOG_ASSERTIONS || JUCE_DEBUG
+                    static ARAAssertFunction assertFunction = assertCallback;
+                    assertFuncPtr = &assertFunction;
+                   #endif
+
+                    const SizedStruct<ARA_STRUCT_MEMBER (ARAInterfaceConfiguration, assertFunctionAddress)> interfaceConfig =
+                    {
+                        std::min<ARAAPIGeneration> (factory->highestSupportedApiGeneration, kARAAPIGeneration_2_0_Final),
+                        assertFuncPtr
+                    };
+
+                    initGuard = std::make_unique<ARAFactoryInitGuard> (factory, &interfaceConfig);
+                }
 
                 // Plugins that can't time-stretch (analysis/alignment tools such as MTrackAlign or
                 // ReChoir, or the ARA SDK example plugin) are still hosted: the playback region is
