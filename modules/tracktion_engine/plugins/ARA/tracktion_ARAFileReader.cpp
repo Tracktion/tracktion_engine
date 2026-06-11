@@ -586,6 +586,11 @@ private:
         jassert (araInstance->factory != nullptr);
         jassert (araInstance->extensionInstance != nullptr);
 
+        // ARA requires renderer deactivation before adding/removing playback regions
+        if (auto p = getPlugin())
+            if (auto pi = p->getAudioPluginInstance())
+                pi->releaseResources();
+
         auto oldTrack = std::move (playbackRegionAndSource);
 
         playbackRegionAndSource = std::make_unique<PlaybackRegionAndSource> (*getDocument(), clip, *araInstance->factory,
@@ -593,11 +598,14 @@ private:
                                                                              juce::String::toHexString (modificationID),
                                                                              clipToClone != nullptr ? clipToClone->playbackRegionAndSource.get() : nullptr);
 
-        if (oldTrack != nullptr)
-        {
-            const ScopedDocumentEditor sde (*this, false);
-            oldTrack = nullptr;
-        }
+        // NB: the caller already holds a ScopedDocumentEditor, so the old regions are
+        // destroyed without opening a nested editing cycle (plugins assert on nesting)
+        oldTrack = nullptr;
+
+        if (auto p = getPlugin())
+            if (auto pi = p->getAudioPluginInstance())
+                if (pi->getSampleRate() > 0 && pi->getBlockSize() > 0)
+                    pi->prepareToPlay (pi->getSampleRate(), pi->getBlockSize());
     }
 
     void internalUpdateContent (ARAClipPlayer* clipToClone)
@@ -705,7 +713,10 @@ private:
     //==============================================================================
     struct ModelUpdater  : private juce::Timer
     {
-        ModelUpdater (ARADocument& d) : document (d) { startTimer (3000); }
+        // Polled often enough that plugin-side analysis/content updates feel responsive
+        // without burning CPU - this used to be 3s, which made the arrangement's note
+        // display lag noticeably behind the plugin
+        ModelUpdater (ARADocument& d) : document (d) { startTimer (250); }
 
         ARADocument& document;
 

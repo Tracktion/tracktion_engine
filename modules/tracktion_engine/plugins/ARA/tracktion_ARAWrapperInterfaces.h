@@ -1027,8 +1027,9 @@ private:
 class NodeReader
 {
 public:
-    NodeReader (const AudioFile& af)
-        : reader (af.engine->getAudioFileManager().cache.createReader (af))
+    NodeReader (const AudioFile& af, bool use64BitSamplesIn)
+        : reader (af.engine->getAudioFileManager().cache.createReader (af)),
+          use64BitSamples (use64BitSamplesIn)
     {
         if (reader != nullptr)
             buffer.setSize (reader->getNumChannels(), 8096, false, true, true);
@@ -1050,13 +1051,29 @@ public:
         buffer.clear();
 
         reader->setReadPosition (samplePosition);
-        reader->readSamples (numSamples, buffer, ChannelConfiguration::stereo(),
-                             0, ChannelConfiguration::stereo(), 5000);
+        const auto channels = ChannelConfiguration::canonical (numChans);
+
+        // If the read fails, the cleared buffer is still copied out below, which
+        // satisfies ARA's requirement that failed reads fill the buffers with silence
+        const bool ok = reader->readSamples (numSamples, buffer, channels, 0, channels, 5000);
 
         for (int i = 0; i < numChans; ++i)
-            juce::FloatVectorOperations::copy ((float*) buffers[i], buffer.getReadPointer (i), numSamples);
+        {
+            if (use64BitSamples)
+            {
+                auto src = buffer.getReadPointer (i);
+                auto dst = (double*) buffers[i];
 
-        return kARATrue;
+                for (int j = 0; j < numSamples; ++j)
+                    dst[j] = src[j];
+            }
+            else
+            {
+                juce::FloatVectorOperations::copy ((float*) buffers[i], buffer.getReadPointer (i), numSamples);
+            }
+        }
+
+        return ok ? kARATrue : kARAFalse;
     }
 
     double getSampleRate() const       { return reader != nullptr ? reader->getSampleRate() : 0.0; }
@@ -1065,6 +1082,7 @@ public:
 private:
     AudioFileCache::Reader::Ptr reader;
     juce::AudioBuffer<float> buffer;
+    const bool use64BitSamples;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NodeReader)
 };
@@ -1075,7 +1093,7 @@ class AudioSourceWrapper
 public:
     AudioSourceWrapper (ARADocument& d, AudioClipBase& audioClip)
       : doc (d),
-        clip (audioClip),
+        audioFile (audioClip.getAudioFile()),
         sourceID (audioClip.getAudioFile().getHashString())
     {
         CRASH_TRACER
@@ -1098,11 +1116,11 @@ public:
         }
     }
 
-    NodeReader* createReader()
+    NodeReader* createReader (bool use64BitSamples = false)
     {
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
-        return new NodeReader (clip.getAudioFile());
+        return new NodeReader (audioFile, use64BitSamples);
     }
 
     void enableAccess (bool b)
@@ -1119,7 +1137,12 @@ public:
 
     void releaseAccess()
     {
+        // Defensive: an unbalanced release must not disable access for other
+        // clips sharing this source
         jassert (accessRefCount > 0);
+
+        if (accessRefCount == 0)
+            return;
 
         if (--accessRefCount == 0)
             enableAccess (false);
@@ -1128,12 +1151,12 @@ public:
     //==============================================================================
     static ARAAudioReaderHostRef ARA_CALL createAudioReaderForSource (ARAAudioAccessControllerHostRef,
                                                                       ARAAudioSourceHostRef hostAudioSourceRef,
-                                                                      ARABool)
+                                                                      ARABool use64BitSamples)
     {
         CRASH_TRACER
 
         if (auto source = fromHostRef (hostAudioSourceRef))
-            return (ARAAudioReaderHostRef) source->createReader();
+            return (ARAAudioReaderHostRef) source->createReader (use64BitSamples != kARAFalse);
 
         return {};
     }
@@ -1163,7 +1186,7 @@ public:
         {
             name.toRawUTF8(),
             sourceID.toRawUTF8(),
-            (ARASampleCount)clip.getAudioFile().getLengthInSamples(),
+            (ARASampleCount)audioFile.getLengthInSamples(),
             (ARASampleRate)(reader != nullptr ? reader->getSampleRate() : 0.0),
             (ARAChannelCount)(reader != nullptr ? reader->getNumChannels() : 0),
             kARAFalse //merits64BitSamples
@@ -1174,13 +1197,16 @@ public:
 
     //==============================================================================
     ARADocument& doc;
-    AudioClipBase& clip;
+
+    // NB: this wrapper is shared between all clips using the same file, so it must not
+    // refer back to the (possibly deleted) clip that created it - take a copy of the file
+    const AudioFile audioFile;
     ARAAudioSourceRef audioSourceRef = {};
 
 private:
     void updateAudioSourceProperties()
     {
-        name = clip.getAudioFile().getFile().getFileName();
+        name = audioFile.getFile().getFileName();
     }
 
     const juce::String sourceID;
@@ -1476,6 +1502,7 @@ public:
             {
                 rebuildPlaybackRegions();
                 enable();
+                enabledInConstructor = true;
 
                 for (auto& pr : playbackRegions)
                     pr->updateRange();
@@ -1487,7 +1514,12 @@ public:
     ~PlaybackRegionAndSource()
     {
         CRASH_TRACER
-        disable();
+
+        // Only balance the constructor's enable() - if construction failed part-way,
+        // an unmatched disable() would steal a sample-access reference from other
+        // clips sharing this audio source
+        if (enabledInConstructor)
+            disable();
         removeAllPlaybackRegions();
         playbackRegions.clear();
         audioModification = nullptr;
@@ -1594,6 +1626,7 @@ private:
     ARADocument& araDoc;
     const ARAFactory& araFactory;
     const ARAPlugInExtensionInstance& pluginInstance;
+    bool enabledInConstructor = false;
 
     void addPlaybackRegion (PlaybackRegionWrapper& pr)
     {

@@ -247,8 +247,8 @@ struct MusicalContextFunctions
             default:
             {
                 std::array<ARA::ARAChordIntervalUsage, 12> chordIntervals{};
-                for (auto s : c.getSteps())
-                    chordIntervals[(std::size_t)s] = ARA::kARAKeySignatureIntervalUsed;
+                for (auto s : c.getSteps())  // wrap extensions (e.g. a 13th) into one octave
+                    chordIntervals[(std::size_t) (((s % 12) + 12) % 12)] = ARA::kARAKeySignatureIntervalUsed;
                 return chordIntervals;
             }
         }
