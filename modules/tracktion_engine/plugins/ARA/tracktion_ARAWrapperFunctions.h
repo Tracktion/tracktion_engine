@@ -47,8 +47,20 @@ struct ArchivingFunctions
     {
         CRASH_TRACER
         if (auto m = (juce::MemoryOutputStream*) ref)
+        {
+            // Plugins may write sparsely - the skipped range must be zero-filled
+            // (MemoryOutputStream can't seek past the end of the data written so far)
+            if (m->getDataSize() < position)
+            {
+                if (! m->setPosition ((int64_t) m->getDataSize()))
+                    return kARAFalse;
+
+                m->writeRepeatedByte (0, position - m->getDataSize());
+            }
+
             if (m->setPosition ((int64_t) position) && m->write (buffer, length))
                 return kARATrue;
+        }
 
         return kARAFalse;
     }
@@ -80,39 +92,55 @@ struct ArchivingFunctions
 //==============================================================================
 struct EditProxyFunctions
 {
+    /** The spec allows these requests to arrive concurrently from any non-render
+        thread and explicitly permits deferred execution, but TransportControl must
+        only be used from the message thread - so hop over to it, re-checking that
+        the edit is still open when the callback finally runs. */
+    static void marshalToMessageThread (ARAPlaybackControllerHostRef ref, std::function<void (TransportControl&)> fn)
+    {
+        if (auto tc = (TransportControl*) ref)
+        {
+            auto editPtr = &tc->edit;
+            auto& engine = tc->edit.engine;
+
+            juce::MessageManager::callAsync ([&engine, editPtr, fn = std::move (fn)]
+            {
+                for (auto e : engine.getActiveEdits().getEdits())
+                    if (e == editPtr)
+                        return fn (e->getTransport());
+            });
+        }
+    }
+
     static void ARA_CALL requestStartPlayback (ARAPlaybackControllerHostRef ref)
     {
         CRASH_TRACER
-        if (auto tc = (TransportControl*) ref)
-            tc->play (false);
+        marshalToMessageThread (ref, [] (TransportControl& tc) { tc.play (false); });
     }
 
     static void ARA_CALL requestStopPlayback (ARAPlaybackControllerHostRef ref)
     {
         CRASH_TRACER
-        if (auto tc = (TransportControl*) ref)
-            tc->stop (false, false);
+        marshalToMessageThread (ref, [] (TransportControl& tc) { tc.stop (false, false); });
     }
 
     static void ARA_CALL requestSetPlaybackPosition (ARAPlaybackControllerHostRef ref, ARATimePosition timePosition)
     {
         CRASH_TRACER
-        if (auto tc = (TransportControl*) ref)
-            tc->setPosition (TimePosition::fromSeconds (timePosition));
+        marshalToMessageThread (ref, [timePosition] (TransportControl& tc) { tc.setPosition (TimePosition::fromSeconds (timePosition)); });
     }
 
     static void ARA_CALL requestSetCycleRange (ARAPlaybackControllerHostRef ref, ARATimePosition startTime, ARATimeDuration duration)
     {
         CRASH_TRACER
-        if (auto tc = (TransportControl*) ref)
-            tc->setLoopRange ({ TimePosition::fromSeconds (startTime), TimeDuration::fromSeconds (duration) });
+        marshalToMessageThread (ref, [startTime, duration] (TransportControl& tc)
+                                     { tc.setLoopRange ({ TimePosition::fromSeconds (startTime), TimeDuration::fromSeconds (duration) }); });
     }
 
     static void ARA_CALL requestEnableCycle (ARAPlaybackControllerHostRef ref, ARABool enable)
     {
         CRASH_TRACER
-        if (auto tc = (TransportControl*) ref)
-            tc->looping = enable != kARAFalse;
+        marshalToMessageThread (ref, [enable] (TransportControl& tc) { tc.looping = enable != kARAFalse; });
     }
 };
 
@@ -130,6 +158,23 @@ struct ModelUpdateFunctions
                         proxy->contentHasChanged();
     }
 
+    /** These notifications arrive from inside our own notifyModelUpdates() call, so
+        updating the document synchronously here would reenter the plugin's document
+        controller - defer to the next message loop iteration instead, re-checking
+        that the edit is still open when the callback runs. */
+    static void deferContentChanged (Edit& edit)
+    {
+        auto editPtr = &edit;
+        auto& engine = edit.engine;
+
+        juce::MessageManager::callAsync ([&engine, editPtr]
+        {
+            for (auto e : engine.getActiveEdits().getEdits())
+                if (e == editPtr)
+                    return notifyARAContentChanged (*e);
+        });
+    }
+
     static void ARA_CALL notifyAudioSourceAnalysisProgress (ARAModelUpdateControllerHostRef,
                                                             ARAAudioSourceHostRef,
                                                             ARAAnalysisProgressState,
@@ -144,7 +189,7 @@ struct ModelUpdateFunctions
     {
         CRASH_TRACER
         if (auto e = (Edit*) hostRef)
-            notifyARAContentChanged (*e);
+            deferContentChanged (*e);
     }
 
     static void ARA_CALL notifyAudioModificationContentChanged (ARAModelUpdateControllerHostRef hostRef,
@@ -154,7 +199,7 @@ struct ModelUpdateFunctions
     {
         CRASH_TRACER
         if (auto e = (Edit*) hostRef)
-            notifyARAContentChanged (*e);
+            deferContentChanged (*e);
     }
 
     static void ARA_CALL notifyPlaybackRegionContentChanged (ARAModelUpdateControllerHostRef hostRef,
@@ -164,7 +209,7 @@ struct ModelUpdateFunctions
     {
         CRASH_TRACER
         if (auto e = (Edit*) hostRef)
-            notifyARAContentChanged (*e);
+            deferContentChanged (*e);
     }
 };
 

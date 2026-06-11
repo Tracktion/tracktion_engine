@@ -507,7 +507,7 @@ struct ARAClipPlayer  : private Selectable::Listener
     private:
         const ARAClipPlayer& pimpl;
         std::vector<ARAContentType> typesBeingAnalyzed;
-        volatile bool analysingContent = false;
+        std::atomic<bool> analysingContent { false };
         bool firstCall = true;
 
         ContentAnalyser() = delete;

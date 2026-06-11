@@ -230,16 +230,19 @@ private:
 
                 if (adoptedARAFactory.get() == nullptr)
                 {
-                    ARAAssertFunction* assertFuncPtr = nullptr;
-                   #if JUCE_LOG_ASSERTIONS || JUCE_DEBUG
-                    static ARAAssertFunction assertFunction = assertCallback;
-                    assertFuncPtr = &assertFunction;
-                   #endif
+                    // The spec requires assertFunctionAddress to always be a valid pointer
+                    // (which may point to a null function pointer in release builds)
+                    static ARAAssertFunction assertFunction =
+                       #if JUCE_LOG_ASSERTIONS || JUCE_DEBUG
+                        assertCallback;
+                       #else
+                        nullptr;
+                       #endif
 
                     const SizedStruct<ARA_STRUCT_MEMBER (ARAInterfaceConfiguration, assertFunctionAddress)> interfaceConfig =
                     {
                         std::min<ARAAPIGeneration> (factory->highestSupportedApiGeneration, kARAAPIGeneration_2_0_Final),
-                        assertFuncPtr
+                        &assertFunction
                     };
 
                     initGuard = std::make_unique<ARAFactoryInitGuard> (factory, &interfaceConfig);
@@ -275,7 +278,12 @@ private:
         if (type == "VST3")
             factory = getFactoryVST3();
 
-        if (factory != nullptr && factory->lowestSupportedApiGeneration > kARAAPIGeneration_2_0_Final)
+        // The plugin must support our API generation: reject both plugins that are
+        // too new (lowest > ours) and ARA1-only plugins (highest < ours), since the
+        // ARA2 bind via IPlugInEntryPoint2 would fail later anyway
+        if (factory != nullptr
+             && (factory->lowestSupportedApiGeneration > kARAAPIGeneration_2_0_Final
+                  || factory->highestSupportedApiGeneration < kARAAPIGeneration_2_0_Final))
             factory = nullptr;
     }
 

@@ -310,7 +310,8 @@ void AudioClipBase::tearDownARA()
         // Preserve the plugin's edits so switching back to ARA (or undoing) can restore them
         captureARAStateToValueTree();
 
-        jassert (araProxy->getReferenceCount() == 1);
+        // NB: a retired playback graph may legitimately still hold a reference to the
+        // reader here - it'll be released when the old graph is reaped
         araProxy = nullptr;
     }
    #endif

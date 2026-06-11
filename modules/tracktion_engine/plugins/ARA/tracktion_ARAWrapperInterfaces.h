@@ -641,6 +641,10 @@ static ARADocument* createDocumentInternal (Edit& edit, const juce::PluginDescri
                 wrapper.release();
                 return d;
             }
+
+            // Binding failed: the document controller must be destroyed, or it leaks
+            // holding a pointer to the host instance we're about to free
+            dci->documentControllerInterface->destroyDocumentController (dci->documentControllerRef);
         }
     }
 
@@ -1363,6 +1367,18 @@ public:
         };
     }
 
+    /** Re-sends the track name/order/colour to the plugin.
+        Must be called from within a document editing cycle. */
+    void updateProperties()
+    {
+        if (regionSequenceRef != nullptr)
+        {
+            updateRegionSequenceProperties();
+            auto props = getRegionSequenceProperties();
+            doc.dci->updateRegionSequenceProperties (doc.dcRef, regionSequenceRef, &props);
+        }
+    }
+
     ARARegionSequenceRef regionSequenceRef = nullptr;
     ARADocument& doc;
     Track* track;
@@ -1395,7 +1411,7 @@ public:
       : doc (d),
         clip (audioClip),
         trackID (audioClip.getTrack()->itemID),
-        flags (factory.supportedPlaybackTransformationFlags),
+        supportedFlags (factory.supportedPlaybackTransformationFlags),
         audioModificationRef (audioModification.audioModificationRef)
     {
         CRASH_TRACER
@@ -1423,7 +1439,7 @@ public:
       : doc (d),
         clip (audioClip),
         trackID (audioClip.getTrack()->itemID),
-        flags (factory.supportedPlaybackTransformationFlags),
+        supportedFlags (factory.supportedPlaybackTransformationFlags),
         audioModificationRef (audioModification.audioModificationRef),
         isLoopIteration (true),
         loopIteration (loopIterationIndex)
@@ -1459,6 +1475,12 @@ public:
         {
             CRASH_TRACER
 
+            // Keep the owning track's name/order/colour in sync too - these are
+            // never propagated otherwise
+            if (auto seq = doc.regionSequences.find (trackID);
+                seq != doc.regionSequences.end() && seq->second != nullptr)
+                seq->second->updateProperties();
+
             updatePlaybackRegionProperties();
             auto playbackRegionProperties = getPlaybackRegionProperties();
             doc.dci->updatePlaybackRegionProperties (doc.dcRef, playbackRegionRef, &playbackRegionProperties);
@@ -1472,12 +1494,22 @@ public:
     {
         auto regionSequenceRef = doc.regionSequences[trackID]->regionSequenceRef;
 
+        // Only request the transformations the clip actually needs: plain linear
+        // time-stretching when the speed ratio isn't 1. Reflecting-tempo stretch and
+        // content-based fades are deliberately not requested even if supported.
+        // When the plugin won't be stretching, the modification and playback
+        // durations must be equal, so the speed ratio mustn't be applied.
+        const bool useStretch = clip.getSpeedRatio() != 1.0
+                                 && (supportedFlags & kARAPlaybackTransformationTimestretch) != 0;
+        const ARAPlaybackTransformationFlags flags = useStretch ? kARAPlaybackTransformationTimestretch
+                                                                : kARAPlaybackTransformationNoChanges;
+        const double speedRatio = useStretch ? clip.getSpeedRatio() : 1.0;
+
         if (isLoopIteration)
         {
             // Recompute this iteration's times from the current clip state so that
             // updateRange() sends fresh values after the clip is moved or resized
             auto pos = clip.getPosition();
-            auto speedRatio = clip.getSpeedRatio();
             auto loopLengthSecs = clip.getLoopLength().inSeconds();
             auto iterStart = loopIteration * loopLengthSecs;
             auto iterDuration = std::max (0.0, std::min (loopLengthSecs,
@@ -1502,8 +1534,8 @@ public:
         return
         {
             flags,
-            pos.getOffset().inSeconds() * clip.getSpeedRatio(),   // Start in modification time
-            pos.getLength().inSeconds() * clip.getSpeedRatio(),   // Duration in modification time
+            pos.getOffset().inSeconds() * speedRatio,             // Start in modification time
+            pos.getLength().inSeconds() * speedRatio,             // Duration in modification time
             pos.getStart().inSeconds(),                           // Start in playback time
             pos.getLength().inSeconds(),                          // Duration in playback time
             doc.musicalContext->musicalContextRef,
@@ -1528,7 +1560,7 @@ private:
 
     juce::String name;
     ARAColor colour;
-    const ARAPlaybackTransformationFlags flags;
+    const ARAPlaybackTransformationFlags supportedFlags;
     ARAAudioModificationRef audioModificationRef = nullptr;
     const bool isLoopIteration = false;
     const int loopIteration = 0;
