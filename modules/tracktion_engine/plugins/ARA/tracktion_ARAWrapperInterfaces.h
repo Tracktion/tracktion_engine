@@ -954,87 +954,78 @@ private:
                                         : BeatPosition();
             auto rangeEndBeat = range ? ed.tempoSequence.toBeats (TimePosition::fromSeconds (range->start + range->duration))
                                       : BeatPosition::fromBeats (std::numeric_limits<float>::max());
-            auto endBeatOfPreviousClip = rangeStartBeat;
 
             // construct a "no chord" for representing gaps in the chord track.
             // All intervals unused marks it as undefined; the name must be left
             // null as it's "the name as displayed in the host", and we don't show one
             ARAContentChord noChord{};
 
-            double lastEmittedPosition = -std::numeric_limits<double>::max();
+            // Flatten the whole chord track into a single Edit-time progression.
+            // This repeats each clip's progression across its full length and
+            // resolves gaps/overlaps exactly as chord-track playback does, so a
+            // looped/repeated progression is reported in full rather than just
+            // the first pass of each clip's pattern.
+            auto ptnGen = chordTrack->getClips().getFirst()->getPatternGenerator();
+            jassert (ptnGen);
 
-            for (auto chordClip : chordTrack->getClips())
+            juce::OwnedArray<PatternGenerator::ProgressionItem> progression;
+            ptnGen->getFlattenedChordProgression (progression, true);
+
+            BeatPosition itemStartBeat;
+
+            for (auto itm : progression)
             {
-                auto chordStartBeat = chordClip->getStartBeat();
-                auto chordEndBeat = chordClip->getEndBeat();
+                auto itemEndBeat = itemStartBeat + itm->lengthInBeats;
+                auto thisItemStart = itemStartBeat;
+                itemStartBeat = itemEndBeat;
 
-                if (range == nullptr || (chordStartBeat < rangeEndBeat && rangeStartBeat < chordEndBeat))
+                // skip items that don't intersect the requested range
+                if (range != nullptr && (itemEndBeat <= rangeStartBeat || thisItemStart >= rangeEndBeat))
+                    continue;
+
+                auto position = beatsToQuarters (ed, thisItemStart);
+
+                // an empty chord name marks a gap in the chord track ("no chord")
+                if (itm->chordName.get().isEmpty())
                 {
-                    // insert a no chord between gaps in chord clips
-                    if (endBeatOfPreviousClip < chordStartBeat)
-                    {
-                        auto gapPosition = beatsToQuarters (ed, endBeatOfPreviousClip);
-
-                        if (gapPosition > lastEmittedPosition)
-                        {
-                            ARAContentChord noChordCopy = noChord;
-                            noChordCopy.position = gapPosition;
-                            items.add (noChordCopy);
-                            lastEmittedPosition = gapPosition;
-                        }
-                    }
-
-                    endBeatOfPreviousClip = juce::jmax (endBeatOfPreviousClip, chordEndBeat);
-                    BeatPosition patternBeat;
-                    auto ptnGen = chordClip->getPatternGenerator();
-                    jassert (ptnGen);
-
-                    for (auto itm : ptnGen->getChordProgression())
-                    {
-                        auto timelineBeat = patternBeat + toDuration (chordStartBeat);
-                        auto position = beatsToQuarters (ed, timelineBeat);
-
-                        if (position > lastEmittedPosition)
-                        {
-                            ARAContentChord item{};
-
-                            bool sharp = ed.pitchSequence.getPitchAtBeat (timelineBeat).accidentalsSharp;
-                            Scale scale = ptnGen->getScaleAtBeat (patternBeat);
-                            Chord chord = itm->getChord (scale);
-                            int rootNote = itm->getRootNote (ptnGen->getNoteAtBeat (patternBeat), scale);
-                            item.root = MusicalContextFunctions::getCircleOfFifthsIndexforMIDINote (rootNote, sharp);
-
-                            // The bass is the lowest note of the chord in its current inversion
-                            auto invertedSteps = chord.getSteps (itm->inversion);
-                            auto bassNote = rootNote + (invertedSteps.isEmpty() ? 0 : invertedSteps.getFirst());
-                            item.bass = MusicalContextFunctions::getCircleOfFifthsIndexforMIDINote (((bassNote % 12) + 12) % 12, sharp);
-
-                            auto chordIntervals = MusicalContextFunctions::getChordARAIntervalUsage (chord);
-                            memcpy (item.intervals, chordIntervals.data(), sizeof (item.intervals));
-
-                            item.name = chordNames.insert (MusicalContextFunctions::convertAccidentalsToUnicode (itm->getChordSymbol())).first->toRawUTF8();
-
-                            item.position = position;
-                            items.add (item);
-                            lastEmittedPosition = position;
-                        }
-
-                        patternBeat = patternBeat + itm->lengthInBeats;
-                    }
+                    ARAContentChord noChordCopy = noChord;
+                    noChordCopy.position = position;
+                    items.add (noChordCopy);
+                    continue;
                 }
+
+                ARAContentChord item{};
+
+                // The flattened items are detached copies, so resolve the key/scale
+                // from the Edit's pitch sequence at the item's Edit-time position
+                // (matching how chord-track playback computes them).
+                auto& pitch = ed.pitchSequence.getPitchAtBeat (thisItemStart);
+                bool sharp = pitch.accidentalsSharp;
+                Scale scale (pitch.getScale());
+                int rootNote = itm->getRootNote (pitch.getPitch() % 12, scale);
+                Chord chord = itm->getChord (scale);
+                item.root = MusicalContextFunctions::getCircleOfFifthsIndexforMIDINote (rootNote, sharp);
+
+                // The bass is the lowest note of the chord in its current inversion
+                auto invertedSteps = chord.getSteps (itm->inversion);
+                auto bassNote = rootNote + (invertedSteps.isEmpty() ? 0 : invertedSteps.getFirst());
+                item.bass = MusicalContextFunctions::getCircleOfFifthsIndexforMIDINote (((bassNote % 12) + 12) % 12, sharp);
+
+                auto chordIntervals = MusicalContextFunctions::getChordARAIntervalUsage (chord);
+                memcpy (item.intervals, chordIntervals.data(), sizeof (item.intervals));
+
+                auto symbol = juce::MidiMessage::getMidiNoteName (rootNote, sharp, false, 0) + chord.getSymbol();
+                item.name = chordNames.insert (MusicalContextFunctions::convertAccidentalsToUnicode (symbol)).first->toRawUTF8();
+
+                item.position = position;
+                items.add (item);
             }
 
-            // if the range is null or goes beyond the last chord clip,
-            // add the no chord here
-            if (items.isEmpty() || endBeatOfPreviousClip < rangeEndBeat)
+            // make sure there is always at least a trailing "no chord"
+            if (items.isEmpty())
             {
-                auto trailPosition = beatsToQuarters (ed, endBeatOfPreviousClip);
-
-                if (items.isEmpty() || trailPosition > lastEmittedPosition)
-                {
-                    noChord.position = trailPosition;
-                    items.add (noChord);
-                }
+                noChord.position = beatsToQuarters (ed, rangeStartBeat);
+                items.add (noChord);
             }
         }
 
