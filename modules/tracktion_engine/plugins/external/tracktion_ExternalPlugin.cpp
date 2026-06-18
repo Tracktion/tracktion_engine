@@ -2070,6 +2070,11 @@ struct AudioProcessorEditorContentComp  : public Plugin::EditorComponent
                 && plugin.getVendor().containsIgnoreCase ("Celemony");
     }
 
+    bool isEditorResizable() override
+    {
+        return editor != nullptr && editor->isResizable();
+    }
+
     juce::ComponentBoundsConstrainer* getBoundsConstrainer() override
     {
         if (editor != nullptr)

@@ -32,6 +32,17 @@ struct CreateNodeParams
     bool implicitlyIncludeSubmixChildTracks = true;     /**< If true, child track in submixes will be included regardless of the allowedTracks param. Only relevent when forRendering is also true. */
     bool allowClipSlots = true;                         /**< If true, track's clip slots will be included, set to false to disable these (which will use a slightly more efficient Node). */
     bool readAheadTimeStretchNodes = false;             /**< TEMPORARY: If true, real-time time-stretch Nodes will use a larger buffer and background thread to reduce audio CPU use. */
+
+    /** If set, this will be called for each output device to give an opportunity to add an
+        additional final Node. Unlike EditNodeBuilder::insertOptionalLastStageNode this is
+        carried per graph build (set via EditPlaybackContext) so different Edits can each have
+        their own callback. The callback receives the OutputDevice being built, the
+        CreateNodeParams (for sample rate/block size/ProcessState) and the current output Node,
+        and returns the Node to use (e.g. a transient generator Plugin summed into the output).
+    */
+    std::function<std::unique_ptr<graph::Node> (OutputDevice&,
+                                                const CreateNodeParams&,
+                                                std::unique_ptr<graph::Node>)> insertOptionalLastStageNodeForDevice = {};
 };
 
 //==============================================================================
@@ -49,6 +60,14 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext&,
 
 /** Creates a Node to render an Edit. */
 std::unique_ptr<tracktion::graph::Node> createNodeForEdit (Edit&, const CreateNodeParams&);
+
+/** Wraps a Plugin as a generator Node (driven by a silent input) and sums it into the supplied
+    output Node. Intended to be returned from CreateNodeParams::insertOptionalLastStageNodeForDevice
+    to add a transient plugin (e.g. a browser-hosted generator) to a device's output. If the plugin
+    is null the output Node is returned unchanged. */
+std::unique_ptr<tracktion::graph::Node> createGeneratorPluginNode (const Plugin::Ptr&,
+                                                                   const CreateNodeParams&,
+                                                                   std::unique_ptr<tracktion::graph::Node> output);
 
 
 } // namespace tracktion::inline engine

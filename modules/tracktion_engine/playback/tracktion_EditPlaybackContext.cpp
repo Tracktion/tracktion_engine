@@ -667,10 +667,18 @@ void EditPlaybackContext::createNode()
     cnp.includeBypassedPlugins = ! engineBehaviour.shouldBypassedPluginsBeRemovedFromPlaybackGraph();
     cnp.allowClipSlots = engineBehaviour.areClipSlotsEnabled();
     cnp.readAheadTimeStretchNodes = engineBehaviour.enableReadAheadForTimeStretchNodes();
+    cnp.insertOptionalLastStageNodeForDevice = insertOptionalLastStageNodeForDeviceCallback;
     auto editNode = createNodeForEdit (*this, audiblePlaybackTime, cnp);
 
     nodePlaybackContext->setNode (std::move (editNode), cnp.sampleRate, cnp.blockSize);
     updateNumCPUs();
+}
+
+void EditPlaybackContext::setInsertOptionalLastStageNodeForDeviceCallback (std::function<std::unique_ptr<graph::Node> (OutputDevice&,
+                                                                                                                      const CreateNodeParams&,
+                                                                                                                      std::unique_ptr<graph::Node>)> callback)
+{
+    insertOptionalLastStageNodeForDeviceCallback = std::move (callback);
 }
 
 void EditPlaybackContext::createPlayAudioNodes (TimePosition startTime)

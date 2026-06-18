@@ -1289,6 +1289,45 @@ void ARADocumentHolder::flushStateToValueTree()
     }
 }
 
+//==============================================================================
+struct ARAPluginBinding::Impl
+{
+    std::unique_ptr<ARAClipPlayer::ARAInstance> instance;
+};
+
+ARAPluginBinding::ARAPluginBinding (std::unique_ptr<Impl> implToUse)
+    : impl (std::move (implToUse))
+{
+}
+
+ARAPluginBinding::~ARAPluginBinding() = default;
+
+std::unique_ptr<ARAPluginBinding> ARADocumentHolder::bindPluginToDocument (ExternalPlugin& plugin,
+                                                                          const juce::PluginDescription& desc)
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+
+    if (! desc.hasARAExtension)
+        return {};
+
+    auto doc = getPimpl()->getOrCreateDocument (desc);
+
+    if (doc == nullptr)
+        return {};
+
+    auto& pluginFactory = ARAClipPlayer::ARAPluginFactory::getInstance (edit.engine, desc);
+
+    std::unique_ptr<ARAClipPlayer::ARAInstance> instance (pluginFactory.createInstance (plugin, doc->dcRef));
+
+    if (instance == nullptr)
+        return {};
+
+    auto impl = std::make_unique<ARAPluginBinding::Impl>();
+    impl->instance = std::move (instance);
+
+    return std::unique_ptr<ARAPluginBinding> (new ARAPluginBinding (std::move (impl)));
+}
+
 ARAClipPlayer::ARADocument* ARAClipPlayer::getDocument() const
 {
     if (auto p = edit.getARADocument().getPimpl())
@@ -1417,6 +1456,11 @@ ARADocumentHolder::ARADocumentHolder (Edit& e, const juce::ValueTree&) : edit (e
 ARADocumentHolder::~ARADocumentHolder() {}
 ARADocumentHolder::Pimpl* ARADocumentHolder::getPimpl()             { return {}; }
 void ARADocumentHolder::flushStateToValueTree() {}
+
+struct ARAPluginBinding::Impl {};
+ARAPluginBinding::ARAPluginBinding (std::unique_ptr<Impl> implToUse) : impl (std::move (implToUse)) {}
+ARAPluginBinding::~ARAPluginBinding() = default;
+std::unique_ptr<ARAPluginBinding> ARADocumentHolder::bindPluginToDocument (ExternalPlugin&, const juce::PluginDescription&)   { return {}; }
 
 } // namespace tracktion::inline engine
 
