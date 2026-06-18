@@ -2111,6 +2111,9 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (EditPlaybackContext& 
             node = createMasterFadeInOutNode (edit, std::move (node), params);
             node = EditNodeBuilder::insertOptionalLastStageNode (std::move (node));
 
+            if (params.insertOptionalLastStageNodeForDevice && device != nullptr)
+                node = params.insertOptionalLastStageNodeForDevice (*device, params, std::move (node));
+
             if (edit.getIsPreviewEdit() && node != nullptr)
                 if (auto previewMeasurer = edit.getPreviewLevelMeasurer())
                     node = makeNode<SharedLevelMeasuringNode> (std::move (previewMeasurer), std::move (node));
@@ -2184,6 +2187,20 @@ std::unique_ptr<tracktion::graph::Node> createNodeForEdit (Edit& edit, const Cre
     node = createRackNode (std::move (node), edit.getRackList(), params);
 
     return node;
+}
+
+std::unique_ptr<tracktion::graph::Node> createGeneratorPluginNode (const Plugin::Ptr& plugin,
+                                                                   const CreateNodeParams& params,
+                                                                   std::unique_ptr<tracktion::graph::Node> output)
+{
+    if (plugin == nullptr)
+        return output;
+
+    auto generator = makeNode<PluginNode> (makeNode<SilentNode> (2),
+                                           plugin, params.sampleRate, params.blockSize, nullptr,
+                                           params.processState, params.forRendering, true, -1);
+
+    return makeSummingNode ({ output.release(), generator.release() });
 }
 
 std::function<std::unique_ptr<tracktion::graph::Node> (std::unique_ptr<tracktion::graph::Node>)> EditNodeBuilder::insertOptionalLastStageNode

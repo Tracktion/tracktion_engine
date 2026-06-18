@@ -562,6 +562,16 @@ public:
     {
         virtual bool allowWindowResizing() = 0;
         virtual juce::ComponentBoundsConstrainer* getBoundsConstrainer() = 0;
+
+        /** Returns true if the underlying editor can genuinely be resized to fit
+            an arbitrary host-provided size.
+
+            This is independent of allowWindowResizing(), which intentionally stays
+            conservative for floating plugin windows to avoid size hysteresis. It's
+            intended for hosts that embed the editor inline (e.g. a side panel) and
+            want to size it themselves. Defaults to false.
+        */
+        virtual bool isEditorResizable()                            { return false; }
     };
 
     /** Creates a custom editor component for this plugin, or nullptr if none. */

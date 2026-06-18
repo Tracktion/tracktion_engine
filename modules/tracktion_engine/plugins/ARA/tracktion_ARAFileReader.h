@@ -143,12 +143,39 @@ ARAIXMLResult detectARAFromIXMLChunks (Engine&, const juce::File& sourceFile);
 
 
 //==============================================================================
+/** Owns an ARA document-controller binding created by
+    ARADocumentHolder::bindPluginToDocument. Destroying it releases the binding,
+    taking the plugin out of ARA mode. */
+class ARAPluginBinding
+{
+public:
+    ~ARAPluginBinding();
+
+private:
+    friend struct ARADocumentHolder;
+    struct Impl;
+    explicit ARAPluginBinding (std::unique_ptr<Impl>);
+
+    std::unique_ptr<Impl> impl;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ARAPluginBinding)
+};
+
+//==============================================================================
 struct ARADocumentHolder
 {
     ARADocumentHolder (Edit&, const juce::ValueTree&);
     ~ARADocumentHolder();
 
     void flushStateToValueTree();
+
+    /** Binds an already-loaded, ARA-capable ExternalPlugin to this Edit's ARA document
+        controller for the given description (lazily creating the document), putting the
+        plugin into ARA mode. No audio source, playback region or musical context is created.
+
+        Returns null if the plugin isn't ARA-capable, its instance isn't loaded yet, or the
+        binding fails. The returned object owns the binding for as long as it's kept alive. */
+    std::unique_ptr<ARAPluginBinding> bindPluginToDocument (ExternalPlugin&, const juce::PluginDescription&);
 
     struct Pimpl;
     Pimpl* getPimpl();
