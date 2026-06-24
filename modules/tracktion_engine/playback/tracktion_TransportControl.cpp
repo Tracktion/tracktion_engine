@@ -1729,7 +1729,11 @@ void TransportControl::performPositionChange()
     const int minutes = (((int) mmcTime) / 60) % 60;
     const int seconds = (((int) mmcTime) % 60);
 
+   #if JUCE_VERSION >= 0x8000e
+    sendMMC (juce::MidiMessage::midiMachineControlGoto ({ 0, (uint8_t) hours, (uint8_t) minutes, (uint8_t) seconds, (uint8_t) frames, 0 }));
+   #else
     sendMMC (juce::MidiMessage::midiMachineControlGoto (hours, minutes, seconds, frames));
+   #endif
 }
 
 void TransportControl::performRewindButtonChanged()
