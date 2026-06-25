@@ -40,7 +40,9 @@ else()
     MESSAGE(STATUS "Not building with VST2")
 endif()
 
-juce_add_console_app(${TARGET_NAME})
+juce_add_console_app(${TARGET_NAME}
+    NEEDS_CURL FALSE
+    NEEDS_WEB_BROWSER FALSE)
 
 juce_generate_juce_header(${TARGET_NAME})
 
@@ -83,11 +85,6 @@ target_compile_definitions(${TARGET_NAME} PRIVATE
     TRACKTION_BUILD_RUBBERBAND=${HAS_RUBBERBAND}
     TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH=1)
 
-if(NOT JUCE_CPM_DEVELOP OR NOT (CMAKE_SYSTEM_NAME STREQUAL "Linux" OR CMAKE_SYSTEM_NAME MATCHES ".*BSD"))
-    target_compile_definitions(${TARGET_NAME} PRIVATE
-        JUCE_USE_CURL=0
-        JUCE_WEB_BROWSER=0)
-endif()
 target_link_libraries(${TARGET_NAME} PRIVATE
     tracktion::tracktion_core
     tracktion::tracktion_engine
