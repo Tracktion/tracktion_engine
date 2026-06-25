@@ -257,10 +257,14 @@ struct PhysicalMidiInputDeviceInstance  : public MidiInputDeviceInstanceBase
 
     void handleMMCMessage (const juce::MidiMessage& message) override
     {
+       #if JUCE_VERSION >= 0x8000e
+        if (auto goto_ = message.getMidiMachineControlGoto())
+            timecodeReader->handleMMCGotoMessage (goto_->hours, goto_->minutes, goto_->seconds, goto_->frames);
+       #else
         int hours, minutes, seconds, frames;
-
         if (message.isMidiMachineControlGoto (hours, minutes, seconds, frames))
             timecodeReader->handleMMCGotoMessage (hours, minutes, seconds, frames);
+       #endif
         else
             timecodeReader->handleMMCMessage (message.getMidiMachineControlCommand());
     }
