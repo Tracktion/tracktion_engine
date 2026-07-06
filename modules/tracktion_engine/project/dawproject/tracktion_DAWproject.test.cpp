@@ -1026,6 +1026,72 @@ TEST_SUITE ("tracktion_engine")
     }
 
     //==============================================================================
+    TEST_CASE ("DAWproject: imported tracks get default volume/pan and level meter plugins")
+    {
+        // Discussion #1152: most DAWs (Bitwig, Reaper...) have per-track gain, pan and
+        // metering built in, so they never appear in the file's <Devices> list. Imported
+        // tracks must get the standard default plugins, and the file's channel volume/pan
+        // values must be applied to them rather than silently dropped.
+        using namespace dawproject;
+
+        auto& engine = *Engine::getEngines()[0];
+
+        const juce::String xml = R"(<?xml version="1.0" encoding="UTF-8"?>
+<Project version="1.0">
+  <Application name="TestDAW" version="1.0"/>
+  <Transport><Tempo value="120.0"/></Transport>
+  <Structure>
+    <Track name="WithVolPan" id="track1" contentType="audio">
+      <Channel id="ch1" role="regular">
+        <Volume unit="decibel" value="-6.0"/>
+        <Pan unit="normalized" value="0.25"/>
+      </Channel>
+    </Track>
+    <Track name="EmptyChannel" id="track2" contentType="notes">
+      <Channel id="ch2" role="regular"/>
+    </Track>
+    <Track name="NoChannel" id="track3" contentType="audio"/>
+  </Structure>
+  <Arrangement><Lanes/></Arrangement>
+</Project>
+)";
+
+        juce::TemporaryFile dawprojectFile (".dawproject");
+        writeMinimalDAWprojectZip (dawprojectFile.getFile(), xml, {});
+
+        ParseOptions parseOpts;
+        parseOpts.extractAudioFiles = false;
+        auto importedEdit = parseDAWproject (engine, dawprojectFile.getFile(), parseOpts);
+        REQUIRE (importedEdit != nullptr);
+
+        auto findTrack = [&] (const juce::String& name) -> AudioTrack*
+        {
+            for (auto* t : getAudioTracks (*importedEdit))
+                if (t->getName() == name)
+                    return t;
+
+            return nullptr;
+        };
+
+        // Every imported track should have the default volume/pan and level meter plugins
+        for (auto trackName : { "WithVolPan", "EmptyChannel", "NoChannel" })
+        {
+            auto* track = findTrack (trackName);
+            REQUIRE_MESSAGE (track != nullptr, "Track not found: " << trackName);
+            CHECK_MESSAGE (track->getVolumePlugin() != nullptr, "No volume plugin on: " << trackName);
+            CHECK_MESSAGE (track->getLevelMeterPlugin() != nullptr, "No level meter plugin on: " << trackName);
+        }
+
+        // The file's channel volume/pan values must be applied, not dropped
+        auto* volPanTrack = findTrack ("WithVolPan");
+        REQUIRE (volPanTrack != nullptr);
+        auto* volPlugin = volPanTrack->getVolumePlugin();
+        REQUIRE (volPlugin != nullptr);
+        CHECK_EQ (volPlugin->getVolumeDb(), doctest::Approx (-6.0f).epsilon (0.01));
+        CHECK_EQ (volPlugin->getPan(), doctest::Approx (0.25f).epsilon (0.01));
+    }
+
+    //==============================================================================
     TEST_CASE ("DAWproject: import clip launcher MIDI clip from <Scenes>")
     {
         // Issue #878: clip-launcher MIDI clips (in <Scenes>, not <Arrangement>) were

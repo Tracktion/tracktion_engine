@@ -201,6 +201,11 @@ void DAWprojectImporter::parseTrack (const juce::XmlElement& trackElement, Edit&
         if (auto* channelElement = trackElement.getChildByName (xml::Channel))
             parseChannel (*channelElement, edit, newTrack.get());
 
+        // Tracks without a channel element still need the default plugins
+        if (auto* audioTrack = dynamic_cast<AudioTrack*> (newTrack.get()))
+            if (audioTrack->getVolumePlugin() == nullptr)
+                audioTrack->pluginList.addDefaultTrackPlugins (false);
+
         // Parse nested tracks
         for (auto* child : trackElement.getChildIterator())
         {
@@ -251,6 +256,17 @@ void DAWprojectImporter::parseChannel (const juce::XmlElement& channelElement, E
     // Apply channel properties to track
     if (auto* audioTrack = dynamic_cast<AudioTrack*> (track))
     {
+        // Parse devices (plugins) first so the default plugins added below
+        // end up after them, keeping the fader/meter post-FX
+        if (auto* devicesElement = channelElement.getChildByName (xml::Devices))
+            parseDevices (*devicesElement, edit, *audioTrack);
+
+        // Most DAWs have per-track gain/pan/metering built in rather than as
+        // exported devices, so add the standard default plugins for the
+        // volume/pan values below to be applied to
+        if (audioTrack->getVolumePlugin() == nullptr)
+            audioTrack->pluginList.addDefaultTrackPlugins (false);
+
         // Parse volume
         if (auto* volumeElement = channelElement.getChildByName (xml::Volume))
         {
@@ -284,10 +300,6 @@ void DAWprojectImporter::parseChannel (const juce::XmlElement& channelElement, E
         // Parse solo
         auto solo = parseBool (channelElement.getStringAttribute (xml::solo), false);
         audioTrack->setSolo (solo);
-
-        // Parse devices (plugins)
-        if (auto* devicesElement = channelElement.getChildByName (xml::Devices))
-            parseDevices (*devicesElement, edit, *audioTrack);
     }
 }
 
