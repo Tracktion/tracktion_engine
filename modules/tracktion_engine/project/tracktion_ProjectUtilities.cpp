@@ -274,6 +274,9 @@ std::pair<int, juce::String> consolidateProject (Project& project)
             return { numImported, error };
     }
 
+    if (edits.getNumFailedLoads() > 0)
+        return { numImported, TRANS("Some of the edits in this project couldn't be opened, so their file references couldn't be updated") };
+
     return { numImported, {} };
 }
 

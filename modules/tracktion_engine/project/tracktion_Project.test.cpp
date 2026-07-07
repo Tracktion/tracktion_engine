@@ -1482,6 +1482,76 @@ TEST_SUITE ("tracktion_engine")
         cleanup();
     }
 
+    TEST_CASE ("ProjectUtilities: consolidate Project with an unloadable Edit")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        // Create a file-based project
+        auto projectFile = tempDir.getChildFile ("consolidate_unloadable_project.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+        REQUIRE (project->isValid());
+
+        // Create a sin wave file outside the project folder
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile != nullptr);
+        REQUIRE (sinFile->getFile().existsAsFile());
+
+        // Create a valid edit referencing the external file
+        auto goodEditItem = project->createNewEdit();
+        REQUIRE (goodEditItem != nullptr);
+
+        {
+            auto edit = createEmptyEdit (engine, goodEditItem->getSourceFile());
+            edit->setProjectItemRef (goodEditItem->getProjectItemRef());
+
+            edit->ensureNumberOfAudioTracks (1);
+            auto audioTracks = getAudioTracks (*edit);
+            REQUIRE (audioTracks.size() >= 1);
+
+            auto waveClip = insertWaveClip (*audioTracks[0], "ExtWave",
+                                            sinFile->getFile(),
+                                            { { 0_tp, TimePosition::fromSeconds (2.0) } },
+                                            DeleteExistingClips::no);
+            CHECK (waveClip != nullptr);
+
+            CHECK (test_utilities::saveEditSync (*edit));
+        }
+
+        // Create a second edit and corrupt its file: not XML and not a serialised
+        // EDIT ValueTree, but non-empty so it isn't treated as a new blank edit
+        auto corruptEditItem = project->createNewEdit();
+        REQUIRE (corruptEditItem != nullptr);
+        REQUIRE (corruptEditItem->getSourceFile().replaceWithText ("CORRUPT"));
+
+        project->save();
+
+        // The corrupt edit should be reported as a failed load rather than a null Edit
+        {
+            auto edits = ProjectUtilities::getEditsInProject (*project);
+            CHECK (edits.getEdits().size() == 1);
+            CHECK (edits.getNumFailedLoads() == 1);
+        }
+
+        // Consolidating shouldn't crash: the valid edit's external file should be
+        // imported and the unloadable edit reported as an error
+        auto [numImported, error] = ProjectUtilities::consolidateProject (*project);
+        CHECK (numImported > 0);
+        CHECK (error.isNotEmpty());
+
+        cleanup();
+    }
+
     TEST_CASE ("Project: setSourceFile triggers sourceFileMoved")
     {
         auto& engine = *Engine::getEngines()[0];
