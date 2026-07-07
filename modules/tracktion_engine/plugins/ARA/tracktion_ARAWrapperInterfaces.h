@@ -69,8 +69,10 @@ public:
             musicalContext = nullptr;
         }
 
-        dci->destroyDocumentController (dcRef);
+        // The spec requires bound plugin instances to be destroyed before the
+        // document controller they're bound to
         wrapper = nullptr;
+        dci->destroyDocumentController (dcRef);
     }
 
     bool canEdit (bool dontCheckMusicalContext) const
@@ -506,6 +508,12 @@ public:
     std::unique_ptr<juce::MemoryBlock> lastArchiveState;
     juce::String lastArchiveDocumentArchiveID;
 
+    // Editor-view-only instances bound to this document besides the clip players
+    // (e.g. the plugin panel's browser instance) - view selection notifications
+    // are fanned out to these as well. Registered/unregistered by
+    // ARADocumentHolder::bindPluginToDocument / ~ARAPluginBinding.
+    std::vector<const ARAPlugInExtensionInstance*> additionalEditorViews;
+
 private:
     std::unique_ptr<ARAInstance> wrapper;
     std::unique_ptr<ARADocumentControllerHostInstance> hostInstance;
@@ -829,6 +837,22 @@ private:
         virtual const void* getDataForEvent (int index) const = 0;
     };
 
+    /** Removes entries whose position doesn't strictly increase over the previous
+        entry, keeping the later entry. Plug-ins validate that content events are
+        strictly ordered and can assert or abort on duplicates, which zero-length
+        progression items or rounding after tempo changes can otherwise produce. */
+    template <typename ContentType, typename GetPosition>
+    static void removeNonIncreasingPositions (juce::Array<ContentType>& items, GetPosition&& getPosition)
+    {
+        for (int i = 1; i < items.size();)
+        {
+            if (getPosition (items.getReference (i)) <= getPosition (items.getReference (i - 1)))
+                items.remove (i - 1);
+            else
+                ++i;
+        }
+    }
+
     template <typename ContentType>
     struct TimeEventReaderHelper : public TimeEventReaderBase
     {
@@ -884,6 +908,8 @@ private:
                                                 beatsToQuarters (ed, timeSig->getStartBeat()) };
                 items.add (item);
             }
+
+            removeNonIncreasingPositions (items, [] (const ARAContentBarSignature& i) { return i.position; });
         }
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TimeSigReader)
@@ -934,6 +960,8 @@ private:
                 extrapolatedTempoEntry.quarterPosition += ed.tempoSequence.getBpmAt (TimePosition::fromSeconds (items.getLast().timePosition));
                 items.add (extrapolatedTempoEntry);
             }
+
+            removeNonIncreasingPositions (items, [] (const ARAContentTempoEntry& i) { return i.quarterPosition; });
         }
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TempoReader)
@@ -1021,6 +1049,10 @@ private:
                 items.add (item);
             }
 
+            // Zero-length progression items produce two chords at the same position,
+            // which ARA plugins reject - keep the later (audible) one
+            removeNonIncreasingPositions (items, [] (const ARAContentChord& i) { return i.position; });
+
             // make sure there is always at least a trailing "no chord"
             if (items.isEmpty())
             {
@@ -1078,6 +1110,8 @@ private:
                 item.position = beatsToQuarters (ed, pitchSetting->getStartBeatNumber());
                 items.add (item);
             }
+
+            removeNonIncreasingPositions (items, [] (const ARAContentKeySignature& i) { return i.position; });
         }
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (KeySignatureReader)
@@ -1165,8 +1199,22 @@ public:
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
 
+        // The cached file info can be stale or missing at this point (e.g. a freshly
+        // unpacked project archive) - re-parse it rather than describing the source
+        // to the plugin with a zero sample rate, which is invalid per the ARA spec
+        if (audioFile.getInfo().sampleRate <= 0.0)
+            audioFile.engine->getAudioFileManager().forceFileUpdate (audioFile);
+
         updateAudioSourceProperties();
         auto audioSourceProperties = getAudioSourceProperties();
+
+        if (audioSourceProperties.sampleRate <= 0.0 || audioSourceProperties.sampleCount <= 0)
+        {
+            TRACKTION_LOG_ERROR ("ARA: not creating an audio source for an unreadable file: "
+                                 + audioFile.getFile().getFullPathName());
+            return;
+        }
+
         audioSourceRef = doc.dci->createAudioSource (doc.dcRef, toHostRef (this), &audioSourceProperties);
     }
 
@@ -1335,7 +1383,7 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioModificationWrapper)
 };
 
-class RegionSequenceWrapper
+class RegionSequenceWrapper  : private SelectableListener
 {
 public:
     RegionSequenceWrapper (ARADocument& d, Track* t) : doc (d), track (t)
@@ -1346,10 +1394,18 @@ public:
         updateRegionSequenceProperties();
         auto regionSequenceProperties = getRegionSequenceProperties();
         regionSequenceRef = doc.dci->createRegionSequence (doc.dcRef, toHostRef (&doc.edit), &regionSequenceProperties);
+
+        // A track rename/recolour with no accompanying clip change must still
+        // reach the plugin, so watch the track itself
+        if (track != nullptr)
+            track->addSelectableListener (this);
     }
 
     ~RegionSequenceWrapper()
     {
+        if (track != nullptr)
+            track->removeSelectableListener (this);
+
         if (regionSequenceRef != nullptr)
             doc.dci->destroyRegionSequence (doc.dcRef, regionSequenceRef);
     }
@@ -1382,6 +1438,34 @@ public:
     Track* track;
 
 private:
+    void selectableObjectChanged (Selectable*) override
+    {
+        // Selectable changes arrive asynchronously on the message thread, so it's
+        // safe to open an editing cycle here. Tracks change for many reasons besides
+        // the properties a region sequence mirrors, so skip no-op notifications.
+        if (track == nullptr || regionSequenceRef == nullptr)
+            return;
+
+        auto trackColour = track->getColour();
+        const ARAColor newColour { trackColour.getFloatRed(), trackColour.getFloatGreen(), trackColour.getFloatBlue() };
+
+        if (name == track->getName()
+             && orderIndex == track->getIndexInEditTrackList()
+             && colour.r == newColour.r && colour.g == newColour.g && colour.b == newColour.b)
+            return;
+
+        if (doc.canEdit (false))
+        {
+            const ARADocument::ScopedEdit scope (doc, false);
+            updateProperties();
+        }
+    }
+
+    void selectableObjectAboutToBeDeleted (Selectable*) override
+    {
+        track = nullptr;
+    }
+
     void updateRegionSequenceProperties()
     {
         name = track->getName();
@@ -1637,26 +1721,70 @@ public:
             audioSource->releaseAccess();
     }
 
+    /** Sends the current selection (all of this clip's playback regions plus its
+        region sequence) to every editor view on the document: the clip's own
+        instance and any additional bound editor views (e.g. the browser panel). */
     void setViewSelection()
     {
-        if (pluginInstance.editorViewInterface != nullptr && ! playbackRegions.empty())
-        {
-            ARAViewSelection selection;
+        // Don't notify while an archive is being restored
+        if (! araDoc.canEdit (true))
+            return;
 
-            ARAPlaybackRegionRef refs[1];
-            refs[0] = playbackRegions[0]->playbackRegionRef;
+        std::vector<ARAPlaybackRegionRef> regionRefs;
 
-            selection.structSize = sizeof (selection);
+        for (auto& pr : playbackRegions)
+            if (pr->playbackRegionRef != nullptr)
+                regionRefs.push_back (pr->playbackRegionRef);
 
-            selection.playbackRegionRefsCount = 1;
-            selection.playbackRegionRefs = refs;
+        if (regionRefs.empty())
+            return;
 
-            selection.regionSequenceRefsCount = 0;
-            selection.regionSequenceRefs = nullptr;
-            selection.timeRange = nullptr;
+        ARARegionSequenceRef sequenceRef = nullptr;
 
-            pluginInstance.editorViewInterface->notifySelection (pluginInstance.editorViewRef, &selection);
-        }
+        if (auto seq = araDoc.regionSequences.find (playbackRegions[0]->trackID);
+            seq != araDoc.regionSequences.end() && seq->second != nullptr)
+            sequenceRef = seq->second->regionSequenceRef;
+
+        ARAViewSelection selection;
+
+        selection.structSize = sizeof (selection);
+        selection.playbackRegionRefsCount = regionRefs.size();
+        selection.playbackRegionRefs = regionRefs.data();
+        selection.regionSequenceRefsCount = sequenceRef != nullptr ? 1 : 0;
+        selection.regionSequenceRefs = sequenceRef != nullptr ? &sequenceRef : nullptr;
+        selection.timeRange = nullptr;
+
+        notifySelectionTo (pluginInstance, selection);
+
+        for (auto extension : araDoc.additionalEditorViews)
+            if (extension != nullptr && extension != &pluginInstance)
+                notifySelectionTo (*extension, selection);
+    }
+
+    /** Returns the number of playback regions a looping clip of the given length needs.
+        Uses a small tolerance so a length sitting on a loop boundary always produces a
+        stable count - deriving it any other way (e.g. repeated subtraction) can disagree
+        with ceil() by one and make the layout check rebuild the regions endlessly. */
+    static size_t getNumLoopRegions (double clipLengthSecs, double loopLengthSecs)
+    {
+        if (loopLengthSecs <= 0.0)
+            return 1;
+
+        auto count = static_cast<ptrdiff_t> (std::ceil ((clipLengthSecs / loopLengthSecs) - 1.0e-9));
+        return static_cast<size_t> (std::max<ptrdiff_t> (1, count));
+    }
+
+    /** Returns true if the current set of playback regions still matches the given
+        clip state, i.e. no rebuild is needed and updateRange() suffices. */
+    bool playbackRegionLayoutMatches (bool isLooping, double clipLengthSecs, double loopLengthSecs) const
+    {
+        if (builtForLooping != (isLooping && loopLengthSecs > 0.0))
+            return false;
+
+        if (! builtForLooping)
+            return true;
+
+        return playbackRegions.size() == getNumLoopRegions (clipLengthSecs, loopLengthSecs);
     }
 
     /** Rebuilds all playback regions based on whether the clip is looping.
@@ -1672,25 +1800,21 @@ public:
         if (audioModification == nullptr || audioModification->audioModificationRef == nullptr)
             return;
 
-        if (clip.isLooping())
+        // Snapshot the clip state once so the region count always agrees with
+        // playbackRegionLayoutMatches() for the same state
+        auto loopLengthSecs = clip.isLooping() ? clip.getLoopLength().inSeconds() : 0.0;
+        builtForLooping = loopLengthSecs > 0.0;
+
+        if (builtForLooping)
         {
-            auto loopLengthSecs = clip.getLoopLength().inSeconds();
+            auto numRegions = getNumLoopRegions (clip.getPosition().getLength().inSeconds(), loopLengthSecs);
 
-            if (loopLengthSecs <= 0.0)
-                return;
-
-            auto remaining = clip.getPosition().getLength().inSeconds();
-            int iteration = 0;
-
-            while (remaining > 0.0)
+            for (size_t iteration = 0; iteration < numRegions; ++iteration)
             {
                 auto pr = std::make_unique<PlaybackRegionWrapper> (araDoc, clip, araFactory, *audioModification,
-                                                                   iteration);
+                                                                   (int) iteration);
                 addPlaybackRegion (*pr);
                 playbackRegions.push_back (std::move (pr));
-
-                remaining -= loopLengthSecs;
-                ++iteration;
             }
         }
         else
@@ -1721,6 +1845,13 @@ private:
     const ARAFactory& araFactory;
     const ARAPlugInExtensionInstance& pluginInstance;
     bool enabledInConstructor = false;
+    bool builtForLooping = false;
+
+    static void notifySelectionTo (const ARAPlugInExtensionInstance& instance, const ARAViewSelection& selection)
+    {
+        if (instance.editorViewInterface != nullptr)
+            instance.editorViewInterface->notifySelection (instance.editorViewRef, &selection);
+    }
 
     void addPlaybackRegion (PlaybackRegionWrapper& pr)
     {

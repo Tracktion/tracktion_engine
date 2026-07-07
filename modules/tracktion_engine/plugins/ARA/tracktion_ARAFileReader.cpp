@@ -426,6 +426,11 @@ struct ARAClipPlayer  : private Selectable::Listener
             playbackRegionAndSource->setViewSelection();
     }
 
+    int getNumPlaybackRegions() const
+    {
+        return playbackRegionAndSource != nullptr ? (int) playbackRegionAndSource->playbackRegions.size() : 0;
+    }
+
     //==============================================================================
     void startProcessing()  { TRACKTION_ASSERT_MESSAGE_THREAD if (playbackRegionAndSource != nullptr) playbackRegionAndSource->enable(); }
     void stopProcessing()   { TRACKTION_ASSERT_MESSAGE_THREAD if (playbackRegionAndSource != nullptr) playbackRegionAndSource->disable(); }
@@ -666,21 +671,12 @@ private:
                 if (playbackRegionAndSource != nullptr
                      && playbackRegionAndSource->hasPlaybackRegions())
                 {
-                    // Check if looping state requires a full region rebuild
-                    bool isLooping = clip.isLooping();
-                    auto regionCount = playbackRegionAndSource->playbackRegions.size();
-                    bool needsRebuild = (isLooping && regionCount <= 1)
-                                      || (! isLooping && regionCount > 1);
-
-                    if (isLooping)
-                    {
-                        auto loopLen = clip.getLoopLength().inSeconds();
-                        auto clipLen = clip.getPosition().getLength().inSeconds();
-                        size_t expectedCount = (loopLen > 0.0) ? (size_t) std::ceil (clipLen / loopLen) : 1;
-                        needsRebuild = needsRebuild || (regionCount != expectedCount);
-                    }
-
-                    if (needsRebuild)
+                    // Only rebuild when the region layout (loop mode / repeat count) no
+                    // longer matches the clip - a rebuild is a remove-all/re-add the
+                    // plugin can see and hear, so it mustn't happen for no-op updates
+                    if (! playbackRegionAndSource->playbackRegionLayoutMatches (clip.isLooping(),
+                                                                                clip.getPosition().getLength().inSeconds(),
+                                                                                clip.getLoopLength().inSeconds()))
                     {
                         const ScopedDocumentEditor sde (*this, true);
 
@@ -815,11 +811,21 @@ ARAFileReader::~ARAFileReader()
 //==============================================================================
 void ARAFileReader::showPluginWindow()
 {
-    if (player != nullptr)
-        player->setViewSelection();
+    notifyViewSelection();
 
     if (auto p = getPlugin())
         p->showWindowExplicitly();
+}
+
+void ARAFileReader::notifyViewSelection()
+{
+    if (player != nullptr)
+        player->setViewSelection();
+}
+
+int ARAFileReader::getNumPlaybackRegions() const
+{
+    return player != nullptr ? player->getNumPlaybackRegions() : 0;
 }
 
 void ARAFileReader::hidePluginWindow()
@@ -1270,21 +1276,30 @@ void ARADocumentHolder::flushStateToValueTree()
 
     if (pimpl != nullptr)
     {
-        // Remove old per-plugin children
-        for (int i = lastState.getNumChildren(); --i >= 0;)
-            if (lastState.getChild (i).hasType (IDs::ARAPLUGIN))
-                lastState.removeChild (i, nullptr);
-
-        // Remove old-format data property
-        lastState.removeProperty ("data", nullptr);
-
-        // Save each document under its own ARAPLUGIN child
+        // Save each document under its own ARAPLUGIN child. NB: never replace a
+        // previously-saved archive with nothing - if a document produced no data
+        // (the plugin failed to store, or no documents were loaded, e.g. an edit
+        // saved by an export job that doesn't load plugins), keep whatever was
+        // saved before rather than silently wiping the user's ARA edits
         for (auto& [key, doc] : pimpl->araDocuments)
         {
             juce::ValueTree pluginState (IDs::ARAPLUGIN);
             pluginState.setProperty (IDs::id, key, nullptr);
             doc->flushStateToValueTree (pluginState);
+
+            if (! pluginState.hasProperty ("data"))
+                continue;
+
+            auto existing = lastState.getChildWithProperty (IDs::id, key);
+
+            if (existing.isValid())
+                lastState.removeChild (existing, nullptr);
+
             lastState.addChild (pluginState, -1, nullptr);
+
+            // This document is now saved per-plugin, so the old-format
+            // whole-document property is stale
+            lastState.removeProperty ("data", nullptr);
         }
     }
 }
@@ -1293,6 +1308,10 @@ void ARADocumentHolder::flushStateToValueTree()
 struct ARAPluginBinding::Impl
 {
     std::unique_ptr<ARAClipPlayer::ARAInstance> instance;
+
+    // The document outlives all bindings: it's owned by the Edit's ARADocumentHolder,
+    // and bindings are owned by UI that's torn down before the Edit
+    ARAClipPlayer::ARADocument* document = nullptr;
 };
 
 ARAPluginBinding::ARAPluginBinding (std::unique_ptr<Impl> implToUse)
@@ -1300,32 +1319,64 @@ ARAPluginBinding::ARAPluginBinding (std::unique_ptr<Impl> implToUse)
 {
 }
 
-ARAPluginBinding::~ARAPluginBinding() = default;
+ARAPluginBinding::~ARAPluginBinding()
+{
+    if (impl != nullptr && impl->document != nullptr && impl->instance != nullptr)
+    {
+        auto& views = impl->document->additionalEditorViews;
+        views.erase (std::remove (views.begin(), views.end(), impl->instance->extensionInstance), views.end());
+    }
+}
 
-std::unique_ptr<ARAPluginBinding> ARADocumentHolder::bindPluginToDocument (ExternalPlugin& plugin,
-                                                                          const juce::PluginDescription& desc)
+bool ARADocumentHolder::bindPluginToDocument (ExternalPlugin& plugin,
+                                              const juce::PluginDescription& desc)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
 
     if (! desc.hasARAExtension)
-        return {};
+        return false;
+
+    // A plugin returned from the PluginCache may already be bound from an earlier
+    // panel session - the bind lasts for the instance's lifetime (destroying the
+    // binding wrapper doesn't end it), and binding twice is invalid, so keep it
+    if (plugin.isBoundToARADocument())
+        return true;
 
     auto doc = getPimpl()->getOrCreateDocument (desc);
 
     if (doc == nullptr)
-        return {};
+        return false;
 
     auto& pluginFactory = ARAClipPlayer::ARAPluginFactory::getInstance (edit.engine, desc);
 
+    //==============================================================================
+    // TODO QA16472: per the ARA spec / vendor guidance, the browser/panel instance
+    // should be ASSIGNED only the editor roles, i.e. pass
+    //     kARAEditorRendererRole | kARAEditorViewRole
+    // as the third argument here, so the plugin doesn't preview its accompaniment
+    // while the DAW is playing
+    //==============================================================================
     std::unique_ptr<ARAClipPlayer::ARAInstance> instance (pluginFactory.createInstance (plugin, doc->dcRef));
 
     if (instance == nullptr)
-        return {};
+        return false;
+
+    // Its VST3 instance is ARA-bound, so it must be destroyed synchronously
+    // (before the document controller) rather than via the async deleter
+    plugin.setDeletesPluginInstanceSynchronously (true);
+
+    // Register the editor view so arrangement selection changes reach it too
+    doc->additionalEditorViews.push_back (instance->extensionInstance);
 
     auto impl = std::make_unique<ARAPluginBinding::Impl>();
     impl->instance = std::move (instance);
+    impl->document = doc;
 
-    return std::unique_ptr<ARAPluginBinding> (new ARAPluginBinding (std::move (impl)));
+    // The plugin owns the binding, so a strong ref back to it would be a refcount cycle
+    impl->instance->plugin = nullptr;
+
+    plugin.setARADocumentBinding (std::unique_ptr<ARAPluginBinding> (new ARAPluginBinding (std::move (impl))));
+    return true;
 }
 
 ARAClipPlayer::ARADocument* ARAClipPlayer::getDocument() const
@@ -1437,6 +1488,8 @@ void ARAFileReader::cleanUpOnShutdown()                        {}
 ExternalPlugin* ARAFileReader::getPlugin()                     { return {}; }
 void ARAFileReader::showPluginWindow()                         {}
 void ARAFileReader::hidePluginWindow()                         {}
+void ARAFileReader::notifyViewSelection()                      {}
+int ARAFileReader::getNumPlaybackRegions() const               { return 0; }
 bool ARAFileReader::isAnalysingContent()                       { return false; }
 juce::MidiMessageSequence ARAFileReader::getAnalysedMIDISequence()   { return {}; }
 void ARAFileReader::sourceClipChanged()                        {}
@@ -1460,7 +1513,7 @@ void ARADocumentHolder::flushStateToValueTree() {}
 struct ARAPluginBinding::Impl {};
 ARAPluginBinding::ARAPluginBinding (std::unique_ptr<Impl> implToUse) : impl (std::move (implToUse)) {}
 ARAPluginBinding::~ARAPluginBinding() = default;
-std::unique_ptr<ARAPluginBinding> ARADocumentHolder::bindPluginToDocument (ExternalPlugin&, const juce::PluginDescription&)   { return {}; }
+bool ARADocumentHolder::bindPluginToDocument (ExternalPlugin&, const juce::PluginDescription&)   { return false; }
 
 } // namespace tracktion::inline engine
 

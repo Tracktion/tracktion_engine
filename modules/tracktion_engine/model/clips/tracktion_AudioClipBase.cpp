@@ -1182,6 +1182,18 @@ bool AudioClipBase::isUsingARA() const
     return TimeStretcher::isARA (timeStretchMode);
 }
 
+void AudioClipBase::selectionStatusChanged (bool isNowSelected)
+{
+    Clip::selectionStatusChanged (isNowSelected);
+
+   #if TRACKTION_ENABLE_ARA
+    // Tell the ARA plugin's editor views about the new selection so their UI
+    // can follow the arrangement
+    if (isNowSelected && araProxy != nullptr && araProxy->isValid())
+        araProxy->notifyViewSelection();
+   #endif
+}
+
 TimeDuration AudioClipBase::getHead() const  { return araProxy != nullptr ? araProxy->getHead() : TimeDuration(); }
 TimeDuration AudioClipBase::getTail() const  { return araProxy != nullptr ? araProxy->getTail() : TimeDuration(); }
 

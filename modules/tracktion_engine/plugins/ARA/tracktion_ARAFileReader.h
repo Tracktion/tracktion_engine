@@ -68,6 +68,16 @@ public:
     void showPluginWindow();
     void hidePluginWindow();
 
+    /** Sends the clip's playback regions and region sequence as the current view
+        selection to every editor view bound to the document (the clip's own
+        instance and e.g. the browser panel instance). Call when the arrangement
+        selection changes so the plugin's UI can follow it. */
+    void notifyViewSelection();
+
+    /** Returns the number of ARA playback regions currently created for the clip
+        (one per loop repeat for looping clips). */
+    int getNumPlaybackRegions() const;
+
     bool isAnalysingContent();
     juce::MidiMessageSequence getAnalysedMIDISequence();
 
@@ -143,9 +153,11 @@ ARAIXMLResult detectARAFromIXMLChunks (Engine&, const juce::File& sourceFile);
 
 
 //==============================================================================
-/** Owns an ARA document-controller binding created by
-    ARADocumentHolder::bindPluginToDocument. Destroying it releases the binding,
-    taking the plugin out of ARA mode. */
+/** RAII wrapper for an ARA document-controller binding created by
+    ARADocumentHolder::bindPluginToDocument, owned by the bound ExternalPlugin
+    (see ExternalPlugin::setARADocumentBinding). It's destroyed - unregistering
+    from the ARA document - just before the plugin's instance is deleted, which
+    is when the bind itself actually ends. */
 class ARAPluginBinding
 {
 public:
@@ -173,9 +185,13 @@ struct ARADocumentHolder
         controller for the given description (lazily creating the document), putting the
         plugin into ARA mode. No audio source, playback region or musical context is created.
 
-        Returns null if the plugin isn't ARA-capable, its instance isn't loaded yet, or the
-        binding fails. The returned object owns the binding for as long as it's kept alive. */
-    std::unique_ptr<ARAPluginBinding> bindPluginToDocument (ExternalPlugin&, const juce::PluginDescription&);
+        The plugin takes ownership of the binding (ExternalPlugin::setARADocumentBinding),
+        which lasts for the lifetime of its loaded instance - if the plugin is already
+        bound (e.g. it came back from the PluginCache), the existing binding is kept.
+
+        Returns false if the plugin isn't ARA-capable, its instance isn't loaded yet, or
+        the binding fails. */
+    bool bindPluginToDocument (ExternalPlugin&, const juce::PluginDescription&);
 
     struct Pimpl;
     Pimpl* getPimpl();

@@ -1014,6 +1014,15 @@ ExternalPlugin::~ExternalPlugin()
     deletePluginInstance();
 }
 
+#if TRACKTION_ENABLE_ARA
+void ExternalPlugin::setARADocumentBinding (std::unique_ptr<ARAPluginBinding> newBinding)
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+    jassert (araBinding == nullptr || newBinding == nullptr);   // an instance must only ever be bound once
+    araBinding = std::move (newBinding);
+}
+#endif
+
 void ExternalPlugin::selectableAboutToBeDeleted()
 {
     for (auto param : autoParamForParamNumbers)
@@ -1919,9 +1928,24 @@ void ExternalPlugin::deletePluginInstance()
     isAsyncInitialising = false;
     loadError = {};
 
+   #if TRACKTION_ENABLE_ARA
+    // The ARA bind lives and dies with the wrapped instance: unregister the binding
+    // from its document before the instance goes away
+    araBinding.reset();
+   #endif
+
     if (loadedInstance)
+    {
         if (auto pi = loadedInstance->releaseInstance())
-            AsyncPluginDeleter::getInstance()->deletePlugin (std::move (pi));
+        {
+            // ARA-bound instances must be destroyed before their document controller,
+            // so they can't sit in the async deletion queue
+            if (deleteInstanceSynchronously)
+                pi.reset();
+            else
+                AsyncPluginDeleter::getInstance()->deletePlugin (std::move (pi));
+        }
+    }
 }
 
 //==============================================================================

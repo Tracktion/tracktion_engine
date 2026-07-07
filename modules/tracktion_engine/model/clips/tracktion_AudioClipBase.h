@@ -601,6 +601,9 @@ public:
     /** Returns true if this clip is using an ARA plugin. */
     bool isUsingARA() const;
 
+    /** @internal Keeps the ARA plugin's editor view following the arrangement selection. */
+    void selectionStatusChanged (bool isNowSelected) override;
+
     TimeDuration getHead() const override;
     TimeDuration getTail() const override;
 

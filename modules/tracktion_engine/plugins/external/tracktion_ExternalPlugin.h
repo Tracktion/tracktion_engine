@@ -14,6 +14,10 @@ namespace tracktion::inline engine {
 // breaking all our saved files. This reverts to the old format
 juce::String createIdentifierString (const juce::PluginDescription&);
 
+#if TRACKTION_ENABLE_ARA
+class ARAPluginBinding;
+#endif
+
 
 /** Wraps a juce::AudioPluginInstance (VST2, VST3, AU, etc.) as a tracktion Plugin.
 
@@ -154,6 +158,28 @@ public:
     /** Returns the underlying juce::AudioPluginInstance, or nullptr if not yet loaded. */
     juce::AudioPluginInstance* getAudioPluginInstance() const;
 
+    /** If enabled, the wrapped juce::AudioPluginInstance is destroyed synchronously when
+        this plugin is deleted rather than via the shared asynchronous deleter. ARA-bound
+        instances need this: the ARA spec requires a bound plugin instance to be destroyed
+        before the document controller it is bound to. */
+    void setDeletesPluginInstanceSynchronously (bool shouldDeleteSynchronously) noexcept    { deleteInstanceSynchronously = shouldDeleteSynchronously; }
+
+   #if TRACKTION_ENABLE_ARA
+    /** Takes ownership of this plugin's ARA document binding
+        (see ARADocumentHolder::bindPluginToDocument). The binding is destroyed -
+        unregistering from the ARA document - just before the wrapped instance is
+        deleted, so it can never dangle or outlive the plugin. */
+    void setARADocumentBinding (std::unique_ptr<ARAPluginBinding>);
+
+    /** Returns true if this plugin owns an ARA document binding, i.e. it was bound via
+        ARADocumentHolder::bindPluginToDocument (the browser/panel case). The bind lasts
+        for the lifetime of the wrapped instance, so a plugin returned from the
+        PluginCache may already be bound.
+        NB: clip-player instances are ARA-bound too, but they're owned by their
+        ARAClipPlayer and never pass through the PluginCache, so they don't show here. */
+    bool isBoundToARADocument() const noexcept          { return araBinding != nullptr; }
+   #endif
+
     /** The plugin's description (format, name, manufacturer, file path, etc.). */
     juce::PluginDescription desc;
 
@@ -182,6 +208,11 @@ private:
     class LoadedInstance;
     std::unique_ptr<LoadedInstance> loadedInstance;
     std::atomic<bool> hasLoadedInstance { false }, isInstancePrepared { false }, isAsyncInitialising { false };
+    bool deleteInstanceSynchronously = false;
+
+   #if TRACKTION_ENABLE_ARA
+    std::unique_ptr<ARAPluginBinding> araBinding;
+   #endif
 
     std::unique_ptr<VSTXML> vstXML;
     int latencySamples = 0;
