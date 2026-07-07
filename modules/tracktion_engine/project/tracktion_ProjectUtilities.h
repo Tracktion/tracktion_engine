@@ -24,22 +24,37 @@ namespace ProjectUtilities
             return edits;
         }
 
-        /** Adds a non-owned Edit. */
+        /** Adds a non-owned Edit. Null Edits are counted as failed loads. */
         void add (Edit* edit)
         {
+            if (edit == nullptr)
+            {
+                ++numFailedLoads;
+                return;
+            }
+
             edits.push_back (edit);
         }
 
-        /** Adds an owned Edit. */
+        /** Adds an owned Edit. Null Edits are counted as failed loads. */
         void add (std::unique_ptr<Edit> edit)
         {
             add (edit.get());
-            ownedEdits.push_back (std::move (edit));
+
+            if (edit != nullptr)
+                ownedEdits.push_back (std::move (edit));
+        }
+
+        /** Returns the number of null Edits that were added, i.e. Edits that failed to load. */
+        int getNumFailedLoads() const
+        {
+            return numFailedLoads;
         }
 
     private:
         std::vector<Edit*> edits;
         std::vector<std::unique_ptr<Edit>> ownedEdits;
+        int numFailedLoads = 0;
     };
 
     /** Force saves a container of Edits. */

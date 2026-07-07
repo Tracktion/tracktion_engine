@@ -3385,6 +3385,9 @@ JUCE_BEGIN_IGNORE_WARNINGS_GCC_LIKE ("-Wdeprecated-declarations")
 JUCE_BEGIN_IGNORE_WARNINGS_MSVC (4996)
 std::unique_ptr<Edit> Edit::createEditForExamining (Engine& e, juce::ValueTree editState, EditRole roleToUse, LoadContext* loadContextToUse)
 {
+    if (! editState.isValid())
+        return {};
+
     return createEdit (Options
     {
         e,
