@@ -141,6 +141,12 @@ public:
         return cache;
     }
 
+    /** The full role set used for clip player instances, which render playback audio
+        as well as hosting the editor. */
+    static constexpr ARAPlugInInstanceRoleFlags allInstanceRoles = kARAPlaybackRendererRole
+                                                                    | kARAEditorRendererRole
+                                                                    | kARAEditorViewRole;
+
     ExternalPlugin::Ptr createPlugin (Edit& ed)
     {
         if (plugin != nullptr)
@@ -149,7 +155,12 @@ public:
             ExternalPlugin::Ptr p = new ExternalPlugin (PluginCreationInfo (ed, newState, true));
 
             if (p->getAudioPluginInstance() != nullptr)
+            {
+                // ARA-bound instances must be destroyed before their document
+                // controller, so they can't go through the shared async deleter
+                p->setDeletesPluginInstanceSynchronously (true);
                 return p;
+            }
         }
 
         return {};
@@ -161,12 +172,16 @@ public:
         ExternalPlugin::Ptr p = new ExternalPlugin (PluginCreationInfo (ed, newState, true));
 
         if (p->getAudioPluginInstance() != nullptr)
+        {
+            p->setDeletesPluginInstanceSynchronously (true);
             return p;
+        }
 
         return {};
     }
 
-    ARAInstance* createInstance (ExternalPlugin& p, ARADocumentControllerRef dcRef)
+    ARAInstance* createInstance (ExternalPlugin& p, ARADocumentControllerRef dcRef,
+                                 ARAPlugInInstanceRoleFlags roles = allInstanceRoles)
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         jassert (plugin != nullptr);
@@ -176,7 +191,7 @@ public:
         w->factory = factory;
         w->extensionInstance = nullptr;
 
-        if (! setExtensionInstance (*w, dcRef))
+        if (! setExtensionInstance (*w, dcRef, roles))
             w = nullptr;
 
         return w.release();
@@ -186,8 +201,10 @@ public:
 
     ~ARAPluginFactory()
     {
-        initGuard.reset();
+        // The dummy instance must go before uninitializeARA - the spec requires all
+        // of a module's plugin instances to be destroyed before ARA is uninitialised
         plugin = nullptr;
+        initGuard.reset();
     }
 
 private:
@@ -287,7 +304,7 @@ private:
             factory = nullptr;
     }
 
-    bool setExtensionInstance (ARAInstance& w, ARADocumentControllerRef dcRef)
+    bool setExtensionInstance (ARAInstance& w, ARADocumentControllerRef dcRef, ARAPlugInInstanceRoleFlags roles)
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         CRASH_TRACER
@@ -298,7 +315,7 @@ private:
         auto type = plugin->getPluginDescription().pluginFormatName;
 
         if (type == "VST3")
-            return setExtensionInstanceVST3 (w, dcRef);
+            return setExtensionInstanceVST3 (w, dcRef, roles);
 
         return false;
     }
@@ -326,17 +343,18 @@ private:
         return {};
     }
 
-    bool setExtensionInstanceVST3 (ARAInstance& w, ARADocumentControllerRef dcRef)
+    bool setExtensionInstanceVST3 (ARAInstance& w, ARADocumentControllerRef dcRef, ARAPlugInInstanceRoleFlags roles)
     {
         if (auto p = w.plugin->getAudioPluginInstance())
         {
             auto vst3EntryPoint2 = getVST3EntryPoint<IPlugInEntryPoint2> (*p);
 
+            // knownRoles must always declare every role this host implements - a role
+            // missing from knownRoles makes the plugin fall back to handling it
+            // internally. Only assignedRoles is narrowed (e.g. editor-only for the
+            // browser/panel instance, so it doesn't act as a playback renderer).
             if (vst3EntryPoint2 != nullptr)
-            {
-                ARAPlugInInstanceRoleFlags roles = kARAPlaybackRendererRole | kARAEditorRendererRole | kARAEditorViewRole;
-                w.extensionInstance = vst3EntryPoint2->bindToDocumentControllerWithRoles (dcRef, roles, roles);
-            }
+                w.extensionInstance = vst3EntryPoint2->bindToDocumentControllerWithRoles (dcRef, allInstanceRoles, roles);
         }
 
         return w.extensionInstance != nullptr;

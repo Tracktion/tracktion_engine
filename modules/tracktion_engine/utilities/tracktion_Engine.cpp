@@ -114,8 +114,10 @@ Engine::~Engine()
     deviceManager.reset();
     midiProgramManager.reset();
 
-    ARAFileReader::cleanUpOnShutdown();
+    // Any queued plugin instance deletions must complete before ARA is uninitialised
+    // and its modules are released - some of those instances may be ARA-bound
     cleanUpDanglingPlugins();
+    ARAFileReader::cleanUpOnShutdown();
     pluginManager.reset();
 
     temporaryFileManager.reset();
