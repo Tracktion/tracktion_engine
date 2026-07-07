@@ -1091,8 +1091,16 @@ void TransportControl::timerCallback()
         if (! looping || isPlaying())
         {
             const auto currentTime = playHeadWrapper->getLiveTransportPosition();
-            transportState->setVideoPosition (currentTime, false);
-            transportState->updatePositionFromPlayhead (currentTime);
+            const auto sampleRate = playHeadWrapper->getSampleRate();
+
+            // The playhead quantises positions to whole samples, so if it's still at the
+            // transport position, keep the precisely-set position rather than replacing
+            // it with the quantised readback (which would show e.g. 8|4|959 instead of 9|1|000)
+            if (toSamples (currentTime, sampleRate) != toSamples (position.get(), sampleRate))
+            {
+                transportState->setVideoPosition (currentTime, false);
+                transportState->updatePositionFromPlayhead (currentTime);
+            }
         }
     }
 

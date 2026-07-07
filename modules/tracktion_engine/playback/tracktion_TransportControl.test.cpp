@@ -44,6 +44,42 @@ namespace tracktion::inline engine {
             CHECK (graph::test_utilities::buffersAreEqual (output, toBufferView (squareBuffer), 0.01f));
         }
 
+        TEST_CASE ("Transport position set whilst stopped isn't quantised to samples")
+        {
+            auto& engine = *Engine::getEngines()[0];
+            test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512, .inputChannels = 0, .outputChannels = 1,
+                                                           .inputNames = {}, .outputNames = {} });
+
+            auto edit = engine::test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+            auto& tc = edit->getTransport();
+            edit->tempoSequence.getTempo (0)->setBpm (74.0);
+            tc.ensureContextAllocated();
+
+            // Bar 9 at 74bpm in 4/4 is beat 32 = 25.945945... seconds, which doesn't
+            // fall on a whole sample at 44.1kHz
+            const auto barTime = edit->tempoSequence.toTime (tempo::BarsAndBeats { .bars = 8 });
+            tc.setPosition (barTime);
+
+            // Process audio blocks so the playhead applies the posted position, and pump
+            // the message loop past the transport's 200ms drag-guard so its timer syncs
+            // the position back from the sample-quantised playhead
+            for (int i = 0; i < 25; ++i)
+            {
+                player.process (512);
+                juce::MessageManager::getInstance()->runDispatchLoopUntil (20);
+            }
+
+            CHECK_EQ (tc.getPosition().inSeconds(), barTime.inSeconds());
+
+            // The position should still read as the start of bar 9 (9|1|000, not 8|4|959)
+            // when displayed the way the timecode readout does
+            const auto nudge = TimeDuration::fromSeconds (0.05 / 96000.0);
+            const auto barsBeats = edit->tempoSequence.toBarsAndBeats (tc.getPosition() + nudge);
+            CHECK_EQ (barsBeats.bars, 8);
+            CHECK_EQ (barsBeats.getWholeBeats(), 0);
+            CHECK_EQ ((int) (barsBeats.getFractionalBeats().inBeats() * Edit::ticksPerQuarterNote), 0);
+        }
+
         TEST_CASE ("Playback context can't be allocated whilst rendering")
         {
             auto& engine = *Engine::getEngines()[0];
