@@ -829,7 +829,8 @@ void TransportControl::releaseAudioNodes()
 
 void TransportControl::ensureContextAllocated (bool alwaysReallocate)
 {
-    if (! edit.shouldPlay())
+    // Whilst rendering, the playback context must stay freed (see Edit::ScopedRenderStatus)
+    if (! edit.shouldPlay() || edit.isRendering())
         return;
 
     const auto start = position.get();
