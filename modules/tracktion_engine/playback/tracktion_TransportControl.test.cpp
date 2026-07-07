@@ -43,6 +43,43 @@ namespace tracktion::inline engine {
 
             CHECK (graph::test_utilities::buffersAreEqual (output, toBufferView (squareBuffer), 0.01f));
         }
+
+        TEST_CASE ("Playback context can't be allocated whilst rendering")
+        {
+            auto& engine = *Engine::getEngines()[0];
+            auto edit = test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+            auto& tc = edit->getTransport();
+
+            tc.ensureContextAllocated();
+            REQUIRE (tc.getCurrentPlaybackContext() != nullptr);
+
+            // Re-allocates in response to playbackContextChanged, the way an app-level
+            // listener might, so freeing the context for a render mustn't resurrect it
+            struct ContextReallocator : TransportControl::Listener
+            {
+                explicit ContextReallocator (TransportControl& t) : transport (t) {}
+
+                void playbackContextChanged() override      { transport.ensureContextAllocated(); }
+
+                TransportControl& transport;
+                const ScopedListener transportListener { transport, *this };
+            };
+
+            ContextReallocator reallocator { tc };
+
+            {
+                const Edit::ScopedRenderStatus srs (*edit, true);
+                CHECK (edit->isRendering());
+                CHECK (tc.getCurrentPlaybackContext() == nullptr);
+
+                tc.ensureContextAllocated();
+                CHECK (tc.getCurrentPlaybackContext() == nullptr);
+            }
+
+            // The context was active before the render, so it should be restored afterwards
+            CHECK (! edit->isRendering());
+            CHECK (tc.getCurrentPlaybackContext() != nullptr);
+        }
     }
 #endif
 
