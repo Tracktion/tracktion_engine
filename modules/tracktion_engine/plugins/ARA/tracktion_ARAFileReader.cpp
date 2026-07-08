@@ -1356,7 +1356,8 @@ bool ARADocumentHolder::bindPluginToDocument (ExternalPlugin& plugin,
     // as the third argument here, so the plugin doesn't preview its accompaniment
     // while the DAW is playing
     //==============================================================================
-    std::unique_ptr<ARAClipPlayer::ARAInstance> instance (pluginFactory.createInstance (plugin, doc->dcRef));
+    std::unique_ptr<ARAClipPlayer::ARAInstance> instance (pluginFactory.createInstance (plugin, doc->dcRef,
+                                                                                                kARAEditorRendererRole | kARAEditorViewRole));
 
     if (instance == nullptr)
         return false;
