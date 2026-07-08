@@ -296,8 +296,11 @@ juce::String ProjectItem::getSelectableDescription()
 
 void ProjectItem::selectionStatusChanged (bool isNowSelected)
 {
+    // Update the length quietly: broadcasting a change here dirties the whole
+    // project, which makes the project tab rebuild its lists and lose the
+    // selection that's being made
     if (isNowSelected && getLength() == 0)
-        verifyLength();
+        verifyLength (juce::dontSendNotification);
 }
 
 //==============================================================================
@@ -775,7 +778,7 @@ juce::String ProjectItem::getProjectName() const
 }
 
 //==============================================================================
-void ProjectItem::verifyLength()
+void ProjectItem::verifyLength (juce::NotificationType notification)
 {
     double len = 0.0;
 
@@ -804,7 +807,12 @@ void ProjectItem::verifyLength()
     }
 
     if (len > 0.001 && len != getLength())
-        setLength (len);
+    {
+        if (notification == juce::dontSendNotification)
+            length = len;
+        else
+            setLength (len);
+    }
 }
 
 //==============================================================================
