@@ -79,6 +79,9 @@ void RackReturnNode::prepareToPlay (const tracktion::graph::PlaybackInitialisati
     if (wetInput->numOutputNodes > 1)
         return;
 
+    if (! wetInput->canShareOutputBuffer())
+        return;
+
     const auto inputNumChannels = wetInput->getNodeProperties().numberOfChannels;
     const auto desiredNumChannels = getNodeProperties().numberOfChannels;
 

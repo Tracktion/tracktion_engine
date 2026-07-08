@@ -58,7 +58,7 @@ public:
         const auto inputProps = input->getNodeProperties();
         const auto nodeProps = getNodeProperties();
 
-        if (info.enableNodeMemorySharing && input->numOutputNodes == 1)
+        if (info.enableNodeMemorySharing && input->numOutputNodes == 1 && input->canShareOutputBuffer())
         {
             const auto inputNumChannels = inputProps.numberOfChannels;
             const auto desiredNumChannels = nodeProps.numberOfChannels;
