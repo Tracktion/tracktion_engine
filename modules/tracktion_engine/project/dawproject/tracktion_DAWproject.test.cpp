@@ -1088,7 +1088,132 @@ TEST_SUITE ("tracktion_engine")
         auto* volPlugin = volPanTrack->getVolumePlugin();
         REQUIRE (volPlugin != nullptr);
         CHECK_EQ (volPlugin->getVolumeDb(), doctest::Approx (-6.0f).epsilon (0.01));
-        CHECK_EQ (volPlugin->getPan(), doctest::Approx (0.25f).epsilon (0.01));
+
+        // Pan is normalized 0-1 in the file (0.5 = centre), -1 to 1 in tracktion
+        CHECK_EQ (volPlugin->getPan(), doctest::Approx (-0.5f).epsilon (0.01));
+    }
+
+    //==============================================================================
+    TEST_CASE ("DAWproject: normalized pan values map to tracktion's -1 to 1 range")
+    {
+        // Discussion #1165: DAWproject pan is normalized 0-1 (0 = hard left,
+        // 0.5 = centre, 1 = hard right), but the values were applied directly to
+        // tracktion's -1 to 1 pan, importing a centred Bitwig track as +0.5.
+        using namespace dawproject;
+
+        auto& engine = *Engine::getEngines()[0];
+
+        const juce::String xml = R"(<?xml version="1.0" encoding="UTF-8"?>
+<Project version="1.0">
+  <Application name="TestDAW" version="1.0"/>
+  <Transport><Tempo value="120.0"/></Transport>
+  <Structure>
+    <Track name="Centre" id="track1" contentType="audio">
+      <Channel id="ch1" role="regular">
+        <Pan max="1.000000" min="0.000000" unit="normalized" value="0.500000"/>
+      </Channel>
+    </Track>
+    <Track name="HardLeft" id="track2" contentType="audio">
+      <Channel id="ch2" role="regular">
+        <Pan max="1.000000" min="0.000000" unit="normalized" value="0.000000"/>
+      </Channel>
+    </Track>
+    <Track name="HardRight" id="track3" contentType="audio">
+      <Channel id="ch3" role="regular">
+        <Pan max="1.000000" min="0.000000" unit="normalized" value="1.000000"/>
+      </Channel>
+    </Track>
+  </Structure>
+  <Arrangement><Lanes/></Arrangement>
+</Project>
+)";
+
+        juce::TemporaryFile dawprojectFile (".dawproject");
+        writeMinimalDAWprojectZip (dawprojectFile.getFile(), xml, {});
+
+        ParseOptions parseOpts;
+        parseOpts.extractAudioFiles = false;
+        auto importedEdit = parseDAWproject (engine, dawprojectFile.getFile(), parseOpts);
+        REQUIRE (importedEdit != nullptr);
+
+        auto checkPan = [&] (const juce::String& trackName, float expectedPan)
+        {
+            for (auto t : getAudioTracks (*importedEdit))
+            {
+                if (t->getName() == trackName)
+                {
+                    auto* volPlugin = t->getVolumePlugin();
+                    REQUIRE_MESSAGE (volPlugin != nullptr, "No volume plugin on: " << trackName);
+                    CHECK_MESSAGE (volPlugin->getPan() == doctest::Approx (expectedPan).epsilon (0.01),
+                                   "Wrong pan on: " << trackName);
+                    return;
+                }
+            }
+
+            FAIL ("Track not found: " << trackName);
+        };
+
+        checkPan ("Centre", 0.0f);
+        checkPan ("HardLeft", -1.0f);
+        checkPan ("HardRight", 1.0f);
+    }
+
+    //==============================================================================
+    TEST_CASE ("DAWproject: round-trip track pan")
+    {
+        using namespace dawproject;
+
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine, 1);
+
+        auto* track = getAudioTracks (*edit)[0];
+        REQUIRE (track != nullptr);
+        track->setName ("Panned Track");
+        auto* volPlugin = track->getVolumePlugin();
+        REQUIRE (volPlugin != nullptr);
+        volPlugin->setPan (-0.5f);
+
+        // Export to XML and check the pan is written as normalized 0-1
+        WriteOptions writeOpts;
+        writeOpts.embedAudioFiles = false;
+        auto xmlResult = createDAWproject (*edit, writeOpts);
+        REQUIRE (xmlResult.has_value());
+        auto& xml = *xmlResult.value();
+
+        auto* structure = xml.getChildByName ("Structure");
+        REQUIRE (structure != nullptr);
+
+        juce::XmlElement* panElement = nullptr;
+        for (auto* child : structure->getChildIterator())
+            if (child->hasTagName ("Track") && child->getStringAttribute ("name") == "Panned Track")
+                if (auto* channel = child->getChildByName ("Channel"))
+                    panElement = channel->getChildByName ("Pan");
+
+        REQUIRE (panElement != nullptr);
+        CHECK_EQ (panElement->getStringAttribute ("unit").toStdString(), "normalized");
+        CHECK_EQ (panElement->getDoubleAttribute ("value"), doctest::Approx (0.25).epsilon (0.01));
+
+        // Re-import and check the pan value survives the round-trip
+        juce::TemporaryFile dawprojectFile (".dawproject");
+        writeMinimalDAWprojectZip (dawprojectFile.getFile(), xml.toString(), {});
+
+        ParseOptions parseOpts;
+        parseOpts.extractAudioFiles = false;
+        auto importedEdit = parseDAWproject (engine, dawprojectFile.getFile(), parseOpts);
+        REQUIRE (importedEdit != nullptr);
+
+        for (auto t : getAudioTracks (*importedEdit))
+        {
+            if (t->getName() == "Panned Track")
+            {
+                auto* importedVolPlugin = t->getVolumePlugin();
+                REQUIRE (importedVolPlugin != nullptr);
+                CHECK_EQ (importedVolPlugin->getPan(), doctest::Approx (-0.5f).epsilon (0.01));
+                return;
+            }
+        }
+
+        FAIL ("Panned Track not found after round-trip");
     }
 
     //==============================================================================

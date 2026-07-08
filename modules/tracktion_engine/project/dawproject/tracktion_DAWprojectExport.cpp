@@ -166,7 +166,9 @@ juce::XmlElement* DAWprojectExporter::createStructure (juce::XmlElement& parent)
 
         auto* pan = addChildElement (*masterChannel, xml::Pan);
         pan->setAttribute (xml::unit, xml::normalized);
-        pan->setAttribute (xml::value, masterVolPlugin->getPan());
+        pan->setAttribute (xml::min, 0.0);
+        pan->setAttribute (xml::max, 1.0);
+        pan->setAttribute (xml::value, panToNormalized (masterVolPlugin->getPan()));
     }
 
     return structure;
@@ -222,7 +224,9 @@ juce::XmlElement* DAWprojectExporter::createChannelElement (juce::XmlElement& pa
 
             auto* pan = addChildElement (*channel, xml::Pan);
             pan->setAttribute (xml::unit, xml::normalized);
-            pan->setAttribute (xml::value, volPlugin->getPan());
+            pan->setAttribute (xml::min, 0.0);
+            pan->setAttribute (xml::max, 1.0);
+            pan->setAttribute (xml::value, panToNormalized (volPlugin->getPan()));
         }
 
         // Mute
