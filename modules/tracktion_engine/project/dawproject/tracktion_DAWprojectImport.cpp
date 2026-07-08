@@ -241,9 +241,13 @@ void DAWprojectImporter::parseChannel (const juce::XmlElement& channelElement, E
 
         if (auto* panElement = channelElement.getChildByName (xml::Pan))
         {
-            auto value = parseDouble (panElement->getStringAttribute (xml::value), 0.0);
             if (auto masterVol = edit.getMasterVolumePlugin())
-                masterVol->setPan (static_cast<float> (value));
+            {
+                if (panElement->getStringAttribute (xml::unit) == xml::normalized)
+                    masterVol->setPan (normalizedToPan (parseDouble (panElement->getStringAttribute (xml::value), 0.5)));
+                else
+                    masterVol->setPan (static_cast<float> (parseDouble (panElement->getStringAttribute (xml::value), 0.0)));
+            }
         }
 
         return;
@@ -285,9 +289,13 @@ void DAWprojectImporter::parseChannel (const juce::XmlElement& channelElement, E
         // Parse pan
         if (auto* panElement = channelElement.getChildByName (xml::Pan))
         {
-            auto value = parseDouble (panElement->getStringAttribute (xml::value), 0.0);
             if (auto* volPlugin = audioTrack->getVolumePlugin())
-                volPlugin->setPan (static_cast<float> (value));
+            {
+                if (panElement->getStringAttribute (xml::unit) == xml::normalized)
+                    volPlugin->setPan (normalizedToPan (parseDouble (panElement->getStringAttribute (xml::value), 0.5)));
+                else
+                    volPlugin->setPan (static_cast<float> (parseDouble (panElement->getStringAttribute (xml::value), 0.0)));
+            }
         }
 
         // Parse mute

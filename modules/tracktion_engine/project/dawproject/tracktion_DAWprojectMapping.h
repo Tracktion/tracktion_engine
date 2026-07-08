@@ -336,6 +336,18 @@ inline juce::Colour dawprojectStringToColour (const juce::String& str)
 }
 
 //==============================================================================
+/** Pan conversion between tracktion (-1.0 to 1.0) and DAWproject (0.0-1.0 normalized, 0.5 = centre). */
+inline float normalizedToPan (double normalized)
+{
+    return juce::jlimit (-1.0f, 1.0f, static_cast<float> (normalized * 2.0 - 1.0));
+}
+
+inline double panToNormalized (float pan)
+{
+    return juce::jlimit (0.0, 1.0, (static_cast<double> (pan) + 1.0) / 2.0);
+}
+
+//==============================================================================
 /** Volume conversion between linear gain and decibels. */
 inline double gainToDecibels (float gain)
 {
