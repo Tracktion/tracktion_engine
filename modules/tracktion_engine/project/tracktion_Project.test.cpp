@@ -3305,6 +3305,12 @@ TEST_SUITE ("tracktion_engine")
         CHECK (item->getLength() > 0.0);
         CHECK (item->getLength() == doctest::Approx (2.0).epsilon (0.1));
 
+        // the quiet variant should also update the length
+        item->setLength (0.0);
+        CHECK (item->getLength() == 0.0);
+        item->verifyLength (juce::dontSendNotification);
+        CHECK (item->getLength() == doctest::Approx (2.0).epsilon (0.1));
+
         cleanup();
     }
 

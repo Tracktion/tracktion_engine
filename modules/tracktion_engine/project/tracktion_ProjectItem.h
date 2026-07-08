@@ -171,8 +171,11 @@ public:
 
     bool deleteSourceFile();
 
-    /** Updates the stored length value in this object. */
-    void verifyLength();
+    /** Updates the stored length value in this object.
+        Pass juce::dontSendNotification to update it without broadcasting a change
+        - a change here propagates to the owning project, which makes project list
+        UIs rebuild themselves. */
+    void verifyLength (juce::NotificationType = juce::sendNotification);
 
     /** used when moving to another project. */
     void changeProjectId (ProjectID oldID, ProjectID newID);
