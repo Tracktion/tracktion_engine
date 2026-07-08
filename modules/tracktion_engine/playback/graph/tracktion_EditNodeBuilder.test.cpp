@@ -758,6 +758,74 @@ TEST_CASE ("Plugin on empty track does not crash with 0-channel buffer")
     }
 }
 
+TEST_CASE ("Generator plugin Node: SilentNode stays silent with node memory sharing enabled")
+{
+    using namespace tracktion::graph::test_utilities;
+    using namespace editnode_test_helpers;
+
+    tracktion::graph::test_utilities::TestSetup ts;
+    ts.sampleRate = 44100.0;
+    ts.blockSize = 256;
+
+    auto& engine = *tracktion::engine::Engine::getEngines()[0];
+    engine.getPluginManager().createBuiltInType<ToneGeneratorPlugin>();
+    auto edit = test_utilities::createTestEdit (engine);
+
+    auto plugin = edit->getPluginCache().createNewPlugin (ToneGeneratorPlugin::xmlTypeName, {});
+    REQUIRE (plugin != nullptr);
+
+    tracktion::graph::PlayHead playHead;
+    tracktion::graph::PlayHeadState playHeadState { playHead };
+    ProcessState processState { playHeadState, edit->tempoSequence };
+
+    CreateNodeParams params { processState };
+    params.sampleRate = ts.sampleRate;
+    params.blockSize = ts.blockSize;
+
+    // Mirrors the browser plugin panel: a generator plugin fed by a SilentNode,
+    // summed into the output (here another SilentNode stands in for the edit output)
+    auto node = createGeneratorPluginNode (plugin, params, makeNode<SilentNode> (2));
+
+    // Collect the SilentNodes so their buffers can be inspected after processing
+    std::vector<Node*> silentNodes;
+    std::function<void (Node&)> collectSilentNodes = [&] (Node& n)
+    {
+        if (dynamic_cast<SilentNode*> (&n) != nullptr)
+            silentNodes.push_back (&n);
+
+        for (auto in : n.getDirectInputNodes())
+            collectSilentNodes (*in);
+    };
+    collectSilentNodes (*node);
+    REQUIRE (silentNodes.size() == 2); // one feeding the plugin, one standing in for the edit output
+
+    for (auto silent : silentNodes)
+        CHECK (! silent->canShareOutputBuffer());
+
+    // N.B. Memory sharing must be enabled before the Node is set so it's active when the graph is prepared
+    auto player = std::make_unique<TracktionNodePlayer> (processState, getPoolCreatorFunction (ThreadPoolStrategy::hybrid));
+    player->enableNodeMemorySharing (true);
+    player->setNode (std::move (node), ts.sampleRate, ts.blockSize);
+
+    graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::move (player), ts, 2, 1.0, true);
+    testContext.getNodePlayer().setNumThreads (0);
+    testContext.setPlayHead (&playHeadState.playHead);
+    playHeadState.playHead.playSyncedToRange ({});
+    auto result = testContext.processAll();
+
+    // Sanity check the generator actually produced audio
+    CHECK (result->buffer.getMagnitude (0, 0, result->buffer.getNumSamples()) > 0.5f);
+
+    // A SilentNode's buffer is only cleared once, in prepareToPlay. If a downstream Node
+    // had adopted it and processed in place (see ShareOutputBuffer), it would now contain
+    // the generator's output and feed it back as the plugin's "silent" input
+    for (auto silent : silentNodes)
+    {
+        auto silentBuffer = toAudioBuffer (silent->getProcessedOutput().audio);
+        CHECK (silentBuffer.getMagnitude (0, silentBuffer.getNumSamples()) == 0.0f);
+    }
+}
+
 } // TEST_SUITE
 
 } // namespace tracktion::inline engine
