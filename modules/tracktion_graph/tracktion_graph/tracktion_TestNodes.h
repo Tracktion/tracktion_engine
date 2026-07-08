@@ -185,8 +185,11 @@ public:
     SilentNode (int numChannelsToUse = 1)
         : numChannels (numChannelsToUse)
     {
+        // The buffer is cleared once in prepareToPlay and never re-written, so downstream
+        // Nodes must not process in place on it or its silence guarantee is lost.
         setOptimisations ({ ClearBuffers::no,
-                            AllocateAudioBuffer::no });
+                            AllocateAudioBuffer::no,
+                            ShareOutputBuffer::no });
     }
 
     NodeProperties getNodeProperties() override
@@ -607,6 +610,9 @@ public:
             return;
 
         if (input->numOutputNodes > 1)
+            return;
+
+        if (! input->canShareOutputBuffer())
             return;
 
         const auto inputNumChannels = input->getNodeProperties().numberOfChannels;

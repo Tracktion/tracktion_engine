@@ -167,16 +167,22 @@ enum class TransformResult
     nodesDeleted        /** Nodes have been deleted. */
 };
 
-enum class ClearBuffers
+enum class ClearBuffers : std::uint8_t
 {
     no, /**< Don't clear buffers before passing them to process, your subclass will take care of that. */
     yes /**< Do clear buffers before passing to process so your subclass can simply add in to them. */
 };
 
-enum class AllocateAudioBuffer
+enum class AllocateAudioBuffer : std::uint8_t
 {
     no, /**< Don't allocate an audio buffer, your subclass will ignore the dest buffer passed to process and simply use setAudioOutput to pass the buffer along. */
     yes /**< Do allocate an audio buffer so your subclass use the dest buffer passed to process. */
+};
+
+enum class ShareOutputBuffer : std::uint8_t
+{
+    no, /**< Don't let downstream Nodes adopt this Node's output buffer as their own process buffer. Use this if the buffer's contents must persist between blocks, e.g. SilentNode's buffer which is cleared once and never re-written. */
+    yes /**< Downstream Nodes may adopt this Node's output buffer and process in place, overwriting its contents. */
 };
 
 /** Holds some hints that _might_ be used by the Node or players to improve efficiency. */
@@ -184,6 +190,7 @@ struct NodeOptimisations
 {
     ClearBuffers clear = ClearBuffers::yes;
     AllocateAudioBuffer allocate = AllocateAudioBuffer::yes;
+    ShareOutputBuffer share = ShareOutputBuffer::yes;
 };
 
 //==============================================================================
@@ -252,6 +259,13 @@ public:
         Must only be called after hasProcessed returns true.
     */
     AudioAndMidiBuffer getProcessedOutput();
+
+    /** Returns true if downstream Nodes may adopt this Node's output buffer as their own
+        process buffer, overwriting its contents. This is the default but Nodes whose buffer
+        contents must persist between blocks can opt out with ShareOutputBuffer::no.
+        @see setOptimisations, setBufferViewToUse
+    */
+    bool canShareOutputBuffer() const;
 
     //==============================================================================
     struct TransformOptions
@@ -606,6 +620,11 @@ inline size_t Node::getAllocatedBytes() const
 inline void Node::setOptimisations (NodeOptimisations newOptimisations)
 {
     nodeOptimisations = newOptimisations;
+}
+
+inline bool Node::canShareOutputBuffer() const
+{
+    return nodeOptimisations.share == ShareOutputBuffer::yes;
 }
 
 inline void Node::setBufferViewToUse (Node* sourceNode, const choc::buffer::ChannelArrayView<float>& view)

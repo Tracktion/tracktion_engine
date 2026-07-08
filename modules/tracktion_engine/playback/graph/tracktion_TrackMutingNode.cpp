@@ -116,6 +116,9 @@ void TrackMutingNode::prepareToPlay (const tracktion::graph::PlaybackInitialisat
     if (input->numOutputNodes > 1)
         return;
 
+    if (! input->canShareOutputBuffer())
+        return;
+
     const auto inputNumChannels = input->getNodeProperties().numberOfChannels;
     const auto desiredNumChannels = getNodeProperties().numberOfChannels;
 

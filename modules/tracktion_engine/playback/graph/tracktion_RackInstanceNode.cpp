@@ -72,7 +72,7 @@ void RackInstanceNode::prepareToPlay (const tracktion::graph::PlaybackInitialisa
     const auto inputNumChannels = input->getNodeProperties().numberOfChannels;
     const auto desiredNumChannels = props.numberOfChannels;
 
-    if (info.enableNodeMemorySharing && inputNumChannels >= desiredNumChannels)
+    if (info.enableNodeMemorySharing && inputNumChannels >= desiredNumChannels && input->canShareOutputBuffer())
     {
         canUseSourceBuffers = true;
         setOptimisations ({ tracktion::graph::ClearBuffers::no,

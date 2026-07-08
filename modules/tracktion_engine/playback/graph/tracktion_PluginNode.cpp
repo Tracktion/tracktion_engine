@@ -138,7 +138,7 @@ void PluginNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationIn
 
     isPrepared = true;
 
-    if (info.enableNodeMemorySharing && input->numOutputNodes == 1)
+    if (info.enableNodeMemorySharing && input->numOutputNodes == 1 && input->canShareOutputBuffer())
     {
         const auto inputNumChannels = input->getNodeProperties().numberOfChannels;
         const auto desiredNumChannels = props.numberOfChannels;
