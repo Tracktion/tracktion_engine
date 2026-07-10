@@ -89,6 +89,7 @@ struct ARAClipPlayer  : private Selectable::Listener
         contentAnalyserChecker = nullptr;
         modelUpdater = nullptr;
         contentUpdater = nullptr;
+        editorViewRegistration = nullptr;
 
         // Needs to happen before killing off ARA stuff
         if (auto p = getPlugin())
@@ -169,6 +170,14 @@ struct ARAClipPlayer  : private Selectable::Listener
 
             if (araInstance == nullptr)
                 return false;
+
+            // Register this instance's editor view with the document so selection
+            // fan-out can reach it directly; the registration removes itself when
+            // this player is destroyed
+            if (araInstance->extensionInstance != nullptr && araInstance->plugin != nullptr)
+                editorViewRegistration = std::make_unique<ARADocument::ScopedEditorView> (*doc,
+                                                                                          *araInstance->extensionInstance,
+                                                                                          *araInstance->plugin);
 
             updateContent (clipToClone);
             updateHeadAndTailTimes();
@@ -420,10 +429,72 @@ struct ARAClipPlayer  : private Selectable::Listener
     }
 
     //==============================================================================
+    /** Sends this clip's playback regions and region sequence as the current view
+        selection to every instance bound to the same document whose plugin UI is
+        currently showing (QA 16250): the document's registered clip players and
+        any additional editor-view bindings (the plugin panel/browser).
+        Visibility is queried live, so there's no UI state to keep in sync. */
     void setViewSelection()
     {
-        if (playbackRegionAndSource != nullptr)
-            playbackRegionAndSource->setViewSelection();
+        if (playbackRegionAndSource == nullptr)
+            return;
+
+        auto doc = getDocument();
+
+        // Don't notify while an archive is being restored
+        if (doc == nullptr || ! doc->canEdit (true))
+            return;
+
+        std::vector<ARAPlaybackRegionRef> regionRefs;
+
+        for (auto& pr : playbackRegionAndSource->playbackRegions)
+            if (pr->playbackRegionRef != nullptr)
+                regionRefs.push_back (pr->playbackRegionRef);
+
+        if (regionRefs.empty())
+            return;
+
+        ARARegionSequenceRef sequenceRef = nullptr;
+
+        if (auto seq = doc->regionSequences.find (playbackRegionAndSource->playbackRegions[0]->trackID);
+            seq != doc->regionSequences.end() && seq->second != nullptr)
+            sequenceRef = seq->second->regionSequenceRef;
+
+        ARAViewSelection selection;
+
+        selection.structSize = sizeof (selection);
+        selection.playbackRegionRefsCount = regionRefs.size();
+        selection.playbackRegionRefs = regionRefs.data();
+        selection.regionSequenceRefsCount = sequenceRef != nullptr ? 1 : 0;
+        selection.regionSequenceRefs = sequenceRef != nullptr ? &sequenceRef : nullptr;
+        selection.timeRange = nullptr;
+
+        doc->visitEditorViews ([&] (const ARAPlugInExtensionInstance& extension, ExternalPlugin& plugin)
+        {
+            if (isPluginUIShowing (plugin))
+                notifySelectionTo (extension, selection);
+        });
+    }
+
+    /** Returns true if the plugin's UI is currently on screen: either a plugin
+        window (floating or regular) or an editor embedded elsewhere, like the
+        plugin panel (found via the processor's active editor). */
+    static bool isPluginUIShowing (ExternalPlugin& p)
+    {
+        if (p.windowState != nullptr && p.windowState->isWindowShowing())
+            return true;
+
+        if (auto pi = p.getAudioPluginInstance())
+            if (auto ed = pi->getActiveEditor())
+                return ed->isShowing();
+
+        return false;
+    }
+
+    static void notifySelectionTo (const ARAPlugInExtensionInstance& instance, const ARAViewSelection& selection)
+    {
+        if (instance.editorViewInterface != nullptr)
+            instance.editorViewInterface->notifySelection (instance.editorViewRef, &selection);
     }
 
     int getNumPlaybackRegions() const
@@ -565,6 +636,7 @@ private:
 
     std::unique_ptr<ARAInstance> araInstance;
     std::unique_ptr<PlaybackRegionAndSource> playbackRegionAndSource;
+    std::unique_ptr<ARADocument::ScopedEditorView> editorViewRegistration;
     HashCode modificationID = 0;
     double araHeadTime = 0.0;
     double araTailTime = 0.0;
@@ -811,10 +883,11 @@ ARAFileReader::~ARAFileReader()
 //==============================================================================
 void ARAFileReader::showPluginWindow()
 {
-    notifyViewSelection();
-
     if (auto p = getPlugin())
         p->showWindowExplicitly();
+
+    // After the window is up, so the open-UI filter includes this instance
+    notifyViewSelection();
 }
 
 void ARAFileReader::notifyViewSelection()
@@ -1309,9 +1382,10 @@ struct ARAPluginBinding::Impl
 {
     std::unique_ptr<ARAClipPlayer::ARAInstance> instance;
 
-    // The document outlives all bindings: it's owned by the Edit's ARADocumentHolder,
-    // and bindings are owned by UI that's torn down before the Edit
-    ARAClipPlayer::ARADocument* document = nullptr;
+    // Registers the instance's editor view for selection fan-out; removes itself
+    // when the binding dies with its plugin, which is torn down before the Edit's
+    // ARADocumentHolder (and so before the document)
+    std::unique_ptr<ARAClipPlayer::ARADocument::ScopedEditorView> editorViewRegistration;
 };
 
 ARAPluginBinding::ARAPluginBinding (std::unique_ptr<Impl> implToUse)
@@ -1319,14 +1393,7 @@ ARAPluginBinding::ARAPluginBinding (std::unique_ptr<Impl> implToUse)
 {
 }
 
-ARAPluginBinding::~ARAPluginBinding()
-{
-    if (impl != nullptr && impl->document != nullptr && impl->instance != nullptr)
-    {
-        auto& views = impl->document->additionalEditorViews;
-        views.erase (std::remove (views.begin(), views.end(), impl->instance->extensionInstance), views.end());
-    }
-}
+ARAPluginBinding::~ARAPluginBinding() = default;
 
 bool ARADocumentHolder::bindPluginToDocument (ExternalPlugin& plugin,
                                               const juce::PluginDescription& desc)
@@ -1366,12 +1433,15 @@ bool ARADocumentHolder::bindPluginToDocument (ExternalPlugin& plugin,
     // (before the document controller) rather than via the async deleter
     plugin.setDeletesPluginInstanceSynchronously (true);
 
-    // Register the editor view so arrangement selection changes reach it too
-    doc->additionalEditorViews.push_back (instance->extensionInstance);
-
     auto impl = std::make_unique<ARAPluginBinding::Impl>();
     impl->instance = std::move (instance);
-    impl->document = doc;
+
+    // Register the editor view so arrangement selection changes reach it while its
+    // UI is showing (queried live at notify time - see ARAClipPlayer::setViewSelection)
+    if (impl->instance->extensionInstance != nullptr)
+        impl->editorViewRegistration = std::make_unique<ARAClipPlayer::ARADocument::ScopedEditorView> (*doc,
+                                                                                                       *impl->instance->extensionInstance,
+                                                                                                       plugin);
 
     // The plugin owns the binding, so a strong ref back to it would be a refcount cycle
     impl->instance->plugin = nullptr;
