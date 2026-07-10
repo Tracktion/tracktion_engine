@@ -491,6 +491,11 @@ void MidiOutputDevice::sendNoteOffMessages()
 
 void MidiOutputDevice::sendMessageNow (const juce::MidiMessage& message)
 {
+    // juce::MidiOutput isn't thread safe, so serialise sends here as this
+    // can be called from the MIDI dispatch thread, the message thread
+    // (control surface feedback, MMC) and device-detection scans.
+    const juce::SpinLock::ScopedLockType sl (outputDeviceLock);
+
     if (outputDevice != nullptr)
         outputDevice->sendMessageNow (message);
 }
