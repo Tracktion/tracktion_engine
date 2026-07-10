@@ -104,6 +104,7 @@ protected:
     double sampleRate = 0;
 
     std::unique_ptr<juce::MidiOutput> outputDevice;
+    juce::SpinLock outputDeviceLock;
     bool sendingMMC = false;
     bool sendControllerMidiClock = false;
     bool softDevice = false;
