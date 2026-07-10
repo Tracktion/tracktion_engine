@@ -69,9 +69,10 @@ public:
     void hidePluginWindow();
 
     /** Sends the clip's playback regions and region sequence as the current view
-        selection to every editor view bound to the document (the clip's own
-        instance and e.g. the browser panel instance). Call when the arrangement
-        selection changes so the plugin's UI can follow it. */
+        selection to every instance bound to the same document whose plugin UI is
+        currently showing (other clips' instances and e.g. the browser panel
+        instance). Call when the arrangement selection changes so open plugin UIs
+        can follow it. */
     void notifyViewSelection();
 
     /** Returns the number of ARA playback regions currently created for the clip

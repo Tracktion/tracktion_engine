@@ -508,16 +508,49 @@ public:
     std::unique_ptr<juce::MemoryBlock> lastArchiveState;
     juce::String lastArchiveDocumentArchiveID;
 
-    // Editor-view-only instances bound to this document besides the clip players
-    // (e.g. the plugin panel's browser instance) - view selection notifications
-    // are fanned out to these as well. Registered/unregistered by
-    // ARADocumentHolder::bindPluginToDocument / ~ARAPluginBinding.
-    std::vector<const ARAPlugInExtensionInstance*> additionalEditorViews;
+    //==============================================================================
+    /** RAII registration of an editor view bound to this document - a clip
+        player's instance or an additional binding like the plugin panel's browser
+        instance - for selection fan-out (see ARAClipPlayer::setViewSelection).
+        Registers on construction and removes itself on destruction; the document
+        must outlive the registration (clip players and plugin bindings are torn
+        down before the Edit's ARADocumentHolder). */
+    class ScopedEditorView
+    {
+    public:
+        ScopedEditorView (ARADocument& d, const ARAPlugInExtensionInstance& e, ExternalPlugin& p)
+            : extension (e), plugin (p), doc (d)
+        {
+            doc.editorViews.push_back (this);
+        }
+
+        ~ScopedEditorView()
+        {
+            auto& views = doc.editorViews;
+            views.erase (std::remove (views.begin(), views.end(), this), views.end());
+        }
+
+        const ARAPlugInExtensionInstance& extension;
+        ExternalPlugin& plugin;
+
+    private:
+        ARADocument& doc;
+
+        JUCE_DECLARE_NON_COPYABLE (ScopedEditorView)
+    };
+
+    /** Calls the given function for every registered editor view. */
+    void visitEditorViews (const std::function<void (const ARAPlugInExtensionInstance&, ExternalPlugin&)>& fn) const
+    {
+        for (auto v : editorViews)
+            fn (v->extension, v->plugin);
+    }
 
 private:
     std::unique_ptr<ARAInstance> wrapper;
     std::unique_ptr<ARADocumentControllerHostInstance> hostInstance;
     std::unique_ptr<ArchivingState> archivingState;
+    std::vector<const ScopedEditorView*> editorViews;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ARADocument)
 };
@@ -1721,46 +1754,6 @@ public:
             audioSource->releaseAccess();
     }
 
-    /** Sends the current selection (all of this clip's playback regions plus its
-        region sequence) to every editor view on the document: the clip's own
-        instance and any additional bound editor views (e.g. the browser panel). */
-    void setViewSelection()
-    {
-        // Don't notify while an archive is being restored
-        if (! araDoc.canEdit (true))
-            return;
-
-        std::vector<ARAPlaybackRegionRef> regionRefs;
-
-        for (auto& pr : playbackRegions)
-            if (pr->playbackRegionRef != nullptr)
-                regionRefs.push_back (pr->playbackRegionRef);
-
-        if (regionRefs.empty())
-            return;
-
-        ARARegionSequenceRef sequenceRef = nullptr;
-
-        if (auto seq = araDoc.regionSequences.find (playbackRegions[0]->trackID);
-            seq != araDoc.regionSequences.end() && seq->second != nullptr)
-            sequenceRef = seq->second->regionSequenceRef;
-
-        ARAViewSelection selection;
-
-        selection.structSize = sizeof (selection);
-        selection.playbackRegionRefsCount = regionRefs.size();
-        selection.playbackRegionRefs = regionRefs.data();
-        selection.regionSequenceRefsCount = sequenceRef != nullptr ? 1 : 0;
-        selection.regionSequenceRefs = sequenceRef != nullptr ? &sequenceRef : nullptr;
-        selection.timeRange = nullptr;
-
-        notifySelectionTo (pluginInstance, selection);
-
-        for (auto extension : araDoc.additionalEditorViews)
-            if (extension != nullptr && extension != &pluginInstance)
-                notifySelectionTo (*extension, selection);
-    }
-
     /** Returns the number of playback regions a looping clip of the given length needs.
         Uses a small tolerance so a length sitting on a loop boundary always produces a
         stable count - deriving it any other way (e.g. repeated subtraction) can disagree
@@ -1846,12 +1839,6 @@ private:
     const ARAPlugInExtensionInstance& pluginInstance;
     bool enabledInConstructor = false;
     bool builtForLooping = false;
-
-    static void notifySelectionTo (const ARAPlugInExtensionInstance& instance, const ARAViewSelection& selection)
-    {
-        if (instance.editorViewInterface != nullptr)
-            instance.editorViewInterface->notifySelection (instance.editorViewRef, &selection);
-    }
 
     void addPlaybackRegion (PlaybackRegionWrapper& pr)
     {
