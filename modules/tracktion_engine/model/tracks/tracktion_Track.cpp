@@ -296,11 +296,16 @@ std::vector<AutomatableEditItem*> Track::getAllAutomatableEditItems() const
         }
     }
 
-    // Deduplicate
-    std::sort (items.begin(), items.end());
-    items.erase (std::unique (items.begin(), items.end()), items.end());
+    // Deduplicate, preserving insertion (plugin chain) order
+    std::vector<AutomatableEditItem*> deduped;
+    deduped.reserve (items.size());
+    std::set<AutomatableEditItem*> seen;
 
-    return items;
+    for (auto item : items)
+        if (seen.insert (item).second)
+            deduped.push_back (item);
+
+    return deduped;
 }
 
 Plugin::Array Track::getAllPlugins() const
