@@ -329,7 +329,12 @@ private:
             if (auto* component = vst3Client->getIComponentPtr())
                 component->queryInterface (entrypoint_t::iid, (void**) &ep);
 
-        return { ep };
+        // queryInterface returns an owned reference, so adopt it - IPtr's
+        // constructor defaults to addRef, which took a second reference and
+        // leaked one plugin ref per query. For single-component plugins (where
+        // the entry point shares the IComponent's refcount) that left every
+        // instance one ref short of destruction at shutdown (QA 16453)
+        return Steinberg::owned (ep);
     }
 
     ARAFactory* getFactoryVST3()
