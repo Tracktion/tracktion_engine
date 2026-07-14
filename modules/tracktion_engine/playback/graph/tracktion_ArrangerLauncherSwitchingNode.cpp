@@ -298,27 +298,36 @@ void ArrangerLauncherSwitchingNode::sortPlayingOrQueuedClipsFirst()
 {
     using enum LaunchHandle::PlayState;
     using enum LaunchHandle::QueueState;
-    sort (launcherNodes,
-          [](auto& n1, auto& n2)
-              {
-                  auto stateToValue = [] (const LaunchHandle& lh)
-                  {
-                      if (lh.getPlayingStatus() == playing) return 1;
 
-                      if (auto q1 = lh.getQueuedStatus())
-                      {
-                          if (q1 == playQueued) return 2;
-                          if (q1 == stopQueued) return 3;
-                      }
+    auto stateToValue = [] (const LaunchHandle& lh)
+    {
+        if (lh.getPlayingStatus() == playing) return 1;
 
-                      return 4;
-                  };
+        if (auto q = lh.getQueuedStatus())
+        {
+            if (q == playQueued) return 2;
+            if (q == stopQueued) return 3;
+        }
 
-                  auto v1 = stateToValue (n1->getLaunchHandle());
-                  auto v2 = stateToValue (n2->getLaunchHandle());
+        return 4;
+    };
 
-                  return v1 < v2;
-              });
+    // Snapshot each node's sort rank once, before sorting. The play/queue state
+    // is updated by the audio thread, so re-reading it inside the comparator
+    // could give a node different ranks across comparisons - that breaks the
+    // strict weak ordering std::sort requires and is undefined behaviour.
+    std::vector<std::pair<int, std::unique_ptr<SlotControlNode>>> ranked;
+    ranked.reserve (launcherNodes.size());
+
+    for (auto& n : launcherNodes)
+        ranked.emplace_back (stateToValue (n->getLaunchHandle()), std::move (n));
+
+    sort (ranked, [] (auto& r1, auto& r2) { return r1.first < r2.first; });
+
+    launcherNodes.clear();
+
+    for (auto& r : ranked)
+        launcherNodes.push_back (std::move (r.second));
 }
 
 void ArrangerLauncherSwitchingNode::updatePlaySlotsState()
