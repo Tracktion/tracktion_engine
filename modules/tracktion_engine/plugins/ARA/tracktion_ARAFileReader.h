@@ -84,10 +84,6 @@ public:
 
     void sourceClipChanged();
 
-    /** Notifies the plugin that the edit's key/chord content has changed.
-        Tempo changes are picked up automatically via the tempo sequence. */
-    void musicalContextContentChanged();
-
     /** Notifies that the ARA content has changed (e.g. notes edited in Melodyne).
         This re-reads the content and broadcasts a change message. */
     void contentHasChanged();
@@ -193,6 +189,13 @@ struct ARADocumentHolder
         Returns false if the plugin isn't ARA-capable, its instance isn't loaded yet, or
         the binding fails. */
     bool bindPluginToDocument (ExternalPlugin&, const juce::PluginDescription&);
+
+    /** Notifies every existing ARA document that the edit's tempo/key/chord content
+        has changed so the plugins re-read their musical contexts. Called from
+        Edit::sendTempoOrPitchSequenceChangedUpdates so it also covers documents with
+        no clips (e.g. a browser/panel-only instance - QA 16550). Doesn't trigger
+        document creation. */
+    void musicalContextContentChanged();
 
     struct Pimpl;
     Pimpl* getPimpl();

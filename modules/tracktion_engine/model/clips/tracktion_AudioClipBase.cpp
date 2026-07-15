@@ -1125,13 +1125,10 @@ void AudioClipBase::pitchTempoTrackChanged()
     createNewProxyAsync();
 
     if (araProxy != nullptr)
-    {
         araProxy->sourceClipChanged();
 
-        // This is the only notification channel for key/chord changes - the tempo
-        // sequence has its own listener for timing changes
-        araProxy->musicalContextContentChanged();
-    }
+    // NB: the ARA musical context (tempo/key/chord content) is updated at document
+    // level by Edit::sendTempoOrPitchSequenceChangedUpdates, not per clip
 }
 
 void AudioClipBase::clearCachedAudioSegmentList()

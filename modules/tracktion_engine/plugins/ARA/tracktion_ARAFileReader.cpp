@@ -64,7 +64,7 @@ namespace tracktion::inline engine {
 
 using namespace ARA;
 
-struct ARAClipPlayer  : private Selectable::Listener
+struct ARAClipPlayer
 {
     #include "tracktion_ARAPluginFactory.h"
     #include "tracktion_ARAWrapperFunctions.h"
@@ -72,7 +72,7 @@ struct ARAClipPlayer  : private Selectable::Listener
 
     //==============================================================================
     ARAClipPlayer (Edit& ed, ARAFileReader& o, AudioClipBase& c)
-      : Selectable::Listener (ed.tempoSequence), owner (o),
+      : owner (o),
         clip (c),
         file (c.getAudioFile()),
         edit (ed)
@@ -197,42 +197,6 @@ struct ARAClipPlayer  : private Selectable::Listener
         updateHeadAndTailTimes();
         owner.sendChangeMessage();
     }
-
-    void musicalContextContentChanged()
-    {
-        // The key/chord (or other pitch-related) content changed: only the
-        // harmonic scope of the musical context needs re-reading
-        if (auto doc = getDocument())
-        {
-            if (doc->musicalContext != nullptr)
-            {
-                const ARADocument::ScopedEdit scope (*doc, true);
-                doc->musicalContext->update (kARAContentUpdateSignalScopeRemainsUnchanged
-                                              | kARAContentUpdateNoteScopeRemainsUnchanged
-                                              | kARAContentUpdateTuningScopeRemainsUnchanged
-                                              | kARAContentUpdateTimingScopeRemainsUnchanged);
-            }
-        }
-    }
-
-    void selectableObjectChanged (Selectable*) override
-    {
-        // The tempo sequence changed: only the timing scope of the musical
-        // context needs re-reading
-        if (auto doc = getDocument())
-        {
-            if (doc->musicalContext != nullptr)
-            {
-                const ARADocument::ScopedEdit scope (*doc, true);
-                doc->musicalContext->update (kARAContentUpdateSignalScopeRemainsUnchanged
-                                              | kARAContentUpdateNoteScopeRemainsUnchanged
-                                              | kARAContentUpdateTuningScopeRemainsUnchanged
-                                              | kARAContentUpdateHarmonicScopeRemainsUnchanged);
-            }
-        }
-    }
-
-    void selectableObjectAboutToBeDeleted (Selectable*) override {}
 
     //==============================================================================
     void updateContent (ARAClipPlayer* clipToClone)
@@ -731,12 +695,15 @@ private:
                  << " newModID=" << juce::String::toHexString (newModificationID)
                  << " willRecreate=" << (modificationID != newModificationID ? 1 : 0));
 
+            bool regionsRecreated = false;
+
             if (modificationID != newModificationID)
             {
                 modificationID = newModificationID;
                 const ScopedDocumentEditor sde (*this, true);
 
                 recreateTrack (clipToClone);
+                regionsRecreated = true;
             }
             else
             {
@@ -762,6 +729,7 @@ private:
                                 pi->releaseResources();
 
                         playbackRegionAndSource->rebuildPlaybackRegions();
+                        regionsRecreated = true;
 
                         if (auto p = getPlugin())
                             if (auto pi = p->getAudioPluginInstance())
@@ -777,6 +745,13 @@ private:
                     }
                 }
             }
+
+            // Recreating the playback regions gave them new refs, orphaning any
+            // selection the plugin's editor views were holding - re-send the current
+            // selection so open UIs (e.g. Tonalic's Refine page) keep following the
+            // clip (QA 16465). Safe here: both document edit cycles have closed.
+            if (regionsRecreated && SelectionManager::findSelectionManagerContaining (clip) != nullptr)
+                setViewSelection();
 
             modelUpdater = std::make_unique<ModelUpdater> (*doc);
 
@@ -927,9 +902,9 @@ void ARAFileReader::sourceClipChanged()
     {
         // NB: deliberately no musical-context update here - this is called for *any*
         // clip property change (name, colour, drag...), and spamming the plugin with
-        // "everything changed" makes it constantly rebuild its model. Tempo changes
-        // reach the context via the tempo-sequence listener and key/chord changes
-        // via musicalContextContentChanged().
+        // "everything changed" makes it constantly rebuild its model. Tempo/key/chord
+        // changes reach the context at document level via
+        // ARADocumentHolder::musicalContextContentChanged().
         player->updateContent (nullptr);
 
         // The plugin won't notify us about content changes we caused ourselves,
@@ -938,12 +913,6 @@ void ARAFileReader::sourceClipChanged()
         player->updateHeadAndTailTimes();
         sendChangeMessage();
     }
-}
-
-void ARAFileReader::musicalContextContentChanged()
-{
-    if (player != nullptr)
-        player->musicalContextContentChanged();
 }
 
 void ARAFileReader::contentHasChanged()
@@ -1395,6 +1364,17 @@ ARAPluginBinding::ARAPluginBinding (std::unique_ptr<Impl> implToUse)
 
 ARAPluginBinding::~ARAPluginBinding() = default;
 
+void ARADocumentHolder::musicalContextContentChanged()
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+
+    // Only notify documents that already exist - don't trigger initialisation
+    if (pimpl != nullptr)
+        for (auto& [key, doc] : pimpl->araDocuments)
+            if (doc != nullptr)
+                doc->musicalContextContentChanged();
+}
+
 bool ARADocumentHolder::bindPluginToDocument (ExternalPlugin& plugin,
                                               const juce::PluginDescription& desc)
 {
@@ -1564,7 +1544,6 @@ int ARAFileReader::getNumPlaybackRegions() const               { return 0; }
 bool ARAFileReader::isAnalysingContent()                       { return false; }
 juce::MidiMessageSequence ARAFileReader::getAnalysedMIDISequence()   { return {}; }
 void ARAFileReader::sourceClipChanged()                        {}
-void ARAFileReader::musicalContextContentChanged()             {}
 void ARAFileReader::contentHasChanged()                        {}
 juce::MemoryBlock ARAFileReader::storeARAArchiveForCopy()      { return {}; }
 void ARAFileReader::restoreARAArchiveForPaste (const juce::MemoryBlock&, const juce::String&, const juce::String&, const juce::String&) {}
@@ -1580,6 +1559,7 @@ ARADocumentHolder::ARADocumentHolder (Edit& e, const juce::ValueTree&) : edit (e
 ARADocumentHolder::~ARADocumentHolder() {}
 ARADocumentHolder::Pimpl* ARADocumentHolder::getPimpl()             { return {}; }
 void ARADocumentHolder::flushStateToValueTree() {}
+void ARADocumentHolder::musicalContextContentChanged() {}
 
 struct ARAPluginBinding::Impl {};
 ARAPluginBinding::ARAPluginBinding (std::unique_ptr<Impl> implToUse) : impl (std::move (implToUse)) {}
