@@ -1735,6 +1735,12 @@ void Edit::sendTempoOrPitchSequenceChangedUpdates()
     for (auto t : getClipTracks (*this))
         for (auto& c : t->getClips())
             c->pitchTempoTrackChanged();
+
+    // Keep any ARA documents' musical contexts in sync at document level, so this
+    // also works when no ARA clips exist to forward the change (e.g. a
+    // browser/panel-only instance)
+    if (araDocumentHolder != nullptr)
+        araDocumentHolder->musicalContextContentChanged();
 }
 
 void Edit::sendSourceFileUpdate()

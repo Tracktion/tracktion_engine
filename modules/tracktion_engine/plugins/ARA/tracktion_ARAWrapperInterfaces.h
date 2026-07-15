@@ -546,6 +546,23 @@ public:
             fn (v->extension, v->plugin);
     }
 
+    //==============================================================================
+    /** Notifies the plugin that the edit's tempo/key/chord content has changed so
+        the musical context is re-read. Driven at document level
+        (Edit::sendTempoOrPitchSequenceChangedUpdates → ARADocumentHolder) so it
+        also works when no ARA clips exist to forward the change, e.g. a
+        browser/panel-only instance (QA 16550). */
+    void musicalContextContentChanged()
+    {
+        if (musicalContext != nullptr)
+        {
+            const ScopedEdit scope (*this, true);
+            musicalContext->update (kARAContentUpdateSignalScopeRemainsUnchanged
+                                     | kARAContentUpdateNoteScopeRemainsUnchanged
+                                     | kARAContentUpdateTuningScopeRemainsUnchanged);
+        }
+    }
+
 private:
     std::unique_ptr<ARAInstance> wrapper;
     std::unique_ptr<ARADocumentControllerHostInstance> hostInstance;
