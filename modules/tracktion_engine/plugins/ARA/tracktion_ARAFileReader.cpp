@@ -1396,15 +1396,11 @@ bool ARADocumentHolder::bindPluginToDocument (ExternalPlugin& plugin,
 
     auto& pluginFactory = ARAClipPlayer::ARAPluginFactory::getInstance (edit.engine, desc);
 
-    //==============================================================================
-    // TODO QA16472: per the ARA spec / vendor guidance, the browser/panel instance
-    // should be ASSIGNED only the editor roles, i.e. pass
-    //     kARAEditorRendererRole | kARAEditorViewRole
-    // as the third argument here, so the plugin doesn't preview its accompaniment
-    // while the DAW is playing
-    //==============================================================================
+    // The browser/panel instance is assigned only the editor roles so the plugin
+    // doesn't act as a playback renderer (e.g. previewing its accompaniment while
+    // the DAW is playing) - see QA 16472
     std::unique_ptr<ARAClipPlayer::ARAInstance> instance (pluginFactory.createInstance (plugin, doc->dcRef,
-                                                                                                kARAEditorRendererRole | kARAEditorViewRole));
+                                                                                        kARAEditorRendererRole | kARAEditorViewRole));
 
     if (instance == nullptr)
         return false;
