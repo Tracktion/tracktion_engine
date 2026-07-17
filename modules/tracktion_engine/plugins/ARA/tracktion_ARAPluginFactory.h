@@ -149,19 +149,8 @@ public:
 
     ExternalPlugin::Ptr createPlugin (Edit& ed)
     {
-        if (plugin != nullptr)
-        {
-            auto newState = ExternalPlugin::create (ed.engine, plugin->getPluginDescription());
-            ExternalPlugin::Ptr p = new ExternalPlugin (PluginCreationInfo (ed, newState, true));
-
-            if (p->getAudioPluginInstance() != nullptr)
-            {
-                // ARA-bound instances must be destroyed before their document
-                // controller, so they can't go through the shared async deleter
-                p->setDeletesPluginInstanceSynchronously (true);
-                return p;
-            }
-        }
+        if (factory != nullptr)
+            return createPlugin (ed, pluginDescription);
 
         return {};
     }
@@ -173,6 +162,8 @@ public:
 
         if (p->getAudioPluginInstance() != nullptr)
         {
+            // ARA-bound instances must be destroyed before their document
+            // controller, so they can't go through the shared async deleter
             p->setDeletesPluginInstanceSynchronously (true);
             return p;
         }
@@ -184,7 +175,7 @@ public:
                                  ARAPlugInInstanceRoleFlags roles = allInstanceRoles)
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
-        jassert (plugin != nullptr);
+        jassert (factory != nullptr);
 
         std::unique_ptr<ARAInstance> w (new ARAInstance());
         w->plugin = &p;
@@ -208,44 +199,78 @@ public:
     }
 
 private:
-    // Because ARA has some state which is global to the DLL, this dummy instance
-    // of the plugin is kept hanging around until shutdown, forcing the DLL to
-    // remain in memory until we're sure all other instances have gone away. Not
-    // pretty, but not sure how else we could handle this.
-    std::unique_ptr<juce::AudioPluginInstance> plugin;
-    std::unique_ptr<ARAFactoryInitGuard> initGuard;
+    const juce::PluginDescription pluginDescription;
 
-    // Holds a shared reference to a factory that was first initialised by an
-    // archive-ID lookup (see getLookupCache()), instead of initGuard
+    // Fallback route only (module missing kARAMainFactoryClass): because ARA has
+    // some state which is global to the DLL, this dummy instance of the plugin is
+    // kept hanging around until shutdown, forcing the DLL to remain in memory
+    // until we're sure all other instances have gone away
+    std::unique_ptr<juce::AudioPluginInstance> plugin;
+
+    // Shared reference to the module-level factory, also held by getLookupCache()
+    // for the session. JUCE pairs initializeARA/uninitializeARA inside the wrapper
+    // and keeps the module loaded while any reference exists. Declared before
+    // initGuard so the module reference outlives the guard's uninitializeARA call
     juce::ARAFactoryWrapper adoptedARAFactory;
 
+    // Fallback route only: pairs initializeARA/uninitializeARA for a factory
+    // obtained from the dummy instance's entry point
+    std::unique_ptr<ARAFactoryInitGuard> initGuard;
+
     ARAPluginFactory (Engine& engine, const juce::PluginDescription& desc)
+        : pluginDescription (desc)
     {
         TRACKTION_ASSERT_MESSAGE_THREAD
         CRASH_TRACER
 
-        plugin = createARAPluginFromDescription (engine, desc);
+        // Read the ARAFactory from the module-level IMainFactory (kARAMainFactoryClass)
+        // instead of instantiating a full dummy plugin just to query its entry point.
+        // The wrapper is shared with the archive-ID lookup cache so each module is
+        // initialised exactly once per session, whichever call site reaches it first -
+        // ARA forbids initialising a module twice. JUCE pairs initializeARA/
+        // uninitializeARA inside the wrapper and keeps the module loaded while any
+        // reference to it exists, so neither the dummy instance nor initGuard is
+        // needed on this path.
+        auto& cache = getLookupCache();
+        auto key = pluginDescription.createIdentifierString();
+        auto cached = cache.find (key);
 
-        if (plugin != nullptr)
+        if (cached == cache.end())
         {
-            getFactoryForPlugin();
+            juce::ARAFactoryResult result;
+            engine.getPluginManager().pluginFormatManager
+                .createARAFactoryAsync (pluginDescription, [&result] (juce::ARAFactoryResult r) { result = std::move (r); });
 
-            if (factory != nullptr)
+            // The callback is synchronous for VST3; if a format ever completes
+            // asynchronously the factory will be null and the fallback below is used
+            if (result.araFactory.get() != nullptr)
+                cached = cache.emplace (key, std::move (result)).first;
+        }
+
+        if (cached != cache.end() && cached->second.araFactory.get() != nullptr)
+        {
+            adoptedARAFactory = cached->second.araFactory;
+            factory = adoptedARAFactory.get();
+
+            if (! supportsRequiredApiGeneration (*factory))
             {
-                // If an archive-ID lookup already initialised this module's factory,
-                // share that initialisation - ARA forbids initialising a module twice
-                for (auto& [key, cached] : getLookupCache())
-                {
-                    juce::ignoreUnused (key);
+                factory = nullptr;
+                adoptedARAFactory = {};
+            }
+        }
+        else
+        {
+            // Defensive fallback for modules missing kARAMainFactoryClass (the ARA2
+            // spec requires it): read the factory from a dummy instance's entry point.
+            // The instance is kept until shutdown to pin the DLL in memory while
+            // other instances may exist
+            plugin = createARAPluginFromDescription (engine, pluginDescription);
 
-                    if (cached.araFactory.get() == factory)
-                    {
-                        adoptedARAFactory = cached.araFactory;
-                        break;
-                    }
-                }
+            if (plugin != nullptr)
+            {
+                getFactoryForPlugin();
 
-                if (adoptedARAFactory.get() == nullptr)
+                if (factory != nullptr)
                 {
                     // The spec requires assertFunctionAddress to always be a valid pointer
                     // (which may point to a null function pointer in release builds)
@@ -264,22 +289,22 @@ private:
 
                     initGuard = std::make_unique<ARAFactoryInitGuard> (factory, &interfaceConfig);
                 }
-
-                // Plugins that can't time-stretch (analysis/alignment tools such as MTrackAlign or
-                // ReChoir, or the ARA SDK example plugin) are still hosted: the playback region is
-                // configured with the plugin's own supportedPlaybackTransformationFlags (see
-                // ARAPlaybackRegion in tracktion_ARAWrapperInterfaces.h), so a non-time-stretch plugin
-                // simply renders pass-through. Previously these were rejected outright, which made
-                // editor-only ARA plugins unusable.
-                if (! canBeUsedAsTimeStretchEngine (*factory))
-                    TRACKTION_LOG ("ARA plugin does not support time-stretching - hosting in pass-through mode");
-            }
-            else
-            {
-                jassertfalse;
-                plugin = nullptr;
+                else
+                {
+                    jassertfalse;
+                    plugin = nullptr;
+                }
             }
         }
+
+        // Plugins that can't time-stretch (analysis/alignment tools such as MTrackAlign or
+        // ReChoir, or the ARA SDK example plugin) are still hosted: the playback region is
+        // configured with the plugin's own supportedPlaybackTransformationFlags (see
+        // ARAPlaybackRegion in tracktion_ARAWrapperInterfaces.h), so a non-time-stretch plugin
+        // simply renders pass-through. Previously these were rejected outright, which made
+        // editor-only ARA plugins unusable.
+        if (factory != nullptr && ! canBeUsedAsTimeStretchEngine (*factory))
+            TRACKTION_LOG ("ARA plugin does not support time-stretching - hosting in pass-through mode");
     }
 
     static std::map<juce::String, std::unique_ptr<ARAPluginFactory>>& getRegistry()
@@ -290,18 +315,22 @@ private:
 
     void getFactoryForPlugin()
     {
-        auto type = plugin->getPluginDescription().pluginFormatName;
+        auto type = pluginDescription.pluginFormatName;
 
         if (type == "VST3")
             factory = getFactoryVST3();
 
+        if (factory != nullptr && ! supportsRequiredApiGeneration (*factory))
+            factory = nullptr;
+    }
+
+    static bool supportsRequiredApiGeneration (const ARAFactory& f) noexcept
+    {
         // The plugin must support our API generation: reject both plugins that are
         // too new (lowest > ours) and ARA1-only plugins (highest < ours), since the
         // ARA2 bind via IPlugInEntryPoint2 would fail later anyway
-        if (factory != nullptr
-             && (factory->lowestSupportedApiGeneration > kARAAPIGeneration_2_0_Final
-                  || factory->highestSupportedApiGeneration < kARAAPIGeneration_2_0_Final))
-            factory = nullptr;
+        return f.lowestSupportedApiGeneration <= kARAAPIGeneration_2_0_Final
+            && f.highestSupportedApiGeneration >= kARAAPIGeneration_2_0_Final;
     }
 
     bool setExtensionInstance (ARAInstance& w, ARADocumentControllerRef dcRef, ARAPlugInInstanceRoleFlags roles)
@@ -312,7 +341,7 @@ private:
         if (dcRef == nullptr)
             return false;
 
-        auto type = plugin->getPluginDescription().pluginFormatName;
+        auto type = pluginDescription.pluginFormatName;
 
         if (type == "VST3")
             return setExtensionInstanceVST3 (w, dcRef, roles);
