@@ -1232,7 +1232,7 @@ public:
        #if JUCE_MAJOR_VERSION == 8
         transportReadout.setFont (juce::FontOptions (juce::Font::getDefaultMonospacedFontName(), 14, juce::Font::plain));
        #else
-        transportReadout.setFont ({ juce::Font::getDefaultMonospacedFontName(), 14, juce::Font::plain });
+        transportReadout.setFont (juce::FontOptions { juce::Font::getDefaultMonospacedFontName(), 14, juce::Font::plain });
        #endif
 
         transportReadoutTimer.setCallback ([this]
