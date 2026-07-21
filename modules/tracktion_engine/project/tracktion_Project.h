@@ -28,8 +28,9 @@ class FolderBasedProject;
     **Folder-based projects** discover
     *items by lazily scanning the folder on
     disk. Items have invalid (zero) ProjectItemIDs, so ID-based lookup always
-    returns nullptr. Many operations that rely on IDs or binary state (search,
-    merge, reorder, property storage) are no-ops for folder-based projects.
+    returns nullptr. Operations that rely on IDs or binary state (merge, reorder)
+    are no-ops for folder-based projects; properties and descriptions are stored
+    in a project_info.json file inside the folder.
 
     The per-method docs below note where behaviour differs between backends.
 
@@ -121,20 +122,24 @@ public:
     /** Generates and assigns a new random project ID. No-op for folder-based projects. */
     void createNewProjectId();
 
-    /** Returns a named project property. Always empty for folder-based projects. */
+    /** Returns a named project property.
+        Folder-based projects store properties in project_info.json.
+    */
     juce::String getProjectProperty (const juce::String& name) const;
 
-    /** Sets a named project property. No-op for folder-based projects. */
+    /** Sets a named project property.
+        Folder-based projects store properties in project_info.json.
+    */
     void setProjectProperty (const juce::String& name, const juce::String& value);
 
-    /** Reloads project properties from the project file. No-op for folder-based projects. */
+    /** Reloads project properties from the project file (or project_info.json). */
     void refreshProjectPropertiesFromFile();
 
     /** Returns true if this project is flagged as a library project (a shared sound/media library). */
     bool isLibraryProject() const;
 
     /** Returns refs to items whose source files are not referenced by any edit.
-        Always returns an empty array for folder-based projects.
+        Works for both file-based and folder-based projects.
     */
     juce::Array<ProjectItemRef> findOrphanItemRefs();
 
@@ -153,7 +158,7 @@ public:
     ProjectItemRef getProjectItemRef (int index);
 
     /** Returns all ProjectItemRefs in this project.
-        Always returns an empty array for folder-based projects (const prevents lazy scan).
+        Folder-based projects trigger the lazy folder scan and return path-based refs.
     */
     juce::Array<ProjectItemRef> getAllProjectItemRefs() const;
 
@@ -163,9 +168,7 @@ public:
     /** Returns all ProjectItems in this project. */
     juce::Array<ProjectItem::Ptr> getAllProjectItems();
 
-    /** Returns the index of the item with the given ref, or -1 if not found.
-        Always returns -1 for folder-based projects.
-    */
+    /** Returns the index of the item with the given ref, or -1 if not found. */
     int getIndexOf (const ProjectItemRef&) const;
 
     /** Returns the ProjectItem for the given ref, or nullptr if not found.
@@ -192,7 +195,7 @@ public:
                                     bool atTopOfList);
 
     /** Removes the item matching the given ref. If deleteSourceMaterial is true, deletes
-        the source file on disk. Always returns false for folder-based projects.
+        the source file on disk. Works for both file-based and folder-based projects.
     */
     bool removeProjectItem (const ProjectItemRef&, bool deleteSourceMaterial);
 

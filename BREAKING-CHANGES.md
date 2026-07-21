@@ -3,6 +3,263 @@
 ___
 
 ### Change
+`Plugin` has a new pure virtual method `getBusses()` which every subclass must implement.
+
+#### Possible Issues
+Custom `Plugin` subclasses will no longer compile until they implement `getBusses()`. The default implementation of `takesAudioInput()` has also changed from `! isSynth()` to `! isSynth() && ! getBusses().inputs.empty()`.
+
+#### Workaround
+Implement `getBusses()` returning a `Plugin::BusLayout` describing the plugin's inputs and outputs. Helpers cover the common cases: `BusLayout::singleStereoInOut()` for a typical stereo effect, `BusLayout::singleInOut (in, out)` for other fixed layouts, `BusLayout::singlePassThrough()` for plugins that pass through whatever they're given, and `{}` for MIDI-only plugins.
+
+#### Rationale
+Multichannel support requires every plugin to explicitly declare its channel requirements rather than the engine assuming stereo.
+
+___
+
+### Change
+`ExternalPlugin::getNumInputs()` and `getNumOutputs()` have been removed.
+
+#### Possible Issues
+Code calling these methods will no longer compile.
+
+#### Workaround
+Use `getBusses()` for main-bus channel counts, or `getAudioPluginInstance()->getTotalNumInputChannels()` / `getTotalNumOutputChannels()` for totals. A deprecated `getTotalNumInputChannels()` shim exists on `ExternalPlugin` for the input side.
+
+#### Rationale
+Part of the multichannel work: single input/output counts can't describe multi-bus plugins.
+
+___
+
+### Change
+The `DeviceManager` per-channel stereo-pair API has been removed. This includes `setWaveOutChannelsEnabled`, `setWaveInChannelsEnabled`, `setDeviceOutChannelStereo`, `setDeviceInChannelStereo`, `isDeviceOutChannelStereo`, `isDeviceInChannelStereo`, `isDeviceOutEnabled`, `isDeviceInEnabled`, `enableAllWaveInputs`, `enableAllWaveOutputs`, `setAllWaveInputsToStereoPair` and `setAllWaveOutputsToStereoPair`.
+
+#### Possible Issues
+Code managing device channels through these methods will no longer compile.
+
+#### Workaround
+Use the new device-centric API: `setDeviceEnabled (WaveInputDevice&/WaveOutputDevice&, bool)`, `setDeviceNumChannels (device, numChannels)`, `setAllWaveInputsToNumChannels()`, `setAllWaveOutputsToNumChannels()` and `getPossibleChannelGroupsForDevice()`. Whole configurations can be saved/restored with the new wave device layout preset API (`getCurrentWaveDeviceLayout()`, `applyWaveDeviceLayout()` etc.).
+
+#### Rationale
+Channel groupings are no longer limited to mono or stereo pairs; devices can now use groups of any size up to `maxNumChannelsPerDevice`.
+
+___
+
+### Change
+`WaveDeviceDescription` has been restructured around the new `ChannelConfiguration` class. Its `std::vector<ChannelIndex> channels` member is now a `ChannelConfiguration`, and the constructors taking left/right channel indices or a `ChannelIndex*` array have been removed. `ChannelIndex` has moved to `utilities/tracktion_ChannelConfiguration.h`, and the free functions `createDescriptionOfChannels()` and `createChannelSet()` have been removed.
+
+#### Possible Issues
+Custom `EngineBehaviour::describeWaveDevices()` implementations will no longer compile (the virtual's signature is unchanged, so the failure is in the body, not the override). Code using the removed free functions will also fail to compile.
+
+#### Workaround
+Construct descriptions with `WaveDeviceDescription (name, ChannelConfiguration, enabled)` or `WaveDeviceDescription::withNumChannels (name, firstChannelIndexInDevice, numChannels, enabled)`. Replace `createDescriptionOfChannels()` with `ChannelConfiguration::getDescription()` and `createChannelSet()` with `ChannelConfiguration::toChannelSet()`.
+
+#### Rationale
+Wave devices can now describe arbitrary channel layouts, not just mono/stereo.
+
+___
+
+### Change
+`InputDevice` and `OutputDevice` now share a common `IODevice` base class. Their constructors no longer take a `type` string, `getType()` has been removed in favour of a new pure virtual `getDeviceTypeDescription()`, `getAlias()` has been replaced by `getAliasOrName()` / `getAliasIfSet()`, and `OutputDevice::getName()` is no longer virtual.
+
+#### Possible Issues
+Custom device subclasses will no longer compile (constructor and `getDeviceTypeDescription()` requirements). Code overriding `OutputDevice::getName()` will silently stop being called.
+
+#### Workaround
+Update constructors to the new `(Engine&, name, deviceID)` signatures and implement `getDeviceTypeDescription()`. Replace `getAlias()` calls with `getAliasOrName()` (falls back to the name) or `getAliasIfSet()` (may be empty).
+
+#### Rationale
+The two device hierarchies duplicated a lot of state and behaviour; a common base simplifies the multichannel refactor.
+
+___
+
+### Change
+`WaveInputDevice::getChannels()` and `WaveOutputDevice::getChannels()` now return `const ChannelConfiguration&` instead of `const std::vector<ChannelIndex>&`. `isStereoPair()`, `setStereoPair()`, `WaveOutputDevice::getLeftChannel()` and `getRightChannel()` are deprecated.
+
+#### Possible Issues
+Code binding the old return type or using the deprecated methods will fail to compile or emit warnings.
+
+#### Workaround
+Use `getChannels().getNumChannels()`, `getChannels()[i].indexInDevice` and `setChannelConfiguration()` instead.
+
+#### Rationale
+Wave devices are no longer restricted to one or two channels.
+
+___
+
+### Change
+`RackInstance`'s two-channel API has been removed: the `enum Channel { left, right }`, the `Channel`-taking name/level setters and getters, and the `leftInputGoesTo` / `rightInputGoesTo` / `leftOutputComesFrom` / `rightOutputComesFrom` cached values and their associated parameters.
+
+#### Possible Issues
+Code using the left/right rack routing API will no longer compile.
+
+#### Workaround
+Use the new dynamic channel-mapping API: `get/setNumInputChannels`, `get/setNumOutputChannels`, `getNumChannelMappings()`, `get/setInputMapping`, `get/setOutputMapping`, `getInput/OutputGainParam (int)` etc. Existing saved edits are migrated automatically on load, so only code needs updating.
+
+#### Rationale
+Racks now support arbitrary channel counts rather than fixed stereo routing.
+
+___
+
+### Change
+`AudioClipBase`'s left/right channel API has been removed: `setLeftChannelActive`, `isLeftChannelActive`, `setRightChannelActive`, `isRightChannelActive` and the protected `activeChannels` member. `getActiveChannels()` remains but is deprecated.
+
+#### Possible Issues
+Code using these methods will no longer compile.
+
+#### Workaround
+Use `getSourceChannelConfiguration()`, `getActiveChannelConfiguration()`, `setActiveChannelConfiguration()` and `getOutputChannelConfiguration()`.
+
+#### Rationale
+Clips can now enable/disable any subset of an arbitrary number of source channels.
+
+___
+
+### Change
+`LevelMeasurer::Client::maxNumChannels` has been removed (channel storage is now dynamic), along with `setLevelCache()` and `getLevelCache()`.
+
+#### Possible Issues
+Code referencing the constant or the cache methods will no longer compile.
+
+#### Workaround
+Use the per-channel access APIs, which are unchanged; storage grows to fit however many channels are fed to the meter.
+
+#### Rationale
+Meters previously crashed when given more than the fixed number of channels; they now handle any channel count.
+
+___
+
+### Change
+`PluginWindowState::windowLocked` has been removed, along with its saved property.
+
+#### Possible Issues
+Code reading or writing `windowLocked` will no longer compile.
+
+#### Workaround
+None - window locking has been removed as a concept. Implement it at the application level if needed.
+
+#### Rationale
+The flag didn't belong in the engine and was barely used in practice.
+
+___
+
+### Change
+`RenderOptions::getStereo()` and the `stereo` cached value have been removed.
+
+#### Possible Issues
+Code querying or setting stereo/mono rendering through these will no longer compile.
+
+#### Workaround
+Use `getChannelConfiguration()` / `setChannelConfiguration()`.
+
+#### Rationale
+Renders can now target any channel layout, not just mono or stereo.
+
+___
+
+### Change
+`UIBehaviour::showOkCancelAlertBox()` and `showYesNoCancelAlertBox()` have been replaced by `showOkCancelAlertBoxAsync()` and `showYesNoCancelAlertBoxAsync()`, which take a completion callback instead of returning a result. `showMenuAndCreatePlugin()` is deprecated in favour of `showMenuAndCreatePluginAsync()`.
+
+#### Possible Issues
+Overrides of the old methods will no longer compile, and callers can no longer get a synchronous answer.
+
+#### Workaround
+Override the `Async` versions and restructure calling code into continuation callbacks. The result semantics are unchanged (`true` = OK; `1` = yes, `2` = no, `0` = cancel).
+
+#### Rationale
+The engine no longer runs modal loops, which block the message thread and can re-enter the engine in unexpected ways.
+
+___
+
+### Change
+Several save/load and project APIs have become asynchronous or lost their built-in UI as part of removing modal loops from the engine:
+- `EditFileOperations::save()` and `saveAs()` now return `void` and take a completion callback (as do `AppFunctions::saveEdit()` / `saveEditAs()`)
+- `Renderer::checkTargetFile()` now takes a completion callback instead of returning `bool`
+- `ProjectManager::createNewProjectInteractively()` now returns `void` and takes a callback
+- `ProjectManager::unpackArchiveAndAddToList()` now requires the caller to supply the destination directory (the engine no longer shows a file chooser)
+- `Project::askAboutTempoDetect()` has been removed
+
+#### Possible Issues
+Code using the old synchronous signatures will no longer compile.
+
+#### Workaround
+Pass completion callbacks and move any dependent logic into them. For tests, `test_utilities::saveEditSync()` provides a synchronous save. UI questions such as tempo detection are now the application's responsibility.
+
+#### Rationale
+Modal loops inside the engine blocked the message thread and made embedding the engine in other applications fragile.
+
+___
+
+### Change
+The free function `yieldGUIThread()` has been removed.
+
+#### Possible Issues
+Code calling it will no longer compile.
+
+#### Workaround
+None - delete the call. It was a Windows-only `juce::Thread::yield()` used from within modal loops, which no longer exist in the engine.
+
+#### Rationale
+Antiquated API that made no sense once the modal loops were removed.
+
+___
+
+### Change
+`FallbackReader` has been renamed to `AudioFormatReaderWithTimeout`, and `AudioFileCache::createFallbackReader()` to `createAudioFormatReaderWithTimeout()`. `AudioFileCache::Reader::readSamples()` now takes `ChannelConfiguration` arguments instead of `juce::AudioChannelSet`.
+
+#### Possible Issues
+Code using the old names or signature will no longer compile. No compatibility alias is provided.
+
+#### Workaround
+Rename the symbols and update `readSamples()` call sites to pass `ChannelConfiguration` (see `ChannelConfiguration::fromChannelSet()`).
+
+#### Rationale
+The old name didn't describe what the class did, and the cache is now channel-layout aware.
+
+___
+
+### Change
+`SourceFileReference::setToDirectFileReference()` and the file-taking `setToProjectFileReference()` overload have been replaced by a single `setToFile (const juce::File&, PathStyle, bool allowProjectItems)` method. `getSourceProjectItemID()` is now `getSourceProjectItemRef()`, returning a `ProjectItemRef`.
+
+#### Possible Issues
+Code using the removed setters or the old getter will no longer compile.
+
+#### Workaround
+Use `setToFile()` with `PathStyle::chooseBest`, `alwaysRelative` or `alwaysAbsolute`. Direct-file callers should pass `allowProjectItems = false`; project-item callers `chooseBest, true`.
+
+#### Rationale
+A single entry point with an explicit path policy replaces several overlapping setters, and supports the smarter relative/absolute path selection needed for folder-based projects.
+
+___
+
+### Change
+`Exportable::ReferencedItem::itemID` (a `ProjectItemID`) is now `itemRef` (a `ProjectItemRef`), and the pure virtual `reassignReferencedItem()` now takes a `ProjectItemRef` instead of a `ProjectItemID`. The `EngineBehaviour::reassignReferencedItem()` overloads changed the same way.
+
+#### Possible Issues
+Implementations of these virtuals in custom `Clip` or `Plugin` subclasses will no longer compile (or, if not marked `override`, will silently stop being called).
+
+#### Workaround
+Update the signatures to take `ProjectItemRef`. `ProjectItemRef` converts implicitly from `ProjectItemID`, and `getProjectItemID()` returns a `std::optional<ProjectItemID>` when the underlying ID is needed.
+
+#### Rationale
+Referenced items must support path-based references for folder-based projects.
+
+___
+
+### Change
+The engine's unit tests have been converted from `juce::UnitTest` to doctest.
+
+#### Possible Issues
+Clients that ran the engine's self-tests through a `juce::UnitTestRunner` (with `TRACKTION_UNIT_TESTS=1`) will find them gone.
+
+#### Workaround
+Run the tests with a doctest runner instead - see `examples/TestRunner`. The helpers in `tracktion_TestUtilities.h` retain their `juce::UnitTest`-taking overloads.
+
+#### Rationale
+doctest allows test filtering, better reporting and running the engine tests without a JUCE test harness.
+
+___
+
+### Change
 `TracktionArchiveFile` and `ExportJob` moved to `legacy::` namespace.
 
 #### Possible Issues
