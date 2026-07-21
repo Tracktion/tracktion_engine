@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['quantisationtype_0',['quantisationtype',['../classtracktion_1_1engine_1_1QuantisationType.html#a39cea508fc5564f09449c67e969e32df',1,'tracktion::engine::QuantisationType::QuantisationType()'],['../classtracktion_1_1engine_1_1QuantisationType.html#a6eaf49691e1874a0c9b995d09c7ea48d',1,'tracktion::engine::QuantisationType::QuantisationType(const juce::ValueTree &amp;, juce::UndoManager *)'],['../classtracktion_1_1engine_1_1QuantisationType.html#a82c84e2d883017db1e57e89ae15b3edf',1,'tracktion::engine::QuantisationType::QuantisationType(const QuantisationType &amp;)']]],
-  ['quickparam_1',['quickParam',['../classtracktion_1_1engine_1_1CustomControlSurface.html#ab59518438a21be1921e10be4bd3e9a8f',1,'tracktion::engine::CustomControlSurface']]]
+  ['quantisationtype_0',['quantisationtype',['../classengine_1_1QuantisationType.html#a095f29bddc40fe12d71591333e737fa8',1,'engine::QuantisationType::QuantisationType()'],['../classengine_1_1QuantisationType.html#a11837c98bdfd3e46a7c467d627c4d0f9',1,'engine::QuantisationType::QuantisationType(const juce::ValueTree &amp;, juce::UndoManager *)'],['../classengine_1_1QuantisationType.html#a17897deeaaba0d43d5ab16f0ead2bb03',1,'engine::QuantisationType::QuantisationType(const QuantisationType &amp;)']]],
+  ['quickparam_1',['quickParam',['../classengine_1_1CustomControlSurface.html#ad67a5c9f85b5869312210e5c98187b53',1,'engine::CustomControlSurface']]]
 ];

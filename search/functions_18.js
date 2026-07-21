@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['yieldguithread_0',['yieldguithread',['../namespacetracktion_1_1engine.html#a46088c3176177549ed24a5f75e59bbb7',1,'tracktion::yieldGUIThread()'],['../namespacetracktion_1_1engine.html#a46088c3176177549ed24a5f75e59bbb7',1,'tracktion::engine::yieldGUIThread()']]],
-  ['ytovalue_1',['yToValue',['../classtracktion_1_1engine_1_1CurveEditor.html#a1df94ce44fd7522d767edb78e79f4219',1,'tracktion::engine::CurveEditor']]]
+  ['ytovalue_0',['yToValue',['../classengine_1_1CurveEditor.html#a12d4bb37403795faaa88603965f37aa1',1,'engine::CurveEditor']]]
 ];

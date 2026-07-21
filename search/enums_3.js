@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['editrole_0',['EditRole',['../classtracktion_1_1engine_1_1Edit.html#a474ef5984345c5b32ffa52ecff59321a',1,'tracktion::engine::Edit']]],
-  ['effecttype_1',['EffectType',['../classtracktion_1_1engine_1_1ClipEffect.html#a68a4d5b963dfd7e9e1f7d1f62ccb9d51',1,'tracktion::engine::ClipEffect']]],
-  ['extracontrollertypes_2',['ExtraControllerTypes',['../classtracktion_1_1engine_1_1MidiControllerEvent.html#a0182a484d888a5d149dd53f6cf93c6b8',1,'tracktion::engine::MidiControllerEvent']]]
+  ['editrole_0',['EditRole',['../classengine_1_1Edit.html#a1e447bd9dfcd8064324bf41df9002c21',1,'engine::Edit']]],
+  ['effecttype_1',['EffectType',['../classengine_1_1ClipEffect.html#ad2485113a8437c897734b9d260fca25b',1,'engine::ClipEffect']]],
+  ['extracontrollertypes_2',['ExtraControllerTypes',['../classengine_1_1MidiControllerEvent.html#a8bdd5b496bf2aa07b20b6146861ea57d',1,'engine::MidiControllerEvent']]]
 ];

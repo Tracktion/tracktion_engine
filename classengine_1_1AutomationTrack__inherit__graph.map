@@ -1,0 +1,9 @@
+<map id="engine::AutomationTrack" name="engine::AutomationTrack">
+<area shape="rect" id="Node000001" title=" " alt="" coords="58,152,242,177"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s]." alt="" coords="96,79,204,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,118,153,152,147,152,147,118"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,5,135,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="95,38,139,76,135,80,91,42"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="159,5,301,31"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="209,42,165,80,161,76,205,38"/>
+</map>

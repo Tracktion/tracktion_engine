@@ -1,0 +1,5 @@
+<map id="engine::ModifierList" name="engine::ModifierList">
+<area shape="rect" id="Node000001" title="Holds a list of Modifiers that have been added to a Track." alt="" coords="31,93,182,119"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1ValueTreeObjectList.html" title=" " alt="" coords="5,5,208,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,59,109,93,104,93,104,59"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="engine::InputDeviceInstance::WaveInputDestination" name="engine::InputDeviceInstance::WaveInputDestination">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,167,212,207"/>
+<area shape="rect" id="Node000002" href="$structengine_1_1InputDeviceInstance_1_1Destination.html" title=" " alt="" coords="5,79,212,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,133,111,166,106,166,106,133"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="37,5,180,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="111,44,111,79,106,79,106,44"/>
+</map>

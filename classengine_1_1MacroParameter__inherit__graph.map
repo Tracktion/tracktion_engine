@@ -1,0 +1,9 @@
+<map id="engine::MacroParameter" name="engine::MacroParameter">
+<area shape="rect" id="Node000001" title="A MacroParameter is an AutomatableParameter which is a collection of Mappings." alt="" coords="151,167,333,192"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1AutomatableParameter.html" title=" " alt="" coords="5,86,231,111"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,116,225,164,222,169,146,121"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="47,5,189,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="121,44,121,86,115,86,115,44"/>
+<area shape="rect" id="Node000004" href="$structengine_1_1AutomatableParameter_1_1ModifierSource.html" title="Base class for things that can be used to modify parameters." alt="" coords="255,79,480,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="327,128,262,169,259,164,324,124"/>
+</map>

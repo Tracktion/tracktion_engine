@@ -1,0 +1,7 @@
+<map id="engine::MackieC4" name="engine::MackieC4">
+<area shape="rect" id="Node000001" title=" " alt="" coords="21,152,160,177"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1ControlSurface.html" title="Base class for types of control surface." alt="" coords="5,79,176,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,118,93,152,88,152,88,118"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="19,5,162,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="93,44,93,79,88,79,88,44"/>
+</map>

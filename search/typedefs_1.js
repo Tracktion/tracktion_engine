@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['channelmap_0',['ChannelMap',['../classtracktion_1_1engine_1_1RackInstanceNode.html#a2e3bfdc449355c234790a89bbcf140cc',1,'tracktion::engine::RackInstanceNode']]]
+  ['channelmap_0',['ChannelMap',['../classengine_1_1RackInstanceNode.html#a77f4341209eeced99d71d151e09f6fcd',1,'engine::RackInstanceNode']]]
 ];

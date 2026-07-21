@@ -1,0 +1,5 @@
+<map id="engine::TrackWaveInputDeviceNode" name="engine::TrackWaveInputDeviceNode">
+<area shape="rect" id="Node000001" title="A Node that takes audio from the output of a track and sends it to its corresponding InputDevice." alt="" coords="5,79,261,104"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1TracktionEngineNode.html" title="Base class for Nodes that provides information about the current process call." alt="" coords="28,5,239,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,44,136,79,131,79,131,44"/>
+</map>

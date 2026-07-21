@@ -1,0 +1,9 @@
+<map id="engine::AutomationCurveModifier" name="engine::AutomationCurveModifier">
+<area shape="rect" id="Node000001" title="An AutomationCurveModifier contains three curves to control automation: absolute, relative and scale." alt="" coords="109,93,351,119"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,13,135,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,42,208,91,206,96,104,46"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="159,13,301,38"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="233,52,233,93,227,93,227,52"/>
+<area shape="rect" id="Node000004" href="$structengine_1_1AutomatableParameter_1_1ModifierSource.html" title="Base class for things that can be used to modify parameters." alt="" coords="325,5,551,45"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="377,53,262,96,260,91,375,48"/>
+</map>

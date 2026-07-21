@@ -74,37 +74,63 @@ $(function() {
 <div class="contents">
 <div class="textblock"><dl class="reflist">
 <dt>Member <a class="el" href="group__tracktion__engine-plugins.html#gaf337be26a74c68764e997b03fe5b0e92">createMelodynePlugin</a>  (Engine &amp;engine)</dt>
-<dd><a class="anchor" id="_deprecated000011"></a>Use createARAPlugin instead  </dd>
+<dd><a class="anchor" id="_deprecated000019"></a>Use createARAPlugin instead  </dd>
+<dt>Member <a class="el" href="classengine_1_1AudioClipBase.html#add9cf0e57ad8a9567c025b60951841a7">engine::AudioClipBase::getActiveChannels</a>  ()</dt>
+<dd><a class="anchor" id="_deprecated000004"></a>Use <a class="el" href="classengine_1_1AudioClipBase.html#ac5e49f0bfd5fc4a719e86335759559e3" title="Returns which channels are active (selected for playback).">getActiveChannelConfiguration()</a> instead.  </dd>
+<dt>Member <a class="el" href="classengine_1_1AudioClipBase.html#abb5a1553ec3e4cb607bd435a0ff919b0">engine::AudioClipBase::getMelodyneProxy</a>  () const</dt>
+<dd><a class="anchor" id="_deprecated000005"></a>Use <a class="el" href="classengine_1_1AudioClipBase.html#a81d56b1dd04e5c2bc732573fb6439676" title="Returns the ARAFileReader proxy if this clip is using an ARA plugin (e.g.">getARAProxy()</a> instead.  </dd>
+<dt>Member <a class="el" href="classengine_1_1AudioClipBase.html#ad7b7918b4b6c5a9f84eceaf7235d4687">engine::AudioClipBase::isUsingMelodyne</a>  () const</dt>
+<dd><a class="anchor" id="_deprecated000006"></a>Use <a class="el" href="classengine_1_1AudioClipBase.html#a3f74234a1bbf989a6bb7abea37ea6744" title="Returns true if this clip is using an ARA plugin.">isUsingARA()</a> instead.  </dd>
+<dt>Member <a class="el" href="classengine_1_1AudioClipBase.html#af4d225967caa249136c660c22c39562f">engine::AudioClipBase::loadMelodyneState</a>  ()</dt>
+<dd><a class="anchor" id="_deprecated000007"></a>Use <a class="el" href="classengine_1_1AudioClipBase.html#a3248fdd6e6ce4f56c81fd67a1bf53d08">loadARAState()</a> instead.  </dd>
+<dt>Member <a class="el" href="classengine_1_1Edit.html#adacdc6552f2e68fa405bf28fabb49f0a">engine::Edit::createEditForExamining</a>  (<a class="el" href="classengine_1_1Engine.html" title="The Engine is the central class for all tracktion sessions.">Engine</a> &amp;, juce::ValueTree, EditRole role=<a class="el" href="classengine_1_1Edit.html#a1e447bd9dfcd8064324bf41df9002c21a240ad6da5d6312c61540e68cb435750c" title="Creates an Edit for examining (listing source files etc).">EditRole::forExamining</a>, <a class="el" href="structengine_1_1Edit_1_1LoadContext.html" title="A context passed to the Options struct which will get updated about load process and can be signaled ...">LoadContext</a> *=nullptr)</dt>
+<dd><a class="anchor" id="_deprecated000008"></a>Use loadEditForExamining(ProjectManager&amp;, ProjectItemRef) for file-based edits. This function doesn't set editFileRetriever, so relative paths won't resolve.  </dd>
+<dt>Member <a class="el" href="classengine_1_1ExternalPlugin.html#aeac6a74a2c63d72e9cd157b2eefdc8b6">engine::ExternalPlugin::getTotalNumInputChannels</a>  () const</dt>
+<dd><a class="anchor" id="_deprecated000020"></a>Use <a class="el" href="classengine_1_1ExternalPlugin.html#ad0d731511d2298085a4e4b9c6fcf6115" title="Returns the underlying juce::AudioPluginInstance, or nullptr if not yet loaded.">getAudioPluginInstance()</a>-&gt;<a class="el" href="classengine_1_1ExternalPlugin.html#aeac6a74a2c63d72e9cd157b2eefdc8b6">getTotalNumInputChannels()</a> instead.  </dd>
+<dt>Member <a class="el" href="namespaceengine.html#abe4f16af7e9461e25f2e4b9f4a02228e">engine::hideMelodyneWindow</a>  (<a class="el" href="classengine_1_1AudioClipBase.html" title="Base class for Clips that produce some kind of audio e.g.">AudioClipBase</a> &amp;c)</dt>
+<dd><a class="anchor" id="_deprecated000002"></a>Use <a class="el" href="namespaceengine.html#a23b44ff76a47c5d8e5d03676492b1eb5" title="Hides the ARA plugin window if this clip is using an ARA plugin.">hideARAWindow()</a> instead.  </dd>
+<dt>Member <a class="el" href="namespaceengine.html#ac2f396cb6f56449190052473224e5b32">engine::melodyneConvertToMIDI</a>  (<a class="el" href="classengine_1_1AudioClipBase.html" title="Base class for Clips that produce some kind of audio e.g.">AudioClipBase</a> &amp;c)</dt>
+<dd><a class="anchor" id="_deprecated000003"></a>Use <a class="el" href="namespaceengine.html#a61e4cb181acfe81e305e84666117c35d" title="If this clip is using an ARA plugin, this will create a new MIDI clip based on the ARA plugin&#39;s analy...">araConvertToMIDI()</a> instead.  </dd>
+<dt>Member <a class="el" href="namespaceengine.html#a92a59ec3e466449cf6a75ab669cec5fd">engine::MelodyneFileReader</a>  </dt>
+<dd><a class="anchor" id="_deprecated000016"></a>Use <a class="el" href="classengine_1_1ARAFileReader.html" title="Manages an ARA plugin instance for an audio clip.">ARAFileReader</a> instead  </dd>
+<dt>Member <a class="el" href="namespaceengine.html#affa45b042aef13b89ba30ccd8bec53fb">engine::MelodyneNode</a>  </dt>
+<dd><a class="anchor" id="_deprecated000015"></a>Use <a class="el" href="classengine_1_1ARANode.html" title="Node for playing back audio through an ARA plugin.">ARANode</a> instead  </dd>
+<dt>Member <a class="el" href="structengine_1_1PluginRenderContext.html#aa61737bbd2faf70803eee4e3e88c5da2">engine::PluginRenderContext::destBufferChannels</a>  </dt>
+<dd><a class="anchor" id="_deprecated000022"></a>This field is not used by the engine and will be removed in a future version.  </dd>
+<dt>Member <a class="el" href="structengine_1_1PluginRenderContext.html#a53354824d9d59fa790bb5d42bcc9eec5">engine::PluginRenderContext::PluginRenderContext</a>  (juce::AudioBuffer&lt; float &gt; *buffer, const juce::AudioChannelSet &amp;bufferChannels, int bufferStart, int bufferSize, <a class="el" href="structengine_1_1MidiMessageArray.html">MidiMessageArray</a> *midiBuffer, double midiOffset, TimeRange editTime, bool playing, bool scrubbing, bool rendering, bool allowBypassedProcessing) noexcept</dt>
+<dd><a class="anchor" id="_deprecated000021"></a>Use the constructor without the bufferChannels parameter. The destBufferChannels field was never used by the engine.  </dd>
+<dt>Member <a class="el" href="classengine_1_1Project.html#a3f74b821c60a9aa3800aac8d481726eb">engine::Project::findOrphanItems</a>  ()</dt>
+<dd><a class="anchor" id="_deprecated000023"></a>Use <a class="el" href="classengine_1_1Project.html#a356ee1c286c2dd5e6c02fca7738d43de" title="Returns refs to items whose source files are not referenced by any edit.">findOrphanItemRefs()</a> instead.  </dd>
+<dt>Member <a class="el" href="namespaceengine.html#a0aab02bc2dcc31800afc54631f9105f9">engine::showMelodyneWindow</a>  (<a class="el" href="classengine_1_1AudioClipBase.html" title="Base class for Clips that produce some kind of audio e.g.">AudioClipBase</a> &amp;c)</dt>
+<dd><a class="anchor" id="_deprecated000001"></a>Use <a class="el" href="namespaceengine.html#a0364f870c4c9923bd323f86ab15f5804" title="Shows the ARA plugin window if this clip is using an ARA plugin.">showARAWindow()</a> instead.  </dd>
+<dt>Member <a class="el" href="classengine_1_1TimeStretcher.html#a4356214c323f20186c56d398909dff8a">engine::TimeStretcher::isMelodyne</a>  (Mode m)</dt>
+<dd><a class="anchor" id="_deprecated000024"></a>Use isARA instead.  </dd>
+<dt>Member <a class="el" href="classengine_1_1TimeStretcher.html#a3a3010b423f2d331fbf159f8ed26d989a07631bab701a79cb7c8c5edb867ac45b">engine::TimeStretcher::melodyne</a>  </dt>
+<dd><a class="anchor" id="_deprecated000025"></a>Use ara instead.  </dd>
+<dt>Member <a class="el" href="classengine_1_1UIBehaviour.html#a1d6d793b62b40306624255ad78fdab64">engine::UIBehaviour::showMenuAndCreatePlugin</a>  (<a class="el" href="classengine_1_1Plugin.html#aff4e17994341b7283990d084aba4f16f" title="Filter categories used when enumerating plugins.">Plugin::Type</a>, <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> &amp;)</dt>
+<dd><a class="anchor" id="_deprecated000026"></a>Use the async callback version instead.  </dd>
+<dt>Member <a class="el" href="classengine_1_1WaveInputDevice.html#abe67ebc7f7c148eff2ec6522f10d7ff8">engine::WaveInputDevice::isStereoPair</a>  () const</dt>
+<dd><a class="anchor" id="_deprecated000009"></a>Use <a class="el" href="classengine_1_1WaveInputDevice.html#a294d3c9835d0b9f27a53dd8fe90038b8">getChannels()</a>.getNumChannels() == 2 instead.  </dd>
+<dt>Member <a class="el" href="classengine_1_1WaveInputDevice.html#a2cc663757ac0f740b7c2c4ee03515a02">engine::WaveInputDevice::setStereoPair</a>  (bool)</dt>
+<dd><a class="anchor" id="_deprecated000010"></a>Use <a class="el" href="classengine_1_1WaveInputDevice.html#ae90acc9d3ffb6cb02295a885b26ab406" title="Updates the channel configuration for track devices.">setChannelConfiguration()</a> instead.  </dd>
+<dt>Member <a class="el" href="classengine_1_1WaveOutputDevice.html#afd7b36ad8963bd8ef3e7995cdf1f5ad6">engine::WaveOutputDevice::getLeftChannel</a>  () const</dt>
+<dd><a class="anchor" id="_deprecated000011"></a>Use <a class="el" href="classengine_1_1WaveOutputDevice.html#a0095ddf4b115221f1960c529ae7f2c92">getChannels()</a>[0].indexInDevice instead.  </dd>
+<dt>Member <a class="el" href="classengine_1_1WaveOutputDevice.html#ad26cd643c50f110c23d61753b81ae6ff">engine::WaveOutputDevice::getRightChannel</a>  () const</dt>
+<dd><a class="anchor" id="_deprecated000012"></a>Use <a class="el" href="classengine_1_1WaveOutputDevice.html#a0095ddf4b115221f1960c529ae7f2c92">getChannels()</a>[1].indexInDevice instead.  </dd>
+<dt>Member <a class="el" href="classengine_1_1WaveOutputDevice.html#a77b1828c15a0e1d635e652a5234b79b5">engine::WaveOutputDevice::isStereoPair</a>  () const</dt>
+<dd><a class="anchor" id="_deprecated000013"></a>Use <a class="el" href="classengine_1_1WaveOutputDevice.html#a0095ddf4b115221f1960c529ae7f2c92">getChannels()</a>.getNumChannels() == 2 instead.  </dd>
+<dt>Member <a class="el" href="classengine_1_1WaveOutputDevice.html#a5c346854049ad84aa0a347384927a408">engine::WaveOutputDevice::setStereoPair</a>  (bool)</dt>
+<dd><a class="anchor" id="_deprecated000014"></a>Use setChannelConfiguration() instead.  </dd>
 <dt>Member <a class="el" href="group__tracktion__engine-plugins.html#ga61d9fa9a4997dc09d48859968aa5b9da">MelodyneInstance</a>  </dt>
-<dd><a class="anchor" id="_deprecated000009"></a>Use <a class="el" href="structARAInstance.html" title="Holds an instance of an ARA plugin along with its factory and extension info.">ARAInstance</a> instead  </dd>
+<dd><a class="anchor" id="_deprecated000017"></a>Use <a class="el" href="structARAInstance.html" title="Holds an instance of an ARA plugin along with its factory and extension info.">ARAInstance</a> instead  </dd>
 <dt>Member <a class="el" href="group__tracktion__engine-plugins.html#ga956493f52c472202ca9488e8138aeb1e">MelodyneInstanceFactory</a>  </dt>
-<dd><a class="anchor" id="_deprecated000010"></a>Use <a class="el" href="structARAPluginFactory.html" title="Factory for creating ARA plugin instances.">ARAPluginFactory</a> instead  </dd>
-<dt>Member <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a46bf6325375bf185761703038ad20b48">tracktion::engine::AudioClipBase::getMelodyneProxy</a>  () const</dt>
-<dd><a class="anchor" id="_deprecated000004"></a>Use <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#abf752fdb624003b43b3cffa3c9ee1727" title="Returns the ARAFileReader proxy if this clip is using an ARA plugin (e.g.">getARAProxy()</a> instead.  </dd>
-<dt>Member <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a9670c7861ec0c2f59c9edb3559e27ea6">tracktion::engine::AudioClipBase::isUsingMelodyne</a>  () const</dt>
-<dd><a class="anchor" id="_deprecated000005"></a>Use <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a0a41a34c6e4309eed674278d2d456de5" title="Returns true if this clip is using an ARA plugin.">isUsingARA()</a> instead.  </dd>
-<dt>Member <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a2f0d07c496356e9fe76afbc4c067fce3">tracktion::engine::AudioClipBase::loadMelodyneState</a>  ()</dt>
-<dd><a class="anchor" id="_deprecated000006"></a>Use <a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html#a504e3c3c03f43c7ca7ec74afeb5270fc">loadARAState()</a> instead.  </dd>
-<dt>Member <a class="el" href="namespacetracktion_1_1engine.html#a16e2fa3c9344880a67f29121f446aebe">tracktion::engine::hideMelodyneWindow</a>  (<a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html" title="Base class for Clips that produce some kind of audio e.g.">AudioClipBase</a> &amp;c)</dt>
-<dd><a class="anchor" id="_deprecated000002"></a>Use <a class="el" href="namespacetracktion_1_1engine.html#af916d35d53212edcef637223a98e456d" title="Hides the ARA plugin window if this clip is using an ARA plugin.">hideARAWindow()</a> instead.  </dd>
-<dt>Member <a class="el" href="namespacetracktion_1_1engine.html#a1a87869d41df00b658fa2f81b49783b2">tracktion::engine::melodyneConvertToMIDI</a>  (<a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html" title="Base class for Clips that produce some kind of audio e.g.">AudioClipBase</a> &amp;c)</dt>
-<dd><a class="anchor" id="_deprecated000003"></a>Use <a class="el" href="namespacetracktion_1_1engine.html#af8ec7e22a452da118cca5aae8872a4d9" title="If this clip is using an ARA plugin, this will create a new MIDI clip based on the ARA plugin&#39;s analy...">araConvertToMIDI()</a> instead.  </dd>
-<dt>Member <a class="el" href="namespacetracktion_1_1engine.html#afb54a3e773571433fc16fa0681b349f1">tracktion::engine::MelodyneFileReader</a>  </dt>
-<dd><a class="anchor" id="_deprecated000008"></a>Use <a class="el" href="classtracktion_1_1engine_1_1ARAFileReader.html" title="Manages an ARA plugin instance for an audio clip.">ARAFileReader</a> instead  </dd>
-<dt>Member <a class="el" href="namespacetracktion_1_1engine.html#ac42355a085385968b73043552c0897e3">tracktion::engine::MelodyneNode</a>  </dt>
-<dd><a class="anchor" id="_deprecated000007"></a>Use <a class="el" href="classtracktion_1_1engine_1_1ARANode.html" title="Node for playing back audio through an ARA plugin.">ARANode</a> instead  </dd>
-<dt>Member <a class="el" href="namespacetracktion_1_1engine.html#a3e22b1a9786dfbfafe8db0e708735090">tracktion::engine::showMelodyneWindow</a>  (<a class="el" href="classtracktion_1_1engine_1_1AudioClipBase.html" title="Base class for Clips that produce some kind of audio e.g.">AudioClipBase</a> &amp;c)</dt>
-<dd><a class="anchor" id="_deprecated000001"></a>Use <a class="el" href="namespacetracktion_1_1engine.html#a6968f6d7b0db6a5ee101f19e7b7aeda7" title="Shows the ARA plugin window if this clip is using an ARA plugin.">showARAWindow()</a> instead.  </dd>
-<dt>Member <a class="el" href="classtracktion_1_1engine_1_1TimeStretcher.html#a481179b47989ad2ddbda5de2ff7e4e16">tracktion::engine::TimeStretcher::isMelodyne</a>  (Mode m)</dt>
-<dd><a class="anchor" id="_deprecated000012"></a>Use isARA instead.  </dd>
-<dt>Member <a class="el" href="classtracktion_1_1engine_1_1TimeStretcher.html#aef6990d119f230d6c5ffb78f4470c79eac2510c267da3bb584284990e15735488">tracktion::engine::TimeStretcher::melodyne</a>  </dt>
-<dd><a class="anchor" id="_deprecated000013"></a>Use ara instead. </dd>
+<dd><a class="anchor" id="_deprecated000018"></a>Use <a class="el" href="structARAPluginFactory.html" title="Factory for creating ARA plugin instances.">ARAPluginFactory</a> instead </dd>
 </dl>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 18 2026 15:03:50 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Jul 21 2026 18:17:57 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

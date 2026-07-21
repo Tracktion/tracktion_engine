@@ -1,0 +1,19 @@
+<map id="engine::FourOscPlugin" name="engine::FourOscPlugin">
+<area shape="rect" id="Node000001" title=" " alt="" coords="684,133,851,159"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1Plugin.html" title="Base class for all audio plugins in the Tracktion Engine." alt="" coords="493,104,608,129"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="622,124,684,132,684,137,621,129"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="229,5,371,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="385,29,418,40,482,70,532,102,530,106,480,75,416,44,384,35"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1Exportable.html" title="An interface for objects within an edit that can be exported." alt="" coords="228,55,372,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="379,80,494,103,493,108,378,85"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1AutomatableEditItem.html" title="Base class for elements that have some kind of automatable parameters." alt="" coords="193,104,407,129"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="420,114,493,114,493,119,420,119"/>
+<area shape="rect" id="Node000006" href="$classengine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,104,135,129"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="149,114,193,114,193,119,149,119"/>
+<area shape="rect" id="Node000007" href="$classengine_1_1MacroParameterElement.html" title="Base class for elements which can contain macro parameters." alt="" coords="183,153,417,179"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="378,148,493,125,494,130,379,153"/>
+<area shape="rect" id="Node000008" href="$structengine_1_1ValueTreeAllEventListener.html" title=" " alt="" coords="205,203,395,243"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="404,196,416,189,430,177,439,165,449,152,464,140,492,127,494,132,467,144,452,156,444,168,434,181,419,194,406,200"/>
+<area shape="rect" id="Node000009" href="$structengine_1_1LevelMeasurer_1_1Client.html" title=" " alt="" coords="465,154,636,194"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="649,159,683,154,684,159,650,164"/>
+</map>

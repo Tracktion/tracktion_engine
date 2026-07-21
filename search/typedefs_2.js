@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['editduration_0',['editduration',['../namespacetracktion_1_1engine.html#a8db697bbe1bfc6a6e15057a64d56b8ed',1,'tracktion::EditDuration'],['../namespacetracktion_1_1engine.html#a8db697bbe1bfc6a6e15057a64d56b8ed',1,'tracktion::engine::EditDuration']]],
-  ['editfileretriever_1',['EditFileRetriever',['../classtracktion_1_1engine_1_1Edit.html#a06f3d6634e75e513e382232f0df7a3cf',1,'tracktion::engine::Edit']]],
-  ['edittime_2',['edittime',['../namespacetracktion_1_1engine.html#ae95cb936a5dbab25bc2e27322f9205b6',1,'tracktion::EditTime'],['../namespacetracktion_1_1engine.html#ae95cb936a5dbab25bc2e27322f9205b6',1,'tracktion::engine::EditTime']]]
+  ['editduration_0',['EditDuration',['../namespaceengine.html#a4f3ea40b6365c23a87e7d774bb8d25e0',1,'engine']]],
+  ['editfileretriever_1',['EditFileRetriever',['../classengine_1_1Edit.html#a4f6034eb21919a727648a2ac59492d7f',1,'engine::Edit']]],
+  ['edittime_2',['EditTime',['../namespaceengine.html#a1a359566c0fbcc69932643b3f205737b',1,'engine']]]
 ];

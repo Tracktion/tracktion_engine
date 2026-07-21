@@ -82,52 +82,50 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespacetracktion" id="r_namespacetracktion"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion.html">tracktion</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacetracktion_1_1graph" id="r_namespacetracktion_1_1graph"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html">tracktion::graph</a></td></tr>
+<tr class="memitem:namespacegraph" id="r_namespacegraph"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegraph.html">graph</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a09e04a897e7b7aed0ebcbb2b62f14675" id="r_a09e04a897e7b7aed0ebcbb2b62f14675"><td class="memItemLeft" align="right" valign="top">juce::AudioBuffer&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html#a09e04a897e7b7aed0ebcbb2b62f14675">tracktion::graph::toAudioBuffer</a> (choc::buffer::ChannelArrayView&lt; float &gt; view)</td></tr>
-<tr class="memdesc:a09e04a897e7b7aed0ebcbb2b62f14675"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a juce::AudioBuffer from a choc::buffer::BufferView.  <br /></td></tr>
-<tr class="separator:a09e04a897e7b7aed0ebcbb2b62f14675"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a328bc67c4f0c13f5f83c4560e4d44715" id="r_a328bc67c4f0c13f5f83c4560e4d44715"><td class="memTemplParams" colspan="2">template&lt;typename SampleType &gt; </td></tr>
-<tr class="memitem:a328bc67c4f0c13f5f83c4560e4d44715"><td class="memTemplItemLeft" align="right" valign="top">choc::buffer::BufferView&lt; SampleType, choc::buffer::SeparateChannelLayout &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html#a328bc67c4f0c13f5f83c4560e4d44715">tracktion::graph::toBufferView</a> (juce::AudioBuffer&lt; SampleType &gt; &amp;buffer)</td></tr>
-<tr class="memdesc:a328bc67c4f0c13f5f83c4560e4d44715"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a juce::AudioBuffer&lt;SampleType&gt; to a choc::buffer::BufferView.  <br /></td></tr>
-<tr class="separator:a328bc67c4f0c13f5f83c4560e4d44715"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0bf4a996c7e326b2ccc25872ad558b83" id="r_a0bf4a996c7e326b2ccc25872ad558b83"><td class="memItemLeft" align="right" valign="top">choc::buffer::FrameRange&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html#a0bf4a996c7e326b2ccc25872ad558b83">tracktion::graph::createFrameRange</a> (std::integral auto start, std::integral auto end)</td></tr>
-<tr class="memdesc:a0bf4a996c7e326b2ccc25872ad558b83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a FrameRange from any integral type.  <br /></td></tr>
-<tr class="separator:a0bf4a996c7e326b2ccc25872ad558b83"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75610fd2541186d3d2577e14ac219446" id="r_a75610fd2541186d3d2577e14ac219446"><td class="memItemLeft" align="right" valign="top">juce::MidiMessage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html#a75610fd2541186d3d2577e14ac219446">tracktion::graph::toMidiMessage</a> (const choc::midi::Sequence::Event &amp;e)</td></tr>
-<tr class="memdesc:a75610fd2541186d3d2577e14ac219446"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a choc::midi event to a juce::MidiMessage.  <br /></td></tr>
-<tr class="separator:a75610fd2541186d3d2577e14ac219446"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a646eb6e0395196d82b5f3532c5a08d8c" id="r_a646eb6e0395196d82b5f3532c5a08d8c"><td class="memTemplParams" colspan="2">template&lt;typename BufferViewType , typename SampleType , typename SmoothingType &gt; </td></tr>
-<tr class="memitem:a646eb6e0395196d82b5f3532c5a08d8c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html#a646eb6e0395196d82b5f3532c5a08d8c">tracktion::graph::multiplyBy</a> (BufferViewType &amp;view, juce::SmoothedValue&lt; SampleType, SmoothingType &gt; &amp;value) noexcept</td></tr>
-<tr class="memdesc:a646eb6e0395196d82b5f3532c5a08d8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mutiplies a choc::buffer::BufferView by a juce::SmoothedValue.  <br /></td></tr>
-<tr class="separator:a646eb6e0395196d82b5f3532c5a08d8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa89f848b24ce52d37f797b335458178b" id="r_aa89f848b24ce52d37f797b335458178b"><td class="memTemplParams" colspan="2">template&lt;typename BufferType , typename GainType &gt; </td></tr>
-<tr class="memitem:aa89f848b24ce52d37f797b335458178b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html#aa89f848b24ce52d37f797b335458178b">tracktion::graph::applyGainRamp</a> (BufferType &amp;&amp;buffer, GainType startGain, GainType endGain) noexcept</td></tr>
-<tr class="memdesc:aa89f848b24ce52d37f797b335458178b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies a gain ram to a choc::buffer::BufferView.  <br /></td></tr>
-<tr class="separator:aa89f848b24ce52d37f797b335458178b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab1e6a6c82ce30b1f839877327d96baa0" id="r_ab1e6a6c82ce30b1f839877327d96baa0"><td class="memItemLeft" align="right" valign="top">choc::buffer::FrameRange&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html#ab1e6a6c82ce30b1f839877327d96baa0">tracktion::graph::frameRangeWithStartAndLength</a> (choc::buffer::FrameCount start, choc::buffer::FrameCount length)</td></tr>
-<tr class="memdesc:ab1e6a6c82ce30b1f839877327d96baa0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a FrameRange with a start and length.  <br /></td></tr>
-<tr class="separator:ab1e6a6c82ce30b1f839877327d96baa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4497898df2d88e7ec62c528015f994b1" id="r_a4497898df2d88e7ec62c528015f994b1"><td class="memItemLeft" align="right" valign="top">choc::buffer::ChannelRange&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html#a4497898df2d88e7ec62c528015f994b1">tracktion::graph::channelRangeWithStartAndLength</a> (choc::buffer::ChannelCount start, choc::buffer::ChannelCount length)</td></tr>
-<tr class="memdesc:a4497898df2d88e7ec62c528015f994b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a ChannelRange with a start and length.  <br /></td></tr>
-<tr class="separator:a4497898df2d88e7ec62c528015f994b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0db582faaeca8844b714175eb0fa458d" id="r_a0db582faaeca8844b714175eb0fa458d"><td class="memTemplParams" colspan="2">template&lt;typename Buffer &gt; </td></tr>
-<tr class="memitem:a0db582faaeca8844b714175eb0fa458d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html#a0db582faaeca8844b714175eb0fa458d">tracktion::graph::sanitise</a> (Buffer &amp;buffer)</td></tr>
-<tr class="separator:a0db582faaeca8844b714175eb0fa458d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a557f634035815360b710a944ea7e0c5b" id="r_a557f634035815360b710a944ea7e0c5b"><td class="memTemplParams" colspan="2">template&lt;typename SampleType , template&lt; typename &gt; typename LayoutType&gt; </td></tr>
-<tr class="memitem:a557f634035815360b710a944ea7e0c5b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1graph.html#a557f634035815360b710a944ea7e0c5b">tracktion::graph::sanityCheckView</a> (const choc::buffer::BufferView&lt; SampleType, LayoutType &gt; &amp;view)</td></tr>
-<tr class="memdesc:a557f634035815360b710a944ea7e0c5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks that the channels have valid pointers if they have a non-zero number of frames.  <br /></td></tr>
-<tr class="separator:a557f634035815360b710a944ea7e0c5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a090ad9c68c6599fcab05c2fb0d4add19" id="r_a090ad9c68c6599fcab05c2fb0d4add19"><td class="memItemLeft" align="right" valign="top">juce::AudioBuffer&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegraph.html#a090ad9c68c6599fcab05c2fb0d4add19">graph::toAudioBuffer</a> (choc::buffer::ChannelArrayView&lt; float &gt; view)</td></tr>
+<tr class="memdesc:a090ad9c68c6599fcab05c2fb0d4add19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a juce::AudioBuffer from a choc::buffer::BufferView.  <br /></td></tr>
+<tr class="separator:a090ad9c68c6599fcab05c2fb0d4add19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa809b72b6a4be2907270e5585454cccc" id="r_aa809b72b6a4be2907270e5585454cccc"><td class="memTemplParams" colspan="2">template&lt;typename SampleType &gt; </td></tr>
+<tr class="memitem:aa809b72b6a4be2907270e5585454cccc"><td class="memTemplItemLeft" align="right" valign="top">choc::buffer::BufferView&lt; SampleType, choc::buffer::SeparateChannelLayout &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacegraph.html#aa809b72b6a4be2907270e5585454cccc">graph::toBufferView</a> (juce::AudioBuffer&lt; SampleType &gt; &amp;buffer)</td></tr>
+<tr class="memdesc:aa809b72b6a4be2907270e5585454cccc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a juce::AudioBuffer&lt;SampleType&gt; to a choc::buffer::BufferView.  <br /></td></tr>
+<tr class="separator:aa809b72b6a4be2907270e5585454cccc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae62023ff098f0801851d1eb1ca0a44bc" id="r_ae62023ff098f0801851d1eb1ca0a44bc"><td class="memItemLeft" align="right" valign="top">choc::buffer::FrameRange&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegraph.html#ae62023ff098f0801851d1eb1ca0a44bc">graph::createFrameRange</a> (std::integral auto start, std::integral auto end)</td></tr>
+<tr class="memdesc:ae62023ff098f0801851d1eb1ca0a44bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a FrameRange from any integral type.  <br /></td></tr>
+<tr class="separator:ae62023ff098f0801851d1eb1ca0a44bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07292834785b3113ad4503d6fa737e3e" id="r_a07292834785b3113ad4503d6fa737e3e"><td class="memItemLeft" align="right" valign="top">juce::MidiMessage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegraph.html#a07292834785b3113ad4503d6fa737e3e">graph::toMidiMessage</a> (const choc::midi::Sequence::Event &amp;e)</td></tr>
+<tr class="memdesc:a07292834785b3113ad4503d6fa737e3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a choc::midi event to a juce::MidiMessage.  <br /></td></tr>
+<tr class="separator:a07292834785b3113ad4503d6fa737e3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25f6c50c8c92df77880cf4fee7508a41" id="r_a25f6c50c8c92df77880cf4fee7508a41"><td class="memTemplParams" colspan="2">template&lt;typename BufferViewType , typename SampleType , typename SmoothingType &gt; </td></tr>
+<tr class="memitem:a25f6c50c8c92df77880cf4fee7508a41"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacegraph.html#a25f6c50c8c92df77880cf4fee7508a41">graph::multiplyBy</a> (BufferViewType &amp;view, juce::SmoothedValue&lt; SampleType, SmoothingType &gt; &amp;value) noexcept</td></tr>
+<tr class="memdesc:a25f6c50c8c92df77880cf4fee7508a41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mutiplies a choc::buffer::BufferView by a juce::SmoothedValue.  <br /></td></tr>
+<tr class="separator:a25f6c50c8c92df77880cf4fee7508a41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad912b9646046ecd02a24f1a5e793031b" id="r_ad912b9646046ecd02a24f1a5e793031b"><td class="memTemplParams" colspan="2">template&lt;typename BufferType , typename GainType &gt; </td></tr>
+<tr class="memitem:ad912b9646046ecd02a24f1a5e793031b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacegraph.html#ad912b9646046ecd02a24f1a5e793031b">graph::applyGainRamp</a> (BufferType &amp;&amp;buffer, GainType startGain, GainType endGain) noexcept</td></tr>
+<tr class="memdesc:ad912b9646046ecd02a24f1a5e793031b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies a gain ram to a choc::buffer::BufferView.  <br /></td></tr>
+<tr class="separator:ad912b9646046ecd02a24f1a5e793031b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe1ccee8501a60b6f39c166a582776d0" id="r_abe1ccee8501a60b6f39c166a582776d0"><td class="memItemLeft" align="right" valign="top">choc::buffer::FrameRange&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegraph.html#abe1ccee8501a60b6f39c166a582776d0">graph::frameRangeWithStartAndLength</a> (choc::buffer::FrameCount start, choc::buffer::FrameCount length)</td></tr>
+<tr class="memdesc:abe1ccee8501a60b6f39c166a582776d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a FrameRange with a start and length.  <br /></td></tr>
+<tr class="separator:abe1ccee8501a60b6f39c166a582776d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ebace0f98c80fb47478482aa1a028bc" id="r_a9ebace0f98c80fb47478482aa1a028bc"><td class="memItemLeft" align="right" valign="top">choc::buffer::ChannelRange&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacegraph.html#a9ebace0f98c80fb47478482aa1a028bc">graph::channelRangeWithStartAndLength</a> (choc::buffer::ChannelCount start, choc::buffer::ChannelCount length)</td></tr>
+<tr class="memdesc:a9ebace0f98c80fb47478482aa1a028bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a ChannelRange with a start and length.  <br /></td></tr>
+<tr class="separator:a9ebace0f98c80fb47478482aa1a028bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1f56723c404d82240c2224784a4be70" id="r_ac1f56723c404d82240c2224784a4be70"><td class="memTemplParams" colspan="2">template&lt;typename Buffer &gt; </td></tr>
+<tr class="memitem:ac1f56723c404d82240c2224784a4be70"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacegraph.html#ac1f56723c404d82240c2224784a4be70">graph::sanitise</a> (Buffer &amp;buffer)</td></tr>
+<tr class="separator:ac1f56723c404d82240c2224784a4be70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0441928c593d6b87c059bc839a00210a" id="r_a0441928c593d6b87c059bc839a00210a"><td class="memTemplParams" colspan="2">template&lt;typename SampleType , template&lt; typename &gt; typename LayoutType&gt; </td></tr>
+<tr class="memitem:a0441928c593d6b87c059bc839a00210a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacegraph.html#a0441928c593d6b87c059bc839a00210a">graph::sanityCheckView</a> (const choc::buffer::BufferView&lt; SampleType, LayoutType &gt; &amp;view)</td></tr>
+<tr class="memdesc:a0441928c593d6b87c059bc839a00210a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks that the channels have valid pointers if they have a non-zero number of frames.  <br /></td></tr>
+<tr class="separator:a0441928c593d6b87c059bc839a00210a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 18 2026 15:03:50 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Jul 21 2026 18:17:57 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

@@ -1,0 +1,9 @@
+<map id="engine::WaveNodeRealTime" name="engine::WaveNodeRealTime">
+<area shape="rect" id="Node000001" title="An Node that plays back a wave file." alt="" coords="133,93,339,119"/>
+<area shape="rect" id="Node000002" href="$classgraph_1_1Node.html" title="Main graph Node processor class." alt="" coords="5,13,107,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,41,211,91,209,96,94,46"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1TracktionEngineNode.html" title="Base class for Nodes that provides information about the current process call." alt="" coords="131,13,341,38"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="239,52,239,93,233,93,233,52"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1DynamicallyOffsettableNodeBase.html" title=" " alt="" coords="366,5,594,45"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="409,52,272,96,271,91,408,47"/>
+</map>

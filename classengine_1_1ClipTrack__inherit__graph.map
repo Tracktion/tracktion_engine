@@ -1,0 +1,19 @@
+<map id="engine::ClipTrack" name="engine::ClipTrack">
+<area shape="rect" id="Node000001" title=" " alt="" coords="285,152,418,177"/>
+<area shape="rect" id="Node000006" href="$classengine_1_1ArrangerTrack.html" title="A track similar to the MarkerTrack but can be used to move sections of an Edit around." alt="" coords="5,225,169,251"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="296,183,131,228,129,223,295,178"/>
+<area shape="rect" id="Node000007" href="$classengine_1_1AudioTrack.html" title=" " alt="" coords="193,225,339,251"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="329,188,282,227,278,223,326,184"/>
+<area shape="rect" id="Node000008" href="$classengine_1_1ChordTrack.html" title=" " alt="" coords="363,225,510,251"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="377,184,424,223,421,227,374,188"/>
+<area shape="rect" id="Node000009" href="$classengine_1_1MarkerTrack.html" title=" " alt="" coords="535,225,688,251"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="407,178,570,223,569,228,406,183"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s]." alt="" coords="223,79,331,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="300,111,341,150,337,154,297,115"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="132,5,261,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="221,38,265,76,262,80,218,42"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="285,5,428,31"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="336,42,292,80,288,76,332,38"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1ClipOwner.html" title="Base class for items that can contain clips." alt="" coords="355,79,497,104"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="406,115,365,154,362,150,402,111"/>
+</map>

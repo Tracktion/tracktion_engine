@@ -78,6 +78,8 @@ $(function() {
 <div class="contents">
 
 <p><code>#include &lt;tracktion_ARAWrapperInterfaces.h&gt;</code></p>
+
+<p>Inherits SelectableListener.</p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -87,6 +89,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4a62eeb79b8690c543c258630c7f2603"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58dbf90d765bf4e662552ffb032caa4c" id="r_a58dbf90d765bf4e662552ffb032caa4c"><td class="memItemLeft" align="right" valign="top">SizedStruct&lt; ARA_STRUCT_MEMBER(ARARegionSequenceProperties, color)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRegionSequenceWrapper.html#a58dbf90d765bf4e662552ffb032caa4c">getRegionSequenceProperties</a> ()</td></tr>
 <tr class="separator:a58dbf90d765bf4e662552ffb032caa4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add0c11843ca45df316647a8d53e1a7a9" id="r_add0c11843ca45df316647a8d53e1a7a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRegionSequenceWrapper.html#add0c11843ca45df316647a8d53e1a7a9">updateProperties</a> ()</td></tr>
+<tr class="memdesc:add0c11843ca45df316647a8d53e1a7a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Re-sends the track name/order/colour to the plugin.  <br /></td></tr>
+<tr class="separator:add0c11843ca45df316647a8d53e1a7a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -124,7 +129,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classARADocument.html#adc8483434966159b9e5554855f9cd701">ARADocument::dci</a>, <a class="el" href="classARADocument.html#ac4ecbd3d352c0ec71c4402d9091f3981">ARADocument::dcRef</a>, <a class="el" href="classRegionSequenceWrapper.html#acd77ddbb5444d4564859dc7c03331ecf">doc</a>, <a class="el" href="classARADocument.html#accc6da280cdc6f60ac861200553c35f1">ARADocument::edit</a>, <a class="el" href="classRegionSequenceWrapper.html#a58dbf90d765bf4e662552ffb032caa4c">getRegionSequenceProperties()</a>, and <a class="el" href="classRegionSequenceWrapper.html#a79e8872799fb0c64f5b21928ea9e4164">regionSequenceRef</a>.</p>
+<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classARADocument.html#adc8483434966159b9e5554855f9cd701">ARADocument::dci</a>, <a class="el" href="classARADocument.html#ac4ecbd3d352c0ec71c4402d9091f3981">ARADocument::dcRef</a>, <a class="el" href="classRegionSequenceWrapper.html#acd77ddbb5444d4564859dc7c03331ecf">doc</a>, <a class="el" href="classARADocument.html#accc6da280cdc6f60ac861200553c35f1">ARADocument::edit</a>, <a class="el" href="classRegionSequenceWrapper.html#a58dbf90d765bf4e662552ffb032caa4c">getRegionSequenceProperties()</a>, <a class="el" href="classRegionSequenceWrapper.html#a79e8872799fb0c64f5b21928ea9e4164">regionSequenceRef</a>, and <a class="el" href="classRegionSequenceWrapper.html#a47c8d9c383fe28b15c8dc0c753eb7c7a">track</a>.</p>
 
 </div>
 </div>
@@ -143,7 +148,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classARADocument.html#adc8483434966159b9e5554855f9cd701">ARADocument::dci</a>, <a class="el" href="classARADocument.html#ac4ecbd3d352c0ec71c4402d9091f3981">ARADocument::dcRef</a>, <a class="el" href="classRegionSequenceWrapper.html#acd77ddbb5444d4564859dc7c03331ecf">doc</a>, and <a class="el" href="classRegionSequenceWrapper.html#a79e8872799fb0c64f5b21928ea9e4164">regionSequenceRef</a>.</p>
+<p class="reference">References <a class="el" href="classARADocument.html#adc8483434966159b9e5554855f9cd701">ARADocument::dci</a>, <a class="el" href="classARADocument.html#ac4ecbd3d352c0ec71c4402d9091f3981">ARADocument::dcRef</a>, <a class="el" href="classRegionSequenceWrapper.html#acd77ddbb5444d4564859dc7c03331ecf">doc</a>, <a class="el" href="classRegionSequenceWrapper.html#a79e8872799fb0c64f5b21928ea9e4164">regionSequenceRef</a>, and <a class="el" href="classRegionSequenceWrapper.html#a47c8d9c383fe28b15c8dc0c753eb7c7a">track</a>.</p>
 
 </div>
 </div>
@@ -165,7 +170,29 @@ Public Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classRegionSequenceWrapper.html#acd77ddbb5444d4564859dc7c03331ecf">doc</a>, and <a class="el" href="classARADocument.html#a2ba4adbaf907fbf3865baba1e03105b4">ARADocument::musicalContext</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classRegionSequenceWrapper.html#ab82b337ae0559639ce842d7fc6f9a9c9">RegionSequenceWrapper()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classRegionSequenceWrapper.html#ab82b337ae0559639ce842d7fc6f9a9c9">RegionSequenceWrapper()</a>, and <a class="el" href="classRegionSequenceWrapper.html#add0c11843ca45df316647a8d53e1a7a9">updateProperties()</a>.</p>
+
+</div>
+</div>
+<a id="add0c11843ca45df316647a8d53e1a7a9" name="add0c11843ca45df316647a8d53e1a7a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add0c11843ca45df316647a8d53e1a7a9">&#9670;&#160;</a></span>updateProperties()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void RegionSequenceWrapper::updateProperties </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Re-sends the track name/order/colour to the plugin. </p>
+<p>Must be called from within a document editing cycle. </p>
+
+<p class="reference">References <a class="el" href="classARADocument.html#adc8483434966159b9e5554855f9cd701">ARADocument::dci</a>, <a class="el" href="classARADocument.html#ac4ecbd3d352c0ec71c4402d9091f3981">ARADocument::dcRef</a>, <a class="el" href="classRegionSequenceWrapper.html#acd77ddbb5444d4564859dc7c03331ecf">doc</a>, <a class="el" href="classRegionSequenceWrapper.html#a58dbf90d765bf4e662552ffb032caa4c">getRegionSequenceProperties()</a>, and <a class="el" href="classRegionSequenceWrapper.html#a79e8872799fb0c64f5b21928ea9e4164">regionSequenceRef</a>.</p>
 
 </div>
 </div>
@@ -182,7 +209,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classRegionSequenceWrapper.html#ab82b337ae0559639ce842d7fc6f9a9c9">RegionSequenceWrapper()</a>, and <a class="el" href="classRegionSequenceWrapper.html#a4a62eeb79b8690c543c258630c7f2603">~RegionSequenceWrapper()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classRegionSequenceWrapper.html#ab82b337ae0559639ce842d7fc6f9a9c9">RegionSequenceWrapper()</a>, <a class="el" href="classRegionSequenceWrapper.html#add0c11843ca45df316647a8d53e1a7a9">updateProperties()</a>, and <a class="el" href="classRegionSequenceWrapper.html#a4a62eeb79b8690c543c258630c7f2603">~RegionSequenceWrapper()</a>.</p>
 
 </div>
 </div>
@@ -198,7 +225,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classRegionSequenceWrapper.html#a58dbf90d765bf4e662552ffb032caa4c">getRegionSequenceProperties()</a>, <a class="el" href="classRegionSequenceWrapper.html#ab82b337ae0559639ce842d7fc6f9a9c9">RegionSequenceWrapper()</a>, and <a class="el" href="classRegionSequenceWrapper.html#a4a62eeb79b8690c543c258630c7f2603">~RegionSequenceWrapper()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classRegionSequenceWrapper.html#a58dbf90d765bf4e662552ffb032caa4c">getRegionSequenceProperties()</a>, <a class="el" href="classRegionSequenceWrapper.html#ab82b337ae0559639ce842d7fc6f9a9c9">RegionSequenceWrapper()</a>, <a class="el" href="classRegionSequenceWrapper.html#add0c11843ca45df316647a8d53e1a7a9">updateProperties()</a>, and <a class="el" href="classRegionSequenceWrapper.html#a4a62eeb79b8690c543c258630c7f2603">~RegionSequenceWrapper()</a>.</p>
 
 </div>
 </div>
@@ -214,6 +241,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="reference">Referenced by <a class="el" href="classRegionSequenceWrapper.html#ab82b337ae0559639ce842d7fc6f9a9c9">RegionSequenceWrapper()</a>, and <a class="el" href="classRegionSequenceWrapper.html#a4a62eeb79b8690c543c258630c7f2603">~RegionSequenceWrapper()</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
@@ -222,7 +251,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 18 2026 15:03:50 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Jul 21 2026 18:17:57 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

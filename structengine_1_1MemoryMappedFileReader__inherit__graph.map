@@ -1,0 +1,5 @@
+<map id="engine::MemoryMappedFileReader" name="engine::MemoryMappedFileReader">
+<area shape="rect" id="Node000001" title="AudioFormatReaderWithTimeout that wraps a MemoryMappedFile which usually improves read speeds." alt="" coords="5,93,208,133"/>
+<area shape="rect" id="Node000002" href="$structengine_1_1AudioFormatReaderWithTimeout.html" title=" " alt="" coords="5,5,208,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,59,109,93,104,93,104,59"/>
+</map>

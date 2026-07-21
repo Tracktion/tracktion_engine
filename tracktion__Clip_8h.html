@@ -84,17 +84,17 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ClipLevel.html">tracktion::engine::ClipLevel</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds a clip's level state.  <a href="structtracktion_1_1engine_1_1ClipLevel.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1ClipLevel.html">engine::ClipLevel</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds a clip's level state.  <a href="structengine_1_1ClipLevel.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1LiveClipLevel.html">tracktion::engine::LiveClipLevel</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a thread-safe way to share a clip's levels with an audio engine without worrying about the <a class="el" href="classtracktion_1_1engine_1_1Clip.html" title="A clip in an edit.">Clip</a> being deleted from underneath you.  <a href="structtracktion_1_1engine_1_1LiveClipLevel.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1LiveClipLevel.html">engine::LiveClipLevel</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a thread-safe way to share a clip's levels with an audio engine without worrying about the <a class="el" href="classengine_1_1Clip.html" title="A clip in an edit.">Clip</a> being deleted from underneath you.  <a href="structengine_1_1LiveClipLevel.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1Clip.html">tracktion::engine::Clip</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A clip in an edit.  <a href="classtracktion_1_1engine_1_1Clip.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Clip.html">engine::Clip</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A clip in an edit.  <a href="classengine_1_1Clip.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1Clip_1_1Listener.html">tracktion::engine::Clip::Listener</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structtracktion_1_1engine_1_1Clip_1_1Listener.html" title="Listener interface to be notified of recorded MIDI being sent to the plugins.">Listener</a> interface to be notified of recorded MIDI being sent to the plugins.  <a href="structtracktion_1_1engine_1_1Clip_1_1Listener.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1Clip_1_1Listener.html">engine::Clip::Listener</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structengine_1_1Clip_1_1Listener.html" title="Listener interface to be notified of recorded MIDI being sent to the plugins.">Listener</a> interface to be notified of recorded MIDI being sent to the plugins.  <a href="structengine_1_1Clip_1_1Listener.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1Clip_1_1SyncType_01_4.html">juce::VariantConverter&lt; tracktion::engine::Clip::SyncType &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -103,38 +103,36 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespacetracktion" id="r_namespacetracktion"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion.html">tracktion</a></td></tr>
+<tr class="memitem:namespaceengine" id="r_namespaceengine"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html">engine</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacetracktion_1_1engine" id="r_namespacetracktion_1_1engine"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html">tracktion::engine</a></td></tr>
+<tr class="memitem:namespaceengine_1_1ClipConstants" id="r_namespaceengine_1_1ClipConstants"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine_1_1ClipConstants.html">engine::ClipConstants</a></td></tr>
+<tr class="memdesc:namespaceengine_1_1ClipConstants"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constraints for clip speeds. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacetracktion_1_1engine_1_1ClipConstants" id="r_namespacetracktion_1_1engine_1_1ClipConstants"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1ClipConstants.html">tracktion::engine::ClipConstants</a></td></tr>
-<tr class="memdesc:namespacetracktion_1_1engine_1_1ClipConstants"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constraints for clip speeds. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacetracktion_1_1engine_1_1details" id="r_namespacetracktion_1_1engine_1_1details"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1details.html">tracktion::engine::details</a></td></tr>
+<tr class="memitem:namespaceengine_1_1details" id="r_namespaceengine_1_1details"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine_1_1details.html">engine::details</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespacejuce" id="r_namespacejuce"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacejuce.html">juce</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ad1624d70e4c73563cc086784fa67c9e9" id="r_ad1624d70e4c73563cc086784fa67c9e9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtracktion_1_1engine_1_1Clip.html#adc95ebd7f90eac7a6972790064cb6b86">Clip::FollowActionDurationType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1details.html#ad1624d70e4c73563cc086784fa67c9e9">tracktion::engine::details::followActionDurationTypeFromString</a> (juce::String)</td></tr>
-<tr class="separator:ad1624d70e4c73563cc086784fa67c9e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5598d0f0ef3396a982384182e4b95672" id="r_a5598d0f0ef3396a982384182e4b95672"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1details.html#a5598d0f0ef3396a982384182e4b95672">tracktion::engine::details::toString</a> (<a class="el" href="classtracktion_1_1engine_1_1Clip.html#adc95ebd7f90eac7a6972790064cb6b86">Clip::FollowActionDurationType</a>)</td></tr>
-<tr class="separator:a5598d0f0ef3396a982384182e4b95672"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a636437e485242559b366e8955bfa9f89" id="r_a636437e485242559b366e8955bfa9f89"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classengine_1_1Clip.html#ac15880c0b4e9ebbcb958af5081aefd5e">Clip::FollowActionDurationType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine_1_1details.html#a636437e485242559b366e8955bfa9f89">engine::details::followActionDurationTypeFromString</a> (juce::String)</td></tr>
+<tr class="separator:a636437e485242559b366e8955bfa9f89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af25a00feb7147681a89cc6f8d6ca9cbd" id="r_af25a00feb7147681a89cc6f8d6ca9cbd"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine_1_1details.html#af25a00feb7147681a89cc6f8d6ca9cbd">engine::details::toString</a> (<a class="el" href="classengine_1_1Clip.html#ac15880c0b4e9ebbcb958af5081aefd5e">Clip::FollowActionDurationType</a>)</td></tr>
+<tr class="separator:af25a00feb7147681a89cc6f8d6ca9cbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a9e739085d094c774730db07f79cb822b" id="r_a9e739085d094c774730db07f79cb822b"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1ClipConstants.html#a9e739085d094c774730db07f79cb822b">tracktion::engine::ClipConstants::speedRatioMin</a> = 0.01</td></tr>
-<tr class="memdesc:a9e739085d094c774730db07f79cb822b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimum speed ratio.  <br /></td></tr>
-<tr class="separator:a9e739085d094c774730db07f79cb822b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a698ca679308d1dcfa39d667ab5f0ca1b" id="r_a698ca679308d1dcfa39d667ab5f0ca1b"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine_1_1ClipConstants.html#a698ca679308d1dcfa39d667ab5f0ca1b">tracktion::engine::ClipConstants::speedRatioMax</a> = 20.0</td></tr>
-<tr class="memdesc:a698ca679308d1dcfa39d667ab5f0ca1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum speed ratio.  <br /></td></tr>
-<tr class="separator:a698ca679308d1dcfa39d667ab5f0ca1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91b31bdb44dac4c3129e0b7d6b9edbf4" id="r_a91b31bdb44dac4c3129e0b7d6b9edbf4"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine_1_1ClipConstants.html#a91b31bdb44dac4c3129e0b7d6b9edbf4">engine::ClipConstants::speedRatioMin</a> = 0.01</td></tr>
+<tr class="memdesc:a91b31bdb44dac4c3129e0b7d6b9edbf4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimum speed ratio.  <br /></td></tr>
+<tr class="separator:a91b31bdb44dac4c3129e0b7d6b9edbf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a029dbed575986268b27647043eeb41e6" id="r_a029dbed575986268b27647043eeb41e6"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine_1_1ClipConstants.html#a029dbed575986268b27647043eeb41e6">engine::ClipConstants::speedRatioMax</a> = 20.0</td></tr>
+<tr class="memdesc:a029dbed575986268b27647043eeb41e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum speed ratio.  <br /></td></tr>
+<tr class="separator:a029dbed575986268b27647043eeb41e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 18 2026 15:03:50 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Jul 21 2026 18:17:57 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

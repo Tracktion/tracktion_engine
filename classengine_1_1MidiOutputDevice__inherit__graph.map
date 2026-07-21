@@ -1,0 +1,7 @@
+<map id="engine::MidiOutputDevice" name="engine::MidiOutputDevice">
+<area shape="rect" id="Node000001" title=" " alt="" coords="11,79,202,104"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1SoftwareMidiOutputDevice.html" title="Create a software midi port on macOS." alt="" coords="5,152,208,192"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="109,118,109,152,104,152,104,118"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1OutputDevice.html" title="Base class for audio or midi output devices, to which a track&#39;s output can be sent." alt="" coords="25,5,188,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,44,109,79,104,79,104,44"/>
+</map>

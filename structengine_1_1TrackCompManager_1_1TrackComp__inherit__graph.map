@@ -1,0 +1,7 @@
+<map id="engine::TrackCompManager::TrackComp" name="engine::TrackCompManager::TrackComp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="74,93,277,133"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,13,148,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,45,155,91,152,95,98,49"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1ValueTreeObjectList.html" title=" " alt="" coords="173,5,375,45"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="244,56,199,95,195,91,240,52"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="engine::InputDeviceInstance::VirtualMidiInputDestination" name="engine::InputDeviceInstance::VirtualMidiInputDestination">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,167,215,207"/>
+<area shape="rect" id="Node000002" href="$structengine_1_1InputDeviceInstance_1_1Destination.html" title=" " alt="" coords="7,79,213,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,133,113,166,107,166,107,133"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="39,5,181,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="113,44,113,79,107,79,107,44"/>
+</map>

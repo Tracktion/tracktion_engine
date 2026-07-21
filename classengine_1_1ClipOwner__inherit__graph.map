@@ -1,0 +1,17 @@
+<map id="engine::ClipOwner" name="engine::ClipOwner">
+<area shape="rect" id="Node000001" title="Base class for items that can contain clips." alt="" coords="281,5,422,31"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1ClipSlot.html" title="Represents a slot on a track that a Clip can live in to be played as a launched clip." alt="" coords="136,79,260,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="316,39,224,81,222,76,313,34"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1ClipTrack.html" title=" " alt="" coords="285,79,418,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="354,44,354,79,349,79,349,44"/>
+<area shape="rect" id="Node000008" href="$classengine_1_1ContainerClip.html" title="A clip that can contain multiple other clips and mix their output together." alt="" coords="442,79,605,104"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="392,33,496,76,494,81,390,38"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1ArrangerTrack.html" title="A track similar to the MarkerTrack but can be used to move sections of an Edit around." alt="" coords="5,152,169,177"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="296,110,131,154,129,149,295,105"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1AudioTrack.html" title=" " alt="" coords="193,152,339,177"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="329,115,282,154,278,150,326,110"/>
+<area shape="rect" id="Node000006" href="$classengine_1_1ChordTrack.html" title=" " alt="" coords="363,152,510,177"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="377,110,424,150,421,154,374,115"/>
+<area shape="rect" id="Node000007" href="$classengine_1_1MarkerTrack.html" title=" " alt="" coords="535,152,688,177"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="407,105,570,149,569,154,406,110"/>
+</map>

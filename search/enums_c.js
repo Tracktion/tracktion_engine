@@ -1,9 +1,10 @@
 var searchData=
 [
-  ['ratetype_0',['RateType',['../namespacetracktion_1_1engine_1_1ModifierCommon.html#a8196f0dce2231f21fcd54b02462ddacb',1,'tracktion::engine::ModifierCommon']]],
-  ['readahead_1',['ReadAhead',['../classtracktion_1_1engine_1_1WaveNodeRealTime.html#ad6fef24de866d868234a6d5624f5eebd',1,'tracktion::engine::WaveNodeRealTime']]],
-  ['relationship_2',['Relationship',['../classtracktion_1_1engine_1_1SelectableClass.html#a200aab7124e35fb928b511a41b71c18a',1,'tracktion::engine::SelectableClass']]],
-  ['renamemode_3',['RenameMode',['../classtracktion_1_1engine_1_1ProjectItem.html#a4ff8de8ad9bd9e16b03850e1f51b5e82',1,'tracktion::engine::ProjectItem']]],
-  ['rendertype_4',['RenderType',['../classtracktion_1_1engine_1_1RenderOptions.html#a746fb0730e47bc8ccd5bb16b5ef39c1c',1,'tracktion::engine::RenderOptions']]],
-  ['resamplingquality_5',['resamplingquality',['../namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6b',1,'tracktion::ResamplingQuality'],['../namespacetracktion_1_1engine.html#a80cc60aadbaf1dca652f40a5544b3e6b',1,'tracktion::engine::ResamplingQuality']]]
+  ['ratetype_0',['RateType',['../namespaceengine_1_1ModifierCommon.html#a482f6d6a86c24f00bbbad1413cbb1513',1,'engine::ModifierCommon']]],
+  ['readahead_1',['ReadAhead',['../classengine_1_1WaveNodeRealTime.html#a641780e52c07e9f604932e6ff42777f3',1,'engine::WaveNodeRealTime']]],
+  ['relationship_2',['Relationship',['../classengine_1_1SelectableClass.html#ad5cdabeb05700d0528caf5cd69453e77',1,'engine::SelectableClass']]],
+  ['reloadmode_3',['ReloadMode',['../classengine_1_1ProjectBase.html#a23b44955192db58b62c6167b7054aadb',1,'engine::ProjectBase']]],
+  ['renamemode_4',['RenameMode',['../classengine_1_1ProjectItem.html#ad870090fb3504528dae62436ec100ee3',1,'engine::ProjectItem']]],
+  ['rendertype_5',['RenderType',['../classengine_1_1RenderOptions.html#a6053db83f0df04378b260944ae89e437',1,'engine::RenderOptions']]],
+  ['resamplingquality_6',['ResamplingQuality',['../namespaceengine.html#a5df35d1d8e8f513a1bf1e31c6c34dc01',1,'engine']]]
 ];

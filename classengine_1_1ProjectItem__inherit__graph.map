@@ -1,0 +1,5 @@
+<map id="engine::ProjectItem" name="engine::ProjectItem">
+<area shape="rect" id="Node000001" title="Represents a file&#45;based resource that is used in a project." alt="" coords="5,79,155,104"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="9,5,151,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,44,83,79,77,79,77,44"/>
+</map>

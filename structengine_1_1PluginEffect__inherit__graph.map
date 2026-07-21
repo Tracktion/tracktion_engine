@@ -1,0 +1,9 @@
+<map id="engine::PluginEffect" name="engine::PluginEffect">
+<area shape="rect" id="Node000001" title=" " alt="" coords="128,181,279,207"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1ClipEffect.html" title=" " alt="" coords="33,101,169,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="129,132,190,179,187,183,125,137"/>
+<area shape="rect" id="Node000003" href="$structengine_1_1ValueTreeAllEventListener.html" title=" " alt="" coords="5,5,196,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="103,59,103,100,98,100,98,59"/>
+<area shape="rect" id="Node000004" href="$structengine_1_1AutomatableParameter_1_1Listener.html" title=" " alt="" coords="193,93,419,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="272,144,220,183,217,179,268,140"/>
+</map>

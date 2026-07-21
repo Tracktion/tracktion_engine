@@ -86,13 +86,16 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a396f7e72c675c984a00c3ffb9ae99777"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a04245d561f63665cc2d94e895ffe8e6c" id="r_a04245d561f63665cc2d94e895ffe8e6c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMusicalContextWrapper.html#a04245d561f63665cc2d94e895ffe8e6c">~MusicalContextWrapper</a> ()</td></tr>
 <tr class="separator:a04245d561f63665cc2d94e895ffe8e6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a792cc50768768e07d17797e84b55f292" id="r_a792cc50768768e07d17797e84b55f292"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMusicalContextWrapper.html#a792cc50768768e07d17797e84b55f292">update</a> ()</td></tr>
-<tr class="separator:a792cc50768768e07d17797e84b55f292"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15d2379c3c937d2e2bdd29e57caff3a9" id="r_a15d2379c3c937d2e2bdd29e57caff3a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMusicalContextWrapper.html#a15d2379c3c937d2e2bdd29e57caff3a9">update</a> (ARAContentUpdateFlags flags=kARAContentUpdateEverythingChanged)</td></tr>
+<tr class="separator:a15d2379c3c937d2e2bdd29e57caff3a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4292c50bdf36b0e5f43cb31d6129deb" id="r_aa4292c50bdf36b0e5f43cb31d6129deb"><td class="memItemLeft" align="right" valign="top">SizedStruct&lt; ARA_STRUCT_MEMBER(ARAMusicalContextProperties, color)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMusicalContextWrapper.html#aa4292c50bdf36b0e5f43cb31d6129deb">getMusicalContextProperties</a> ()</td></tr>
 <tr class="separator:aa4292c50bdf36b0e5f43cb31d6129deb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a0118d556dd1261af8e53eb7f4fc74873" id="r_a0118d556dd1261af8e53eb7f4fc74873"><td class="memItemLeft" align="right" valign="top">static ARAQuarterPosition&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMusicalContextWrapper.html#a0118d556dd1261af8e53eb7f4fc74873">beatsToQuarters</a> (Edit &amp;ed, BeatPosition beat)</td></tr>
+<tr class="memdesc:a0118d556dd1261af8e53eb7f4fc74873"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an edit beat position to ARA quarter notes.  <br /></td></tr>
+<tr class="separator:a0118d556dd1261af8e53eb7f4fc74873"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad645196eb3376b33bee90ea9d78283eb" id="r_ad645196eb3376b33bee90ea9d78283eb"><td class="memItemLeft" align="right" valign="top">static ARABool ARA_CALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMusicalContextWrapper.html#ad645196eb3376b33bee90ea9d78283eb">isMusicalContextContentAvailable</a> (ARAContentAccessControllerHostRef editRef, ARAMusicalContextHostRef, ARAContentType type)</td></tr>
 <tr class="separator:ad645196eb3376b33bee90ea9d78283eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae0eecab9ba0e1323e8578df62c1e2c2b" id="r_ae0eecab9ba0e1323e8578df62c1e2c2b"><td class="memItemLeft" align="right" valign="top">static ARAContentGrade ARA_CALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMusicalContextWrapper.html#ae0eecab9ba0e1323e8578df62c1e2c2b">getMusicalContextContentGrade</a> (ARAContentAccessControllerHostRef, ARAMusicalContextHostRef, ARAContentType)</td></tr>
@@ -160,8 +163,8 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a792cc50768768e07d17797e84b55f292" name="a792cc50768768e07d17797e84b55f292"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a792cc50768768e07d17797e84b55f292">&#9670;&#160;</a></span>update()</h2>
+<a id="a15d2379c3c937d2e2bdd29e57caff3a9" name="a15d2379c3c937d2e2bdd29e57caff3a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15d2379c3c937d2e2bdd29e57caff3a9">&#9670;&#160;</a></span>update()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -169,13 +172,53 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">void MusicalContextWrapper::update </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">ARAContentUpdateFlags&#160;</td>
+          <td class="paramname"><em>flags</em> = <code>kARAContentUpdateEverythingChanged</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classARADocument.html#adc8483434966159b9e5554855f9cd701">ARADocument::dci</a>, <a class="el" href="classARADocument.html#ac4ecbd3d352c0ec71c4402d9091f3981">ARADocument::dcRef</a>, <a class="el" href="classMusicalContextWrapper.html#a6379f29afabefc6024843b9cc6c7c019">document</a>, and <a class="el" href="classMusicalContextWrapper.html#a9f42fc9f3a7fed05682a5a633aa55fe2">musicalContextRef</a>.</p>
+<p class="reference">References <a class="el" href="classARADocument.html#aec391580c9bf5675fd88538b698b895c">ARADocument::canEdit()</a>, <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classARADocument.html#adc8483434966159b9e5554855f9cd701">ARADocument::dci</a>, <a class="el" href="classARADocument.html#ac4ecbd3d352c0ec71c4402d9091f3981">ARADocument::dcRef</a>, <a class="el" href="classMusicalContextWrapper.html#a6379f29afabefc6024843b9cc6c7c019">document</a>, and <a class="el" href="classMusicalContextWrapper.html#a9f42fc9f3a7fed05682a5a633aa55fe2">musicalContextRef</a>.</p>
+
+</div>
+</div>
+<a id="a0118d556dd1261af8e53eb7f4fc74873" name="a0118d556dd1261af8e53eb7f4fc74873"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0118d556dd1261af8e53eb7f4fc74873">&#9670;&#160;</a></span>beatsToQuarters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static ARAQuarterPosition MusicalContextWrapper::beatsToQuarters </td>
+          <td>(</td>
+          <td class="paramtype">Edit &amp;&#160;</td>
+          <td class="paramname"><em>ed</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">BeatPosition&#160;</td>
+          <td class="paramname"><em>beat</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts an edit beat position to ARA quarter notes. </p>
+<p>NB: a tracktion beat is the time-signature denominator note, which is only a quarter note in x/4 signatures - ARA positions must always be in quarters. </p>
 
 </div>
 </div>
@@ -595,7 +638,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classMusicalContextWrapper.html#a396f7e72c675c984a00c3ffb9ae99777">MusicalContextWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a792cc50768768e07d17797e84b55f292">update()</a>, and <a class="el" href="classMusicalContextWrapper.html#a04245d561f63665cc2d94e895ffe8e6c">~MusicalContextWrapper()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classMusicalContextWrapper.html#a396f7e72c675c984a00c3ffb9ae99777">MusicalContextWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a15d2379c3c937d2e2bdd29e57caff3a9">update()</a>, and <a class="el" href="classMusicalContextWrapper.html#a04245d561f63665cc2d94e895ffe8e6c">~MusicalContextWrapper()</a>.</p>
 
 </div>
 </div>
@@ -611,7 +654,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classMusicalContextWrapper.html#a396f7e72c675c984a00c3ffb9ae99777">MusicalContextWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a792cc50768768e07d17797e84b55f292">update()</a>, and <a class="el" href="classMusicalContextWrapper.html#a04245d561f63665cc2d94e895ffe8e6c">~MusicalContextWrapper()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classMusicalContextWrapper.html#a396f7e72c675c984a00c3ffb9ae99777">MusicalContextWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a15d2379c3c937d2e2bdd29e57caff3a9">update()</a>, and <a class="el" href="classMusicalContextWrapper.html#a04245d561f63665cc2d94e895ffe8e6c">~MusicalContextWrapper()</a>.</p>
 
 </div>
 </div>
@@ -621,7 +664,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 18 2026 15:03:50 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Jul 21 2026 18:17:57 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

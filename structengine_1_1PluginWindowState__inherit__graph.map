@@ -1,0 +1,7 @@
+<map id="engine::PluginWindowState" name="engine::PluginWindowState">
+<area shape="rect" id="Node000001" title=" " alt="" coords="123,5,323,31"/>
+<area shape="rect" id="Node000002" href="$structengine_1_1Plugin_1_1WindowState.html" title="Persistent state for the plugin&#39;s editor window (position, visibility, etc.)." alt="" coords="5,86,213,111"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="196,41,128,88,125,84,193,36"/>
+<area shape="rect" id="Node000003" href="$structengine_1_1RackType_1_1WindowState.html" title=" " alt="" coords="238,79,434,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="252,36,310,76,307,81,249,41"/>
+</map>

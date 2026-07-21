@@ -1,6 +1,22 @@
 var searchData=
 [
   ['engine_0',['engine',['../namespaceengine.html',1,'']]],
-  ['engine_3a_3adetail_1',['detail',['../namespaceengine_1_1detail.html',1,'engine']]],
-  ['engine_3a_3arender_5futils_2',['render_utils',['../namespaceengine_1_1render__utils.html',1,'engine']]]
+  ['engine_3a_3aappfunctions_1',['AppFunctions',['../namespaceengine_1_1AppFunctions.html',1,'engine']]],
+  ['engine_3a_3abenchmark_5futilities_2',['benchmark_utilities',['../namespaceengine_1_1benchmark__utilities.html',1,'engine']]],
+  ['engine_3a_3aclick_3',['Click',['../namespaceengine_1_1Click.html',1,'engine']]],
+  ['engine_3a_3aclipconstants_4',['ClipConstants',['../namespaceengine_1_1ClipConstants.html',1,'engine']]],
+  ['engine_3a_3adawproject_5',['dawproject',['../namespaceengine_1_1dawproject.html',1,'engine']]],
+  ['engine_3a_3adawproject_3a_3axml_6',['xml',['../namespaceengine_1_1dawproject_1_1xml.html',1,'engine::dawproject']]],
+  ['engine_3a_3adetail_7',['detail',['../namespaceengine_1_1detail.html',1,'engine']]],
+  ['engine_3a_3adetails_8',['details',['../namespaceengine_1_1details.html',1,'engine']]],
+  ['engine_3a_3aids_9',['IDs',['../namespaceengine_1_1IDs.html',1,'engine']]],
+  ['engine_3a_3alegacy_10',['legacy',['../namespaceengine_1_1legacy.html',1,'engine']]],
+  ['engine_3a_3amidinodehelpers_11',['MidiNodeHelpers',['../namespaceengine_1_1MidiNodeHelpers.html',1,'engine']]],
+  ['engine_3a_3amodifier_12',['modifier',['../namespaceengine_1_1modifier.html',1,'engine']]],
+  ['engine_3a_3amodifiercommon_13',['ModifierCommon',['../namespaceengine_1_1ModifierCommon.html',1,'engine']]],
+  ['engine_3a_3apredefinedwavetable_14',['PredefinedWavetable',['../namespaceengine_1_1PredefinedWavetable.html',1,'engine']]],
+  ['engine_3a_3aprojectutilities_15',['ProjectUtilities',['../namespaceengine_1_1ProjectUtilities.html',1,'engine']]],
+  ['engine_3a_3aracknodebuilder_16',['RackNodeBuilder',['../namespaceengine_1_1RackNodeBuilder.html',1,'engine']]],
+  ['engine_3a_3arender_5futils_17',['render_utils',['../namespaceengine_1_1render__utils.html',1,'engine']]],
+  ['engine_3a_3atracktionbinarydata_18',['TracktionBinaryData',['../namespaceengine_1_1TracktionBinaryData.html',1,'engine']]]
 ];

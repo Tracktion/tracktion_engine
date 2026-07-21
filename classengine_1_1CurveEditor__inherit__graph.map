@@ -1,0 +1,9 @@
+<map id="engine::CurveEditor" name="engine::CurveEditor">
+<area shape="rect" id="Node000001" title=" " alt="" coords="265,55,416,80"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1SelectableListener.html" title=" " alt="" coords="14,5,209,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,31,281,52,280,57,184,36"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1MouseHoverDetector.html" title=" " alt="" coords="5,55,217,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="231,65,265,65,265,70,231,70"/>
+<area shape="rect" id="Node000004" href="$structengine_1_1TransparentToMouseInTrackItemComp.html" title=" " alt="" coords="8,105,215,145"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="204,99,288,77,290,83,206,104"/>
+</map>

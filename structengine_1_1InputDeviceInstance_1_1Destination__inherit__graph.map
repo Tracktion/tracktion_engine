@@ -1,0 +1,11 @@
+<map id="engine::InputDeviceInstance::Destination" name="engine::InputDeviceInstance::Destination">
+<area shape="rect" id="Node000001" title=" " alt="" coords="196,69,403,109"/>
+<area shape="rect" id="Node000003" href="$structengine_1_1InputDeviceInstance_1_1MidiInputDestination.html" title=" " alt="" coords="452,5,659,45"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="392,63,474,43,475,48,394,69"/>
+<area shape="rect" id="Node000004" href="$structengine_1_1InputDeviceInstance_1_1VirtualMidiInputDestination.html" title=" " alt="" coords="451,69,660,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="417,87,450,87,450,92,417,92"/>
+<area shape="rect" id="Node000005" href="$structengine_1_1InputDeviceInstance_1_1WaveInputDestination.html" title=" " alt="" coords="452,133,659,173"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="394,110,475,131,474,136,392,115"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,77,148,102"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,87,196,87,196,92,162,92"/>
+</map>

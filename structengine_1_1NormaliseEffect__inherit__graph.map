@@ -1,0 +1,9 @@
+<map id="engine::NormaliseEffect" name="engine::NormaliseEffect">
+<area shape="rect" id="Node000001" title=" " alt="" coords="93,167,271,192"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1ClipEffect.html" title=" " alt="" coords="33,93,169,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,126,170,164,167,168,122,130"/>
+<area shape="rect" id="Node000003" href="$structengine_1_1ValueTreeAllEventListener.html" title=" " alt="" coords="5,5,196,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="103,59,103,93,98,93,98,59"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="193,93,336,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="243,130,197,168,194,164,239,126"/>
+</map>

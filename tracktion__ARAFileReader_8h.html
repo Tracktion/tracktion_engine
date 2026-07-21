@@ -76,35 +76,55 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#typedef-members">Typedefs</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">tracktion_ARAFileReader.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtracktion_1_1engine_1_1ARAFileReader.html">tracktion::engine::ARAFileReader</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manages an ARA plugin instance for an audio clip.  <a href="classtracktion_1_1engine_1_1ARAFileReader.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ARAFileReader.html">engine::ARAFileReader</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manages an ARA plugin instance for an audio clip.  <a href="classengine_1_1ARAFileReader.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtracktion_1_1engine_1_1ARADocumentHolder.html">tracktion::engine::ARADocumentHolder</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1ARAFileReader_1_1ARAChunkInfo.html">engine::ARAFileReader::ARAChunkInfo</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parsed info from an ARA audio file chunk embedded in iXML.  <a href="structengine_1_1ARAFileReader_1_1ARAChunkInfo.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1ARAIXMLResult.html">engine::ARAIXMLResult</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Result of detecting ARA iXML chunks in an audio file.  <a href="structengine_1_1ARAIXMLResult.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ARAPluginBinding.html">engine::ARAPluginBinding</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">RAII wrapper for an ARA document-controller binding created by <a class="el" href="structengine_1_1ARADocumentHolder.html#abb6436a0044149013cb5a437a6a58370" title="Binds an already-loaded, ARA-capable ExternalPlugin to this Edit&#39;s ARA document controller for the gi...">ARADocumentHolder::bindPluginToDocument</a>, owned by the bound <a class="el" href="classengine_1_1ExternalPlugin.html" title="Wraps a juce::AudioPluginInstance (VST2, VST3, AU, etc.) as a tracktion Plugin.">ExternalPlugin</a> (see <a class="el" href="classengine_1_1Plugin.html#a50c8008ff5281d1a6d4bbb2c19c532be">ExternalPlugin::setARADocumentBinding</a>).  <a href="classengine_1_1ARAPluginBinding.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1ARADocumentHolder.html">engine::ARADocumentHolder</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespacetracktion" id="r_namespacetracktion"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion.html">tracktion</a></td></tr>
+<tr class="memitem:namespaceengine" id="r_namespaceengine"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html">engine</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacetracktion_1_1engine" id="r_namespacetracktion_1_1engine"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html">tracktion::engine</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:ga3e18b41b087617c412fdab699f896305" id="r_ga3e18b41b087617c412fdab699f896305"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tracktion__engine-plugins.html#ga3e18b41b087617c412fdab699f896305">T_ARA_DBG</a>(...)</td></tr>
+<tr class="separator:ga3e18b41b087617c412fdab699f896305"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:afb54a3e773571433fc16fa0681b349f1" id="r_afb54a3e773571433fc16fa0681b349f1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacetracktion_1_1engine.html#afb54a3e773571433fc16fa0681b349f1">tracktion::engine::MelodyneFileReader</a> = <a class="el" href="classtracktion_1_1engine_1_1ARAFileReader.html">ARAFileReader</a></td></tr>
-<tr class="separator:afb54a3e773571433fc16fa0681b349f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92a59ec3e466449cf6a75ab669cec5fd" id="r_a92a59ec3e466449cf6a75ab669cec5fd"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#a92a59ec3e466449cf6a75ab669cec5fd">engine::MelodyneFileReader</a> = <a class="el" href="classengine_1_1ARAFileReader.html">ARAFileReader</a></td></tr>
+<tr class="separator:a92a59ec3e466449cf6a75ab669cec5fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a81d0bc8e27d0e15a82288e178df8c087" id="r_a81d0bc8e27d0e15a82288e178df8c087"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structengine_1_1ARAIXMLResult.html">ARAIXMLResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#a81d0bc8e27d0e15a82288e178df8c087">engine::detectARAFromIXMLChunks</a> (<a class="el" href="classengine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;sourceFile)</td></tr>
+<tr class="memdesc:a81d0bc8e27d0e15a82288e178df8c087"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scans a source audio file for ARA iXML chunks and returns the first matching installed plugin description along with archive data.  <br /></td></tr>
+<tr class="separator:a81d0bc8e27d0e15a82288e178df8c087"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 18 2026 15:03:50 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Jul 21 2026 18:17:57 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

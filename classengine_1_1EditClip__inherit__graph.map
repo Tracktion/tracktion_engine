@@ -1,0 +1,19 @@
+<map id="engine::EditClip" name="engine::EditClip">
+<area shape="rect" id="Node000001" title="This is the main source of an Edit clip and is responsible for managing its properties." alt="" coords="345,328,469,353"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1AudioClipBase.html" title="Base class for Clips that produce some kind of audio e.g." alt="" coords="230,247,398,273"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="340,280,395,326,392,330,337,284"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1Clip.html" title="A clip in an edit." alt="" coords="183,159,282,185"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="255,193,305,245,301,249,251,197"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g." alt="" coords="81,79,219,104"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="174,112,222,157,219,161,170,115"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,5,135,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="95,38,139,76,135,80,91,42"/>
+<area shape="rect" id="Node000006" href="$classengine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="159,5,301,31"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="209,42,165,80,161,76,205,38"/>
+<area shape="rect" id="Node000007" href="$classengine_1_1Exportable.html" title="An interface for objects within an edit that can be exported." alt="" coords="243,79,387,104"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="295,115,247,161,243,157,291,112"/>
+<area shape="rect" id="Node000008" href="$structengine_1_1RenderManager_1_1Job_1_1Listener.html" title=" " alt="" coords="307,152,484,192"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="370,204,327,249,323,245,366,200"/>
+<area shape="rect" id="Node000009" href="$structengine_1_1EditSnapshot_1_1Listener.html" title=" " alt="" coords="423,240,581,280"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="470,291,423,330,420,326,467,287"/>
+</map>

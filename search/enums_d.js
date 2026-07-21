@@ -1,13 +1,14 @@
 var searchData=
 [
-  ['scaletype_0',['ScaleType',['../classtracktion_1_1engine_1_1Scale.html#a52437d60f63fb74c47254de4751aec0e',1,'tracktion::engine::Scale']]],
-  ['setnamemode_1',['SetNameMode',['../classtracktion_1_1engine_1_1ProjectItem.html#adc684adf3e111a2244fb8c0f0a9f38f5',1,'tracktion::engine::ProjectItem']]],
-  ['settingid_2',['settingid',['../namespacetracktion_1_1engine.html#aef0092bdbd8a28c3968f7f81912f815e',1,'tracktion::SettingID'],['../namespacetracktion_1_1engine.html#aef0092bdbd8a28c3968f7f81912f815e',1,'tracktion::engine::SettingID']]],
-  ['sharenodememory_3',['ShareNodeMemory',['../namespacetracktion_1_1engine_1_1benchmark__utilities.html#a1dc131828611e7721cdc0a42d0037477',1,'tracktion::engine::benchmark_utilities']]],
-  ['srcchannels_4',['SrcChannels',['../structtracktion_1_1engine_1_1MakeMonoEffect.html#ac18d60d1750340975f985c76013ec13e',1,'tracktion::engine::MakeMonoEffect']]],
-  ['state_5',['State',['../classtracktion_1_1engine_1_1LinEnvelope.html#ae5add9a31285d6c029daeca514a46438',1,'tracktion::engine::LinEnvelope']]],
-  ['steps_6',['Steps',['../classtracktion_1_1engine_1_1Scale.html#a440c2752d50115f83ba28784b4e317e5',1,'tracktion::engine::Scale']]],
-  ['syncpitch_7',['SyncPitch',['../classtracktion_1_1engine_1_1WaveNodeRealTime.html#aa6e19053cc6abc23eea7f6d677c09738',1,'tracktion::engine::WaveNodeRealTime']]],
-  ['synctempo_8',['SyncTempo',['../classtracktion_1_1engine_1_1WaveNodeRealTime.html#a5344568de02983a82feb480f494403ef',1,'tracktion::engine::WaveNodeRealTime']]],
-  ['synctype_9',['synctype',['../classtracktion_1_1engine_1_1Clip.html#af0cfff3f282a7f6b1b92dc5ae61c97b7',1,'tracktion::engine::Clip::SyncType'],['../namespacetracktion_1_1engine_1_1ModifierCommon.html#a4dcd9d7ff08bc5c648d14f9b798e6276',1,'tracktion::engine::ModifierCommon::SyncType']]]
+  ['scaletype_0',['ScaleType',['../classengine_1_1Scale.html#a8d437faf380d41429819c1ac6f79b0bb',1,'engine::Scale']]],
+  ['setnamemode_1',['SetNameMode',['../classengine_1_1ProjectItem.html#ad79f78c822c912bc438300149b05a7f4',1,'engine::ProjectItem']]],
+  ['settingid_2',['SettingID',['../namespaceengine.html#a37f708109fdbdb9329a540048b1a040f',1,'engine']]],
+  ['sharenodememory_3',['ShareNodeMemory',['../namespaceengine_1_1benchmark__utilities.html#abf04ac3c8a52a199181082b267211722',1,'engine::benchmark_utilities']]],
+  ['shareoutputbuffer_4',['ShareOutputBuffer',['../namespacegraph.html#a053f6be9c1d959b7ab4d6f15c8f40404',1,'graph']]],
+  ['srcchannels_5',['SrcChannels',['../structengine_1_1MakeMonoEffect.html#a69545a643bbb3b9f6dd13b5ca4e82d38',1,'engine::MakeMonoEffect']]],
+  ['state_6',['State',['../classengine_1_1LinEnvelope.html#a71fb3324b6833866986cd86a7a9a1ea3',1,'engine::LinEnvelope']]],
+  ['steps_7',['Steps',['../classengine_1_1Scale.html#ae9498a17921a351ac34c2c023a355bf9',1,'engine::Scale']]],
+  ['syncpitch_8',['SyncPitch',['../classengine_1_1WaveNodeRealTime.html#aef53d652bb1080e181bf4e23f8c84e74',1,'engine::WaveNodeRealTime']]],
+  ['synctempo_9',['SyncTempo',['../classengine_1_1WaveNodeRealTime.html#a6af34b41eba29b247062b68f85f75a49',1,'engine::WaveNodeRealTime']]],
+  ['synctype_10',['synctype',['../classengine_1_1Clip.html#ae57b6733fb03642e4e1a1fe0d02f9564',1,'engine::Clip::SyncType'],['../namespaceengine_1_1ModifierCommon.html#a2e8c48a3a172f425a15ac6576fa85496',1,'engine::ModifierCommon::SyncType']]]
 ];

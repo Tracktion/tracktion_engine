@@ -1,0 +1,17 @@
+<map id="engine::FreezePointPlugin" name="engine::FreezePointPlugin">
+<area shape="rect" id="Node000001" title=" " alt="" coords="628,104,819,129"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1Plugin.html" title="Base class for all audio plugins in the Tracktion Engine." alt="" coords="465,104,580,129"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="594,114,628,114,628,119,594,119"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="229,5,371,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="386,28,418,40,470,70,509,102,506,106,467,75,416,44,384,33"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1Exportable.html" title="An interface for objects within an edit that can be exported." alt="" coords="228,55,372,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="378,80,418,89,471,101,470,107,417,94,377,85"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1AutomatableEditItem.html" title="Base class for elements that have some kind of automatable parameters." alt="" coords="193,104,407,129"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="420,114,465,114,465,119,420,119"/>
+<area shape="rect" id="Node000006" href="$classengine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,104,135,129"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="149,114,193,114,193,119,149,119"/>
+<area shape="rect" id="Node000007" href="$classengine_1_1MacroParameterElement.html" title="Base class for elements which can contain macro parameters." alt="" coords="183,153,417,179"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="377,148,417,139,470,127,471,132,418,145,378,153"/>
+<area shape="rect" id="Node000008" href="$structengine_1_1ValueTreeAllEventListener.html" title=" " alt="" coords="205,203,395,243"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="399,196,416,189,466,158,505,128,509,132,470,163,419,194,401,201"/>
+</map>

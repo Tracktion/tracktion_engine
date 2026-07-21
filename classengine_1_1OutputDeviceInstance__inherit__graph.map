@@ -1,0 +1,7 @@
+<map id="engine::OutputDeviceInstance" name="engine::OutputDeviceInstance">
+<area shape="rect" id="Node000001" title=" " alt="" coords="101,5,319,31"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1MidiOutputDeviceInstance.html" title=" " alt="" coords="5,79,196,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,41,129,81,125,76,181,36"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1WaveOutputDeviceInstance.html" title=" " alt="" coords="220,79,419,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="239,36,295,76,291,81,235,41"/>
+</map>

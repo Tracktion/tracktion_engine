@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['idmap_0',['IDMap',['../structtracktion_1_1engine_1_1EditItemID.html#ad2cbbf762fd20937f7021641238019c7',1,'tracktion::engine::EditItemID']]]
+  ['idmap_0',['IDMap',['../structengine_1_1EditItemID.html#a4588dfce202af926fae6586b5e535e33',1,'engine::EditItemID']]]
 ];

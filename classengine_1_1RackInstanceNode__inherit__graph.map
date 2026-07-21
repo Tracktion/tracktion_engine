@@ -1,0 +1,5 @@
+<map id="engine::RackInstanceNode" name="engine::RackInstanceNode">
+<area shape="rect" id="Node000001" title="Sends an input Node to a Rack bus handling the channel mapping and channel gain levels." alt="" coords="13,79,208,104"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1TracktionEngineNode.html" title="Base class for Nodes that provides information about the current process call." alt="" coords="5,5,216,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,44,113,79,108,79,108,44"/>
+</map>

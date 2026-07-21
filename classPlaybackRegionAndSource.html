@@ -71,6 +71,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classPlaybackRegionAndSource-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">PlaybackRegionAndSource Class Reference<div class="ingroups"><a class="el" href="group__tracktion__engine.html">tracktion_engine</a> &raquo; <a class="el" href="group__tracktion__engine-plugins.html">plugins</a></div></div></div>
@@ -89,17 +90,35 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0c2dcf474ad9d2ef5f3ba6b6511b88ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa52f420d09ca256da9282358fc995608" id="r_aa52f420d09ca256da9282358fc995608"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionAndSource.html#aa52f420d09ca256da9282358fc995608">disable</a> ()</td></tr>
 <tr class="separator:aa52f420d09ca256da9282358fc995608"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e558acfdba850e1dc1303a46d859875" id="r_a1e558acfdba850e1dc1303a46d859875"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionAndSource.html#a1e558acfdba850e1dc1303a46d859875">setViewSelection</a> ()</td></tr>
-<tr class="separator:a1e558acfdba850e1dc1303a46d859875"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f8ffc6c0a1bdba0b09928940a0f4aef" id="r_a4f8ffc6c0a1bdba0b09928940a0f4aef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionAndSource.html#a4f8ffc6c0a1bdba0b09928940a0f4aef">playbackRegionLayoutMatches</a> (bool isLooping, double clipLengthSecs, double loopLengthSecs) const</td></tr>
+<tr class="memdesc:a4f8ffc6c0a1bdba0b09928940a0f4aef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the current set of playback regions still matches the given clip state, i.e.  <br /></td></tr>
+<tr class="separator:a4f8ffc6c0a1bdba0b09928940a0f4aef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add47099fdbdcd1a93f01d9df1b7019a2" id="r_add47099fdbdcd1a93f01d9df1b7019a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionAndSource.html#add47099fdbdcd1a93f01d9df1b7019a2">rebuildPlaybackRegions</a> ()</td></tr>
+<tr class="memdesc:add47099fdbdcd1a93f01d9df1b7019a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rebuilds all playback regions based on whether the clip is looping.  <br /></td></tr>
+<tr class="separator:add47099fdbdcd1a93f01d9df1b7019a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6920aa10495a87d35f20e082639b38f5" id="r_a6920aa10495a87d35f20e082639b38f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classPlaybackRegionWrapper.html">PlaybackRegionWrapper</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionAndSource.html#a6920aa10495a87d35f20e082639b38f5">getFirstPlaybackRegion</a> () const</td></tr>
+<tr class="memdesc:a6920aa10495a87d35f20e082639b38f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the first playback region, or nullptr if none exist.  <br /></td></tr>
+<tr class="separator:a6920aa10495a87d35f20e082639b38f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5af185138eee0ff44169f3403bc115c0" id="r_a5af185138eee0ff44169f3403bc115c0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionAndSource.html#a5af185138eee0ff44169f3403bc115c0">hasPlaybackRegions</a> () const</td></tr>
+<tr class="memdesc:a5af185138eee0ff44169f3403bc115c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if there is at least one playback region.  <br /></td></tr>
+<tr class="separator:a5af185138eee0ff44169f3403bc115c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:af7bc4e95d77ef47895f4b37f8c9dc81b" id="r_af7bc4e95d77ef47895f4b37f8c9dc81b"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionAndSource.html#af7bc4e95d77ef47895f4b37f8c9dc81b">getNumLoopRegions</a> (double clipLengthSecs, double loopLengthSecs)</td></tr>
+<tr class="memdesc:af7bc4e95d77ef47895f4b37f8c9dc81b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of playback regions a looping clip of the given length needs.  <br /></td></tr>
+<tr class="separator:af7bc4e95d77ef47895f4b37f8c9dc81b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:ad0dedeb0835d78450b5db8e9d53304ce" id="r_ad0dedeb0835d78450b5db8e9d53304ce"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classPlaybackRegionWrapper.html">PlaybackRegionWrapper</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionAndSource.html#ad0dedeb0835d78450b5db8e9d53304ce">playbackRegion</a></td></tr>
-<tr class="separator:ad0dedeb0835d78450b5db8e9d53304ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71967fd92948b22f0893cf869f2dfe8a" id="r_a71967fd92948b22f0893cf869f2dfe8a"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classAudioSourceWrapper.html">AudioSourceWrapper</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionAndSource.html#a71967fd92948b22f0893cf869f2dfe8a">audioSource</a></td></tr>
-<tr class="separator:a71967fd92948b22f0893cf869f2dfe8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8cb49b26b0be1794e8bca97db8fd4ed8" id="r_a8cb49b26b0be1794e8bca97db8fd4ed8"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::unique_ptr&lt; <a class="el" href="classPlaybackRegionWrapper.html">PlaybackRegionWrapper</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionAndSource.html#a8cb49b26b0be1794e8bca97db8fd4ed8">playbackRegions</a></td></tr>
+<tr class="separator:a8cb49b26b0be1794e8bca97db8fd4ed8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a614838cb54e38c104076171b86fa1848" id="r_a614838cb54e38c104076171b86fa1848"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classAudioSourceWrapper.html">AudioSourceWrapper</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionAndSource.html#a614838cb54e38c104076171b86fa1848">audioSource</a></td></tr>
+<tr class="separator:a614838cb54e38c104076171b86fa1848"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4babf92c65a0ecc9394004452fdfc6a6" id="r_a4babf92c65a0ecc9394004452fdfc6a6"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classAudioModificationWrapper.html">AudioModificationWrapper</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionAndSource.html#a4babf92c65a0ecc9394004452fdfc6a6">audioModification</a></td></tr>
 <tr class="separator:a4babf92c65a0ecc9394004452fdfc6a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af021350e3986d83ef89a80f5cd590c2c" id="r_af021350e3986d83ef89a80f5cd590c2c"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionAndSource.html#af021350e3986d83ef89a80f5cd590c2c">audioSourceKey</a></td></tr>
+<tr class="separator:af021350e3986d83ef89a80f5cd590c2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="afe5381d185bbae3579622d8781b83987" name="afe5381d185bbae3579622d8781b83987"></a>
@@ -152,7 +171,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classPlaybackRegionAndSource.html#a4babf92c65a0ecc9394004452fdfc6a6">audioModification</a>, <a class="el" href="classPlaybackRegionAndSource.html#a71967fd92948b22f0893cf869f2dfe8a">audioSource</a>, <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classPlaybackRegionAndSource.html#a0c2dcf474ad9d2ef5f3ba6b6511b88ac">enable()</a>, and <a class="el" href="classPlaybackRegionAndSource.html#ad0dedeb0835d78450b5db8e9d53304ce">playbackRegion</a>.</p>
+<p class="reference">References <a class="el" href="classARADocument.html#a8eb67e4ecf2f37e0d4796dbac492e58c">ARADocument::acquireAudioSource()</a>, <a class="el" href="classPlaybackRegionAndSource.html#a4babf92c65a0ecc9394004452fdfc6a6">audioModification</a>, <a class="el" href="classPlaybackRegionAndSource.html#a614838cb54e38c104076171b86fa1848">audioSource</a>, <a class="el" href="classPlaybackRegionAndSource.html#af021350e3986d83ef89a80f5cd590c2c">audioSourceKey</a>, <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classPlaybackRegionAndSource.html#a0c2dcf474ad9d2ef5f3ba6b6511b88ac">enable()</a>, <a class="el" href="classPlaybackRegionAndSource.html#a8cb49b26b0be1794e8bca97db8fd4ed8">playbackRegions</a>, and <a class="el" href="classPlaybackRegionAndSource.html#add47099fdbdcd1a93f01d9df1b7019a2">rebuildPlaybackRegions()</a>.</p>
 
 </div>
 </div>
@@ -172,7 +191,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section note"><dt>Note</dt><dd>Destruction order matters here </dd></dl>
 
-<p class="reference">References <a class="el" href="classPlaybackRegionAndSource.html#a4babf92c65a0ecc9394004452fdfc6a6">audioModification</a>, <a class="el" href="classPlaybackRegionAndSource.html#a71967fd92948b22f0893cf869f2dfe8a">audioSource</a>, <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classPlaybackRegionAndSource.html#aa52f420d09ca256da9282358fc995608">disable()</a>, and <a class="el" href="classPlaybackRegionAndSource.html#ad0dedeb0835d78450b5db8e9d53304ce">playbackRegion</a>.</p>
+<p class="reference">References <a class="el" href="classPlaybackRegionAndSource.html#a4babf92c65a0ecc9394004452fdfc6a6">audioModification</a>, <a class="el" href="classPlaybackRegionAndSource.html#a614838cb54e38c104076171b86fa1848">audioSource</a>, <a class="el" href="classPlaybackRegionAndSource.html#af021350e3986d83ef89a80f5cd590c2c">audioSourceKey</a>, <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classPlaybackRegionAndSource.html#aa52f420d09ca256da9282358fc995608">disable()</a>, <a class="el" href="classPlaybackRegionAndSource.html#a8cb49b26b0be1794e8bca97db8fd4ed8">playbackRegions</a>, and <a class="el" href="classARADocument.html#ab5dde177bbca6407827a468e0820689c">ARADocument::releaseAudioSource()</a>.</p>
 
 </div>
 </div>
@@ -192,7 +211,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classPlaybackRegionAndSource.html#a71967fd92948b22f0893cf869f2dfe8a">audioSource</a>, and <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>.</p>
+<p class="reference">References <a class="el" href="classPlaybackRegionAndSource.html#a614838cb54e38c104076171b86fa1848">audioSource</a>, and <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classPlaybackRegionAndSource.html#afe5381d185bbae3579622d8781b83987">PlaybackRegionAndSource()</a>.</p>
 
@@ -213,20 +232,100 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classPlaybackRegionAndSource.html#a71967fd92948b22f0893cf869f2dfe8a">audioSource</a>, and <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>.</p>
+<p class="reference">References <a class="el" href="classPlaybackRegionAndSource.html#a614838cb54e38c104076171b86fa1848">audioSource</a>, and <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classPlaybackRegionAndSource.html#aaf42b3a9bcc6f5807cacfe6b59b68c2f">~PlaybackRegionAndSource()</a>.</p>
 
 </div>
 </div>
-<a id="a1e558acfdba850e1dc1303a46d859875" name="a1e558acfdba850e1dc1303a46d859875"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1e558acfdba850e1dc1303a46d859875">&#9670;&#160;</a></span>setViewSelection()</h2>
+<a id="af7bc4e95d77ef47895f4b37f8c9dc81b" name="af7bc4e95d77ef47895f4b37f8c9dc81b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7bc4e95d77ef47895f4b37f8c9dc81b">&#9670;&#160;</a></span>getNumLoopRegions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static size_t PlaybackRegionAndSource::getNumLoopRegions </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>clipLengthSecs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>loopLengthSecs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the number of playback regions a looping clip of the given length needs. </p>
+<p>Uses a small tolerance so a length sitting on a loop boundary always produces a stable count - deriving it any other way (e.g. repeated subtraction) can disagree with ceil() by one and make the layout check rebuild the regions endlessly. </p>
+
+<p class="reference">Referenced by <a class="el" href="classPlaybackRegionAndSource.html#a4f8ffc6c0a1bdba0b09928940a0f4aef">playbackRegionLayoutMatches()</a>, and <a class="el" href="classPlaybackRegionAndSource.html#add47099fdbdcd1a93f01d9df1b7019a2">rebuildPlaybackRegions()</a>.</p>
+
+</div>
+</div>
+<a id="a4f8ffc6c0a1bdba0b09928940a0f4aef" name="a4f8ffc6c0a1bdba0b09928940a0f4aef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f8ffc6c0a1bdba0b09928940a0f4aef">&#9670;&#160;</a></span>playbackRegionLayoutMatches()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void PlaybackRegionAndSource::setViewSelection </td>
+          <td class="memname">bool PlaybackRegionAndSource::playbackRegionLayoutMatches </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isLooping</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>clipLengthSecs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>loopLengthSecs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if the current set of playback regions still matches the given clip state, i.e. </p>
+<p>no rebuild is needed and updateRange() suffices. </p>
+
+<p class="reference">References <a class="el" href="classPlaybackRegionAndSource.html#af7bc4e95d77ef47895f4b37f8c9dc81b">getNumLoopRegions()</a>, and <a class="el" href="classPlaybackRegionAndSource.html#a8cb49b26b0be1794e8bca97db8fd4ed8">playbackRegions</a>.</p>
+
+</div>
+</div>
+<a id="add47099fdbdcd1a93f01d9df1b7019a2" name="add47099fdbdcd1a93f01d9df1b7019a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add47099fdbdcd1a93f01d9df1b7019a2">&#9670;&#160;</a></span>rebuildPlaybackRegions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PlaybackRegionAndSource::rebuildPlaybackRegions </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -234,35 +333,82 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classPlaybackRegionAndSource.html#ad0dedeb0835d78450b5db8e9d53304ce">playbackRegion</a>.</p>
+<p>Rebuilds all playback regions based on whether the clip is looping. </p>
+<p>If looping, creates one <a class="el" href="classPlaybackRegionWrapper.html">PlaybackRegionWrapper</a> per loop iteration. If not looping, creates a single region covering the whole clip. </p>
+
+<p class="reference">References <a class="el" href="classPlaybackRegionAndSource.html#a4babf92c65a0ecc9394004452fdfc6a6">audioModification</a>, <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classPlaybackRegionAndSource.html#af7bc4e95d77ef47895f4b37f8c9dc81b">getNumLoopRegions()</a>, and <a class="el" href="classPlaybackRegionAndSource.html#a8cb49b26b0be1794e8bca97db8fd4ed8">playbackRegions</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classPlaybackRegionAndSource.html#afe5381d185bbae3579622d8781b83987">PlaybackRegionAndSource()</a>.</p>
 
 </div>
 </div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="ad0dedeb0835d78450b5db8e9d53304ce" name="ad0dedeb0835d78450b5db8e9d53304ce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad0dedeb0835d78450b5db8e9d53304ce">&#9670;&#160;</a></span>playbackRegion</h2>
+<a id="a6920aa10495a87d35f20e082639b38f5" name="a6920aa10495a87d35f20e082639b38f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6920aa10495a87d35f20e082639b38f5">&#9670;&#160;</a></span>getFirstPlaybackRegion()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::unique_ptr&lt;<a class="el" href="classPlaybackRegionWrapper.html">PlaybackRegionWrapper</a>&gt; PlaybackRegionAndSource::playbackRegion</td>
+          <td class="memname"><a class="el" href="classPlaybackRegionWrapper.html">PlaybackRegionWrapper</a> * PlaybackRegionAndSource::getFirstPlaybackRegion </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classPlaybackRegionAndSource.html#afe5381d185bbae3579622d8781b83987">PlaybackRegionAndSource()</a>, <a class="el" href="classPlaybackRegionAndSource.html#a1e558acfdba850e1dc1303a46d859875">setViewSelection()</a>, and <a class="el" href="classPlaybackRegionAndSource.html#aaf42b3a9bcc6f5807cacfe6b59b68c2f">~PlaybackRegionAndSource()</a>.</p>
+<p>Returns the first playback region, or nullptr if none exist. </p>
+
+<p class="reference">References <a class="el" href="classPlaybackRegionAndSource.html#a8cb49b26b0be1794e8bca97db8fd4ed8">playbackRegions</a>.</p>
 
 </div>
 </div>
-<a id="a71967fd92948b22f0893cf869f2dfe8a" name="a71967fd92948b22f0893cf869f2dfe8a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a71967fd92948b22f0893cf869f2dfe8a">&#9670;&#160;</a></span>audioSource</h2>
+<a id="a5af185138eee0ff44169f3403bc115c0" name="a5af185138eee0ff44169f3403bc115c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5af185138eee0ff44169f3403bc115c0">&#9670;&#160;</a></span>hasPlaybackRegions()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::unique_ptr&lt;<a class="el" href="classAudioSourceWrapper.html">AudioSourceWrapper</a>&gt; PlaybackRegionAndSource::audioSource</td>
+          <td class="memname">bool PlaybackRegionAndSource::hasPlaybackRegions </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if there is at least one playback region. </p>
+
+<p class="reference">References <a class="el" href="classPlaybackRegionAndSource.html#a8cb49b26b0be1794e8bca97db8fd4ed8">playbackRegions</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a8cb49b26b0be1794e8bca97db8fd4ed8" name="a8cb49b26b0be1794e8bca97db8fd4ed8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8cb49b26b0be1794e8bca97db8fd4ed8">&#9670;&#160;</a></span>playbackRegions</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::unique_ptr&lt;<a class="el" href="classPlaybackRegionWrapper.html">PlaybackRegionWrapper</a>&gt; &gt; PlaybackRegionAndSource::playbackRegions</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classPlaybackRegionAndSource.html#a6920aa10495a87d35f20e082639b38f5">getFirstPlaybackRegion()</a>, <a class="el" href="classPlaybackRegionAndSource.html#a5af185138eee0ff44169f3403bc115c0">hasPlaybackRegions()</a>, <a class="el" href="classPlaybackRegionAndSource.html#afe5381d185bbae3579622d8781b83987">PlaybackRegionAndSource()</a>, <a class="el" href="classPlaybackRegionAndSource.html#a4f8ffc6c0a1bdba0b09928940a0f4aef">playbackRegionLayoutMatches()</a>, <a class="el" href="classPlaybackRegionAndSource.html#add47099fdbdcd1a93f01d9df1b7019a2">rebuildPlaybackRegions()</a>, and <a class="el" href="classPlaybackRegionAndSource.html#aaf42b3a9bcc6f5807cacfe6b59b68c2f">~PlaybackRegionAndSource()</a>.</p>
+
+</div>
+</div>
+<a id="a614838cb54e38c104076171b86fa1848" name="a614838cb54e38c104076171b86fa1848"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a614838cb54e38c104076171b86fa1848">&#9670;&#160;</a></span>audioSource</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;<a class="el" href="classAudioSourceWrapper.html">AudioSourceWrapper</a>&gt; PlaybackRegionAndSource::audioSource</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -283,6 +429,22 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="reference">Referenced by <a class="el" href="classPlaybackRegionAndSource.html#afe5381d185bbae3579622d8781b83987">PlaybackRegionAndSource()</a>, <a class="el" href="classPlaybackRegionAndSource.html#add47099fdbdcd1a93f01d9df1b7019a2">rebuildPlaybackRegions()</a>, and <a class="el" href="classPlaybackRegionAndSource.html#aaf42b3a9bcc6f5807cacfe6b59b68c2f">~PlaybackRegionAndSource()</a>.</p>
+
+</div>
+</div>
+<a id="af021350e3986d83ef89a80f5cd590c2c" name="af021350e3986d83ef89a80f5cd590c2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af021350e3986d83ef89a80f5cd590c2c">&#9670;&#160;</a></span>audioSourceKey</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::String PlaybackRegionAndSource::audioSourceKey</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
 <p class="reference">Referenced by <a class="el" href="classPlaybackRegionAndSource.html#afe5381d185bbae3579622d8781b83987">PlaybackRegionAndSource()</a>, and <a class="el" href="classPlaybackRegionAndSource.html#aaf42b3a9bcc6f5807cacfe6b59b68c2f">~PlaybackRegionAndSource()</a>.</p>
 
 </div>
@@ -293,7 +455,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 18 2026 15:03:50 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Jul 21 2026 18:17:57 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

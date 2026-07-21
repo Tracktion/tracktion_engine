@@ -1,0 +1,11 @@
+<map id="engine::TimeSigSetting" name="engine::TimeSigSetting">
+<area shape="rect" id="Node000001" title=" " alt="" coords="158,167,331,192"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g." alt="" coords="81,86,219,111"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,118,232,164,229,169,173,122"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,5,135,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="94,39,140,84,136,88,90,42"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="159,5,301,31"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="210,42,164,88,160,84,206,39"/>
+<area shape="rect" id="Node000005" href="$structengine_1_1ValueTreeAllEventListener.html" title=" " alt="" coords="244,79,435,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="307,130,261,168,257,164,304,126"/>
+</map>

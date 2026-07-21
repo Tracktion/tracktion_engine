@@ -1,0 +1,7 @@
+<map id="engine::ProjectBase" name="engine::ProjectBase">
+<area shape="rect" id="Node000001" title="Abstract base class for project backends." alt="" coords="128,5,279,31"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1FileBasedProject.html" title="Contains the implementation logic for a file&#45;based (.tracktion) project." alt="" coords="5,79,188,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,40,116,81,113,76,174,36"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1FolderBasedProject.html" title="A project backend that represents a folder on disk." alt="" coords="212,79,411,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="233,36,295,76,292,81,231,40"/>
+</map>

@@ -86,15 +86,18 @@ $(function() {
  <a href="classengine_1_1Renderer_1_1RenderTask.html#details">More...</a></p>
 
 <p><code>#include &lt;tracktion_Renderer.h&gt;</code></p>
-
-<p>Inherits ThreadPoolJobWithProgress.</p>
+<div class="dynheader">
+Inheritance diagram for engine::Renderer::RenderTask:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classengine_1_1Renderer_1_1RenderTask__inherit__graph.svg" width="227" height="124"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ab3d19ab633a9b15aa248e4806f974f97" id="r_ab3d19ab633a9b15aa248e4806f974f97"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#ab3d19ab633a9b15aa248e4806f974f97">RenderTask</a> (const juce::String &amp;taskDescription, const <a class="el" href="structengine_1_1Renderer_1_1Parameters.html">Renderer::Parameters</a> &amp;, std::atomic&lt; float &gt; *progressToUpdate, juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver *)</td></tr>
 <tr class="memdesc:ab3d19ab633a9b15aa248e4806f974f97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classengine_1_1Renderer_1_1RenderTask.html" title="Task that actually performs the render operation in blocks.">RenderTask</a> for a set of parameters.  <br /></td></tr>
 <tr class="separator:ab3d19ab633a9b15aa248e4806f974f97"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad274724b5d2fb05c0e29325194fd882b" id="r_ad274724b5d2fb05c0e29325194fd882b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#ad274724b5d2fb05c0e29325194fd882b">RenderTask</a> (const juce::String &amp;taskDescription, const <a class="el" href="structengine_1_1Renderer_1_1Parameters.html">Renderer::Parameters</a> &amp;, std::unique_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">tracktion::graph::Node</a> &gt;, std::unique_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html">tracktion::graph::PlayHead</a> &gt;, std::unique_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html">tracktion::graph::PlayHeadState</a> &gt;, std::unique_ptr&lt; ProcessState &gt;, std::atomic&lt; float &gt; *progressToUpdate, juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver *)</td></tr>
+<tr class="memitem:ad274724b5d2fb05c0e29325194fd882b" id="r_ad274724b5d2fb05c0e29325194fd882b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#ad274724b5d2fb05c0e29325194fd882b">RenderTask</a> (const juce::String &amp;taskDescription, const <a class="el" href="structengine_1_1Renderer_1_1Parameters.html">Renderer::Parameters</a> &amp;, std::unique_ptr&lt; tracktion::graph::Node &gt;, std::unique_ptr&lt; tracktion::graph::PlayHead &gt;, std::unique_ptr&lt; tracktion::graph::PlayHeadState &gt;, std::unique_ptr&lt; <a class="el" href="structengine_1_1ProcessState.html">ProcessState</a> &gt;, std::atomic&lt; float &gt; *progressToUpdate, juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver *)</td></tr>
 <tr class="memdesc:ad274724b5d2fb05c0e29325194fd882b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classengine_1_1Renderer_1_1RenderTask.html" title="Task that actually performs the render operation in blocks.">RenderTask</a> for a set of parameters and existing graph.  <br /></td></tr>
 <tr class="separator:ad274724b5d2fb05c0e29325194fd882b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afce56d290f8c58c70e8690aa41ad0fd5" id="r_afce56d290f8c58c70e8690aa41ad0fd5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#afce56d290f8c58c70e8690aa41ad0fd5">~RenderTask</a> () override</td></tr>
@@ -108,14 +111,29 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:abdbd9a89029ee7adf9be419dc4239459"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acff5d1e14c61bf03466d3d1c310fe458" id="r_acff5d1e14c61bf03466d3d1c310fe458"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#acff5d1e14c61bf03466d3d1c310fe458">performNormalisingAndTrimming</a> (const <a class="el" href="structengine_1_1Renderer_1_1Parameters.html">Renderer::Parameters</a> &amp;target, const <a class="el" href="structengine_1_1Renderer_1_1Parameters.html">Renderer::Parameters</a> &amp;intermediate)</td></tr>
 <tr class="separator:acff5d1e14c61bf03466d3d1c310fe458"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classengine_1_1ThreadPoolJobWithProgress"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classengine_1_1ThreadPoolJobWithProgress')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classengine_1_1ThreadPoolJobWithProgress.html">engine::ThreadPoolJobWithProgress</a></td></tr>
+<tr class="memitem:ac9dc562537223bc8e52951e7fd996dd2 inherit pub_methods_classengine_1_1ThreadPoolJobWithProgress" id="r_ac9dc562537223bc8e52951e7fd996dd2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ThreadPoolJobWithProgress.html#ac9dc562537223bc8e52951e7fd996dd2">ThreadPoolJobWithProgress</a> (const juce::String &amp;name)</td></tr>
+<tr class="separator:ac9dc562537223bc8e52951e7fd996dd2 inherit pub_methods_classengine_1_1ThreadPoolJobWithProgress"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbcd30dc4a7cc7ace4c932d497e3a96d inherit pub_methods_classengine_1_1ThreadPoolJobWithProgress" id="r_afbcd30dc4a7cc7ace4c932d497e3a96d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ThreadPoolJobWithProgress.html#afbcd30dc4a7cc7ace4c932d497e3a96d">~ThreadPoolJobWithProgress</a> ()</td></tr>
+<tr class="separator:afbcd30dc4a7cc7ace4c932d497e3a96d inherit pub_methods_classengine_1_1ThreadPoolJobWithProgress"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb820f7e7a749fb6f5febace145f9783 inherit pub_methods_classengine_1_1ThreadPoolJobWithProgress" id="r_abb820f7e7a749fb6f5febace145f9783"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ThreadPoolJobWithProgress.html#abb820f7e7a749fb6f5febace145f9783">canCancel</a> () const</td></tr>
+<tr class="separator:abb820f7e7a749fb6f5febace145f9783 inherit pub_methods_classengine_1_1ThreadPoolJobWithProgress"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25f50873327ab68b42c5565831d7262c inherit pub_methods_classengine_1_1ThreadPoolJobWithProgress" id="r_a25f50873327ab68b42c5565831d7262c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ThreadPoolJobWithProgress.html#a25f50873327ab68b42c5565831d7262c">setManager</a> (<a class="el" href="classengine_1_1BackgroundJobManager.html">BackgroundJobManager</a> &amp;)</td></tr>
+<tr class="separator:a25f50873327ab68b42c5565831d7262c inherit pub_methods_classengine_1_1ThreadPoolJobWithProgress"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54b9b4b5bc29b2efb70f0c4fc04950fe inherit pub_methods_classengine_1_1ThreadPoolJobWithProgress" id="r_a54b9b4b5bc29b2efb70f0c4fc04950fe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ThreadPoolJobWithProgress.html#a54b9b4b5bc29b2efb70f0c4fc04950fe">setName</a> (const juce::String &amp;newName)</td></tr>
+<tr class="memdesc:a54b9b4b5bc29b2efb70f0c4fc04950fe inherit pub_methods_classengine_1_1ThreadPoolJobWithProgress"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the job's name but also updates the manager so the list will reflect it.  <br /></td></tr>
+<tr class="separator:a54b9b4b5bc29b2efb70f0c4fc04950fe inherit pub_methods_classengine_1_1ThreadPoolJobWithProgress"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62d0e35da5e93b97373a1ac906d38a0d inherit pub_methods_classengine_1_1ThreadPoolJobWithProgress" id="r_a62d0e35da5e93b97373a1ac906d38a0d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ThreadPoolJobWithProgress.html#a62d0e35da5e93b97373a1ac906d38a0d">prepareForJobDeletion</a> ()</td></tr>
+<tr class="memdesc:a62d0e35da5e93b97373a1ac906d38a0d inherit pub_methods_classengine_1_1ThreadPoolJobWithProgress"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call this in your sub-class destructor to to remvoe it from the manager queue before this class's destructor is called which can result in a pure virtual call.  <br /></td></tr>
+<tr class="separator:a62d0e35da5e93b97373a1ac906d38a0d inherit pub_methods_classengine_1_1ThreadPoolJobWithProgress"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a616e3f882aceae605148126c00916dc9" id="r_a616e3f882aceae605148126c00916dc9"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#a616e3f882aceae605148126c00916dc9">flushAllPlugins</a> (const Plugin::Array &amp;, double sampleRate, int samplesPerBlock)</td></tr>
+<tr class="memitem:a616e3f882aceae605148126c00916dc9" id="r_a616e3f882aceae605148126c00916dc9"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#a616e3f882aceae605148126c00916dc9">flushAllPlugins</a> (const <a class="el" href="classengine_1_1Plugin.html#a50c8008ff5281d1a6d4bbb2c19c532be">Plugin::Array</a> &amp;, double sampleRate, int samplesPerBlock)</td></tr>
 <tr class="separator:a616e3f882aceae605148126c00916dc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a752477112ba80588db520f1560861d4c" id="r_a752477112ba80588db520f1560861d4c"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#a752477112ba80588db520f1560861d4c">setAllPluginsRealtime</a> (const Plugin::Array &amp;, bool realtime)</td></tr>
+<tr class="memitem:a752477112ba80588db520f1560861d4c" id="r_a752477112ba80588db520f1560861d4c"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#a752477112ba80588db520f1560861d4c">setAllPluginsRealtime</a> (const <a class="el" href="classengine_1_1Plugin.html#a50c8008ff5281d1a6d4bbb2c19c532be">Plugin::Array</a> &amp;, bool <a class="el" href="namespaceengine.html#a37f708109fdbdb9329a540048b1a040fa37e2a166d3ab28426a1d1a481d356d33">realtime</a>)</td></tr>
 <tr class="separator:a752477112ba80588db520f1560861d4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e789d2382a8cbc9ac569ef3a2e2db7d" id="r_a0e789d2382a8cbc9ac569ef3a2e2db7d"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#a0e789d2382a8cbc9ac569ef3a2e2db7d">addMidiMetaDataAndWriteToFile</a> (juce::File, juce::MidiMessageSequence, const TempoSequence &amp;)</td></tr>
+<tr class="memitem:a0e789d2382a8cbc9ac569ef3a2e2db7d" id="r_a0e789d2382a8cbc9ac569ef3a2e2db7d"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#a0e789d2382a8cbc9ac569ef3a2e2db7d">addMidiMetaDataAndWriteToFile</a> (juce::File, juce::MidiMessageSequence, const <a class="el" href="classengine_1_1TempoSequence.html">TempoSequence</a> &amp;)</td></tr>
 <tr class="separator:a0e789d2382a8cbc9ac569ef3a2e2db7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
@@ -194,25 +212,25 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1Node.html">tracktion::graph::Node</a> &gt;&#160;</td>
+          <td class="paramtype">std::unique_ptr&lt; tracktion::graph::Node &gt;&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1PlayHead.html">tracktion::graph::PlayHead</a> &gt;&#160;</td>
+          <td class="paramtype">std::unique_ptr&lt; tracktion::graph::PlayHead &gt;&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classtracktion_1_1graph_1_1PlayHeadState.html">tracktion::graph::PlayHeadState</a> &gt;&#160;</td>
+          <td class="paramtype">std::unique_ptr&lt; tracktion::graph::PlayHeadState &gt;&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::unique_ptr&lt; ProcessState &gt;&#160;</td>
+          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="structengine_1_1ProcessState.html">ProcessState</a> &gt;&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
@@ -312,12 +330,14 @@ Public Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Returns the current progress of the render. </p>
+
+<p>Implements <a class="el" href="classengine_1_1ThreadPoolJobWithProgress.html#a0a1a58cc8bfff79bc5206b2593907344">engine::ThreadPoolJobWithProgress</a>.</p>
 
 </div>
 </div>
@@ -333,7 +353,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">static void engine::Renderer::RenderTask::flushAllPlugins </td>
           <td>(</td>
-          <td class="paramtype">const Plugin::Array &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classengine_1_1Plugin.html#a50c8008ff5281d1a6d4bbb2c19c532be">Plugin::Array</a> &amp;&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
@@ -375,7 +395,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">static void engine::Renderer::RenderTask::setAllPluginsRealtime </td>
           <td>(</td>
-          <td class="paramtype">const Plugin::Array &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classengine_1_1Plugin.html#a50c8008ff5281d1a6d4bbb2c19c532be">Plugin::Array</a> &amp;&#160;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
@@ -423,7 +443,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const TempoSequence &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classengine_1_1TempoSequence.html">TempoSequence</a> &amp;&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -508,7 +528,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 18 2026 15:03:50 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Jul 21 2026 18:17:58 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

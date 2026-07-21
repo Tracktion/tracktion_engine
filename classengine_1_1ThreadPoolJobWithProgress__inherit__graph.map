@@ -1,0 +1,19 @@
+<map id="engine::ThreadPoolJobWithProgress" name="engine::ThreadPoolJobWithProgress">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,113,203,153"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1ArchiveJob.html" title="Job that archives a Project or single Edit into a standard zip file." alt="" coords="287,5,430,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,102,192,70,250,41,288,28,290,33,252,46,194,75,145,107"/>
+<area shape="rect" id="Node000003" href="$structengine_1_1AudioProxyGenerator_1_1GeneratorJob.html" title=" " alt="" coords="252,55,465,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="206,107,269,93,270,98,207,112"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1RenderManager_1_1Job.html" title="The base class that all generator jobs derive from." alt="" coords="256,120,461,145"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="216,130,256,130,256,135,216,135"/>
+<area shape="rect" id="Node000008" href="$classengine_1_1Renderer_1_1RenderTask.html" title="Task that actually performs the render operation in blocks." alt="" coords="251,169,467,195"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="216,152,293,167,292,172,215,157"/>
+<area shape="rect" id="Node000009" href="$classengine_1_1legacy_1_1ExportJob.html" title=" " alt="" coords="265,219,452,244"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="151,157,199,182,252,205,290,216,288,221,250,210,197,187,149,162"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1EditRenderJob.html" title=" " alt="" coords="535,71,701,96"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="439,115,550,93,551,99,440,120"/>
+<area shape="rect" id="Node000006" href="$classengine_1_1ReverseRenderJob.html" title=" " alt="" coords="521,120,715,145"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="475,130,521,130,521,135,475,135"/>
+<area shape="rect" id="Node000007" href="$classengine_1_1WarpTimeRenderJob.html" title=" " alt="" coords="515,169,721,195"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="440,145,551,167,550,172,439,151"/>
+</map>

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['wave_0',['Wave',['../classtracktion_1_1engine_1_1LFOModifier.html#ae6e128e7deb6362c9a896ffc1176b777',1,'tracktion::engine::LFOModifier']]],
-  ['waves_1',['Waves',['../classtracktion_1_1engine_1_1Oscillator.html#ab6d517c61b99418db1edc1beecf15ad2',1,'tracktion::engine::Oscillator']]],
-  ['waveshape_2',['WaveShape',['../classtracktion_1_1engine_1_1SimpleLFO.html#ad65ef55cc6b333f872b86d56e8c4f71b',1,'tracktion::engine::SimpleLFO']]]
+  ['wave_0',['Wave',['../classengine_1_1LFOModifier.html#acf8b502cde2f42f3b34d53c9efac0a9d',1,'engine::LFOModifier']]],
+  ['waves_1',['Waves',['../classengine_1_1Oscillator.html#a5403a3783dbb6d34f5fbf67d03d25516',1,'engine::Oscillator']]],
+  ['waveshape_2',['WaveShape',['../classengine_1_1SimpleLFO.html#a04b0f3d934d4ac026aa428e903e808c9',1,'engine::SimpleLFO']]]
 ];

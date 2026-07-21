@@ -1,0 +1,5 @@
+<map id="engine::SharedLevelMeasurer" name="engine::SharedLevelMeasurer">
+<area shape="rect" id="Node000001" title="A shared level measurer that can be used by several threads to provide a total output level." alt="" coords="5,79,220,104"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1LevelMeasurer.html" title="Monitors the levels of buffers that are passed in, and keeps peak values, overloads,..." alt="" coords="27,5,198,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,44,115,79,110,79,110,44"/>
+</map>

@@ -1,15 +1,15 @@
 var searchData=
 [
-  ['v_0',['v',['../classtracktion_1_1engine_1_1Scale.html#aa84f44f74d8de0baa054ca6fda7d2178a9e3669d19b675bd57058fd4664205d2a',1,'tracktion::engine::Scale']]],
+  ['v_0',['v',['../classengine_1_1Scale.html#aad9e17a7e201566bb9c9c34b6338983da9e3669d19b675bd57058fd4664205d2a',1,'engine::Scale']]],
   ['value_1',['value',['../namespaceengine.html#adbd4046935de78895707c8f8277c8470a2063c1608d6e0baf80249c42e2be5804',1,'engine']]],
-  ['velocity_2',['velocity',['../classtracktion_1_1engine_1_1MIDITrackerModifier.html#accface57dc74546c41dfd87fd0d083bda39b10f055e9ba2da2eb18d8095069e1d',1,'tracktion::engine::MIDITrackerModifier']]],
-  ['vi_3',['vi',['../classtracktion_1_1engine_1_1Scale.html#aa84f44f74d8de0baa054ca6fda7d2178a35b36b28916d38b34abddf832e286126',1,'tracktion::engine::Scale']]],
-  ['video_4',['video',['../classtracktion_1_1engine_1_1TrackItem.html#a01da0e462b71b30657a62268ef090f24a421b47ffd946ca083b65cd668c6b17e6',1,'tracktion::engine::TrackItem::video'],['../classtracktion_1_1engine_1_1ProjectItem.html#a863e45f26bfc71747622cf23cfef8514a421b47ffd946ca083b65cd668c6b17e6',1,'tracktion::engine::ProjectItem::video']]],
-  ['vii_5',['vii',['../classtracktion_1_1engine_1_1Scale.html#aa84f44f74d8de0baa054ca6fda7d2178a44b7ed6c8297b6f269c8b872b0fd6266',1,'tracktion::engine::Scale']]],
-  ['virtualmididevice_6',['virtualMidiDevice',['../classtracktion_1_1engine_1_1InputDevice.html#ac142baad652904d37630d4e5c1142d8fa2ed2b08e0167e75c5f18c81c0a11bd2b',1,'tracktion::engine::InputDevice']]],
-  ['virtualmididevices_7',['virtualmididevices',['../namespacetracktion_1_1engine.html#aef0092bdbd8a28c3968f7f81912f815eadc17b81e0fcc4244d653e30e5552af7f',1,'tracktion::engine']]],
-  ['virtualmidiin_8',['virtualmidiin',['../namespacetracktion_1_1engine.html#aef0092bdbd8a28c3968f7f81912f815ea30c1138f8420913e5253a0fd215212f4',1,'tracktion::engine']]],
-  ['voltexttrackid_9',['volTextTrackId',['../classtracktion_1_1engine_1_1CustomControlSurface.html#a616409a4913a2ad7dd074e25b022a5cda00af214d90dc38b6b266dc2ae6f076f9',1,'tracktion::engine::CustomControlSurface']]],
-  ['voltrackid_10',['volTrackId',['../classtracktion_1_1engine_1_1CustomControlSurface.html#a616409a4913a2ad7dd074e25b022a5cda3aa817479fc244779fc2fa1f0ef10d3b',1,'tracktion::engine::CustomControlSurface']]],
-  ['volume_11',['volume',['../classtracktion_1_1engine_1_1ClipEffect.html#a68a4d5b963dfd7e9e1f7d1f62ccb9d51a210ab9e731c9c36c2c38db15c28a8d1c',1,'tracktion::engine::ClipEffect']]]
+  ['velocity_2',['velocity',['../classengine_1_1MIDITrackerModifier.html#a2836aff90f695fd0e7ffe0ec5280def6ab36bda94a436484ae7d9b19181dac191',1,'engine::MIDITrackerModifier']]],
+  ['vi_3',['vi',['../classengine_1_1Scale.html#aad9e17a7e201566bb9c9c34b6338983da35b36b28916d38b34abddf832e286126',1,'engine::Scale']]],
+  ['video_4',['video',['../classengine_1_1TrackItem.html#ab919abf28cd728b3e0a752886412d323a421b47ffd946ca083b65cd668c6b17e6',1,'engine::TrackItem::video'],['../classengine_1_1ProjectItem.html#a623aa1325194ecfee996f3dca418eb58a421b47ffd946ca083b65cd668c6b17e6',1,'engine::ProjectItem::video']]],
+  ['vii_5',['vii',['../classengine_1_1Scale.html#aad9e17a7e201566bb9c9c34b6338983da44b7ed6c8297b6f269c8b872b0fd6266',1,'engine::Scale']]],
+  ['virtualmididevice_6',['virtualMidiDevice',['../classengine_1_1InputDevice.html#a18ea4a67e3b8add187770a846858dcdfada4dbc2878b467227350f10c7b266f7f',1,'engine::InputDevice']]],
+  ['virtualmididevices_7',['virtualmididevices',['../namespaceengine.html#a37f708109fdbdb9329a540048b1a040fadc17b81e0fcc4244d653e30e5552af7f',1,'engine']]],
+  ['virtualmidiin_8',['virtualmidiin',['../namespaceengine.html#a37f708109fdbdb9329a540048b1a040fa30c1138f8420913e5253a0fd215212f4',1,'engine']]],
+  ['voltexttrackid_9',['volTextTrackId',['../classengine_1_1CustomControlSurface.html#af783e22ec17928f8efe497bb002619e3a12827cb2d70b6bfed7c31f14760c47fc',1,'engine::CustomControlSurface']]],
+  ['voltrackid_10',['volTrackId',['../classengine_1_1CustomControlSurface.html#af783e22ec17928f8efe497bb002619e3a79ddcf3aa487849c7215b643c7808993',1,'engine::CustomControlSurface']]],
+  ['volume_11',['volume',['../classengine_1_1ClipEffect.html#ad2485113a8437c897734b9d260fca25ba210ab9e731c9c36c2c38db15c28a8d1c',1,'engine::ClipEffect']]]
 ];

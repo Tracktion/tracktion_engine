@@ -1,0 +1,99 @@
+<map id="engine::Selectable" name="engine::Selectable">
+<area shape="rect" id="Node000001" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,1159,148,1185"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1AutomatableParameter.html" title=" " alt="" coords="204,198,429,223"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,1145,89,1039,111,876,145,683,168,585,193,489,222,407,254,330,306,222,311,225,259,332,227,409,199,490,173,586,151,684,116,877,94,1039,83,1146"/>
+<area shape="rect" id="Node000009" href="$classengine_1_1AutomationCurveModifier.html" title="An AutomationCurveModifier contains three curves to control automation: absolute, relative and scale." alt="" coords="196,502,437,527"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="76,1145,85,1017,104,834,120,740,139,655,164,585,178,557,194,537,209,525,212,530,198,541,183,560,169,587,144,656,125,741,109,835,90,1018,82,1146"/>
+<area shape="rect" id="Node000010" href="$classengine_1_1ClipSlot.html" title="Represents a slot on a track that a Clip can live in to be played as a launched clip." alt="" coords="255,551,379,577"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="77,1145,87,1026,107,858,123,772,142,694,166,630,179,605,194,586,222,568,254,560,255,566,224,573,198,590,184,608,171,632,147,695,128,773,113,859,92,1027,82,1146"/>
+<area shape="rect" id="Node000011" href="$classengine_1_1ControlSurface.html" title="Base class for types of control surface." alt="" coords="231,601,402,626"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="79,1145,92,1076,115,980,148,871,169,816,194,764,219,721,249,682,300,625,304,628,253,685,224,724,198,767,174,818,153,873,120,981,97,1077,85,1146"/>
+<area shape="rect" id="Node000021" href="$classengine_1_1CurveEditorPoint.html" title=" " alt="" coords="225,778,408,803"/>
+<area shape="poly" id="edge18_Node000001_Node000021" title=" " alt="" coords="77,1146,85,1083,104,1000,119,955,139,911,164,870,194,833,220,814,249,801,251,806,222,818,198,837,168,873,144,914,124,957,109,1001,90,1084,82,1146"/>
+<area shape="rect" id="Node000023" href="$classengine_1_1Edit.html" title="The Tracktion Edit class!" alt="" coords="267,847,366,873"/>
+<area shape="poly" id="edge20_Node000001_Node000023" title=" " alt="" coords="78,1145,88,1090,108,1019,123,982,142,946,166,912,194,883,211,872,229,865,267,857,268,863,231,870,213,877,198,887,170,916,147,948,128,984,113,1021,93,1091,83,1146"/>
+<area shape="rect" id="Node000024" href="$structengine_1_1InputDeviceInstance_1_1Destination.html" title=" " alt="" coords="213,897,420,937"/>
+<area shape="poly" id="edge21_Node000001_Node000024" title=" " alt="" coords="82,1145,96,1102,118,1048,151,994,171,969,194,947,213,935,216,940,198,951,175,973,155,997,123,1051,101,1104,87,1147"/>
+<area shape="rect" id="Node000028" href="$structengine_1_1MakeMonoEffect.html" title=" " alt="" coords="225,962,408,987"/>
+<area shape="poly" id="edge25_Node000001_Node000028" title=" " alt="" coords="85,1145,102,1111,125,1070,156,1030,195,996,224,983,226,987,197,1001,160,1034,130,1073,106,1114,90,1148"/>
+<area shape="rect" id="Node000029" href="$structengine_1_1Modifier.html" title="Bass class for parameter Modifiers." alt="" coords="253,1011,380,1037"/>
+<area shape="poly" id="edge26_Node000001_Node000029" title=" " alt="" coords="92,1146,134,1095,162,1068,195,1046,223,1034,252,1027,253,1032,225,1039,197,1050,166,1072,138,1098,96,1150"/>
+<area shape="rect" id="Node000036" href="$structengine_1_1NormaliseEffect.html" title=" " alt="" coords="227,1061,406,1086"/>
+<area shape="poly" id="edge33_Node000001_Node000036" title=" " alt="" coords="104,1149,145,1120,195,1095,231,1083,233,1089,197,1100,148,1125,107,1153"/>
+<area shape="rect" id="Node000037" href="$classengine_1_1Plugin.html" title="Base class for all audio plugins in the Tracktion Engine." alt="" coords="259,1110,374,1135"/>
+<area shape="poly" id="edge34_Node000001_Node000037" title=" " alt="" coords="149,1154,195,1144,258,1131,259,1136,197,1149,150,1159"/>
+<area shape="rect" id="Node000066" href="$classengine_1_1Project.html" title="A tracktion project." alt="" coords="257,1159,376,1185"/>
+<area shape="poly" id="edge37_Node000001_Node000066" title=" " alt="" coords="162,1169,257,1169,257,1175,162,1175"/>
+<area shape="rect" id="Node000067" href="$classengine_1_1ProjectItem.html" title="Represents a file&#45;based resource that is used in a project." alt="" coords="242,1209,391,1234"/>
+<area shape="poly" id="edge38_Node000001_Node000067" title=" " alt="" coords="153,1185,255,1206,253,1211,152,1190"/>
+<area shape="rect" id="Node000068" href="$classengine_1_1RackType.html" title=" " alt="" coords="249,1258,385,1283"/>
+<area shape="poly" id="edge39_Node000001_Node000068" title=" " alt="" coords="107,1191,148,1218,197,1243,249,1258,248,1263,195,1248,146,1223,104,1195"/>
+<area shape="rect" id="Node000069" href="$classengine_1_1Scene.html" title="A Scene is a collection of ClipSlots across tracks." alt="" coords="260,1307,373,1333"/>
+<area shape="poly" id="edge40_Node000001_Node000069" title=" " alt="" coords="96,1194,138,1245,166,1271,197,1292,228,1305,260,1313,259,1318,226,1310,195,1297,163,1275,134,1249,92,1198"/>
+<area shape="rect" id="Node000070" href="$classengine_1_1SelectedMidiEvents.html" title="Represents a set of selected MIDI notes." alt="" coords="215,1357,418,1382"/>
+<area shape="poly" id="edge41_Node000001_Node000070" title=" " alt="" coords="90,1196,106,1230,130,1271,160,1310,197,1343,219,1354,217,1359,195,1348,156,1314,125,1274,102,1233,85,1199"/>
+<area shape="rect" id="Node000071" href="$structengine_1_1StepClip_1_1Channel.html" title=" " alt="" coords="222,1406,411,1431"/>
+<area shape="poly" id="edge42_Node000001_Node000071" title=" " alt="" coords="87,1198,100,1241,122,1295,154,1348,174,1372,198,1392,223,1406,221,1411,194,1397,171,1376,150,1351,117,1297,95,1243,82,1199"/>
+<area shape="rect" id="Node000072" href="$structengine_1_1StepClip_1_1PatternInstance.html" title=" " alt="" coords="225,1456,408,1496"/>
+<area shape="poly" id="edge43_Node000001_Node000072" title=" " alt="" coords="84,1198,95,1250,116,1316,149,1384,172,1415,198,1442,226,1459,223,1464,194,1446,167,1418,145,1387,111,1318,90,1251,79,1199"/>
+<area shape="rect" id="Node000073" href="$structengine_1_1StepVolumeEffect.html" title=" " alt="" coords="222,1521,411,1546"/>
+<area shape="poly" id="edge44_Node000001_Node000073" title=" " alt="" coords="82,1198,88,1262,106,1345,121,1389,141,1432,166,1472,198,1506,223,1521,220,1526,194,1510,162,1475,136,1435,116,1391,101,1347,83,1262,76,1199"/>
+<area shape="rect" id="Node000074" href="$classengine_1_1TempoSequence.html" title="Holds a list of TempoSetting objects, to form a sequence of tempo changes." alt="" coords="227,1570,407,1595"/>
+<area shape="poly" id="edge45_Node000001_Node000074" title=" " alt="" coords="80,1198,84,1270,99,1368,114,1420,135,1470,162,1517,198,1557,227,1574,225,1578,194,1561,158,1520,130,1472,109,1421,94,1369,78,1271,75,1199"/>
+<area shape="rect" id="Node000075" href="$classengine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s]." alt="" coords="263,1619,371,1645"/>
+<area shape="poly" id="edge46_Node000001_Node000075" title=" " alt="" coords="84,1198,98,1289,123,1413,138,1475,156,1531,176,1576,198,1606,212,1616,228,1623,263,1631,262,1636,226,1629,209,1621,194,1610,172,1579,151,1533,133,1476,117,1414,93,1290,79,1198"/>
+<area shape="rect" id="Node000085" href="$structengine_1_1TrackCompManager_1_1TrackComp.html" title=" " alt="" coords="215,1669,418,1709"/>
+<area shape="poly" id="edge47_Node000001_Node000085" title=" " alt="" coords="84,1198,97,1299,120,1436,136,1506,154,1569,175,1621,198,1656,217,1669,213,1674,194,1659,170,1623,149,1571,131,1507,115,1437,91,1299,78,1199"/>
+<area shape="rect" id="Node000086" href="$classengine_1_1TrackItem.html" title="Base class for EditItems that live in a Track, e.g." alt="" coords="247,1734,386,1759"/>
+<area shape="poly" id="edge48_Node000001_Node000086" title=" " alt="" coords="83,1198,93,1311,115,1469,131,1548,150,1621,172,1680,185,1703,198,1719,221,1735,248,1743,246,1748,218,1740,194,1723,180,1706,167,1682,145,1623,126,1550,110,1469,88,1312,77,1199"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1AirWindowsAutomatableParameter.html" title=" " alt="" coords="491,5,726,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="335,186,396,121,438,85,484,55,511,43,513,48,487,60,441,89,400,124,339,189"/>
+<area shape="rect" id="Node000004" href="$structengine_1_1DiscreteLabelledParameter.html" title=" " alt="" coords="517,69,700,109"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="349,188,410,153,484,119,520,107,521,112,486,124,413,158,351,193"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1ExternalAutomatableParameter.html" title=" " alt="" coords="503,133,715,173"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="395,193,506,171,507,176,396,198"/>
+<area shape="rect" id="Node000006" href="$classengine_1_1MacroParameter.html" title="A MacroParameter is an AutomatableParameter which is a collection of Mappings." alt="" coords="518,198,699,223"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="443,208,518,208,518,213,443,213"/>
+<area shape="rect" id="Node000007" href="$structengine_1_1PluginWetDryAutomatableParam.html" title="Specialised AutomatableParameter for wet/dry." alt="" coords="485,248,732,288"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="396,223,507,245,506,251,395,229"/>
+<area shape="rect" id="Node000008" href="$structengine_1_1SuffixedParameter.html" title=" " alt="" coords="512,313,705,338"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="351,229,412,264,486,297,530,310,528,315,484,303,410,269,348,233"/>
+<area shape="rect" id="Node000012" href="$classengine_1_1AlphaTrackControlSurface.html" title=" " alt="" coords="513,363,705,403"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="413,601,436,586,451,566,459,545,459,502,459,457,467,435,484,413,511,394,514,399,487,417,472,437,465,458,464,502,464,546,456,568,439,590,416,605"/>
+<area shape="rect" id="Node000013" href="$classengine_1_1CustomControlSurface.html" title=" " alt="" coords="499,427,719,453"/>
+<area shape="poly" id="edge12_Node000011_Node000013" title=" " alt="" coords="414,599,436,586,448,572,455,557,459,526,462,493,470,477,484,462,501,451,504,455,487,466,474,480,468,495,464,526,460,559,453,575,439,590,417,604"/>
+<area shape="rect" id="Node000014" href="$classengine_1_1MackieC4.html" title=" " alt="" coords="539,477,678,502"/>
+<area shape="poly" id="edge13_Node000011_Node000014" title=" " alt="" coords="414,597,436,586,452,569,459,550,466,530,484,511,510,498,538,490,540,496,512,503,487,515,471,533,464,552,456,571,439,590,416,602"/>
+<area shape="rect" id="Node000015" href="$classengine_1_1MackieMCU.html" title=" " alt="" coords="533,526,685,551"/>
+<area shape="poly" id="edge14_Node000011_Node000015" title=" " alt="" coords="406,595,436,586,460,573,484,560,532,547,533,552,486,565,463,578,438,590,407,600"/>
+<area shape="rect" id="Node000017" href="$classengine_1_1MackieXT.html" title=" " alt="" coords="539,575,678,601"/>
+<area shape="poly" id="edge15_Node000011_Node000017" title=" " alt="" coords="415,602,539,591,539,597,416,607"/>
+<area shape="rect" id="Node000018" href="$classengine_1_1NovationRemoteSl.html" title=" " alt="" coords="511,625,707,650"/>
+<area shape="poly" id="edge16_Node000011_Node000018" title=" " alt="" coords="416,619,511,627,510,632,415,624"/>
+<area shape="rect" id="Node000020" href="$classengine_1_1TranzportControlSurface.html" title=" " alt="" coords="518,675,699,715"/>
+<area shape="poly" id="edge17_Node000011_Node000020" title=" " alt="" coords="375,627,486,659,534,672,532,677,485,664,374,632"/>
+<area shape="rect" id="Node000022" href="$classengine_1_1TempoSetting.html" title="A tempo value, as used in a TempoSequence." alt="" coords="527,739,690,765"/>
+<area shape="poly" id="edge19_Node000021_Node000022" title=" " alt="" coords="422,774,527,760,527,765,422,779"/>
+<area shape="rect" id="Node000025" href="$structengine_1_1InputDeviceInstance_1_1MidiInputDestination.html" title=" " alt="" coords="505,789,712,829"/>
+<area shape="poly" id="edge22_Node000024_Node000025" title=" " alt="" coords="419,890,436,882,450,871,459,861,469,850,484,839,511,827,513,832,487,844,473,854,463,864,454,875,439,886,421,895"/>
+<area shape="rect" id="Node000026" href="$structengine_1_1InputDeviceInstance_1_1VirtualMidiInputDestination.html" title=" " alt="" coords="504,853,713,893"/>
+<area shape="poly" id="edge23_Node000024_Node000026" title=" " alt="" coords="433,897,503,886,504,892,434,902"/>
+<area shape="rect" id="Node000027" href="$structengine_1_1InputDeviceInstance_1_1WaveInputDestination.html" title=" " alt="" coords="505,917,712,957"/>
+<area shape="poly" id="edge24_Node000024_Node000027" title=" " alt="" coords="434,923,505,928,505,933,434,928"/>
+<area shape="rect" id="Node000030" href="$classengine_1_1BreakpointOscillatorModifier.html" title=" " alt="" coords="505,981,712,1021"/>
+<area shape="poly" id="edge27_Node000029_Node000030" title=" " alt="" coords="394,1015,505,1007,505,1012,394,1021"/>
+<area shape="rect" id="Node000031" href="$classengine_1_1EnvelopeFollowerModifier.html" title=" " alt="" coords="514,1045,703,1085"/>
+<area shape="poly" id="edge28_Node000029_Node000031" title=" " alt="" coords="394,1032,514,1049,513,1055,393,1037"/>
+<area shape="rect" id="Node000032" href="$classengine_1_1LFOModifier.html" title=" " alt="" coords="533,1110,685,1135"/>
+<area shape="poly" id="edge29_Node000029_Node000032" title=" " alt="" coords="395,1030,439,1046,454,1058,464,1071,472,1084,487,1095,533,1112,532,1117,484,1100,468,1087,459,1074,450,1062,436,1050,393,1035"/>
+<area shape="rect" id="Node000033" href="$classengine_1_1MIDITrackerModifier.html" title=" " alt="" coords="507,1159,710,1185"/>
+<area shape="poly" id="edge30_Node000029_Node000033" title=" " alt="" coords="394,1026,418,1033,439,1046,451,1058,458,1071,464,1097,470,1122,476,1133,487,1145,509,1157,506,1162,484,1149,472,1137,465,1124,459,1098,453,1073,447,1061,436,1050,415,1038,392,1031"/>
+<area shape="rect" id="Node000034" href="$classengine_1_1RandomModifier.html" title=" " alt="" coords="518,1209,699,1234"/>
+<area shape="poly" id="edge31_Node000029_Node000034" title=" " alt="" coords="395,1024,418,1032,439,1046,454,1064,462,1083,464,1122,466,1159,473,1177,487,1194,519,1212,516,1216,484,1198,468,1180,461,1160,459,1122,457,1085,450,1067,436,1050,416,1037,393,1030"/>
+<area shape="rect" id="Node000035" href="$classengine_1_1StepModifier.html" title=" " alt="" coords="531,1258,687,1283"/>
+<area shape="poly" id="edge32_Node000029_Node000035" title=" " alt="" coords="395,1024,418,1032,439,1046,458,1071,466,1096,467,1121,464,1147,461,1172,462,1196,470,1220,487,1243,508,1257,532,1266,530,1271,505,1262,483,1247,465,1223,457,1197,456,1172,459,1146,461,1121,461,1097,453,1073,435,1050,416,1037,393,1029"/>
+<area shape="rect" id="Node000038" href="$classengine_1_1AirWindowsPlugin.html" title=" " alt="" coords="513,1307,704,1333"/>
+<area shape="poly" id="edge35_Node000037_Node000038" title=" " alt="" coords="389,1122,415,1130,439,1145,454,1163,462,1182,464,1220,466,1258,473,1276,487,1293,514,1309,512,1314,484,1297,468,1278,461,1259,459,1221,457,1183,450,1166,436,1149,413,1135,387,1127"/>
+<area shape="rect" id="Node000039" href="$classengine_1_1AuxReturnPlugin.html" title=" " alt="" coords="517,1357,700,1382"/>
+<area shape="poly" id="edge36_Node000037_Node000039" title=" " alt="" coords="389,1121,416,1129,439,1145,458,1169,466,1195,467,1221,464,1246,461,1272,462,1296,469,1320,487,1343,501,1354,518,1361,516,1366,499,1359,483,1347,465,1323,457,1297,456,1271,459,1246,461,1221,461,1196,453,1172,436,1149,413,1134,387,1126"/>
+</map>

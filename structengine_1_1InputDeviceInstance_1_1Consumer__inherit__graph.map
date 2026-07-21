@@ -1,0 +1,9 @@
+<map id="engine::InputDeviceInstance::Consumer" name="engine::InputDeviceInstance::Consumer">
+<area shape="rect" id="Node000001" title="Base class for classes that want to listen to an InputDevice and get a callback for each block of inp..." alt="" coords="5,47,212,87"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1HostedMidiInputDeviceNode.html" title="A Node that intercepts MIDI from a plugin callback and inserts it in to the playback graph." alt="" coords="260,5,520,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="225,44,317,28,317,33,226,50"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1MidiInputDeviceNode.html" title="A Node that intercepts incoming live MIDI and inserts it in to the playback graph." alt="" coords="283,55,497,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="226,65,282,65,282,70,226,70"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1WaveInputDeviceNode.html" title="A Node that intercepts incoming live audio and inserts it in to the playback graph." alt="" coords="279,104,501,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="226,85,317,101,317,107,225,90"/>
+</map>

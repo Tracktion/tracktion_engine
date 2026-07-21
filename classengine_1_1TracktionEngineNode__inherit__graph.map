@@ -1,0 +1,37 @@
+<map id="engine::TracktionEngineNode" name="engine::TracktionEngineNode">
+<area shape="rect" id="Node000001" title="Base class for Nodes that provides information about the current process call." alt="" coords="5,415,216,441"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1ArrangerLauncherSwitchingNode.html" title="A Node that switches between two of its inputs based on a flag." alt="" coords="299,5,489,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,401,124,332,149,238,169,188,194,140,225,95,262,55,298,35,300,40,266,59,229,98,198,142,174,191,154,240,129,333,117,402"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1CombiningNode.html" title="An Node that mixes a sequence of clips of other nodes." alt="" coords="305,70,483,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="114,401,127,340,155,259,174,216,198,175,228,137,262,105,282,93,304,85,305,90,284,98,266,109,232,141,203,178,179,219,160,261,133,341,119,403"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1ContainerClipNode.html" title=" " alt="" coords="296,119,492,145"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="116,401,133,348,162,281,181,245,205,211,232,180,263,154,294,138,297,143,265,158,235,184,209,215,186,248,167,283,138,350,121,403"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1DynamicOffsetNode.html" title=" " alt="" coords="291,169,497,194"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="119,401,139,357,170,303,211,248,235,224,263,203,290,190,292,195,265,208,239,228,215,252,174,306,144,360,124,404"/>
+<area shape="rect" id="Node000006" href="$classengine_1_1FadeInOutNode.html" title="A Node that fades in and out given time regions." alt="" coords="307,218,481,243"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="124,402,146,367,178,327,217,286,263,252,306,236,308,241,265,257,220,290,182,330,151,371,128,405"/>
+<area shape="rect" id="Node000007" href="$classengine_1_1HostedMidiInputDeviceNode.html" title="A Node that intercepts MIDI from a plugin callback and inserts it in to the playback graph." alt="" coords="264,267,524,293"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="131,403,187,351,223,324,263,302,295,290,296,295,265,306,226,328,190,355,135,407"/>
+<area shape="rect" id="Node000008" href="$classengine_1_1LoopingMidiNode.html" title="A Node that plays MIDI data from a MidiMessageSequence, at a specific MIDI channel." alt="" coords="301,317,487,342"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="144,406,199,377,263,351,306,339,307,345,265,356,201,382,146,411"/>
+<area shape="rect" id="Node000009" href="$classengine_1_1MidiNode.html" title="A Node that plays MIDI data from a MidiMessageSequence, at a specific MIDI channel." alt="" coords="326,366,462,391"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="197,410,325,388,326,393,198,416"/>
+<area shape="rect" id="Node000010" href="$classengine_1_1PlayHeadPositionNode.html" title="A Node that calculates a position to show visually what time is currently being processed by the grap..." alt="" coords="283,415,505,441"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="229,425,283,425,283,431,229,431"/>
+<area shape="rect" id="Node000011" href="$classengine_1_1PluginNode.html" title="Node for processing a plugin." alt="" coords="320,465,468,490"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="198,440,321,462,320,467,197,446"/>
+<area shape="rect" id="Node000012" href="$classengine_1_1RackInstanceNode.html" title="Sends an input Node to a Rack bus handling the channel mapping and channel gain levels." alt="" coords="297,514,491,539"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="147,445,201,473,265,499,312,511,311,517,263,504,199,478,145,450"/>
+<area shape="rect" id="Node000013" href="$classengine_1_1SlotControlNode.html" title=" " alt="" coords="304,563,484,589"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="135,449,190,500,226,526,265,548,305,562,303,567,263,553,223,531,187,504,131,453"/>
+<area shape="rect" id="Node000014" href="$classengine_1_1SpeedRampWaveNode.html" title="An Node that plays back a wave file." alt="" coords="283,613,505,638"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="128,451,151,485,182,525,221,565,265,598,294,610,292,615,263,602,217,569,178,529,146,488,124,454"/>
+<area shape="rect" id="Node000015" href="$classengine_1_1TrackMidiInputDeviceNode.html" title="A Node that takes MIDI from the output of a track and sends it to its corresponding InputDevice." alt="" coords="270,662,518,687"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="124,453,144,496,175,549,215,603,239,627,265,647,291,660,288,664,263,652,236,631,211,607,170,552,140,499,120,455"/>
+<area shape="rect" id="Node000016" href="$classengine_1_1TrackWaveInputDeviceNode.html" title="A Node that takes audio from the output of a track and sends it to its corresponding InputDevice." alt="" coords="266,711,522,737"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="121,453,138,505,167,572,209,640,235,671,266,696,288,709,286,714,262,701,232,674,205,643,162,575,133,507,116,455"/>
+<area shape="rect" id="Node000017" href="$classengine_1_1WaveNode.html" title="An Node that plays back a wave file." alt="" coords="322,761,466,786"/>
+<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="119,454,133,515,160,595,180,637,203,677,232,714,266,746,292,761,323,769,321,774,291,766,262,750,228,718,199,680,175,639,155,597,128,516,114,455"/>
+<area shape="rect" id="Node000018" href="$classengine_1_1WaveNodeRealTime.html" title="An Node that plays back a wave file." alt="" coords="291,810,497,835"/>
+<area shape="poly" id="edge17_Node000001_Node000018" title=" " alt="" coords="117,454,128,524,153,617,173,666,197,714,228,758,266,795,291,810,289,815,262,799,224,761,193,717,168,668,148,618,123,525,112,455"/>
+</map>

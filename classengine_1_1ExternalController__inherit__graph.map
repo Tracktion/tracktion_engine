@@ -1,0 +1,7 @@
+<map id="engine::ExternalController" name="engine::ExternalController">
+<area shape="rect" id="Node000001" title="Acts as a holder for a ControlSurface object." alt="" coords="124,93,316,119"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1SelectableListener.html" title=" " alt="" coords="5,13,200,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,44,204,91,201,95,130,48"/>
+<area shape="rect" id="Node000003" href="$structengine_1_1AutomatableParameter_1_1Listener.html" title=" " alt="" coords="225,5,450,45"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="299,55,239,95,236,91,296,51"/>
+</map>

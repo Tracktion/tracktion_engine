@@ -1,0 +1,5 @@
+<map id="graph::ConnectedNode" name="graph::ConnectedNode">
+<area shape="rect" id="Node000001" title="An Node which sums together the multiple inputs adding additional latency to provide a coherent outpu..." alt="" coords="5,79,176,104"/>
+<area shape="rect" id="Node000002" href="$classgraph_1_1Node.html" title="Main graph Node processor class." alt="" coords="40,5,141,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,44,93,79,88,79,88,44"/>
+</map>

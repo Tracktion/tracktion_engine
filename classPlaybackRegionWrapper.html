@@ -82,7 +82,11 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:abd175d8f5b7d81bc04b87ee8f4a89a1c" id="r_abd175d8f5b7d81bc04b87ee8f4a89a1c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper</a> (<a class="el" href="classARADocument.html">ARADocument</a> &amp;d, AudioClipBase &amp;audioClip, const ARAFactory &amp;factory, const <a class="el" href="classAudioModificationWrapper.html">AudioModificationWrapper</a> &amp;audioModification)</td></tr>
+<tr class="memdesc:abd175d8f5b7d81bc04b87ee8f4a89a1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a playback region covering the whole clip (non-looping case).  <br /></td></tr>
 <tr class="separator:abd175d8f5b7d81bc04b87ee8f4a89a1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe2c1b5696c91f7c3f9e319501efe8e3" id="r_abe2c1b5696c91f7c3f9e319501efe8e3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionWrapper.html#abe2c1b5696c91f7c3f9e319501efe8e3">PlaybackRegionWrapper</a> (<a class="el" href="classARADocument.html">ARADocument</a> &amp;d, AudioClipBase &amp;audioClip, const ARAFactory &amp;factory, const <a class="el" href="classAudioModificationWrapper.html">AudioModificationWrapper</a> &amp;audioModification, int loopIterationIndex)</td></tr>
+<tr class="memdesc:abe2c1b5696c91f7c3f9e319501efe8e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a playback region for one loop iteration of a looping clip.  <br /></td></tr>
+<tr class="separator:abe2c1b5696c91f7c3f9e319501efe8e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2f7bc3df1440be3ef9d718a120e0735" id="r_ac2f7bc3df1440be3ef9d718a120e0735"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionWrapper.html#ac2f7bc3df1440be3ef9d718a120e0735">~PlaybackRegionWrapper</a> ()</td></tr>
 <tr class="separator:ac2f7bc3df1440be3ef9d718a120e0735"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a04f32a855b991d7d6050a1499eeee519" id="r_a04f32a855b991d7d6050a1499eeee519"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionWrapper.html#a04f32a855b991d7d6050a1499eeee519">updateRange</a> ()</td></tr>
@@ -99,10 +103,12 @@ Public Attributes</h2></td></tr>
 <tr class="separator:afbffab49c3dc30614f4682fc4ac4e89a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acac88f1add1c57527866ba8c4bfd99cd" id="r_acac88f1add1c57527866ba8c4bfd99cd"><td class="memItemLeft" align="right" valign="top">AudioClipBase &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionWrapper.html#acac88f1add1c57527866ba8c4bfd99cd">clip</a></td></tr>
 <tr class="separator:acac88f1add1c57527866ba8c4bfd99cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa1dce42d2a57f42ed662dc79f3376ed" id="r_afa1dce42d2a57f42ed662dc79f3376ed"><td class="memItemLeft" align="right" valign="top">EditItemID&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlaybackRegionWrapper.html#afa1dce42d2a57f42ed662dc79f3376ed">trackID</a></td></tr>
+<tr class="separator:afa1dce42d2a57f42ed662dc79f3376ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="abd175d8f5b7d81bc04b87ee8f4a89a1c" name="abd175d8f5b7d81bc04b87ee8f4a89a1c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abd175d8f5b7d81bc04b87ee8f4a89a1c">&#9670;&#160;</a></span>PlaybackRegionWrapper()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#abd175d8f5b7d81bc04b87ee8f4a89a1c">&#9670;&#160;</a></span>PlaybackRegionWrapper() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -139,7 +145,60 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classAudioModificationWrapper.html#a1988458616dbba2ffc7cc6cdd96018e6">AudioModificationWrapper::audioModificationRef</a>, <a class="el" href="classPlaybackRegionWrapper.html#acac88f1add1c57527866ba8c4bfd99cd">clip</a>, <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classARADocument.html#adc8483434966159b9e5554855f9cd701">ARADocument::dci</a>, <a class="el" href="classARADocument.html#ac4ecbd3d352c0ec71c4402d9091f3981">ARADocument::dcRef</a>, <a class="el" href="classPlaybackRegionWrapper.html#afbffab49c3dc30614f4682fc4ac4e89a">doc</a>, <a class="el" href="classARADocument.html#accc6da280cdc6f60ac861200553c35f1">ARADocument::edit</a>, <a class="el" href="classPlaybackRegionWrapper.html#ad9eb40e1d6c9ef03e02cdb7893f8c89f">getPlaybackRegionProperties()</a>, <a class="el" href="classARADocument.html#a2ba4adbaf907fbf3865baba1e03105b4">ARADocument::musicalContext</a>, <a class="el" href="classPlaybackRegionWrapper.html#a61ba32a728316b6b21bc7e0698281a30">playbackRegionRef</a>, and <a class="el" href="classARADocument.html#a3e5d2363ef4524e00265ec3c41fd9ef2">ARADocument::willCreatePlaybackRegionOnTrack()</a>.</p>
+<p>Creates a playback region covering the whole clip (non-looping case). </p>
+
+<p class="reference">References <a class="el" href="classPlaybackRegionWrapper.html#acac88f1add1c57527866ba8c4bfd99cd">clip</a>, <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classARADocument.html#adc8483434966159b9e5554855f9cd701">ARADocument::dci</a>, <a class="el" href="classARADocument.html#ac4ecbd3d352c0ec71c4402d9091f3981">ARADocument::dcRef</a>, <a class="el" href="classPlaybackRegionWrapper.html#afbffab49c3dc30614f4682fc4ac4e89a">doc</a>, <a class="el" href="classARADocument.html#accc6da280cdc6f60ac861200553c35f1">ARADocument::edit</a>, <a class="el" href="classPlaybackRegionWrapper.html#ad9eb40e1d6c9ef03e02cdb7893f8c89f">getPlaybackRegionProperties()</a>, <a class="el" href="classARADocument.html#a2ba4adbaf907fbf3865baba1e03105b4">ARADocument::musicalContext</a>, <a class="el" href="classPlaybackRegionWrapper.html#a61ba32a728316b6b21bc7e0698281a30">playbackRegionRef</a>, and <a class="el" href="classARADocument.html#a3e5d2363ef4524e00265ec3c41fd9ef2">ARADocument::willCreatePlaybackRegionOnTrack()</a>.</p>
+
+</div>
+</div>
+<a id="abe2c1b5696c91f7c3f9e319501efe8e3" name="abe2c1b5696c91f7c3f9e319501efe8e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe2c1b5696c91f7c3f9e319501efe8e3">&#9670;&#160;</a></span>PlaybackRegionWrapper() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PlaybackRegionWrapper::PlaybackRegionWrapper </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classARADocument.html">ARADocument</a> &amp;&#160;</td>
+          <td class="paramname"><em>d</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">AudioClipBase &amp;&#160;</td>
+          <td class="paramname"><em>audioClip</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ARAFactory &amp;&#160;</td>
+          <td class="paramname"><em>factory</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classAudioModificationWrapper.html">AudioModificationWrapper</a> &amp;&#160;</td>
+          <td class="paramname"><em>audioModification</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>loopIterationIndex</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a playback region for one loop iteration of a looping clip. </p>
+<p>The time ranges are recomputed from the current clip state whenever the properties are requested, so they stay correct as the clip is moved or resized. </p>
+
+<p class="reference">References <a class="el" href="classPlaybackRegionWrapper.html#acac88f1add1c57527866ba8c4bfd99cd">clip</a>, <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classARADocument.html#adc8483434966159b9e5554855f9cd701">ARADocument::dci</a>, <a class="el" href="classARADocument.html#ac4ecbd3d352c0ec71c4402d9091f3981">ARADocument::dcRef</a>, <a class="el" href="classPlaybackRegionWrapper.html#afbffab49c3dc30614f4682fc4ac4e89a">doc</a>, <a class="el" href="classARADocument.html#accc6da280cdc6f60ac861200553c35f1">ARADocument::edit</a>, <a class="el" href="classPlaybackRegionWrapper.html#ad9eb40e1d6c9ef03e02cdb7893f8c89f">getPlaybackRegionProperties()</a>, <a class="el" href="classARADocument.html#a2ba4adbaf907fbf3865baba1e03105b4">ARADocument::musicalContext</a>, <a class="el" href="classPlaybackRegionWrapper.html#a61ba32a728316b6b21bc7e0698281a30">playbackRegionRef</a>, and <a class="el" href="classARADocument.html#a3e5d2363ef4524e00265ec3c41fd9ef2">ARADocument::willCreatePlaybackRegionOnTrack()</a>.</p>
 
 </div>
 </div>
@@ -158,7 +217,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classPlaybackRegionWrapper.html#acac88f1add1c57527866ba8c4bfd99cd">clip</a>, <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classARADocument.html#adc8483434966159b9e5554855f9cd701">ARADocument::dci</a>, <a class="el" href="classARADocument.html#ac4ecbd3d352c0ec71c4402d9091f3981">ARADocument::dcRef</a>, <a class="el" href="classPlaybackRegionWrapper.html#afbffab49c3dc30614f4682fc4ac4e89a">doc</a>, <a class="el" href="classPlaybackRegionWrapper.html#a61ba32a728316b6b21bc7e0698281a30">playbackRegionRef</a>, and <a class="el" href="classARADocument.html#a8cd9393a9d15f940d6b090e719eed48c">ARADocument::willDestroyPlaybackRegionOnTrack()</a>.</p>
+<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classARADocument.html#adc8483434966159b9e5554855f9cd701">ARADocument::dci</a>, <a class="el" href="classARADocument.html#ac4ecbd3d352c0ec71c4402d9091f3981">ARADocument::dcRef</a>, <a class="el" href="classPlaybackRegionWrapper.html#afbffab49c3dc30614f4682fc4ac4e89a">doc</a>, <a class="el" href="classPlaybackRegionWrapper.html#a61ba32a728316b6b21bc7e0698281a30">playbackRegionRef</a>, <a class="el" href="classPlaybackRegionWrapper.html#afa1dce42d2a57f42ed662dc79f3376ed">trackID</a>, and <a class="el" href="classARADocument.html#ae27fd4a485c820493624d04032c422d9">ARADocument::willDestroyPlaybackRegionOnTrack()</a>.</p>
 
 </div>
 </div>
@@ -178,7 +237,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classARADocument.html#adc8483434966159b9e5554855f9cd701">ARADocument::dci</a>, <a class="el" href="classARADocument.html#ac4ecbd3d352c0ec71c4402d9091f3981">ARADocument::dcRef</a>, <a class="el" href="classPlaybackRegionWrapper.html#afbffab49c3dc30614f4682fc4ac4e89a">doc</a>, <a class="el" href="classPlaybackRegionWrapper.html#ad9eb40e1d6c9ef03e02cdb7893f8c89f">getPlaybackRegionProperties()</a>, and <a class="el" href="classPlaybackRegionWrapper.html#a61ba32a728316b6b21bc7e0698281a30">playbackRegionRef</a>.</p>
+<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classARADocument.html#adc8483434966159b9e5554855f9cd701">ARADocument::dci</a>, <a class="el" href="classARADocument.html#ac4ecbd3d352c0ec71c4402d9091f3981">ARADocument::dcRef</a>, <a class="el" href="classPlaybackRegionWrapper.html#afbffab49c3dc30614f4682fc4ac4e89a">doc</a>, <a class="el" href="classPlaybackRegionWrapper.html#ad9eb40e1d6c9ef03e02cdb7893f8c89f">getPlaybackRegionProperties()</a>, <a class="el" href="classPlaybackRegionWrapper.html#a61ba32a728316b6b21bc7e0698281a30">playbackRegionRef</a>, <a class="el" href="classARADocument.html#a468fe477768a362b4b96451cab31a352">ARADocument::regionSequences</a>, and <a class="el" href="classPlaybackRegionWrapper.html#afa1dce42d2a57f42ed662dc79f3376ed">trackID</a>.</p>
 
 </div>
 </div>
@@ -199,9 +258,9 @@ Public Attributes</h2></td></tr>
 
 <p>NB: This is where time-stretching is setup. </p>
 
-<p class="reference">References <a class="el" href="classPlaybackRegionWrapper.html#acac88f1add1c57527866ba8c4bfd99cd">clip</a>, <a class="el" href="classPlaybackRegionWrapper.html#afbffab49c3dc30614f4682fc4ac4e89a">doc</a>, <a class="el" href="classARADocument.html#a2ba4adbaf907fbf3865baba1e03105b4">ARADocument::musicalContext</a>, and <a class="el" href="classARADocument.html#aa880cbc473f88dd4640a7d31a6d9a366">ARADocument::regionSequences</a>.</p>
+<p class="reference">References <a class="el" href="classPlaybackRegionWrapper.html#acac88f1add1c57527866ba8c4bfd99cd">clip</a>, <a class="el" href="classPlaybackRegionWrapper.html#afbffab49c3dc30614f4682fc4ac4e89a">doc</a>, <a class="el" href="classARADocument.html#a2ba4adbaf907fbf3865baba1e03105b4">ARADocument::musicalContext</a>, <a class="el" href="classARADocument.html#a468fe477768a362b4b96451cab31a352">ARADocument::regionSequences</a>, and <a class="el" href="classPlaybackRegionWrapper.html#afa1dce42d2a57f42ed662dc79f3376ed">trackID</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper()</a>, and <a class="el" href="classPlaybackRegionWrapper.html#a04f32a855b991d7d6050a1499eeee519">updateRange()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abe2c1b5696c91f7c3f9e319501efe8e3">PlaybackRegionWrapper()</a>, and <a class="el" href="classPlaybackRegionWrapper.html#a04f32a855b991d7d6050a1499eeee519">updateRange()</a>.</p>
 
 </div>
 </div>
@@ -218,7 +277,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#a04f32a855b991d7d6050a1499eeee519">updateRange()</a>, and <a class="el" href="classPlaybackRegionWrapper.html#ac2f7bc3df1440be3ef9d718a120e0735">~PlaybackRegionWrapper()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abe2c1b5696c91f7c3f9e319501efe8e3">PlaybackRegionWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#a04f32a855b991d7d6050a1499eeee519">updateRange()</a>, and <a class="el" href="classPlaybackRegionWrapper.html#ac2f7bc3df1440be3ef9d718a120e0735">~PlaybackRegionWrapper()</a>.</p>
 
 </div>
 </div>
@@ -234,7 +293,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classPlaybackRegionWrapper.html#ad9eb40e1d6c9ef03e02cdb7893f8c89f">getPlaybackRegionProperties()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#a04f32a855b991d7d6050a1499eeee519">updateRange()</a>, and <a class="el" href="classPlaybackRegionWrapper.html#ac2f7bc3df1440be3ef9d718a120e0735">~PlaybackRegionWrapper()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classPlaybackRegionWrapper.html#ad9eb40e1d6c9ef03e02cdb7893f8c89f">getPlaybackRegionProperties()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abe2c1b5696c91f7c3f9e319501efe8e3">PlaybackRegionWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#a04f32a855b991d7d6050a1499eeee519">updateRange()</a>, and <a class="el" href="classPlaybackRegionWrapper.html#ac2f7bc3df1440be3ef9d718a120e0735">~PlaybackRegionWrapper()</a>.</p>
 
 </div>
 </div>
@@ -250,7 +309,23 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classPlaybackRegionWrapper.html#ad9eb40e1d6c9ef03e02cdb7893f8c89f">getPlaybackRegionProperties()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper()</a>, and <a class="el" href="classPlaybackRegionWrapper.html#ac2f7bc3df1440be3ef9d718a120e0735">~PlaybackRegionWrapper()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classPlaybackRegionWrapper.html#ad9eb40e1d6c9ef03e02cdb7893f8c89f">getPlaybackRegionProperties()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper()</a>, and <a class="el" href="classPlaybackRegionWrapper.html#abe2c1b5696c91f7c3f9e319501efe8e3">PlaybackRegionWrapper()</a>.</p>
+
+</div>
+</div>
+<a id="afa1dce42d2a57f42ed662dc79f3376ed" name="afa1dce42d2a57f42ed662dc79f3376ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa1dce42d2a57f42ed662dc79f3376ed">&#9670;&#160;</a></span>trackID</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">EditItemID PlaybackRegionWrapper::trackID</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classPlaybackRegionWrapper.html#ad9eb40e1d6c9ef03e02cdb7893f8c89f">getPlaybackRegionProperties()</a>, <a class="el" href="classPlaybackRegionWrapper.html#a04f32a855b991d7d6050a1499eeee519">updateRange()</a>, and <a class="el" href="classPlaybackRegionWrapper.html#ac2f7bc3df1440be3ef9d718a120e0735">~PlaybackRegionWrapper()</a>.</p>
 
 </div>
 </div>
@@ -260,7 +335,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 18 2026 15:03:50 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Jul 21 2026 18:17:57 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['mergemode_0',['MergeMode',['../classtracktion_1_1engine_1_1MidiInputDevice.html#a43580ddbc607e05168cd78e36f9df151',1,'tracktion::engine::MidiInputDevice']]],
-  ['mode_1',['mode',['../classtracktion_1_1engine_1_1PatternGenerator.html#a87e3536a690758ecd3435e00a2a01086',1,'tracktion::engine::PatternGenerator::Mode'],['../classtracktion_1_1engine_1_1MIDITrackerModifier.html#a4600a89f9295c8b0e9c7b6df6614da86',1,'tracktion::engine::MIDITrackerModifier::Mode'],['../classtracktion_1_1engine_1_1LevelMeasurer.html#a3ddbe3b40b23e1b24d9032a51c04294a',1,'tracktion::engine::LevelMeasurer::Mode'],['../classtracktion_1_1engine_1_1TimeStretcher.html#aef6990d119f230d6c5ffb78f4470c79e',1,'tracktion::engine::TimeStretcher::Mode']]],
-  ['modsource_2',['ModSource',['../classtracktion_1_1engine_1_1FourOscPlugin.html#a3ee8e2d778f393a87c3ef50a0bdd94cc',1,'tracktion::engine::FourOscPlugin']]],
-  ['monitormode_3',['MonitorMode',['../classtracktion_1_1engine_1_1InputDevice.html#a30f8eb911d24e19420958698626371b2',1,'tracktion::engine::InputDevice']]],
-  ['moveclipaction_4',['moveclipaction',['../namespacetracktion_1_1engine.html#addf8245ddf875ad562228c1b4911c5ee',1,'tracktion::MoveClipAction'],['../namespacetracktion_1_1engine.html#addf8245ddf875ad562228c1b4911c5ee',1,'tracktion::engine::MoveClipAction']]],
-  ['multithreaded_5',['MultiThreaded',['../namespacetracktion_1_1engine_1_1benchmark__utilities.html#acbaa9c9a2c7b9d5a33c3dbc121968924',1,'tracktion::engine::benchmark_utilities']]],
-  ['muteandsololightstate_6',['MuteAndSoloLightState',['../classtracktion_1_1engine_1_1Track.html#af2bbaf1bca5f5d7f9102746c0e1dd686',1,'tracktion::engine::Track']]]
+  ['mergemode_0',['MergeMode',['../classengine_1_1MidiInputDevice.html#af622ea62404629bd7582827480e4e738',1,'engine::MidiInputDevice']]],
+  ['mode_1',['mode',['../classengine_1_1PatternGenerator.html#ab731c9148da870fc843e9f33adc08ac9',1,'engine::PatternGenerator::Mode'],['../classengine_1_1MIDITrackerModifier.html#ad8cfa3130612f78310f6758253f92e59',1,'engine::MIDITrackerModifier::Mode'],['../classengine_1_1LevelMeasurer.html#a07933caa38a1923245eac235f5b424d4',1,'engine::LevelMeasurer::Mode'],['../classengine_1_1TimeStretcher.html#a3a3010b423f2d331fbf159f8ed26d989',1,'engine::TimeStretcher::Mode']]],
+  ['modsource_2',['ModSource',['../classengine_1_1FourOscPlugin.html#ab5755a3afcbbcabf884a95e13ef91e82',1,'engine::FourOscPlugin']]],
+  ['monitormode_3',['MonitorMode',['../classengine_1_1InputDevice.html#a813ed2b45ed1c5f513b027ea5f3b41a1',1,'engine::InputDevice']]],
+  ['moveclipaction_4',['MoveClipAction',['../namespaceengine.html#acd04936137904539ce55ffd364a28b34',1,'engine']]],
+  ['multithreaded_5',['MultiThreaded',['../namespaceengine_1_1benchmark__utilities.html#abe740cc9c0626c664344d7e7a5612b56',1,'engine::benchmark_utilities']]],
+  ['muteandsololightstate_6',['MuteAndSoloLightState',['../classengine_1_1Track.html#a03b0d65237945ad7334cb351aa8c8b9f',1,'engine::Track']]]
 ];

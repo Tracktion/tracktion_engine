@@ -1,0 +1,7 @@
+<map id="engine::ExternalAutomatableParameter" name="engine::ExternalAutomatableParameter">
+<area shape="rect" id="Node000001" title=" " alt="" coords="12,152,224,192"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1AutomatableParameter.html" title=" " alt="" coords="5,79,231,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,118,121,152,115,152,115,118"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="47,5,189,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="121,44,121,79,115,79,115,44"/>
+</map>

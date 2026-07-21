@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['jogid_0',['jogId',['../classtracktion_1_1engine_1_1CustomControlSurface.html#a616409a4913a2ad7dd074e25b022a5cdac6ec5d4c45effa8fecabad01d3f99587',1,'tracktion::engine::CustomControlSurface']]],
-  ['jumptomarkinid_1',['jumpToMarkInId',['../classtracktion_1_1engine_1_1CustomControlSurface.html#a616409a4913a2ad7dd074e25b022a5cdadb08c9744018815df85702aa1b8f3924',1,'tracktion::engine::CustomControlSurface']]],
-  ['jumptomarkoutid_2',['jumpToMarkOutId',['../classtracktion_1_1engine_1_1CustomControlSurface.html#a616409a4913a2ad7dd074e25b022a5cdaaffcbd33e351230da9dbc130b02ecd26',1,'tracktion::engine::CustomControlSurface']]]
+  ['jogid_0',['jogId',['../classengine_1_1CustomControlSurface.html#af783e22ec17928f8efe497bb002619e3af274baddcc1031766c15d635923d7ac2',1,'engine::CustomControlSurface']]],
+  ['jumptomarkinid_1',['jumpToMarkInId',['../classengine_1_1CustomControlSurface.html#af783e22ec17928f8efe497bb002619e3a23029e9401e4f87190d11750853d72ec',1,'engine::CustomControlSurface']]],
+  ['jumptomarkoutid_2',['jumpToMarkOutId',['../classengine_1_1CustomControlSurface.html#af783e22ec17928f8efe497bb002619e3aa3889579a880037fab5e78547427bb38',1,'engine::CustomControlSurface']]]
 ];

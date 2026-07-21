@@ -82,12 +82,17 @@ $(function() {
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a71ffc12519c7feb3ad49c260500025e9" id="r_a71ffc12519c7feb3ad49c260500025e9"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structModelUpdateFunctions.html#a71ffc12519c7feb3ad49c260500025e9">notifyARAContentChanged</a> (Edit &amp;edit)</td></tr>
 <tr class="separator:a71ffc12519c7feb3ad49c260500025e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bddaa0b8487d7d3f0d3421e73c8eba3" id="r_a1bddaa0b8487d7d3f0d3421e73c8eba3"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structModelUpdateFunctions.html#a1bddaa0b8487d7d3f0d3421e73c8eba3">deferContentChanged</a> (Edit &amp;edit)</td></tr>
+<tr class="memdesc:a1bddaa0b8487d7d3f0d3421e73c8eba3"><td class="mdescLeft">&#160;</td><td class="mdescRight">These notifications arrive from inside our own notifyModelUpdates() call, so updating the document synchronously here would reenter the plugin's document controller - defer to the next message loop iteration instead, re-checking that the edit is still open when the callback runs.  <br /></td></tr>
+<tr class="separator:a1bddaa0b8487d7d3f0d3421e73c8eba3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54d174608f025983012f81c55325dbfd" id="r_a54d174608f025983012f81c55325dbfd"><td class="memItemLeft" align="right" valign="top">static void ARA_CALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structModelUpdateFunctions.html#a54d174608f025983012f81c55325dbfd">notifyAudioSourceAnalysisProgress</a> (ARAModelUpdateControllerHostRef, ARAAudioSourceHostRef, ARAAnalysisProgressState, float)</td></tr>
 <tr class="separator:a54d174608f025983012f81c55325dbfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5feea024c101f98edc69235cea37cca7" id="r_a5feea024c101f98edc69235cea37cca7"><td class="memItemLeft" align="right" valign="top">static void ARA_CALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structModelUpdateFunctions.html#a5feea024c101f98edc69235cea37cca7">notifyAudioSourceContentChanged</a> (ARAModelUpdateControllerHostRef hostRef, ARAAudioSourceHostRef, const ARAContentTimeRange *, ARAContentUpdateFlags)</td></tr>
 <tr class="separator:a5feea024c101f98edc69235cea37cca7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e0b046c60f0e8e9ca7b21f63212448b" id="r_a9e0b046c60f0e8e9ca7b21f63212448b"><td class="memItemLeft" align="right" valign="top">static void ARA_CALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structModelUpdateFunctions.html#a9e0b046c60f0e8e9ca7b21f63212448b">notifyAudioModificationContentChanged</a> (ARAModelUpdateControllerHostRef hostRef, ARAAudioModificationHostRef, const ARAContentTimeRange *, ARAContentUpdateFlags)</td></tr>
 <tr class="separator:a9e0b046c60f0e8e9ca7b21f63212448b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b85bb365fedfde9cba224dca786e599" id="r_a2b85bb365fedfde9cba224dca786e599"><td class="memItemLeft" align="right" valign="top">static void ARA_CALL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structModelUpdateFunctions.html#a2b85bb365fedfde9cba224dca786e599">notifyPlaybackRegionContentChanged</a> (ARAModelUpdateControllerHostRef hostRef, ARAPlaybackRegionHostRef, const ARAContentTimeRange *, ARAContentUpdateFlags)</td></tr>
+<tr class="separator:a2b85bb365fedfde9cba224dca786e599"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a71ffc12519c7feb3ad49c260500025e9" name="a71ffc12519c7feb3ad49c260500025e9"></a>
@@ -114,7 +119,39 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="structModelUpdateFunctions.html#a9e0b046c60f0e8e9ca7b21f63212448b">notifyAudioModificationContentChanged()</a>, and <a class="el" href="structModelUpdateFunctions.html#a5feea024c101f98edc69235cea37cca7">notifyAudioSourceContentChanged()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structModelUpdateFunctions.html#a1bddaa0b8487d7d3f0d3421e73c8eba3">deferContentChanged()</a>.</p>
+
+</div>
+</div>
+<a id="a1bddaa0b8487d7d3f0d3421e73c8eba3" name="a1bddaa0b8487d7d3f0d3421e73c8eba3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1bddaa0b8487d7d3f0d3421e73c8eba3">&#9670;&#160;</a></span>deferContentChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ModelUpdateFunctions::deferContentChanged </td>
+          <td>(</td>
+          <td class="paramtype">Edit &amp;&#160;</td>
+          <td class="paramname"><em>edit</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>These notifications arrive from inside our own notifyModelUpdates() call, so updating the document synchronously here would reenter the plugin's document controller - defer to the next message loop iteration instead, re-checking that the edit is still open when the callback runs. </p>
+
+<p class="reference">References <a class="el" href="structModelUpdateFunctions.html#a71ffc12519c7feb3ad49c260500025e9">notifyARAContentChanged()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="structModelUpdateFunctions.html#a9e0b046c60f0e8e9ca7b21f63212448b">notifyAudioModificationContentChanged()</a>, <a class="el" href="structModelUpdateFunctions.html#a5feea024c101f98edc69235cea37cca7">notifyAudioSourceContentChanged()</a>, and <a class="el" href="structModelUpdateFunctions.html#a2b85bb365fedfde9cba224dca786e599">notifyPlaybackRegionContentChanged()</a>.</p>
 
 </div>
 </div>
@@ -212,7 +249,7 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, and <a class="el" href="structModelUpdateFunctions.html#a71ffc12519c7feb3ad49c260500025e9">notifyARAContentChanged()</a>.</p>
+<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, and <a class="el" href="structModelUpdateFunctions.html#a1bddaa0b8487d7d3f0d3421e73c8eba3">deferContentChanged()</a>.</p>
 
 </div>
 </div>
@@ -262,7 +299,57 @@ Static Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, and <a class="el" href="structModelUpdateFunctions.html#a71ffc12519c7feb3ad49c260500025e9">notifyARAContentChanged()</a>.</p>
+<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, and <a class="el" href="structModelUpdateFunctions.html#a1bddaa0b8487d7d3f0d3421e73c8eba3">deferContentChanged()</a>.</p>
+
+</div>
+</div>
+<a id="a2b85bb365fedfde9cba224dca786e599" name="a2b85bb365fedfde9cba224dca786e599"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b85bb365fedfde9cba224dca786e599">&#9670;&#160;</a></span>notifyPlaybackRegionContentChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ARA_CALL ModelUpdateFunctions::notifyPlaybackRegionContentChanged </td>
+          <td>(</td>
+          <td class="paramtype">ARAModelUpdateControllerHostRef&#160;</td>
+          <td class="paramname"><em>hostRef</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ARAPlaybackRegionHostRef&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const ARAContentTimeRange *&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ARAContentUpdateFlags&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, and <a class="el" href="structModelUpdateFunctions.html#a1bddaa0b8487d7d3f0d3421e73c8eba3">deferContentChanged()</a>.</p>
 
 </div>
 </div>
@@ -272,7 +359,7 @@ Static Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 18 2026 15:03:50 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Jul 21 2026 18:17:57 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

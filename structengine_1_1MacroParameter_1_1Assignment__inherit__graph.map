@@ -1,0 +1,5 @@
+<map id="engine::MacroParameter::Assignment" name="engine::MacroParameter::Assignment">
+<area shape="rect" id="Node000001" title="An Assignment between a MacroParameter and an AutomatableParameter." alt="" coords="27,93,209,133"/>
+<area shape="rect" id="Node000002" href="$structengine_1_1AutomatableParameter_1_1ModifierAssignment.html" title="Connects a modifier source to an AutomatableParameter." alt="" coords="5,5,231,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,59,121,93,115,93,115,59"/>
+</map>

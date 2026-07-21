@@ -1,0 +1,11 @@
+<map id="engine::DynamicallyOffsettableNodeBase" name="engine::DynamicallyOffsettableNodeBase">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,73,233,113"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1DynamicOffsetNode.html" title=" " alt="" coords="282,5,487,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="193,66,281,39,325,28,327,33,282,45,194,71"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1FadeInOutNode.html" title="A Node that fades in and out given time regions." alt="" coords="298,55,471,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="247,78,298,73,298,78,248,83"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1LoopingMidiNode.html" title="A Node that plays MIDI data from a MidiMessageSequence, at a specific MIDI channel." alt="" coords="291,104,478,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="247,102,291,106,291,111,247,107"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1WaveNodeRealTime.html" title="An Node that plays back a wave file." alt="" coords="281,153,488,179"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="199,114,282,138,331,151,330,156,281,143,198,119"/>
+</map>

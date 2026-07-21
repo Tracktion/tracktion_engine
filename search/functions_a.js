@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['keepsectionssortedandinrange_0',['keepSectionsSortedAndInRange',['../classtracktion_1_1engine_1_1CompManager.html#aa46965683dd1e982d6e626fe18d2343c',1,'tracktion::engine::CompManager']]],
-  ['keepselectedobjectonscreen_1',['keepSelectedObjectOnScreen',['../classtracktion_1_1engine_1_1SelectableClass.html#a6bf14010cc025e56a2b9cbfb3d6545d3',1,'tracktion::engine::SelectableClass']]],
-  ['keepselectedobjectsonscreen_2',['keepSelectedObjectsOnScreen',['../classtracktion_1_1engine_1_1SelectionManager.html#afa17a98cf4a815d5702c372ac8f1303c',1,'tracktion::engine::SelectionManager']]],
-  ['keyresult_3',['keyresult',['../structtracktion_1_1engine_1_1KeyResult.html#a0570f7883f49e52575c4fa2eb07ecaf9',1,'tracktion::engine::KeyResult::KeyResult()=default'],['../structtracktion_1_1engine_1_1KeyResult.html#a19220eb811a3c8c6e5cb5824bfa507cb',1,'tracktion::engine::KeyResult::KeyResult(double r_, int k_, Scale::ScaleType s_)']]],
-  ['killactivenotes_4',['killActiveNotes',['../classtracktion_1_1engine_1_1LoopingMidiNode.html#ae4abd283f244cc9e43908d25bad8409e',1,'tracktion::engine::LoopingMidiNode']]]
+  ['keepsectionssortedandinrange_0',['keepSectionsSortedAndInRange',['../classengine_1_1CompManager.html#af486acf6c0661a1c45a2ba559ee25640',1,'engine::CompManager']]],
+  ['keepselectedobjectonscreen_1',['keepSelectedObjectOnScreen',['../classengine_1_1SelectableClass.html#af37a0e749dcfee5188f0c66ff341a031',1,'engine::SelectableClass']]],
+  ['keepselectedobjectsonscreen_2',['keepSelectedObjectsOnScreen',['../classengine_1_1SelectionManager.html#acea3ab0e23359bfa60534e0165e5de4b',1,'engine::SelectionManager']]],
+  ['keyresult_3',['keyresult',['../structengine_1_1KeyResult.html#aa009708a2a8892f746465184dfc1ddff',1,'engine::KeyResult::KeyResult()=default'],['../structengine_1_1KeyResult.html#a749a2bd8623c1a218c9abc7b4798cf7f',1,'engine::KeyResult::KeyResult(double r_, int k_, Scale::ScaleType s_)']]],
+  ['killactivenotes_4',['killActiveNotes',['../classengine_1_1LoopingMidiNode.html#ae67560944582dfa3a23501c3fc1b77b8',1,'engine::LoopingMidiNode']]]
 ];

@@ -1,0 +1,5 @@
+<map id="graph::MidiNode" name="graph::MidiNode">
+<area shape="rect" id="Node000001" title="Plays back a MIDI sequence." alt="" coords="5,79,135,104"/>
+<area shape="rect" id="Node000002" href="$classgraph_1_1Node.html" title="Main graph Node processor class." alt="" coords="19,5,121,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,44,73,79,67,79,67,44"/>
+</map>

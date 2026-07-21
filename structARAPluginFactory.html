@@ -73,6 +73,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="structARAPluginFactory-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">ARAPluginFactory Struct Reference<div class="ingroups"><a class="el" href="group__tracktion__engine.html">tracktion_engine</a> &raquo; <a class="el" href="group__tracktion__engine-plugins.html">plugins</a></div></div></div>
 </div><!--header-->
@@ -89,8 +90,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:abb1338d8ff3648d6b2792602fa2fbd1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d4d38dfd9771b0be49ed0443395be76" id="r_a0d4d38dfd9771b0be49ed0443395be76"><td class="memItemLeft" align="right" valign="top">ExternalPlugin::Ptr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARAPluginFactory.html#a0d4d38dfd9771b0be49ed0443395be76">createPlugin</a> (Edit &amp;ed, const juce::PluginDescription &amp;desc)</td></tr>
 <tr class="separator:a0d4d38dfd9771b0be49ed0443395be76"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a001f844d08d5d20b2e6be224d8356978" id="r_a001f844d08d5d20b2e6be224d8356978"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structARAInstance.html">ARAInstance</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARAPluginFactory.html#a001f844d08d5d20b2e6be224d8356978">createInstance</a> (ExternalPlugin &amp;p, ARADocumentControllerRef dcRef)</td></tr>
-<tr class="separator:a001f844d08d5d20b2e6be224d8356978"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01d32c09409ac594862d353e5ec922c8" id="r_a01d32c09409ac594862d353e5ec922c8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structARAInstance.html">ARAInstance</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARAPluginFactory.html#a01d32c09409ac594862d353e5ec922c8">createInstance</a> (ExternalPlugin &amp;p, ARADocumentControllerRef dcRef, ARAPlugInInstanceRoleFlags roles=<a class="el" href="structARAPluginFactory.html#ac24ff215c49d66dd5947a311cf126771">allInstanceRoles</a>)</td></tr>
+<tr class="separator:a01d32c09409ac594862d353e5ec922c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ccd39a4dd6bba86021c0b9e83938e1e" id="r_a8ccd39a4dd6bba86021c0b9e83938e1e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARAPluginFactory.html#a8ccd39a4dd6bba86021c0b9e83938e1e">~ARAPluginFactory</a> ()</td></tr>
 <tr class="separator:a8ccd39a4dd6bba86021c0b9e83938e1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -99,6 +100,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a1b8d62fe184055a7c913bda2be5360b7" id="r_a1b8d62fe184055a7c913bda2be5360b7"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structARAPluginFactory.html">ARAPluginFactory</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARAPluginFactory.html#a1b8d62fe184055a7c913bda2be5360b7">getInstance</a> (Engine &amp;engine, const juce::PluginDescription &amp;desc)</td></tr>
 <tr class="memdesc:a1b8d62fe184055a7c913bda2be5360b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns (or creates) the factory for a specific ARA plugin type.  <br /></td></tr>
 <tr class="separator:a1b8d62fe184055a7c913bda2be5360b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63d6bd3ee21619ce83c783a5e5ff488f" id="r_a63d6bd3ee21619ce83c783a5e5ff488f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structARAPluginFactory.html">ARAPluginFactory</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARAPluginFactory.html#a63d6bd3ee21619ce83c783a5e5ff488f">getExistingInstance</a> (const juce::PluginDescription &amp;desc)</td></tr>
+<tr class="memdesc:a63d6bd3ee21619ce83c783a5e5ff488f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the factory for a plugin type if one has already been created, without creating one.  <br /></td></tr>
+<tr class="separator:a63d6bd3ee21619ce83c783a5e5ff488f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a732e3842446c1bee5729cbf5e66900ef" id="r_a732e3842446c1bee5729cbf5e66900ef"><td class="memItemLeft" align="right" valign="top">static juce::PluginDescription&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARAPluginFactory.html#a732e3842446c1bee5729cbf5e66900ef">findPreferredDefault</a> (const juce::Array&lt; juce::PluginDescription &gt; &amp;descs)</td></tr>
 <tr class="memdesc:a732e3842446c1bee5729cbf5e66900ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Picks the preferred default ARA plugin description for legacy clips.  <br /></td></tr>
 <tr class="separator:a732e3842446c1bee5729cbf5e66900ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -107,11 +111,20 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a9589886f7c706cb08a5ee87db1acd6d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0665e67e25c6ac5f53d0c9085e77d295" id="r_a0665e67e25c6ac5f53d0c9085e77d295"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARAPluginFactory.html#a0665e67e25c6ac5f53d0c9085e77d295">shutdown</a> ()</td></tr>
 <tr class="separator:a0665e67e25c6ac5f53d0c9085e77d295"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60239d786bc4989e2cdf701c2ff364fd" id="r_a60239d786bc4989e2cdf701c2ff364fd"><td class="memItemLeft" align="right" valign="top">static std::map&lt; juce::String, juce::ARAFactoryResult &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARAPluginFactory.html#a60239d786bc4989e2cdf701c2ff364fd">getLookupCache</a> ()</td></tr>
+<tr class="memdesc:a60239d786bc4989e2cdf701c2ff364fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Factories loaded for archive-ID lookups, kept for the session so their modules aren't torn down (bundleExit) while plugin background threads may be running.  <br /></td></tr>
+<tr class="separator:a60239d786bc4989e2cdf701c2ff364fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a2c50cc158fc2427cbd2febcada532a8a" id="r_a2c50cc158fc2427cbd2febcada532a8a"><td class="memItemLeft" align="right" valign="top">const ARAFactory *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARAPluginFactory.html#a2c50cc158fc2427cbd2febcada532a8a">factory</a> = nullptr</td></tr>
 <tr class="separator:a2c50cc158fc2427cbd2febcada532a8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:ac24ff215c49d66dd5947a311cf126771" id="r_ac24ff215c49d66dd5947a311cf126771"><td class="memItemLeft" align="right" valign="top">static constexpr ARAPlugInInstanceRoleFlags&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARAPluginFactory.html#ac24ff215c49d66dd5947a311cf126771">allInstanceRoles</a></td></tr>
+<tr class="memdesc:ac24ff215c49d66dd5947a311cf126771"><td class="mdescLeft">&#160;</td><td class="mdescRight">The full role set used for clip player instances, which render playback audio as well as hosting the editor.  <br /></td></tr>
+<tr class="separator:ac24ff215c49d66dd5947a311cf126771"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Factory for creating ARA plugin instances. </p>
@@ -172,6 +185,34 @@ Public Attributes</h2></td></tr>
 <p>Returns (or creates) the factory for a specific ARA plugin type. </p>
 
 <p class="reference">Referenced by <a class="el" href="structARAPluginFactory.html#a9589886f7c706cb08a5ee87db1acd6d0">getDefaultInstance()</a>.</p>
+
+</div>
+</div>
+<a id="a63d6bd3ee21619ce83c783a5e5ff488f" name="a63d6bd3ee21619ce83c783a5e5ff488f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63d6bd3ee21619ce83c783a5e5ff488f">&#9670;&#160;</a></span>getExistingInstance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="structARAPluginFactory.html">ARAPluginFactory</a> * ARAPluginFactory::getExistingInstance </td>
+          <td>(</td>
+          <td class="paramtype">const juce::PluginDescription &amp;&#160;</td>
+          <td class="paramname"><em>desc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the factory for a plugin type if one has already been created, without creating one. </p>
 
 </div>
 </div>
@@ -259,7 +300,37 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>.</p>
+<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, and <a class="el" href="structARAPluginFactory.html#a60239d786bc4989e2cdf701c2ff364fd">getLookupCache()</a>.</p>
+
+</div>
+</div>
+<a id="a60239d786bc4989e2cdf701c2ff364fd" name="a60239d786bc4989e2cdf701c2ff364fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60239d786bc4989e2cdf701c2ff364fd">&#9670;&#160;</a></span>getLookupCache()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static std::map&lt; juce::String, juce::ARAFactoryResult &gt; &amp; ARAPluginFactory::getLookupCache </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Factories loaded for archive-ID lookups, kept for the session so their modules aren't torn down (bundleExit) while plugin background threads may be running. </p>
+<p>Keyed by plugin identifier string. </p>
+
+<p class="reference">Referenced by <a class="el" href="structARAPluginFactory.html#a0665e67e25c6ac5f53d0c9085e77d295">shutdown()</a>.</p>
 
 </div>
 </div>
@@ -278,6 +349,10 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="structARAPluginFactory.html#abb1338d8ff3648d6b2792602fa2fbd1b">createPlugin()</a>, and <a class="el" href="structARAPluginFactory.html#a2c50cc158fc2427cbd2febcada532a8a">factory</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="structARAPluginFactory.html#abb1338d8ff3648d6b2792602fa2fbd1b">createPlugin()</a>.</p>
 
 </div>
 </div>
@@ -309,8 +384,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a001f844d08d5d20b2e6be224d8356978" name="a001f844d08d5d20b2e6be224d8356978"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a001f844d08d5d20b2e6be224d8356978">&#9670;&#160;</a></span>createInstance()</h2>
+<a id="a01d32c09409ac594862d353e5ec922c8" name="a01d32c09409ac594862d353e5ec922c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01d32c09409ac594862d353e5ec922c8">&#9670;&#160;</a></span>createInstance()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -325,7 +400,13 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">ARADocumentControllerRef&#160;</td>
-          <td class="paramname"><em>dcRef</em>&#160;</td>
+          <td class="paramname"><em>dcRef</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ARAPlugInInstanceRoleFlags&#160;</td>
+          <td class="paramname"><em>roles</em> = <code><a class="el" href="structARAPluginFactory.html#ac24ff215c49d66dd5947a311cf126771">allInstanceRoles</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -340,6 +421,33 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="ac24ff215c49d66dd5947a311cf126771" name="ac24ff215c49d66dd5947a311cf126771"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac24ff215c49d66dd5947a311cf126771">&#9670;&#160;</a></span>allInstanceRoles</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr ARAPlugInInstanceRoleFlags ARAPluginFactory::allInstanceRoles</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= kARAPlaybackRendererRole</div>
+<div class="line">                                                                    | kARAEditorRendererRole</div>
+<div class="line">                                                                    | kARAEditorViewRole</div>
+</div><!-- fragment -->
+<p>The full role set used for clip player instances, which render playback audio as well as hosting the editor. </p>
+
+</div>
+</div>
 <a id="a2c50cc158fc2427cbd2febcada532a8a" name="a2c50cc158fc2427cbd2febcada532a8a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2c50cc158fc2427cbd2febcada532a8a">&#9670;&#160;</a></span>factory</h2>
 
@@ -352,7 +460,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="structARAPluginFactory.html#a001f844d08d5d20b2e6be224d8356978">createInstance()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="structARAPluginFactory.html#a01d32c09409ac594862d353e5ec922c8">createInstance()</a>, and <a class="el" href="structARAPluginFactory.html#abb1338d8ff3648d6b2792602fa2fbd1b">createPlugin()</a>.</p>
 
 </div>
 </div>
@@ -362,7 +470,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 18 2026 15:03:50 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Jul 21 2026 18:17:57 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

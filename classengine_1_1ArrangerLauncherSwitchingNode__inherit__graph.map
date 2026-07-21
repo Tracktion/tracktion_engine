@@ -1,0 +1,7 @@
+<map id="engine::ArrangerLauncherSwitchingNode" name="engine::ArrangerLauncherSwitchingNode">
+<area shape="rect" id="Node000001" title="A Node that switches between two of its inputs based on a flag." alt="" coords="120,93,309,133"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1TracktionEngineNode.html" title="Base class for Nodes that provides information about the current process call." alt="" coords="5,13,216,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,45,193,91,190,95,133,49"/>
+<area shape="rect" id="Node000003" href="$structengine_1_1SharedTimer_1_1Listener.html" title=" " alt="" coords="240,5,397,45"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="287,56,239,95,236,91,283,52"/>
+</map>

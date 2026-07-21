@@ -1,0 +1,5 @@
+<map id="engine::SpeedRampWaveNode" name="engine::SpeedRampWaveNode">
+<area shape="rect" id="Node000001" title="An Node that plays back a wave file." alt="" coords="5,79,228,104"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1TracktionEngineNode.html" title="Base class for Nodes that provides information about the current process call." alt="" coords="11,5,222,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,44,119,79,114,79,114,44"/>
+</map>

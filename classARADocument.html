@@ -78,20 +78,20 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>As specified by the Celmony:  
- <a href="classARADocument.html#details">More...</a></p>
-
 <p><code>#include &lt;tracktion_ARAWrapperInterfaces.h&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structARADocument_1_1ScopedEdit.html">ScopedEdit</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument_1_1ScopedEditorView.html">ScopedEditorView</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">RAII registration of an editor view bound to this document - a clip player's instance or an additional binding like the plugin panel's browser instance - for selection fan-out (see ARAClipPlayer::setViewSelection).  <a href="classARADocument_1_1ScopedEditorView.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac4390aff246ecec2157824b84730ab44" id="r_ac4390aff246ecec2157824b84730ab44"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#ac4390aff246ecec2157824b84730ab44">ARADocument</a> (Edit &amp;sourceEdit, <a class="el" href="structARAInstance.html">ARAInstance</a> *validPluginWrapper, const ARAPlugInExtensionInstance &amp;, const ARADocumentControllerInstance &amp;dc, ARADocumentControllerHostInstance *dchi)</td></tr>
-<tr class="separator:ac4390aff246ecec2157824b84730ab44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8f064a87e382ce0f6a7ef67d9c5e9e9" id="r_ad8f064a87e382ce0f6a7ef67d9c5e9e9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#ad8f064a87e382ce0f6a7ef67d9c5e9e9">ARADocument</a> (Edit &amp;sourceEdit, <a class="el" href="structARAInstance.html">ARAInstance</a> *validPluginWrapper, const ARAPlugInExtensionInstance &amp;, const ARADocumentControllerInstance &amp;dc, ARADocumentControllerHostInstance *dchi, <a class="el" href="structArchivingState.html">ArchivingState</a> *archState)</td></tr>
+<tr class="separator:ad8f064a87e382ce0f6a7ef67d9c5e9e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27a3393488d556e3b580ed495ad89a63" id="r_a27a3393488d556e3b580ed495ad89a63"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a27a3393488d556e3b580ed495ad89a63">~ARADocument</a> ()</td></tr>
 <tr class="separator:a27a3393488d556e3b580ed495ad89a63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec391580c9bf5675fd88538b698b895c" id="r_aec391580c9bf5675fd88538b698b895c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#aec391580c9bf5675fd88538b698b895c">canEdit</a> (bool dontCheckMusicalContext) const</td></tr>
@@ -104,18 +104,28 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a2ce6147bfbfa445cef44c9e340e990de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8335741ce06f35a63db6180ff888b877" id="r_a8335741ce06f35a63db6180ff888b877"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a8335741ce06f35a63db6180ff888b877">beginRestoringState</a> (const juce::ValueTree &amp;state)</td></tr>
 <tr class="separator:a8335741ce06f35a63db6180ff888b877"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71649f72ecfbd09f1062001c1007a922" id="r_a71649f72ecfbd09f1062001c1007a922"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a71649f72ecfbd09f1062001c1007a922">endRestoringState</a> ()</td></tr>
-<tr class="separator:a71649f72ecfbd09f1062001c1007a922"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa040838fb09c38bd8e6089feb755ac88" id="r_aa040838fb09c38bd8e6089feb755ac88"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#aa040838fb09c38bd8e6089feb755ac88">endRestoringState</a> (juce::Array&lt; <a class="el" href="structPersistentIDMappingGroup.html">PersistentIDMappingGroup</a> &gt; groups={})</td></tr>
+<tr class="separator:aa040838fb09c38bd8e6089feb755ac88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3370282e7072f62f1177fdf1802ca0e9" id="r_a3370282e7072f62f1177fdf1802ca0e9"><td class="memItemLeft" align="right" valign="top">juce::MemoryBlock&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a3370282e7072f62f1177fdf1802ca0e9">storeObjectsForCopy</a> (ARAAudioSourceRef source, ARAAudioModificationRef modification)</td></tr>
 <tr class="memdesc:a3370282e7072f62f1177fdf1802ca0e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store a partial ARA archive containing just the given audio source and modification.  <br /></td></tr>
 <tr class="separator:a3370282e7072f62f1177fdf1802ca0e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57f29c08f5c22ee7f396f7c57636e2d5" id="r_a57f29c08f5c22ee7f396f7c57636e2d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a57f29c08f5c22ee7f396f7c57636e2d5">restoreObjectsForPaste</a> (const juce::MemoryBlock &amp;data, const juce::String &amp;archivedSourceID, const juce::String &amp;currentSourceID, const juce::String &amp;archivedModID, const juce::String &amp;currentModID)</td></tr>
-<tr class="memdesc:a57f29c08f5c22ee7f396f7c57636e2d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restore a partial ARA archive, mapping archived persistent IDs to current ones.  <br /></td></tr>
-<tr class="separator:a57f29c08f5c22ee7f396f7c57636e2d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a532ad4c7e45fd3d88e405c30fd4ef6b5" id="r_a532ad4c7e45fd3d88e405c30fd4ef6b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a532ad4c7e45fd3d88e405c30fd4ef6b5">restoreObjectsForPaste</a> (const juce::MemoryBlock &amp;data, const juce::String &amp;archivedSourceID, const juce::String &amp;currentSourceID, const juce::String &amp;archivedModID, const juce::String &amp;currentModID, const juce::String &amp;documentArchiveID={})</td></tr>
+<tr class="memdesc:a532ad4c7e45fd3d88e405c30fd4ef6b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restore a partial ARA archive, mapping archived persistent IDs to current ones.  <br /></td></tr>
+<tr class="separator:a532ad4c7e45fd3d88e405c30fd4ef6b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e5d2363ef4524e00265ec3c41fd9ef2" id="r_a3e5d2363ef4524e00265ec3c41fd9ef2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a3e5d2363ef4524e00265ec3c41fd9ef2">willCreatePlaybackRegionOnTrack</a> (Track *track)</td></tr>
 <tr class="separator:a3e5d2363ef4524e00265ec3c41fd9ef2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8cd9393a9d15f940d6b090e719eed48c" id="r_a8cd9393a9d15f940d6b090e719eed48c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a8cd9393a9d15f940d6b090e719eed48c">willDestroyPlaybackRegionOnTrack</a> (Track *track)</td></tr>
-<tr class="separator:a8cd9393a9d15f940d6b090e719eed48c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae27fd4a485c820493624d04032c422d9" id="r_ae27fd4a485c820493624d04032c422d9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#ae27fd4a485c820493624d04032c422d9">willDestroyPlaybackRegionOnTrack</a> (EditItemID trackID)</td></tr>
+<tr class="separator:ae27fd4a485c820493624d04032c422d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8eb67e4ecf2f37e0d4796dbac492e58c" id="r_a8eb67e4ecf2f37e0d4796dbac492e58c"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classAudioSourceWrapper.html">AudioSourceWrapper</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a8eb67e4ecf2f37e0d4796dbac492e58c">acquireAudioSource</a> (AudioClipBase &amp;audioClip)</td></tr>
+<tr class="separator:a8eb67e4ecf2f37e0d4796dbac492e58c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5dde177bbca6407827a468e0820689c" id="r_ab5dde177bbca6407827a468e0820689c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#ab5dde177bbca6407827a468e0820689c">releaseAudioSource</a> (const juce::String &amp;key)</td></tr>
+<tr class="separator:ab5dde177bbca6407827a468e0820689c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85419335a23d0afee76bd083db25daa9" id="r_a85419335a23d0afee76bd083db25daa9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a85419335a23d0afee76bd083db25daa9">visitEditorViews</a> (const std::function&lt; void(const ARAPlugInExtensionInstance &amp;, ExternalPlugin &amp;)&gt; &amp;fn) const</td></tr>
+<tr class="memdesc:a85419335a23d0afee76bd083db25daa9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls the given function for every registered editor view.  <br /></td></tr>
+<tr class="separator:a85419335a23d0afee76bd083db25daa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22246a93fef1d63c062211b2f8cde837" id="r_a22246a93fef1d63c062211b2f8cde837"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a22246a93fef1d63c062211b2f8cde837">musicalContextContentChanged</a> ()</td></tr>
+<tr class="memdesc:a22246a93fef1d63c062211b2f8cde837"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notifies the plugin that the edit's tempo/key/chord content has changed so the musical context is re-read.  <br /></td></tr>
+<tr class="separator:a22246a93fef1d63c062211b2f8cde837"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -127,22 +137,22 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ac4ecbd3d352c0ec71c4402d9091f3981"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ba4adbaf907fbf3865baba1e03105b4" id="r_a2ba4adbaf907fbf3865baba1e03105b4"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classMusicalContextWrapper.html">MusicalContextWrapper</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a2ba4adbaf907fbf3865baba1e03105b4">musicalContext</a></td></tr>
 <tr class="separator:a2ba4adbaf907fbf3865baba1e03105b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa880cbc473f88dd4640a7d31a6d9a366" id="r_aa880cbc473f88dd4640a7d31a6d9a366"><td class="memItemLeft" align="right" valign="top">std::map&lt; Track *, std::unique_ptr&lt; <a class="el" href="classRegionSequenceWrapper.html">RegionSequenceWrapper</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#aa880cbc473f88dd4640a7d31a6d9a366">regionSequences</a></td></tr>
-<tr class="separator:aa880cbc473f88dd4640a7d31a6d9a366"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9018a63f8df80e957a6a0709c9e3dd5c" id="r_a9018a63f8df80e957a6a0709c9e3dd5c"><td class="memItemLeft" align="right" valign="top">std::map&lt; Track *, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a9018a63f8df80e957a6a0709c9e3dd5c">regionSequencePlaybackRegionCount</a></td></tr>
-<tr class="separator:a9018a63f8df80e957a6a0709c9e3dd5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a468fe477768a362b4b96451cab31a352" id="r_a468fe477768a362b4b96451cab31a352"><td class="memItemLeft" align="right" valign="top">std::map&lt; EditItemID, std::unique_ptr&lt; <a class="el" href="classRegionSequenceWrapper.html">RegionSequenceWrapper</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a468fe477768a362b4b96451cab31a352">regionSequences</a></td></tr>
+<tr class="separator:a468fe477768a362b4b96451cab31a352"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ac6c0d7beff2f64dd6444b4205e9476" id="r_a2ac6c0d7beff2f64dd6444b4205e9476"><td class="memItemLeft" align="right" valign="top">std::map&lt; EditItemID, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a2ac6c0d7beff2f64dd6444b4205e9476">regionSequencePlaybackRegionCount</a></td></tr>
+<tr class="separator:a2ac6c0d7beff2f64dd6444b4205e9476"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae3de566bec8035bcb107e2a3b63b889" id="r_aae3de566bec8035bcb107e2a3b63b889"><td class="memItemLeft" align="right" valign="top">std::map&lt; juce::String, std::shared_ptr&lt; <a class="el" href="classAudioSourceWrapper.html">AudioSourceWrapper</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#aae3de566bec8035bcb107e2a3b63b889">audioSources</a></td></tr>
+<tr class="separator:aae3de566bec8035bcb107e2a3b63b889"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1aa3ec847988fc38d94dd47e1a54b3e" id="r_ae1aa3ec847988fc38d94dd47e1a54b3e"><td class="memItemLeft" align="right" valign="top">std::map&lt; juce::String, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#ae1aa3ec847988fc38d94dd47e1a54b3e">audioSourceRefCount</a></td></tr>
+<tr class="separator:ae1aa3ec847988fc38d94dd47e1a54b3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a737e49adc3f68f12f06b75d918b7d7b5" id="r_a737e49adc3f68f12f06b75d918b7d7b5"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; juce::MemoryBlock &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#a737e49adc3f68f12f06b75d918b7d7b5">lastArchiveState</a></td></tr>
 <tr class="separator:a737e49adc3f68f12f06b75d918b7d7b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af23eef87cd719eec9baec8a980c68680" id="r_af23eef87cd719eec9baec8a980c68680"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classARADocument.html#af23eef87cd719eec9baec8a980c68680">lastArchiveDocumentArchiveID</a></td></tr>
+<tr class="separator:af23eef87cd719eec9baec8a980c68680"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>As specified by the Celmony: </p>
-<ul>
-<li>1 document per Edit</li>
-<li>1 musical context per edit </li>
-</ul>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ac4390aff246ecec2157824b84730ab44" name="ac4390aff246ecec2157824b84730ab44"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac4390aff246ecec2157824b84730ab44">&#9670;&#160;</a></span>ARADocument()</h2>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ad8f064a87e382ce0f6a7ef67d9c5e9e9" name="ad8f064a87e382ce0f6a7ef67d9c5e9e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad8f064a87e382ce0f6a7ef67d9c5e9e9">&#9670;&#160;</a></span>ARADocument()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -175,7 +185,13 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">ARADocumentControllerHostInstance *&#160;</td>
-          <td class="paramname"><em>dchi</em>&#160;</td>
+          <td class="paramname"><em>dchi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structArchivingState.html">ArchivingState</a> *&#160;</td>
+          <td class="paramname"><em>archState</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -185,7 +201,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>.</p>
+<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, and <a class="el" href="classARADocument.html#a2ba4adbaf907fbf3865baba1e03105b4">musicalContext</a>.</p>
 
 </div>
 </div>
@@ -204,7 +220,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>.</p>
+<p class="reference">References <a class="el" href="classARADocument.html#ae1aa3ec847988fc38d94dd47e1a54b3e">audioSourceRefCount</a>, <a class="el" href="classARADocument.html#aae3de566bec8035bcb107e2a3b63b889">audioSources</a>, <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classARADocument.html#adc8483434966159b9e5554855f9cd701">dci</a>, <a class="el" href="classARADocument.html#ac4ecbd3d352c0ec71c4402d9091f3981">dcRef</a>, <a class="el" href="classARADocument.html#a2ba4adbaf907fbf3865baba1e03105b4">musicalContext</a>, and <a class="el" href="classARADocument.html#a468fe477768a362b4b96451cab31a352">regionSequences</a>.</p>
 
 </div>
 </div>
@@ -225,6 +241,10 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="reference">References <a class="el" href="classARADocument.html#adc8483434966159b9e5554855f9cd701">dci</a>, <a class="el" href="classARADocument.html#ac4ecbd3d352c0ec71c4402d9091f3981">dcRef</a>, <a class="el" href="classARADocument.html#a737e49adc3f68f12f06b75d918b7d7b5">lastArchiveState</a>, and <a class="el" href="classARADocument.html#a2ba4adbaf907fbf3865baba1e03105b4">musicalContext</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classARADocument.html#a588bdbfe82f2c60c51bec181c63fc4db">beginEditing()</a>, <a class="el" href="classARADocument.html#aebca067b4d36ae34e1e464baf693599e">endEditing()</a>, and <a class="el" href="classMusicalContextWrapper.html#a15d2379c3c937d2e2bdd29e57caff3a9">MusicalContextWrapper::update()</a>.</p>
+
 </div>
 </div>
 <a id="a588bdbfe82f2c60c51bec181c63fc4db" name="a588bdbfe82f2c60c51bec181c63fc4db"></a>
@@ -242,6 +262,10 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classARADocument.html#aec391580c9bf5675fd88538b698b895c">canEdit()</a>, <a class="el" href="classARADocument.html#adc8483434966159b9e5554855f9cd701">dci</a>, and <a class="el" href="classARADocument.html#ac4ecbd3d352c0ec71c4402d9091f3981">dcRef</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classARADocument.html#a8335741ce06f35a63db6180ff888b877">beginRestoringState()</a>, and <a class="el" href="structARADocument_1_1ScopedEdit.html#aff750ae57186724d86d18b0e50eda336">ARADocument::ScopedEdit::ScopedEdit()</a>.</p>
 
 </div>
 </div>
@@ -261,6 +285,10 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="reference">References <a class="el" href="classARADocument.html#aec391580c9bf5675fd88538b698b895c">canEdit()</a>, <a class="el" href="classARADocument.html#adc8483434966159b9e5554855f9cd701">dci</a>, and <a class="el" href="classARADocument.html#ac4ecbd3d352c0ec71c4402d9091f3981">dcRef</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="structARADocument_1_1ScopedEdit.html#a9e387d41152487ded52ca864ebb397b7">ARADocument::ScopedEdit::~ScopedEdit()</a>.</p>
+
 </div>
 </div>
 <a id="a2ce6147bfbfa445cef44c9e340e990de" name="a2ce6147bfbfa445cef44c9e340e990de"></a>
@@ -279,7 +307,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>.</p>
+<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classARADocument.html#adc8483434966159b9e5554855f9cd701">dci</a>, and <a class="el" href="classARADocument.html#ac4ecbd3d352c0ec71c4402d9091f3981">dcRef</a>.</p>
 
 </div>
 </div>
@@ -300,12 +328,12 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section note"><dt>Note</dt><dd>Must not be editing or already restoring the document while restoring from a state. </dd></dl>
 
-<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>.</p>
+<p class="reference">References <a class="el" href="classARADocument.html#a588bdbfe82f2c60c51bec181c63fc4db">beginEditing()</a>, <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classARADocument.html#af23eef87cd719eec9baec8a980c68680">lastArchiveDocumentArchiveID</a>, and <a class="el" href="classARADocument.html#a737e49adc3f68f12f06b75d918b7d7b5">lastArchiveState</a>.</p>
 
 </div>
 </div>
-<a id="a71649f72ecfbd09f1062001c1007a922" name="a71649f72ecfbd09f1062001c1007a922"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a71649f72ecfbd09f1062001c1007a922">&#9670;&#160;</a></span>endRestoringState()</h2>
+<a id="aa040838fb09c38bd8e6089feb755ac88" name="aa040838fb09c38bd8e6089feb755ac88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa040838fb09c38bd8e6089feb755ac88">&#9670;&#160;</a></span>endRestoringState()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -313,13 +341,12 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">void ARADocument::endRestoringState </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">juce::Array&lt; <a class="el" href="structPersistentIDMappingGroup.html">PersistentIDMappingGroup</a> &gt;&#160;</td>
+          <td class="paramname"><em>groups</em> = <code>{}</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>.</p>
 
 </div>
 </div>
@@ -352,12 +379,12 @@ Public Attributes</h2></td></tr>
 <p>Store a partial ARA archive containing just the given audio source and modification. </p>
 <p>Used by clipboard copy to capture ARA plugin edits (e.g. Melodyne note corrections). </p>
 
-<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>.</p>
+<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>, <a class="el" href="classARADocument.html#adc8483434966159b9e5554855f9cd701">dci</a>, <a class="el" href="classARADocument.html#ac4ecbd3d352c0ec71c4402d9091f3981">dcRef</a>, and <a class="el" href="group__tracktion__engine-plugins.html#ga3e18b41b087617c412fdab699f896305">T_ARA_DBG</a>.</p>
 
 </div>
 </div>
-<a id="a57f29c08f5c22ee7f396f7c57636e2d5" name="a57f29c08f5c22ee7f396f7c57636e2d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a57f29c08f5c22ee7f396f7c57636e2d5">&#9670;&#160;</a></span>restoreObjectsForPaste()</h2>
+<a id="a532ad4c7e45fd3d88e405c30fd4ef6b5" name="a532ad4c7e45fd3d88e405c30fd4ef6b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a532ad4c7e45fd3d88e405c30fd4ef6b5">&#9670;&#160;</a></span>restoreObjectsForPaste()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -390,7 +417,13 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const juce::String &amp;&#160;</td>
-          <td class="paramname"><em>currentModID</em>&#160;</td>
+          <td class="paramname"><em>currentModID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>documentArchiveID</em> = <code>{}</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -402,8 +435,6 @@ Public Attributes</h2></td></tr>
 
 <p>Restore a partial ARA archive, mapping archived persistent IDs to current ones. </p>
 <p>Used by clipboard paste to restore ARA plugin edits into a newly pasted clip. </p>
-
-<p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>.</p>
 
 </div>
 </div>
@@ -423,12 +454,14 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>.</p>
+<p class="reference">References <a class="el" href="classARADocument.html#a2ac6c0d7beff2f64dd6444b4205e9476">regionSequencePlaybackRegionCount</a>, and <a class="el" href="classARADocument.html#a468fe477768a362b4b96451cab31a352">regionSequences</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>, and <a class="el" href="classPlaybackRegionWrapper.html#abe2c1b5696c91f7c3f9e319501efe8e3">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>.</p>
 
 </div>
 </div>
-<a id="a8cd9393a9d15f940d6b090e719eed48c" name="a8cd9393a9d15f940d6b090e719eed48c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8cd9393a9d15f940d6b090e719eed48c">&#9670;&#160;</a></span>willDestroyPlaybackRegionOnTrack()</h2>
+<a id="ae27fd4a485c820493624d04032c422d9" name="ae27fd4a485c820493624d04032c422d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae27fd4a485c820493624d04032c422d9">&#9670;&#160;</a></span>willDestroyPlaybackRegionOnTrack()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -436,14 +469,102 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">void ARADocument::willDestroyPlaybackRegionOnTrack </td>
           <td>(</td>
-          <td class="paramtype">Track *&#160;</td>
-          <td class="paramname"><em>track</em></td><td>)</td>
+          <td class="paramtype">EditItemID&#160;</td>
+          <td class="paramname"><em>trackID</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p class="reference">References <a class="el" href="classARADocument.html#a2ac6c0d7beff2f64dd6444b4205e9476">regionSequencePlaybackRegionCount</a>, and <a class="el" href="classARADocument.html#a468fe477768a362b4b96451cab31a352">regionSequences</a>.</p>
+
 <p class="reference">Referenced by <a class="el" href="classPlaybackRegionWrapper.html#ac2f7bc3df1440be3ef9d718a120e0735">PlaybackRegionWrapper::~PlaybackRegionWrapper()</a>.</p>
+
+</div>
+</div>
+<a id="a8eb67e4ecf2f37e0d4796dbac492e58c" name="a8eb67e4ecf2f37e0d4796dbac492e58c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8eb67e4ecf2f37e0d4796dbac492e58c">&#9670;&#160;</a></span>acquireAudioSource()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt; <a class="el" href="classAudioSourceWrapper.html">AudioSourceWrapper</a> &gt; ARADocument::acquireAudioSource </td>
+          <td>(</td>
+          <td class="paramtype">AudioClipBase &amp;&#160;</td>
+          <td class="paramname"><em>audioClip</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classARADocument.html#ae1aa3ec847988fc38d94dd47e1a54b3e">audioSourceRefCount</a>, and <a class="el" href="classARADocument.html#aae3de566bec8035bcb107e2a3b63b889">audioSources</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classPlaybackRegionAndSource.html#afe5381d185bbae3579622d8781b83987">PlaybackRegionAndSource::PlaybackRegionAndSource()</a>.</p>
+
+</div>
+</div>
+<a id="ab5dde177bbca6407827a468e0820689c" name="ab5dde177bbca6407827a468e0820689c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5dde177bbca6407827a468e0820689c">&#9670;&#160;</a></span>releaseAudioSource()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ARADocument::releaseAudioSource </td>
+          <td>(</td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>key</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classARADocument.html#ae1aa3ec847988fc38d94dd47e1a54b3e">audioSourceRefCount</a>, and <a class="el" href="classARADocument.html#aae3de566bec8035bcb107e2a3b63b889">audioSources</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classPlaybackRegionAndSource.html#aaf42b3a9bcc6f5807cacfe6b59b68c2f">PlaybackRegionAndSource::~PlaybackRegionAndSource()</a>.</p>
+
+</div>
+</div>
+<a id="a85419335a23d0afee76bd083db25daa9" name="a85419335a23d0afee76bd083db25daa9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85419335a23d0afee76bd083db25daa9">&#9670;&#160;</a></span>visitEditorViews()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ARADocument::visitEditorViews </td>
+          <td>(</td>
+          <td class="paramtype">const std::function&lt; void(const ARAPlugInExtensionInstance &amp;, ExternalPlugin &amp;)&gt; &amp;&#160;</td>
+          <td class="paramname"><em>fn</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calls the given function for every registered editor view. </p>
+
+</div>
+</div>
+<a id="a22246a93fef1d63c062211b2f8cde837" name="a22246a93fef1d63c062211b2f8cde837"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22246a93fef1d63c062211b2f8cde837">&#9670;&#160;</a></span>musicalContextContentChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ARADocument::musicalContextContentChanged </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Notifies the plugin that the edit's tempo/key/chord content has changed so the musical context is re-read. </p>
+<p>Driven at document level (Edit::sendTempoOrPitchSequenceChangedUpdates → ARADocumentHolder) so it also works when no ARA clips exist to forward the change, e.g. a browser/panel-only instance (QA 16550). </p>
+
+<p class="reference">References <a class="el" href="classARADocument.html#a2ba4adbaf907fbf3865baba1e03105b4">musicalContext</a>.</p>
 
 </div>
 </div>
@@ -460,7 +581,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classAudioModificationWrapper.html#ab8e025764ef18f2e0e5bc04a544cb821">AudioModificationWrapper::AudioModificationWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a396f7e72c675c984a00c3ffb9ae99777">MusicalContextWrapper::MusicalContextWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>, and <a class="el" href="classRegionSequenceWrapper.html#ab82b337ae0559639ce842d7fc6f9a9c9">RegionSequenceWrapper::RegionSequenceWrapper()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classAudioModificationWrapper.html#ab8e025764ef18f2e0e5bc04a544cb821">AudioModificationWrapper::AudioModificationWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a396f7e72c675c984a00c3ffb9ae99777">MusicalContextWrapper::MusicalContextWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abe2c1b5696c91f7c3f9e319501efe8e3">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>, and <a class="el" href="classRegionSequenceWrapper.html#ab82b337ae0559639ce842d7fc6f9a9c9">RegionSequenceWrapper::RegionSequenceWrapper()</a>.</p>
 
 </div>
 </div>
@@ -476,7 +597,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classAudioModificationWrapper.html#ab8e025764ef18f2e0e5bc04a544cb821">AudioModificationWrapper::AudioModificationWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#ad27c0d85cc3ac293c4e309c33de97c11">AudioSourceWrapper::AudioSourceWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#ae1c92beb12adfa6090b8d5b5f55d1861">AudioSourceWrapper::enableAccess()</a>, <a class="el" href="classMusicalContextWrapper.html#a396f7e72c675c984a00c3ffb9ae99777">MusicalContextWrapper::MusicalContextWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>, <a class="el" href="classRegionSequenceWrapper.html#ab82b337ae0559639ce842d7fc6f9a9c9">RegionSequenceWrapper::RegionSequenceWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a792cc50768768e07d17797e84b55f292">MusicalContextWrapper::update()</a>, <a class="el" href="classPlaybackRegionWrapper.html#a04f32a855b991d7d6050a1499eeee519">PlaybackRegionWrapper::updateRange()</a>, <a class="el" href="classAudioModificationWrapper.html#a9ea64893c5fda34f4d68bb4fe316bac1">AudioModificationWrapper::~AudioModificationWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#a7ab47be6377ff39c7cf731004e0712d3">AudioSourceWrapper::~AudioSourceWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a04245d561f63665cc2d94e895ffe8e6c">MusicalContextWrapper::~MusicalContextWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#ac2f7bc3df1440be3ef9d718a120e0735">PlaybackRegionWrapper::~PlaybackRegionWrapper()</a>, and <a class="el" href="classRegionSequenceWrapper.html#a4a62eeb79b8690c543c258630c7f2603">RegionSequenceWrapper::~RegionSequenceWrapper()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classAudioModificationWrapper.html#ab8e025764ef18f2e0e5bc04a544cb821">AudioModificationWrapper::AudioModificationWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#ad27c0d85cc3ac293c4e309c33de97c11">AudioSourceWrapper::AudioSourceWrapper()</a>, <a class="el" href="classARADocument.html#a588bdbfe82f2c60c51bec181c63fc4db">beginEditing()</a>, <a class="el" href="classARADocument.html#aec391580c9bf5675fd88538b698b895c">canEdit()</a>, <a class="el" href="classAudioSourceWrapper.html#ae1c92beb12adfa6090b8d5b5f55d1861">AudioSourceWrapper::enableAccess()</a>, <a class="el" href="classARADocument.html#aebca067b4d36ae34e1e464baf693599e">endEditing()</a>, <a class="el" href="classARADocument.html#a2ce6147bfbfa445cef44c9e340e990de">flushStateToValueTree()</a>, <a class="el" href="classMusicalContextWrapper.html#a396f7e72c675c984a00c3ffb9ae99777">MusicalContextWrapper::MusicalContextWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abe2c1b5696c91f7c3f9e319501efe8e3">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>, <a class="el" href="classRegionSequenceWrapper.html#ab82b337ae0559639ce842d7fc6f9a9c9">RegionSequenceWrapper::RegionSequenceWrapper()</a>, <a class="el" href="classARADocument.html#a3370282e7072f62f1177fdf1802ca0e9">storeObjectsForCopy()</a>, <a class="el" href="classMusicalContextWrapper.html#a15d2379c3c937d2e2bdd29e57caff3a9">MusicalContextWrapper::update()</a>, <a class="el" href="classRegionSequenceWrapper.html#add0c11843ca45df316647a8d53e1a7a9">RegionSequenceWrapper::updateProperties()</a>, <a class="el" href="classPlaybackRegionWrapper.html#a04f32a855b991d7d6050a1499eeee519">PlaybackRegionWrapper::updateRange()</a>, <a class="el" href="classARADocument.html#a27a3393488d556e3b580ed495ad89a63">~ARADocument()</a>, <a class="el" href="classAudioModificationWrapper.html#a9ea64893c5fda34f4d68bb4fe316bac1">AudioModificationWrapper::~AudioModificationWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#a7ab47be6377ff39c7cf731004e0712d3">AudioSourceWrapper::~AudioSourceWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a04245d561f63665cc2d94e895ffe8e6c">MusicalContextWrapper::~MusicalContextWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#ac2f7bc3df1440be3ef9d718a120e0735">PlaybackRegionWrapper::~PlaybackRegionWrapper()</a>, and <a class="el" href="classRegionSequenceWrapper.html#a4a62eeb79b8690c543c258630c7f2603">RegionSequenceWrapper::~RegionSequenceWrapper()</a>.</p>
 
 </div>
 </div>
@@ -492,7 +613,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classAudioModificationWrapper.html#ab8e025764ef18f2e0e5bc04a544cb821">AudioModificationWrapper::AudioModificationWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#ad27c0d85cc3ac293c4e309c33de97c11">AudioSourceWrapper::AudioSourceWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#ae1c92beb12adfa6090b8d5b5f55d1861">AudioSourceWrapper::enableAccess()</a>, <a class="el" href="classMusicalContextWrapper.html#a396f7e72c675c984a00c3ffb9ae99777">MusicalContextWrapper::MusicalContextWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>, <a class="el" href="classRegionSequenceWrapper.html#ab82b337ae0559639ce842d7fc6f9a9c9">RegionSequenceWrapper::RegionSequenceWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a792cc50768768e07d17797e84b55f292">MusicalContextWrapper::update()</a>, <a class="el" href="classPlaybackRegionWrapper.html#a04f32a855b991d7d6050a1499eeee519">PlaybackRegionWrapper::updateRange()</a>, <a class="el" href="classAudioModificationWrapper.html#a9ea64893c5fda34f4d68bb4fe316bac1">AudioModificationWrapper::~AudioModificationWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#a7ab47be6377ff39c7cf731004e0712d3">AudioSourceWrapper::~AudioSourceWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a04245d561f63665cc2d94e895ffe8e6c">MusicalContextWrapper::~MusicalContextWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#ac2f7bc3df1440be3ef9d718a120e0735">PlaybackRegionWrapper::~PlaybackRegionWrapper()</a>, and <a class="el" href="classRegionSequenceWrapper.html#a4a62eeb79b8690c543c258630c7f2603">RegionSequenceWrapper::~RegionSequenceWrapper()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classAudioModificationWrapper.html#ab8e025764ef18f2e0e5bc04a544cb821">AudioModificationWrapper::AudioModificationWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#ad27c0d85cc3ac293c4e309c33de97c11">AudioSourceWrapper::AudioSourceWrapper()</a>, <a class="el" href="classARADocument.html#a588bdbfe82f2c60c51bec181c63fc4db">beginEditing()</a>, <a class="el" href="classARADocument.html#aec391580c9bf5675fd88538b698b895c">canEdit()</a>, <a class="el" href="classAudioSourceWrapper.html#ae1c92beb12adfa6090b8d5b5f55d1861">AudioSourceWrapper::enableAccess()</a>, <a class="el" href="classARADocument.html#aebca067b4d36ae34e1e464baf693599e">endEditing()</a>, <a class="el" href="classARADocument.html#a2ce6147bfbfa445cef44c9e340e990de">flushStateToValueTree()</a>, <a class="el" href="classMusicalContextWrapper.html#a396f7e72c675c984a00c3ffb9ae99777">MusicalContextWrapper::MusicalContextWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abe2c1b5696c91f7c3f9e319501efe8e3">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>, <a class="el" href="classRegionSequenceWrapper.html#ab82b337ae0559639ce842d7fc6f9a9c9">RegionSequenceWrapper::RegionSequenceWrapper()</a>, <a class="el" href="classARADocument.html#a3370282e7072f62f1177fdf1802ca0e9">storeObjectsForCopy()</a>, <a class="el" href="classMusicalContextWrapper.html#a15d2379c3c937d2e2bdd29e57caff3a9">MusicalContextWrapper::update()</a>, <a class="el" href="classRegionSequenceWrapper.html#add0c11843ca45df316647a8d53e1a7a9">RegionSequenceWrapper::updateProperties()</a>, <a class="el" href="classPlaybackRegionWrapper.html#a04f32a855b991d7d6050a1499eeee519">PlaybackRegionWrapper::updateRange()</a>, <a class="el" href="classARADocument.html#a27a3393488d556e3b580ed495ad89a63">~ARADocument()</a>, <a class="el" href="classAudioModificationWrapper.html#a9ea64893c5fda34f4d68bb4fe316bac1">AudioModificationWrapper::~AudioModificationWrapper()</a>, <a class="el" href="classAudioSourceWrapper.html#a7ab47be6377ff39c7cf731004e0712d3">AudioSourceWrapper::~AudioSourceWrapper()</a>, <a class="el" href="classMusicalContextWrapper.html#a04245d561f63665cc2d94e895ffe8e6c">MusicalContextWrapper::~MusicalContextWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#ac2f7bc3df1440be3ef9d718a120e0735">PlaybackRegionWrapper::~PlaybackRegionWrapper()</a>, and <a class="el" href="classRegionSequenceWrapper.html#a4a62eeb79b8690c543c258630c7f2603">RegionSequenceWrapper::~RegionSequenceWrapper()</a>.</p>
 
 </div>
 </div>
@@ -508,37 +629,71 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classPlaybackRegionWrapper.html#ad9eb40e1d6c9ef03e02cdb7893f8c89f">PlaybackRegionWrapper::getPlaybackRegionProperties()</a>, <a class="el" href="classRegionSequenceWrapper.html#a58dbf90d765bf4e662552ffb032caa4c">RegionSequenceWrapper::getRegionSequenceProperties()</a>, and <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classARADocument.html#ad8f064a87e382ce0f6a7ef67d9c5e9e9">ARADocument()</a>, <a class="el" href="classARADocument.html#aec391580c9bf5675fd88538b698b895c">canEdit()</a>, <a class="el" href="classPlaybackRegionWrapper.html#ad9eb40e1d6c9ef03e02cdb7893f8c89f">PlaybackRegionWrapper::getPlaybackRegionProperties()</a>, <a class="el" href="classRegionSequenceWrapper.html#a58dbf90d765bf4e662552ffb032caa4c">RegionSequenceWrapper::getRegionSequenceProperties()</a>, <a class="el" href="classARADocument.html#a22246a93fef1d63c062211b2f8cde837">musicalContextContentChanged()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abd175d8f5b7d81bc04b87ee8f4a89a1c">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>, <a class="el" href="classPlaybackRegionWrapper.html#abe2c1b5696c91f7c3f9e319501efe8e3">PlaybackRegionWrapper::PlaybackRegionWrapper()</a>, and <a class="el" href="classARADocument.html#a27a3393488d556e3b580ed495ad89a63">~ARADocument()</a>.</p>
 
 </div>
 </div>
-<a id="aa880cbc473f88dd4640a7d31a6d9a366" name="aa880cbc473f88dd4640a7d31a6d9a366"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa880cbc473f88dd4640a7d31a6d9a366">&#9670;&#160;</a></span>regionSequences</h2>
+<a id="a468fe477768a362b4b96451cab31a352" name="a468fe477768a362b4b96451cab31a352"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a468fe477768a362b4b96451cab31a352">&#9670;&#160;</a></span>regionSequences</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::map&lt;Track*, std::unique_ptr&lt;<a class="el" href="classRegionSequenceWrapper.html">RegionSequenceWrapper</a>&gt; &gt; ARADocument::regionSequences</td>
+          <td class="memname">std::map&lt;EditItemID, std::unique_ptr&lt;<a class="el" href="classRegionSequenceWrapper.html">RegionSequenceWrapper</a>&gt; &gt; ARADocument::regionSequences</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classPlaybackRegionWrapper.html#ad9eb40e1d6c9ef03e02cdb7893f8c89f">PlaybackRegionWrapper::getPlaybackRegionProperties()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classPlaybackRegionWrapper.html#ad9eb40e1d6c9ef03e02cdb7893f8c89f">PlaybackRegionWrapper::getPlaybackRegionProperties()</a>, <a class="el" href="classPlaybackRegionWrapper.html#a04f32a855b991d7d6050a1499eeee519">PlaybackRegionWrapper::updateRange()</a>, <a class="el" href="classARADocument.html#a3e5d2363ef4524e00265ec3c41fd9ef2">willCreatePlaybackRegionOnTrack()</a>, <a class="el" href="classARADocument.html#ae27fd4a485c820493624d04032c422d9">willDestroyPlaybackRegionOnTrack()</a>, and <a class="el" href="classARADocument.html#a27a3393488d556e3b580ed495ad89a63">~ARADocument()</a>.</p>
 
 </div>
 </div>
-<a id="a9018a63f8df80e957a6a0709c9e3dd5c" name="a9018a63f8df80e957a6a0709c9e3dd5c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9018a63f8df80e957a6a0709c9e3dd5c">&#9670;&#160;</a></span>regionSequencePlaybackRegionCount</h2>
+<a id="a2ac6c0d7beff2f64dd6444b4205e9476" name="a2ac6c0d7beff2f64dd6444b4205e9476"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ac6c0d7beff2f64dd6444b4205e9476">&#9670;&#160;</a></span>regionSequencePlaybackRegionCount</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::map&lt;Track*, int&gt; ARADocument::regionSequencePlaybackRegionCount</td>
+          <td class="memname">std::map&lt;EditItemID, int&gt; ARADocument::regionSequencePlaybackRegionCount</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classARADocument.html#a3e5d2363ef4524e00265ec3c41fd9ef2">willCreatePlaybackRegionOnTrack()</a>, and <a class="el" href="classARADocument.html#ae27fd4a485c820493624d04032c422d9">willDestroyPlaybackRegionOnTrack()</a>.</p>
+
+</div>
+</div>
+<a id="aae3de566bec8035bcb107e2a3b63b889" name="aae3de566bec8035bcb107e2a3b63b889"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae3de566bec8035bcb107e2a3b63b889">&#9670;&#160;</a></span>audioSources</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::map&lt;juce::String, std::shared_ptr&lt;<a class="el" href="classAudioSourceWrapper.html">AudioSourceWrapper</a>&gt; &gt; ARADocument::audioSources</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classARADocument.html#a8eb67e4ecf2f37e0d4796dbac492e58c">acquireAudioSource()</a>, <a class="el" href="classARADocument.html#ab5dde177bbca6407827a468e0820689c">releaseAudioSource()</a>, and <a class="el" href="classARADocument.html#a27a3393488d556e3b580ed495ad89a63">~ARADocument()</a>.</p>
+
+</div>
+</div>
+<a id="ae1aa3ec847988fc38d94dd47e1a54b3e" name="ae1aa3ec847988fc38d94dd47e1a54b3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1aa3ec847988fc38d94dd47e1a54b3e">&#9670;&#160;</a></span>audioSourceRefCount</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::map&lt;juce::String, int&gt; ARADocument::audioSourceRefCount</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classARADocument.html#a8eb67e4ecf2f37e0d4796dbac492e58c">acquireAudioSource()</a>, <a class="el" href="classARADocument.html#ab5dde177bbca6407827a468e0820689c">releaseAudioSource()</a>, and <a class="el" href="classARADocument.html#a27a3393488d556e3b580ed495ad89a63">~ARADocument()</a>.</p>
 
 </div>
 </div>
@@ -554,6 +709,24 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="reference">Referenced by <a class="el" href="classARADocument.html#a8335741ce06f35a63db6180ff888b877">beginRestoringState()</a>, and <a class="el" href="classARADocument.html#aec391580c9bf5675fd88538b698b895c">canEdit()</a>.</p>
+
+</div>
+</div>
+<a id="af23eef87cd719eec9baec8a980c68680" name="af23eef87cd719eec9baec8a980c68680"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af23eef87cd719eec9baec8a980c68680">&#9670;&#160;</a></span>lastArchiveDocumentArchiveID</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::String ARADocument::lastArchiveDocumentArchiveID</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classARADocument.html#a8335741ce06f35a63db6180ff888b877">beginRestoringState()</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
@@ -562,7 +735,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Feb 18 2026 15:03:50 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Jul 21 2026 18:17:57 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

@@ -1,0 +1,15 @@
+<map id="engine::EnvelopeFollowerModifier" name="engine::EnvelopeFollowerModifier">
+<area shape="rect" id="Node000001" title=" " alt="" coords="695,77,884,117"/>
+<area shape="rect" id="Node000002" href="$structengine_1_1Modifier.html" title="Bass class for parameter Modifiers." alt="" coords="488,55,615,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="629,74,695,82,694,88,628,79"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1AutomatableEditItem.html" title="Base class for elements that have some kind of automatable parameters." alt="" coords="189,5,402,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="376,31,488,53,487,58,375,36"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="5,5,135,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="149,15,189,15,189,21,149,21"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="224,55,367,80"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="381,65,488,65,488,70,381,70"/>
+<area shape="rect" id="Node000006" href="$structengine_1_1AutomatableParameter_1_1ModifierSource.html" title="Base class for things that can be used to modify parameters." alt="" coords="183,105,408,145"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="398,99,493,77,494,83,399,104"/>
+<area shape="rect" id="Node000007" href="$structengine_1_1ValueTreeAllEventListener.html" title=" " alt="" coords="456,105,647,145"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="660,109,694,105,695,110,660,115"/>
+</map>

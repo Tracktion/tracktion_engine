@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['defaults_0',['Defaults',['../classtracktion_1_1engine_1_1StepClip.html#a68c9bd0cbec768984073ace53bdefa1a',1,'tracktion::engine::StepClip']]],
-  ['deleteexistingclips_1',['deleteexistingclips',['../namespacetracktion_1_1engine.html#acb9cf874dc4e4feb1c368815603c6c9e',1,'tracktion::DeleteExistingClips'],['../namespacetracktion_1_1engine.html#acb9cf874dc4e4feb1c368815603c6c9e',1,'tracktion::engine::DeleteExistingClips']]],
-  ['devicetype_2',['devicetype',['../classtracktion_1_1engine_1_1InputDevice.html#ac142baad652904d37630d4e5c1142d8f',1,'tracktion::engine::InputDevice::DeviceType'],['../classtracktion_1_1engine_1_1InsertPlugin.html#ad2fd3dac8def4611b0652e5570a064ac',1,'tracktion::engine::InsertPlugin::DeviceType']]]
+  ['defaults_0',['Defaults',['../classengine_1_1StepClip.html#ab5599e1645b735392afe0e84ce8e7644',1,'engine::StepClip']]],
+  ['deleteexistingclips_1',['DeleteExistingClips',['../namespaceengine.html#a1520e7b938da93238f67025c2229b33c',1,'engine']]],
+  ['devicetype_2',['devicetype',['../classengine_1_1InputDevice.html#a18ea4a67e3b8add187770a846858dcdf',1,'engine::InputDevice::DeviceType'],['../classengine_1_1InsertPlugin.html#ae2c628eafcb6b87a87bb3616220c18e1',1,'engine::InsertPlugin::DeviceType']]]
 ];

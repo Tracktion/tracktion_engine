@@ -1,0 +1,29 @@
+<map id="graph::Node" name="graph::Node">
+<area shape="rect" id="Node000001" title="Main graph Node processor class." alt="" coords="5,301,107,327"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1WaveNodeRealTime.html" title="An Node that plays back a wave file." alt="" coords="155,5,361,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,287,63,235,78,168,91,133,107,99,128,68,153,40,170,29,173,33,156,44,132,71,112,102,96,135,83,170,68,236,61,288"/>
+<area shape="rect" id="Node000003" href="$classgraph_1_1BasicSummingNode.html" title=" " alt="" coords="159,55,357,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="58,287,68,244,85,190,113,136,131,111,153,89,171,78,174,82,156,93,135,114,117,139,90,192,73,245,64,288"/>
+<area shape="rect" id="Node000004" href="$classgraph_1_1ConnectedNode.html" title="An Node which sums together the multiple inputs adding additional latency to provide a coherent outpu..." alt="" coords="173,104,343,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="62,287,74,253,93,213,119,173,153,139,173,127,176,132,156,143,123,176,98,216,79,255,67,289"/>
+<area shape="rect" id="Node000005" href="$classgraph_1_1FunctionNode.html" title=" " alt="" coords="180,153,336,179"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="68,288,102,237,125,210,153,188,179,176,181,181,156,192,129,214,106,240,72,291"/>
+<area shape="rect" id="Node000006" href="$classgraph_1_1GainNode.html" title=" " alt="" coords="193,203,323,228"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="79,290,113,262,154,237,191,224,193,229,156,242,116,266,82,294"/>
+<area shape="rect" id="Node000007" href="$classgraph_1_1LatencyNode.html" title=" " alt="" coords="182,252,334,277"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="118,295,154,286,201,275,202,280,155,291,119,300"/>
+<area shape="rect" id="Node000008" href="$classgraph_1_1MidiNode.html" title="Plays back a MIDI sequence." alt="" coords="193,301,323,327"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="121,311,193,311,193,317,121,317"/>
+<area shape="rect" id="Node000009" href="$classgraph_1_1ReturnNode.html" title=" " alt="" coords="186,351,330,376"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="121,327,206,348,205,353,120,332"/>
+<area shape="rect" id="Node000010" href="$classgraph_1_1SendNode.html" title=" " alt="" coords="191,400,325,425"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="82,334,116,361,156,385,192,398,190,403,154,390,113,365,79,338"/>
+<area shape="rect" id="Node000011" href="$classgraph_1_1SilentNode.html" title="Just a simple audio node that doesn&#39;t take any input so can be used as a stub." alt="" coords="189,449,327,475"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="72,337,106,387,129,413,156,434,189,449,187,454,153,439,126,417,102,391,68,340"/>
+<area shape="rect" id="Node000012" href="$classgraph_1_1SinNode.html" title=" " alt="" coords="197,499,319,524"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="67,339,79,372,98,412,123,451,156,484,176,495,198,502,196,507,174,500,153,488,119,454,93,414,74,374,62,340"/>
+<area shape="rect" id="Node000013" href="$classgraph_1_1SinkNode.html" title="Blocks audio and MIDI input from reaching the outputs." alt="" coords="193,548,323,573"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="64,339,73,382,91,435,118,488,135,512,156,533,174,544,194,552,192,557,172,549,153,537,131,516,113,491,86,437,68,384,59,341"/>
+<area shape="rect" id="Node000014" href="$classgraph_1_1SummingNode.html" title="An Node which sums together the multiple inputs adding additional latency to provide a coherent outpu..." alt="" coords="177,597,339,623"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="62,340,68,392,84,457,96,492,112,525,132,556,156,583,178,596,175,601,153,587,128,559,107,528,91,494,79,459,63,393,56,341"/>
+</map>

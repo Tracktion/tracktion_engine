@@ -1,0 +1,5 @@
+<map id="engine::MidiInputDeviceNode" name="engine::MidiInputDeviceNode">
+<area shape="rect" id="Node000001" title="A Node that intercepts incoming live MIDI and inserts it in to the playback graph." alt="" coords="5,93,220,119"/>
+<area shape="rect" id="Node000002" href="$structengine_1_1InputDeviceInstance_1_1Consumer.html" title="Base class for classes that want to listen to an InputDevice and get a callback for each block of inp..." alt="" coords="9,5,216,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,59,115,93,110,93,110,59"/>
+</map>

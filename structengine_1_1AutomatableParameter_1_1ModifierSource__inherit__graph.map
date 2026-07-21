@@ -1,0 +1,21 @@
+<map id="engine::AutomatableParameter::ModifierSource" name="engine::AutomatableParameter::ModifierSource">
+<area shape="rect" id="Node000001" title="Base class for things that can be used to modify parameters." alt="" coords="5,103,231,143"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1AutomationCurveModifier.html" title="An AutomationCurveModifier contains three curves to control automation: absolute, relative and scale." alt="" coords="279,61,520,86"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="243,98,326,83,327,89,244,103"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1MacroParameter.html" title="A MacroParameter is an AutomatableParameter which is a collection of Mappings." alt="" coords="309,110,490,135"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="244,120,308,120,308,125,244,125"/>
+<area shape="rect" id="Node000004" href="$structengine_1_1Modifier.html" title="Bass class for parameter Modifiers." alt="" coords="336,159,463,185"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="245,142,336,158,335,164,244,147"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1BreakpointOscillatorModifier.html" title=" " alt="" coords="568,5,775,45"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="476,164,498,156,518,145,535,124,542,102,549,78,566,55,585,43,588,48,570,59,553,81,547,103,540,127,522,149,500,161,478,169"/>
+<area shape="rect" id="Node000006" href="$classengine_1_1EnvelopeFollowerModifier.html" title=" " alt="" coords="577,69,766,109"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="476,157,519,144,543,132,567,119,599,107,601,112,569,124,545,137,521,149,477,162"/>
+<area shape="rect" id="Node000007" href="$classengine_1_1LFOModifier.html" title=" " alt="" coords="595,134,747,159"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="476,162,595,151,595,156,476,168"/>
+<area shape="rect" id="Node000008" href="$classengine_1_1MIDITrackerModifier.html" title=" " alt="" coords="570,183,773,209"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="476,176,570,184,569,190,476,181"/>
+<area shape="rect" id="Node000009" href="$classengine_1_1RandomModifier.html" title=" " alt="" coords="581,233,762,258"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="457,186,569,217,618,230,616,235,567,223,456,191"/>
+<area shape="rect" id="Node000010" href="$classengine_1_1StepModifier.html" title=" " alt="" coords="593,282,749,307"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="432,190,493,229,569,267,607,279,606,284,567,272,491,234,429,195"/>
+</map>

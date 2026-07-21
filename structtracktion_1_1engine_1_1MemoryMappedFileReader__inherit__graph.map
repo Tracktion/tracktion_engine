@@ -1,5 +1,0 @@
-<map id="tracktion::engine::MemoryMappedFileReader" name="tracktion::engine::MemoryMappedFileReader">
-<area shape="rect" id="Node000001" title="FallbackReader that wraps a MemoryMappedFile which usually improves read speeds." alt="" coords="5,93,203,133"/>
-<area shape="rect" id="Node000002" href="$structtracktion_1_1engine_1_1FallbackReader.html" title=" " alt="" coords="34,5,174,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,59,107,93,101,93,101,59"/>
-</map>
