@@ -71,6 +71,11 @@ std::vector<Node*> SlotControlNode::getDirectInputNodes()
     return {};
 }
 
+std::vector<Node*> SlotControlNode::getInternalNodes()
+{
+    return orderedNodes;
+}
+
 void SlotControlNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo& info)
 {
     auto info2 = info;
