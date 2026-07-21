@@ -171,6 +171,9 @@ public:
 
     /** Creates a project with a new ID, a default edit, and adds it to the list.
         Also creates default media folders and refreshes the folder structure.
+        N.B. the backend is determined by whether projectFile is a directory on disk,
+        so for ProjectType::folderBased the caller must create the directory first.
+        projectFile is asserted to match the given ProjectType.
     */
     Project::Ptr createNewProject (const juce::File& projectFile,
                                     juce::ValueTree folderToAddTo,

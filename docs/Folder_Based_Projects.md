@@ -26,9 +26,11 @@ All public `Project` methods delegate to the active backend. You can check which
 
 ### FolderBasedProject internals
 
-`FolderBasedProject` lazily scans its folder to discover items. On first access to the item list, it walks the directory tree and creates `ProjectItem` objects for each discovered file. The item type and category are inferred from file extensions and subfolder names.
+`FolderBasedProject` lazily scans its folder to discover items. On first access to the item list, it walks the directory tree and creates `ProjectItem` objects for each discovered file. The item type and category are inferred from file extensions and subfolder names. The scan covers edits (`.tracktionedit`/`.trkedit`), audio (`.wav`, `.aiff`, `.aif`, `.mp3`, `.ogg`, `.flac`), MIDI (`.mid`, `.midi`) and the video formats reported by `VideoEngine::getVideoFileExtensions()`.
 
-Project-level properties (description, custom properties) are stored in a `project_info.json` file inside the folder. The project name is derived from the folder name itself.
+Project-level properties (description, custom properties) are stored in a `project_info.json` file inside the folder. Per-item descriptions are also persisted there, keyed by the item's relative path (`"itemDesc:<path>"`), since the items themselves are recreated on every scan. The project name is derived from the folder name itself.
+
+`Project::reload()` clears the scan cache and rescans the folder (lazily or immediately depending on the `ReloadMode`). The rescan preserves items whose source files live outside the project folder, e.g. renders sent to a custom directory.
 
 ## Key New Types
 
@@ -61,8 +63,10 @@ ref.isAbsolutePath();    // true if backed by an absolute path
 ref.isValid();           // true if non-empty (any type)
 
 // Extraction
-ProjectItemID id = ref.getProjectItemID();  // valid only if isProjectItemID()
-ProjectID pid   = ref.getProjectID();       // project portion of the ID
+if (auto id = ref.getProjectItemID())       // std::optional<ProjectItemID>,
+    use (*id);                              // present only if isProjectItemID()
+
+ProjectID pid = ref.getProjectID();         // project portion of the ID
 ```
 
 ### `ProjectType`
@@ -100,10 +104,16 @@ auto project = projectManager.createNewProject (projectFile,
 
 ### Folder-based
 ```cpp
+projectFolder.createDirectory(); // the folder must exist before the call
+
 auto project = projectManager.createNewProject (projectFolder,
                                                 folderTree,
                                                 ProjectType::folderBased);
 ```
+
+N.B. the backend is chosen by whether the path is an existing directory on disk,
+so the caller must create the folder first (`createNewProjectInteractively` does
+this for you). The file is asserted to match the requested `ProjectType`.
 
 ### Temporary projects
 ```cpp
@@ -123,15 +133,15 @@ Edits reference their media files differently depending on the project type:
 - **File-based**: edits store a `ProjectItemID` string (e.g. `"1234_5678"`). The engine resolves this to a file via `ProjectManager::findSourceFile(ProjectItemID)`.
 - **Folder-based**: edits store a relative or absolute file path. The engine resolves this via `ProjectManager::findSourceFile(ProjectItemRef)`.
 
-Use `Project::getSourcePathForFile(file)` to obtain the correct reference string for a given file. This returns a `ProjectItemID` string for file-based projects and a relative path for folder-based projects.
+For folder-based projects, use `Project::getSourcePathForFile(file)` to obtain the reference string for a given file. It returns a path relative to the project folder if the file is inside it, otherwise the absolute path. (File-based projects should not use this method - they reference sources by `ProjectItemID`.)
 
 ## Things to Look Out For
 
-1. **No-op operations** — `mergeOtherProjectIntoThis()`, `mergeArchiveContents()`, and `moveProjectItem()` are no-ops for folder-based projects. Check `isFolderBased()` if your code depends on these. Note that `get/setDescription()` and `get/setProjectProperty()` now work for folder-based projects (stored in `project_info.json`).
+1. **No-op operations** — `mergeOtherProjectIntoThis()`, `mergeArchiveContents()`, and `moveProjectItem()` are no-ops for folder-based projects. Check `isFolderBased()` if your code depends on these. Note that `get/setDescription()` and `get/setProjectProperty()` work for folder-based projects (stored in `project_info.json`), and `removeProjectItem()` works too (removing the item from the cache and optionally deleting its source file).
 
 2. **Lazy scanning cost** — the first call to item-listing methods triggers a directory scan. For large folders this may have noticeable latency.
 
-3. **Unstable `ProjectID`** — folder-based project IDs are computed from the folder path hash. If the folder is moved or renamed, the `ProjectID` changes. Do not persist folder-based `ProjectID` values for long-term identification.
+3. **Unstable `ProjectID`** — folder-based project IDs are computed from the folder path hash. If the folder is moved or renamed, the `ProjectID` changes. Note that calling `setName()` on a folder-based project renames (moves) the folder on disk, so it too changes the `ProjectID`. Do not persist folder-based `ProjectID` values for long-term identification.
 
 4. **Invalid `ProjectItemID`** — items in folder-based projects have invalid (zero) `ProjectItemID` values. Code that checks `projectItemID.isValid()` will return `false` for these items. Use `ProjectItem::getProjectItemRef()` instead.
 
@@ -168,16 +178,18 @@ Many APIs that previously accepted or returned `ProjectItemID` now use `ProjectI
 
 **In most cases, no code changes are needed** — `ProjectItemRef` has an implicit constructor from `ProjectItemID`, so existing call sites that pass a `ProjectItemID` will compile unchanged.
 
-If you need the old `ProjectItemID` from a `ProjectItemRef`:
+If you need the old `ProjectItemID` from a `ProjectItemRef`, note that
+`getProjectItemID()` returns a `std::optional<ProjectItemID>`:
 ```cpp
 ProjectItemRef ref = item->getProjectItemRef();
-if (ref.isProjectItemID())
-    ProjectItemID id = ref.getProjectItemID();
+
+if (auto id = ref.getProjectItemID())
+    use (*id);
 ```
 
 ### New `ProjectType` parameter
 
-`ProjectManager::createNewProject` has a single-argument overload (taking just a `juce::File`) that defaults to file-based. The two- and three-argument overloads of `createNewProject`, `createNewProjectInteractively`, and `createNewProjectFromTemplate` require an explicit `ProjectType` parameter. The `TempProject` helper defaults to `ProjectType::fileBased` if not specified.
+`ProjectManager::createNewProject` has a single-argument overload (taking just a `juce::File`) that picks the backend from the path: an existing directory gives a folder-based project, anything else file-based. The three-argument `createNewProject` overload, `createNewProjectInteractively`, and `createNewProjectFromTemplate` take an explicit `ProjectType` parameter; for `createNewProject` the path must match the requested type (see "Creating Projects" above). The `TempProject` helper defaults to `ProjectType::fileBased` if not specified.
 
 ### `findOrphanItems()` → `findOrphanItemRefs()`
 
@@ -212,8 +224,10 @@ The `tracktion_Archive.h` header provides a new archive system that replaces the
 
 `ArchiveJob` is a `ThreadPoolJobWithProgress` that archives a `Project` or single `ProjectItem` into a zip file.
 
-- **Folder-based projects**: consolidates, then zips the project folder.
-- **File-based projects**: converts to folder-based in a temp directory first, consolidates, then zips.
+- **Folder-based projects**: copies the project folder to a temp directory, consolidates the copy, then zips it.
+- **File-based projects**: converts to folder-based in a temp directory first, then consolidates and zips as above.
+
+In both cases the work happens on a temporary copy - the user's project folder is never modified. Applications can bundle extra resources into archives by overriding `EngineBehaviour::getExtraFilesToArchive (Edit&)`.
 
 ```cpp
 ArchiveJob::Source source = &myProject;

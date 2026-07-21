@@ -1,5 +1,37 @@
 # Changelist
 
+## v3.5
+- Folder-based projects
+  - New folder-based project backend: a plain directory on disk, no binary project file (see docs/Folder_Based_Projects.md)
+  - New `ProjectItemRef` type unifying ID-based and path-based source references
+  - New strong `ProjectID` type replacing raw ints
+  - New zip-based archive format replacing `.trkarch` (legacy classes preserved in a `legacy::` namespace for reading old archives)
+  - New `ProjectUtilities` consolidation functions for making projects/edits self-contained
+  - Smarter relative/absolute source path handling in clips
+- Multichannel
+  - Arbitrary channel counts throughout: devices, plugins, racks, clips, recording and rendering
+  - New `ChannelConfiguration` class describing channel layouts
+  - Device channel groupings of any size, with savable device I/O layout presets
+  - Plugins explicitly declare their bus layouts via `Plugin::getBusses()`
+- ARA
+  - Generalised ARA hosting (no longer Melodyne-specific), enabled with `TRACKTION_ENABLE_ARA`
+  - Overhauled hosting lifecycle, region management and notifications
+  - Support for non-clip based ARA plugins, chord track progression and view selection sync
+- Async engine
+  - Removed all modal loops from the engine: alert/dialogue APIs are now async with completion callbacks
+  - Added `Engine::prepareForShutdown` for non-blocking plugin teardown
+- Time-stretching
+  - Added support for the Signalsmith stretch library
+  - Stretchers now report their latency
+- Import/Export
+  - DAWproject: scene/launch-clip support, nested path fixes, default volume/pan/meter plugins and correct pan range on import
+- Misc
+  - Level meters for audio/MIDI output devices and a test tone generator on `WaveOutputDevice`
+  - `AudioFileManager` support for registering in-memory audio data as clip sources
+  - New `TRACKTION_SANITISE_PLUGIN_OUTPUT` and `TRACKTION_ENABLE_PLUGIN_CPU_MEASUREMENT` flags
+  - Engine unit tests converted from juce::UnitTest to doctest
+  - Tons of bug fixes, optimisations and API improvements
+
 ## v3.2
 - Automation modes (read/write/touch/latch)
 - AutomationCurve bypass

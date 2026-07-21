@@ -488,8 +488,14 @@ Project::Ptr ProjectManager::createNewProject (const juce::File& projectFile)
 
 Project::Ptr ProjectManager::createNewProject (const juce::File& projectFile,
                                                 juce::ValueTree folderToAddTo,
-                                                ProjectType)
+                                                ProjectType projectType)
 {
+    // The backend is determined by whether projectFile is a directory, so for a
+    // folder-based project the caller must create the directory before calling this
+    jassert (projectType == ProjectType::folderBased ? projectFile.isDirectory()
+                                                     : ! projectFile.isDirectory());
+    juce::ignoreUnused (projectType);
+
     const juce::ScopedLock sl (lock);
 
     auto newProj = createNewProject (projectFile);
