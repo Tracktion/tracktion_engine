@@ -29,6 +29,11 @@ public:
     EnginePlayer (Engine& e, HostedAudioDeviceInterface::Parameters p)
         : engine (e), params (p), output (static_cast<size_t> (p.outputChannels))
     {
+        // Blocks are pumped as fast as possible so wall-clock CPU usage is meaningless
+        // here. Effectively disable the limit or the DeviceManager will silently swallow
+        // blocks when slowed down (e.g. under TSAN), losing samples from recordings
+        engine.getDeviceManager().setCpuLimitBeforeMuting (1000.0);
+
         audioIO.initialise (params);
         audioIO.prepareToPlay (params.sampleRate, params.blockSize);
         engine.getDeviceManager().dispatchPendingUpdates();
