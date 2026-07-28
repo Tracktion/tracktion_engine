@@ -25,6 +25,13 @@ public:
     /** Returns the current FFmpeg file. */
     static juce::File getFFmpegExe();
 
+    /** Returns the LAME shared library to load when TRACKTION_ENABLE_LIBLAME is set.
+        This can be a full path or a bare library name, in which case the platform's
+        usual library search path is used.
+        @see LibLameEncoderAudioFormat
+    */
+    static juce::String getLameSharedLibrary();
+
     /** Add the LAMEAudioFormat to the AudioFileFormatManager */
     static void registerAudioFormat (AudioFileFormatManager&);
 
