@@ -225,6 +225,16 @@
  #define TRACKTION_ENABLE_FFMPEG 0
 #endif
 
+/** Config: TRACKTION_ENABLE_LIBLAME
+    Enables LibLameEncoderAudioFormat, which encodes mp3 by loading the LAME shared
+    library at runtime instead of running the LAME or FFmpeg command line tools.
+    Nothing is linked at build time, and if the library can't be found at runtime
+    LAMEManager falls back to whichever command line encoder is enabled.
+*/
+#ifndef TRACKTION_ENABLE_LIBLAME
+ #define TRACKTION_ENABLE_LIBLAME 0
+#endif
+
 /** Config: TRACKTION_UNIT_TESTS
     Enables Tracktion unit tests.
     If enabled, these will be added the UnitTestRunners under the "Tracktion" category.
@@ -580,6 +590,7 @@ namespace tracktion::inline engine {
 #include "audio_files/tracktion_AudioFifo.h"
 #include "audio_files/tracktion_RecordingThumbnailManager.h"
 #include "audio_files/formats/tracktion_FFmpegEncoderAudioFormat.h"
+#include "audio_files/formats/tracktion_LibLameEncoderAudioFormat.h"
 #include "audio_files/formats/tracktion_FloatAudioFileFormat.h"
 #include "audio_files/formats/tracktion_MemoryMappedFileReader.h"
 #include "audio_files/formats/tracktion_LAMEManager.h"

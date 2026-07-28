@@ -34,6 +34,8 @@ extern "C"
 
 #include <string>
 #include <bitset>
+#include <cstdarg>
+#include <cstdio>
 
 #ifdef __GNUC__
  #pragma GCC diagnostic push
@@ -41,6 +43,7 @@ extern "C"
 #endif
 
 #include "audio_files/formats/tracktion_FFmpegEncoderAudioFormat.cpp"
+#include "audio_files/formats/tracktion_LibLameEncoderAudioFormat.cpp"
 #include "audio_files/formats/tracktion_FloatAudioFileFormat.cpp"
 #include "audio_files/formats/tracktion_RexFileFormat.cpp"
 #include "audio_files/formats/tracktion_LAMEManager.cpp"
