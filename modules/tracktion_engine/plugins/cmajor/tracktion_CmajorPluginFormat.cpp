@@ -31,7 +31,12 @@ bool isCmajorPatchPluginFormat (const juce::PluginDescription& pd)
 
 } // namespace tracktion::inline engine
 
+// N.B. cmajor's cmaj_JUCEPlugin.h guards on JUCE_MAJOR_VERSION == 8, so on JUCE 9 it
+// falls back to the deprecated Font constructors. The vendored repo can't be patched,
+// so the deprecation warning is suppressed for this header only.
+JUCE_BEGIN_IGNORE_DEPRECATION_WARNINGS
 #include "cmajor/helpers/cmaj_JUCEPluginFormat.h"
+JUCE_END_IGNORE_DEPRECATION_WARNINGS
 #include "cmajor/helpers/cmaj_FileBasedCacheDatabase.h"
 
 namespace tracktion::inline engine {
