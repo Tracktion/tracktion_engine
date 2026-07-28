@@ -93,6 +93,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a88fafe9090532966f0ea1a18b065bd6a" id="r_a88fafe9090532966f0ea1a18b065bd6a"><td class="memItemLeft" align="right" valign="top">static juce::File&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1LAMEManager.html#a88fafe9090532966f0ea1a18b065bd6a">getFFmpegExe</a> ()</td></tr>
 <tr class="memdesc:a88fafe9090532966f0ea1a18b065bd6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current FFmpeg file.  <br /></td></tr>
 <tr class="separator:a88fafe9090532966f0ea1a18b065bd6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9baefff642e39f3cc8946cc7d5ddefdf" id="r_a9baefff642e39f3cc8946cc7d5ddefdf"><td class="memItemLeft" align="right" valign="top">static juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1LAMEManager.html#a9baefff642e39f3cc8946cc7d5ddefdf">getLameSharedLibrary</a> ()</td></tr>
+<tr class="memdesc:a9baefff642e39f3cc8946cc7d5ddefdf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the LAME shared library to load when TRACKTION_ENABLE_LIBLAME is set.  <br /></td></tr>
+<tr class="separator:a9baefff642e39f3cc8946cc7d5ddefdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a137a33ea49b5cf2a98792dcc2cb713e0" id="r_a137a33ea49b5cf2a98792dcc2cb713e0"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1LAMEManager.html#a137a33ea49b5cf2a98792dcc2cb713e0">registerAudioFormat</a> (<a class="el" href="classengine_1_1AudioFileFormatManager.html">AudioFileFormatManager</a> &amp;)</td></tr>
 <tr class="memdesc:a137a33ea49b5cf2a98792dcc2cb713e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add the LAMEAudioFormat to the <a class="el" href="classengine_1_1AudioFileFormatManager.html" title="Keeps a list of available wave formats and can create a format object for a file.">AudioFileFormatManager</a>.  <br /></td></tr>
 <tr class="separator:a137a33ea49b5cf2a98792dcc2cb713e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -157,6 +160,34 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a9baefff642e39f3cc8946cc7d5ddefdf" name="a9baefff642e39f3cc8946cc7d5ddefdf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9baefff642e39f3cc8946cc7d5ddefdf">&#9670;&#160;</a></span>getLameSharedLibrary()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static juce::String engine::LAMEManager::getLameSharedLibrary </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the LAME shared library to load when TRACKTION_ENABLE_LIBLAME is set. </p>
+<p>This can be a full path or a bare library name, in which case the platform's usual library search path is used. </p><dl class="section see"><dt>See also</dt><dd>LibLameEncoderAudioFormat </dd></dl>
+
+</div>
+</div>
 <a id="a137a33ea49b5cf2a98792dcc2cb713e0" name="a137a33ea49b5cf2a98792dcc2cb713e0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a137a33ea49b5cf2a98792dcc2cb713e0">&#9670;&#160;</a></span>registerAudioFormat()</h2>
 
@@ -218,7 +249,7 @@ Static Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jul 22 2026 10:21:46 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Jul 28 2026 12:01:28 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

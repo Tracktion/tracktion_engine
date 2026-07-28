@@ -21,6 +21,12 @@
     <namespace>engine</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_LibLameEncoderAudioFormat.h</name>
+    <path>build/tracktion_engine/audio_files/formats/</path>
+    <filename>tracktion__LibLameEncoderAudioFormat_8h.html</filename>
+    <namespace>engine</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_MemoryMappedFileReader.h</name>
     <path>build/tracktion_engine/audio_files/formats/</path>
     <filename>tracktion__MemoryMappedFileReader_8h.html</filename>
@@ -38871,6 +38877,13 @@
       <name>getFFmpegExe</name>
       <anchorfile>classengine_1_1LAMEManager.html</anchorfile>
       <anchor>a88fafe9090532966f0ea1a18b065bd6a</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static juce::String</type>
+      <name>getLameSharedLibrary</name>
+      <anchorfile>classengine_1_1LAMEManager.html</anchorfile>
+      <anchor>a9baefff642e39f3cc8946cc7d5ddefdf</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
