@@ -450,6 +450,7 @@ namespace tracktion::inline engine {
 #include "utilities/tracktion_Spline.h"
 #include "utilities/tracktion_Ditherer.h"
 #include "utilities/tracktion_ExternalPlayheadSynchroniser.h"
+#include "utilities/tracktion_SafeScopedListener.h"  // (needed by tracktion_Selectable.h)
 #include "selection/tracktion_Selectable.h"
 #include "selection/tracktion_SelectableClass.h"
 #include "selection/tracktion_SelectionManager.h"
@@ -462,7 +463,6 @@ namespace tracktion::inline engine {
 #include "utilities/tracktion_BinaryData.h"
 #include "utilities/tracktion_SettingID.h"
 #include "utilities/tracktion_SharedTimer.h"
-#include "utilities/tracktion_SafeScopedListener.h"
 #include "utilities/tracktion_ScopedListener.h"
 #include "utilities/tracktion_MouseHoverDetector.h"
 #include "utilities/tracktion_CurveEditor.h"
