@@ -54,6 +54,7 @@
 #define ENGINE_UNIT_TESTS_RACKINSTANCE                  1
 #define ENGINE_UNIT_TESTS_RECORDING                     1
 #define ENGINE_UNIT_TESTS_RENDERING                     1
+#define ENGINE_UNIT_TESTS_RENDER_QUEUE                  1
 #define ENGINE_UNIT_TESTS_TIMESTRETCHER                 1
 #define ENGINE_UNIT_TESTS_CLIPS                         1
 #define ENGINE_UNIT_TESTS_SELECTABLE                    1

@@ -184,10 +184,85 @@ juce::ThreadPoolJob::JobStatus Renderer::RenderTask::runJob()
 }
 
 //==============================================================================
+bool Renderer::RenderTask::foldWrapRemainder (const Renderer::Parameters& target,
+                                              const Renderer::Parameters& intermediate)
+{
+    CRASH_TRACER
+    setJobName (TRANS("Wrapping tail") + "...");
+
+    auto& engine = params.edit->engine;
+    const auto regionSamples = (SampleCount) tracktion::toSamples (target.time.getLength(), target.sampleRateForAudio);
+
+    std::unique_ptr<juce::AudioFormatReader> reader (AudioFileUtils::createReaderFor (engine, intermediate.destFile));
+
+    if (reader == nullptr)
+    {
+        errorMessage = TRANS("Couldn't read intermediate file");
+        return false;
+    }
+
+    // Without a tail past the region end there's nothing to fold
+    if (reader->lengthInSamples <= regionSamples || regionSamples <= 0)
+        return true;
+
+    juce::TemporaryFile foldedFile (intermediate.destFile);
+    const int numChannels = (int) reader->numChannels;
+
+    {
+        AudioFileWriter writer (AudioFile (engine, foldedFile.getFile()),
+                                intermediate.audioFormat, numChannels, target.sampleRateForAudio,
+                                32, {}, 0, reader->getChannelLayout());
+
+        if (! writer.isOpen())
+        {
+            errorMessage = TRANS("Couldn't write to target file");
+            return false;
+        }
+
+        const int blockSize = 16384;
+        juce::AudioBuffer<float> regionBuffer (numChannels, blockSize);
+        juce::AudioBuffer<float> tailBuffer (numChannels, blockSize);
+
+        for (SampleCount pos = 0; pos < regionSamples;)
+        {
+            auto samps = (int) std::min ((SampleCount) blockSize, regionSamples - pos);
+            reader->read (&regionBuffer, 0, samps, pos, true, numChannels > 1);
+
+            // A tail longer than the region wraps round more than once
+            for (auto tailPos = regionSamples + pos; tailPos < reader->lengthInSamples; tailPos += regionSamples)
+            {
+                auto tailSamps = (int) std::min ((SampleCount) samps, reader->lengthInSamples - tailPos);
+                reader->read (&tailBuffer, 0, tailSamps, tailPos, true, numChannels > 1);
+
+                for (int chan = 0; chan < numChannels; ++chan)
+                    regionBuffer.addFrom (chan, 0, tailBuffer, chan, 0, tailSamps);
+            }
+
+            writer.appendBuffer (regionBuffer, samps);
+            pos += samps;
+        }
+    }
+
+    reader.reset();
+
+    if (! foldedFile.overwriteTargetFileWithTemporary())
+    {
+        errorMessage = TRANS("Couldn't write to target file");
+        return false;
+    }
+
+    return true;
+}
+
+//==============================================================================
 bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parameters& target,
                                                           const Renderer::Parameters& intermediate)
 {
     CRASH_TRACER
+
+    if (target.wrapRemainder && ! target.trimSilenceAtEnds)
+        if (! foldWrapRemainder (target, intermediate))
+            return false;
 
     if (target.trimSilenceAtEnds)
     {
