@@ -82280,6 +82280,20 @@
       <arglist>(WeakReferenceable *object)</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>resetSelectableListener</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a4fa4ebf235bc1920cad8f26f85649e49</anchor>
+      <arglist>(SafeScopedListener &amp;scopedListener, Selectable &amp;broadcaster, SelectableListener &amp;listener)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>resetSelectableListener</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a74ac330b178672d9677fddc5291f6190</anchor>
+      <arglist>(SafeScopedListener &amp;scopedListener, Selectable *broadcaster, SelectableListener &amp;listener)</arglist>
+    </member>
+    <member kind="function">
       <type>bool</type>
       <name>callBlocking</name>
       <anchorfile>namespaceengine.html</anchorfile>

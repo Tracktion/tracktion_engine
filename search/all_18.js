@@ -55,7 +55,7 @@ var searchData=
   ['waves_52',['Waves',['../classengine_1_1Oscillator.html#a5403a3783dbb6d34f5fbf67d03d25516',1,'engine::Oscillator']]],
   ['wavesawdown_53',['waveSawDown',['../classengine_1_1LFOModifier.html#acf8b502cde2f42f3b34d53c9efac0a9da744954fb8e63f769f89f31c1d7787932',1,'engine::LFOModifier']]],
   ['wavesawup_54',['waveSawUp',['../classengine_1_1LFOModifier.html#acf8b502cde2f42f3b34d53c9efac0a9da899fa716e239acf0f99a9c448bb5233d',1,'engine::LFOModifier']]],
-  ['waveshape_55',['waveshape',['../classengine_1_1SimpleLFO.html#a04b0f3d934d4ac026aa428e903e808c9',1,'engine::SimpleLFO::WaveShape'],['../structengine_1_1SimpleLFO_1_1Parameters.html#a090515f6c1459fd656ab4cd43bca200d',1,'engine::SimpleLFO::Parameters::waveShape']]],
+  ['waveshape_55',['waveshape',['../structengine_1_1SimpleLFO_1_1Parameters.html#a090515f6c1459fd656ab4cd43bca200d',1,'engine::SimpleLFO::Parameters::waveShape'],['../classengine_1_1SimpleLFO.html#a04b0f3d934d4ac026aa428e903e808c9',1,'engine::SimpleLFO::WaveShape']]],
   ['waveshapevalue_56',['waveshapevalue',['../structengine_1_1FourOscPlugin_1_1LFOParams.html#adab225e3bd3b49d6c4e95a1366d4059c',1,'engine::FourOscPlugin::LFOParams::waveShapeValue'],['../structengine_1_1FourOscPlugin_1_1OscParams.html#a18d06259fe59cee5d23c8cbaa2e3bbdf',1,'engine::FourOscPlugin::OscParams::waveShapeValue']]],
   ['wavesine_57',['waveSine',['../classengine_1_1LFOModifier.html#acf8b502cde2f42f3b34d53c9efac0a9da8532f41221c99e2194e183aa0c275e57',1,'engine::LFOModifier']]],
   ['wavesquare_58',['waveSquare',['../classengine_1_1LFOModifier.html#acf8b502cde2f42f3b34d53c9efac0a9da52a644209bc2c2405bc65071df72fc54',1,'engine::LFOModifier']]],
