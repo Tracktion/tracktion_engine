@@ -620,6 +620,8 @@ namespace tracktion::inline engine {
 #include "model/export/tracktion_ReferencedMaterialList.h"
 #include "model/export/tracktion_Renderer.h"
 #include "model/export/tracktion_RenderManager.h"
+#include "model/export/tracktion_RenderSpecification.h"
+#include "model/export/tracktion_RenderQueue.h"
 
 #include "model/edit/tracktion_QuantisationType.h"
 

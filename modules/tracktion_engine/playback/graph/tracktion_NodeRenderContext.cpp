@@ -69,7 +69,7 @@ NodeRenderContext::NodeRenderContext (Renderer::RenderTask& owner_, Renderer::Pa
         TRACKTION_LOG_ERROR("Rendering whilst attached to audio device");
     }
 
-    if (r.shouldNormalise || r.trimSilenceAtEnds || r.shouldNormaliseByRMS)
+    if (r.shouldNormalise || r.trimSilenceAtEnds || r.shouldNormaliseByRMS || r.wrapRemainder)
     {
         needsToNormaliseAndTrim = true;
 

@@ -90,6 +90,11 @@ public:
         int quality = 0;                                        ///< For audio formats that support it, the desired quality index @see juce::AudioFormat::createWriterFor
         juce::StringPairArray metadata;                         ///< A map of meta data to add to the file
 
+        bool wrapRemainder = false;                             /**< If true, the tail rendered during the endAllowance period is mixed
+                                                                     back onto the start of the file and the file is truncated to the
+                                                                     original time range, so the result loops seamlessly.
+                                                                     Incompatible with trimSilenceAtEnds, which takes priority. */
+
         /// @internal
         bool separateTracks = false;
         /// @internal
@@ -150,6 +155,9 @@ public:
         /** @internal */
         bool performNormalisingAndTrimming (const Renderer::Parameters& target,
                                             const Renderer::Parameters& intermediate);
+        /** @internal */
+        bool foldWrapRemainder (const Renderer::Parameters& target,
+                                const Renderer::Parameters& intermediate);
 
     private:
         //==============================================================================
