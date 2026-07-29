@@ -687,6 +687,12 @@ void Renderer::checkTargetFile (Engine& e, const juce::File& file,
 EditRenderer::Handle::~Handle()
 {
     cancel();
+
+    // Signal the thread to exit so any blocking calls it makes to the message
+    // thread return rather than deadlocking against the join below
+    if (threadExitEnabler)
+        signalThreadShouldExit (threadExitEnabler->getID());
+
     renderThread.join();
 }
 
@@ -715,27 +721,52 @@ auto EditRenderer::render (Renderer::Parameters r,
                                                       &renderHandle->progress,
                                                       renderHandle->thumbnailToUpdate.get());
 
-    renderHandle->renderThread = std::thread ([destFile,
+    auto threadStarted = std::make_shared<Semaphore>();
+
+    renderHandle->renderThread = std::thread ([threadStarted,
+                                              destFile,
+                                              handleRef = std::weak_ptr (renderHandle),
                                               &hasBeenCancelledFlag = renderHandle->hasBeenCancelled,
                                               finishedCallback = std::move (finishedCallback_),
                                               task = std::move (renderTask),
-                                              scopedRenderState = std::move (srs)]
+                                              scopedRenderState = std::move (srs)]() mutable
     {
+        if (auto h = handleRef.lock())
+        {
+            h->threadExitEnabler = std::make_unique<ScopedThreadExitStatusEnabler>();
+            handleRef.reset();
+        }
+
+        threadStarted->signal();
+
         for (;;)
         {
             if (hasBeenCancelledFlag)
+            {
+                // N.B. Tearing the task down here needs the message thread which is
+                // probably blocked joining this thread, so it relies on ~Handle having
+                // signalled the exit status to unblock it
+                task.reset();
                 return finishedCallback (tl::unexpected (NEEDS_TRANS("Cancelled")));
+            }
 
             if (task->runJob() == juce::ThreadPoolJob::jobNeedsRunningAgain)
                 continue;
 
-            // Finished
-            if (auto err = task->errorMessage; err.isNotEmpty())
+            // Finished. Destroy the task before calling back as its teardown needs the
+            // message thread which callers will usually only dispatch until the callback
+            const auto err = task->errorMessage;
+            task.reset();
+
+            if (err.isNotEmpty())
                 return finishedCallback (tl::unexpected (err.toStdString()));
 
             return finishedCallback (destFile);
         }
     });
+
+    // Wait until the thread has started so it's properly registered with the ExitStatusEnabler
+    threadStarted->wait();
 
     return renderHandle;
 }

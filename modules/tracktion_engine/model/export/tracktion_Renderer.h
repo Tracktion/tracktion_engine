@@ -314,6 +314,7 @@ public:
         friend EditRenderer;
 
         std::thread renderThread;
+        std::unique_ptr<ScopedThreadExitStatusEnabler> threadExitEnabler;
         std::atomic<float> progress { 0.0f };
         std::atomic<bool> hasBeenCancelled { false };
         std::shared_ptr<juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver> thumbnailToUpdate;
