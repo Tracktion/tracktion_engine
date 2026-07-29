@@ -86,11 +86,8 @@ ExternalController::~ExternalController()
     getControlSurface().shutDownDevice();
     controlSurface = nullptr;
 
-    if (lastRegisteredSelectable != nullptr)
-    {
-        lastRegisteredSelectable->removeSelectableListener (this);
-        lastRegisteredSelectable = nullptr;
-    }
+    lastRegisteredListener.reset();
+    lastRegisteredSelectable = nullptr;
 }
 
 void ExternalController::changeListenerCallback (juce::ChangeBroadcaster*)
@@ -905,16 +902,12 @@ void ExternalController::selectedPluginChanged()
     {
         if (getControlSurface().canChangeSelectedPlugin() || lastRegisteredSelectable == nullptr)
         {
-            if (lastRegisteredSelectable != nullptr)
-                lastRegisteredSelectable->removeSelectableListener (this);
-
             lastRegisteredSelectable = nullptr;
 
             if (auto sm = getExternalControllerManager().getSelectionManager())
                 lastRegisteredSelectable = sm->getSelectedObject (0);
 
-            if (lastRegisteredSelectable != nullptr)
-                lastRegisteredSelectable->addSelectableListener (this);
+            resetSelectableListener (lastRegisteredListener, lastRegisteredSelectable.get(), *this);
 
             juce::String pluginName;
             if (auto plugin = dynamic_cast<Plugin*> (lastRegisteredSelectable.get()))
@@ -947,7 +940,7 @@ void ExternalController::selectableObjectAboutToBeDeleted (Selectable* s)
 
     if (lastRegisteredSelectable == s)
     {
-        s->removeSelectableListener (this);
+        lastRegisteredListener.reset();
         lastRegisteredSelectable = nullptr;
 
         updateParameters();

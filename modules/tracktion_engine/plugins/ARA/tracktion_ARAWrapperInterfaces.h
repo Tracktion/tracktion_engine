@@ -1447,14 +1447,12 @@ public:
 
         // A track rename/recolour with no accompanying clip change must still
         // reach the plugin, so watch the track itself
-        if (track != nullptr)
-            track->addSelectableListener (this);
+        resetSelectableListener (trackListener, track, *this);
     }
 
     ~RegionSequenceWrapper()
     {
-        if (track != nullptr)
-            track->removeSelectableListener (this);
+        trackListener.reset();
 
         if (regionSequenceRef != nullptr)
             doc.dci->destroyRegionSequence (doc.dcRef, regionSequenceRef);
@@ -1475,7 +1473,9 @@ public:
         Must be called from within a document editing cycle. */
     void updateProperties()
     {
-        if (regionSequenceRef != nullptr)
+        // The track can be deleted while sibling playback regions are still alive and
+        // calling in here, so this must be guarded like selectableObjectChanged is
+        if (track != nullptr && regionSequenceRef != nullptr)
         {
             updateRegionSequenceProperties();
             auto props = getRegionSequenceProperties();
@@ -1513,6 +1513,8 @@ private:
 
     void selectableObjectAboutToBeDeleted (Selectable*) override
     {
+        // track is read as data elsewhere in this class, so it must still be nulled
+        // here; trackListener unregisters itself when the track goes away
         track = nullptr;
     }
 
@@ -1524,6 +1526,7 @@ private:
         colour = { trackColour.getFloatRed(), trackColour.getFloatGreen(), trackColour.getFloatBlue() };
     }
 
+    SafeScopedListener trackListener;
     int orderIndex;
     juce::String name;
     ARAColor colour;

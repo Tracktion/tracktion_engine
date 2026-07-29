@@ -397,4 +397,37 @@ private:
 };
 
 
+//==============================================================================
+/** Registers a SafeScopedListener with a Selectable.
+
+    Prefer this over calling SafeScopedListener::reset() directly for Selectables,
+    as the parameter types resolve two things at the call site that are easy to get
+    wrong by hand:
+      - the listener converts to SelectableListener& in the caller's context, so
+        classes which inherit SelectableListener privately don't need a cast;
+      - the broadcaster converts to Selectable&, so subclasses which declare their
+        own addListener() (e.g. Clip::addListener (Clip::Listener*)) can't hide
+        Selectable::addListener and silently bind the wrong listener interface.
+*/
+inline void resetSelectableListener (SafeScopedListener& scopedListener,
+                                     Selectable& broadcaster,
+                                     SelectableListener& listener)
+{
+    scopedListener.reset (makeSafeRef (broadcaster), listener);
+}
+
+/** Registers a SafeScopedListener with a Selectable, or unregisters it if the
+    broadcaster is null.
+*/
+inline void resetSelectableListener (SafeScopedListener& scopedListener,
+                                     Selectable* broadcaster,
+                                     SelectableListener& listener)
+{
+    if (broadcaster != nullptr)
+        resetSelectableListener (scopedListener, *broadcaster, listener);
+    else
+        scopedListener.reset();
+}
+
+
 } // namespace tracktion::inline engine

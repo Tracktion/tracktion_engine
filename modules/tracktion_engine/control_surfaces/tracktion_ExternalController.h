@@ -199,6 +199,7 @@ private:
     bool allowBankingOffEnd = false;
     AutomatableParameter::Array currentParams;
     SafeSelectable<Selectable> currentParamSource, lastRegisteredSelectable;
+    SafeScopedListener lastRegisteredListener;
     bool showTrackSelection = false;
     bool showClipSlotSelection = true;
     juce::Colour selectionColour;
