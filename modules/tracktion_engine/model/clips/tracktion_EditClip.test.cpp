@@ -102,7 +102,7 @@ TEST_SUITE("tracktion_engine")
                     == doctest::Approx (0.707f).epsilon (0.01));
 
             // Finally, sum the buffers together negating one of them, they should cancel
-            CHECK(tempSourceRender.buffer.getNumSamples() == tempDestRender.buffer.getNumSamples());
+            REQUIRE (tempSourceRender.buffer.getNumSamples() == tempDestRender.buffer.getNumSamples());
             tempDestRender.buffer.addFrom (0, 0, tempSourceRender.buffer,
                                            0, 0, tempSourceRender.buffer.getNumSamples(),
                                            -1.0f);
