@@ -51,6 +51,8 @@ extern "C"
 #include "audio_files/tracktion_BufferedFileReader.h"
 #include "audio_files/tracktion_BufferedFileReader.cpp"
 
+#include "audio_files/tracktion_AudioFifo.test.cpp"
+
 #include "audio_files/tracktion_AudioFileCache.cpp"
 #include "audio_files/tracktion_AudioFileCache.test.cpp"
 #include "audio_files/tracktion_AudioFile.cpp"
