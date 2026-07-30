@@ -15,6 +15,10 @@ namespace tracktion::inline engine
 /**
     Mutes a set of tracks for its lifetime, restoring their previous mute
     states on destruction. Message-thread only.
+
+    Render jobs pair this with Renderer::Parameters::tracksToProcessWhileMuted
+    so the muted tracks keep feeding sidechains, aux buses and racks in the
+    render graph while their direct output is silenced.
 */
 class ScopedTrackMuter
 {

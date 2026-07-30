@@ -43,6 +43,15 @@ struct RenderSpecification
     */
     juce::Array<EditItemID> mutedTracks;
 
+    /** If true, findStemSourceTracks() runs over the tracks list when the job
+        is created and the tracks it finds - sidechain sources, aux-send
+        sources and rack feeders the stem depends on - are added to
+        mutedTracks automatically, so the stem sounds as it does in the full
+        mix. Has no effect when tracks is empty (a whole-Edit render already
+        includes everything).
+    */
+    bool includeSourceTracks = false;
+
     /** The time range to render. If unset, the whole Edit length is used. */
     std::optional<TimeRange> time;
 
@@ -93,6 +102,21 @@ struct RenderSpecification
     failure result describing the first problem found.
 */
 juce::Result validateRenderSpecification (Edit&, const RenderSpecification&);
+
+//==============================================================================
+/** Finds the tracks a stem render depends on for its sound but which aren't
+    part of the stem itself: sidechain sources of the stem's plugins, tracks
+    with an aux send feeding an aux return in the stem, and tracks hosting
+    instances of a rack the stem shares (a rack is processed once, fed by all
+    its instances). The search runs to a fixpoint, so sources of sources are
+    found too, and looks inside the stem's submix folders.
+
+    Render the returned tracks via RenderSpecification::mutedTracks: included
+    in the graph, silenced in the output. Tracks that merely route their
+    output into the stem's tracks are NOT returned - the render graph pulls
+    those in by itself.
+*/
+juce::Array<EditItemID> findStemSourceTracks (Edit&, const juce::Array<EditItemID>& stemTracks);
 
 //==============================================================================
 /** A concrete render job created from a RenderSpecification. */

@@ -25,6 +25,7 @@ TEST_SUITE("tracktion_engine")
         spec.tracks.add (EditItemID::fromRawID (1001));
         spec.tracks.add (EditItemID::fromRawID (1002));
         spec.mutedTracks.add (EditItemID::fromRawID (1003));
+        spec.includeSourceTracks = true;
         spec.time = TimeRange (TimePosition::fromSeconds (1.5), TimePosition::fromSeconds (4.25));
         spec.wrapRemainder = true;
         spec.destination = juce::File::getSpecialLocation (juce::File::tempDirectory).getChildFile ("renders");
@@ -47,6 +48,7 @@ TEST_SUITE("tracktion_engine")
 
         CHECK_EQ (restored.tracks, spec.tracks);
         CHECK_EQ (restored.mutedTracks, spec.mutedTracks);
+        CHECK_EQ (restored.includeSourceTracks, spec.includeSourceTracks);
         REQUIRE (restored.time.has_value());
         CHECK_EQ (restored.time->getStart(), spec.time->getStart());
         CHECK_EQ (restored.time->getEnd(), spec.time->getEnd());
@@ -513,6 +515,329 @@ TEST_SUITE("tracktion_engine")
                 maxDiff = std::max (maxDiff, std::abs (offline.getSample (ch, i) - realtime.getSample (ch, i)));
 
         CHECK_LT (maxDiff, 0.0001f);
+    }
+
+    TEST_CASE ("findStemSourceTracks finds sidechain, aux and rack dependencies")
+    {
+        auto& engine = *Engine::getEngines()[0];
+
+        auto insertPluginOfType = [] (AudioTrack& track, const char* xmlTypeName) -> Plugin*
+        {
+            auto plugin = track.edit.getPluginCache().createNewPlugin (xmlTypeName, {});
+            track.pluginList.insertPlugin (plugin, 0, nullptr);
+            return plugin.get();
+        };
+
+        SUBCASE ("sidechain sources, transitively")
+        {
+            auto edit = test_utilities::createTestEdit (engine, 3);
+            auto tracks = getAudioTracks (*edit);
+
+            // Track 2's compressor is keyed from track 1, whose compressor is keyed from track 0
+            auto comp2 = insertPluginOfType (*tracks[2], CompressorPlugin::xmlTypeName);
+            auto comp1 = insertPluginOfType (*tracks[1], CompressorPlugin::xmlTypeName);
+            REQUIRE (comp1 != nullptr);
+            REQUIRE (comp2 != nullptr);
+            comp2->setSidechainSourceID (tracks[1]->itemID);
+            comp1->setSidechainSourceID (tracks[0]->itemID);
+
+            auto sources = findStemSourceTracks (*edit, { tracks[2]->itemID });
+            CHECK_EQ (sources.size(), 2);
+            CHECK (sources.contains (tracks[1]->itemID));
+            CHECK (sources.contains (tracks[0]->itemID));   // the source's own source
+
+            // A source that's already part of the stem isn't listed, and
+            // source tracks themselves depend on nothing
+            CHECK_EQ (findStemSourceTracks (*edit, { tracks[1]->itemID, tracks[2]->itemID }).size(), 1);
+            CHECK (findStemSourceTracks (*edit, { tracks[0]->itemID }).isEmpty());
+        }
+
+        SUBCASE ("aux returns pull in the tracks sending to their bus")
+        {
+            auto edit = test_utilities::createTestEdit (engine, 3);
+            auto tracks = getAudioTracks (*edit);
+
+            auto send0 = dynamic_cast<AuxSendPlugin*> (insertPluginOfType (*tracks[0], AuxSendPlugin::xmlTypeName));
+            auto send1 = dynamic_cast<AuxSendPlugin*> (insertPluginOfType (*tracks[1], AuxSendPlugin::xmlTypeName));
+            auto ret   = dynamic_cast<AuxReturnPlugin*> (insertPluginOfType (*tracks[2], AuxReturnPlugin::xmlTypeName));
+            REQUIRE (send0 != nullptr);
+            REQUIRE (send1 != nullptr);
+            REQUIRE (ret != nullptr);
+
+            send0->busNumber = 1;
+            send1->busNumber = 2;   // a different bus: not a source for this return
+            ret->busNumber = 1;
+
+            auto sources = findStemSourceTracks (*edit, { tracks[2]->itemID });
+            CHECK_EQ (sources.size(), 1);
+            CHECK (sources.contains (tracks[0]->itemID));
+
+            // A send doesn't need its return to sound right
+            CHECK (findStemSourceTracks (*edit, { tracks[0]->itemID }).isEmpty());
+        }
+
+        SUBCASE ("rack instances pull in the tracks hosting the rack's other instances")
+        {
+            auto edit = test_utilities::createTestEdit (engine, 3);
+            auto tracks = getAudioTracks (*edit);
+
+            Plugin::Array pluginsToWrap;
+            pluginsToWrap.add (tracks[0]->getVolumePlugin());
+            auto rack = RackType::createTypeToWrapPlugins (pluginsToWrap, *edit);
+            REQUIRE (rack != nullptr);
+
+            tracks[0]->pluginList.insertPlugin (RackInstance::create (*rack), 0);
+            tracks[1]->pluginList.insertPlugin (RackInstance::create (*rack), 0);
+
+            auto sources = findStemSourceTracks (*edit, { tracks[1]->itemID });
+            CHECK_EQ (sources.size(), 1);
+            CHECK (sources.contains (tracks[0]->itemID));
+
+            CHECK (findStemSourceTracks (*edit, { tracks[0]->itemID }) == juce::Array<EditItemID> { tracks[1]->itemID });
+            CHECK (findStemSourceTracks (*edit, { tracks[2]->itemID }).isEmpty());
+        }
+
+        SUBCASE ("dependencies of a submix's children are found from the folder")
+        {
+            auto edit = test_utilities::createTestEdit (engine, 1);
+            auto keyTrack = getAudioTracks (*edit)[0];
+
+            auto submix = edit->insertNewFolderTrack ({ nullptr, nullptr }, nullptr, true);
+            auto child = edit->insertNewAudioTrack ({ submix.get(), nullptr }, nullptr);
+            REQUIRE (child != nullptr);
+
+            auto comp = insertPluginOfType (*child, CompressorPlugin::xmlTypeName);
+            REQUIRE (comp != nullptr);
+            comp->setSidechainSourceID (keyTrack->itemID);
+
+            CHECK (findStemSourceTracks (*edit, { submix->itemID }) == juce::Array<EditItemID> { keyTrack->itemID });
+        }
+    }
+
+    TEST_CASE ("Stems rendered with includeSourceTracks null against the full mix")
+    {
+        auto& engine = *Engine::getEngines()[0];
+
+        auto renderSpec = [&engine] (Edit& edit, const RenderSpecification& spec) -> juce::AudioBuffer<float>
+        {
+            auto job = createRenderJob (edit, spec);
+            REQUIRE (job.has_value());
+
+            RenderQueue queue;
+            queue.addJob (std::move (*job));
+
+            std::atomic<bool> done { false };
+            queue.onFinished = [&] { done = true; };
+            queue.start();
+            test_utilities::runDispatchLoopUntilTrue (done);
+            REQUIRE (queue.getJobs()[0]->getState() == RenderQueue::Job::State::completed);
+
+            auto buffer = test_utilities::loadFileInToBuffer (engine, spec.destination);
+            REQUIRE (buffer.has_value());
+            return *buffer;
+        };
+
+        auto maxDifference = [] (const juce::AudioBuffer<float>& a, const juce::AudioBuffer<float>& b)
+        {
+            float diff = 0.0f;
+
+            for (int ch = 0; ch < std::min (a.getNumChannels(), b.getNumChannels()); ++ch)
+                for (int i = 0; i < std::min (a.getNumSamples(), b.getNumSamples()); ++i)
+                    diff = std::max (diff, std::abs (a.getSample (ch, i) - b.getSample (ch, i)));
+
+            return diff;
+        };
+
+        // Renders the whole Edit, then each stem with includeSourceTracks on,
+        // and returns { mix, sum of stems }. Every render gets a fresh file:
+        // the AudioFile cache serves stale content for reused paths.
+        auto renderMixAndStemSum = [&] (Edit& edit, const std::vector<juce::Array<EditItemID>>& stems)
+        {
+            std::vector<std::unique_ptr<juce::TemporaryFile>> files;
+            auto newFile = [&files]() -> juce::File
+            {
+                files.push_back (std::make_unique<juce::TemporaryFile> (".wav"));
+                return files.back()->getFile();
+            };
+
+            RenderSpecification spec;
+            spec.bitDepth = 32;     // float files, so summing stems adds no quantisation noise
+            spec.destination = newFile();
+            auto mix = renderSpec (edit, spec);
+
+            juce::AudioBuffer<float> sum (mix.getNumChannels(), mix.getNumSamples());
+            sum.clear();
+
+            for (auto& stemTracks : stems)
+            {
+                spec.tracks = stemTracks;
+                spec.includeSourceTracks = true;
+                spec.destination = newFile();
+                auto stem = renderSpec (edit, spec);
+
+                REQUIRE_EQ (stem.getNumSamples(), mix.getNumSamples());
+
+                for (int ch = 0; ch < sum.getNumChannels(); ++ch)
+                    sum.addFrom (ch, 0, stem, std::min (ch, stem.getNumChannels() - 1), 0, mix.getNumSamples());
+            }
+
+            return std::pair { std::move (mix), std::move (sum) };
+        };
+
+        constexpr float nullEpsilon = 0.0001f;
+
+        SUBCASE ("plain tracks")
+        {
+            auto edit = test_utilities::createTestEdit (engine, 2);
+            auto tracks = getAudioTracks (*edit);
+
+            auto sin220 = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0, 1, 220.0f);
+            auto sin330 = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0, 1, 330.0f);
+            insertWaveClip (*tracks[0], {}, sin220->getFile(), { .time = { 0_tp, 1_tp } }, DeleteExistingClips::no);
+            insertWaveClip (*tracks[1], {}, sin330->getFile(), { .time = { 0_tp, 1_tp } }, DeleteExistingClips::no);
+            tracks[0]->getVolumePlugin()->setVolumeDb (-6.0f);
+
+            auto [mix, sum] = renderMixAndStemSum (*edit, { { tracks[0]->itemID }, { tracks[1]->itemID } });
+            REQUIRE_GT (mix.getMagnitude (0, mix.getNumSamples()), 0.1f);
+            CHECK_LT (maxDifference (mix, sum), nullEpsilon);
+        }
+
+        SUBCASE ("folder submix with bus plugins")
+        {
+            auto edit = test_utilities::createTestEdit (engine, 1);
+            auto plainTrack = getAudioTracks (*edit)[0];
+
+            auto submix = edit->insertNewFolderTrack ({ nullptr, nullptr }, nullptr, true);
+            auto child1 = edit->insertNewAudioTrack ({ submix.get(), nullptr }, nullptr);
+            auto child2 = edit->insertNewAudioTrack ({ submix.get(), nullptr }, nullptr);
+            REQUIRE (child2 != nullptr);
+
+            auto sin220 = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0, 1, 220.0f);
+            auto sin330 = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0, 1, 330.0f);
+            auto sin440 = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0, 1, 440.0f);
+            insertWaveClip (*child1, {}, sin220->getFile(), { .time = { 0_tp, 1_tp } }, DeleteExistingClips::no);
+            insertWaveClip (*child2, {}, sin330->getFile(), { .time = { 0_tp, 1_tp } }, DeleteExistingClips::no);
+            insertWaveClip (*plainTrack, {}, sin440->getFile(), { .time = { 0_tp, 1_tp } }, DeleteExistingClips::no);
+            submix->getVolumePlugin()->setVolumeDb (-6.0f);
+
+            auto [mix, sum] = renderMixAndStemSum (*edit, { { submix->itemID }, { plainTrack->itemID } });
+            REQUIRE_GT (mix.getMagnitude (0, mix.getNumSamples()), 0.1f);
+            CHECK_LT (maxDifference (mix, sum), nullEpsilon);
+        }
+
+        // Once with stereo clips and once with mono clips: sidechain wires always
+        // assume two track source channels, so the mono case exercises the
+        // pre-sidechain mono->stereo conversion in the graph
+        int numClipChannels = 0;
+
+        SUBCASE ("sidechained compressor, stereo clips")    { numClipChannels = 2; }
+        SUBCASE ("sidechained compressor, mono clips")      { numClipChannels = 1; }
+
+        if (numClipChannels > 0)
+        {
+            auto edit = test_utilities::createTestEdit (engine, 2);
+            auto tracks = getAudioTracks (*edit);
+
+            auto sin220 = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0, numClipChannels, 220.0f);
+            auto sin330 = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0, numClipChannels, 330.0f);
+            insertWaveClip (*tracks[0], {}, sin220->getFile(), { .time = { 0_tp, 1_tp } }, DeleteExistingClips::no);
+            insertWaveClip (*tracks[1], {}, sin330->getFile(), { .time = { 0_tp, 1_tp } }, DeleteExistingClips::no);
+
+            auto compPlugin = edit->getPluginCache().createNewPlugin (CompressorPlugin::xmlTypeName, {});
+            tracks[1]->pluginList.insertPlugin (compPlugin, 0, nullptr);
+            auto comp = dynamic_cast<CompressorPlugin*> (compPlugin.get());
+            REQUIRE (comp != nullptr);
+            REQUIRE (comp->canSidechain());
+            comp->useSidechainTrigger = true;
+            comp->setSidechainSourceID (tracks[0]->itemID);
+            comp->guessSidechainRouting();
+            comp->setThreshold (0.05f);
+            comp->setRatio (0.1f);
+
+            auto [mix, sum] = renderMixAndStemSum (*edit, { { tracks[0]->itemID }, { tracks[1]->itemID } });
+            REQUIRE_GT (mix.getMagnitude (0, mix.getNumSamples()), 0.1f);
+            CHECK_LT (maxDifference (mix, sum), nullEpsilon);
+
+            // Sanity: without the source track the compressor keys off silence
+            // and the stem no longer matches its sound in the mix
+            juce::TemporaryFile aloneFile (".wav"), keyedFile (".wav");
+            RenderSpecification spec;
+            spec.bitDepth = 32;
+            spec.tracks = { tracks[1]->itemID };
+            spec.destination = aloneFile.getFile();
+            auto alone = renderSpec (*edit, spec);
+
+            spec.includeSourceTracks = true;
+            spec.destination = keyedFile.getFile();
+            auto keyed = renderSpec (*edit, spec);
+
+            CHECK_GT (maxDifference (alone, keyed), 0.001f);
+        }
+
+        SUBCASE ("aux send and return")
+        {
+            auto edit = test_utilities::createTestEdit (engine, 2);
+            auto tracks = getAudioTracks (*edit);
+
+            auto sin220 = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0, 1, 220.0f);
+            insertWaveClip (*tracks[0], {}, sin220->getFile(), { .time = { 0_tp, 1_tp } }, DeleteExistingClips::no);
+
+            auto sendPlugin = edit->getPluginCache().createNewPlugin (AuxSendPlugin::xmlTypeName, {});
+            auto retPlugin  = edit->getPluginCache().createNewPlugin (AuxReturnPlugin::xmlTypeName, {});
+            tracks[0]->pluginList.insertPlugin (sendPlugin, 0, nullptr);
+            tracks[1]->pluginList.insertPlugin (retPlugin, 0, nullptr);
+            auto send = dynamic_cast<AuxSendPlugin*> (sendPlugin.get());
+            auto ret  = dynamic_cast<AuxReturnPlugin*> (retPlugin.get());
+            REQUIRE (send != nullptr);
+            REQUIRE (ret != nullptr);
+            send->busNumber = 1;
+            send->setGainDb (-6.0f);
+            ret->busNumber = 1;
+
+            auto [mix, sum] = renderMixAndStemSum (*edit, { { tracks[0]->itemID }, { tracks[1]->itemID } });
+            REQUIRE_GT (mix.getMagnitude (0, mix.getNumSamples()), 0.1f);
+            CHECK_LT (maxDifference (mix, sum), nullEpsilon);
+
+            // Sanity: the return stem is only non-silent because the solver
+            // pulled the sending track in
+            juce::TemporaryFile withFile (".wav");
+            RenderSpecification spec;
+            spec.bitDepth = 32;
+            spec.tracks = { tracks[1]->itemID };
+            spec.includeSourceTracks = true;
+            spec.destination = withFile.getFile();
+            auto returnStem = renderSpec (*edit, spec);
+            CHECK_GT (returnStem.getMagnitude (0, returnStem.getNumSamples()), 0.1f);
+        }
+
+        SUBCASE ("rack fed by another track")
+        {
+            auto edit = test_utilities::createTestEdit (engine, 2);
+            auto tracks = getAudioTracks (*edit);
+
+            auto sin220 = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0, 2, 220.0f);
+            insertWaveClip (*tracks[0], {}, sin220->getFile(), { .time = { 0_tp, 1_tp } }, DeleteExistingClips::no);
+
+            Plugin::Array pluginsToWrap;
+            pluginsToWrap.add (tracks[0]->getVolumePlugin());
+            auto rack = RackType::createTypeToWrapPlugins (pluginsToWrap, *edit);
+            REQUIRE (rack != nullptr);
+
+            // Track 0 feeds the rack and returns nothing; track 1 plays no
+            // clips but consumes the rack's output
+            auto feeder = dynamic_cast<RackInstance*> (tracks[0]->pluginList.insertPlugin (RackInstance::create (*rack), 0).get());
+            auto consumer = dynamic_cast<RackInstance*> (tracks[1]->pluginList.insertPlugin (RackInstance::create (*rack), 0).get());
+            REQUIRE (feeder != nullptr);
+            REQUIRE (consumer != nullptr);
+            feeder->setOutputMapping (0, -1);
+            feeder->setOutputMapping (1, -1);
+            consumer->setInputMapping (0, -1);
+            consumer->setInputMapping (1, -1);
+
+            auto [mix, sum] = renderMixAndStemSum (*edit, { { tracks[0]->itemID }, { tracks[1]->itemID } });
+            REQUIRE_GT (mix.getMagnitude (0, mix.getNumSamples()), 0.1f);
+            CHECK_LT (maxDifference (mix, sum), nullEpsilon);
+        }
     }
 }
 
