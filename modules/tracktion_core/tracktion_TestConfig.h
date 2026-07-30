@@ -61,6 +61,7 @@
 #define ENGINE_UNIT_TESTS_SOURCE_FILE_REFERENCE         1
 #define ENGINE_UNIT_TESTS_AUDIO_FIFO                    1
 #define ENGINE_UNIT_TESTS_AUDIO_FILE                    1
+#define ENGINE_UNIT_TESTS_AUDIO_FILE_ANALYSER           1
 #define ENGINE_UNIT_TESTS_AUDIO_FILE_CACHE              1
 #define ENGINE_UNIT_TESTS_EXTERNALPLUGIN                1
 #define ENGINE_UNIT_TESTS_VOLPANPLUGIN                  1
