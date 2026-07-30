@@ -13,12 +13,31 @@ namespace tracktion::inline engine
 
 //==============================================================================
 /**
+    Mutes a set of tracks for its lifetime, restoring their previous mute
+    states on destruction. Message-thread only.
+*/
+class ScopedTrackMuter
+{
+public:
+    ScopedTrackMuter (Edit&, const juce::Array<EditItemID>& tracksToMute);
+    ~ScopedTrackMuter();
+
+private:
+    std::vector<std::pair<Track::Ptr, bool>> restoreList;
+
+    JUCE_DECLARE_NON_COPYABLE (ScopedTrackMuter)
+};
+
+//==============================================================================
+/**
     Runs a list of render jobs strictly one at a time, in order.
 
     Add jobs (usually from expandRenderSpecification()), keeping hold of the
     returned Job handles, attach any callbacks, then call start(). Each job
     renders on its own background thread via EditRenderer; the next job only
-    starts once the previous one has finished. All methods and callbacks are
+    starts once the previous one has finished. More jobs can be appended while
+    the queue is running - call start() again after adding them in case the
+    earlier jobs have already finished. All methods and callbacks are
     message-thread only.
 
     Deleting the queue cancels any remaining jobs. Job handles remain valid
@@ -66,9 +85,12 @@ public:
         void cancel();
 
         /** Sets a receiver (e.g. a juce::AudioThumbnail) to be filled while this
-            job renders. Only valid before the queue is started.
+            job renders. Only valid while the job is still pending.
         */
         void setThumbnail (std::shared_ptr<juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver>);
+
+        /** Returns the receiver set with setThumbnail(), if any. */
+        std::shared_ptr<juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver> getThumbnail() const    { return thumbnail; }
 
     private:
         //==============================================================================
@@ -83,6 +105,11 @@ public:
         std::shared_ptr<juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver> thumbnail;
         std::shared_ptr<EditRenderer::Handle> handle;
 
+        /** Held while the job renders; releasing it restores the muted source
+            tracks. The Job owning it means the mutes can't outlive the job
+            even if a handle outlives the queue. */
+        std::unique_ptr<ScopedTrackMuter> muteScope;
+
         JUCE_DECLARE_NON_COPYABLE (Job)
     };
 
@@ -95,13 +122,18 @@ public:
     ~RenderQueue();
 
     //==============================================================================
-    /** Adds a job to the queue, returning its handle. Only valid before start(). */
+    /** Adds a job to the queue, returning its handle. Jobs may be appended at
+        any time, including while the queue is running - call start() again
+        afterwards in case the earlier jobs have already finished. */
     JobPtr addJob (PlannedRenderJob);
 
-    /** Adds a list of jobs to the queue. Only valid before start(). */
+    /** Adds a list of jobs to the queue. */
     void addJobs (std::vector<PlannedRenderJob>);
 
-    /** Starts running the queued jobs in order. */
+    /** Starts running the queued jobs in order. Safe to call again after
+        appending jobs to a running or finished queue: a no-op while a job is
+        active, otherwise it picks up the next pending job. onFinished fires
+        each time the queue runs out of pending jobs. */
     void start();
 
     /** Cancels the active job and all pending jobs. */

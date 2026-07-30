@@ -24,6 +24,7 @@ TEST_SUITE("tracktion_engine")
         RenderSpecification spec;
         spec.tracks.add (EditItemID::fromRawID (1001));
         spec.tracks.add (EditItemID::fromRawID (1002));
+        spec.mutedTracks.add (EditItemID::fromRawID (1003));
         spec.time = TimeRange (TimePosition::fromSeconds (1.5), TimePosition::fromSeconds (4.25));
         spec.wrapRemainder = true;
         spec.destination = juce::File::getSpecialLocation (juce::File::tempDirectory).getChildFile ("renders");
@@ -45,6 +46,7 @@ TEST_SUITE("tracktion_engine")
         auto restored = RenderSpecification::fromJSON (spec.toJSON());
 
         CHECK_EQ (restored.tracks, spec.tracks);
+        CHECK_EQ (restored.mutedTracks, spec.mutedTracks);
         REQUIRE (restored.time.has_value());
         CHECK_EQ (restored.time->getStart(), spec.time->getStart());
         CHECK_EQ (restored.time->getEnd(), spec.time->getEnd());
@@ -130,6 +132,12 @@ TEST_SUITE("tracktion_engine")
         SUBCASE ("unknown track ID")
         {
             spec.tracks.add (EditItemID::fromRawID (0xdeadbeef));
+            CHECK (validateRenderSpecification (*edit, spec).failed());
+        }
+
+        SUBCASE ("unknown muted track ID")
+        {
+            spec.mutedTracks.add (EditItemID::fromRawID (0xdeadbeef));
             CHECK (validateRenderSpecification (*edit, spec).failed());
         }
 
@@ -223,6 +231,113 @@ TEST_SUITE("tracktion_engine")
             CHECK (job->params.wrapRemainder);
             CHECK (! job->params.trimSilenceAtEnds);  // forced off for wrapped renders
             CHECK_EQ (job->params.endAllowance, TimeDuration());  // no tail-reporting plugins here
+        }
+    }
+
+    TEST_CASE ("RenderSpecification advanced selection: muted tracks and submixes")
+    {
+        auto& engine = *Engine::getEngines()[0];
+
+        auto renderSpec = [&engine] (Edit& edit, const RenderSpecification& spec) -> juce::AudioBuffer<float>
+        {
+            auto job = createRenderJob (edit, spec);
+            REQUIRE (job.has_value());
+
+            RenderQueue queue;
+            queue.addJob (std::move (*job));
+
+            std::atomic<bool> done { false };
+            queue.onFinished = [&] { done = true; };
+            queue.start();
+            test_utilities::runDispatchLoopUntilTrue (done);
+            REQUIRE (queue.getJobs()[0]->getState() == RenderQueue::Job::State::completed);
+
+            auto buffer = test_utilities::loadFileInToBuffer (engine, spec.destination);
+            REQUIRE (buffer.has_value());
+            return *buffer;
+        };
+
+        SUBCASE ("mutedTracks keep a track in the graph but silent in the output")
+        {
+            auto edit = test_utilities::createTestEdit (engine, 2);
+            auto tracks = getAudioTracks (*edit);
+
+            auto sin220 = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0, 1, 220.0f);
+            auto sin330 = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0, 1, 330.0f);
+            insertWaveClip (*tracks[0], {}, sin220->getFile(), { .time = { 0_tp, 1_tp } }, DeleteExistingClips::no);
+            insertWaveClip (*tracks[1], {}, sin330->getFile(), { .time = { 0_tp, 1_tp } }, DeleteExistingClips::no);
+
+            // N.B. distinct destination files: reading back through the
+            // AudioFile cache would serve stale content for a reused path
+            juce::TemporaryFile refFile (".wav"), mutedFile (".wav"), bothFile (".wav");
+
+            RenderSpecification spec;
+            spec.tracks = { tracks[0]->itemID };
+            spec.destination = refFile.getFile();
+            const auto reference = renderSpec (*edit, spec);
+
+            spec.mutedTracks = { tracks[1]->itemID };
+            spec.destination = mutedFile.getFile();
+            const auto muted = renderSpec (*edit, spec);
+
+            // The muted track's state must have been restored after the job
+            CHECK (! tracks[1]->isMuted (false));
+
+            spec.tracks = { tracks[0]->itemID, tracks[1]->itemID };
+            spec.mutedTracks = {};
+            spec.destination = bothFile.getFile();
+            const auto both = renderSpec (*edit, spec);
+
+            REQUIRE_EQ (muted.getNumSamples(), reference.getNumSamples());
+
+            auto maxDifference = [] (const juce::AudioBuffer<float>& a, const juce::AudioBuffer<float>& b)
+            {
+                float diff = 0.0f;
+
+                for (int i = 0; i < std::min (a.getNumSamples(), b.getNumSamples()); ++i)
+                    diff = std::max (diff, std::abs (a.getSample (0, i) - b.getSample (0, i)));
+
+                return diff;
+            };
+
+            // With track 2 muted the render matches track 1 alone; unmuted it doesn't
+            CHECK_LT (maxDifference (muted, reference), 0.0001f);
+            CHECK_GT (maxDifference (both, reference), 0.1f);
+        }
+
+        SUBCASE ("rendering a submix folder includes its children and bus plugins")
+        {
+            auto edit = test_utilities::createTestEdit (engine);
+            auto submix = edit->insertNewFolderTrack ({ nullptr, nullptr }, nullptr, true);
+            REQUIRE (submix != nullptr);
+            auto childTrack = edit->insertNewAudioTrack ({ submix.get(), nullptr }, nullptr);
+            REQUIRE (childTrack != nullptr);
+
+            auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0);
+            insertWaveClip (*childTrack, {}, sinFile->getFile(), { .time = { 0_tp, 1_tp } },
+                            DeleteExistingClips::no);
+
+            constexpr float busGainDb = -6.0f;
+            submix->getVolumePlugin()->setVolumeDb (busGainDb);
+
+            juce::TemporaryFile childFile (".wav"), submixFile (".wav");
+
+            // Reference: the child on its own renders without the submix's plugins
+            RenderSpecification spec;
+            spec.tracks = { childTrack->itemID };
+            spec.destination = childFile.getFile();
+            const auto childAlone = renderSpec (*edit, spec);
+
+            spec.tracks = { submix->itemID };
+            spec.destination = submixFile.getFile();
+            const auto throughSubmix = renderSpec (*edit, spec);
+
+            const auto childPeak = childAlone.getMagnitude (0, childAlone.getNumSamples());
+            const auto submixPeak = throughSubmix.getMagnitude (0, throughSubmix.getNumSamples());
+
+            REQUIRE_GT (childPeak, 0.1f);   // the reference must actually contain audio
+            CHECK_EQ (submixPeak, doctest::Approx (childPeak * juce::Decibels::decibelsToGain (busGainDb))
+                                    .epsilon (0.02));
         }
     }
 

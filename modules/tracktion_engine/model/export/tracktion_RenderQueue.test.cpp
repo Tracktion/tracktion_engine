@@ -159,6 +159,54 @@ TEST_SUITE("tracktion_engine")
         CHECK (! job->getParameters().destFile.existsAsFile());
     }
 
+    TEST_CASE ("RenderQueue accepts jobs appended while running and after finishing")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine);
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0);
+        insertWaveClip (*getAudioTracks (*edit)[0], {}, sinFile->getFile(), { .time = { 0_tp, 1_tp } },
+                        DeleteExistingClips::no);
+
+        juce::TemporaryFile destFile1 (".wav"), destFile2 (".wav"), destFile3 (".wav");
+
+        auto makeSpec = [] (const juce::File& f)
+        {
+            RenderSpecification spec;
+            spec.destination = f;
+            return spec;
+        };
+
+        RenderQueue queue;
+        queue.addJob (*createRenderJob (*edit, makeSpec (destFile1.getFile())));
+
+        std::atomic<int> finishedCount { 0 };
+        std::atomic<bool> finished { false };
+        queue.onFinished = [&] { ++finishedCount; finished = true; };
+
+        // Append a second job while the first is active: one onFinished once both are done
+        queue.start();
+        queue.addJob (*createRenderJob (*edit, makeSpec (destFile2.getFile())));
+        queue.start();
+
+        test_utilities::runDispatchLoopUntilTrue (finished);
+        CHECK_EQ (finishedCount.load(), 1);
+        CHECK (queue.hasFinished());
+        CHECK (queue.getJobs()[0]->getState() == RenderQueue::Job::State::completed);
+        CHECK (queue.getJobs()[1]->getState() == RenderQueue::Job::State::completed);
+
+        // Append a third job to the finished queue: it runs and onFinished fires again
+        finished = false;
+        queue.addJob (*createRenderJob (*edit, makeSpec (destFile3.getFile())));
+        queue.start();
+
+        test_utilities::runDispatchLoopUntilTrue (finished);
+        CHECK_EQ (finishedCount.load(), 2);
+        REQUIRE_EQ (queue.getJobs().size(), (size_t) 3);
+        CHECK (queue.getJobs()[2]->getState() == RenderQueue::Job::State::completed);
+        CHECK (queue.getJobs()[2]->getFile().existsAsFile());
+    }
+
     TEST_CASE ("RenderQueue wrap remainder folds the tail onto the loop start")
     {
         auto& engine = *Engine::getEngines()[0];
