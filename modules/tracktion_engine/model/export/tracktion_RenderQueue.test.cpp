@@ -131,6 +131,32 @@ TEST_SUITE("tracktion_engine")
 
         CHECK (queue.getJobs()[0]->getState() == RenderQueue::Job::State::cancelled);
         CHECK (queue.hasFinished());
+        CHECK (! queue.getJobs()[0]->getParameters().destFile.existsAsFile());
+    }
+
+    TEST_CASE ("RenderQueue deleted mid-render leaves no partial file")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine);
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0);
+        insertWaveClip (*getAudioTracks (*edit)[0], {}, sinFile->getFile(), { .time = { 0_tp, 5_tp } },
+                        DeleteExistingClips::no);
+
+        juce::TemporaryFile destFile (".wav");
+
+        RenderSpecification spec;
+        spec.destination = destFile.getFile();
+
+        auto queue = std::make_unique<RenderQueue>();
+        auto job = queue->addJob (*createRenderJob (*edit, spec));
+
+        queue->start();
+        juce::MessageManager::getInstance()->runDispatchLoopUntil (50);
+        queue.reset();  // cancels the active job, joins its thread and cleans up
+
+        CHECK (job->getState() == RenderQueue::Job::State::cancelled);
+        CHECK (! job->getParameters().destFile.existsAsFile());
     }
 
     TEST_CASE ("RenderQueue wrap remainder folds the tail onto the loop start")

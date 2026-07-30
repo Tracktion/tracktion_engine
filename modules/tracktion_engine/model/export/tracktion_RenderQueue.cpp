@@ -54,6 +54,16 @@ RenderQueue::~RenderQueue()
     TRACKTION_ASSERT_MESSAGE_THREAD
     *aliveFlag = false;
     cancelAll();
+
+    // Wait for any active render to stop, then remove its partial file
+    for (auto& job : jobs)
+    {
+        if (job->handle != nullptr)
+        {
+            job->handle = nullptr;
+            job->planned.params.destFile.deleteFile();
+        }
+    }
 }
 
 RenderQueue::JobPtr RenderQueue::addJob (PlannedRenderJob planned)
@@ -173,6 +183,10 @@ void RenderQueue::handleJobFinished (Job& job, tl::expected<juce::File, std::str
             job.error = juce::String (result.error());
         }
     }
+
+    // Failed and cancelled jobs mustn't leave partial files behind
+    if (job.state != Job::State::completed)
+        job.planned.params.destFile.deleteFile();
 
     if (onJobFinished != nullptr)
         onJobFinished (job);
