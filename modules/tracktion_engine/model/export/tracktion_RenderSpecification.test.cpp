@@ -225,6 +225,125 @@ TEST_SUITE("tracktion_engine")
             CHECK_EQ (job->params.endAllowance, TimeDuration());  // no tail-reporting plugins here
         }
     }
+
+    TEST_CASE ("RenderSpecification post-processing options shape the rendered audio")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0);
+
+        juce::TemporaryFile destFile (".wav");
+
+        RenderSpecification spec;
+        spec.destination = destFile.getFile();
+
+        auto render = [&]() -> juce::AudioBuffer<float>
+        {
+            auto job = createRenderJob (*edit, spec);
+            REQUIRE (job.has_value());
+
+            RenderQueue queue;
+            queue.addJob (std::move (*job));
+
+            std::atomic<bool> done { false };
+            queue.onFinished = [&] { done = true; };
+            queue.start();
+            test_utilities::runDispatchLoopUntilTrue (done);
+            REQUIRE (queue.getJobs()[0]->getState() == RenderQueue::Job::State::completed);
+
+            auto buffer = test_utilities::loadFileInToBuffer (engine, spec.destination);
+            REQUIRE (buffer.has_value());
+            return *buffer;
+        };
+
+        SUBCASE ("normalise scales the peak to the target level")
+        {
+            auto clip = insertWaveClip (*track, {}, sinFile->getFile(), { .time = { 0_tp, 1_tp } },
+                                        DeleteExistingClips::no);
+            REQUIRE (clip != nullptr);
+            clip->setGainDB (-12.0f);
+
+            spec.normalise = true;
+            spec.normaliseToLevelDb = -6.0f;
+
+            auto buffer = render();
+            CHECK_EQ (buffer.getMagnitude (0, buffer.getNumSamples()),
+                      doctest::Approx (juce::Decibels::decibelsToGain (-6.0f)).epsilon (0.02));
+        }
+
+        SUBCASE ("RMS adjustment scales the average level to the target")
+        {
+            auto clip = insertWaveClip (*track, {}, sinFile->getFile(), { .time = { 0_tp, 1_tp } },
+                                        DeleteExistingClips::no);
+            REQUIRE (clip != nullptr);
+            clip->setGainDB (-12.0f);
+
+            spec.normaliseByRMS = true;
+            spec.normaliseToLevelDb = -12.0f;
+
+            auto buffer = render();
+            CHECK_EQ (buffer.getRMSLevel (0, 0, buffer.getNumSamples()),
+                      doctest::Approx (juce::Decibels::decibelsToGain (-12.0f)).epsilon (0.02));
+        }
+
+        SUBCASE ("trim silence removes the silent lead-in and tail")
+        {
+            // A 1s clip in the middle of a 3s range: only the clip should remain
+            insertWaveClip (*track, {}, sinFile->getFile(), { .time = { 1_tp, 2_tp } },
+                            DeleteExistingClips::no);
+
+            spec.time = TimeRange (TimePosition(), TimePosition::fromSeconds (3.0));
+            spec.trimSilence = true;
+
+            auto buffer = render();
+            const auto seconds = buffer.getNumSamples() / 44100.0;
+            CHECK_GT (seconds, 0.9);
+            CHECK_LT (seconds, 1.2);
+        }
+
+        SUBCASE ("dithering adds low-level noise below the 16-bit floor")
+        {
+            // At -100 dB the sine sits around the 16-bit LSB, so it mostly
+            // quantises to silence unless dither noise is added.
+            // N.B. each render goes to its own file: the AudioFile cache would
+            // serve stale content if one path were reused.
+            auto clip = insertWaveClip (*track, {}, sinFile->getFile(), { .time = { 0_tp, 1_tp } },
+                                        DeleteExistingClips::no);
+            REQUIRE (clip != nullptr);
+            clip->setGainDB (-100.0f);
+
+            auto countNonZeroSamples = [] (const juce::AudioBuffer<float>& b)
+            {
+                int count = 0;
+
+                for (int i = 0; i < b.getNumSamples(); ++i)
+                    if (b.getSample (0, i) != 0.0f)
+                        ++count;
+
+                return count;
+            };
+
+            const auto undithered = render();
+
+            juce::TemporaryFile ditheredFile (".wav");
+            spec.destination = ditheredFile.getFile();
+            spec.dither = true;
+            const auto dithered = render();
+
+            // The dither noise must actually change the quantised output...
+            float maxDiff = 0.0f;
+
+            for (int i = 0; i < std::min (undithered.getNumSamples(), dithered.getNumSamples()); ++i)
+                maxDiff = std::max (maxDiff, std::abs (undithered.getSample (0, i) - dithered.getSample (0, i)));
+
+            CHECK_GT (maxDiff, 0.0f);
+
+            // ...and push more of this sub-LSB signal above the quantisation floor
+            CHECK_GT (countNonZeroSamples (dithered), countNonZeroSamples (undithered));
+        }
+    }
 }
 
 } // namespace tracktion::inline engine
