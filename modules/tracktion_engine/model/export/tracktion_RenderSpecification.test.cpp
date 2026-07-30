@@ -459,6 +459,61 @@ TEST_SUITE("tracktion_engine")
             CHECK_GT (countNonZeroSamples (dithered), countNonZeroSamples (undithered));
         }
     }
+
+    TEST_CASE ("RenderSpecification realtime render matches the offline render")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+
+        // Short clip: a realtime render takes as long as the rendered region
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 0.5);
+        auto clip = insertWaveClip (*track, {}, sinFile->getFile(), { .time = { 0_tp, TimePosition::fromSeconds (0.5) } },
+                                    DeleteExistingClips::no);
+        REQUIRE (clip != nullptr);
+
+        auto renderWith = [&] (bool realTime) -> juce::AudioBuffer<float>
+        {
+            // Each render goes to its own file to dodge the AudioFile cache
+            juce::TemporaryFile destFile (".wav");
+
+            RenderSpecification spec;
+            spec.destination = destFile.getFile();
+            spec.realTime = realTime;
+
+            auto job = createRenderJob (*edit, spec);
+            REQUIRE (job.has_value());
+
+            RenderQueue queue;
+            queue.addJob (std::move (*job));
+
+            std::atomic<bool> done { false };
+            queue.onFinished = [&] { done = true; };
+            queue.start();
+            test_utilities::runDispatchLoopUntilTrue (done);
+            REQUIRE (queue.getJobs()[0]->getState() == RenderQueue::Job::State::completed);
+
+            auto buffer = test_utilities::loadFileInToBuffer (engine, spec.destination);
+            REQUIRE (buffer.has_value());
+            return *buffer;
+        };
+
+        const auto offline  = renderWith (false);
+        const auto realtime = renderWith (true);
+
+        // Not silence, same length, and sample-accurate agreement
+        CHECK_GT (offline.getMagnitude (0, offline.getNumSamples()), 0.1f);
+        REQUIRE_EQ (offline.getNumSamples(), realtime.getNumSamples());
+        REQUIRE_EQ (offline.getNumChannels(), realtime.getNumChannels());
+
+        float maxDiff = 0.0f;
+
+        for (int ch = 0; ch < offline.getNumChannels(); ++ch)
+            for (int i = 0; i < offline.getNumSamples(); ++i)
+                maxDiff = std::max (maxDiff, std::abs (offline.getSample (ch, i) - realtime.getSample (ch, i)));
+
+        CHECK_LT (maxDiff, 0.0001f);
+    }
 }
 
 } // namespace tracktion::inline engine
