@@ -30,8 +30,18 @@ namespace tracktion::inline engine
 struct RenderSpecification
 {
     //==============================================================================
-    /** The tracks to mix into the render. If empty, the whole Edit is rendered. */
+    /** The tracks to mix into the render. If empty, the whole Edit is rendered.
+        Submix folder tracks are valid entries: rendering one includes its child
+        tracks and its plugin chain.
+    */
     juce::Array<EditItemID> tracks;
+
+    /** Tracks to include in the render graph but keep silent in the output:
+        they are muted in the Edit while the job renders and restored
+        afterwards. Use this for sidechain/rack source tracks that must keep
+        feeding the rendered tracks' processing without being heard.
+    */
+    juce::Array<EditItemID> mutedTracks;
 
     /** The time range to render. If unset, the whole Edit length is used. */
     std::optional<TimeRange> time;
@@ -90,6 +100,7 @@ struct PlannedRenderJob
 {
     juce::String name;                      ///< A display name for the job, e.g. the track name
     Renderer::Parameters params;            ///< The parameters to render with
+    juce::Array<EditItemID> tracksToMute;   ///< Tracks muted in the Edit while this job renders
 };
 
 /** Creates the render job for a valid specification.

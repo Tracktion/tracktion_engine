@@ -11,6 +11,29 @@
 namespace tracktion::inline engine
 {
 
+ScopedTrackMuter::ScopedTrackMuter (Edit& edit, const juce::Array<EditItemID>& tracksToMute)
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+
+    for (auto id : tracksToMute)
+    {
+        if (auto track = findTrackForID (edit, id))
+        {
+            restoreList.emplace_back (track, track->isMuted (false));
+            track->setMute (true);
+        }
+    }
+}
+
+ScopedTrackMuter::~ScopedTrackMuter()
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+
+    for (auto& [track, wasMuted] : restoreList)
+        track->setMute (wasMuted);
+}
+
+//==============================================================================
 float RenderQueue::Job::getProgress() const
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
@@ -63,13 +86,14 @@ RenderQueue::~RenderQueue()
             job->handle = nullptr;
             job->planned.params.destFile.deleteFile();
         }
+
+        job->muteScope.reset();
     }
 }
 
 RenderQueue::JobPtr RenderQueue::addJob (PlannedRenderJob planned)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
-    jassert (! started);
 
     jobs.push_back (JobPtr (new Job (std::move (planned))));
     return jobs.back();
@@ -84,9 +108,14 @@ void RenderQueue::addJobs (std::vector<PlannedRenderJob> planned)
 void RenderQueue::start()
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
-    jassert (! started);
-
     started = true;
+
+    // If a job is running (or its finished callback is still in flight), the
+    // queue will advance itself; starting another job now would run two at once
+    for (auto& job : jobs)
+        if (job->state == Job::State::active || job->handle != nullptr)
+            return;
+
     startNextJob();
 }
 
@@ -141,6 +170,10 @@ void RenderQueue::startNextJob()
         auto& job = *jobPtr;
         job.state = Job::State::active;
 
+        if (! job.planned.tracksToMute.isEmpty() && job.planned.params.edit != nullptr)
+            job.muteScope = std::make_unique<ScopedTrackMuter> (*job.planned.params.edit,
+                                                                job.planned.tracksToMute);
+
         if (onJobStarted != nullptr)
             onJobStarted (job);
 
@@ -148,9 +181,9 @@ void RenderQueue::startNextJob()
         // message thread. The job pointer keeps the Job alive; the alive flag
         // skips advancing the queue if the queue itself has gone.
         job.handle = EditRenderer::render (job.planned.params,
-                                           [alive = std::weak_ptr<bool> (aliveFlag), this, jobPtr] (auto result)
+                                           [alive = std::weak_ptr<bool> (aliveFlag), this, jobPtr] (auto renderResult)
                                            {
-                                               juce::MessageManager::callAsync ([alive, this, jobPtr, result = std::move (result)]() mutable
+                                               juce::MessageManager::callAsync ([alive, this, jobPtr, result = std::move (renderResult)]() mutable
                                                {
                                                    if (auto stillAlive = alive.lock(); stillAlive != nullptr && *stillAlive)
                                                        handleJobFinished (*jobPtr, std::move (result));
@@ -168,6 +201,7 @@ void RenderQueue::handleJobFinished (Job& job, tl::expected<juce::File, std::str
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
     job.handle = nullptr;
+    job.muteScope.reset();
 
     // A job cancelled while active has already been marked cancelled
     if (job.state == Job::State::active)

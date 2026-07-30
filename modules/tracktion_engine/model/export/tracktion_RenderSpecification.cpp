@@ -85,6 +85,7 @@ juce::var RenderSpecification::toJSON() const
     auto obj = new juce::DynamicObject();
 
     obj->setProperty ("tracks", EditItemID::listToString (tracks));
+    obj->setProperty ("mutedTracks", EditItemID::listToString (mutedTracks));
 
     if (time)
     {
@@ -123,7 +124,7 @@ juce::var RenderSpecification::toJSON() const
 
 RenderSpecification RenderSpecification::fromJSON (const juce::var& v, juce::StringArray* unknownKeys)
 {
-    static const juce::StringArray knownKeys { "tracks", "startTime", "endTime",
+    static const juce::StringArray knownKeys { "tracks", "mutedTracks", "startTime", "endTime",
                                               "wrapRemainder", "destination", "format", "sampleRate",
                                               "bitDepth", "quality", "channelLayout", "normalise",
                                               "normaliseByRMS", "normaliseToLevelDb", "trimSilence",
@@ -147,6 +148,7 @@ RenderSpecification RenderSpecification::fromJSON (const juce::var& v, juce::Str
     };
 
     spec.tracks             = EditItemID::parseStringList (get ("tracks", juce::String()));
+    spec.mutedTracks        = EditItemID::parseStringList (get ("mutedTracks", juce::String()));
     spec.wrapRemainder      = get ("wrapRemainder", spec.wrapRemainder);
     spec.destination        = juce::File (get ("destination", juce::String()).toString());
     spec.format             = get ("format", spec.format);
@@ -198,7 +200,8 @@ juce::Result validateRenderSpecification (Edit& edit, const RenderSpecification&
     if (! isKnownChannelLayout (spec.channelLayout))
         return juce::Result::fail (TRANS("Unknown channel layout: ") + spec.channelLayout);
 
-    if (resolveTracks (edit, spec.tracks).size() != spec.tracks.size())
+    if (resolveTracks (edit, spec.tracks).size() != spec.tracks.size()
+         || resolveTracks (edit, spec.mutedTracks).size() != spec.mutedTracks.size())
         return juce::Result::fail (TRANS("The specification contains tracks which aren't in this Edit"));
 
     if (spec.time ? spec.time->isEmpty() : (edit.getLength() == TimeDuration()))
@@ -249,10 +252,16 @@ std::optional<PlannedRenderJob> createRenderJob (Edit& edit, const RenderSpecifi
     for (auto [track, index] : resolved)
         params.tracksToDo.setBit (index);
 
+    // Muted tracks are part of the graph so they can feed the rendered tracks'
+    // processing; the queue mutes them in the Edit while the job runs
+    if (! spec.mutedTracks.isEmpty() && ! params.tracksToDo.isZero())
+        for (auto [track, index] : resolveTracks (edit, spec.mutedTracks))
+            params.tracksToDo.setBit (index);
+
     auto name = resolved.size() == 1 ? resolved.getFirst().first->getName()
                                      : spec.destination.getFileNameWithoutExtension();
 
-    return PlannedRenderJob { name, std::move (params) };
+    return PlannedRenderJob { name, std::move (params), spec.mutedTracks };
 }
 
 std::vector<RenderSpecification> createPerTrackSpecifications (Edit& edit,
