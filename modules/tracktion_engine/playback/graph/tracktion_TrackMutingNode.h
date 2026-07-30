@@ -27,6 +27,13 @@ public:
     /** Call once per block to update the mute status. */
     void update();
 
+    /** Forces the track's contents to keep processing while the track is muted,
+        so it can still feed sidechains, aux buses and racks; the track's own
+        output stays muted. Render graphs call this for stem source tracks.
+        @see CreateNodeParams::tracksToProcessWhileMuted
+    */
+    void setKeepProcessingWhileMuted()          { callInputWhileMuted = true; }
+
     //==============================================================================
     /** Returns true if the track's mix bus should be audible. */
     bool shouldTrackBeAudible() const;

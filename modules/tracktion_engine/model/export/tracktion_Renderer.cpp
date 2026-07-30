@@ -41,6 +41,7 @@ namespace render_utils
         cnp.includeMasterPlugins = r.useMasterPlugins;
         cnp.includeBypassedPlugins = false;
         cnp.allowClipSlots = r.edit->engine.getEngineBehaviour().areClipSlotsEnabled();
+        cnp.tracksToProcessWhileMuted = r.tracksToProcessWhileMuted;
 
         std::unique_ptr<tracktion::graph::Node> node;
         callBlocking ([&r, &node, &cnp] { node = createNodeForEdit (*r.edit, cnp); });
@@ -143,6 +144,7 @@ Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
     cnp.includeMasterPlugins = r.useMasterPlugins;
     cnp.includeBypassedPlugins = false;
     cnp.allowClipSlots = r.edit->engine.getEngineBehaviour().areClipSlotsEnabled();
+    cnp.tracksToProcessWhileMuted = r.tracksToProcessWhileMuted;
 
     callBlocking ([this, &r, &cnp] { graphNode = createNodeForEdit (*r.edit, cnp); });
 }

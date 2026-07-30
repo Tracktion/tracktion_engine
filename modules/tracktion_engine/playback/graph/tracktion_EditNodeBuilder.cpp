@@ -86,14 +86,6 @@ namespace
         return false;
     }
 
-    int getTrackNumChannels (const Plugin& plugin)
-    {
-        if (auto track = dynamic_cast<AudioTrack*> (plugin.getOwnerTrack()))
-            return track->getChannelConfiguration().getNumChannels();
-
-        return 2;
-    }
-
 
     AudioTrack* getTrackContainingTrackDevice (Edit& edit, WaveInputDevice& device)
     {
@@ -1227,7 +1219,9 @@ std::unique_ptr<tracktion::graph::Node> createSidechainInputNodeForPlugin (Plugi
     // So we really have two channel maps, one from the plugin's track to the plugin and one from the sidechain track to the plugin
     ChannelMap directChannelMap, sidechainChannelMap;
 
-    const auto trackChannels = getTrackNumChannels (plugin);
+    // Wires always use two source channels for the plugin's track, regardless of the
+    // track's actual channel count (see guessSidechainRouting() and the sidechain editor UI)
+    constexpr int trackChannels = 2;
 
     for (int i = 0; i < plugin.getNumWires(); ++i)
     {
@@ -1305,10 +1299,10 @@ std::unique_ptr<tracktion::graph::Node> createNodeForPlugin (Plugin& plugin, con
         if (plugin.getOwnerTrack() != nullptr || plugin.getOwnerClip() != nullptr)
             maxNumChannels = effectivePluginChannels;
 
-    node = createSidechainInputNodeForPlugin (plugin, std::move (node));
-
     // If the input has fewer channels than the plugin expects, pre-convert (e.g. mono→stereo)
-    // so the plugin receives the right number of channels
+    // so the plugin receives the right number of channels. This must happen before the
+    // sidechain input is summed in: sidechain wires assume two track channels, and a
+    // conversion applied after the sum would squash the sidechain channels back down
     if (incomingChannels < pluginInputChannels
         && incomingChannels > 0
         && pluginInputChannels > 0)
@@ -1316,6 +1310,8 @@ std::unique_ptr<tracktion::graph::Node> createNodeForPlugin (Plugin& plugin, con
         node = tracktion::graph::makeNode<ChannelRemappingNode> (std::move (node),
                                                                  ChannelMap::conversion (incomingChannels, pluginInputChannels));
     }
+
+    node = createSidechainInputNodeForPlugin (plugin, std::move (node));
 
     // Create the PluginNode
     auto pluginNode = tracktion::graph::makeNode<PluginNode> (std::move (node),
@@ -1563,6 +1559,12 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioTrack (AudioTrack& at,
     auto clipsMuteState = std::make_unique<TrackMuteState> (at, true, processMidiWhenMuted);
     auto trackMuteState = std::make_unique<TrackMuteState> (at, false, processMidiWhenMuted);
 
+    if (params.tracksToProcessWhileMuted.contains (at.itemID))
+    {
+        clipsMuteState->setKeepProcessingWhileMuted();
+        trackMuteState->setKeepProcessingWhileMuted();
+    }
+
     std::unique_ptr<Node> node = createClipsNode (at, *clipsMuteState, params);
     if (node)
     {
@@ -1713,6 +1715,9 @@ std::unique_ptr<tracktion::graph::Node> createNodeForSubmixTrack (FolderTrack& s
     // Finally the effects
     std::unique_ptr<Node> node = std::move (sumNode);
     auto trackMuteState = std::make_unique<TrackMuteState> (submixTrack, false, false);
+
+    if (params.tracksToProcessWhileMuted.contains (submixTrack.itemID))
+        trackMuteState->setKeepProcessingWhileMuted();
 
     node = createPluginNodeForTrack (submixTrack, *trackMuteState, std::move (node), params.processState.playHeadState, params);
 

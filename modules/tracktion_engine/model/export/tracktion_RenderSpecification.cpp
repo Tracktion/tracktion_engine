@@ -86,6 +86,7 @@ juce::var RenderSpecification::toJSON() const
 
     obj->setProperty ("tracks", EditItemID::listToString (tracks));
     obj->setProperty ("mutedTracks", EditItemID::listToString (mutedTracks));
+    obj->setProperty ("includeSourceTracks", includeSourceTracks);
 
     if (time)
     {
@@ -124,7 +125,7 @@ juce::var RenderSpecification::toJSON() const
 
 RenderSpecification RenderSpecification::fromJSON (const juce::var& v, juce::StringArray* unknownKeys)
 {
-    static const juce::StringArray knownKeys { "tracks", "mutedTracks", "startTime", "endTime",
+    static const juce::StringArray knownKeys { "tracks", "mutedTracks", "includeSourceTracks", "startTime", "endTime",
                                               "wrapRemainder", "destination", "format", "sampleRate",
                                               "bitDepth", "quality", "channelLayout", "normalise",
                                               "normaliseByRMS", "normaliseToLevelDb", "trimSilence",
@@ -149,6 +150,7 @@ RenderSpecification RenderSpecification::fromJSON (const juce::var& v, juce::Str
 
     spec.tracks             = EditItemID::parseStringList (get ("tracks", juce::String()));
     spec.mutedTracks        = EditItemID::parseStringList (get ("mutedTracks", juce::String()));
+    spec.includeSourceTracks = get ("includeSourceTracks", spec.includeSourceTracks);
     spec.wrapRemainder      = get ("wrapRemainder", spec.wrapRemainder);
     spec.destination        = juce::File (get ("destination", juce::String()).toString());
     spec.format             = get ("format", spec.format);
@@ -211,6 +213,83 @@ juce::Result validateRenderSpecification (Edit& edit, const RenderSpecification&
 }
 
 //==============================================================================
+juce::Array<EditItemID> findStemSourceTracks (Edit& edit, const juce::Array<EditItemID>& stemTracks)
+{
+    // The tracks whose processing runs as part of the stem: the given tracks
+    // plus everything nested inside any folders among them
+    juce::Array<Track*> stemSet;
+
+    for (auto id : stemTracks)
+    {
+        if (auto track = findTrackForID (edit, id))
+        {
+            stemSet.addIfNotAlreadyThere (track);
+
+            for (auto sub : track->getAllSubTracks (true))
+                stemSet.addIfNotAlreadyThere (sub);
+        }
+    }
+
+    juce::Array<Track*> sources, visited;
+    auto toVisit = stemSet;
+
+    auto addSource = [&] (Track* source)
+    {
+        if (source != nullptr && ! stemSet.contains (source) && ! sources.contains (source))
+        {
+            sources.add (source);
+            toVisit.add (source);
+        }
+    };
+
+    // Fixpoint: tracks added as sources are visited in turn, so sources of
+    // sources are found; the visited list breaks feedback cycles
+    while (! toVisit.isEmpty())
+    {
+        auto track = toVisit.removeAndReturn (toVisit.size() - 1);
+
+        if (visited.contains (track))
+            continue;
+
+        visited.add (track);
+
+        // A folder's children process along with it, so their dependencies
+        // count too, but muting the folder alone silences the whole subtree
+        for (auto sub : track->getAllSubTracks (true))
+            toVisit.add (sub);
+
+        for (auto p : track->getAllPlugins())
+        {
+            if (auto sourceID = p->getSidechainSourceID(); sourceID.isValid())
+                addSource (findTrackForID (edit, sourceID));
+
+            // An aux return receives from every send on its bus
+            if (auto auxReturn = dynamic_cast<AuxReturnPlugin*> (p))
+                for (auto t : getAllTracks (edit))
+                    for (auto p2 : t->getAllPlugins())
+                        if (auto send = dynamic_cast<AuxSendPlugin*> (p2))
+                            if (send->getBusNumber() == auxReturn->busNumber.get())
+                                addSource (t);
+
+            // A rack is processed once, fed by all of its instances, so the
+            // stem needs the tracks hosting the rack's other instances
+            if (auto rackInstance = dynamic_cast<RackInstance*> (p))
+                if (rackInstance->type != nullptr)
+                    for (auto other : getRackInstancesInEditForType (*rackInstance->type))
+                        if (other != rackInstance)
+                            addSource (other->getOwnerTrack());
+        }
+    }
+
+    juce::Array<EditItemID> result;
+
+    for (auto t : sources)
+        result.add (t->itemID);
+
+    return result;
+}
+
+//==============================================================================
 std::optional<PlannedRenderJob> createRenderJob (Edit& edit, const RenderSpecification& spec)
 {
     using namespace render_spec_utils;
@@ -252,16 +331,34 @@ std::optional<PlannedRenderJob> createRenderJob (Edit& edit, const RenderSpecifi
     for (auto [track, index] : resolved)
         params.tracksToDo.setBit (index);
 
+    auto mutedTracks = spec.mutedTracks;
+
+    if (spec.includeSourceTracks && ! spec.tracks.isEmpty())
+    {
+        // The solver finds the tracks this stem depends on for its sound;
+        // they render muted just like the explicitly-listed ones
+        auto seed = spec.tracks;
+        seed.addArray (spec.mutedTracks);
+
+        for (auto id : findStemSourceTracks (edit, seed))
+            mutedTracks.addIfNotAlreadyThere (id);
+    }
+
     // Muted tracks are part of the graph so they can feed the rendered tracks'
-    // processing; the queue mutes them in the Edit while the job runs
-    if (! spec.mutedTracks.isEmpty() && ! params.tracksToDo.isZero())
-        for (auto [track, index] : resolveTracks (edit, spec.mutedTracks))
+    // processing; the queue mutes them in the Edit while the job runs, and the
+    // graph is told to keep them processing despite the mute
+    if (! mutedTracks.isEmpty() && ! params.tracksToDo.isZero())
+    {
+        for (auto [track, index] : resolveTracks (edit, mutedTracks))
             params.tracksToDo.setBit (index);
+
+        params.tracksToProcessWhileMuted = mutedTracks;
+    }
 
     auto name = resolved.size() == 1 ? resolved.getFirst().first->getName()
                                      : spec.destination.getFileNameWithoutExtension();
 
-    return PlannedRenderJob { name, std::move (params), spec.mutedTracks };
+    return PlannedRenderJob { name, std::move (params), mutedTracks };
 }
 
 std::vector<RenderSpecification> createPerTrackSpecifications (Edit& edit,

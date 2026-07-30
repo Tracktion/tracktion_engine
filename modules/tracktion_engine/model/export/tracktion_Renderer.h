@@ -54,6 +54,12 @@ public:
         juce::BigInteger tracksToDo;                            ///< An bitset of tracks to render, if this is empty, all tracks will be rendered. @see toBitSet/toTrackArray
         juce::Array<Clip*> allowedClips;                        ///< An array of clips to render, if this is empty, all clips will be included
 
+        /** Tracks whose contents keep processing even while the track is muted, so they
+            can feed the rendered tracks' sidechains, aux buses and racks without being
+            heard directly. Used with RenderSpecification::mutedTracks stem sources.
+        */
+        juce::Array<EditItemID> tracksToProcessWhileMuted;
+
         juce::File destFile;                                    ///< The destination file to write to, must be writable
         juce::AudioFormat* audioFormat = nullptr;               ///< The AudioFormat to use, can be nullptr if createMidiFile is true
 
