@@ -174,6 +174,15 @@ void RenderQueue::startNextJob()
             job.muteScope = std::make_unique<ScopedTrackMuter> (*job.planned.params.edit,
                                                                 job.planned.tracksToMute);
 
+        // An existing destination has to go before the render starts: a file output
+        // stream opens at the end of whatever is already there, so rendering over a
+        // file would append a second one to it. (The old exporter does this as part
+        // of its overwrite confirmation.) Going through AudioFile also releases any
+        // reader the file manager is holding on it.
+        if (auto& destFile = job.planned.params.destFile;
+            destFile.existsAsFile() && job.planned.params.edit != nullptr)
+            AudioFile (job.planned.params.edit->engine, destFile).deleteFile();
+
         if (onJobStarted != nullptr)
             onJobStarted (job);
 

@@ -207,6 +207,47 @@ TEST_SUITE("tracktion_engine")
         CHECK (queue.getJobs()[2]->getFile().existsAsFile());
     }
 
+    TEST_CASE ("RenderQueue rendering over an existing file replaces it")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine);
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0);
+        insertWaveClip (*getAudioTracks (*edit)[0], {}, sinFile->getFile(), { .time = { 0_tp, 1_tp } },
+                        DeleteExistingClips::no);
+
+        juce::TemporaryFile destFile (".wav");
+
+        RenderSpecification spec;
+        spec.destination = destFile.getFile();
+
+        auto renderOnce = [&]
+        {
+            RenderQueue queue;
+            queue.addJob (*createRenderJob (*edit, spec));
+
+            std::atomic<bool> finished { false };
+            queue.onFinished = [&] { finished = true; };
+            queue.start();
+            test_utilities::runDispatchLoopUntilTrue (finished);
+
+            REQUIRE (queue.getJobs()[0]->getState() == RenderQueue::Job::State::completed);
+            return destFile.getFile().getSize();
+        };
+
+        const auto firstSize = renderOnce();
+        CHECK_GT (firstSize, (juce::int64) 0);
+
+        // A file output stream opens at the end of an existing file, so without the
+        // destination being deleted first this second render appends a whole second
+        // wav to the first one
+        CHECK_EQ (renderOnce(), firstSize);
+
+        auto buffer = test_utilities::loadFileInToBuffer (engine, destFile.getFile());
+        REQUIRE (buffer.has_value());
+        CHECK_EQ (buffer->getNumSamples(), (int) toSamples (1_td, 44100.0));
+    }
+
     TEST_CASE ("RenderQueue wrap remainder folds the tail onto the loop start")
     {
         auto& engine = *Engine::getEngines()[0];
