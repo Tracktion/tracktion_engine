@@ -215,7 +215,7 @@ namespace audio_analysis_utils
             result.setProperty ("peakDb", rounded (safeDb (peak)));
             result.setProperty ("truePeakDb", rounded (safeDb (std::max (peak, truePeak))));
             result.setProperty ("rmsDb", rounded (safeDb (rms)));
-            result.setProperty ("clippedSamples", clippedSamples);
+            result.setProperty ("clippedSamples", (juce::int64) clippedSamples);
             result.setProperty ("silenceRatio", totalBlocks > 0 ? rounded ((double) silentBlocks / (double) totalBlocks, 2) : 0.0);
 
             addLoudness (result);
