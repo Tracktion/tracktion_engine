@@ -233,7 +233,7 @@ bool Renderer::RenderTask::foldWrapRemainder (const Renderer::Parameters& target
             // A tail longer than the region wraps round more than once
             for (auto tailPos = regionSamples + pos; tailPos < reader->lengthInSamples; tailPos += regionSamples)
             {
-                auto tailSamps = (int) std::min ((SampleCount) samps, reader->lengthInSamples - tailPos);
+                auto tailSamps = (int) std::min ((SampleCount) samps, (SampleCount) (reader->lengthInSamples - tailPos));
                 reader->read (&tailBuffer, 0, tailSamps, tailPos, true, numChannels > 1);
 
                 for (int chan = 0; chan < numChannels; ++chan)
