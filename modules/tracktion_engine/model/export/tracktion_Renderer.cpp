@@ -276,7 +276,7 @@ static LoudnessMeter::Readings measureLoudness (juce::AudioFormatReader& reader)
 
     for (SampleCount pos = 0; pos < reader.lengthInSamples;)
     {
-        auto samps = (int) std::min ((SampleCount) blockSize, reader.lengthInSamples - pos);
+        auto samps = (int) std::min ((SampleCount) blockSize, (SampleCount) reader.lengthInSamples - pos);
         reader.read (&buffer, 0, samps, pos, true, numChannels > 1);
         meter.process (buffer.getArrayOfReadPointers(), numChannels, samps);
         pos += samps;
