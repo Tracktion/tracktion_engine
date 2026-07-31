@@ -587,6 +587,7 @@ namespace tracktion::inline engine {
 
 #include "audio_files/tracktion_AudioFormatManager.h"
 #include "audio_files/tracktion_AudioFileUtils.h"
+#include "audio_files/tracktion_LoudnessMeter.h"
 #include "audio_files/tracktion_AudioFileAnalyser.h"
 #include "audio_files/tracktion_AudioFifo.h"
 #include "audio_files/tracktion_RecordingThumbnailManager.h"

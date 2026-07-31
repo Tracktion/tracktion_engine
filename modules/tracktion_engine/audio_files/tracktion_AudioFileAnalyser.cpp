@@ -13,7 +13,7 @@ namespace tracktion::inline engine
 
 namespace audio_analysis_utils
 {
-    inline constexpr float silenceFloorDb = -100.0f;
+    inline constexpr float silenceFloorDb = LoudnessMeter::silenceFloorDb;
 
     static double rounded (double value, int decimals = 1)
     {
@@ -26,76 +26,6 @@ namespace audio_analysis_utils
         return std::max ((double) silenceFloorDb, 20.0 * std::log10 (std::max (1.0e-10, gain)));
     }
 
-    /** A direct-form biquad on doubles, for the K-weighting filters. */
-    struct Biquad
-    {
-        double b0 = 1.0, b1 = 0.0, b2 = 0.0, a1 = 0.0, a2 = 0.0;
-        double x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
-
-        double process (double x)
-        {
-            const auto y = b0 * x + b1 * x1 + b2 * x2 - a1 * y1 - a2 * y2;
-            x2 = x1; x1 = x;
-            y2 = y1; y1 = y;
-            return y;
-        }
-    };
-
-    /** The BS.1770-4 K-weighting: a high-shelf "head" pre-filter followed by
-        an RLB high-pass, designed for the given sample rate from the analog
-        prototypes published in the spec.
-    */
-    static std::pair<Biquad, Biquad> makeKWeighting (double sampleRate)
-    {
-        Biquad shelf, highpass;
-
-        {
-            const double f0 = 1681.974450955533;
-            const double gainDb = 3.999843853973347;
-            const double q = 0.7071752369554196;
-
-            const double k = std::tan (juce::MathConstants<double>::pi * f0 / sampleRate);
-            const double vh = std::pow (10.0, gainDb / 20.0);
-            const double vb = std::pow (vh, 0.4996667741545416);
-            const double a0 = 1.0 + k / q + k * k;
-
-            shelf.b0 = (vh + vb * k / q + k * k) / a0;
-            shelf.b1 = 2.0 * (k * k - vh) / a0;
-            shelf.b2 = (vh - vb * k / q + k * k) / a0;
-            shelf.a1 = 2.0 * (k * k - 1.0) / a0;
-            shelf.a2 = (1.0 - k / q + k * k) / a0;
-        }
-
-        {
-            const double f0 = 38.13547087602444;
-            const double q = 0.5003270373238773;
-
-            const double k = std::tan (juce::MathConstants<double>::pi * f0 / sampleRate);
-            const double a0 = 1.0 + k / q + k * k;
-
-            highpass.b0 = 1.0;
-            highpass.b1 = -2.0;
-            highpass.b2 = 1.0;
-            highpass.a1 = 2.0 * (k * k - 1.0) / a0;
-            highpass.a2 = (1.0 - k / q + k * k) / a0;
-        }
-
-        return { shelf, highpass };
-    }
-
-    /** BS.1770 channel weights: 1.0 for left/right/centre, 1.41 for surrounds.
-        The LFE should be excluded, but plain audio files carry no layout info.
-    */
-    static double channelWeight (int channelIndex)
-    {
-        return channelIndex >= 3 ? 1.41 : 1.0;
-    }
-
-    static double powerToLoudness (double power)
-    {
-        return -0.691 + 10.0 * std::log10 (std::max (1.0e-12, power));
-    }
-
     //==============================================================================
     /** Peak, true peak, RMS, R128 loudness, clipping and silence ratio. */
     struct LevelAnalyser final : public AudioFileAnalyser
@@ -104,36 +34,19 @@ namespace audio_analysis_utils
         {
             sampleRate = info.sampleRate;
             numChannels = std::max (1, info.numChannels);
-
-            auto [shelf, highpass] = makeKWeighting (sampleRate);
-            channels.clear();
-
-            for (int i = 0; i < numChannels; ++i)
-                channels.push_back ({ shelf, highpass, 0.0 });
-
             gatingBlockSamples = std::max (1, (int) std::llround (sampleRate * 0.1));
 
-            oversampler = std::make_unique<juce::dsp::Oversampling<float>> (
-                              (size_t) numChannels, 2,
-                              juce::dsp::Oversampling<float>::filterHalfBandFIREquiripple);
-            oversampler->initProcessing ((size_t) maxBlockSize);
+            meter.prepare (sampleRate, numChannels, maxBlockSize);
         }
 
         void process (const juce::AudioBuffer<float>& buffer, int numSamples) override
         {
-            for (int start = 0; start < numSamples; start += maxBlockSize)
-            {
-                const auto numThisTime = std::min (maxBlockSize, numSamples - start);
-                processBlock (buffer, start, numThisTime);
-            }
-        }
+            const auto numChannelsToUse = std::min (numChannels, buffer.getNumChannels());
 
-        void processBlock (const juce::AudioBuffer<float>& buffer, int startSample, int numSamples)
-        {
             // Sample peak, sum of squares and clipped-sample count
-            for (int ch = 0; ch < std::min (numChannels, buffer.getNumChannels()); ++ch)
+            for (int ch = 0; ch < numChannelsToUse; ++ch)
             {
-                auto data = buffer.getReadPointer (ch, startSample);
+                auto data = buffer.getReadPointer (ch);
 
                 for (int i = 0; i < numSamples; ++i)
                 {
@@ -148,57 +61,34 @@ namespace audio_analysis_utils
 
             totalSamplesPerChannel += numSamples;
 
-            // True peak from the 4x oversampled signal
-            juce::dsp::AudioBlock<const float> block (buffer.getArrayOfReadPointers(),
-                                                      (size_t) std::min (numChannels, buffer.getNumChannels()),
-                                                      (size_t) startSample, (size_t) numSamples);
-            auto upsampled = oversampler->processSamplesUp (block);
+            // Loudness and true peak
+            meter.process (choc::buffer::createChannelArrayView (buffer.getArrayOfReadPointers(),
+                                                                 (choc::buffer::ChannelCount) numChannelsToUse,
+                                                                 (choc::buffer::FrameCount) numSamples));
 
-            for (size_t ch = 0; ch < upsampled.getNumChannels(); ++ch)
-                for (size_t i = 0; i < upsampled.getNumSamples(); ++i)
-                    truePeak = std::max (truePeak, std::abs (upsampled.getSample ((int) ch, (int) i)));
-
-            // K-weighted energy in 100ms gating blocks, and the silence ratio's
-            // per-block unweighted energy
+            // The silence ratio's per-block unweighted energy, on the same
+            // 100ms grid as the meter's gating blocks
             for (int i = 0; i < numSamples; ++i)
             {
-                double weightedSquares = 0.0;
-
-                for (int ch = 0; ch < std::min (numChannels, buffer.getNumChannels()); ++ch)
+                for (int ch = 0; ch < numChannelsToUse; ++ch)
                 {
-                    auto& state = channels[(size_t) ch];
-                    const double sample = buffer.getSample (ch, startSample + i);
-                    const double filtered = state.highpass.process (state.shelf.process (sample));
-
-                    weightedSquares += channelWeight (ch) * filtered * filtered;
-                    state.plainBlockEnergy += sample * sample;
+                    const double sample = buffer.getSample (ch, i);
+                    plainBlockEnergy += sample * sample;
                 }
 
-                blockEnergy += weightedSquares;
-
                 if (++samplesIntoBlock >= gatingBlockSamples)
-                    finishGatingBlock();
+                    finishSilenceBlock();
             }
         }
 
-        void finishGatingBlock()
+        void finishSilenceBlock()
         {
-            blockEnergies.push_back (blockEnergy / (double) gatingBlockSamples);
-            blockEnergy = 0.0;
-
-            double plainEnergy = 0.0;
-
-            for (auto& state : channels)
-            {
-                plainEnergy += state.plainBlockEnergy;
-                state.plainBlockEnergy = 0.0;
-            }
-
-            const auto blockRms = std::sqrt (plainEnergy / (double) (gatingBlockSamples * (int) channels.size()));
+            const auto blockRms = std::sqrt (plainBlockEnergy / (double) (gatingBlockSamples * numChannels));
 
             if (safeDb (blockRms) < -60.0)
                 ++silentBlocks;
 
+            plainBlockEnergy = 0.0;
             ++totalBlocks;
             samplesIntoBlock = 0;
         }
@@ -206,97 +96,39 @@ namespace audio_analysis_utils
         void addResults (juce::DynamicObject& result) override
         {
             if (samplesIntoBlock >= gatingBlockSamples / 2)
-                finishGatingBlock();
+                finishSilenceBlock();
+
+            meter.flush();
+            const auto readings = meter.getReadings();
 
             const auto rms = totalSamplesPerChannel > 0
                                 ? std::sqrt (sumOfSquares / (double) (totalSamplesPerChannel * numChannels))
                                 : 0.0;
 
             result.setProperty ("peakDb", rounded (safeDb (peak)));
-            result.setProperty ("truePeakDb", rounded (safeDb (std::max (peak, truePeak))));
+            result.setProperty ("truePeakDb", rounded (readings.truePeakDb));
             result.setProperty ("rmsDb", rounded (safeDb (rms)));
             result.setProperty ("clippedSamples", (juce::int64) clippedSamples);
             result.setProperty ("silenceRatio", totalBlocks > 0 ? rounded ((double) silentBlocks / (double) totalBlocks, 2) : 0.0);
 
-            addLoudness (result);
+            result.setProperty ("integratedLufs", readings.integratedValid ? juce::var (rounded (readings.integratedLufs)) : juce::var());
+            result.setProperty ("maxMomentaryLufs", readings.momentaryValid ? juce::var (rounded (readings.maxMomentaryLufs)) : juce::var());
+            result.setProperty ("maxShortTermLufs", readings.shortTermValid ? juce::var (rounded (readings.maxShortTermLufs)) : juce::var());
         }
-
-        void addLoudness (juce::DynamicObject& result)
-        {
-            // Momentary loudness: 400ms windows at the 100ms gating-block hop
-            std::vector<double> momentaryPowers;
-            double maxMomentary = silenceFloorDb, maxShortTerm = silenceFloorDb;
-
-            for (size_t i = 3; i < blockEnergies.size(); ++i)
-            {
-                const auto power = (blockEnergies[i - 3] + blockEnergies[i - 2]
-                                     + blockEnergies[i - 1] + blockEnergies[i]) / 4.0;
-                momentaryPowers.push_back (power);
-                maxMomentary = std::max (maxMomentary, powerToLoudness (power));
-            }
-
-            // Short-term: 3s windows at the same hop
-            for (size_t i = 29; i < blockEnergies.size(); ++i)
-            {
-                double power = 0.0;
-
-                for (size_t j = i - 29; j <= i; ++j)
-                    power += blockEnergies[j];
-
-                maxShortTerm = std::max (maxShortTerm, powerToLoudness (power / 30.0));
-            }
-
-            // Integrated: mean power of the momentary blocks that pass the
-            // -70 LUFS absolute gate, then the relative gate 10 LU below the
-            // mean of those
-            auto gatedMean = [&momentaryPowers] (double gateLufs)
-            {
-                double sum = 0.0;
-                int count = 0;
-
-                for (auto power : momentaryPowers)
-                {
-                    if (powerToLoudness (power) > gateLufs)
-                    {
-                        sum += power;
-                        ++count;
-                    }
-                }
-
-                return count > 0 ? std::optional<double> (sum / count) : std::nullopt;
-            };
-
-            std::optional<double> integrated;
-
-            if (auto absoluteGated = gatedMean (-70.0))
-                if (auto relativeGated = gatedMean (powerToLoudness (*absoluteGated) - 10.0))
-                    integrated = powerToLoudness (*relativeGated);
-
-            result.setProperty ("integratedLufs", integrated ? juce::var (rounded (*integrated)) : juce::var());
-            result.setProperty ("maxMomentaryLufs", momentaryPowers.empty() ? juce::var() : juce::var (rounded (maxMomentary)));
-            result.setProperty ("maxShortTermLufs", blockEnergies.size() < 30 ? juce::var() : juce::var (rounded (maxShortTerm)));
-        }
-
-        struct ChannelState
-        {
-            Biquad shelf, highpass;
-            double plainBlockEnergy = 0.0;
-        };
 
         static constexpr int maxBlockSize = 8192;
 
+        LoudnessMeter meter;
+
         double sampleRate = 44100.0;
         int numChannels = 1;
-        std::vector<ChannelState> channels;
-        std::unique_ptr<juce::dsp::Oversampling<float>> oversampler;
 
-        float peak = 0.0f, truePeak = 0.0f;
+        float peak = 0.0f;
         double sumOfSquares = 0.0;
         int64_t totalSamplesPerChannel = 0, clippedSamples = 0;
 
         int gatingBlockSamples = 4410, samplesIntoBlock = 0;
-        double blockEnergy = 0.0;
-        std::vector<double> blockEnergies;
+        double plainBlockEnergy = 0.0;
         int silentBlocks = 0, totalBlocks = 0;
     };
 

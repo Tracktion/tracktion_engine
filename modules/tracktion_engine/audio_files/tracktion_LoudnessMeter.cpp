@@ -1,0 +1,343 @@
+/*
+    ,--.                     ,--.     ,--.  ,--.
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
+  '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
+    |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
+    `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
+
+    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+*/
+
+namespace tracktion::inline engine
+{
+
+namespace loudness_utils
+{
+    static double safeDb (double gain)
+    {
+        return std::max ((double) LoudnessMeter::silenceFloorDb,
+                         20.0 * std::log10 (std::max (1.0e-10, gain)));
+    }
+
+    static double powerToLoudness (double power)
+    {
+        return -0.691 + 10.0 * std::log10 (std::max (1.0e-12, power));
+    }
+
+    /** BS.1770 channel weights: 1.0 for left/right/centre, 1.41 for surrounds.
+        The LFE should be excluded, but plain buffers carry no layout info.
+    */
+    static double channelWeight (int channelIndex)
+    {
+        return channelIndex >= 3 ? 1.41 : 1.0;
+    }
+}
+
+//==============================================================================
+void LoudnessMeter::setKWeightingCoefficients (Biquad& shelf, Biquad& highpass, double sampleRate)
+{
+    // The BS.1770-4 K-weighting: a high-shelf "head" pre-filter followed by an
+    // RLB high-pass, designed for the given sample rate from the analog
+    // prototypes published in the spec.
+    {
+        const double f0 = 1681.974450955533;
+        const double gainDb = 3.999843853973347;
+        const double q = 0.7071752369554196;
+
+        const double k = std::tan (juce::MathConstants<double>::pi * f0 / sampleRate);
+        const double vh = std::pow (10.0, gainDb / 20.0);
+        const double vb = std::pow (vh, 0.4996667741545416);
+        const double a0 = 1.0 + k / q + k * k;
+
+        shelf.b0 = (vh + vb * k / q + k * k) / a0;
+        shelf.b1 = 2.0 * (k * k - vh) / a0;
+        shelf.b2 = (vh - vb * k / q + k * k) / a0;
+        shelf.a1 = 2.0 * (k * k - 1.0) / a0;
+        shelf.a2 = (1.0 - k / q + k * k) / a0;
+    }
+
+    {
+        const double f0 = 38.13547087602444;
+        const double q = 0.5003270373238773;
+
+        const double k = std::tan (juce::MathConstants<double>::pi * f0 / sampleRate);
+        const double a0 = 1.0 + k / q + k * k;
+
+        highpass.b0 = 1.0;
+        highpass.b1 = -2.0;
+        highpass.b2 = 1.0;
+        highpass.a1 = 2.0 * (k * k - 1.0) / a0;
+        highpass.a2 = (1.0 - k / q + k * k) / a0;
+    }
+}
+
+//==============================================================================
+void LoudnessMeter::prepare (double newSampleRate, int newNumChannels, int newMaxBlockSize)
+{
+    sampleRate = newSampleRate > 0.0 ? newSampleRate : 44100.0;
+    numChannels = std::max (1, newNumChannels);
+    maxBlockSize = std::max (1, newMaxBlockSize);
+    gatingBlockSamples = std::max (1, (int) std::llround (sampleRate * 0.1));
+
+    channels.assign ((size_t) numChannels, {});
+
+    for (auto& state : channels)
+        setKWeightingCoefficients (state.shelf, state.highpass, sampleRate);
+
+    oversampler = std::make_unique<juce::dsp::Oversampling<float>> (
+                      (size_t) numChannels, 2,
+                      juce::dsp::Oversampling<float>::filterHalfBandFIREquiripple);
+    oversampler->initProcessing ((size_t) maxBlockSize);
+
+    resetRequested.store (false, std::memory_order_relaxed);
+    resetMeasurement();
+}
+
+void LoudnessMeter::process (choc::buffer::ChannelArrayView<const float> block) noexcept
+{
+    processSamples (block.data.channels, (int) block.getNumChannels(),
+                    (int) block.data.offset, (int) block.getNumFrames());
+}
+
+void LoudnessMeter::process (const float* const* channelData, int numChannelsToUse, int numSamples) noexcept
+{
+    processSamples (channelData, numChannelsToUse, 0, numSamples);
+}
+
+void LoudnessMeter::processSamples (const float* const* channelData, int numChannelsToUse,
+                                    int startSample, int numSamples) noexcept
+{
+    if (channelData == nullptr || channels.empty() || numSamples <= 0)
+        return;
+
+    if (resetRequested.exchange (false, std::memory_order_relaxed))
+        resetMeasurement();
+
+    numChannelsToUse = std::min (numChannelsToUse, numChannels);
+
+    if (numChannelsToUse <= 0)
+        return;
+
+    for (int start = 0; start < numSamples; start += maxBlockSize)
+        processChunk (channelData, numChannelsToUse, startSample + start,
+                      std::min (maxBlockSize, numSamples - start));
+
+    publishPeaks();
+}
+
+void LoudnessMeter::processChunk (const float* const* channelData, int numChannelsToUse,
+                                  int startSample, int numSamples) noexcept
+{
+    using namespace loudness_utils;
+
+    // Sample peak
+    for (int ch = 0; ch < numChannelsToUse; ++ch)
+    {
+        auto data = channelData[ch] + startSample;
+
+        for (int i = 0; i < numSamples; ++i)
+            peak = std::max (peak, std::abs (data[i]));
+    }
+
+    // True peak from the 4x oversampled signal
+    juce::dsp::AudioBlock<const float> block (channelData, (size_t) numChannelsToUse,
+                                              (size_t) startSample, (size_t) numSamples);
+    auto upsampled = oversampler->processSamplesUp (block);
+
+    for (size_t ch = 0; ch < std::min ((size_t) numChannelsToUse, upsampled.getNumChannels()); ++ch)
+    {
+        auto data = upsampled.getChannelPointer (ch);
+
+        for (size_t i = 0; i < upsampled.getNumSamples(); ++i)
+            truePeak = std::max (truePeak, std::abs (data[i]));
+    }
+
+    // K-weighted energy in 100ms gating blocks
+    for (int i = 0; i < numSamples; ++i)
+    {
+        double weightedSquares = 0.0;
+
+        for (int ch = 0; ch < numChannelsToUse; ++ch)
+        {
+            auto& state = channels[(size_t) ch];
+            const double sample = channelData[ch][startSample + i];
+            const double filtered = state.highpass.process (state.shelf.process (sample));
+
+            weightedSquares += channelWeight (ch) * filtered * filtered;
+        }
+
+        blockEnergy += weightedSquares;
+
+        if (++samplesIntoBlock >= gatingBlockSamples)
+            finishGatingBlock();
+    }
+}
+
+void LoudnessMeter::finishGatingBlock() noexcept
+{
+    using namespace loudness_utils;
+
+    // Note the division by the full block length even for a partial block
+    // flushed at the end of a file - this matches the offline analyser
+    const auto blockPower = blockEnergy / (double) gatingBlockSamples;
+    blockEnergy = 0.0;
+    samplesIntoBlock = 0;
+
+    blockPowers[(size_t) blockPowerPos] = blockPower;
+    blockPowerPos = (blockPowerPos + 1) % shortTermBlocks;
+    ++numGatingBlocks;
+
+    if (numGatingBlocks >= momentaryBlocks)
+    {
+        const auto momentaryPower = sumOfLastBlockPowers (momentaryBlocks) / (double) momentaryBlocks;
+        const auto momentaryLufs = powerToLoudness (momentaryPower);
+
+        publishedMomentary.store ((float) momentaryLufs, std::memory_order_relaxed);
+        publishedMaxMomentary.store (std::max (publishedMaxMomentary.load (std::memory_order_relaxed),
+                                               (float) momentaryLufs), std::memory_order_relaxed);
+
+        addToHistogram (momentaryPower, momentaryLufs);
+        updateIntegrated();
+    }
+
+    if (numGatingBlocks >= shortTermBlocks)
+    {
+        const auto shortTermLufs = powerToLoudness (sumOfLastBlockPowers (shortTermBlocks) / (double) shortTermBlocks);
+
+        publishedShortTerm.store ((float) shortTermLufs, std::memory_order_relaxed);
+        publishedMaxShortTerm.store (std::max (publishedMaxShortTerm.load (std::memory_order_relaxed),
+                                               (float) shortTermLufs), std::memory_order_relaxed);
+    }
+
+    publishedNumGatingBlocks.store (numGatingBlocks, std::memory_order_relaxed);
+}
+
+double LoudnessMeter::sumOfLastBlockPowers (int numBlocks) const noexcept
+{
+    double sum = 0.0;
+
+    for (int i = 1; i <= numBlocks; ++i)
+        sum += blockPowers[(size_t) ((blockPowerPos - i + shortTermBlocks) % shortTermBlocks)];
+
+    return sum;
+}
+
+void LoudnessMeter::addToHistogram (double power, double loudness) noexcept
+{
+    // The absolute gate is the histogram's lower bound
+    if (loudness <= histogramFloorLufs)
+        return;
+
+    const auto bin = juce::jlimit (0, numHistogramBins - 1,
+                                   (int) ((loudness - histogramFloorLufs) / histogramBinWidthLu));
+
+    binPowerSums[(size_t) bin] += power;
+    ++binCounts[(size_t) bin];
+
+    histogramPowerSum += power;
+    ++histogramCount;
+}
+
+void LoudnessMeter::updateIntegrated() noexcept
+{
+    using namespace loudness_utils;
+
+    if (histogramCount == 0)
+    {
+        publishedIntegratedValid.store (false, std::memory_order_relaxed);
+        return;
+    }
+
+    // The relative gate sits 10 LU below the mean of the absolutely-gated blocks
+    const auto relativeGateLufs = powerToLoudness (histogramPowerSum / (double) histogramCount) - 10.0;
+    const auto firstBin = juce::jlimit (0, numHistogramBins,
+                                        (int) std::ceil ((relativeGateLufs - histogramFloorLufs) / histogramBinWidthLu));
+
+    double sum = 0.0;
+    int64_t count = 0;
+
+    for (int bin = firstBin; bin < numHistogramBins; ++bin)
+    {
+        sum += binPowerSums[(size_t) bin];
+        count += binCounts[(size_t) bin];
+    }
+
+    if (count == 0)
+    {
+        publishedIntegratedValid.store (false, std::memory_order_relaxed);
+        return;
+    }
+
+    publishedIntegrated.store ((float) powerToLoudness (sum / (double) count), std::memory_order_relaxed);
+    publishedIntegratedValid.store (true, std::memory_order_relaxed);
+}
+
+void LoudnessMeter::publishPeaks() noexcept
+{
+    using namespace loudness_utils;
+
+    publishedSamplePeakDb.store ((float) safeDb (peak), std::memory_order_relaxed);
+    publishedTruePeakDb.store ((float) safeDb (std::max (peak, truePeak)), std::memory_order_relaxed);
+}
+
+void LoudnessMeter::flush() noexcept
+{
+    if (samplesIntoBlock >= gatingBlockSamples / 2)
+        finishGatingBlock();
+
+    publishPeaks();
+}
+
+void LoudnessMeter::requestReset() noexcept
+{
+    resetRequested.store (true, std::memory_order_relaxed);
+}
+
+void LoudnessMeter::resetMeasurement() noexcept
+{
+    samplesIntoBlock = 0;
+    blockEnergy = 0.0;
+    blockPowers.fill (0.0);
+    blockPowerPos = 0;
+    numGatingBlocks = 0;
+
+    binPowerSums.fill (0.0);
+    binCounts.fill (0);
+    histogramPowerSum = 0.0;
+    histogramCount = 0;
+
+    peak = 0.0f;
+    truePeak = 0.0f;
+
+    publishedMomentary.store (silenceFloorDb, std::memory_order_relaxed);
+    publishedShortTerm.store (silenceFloorDb, std::memory_order_relaxed);
+    publishedIntegrated.store (silenceFloorDb, std::memory_order_relaxed);
+    publishedMaxMomentary.store (silenceFloorDb, std::memory_order_relaxed);
+    publishedMaxShortTerm.store (silenceFloorDb, std::memory_order_relaxed);
+    publishedTruePeakDb.store (silenceFloorDb, std::memory_order_relaxed);
+    publishedSamplePeakDb.store (silenceFloorDb, std::memory_order_relaxed);
+    publishedNumGatingBlocks.store (0, std::memory_order_relaxed);
+    publishedIntegratedValid.store (false, std::memory_order_relaxed);
+}
+
+LoudnessMeter::Readings LoudnessMeter::getReadings() const noexcept
+{
+    Readings r;
+
+    r.momentaryLufs     = publishedMomentary.load (std::memory_order_relaxed);
+    r.shortTermLufs     = publishedShortTerm.load (std::memory_order_relaxed);
+    r.integratedLufs    = publishedIntegrated.load (std::memory_order_relaxed);
+    r.maxMomentaryLufs  = publishedMaxMomentary.load (std::memory_order_relaxed);
+    r.maxShortTermLufs  = publishedMaxShortTerm.load (std::memory_order_relaxed);
+    r.truePeakDb        = publishedTruePeakDb.load (std::memory_order_relaxed);
+    r.samplePeakDb      = publishedSamplePeakDb.load (std::memory_order_relaxed);
+
+    const auto blocks   = publishedNumGatingBlocks.load (std::memory_order_relaxed);
+    r.momentaryValid    = blocks >= momentaryBlocks;
+    r.shortTermValid    = blocks >= shortTermBlocks;
+    r.integratedValid   = publishedIntegratedValid.load (std::memory_order_relaxed);
+
+    return r;
+}
+
+} // namespace tracktion::inline engine
