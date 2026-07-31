@@ -257,6 +257,37 @@ bool Renderer::RenderTask::foldWrapRemainder (const Renderer::Parameters& target
 }
 
 //==============================================================================
+/** Streams a whole file through a LoudnessMeter and returns its final readings.
+
+    N.B. this has to run over the intermediate file at normalise time rather
+    than during the render pass: folding the wrap remainder and trimming
+    silence both change the audio, so anything measured earlier would be stale
+    for those paths.
+*/
+static LoudnessMeter::Readings measureLoudness (juce::AudioFormatReader& reader)
+{
+    const int blockSize = 16384;
+    const auto numChannels = (int) reader.numChannels;
+
+    LoudnessMeter meter;
+    meter.prepare (reader.sampleRate, numChannels, blockSize);
+
+    juce::AudioBuffer<float> buffer (numChannels, blockSize);
+
+    for (SampleCount pos = 0; pos < reader.lengthInSamples;)
+    {
+        auto samps = (int) std::min ((SampleCount) blockSize, reader.lengthInSamples - pos);
+        reader.read (&buffer, 0, samps, pos, true, numChannels > 1);
+        meter.process (buffer.getArrayOfReadPointers(), numChannels, samps);
+        pos += samps;
+    }
+
+    meter.flush();
+
+    return meter.getReadings();
+}
+
+//==============================================================================
 bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parameters& target,
                                                           const Renderer::Parameters& intermediate)
 {
@@ -284,7 +315,7 @@ bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parame
                                                + doneRange.getStart());
     }
 
-    if (target.shouldNormalise || target.shouldNormaliseByRMS)
+    if (target.shouldNormalise || target.shouldNormaliseByRMS || target.shouldNormaliseByLUFS)
         setJobName (TRANS("Normalising") + "...");
 
     std::unique_ptr<juce::AudioFormatReader> reader (AudioFileUtils::createReaderFor (params.edit->engine,
@@ -310,7 +341,31 @@ bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parame
     progress = 0.96f;
     float gain = 1.0f;
 
-    if (target.shouldNormaliseByRMS)
+    if (target.shouldNormaliseByLUFS)
+    {
+        setJobName (TRANS("Measuring loudness") + "...");
+
+        const auto readings = measureLoudness (*reader);
+
+        progress = 0.98f;
+        setJobName (TRANS("Normalising") + "...");
+
+        // Nothing passed the loudness gates (silence, or too short to measure),
+        // so there's no meaningful target to hit - leave the audio alone
+        if (readings.integratedValid)
+        {
+            auto gainDb = target.normaliseToLevelDb - readings.integratedLufs;
+
+            // Unlike gated loudness, true peak is exactly gain-linear, so holding
+            // it under the ceiling is a min on the gain - never a boost, so the
+            // result can only end up quieter than the loudness target asked for
+            if (target.limitTruePeak && readings.truePeakDb > LoudnessMeter::silenceFloorDb)
+                gainDb = std::min (gainDb, target.truePeakCeilingDb - readings.truePeakDb);
+
+            gain = juce::jlimit (0.0f, 100.0f, dbToGain (gainDb));
+        }
+    }
+    else if (target.shouldNormaliseByRMS)
         gain = juce::jlimit (0.0f, 100.0f, dbToGain (target.normaliseToLevelDb) / (intermediate.resultRMS + 2.0f / 32768.0f));
     else if (target.shouldNormalise)
         gain = juce::jlimit (0.0f, 100.0f, dbToGain (target.normaliseToLevelDb) * (1.0f / (intermediate.resultMagnitude * 1.005f + 2.0f / 32768.0f)));

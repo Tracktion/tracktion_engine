@@ -36,7 +36,10 @@ TEST_SUITE("tracktion_engine")
         spec.channelLayout = "stereo";
         spec.normalise = true;
         spec.normaliseByRMS = true;
+        spec.normaliseByLUFS = true;
         spec.normaliseToLevelDb = -14.0f;
+        spec.limitTruePeak = false;
+        spec.truePeakCeilingDb = -2.0f;
         spec.trimSilence = true;
         spec.dither = true;
         spec.realTime = true;
@@ -61,7 +64,10 @@ TEST_SUITE("tracktion_engine")
         CHECK_EQ (restored.channelLayout, spec.channelLayout);
         CHECK_EQ (restored.normalise, spec.normalise);
         CHECK_EQ (restored.normaliseByRMS, spec.normaliseByRMS);
+        CHECK_EQ (restored.normaliseByLUFS, spec.normaliseByLUFS);
         CHECK_EQ (restored.normaliseToLevelDb, spec.normaliseToLevelDb);
+        CHECK_EQ (restored.limitTruePeak, spec.limitTruePeak);
+        CHECK_EQ (restored.truePeakCeilingDb, spec.truePeakCeilingDb);
         CHECK_EQ (restored.trimSilence, spec.trimSilence);
         CHECK_EQ (restored.dither, spec.dither);
         CHECK_EQ (restored.realTime, spec.realTime);
@@ -81,6 +87,8 @@ TEST_SUITE("tracktion_engine")
             CHECK_EQ (parsed.format, juce::String ("aiff"));
             CHECK_EQ (parsed.sampleRate, 44100.0);
             CHECK_EQ (parsed.bitDepth, 16);
+            CHECK (parsed.limitTruePeak);                   // the true-peak ceiling is on by default...
+            CHECK_EQ (parsed.truePeakCeilingDb, -1.0f);     // ...at -1 dBTP
             CHECK (! parsed.time.has_value());
             CHECK_EQ (unknownKeys, juce::StringArray { "someFutureKey" });
         }
@@ -459,6 +467,174 @@ TEST_SUITE("tracktion_engine")
 
             // ...and push more of this sub-LSB signal above the quantisation floor
             CHECK_GT (countNonZeroSamples (dithered), countNonZeroSamples (undithered));
+        }
+    }
+
+    TEST_CASE ("RenderSpecification LUFS normalisation")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+
+        // 997Hz is where the K-weighting's gain cancels BS.1770's -0.691 offset,
+        // so a steady tone's loudness is simply its RMS power
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0, 1, 997.0f);
+
+        auto clip = insertWaveClip (*track, {}, sinFile->getFile(), { .time = { 0_tp, 5_tp } },
+                                    DeleteExistingClips::no);
+        REQUIRE (clip != nullptr);
+        clip->setGainDB (-3.0f);
+
+        RenderSpecification spec;
+        spec.bitDepth = 24;
+        spec.normaliseByLUFS = true;
+        spec.normaliseToLevelDb = -14.0f;
+
+        // N.B. each render goes to its own file: the AudioFile cache would
+        // serve stale content if one path were reused
+        auto render = [&] (const juce::File& destination) -> juce::AudioBuffer<float>
+        {
+            spec.destination = destination;
+
+            auto job = createRenderJob (*edit, spec);
+            REQUIRE (job.has_value());
+
+            RenderQueue queue;
+            queue.addJob (std::move (*job));
+
+            std::atomic<bool> done { false };
+            queue.onFinished = [&] { done = true; };
+            queue.start();
+            test_utilities::runDispatchLoopUntilTrue (done);
+            REQUIRE (queue.getJobs()[0]->getState() == RenderQueue::Job::State::completed);
+
+            auto buffer = test_utilities::loadFileInToBuffer (engine, destination);
+            REQUIRE (buffer.has_value());
+            return *buffer;
+        };
+
+        auto measure = [] (const juce::AudioBuffer<float>& b)
+        {
+            LoudnessMeter meter;
+            meter.prepare (44100.0, b.getNumChannels(), 8192);
+            meter.process (b.getArrayOfReadPointers(), b.getNumChannels(), b.getNumSamples());
+            meter.flush();
+
+            auto readings = meter.getReadings();
+            REQUIRE (readings.integratedValid);
+            return readings;
+        };
+
+        auto measureLufs = [&measure] (const juce::AudioBuffer<float>& b) { return measure (b).integratedLufs; };
+
+        SUBCASE ("the output measures at the target integrated loudness")
+        {
+            juce::TemporaryFile destFile (".wav");
+            CHECK_LT (std::abs (measureLufs (render (destFile.getFile())) - -14.0f), 0.2f);
+        }
+
+        SUBCASE ("two targets differ by exactly the difference in targets")
+        {
+            juce::TemporaryFile quietFile (".wav"), loudFile (".wav");
+
+            spec.normaliseToLevelDb = -20.0f;
+            const auto quiet = measureLufs (render (quietFile.getFile()));
+
+            spec.normaliseToLevelDb = -14.0f;
+            const auto loud = measureLufs (render (loudFile.getFile()));
+
+            CHECK_LT (std::abs (quiet - -20.0f), 0.2f);
+            CHECK_LT (std::abs (loud - -14.0f), 0.2f);
+            CHECK_LT (std::abs ((loud - quiet) - 6.0f), 0.05f);
+        }
+
+        SUBCASE ("the target is hit after silence has been trimmed")
+        {
+            // The clip sits inside a longer range, so the measurement has to
+            // run on the trimmed file rather than on what the render produced
+            clip->setPosition ({ { 1_tp, 6_tp }, 0_td });
+            spec.time = TimeRange (TimePosition(), TimePosition::fromSeconds (8.0));
+            spec.trimSilence = true;
+
+            juce::TemporaryFile destFile (".wav");
+            auto buffer = render (destFile.getFile());
+
+            const auto seconds = buffer.getNumSamples() / 44100.0;
+            CHECK_GT (seconds, 4.9);
+            CHECK_LT (seconds, 5.2);
+            CHECK_LT (std::abs (measureLufs (buffer) - -14.0f), 0.2f);
+        }
+
+        SUBCASE ("LUFS takes priority over the RMS and peak modes")
+        {
+            spec.normalise = true;
+            spec.normaliseByRMS = true;
+
+            juce::TemporaryFile destFile (".wav");
+            CHECK_LT (std::abs (measureLufs (render (destFile.getFile())) - -14.0f), 0.2f);
+        }
+
+        SUBCASE ("material below the absolute gate is left alone rather than amplified")
+        {
+            // Nothing passes the -70 LUFS gate, so there's no loudness to
+            // normalise: the audio has to come through untouched
+            clip->setGainDB (-100.0f);
+
+            juce::TemporaryFile destFile (".wav");
+            auto buffer = render (destFile.getFile());
+
+            const auto magnitude = buffer.getMagnitude (0, buffer.getNumSamples());
+            CHECK_GT (magnitude, 0.0f);
+            CHECK_LT (magnitude, juce::Decibels::decibelsToGain (-90.0f));
+        }
+
+        // For this signal (a sine duplicated across two channels) the integrated
+        // loudness equals the peak level in dBFS, so a ceiling below the target
+        // has to bite by exactly the difference between them
+        SUBCASE ("the true-peak ceiling holds the gain back below the target")
+        {
+            spec.normaliseToLevelDb = -1.0f;
+            spec.truePeakCeilingDb = -6.0f;
+
+            juce::TemporaryFile destFile (".wav");
+            auto readings = measure (render (destFile.getFile()));
+
+            CHECK_LT (readings.truePeakDb, -6.0f + 0.1f);
+            CHECK_LT (std::abs (readings.integratedLufs - -6.0f), 0.2f);
+        }
+
+        SUBCASE ("without the limit the target wins and the peak goes over")
+        {
+            spec.normaliseToLevelDb = -1.0f;
+            spec.truePeakCeilingDb = -6.0f;
+            spec.limitTruePeak = false;
+
+            juce::TemporaryFile destFile (".wav");
+            auto readings = measure (render (destFile.getFile()));
+
+            CHECK_LT (std::abs (readings.integratedLufs - -1.0f), 0.2f);
+            CHECK_GT (readings.truePeakDb, -6.0f);
+        }
+
+        SUBCASE ("the limit is inert when the ceiling isn't reached")
+        {
+            juce::TemporaryFile limitedFile (".wav"), unlimitedFile (".wav");
+
+            const auto limited = render (limitedFile.getFile());
+
+            spec.limitTruePeak = false;
+            const auto unlimited = render (unlimitedFile.getFile());
+
+            REQUIRE_EQ (limited.getNumSamples(), unlimited.getNumSamples());
+            REQUIRE_EQ (limited.getNumChannels(), unlimited.getNumChannels());
+
+            float maxDiff = 0.0f;
+
+            for (int chan = 0; chan < limited.getNumChannels(); ++chan)
+                for (int i = 0; i < limited.getNumSamples(); ++i)
+                    maxDiff = std::max (maxDiff, std::abs (limited.getSample (chan, i) - unlimited.getSample (chan, i)));
+
+            CHECK_EQ (maxDiff, 0.0f);
         }
     }
 

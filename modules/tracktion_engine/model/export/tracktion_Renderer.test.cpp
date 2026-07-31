@@ -657,6 +657,64 @@ TEST_SUITE("tracktion_engine")
         afm.unregisterMemoryBuffer (key);
     }
 
+    TEST_CASE ("Renderer LUFS normalisation measures the wrapped file")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine);
+
+        // 997Hz over a 3s region is a whole number of cycles, so the folded
+        // tail lands in phase and doubles the level of the first 2s. Measuring
+        // during the render pass instead of after the fold would miss that.
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0, 1, 997.0f);
+        auto clip = insertWaveClip (*getAudioTracks (*edit)[0], {}, sinFile->getFile(), { .time = { 0_tp, 5_tp } },
+                                    DeleteExistingClips::no);
+        REQUIRE (clip != nullptr);
+        clip->setGainDB (-12.0f);   // leaves headroom for the folded tail to double the level
+
+        juce::TemporaryFile destFile (".wav");
+        Renderer::Parameters params (*edit);
+        params.destFile = destFile.getFile();
+        params.audioFormat = engine.getAudioFileFormatManager().getWavFormat();
+        params.bitDepth = 24;
+        params.time = { 0_tp, 3_tp };
+        params.endAllowance = 2_td;
+        params.wrapRemainder = true;
+        params.shouldNormaliseByLUFS = true;
+        params.normaliseToLevelDb = -14.0f;
+
+        std::atomic<bool> callbackFinished { false };
+        bool renderSucceeded = false;
+
+        auto handle = EditRenderer::render (std::move (params),
+                                            [&] (auto res)
+                                            {
+                                                renderSucceeded = res.has_value();
+                                                callbackFinished = true;
+                                            });
+
+        test_utilities::runDispatchLoopUntilTrue (callbackFinished);
+        REQUIRE (renderSucceeded);
+
+        auto buffer = test_utilities::loadFileInToBuffer (engine, destFile.getFile());
+        REQUIRE (buffer.has_value());
+        CHECK_EQ (buffer->getNumSamples(), toSamples (3_td, 44100.0));
+
+        // The tail really was folded on: the first 2s sit ~6dB above the last 1s
+        const auto foldedLevel = buffer->getRMSLevel (0, 0, (int) toSamples (2_td, 44100.0));
+        const auto plainLevel = buffer->getRMSLevel (0, (int) toSamples (2_td, 44100.0),
+                                                     (int) toSamples (1_td, 44100.0));
+        CHECK_EQ (foldedLevel, doctest::Approx (plainLevel * 2.0f).epsilon (0.05));
+
+        LoudnessMeter meter;
+        meter.prepare (44100.0, buffer->getNumChannels(), 8192);
+        meter.process (buffer->getArrayOfReadPointers(), buffer->getNumChannels(), buffer->getNumSamples());
+        meter.flush();
+
+        auto readings = meter.getReadings();
+        REQUIRE (readings.integratedValid);
+        CHECK_LT (std::abs (readings.integratedLufs - -14.0f), 0.2f);
+    }
+
 }
 
 #endif

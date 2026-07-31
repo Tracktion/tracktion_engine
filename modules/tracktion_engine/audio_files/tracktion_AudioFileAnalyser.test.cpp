@@ -24,7 +24,7 @@ TEST_SUITE("tracktion_engine")
         */
         template<typename AudioFormatType, typename SampleGenerator>
         void writeTestFile (const juce::File& file, double sampleRate, int numChannels, int numSamples,
-                            int bitDepth, SampleGenerator&& generator)
+                            int bitDepth, SampleGenerator&& generator, int qualityOptionIndex = 0)
         {
             AudioFormatType format;
             file.deleteFile();
@@ -34,7 +34,8 @@ TEST_SUITE("tracktion_engine")
             auto writer = format.createWriterFor (stream, juce::AudioFormatWriterOptions()
                                                             .withSampleRate (sampleRate)
                                                             .withNumChannels (numChannels)
-                                                            .withBitsPerSample (bitDepth));
+                                                            .withBitsPerSample (bitDepth)
+                                                            .withQualityOptionIndex (qualityOptionIndex));
             REQUIRE (writer != nullptr);
 
             juce::AudioBuffer<float> buffer (numChannels, numSamples);
@@ -231,6 +232,33 @@ TEST_SUITE("tracktion_engine")
             juce::TemporaryFile file (".flac");
             writeTestFile<juce::FlacAudioFormat> (file.getFile(), 44100.0, 2, 44100, 24, stereoSin);
             checkFile (file.getFile());
+        }
+
+        SUBCASE ("OGG")
+        {
+            // Lossy, so the tolerances are wider than the uncompressed formats above
+            // and the length is only approximate. Quality index 9 is 320kbps
+            juce::TemporaryFile file (".ogg");
+            writeTestFile<juce::OggVorbisAudioFormat> (file.getFile(), 44100.0, 2, 2 * 44100, 32,
+                                                       [] (int, int i)
+                                                       {
+                                                           return 0.5f * std::sin (juce::MathConstants<float>::twoPi
+                                                                                     * 220.0f * (float) i / 44100.0f);
+                                                       },
+                                                       9);
+
+            auto v = analyse (file.getFile());
+            CHECK_EQ ((int) v.getProperty ("channels", 0), 2);
+            CHECK_EQ (num (v, "sampleRate"), 44100.0);
+            CHECK_EQ (num (v, "seconds"), doctest::Approx (2.0).epsilon (0.05));
+
+            CHECK_EQ (num (v, "peakDb"), doctest::Approx (-6.0).epsilon (0.2));
+            CHECK_EQ (num (v, "rmsDb"), doctest::Approx (-9.0).epsilon (0.05));
+            CHECK_EQ (num (v, "integratedLufs"), doctest::Approx (-6.7).epsilon (0.15));
+
+            // The tone still has to land in the right band and centroid
+            auto spectrum = v.getProperty ("spectrum", juce::var());
+            CHECK_EQ (num (spectrum, "centroidHz"), doctest::Approx (220.0).epsilon (0.4));
         }
 
         SUBCASE ("a missing file returns an error")

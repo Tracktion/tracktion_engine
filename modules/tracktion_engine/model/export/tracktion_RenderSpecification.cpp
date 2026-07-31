@@ -103,7 +103,10 @@ juce::var RenderSpecification::toJSON() const
     obj->setProperty ("channelLayout", channelLayout);
     obj->setProperty ("normalise", normalise);
     obj->setProperty ("normaliseByRMS", normaliseByRMS);
+    obj->setProperty ("normaliseByLUFS", normaliseByLUFS);
     obj->setProperty ("normaliseToLevelDb", normaliseToLevelDb);
+    obj->setProperty ("limitTruePeak", limitTruePeak);
+    obj->setProperty ("truePeakCeilingDb", truePeakCeilingDb);
     obj->setProperty ("trimSilence", trimSilence);
     obj->setProperty ("dither", dither);
     obj->setProperty ("realTime", realTime);
@@ -128,7 +131,8 @@ RenderSpecification RenderSpecification::fromJSON (const juce::var& v, juce::Str
     static const juce::StringArray knownKeys { "tracks", "mutedTracks", "includeSourceTracks", "startTime", "endTime",
                                               "wrapRemainder", "destination", "format", "sampleRate",
                                               "bitDepth", "quality", "channelLayout", "normalise",
-                                              "normaliseByRMS", "normaliseToLevelDb", "trimSilence",
+                                              "normaliseByRMS", "normaliseByLUFS", "normaliseToLevelDb",
+                                              "limitTruePeak", "truePeakCeilingDb", "trimSilence",
                                               "dither", "realTime", "usePlugins", "useMasterPlugins",
                                               "metadata" };
     RenderSpecification spec;
@@ -160,7 +164,10 @@ RenderSpecification RenderSpecification::fromJSON (const juce::var& v, juce::Str
     spec.channelLayout      = get ("channelLayout", spec.channelLayout);
     spec.normalise          = get ("normalise", spec.normalise);
     spec.normaliseByRMS     = get ("normaliseByRMS", spec.normaliseByRMS);
+    spec.normaliseByLUFS    = get ("normaliseByLUFS", spec.normaliseByLUFS);
     spec.normaliseToLevelDb = get ("normaliseToLevelDb", spec.normaliseToLevelDb);
+    spec.limitTruePeak      = get ("limitTruePeak", spec.limitTruePeak);
+    spec.truePeakCeilingDb  = get ("truePeakCeilingDb", spec.truePeakCeilingDb);
     spec.trimSilence        = get ("trimSilence", spec.trimSilence);
     spec.dither             = get ("dither", spec.dither);
     spec.realTime           = get ("realTime", spec.realTime);
@@ -298,22 +305,25 @@ std::optional<PlannedRenderJob> createRenderJob (Edit& edit, const RenderSpecifi
         return {};
 
     Renderer::Parameters params (edit);
-    params.audioFormat          = getFormat (edit.engine, spec.format);
-    params.bitDepth             = spec.bitDepth;
-    params.sampleRateForAudio   = spec.sampleRate;
-    params.quality              = spec.quality;
-    params.time                 = spec.time.value_or (TimeRange (TimePosition(), toPosition (edit.getLength())));
-    params.shouldNormalise      = spec.normalise;
-    params.shouldNormaliseByRMS = spec.normaliseByRMS;
-    params.normaliseToLevelDb   = spec.normaliseToLevelDb;
-    params.trimSilenceAtEnds    = spec.trimSilence && ! spec.wrapRemainder;
-    params.ditheringEnabled     = spec.dither;
-    params.realTimeRender       = spec.realTime;
-    params.usePlugins           = spec.usePlugins;
-    params.useMasterPlugins     = spec.useMasterPlugins;
-    params.metadata             = spec.metadata;
-    params.canRenderInMono      = false;
-    params.destFile             = spec.destination;
+    params.audioFormat           = getFormat (edit.engine, spec.format);
+    params.bitDepth              = spec.bitDepth;
+    params.sampleRateForAudio    = spec.sampleRate;
+    params.quality               = spec.quality;
+    params.time                  = spec.time.value_or (TimeRange (TimePosition(), toPosition (edit.getLength())));
+    params.shouldNormalise       = spec.normalise;
+    params.shouldNormaliseByRMS  = spec.normaliseByRMS;
+    params.shouldNormaliseByLUFS = spec.normaliseByLUFS;
+    params.normaliseToLevelDb    = spec.normaliseToLevelDb;
+    params.limitTruePeak         = spec.limitTruePeak;
+    params.truePeakCeilingDb     = spec.truePeakCeilingDb;
+    params.trimSilenceAtEnds     = spec.trimSilence && ! spec.wrapRemainder;
+    params.ditheringEnabled      = spec.dither;
+    params.realTimeRender        = spec.realTime;
+    params.usePlugins            = spec.usePlugins;
+    params.useMasterPlugins      = spec.useMasterPlugins;
+    params.metadata              = spec.metadata;
+    params.canRenderInMono       = false;
+    params.destFile              = spec.destination;
 
     if (spec.channelLayout == "mono")           params.mustRenderInMono = true;
     else if (spec.channelLayout == "stereo")    params.channelConfig = ChannelConfiguration::stereo();

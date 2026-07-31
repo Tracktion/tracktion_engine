@@ -78,7 +78,14 @@ struct RenderSpecification
     //==============================================================================
     bool normalise = false;                 ///< Normalise the result by peak level
     bool normaliseByRMS = false;            ///< Normalise the result by RMS level instead
-    float normaliseToLevelDb = 0;           ///< The level to normalise to
+    bool normaliseByLUFS = false;           /**< Normalise the result to an integrated loudness
+                                                 (BS.1770-4) target instead. If more than one
+                                                 normalise flag is set, LUFS wins, then RMS, then peak. */
+    float normaliseToLevelDb = 0;           ///< The level to normalise to, in dB or LUFS depending on the mode
+    bool limitTruePeak = true;              /**< LUFS mode only: hold the gain back so the true peak stays
+                                                 under truePeakCeilingDb, even if the result then lands
+                                                 quieter than the loudness target. */
+    float truePeakCeilingDb = -1.0f;        ///< The true-peak ceiling to keep under when limitTruePeak is set
     bool trimSilence = false;               ///< Trim leading/trailing silence
     bool dither = false;                    ///< Apply dithering for non-float formats
     bool realTime = false;                  ///< Render at 1x play speed

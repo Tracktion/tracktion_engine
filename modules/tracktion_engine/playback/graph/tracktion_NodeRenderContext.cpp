@@ -69,7 +69,7 @@ NodeRenderContext::NodeRenderContext (Renderer::RenderTask& owner_, Renderer::Pa
         TRACKTION_LOG_ERROR("Rendering whilst attached to audio device");
     }
 
-    if (r.shouldNormalise || r.trimSilenceAtEnds || r.shouldNormaliseByRMS || r.wrapRemainder)
+    if (r.shouldNormalise || r.trimSilenceAtEnds || r.shouldNormaliseByRMS || r.shouldNormaliseByLUFS || r.wrapRemainder)
     {
         needsToNormaliseAndTrim = true;
 
@@ -81,6 +81,7 @@ NodeRenderContext::NodeRenderContext (Renderer::RenderTask& owner_, Renderer::Pa
         r.shouldNormalise = false;
         r.trimSilenceAtEnds = false;
         r.shouldNormaliseByRMS = false;
+        r.shouldNormaliseByLUFS = false;
     }
 
     ChannelConfiguration outputChannelConfig;

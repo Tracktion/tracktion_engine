@@ -78,7 +78,14 @@ public:
 
         bool shouldNormalise = false;                           ///< If true, the resulting audio will be normalised by peak level
         bool shouldNormaliseByRMS = false;                      ///< If true, the resulting audio will be normalised by RMS level
-        float normaliseToLevelDb = 0;                           ///< The level to normalise to
+        bool shouldNormaliseByLUFS = false;                     /**< If true, the resulting audio will be normalised to an integrated
+                                                                     loudness (BS.1770-4) target. Takes priority over the peak and
+                                                                     RMS modes if more than one is set. */
+        float normaliseToLevelDb = 0;                           ///< The level to normalise to, in dB or LUFS depending on the mode
+        bool limitTruePeak = true;                              /**< LUFS mode only: if true, the gain is held back so the true peak
+                                                                     stays under truePeakCeilingDb, even if that means the result
+                                                                     lands quieter than the loudness target. */
+        float truePeakCeilingDb = -1.0f;                        ///< The true-peak ceiling to keep under when limitTruePeak is set
         bool canRenderInMono = true;                            ///< If false, the result audio will be forced to stereo
         bool mustRenderInMono = false;                          ///< If true, the resulting audio will be forced to mono
         ChannelConfiguration channelConfig;                     /**< Output channel configuration. When empty (default),
