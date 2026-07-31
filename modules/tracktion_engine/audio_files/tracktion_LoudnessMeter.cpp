@@ -202,11 +202,15 @@ void LoudnessMeter::finishGatingBlock() noexcept
 
     if (numGatingBlocks >= shortTermBlocks)
     {
-        const auto shortTermLufs = powerToLoudness (sumOfLastBlockPowers (shortTermBlocks) / (double) shortTermBlocks);
+        const auto shortTermPower = sumOfLastBlockPowers (shortTermBlocks) / (double) shortTermBlocks;
+        const auto shortTermLufs = powerToLoudness (shortTermPower);
 
         publishedShortTerm.store ((float) shortTermLufs, std::memory_order_relaxed);
         publishedMaxShortTerm.store (std::max (publishedMaxShortTerm.load (std::memory_order_relaxed),
                                                (float) shortTermLufs), std::memory_order_relaxed);
+
+        addToShortTermHistogram (shortTermPower, shortTermLufs);
+        updateLoudnessRange();
     }
 
     publishedNumGatingBlocks.store (numGatingBlocks, std::memory_order_relaxed);
@@ -272,6 +276,69 @@ void LoudnessMeter::updateIntegrated() noexcept
     publishedIntegratedValid.store (true, std::memory_order_relaxed);
 }
 
+void LoudnessMeter::addToShortTermHistogram (double power, double loudness) noexcept
+{
+    if (loudness <= histogramFloorLufs)
+        return;
+
+    const auto bin = juce::jlimit (0, numHistogramBins - 1,
+                                   (int) ((loudness - histogramFloorLufs) / histogramBinWidthLu));
+
+    ++shortTermBinCounts[(size_t) bin];
+    shortTermPowerSum += power;
+    ++shortTermCount;
+}
+
+void LoudnessMeter::updateLoudnessRange() noexcept
+{
+    using namespace loudness_utils;
+
+    if (shortTermCount == 0)
+    {
+        publishedLoudnessRangeValid.store (false, std::memory_order_relaxed);
+        return;
+    }
+
+    // EBU Tech 3342: the same -70 LUFS absolute gate as the integrated
+    // measurement, but a relative gate 20 LU down, then the spread between the
+    // 10th and 95th percentiles of what's left
+    const auto relativeGateLufs = powerToLoudness (shortTermPowerSum / (double) shortTermCount) - 20.0;
+    const auto firstBin = juce::jlimit (0, numHistogramBins,
+                                        (int) std::ceil ((relativeGateLufs - histogramFloorLufs) / histogramBinWidthLu));
+
+    int64_t total = 0;
+
+    for (int bin = firstBin; bin < numHistogramBins; ++bin)
+        total += shortTermBinCounts[(size_t) bin];
+
+    if (total == 0)
+    {
+        publishedLoudnessRangeValid.store (false, std::memory_order_relaxed);
+        return;
+    }
+
+    auto loudnessAtPercentile = [this, firstBin, total] (double percentile)
+    {
+        const auto target = (int64_t) std::llround ((double) (total - 1) * percentile);
+        int64_t accumulated = 0;
+
+        for (int bin = firstBin; bin < numHistogramBins; ++bin)
+        {
+            accumulated += shortTermBinCounts[(size_t) bin];
+
+            if (accumulated > target)
+                return histogramFloorLufs + bin * histogramBinWidthLu;
+        }
+
+        return histogramFloorLufs + (numHistogramBins - 1) * histogramBinWidthLu;
+    };
+
+    const auto range = loudnessAtPercentile (0.95) - loudnessAtPercentile (0.1);
+
+    publishedLoudnessRange.store ((float) std::max (0.0, range), std::memory_order_relaxed);
+    publishedLoudnessRangeValid.store (true, std::memory_order_relaxed);
+}
+
 void LoudnessMeter::publishPeaks() noexcept
 {
     using namespace loudness_utils;
@@ -306,6 +373,10 @@ void LoudnessMeter::resetMeasurement() noexcept
     histogramPowerSum = 0.0;
     histogramCount = 0;
 
+    shortTermBinCounts.fill (0);
+    shortTermPowerSum = 0.0;
+    shortTermCount = 0;
+
     peak = 0.0f;
     truePeak = 0.0f;
 
@@ -316,8 +387,10 @@ void LoudnessMeter::resetMeasurement() noexcept
     publishedMaxShortTerm.store (silenceFloorDb, std::memory_order_relaxed);
     publishedTruePeakDb.store (silenceFloorDb, std::memory_order_relaxed);
     publishedSamplePeakDb.store (silenceFloorDb, std::memory_order_relaxed);
+    publishedLoudnessRange.store (0.0f, std::memory_order_relaxed);
     publishedNumGatingBlocks.store (0, std::memory_order_relaxed);
     publishedIntegratedValid.store (false, std::memory_order_relaxed);
+    publishedLoudnessRangeValid.store (false, std::memory_order_relaxed);
 }
 
 LoudnessMeter::Readings LoudnessMeter::getReadings() const noexcept
@@ -331,11 +404,13 @@ LoudnessMeter::Readings LoudnessMeter::getReadings() const noexcept
     r.maxShortTermLufs  = publishedMaxShortTerm.load (std::memory_order_relaxed);
     r.truePeakDb        = publishedTruePeakDb.load (std::memory_order_relaxed);
     r.samplePeakDb      = publishedSamplePeakDb.load (std::memory_order_relaxed);
+    r.loudnessRangeLu   = publishedLoudnessRange.load (std::memory_order_relaxed);
 
     const auto blocks   = publishedNumGatingBlocks.load (std::memory_order_relaxed);
     r.momentaryValid    = blocks >= momentaryBlocks;
     r.shortTermValid    = blocks >= shortTermBlocks;
     r.integratedValid   = publishedIntegratedValid.load (std::memory_order_relaxed);
+    r.loudnessRangeValid = publishedLoudnessRangeValid.load (std::memory_order_relaxed);
 
     return r;
 }

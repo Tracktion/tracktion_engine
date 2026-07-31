@@ -285,8 +285,58 @@ TEST_SUITE("tracktion_engine")
         CHECK_EQ (a.shortTermLufs, doctest::Approx (b.shortTermLufs).epsilon (0.0001));
         CHECK_EQ (a.maxMomentaryLufs, doctest::Approx (b.maxMomentaryLufs).epsilon (0.0001));
         CHECK_EQ (a.maxShortTermLufs, doctest::Approx (b.maxShortTermLufs).epsilon (0.0001));
+        CHECK_EQ (a.loudnessRangeLu, doctest::Approx (b.loudnessRangeLu).epsilon (0.0001));
         CHECK_EQ (a.truePeakDb, doctest::Approx (b.truePeakDb).epsilon (0.001));
         CHECK_EQ (a.samplePeakDb, doctest::Approx (b.samplePeakDb).epsilon (0.0001));
+    }
+
+    TEST_CASE ("LoudnessMeter loudness range")
+    {
+        using namespace loudness_meter_tests;
+
+        SUBCASE ("a constant level has almost no loudness range")
+        {
+            auto buffer = makeBuffer (20 * (int) testSampleRate, [] (int i) { return sine (i, 1000.0, 0.5f); });
+
+            LoudnessMeter meter;
+            meter.prepare (testSampleRate, 1, 8192);
+            processInBlocks (meter, buffer, { 1024 });
+
+            auto readings = meter.getReadings();
+            REQUIRE (readings.loudnessRangeValid);
+            CHECK_LT (readings.loudnessRangeLu, 0.5f);
+        }
+
+        SUBCASE ("two sections 20 LU apart give a loudness range of about 20 LU")
+        {
+            const auto tenSeconds = 10 * (int) testSampleRate;
+
+            auto buffer = makeBuffer (2 * tenSeconds, [] (int i)
+            {
+                return sine (i, 1000.0, i < tenSeconds ? 0.5f : 0.05f);
+            });
+
+            LoudnessMeter meter;
+            meter.prepare (testSampleRate, 1, 8192);
+            processInBlocks (meter, buffer, { 1024 });
+
+            auto readings = meter.getReadings();
+            REQUIRE (readings.loudnessRangeValid);
+            CHECK_EQ (readings.loudnessRangeLu, doctest::Approx (20.0).epsilon (0.05));
+        }
+
+        SUBCASE ("it isn't valid until there are short-term blocks")
+        {
+            auto buffer = makeBuffer (2 * (int) testSampleRate, [] (int i) { return sine (i, 1000.0, 0.5f); });
+
+            LoudnessMeter meter;
+            meter.prepare (testSampleRate, 1, 8192);
+            processInBlocks (meter, buffer, { 1024 });
+
+            auto readings = meter.getReadings();
+            CHECK (! readings.shortTermValid);
+            CHECK (! readings.loudnessRangeValid);
+        }
     }
 
     TEST_CASE ("LoudnessMeter choc view and raw pointer overloads agree")
@@ -320,6 +370,7 @@ TEST_SUITE("tracktion_engine")
         CHECK_EQ (a.shortTermLufs, b.shortTermLufs);
         CHECK_EQ (a.maxMomentaryLufs, b.maxMomentaryLufs);
         CHECK_EQ (a.maxShortTermLufs, b.maxShortTermLufs);
+        CHECK_EQ (a.loudnessRangeLu, b.loudnessRangeLu);
         CHECK_EQ (a.truePeakDb, b.truePeakDb);
         CHECK_EQ (a.samplePeakDb, b.samplePeakDb);
         CHECK (b.integratedValid);
@@ -369,6 +420,11 @@ TEST_SUITE("tracktion_engine")
         CHECK_EQ (readings.maxMomentaryLufs, doctest::Approx (-29.0).epsilon (0.02));
         CHECK_EQ (readings.maxShortTermLufs, doctest::Approx (-29.0).epsilon (0.02));
         CHECK_EQ (readings.samplePeakDb, doctest::Approx (-26.02).epsilon (0.01));
+
+        // The short-term histogram is cleared too, so the loud section doesn't
+        // leave a 20 LU range behind
+        REQUIRE (readings.loudnessRangeValid);
+        CHECK_LT (readings.loudnessRangeLu, 0.5f);
     }
 
     TEST_CASE ("LoudnessMeter readings can be polled whilst processing")

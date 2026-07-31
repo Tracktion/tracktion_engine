@@ -61,7 +61,8 @@ tl::expected<juce::var, juce::String> analyseAudioFile (Engine&, const juce::Fil
 /** Analyses a file with the standard level/spectrum/envelope analysers.
     Level stats: sample peak, oversampled true peak, RMS, EBU R128 loudness
     (integrated, max momentary, max short-term - BS.1770-4 K-weighting and
-    gating), clipped-sample count and the ratio of silent time.
+    gating), loudness range in LU (EBU Tech 3342), clipped-sample count and the
+    ratio of silent time.
     Spectrum: third-octave band energies relative to the loudest band, plus
     spectral centroid, 85% rolloff and low/mid/high balance.
     Envelope: peak and RMS in dB over evenly-spaced windows.
