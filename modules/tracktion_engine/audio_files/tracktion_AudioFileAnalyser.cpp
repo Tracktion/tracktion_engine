@@ -114,6 +114,7 @@ namespace audio_analysis_utils
             result.setProperty ("integratedLufs", readings.integratedValid ? juce::var (rounded (readings.integratedLufs)) : juce::var());
             result.setProperty ("maxMomentaryLufs", readings.momentaryValid ? juce::var (rounded (readings.maxMomentaryLufs)) : juce::var());
             result.setProperty ("maxShortTermLufs", readings.shortTermValid ? juce::var (rounded (readings.maxShortTermLufs)) : juce::var());
+            result.setProperty ("loudnessRangeLu", readings.loudnessRangeValid ? juce::var (rounded (readings.loudnessRangeLu)) : juce::var());
         }
 
         static constexpr int maxBlockSize = 8192;

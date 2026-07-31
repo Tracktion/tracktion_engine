@@ -16,9 +16,9 @@ namespace tracktion::inline engine
 /**
     A real-time-safe EBU R128 / ITU-R BS.1770-4 loudness meter.
 
-    It measures momentary (400ms), short-term (3s) and gated integrated loudness
-    along with 4x-oversampled true peak and sample peak, and can be driven either
-    from an audio callback or from an offline file pass.
+    It measures momentary (400ms), short-term (3s) and gated integrated loudness,
+    loudness range (EBU Tech 3342) and 4x-oversampled true peak and sample peak,
+    and can be driven either from an audio callback or from an offline file pass.
 
     Real-time contract:
     - prepare() does all of the allocation and must not be called while
@@ -32,10 +32,8 @@ namespace tracktion::inline engine
     into a fixed 0.1 LU histogram (the libebur128 approach), so the memory is
     constant and the gated result is recomputed in constant time every 100ms.
     Only the two gate decisions are quantised, to at most the 0.1 LU bin width,
-    which is far inside the EBU R128 tolerance.
-
-    Loudness range (LRA) isn't measured - no consumer needs it yet, and it would
-    need a second short-term histogram.
+    which is far inside the EBU R128 tolerance. Loudness range works the same
+    way, from a second histogram of short-term loudness.
 */
 class LoudnessMeter
 {
@@ -91,10 +89,12 @@ public:
         float maxShortTermLufs  = silenceFloorDb;   /**< Held maximum short-term value. */
         float truePeakDb        = silenceFloorDb;   /**< Held maximum, 4x oversampled. */
         float samplePeakDb      = silenceFloorDb;   /**< Held maximum sample value. */
+        float loudnessRangeLu   = 0.0f;             /**< EBU Tech 3342 loudness range, in LU. */
 
         bool momentaryValid     = false;            /**< False until 400ms has been processed. */
         bool shortTermValid     = false;            /**< False until 3s has been processed. */
         bool integratedValid    = false;            /**< False until a block passes the gates. */
+        bool loudnessRangeValid = false;            /**< False until a short-term block passes the gates. */
     };
 
     /** Returns the current readings. Lock-free, callable from any thread. */
@@ -136,6 +136,8 @@ private:
     double sumOfLastBlockPowers (int numBlocks) const noexcept;
     void addToHistogram (double power, double loudness) noexcept;
     void updateIntegrated() noexcept;
+    void addToShortTermHistogram (double power, double loudness) noexcept;
+    void updateLoudnessRange() noexcept;
     void publishPeaks() noexcept;
     void resetMeasurement() noexcept;
 
@@ -155,14 +157,20 @@ private:
     double histogramPowerSum = 0.0;
     int64_t histogramCount = 0;
 
+    // The loudness range only needs counts - the percentiles come from those,
+    // and its relative gate uses a running mean of the gated short-term powers
+    std::array<int64_t, numHistogramBins> shortTermBinCounts = {};
+    double shortTermPowerSum = 0.0;
+    int64_t shortTermCount = 0;
+
     float peak = 0.0f, truePeak = 0.0f;
 
     std::atomic<float> publishedMomentary { silenceFloorDb }, publishedShortTerm { silenceFloorDb },
                        publishedIntegrated { silenceFloorDb }, publishedMaxMomentary { silenceFloorDb },
                        publishedMaxShortTerm { silenceFloorDb }, publishedTruePeakDb { silenceFloorDb },
-                       publishedSamplePeakDb { silenceFloorDb };
+                       publishedSamplePeakDb { silenceFloorDb }, publishedLoudnessRange { 0.0f };
     std::atomic<int64_t> publishedNumGatingBlocks { 0 };
-    std::atomic<bool> publishedIntegratedValid { false };
+    std::atomic<bool> publishedIntegratedValid { false }, publishedLoudnessRangeValid { false };
     std::atomic<bool> resetRequested { false };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LoudnessMeter)
