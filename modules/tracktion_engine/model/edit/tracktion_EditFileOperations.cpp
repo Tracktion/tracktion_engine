@@ -253,6 +253,17 @@ void EditFileOperations::save (bool warnOfFailure,
         return;
     }
 
+    // Something is part-way through an operation that has temporarily changed the
+    // Edit and will restore it (see Edit::SaveInhibitor), so writing now would
+    // persist state the user never asked for
+    if (edit.isSaveInhibited())
+    {
+        if (callback)
+            callback (false);
+
+        return;
+    }
+
     CustomControlSurface::saveAllSettings (edit.engine);
     edit.getParameterControlMappings().saveToEdit();
 
@@ -502,6 +513,11 @@ void EditFileOperations::saveAs (const juce::File& f, bool forceOverwriteExistin
 bool EditFileOperations::saveTempVersion (bool forceSaveEvenIfUnchanged)
 {
     CRASH_TRACER
+
+    // As in save(): nothing should be written whilst the Edit is temporarily
+    // modified. Not an error - there just isn't anything safe to write yet.
+    if (edit.isSaveInhibited())
+        return true;
 
     if (! (forceSaveEvenIfUnchanged || edit.hasChangedSinceSaved()))
         return true;

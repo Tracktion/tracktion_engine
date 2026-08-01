@@ -1292,6 +1292,10 @@ Edit::UndoTransactionInhibitor::UndoTransactionInhibitor (Edit& e) : edit (&e)  
 Edit::UndoTransactionInhibitor::UndoTransactionInhibitor (const UndoTransactionInhibitor& o) : edit (o.edit)    { if (auto e = edit.get()) ++(e->numUndoTransactionInhibitors); }
 Edit::UndoTransactionInhibitor::~UndoTransactionInhibitor()                                                     { if (auto e = edit.get()) --(e->numUndoTransactionInhibitors); }
 
+Edit::SaveInhibitor::SaveInhibitor (Edit& e) : edit (&e)                                                        { ++e.numSaveInhibitors; }
+Edit::SaveInhibitor::SaveInhibitor (const SaveInhibitor& o) : edit (o.edit)                                     { if (auto e = edit.get()) ++(e->numSaveInhibitors); }
+Edit::SaveInhibitor::~SaveInhibitor()                                                                           { if (auto e = edit.get()) --(e->numSaveInhibitors); }
+
 //==============================================================================
 EditItemID Edit::createNewItemID (const std::vector<EditItemID>& idsToAvoid) const
 {
