@@ -17,7 +17,7 @@
 namespace tracktion::inline engine
 {
 
-TEST_SUITE("tracktion_engine")
+TEST_SUITE ("tracktion_engine")
 {
     TEST_CASE ("RenderQueue renders jobs sequentially in order")
     {
@@ -205,6 +205,100 @@ TEST_SUITE("tracktion_engine")
         REQUIRE_EQ (queue.getJobs().size(), (size_t) 3);
         CHECK (queue.getJobs()[2]->getState() == RenderQueue::Job::State::completed);
         CHECK (queue.getJobs()[2]->getFile().existsAsFile());
+    }
+
+    TEST_CASE ("RenderQueue accepts jobs appended from the onJobStarted callback")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine);
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0);
+        insertWaveClip (*getAudioTracks (*edit)[0], {}, sinFile->getFile(), { .time = { 0_tp, 1_tp } },
+                        DeleteExistingClips::no);
+
+        juce::TemporaryFile destFile1 (".wav"), destFile2 (".wav");
+
+        auto makeSpec = [] (const juce::File& f)
+        {
+            RenderSpecification spec;
+            spec.destination = f;
+            return spec;
+        };
+
+        RenderQueue queue;
+        queue.addJob (*createRenderJob (*edit, makeSpec (destFile1.getFile())));
+
+        std::atomic<bool> finished { false };
+        queue.onFinished = [&] { finished = true; };
+
+        // Appending from inside the callback reallocates the job vector whilst
+        // startNextJob is still walking it
+        queue.onJobStarted = [&, chained = false] (auto&) mutable
+        {
+            if (! std::exchange (chained, true))
+                queue.addJob (*createRenderJob (*edit, makeSpec (destFile2.getFile())));
+        };
+
+        queue.start();
+        test_utilities::runDispatchLoopUntilTrue (finished);
+
+        REQUIRE_EQ (queue.getJobs().size(), (size_t) 2);
+        CHECK (queue.getJobs()[0]->getState() == RenderQueue::Job::State::completed);
+        CHECK (queue.getJobs()[1]->getState() == RenderQueue::Job::State::completed);
+        CHECK (queue.getJobs()[1]->getFile().existsAsFile());
+    }
+
+    TEST_CASE ("RenderQueue cancelling from the onJobStarted callback skips the render")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine, 2);
+        auto tracks = getAudioTracks (*edit);
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0);
+
+        for (auto t : tracks)
+            insertWaveClip (*t, {}, sinFile->getFile(), { .time = { 0_tp, 1_tp } },
+                            DeleteExistingClips::no);
+
+        auto destDir = juce::File::createTempFile ({});
+        destDir.createDirectory();
+
+        RenderQueue queue;
+
+        for (auto& spec : createPerTrackSpecifications (*edit, {}, destDir))
+            queue.addJob (*createRenderJob (*edit, spec));
+
+        REQUIRE_EQ (queue.getJobs().size(), (size_t) 2);
+
+        std::atomic<bool> finished { false };
+        queue.onFinished = [&] { finished = true; };
+
+        std::vector<RenderQueue::Job*> finishedOrder;
+        queue.onJobFinished = [&] (auto& j) { finishedOrder.push_back (&j); };
+
+        // Cancelling here happens before the job has a handle to cancel, so the
+        // queue has to skip it rather than render it and throw the result away
+        queue.onJobStarted = [&] (auto& j)
+        {
+            if (&j == queue.getJobs()[0].get())
+                j.cancel();
+        };
+
+        queue.start();
+        test_utilities::runDispatchLoopUntilTrue (finished);
+
+        // The skipped job never reaches handleJobFinished, so it never reports as
+        // finished - if it does, the render ran and its result was thrown away
+        const std::vector<RenderQueue::Job*> expectedFinished { queue.getJobs()[1].get() };
+        CHECK_EQ (finishedOrder, expectedFinished);
+
+        CHECK (queue.getJobs()[0]->getState() == RenderQueue::Job::State::cancelled);
+        CHECK (! queue.getJobs()[0]->getParameters().destFile.existsAsFile());
+        CHECK (queue.getJobs()[1]->getState() == RenderQueue::Job::State::completed);
+        CHECK (queue.getJobs()[1]->getFile().existsAsFile());
+        CHECK (queue.hasFinished());
+
+        destDir.deleteRecursively();
     }
 
     TEST_CASE ("RenderQueue rendering over an existing file replaces it")

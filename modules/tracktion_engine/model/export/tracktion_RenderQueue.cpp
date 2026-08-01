@@ -162,8 +162,13 @@ void RenderQueue::startNextJob()
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
 
-    for (auto& jobPtr : jobs)
+    // Indexed rather than a range-for, and taking a copy of the pointer: the
+    // onJobStarted callback is allowed to append to the queue, which would
+    // reallocate jobs and invalidate any iterator or reference into it
+    for (size_t i = 0; i < jobs.size(); ++i)
     {
+        auto jobPtr = jobs[i];
+
         if (jobPtr->state != Job::State::pending)
             continue;
 
@@ -185,6 +190,15 @@ void RenderQueue::startNextJob()
 
         if (onJobStarted != nullptr)
             onJobStarted (job);
+
+        // The callback may have cancelled this job. There's no handle to cancel at
+        // that point, so check here rather than starting a render whose result would
+        // be discarded when it finished
+        if (job.state != Job::State::active)
+        {
+            job.muteScope.reset();
+            continue;
+        }
 
         // The finished callback arrives on the render thread, so hop back to the
         // message thread. The job pointer keeps the Job alive; the alive flag
