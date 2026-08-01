@@ -201,8 +201,10 @@ NodeRenderContext::~NodeRenderContext()
         if (needsToNormaliseAndTrim && ! owner.shouldCancel())
             owner.performNormalisingAndTrimming (originalParams, r);
     }
-    catch (std::runtime_error& err)
+    catch (const std::exception& err)
     {
+        // Destructors are implicitly noexcept, so anything escaping here (a bad_alloc
+        // from the normalising pass, say) would terminate rather than fail the render
         TRACKTION_LOG_ERROR (err.what());
     }
 }

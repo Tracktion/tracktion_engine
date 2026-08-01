@@ -871,7 +871,9 @@ EditRenderer::Handle::~Handle()
     if (threadExitEnabler)
         signalThreadShouldExit (threadExitEnabler->getID());
 
-    renderThread.join();
+    // A render which failed to build its graph never started a thread
+    if (renderThread.joinable())
+        renderThread.join();
 
     // A cancelled render hands its task over rather than destroying it on the render
     // thread, as the graph holds plugins which have to be deleted on the message thread
@@ -904,11 +906,18 @@ auto EditRenderer::render (Renderer::Parameters r,
                                                       &renderHandle->progress,
                                                       renderHandle->thumbnailToUpdate.get());
 
+    // createRenderTask returns nullptr if the graph couldn't be built, so there's
+    // nothing to run - report it rather than starting a thread to dereference it
+    if (renderTask == nullptr)
+    {
+        finishedCallback_ (tl::unexpected (std::string (NEEDS_TRANS("Couldn't create the render graph"))));
+        return renderHandle;
+    }
+
     auto threadStarted = std::make_shared<Semaphore>();
 
-    if (renderTask != nullptr)
-        renderTask->setCancellationCheck ([&cancelled = renderHandle->hasBeenCancelled]
-                                          { return cancelled.load(); });
+    renderTask->setCancellationCheck ([&cancelled = renderHandle->hasBeenCancelled]
+                                      { return cancelled.load(); });
 
     // Safe to hold unowned: ~Handle joins the render thread, so the Handle always
     // outlives it (as the hasBeenCancelled reference below already relies on)
