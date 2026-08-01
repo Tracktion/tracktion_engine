@@ -15,7 +15,14 @@ ScopedTrackMuter::ScopedTrackMuter (Edit& edit, const juce::Array<EditItemID>& t
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
 
-    for (auto id : tracksToMute)
+    // The list has to be de-duplicated first: muting a track twice would capture
+    // the mute this class had just applied as that track's "previous" state, and
+    // the restore would then leave it muted for good.
+    std::vector<EditItemID> uniqueIDs (tracksToMute.begin(), tracksToMute.end());
+    std::sort (uniqueIDs.begin(), uniqueIDs.end());
+    uniqueIDs.erase (std::unique (uniqueIDs.begin(), uniqueIDs.end()), uniqueIDs.end());
+
+    for (auto id : uniqueIDs)
     {
         if (auto track = findTrackForID (edit, id))
         {
@@ -78,13 +85,18 @@ RenderQueue::~RenderQueue()
     *aliveFlag = false;
     cancelAll();
 
-    // Wait for any active render to stop, then remove its partial file
+    // Wait for any active render to stop, then remove its partial file. A job can
+    // have finished successfully and be waiting on the callAsync that clears its
+    // handle, so the state has to be re-checked after the join - deleting there
+    // would throw away a complete file.
     for (auto& job : jobs)
     {
         if (job->handle != nullptr)
         {
-            job->handle = nullptr;
-            job->planned.params.destFile.deleteFile();
+            job->handle = nullptr;   // joins the render thread, so renderSucceeded has settled
+
+            if (! job->renderSucceeded)
+                job->planned.params.destFile.deleteFile();
         }
 
         job->muteScope.reset();
@@ -206,6 +218,8 @@ void RenderQueue::startNextJob()
         job.handle = EditRenderer::render (job.planned.params,
                                            [alive = std::weak_ptr<bool> (aliveFlag), this, jobPtr] (auto renderResult)
                                            {
+                                               jobPtr->renderSucceeded = renderResult.has_value();
+
                                                juce::MessageManager::callAsync ([alive, this, jobPtr, result = std::move (renderResult)]() mutable
                                                {
                                                    if (auto stillAlive = alive.lock(); stillAlive != nullptr && *stillAlive)
