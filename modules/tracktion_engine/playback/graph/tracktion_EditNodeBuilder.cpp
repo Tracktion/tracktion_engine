@@ -86,7 +86,6 @@ namespace
         return false;
     }
 
-
     AudioTrack* getTrackContainingTrackDevice (Edit& edit, WaveInputDevice& device)
     {
         for (auto t : getAudioTracks (edit))
