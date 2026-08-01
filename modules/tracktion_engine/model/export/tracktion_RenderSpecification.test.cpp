@@ -17,7 +17,7 @@
 namespace tracktion::inline engine
 {
 
-TEST_SUITE("tracktion_engine")
+TEST_SUITE ("tracktion_engine")
 {
     TEST_CASE ("RenderSpecification JSON round-trip")
     {

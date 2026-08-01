@@ -94,7 +94,7 @@ public:
         void setThumbnail (std::shared_ptr<juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver>);
 
         /** Returns the receiver set with setThumbnail(), if any. */
-        std::shared_ptr<juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver> getThumbnail() const    { return thumbnail; }
+        std::shared_ptr<juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver> getThumbnail() const { return thumbnail; }
 
     private:
         //==============================================================================

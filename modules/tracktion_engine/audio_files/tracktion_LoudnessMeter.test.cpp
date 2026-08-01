@@ -15,7 +15,7 @@
 namespace tracktion::inline engine
 {
 
-TEST_SUITE("tracktion_engine")
+TEST_SUITE ("tracktion_engine")
 {
     namespace loudness_meter_tests
     {
