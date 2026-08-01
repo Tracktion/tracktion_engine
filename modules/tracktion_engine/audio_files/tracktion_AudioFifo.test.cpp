@@ -15,7 +15,8 @@
 #include <thread>
 #include <chrono>
 
-namespace tracktion::inline engine {
+namespace tracktion::inline engine
+{
 
 //==============================================================================
 namespace audio_fifo_test_utils

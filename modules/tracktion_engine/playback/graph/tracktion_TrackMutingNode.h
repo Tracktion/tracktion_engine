@@ -8,7 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion::inline engine {
+namespace tracktion::inline engine
+{
 
 /**
     Holds the state of a Track and if its contents/plugins should be played or not.

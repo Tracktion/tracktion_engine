@@ -10,7 +10,8 @@
 
 #pragma once
 
-namespace tracktion::inline engine {
+namespace tracktion::inline engine
+{
 
 class TrackMuteState;
 
