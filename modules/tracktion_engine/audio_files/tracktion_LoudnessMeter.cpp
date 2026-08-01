@@ -192,9 +192,8 @@ void LoudnessMeter::finishGatingBlock() noexcept
         const auto momentaryPower = sumOfLastBlockPowers (momentaryBlocks) / (double) momentaryBlocks;
         const auto momentaryLufs = powerToLoudness (momentaryPower);
 
-        publishedMomentary.store ((float) momentaryLufs, std::memory_order_relaxed);
-        publishedMaxMomentary.store (std::max (publishedMaxMomentary.load (std::memory_order_relaxed),
-                                               (float) momentaryLufs), std::memory_order_relaxed);
+        currentReadings.momentaryLufs = (float) momentaryLufs;
+        currentReadings.maxMomentaryLufs = std::max (currentReadings.maxMomentaryLufs, (float) momentaryLufs);
 
         addToHistogram (momentaryPower, momentaryLufs);
         updateIntegrated();
@@ -205,15 +204,17 @@ void LoudnessMeter::finishGatingBlock() noexcept
         const auto shortTermPower = sumOfLastBlockPowers (shortTermBlocks) / (double) shortTermBlocks;
         const auto shortTermLufs = powerToLoudness (shortTermPower);
 
-        publishedShortTerm.store ((float) shortTermLufs, std::memory_order_relaxed);
-        publishedMaxShortTerm.store (std::max (publishedMaxShortTerm.load (std::memory_order_relaxed),
-                                               (float) shortTermLufs), std::memory_order_relaxed);
+        currentReadings.shortTermLufs = (float) shortTermLufs;
+        currentReadings.maxShortTermLufs = std::max (currentReadings.maxShortTermLufs, (float) shortTermLufs);
 
         addToShortTermHistogram (shortTermPower, shortTermLufs);
         updateLoudnessRange();
     }
 
-    publishedNumGatingBlocks.store (numGatingBlocks, std::memory_order_relaxed);
+    currentReadings.momentaryValid = numGatingBlocks >= momentaryBlocks;
+    currentReadings.shortTermValid = numGatingBlocks >= shortTermBlocks;
+
+    publish();
 }
 
 double LoudnessMeter::sumOfLastBlockPowers (int numBlocks) const noexcept
@@ -248,7 +249,7 @@ void LoudnessMeter::updateIntegrated() noexcept
 
     if (histogramCount == 0)
     {
-        publishedIntegratedValid.store (false, std::memory_order_relaxed);
+        currentReadings.integratedValid = false;
         return;
     }
 
@@ -268,12 +269,12 @@ void LoudnessMeter::updateIntegrated() noexcept
 
     if (count == 0)
     {
-        publishedIntegratedValid.store (false, std::memory_order_relaxed);
+        currentReadings.integratedValid = false;
         return;
     }
 
-    publishedIntegrated.store ((float) powerToLoudness (sum / (double) count), std::memory_order_relaxed);
-    publishedIntegratedValid.store (true, std::memory_order_relaxed);
+    currentReadings.integratedLufs = (float) powerToLoudness (sum / (double) count);
+    currentReadings.integratedValid = true;
 }
 
 void LoudnessMeter::addToShortTermHistogram (double power, double loudness) noexcept
@@ -295,7 +296,7 @@ void LoudnessMeter::updateLoudnessRange() noexcept
 
     if (shortTermCount == 0)
     {
-        publishedLoudnessRangeValid.store (false, std::memory_order_relaxed);
+        currentReadings.loudnessRangeValid = false;
         return;
     }
 
@@ -313,7 +314,7 @@ void LoudnessMeter::updateLoudnessRange() noexcept
 
     if (total == 0)
     {
-        publishedLoudnessRangeValid.store (false, std::memory_order_relaxed);
+        currentReadings.loudnessRangeValid = false;
         return;
     }
 
@@ -335,16 +336,23 @@ void LoudnessMeter::updateLoudnessRange() noexcept
 
     const auto range = loudnessAtPercentile (0.95) - loudnessAtPercentile (0.1);
 
-    publishedLoudnessRange.store ((float) std::max (0.0, range), std::memory_order_relaxed);
-    publishedLoudnessRangeValid.store (true, std::memory_order_relaxed);
+    currentReadings.loudnessRangeLu = (float) std::max (0.0, range);
+    currentReadings.loudnessRangeValid = true;
 }
 
 void LoudnessMeter::publishPeaks() noexcept
 {
     using namespace loudness_utils;
 
-    publishedSamplePeakDb.store ((float) safeDb (peak), std::memory_order_relaxed);
-    publishedTruePeakDb.store ((float) safeDb (std::max (peak, truePeak)), std::memory_order_relaxed);
+    currentReadings.samplePeakDb = (float) safeDb (peak);
+    currentReadings.truePeakDb = (float) safeDb (std::max (peak, truePeak));
+
+    publish();
+}
+
+void LoudnessMeter::publish() noexcept
+{
+    publishedReadings.store (currentReadings);
 }
 
 void LoudnessMeter::flush() noexcept
@@ -380,39 +388,13 @@ void LoudnessMeter::resetMeasurement() noexcept
     peak = 0.0f;
     truePeak = 0.0f;
 
-    publishedMomentary.store (silenceFloorDb, std::memory_order_relaxed);
-    publishedShortTerm.store (silenceFloorDb, std::memory_order_relaxed);
-    publishedIntegrated.store (silenceFloorDb, std::memory_order_relaxed);
-    publishedMaxMomentary.store (silenceFloorDb, std::memory_order_relaxed);
-    publishedMaxShortTerm.store (silenceFloorDb, std::memory_order_relaxed);
-    publishedTruePeakDb.store (silenceFloorDb, std::memory_order_relaxed);
-    publishedSamplePeakDb.store (silenceFloorDb, std::memory_order_relaxed);
-    publishedLoudnessRange.store (0.0f, std::memory_order_relaxed);
-    publishedNumGatingBlocks.store (0, std::memory_order_relaxed);
-    publishedIntegratedValid.store (false, std::memory_order_relaxed);
-    publishedLoudnessRangeValid.store (false, std::memory_order_relaxed);
+    currentReadings = Readings();
+    publish();
 }
 
 LoudnessMeter::Readings LoudnessMeter::getReadings() const noexcept
 {
-    Readings r;
-
-    r.momentaryLufs     = publishedMomentary.load (std::memory_order_relaxed);
-    r.shortTermLufs     = publishedShortTerm.load (std::memory_order_relaxed);
-    r.integratedLufs    = publishedIntegrated.load (std::memory_order_relaxed);
-    r.maxMomentaryLufs  = publishedMaxMomentary.load (std::memory_order_relaxed);
-    r.maxShortTermLufs  = publishedMaxShortTerm.load (std::memory_order_relaxed);
-    r.truePeakDb        = publishedTruePeakDb.load (std::memory_order_relaxed);
-    r.samplePeakDb      = publishedSamplePeakDb.load (std::memory_order_relaxed);
-    r.loudnessRangeLu   = publishedLoudnessRange.load (std::memory_order_relaxed);
-
-    const auto blocks   = publishedNumGatingBlocks.load (std::memory_order_relaxed);
-    r.momentaryValid    = blocks >= momentaryBlocks;
-    r.shortTermValid    = blocks >= shortTermBlocks;
-    r.integratedValid   = publishedIntegratedValid.load (std::memory_order_relaxed);
-    r.loudnessRangeValid = publishedLoudnessRangeValid.load (std::memory_order_relaxed);
-
-    return r;
+    return publishedReadings.load();
 }
 
 } // namespace tracktion::inline engine

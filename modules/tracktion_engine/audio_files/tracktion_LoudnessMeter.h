@@ -23,8 +23,10 @@ namespace tracktion::inline engine
     - prepare() does all of the allocation and must not be called while
       processing.
     - process() is allocation- and lock-free, and takes no locks internally.
-    - getReadings() is lock-free and may be called from any thread (typically a
-      UI timer) while process() is running on the audio thread.
+    - getReadings() may be called from any thread (typically a UI timer) while
+      process() is running on the audio thread. It returns one internally
+      consistent snapshot, via a seqlock: the write side stays wait-free, and the
+      read side only retries if it collides with a publish.
 
     Unlike a straight offline implementation, the integrated measurement doesn't
     keep the whole history of gating blocks: momentary powers are accumulated
@@ -138,6 +140,7 @@ private:
     void addToShortTermHistogram (double power, double loudness) noexcept;
     void updateLoudnessRange() noexcept;
     void publishPeaks() noexcept;
+    void publish() noexcept;
     void resetMeasurement() noexcept;
 
     double sampleRate = 44100.0;
@@ -164,12 +167,12 @@ private:
 
     float peak = 0.0f, truePeak = 0.0f;
 
-    std::atomic<float> publishedMomentary { silenceFloorDb }, publishedShortTerm { silenceFloorDb },
-                       publishedIntegrated { silenceFloorDb }, publishedMaxMomentary { silenceFloorDb },
-                       publishedMaxShortTerm { silenceFloorDb }, publishedTruePeakDb { silenceFloorDb },
-                       publishedSamplePeakDb { silenceFloorDb }, publishedLoudnessRange { 0.0f };
-    std::atomic<int64_t> publishedNumGatingBlocks { 0 };
-    std::atomic<bool> publishedIntegratedValid { false }, publishedLoudnessRangeValid { false };
+    // The readings are published as one seqlock-protected snapshot rather than a
+    // field per atomic: a reader has to see a set of values that were all true at
+    // the same instant, or it can pair a stale valid flag with a freshly-reset
+    // measurement. currentReadings belongs to the processing thread alone.
+    Readings currentReadings;
+    crill::seqlock_object<Readings> publishedReadings { Readings() };
     std::atomic<bool> resetRequested { false };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LoudnessMeter)
