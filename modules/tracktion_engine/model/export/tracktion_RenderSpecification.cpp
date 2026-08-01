@@ -31,7 +31,7 @@ namespace render_spec_utils
     static bool isKnownChannelLayout (const juce::String& layout)
     {
         return layout.isEmpty() || layout == "mono" || layout == "stereo"
-                || layout == "5.1" || layout == "7.1";
+               || layout == "5.1" || layout == "7.1";
     }
 
     /** Finds the tracks for a set of IDs along with their indexes in the
@@ -210,7 +210,7 @@ juce::Result validateRenderSpecification (Edit& edit, const RenderSpecification&
         return juce::Result::fail (TRANS("Unknown channel layout: ") + spec.channelLayout);
 
     if (resolveTracks (edit, spec.tracks).size() != spec.tracks.size()
-         || resolveTracks (edit, spec.mutedTracks).size() != spec.mutedTracks.size())
+        || resolveTracks (edit, spec.mutedTracks).size() != spec.mutedTracks.size())
         return juce::Result::fail (TRANS("The specification contains tracks which aren't in this Edit"));
 
     if (spec.time ? spec.time->isEmpty() : (edit.getLength() == TimeDuration()))
