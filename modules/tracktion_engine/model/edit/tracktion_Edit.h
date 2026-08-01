@@ -734,6 +734,31 @@ public:
     /** Marks the edit as being significantly changed and should therefore be saved. */
     void markAsChanged();
 
+    /** Stops the Edit being written to disk.
+
+        Hold one of these across any operation that temporarily changes the Edit
+        and restores it afterwards - a stem render muting the tracks that feed
+        the other stems, for instance. Without it an autosave landing mid-operation
+        would persist state the user never asked for.
+    */
+    struct SaveInhibitor
+    {
+        /** Creates a SaveInhibitor for an Edit. */
+        SaveInhibitor (Edit&);
+
+        /** Creates a copy of a SaveInhibitor for an Edit. */
+        SaveInhibitor (const SaveInhibitor&);
+
+        /** Destructor. If this is the last SaveInhibitor, saving is re-allowed. */
+        ~SaveInhibitor();
+
+    private:
+        SafeSelectable<Edit> edit;
+    };
+
+    /** Returns true if a SaveInhibitor is currently stopping this Edit being saved. */
+    bool isSaveInhibited() const noexcept                { return numSaveInhibitors > 0; }
+
     /** Invalidates the stored length so the next call to getLength will update form the Edit contents.
         You shouldn't normally need to call this as it will happen automatically as clips are added/removed.
     */
@@ -913,6 +938,7 @@ private:
     LoadContext* loadContext = nullptr;
     juce::UndoManager undoManager;
     int numUndoTransactionInhibitors = 0;
+    int numSaveInhibitors = 0;
     mutable juce::File tempDirectory;
     juce::Array<EditItemID> lowLatencyDisabledPlugins;
     double normalLatencyBufferSizeSeconds = 0.0;
