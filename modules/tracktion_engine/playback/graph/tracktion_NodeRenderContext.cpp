@@ -474,11 +474,17 @@ juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
     playHeadState->update (toSamples ({ streamTime, streamTime + blockLength }, sampleRate));
 
     // Wait for any nodes to render their sources or proxies
-    auto leafNodesReady = [nodes = getNodes (*nodePlayer->getNode(), VertexOrdering::postordering)]
+    auto leafNodesReady = [nodes = getNodes (*nodePlayer->getNode(), VertexOrdering::postordering),
+                           referenceSampleRange = toSamples ({ streamTime, streamTime + blockLength }, sampleRate)]
     {
         for (auto node : nodes)
+        {
+            // Call prepare for next block here to ensure isReadyToProcess internals are updated
+            node->prepareForNextBlock (referenceSampleRange);
+
             if (node->getDirectInputNodes().empty() && ! node->isReadyToProcess())
                 return false;
+        }
 
         return true;
     };
