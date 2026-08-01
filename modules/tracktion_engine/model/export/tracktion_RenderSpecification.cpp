@@ -15,6 +15,12 @@ namespace render_spec_utils
 {
     inline constexpr double maxWrapRemainderTailSeconds = 30.0;
 
+    /** True for the one format that isn't audio, so has no juce::AudioFormat. */
+    static bool isMidiFormat (const juce::String& format)
+    {
+        return format == "midi";
+    }
+
     static juce::AudioFormat* getFormat (Engine& engine, const juce::String& format)
     {
         auto& affm = engine.getAudioFileFormatManager();
@@ -196,18 +202,23 @@ juce::Result validateRenderSpecification (Edit& edit, const RenderSpecification&
     if (spec.destination.isDirectory())
         return juce::Result::fail (TRANS("The destination must be a file, not a directory"));
 
-    if (getFormat (edit.engine, spec.format) == nullptr)
+    if (! isMidiFormat (spec.format) && getFormat (edit.engine, spec.format) == nullptr)
         return juce::Result::fail (spec.format == "mp3" ? TRANS("MP3 encoding is not available")
                                                         : TRANS("Unknown format: ") + spec.format);
 
+    // The MIDI render still processes the graph, so it needs a sane rate, but
+    // the rest of the audio settings don't apply to it and aren't checked
     if (spec.sampleRate < 8000.0 || spec.sampleRate > 384000.0)
         return juce::Result::fail (TRANS("Invalid sample rate"));
 
-    if (spec.bitDepth != 16 && spec.bitDepth != 24 && spec.bitDepth != 32)
-        return juce::Result::fail (TRANS("Invalid bit depth"));
+    if (! isMidiFormat (spec.format))
+    {
+        if (spec.bitDepth != 16 && spec.bitDepth != 24 && spec.bitDepth != 32)
+            return juce::Result::fail (TRANS("Invalid bit depth"));
 
-    if (! isKnownChannelLayout (spec.channelLayout))
-        return juce::Result::fail (TRANS("Unknown channel layout: ") + spec.channelLayout);
+        if (! isKnownChannelLayout (spec.channelLayout))
+            return juce::Result::fail (TRANS("Unknown channel layout: ") + spec.channelLayout);
+    }
 
     if (resolveTracks (edit, spec.tracks).size() != spec.tracks.size()
         || resolveTracks (edit, spec.mutedTracks).size() != spec.mutedTracks.size())
@@ -304,36 +315,45 @@ std::optional<PlannedRenderJob> createRenderJob (Edit& edit, const RenderSpecifi
     if (validateRenderSpecification (edit, spec).failed())
         return {};
 
+    const bool renderingMidi = isMidiFormat (spec.format);
+
     Renderer::Parameters params (edit);
-    params.audioFormat           = getFormat (edit.engine, spec.format);
-    params.bitDepth              = spec.bitDepth;
+    params.audioFormat           = renderingMidi ? nullptr : getFormat (edit.engine, spec.format);
+    params.createMidiFile        = renderingMidi;
     params.sampleRateForAudio    = spec.sampleRate;
-    params.quality               = spec.quality;
     params.time                  = spec.time.value_or (TimeRange (TimePosition(), toPosition (edit.getLength())));
-    params.shouldNormalise       = spec.normalise;
-    params.shouldNormaliseByRMS  = spec.normaliseByRMS;
-    params.shouldNormaliseByLUFS = spec.normaliseByLUFS;
-    params.normaliseToLevelDb    = spec.normaliseToLevelDb;
-    params.limitTruePeak         = spec.limitTruePeak;
-    params.truePeakCeilingDb     = spec.truePeakCeilingDb;
-    params.trimSilenceAtEnds     = spec.trimSilence && ! spec.wrapRemainder;
-    params.ditheringEnabled      = spec.dither;
     params.realTimeRender        = spec.realTime;
     params.usePlugins            = spec.usePlugins;
     params.useMasterPlugins      = spec.useMasterPlugins;
-    params.metadata              = spec.metadata;
     params.canRenderInMono       = false;
     params.destFile              = spec.destination;
 
-    if (spec.channelLayout == "mono")           params.mustRenderInMono = true;
-    else if (spec.channelLayout == "stereo")    params.channelConfig = ChannelConfiguration::stereo();
-    else if (spec.channelLayout == "5.1")       params.channelConfig = ChannelConfiguration::surround5_1();
-    else if (spec.channelLayout == "7.1")       params.channelConfig = ChannelConfiguration::surround7_1();
-
-    if (spec.wrapRemainder)
+    // Everything below shapes the rendered audio, so a MIDI render leaves it at
+    // its defaults rather than carrying settings which silently do nothing
+    if (! renderingMidi)
     {
-        params.wrapRemainder = true;
-        params.endAllowance = findWrapRemainderTail (edit, spec.tracks);
+        params.bitDepth              = spec.bitDepth;
+        params.quality               = spec.quality;
+        params.shouldNormalise       = spec.normalise;
+        params.shouldNormaliseByRMS  = spec.normaliseByRMS;
+        params.shouldNormaliseByLUFS = spec.normaliseByLUFS;
+        params.normaliseToLevelDb    = spec.normaliseToLevelDb;
+        params.limitTruePeak         = spec.limitTruePeak;
+        params.truePeakCeilingDb     = spec.truePeakCeilingDb;
+        params.trimSilenceAtEnds     = spec.trimSilence && ! spec.wrapRemainder;
+        params.ditheringEnabled      = spec.dither;
+        params.metadata              = spec.metadata;
+
+        if (spec.channelLayout == "mono")           params.mustRenderInMono = true;
+        else if (spec.channelLayout == "stereo")    params.channelConfig = ChannelConfiguration::stereo();
+        else if (spec.channelLayout == "5.1")       params.channelConfig = ChannelConfiguration::surround5_1();
+        else if (spec.channelLayout == "7.1")       params.channelConfig = ChannelConfiguration::surround7_1();
+
+        if (spec.wrapRemainder)
+        {
+            params.wrapRemainder = true;
+            params.endAllowance = findWrapRemainderTail (edit, spec.tracks);
+        }
     }
 
     auto resolved = resolveTracks (edit, spec.tracks);
@@ -377,12 +397,17 @@ std::vector<RenderSpecification> createPerTrackSpecifications (Edit& edit,
 {
     using namespace render_spec_utils;
 
-    auto format = getFormat (edit.engine, base.format);
+    juce::String extension (".mid");
 
-    if (format == nullptr)
-        return {};
+    if (! isMidiFormat (base.format))
+    {
+        auto format = getFormat (edit.engine, base.format);
 
-    const auto extension = format->getFileExtensions()[0];
+        if (format == nullptr)
+            return {};
+
+        extension = format->getFileExtensions()[0];
+    }
 
     auto tracksAndIndexes = resolveTracks (edit, base.tracks);
 

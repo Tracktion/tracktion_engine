@@ -92,6 +92,17 @@ TEST_SUITE ("tracktion_engine")
             CHECK (! parsed.time.has_value());
             CHECK_EQ (unknownKeys, juce::StringArray { "someFutureKey" });
         }
+
+        SUBCASE ("the midi format survives the round-trip")
+        {
+            RenderSpecification midiSpec;
+            midiSpec.format = "midi";
+            midiSpec.usePlugins = false;
+
+            auto restored = RenderSpecification::fromJSON (midiSpec.toJSON());
+            CHECK_EQ (restored.format, juce::String ("midi"));
+            CHECK (! restored.usePlugins);
+        }
     }
 
     TEST_CASE ("RenderSpecification validation")
@@ -156,6 +167,21 @@ TEST_SUITE ("tracktion_engine")
             spec.time = TimeRange (TimePosition::fromSeconds (3.0), TimePosition::fromSeconds (3.0));
             CHECK (validateRenderSpecification (*edit, spec).failed());
         }
+
+        SUBCASE ("the midi format is accepted and skips the audio-only checks")
+        {
+            spec.format = "midi";
+            CHECK (validateRenderSpecification (*edit, spec).wasOk());
+
+            // These would fail for an audio format but say nothing about a MIDI file
+            spec.bitDepth = 12;
+            spec.channelLayout = "22.2";
+            CHECK (validateRenderSpecification (*edit, spec).wasOk());
+
+            // The graph still has to be processed at a real rate
+            spec.sampleRate = 10.0;
+            CHECK (validateRenderSpecification (*edit, spec).failed());
+        }
     }
 
     TEST_CASE ("RenderSpecification expansion")
@@ -208,6 +234,59 @@ TEST_SUITE ("tracktion_engine")
 
             CHECK_EQ (paths.size(), 3);
             destDir.deleteRecursively();
+        }
+
+        SUBCASE ("per-track midi specifications get .mid names")
+        {
+            auto destDir = juce::File::createTempFile ({});
+            destDir.createDirectory();
+
+            RenderSpecification base;
+            base.format = "midi";
+
+            auto specs = createPerTrackSpecifications (*edit, base, destDir);
+            REQUIRE_EQ (specs.size(), (size_t) 3);
+
+            for (auto& spec : specs)
+            {
+                CHECK_EQ (spec.format, juce::String ("midi"));
+                CHECK_EQ (spec.destination.getFileExtension(), juce::String (".mid"));
+            }
+
+            destDir.deleteRecursively();
+        }
+
+        SUBCASE ("a midi specification makes a MIDI job with the audio options left alone")
+        {
+            juce::TemporaryFile destFile (".mid");
+
+            RenderSpecification spec;
+            spec.destination = destFile.getFile();
+            spec.format = "midi";
+            spec.tracks = { tracks[1]->itemID };
+
+            // Audio settings which a MIDI render can't act on: they must not
+            // reach the parameters, where they'd imply work that never happens
+            spec.normaliseByLUFS = true;
+            spec.normaliseToLevelDb = -14.0f;
+            spec.trimSilence = true;
+            spec.dither = true;
+            spec.wrapRemainder = true;
+            spec.channelLayout = "mono";
+
+            auto job = createRenderJob (*edit, spec);
+            REQUIRE (job.has_value());
+
+            CHECK (job->params.createMidiFile);
+            CHECK_EQ (job->params.audioFormat, nullptr);
+            CHECK_EQ (job->params.destFile, destFile.getFile());
+            CHECK_EQ (job->params.tracksToDo.countNumberOfSetBits(), 1);
+
+            CHECK (! job->params.shouldNormaliseByLUFS);
+            CHECK (! job->params.trimSilenceAtEnds);
+            CHECK (! job->params.ditheringEnabled);
+            CHECK (! job->params.wrapRemainder);
+            CHECK (! job->params.mustRenderInMono);
         }
 
         SUBCASE ("channel layouts map to the expected parameters")
@@ -691,6 +770,211 @@ TEST_SUITE ("tracktion_engine")
                 maxDiff = std::max (maxDiff, std::abs (offline.getSample (ch, i) - realtime.getSample (ch, i)));
 
         CHECK_LT (maxDiff, 0.0001f);
+    }
+
+    //==============================================================================
+    TEST_CASE ("RenderSpecification MIDI render")
+    {
+        auto& engine = *Engine::getEngines()[0];
+
+        // The test Edit is 60bpm, so one beat is one second and beat N lands on
+        // tick N * Edit::ticksPerQuarterNote
+        constexpr double ticksPerBeat = (double) Edit::ticksPerQuarterNote;
+
+        /** The note-ons found in a rendered MIDI file, as (pitch, tick) pairs. */
+        struct MidiResult
+        {
+            bool succeeded = false;
+            int numTracksInFile = 0;
+            std::vector<std::pair<int, double>> noteOns;
+        };
+
+        auto renderToMidi = [&engine] (Edit& edit, const RenderSpecification& spec) -> MidiResult
+        {
+            MidiResult result;
+
+            auto job = createRenderJob (edit, spec);
+            REQUIRE (job.has_value());
+
+            RenderQueue queue;
+            queue.addJob (std::move (*job));
+
+            std::atomic<bool> done { false };
+            queue.onFinished = [&done] { done = true; };
+            queue.start();
+            test_utilities::runDispatchLoopUntilTrue (done);
+
+            result.succeeded = queue.getJobs()[0]->getState() == RenderQueue::Job::State::completed;
+
+            if (! result.succeeded)
+                return result;
+
+            juce::FileInputStream in (spec.destination);
+            juce::MidiFile midiFile;
+            REQUIRE (in.openedOk());
+            REQUIRE (midiFile.readFrom (in));
+
+            result.numTracksInFile = midiFile.getNumTracks();
+
+            for (int i = 0; i < midiFile.getNumTracks(); ++i)
+                for (auto event : *midiFile.getTrack (i))
+                    if (event->message.isNoteOn())
+                        result.noteOns.push_back ({ event->message.getNoteNumber(),
+                                                    event->message.getTimeStamp() });
+
+            return result;
+        };
+
+        auto addMidiClip = [] (AudioTrack& track, TimeRange time, int pitch)
+        {
+            auto clip = track.insertMIDIClip (time, nullptr);
+            clip->getSequence().addNote (pitch, BeatPosition::fromBeats (0.0), BeatDuration::fromBeats (1.0),
+                                         127, 0, nullptr);
+            return clip;
+        };
+
+        SUBCASE ("a MIDI clip renders to a MIDI file at the right pitch and position")
+        {
+            auto edit = test_utilities::createTestEdit (engine);
+            addMidiClip (*getAudioTracks (*edit)[0], { 1_tp, 2_tp }, 60);
+
+            juce::TemporaryFile destFile (".mid");
+            RenderSpecification spec;
+            spec.destination = destFile.getFile();
+            spec.format = "midi";
+            spec.time = TimeRange { 0_tp, 4_tp };
+
+            auto result = renderToMidi (*edit, spec);
+            REQUIRE (result.succeeded);
+
+            // A tempo track plus the note data
+            CHECK_EQ (result.numTracksInFile, 2);
+            REQUIRE_EQ (result.noteOns.size(), (size_t) 1);
+            CHECK_EQ (result.noteOns[0].first, 60);
+            CHECK_EQ (result.noteOns[0].second, doctest::Approx (ticksPerBeat));
+        }
+
+        SUBCASE ("an internal instrument passes the MIDI through rather than consuming it")
+        {
+            auto edit = test_utilities::createTestEdit (engine);
+            auto track = getAudioTracks (*edit)[0];
+            addMidiClip (*track, { 0_tp, 1_tp }, 60);
+
+            auto synth = edit->getPluginCache().createNewPlugin (FourOscPlugin::xmlTypeName, {});
+            REQUIRE (synth != nullptr);
+            track->pluginList.insertPlugin (*synth, 0, nullptr);
+
+            juce::TemporaryFile destFile (".mid");
+            RenderSpecification spec;
+            spec.destination = destFile.getFile();
+            spec.format = "midi";
+            spec.time = TimeRange { 0_tp, 4_tp };
+
+            auto result = renderToMidi (*edit, spec);
+            REQUIRE (result.succeeded);
+            REQUIRE_EQ (result.noteOns.size(), (size_t) 1);
+            CHECK_EQ (result.noteOns[0].first, 60);
+        }
+
+        SUBCASE ("usePlugins decides whether MIDI effects are baked in")
+        {
+            auto edit = test_utilities::createTestEdit (engine);
+            auto track = getAudioTracks (*edit)[0];
+            addMidiClip (*track, { 0_tp, 1_tp }, 60);
+
+            auto modifier = dynamic_cast<MidiModifierPlugin*> (edit->getPluginCache()
+                                                                  .createNewPlugin (MidiModifierPlugin::xmlTypeName, {}).get());
+            REQUIRE (modifier != nullptr);
+            modifier->semitones->setParameter (12.0f, juce::dontSendNotification);
+            track->pluginList.insertPlugin (*modifier, 0, nullptr);
+
+            auto renderWithPlugins = [&] (bool usePlugins)
+            {
+                juce::TemporaryFile destFile (".mid");
+                RenderSpecification spec;
+                spec.destination = destFile.getFile();
+                spec.format = "midi";
+                spec.time = TimeRange { 0_tp, 4_tp };
+                spec.usePlugins = usePlugins;
+                return renderToMidi (*edit, spec);
+            };
+
+            const auto withPlugins = renderWithPlugins (true);
+            REQUIRE (withPlugins.succeeded);
+            REQUIRE_EQ (withPlugins.noteOns.size(), (size_t) 1);
+            CHECK_EQ (withPlugins.noteOns[0].first, 72);    // the +12 modifier is baked in
+
+            const auto withoutPlugins = renderWithPlugins (false);
+            REQUIRE (withoutPlugins.succeeded);
+            REQUIRE_EQ (withoutPlugins.noteOns.size(), (size_t) 1);
+            CHECK_EQ (withoutPlugins.noteOns[0].first, 60); // the clip's own MIDI
+        }
+
+        SUBCASE ("selecting one track renders only that track's MIDI")
+        {
+            auto edit = test_utilities::createTestEdit (engine, 2);
+            auto tracks = getAudioTracks (*edit);
+            REQUIRE_GE (tracks.size(), 2);
+
+            addMidiClip (*tracks[0], { 0_tp, 1_tp }, 60);
+            addMidiClip (*tracks[1], { 2_tp, 3_tp }, 72);
+
+            juce::TemporaryFile destFile (".mid");
+            RenderSpecification spec;
+            spec.destination = destFile.getFile();
+            spec.format = "midi";
+            spec.time = TimeRange { 0_tp, 4_tp };
+            spec.tracks = { tracks[1]->itemID };
+
+            auto result = renderToMidi (*edit, spec);
+            REQUIRE (result.succeeded);
+            REQUIRE_EQ (result.noteOns.size(), (size_t) 1);
+            CHECK_EQ (result.noteOns[0].first, 72);
+            CHECK_EQ (result.noteOns[0].second, doctest::Approx (2.0 * ticksPerBeat));
+        }
+
+        SUBCASE ("a whole-Edit render flattens every track into one MIDI track")
+        {
+            auto edit = test_utilities::createTestEdit (engine, 2);
+            auto tracks = getAudioTracks (*edit);
+            REQUIRE_GE (tracks.size(), 2);
+
+            addMidiClip (*tracks[0], { 0_tp, 1_tp }, 60);
+            addMidiClip (*tracks[1], { 2_tp, 3_tp }, 72);
+
+            juce::TemporaryFile destFile (".mid");
+            RenderSpecification spec;
+            spec.destination = destFile.getFile();
+            spec.format = "midi";
+            spec.time = TimeRange { 0_tp, 4_tp };
+
+            auto result = renderToMidi (*edit, spec);
+            REQUIRE (result.succeeded);
+
+            // Both notes are present, but there's still only the tempo track and
+            // a single data track - the Edit's tracks aren't kept apart
+            CHECK_EQ (result.numTracksInFile, 2);
+            REQUIRE_EQ (result.noteOns.size(), (size_t) 2);
+            CHECK_EQ (result.noteOns[0].first, 60);
+            CHECK_EQ (result.noteOns[1].first, 72);
+        }
+
+        SUBCASE ("a render with no MIDI in it fails rather than writing an empty file")
+        {
+            auto edit = test_utilities::createTestEdit (engine);
+            auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0);
+            insertWaveClip (*getAudioTracks (*edit)[0], {}, sinFile->getFile(), { .time = { 0_tp, 1_tp } },
+                            DeleteExistingClips::no);
+
+            juce::TemporaryFile destFile (".mid");
+            RenderSpecification spec;
+            spec.destination = destFile.getFile();
+            spec.format = "midi";
+            spec.time = TimeRange { 0_tp, 1_tp };
+
+            auto result = renderToMidi (*edit, spec);
+            CHECK (! result.succeeded);
+        }
     }
 
     TEST_CASE ("findStemSourceTracks finds sidechain, aux and rack dependencies")
