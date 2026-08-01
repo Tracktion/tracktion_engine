@@ -8,7 +8,8 @@
     Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
 */
 
-namespace tracktion::inline engine {
+namespace tracktion::inline engine
+{
 
 Edit::GlobalMacros::GlobalMacros (Edit& e)
     : MacroParameterElement (e, e.state),

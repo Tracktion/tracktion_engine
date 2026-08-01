@@ -15,7 +15,8 @@
 #define USE_DYNAMIC_OFFSET_CONTAINER_CLIP 1
 
 
-namespace tracktion::inline engine {
+namespace tracktion::inline engine
+{
 
 //==============================================================================
 //==============================================================================

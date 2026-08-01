@@ -315,7 +315,8 @@ namespace tracktion::inline graph
 
 
 //==============================================================================
-namespace tracktion::inline engine {
+namespace tracktion::inline engine
+{
     class EngineBehaviour;
     class Engine;
     class DeviceManager;
