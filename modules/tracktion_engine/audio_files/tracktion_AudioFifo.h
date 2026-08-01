@@ -31,6 +31,11 @@ public:
 
     void setSize (int numChannels, int numSamples)
     {
+        // ChannelCount is unsigned, so a channel-less buffer would wrap the clamping in
+        // getSourceChannel to a huge index rather than limiting it to the last channel
+        jassert (numChannels > 0);
+        numChannels = std::max (1, numChannels);
+
         fifo.setTotalSize (numSamples);
         buffer.resize ({ (choc::buffer::ChannelCount) numChannels,
                          (choc::buffer::FrameCount) numSamples });
