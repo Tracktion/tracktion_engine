@@ -109,6 +109,11 @@ public:
         std::shared_ptr<juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver> thumbnail;
         std::shared_ptr<EditRenderer::Handle> handle;
 
+        /** Set on the render thread the moment the render returns, before the
+            message-thread hop that updates state. ~RenderQueue can run in between
+            the two and needs to know whether destFile is a complete file. */
+        std::atomic<bool> renderSucceeded { false };
+
         /** Held while the job renders; releasing it restores the muted source
             tracks. The Job owning it means the mutes can't outlive the job
             even if a handle outlives the queue. */
