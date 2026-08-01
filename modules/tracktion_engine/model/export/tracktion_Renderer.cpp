@@ -172,6 +172,42 @@ Renderer::RenderTask::~RenderTask()
 {
 }
 
+void Renderer::RenderTask::setCancellationCheck (CancellationCheck c)
+{
+    cancellationCheck = std::move (c);
+}
+
+Renderer::RenderTask::CancellationCheck Renderer::RenderTask::getDefaultCancellationCheck()
+{
+    return []
+    {
+        // A RenderTask can be driven by a pool job, a juce::Thread or a raw
+        // std::thread, and each signals cancellation differently. These all read the
+        // calling thread's state, so this has to be evaluated on the thread running
+        // the render rather than cached per-instance
+        if (auto job = juce::ThreadPoolJob::getCurrentThreadPoolJob())
+            if (job->shouldExit())
+                return true;
+
+        if (juce::Thread::currentThreadShouldExit())
+            return true;
+
+        if (isCurrentThreadSupplyingExitStatus() && shouldCurrentThreadExit())
+            return true;
+
+        return false;
+    };
+}
+
+bool Renderer::RenderTask::shouldCancel() const
+{
+    // shouldExit() covers this task having been pool-scheduled in its own right
+    if (shouldExit() || getDefaultCancellationCheck()())
+        return true;
+
+    return cancellationCheck != nullptr && cancellationCheck();
+}
+
 juce::ThreadPoolJob::JobStatus Renderer::RenderTask::runJob()
 {
     CRASH_TRACER
@@ -240,7 +276,12 @@ bool Renderer::RenderTask::foldWrapRemainder (const Renderer::Parameters& target
                     regionBuffer.addFrom (chan, 0, tailBuffer, chan, 0, tailSamps);
             }
 
-            writer.appendBuffer (regionBuffer, samps);
+            if (! writer.appendBuffer (regionBuffer, samps))
+            {
+                errorMessage = TRANS("Couldn't write to target file");
+                return false;
+            }
+
             pos += samps;
         }
     }
@@ -387,7 +428,12 @@ bool Renderer::RenderTask::performNormalisingAndTrimming (const Renderer::Parame
         if (target.ditheringEnabled && target.bitDepth < 32)
             ditherers.apply (tempBuffer, samps);
 
-        writer.appendBuffer (tempBuffer, samps);
+        if (! writer.appendBuffer (tempBuffer, samps))
+        {
+            errorMessage = TRANS("Couldn't write to target file");
+            return false;
+        }
+
         pos += samps;
     }
 
@@ -826,6 +872,11 @@ EditRenderer::Handle::~Handle()
         signalThreadShouldExit (threadExitEnabler->getID());
 
     renderThread.join();
+
+    // A cancelled render hands its task over rather than destroying it on the render
+    // thread, as the graph holds plugins which have to be deleted on the message thread
+    if (taskToDestroy != nullptr)
+        callBlockingCatching ([this] { taskToDestroy.reset(); });
 }
 
 void EditRenderer::Handle::cancel()
@@ -855,8 +906,17 @@ auto EditRenderer::render (Renderer::Parameters r,
 
     auto threadStarted = std::make_shared<Semaphore>();
 
+    if (renderTask != nullptr)
+        renderTask->setCancellationCheck ([&cancelled = renderHandle->hasBeenCancelled]
+                                          { return cancelled.load(); });
+
+    // Safe to hold unowned: ~Handle joins the render thread, so the Handle always
+    // outlives it (as the hasBeenCancelled reference below already relies on)
+    auto handlePtr = renderHandle.get();
+
     renderHandle->renderThread = std::thread ([threadStarted,
                                               destFile,
+                                              handlePtr,
                                               handleRef = std::weak_ptr (renderHandle),
                                               &hasBeenCancelledFlag = renderHandle->hasBeenCancelled,
                                               finishedCallback = std::move (finishedCallback_),
@@ -875,10 +935,10 @@ auto EditRenderer::render (Renderer::Parameters r,
         {
             if (hasBeenCancelledFlag)
             {
-                // N.B. Tearing the task down here needs the message thread which is
-                // probably blocked joining this thread, so it relies on ~Handle having
-                // signalled the exit status to unblock it
-                task.reset();
+                // Tearing the task down here needs the message thread, which is probably
+                // blocked joining this thread, so hand it to the handle to destroy once
+                // the join has completed and the message thread is running again
+                handlePtr->taskToDestroy = std::move (task);
                 return finishedCallback (tl::unexpected (NEEDS_TRANS("Cancelled")));
             }
 

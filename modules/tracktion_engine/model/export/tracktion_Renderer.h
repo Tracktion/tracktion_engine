@@ -159,6 +159,27 @@ public:
         juce::String errorMessage;
 
         //==============================================================================
+        /** A predicate polled to find out whether the render should stop.
+            This is called from whichever thread is driving runJob(), around once per
+            block, so it must be cheap and mustn't block.
+        */
+        using CancellationCheck = std::function<bool()>;
+
+        /** Sets an additional predicate used to cancel this render.
+            The standard thread and pool-job exit flags are always checked as well, so
+            this only needs to supply a caller's own flag.
+        */
+        void setCancellationCheck (CancellationCheck);
+
+        /** Returns true if the render should stop. */
+        bool shouldCancel() const;
+
+        /** Returns a predicate which polls whichever of the standard exit mechanisms
+            the calling thread happens to be using. Safe to call from any thread.
+        */
+        static CancellationCheck getDefaultCancellationCheck();
+
+        //==============================================================================
         /** @internal */
         static void flushAllPlugins (const Plugin::Array&, double sampleRate, int samplesPerBlock);
         /** @internal */
@@ -183,6 +204,7 @@ public:
         std::atomic<float> progressInternal { 0.0f };
         std::atomic<float>& progress;
         juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* sourceToUpdate = nullptr;
+        CancellationCheck cancellationCheck;
 
         //==============================================================================
         bool renderAudio (Renderer::Parameters&);
@@ -339,6 +361,10 @@ public:
         std::atomic<float> progress { 0.0f };
         std::atomic<bool> hasBeenCancelled { false };
         std::shared_ptr<juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver> thumbnailToUpdate;
+
+        // A cancelled render can't tear its graph down on its own thread, so it hands
+        // the task over to be destroyed on the message thread once the thread has gone
+        std::unique_ptr<Renderer::RenderTask> taskToDestroy;
 
         Handle() = default;
     };

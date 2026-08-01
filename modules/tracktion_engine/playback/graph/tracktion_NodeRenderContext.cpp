@@ -196,7 +196,9 @@ NodeRenderContext::~NodeRenderContext()
     {
         callBlocking ([this] { nodePlayer.reset(); });
 
-        if (needsToNormaliseAndTrim)
+        // Normalising a cancelled render re-reads and re-encodes the whole partial file
+        // only for the result to be thrown away, so skip it and let the file be deleted
+        if (needsToNormaliseAndTrim && ! owner.shouldCancel())
             owner.performNormalisingAndTrimming (originalParams, r);
     }
     catch (std::runtime_error& err)
@@ -216,13 +218,17 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
         juce::Thread::sleep (1);
     }
 
-    if (owner.shouldExit())
+    if (owner.shouldCancel())
     {
         writer->closeForWriting();
         r.destFile.deleteFile();
 
         playHead->stop();
         Renderer::RenderTask::setAllPluginsRealtime (plugins, true);
+
+        // This reports the job as finished, so without an error the caller would be
+        // told a render whose file has just been deleted had succeeded (as renderMidi)
+        owner.errorMessage = TRANS("Render cancelled");
 
         return true;
     }
@@ -281,7 +287,7 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
         return true;
     }();
 
-    while (! (leafNodesReady || owner.shouldExit()))
+    while (! (leafNodesReady || owner.shouldCancel()))
         return false;
 
     const auto bufferSize = r.blockSizeForAudio + 256;
@@ -478,7 +484,7 @@ juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
     {
         juce::Thread::sleep (100);
 
-        if (owner.shouldExit())
+        if (owner.shouldCancel())
             return TRANS("Render cancelled");
     }
 
@@ -491,7 +497,7 @@ juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
 
     for (;;)
     {
-        if (owner.shouldExit())
+        if (owner.shouldCancel())
             return TRANS("Render cancelled");
 
         if (streamTime > r.time.getEnd())
