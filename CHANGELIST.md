@@ -23,6 +23,14 @@
 - Time-stretching
   - Added support for the Signalsmith stretch library
   - Stretchers now report their latency
+- Rendering
+  - New `RenderSpecification` describing a render as data, with JSON round-tripping and per-track/stem expansion
+  - New `RenderQueue` running specifications sequentially, with progress, cancellation, appending whilst running and partial-file cleanup
+  - Stem rendering: muted tracks can be rendered, and source tracks keep processing whilst muted so sidechains and aux buses still feed them
+  - Loudness normalisation to a LUFS target with a true-peak ceiling, and a wrap-remainder mode folding a render's tail back onto its start
+- Analysis
+  - New real-time-safe `LoudnessMeter` measuring EBU R128 momentary/short-term/gated-integrated loudness, EBU Tech 3342 loudness range and oversampled true peak
+  - New `AudioFileAnalyser` reporting loudness, spectral and dynamics statistics for an audio file
 - Import/Export
   - DAWproject: scene/launch-clip support, nested path fixes, default volume/pan/meter plugins and correct pan range on import
 - Misc

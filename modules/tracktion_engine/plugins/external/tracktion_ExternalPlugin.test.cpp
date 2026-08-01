@@ -12,6 +12,8 @@
 
 #include "../../playback/graph/tracktion_EditNodeBuilder.h"
 #include "../../playback/graph/tracktion_PluginNode.h"
+#include "../../playback/graph/tracktion_TracktionNodePlayer.h"
+#include "../../../tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
 #include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
 
 namespace tracktion::inline engine
@@ -51,7 +53,20 @@ public:
     void prepareToPlay (double, int) override {}
     void releaseResources() override {}
     using juce::AudioProcessor::processBlock;
-    void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override {}
+
+    void processBlock (juce::AudioBuffer<float>& b, juce::MidiBuffer&) override
+    {
+        // Recorded so a test can check which signal arrived on which input channel.
+        // Only read these once processing has finished
+        numInputChannelsSeen = std::max (numInputChannelsSeen, b.getNumChannels());
+
+        for (int ch = 0; ch < std::min (b.getNumChannels(), maxRecordedChannels); ++ch)
+            inputPeaks[ch] = std::max (inputPeaks[ch], b.getMagnitude (ch, 0, b.getNumSamples()));
+    }
+
+    static constexpr int maxRecordedChannels = 8;
+    float inputPeaks[maxRecordedChannels] = {};
+    int numInputChannelsSeen = 0;
     double getTailLengthSeconds() const override { return 0.0; }
     bool acceptsMidi() const override { return false; }
     bool producesMidi() const override { return false; }
@@ -232,6 +247,118 @@ TEST_SUITE ("tracktion_engine")
         CHECK_EQ (downstreamOfPlugin->getNodeProperties().numberOfChannels, 2);
 
         // Restore previous state
+        pm.knownPluginList.removeType (pluginDesc);
+        pm.createPluginInstance = prevCallback;
+    }
+
+    //==============================================================================
+    TEST_CASE ("PluginNode: a mono track feeding a sidechained plugin doesn't leak into the sidechain")
+    {
+        // A mono track into a stereo-main plugin needs a mono->stereo conversion, which
+        // duplicates the source channel across both destinations. That has to happen
+        // before the sidechain is summed in - run afterwards it converts the combined
+        // buffer instead, overwriting the sidechain channel with a copy of the track.
+        // Both orderings produce the same channel count, so only the content shows it.
+        constexpr double sampleRate = 44100.0;
+        constexpr int blockSize = 256;
+        constexpr double durationInSeconds = 0.5;
+
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getPluginManager();
+        auto prevCallback = pm.createPluginInstance;
+
+        SidechainTestPlugin testProc;
+        SidechainTestPlugin* createdInstance = nullptr;
+
+        pm.createPluginInstance =
+            [&] (const juce::PluginDescription& d, double, int, juce::String&)
+            -> std::unique_ptr<juce::AudioPluginInstance>
+            {
+                if (d.name != "SidechainTestPlugin")
+                    return nullptr;
+
+                auto instance = std::make_unique<SidechainTestPlugin>();
+                createdInstance = instance.get();
+
+                return instance;
+            };
+
+        auto pluginDesc = testProc.getPluginDescription();
+        pm.knownPluginList.addType (pluginDesc);
+
+        auto edit = test_utilities::createTestEdit (engine, 2);
+        auto pluginTrack = getAudioTracks (*edit)[0];
+        auto sidechainSourceTrack = getAudioTracks (*edit)[1];
+
+        // A track's channel count comes from its clips, so a mono clip makes the track
+        // node mono and forces the conversion this test is about
+        auto monoFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, durationInSeconds, 1, 220.0f);
+        insertWaveClip (*pluginTrack, {}, monoFile->getFile(),
+                        { .time = { 0_tp, TimePosition::fromSeconds (durationInSeconds) } },
+                        DeleteExistingClips::no);
+        REQUIRE_EQ (pluginTrack->getChannelConfiguration().getNumChannels(), 1);
+
+        // The sidechain source needs audio of its own: a silent one can't tell a
+        // preserved sidechain channel apart from one the conversion dropped
+        auto sidechainFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, durationInSeconds, 2, 440.0f);
+        insertWaveClip (*sidechainSourceTrack, {}, sidechainFile->getFile(),
+                        { .time = { 0_tp, TimePosition::fromSeconds (durationInSeconds) } },
+                        DeleteExistingClips::no);
+
+        auto pluginState = ExternalPlugin::create (engine, pluginDesc);
+        auto pluginRef = pluginTrack->pluginList.insertPlugin (pluginState, 0);
+        auto externalPlugin = dynamic_cast<ExternalPlugin*> (pluginRef.get());
+        REQUIRE (externalPlugin != nullptr);
+
+        externalPlugin->initialiseFully();
+        REQUIRE (externalPlugin->getAudioPluginInstance() != nullptr);
+        REQUIRE (createdInstance != nullptr);
+
+        // setSidechainSourceID on its own leaves the plugin with no wires, which makes
+        // createSidechainInputNodeForPlugin bail out. Going through the by-name setter
+        // is what the sidechain editor does, and it fills in the default routing
+        externalPlugin->setSidechainSourceByName ("2. " + sidechainSourceTrack->getName());
+        REQUIRE (externalPlugin->getSidechainSourceID().isValid());
+        REQUIRE (externalPlugin->getNumWires() > 0);
+
+        tracktion::graph::PlayHead playHead;
+        tracktion::graph::PlayHeadState playHeadState { playHead };
+        ProcessState processState { playHeadState, edit->tempoSequence };
+        CreateNodeParams params { processState };
+        params.sampleRate = sampleRate;
+        params.blockSize = blockSize;
+        params.forRendering = true;
+
+        auto rootNode = createNodeForEdit (*edit, params);
+        REQUIRE (rootNode != nullptr);
+
+        graph::test_utilities::TestSetup ts;
+        ts.sampleRate = sampleRate;
+        ts.blockSize = blockSize;
+
+        graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (
+            std::make_unique<TracktionNodePlayer> (std::move (rootNode), processState,
+                                                   sampleRate, blockSize,
+                                                   tracktion::graph::getPoolCreatorFunction (tracktion::graph::ThreadPoolStrategy::realTime)),
+            ts, 2, durationInSeconds, true);
+
+        testContext.getNodePlayer().setNumThreads (0);
+        testContext.setPlayHead (&playHeadState.playHead);
+        playHeadState.playHead.playSyncedToRange ({});
+        testContext.processAll();
+
+        // The default routing wires the track to plugin channels 0 and 1 and the
+        // sidechain source to channel 2
+        REQUIRE_EQ (createdInstance->numInputChannelsSeen, 3);
+
+        // The mono track, duplicated across the stereo main bus
+        CHECK (createdInstance->inputPeaks[0] > 0.1f);
+        CHECK (createdInstance->inputPeaks[1] > 0.1f);
+
+        // The sidechain source. Converting after the sidechain is summed in remaps only
+        // the track's own channel onto the main bus and drops this one, so it reads 0
+        CHECK (createdInstance->inputPeaks[2] > 0.1f);
+
         pm.knownPluginList.removeType (pluginDesc);
         pm.createPluginInstance = prevCallback;
     }
