@@ -13,6 +13,33 @@ namespace tracktion::inline engine
 
 //==============================================================================
 /**
+    The file format a render is written in. The enumerator names are the format's
+    canonical name everywhere it is written as text - JSON, config files, the
+    command line and the scripting API - so don't rename one without migrating
+    saved presets.
+*/
+enum class RenderFormat
+{
+    wav,
+    aiff,
+    flac,
+    ogg,
+    mp3,
+    midi        /**< Writes a MIDI file rather than audio. Every audio-only
+                     setting is ignored for it. @see RenderSpecification::format */
+};
+
+/** Converts a RenderFormat from its canonical name, or nullopt if unrecognised. */
+std::optional<RenderFormat> renderFormatFromString (juce::String);
+
+/** Converts a RenderFormat to its canonical name. */
+juce::String toString (RenderFormat);
+
+/** True for the format that writes notes rather than audio. */
+inline bool isMidiFormat (RenderFormat f)       { return f == RenderFormat::midi; }
+
+//==============================================================================
+/**
     A plain-data description of a single render operation: one output file.
 
     Unlike RenderOptions this has no UI or selection dependencies: items are
@@ -65,15 +92,15 @@ struct RenderSpecification
     /** The destination file to write to. */
     juce::File destination;
 
-    /** One of "wav", "aiff", "flac", "ogg", "mp3", or "midi".
+    /** The format to write.
 
-        "midi" writes a MIDI file rather than audio, capturing the MIDI arriving
-        at the render graph's output. The audio-only options below (bit depth,
-        quality, channel layout, the normalise family, dither, trimSilence and
-        wrapRemainder) don't apply and are ignored; sampleRate still sets the
-        rate the graph is processed at. @see usePlugins
+        RenderFormat::midi writes a MIDI file rather than audio, capturing the
+        MIDI arriving at the render graph's output. The audio-only options below
+        (bit depth, quality, channel layout, the normalise family, dither,
+        trimSilence and wrapRemainder) don't apply and are ignored; sampleRate
+        still sets the rate the graph is processed at. @see usePlugins
     */
-    juce::String format { "wav" };
+    RenderFormat format = RenderFormat::wav;
     double sampleRate = 44100.0;            ///< The sample rate to render at
     int bitDepth = 16;                      ///< The bit depth to render at
     int quality = 0;                        ///< Format-specific quality index, for formats that use one
@@ -112,7 +139,9 @@ struct RenderSpecification
 
     /** Creates a specification from its canonical JSON representation.
         Missing keys take their default values. Unknown keys are ignored and
-        their names appended to unknownKeys if supplied.
+        their names appended to unknownKeys if supplied. An unrecognised
+        "format" leaves the default - call renderFormatFromString() first if the
+        caller needs to report that rather than silently fall back.
     */
     static RenderSpecification fromJSON (const juce::var&, juce::StringArray* unknownKeys = nullptr);
 };

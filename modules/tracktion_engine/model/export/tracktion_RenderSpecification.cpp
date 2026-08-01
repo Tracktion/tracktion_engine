@@ -11,25 +11,34 @@
 namespace tracktion::inline engine
 {
 
+std::optional<RenderFormat> renderFormatFromString (juce::String s)
+{
+    return magic_enum::enum_cast<RenderFormat> (s.toStdString());
+}
+
+juce::String toString (RenderFormat f)
+{
+    return std::string (magic_enum::enum_name (f));
+}
+
 namespace render_spec_utils
 {
     inline constexpr double maxWrapRemainderTailSeconds = 30.0;
 
-    /** True for the one format that isn't audio, so has no juce::AudioFormat. */
-    static bool isMidiFormat (const juce::String& format)
-    {
-        return format == "midi";
-    }
-
-    static juce::AudioFormat* getFormat (Engine& engine, const juce::String& format)
+    /** The AudioFormat to write, or nullptr for a format that isn't audio. */
+    static juce::AudioFormat* getFormat (Engine& engine, RenderFormat format)
     {
         auto& affm = engine.getAudioFileFormatManager();
 
-        if (format == "wav")    return affm.getWavFormat();
-        if (format == "aiff")   return affm.getAiffFormat();
-        if (format == "flac")   return affm.getFlacFormat();
-        if (format == "ogg")    return affm.getOggFormat();
-        if (format == "mp3")    return affm.getLameFormat();
+        switch (format)
+        {
+            case RenderFormat::wav:     return affm.getWavFormat();
+            case RenderFormat::aiff:    return affm.getAiffFormat();
+            case RenderFormat::flac:    return affm.getFlacFormat();
+            case RenderFormat::ogg:     return affm.getOggFormat();
+            case RenderFormat::mp3:     return affm.getLameFormat();
+            case RenderFormat::midi:    break;
+        }
 
         return nullptr;
     }
@@ -102,7 +111,7 @@ juce::var RenderSpecification::toJSON() const
 
     obj->setProperty ("wrapRemainder", wrapRemainder);
     obj->setProperty ("destination", destination.getFullPathName());
-    obj->setProperty ("format", format);
+    obj->setProperty ("format", toString (format));
     obj->setProperty ("sampleRate", sampleRate);
     obj->setProperty ("bitDepth", bitDepth);
     obj->setProperty ("quality", quality);
@@ -163,7 +172,8 @@ RenderSpecification RenderSpecification::fromJSON (const juce::var& v, juce::Str
     spec.includeSourceTracks = get ("includeSourceTracks", spec.includeSourceTracks);
     spec.wrapRemainder      = get ("wrapRemainder", spec.wrapRemainder);
     spec.destination        = juce::File (get ("destination", juce::String()).toString());
-    spec.format             = get ("format", spec.format);
+    spec.format             = renderFormatFromString (get ("format", toString (spec.format)).toString())
+                                  .value_or (spec.format);
     spec.sampleRate         = get ("sampleRate", spec.sampleRate);
     spec.bitDepth           = get ("bitDepth", spec.bitDepth);
     spec.quality            = get ("quality", spec.quality);
@@ -202,9 +212,11 @@ juce::Result validateRenderSpecification (Edit& edit, const RenderSpecification&
     if (spec.destination.isDirectory())
         return juce::Result::fail (TRANS("The destination must be a file, not a directory"));
 
+    // The enum can only name formats we support, so the one thing left to check
+    // is whether this build actually has an encoder for it
     if (! isMidiFormat (spec.format) && getFormat (edit.engine, spec.format) == nullptr)
-        return juce::Result::fail (spec.format == "mp3" ? TRANS("MP3 encoding is not available")
-                                                        : TRANS("Unknown format: ") + spec.format);
+        return juce::Result::fail (spec.format == RenderFormat::mp3 ? TRANS("MP3 encoding is not available")
+                                                                    : TRANS("Unknown format: ") + toString (spec.format));
 
     // The MIDI render still processes the graph, so it needs a sane rate, but
     // the rest of the audio settings don't apply to it and aren't checked
