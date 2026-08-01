@@ -65,7 +65,15 @@ struct RenderSpecification
     /** The destination file to write to. */
     juce::File destination;
 
-    juce::String format { "wav" };          ///< One of "wav", "aiff", "flac", "ogg", "mp3"
+    /** One of "wav", "aiff", "flac", "ogg", "mp3", or "midi".
+
+        "midi" writes a MIDI file rather than audio, capturing the MIDI arriving
+        at the render graph's output. The audio-only options below (bit depth,
+        quality, channel layout, the normalise family, dither, trimSilence and
+        wrapRemainder) don't apply and are ignored; sampleRate still sets the
+        rate the graph is processed at. @see usePlugins
+    */
+    juce::String format { "wav" };
     double sampleRate = 44100.0;            ///< The sample rate to render at
     int bitDepth = 16;                      ///< The bit depth to render at
     int quality = 0;                        ///< Format-specific quality index, for formats that use one
@@ -89,7 +97,12 @@ struct RenderSpecification
     bool trimSilence = false;               ///< Trim leading/trailing silence
     bool dither = false;                    ///< Apply dithering for non-float formats
     bool realTime = false;                  ///< Render at 1x play speed
-    bool usePlugins = true;                 ///< Include track plugins
+    bool usePlugins = true;                 /**< Include track plugins. For a MIDI render this
+                                                 chooses what gets written: with plugins the MIDI
+                                                 is taken after the track's plugin chain, so MIDI
+                                                 effects are baked in but an external instrument
+                                                 which doesn't pass MIDI through will swallow it;
+                                                 without, the clips' own MIDI is written. */
     bool useMasterPlugins = true;           ///< Include the master plugin chain
     juce::StringPairArray metadata;         ///< Metadata pairs to write to the file where supported
 
