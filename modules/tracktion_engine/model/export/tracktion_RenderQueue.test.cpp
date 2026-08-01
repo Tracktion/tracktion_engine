@@ -159,6 +159,84 @@ TEST_SUITE ("tracktion_engine")
         CHECK (! job->getParameters().destFile.existsAsFile());
     }
 
+    namespace render_teardown_tests
+    {
+        /** Records whether deinitialise() is ever called off the message thread, so a
+            test can check a cancelled render tears its graph down on the right one.
+        */
+        class TeardownThreadPlugin  : public Plugin
+        {
+        public:
+            TeardownThreadPlugin (PluginCreationInfo info)   : Plugin (info) {}
+
+            static const char* getPluginName()               { return NEEDS_TRANS("Teardown Thread Tester"); }
+            static const char* xmlTypeName;
+
+            static juce::ValueTree create()                  { return createValueTree (IDs::PLUGIN, IDs::type, xmlTypeName); }
+
+            juce::String getName() const override            { return getPluginName(); }
+            juce::String getPluginType() override            { return xmlTypeName; }
+            juce::String getSelectableDescription() override { return getName(); }
+
+            BusLayout getBusses() const override             { return BusLayout::singleStereoInOut(); }
+
+            void initialise (const PluginInitialisationInfo&) override {}
+            void applyToBuffer (const PluginRenderContext&) override {}
+
+            void deinitialise() override
+            {
+                // Monotonic, as deinitialise can be called more than once and a later
+                // message-thread call mustn't hide an earlier render-thread one
+                if (! juce::MessageManager::existsAndIsCurrentThread())
+                    deinitialisedOffMessageThread = true;
+
+                wasDeinitialised = true;
+            }
+
+            std::atomic<bool> wasDeinitialised { false }, deinitialisedOffMessageThread { false };
+        };
+
+        const char* TeardownThreadPlugin::xmlTypeName ("teardownThreadTester");
+    }
+
+    TEST_CASE ("RenderQueue cancelled mid-render deinitialises plugins on the message thread")
+    {
+        using render_teardown_tests::TeardownThreadPlugin;
+
+        auto& engine = *Engine::getEngines()[0];
+        engine.getPluginManager().createBuiltInType<TeardownThreadPlugin>();
+
+        auto edit = test_utilities::createTestEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0);
+        insertWaveClip (*track, {}, sinFile->getFile(), { .time = { 0_tp, 5_tp } },
+                        DeleteExistingClips::no);
+
+        auto plugin = insertNewPlugin<TeardownThreadPlugin> (*track);
+        REQUIRE (plugin != nullptr);
+
+        juce::TemporaryFile destFile (".wav");
+
+        RenderSpecification spec;
+        spec.destination = destFile.getFile();
+
+        auto queue = std::make_unique<RenderQueue>();
+        auto job = queue->addJob (*createRenderJob (*edit, spec));
+
+        queue->start();
+        juce::MessageManager::getInstance()->runDispatchLoopUntil (50);
+
+        // Destroying the queue cancels the active job and joins its render thread. The
+        // graph holds the plugin, which has to be deinitialised on the message thread
+        queue.reset();
+
+        REQUIRE (job->getState() == RenderQueue::Job::State::cancelled);
+        REQUIRE (plugin->wasDeinitialised.load());  // Otherwise the graph never got built and this proves nothing
+        CHECK (! plugin->deinitialisedOffMessageThread.load());
+        CHECK (! job->getParameters().destFile.existsAsFile());
+    }
+
     TEST_CASE ("RenderQueue accepts jobs appended while running and after finishing")
     {
         auto& engine = *Engine::getEngines()[0];
