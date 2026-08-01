@@ -99,9 +99,9 @@ TEST_SUITE ("tracktion_engine")
             midiSpec.format = "midi";
             midiSpec.usePlugins = false;
 
-            auto restored = RenderSpecification::fromJSON (midiSpec.toJSON());
-            CHECK_EQ (restored.format, juce::String ("midi"));
-            CHECK (! restored.usePlugins);
+            auto restoredMidi = RenderSpecification::fromJSON (midiSpec.toJSON());
+            CHECK_EQ (restoredMidi.format, juce::String ("midi"));
+            CHECK (! restoredMidi.usePlugins);
         }
     }
 
@@ -789,7 +789,7 @@ TEST_SUITE ("tracktion_engine")
             std::vector<std::pair<int, double>> noteOns;
         };
 
-        auto renderToMidi = [&engine] (Edit& edit, const RenderSpecification& spec) -> MidiResult
+        auto renderToMidi = [] (Edit& edit, const RenderSpecification& spec) -> MidiResult
         {
             MidiResult result;
 
