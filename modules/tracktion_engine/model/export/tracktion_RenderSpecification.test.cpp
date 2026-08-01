@@ -29,7 +29,7 @@ TEST_SUITE ("tracktion_engine")
         spec.time = TimeRange (TimePosition::fromSeconds (1.5), TimePosition::fromSeconds (4.25));
         spec.wrapRemainder = true;
         spec.destination = juce::File::getSpecialLocation (juce::File::tempDirectory).getChildFile ("renders");
-        spec.format = "flac";
+        spec.format = RenderFormat::flac;
         spec.sampleRate = 96000.0;
         spec.bitDepth = 24;
         spec.quality = 3;
@@ -57,7 +57,7 @@ TEST_SUITE ("tracktion_engine")
         CHECK_EQ (restored.time->getEnd(), spec.time->getEnd());
         CHECK_EQ (restored.wrapRemainder, spec.wrapRemainder);
         CHECK_EQ (restored.destination, spec.destination);
-        CHECK_EQ (restored.format, spec.format);
+        CHECK (toString (restored.format) == toString (spec.format));
         CHECK_EQ (restored.sampleRate, spec.sampleRate);
         CHECK_EQ (restored.bitDepth, spec.bitDepth);
         CHECK_EQ (restored.quality, spec.quality);
@@ -84,7 +84,7 @@ TEST_SUITE ("tracktion_engine")
             juce::StringArray unknownKeys;
             auto parsed = RenderSpecification::fromJSON (juce::var (obj), &unknownKeys);
 
-            CHECK_EQ (parsed.format, juce::String ("aiff"));
+            CHECK (toString (parsed.format) == toString (RenderFormat::aiff));
             CHECK_EQ (parsed.sampleRate, 44100.0);
             CHECK_EQ (parsed.bitDepth, 16);
             CHECK (parsed.limitTruePeak);                   // the true-peak ceiling is on by default...
@@ -96,11 +96,11 @@ TEST_SUITE ("tracktion_engine")
         SUBCASE ("the midi format survives the round-trip")
         {
             RenderSpecification midiSpec;
-            midiSpec.format = "midi";
+            midiSpec.format = RenderFormat::midi;
             midiSpec.usePlugins = false;
 
             auto restoredMidi = RenderSpecification::fromJSON (midiSpec.toJSON());
-            CHECK_EQ (restoredMidi.format, juce::String ("midi"));
+            CHECK (toString (restoredMidi.format) == toString (RenderFormat::midi));
             CHECK (! restoredMidi.usePlugins);
         }
     }
@@ -132,10 +132,22 @@ TEST_SUITE ("tracktion_engine")
             CHECK (validateRenderSpecification (*edit, spec).failed());
         }
 
-        SUBCASE ("unknown format")
+        // An unknown format can't reach validation any more - RenderFormat can
+        // only name one we support - so the check lives at the string boundary
+        SUBCASE ("format names round-trip, and an unknown one is rejected")
         {
-            spec.format = "wibble";
-            CHECK (validateRenderSpecification (*edit, spec).failed());
+            CHECK (! renderFormatFromString ("wibble").has_value());
+            CHECK (! renderFormatFromString ("").has_value());
+
+            magic_enum::enum_for_each<RenderFormat> ([] (auto f)
+            {
+                constexpr RenderFormat format = f;
+                CHECK (toString (renderFormatFromString (toString (format)).value_or (RenderFormat::midi)) == toString (format));
+            });
+
+            // The canonical names are what presets and config files hold
+            CHECK (toString (RenderFormat::wav) == juce::String ("wav"));
+            CHECK (toString (RenderFormat::midi) == juce::String ("midi"));
         }
 
         SUBCASE ("invalid bit depth")
@@ -170,7 +182,7 @@ TEST_SUITE ("tracktion_engine")
 
         SUBCASE ("the midi format is accepted and skips the audio-only checks")
         {
-            spec.format = "midi";
+            spec.format = RenderFormat::midi;
             CHECK (validateRenderSpecification (*edit, spec).wasOk());
 
             // These would fail for an audio format but say nothing about a MIDI file
@@ -242,14 +254,14 @@ TEST_SUITE ("tracktion_engine")
             destDir.createDirectory();
 
             RenderSpecification base;
-            base.format = "midi";
+            base.format = RenderFormat::midi;
 
             auto specs = createPerTrackSpecifications (*edit, base, destDir);
             REQUIRE_EQ (specs.size(), (size_t) 3);
 
             for (auto& spec : specs)
             {
-                CHECK_EQ (spec.format, juce::String ("midi"));
+                CHECK (toString (spec.format) == toString (RenderFormat::midi));
                 CHECK_EQ (spec.destination.getFileExtension(), juce::String (".mid"));
             }
 
@@ -262,7 +274,7 @@ TEST_SUITE ("tracktion_engine")
 
             RenderSpecification spec;
             spec.destination = destFile.getFile();
-            spec.format = "midi";
+            spec.format = RenderFormat::midi;
             spec.tracks = { tracks[1]->itemID };
 
             // Audio settings which a MIDI render can't act on: they must not
@@ -841,7 +853,7 @@ TEST_SUITE ("tracktion_engine")
             juce::TemporaryFile destFile (".mid");
             RenderSpecification spec;
             spec.destination = destFile.getFile();
-            spec.format = "midi";
+            spec.format = RenderFormat::midi;
             spec.time = TimeRange { 0_tp, 4_tp };
 
             auto result = renderToMidi (*edit, spec);
@@ -867,7 +879,7 @@ TEST_SUITE ("tracktion_engine")
             juce::TemporaryFile destFile (".mid");
             RenderSpecification spec;
             spec.destination = destFile.getFile();
-            spec.format = "midi";
+            spec.format = RenderFormat::midi;
             spec.time = TimeRange { 0_tp, 4_tp };
 
             auto result = renderToMidi (*edit, spec);
@@ -893,7 +905,7 @@ TEST_SUITE ("tracktion_engine")
                 juce::TemporaryFile destFile (".mid");
                 RenderSpecification spec;
                 spec.destination = destFile.getFile();
-                spec.format = "midi";
+                spec.format = RenderFormat::midi;
                 spec.time = TimeRange { 0_tp, 4_tp };
                 spec.usePlugins = usePlugins;
                 return renderToMidi (*edit, spec);
@@ -922,7 +934,7 @@ TEST_SUITE ("tracktion_engine")
             juce::TemporaryFile destFile (".mid");
             RenderSpecification spec;
             spec.destination = destFile.getFile();
-            spec.format = "midi";
+            spec.format = RenderFormat::midi;
             spec.time = TimeRange { 0_tp, 4_tp };
             spec.tracks = { tracks[1]->itemID };
 
@@ -945,7 +957,7 @@ TEST_SUITE ("tracktion_engine")
             juce::TemporaryFile destFile (".mid");
             RenderSpecification spec;
             spec.destination = destFile.getFile();
-            spec.format = "midi";
+            spec.format = RenderFormat::midi;
             spec.time = TimeRange { 0_tp, 4_tp };
 
             auto result = renderToMidi (*edit, spec);
@@ -969,7 +981,7 @@ TEST_SUITE ("tracktion_engine")
             juce::TemporaryFile destFile (".mid");
             RenderSpecification spec;
             spec.destination = destFile.getFile();
-            spec.format = "midi";
+            spec.format = RenderFormat::midi;
             spec.time = TimeRange { 0_tp, 1_tp };
 
             auto result = renderToMidi (*edit, spec);
