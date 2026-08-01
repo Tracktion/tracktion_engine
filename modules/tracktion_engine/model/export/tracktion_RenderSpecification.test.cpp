@@ -799,6 +799,8 @@ TEST_SUITE ("tracktion_engine")
             bool succeeded = false;
             int numTracksInFile = 0;
             std::vector<std::pair<int, double>> noteOns;
+            std::vector<std::pair<int, int>> timeSigs;      ///< numerator/denominator meta events
+            std::vector<double> tempoBpms;                  ///< tempo meta events, as BPM
         };
 
         auto renderToMidi = [] (Edit& edit, const RenderSpecification& spec) -> MidiResult
@@ -829,10 +831,25 @@ TEST_SUITE ("tracktion_engine")
             result.numTracksInFile = midiFile.getNumTracks();
 
             for (int i = 0; i < midiFile.getNumTracks(); ++i)
+            {
                 for (auto event : *midiFile.getTrack (i))
-                    if (event->message.isNoteOn())
-                        result.noteOns.push_back ({ event->message.getNoteNumber(),
-                                                    event->message.getTimeStamp() });
+                {
+                    const auto& m = event->message;
+
+                    if (m.isNoteOn())
+                        result.noteOns.push_back ({ m.getNoteNumber(), m.getTimeStamp() });
+
+                    if (m.isTimeSignatureMetaEvent())
+                    {
+                        int numerator = 0, denominator = 0;
+                        m.getTimeSignatureInfo (numerator, denominator);
+                        result.timeSigs.push_back ({ numerator, denominator });
+                    }
+
+                    if (m.isTempoMetaEvent())
+                        result.tempoBpms.push_back (60.0 / m.getTempoSecondsPerQuarterNote());
+                }
+            }
 
             return result;
         };
@@ -969,6 +986,140 @@ TEST_SUITE ("tracktion_engine")
             REQUIRE_EQ (result.noteOns.size(), (size_t) 2);
             CHECK_EQ (result.noteOns[0].first, 60);
             CHECK_EQ (result.noteOns[1].first, 72);
+        }
+
+        SUBCASE ("note positions are musical, so a tempo change doesn't move them")
+        {
+            auto edit = test_utilities::createTestEdit (engine);
+            auto track = getAudioTracks (*edit)[0];
+
+            // Notes either side of a tempo change. Their tick positions are
+            // beats, so doubling the tempo must not move them - it would if the
+            // conversion went through seconds at a single assumed tempo
+            addMidiClip (*track, { 0_tp, 1_tp }, 60);
+            edit->tempoSequence.insertTempo (BeatPosition::fromBeats (2.0), 120.0, 0.0f);
+            addMidiClip (*track, { 2_tp, 3_tp }, 72);   // starts on the tempo change
+
+            juce::TemporaryFile destFile (".mid");
+            RenderSpecification spec;
+            spec.destination = destFile.getFile();
+            spec.format = RenderFormat::midi;
+            spec.time = TimeRange { 0_tp, 10_tp };
+
+            auto result = renderToMidi (*edit, spec);
+            REQUIRE (result.succeeded);
+            REQUIRE_EQ (result.noteOns.size(), (size_t) 2);
+
+            CHECK_EQ (result.noteOns[0].first, 60);
+            CHECK_EQ (result.noteOns[0].second, doctest::Approx (0.0));
+            CHECK_EQ (result.noteOns[1].first, 72);
+            CHECK_EQ (result.noteOns[1].second, doctest::Approx (2.0 * ticksPerBeat).epsilon (0.01));
+
+            // Both tempos reach the file, so an importer can reconstruct the map
+            REQUIRE_EQ (result.tempoBpms.size(), (size_t) 2);
+            CHECK_EQ (result.tempoBpms[0], doctest::Approx (60.0).epsilon (0.01));
+            CHECK_EQ (result.tempoBpms[1], doctest::Approx (120.0).epsilon (0.01));
+        }
+
+        SUBCASE ("a range starting mid-edit writes positions relative to the range")
+        {
+            auto edit = test_utilities::createTestEdit (engine);
+            auto track = getAudioTracks (*edit)[0];
+
+            addMidiClip (*track, { 0_tp, 1_tp }, 60);
+            addMidiClip (*track, { 4_tp, 5_tp }, 72);
+
+            juce::TemporaryFile destFile (".mid");
+            RenderSpecification spec;
+            spec.destination = destFile.getFile();
+            spec.format = RenderFormat::midi;
+            spec.time = TimeRange { 2_tp, 6_tp };   // starts after the first note, covers the second
+
+            auto result = renderToMidi (*edit, spec);
+            REQUIRE (result.succeeded);
+
+            // Only the note inside the range, and it starts two beats in - the
+            // file begins at the range, not at the start of the edit
+            REQUIRE_EQ (result.noteOns.size(), (size_t) 1);
+            CHECK_EQ (result.noteOns[0].first, 72);
+            CHECK_EQ (result.noteOns[0].second, doctest::Approx (2.0 * ticksPerBeat).epsilon (0.01));
+        }
+
+        SUBCASE ("the edit's time signature reaches the file")
+        {
+            auto edit = test_utilities::createTestEdit (engine);
+            REQUIRE_GT (edit->tempoSequence.getNumTimeSigs(), 0);
+            edit->tempoSequence.getTimeSig (0)->setStringTimeSig ("3/4");
+
+            addMidiClip (*getAudioTracks (*edit)[0], { 0_tp, 1_tp }, 60);
+
+            juce::TemporaryFile destFile (".mid");
+            RenderSpecification spec;
+            spec.destination = destFile.getFile();
+            spec.format = RenderFormat::midi;
+            spec.time = TimeRange { 0_tp, 4_tp };
+
+            auto result = renderToMidi (*edit, spec);
+            REQUIRE (result.succeeded);
+            REQUIRE_GE (result.timeSigs.size(), (size_t) 1);
+            CHECK_EQ (result.timeSigs[0].first, 3);
+            CHECK_EQ (result.timeSigs[0].second, 4);
+        }
+
+        SUBCASE ("a rendered file reimports with the same notes")
+        {
+            auto edit = test_utilities::createTestEdit (engine);
+            auto track = getAudioTracks (*edit)[0];
+
+            // A chord plus a melody note, so pitch, position and length all matter
+            auto clip = track->insertMIDIClip ({ 0_tp, 4_tp }, nullptr);
+            auto& sequence = clip->getSequence();
+            sequence.addNote (60, BeatPosition::fromBeats (0.0), BeatDuration::fromBeats (2.0), 127, 0, nullptr);
+            sequence.addNote (64, BeatPosition::fromBeats (0.0), BeatDuration::fromBeats (2.0), 127, 0, nullptr);
+            sequence.addNote (67, BeatPosition::fromBeats (0.0), BeatDuration::fromBeats (2.0), 127, 0, nullptr);
+            sequence.addNote (72, BeatPosition::fromBeats (2.5), BeatDuration::fromBeats (0.5), 100, 0, nullptr);
+
+            juce::TemporaryFile destFile (".mid");
+            RenderSpecification spec;
+            spec.destination = destFile.getFile();
+            spec.format = RenderFormat::midi;
+            spec.time = TimeRange { 0_tp, 4_tp };
+
+            REQUIRE (renderToMidi (*edit, spec).succeeded);
+
+            // Read it back the way importing a MIDI file into an edit does
+            juce::OwnedArray<MidiList> lists;
+            juce::Array<BeatPosition> tempoChangeBeats;
+            juce::Array<double> bpms;
+            juce::Array<int> numerators, denominators;
+            BeatDuration songLength;
+
+            REQUIRE (MidiList::readSeparateTracksFromFile (destFile.getFile(), lists, tempoChangeBeats,
+                                                           bpms, numerators, denominators, songLength, false));
+
+            juce::Array<MidiNote*> imported;
+
+            for (auto list : lists)
+                for (auto note : list->getNotes())
+                    imported.add (note);
+
+            MidiList::sortMidiEventsByTime (imported);
+
+            const auto& original = sequence.getNotes();
+            REQUIRE_EQ (imported.size(), original.size());
+
+            // Same pitches, positions and lengths as the clip they came from
+            for (int i = 0; i < imported.size(); ++i)
+            {
+                auto expected = original[i];
+                auto actual = imported[i];
+
+                CHECK_EQ (actual->getNoteNumber(), expected->getNoteNumber());
+                CHECK_EQ (actual->getStartBeat().inBeats(),
+                          doctest::Approx (expected->getStartBeat().inBeats()).epsilon (0.001));
+                CHECK_EQ (actual->getLengthBeats().inBeats(),
+                          doctest::Approx (expected->getLengthBeats().inBeats()).epsilon (0.001));
+            }
         }
 
         SUBCASE ("a render with no MIDI in it fails rather than writing an empty file")
