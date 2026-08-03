@@ -96,6 +96,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aec5bef57ed88baaf8c8d54250c29e9b8" id="r_aec5bef57ed88baaf8c8d54250c29e9b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1TrackMuteState.html#aec5bef57ed88baaf8c8d54250c29e9b8">update</a> ()</td></tr>
 <tr class="memdesc:aec5bef57ed88baaf8c8d54250c29e9b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call once per block to update the mute status.  <br /></td></tr>
 <tr class="separator:aec5bef57ed88baaf8c8d54250c29e9b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0738fe91439612f8aa72f0cc005e825" id="r_ae0738fe91439612f8aa72f0cc005e825"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1TrackMuteState.html#ae0738fe91439612f8aa72f0cc005e825">setKeepProcessingWhileMuted</a> ()</td></tr>
+<tr class="memdesc:ae0738fe91439612f8aa72f0cc005e825"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forces the track's contents to keep processing while the track is muted, so it can still feed sidechains, aux buses and racks; the track's own output stays muted.  <br /></td></tr>
+<tr class="separator:ae0738fe91439612f8aa72f0cc005e825"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a187860e260bef6d5ce97016703e7f24e" id="r_a187860e260bef6d5ce97016703e7f24e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1TrackMuteState.html#a187860e260bef6d5ce97016703e7f24e">shouldTrackBeAudible</a> () const</td></tr>
 <tr class="memdesc:a187860e260bef6d5ce97016703e7f24e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the track's mix bus should be audible.  <br /></td></tr>
 <tr class="separator:a187860e260bef6d5ce97016703e7f24e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -192,6 +195,26 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Call once per block to update the mute status. </p>
+
+</div>
+</div>
+<a id="ae0738fe91439612f8aa72f0cc005e825" name="ae0738fe91439612f8aa72f0cc005e825"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0738fe91439612f8aa72f0cc005e825">&#9670;&#160;</a></span>setKeepProcessingWhileMuted()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void engine::TrackMuteState::setKeepProcessingWhileMuted </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Forces the track's contents to keep processing while the track is muted, so it can still feed sidechains, aux buses and racks; the track's own output stays muted. </p>
+<p>Render graphs call this for stem source tracks. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="structengine_1_1CreateNodeParams.html#a461f6433d1527135b26ccd360208ea05" title="Tracks whose contents keep processing while the track is muted, so they can feed sidechains,...">CreateNodeParams::tracksToProcessWhileMuted</a> </dd></dl>
 
 </div>
 </div>
@@ -316,7 +339,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jul 29 2026 12:36:46 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Aug 3 2026 18:52:07 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

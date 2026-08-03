@@ -1,7 +1,7 @@
 var searchData=
 [
   ['warptime_0',['warpTime',['../classengine_1_1ClipEffect.html#ad2485113a8437c897734b9d260fca25bae10db1f12a5f7fa88737eda4e033a077',1,'engine::ClipEffect']]],
-  ['wav_1',['wav',['../classengine_1_1RenderOptions.html#a9e30451fabe87135e06837529770e362a788e6ca25fcff74725211eb6f27ec502',1,'engine::RenderOptions']]],
+  ['wav_1',['wav',['../classengine_1_1RenderOptions.html#a9e30451fabe87135e06837529770e362a788e6ca25fcff74725211eb6f27ec502',1,'engine::RenderOptions::wav'],['../namespaceengine.html#a3f0cb9989dc30bafaad719176696cc10a4bda4933646d3ce6ceedcdb1e5f982d8',1,'engine::wav']]],
   ['wave_2',['wave',['../classengine_1_1TrackItem.html#ab919abf28cd728b3e0a752886412d323ab2d7d7656eb4e5153688637c8fbf7b49',1,'engine::TrackItem']]],
   ['wavedevice_3',['waveDevice',['../classengine_1_1InputDevice.html#a18ea4a67e3b8add187770a846858dcdfa9f36052f38862388ef94aa31684fdbc1',1,'engine::InputDevice']]],
   ['wavein_4',['wavein',['../namespaceengine.html#a37f708109fdbdb9329a540048b1a040fac733e4221d487351d76843e7d172fa06',1,'engine']]],

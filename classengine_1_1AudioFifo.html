@@ -80,6 +80,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>A single-producer, single-consumer fifo of audio samples.  
+ <a href="classengine_1_1AudioFifo.html#details">More...</a></p>
+
 <p><code>#include &lt;tracktion_AudioFifo.h&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -98,24 +101,27 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7f8a833a8601250e3357776e5c28d246"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45c2da5d4aaa1d025b7a018ff67032ae" id="r_a45c2da5d4aaa1d025b7a018ff67032ae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioFifo.html#a45c2da5d4aaa1d025b7a018ff67032ae">ensureFreeSpace</a> (int numSamples)</td></tr>
 <tr class="separator:a45c2da5d4aaa1d025b7a018ff67032ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d20e7c02b76edf26777372629d8640c" id="r_a1d20e7c02b76edf26777372629d8640c"><td class="memItemLeft" align="right" valign="top">TRACKTION_NO_TSAN bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioFifo.html#a1d20e7c02b76edf26777372629d8640c">write</a> (const juce::AudioBuffer&lt; float &gt; &amp;src)</td></tr>
-<tr class="separator:a1d20e7c02b76edf26777372629d8640c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c99b72404bc6ef4707a44bed304293b" id="r_a0c99b72404bc6ef4707a44bed304293b"><td class="memItemLeft" align="right" valign="top">TRACKTION_NO_TSAN bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioFifo.html#a0c99b72404bc6ef4707a44bed304293b">write</a> (const juce::AudioBuffer&lt; float &gt; &amp;src, int startSample, int numSamples)</td></tr>
-<tr class="separator:a0c99b72404bc6ef4707a44bed304293b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5b66e2bdf75bb79f06b287eaa63d01d" id="r_ae5b66e2bdf75bb79f06b287eaa63d01d"><td class="memItemLeft" align="right" valign="top">TRACKTION_NO_TSAN bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioFifo.html#ae5b66e2bdf75bb79f06b287eaa63d01d">write</a> (const float *const *data, int numSamples)</td></tr>
-<tr class="separator:ae5b66e2bdf75bb79f06b287eaa63d01d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3213fe55071a0da85657e13547de0c3a" id="r_a3213fe55071a0da85657e13547de0c3a"><td class="memItemLeft" align="right" valign="top">TRACKTION_NO_TSAN bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioFifo.html#a3213fe55071a0da85657e13547de0c3a">writeSilence</a> (int numSamples)</td></tr>
-<tr class="separator:a3213fe55071a0da85657e13547de0c3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31831a57297b5c9c0cf43c3113d9dcce" id="r_a31831a57297b5c9c0cf43c3113d9dcce"><td class="memItemLeft" align="right" valign="top">TRACKTION_NO_TSAN bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioFifo.html#a31831a57297b5c9c0cf43c3113d9dcce">read</a> (juce::AudioBuffer&lt; float &gt; &amp;dest, int startSampleInDestBuffer)</td></tr>
-<tr class="separator:a31831a57297b5c9c0cf43c3113d9dcce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b0ee70225c9fc8708d925eb52e0a24d" id="r_a5b0ee70225c9fc8708d925eb52e0a24d"><td class="memItemLeft" align="right" valign="top">TRACKTION_NO_TSAN bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioFifo.html#a5b0ee70225c9fc8708d925eb52e0a24d">read</a> (juce::AudioBuffer&lt; float &gt; &amp;dest, int startSampleInDestBuffer, int numSamples)</td></tr>
-<tr class="separator:a5b0ee70225c9fc8708d925eb52e0a24d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1a918a89780984f8e4a1d35ab7246c3" id="r_ad1a918a89780984f8e4a1d35ab7246c3"><td class="memItemLeft" align="right" valign="top">TRACKTION_NO_TSAN bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioFifo.html#ad1a918a89780984f8e4a1d35ab7246c3">readAdding</a> (juce::AudioBuffer&lt; float &gt; &amp;dest, int startSampleInDestBuffer)</td></tr>
-<tr class="separator:ad1a918a89780984f8e4a1d35ab7246c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab94864c088c586c5b43d069ed9c03aca" id="r_ab94864c088c586c5b43d069ed9c03aca"><td class="memItemLeft" align="right" valign="top">TRACKTION_NO_TSAN bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioFifo.html#ab94864c088c586c5b43d069ed9c03aca">readAdding</a> (juce::AudioBuffer&lt; float &gt; &amp;dest, int startSampleInDestBuffer, int numSamples)</td></tr>
-<tr class="separator:ab94864c088c586c5b43d069ed9c03aca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbaded8e973fc63bbf64d577f91089e4" id="r_acbaded8e973fc63bbf64d577f91089e4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioFifo.html#acbaded8e973fc63bbf64d577f91089e4">write</a> (const juce::AudioBuffer&lt; float &gt; &amp;src)</td></tr>
+<tr class="separator:acbaded8e973fc63bbf64d577f91089e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ff8b238c61b1a2ca6bea1a1c3a0309a" id="r_a6ff8b238c61b1a2ca6bea1a1c3a0309a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioFifo.html#a6ff8b238c61b1a2ca6bea1a1c3a0309a">write</a> (const juce::AudioBuffer&lt; float &gt; &amp;src, int startSample, int numSamples)</td></tr>
+<tr class="separator:a6ff8b238c61b1a2ca6bea1a1c3a0309a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b2f1e44f2bb844ea84a98c71a434267" id="r_a5b2f1e44f2bb844ea84a98c71a434267"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioFifo.html#a5b2f1e44f2bb844ea84a98c71a434267">write</a> (const float *const *data, int numSamples)</td></tr>
+<tr class="separator:a5b2f1e44f2bb844ea84a98c71a434267"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a435be0320ae86ba214fc1fd83314e5f7" id="r_a435be0320ae86ba214fc1fd83314e5f7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioFifo.html#a435be0320ae86ba214fc1fd83314e5f7">writeSilence</a> (int numSamples)</td></tr>
+<tr class="separator:a435be0320ae86ba214fc1fd83314e5f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23253271d14bdc7e35d58a6dc0ee7f59" id="r_a23253271d14bdc7e35d58a6dc0ee7f59"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioFifo.html#a23253271d14bdc7e35d58a6dc0ee7f59">read</a> (juce::AudioBuffer&lt; float &gt; &amp;dest, int startSampleInDestBuffer)</td></tr>
+<tr class="separator:a23253271d14bdc7e35d58a6dc0ee7f59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9845b69adb65ec816b18437b59072092" id="r_a9845b69adb65ec816b18437b59072092"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioFifo.html#a9845b69adb65ec816b18437b59072092">read</a> (juce::AudioBuffer&lt; float &gt; &amp;dest, int startSampleInDestBuffer, int numSamples)</td></tr>
+<tr class="separator:a9845b69adb65ec816b18437b59072092"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28f8cb437bb43bda4bc010a723607b31" id="r_a28f8cb437bb43bda4bc010a723607b31"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioFifo.html#a28f8cb437bb43bda4bc010a723607b31">readAdding</a> (juce::AudioBuffer&lt; float &gt; &amp;dest, int startSampleInDestBuffer)</td></tr>
+<tr class="separator:a28f8cb437bb43bda4bc010a723607b31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06fe6938160a4a99b0ed57dc083855df" id="r_a06fe6938160a4a99b0ed57dc083855df"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioFifo.html#a06fe6938160a4a99b0ed57dc083855df">readAdding</a> (juce::AudioBuffer&lt; float &gt; &amp;dest, int startSampleInDestBuffer, int numSamples)</td></tr>
+<tr class="separator:a06fe6938160a4a99b0ed57dc083855df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A single-producer, single-consumer fifo of audio samples. </p>
+<p>The reader and writer may be on different threads. The storage is a choc::buffer::ChannelArrayBuffer rather than a juce::AudioBuffer because the latter keeps a shared "hasBeenCleared" flag which both sides would touch on every call, giving a data race outside of the sample regions that the AbstractFifo keeps disjoint. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a4fa095836f947f252c11bda0b7d563b1" name="a4fa095836f947f252c11bda0b7d563b1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4fa095836f947f252c11bda0b7d563b1">&#9670;&#160;</a></span>AudioFifo()</h2>
 
@@ -291,14 +297,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a1d20e7c02b76edf26777372629d8640c" name="a1d20e7c02b76edf26777372629d8640c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1d20e7c02b76edf26777372629d8640c">&#9670;&#160;</a></span>write() <span class="overload">[1/3]</span></h2>
+<a id="acbaded8e973fc63bbf64d577f91089e4" name="acbaded8e973fc63bbf64d577f91089e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acbaded8e973fc63bbf64d577f91089e4">&#9670;&#160;</a></span>write() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">TRACKTION_NO_TSAN bool engine::AudioFifo::write </td>
+          <td class="memname">bool engine::AudioFifo::write </td>
           <td>(</td>
           <td class="paramtype">const juce::AudioBuffer&lt; float &gt; &amp;&#160;</td>
           <td class="paramname"><em>src</em></td><td>)</td>
@@ -311,14 +317,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a0c99b72404bc6ef4707a44bed304293b" name="a0c99b72404bc6ef4707a44bed304293b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0c99b72404bc6ef4707a44bed304293b">&#9670;&#160;</a></span>write() <span class="overload">[2/3]</span></h2>
+<a id="a6ff8b238c61b1a2ca6bea1a1c3a0309a" name="a6ff8b238c61b1a2ca6bea1a1c3a0309a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ff8b238c61b1a2ca6bea1a1c3a0309a">&#9670;&#160;</a></span>write() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">TRACKTION_NO_TSAN bool engine::AudioFifo::write </td>
+          <td class="memname">bool engine::AudioFifo::write </td>
           <td>(</td>
           <td class="paramtype">const juce::AudioBuffer&lt; float &gt; &amp;&#160;</td>
           <td class="paramname"><em>src</em>, </td>
@@ -345,14 +351,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ae5b66e2bdf75bb79f06b287eaa63d01d" name="ae5b66e2bdf75bb79f06b287eaa63d01d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae5b66e2bdf75bb79f06b287eaa63d01d">&#9670;&#160;</a></span>write() <span class="overload">[3/3]</span></h2>
+<a id="a5b2f1e44f2bb844ea84a98c71a434267" name="a5b2f1e44f2bb844ea84a98c71a434267"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b2f1e44f2bb844ea84a98c71a434267">&#9670;&#160;</a></span>write() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">TRACKTION_NO_TSAN bool engine::AudioFifo::write </td>
+          <td class="memname">bool engine::AudioFifo::write </td>
           <td>(</td>
           <td class="paramtype">const float *const *&#160;</td>
           <td class="paramname"><em>data</em>, </td>
@@ -373,14 +379,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a3213fe55071a0da85657e13547de0c3a" name="a3213fe55071a0da85657e13547de0c3a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3213fe55071a0da85657e13547de0c3a">&#9670;&#160;</a></span>writeSilence()</h2>
+<a id="a435be0320ae86ba214fc1fd83314e5f7" name="a435be0320ae86ba214fc1fd83314e5f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a435be0320ae86ba214fc1fd83314e5f7">&#9670;&#160;</a></span>writeSilence()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">TRACKTION_NO_TSAN bool engine::AudioFifo::writeSilence </td>
+          <td class="memname">bool engine::AudioFifo::writeSilence </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>numSamples</em></td><td>)</td>
@@ -391,14 +397,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a31831a57297b5c9c0cf43c3113d9dcce" name="a31831a57297b5c9c0cf43c3113d9dcce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a31831a57297b5c9c0cf43c3113d9dcce">&#9670;&#160;</a></span>read() <span class="overload">[1/2]</span></h2>
+<a id="a23253271d14bdc7e35d58a6dc0ee7f59" name="a23253271d14bdc7e35d58a6dc0ee7f59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23253271d14bdc7e35d58a6dc0ee7f59">&#9670;&#160;</a></span>read() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">TRACKTION_NO_TSAN bool engine::AudioFifo::read </td>
+          <td class="memname">bool engine::AudioFifo::read </td>
           <td>(</td>
           <td class="paramtype">juce::AudioBuffer&lt; float &gt; &amp;&#160;</td>
           <td class="paramname"><em>dest</em>, </td>
@@ -421,14 +427,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a5b0ee70225c9fc8708d925eb52e0a24d" name="a5b0ee70225c9fc8708d925eb52e0a24d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5b0ee70225c9fc8708d925eb52e0a24d">&#9670;&#160;</a></span>read() <span class="overload">[2/2]</span></h2>
+<a id="a9845b69adb65ec816b18437b59072092" name="a9845b69adb65ec816b18437b59072092"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9845b69adb65ec816b18437b59072092">&#9670;&#160;</a></span>read() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">TRACKTION_NO_TSAN bool engine::AudioFifo::read </td>
+          <td class="memname">bool engine::AudioFifo::read </td>
           <td>(</td>
           <td class="paramtype">juce::AudioBuffer&lt; float &gt; &amp;&#160;</td>
           <td class="paramname"><em>dest</em>, </td>
@@ -455,14 +461,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad1a918a89780984f8e4a1d35ab7246c3" name="ad1a918a89780984f8e4a1d35ab7246c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad1a918a89780984f8e4a1d35ab7246c3">&#9670;&#160;</a></span>readAdding() <span class="overload">[1/2]</span></h2>
+<a id="a28f8cb437bb43bda4bc010a723607b31" name="a28f8cb437bb43bda4bc010a723607b31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28f8cb437bb43bda4bc010a723607b31">&#9670;&#160;</a></span>readAdding() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">TRACKTION_NO_TSAN bool engine::AudioFifo::readAdding </td>
+          <td class="memname">bool engine::AudioFifo::readAdding </td>
           <td>(</td>
           <td class="paramtype">juce::AudioBuffer&lt; float &gt; &amp;&#160;</td>
           <td class="paramname"><em>dest</em>, </td>
@@ -483,14 +489,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab94864c088c586c5b43d069ed9c03aca" name="ab94864c088c586c5b43d069ed9c03aca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab94864c088c586c5b43d069ed9c03aca">&#9670;&#160;</a></span>readAdding() <span class="overload">[2/2]</span></h2>
+<a id="a06fe6938160a4a99b0ed57dc083855df" name="a06fe6938160a4a99b0ed57dc083855df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06fe6938160a4a99b0ed57dc083855df">&#9670;&#160;</a></span>readAdding() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">TRACKTION_NO_TSAN bool engine::AudioFifo::readAdding </td>
+          <td class="memname">bool engine::AudioFifo::readAdding </td>
           <td>(</td>
           <td class="paramtype">juce::AudioBuffer&lt; float &gt; &amp;&#160;</td>
           <td class="paramname"><em>dest</em>, </td>
@@ -523,7 +529,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jul 29 2026 12:36:45 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Aug 3 2026 18:52:06 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

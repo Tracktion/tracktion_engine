@@ -415,6 +415,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1Edit_1_1GlobalMacros.html">engine::Edit::GlobalMacros</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds the global Macros for the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="structengine_1_1Edit_1_1GlobalMacros.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1Edit_1_1SaveInhibitor.html">engine::Edit::SaveInhibitor</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> being written to disk.  <a href="structengine_1_1Edit_1_1SaveInhibitor.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1Edit_1_1Metadata.html">engine::Edit::Metadata</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structengine_1_1Edit_1_1Metadata.html" title="Metadata for the Edit.">Metadata</a> for the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <a href="structengine_1_1Edit_1_1Metadata.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -578,6 +581,21 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1RenderOptions_1_1AddRenderOptions_01_4.html">juce::VariantConverter&lt; tracktion::engine::RenderOptions::AddRenderOptions &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ScopedTrackMuter.html">engine::ScopedTrackMuter</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mutes a set of tracks for its lifetime, restoring their previous mute states on destruction.  <a href="classengine_1_1ScopedTrackMuter.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1RenderQueue.html">engine::RenderQueue</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs a list of render jobs strictly one at a time, in order.  <a href="classengine_1_1RenderQueue.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1RenderQueue_1_1Job.html">engine::RenderQueue::Job</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A single job in the queue, obtained from <a class="el" href="classengine_1_1RenderQueue.html#a8805e7f6da435231b8534e7bbd274009" title="Adds a job to the queue, returning its handle.">addJob()</a>/addJobs()/getJobs().  <a href="classengine_1_1RenderQueue_1_1Job.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1RenderSpecification.html">engine::RenderSpecification</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A plain-data description of a single render operation: one output file.  <a href="structengine_1_1RenderSpecification.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1PlannedRenderJob.html">engine::PlannedRenderJob</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A concrete render job created from a <a class="el" href="structengine_1_1RenderSpecification.html" title="A plain-data description of a single render operation: one output file.">RenderSpecification</a>.  <a href="structengine_1_1PlannedRenderJob.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ArrangerTrack.html">engine::ArrangerTrack</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A track similar to the <a class="el" href="classengine_1_1MarkerTrack.html">MarkerTrack</a> but can be used to move sections of an <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> around.  <a href="classengine_1_1ArrangerTrack.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -672,7 +690,7 @@ Classes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jul 29 2026 12:36:45 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Aug 3 2026 18:52:06 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

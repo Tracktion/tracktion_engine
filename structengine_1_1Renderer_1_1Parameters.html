@@ -124,6 +124,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:afe0f0f2686917dc030fbf846b4d17430" id="r_afe0f0f2686917dc030fbf846b4d17430"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="classengine_1_1Clip.html">Clip</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1Renderer_1_1Parameters.html#afe0f0f2686917dc030fbf846b4d17430">allowedClips</a></td></tr>
 <tr class="memdesc:afe0f0f2686917dc030fbf846b4d17430"><td class="mdescLeft">&#160;</td><td class="mdescRight">An array of clips to render, if this is empty, all clips will be included.  <br /></td></tr>
 <tr class="separator:afe0f0f2686917dc030fbf846b4d17430"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fa98857f694a4b7e935934b8dac6fb7" id="r_a9fa98857f694a4b7e935934b8dac6fb7"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="structengine_1_1EditItemID.html">EditItemID</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1Renderer_1_1Parameters.html#a9fa98857f694a4b7e935934b8dac6fb7">tracksToProcessWhileMuted</a></td></tr>
+<tr class="memdesc:a9fa98857f694a4b7e935934b8dac6fb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tracks whose contents keep processing even while the track is muted, so they can feed the rendered tracks' sidechains, aux buses and racks without being heard directly.  <br /></td></tr>
+<tr class="separator:a9fa98857f694a4b7e935934b8dac6fb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0208b1dd7d3e91b683e279e9549c6707" id="r_a0208b1dd7d3e91b683e279e9549c6707"><td class="memItemLeft" align="right" valign="top">juce::File&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1Renderer_1_1Parameters.html#a0208b1dd7d3e91b683e279e9549c6707">destFile</a></td></tr>
 <tr class="memdesc:a0208b1dd7d3e91b683e279e9549c6707"><td class="mdescLeft">&#160;</td><td class="mdescRight">The destination file to write to, must be writable.  <br /></td></tr>
 <tr class="separator:a0208b1dd7d3e91b683e279e9549c6707"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -157,9 +160,18 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a1888ffcfab8039aa0ed1764550369076" id="r_a1888ffcfab8039aa0ed1764550369076"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1Renderer_1_1Parameters.html#a1888ffcfab8039aa0ed1764550369076">shouldNormaliseByRMS</a> = false</td></tr>
 <tr class="memdesc:a1888ffcfab8039aa0ed1764550369076"><td class="mdescLeft">&#160;</td><td class="mdescRight">If true, the resulting audio will be normalised by RMS level.  <br /></td></tr>
 <tr class="separator:a1888ffcfab8039aa0ed1764550369076"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad81e2c529af62eaaaf8e61b0da1768c0" id="r_ad81e2c529af62eaaaf8e61b0da1768c0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1Renderer_1_1Parameters.html#ad81e2c529af62eaaaf8e61b0da1768c0">shouldNormaliseByLUFS</a> = false</td></tr>
+<tr class="memdesc:ad81e2c529af62eaaaf8e61b0da1768c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">If true, the resulting audio will be normalised to an integrated loudness (BS.1770-4) target.  <br /></td></tr>
+<tr class="separator:ad81e2c529af62eaaaf8e61b0da1768c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18179292715438444c064e09977a28a0" id="r_a18179292715438444c064e09977a28a0"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1Renderer_1_1Parameters.html#a18179292715438444c064e09977a28a0">normaliseToLevelDb</a> = 0</td></tr>
-<tr class="memdesc:a18179292715438444c064e09977a28a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The level to normalise to.  <br /></td></tr>
+<tr class="memdesc:a18179292715438444c064e09977a28a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The level to normalise to, in dB or LUFS depending on the mode.  <br /></td></tr>
 <tr class="separator:a18179292715438444c064e09977a28a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c53c90151c358fd9c8d40db6df53c31" id="r_a5c53c90151c358fd9c8d40db6df53c31"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1Renderer_1_1Parameters.html#a5c53c90151c358fd9c8d40db6df53c31">limitTruePeak</a> = true</td></tr>
+<tr class="memdesc:a5c53c90151c358fd9c8d40db6df53c31"><td class="mdescLeft">&#160;</td><td class="mdescRight">LUFS mode only: if true, the gain is held back so the true peak stays under truePeakCeilingDb, even if that means the result lands quieter than the loudness target.  <br /></td></tr>
+<tr class="separator:a5c53c90151c358fd9c8d40db6df53c31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0807ab3c00c2667f4267ee94f7d518f9" id="r_a0807ab3c00c2667f4267ee94f7d518f9"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1Renderer_1_1Parameters.html#a0807ab3c00c2667f4267ee94f7d518f9">truePeakCeilingDb</a> = -1.0f</td></tr>
+<tr class="memdesc:a0807ab3c00c2667f4267ee94f7d518f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The true-peak ceiling to keep under when limitTruePeak is set.  <br /></td></tr>
+<tr class="separator:a0807ab3c00c2667f4267ee94f7d518f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03b342f74cd97c4674758abd5b80d42e" id="r_a03b342f74cd97c4674758abd5b80d42e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1Renderer_1_1Parameters.html#a03b342f74cd97c4674758abd5b80d42e">canRenderInMono</a> = true</td></tr>
 <tr class="memdesc:a03b342f74cd97c4674758abd5b80d42e"><td class="mdescLeft">&#160;</td><td class="mdescRight">If false, the result audio will be forced to stereo.  <br /></td></tr>
 <tr class="separator:a03b342f74cd97c4674758abd5b80d42e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -190,6 +202,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a76ea271f1cc63e21d0c6ae86ec86964e" id="r_a76ea271f1cc63e21d0c6ae86ec86964e"><td class="memItemLeft" align="right" valign="top">juce::StringPairArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1Renderer_1_1Parameters.html#a76ea271f1cc63e21d0c6ae86ec86964e">metadata</a></td></tr>
 <tr class="memdesc:a76ea271f1cc63e21d0c6ae86ec86964e"><td class="mdescLeft">&#160;</td><td class="mdescRight">A map of meta data to add to the file.  <br /></td></tr>
 <tr class="separator:a76ea271f1cc63e21d0c6ae86ec86964e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aebf68e3b36a4a0ec45508b9dbe424870" id="r_aebf68e3b36a4a0ec45508b9dbe424870"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1Renderer_1_1Parameters.html#aebf68e3b36a4a0ec45508b9dbe424870">wrapRemainder</a> = false</td></tr>
+<tr class="memdesc:aebf68e3b36a4a0ec45508b9dbe424870"><td class="mdescLeft">&#160;</td><td class="mdescRight">If true, the tail rendered during the endAllowance period is mixed back onto the start of the file and the file is truncated to the original time range, so the result loops seamlessly.  <br /></td></tr>
+<tr class="separator:aebf68e3b36a4a0ec45508b9dbe424870"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab06600fab0d7e097a6ef4b14d3253061" id="r_ab06600fab0d7e097a6ef4b14d3253061"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1Renderer_1_1Parameters.html#ab06600fab0d7e097a6ef4b14d3253061">separateTracks</a> = false</td></tr>
 <tr class="separator:ab06600fab0d7e097a6ef4b14d3253061"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad22e656f15a49fd7797c89b22d0001fe" id="r_ad22e656f15a49fd7797c89b22d0001fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classengine_1_1ProjectItem.html#a623aa1325194ecfee996f3dca418eb58">ProjectItem::Category</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1Renderer_1_1Parameters.html#ad22e656f15a49fd7797c89b22d0001fe">category</a> = <a class="el" href="classengine_1_1ProjectItem.html#a623aa1325194ecfee996f3dca418eb58a334c4a4c42fdb79d7ebc3e73b517e6f8">ProjectItem::Category::none</a></td></tr>
@@ -450,6 +465,23 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a9fa98857f694a4b7e935934b8dac6fb7" name="a9fa98857f694a4b7e935934b8dac6fb7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9fa98857f694a4b7e935934b8dac6fb7">&#9670;&#160;</a></span>tracksToProcessWhileMuted</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::Array&lt;<a class="el" href="structengine_1_1EditItemID.html">EditItemID</a>&gt; engine::Renderer::Parameters::tracksToProcessWhileMuted</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Tracks whose contents keep processing even while the track is muted, so they can feed the rendered tracks' sidechains, aux buses and racks without being heard directly. </p>
+<p>Used with <a class="el" href="structengine_1_1RenderSpecification.html#aa7000d50bc16659dc13c02d78ae8efda" title="Tracks to include in the render graph but keep silent in the output: they are muted in the Edit while...">RenderSpecification::mutedTracks</a> stem sources. </p>
+
+</div>
+</div>
 <a id="a0208b1dd7d3e91b683e279e9549c6707" name="a0208b1dd7d3e91b683e279e9549c6707"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0208b1dd7d3e91b683e279e9549c6707">&#9670;&#160;</a></span>destFile</h2>
 
@@ -627,6 +659,23 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ad81e2c529af62eaaaf8e61b0da1768c0" name="ad81e2c529af62eaaaf8e61b0da1768c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad81e2c529af62eaaaf8e61b0da1768c0">&#9670;&#160;</a></span>shouldNormaliseByLUFS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool engine::Renderer::Parameters::shouldNormaliseByLUFS = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>If true, the resulting audio will be normalised to an integrated loudness (BS.1770-4) target. </p>
+<p>Takes priority over the peak and RMS modes if more than one is set. </p>
+
+</div>
+</div>
 <a id="a18179292715438444c064e09977a28a0" name="a18179292715438444c064e09977a28a0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a18179292715438444c064e09977a28a0">&#9670;&#160;</a></span>normaliseToLevelDb</h2>
 
@@ -639,7 +688,39 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>The level to normalise to. </p>
+<p>The level to normalise to, in dB or LUFS depending on the mode. </p>
+
+</div>
+</div>
+<a id="a5c53c90151c358fd9c8d40db6df53c31" name="a5c53c90151c358fd9c8d40db6df53c31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c53c90151c358fd9c8d40db6df53c31">&#9670;&#160;</a></span>limitTruePeak</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool engine::Renderer::Parameters::limitTruePeak = true</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>LUFS mode only: if true, the gain is held back so the true peak stays under truePeakCeilingDb, even if that means the result lands quieter than the loudness target. </p>
+
+</div>
+</div>
+<a id="a0807ab3c00c2667f4267ee94f7d518f9" name="a0807ab3c00c2667f4267ee94f7d518f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0807ab3c00c2667f4267ee94f7d518f9">&#9670;&#160;</a></span>truePeakCeilingDb</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float engine::Renderer::Parameters::truePeakCeilingDb = -1.0f</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The true-peak ceiling to keep under when limitTruePeak is set. </p>
 
 </div>
 </div>
@@ -805,6 +886,23 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aebf68e3b36a4a0ec45508b9dbe424870" name="aebf68e3b36a4a0ec45508b9dbe424870"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aebf68e3b36a4a0ec45508b9dbe424870">&#9670;&#160;</a></span>wrapRemainder</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool engine::Renderer::Parameters::wrapRemainder = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>If true, the tail rendered during the endAllowance period is mixed back onto the start of the file and the file is truncated to the original time range, so the result loops seamlessly. </p>
+<p>Incompatible with trimSilenceAtEnds, which takes priority. </p>
+
+</div>
+</div>
 <a id="ab06600fab0d7e097a6ef4b14d3253061" name="ab06600fab0d7e097a6ef4b14d3253061"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab06600fab0d7e097a6ef4b14d3253061">&#9670;&#160;</a></span>separateTracks</h2>
 
@@ -881,7 +979,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jul 29 2026 12:36:46 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Aug 3 2026 18:52:07 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

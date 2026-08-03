@@ -117,6 +117,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a2213617b220383123f4582d9b97f426f" id="r_a2213617b220383123f4582d9b97f426f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1CreateNodeParams.html#a2213617b220383123f4582d9b97f426f">implicitlyIncludeSubmixChildTracks</a> = true</td></tr>
 <tr class="memdesc:a2213617b220383123f4582d9b97f426f"><td class="mdescLeft">&#160;</td><td class="mdescRight">If true, child track in submixes will be included regardless of the allowedTracks param.  <br /></td></tr>
 <tr class="separator:a2213617b220383123f4582d9b97f426f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a461f6433d1527135b26ccd360208ea05" id="r_a461f6433d1527135b26ccd360208ea05"><td class="memItemLeft" align="right" valign="top">juce::Array&lt; <a class="el" href="structengine_1_1EditItemID.html">EditItemID</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1CreateNodeParams.html#a461f6433d1527135b26ccd360208ea05">tracksToProcessWhileMuted</a> = {}</td></tr>
+<tr class="memdesc:a461f6433d1527135b26ccd360208ea05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tracks whose contents keep processing while the track is muted, so they can feed sidechains, aux buses and racks without being heard.  <br /></td></tr>
+<tr class="separator:a461f6433d1527135b26ccd360208ea05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2c5fa2c93c35ff742fe94abc11c2db1" id="r_af2c5fa2c93c35ff742fe94abc11c2db1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1CreateNodeParams.html#af2c5fa2c93c35ff742fe94abc11c2db1">allowClipSlots</a> = true</td></tr>
 <tr class="memdesc:af2c5fa2c93c35ff742fe94abc11c2db1"><td class="mdescLeft">&#160;</td><td class="mdescRight">If true, track's clip slots will be included, set to false to disable these (which will use a slightly more efficient Node).  <br /></td></tr>
 <tr class="separator:af2c5fa2c93c35ff742fe94abc11c2db1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -294,6 +297,23 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a461f6433d1527135b26ccd360208ea05" name="a461f6433d1527135b26ccd360208ea05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a461f6433d1527135b26ccd360208ea05">&#9670;&#160;</a></span>tracksToProcessWhileMuted</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::Array&lt;<a class="el" href="structengine_1_1EditItemID.html">EditItemID</a>&gt; engine::CreateNodeParams::tracksToProcessWhileMuted = {}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Tracks whose contents keep processing while the track is muted, so they can feed sidechains, aux buses and racks without being heard. </p>
+<p>Used by stem renders. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="structengine_1_1Renderer_1_1Parameters.html#a9fa98857f694a4b7e935934b8dac6fb7" title="Tracks whose contents keep processing even while the track is muted, so they can feed the rendered tr...">Renderer::Parameters::tracksToProcessWhileMuted</a> </dd></dl>
+
+</div>
+</div>
 <a id="af2c5fa2c93c35ff742fe94abc11c2db1" name="af2c5fa2c93c35ff742fe94abc11c2db1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af2c5fa2c93c35ff742fe94abc11c2db1">&#9670;&#160;</a></span>allowClipSlots</h2>
 
@@ -349,7 +369,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jul 29 2026 12:36:45 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Aug 3 2026 18:52:06 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

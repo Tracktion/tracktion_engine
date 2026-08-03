@@ -35,5 +35,6 @@ var searchData=
   ['loopinfo_32',['LoopInfo',['../classengine_1_1LoopInfo.html',1,'engine']]],
   ['loopingmidinode_33',['LoopingMidiNode',['../classengine_1_1LoopingMidiNode.html',1,'engine']]],
   ['looppoint_34',['LoopPoint',['../structengine_1_1LoopInfo_1_1LoopPoint.html',1,'engine::LoopInfo']]],
-  ['lowpassplugin_35',['LowPassPlugin',['../classengine_1_1LowPassPlugin.html',1,'engine']]]
+  ['loudnessmeter_35',['LoudnessMeter',['../classengine_1_1LoudnessMeter.html',1,'engine']]],
+  ['lowpassplugin_36',['LowPassPlugin',['../classengine_1_1LowPassPlugin.html',1,'engine']]]
 ];

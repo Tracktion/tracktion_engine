@@ -74,6 +74,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
@@ -92,6 +93,12 @@ Inheritance diagram for engine::Renderer::RenderTask:</div>
 <div class="center"><iframe scrolling="no" frameborder="0" src="classengine_1_1Renderer_1_1RenderTask__inherit__graph.svg" width="227" height="124"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a6a26e70498226c66e9a09f70ee20f05b" id="r_a6a26e70498226c66e9a09f70ee20f05b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#a6a26e70498226c66e9a09f70ee20f05b">CancellationCheck</a> = std::function&lt; bool()&gt;</td></tr>
+<tr class="memdesc:a6a26e70498226c66e9a09f70ee20f05b"><td class="mdescLeft">&#160;</td><td class="mdescRight">A predicate polled to find out whether the render should stop.  <br /></td></tr>
+<tr class="separator:a6a26e70498226c66e9a09f70ee20f05b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ab3d19ab633a9b15aa248e4806f974f97" id="r_ab3d19ab633a9b15aa248e4806f974f97"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#ab3d19ab633a9b15aa248e4806f974f97">RenderTask</a> (const juce::String &amp;taskDescription, const <a class="el" href="structengine_1_1Renderer_1_1Parameters.html">Renderer::Parameters</a> &amp;, std::atomic&lt; float &gt; *progressToUpdate, juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver *)</td></tr>
@@ -109,8 +116,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abdbd9a89029ee7adf9be419dc4239459" id="r_abdbd9a89029ee7adf9be419dc4239459"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#abdbd9a89029ee7adf9be419dc4239459">getCurrentTaskProgress</a> () override</td></tr>
 <tr class="memdesc:abdbd9a89029ee7adf9be419dc4239459"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current progress of the render.  <br /></td></tr>
 <tr class="separator:abdbd9a89029ee7adf9be419dc4239459"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61efd251396ae65267aa5549d5dc18c9" id="r_a61efd251396ae65267aa5549d5dc18c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#a61efd251396ae65267aa5549d5dc18c9">setCancellationCheck</a> (<a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#a6a26e70498226c66e9a09f70ee20f05b">CancellationCheck</a>)</td></tr>
+<tr class="memdesc:a61efd251396ae65267aa5549d5dc18c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets an additional predicate used to cancel this render.  <br /></td></tr>
+<tr class="separator:a61efd251396ae65267aa5549d5dc18c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78147180203fd1670d392b8c7e1ea570" id="r_a78147180203fd1670d392b8c7e1ea570"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#a78147180203fd1670d392b8c7e1ea570">shouldCancel</a> () const</td></tr>
+<tr class="memdesc:a78147180203fd1670d392b8c7e1ea570"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the render should stop.  <br /></td></tr>
+<tr class="separator:a78147180203fd1670d392b8c7e1ea570"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acff5d1e14c61bf03466d3d1c310fe458" id="r_acff5d1e14c61bf03466d3d1c310fe458"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#acff5d1e14c61bf03466d3d1c310fe458">performNormalisingAndTrimming</a> (const <a class="el" href="structengine_1_1Renderer_1_1Parameters.html">Renderer::Parameters</a> &amp;target, const <a class="el" href="structengine_1_1Renderer_1_1Parameters.html">Renderer::Parameters</a> &amp;intermediate)</td></tr>
 <tr class="separator:acff5d1e14c61bf03466d3d1c310fe458"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48012202ed1edf323a72639dc8309d12" id="r_a48012202ed1edf323a72639dc8309d12"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#a48012202ed1edf323a72639dc8309d12">foldWrapRemainder</a> (const <a class="el" href="structengine_1_1Renderer_1_1Parameters.html">Renderer::Parameters</a> &amp;target, const <a class="el" href="structengine_1_1Renderer_1_1Parameters.html">Renderer::Parameters</a> &amp;intermediate)</td></tr>
+<tr class="separator:a48012202ed1edf323a72639dc8309d12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classengine_1_1ThreadPoolJobWithProgress"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classengine_1_1ThreadPoolJobWithProgress')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classengine_1_1ThreadPoolJobWithProgress.html">engine::ThreadPoolJobWithProgress</a></td></tr>
 <tr class="memitem:ac9dc562537223bc8e52951e7fd996dd2 inherit pub_methods_classengine_1_1ThreadPoolJobWithProgress" id="r_ac9dc562537223bc8e52951e7fd996dd2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ThreadPoolJobWithProgress.html#ac9dc562537223bc8e52951e7fd996dd2">ThreadPoolJobWithProgress</a> (const juce::String &amp;name)</td></tr>
 <tr class="separator:ac9dc562537223bc8e52951e7fd996dd2 inherit pub_methods_classengine_1_1ThreadPoolJobWithProgress"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -129,6 +144,9 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a0d3a4f9736a42a90b7e6629baf35040f" id="r_a0d3a4f9736a42a90b7e6629baf35040f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#a6a26e70498226c66e9a09f70ee20f05b">CancellationCheck</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#a0d3a4f9736a42a90b7e6629baf35040f">getDefaultCancellationCheck</a> ()</td></tr>
+<tr class="memdesc:a0d3a4f9736a42a90b7e6629baf35040f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a predicate which polls whichever of the standard exit mechanisms the calling thread happens to be using.  <br /></td></tr>
+<tr class="separator:a0d3a4f9736a42a90b7e6629baf35040f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a616e3f882aceae605148126c00916dc9" id="r_a616e3f882aceae605148126c00916dc9"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#a616e3f882aceae605148126c00916dc9">flushAllPlugins</a> (const <a class="el" href="classengine_1_1Plugin.html#a50c8008ff5281d1a6d4bbb2c19c532be">Plugin::Array</a> &amp;, double sampleRate, int samplesPerBlock)</td></tr>
 <tr class="separator:a616e3f882aceae605148126c00916dc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a752477112ba80588db520f1560861d4c" id="r_a752477112ba80588db520f1560861d4c"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#a752477112ba80588db520f1560861d4c">setAllPluginsRealtime</a> (const <a class="el" href="classengine_1_1Plugin.html#a50c8008ff5281d1a6d4bbb2c19c532be">Plugin::Array</a> &amp;, bool <a class="el" href="namespaceengine.html#a37f708109fdbdb9329a540048b1a040fa37e2a166d3ab28426a1d1a481d356d33">realtime</a>)</td></tr>
@@ -148,7 +166,25 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Task that actually performs the render operation in blocks. </p>
 <p>You should continually call the runJob method until it returns jobHasFinished. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a6a26e70498226c66e9a09f70ee20f05b" name="a6a26e70498226c66e9a09f70ee20f05b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a26e70498226c66e9a09f70ee20f05b">&#9670;&#160;</a></span>CancellationCheck</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#a6a26e70498226c66e9a09f70ee20f05b">engine::Renderer::RenderTask::CancellationCheck</a> =  std::function&lt;bool()&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A predicate polled to find out whether the render should stop. </p>
+<p>This is called from whichever thread is driving <a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#a10080a9dde4041e559c5b37784f45a65" title="Call until this returns jobHasFinished to perform the render.">runJob()</a>, around once per block, so it must be cheap and mustn't block. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ab3d19ab633a9b15aa248e4806f974f97" name="ab3d19ab633a9b15aa248e4806f974f97"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab3d19ab633a9b15aa248e4806f974f97">&#9670;&#160;</a></span>RenderTask() <span class="overload">[1/2]</span></h2>
 
@@ -341,6 +377,74 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a61efd251396ae65267aa5549d5dc18c9" name="a61efd251396ae65267aa5549d5dc18c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61efd251396ae65267aa5549d5dc18c9">&#9670;&#160;</a></span>setCancellationCheck()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void engine::Renderer::RenderTask::setCancellationCheck </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#a6a26e70498226c66e9a09f70ee20f05b">CancellationCheck</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets an additional predicate used to cancel this render. </p>
+<p>The standard thread and pool-job exit flags are always checked as well, so this only needs to supply a caller's own flag. </p>
+
+</div>
+</div>
+<a id="a78147180203fd1670d392b8c7e1ea570" name="a78147180203fd1670d392b8c7e1ea570"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78147180203fd1670d392b8c7e1ea570">&#9670;&#160;</a></span>shouldCancel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool engine::Renderer::RenderTask::shouldCancel </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if the render should stop. </p>
+
+</div>
+</div>
+<a id="a0d3a4f9736a42a90b7e6629baf35040f" name="a0d3a4f9736a42a90b7e6629baf35040f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d3a4f9736a42a90b7e6629baf35040f">&#9670;&#160;</a></span>getDefaultCancellationCheck()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classengine_1_1Renderer_1_1RenderTask.html#a6a26e70498226c66e9a09f70ee20f05b">CancellationCheck</a> engine::Renderer::RenderTask::getDefaultCancellationCheck </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a predicate which polls whichever of the standard exit mechanisms the calling thread happens to be using. </p>
+<p>Safe to call from any thread. </p>
+
+</div>
+</div>
 <a id="a616e3f882aceae605148126c00916dc9" name="a616e3f882aceae605148126c00916dc9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a616e3f882aceae605148126c00916dc9">&#9670;&#160;</a></span>flushAllPlugins()</h2>
 
@@ -489,6 +593,34 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a48012202ed1edf323a72639dc8309d12" name="a48012202ed1edf323a72639dc8309d12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48012202ed1edf323a72639dc8309d12">&#9670;&#160;</a></span>foldWrapRemainder()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool engine::Renderer::RenderTask::foldWrapRemainder </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structengine_1_1Renderer_1_1Parameters.html">Renderer::Parameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structengine_1_1Renderer_1_1Parameters.html">Renderer::Parameters</a> &amp;&#160;</td>
+          <td class="paramname"><em>intermediate</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="ac62c604ab68f2f7733e949f6de0602a1" name="ac62c604ab68f2f7733e949f6de0602a1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac62c604ab68f2f7733e949f6de0602a1">&#9670;&#160;</a></span>params</h2>
@@ -528,7 +660,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jul 29 2026 12:36:46 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Aug 3 2026 18:52:07 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

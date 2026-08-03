@@ -1,7 +1,7 @@
 var searchData=
 [
   ['off_0',['off',['../classengine_1_1PatternGenerator.html#ab731c9148da870fc843e9f33adc08ac9a3262d48df5d75e3452f0f16b313b7808',1,'engine::PatternGenerator::off'],['../classengine_1_1InputDevice.html#a813ed2b45ed1c5f513b027ea5f3b41a1a3262d48df5d75e3452f0f16b313b7808',1,'engine::InputDevice::off']]],
-  ['ogg_1',['ogg',['../classengine_1_1RenderOptions.html#a9e30451fabe87135e06837529770e362a182e0b67a426e85766b3cf22e26750fb',1,'engine::RenderOptions']]],
+  ['ogg_1',['ogg',['../classengine_1_1RenderOptions.html#a9e30451fabe87135e06837529770e362a182e0b67a426e85766b3cf22e26750fb',1,'engine::RenderOptions::ogg'],['../namespaceengine.html#a3f0cb9989dc30bafaad719176696cc10a34da450e959d17db92f6876051d0faac',1,'engine::ogg']]],
   ['on_2',['on',['../classengine_1_1InputDevice.html#a813ed2b45ed1c5f513b027ea5f3b41a1aed2b5c0139cec8ad2873829dc1117d50',1,'engine::InputDevice']]],
   ['onebar_3',['oneBar',['../classengine_1_1Edit.html#af117d763e56e188ee2bfd91a28411818a6e45a5543108e522a7069c90787b390d',1,'engine::Edit']]],
   ['onebeat_4',['oneBeat',['../classengine_1_1Edit.html#af117d763e56e188ee2bfd91a28411818a304659151ad21517e875f879b072e528',1,'engine::Edit']]],

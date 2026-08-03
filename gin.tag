@@ -48,6 +48,14 @@
     <namespace>engine</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_AudioFileAnalyser.h</name>
+    <path>build/tracktion_engine/audio_files/</path>
+    <filename>tracktion__AudioFileAnalyser_8h.html</filename>
+    <class kind="class">engine::AudioFileAnalyser</class>
+    <class kind="struct">engine::AudioAnalysisOptions</class>
+    <namespace>engine</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_AudioFileCache.h</name>
     <path>build/tracktion_engine/audio_files/</path>
     <filename>tracktion__AudioFileCache_8h.html</filename>
@@ -116,6 +124,14 @@
     <filename>tracktion__LoopInfo_8h.html</filename>
     <class kind="class">engine::LoopInfo</class>
     <class kind="struct">engine::LoopInfo::LoopPoint</class>
+    <namespace>engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_LoudnessMeter.h</name>
+    <path>build/tracktion_engine/audio_files/</path>
+    <filename>tracktion__LoudnessMeter_8h.html</filename>
+    <class kind="class">engine::LoudnessMeter</class>
+    <class kind="struct">engine::LoudnessMeter::Readings</class>
     <namespace>engine</namespace>
   </compound>
   <compound kind="file">
@@ -705,6 +721,7 @@
     <class kind="struct">engine::Edit::ScopedRenderStatus</class>
     <class kind="struct">engine::Edit::UndoTransactionInhibitor</class>
     <class kind="struct">engine::Edit::GlobalMacros</class>
+    <class kind="struct">engine::Edit::SaveInhibitor</class>
     <class kind="struct">engine::Edit::Metadata</class>
     <class kind="struct">engine::Edit::LoadFinishedCallback</class>
     <class kind="struct">engine::Edit::WastedMidiMessagesListener</class>
@@ -937,6 +954,23 @@
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::RenderOptions::AddRenderOptions &gt;</class>
     <namespace>engine</namespace>
     <namespace>juce</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_RenderQueue.h</name>
+    <path>build/tracktion_engine/model/export/</path>
+    <filename>tracktion__RenderQueue_8h.html</filename>
+    <class kind="class">engine::ScopedTrackMuter</class>
+    <class kind="class">engine::RenderQueue</class>
+    <class kind="class">engine::RenderQueue::Job</class>
+    <namespace>engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_RenderSpecification.h</name>
+    <path>build/tracktion_engine/model/export/</path>
+    <filename>tracktion__RenderSpecification_8h.html</filename>
+    <class kind="struct">engine::RenderSpecification</class>
+    <class kind="struct">engine::PlannedRenderJob</class>
+    <namespace>engine</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_ArrangerTrack.h</name>
@@ -5735,6 +5769,38 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>engine::AudioAnalysisOptions</name>
+    <filename>structengine_1_1AudioAnalysisOptions.html</filename>
+    <member kind="variable">
+      <type>bool</type>
+      <name>levels</name>
+      <anchorfile>structengine_1_1AudioAnalysisOptions.html</anchorfile>
+      <anchor>a333e61bd0712ae4ff1ad52da05476a4e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>spectrum</name>
+      <anchorfile>structengine_1_1AudioAnalysisOptions.html</anchorfile>
+      <anchor>a49aebf583ce0d561b82244f282b671f2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>envelope</name>
+      <anchorfile>structengine_1_1AudioAnalysisOptions.html</anchorfile>
+      <anchor>a48c31941162d5a285bba924c56d10e7e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>envelopePoints</name>
+      <anchorfile>structengine_1_1AudioAnalysisOptions.html</anchorfile>
+      <anchor>a9ddc52b1b6466eb32b42bf6b8df44598</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>graph::Node::AudioAndMidiBuffer</name>
     <filename>structgraph_1_1Node_1_1AudioAndMidiBuffer.html</filename>
     <member kind="variable">
@@ -7600,59 +7666,59 @@
       <arglist>(int numSamples)</arglist>
     </member>
     <member kind="function">
-      <type>TRACKTION_NO_TSAN bool</type>
+      <type>bool</type>
       <name>write</name>
       <anchorfile>classengine_1_1AudioFifo.html</anchorfile>
-      <anchor>a1d20e7c02b76edf26777372629d8640c</anchor>
+      <anchor>acbaded8e973fc63bbf64d577f91089e4</anchor>
       <arglist>(const juce::AudioBuffer&lt; float &gt; &amp;src)</arglist>
     </member>
     <member kind="function">
-      <type>TRACKTION_NO_TSAN bool</type>
+      <type>bool</type>
       <name>write</name>
       <anchorfile>classengine_1_1AudioFifo.html</anchorfile>
-      <anchor>a0c99b72404bc6ef4707a44bed304293b</anchor>
+      <anchor>a6ff8b238c61b1a2ca6bea1a1c3a0309a</anchor>
       <arglist>(const juce::AudioBuffer&lt; float &gt; &amp;src, int startSample, int numSamples)</arglist>
     </member>
     <member kind="function">
-      <type>TRACKTION_NO_TSAN bool</type>
+      <type>bool</type>
       <name>write</name>
       <anchorfile>classengine_1_1AudioFifo.html</anchorfile>
-      <anchor>ae5b66e2bdf75bb79f06b287eaa63d01d</anchor>
+      <anchor>a5b2f1e44f2bb844ea84a98c71a434267</anchor>
       <arglist>(const float *const *data, int numSamples)</arglist>
     </member>
     <member kind="function">
-      <type>TRACKTION_NO_TSAN bool</type>
+      <type>bool</type>
       <name>writeSilence</name>
       <anchorfile>classengine_1_1AudioFifo.html</anchorfile>
-      <anchor>a3213fe55071a0da85657e13547de0c3a</anchor>
+      <anchor>a435be0320ae86ba214fc1fd83314e5f7</anchor>
       <arglist>(int numSamples)</arglist>
     </member>
     <member kind="function">
-      <type>TRACKTION_NO_TSAN bool</type>
+      <type>bool</type>
       <name>read</name>
       <anchorfile>classengine_1_1AudioFifo.html</anchorfile>
-      <anchor>a31831a57297b5c9c0cf43c3113d9dcce</anchor>
+      <anchor>a23253271d14bdc7e35d58a6dc0ee7f59</anchor>
       <arglist>(juce::AudioBuffer&lt; float &gt; &amp;dest, int startSampleInDestBuffer)</arglist>
     </member>
     <member kind="function">
-      <type>TRACKTION_NO_TSAN bool</type>
+      <type>bool</type>
       <name>read</name>
       <anchorfile>classengine_1_1AudioFifo.html</anchorfile>
-      <anchor>a5b0ee70225c9fc8708d925eb52e0a24d</anchor>
+      <anchor>a9845b69adb65ec816b18437b59072092</anchor>
       <arglist>(juce::AudioBuffer&lt; float &gt; &amp;dest, int startSampleInDestBuffer, int numSamples)</arglist>
     </member>
     <member kind="function">
-      <type>TRACKTION_NO_TSAN bool</type>
+      <type>bool</type>
       <name>readAdding</name>
       <anchorfile>classengine_1_1AudioFifo.html</anchorfile>
-      <anchor>ad1a918a89780984f8e4a1d35ab7246c3</anchor>
+      <anchor>a28f8cb437bb43bda4bc010a723607b31</anchor>
       <arglist>(juce::AudioBuffer&lt; float &gt; &amp;dest, int startSampleInDestBuffer)</arglist>
     </member>
     <member kind="function">
-      <type>TRACKTION_NO_TSAN bool</type>
+      <type>bool</type>
       <name>readAdding</name>
       <anchorfile>classengine_1_1AudioFifo.html</anchorfile>
-      <anchor>ab94864c088c586c5b43d069ed9c03aca</anchor>
+      <anchor>a06fe6938160a4a99b0ed57dc083855df</anchor>
       <arglist>(juce::AudioBuffer&lt; float &gt; &amp;dest, int startSampleInDestBuffer, int numSamples)</arglist>
     </member>
   </compound>
@@ -7970,6 +8036,38 @@
       <anchorfile>classengine_1_1AudioFile.html</anchorfile>
       <anchor>ae115dca3f73ebd6fb08d2ce0fff77cc8</anchor>
       <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>engine::AudioFileAnalyser</name>
+    <filename>classengine_1_1AudioFileAnalyser.html</filename>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~AudioFileAnalyser</name>
+      <anchorfile>classengine_1_1AudioFileAnalyser.html</anchorfile>
+      <anchor>a5b32de98ab9baf3d5195a8757f35b887</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>prepare</name>
+      <anchorfile>classengine_1_1AudioFileAnalyser.html</anchorfile>
+      <anchor>a30bc32a4ba9d0f1b9ecffb60d81b66fd</anchor>
+      <arglist>(const AudioFileInfo &amp;)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>process</name>
+      <anchorfile>classengine_1_1AudioFileAnalyser.html</anchorfile>
+      <anchor>a963d5892ff940e7c3a68b55086cd6842</anchor>
+      <arglist>(const juce::AudioBuffer&lt; float &gt; &amp;, int numSamples)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>addResults</name>
+      <anchorfile>classengine_1_1AudioFileAnalyser.html</anchorfile>
+      <anchor>a22e83badbcae4777a90d5d6f81695312</anchor>
+      <arglist>(juce::DynamicObject &amp;)=0</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -21094,6 +21192,13 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
+      <type>juce::Array&lt; EditItemID &gt;</type>
+      <name>tracksToProcessWhileMuted</name>
+      <anchorfile>structengine_1_1CreateNodeParams.html</anchorfile>
+      <anchor>a461f6433d1527135b26ccd360208ea05</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
       <type>bool</type>
       <name>allowClipSlots</name>
       <anchorfile>structengine_1_1CreateNodeParams.html</anchorfile>
@@ -26566,6 +26671,7 @@
     <class kind="struct">engine::Edit::LoadFinishedCallback</class>
     <class kind="struct">engine::Edit::Metadata</class>
     <class kind="struct">engine::Edit::Options</class>
+    <class kind="struct">engine::Edit::SaveInhibitor</class>
     <class kind="struct">engine::Edit::ScopedRenderStatus</class>
     <class kind="struct">engine::Edit::UndoTransactionInhibitor</class>
     <class kind="struct">engine::Edit::WastedMidiMessagesListener</class>
@@ -27581,6 +27687,13 @@
       <anchorfile>classengine_1_1Edit.html</anchorfile>
       <anchor>ad2e53ff7ad077aa12e2a264f03d0f71d</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isSaveInhibited</name>
+      <anchorfile>classengine_1_1Edit.html</anchorfile>
+      <anchor>a88e19c504cd7d1db50c77ba2e9e1bdcb</anchor>
+      <arglist>() const noexcept</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -38623,6 +38736,92 @@
       <arglist>(Engine &amp;, const AudioFile &amp;proxy)</arglist>
     </member>
   </compound>
+  <compound kind="class">
+    <name>engine::RenderQueue::Job</name>
+    <filename>classengine_1_1RenderQueue_1_1Job.html</filename>
+    <member kind="enumeration">
+      <type></type>
+      <name>State</name>
+      <anchorfile>classengine_1_1RenderQueue_1_1Job.html</anchorfile>
+      <anchor>a1e4b60bf096d70393589a26ebbf4dd4a</anchor>
+      <arglist></arglist>
+      <enumvalue file="classengine_1_1RenderQueue_1_1Job.html" anchor="a1e4b60bf096d70393589a26ebbf4dd4aa7c6c2e5d48ab37a007cbf70d3ea25fa4">pending</enumvalue>
+      <enumvalue file="classengine_1_1RenderQueue_1_1Job.html" anchor="a1e4b60bf096d70393589a26ebbf4dd4aac76a5e84e4bdee527e274ea30c680d79">active</enumvalue>
+      <enumvalue file="classengine_1_1RenderQueue_1_1Job.html" anchor="a1e4b60bf096d70393589a26ebbf4dd4aaaa8fb77e57d1ca18d593e909729871fe">completed</enumvalue>
+      <enumvalue file="classengine_1_1RenderQueue_1_1Job.html" anchor="a1e4b60bf096d70393589a26ebbf4dd4aa26934eb377001f66e37289a5c93fe284">failed</enumvalue>
+      <enumvalue file="classengine_1_1RenderQueue_1_1Job.html" anchor="a1e4b60bf096d70393589a26ebbf4dd4aa38881e0a24039dc2621e1d6f86cb71f7">cancelled</enumvalue>
+    </member>
+    <member kind="function">
+      <type>State</type>
+      <name>getState</name>
+      <anchorfile>classengine_1_1RenderQueue_1_1Job.html</anchorfile>
+      <anchor>ad75e8a9c28151cf0eb701d7a2335dcbe</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>getName</name>
+      <anchorfile>classengine_1_1RenderQueue_1_1Job.html</anchorfile>
+      <anchor>ad128c6be275cdd924a503efd82dd7f2b</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>const Renderer::Parameters &amp;</type>
+      <name>getParameters</name>
+      <anchorfile>classengine_1_1RenderQueue_1_1Job.html</anchorfile>
+      <anchor>a8664f318164a369c021e919f80c5f09e</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>float</type>
+      <name>getProgress</name>
+      <anchorfile>classengine_1_1RenderQueue_1_1Job.html</anchorfile>
+      <anchor>aa9f50f776a4fb1d45afe3179df6d526a</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::File</type>
+      <name>getFile</name>
+      <anchorfile>classengine_1_1RenderQueue_1_1Job.html</anchorfile>
+      <anchor>ad2a2239747c02a69a34af1f9b64a9f43</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>getError</name>
+      <anchorfile>classengine_1_1RenderQueue_1_1Job.html</anchorfile>
+      <anchor>a495a6ee7be9a9e7d92396cf093085677</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>cancel</name>
+      <anchorfile>classengine_1_1RenderQueue_1_1Job.html</anchorfile>
+      <anchor>adc80d5e807c3cac1dd731ae4b37af7ed</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setThumbnail</name>
+      <anchorfile>classengine_1_1RenderQueue_1_1Job.html</anchorfile>
+      <anchor>a15477c76d3c2a1d4940adf515039869e</anchor>
+      <arglist>(std::shared_ptr&lt; juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver &gt;)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::shared_ptr&lt; juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver &gt;</type>
+      <name>getThumbnail</name>
+      <anchorfile>classengine_1_1RenderQueue_1_1Job.html</anchorfile>
+      <anchor>a438f957df59fe1f8ac60c08b3774f7ef</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="friend" protection="private">
+      <type>friend class</type>
+      <name>RenderQueue</name>
+      <anchorfile>classengine_1_1RenderQueue_1_1Job.html</anchorfile>
+      <anchor>a68e318c4a7793b7195ffd7ba8b6afba9</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
   <compound kind="struct">
     <name>engine::BackgroundJobManager::JobInfo</name>
     <filename>structengine_1_1BackgroundJobManager_1_1JobInfo.html</filename>
@@ -41769,6 +41968,67 @@
       <name>type</name>
       <anchorfile>structengine_1_1LoopInfo_1_1LoopPoint.html</anchorfile>
       <anchor>aedb25d60886fad5cf27e138dec89998a</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>engine::LoudnessMeter</name>
+    <filename>classengine_1_1LoudnessMeter.html</filename>
+    <class kind="struct">engine::LoudnessMeter::Readings</class>
+    <member kind="function">
+      <type></type>
+      <name>LoudnessMeter</name>
+      <anchorfile>classengine_1_1LoudnessMeter.html</anchorfile>
+      <anchor>a27047b4e455506e494c20a46e3fe66c4</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prepare</name>
+      <anchorfile>classengine_1_1LoudnessMeter.html</anchorfile>
+      <anchor>a7c6468e3ac2a27678e92333eae707f52</anchor>
+      <arglist>(double sampleRate, int numChannels, int maxBlockSize)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>process</name>
+      <anchorfile>classengine_1_1LoudnessMeter.html</anchorfile>
+      <anchor>a88451a18aeff0ddfa320b8cb00bbb25e</anchor>
+      <arglist>(choc::buffer::ChannelArrayView&lt; const float &gt; block) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>process</name>
+      <anchorfile>classengine_1_1LoudnessMeter.html</anchorfile>
+      <anchor>a433e87c87024b546d3c315adbb3f2893</anchor>
+      <arglist>(const float *const *channels, int numChannels, int numSamples) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>flush</name>
+      <anchorfile>classengine_1_1LoudnessMeter.html</anchorfile>
+      <anchor>a2a56a0a649d12e5decfd0bcb91a270b8</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>requestReset</name>
+      <anchorfile>classengine_1_1LoudnessMeter.html</anchorfile>
+      <anchor>ab8d0abf63ccbc2a4f0043706827b7b79</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>Readings</type>
+      <name>getReadings</name>
+      <anchorfile>classengine_1_1LoudnessMeter.html</anchorfile>
+      <anchor>a734aec79cffb02c0fd61236c5bc27f07</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="variable" static="yes">
+      <type>static constexpr float</type>
+      <name>silenceFloorDb</name>
+      <anchorfile>classengine_1_1LoudnessMeter.html</anchorfile>
+      <anchor>ae319995048ea0aa08f3ef642e60107ea</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -51736,6 +51996,13 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
+      <type>juce::Array&lt; EditItemID &gt;</type>
+      <name>tracksToProcessWhileMuted</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a9fa98857f694a4b7e935934b8dac6fb7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
       <type>juce::File</type>
       <name>destFile</name>
       <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
@@ -51813,10 +52080,31 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
+      <type>bool</type>
+      <name>shouldNormaliseByLUFS</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>ad81e2c529af62eaaaf8e61b0da1768c0</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
       <type>float</type>
       <name>normaliseToLevelDb</name>
       <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
       <anchor>a18179292715438444c064e09977a28a0</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>limitTruePeak</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a5c53c90151c358fd9c8d40db6df53c31</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>truePeakCeilingDb</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>a0807ab3c00c2667f4267ee94f7d518f9</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -51887,6 +52175,13 @@
       <name>metadata</name>
       <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
       <anchor>a76ea271f1cc63e21d0c6ae86ec86964e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>wrapRemainder</name>
+      <anchorfile>structengine_1_1Renderer_1_1Parameters.html</anchorfile>
+      <anchor>aebf68e3b36a4a0ec45508b9dbe424870</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -54223,6 +54518,31 @@
       <name>time</name>
       <anchorfile>structengine_1_1EditInsertPoint_1_1Placement.html</anchorfile>
       <anchor>ae92b639b1d9588da17549bab75bc0c42</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>engine::PlannedRenderJob</name>
+    <filename>structengine_1_1PlannedRenderJob.html</filename>
+    <member kind="variable">
+      <type>juce::String</type>
+      <name>name</name>
+      <anchorfile>structengine_1_1PlannedRenderJob.html</anchorfile>
+      <anchor>a31ad1f62a684e865eeed433021f3422e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>Renderer::Parameters</type>
+      <name>params</name>
+      <anchorfile>structengine_1_1PlannedRenderJob.html</anchorfile>
+      <anchor>a92222be51f07825d5f5324af5cbd946b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::Array&lt; EditItemID &gt;</type>
+      <name>tracksToMute</name>
+      <anchorfile>structengine_1_1PlannedRenderJob.html</anchorfile>
+      <anchor>a1755cbda74796832b3a58abb866ecee7</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -61386,6 +61706,94 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>engine::LoudnessMeter::Readings</name>
+    <filename>structengine_1_1LoudnessMeter_1_1Readings.html</filename>
+    <member kind="variable">
+      <type>float</type>
+      <name>momentaryLufs</name>
+      <anchorfile>structengine_1_1LoudnessMeter_1_1Readings.html</anchorfile>
+      <anchor>af061653640ebc8897aec14295e614702</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>shortTermLufs</name>
+      <anchorfile>structengine_1_1LoudnessMeter_1_1Readings.html</anchorfile>
+      <anchor>a0af54bfc16cab131998766f306a674e1</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>integratedLufs</name>
+      <anchorfile>structengine_1_1LoudnessMeter_1_1Readings.html</anchorfile>
+      <anchor>a7bbeb812b78e3e07a30d98315d0a606f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>maxMomentaryLufs</name>
+      <anchorfile>structengine_1_1LoudnessMeter_1_1Readings.html</anchorfile>
+      <anchor>a865e608ac1b0558303ffbbdda142907c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>maxShortTermLufs</name>
+      <anchorfile>structengine_1_1LoudnessMeter_1_1Readings.html</anchorfile>
+      <anchor>af8814106473e5b450a2121964eb05ff0</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>truePeakDb</name>
+      <anchorfile>structengine_1_1LoudnessMeter_1_1Readings.html</anchorfile>
+      <anchor>a05eefcd975afbfe6e5e9620bfc703d0f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>samplePeakDb</name>
+      <anchorfile>structengine_1_1LoudnessMeter_1_1Readings.html</anchorfile>
+      <anchor>afa7103c5378d7ebb393e373308c10aa5</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>loudnessRangeLu</name>
+      <anchorfile>structengine_1_1LoudnessMeter_1_1Readings.html</anchorfile>
+      <anchor>aa8aee6ba5d5a1c241d0b18ca5d064856</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>momentaryValid</name>
+      <anchorfile>structengine_1_1LoudnessMeter_1_1Readings.html</anchorfile>
+      <anchor>a093c1bd6b8db87227bf13d318deb7eca</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>shortTermValid</name>
+      <anchorfile>structengine_1_1LoudnessMeter_1_1Readings.html</anchorfile>
+      <anchor>a9bbf6154de623dff6c3fc10f7a30539c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>integratedValid</name>
+      <anchorfile>structengine_1_1LoudnessMeter_1_1Readings.html</anchorfile>
+      <anchor>a9e5e0af2fbccfae7023feb748fe99237</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>loudnessRangeValid</name>
+      <anchorfile>structengine_1_1LoudnessMeter_1_1Readings.html</anchorfile>
+      <anchor>a95c3b9c4eb08e7968f1b2c399a59296e</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>engine::TransportControl::ReallocationInhibitor</name>
     <filename>structengine_1_1TransportControl_1_1ReallocationInhibitor.html</filename>
     <member kind="function">
@@ -62819,6 +63227,109 @@
       <arglist></arglist>
     </member>
   </compound>
+  <compound kind="class">
+    <name>engine::RenderQueue</name>
+    <filename>classengine_1_1RenderQueue.html</filename>
+    <class kind="class">engine::RenderQueue::Job</class>
+    <member kind="typedef">
+      <type>std::shared_ptr&lt; Job &gt;</type>
+      <name>JobPtr</name>
+      <anchorfile>classengine_1_1RenderQueue.html</anchorfile>
+      <anchor>a29ce754e92559d72d6c3f96afc9a2351</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>RenderQueue</name>
+      <anchorfile>classengine_1_1RenderQueue.html</anchorfile>
+      <anchor>a373fef0f96c4474e063f5b0fafad8bd7</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~RenderQueue</name>
+      <anchorfile>classengine_1_1RenderQueue.html</anchorfile>
+      <anchor>a2f4de2e4366e56db02124b1cc2c3b6ee</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>JobPtr</type>
+      <name>addJob</name>
+      <anchorfile>classengine_1_1RenderQueue.html</anchorfile>
+      <anchor>a8805e7f6da435231b8534e7bbd274009</anchor>
+      <arglist>(PlannedRenderJob)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>addJobs</name>
+      <anchorfile>classengine_1_1RenderQueue.html</anchorfile>
+      <anchor>ad9ad9c77a27381fcdc9167b012f1d3be</anchor>
+      <arglist>(std::vector&lt; PlannedRenderJob &gt;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>start</name>
+      <anchorfile>classengine_1_1RenderQueue.html</anchorfile>
+      <anchor>a8ac6dcab1a30e415ab75f6fc6edefe99</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>cancelAll</name>
+      <anchorfile>classengine_1_1RenderQueue.html</anchorfile>
+      <anchor>af2273e04993ff1a88fcb17b7848c5e42</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>const std::vector&lt; JobPtr &gt; &amp;</type>
+      <name>getJobs</name>
+      <anchorfile>classengine_1_1RenderQueue.html</anchorfile>
+      <anchor>a7839e88e3f58a38ce07a7880c421050a</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>hasStarted</name>
+      <anchorfile>classengine_1_1RenderQueue.html</anchorfile>
+      <anchor>a2bc8ea4f75c86c63452eb339a0d544bf</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>hasFinished</name>
+      <anchorfile>classengine_1_1RenderQueue.html</anchorfile>
+      <anchor>a23efcc129213b945170c9bc64e56047e</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>float</type>
+      <name>getTotalProgress</name>
+      <anchorfile>classengine_1_1RenderQueue.html</anchorfile>
+      <anchor>ac40794e75e9d7482d16e8e9da3f596f1</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="variable">
+      <type>std::function&lt; void(Job &amp;)&gt;</type>
+      <name>onJobStarted</name>
+      <anchorfile>classengine_1_1RenderQueue.html</anchorfile>
+      <anchor>a491e35c1feb73266c0a3b55d7fd7b0e8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::function&lt; void(Job &amp;)&gt;</type>
+      <name>onJobFinished</name>
+      <anchorfile>classengine_1_1RenderQueue.html</anchorfile>
+      <anchor>a0a04a58a44288b4dfd4c2f96076554b7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::function&lt; void()&gt;</type>
+      <name>onFinished</name>
+      <anchorfile>classengine_1_1RenderQueue.html</anchorfile>
+      <anchor>a411b3a794eab91fd2d1a893a2ec86135</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
   <compound kind="struct">
     <name>engine::Renderer::RenderResult</name>
     <filename>structengine_1_1Renderer_1_1RenderResult.html</filename>
@@ -62865,10 +63376,203 @@
       <arglist></arglist>
     </member>
   </compound>
+  <compound kind="struct">
+    <name>engine::RenderSpecification</name>
+    <filename>structengine_1_1RenderSpecification.html</filename>
+    <member kind="function">
+      <type>juce::var</type>
+      <name>toJSON</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>a3c48891e9b43dc542dfc85882e6f1e4c</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static RenderSpecification</type>
+      <name>fromJSON</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>a478e2f4c33db2a0338fe13a843ec4004</anchor>
+      <arglist>(const juce::var &amp;, juce::StringArray *unknownKeys=nullptr)</arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::Array&lt; EditItemID &gt;</type>
+      <name>tracks</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>ac64dddd50e9784cf323d7f2103b0ea88</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::Array&lt; EditItemID &gt;</type>
+      <name>mutedTracks</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>aa7000d50bc16659dc13c02d78ae8efda</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>includeSourceTracks</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>aa2b5b863a90dd95ef328a25ac7197cb7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::Array&lt; EditItemID &gt;</type>
+      <name>clips</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>a5b866a1c1546d7bdf3c9346cd42cbada</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::optional&lt; TimeRange &gt;</type>
+      <name>time</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>aa40f1c46e30f20ea151051428d8ac3cb</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>wrapRemainder</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>af4d31cdb7198329c8c8674caad1a01fc</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::File</type>
+      <name>destination</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>a1d5a6359ff755c818554c2cd69eb64bf</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>RenderFormat</type>
+      <name>format</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>a207516ea480d74ab9fa49777edaaaa50</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>double</type>
+      <name>sampleRate</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>a70ec670f7f0512b260a5dd996c5b0cfc</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>bitDepth</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>a79d2d310d304481d46e0cd228750d1b8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>quality</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>a2bebe1b98051f003952d5adfc8dd3801</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::String</type>
+      <name>channelLayout</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>a1cfe510e6163cd50b45fff3261a2bae6</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>normalise</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>ae25aad2c39699c4c94c4390ae27a1c0e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>normaliseByRMS</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>a5c4107c6f987b1012432837815354837</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>normaliseByLUFS</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>a75a769aa88a3e908007c1f7929ad3387</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>normaliseToLevelDb</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>acdb502cc241b4e76d94bd4c460a0ddbb</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>limitTruePeak</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>a49b64bea7fcccdef085ec64157053194</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>truePeakCeilingDb</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>ab41433b6e9f893ab641b4ff6f7ad2696</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>trimSilence</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>ad423dd5bd4926e4945de1368d4048f42</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>dither</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>accc12703f4aed4e79c6bdd3fb5332c41</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>realTime</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>a6b4a3d3d3611592eae0f4ef5802bb3f8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>usePlugins</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>a4841b15041911b6bccdb323b73c2d549</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>useMasterPlugins</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>a8843a495987193ce7c8fab575cf5c9ea</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::StringPairArray</type>
+      <name>metadata</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>af4b1bc5018b257a2d91dad8412714c60</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
   <compound kind="class">
     <name>engine::Renderer::RenderTask</name>
     <filename>classengine_1_1Renderer_1_1RenderTask.html</filename>
     <base>engine::ThreadPoolJobWithProgress</base>
+    <member kind="typedef">
+      <type>std::function&lt; bool()&gt;</type>
+      <name>CancellationCheck</name>
+      <anchorfile>classengine_1_1Renderer_1_1RenderTask.html</anchorfile>
+      <anchor>a6a26e70498226c66e9a09f70ee20f05b</anchor>
+      <arglist></arglist>
+    </member>
     <member kind="function">
       <type></type>
       <name>RenderTask</name>
@@ -62905,11 +63609,39 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>setCancellationCheck</name>
+      <anchorfile>classengine_1_1Renderer_1_1RenderTask.html</anchorfile>
+      <anchor>a61efd251396ae65267aa5549d5dc18c9</anchor>
+      <arglist>(CancellationCheck)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>shouldCancel</name>
+      <anchorfile>classengine_1_1Renderer_1_1RenderTask.html</anchorfile>
+      <anchor>a78147180203fd1670d392b8c7e1ea570</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
       <type>bool</type>
       <name>performNormalisingAndTrimming</name>
       <anchorfile>classengine_1_1Renderer_1_1RenderTask.html</anchorfile>
       <anchor>acff5d1e14c61bf03466d3d1c310fe458</anchor>
       <arglist>(const Renderer::Parameters &amp;target, const Renderer::Parameters &amp;intermediate)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>foldWrapRemainder</name>
+      <anchorfile>classengine_1_1Renderer_1_1RenderTask.html</anchorfile>
+      <anchor>a48012202ed1edf323a72639dc8309d12</anchor>
+      <arglist>(const Renderer::Parameters &amp;target, const Renderer::Parameters &amp;intermediate)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static CancellationCheck</type>
+      <name>getDefaultCancellationCheck</name>
+      <anchorfile>classengine_1_1Renderer_1_1RenderTask.html</anchorfile>
+      <anchor>a0d3a4f9736a42a90b7e6629baf35040f</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
       <type>static void</type>
@@ -64040,6 +64772,31 @@
       <anchorfile>structengine_1_1SamplerPlugin_1_1SamplerSound.html</anchorfile>
       <anchor>a9b01eb2e7c6f948c95d812004e86092c</anchor>
       <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>engine::Edit::SaveInhibitor</name>
+    <filename>structengine_1_1Edit_1_1SaveInhibitor.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>SaveInhibitor</name>
+      <anchorfile>structengine_1_1Edit_1_1SaveInhibitor.html</anchorfile>
+      <anchor>a0751c7f247fac87b4ca7813d7a6d2a9e</anchor>
+      <arglist>(Edit &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SaveInhibitor</name>
+      <anchorfile>structengine_1_1Edit_1_1SaveInhibitor.html</anchorfile>
+      <anchor>a26876d7a5433d43efcd58a2e6509082b</anchor>
+      <arglist>(const SaveInhibitor &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~SaveInhibitor</name>
+      <anchorfile>structengine_1_1Edit_1_1SaveInhibitor.html</anchorfile>
+      <anchor>a2ffe19eebb67be72b8f2c14ca3f7730c</anchor>
+      <arglist>()</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -65216,6 +65973,24 @@
       <anchorfile>structengine_1_1FreezePointPlugin_1_1ScopedTrackFreezer.html</anchorfile>
       <anchor>a84cf09ca464e9383d16d487a5fc9b4ee</anchor>
       <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>engine::ScopedTrackMuter</name>
+    <filename>classengine_1_1ScopedTrackMuter.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>ScopedTrackMuter</name>
+      <anchorfile>classengine_1_1ScopedTrackMuter.html</anchorfile>
+      <anchor>abaf0b7ebdda8b13e85d9e99e367e0831</anchor>
+      <arglist>(Edit &amp;, const juce::Array&lt; EditItemID &gt; &amp;tracksToMute)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~ScopedTrackMuter</name>
+      <anchorfile>classengine_1_1ScopedTrackMuter.html</anchorfile>
+      <anchor>a37b857695e13b39a3ec83a7447d5dd01</anchor>
+      <arglist>()</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -73982,6 +74757,13 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>setKeepProcessingWhileMuted</name>
+      <anchorfile>classengine_1_1TrackMuteState.html</anchorfile>
+      <anchor>ae0738fe91439612f8aa72f0cc005e825</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
       <type>bool</type>
       <name>shouldTrackBeAudible</name>
       <anchorfile>classengine_1_1TrackMuteState.html</anchorfile>
@@ -79606,12 +80388,14 @@
     <class kind="struct">engine::AsyncCaller</class>
     <class kind="struct">engine::AsyncFunctionCaller</class>
     <class kind="struct">engine::AtomicWrapper</class>
+    <class kind="struct">engine::AudioAnalysisOptions</class>
     <class kind="class">engine::AudioBufferSnapshot</class>
     <class kind="class">engine::AudioClipBase</class>
     <class kind="struct">engine::AudioClipPlayhead</class>
     <class kind="struct">engine::AudioFadeCurve</class>
     <class kind="class">engine::AudioFifo</class>
     <class kind="class">engine::AudioFile</class>
+    <class kind="class">engine::AudioFileAnalyser</class>
     <class kind="class">engine::AudioFileCache</class>
     <class kind="class">engine::AudioFileFormatManager</class>
     <class kind="struct">engine::AudioFileInfo</class>
@@ -79772,6 +80556,7 @@
     <class kind="class">engine::LiveMidiOutputNode</class>
     <class kind="class">engine::LoopInfo</class>
     <class kind="class">engine::LoopingMidiNode</class>
+    <class kind="class">engine::LoudnessMeter</class>
     <class kind="class">engine::LowPassPlugin</class>
     <class kind="class">engine::MackieC4</class>
     <class kind="class">engine::MackieMCU</class>
@@ -79843,6 +80628,7 @@
     <class kind="class">engine::PitchSetting</class>
     <class kind="struct">engine::PitchShiftEffect</class>
     <class kind="class">engine::PitchShiftPlugin</class>
+    <class kind="struct">engine::PlannedRenderJob</class>
     <class kind="class">engine::PlayHeadPositionNode</class>
     <class kind="class">engine::Plugin</class>
     <class kind="class">engine::PluginCache</class>
@@ -79884,6 +80670,8 @@
     <class kind="class">engine::Renderer</class>
     <class kind="class">engine::RenderManager</class>
     <class kind="class">engine::RenderOptions</class>
+    <class kind="class">engine::RenderQueue</class>
+    <class kind="struct">engine::RenderSpecification</class>
     <class kind="class">engine::ReverbPlugin</class>
     <class kind="struct">engine::ReverseEffect</class>
     <class kind="class">engine::ReverseRenderJob</class>
@@ -79901,6 +80689,7 @@
     <class kind="struct">engine::ScopedPluginUnloadInhibitor</class>
     <class kind="class">engine::ScopedSteadyLoad</class>
     <class kind="struct">engine::ScopedThreadExitStatusEnabler</class>
+    <class kind="class">engine::ScopedTrackMuter</class>
     <class kind="class">engine::ScopedWaitCursor</class>
     <class kind="struct">engine::ScreenSaverDefeater</class>
     <class kind="class">engine::Selectable</class>
@@ -80206,6 +80995,19 @@
     </member>
     <member kind="enumeration">
       <type></type>
+      <name>RenderFormat</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a3f0cb9989dc30bafaad719176696cc10</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespaceengine.html" anchor="a3f0cb9989dc30bafaad719176696cc10a4bda4933646d3ce6ceedcdb1e5f982d8">wav</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a3f0cb9989dc30bafaad719176696cc10ae28f90f5d6a63f199f7f73b5b0b6bbf9">aiff</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a3f0cb9989dc30bafaad719176696cc10a24e2bc3c3160c24391d12181c7471be3">flac</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a3f0cb9989dc30bafaad719176696cc10a34da450e959d17db92f6876051d0faac">ogg</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a3f0cb9989dc30bafaad719176696cc10a28dafd4a8cb5f33065e93cbc83862563">mp3</enumvalue>
+      <enumvalue file="namespaceengine.html" anchor="a3f0cb9989dc30bafaad719176696cc10aa5f4ed7e858bf18cc1f2c0e35e7301e7">midi</enumvalue>
+    </member>
+    <member kind="enumeration">
+      <type></type>
       <name>ProjectType</name>
       <anchorfile>namespaceengine.html</anchorfile>
       <anchor>a6f840ca360be9902098f124929023df3</anchor>
@@ -80402,6 +81204,20 @@
       <enumvalue file="namespaceengine.html" anchor="a37f708109fdbdb9329a540048b1a040fa01372905495e6c5db01a5baa92da0d98">passThroughFilters</enumvalue>
       <enumvalue file="namespaceengine.html" anchor="a37f708109fdbdb9329a540048b1a040fa3de70b17fc38e2631a7c5ce85f1c4ed8">externControlShowClipSlotSelection</enumvalue>
       <enumvalue file="namespaceengine.html" anchor="a37f708109fdbdb9329a540048b1a040fae9f0ae9d4723099d46d0fcdba664fd62">addAcidMetadata</enumvalue>
+    </member>
+    <member kind="function">
+      <type>tl::expected&lt; juce::var, juce::String &gt;</type>
+      <name>analyseAudioFile</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a2907d263bda3abddc6640ad146cf1f7c</anchor>
+      <arglist>(Engine &amp;, const juce::File &amp;, const std::vector&lt; AudioFileAnalyser * &gt; &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>tl::expected&lt; juce::var, juce::String &gt;</type>
+      <name>analyseAudioFile</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a07c8afbe5d439bb348320aafb28a956a</anchor>
+      <arglist>(Engine &amp;, const juce::File &amp;, const AudioAnalysisOptions &amp;={})</arglist>
     </member>
     <member kind="function">
       <type>juce::Array&lt; KeyResult &gt;</type>
@@ -81648,6 +82464,55 @@
       <anchorfile>namespaceengine.html</anchorfile>
       <anchor>ae6a89212d22c82b573d1471b23478e35</anchor>
       <arglist>(Edit &amp;, TimeRange)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::optional&lt; RenderFormat &gt;</type>
+      <name>renderFormatFromString</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a470e31ecc2a8ecd2c1f16f6810d2ce4f</anchor>
+      <arglist>(juce::String)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::String</type>
+      <name>toString</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>ac6f12f418e5a7a2764f32f80ae0a6b94</anchor>
+      <arglist>(RenderFormat)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>isMidiFormat</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a15b8c4db1687a0f5778e68f950141567</anchor>
+      <arglist>(RenderFormat f)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Result</type>
+      <name>validateRenderSpecification</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>af87f1ff2d53df619eead8ccf4c35bade</anchor>
+      <arglist>(Edit &amp;, const RenderSpecification &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; EditItemID &gt;</type>
+      <name>findStemSourceTracks</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>ab3d26ec63553dd6f17400b21db6d69f8</anchor>
+      <arglist>(Edit &amp;, const juce::Array&lt; EditItemID &gt; &amp;stemTracks)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::optional&lt; PlannedRenderJob &gt;</type>
+      <name>createRenderJob</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a18364f02ab4e2b30d08bbd2acb535d62</anchor>
+      <arglist>(Edit &amp;, const RenderSpecification &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::vector&lt; RenderSpecification &gt;</type>
+      <name>createPerTrackSpecifications</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>ae34a9b5538d5c1f5584dc038a6cd7ed6</anchor>
+      <arglist>(Edit &amp;, const RenderSpecification &amp;base, const juce::File &amp;directory)</arglist>
     </member>
     <member kind="function">
       <type>BeatPosition</type>
@@ -84771,6 +85636,8 @@
     <class kind="class">engine::AudioFifo</class>
     <class kind="struct">engine::AudioFileInfo</class>
     <class kind="class">engine::AudioFile</class>
+    <class kind="class">engine::AudioFileAnalyser</class>
+    <class kind="struct">engine::AudioAnalysisOptions</class>
     <class kind="struct">engine::AudioFormatReaderWithTimeout</class>
     <class kind="class">engine::AudioFileCache</class>
     <class kind="class">engine::AudioFileCache::Reader</class>
@@ -84788,6 +85655,8 @@
     <class kind="class">engine::BufferedFileReader</class>
     <class kind="class">engine::LoopInfo</class>
     <class kind="struct">engine::LoopInfo::LoopPoint</class>
+    <class kind="class">engine::LoudnessMeter</class>
+    <class kind="struct">engine::LoudnessMeter::Readings</class>
     <class kind="class">engine::RecordingThumbnailManager</class>
     <class kind="struct">engine::RecordingThumbnailManager::Thumbnail</class>
     <class kind="class">engine::SmartThumbnail</class>
@@ -84991,6 +85860,7 @@
     <class kind="struct">engine::Edit::ScopedRenderStatus</class>
     <class kind="struct">engine::Edit::UndoTransactionInhibitor</class>
     <class kind="struct">engine::Edit::GlobalMacros</class>
+    <class kind="struct">engine::Edit::SaveInhibitor</class>
     <class kind="struct">engine::Edit::Metadata</class>
     <class kind="struct">engine::Edit::LoadFinishedCallback</class>
     <class kind="struct">engine::Edit::WastedMidiMessagesListener</class>
@@ -85052,6 +85922,11 @@
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::RenderOptions::RenderType &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::RenderOptions::TargetFileFormat &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::RenderOptions::AddRenderOptions &gt;</class>
+    <class kind="class">engine::ScopedTrackMuter</class>
+    <class kind="class">engine::RenderQueue</class>
+    <class kind="class">engine::RenderQueue::Job</class>
+    <class kind="struct">engine::RenderSpecification</class>
+    <class kind="struct">engine::PlannedRenderJob</class>
     <class kind="class">engine::ArrangerTrack</class>
     <class kind="class">engine::AudioTrack</class>
     <class kind="struct">engine::AudioTrack::FreezePointRemovalInhibitor</class>

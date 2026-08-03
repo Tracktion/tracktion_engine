@@ -112,6 +112,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1Edit_1_1Options.html">Options</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines how the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> will be created.  <a href="structengine_1_1Edit_1_1Options.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1Edit_1_1SaveInhibitor.html">SaveInhibitor</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> being written to disk.  <a href="structengine_1_1Edit_1_1SaveInhibitor.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1Edit_1_1ScopedRenderStatus.html">ScopedRenderStatus</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Temporarily removes an <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> from the device manager, optionally re-adding it on destruction.  <a href="structengine_1_1Edit_1_1ScopedRenderStatus.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -541,6 +544,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad2e53ff7ad077aa12e2a264f03d0f71d" id="r_ad2e53ff7ad077aa12e2a264f03d0f71d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Edit.html#ad2e53ff7ad077aa12e2a264f03d0f71d">markAsChanged</a> ()</td></tr>
 <tr class="memdesc:ad2e53ff7ad077aa12e2a264f03d0f71d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Marks the edit as being significantly changed and should therefore be saved.  <br /></td></tr>
 <tr class="separator:ad2e53ff7ad077aa12e2a264f03d0f71d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88e19c504cd7d1db50c77ba2e9e1bdcb" id="r_a88e19c504cd7d1db50c77ba2e9e1bdcb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Edit.html#a88e19c504cd7d1db50c77ba2e9e1bdcb">isSaveInhibited</a> () const noexcept</td></tr>
+<tr class="memdesc:a88e19c504cd7d1db50c77ba2e9e1bdcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if a <a class="el" href="structengine_1_1Edit_1_1SaveInhibitor.html" title="Stops the Edit being written to disk.">SaveInhibitor</a> is currently stopping this <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> being saved.  <br /></td></tr>
+<tr class="separator:a88e19c504cd7d1db50c77ba2e9e1bdcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac940f9f15c87f2e2ea8a72d4b3729b20" id="r_ac940f9f15c87f2e2ea8a72d4b3729b20"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Edit.html#ac940f9f15c87f2e2ea8a72d4b3729b20">invalidateStoredLength</a> () noexcept</td></tr>
 <tr class="memdesc:ac940f9f15c87f2e2ea8a72d4b3729b20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invalidates the stored length so the next call to getLength will update form the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> contents.  <br /></td></tr>
 <tr class="separator:ac940f9f15c87f2e2ea8a72d4b3729b20"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -4284,6 +4290,33 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a88e19c504cd7d1db50c77ba2e9e1bdcb" name="a88e19c504cd7d1db50c77ba2e9e1bdcb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88e19c504cd7d1db50c77ba2e9e1bdcb">&#9670;&#160;</a></span>isSaveInhibited()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool engine::Edit::isSaveInhibited </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns true if a <a class="el" href="structengine_1_1Edit_1_1SaveInhibitor.html" title="Stops the Edit being written to disk.">SaveInhibitor</a> is currently stopping this <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> being saved. </p>
+
+</div>
+</div>
 <a id="ac940f9f15c87f2e2ea8a72d4b3729b20" name="ac940f9f15c87f2e2ea8a72d4b3729b20"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac940f9f15c87f2e2ea8a72d4b3729b20">&#9670;&#160;</a></span>invalidateStoredLength()</h2>
 
@@ -5170,7 +5203,7 @@ Static Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jul 29 2026 12:36:45 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Aug 3 2026 18:52:06 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

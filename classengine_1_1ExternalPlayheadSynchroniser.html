@@ -102,11 +102,12 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>An <a class="el" href="classengine_1_1ExternalPlayheadSynchroniser.html" title="An ExternalPlayheadSynchroniser is used to synchronise the internal Edit&#39;s playhead with an AudioProc...">ExternalPlayheadSynchroniser</a> is used to synchronise the internal <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>'s playhead with an AudioProcessor, for use in plugins. </p>
-<p>Just create one when you create your <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> and repeatedly call the synchronise method in your process block like this: </p><div class="fragment"><div class="line"><span class="keywordtype">void</span> processBlock (juce::AudioBuffer&lt;float&gt;&amp; buffer, juce::MidiBuffer&amp; midi)<span class="keyword"> override</span></div>
+<p>Just create one when you create your <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> and repeatedly call the synchronise method in your process block like this: </p><div class="fragment"><div class="line"><span class="keywordtype">void</span> processBlock (juce::AudioBuffer&lt;float&gt;&amp; buffer, juce::MidiBuffer&amp; <a class="code hl_enumvalue" href="namespaceengine.html#a3f0cb9989dc30bafaad719176696cc10aa5f4ed7e858bf18cc1f2c0e35e7301e7">midi</a>)<span class="keyword"> override</span></div>
 <div class="line"><span class="keyword"></span>{</div>
 <div class="line">    <span class="comment">// Update position info first</span></div>
 <div class="line">    externalPlayheadSynchroniser.synchronise (*<span class="keyword">this</span>);</div>
 <div class="line">    ...</div>
+<div class="ttc" id="anamespaceengine_html_a3f0cb9989dc30bafaad719176696cc10aa5f4ed7e858bf18cc1f2c0e35e7301e7"><div class="ttname"><a href="namespaceengine.html#a3f0cb9989dc30bafaad719176696cc10aa5f4ed7e858bf18cc1f2c0e35e7301e7">engine::RenderFormat::midi</a></div><div class="ttdeci">@ midi</div><div class="ttdoc">Writes a MIDI file rather than audio.</div></div>
 </div><!-- fragment --> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac6858f63c048115eb5bf2bbe9f6720f9" name="ac6858f63c048115eb5bf2bbe9f6720f9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac6858f63c048115eb5bf2bbe9f6720f9">&#9670;&#160;</a></span>ExternalPlayheadSynchroniser()</h2>
@@ -196,7 +197,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jul 29 2026 12:36:45 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Aug 3 2026 18:52:06 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

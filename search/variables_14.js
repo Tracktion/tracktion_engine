@@ -7,9 +7,9 @@ var searchData=
   ['updatelinkedclipscaller_4',['updateLinkedClipsCaller',['../classengine_1_1Clip.html#ab65d12d8486e752ec64b4413dad025cb',1,'engine::Clip']]],
   ['updateparametersrecursioncheck_5',['updateParametersRecursionCheck',['../classengine_1_1AutomatableParameter.html#ac13ecd89382669592599d72aebf46658',1,'engine::AutomatableParameter']]],
   ['useallinputs_6',['useAllInputs',['../classengine_1_1VirtualMidiInputDevice.html#a71082ef63146480069a53567f45b1096',1,'engine::VirtualMidiInputDevice']]],
-  ['usemasterplugins_7',['useMasterPlugins',['../structengine_1_1Renderer_1_1Parameters.html#a3f9912d7e98940a5bc2ce06dab9ef07e',1,'engine::Renderer::Parameters']]],
+  ['usemasterplugins_7',['usemasterplugins',['../structengine_1_1Renderer_1_1Parameters.html#a3f9912d7e98940a5bc2ce06dab9ef07e',1,'engine::Renderer::Parameters::useMasterPlugins'],['../structengine_1_1RenderSpecification.html#a8843a495987193ce7c8fab575cf5c9ea',1,'engine::RenderSpecification::useMasterPlugins']]],
   ['usemididevices_8',['useMidiDevices',['../structengine_1_1HostedAudioDeviceInterface_1_1Parameters.html#a1dc78db2a6613de2471a3397590feafd',1,'engine::HostedAudioDeviceInterface::Parameters']]],
-  ['useplugins_9',['useplugins',['../structengine_1_1Renderer_1_1Parameters.html#a99b358fa5c1b8ebd695ff8a13ccd7335',1,'engine::Renderer::Parameters::usePlugins'],['../classengine_1_1RenderOptions.html#a3f1379849230e04c7860308c4a2298be',1,'engine::RenderOptions::usePlugins']]],
+  ['useplugins_9',['useplugins',['../structengine_1_1Renderer_1_1Parameters.html#a99b358fa5c1b8ebd695ff8a13ccd7335',1,'engine::Renderer::Parameters::usePlugins'],['../classengine_1_1RenderOptions.html#a3f1379849230e04c7860308c4a2298be',1,'engine::RenderOptions::usePlugins'],['../structengine_1_1RenderSpecification.html#a4841b15041911b6bccdb323b73c2d549',1,'engine::RenderSpecification::usePlugins']]],
   ['useproxyfile_10',['useProxyFile',['../structengine_1_1EngineBehaviour_1_1ClipDefaults.html#ad17a4aa794c420d7ea612726dc5c522f',1,'engine::EngineBehaviour::ClipDefaults']]],
   ['usermovedauxes_11',['userMovedAuxes',['../classengine_1_1MackieMCU.html#a0700fe5990b067e8030c0b18a51cd000',1,'engine::MackieMCU']]],
   ['usesidechaintrigger_12',['useSidechainTrigger',['../classengine_1_1CompressorPlugin.html#a8835cec9ae5f3ca0f067912addc343ed',1,'engine::CompressorPlugin']]]
