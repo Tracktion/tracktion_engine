@@ -269,22 +269,6 @@ void RenderOptions::valueTreePropertyChanged (juce::ValueTree& v, const juce::Id
 }
 
 //==============================================================================
-static juce::StringPairArray getMetadata (Edit& edit)
-{
-    juce::StringPairArray metadataList;
-    auto metadata = edit.getEditMetadata();
-
-    if (metadata.album.isNotEmpty())          metadataList.set ("id3album", metadata.album);
-    if (metadata.artist.isNotEmpty())         metadataList.set ("id3artist", metadata.artist);
-    if (metadata.comment.isNotEmpty())        metadataList.set ("id3comment", metadata.comment);
-    if (metadata.date.isNotEmpty())           metadataList.set ("id3date", metadata.date);
-    if (metadata.genre.isNotEmpty())          metadataList.set ("id3genre", metadata.genre);
-    if (metadata.title.isNotEmpty())          metadataList.set ("id3title", metadata.title);
-    if (metadata.trackNumber.isNotEmpty())    metadataList.set ("id3trackNumber", metadata.trackNumber);
-
-    return metadataList;
-}
-
 ChannelConfiguration RenderOptions::getChannelConfiguration() const
 {
     auto s = channelConfigStr.get().trim();
@@ -404,7 +388,7 @@ Renderer::Parameters RenderOptions::getRenderParameters (Edit& edit, SelectionMa
         params.tracksToDo.setRange (0, allTracks.size(), true);
 
     if (addMetadata)
-        params.metadata = getMetadata (edit);
+        params.metadata = createTagMetadata (edit);
 
     if (addAcidMetadata)
         params.metadata.addArray (createAcidInfo (edit, params.time));
@@ -804,7 +788,7 @@ std::unique_ptr<RenderOptions> RenderOptions::forGeneralExporter (Edit& edit)
     for (auto t : getAllTracks (edit))
         ro->tracks.add (t->itemID);
 
-    ro->addMetadata = getMetadata (edit).size() != 0;
+    ro->addMetadata = hasTagMetadata (edit);
     ro->updateDefaultFilename (&edit);
     ro->updateHash();
 

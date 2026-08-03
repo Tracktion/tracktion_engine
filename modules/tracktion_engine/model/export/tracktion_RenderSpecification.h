@@ -39,6 +39,43 @@ juce::String toString (RenderFormat);
 inline bool isMidiFormat (RenderFormat f)       { return f == RenderFormat::midi; }
 
 //==============================================================================
+/** Returns an Edit's tag metadata - title, artist, album, date, genre, comment
+    and track number - as the canonical "id3*" key/value pairs.
+
+    These names are the single vocabulary tags are written in everywhere a
+    render carries them (presets, config files and the scripting API), whatever
+    the output format turns out to be: translateMetadataForFormat() converts
+    them to whatever the format's writer actually understands. Empty fields are
+    left out - but note getEditMetadata() fills the date in with the current
+    year, so an Edit with no tags at all still gets a date.
+
+    @see Edit::getEditMetadata, translateMetadataForFormat
+*/
+juce::StringPairArray createTagMetadata (Edit&);
+
+/** True if an Edit has actually been given any tags, which is what decides
+    whether tagging is enabled by default. This is not the same as
+    createTagMetadata() returning something - that always carries a date.
+*/
+bool hasTagMetadata (Edit&);
+
+/** True if a format's writer can carry tag metadata at all: wav (in a RIFF
+    INFO chunk), ogg (Vorbis comments) and mp3 (ID3) can; aiff and flac have no
+    metadata support in their writers, and a MIDI file has nowhere to put it.
+*/
+bool formatSupportsTagMetadata (RenderFormat);
+
+/** Converts canonical "id3*" tag pairs to the keys a format's writer
+    understands: passed through unchanged for ogg and mp3, mapped to the WAV
+    writer's RIFF INFO names for wav, and dropped for the formats which can't
+    carry tags.
+
+    Pairs outside the "id3*" family - ACID or BWAV info, say - are always passed
+    through untouched, so this can be applied to a whole metadata set.
+*/
+juce::StringPairArray translateMetadataForFormat (const juce::StringPairArray&, RenderFormat);
+
+//==============================================================================
 /**
     A plain-data description of a single render operation: one output file.
 
