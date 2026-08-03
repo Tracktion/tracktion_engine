@@ -21,6 +21,118 @@ juce::String toString (RenderFormat f)
     return std::string (magic_enum::enum_name (f));
 }
 
+//==============================================================================
+juce::StringPairArray createTagMetadata (Edit& edit)
+{
+    juce::StringPairArray metadataList;
+    auto metadata = edit.getEditMetadata();
+
+    if (metadata.album.isNotEmpty())          metadataList.set ("id3album", metadata.album);
+    if (metadata.artist.isNotEmpty())         metadataList.set ("id3artist", metadata.artist);
+    if (metadata.comment.isNotEmpty())        metadataList.set ("id3comment", metadata.comment);
+    if (metadata.date.isNotEmpty())           metadataList.set ("id3date", metadata.date);
+    if (metadata.genre.isNotEmpty())          metadataList.set ("id3genre", metadata.genre);
+    if (metadata.title.isNotEmpty())          metadataList.set ("id3title", metadata.title);
+    if (metadata.trackNumber.isNotEmpty())    metadataList.set ("id3trackNumber", metadata.trackNumber);
+
+    return metadataList;
+}
+
+bool hasTagMetadata (Edit& edit)
+{
+    // Not createTagMetadata().size(): getEditMetadata() fills the date in with
+    // the current year even for an Edit that has never been given a tag, so
+    // that would answer yes for every Edit. What counts is whether any tag has
+    // actually been stored
+    auto meta = edit.state.getChildWithName (IDs::ID3VORBISMETADATA);
+
+    if (! meta.isValid())
+        return false;
+
+    for (auto& id : { IDs::album, IDs::artist, IDs::comment, IDs::date,
+                      IDs::genre, IDs::title, IDs::trackNumber })
+        if (meta[id].toString().isNotEmpty())
+            return true;
+
+    return false;
+}
+
+bool formatSupportsTagMetadata (RenderFormat f)
+{
+    switch (f)
+    {
+        case RenderFormat::wav:
+        case RenderFormat::ogg:
+        case RenderFormat::mp3:     return true;
+
+        case RenderFormat::aiff:
+        case RenderFormat::flac:
+        case RenderFormat::midi:    break;
+    }
+
+    return false;
+}
+
+/** The RIFF INFO key the WAV writer wants for a canonical id3 tag key, or
+    nullptr if that tag has no INFO equivalent. The WAV writer has no ID3
+    support at all, so this is the only way a .wav carries tags. ICMT is the
+    comment field readers expect (JUCE's riffInfoComment is the rarer CMNT) and
+    ICRD the date one.
+*/
+static const char* getRiffInfoKeyForTag (const juce::String& id3Key)
+{
+    if (id3Key == "id3album")           return juce::WavAudioFormat::riffInfoProductName;
+    if (id3Key == "id3artist")          return juce::WavAudioFormat::riffInfoArtist;
+    if (id3Key == "id3comment")         return juce::WavAudioFormat::riffInfoComment2;
+    if (id3Key == "id3date")            return juce::WavAudioFormat::riffInfoDateCreated;
+    if (id3Key == "id3genre")           return juce::WavAudioFormat::riffInfoGenre;
+    if (id3Key == "id3title")           return juce::WavAudioFormat::riffInfoTitle;
+    if (id3Key == "id3trackNumber")     return juce::WavAudioFormat::riffInfoTrackNumber;
+
+    return nullptr;
+}
+
+juce::StringPairArray translateMetadataForFormat (const juce::StringPairArray& metadata, RenderFormat format)
+{
+    juce::StringPairArray result;
+    auto& keys = metadata.getAllKeys();
+    auto& values = metadata.getAllValues();
+
+    for (int i = 0; i < metadata.size(); ++i)
+    {
+        const auto& key = keys[i];
+
+        // Anything that isn't a tag - ACID, BWAV - belongs to the format's own
+        // chunks and passes straight through
+        if (! key.startsWith ("id3"))
+        {
+            result.set (key, values[i]);
+            continue;
+        }
+
+        switch (format)
+        {
+            case RenderFormat::ogg:
+            case RenderFormat::mp3:
+                result.set (key, values[i]);
+                break;
+
+            case RenderFormat::wav:
+                if (auto riffKey = getRiffInfoKeyForTag (key))
+                    result.set (riffKey, values[i]);
+
+                break;
+
+            case RenderFormat::aiff:
+            case RenderFormat::flac:
+            case RenderFormat::midi:
+                break;
+        }
+    }
+
+    return result;
+}
+
 namespace render_spec_utils
 {
     inline constexpr double maxWrapRemainderTailSeconds = 30.0;
@@ -391,7 +503,7 @@ std::optional<PlannedRenderJob> createRenderJob (Edit& edit, const RenderSpecifi
         params.truePeakCeilingDb     = spec.truePeakCeilingDb;
         params.trimSilenceAtEnds     = spec.trimSilence && ! spec.wrapRemainder;
         params.ditheringEnabled      = spec.dither;
-        params.metadata              = spec.metadata;
+        params.metadata              = translateMetadataForFormat (spec.metadata, spec.format);
 
         if (spec.channelLayout == "mono")           params.mustRenderInMono = true;
         else if (spec.channelLayout == "stereo")    params.channelConfig = ChannelConfiguration::stereo();
