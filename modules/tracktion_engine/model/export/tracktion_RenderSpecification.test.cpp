@@ -26,6 +26,8 @@ TEST_SUITE ("tracktion_engine")
         spec.tracks.add (EditItemID::fromRawID (1002));
         spec.mutedTracks.add (EditItemID::fromRawID (1003));
         spec.includeSourceTracks = true;
+        spec.clips.add (EditItemID::fromRawID (2001));
+        spec.clips.add (EditItemID::fromRawID (2002));
         spec.time = TimeRange (TimePosition::fromSeconds (1.5), TimePosition::fromSeconds (4.25));
         spec.wrapRemainder = true;
         spec.destination = juce::File::getSpecialLocation (juce::File::tempDirectory).getChildFile ("renders");
@@ -52,6 +54,7 @@ TEST_SUITE ("tracktion_engine")
         CHECK_EQ (restored.tracks, spec.tracks);
         CHECK_EQ (restored.mutedTracks, spec.mutedTracks);
         CHECK_EQ (restored.includeSourceTracks, spec.includeSourceTracks);
+        CHECK_EQ (restored.clips, spec.clips);
         REQUIRE (restored.time.has_value());
         CHECK_EQ (restored.time->getStart(), spec.time->getStart());
         CHECK_EQ (restored.time->getEnd(), spec.time->getEnd());
@@ -154,6 +157,72 @@ TEST_SUITE ("tracktion_engine")
         {
             spec.bitDepth = 12;
             CHECK (validateRenderSpecification (*edit, spec).failed());
+        }
+
+        // What each format supports is read from the format itself, so these follow
+        // whatever JUCE and the encoders say rather than a list maintained here
+        SUBCASE ("a bit depth the format can't write is rejected, not left to the writer")
+        {
+            spec.format = RenderFormat::flac;
+            spec.destination = destFile.getFile().withFileExtension (".flac");
+
+            spec.bitDepth = 24;
+            CHECK (validateRenderSpecification (*edit, spec).wasOk());
+
+            // FLAC is 16 or 24 bit only; this used to reach createWriterFor(), come
+            // back null and be reported as "Couldn't write to target file"
+            spec.bitDepth = 32;
+            auto result = validateRenderSpecification (*edit, spec);
+            CHECK (result.failed());
+            CHECK (result.getErrorMessage().contains ("16, 24"));
+
+            // AIFF is 8, 16 or 24
+            spec.format = RenderFormat::aiff;
+            spec.destination = destFile.getFile().withFileExtension (".aiff");
+            CHECK (validateRenderSpecification (*edit, spec).failed());
+
+            spec.bitDepth = 8;
+            CHECK (validateRenderSpecification (*edit, spec).wasOk());
+        }
+
+        SUBCASE ("a lossy format's fixed bit depth isn't validated")
+        {
+            // Ogg reports only 32 and MP3 only 16, but both ignore what they are
+            // handed - and the spec's default is 16, so rejecting it would break
+            // every ogg render that doesn't name a depth
+            spec.format = RenderFormat::ogg;
+            spec.destination = destFile.getFile().withFileExtension (".ogg");
+
+            for (auto depth : { 16, 24, 32 })
+            {
+                spec.bitDepth = depth;
+                CHECK (validateRenderSpecification (*edit, spec).wasOk());
+            }
+        }
+
+        SUBCASE ("a sample rate the format can't encode is rejected")
+        {
+            // Ogg goes all the way up, so 96k is fine there...
+            spec.format = RenderFormat::ogg;
+            spec.destination = destFile.getFile().withFileExtension (".ogg");
+            spec.sampleRate = 96000.0;
+            CHECK (validateRenderSpecification (*edit, spec).wasOk());
+
+            // ...but MP3 stops at 48k, and used to silently encode at 48k anyway.
+            // TestRunner can't find the libmp3lame that ships in the app bundle, so
+            // this half only runs where the encoder is actually available
+            if (engine.getAudioFileFormatManager().getLameFormat() != nullptr)
+            {
+                spec.format = RenderFormat::mp3;
+                spec.destination = destFile.getFile().withFileExtension (".mp3");
+
+                auto result = validateRenderSpecification (*edit, spec);
+                CHECK (result.failed());
+                CHECK (result.getErrorMessage().contains ("48000"));
+
+                spec.sampleRate = 44100.0;
+                CHECK (validateRenderSpecification (*edit, spec).wasOk());
+            }
         }
 
         SUBCASE ("unknown channel layout")

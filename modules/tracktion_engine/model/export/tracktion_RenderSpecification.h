@@ -79,6 +79,12 @@ struct RenderSpecification
     */
     bool includeSourceTracks = false;
 
+    /** If not empty, only these clips play in the render: everything else on
+        the rendered tracks stays silent. The tracks' plugin chains still run.
+        @see Renderer::Parameters::allowedClips
+    */
+    juce::Array<EditItemID> clips;
+
     /** The time range to render. If unset, the whole Edit length is used. */
     std::optional<TimeRange> time;
 
