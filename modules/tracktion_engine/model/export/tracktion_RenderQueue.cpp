@@ -200,6 +200,9 @@ void RenderQueue::startNextJob()
             destFile.existsAsFile() && job.planned.params.edit != nullptr)
             AudioFile (job.planned.params.edit->engine, destFile).deleteFile();
 
+        // N.B. the delete above has already happened by the time this runs, so a
+        // callback that cancels the job leaves any pre-existing file at destFile
+        // gone with nothing rendered to replace it
         if (onJobStarted != nullptr)
             onJobStarted (job);
 
