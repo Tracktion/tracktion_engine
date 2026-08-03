@@ -264,6 +264,73 @@ TEST_SUITE ("tracktion_engine")
         CHECK (readings.integratedValid);
     }
 
+    TEST_CASE ("LoudnessMeter channel weighting excludes the LFE")
+    {
+        using namespace loudness_meter_tests;
+
+        // A 5.1 buffer (L, R, C, LFE, Ls, Rs) with a 997Hz tone on whichever
+        // channels the case asks for, so the weights can be read off the result
+        auto measure = [] (const std::vector<int>& tonedChannels, float lfeAmplitude)
+        {
+            const auto numSamples = 4 * (int) testSampleRate;
+            juce::AudioBuffer<float> buffer (6, numSamples);
+            buffer.clear();
+
+            for (auto ch : tonedChannels)
+                for (int i = 0; i < numSamples; ++i)
+                    buffer.setSample (ch, i, sine (i, 997.0, ch == 3 ? lfeAmplitude : 0.5f));
+
+            LoudnessMeter meter;
+            meter.prepare (testSampleRate, 6, 8192);
+            processInBlocks (meter, buffer, { 512 });
+
+            return meter.getReadings();
+        };
+
+        // Two channels at 1.0 weight each: 3.01dB above the -9.03 LUFS a single
+        // channel of this tone measures
+        const auto stereoOnly = measure ({ 0, 1 }, 0.0f);
+        REQUIRE (stereoOnly.integratedValid);
+        CHECK_EQ (stereoOnly.integratedLufs, doctest::Approx (-6.02).epsilon (0.01));
+
+        // Adding a full-scale LFE mustn't move the loudness at all
+        const auto withLFE = measure ({ 0, 1, 3 }, 1.0f);
+        CHECK_EQ (withLFE.integratedLufs, doctest::Approx (stereoOnly.integratedLufs).epsilon (0.0001));
+        CHECK_EQ (withLFE.shortTermLufs, doctest::Approx (stereoOnly.shortTermLufs).epsilon (0.0001));
+        CHECK_EQ (withLFE.momentaryLufs, doctest::Approx (stereoOnly.momentaryLufs).epsilon (0.0001));
+
+        // ...but the channel is genuinely being fed in: peak is measured across
+        // every channel, so a full-scale LFE still shows up there
+        CHECK_EQ (withLFE.samplePeakDb, doctest::Approx (0.0).epsilon (0.01));
+        CHECK_GT (withLFE.samplePeakDb, stereoOnly.samplePeakDb + 3.0f);
+
+        // A surround at the same level as the front channels adds its 1.41
+        // weight, which keeps this from passing if every weight became zero
+        const auto withSurround = measure ({ 0, 1, 4 }, 0.0f);
+        CHECK_EQ (withSurround.integratedLufs, doctest::Approx (-3.70).epsilon (0.01));
+        CHECK_GT (withSurround.integratedLufs, stereoOnly.integratedLufs + 2.0f);
+
+        // 5.0 has no LFE, so index 3 is a surround there and does count
+        const auto fiveOh = []
+        {
+            const auto numSamples = 4 * (int) testSampleRate;
+            juce::AudioBuffer<float> buffer (5, numSamples);
+            buffer.clear();
+
+            for (auto ch : { 0, 1, 3 })
+                for (int i = 0; i < numSamples; ++i)
+                    buffer.setSample (ch, i, sine (i, 997.0, 0.5f));
+
+            LoudnessMeter meter;
+            meter.prepare (testSampleRate, 5, 8192);
+            processInBlocks (meter, buffer, { 512 });
+
+            return meter.getReadings();
+        }();
+
+        CHECK_EQ (fiveOh.integratedLufs, doctest::Approx (-3.70).epsilon (0.01));
+    }
+
     TEST_CASE ("LoudnessMeter is invariant to the block sizes it's fed")
     {
         using namespace loudness_meter_tests;

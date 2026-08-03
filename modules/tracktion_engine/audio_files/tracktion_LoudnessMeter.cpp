@@ -24,11 +24,19 @@ namespace loudness_utils
         return -0.691 + 10.0 * std::log10 (std::max (1.0e-12, power));
     }
 
-    /** BS.1770 channel weights: 1.0 for left/right/centre, 1.41 for surrounds.
-        The LFE should be excluded, but plain buffers carry no layout info.
+    /** BS.1770 channel weights for a buffer in the usual ITU order
+        (L, R, C, LFE, Ls, Rs...): 1.0 for the front channels, 1.41 for the
+        surrounds, and the LFE excluded from the measurement entirely.
+
+        Plain buffers carry no layout information, so the LFE has to be found by
+        position. Only the 5.1 and 7.1 layouts have one, and in both it sits at
+        index 3; 5.0 and below are taken to have no LFE.
     */
-    static double channelWeight (int channelIndex)
+    static double channelWeight (int channelIndex, int totalChannels)
     {
+        if (totalChannels >= 6 && channelIndex == 3)
+            return 0.0;
+
         return channelIndex >= 3 ? 1.41 : 1.0;
     }
 }
@@ -163,7 +171,7 @@ void LoudnessMeter::processChunk (const float* const* channelData, int numChanne
             const double sample = channelData[ch][startSample + i];
             const double filtered = state.highpass.process (state.shelf.process (sample));
 
-            weightedSquares += channelWeight (ch) * filtered * filtered;
+            weightedSquares += channelWeight (ch, numChannelsToUse) * filtered * filtered;
         }
 
         blockEnergy += weightedSquares;
