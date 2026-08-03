@@ -634,6 +634,9 @@ std::unique_ptr<juce::AudioFormatWriter> LibLameEncoderAudioFormat::createWriter
 // dlopen'd rather than linked, so users can substitute their own build of it.
 #include "../../../3rd_party/choc/choc/text/choc_OpenSourceLicenseList.h"
 
+// The licence text is split into two adjacent literals that the compiler
+// concatenates: MSVC rejects any single string literal over 16380 characters
+// (error C2026), and the full LGPL text is around 25KB. Don't join them back up.
 CHOC_REGISTER_OPEN_SOURCE_LICENCE (LAME, R"LICENCE(
 LAME (LAME Ain't an MP3 Encoder) - https://lame.sourceforge.io/
 
@@ -868,7 +871,8 @@ source code from the same place satisfies the requirement to
 distribute the source code, even though third parties are not
 compelled to copy the source along with the object code.
 
-  5. A program that contains no derivative of any portion of the
+)LICENCE"
+R"LICENCE(  5. A program that contains no derivative of any portion of the
 Library, but is designed to work with the Library by being compiled or
 linked with it, is called a "work that uses the Library".  Such a
 work, in isolation, is not a derivative work of the Library, and
