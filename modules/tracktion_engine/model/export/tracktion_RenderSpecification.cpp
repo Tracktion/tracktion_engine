@@ -102,6 +102,7 @@ juce::var RenderSpecification::toJSON() const
     obj->setProperty ("tracks", EditItemID::listToString (tracks));
     obj->setProperty ("mutedTracks", EditItemID::listToString (mutedTracks));
     obj->setProperty ("includeSourceTracks", includeSourceTracks);
+    obj->setProperty ("clips", EditItemID::listToString (clips));
 
     if (time)
     {
@@ -143,7 +144,7 @@ juce::var RenderSpecification::toJSON() const
 
 RenderSpecification RenderSpecification::fromJSON (const juce::var& v, juce::StringArray* unknownKeys)
 {
-    static const juce::StringArray knownKeys { "tracks", "mutedTracks", "includeSourceTracks", "startTime", "endTime",
+    static const juce::StringArray knownKeys { "tracks", "mutedTracks", "includeSourceTracks", "clips", "startTime", "endTime",
                                               "wrapRemainder", "destination", "format", "sampleRate",
                                               "bitDepth", "quality", "channelLayout", "normalise",
                                               "normaliseByRMS", "normaliseByLUFS", "normaliseToLevelDb",
@@ -170,6 +171,7 @@ RenderSpecification RenderSpecification::fromJSON (const juce::var& v, juce::Str
     spec.tracks             = EditItemID::parseStringList (get ("tracks", juce::String()));
     spec.mutedTracks        = EditItemID::parseStringList (get ("mutedTracks", juce::String()));
     spec.includeSourceTracks = get ("includeSourceTracks", spec.includeSourceTracks);
+    spec.clips              = EditItemID::parseStringList (get ("clips", juce::String()));
     spec.wrapRemainder      = get ("wrapRemainder", spec.wrapRemainder);
     spec.destination        = juce::File (get ("destination", juce::String()).toString());
     spec.format             = renderFormatFromString (get ("format", toString (spec.format)).toString())
@@ -225,8 +227,39 @@ juce::Result validateRenderSpecification (Edit& edit, const RenderSpecification&
 
     if (! isMidiFormat (spec.format))
     {
-        if (spec.bitDepth != 16 && spec.bitDepth != 24 && spec.bitDepth != 32)
-            return juce::Result::fail (TRANS("Invalid bit depth"));
+        // Ask the format what it can do rather than hard coding it here, so this keeps
+        // up as formats gain support. Without it an unsupported combination gets as far
+        // as createWriterFor() returning nullptr, which surfaces as "Couldn't write to
+        // target file" - a filesystem complaint about a settings problem - or, worse,
+        // is silently ignored: MP3 tops out at 48kHz and simply encodes at that rate.
+        auto* audioFormat = getFormat (edit.engine, spec.format);
+
+        auto listOf = [] (const juce::Array<int>& values)
+        {
+            juce::StringArray strings;
+
+            for (auto v : values)
+                strings.add (juce::String (v));
+
+            return strings.joinIntoString (", ");
+        };
+
+        if (auto rates = audioFormat->getPossibleSampleRates();
+            ! rates.isEmpty() && ! rates.contains (juce::roundToInt (spec.sampleRate)))
+            return juce::Result::fail (TRANS("XZZX doesn't support a sample rate of YZZY")
+                                         .replace ("XZZX", toString (spec.format))
+                                         .replace ("YZZY", juce::String (spec.sampleRate, 0))
+                                        + ". " + TRANS("Supported rates: XZZX").replace ("XZZX", listOf (rates)));
+
+        // A format offering a single depth fixes its own and ignores whatever it is
+        // handed - Ogg reports 32 and MP3 16, but both encode the same file whatever
+        // is asked for - so there is nothing to validate in that case
+        if (auto depths = audioFormat->getPossibleBitDepths();
+            depths.size() > 1 && ! depths.contains (spec.bitDepth))
+            return juce::Result::fail (TRANS("XZZX doesn't support YZZY bit")
+                                         .replace ("XZZX", toString (spec.format))
+                                         .replace ("YZZY", juce::String (spec.bitDepth))
+                                        + ". " + TRANS("Supported bit depths: XZZX").replace ("XZZX", listOf (depths)));
 
         if (! isKnownChannelLayout (spec.channelLayout))
             return juce::Result::fail (TRANS("Unknown channel layout: ") + spec.channelLayout);
@@ -235,6 +268,10 @@ juce::Result validateRenderSpecification (Edit& edit, const RenderSpecification&
     if (resolveTracks (edit, spec.tracks).size() != spec.tracks.size()
         || resolveTracks (edit, spec.mutedTracks).size() != spec.mutedTracks.size())
         return juce::Result::fail (TRANS("The specification contains tracks which aren't in this Edit"));
+
+    for (auto id : spec.clips)
+        if (findClipForID (edit, id) == nullptr)
+            return juce::Result::fail (TRANS("The specification contains clips which aren't in this Edit"));
 
     if (spec.time ? spec.time->isEmpty() : (edit.getLength() == TimeDuration()))
         return juce::Result::fail (TRANS("There is nothing to render in the time range"));
@@ -372,6 +409,10 @@ std::optional<PlannedRenderJob> createRenderJob (Edit& edit, const RenderSpecifi
 
     for (auto [track, index] : resolved)
         params.tracksToDo.setBit (index);
+
+    for (auto id : spec.clips)
+        if (auto clip = findClipForID (edit, id))
+            params.allowedClips.add (clip);
 
     auto mutedTracks = spec.mutedTracks;
 
