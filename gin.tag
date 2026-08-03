@@ -82487,6 +82487,34 @@
       <arglist>(RenderFormat f)</arglist>
     </member>
     <member kind="function">
+      <type>juce::StringPairArray</type>
+      <name>createTagMetadata</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a6216a6c8948fadaa1c0b8b4ddded0aec</anchor>
+      <arglist>(Edit &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>hasTagMetadata</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>aaec5344c806fe5bc4227ed65ecd320ab</anchor>
+      <arglist>(Edit &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>formatSupportsTagMetadata</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>ae9251499864dc981bc199f063649d3b7</anchor>
+      <arglist>(RenderFormat)</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::StringPairArray</type>
+      <name>translateMetadataForFormat</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>afcc166bbd6666cf27876892efe97172a</anchor>
+      <arglist>(const juce::StringPairArray &amp;, RenderFormat)</arglist>
+    </member>
+    <member kind="function">
       <type>juce::Result</type>
       <name>validateRenderSpecification</name>
       <anchorfile>namespaceengine.html</anchorfile>
