@@ -938,6 +938,40 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SignalsmithStretcher)
 };
 
+// Registers Signalsmith Stretch's licence with the list the host app shows in
+// its about box. MIT only asks that the notice ships with the binary.
+} // namespace tracktion::inline engine
+#include "../../3rd_party/choc/choc/text/choc_OpenSourceLicenseList.h"
+
+CHOC_REGISTER_OPEN_SOURCE_LICENCE (SignalsmithStretch, R"LICENCE(
+Signalsmith Stretch - https://signalsmith-audio.co.uk/code/stretch/
+
+MIT License
+
+Copyright (c) 2022 Geraint Luff / Signalsmith Audio Ltd.
+Copyright (c) 2025 Signalsmith Audio (signalsmith-linear)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+)LICENCE")
+
+namespace tracktion::inline engine {
+
 #endif // TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
 
 //==============================================================================
