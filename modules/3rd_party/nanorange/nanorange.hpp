@@ -17105,7 +17105,7 @@ private:
                 if constexpr (signed_integral<D>) {
                     return D(D(x.value_) - D(y.value_));
                 } else {
-                    return (y.value_ > x.value)
+                    return (y.value_ > x.value_)
                         ? D(-D(y.value_ - x.value_))
                         : D(x.value_ - y.value_);
                 }
