@@ -711,6 +711,10 @@ struct RubberBandStretcher  : public TimeStretcher::Stretcher
     void reset() override
     {
         rubberBandStretcher.reset();
+
+        // Resetting the stretcher restores its start delay so the padding and
+        // dropping needs to be set up again by the next setSpeedAndPitch call
+        numSamplesToDrop = -1;
     }
 
     bool setSpeedAndPitch (float speedRatio, float semitonesUp) override
