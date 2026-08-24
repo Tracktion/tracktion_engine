@@ -51,7 +51,7 @@ var searchData=
   ['filelengthsamples_48',['fileLengthSamples',['../structengine_1_1SamplerPlugin_1_1SamplerSound.html#a453ad23fb24eebafa525856ab6e7bde9',1,'engine::SamplerPlugin::SamplerSound']]],
   ['filemode_49',['FileMode',['../classengine_1_1ProjectItem.html#ade3f35ac6ccb196852bf03a9413bd006',1,'engine::ProjectItem']]],
   ['filemodificationtime_50',['fileModificationTime',['../structengine_1_1AudioFileInfo.html#a9c584513f48a0cb72384ea19f1c53d3b',1,'engine::AudioFileInfo']]],
-  ['filepathresolver_51',['filepathresolver',['../classengine_1_1Edit.html#a6d56886528d14e90d2fc8adfc8edb611',1,'engine::Edit::FilePathResolver'],['../structengine_1_1Edit_1_1Options.html#a6c8d74b7a5872e53e49cce556851f39b',1,'engine::Edit::Options::filePathResolver'],['../classengine_1_1Edit.html#a2130989e0344f1524723bcfa04b52525',1,'engine::Edit::filePathResolver']]],
+  ['filepathresolver_51',['filepathresolver',['../structengine_1_1Edit_1_1Options.html#a6c8d74b7a5872e53e49cce556851f39b',1,'engine::Edit::Options::filePathResolver'],['../classengine_1_1Edit.html#a2130989e0344f1524723bcfa04b52525',1,'engine::Edit::filePathResolver'],['../classengine_1_1Edit.html#a6d56886528d14e90d2fc8adfc8edb611',1,'engine::Edit::FilePathResolver']]],
   ['files_52',['files',['../structengine_1_1FileDragList.html#aca920ec041d8d21ed7f9ae963a859cd9',1,'engine::FileDragList']]],
   ['filestartsample_53',['fileStartSample',['../structengine_1_1SamplerPlugin_1_1SamplerSound.html#a6ff61ac167f38a028281ba4a499dcbeb',1,'engine::SamplerPlugin::SamplerSound']]],
   ['fillpath_54',['fillPath',['../classengine_1_1CurveEditor.html#a8128a3aa1e326f09e3ea5f29f98dd40f',1,'engine::CurveEditor']]],
