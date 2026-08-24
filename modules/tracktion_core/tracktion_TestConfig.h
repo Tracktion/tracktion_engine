@@ -29,6 +29,7 @@
 #define ENGINE_UNIT_TESTS_CLIPEFFECTS                   1
 #define ENGINE_UNIT_TESTS_CLIPBOARD                     1
 #define ENGINE_UNIT_TESTS_CLIPSLOT                      1
+#define ENGINE_UNIT_TESTS_CLIP_LAUNCHER                 1
 #define ENGINE_UNIT_TESTS_COMP_MANAGER                  1
 #define ENGINE_UNIT_TESTS_CONSTRAINED_CACHED_VALUE      1
 #define ENGINE_UNIT_TESTS_DAWPROJECT                    1
