@@ -1444,7 +1444,7 @@ void LoopingMidiNode::killActiveNotes (MidiMessageArray& dest, double timestampF
                                      dest,
                                      midiSourceID,
                                      timestampForNoteOffs,
-                                     false);
+                                     getPlayHead().isPlaying());
 }
 
 //==============================================================================
