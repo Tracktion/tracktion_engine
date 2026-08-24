@@ -89,6 +89,7 @@ extern "C" char MacGetMacFSRefForREXDLL (FSRef* fsRef)
 #include "utilities/tracktion_ScreenSaverDefeater.cpp"
 #include "utilities/tracktion_ChannelConfiguration.cpp"
 #include "utilities/tracktion_ChannelConfiguration.test.cpp"
+#include "utilities/tracktion_BackgroundJobs.test.cpp"
 
 #ifdef __GNUC__
  #pragma GCC diagnostic pop

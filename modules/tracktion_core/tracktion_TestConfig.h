@@ -23,6 +23,7 @@
 #define ENGINE_UNIT_TESTS_AUTOMATION                    1
 #define ENGINE_UNIT_TESTS_AUTOMATION_CURVE_LIST         1
 #define ENGINE_UNIT_TESTS_AUX_SEND                      1
+#define ENGINE_UNIT_TESTS_BACKGROUND_JOBS               1
 #define ENGINE_UNIT_TESTS_CHANNELCONFIGURATION          1
 #define ENGINE_UNIT_TESTS_CLICKNODE                     1
 #define ENGINE_UNIT_TESTS_CLIPEFFECTS                   1
