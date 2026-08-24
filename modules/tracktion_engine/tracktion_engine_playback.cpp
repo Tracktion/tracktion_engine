@@ -220,6 +220,7 @@ using namespace std::literals;
 #include "playback/graph/tracktion_AuxSendNode.cpp"
 #include "playback/graph/tracktion_ClickNode.cpp"
 #include "playback/graph/tracktion_ClickNode.test.cpp"
+#include "playback/graph/tracktion_ClipLauncher.test.cpp"
 #include "playback/graph/tracktion_CombiningNode.cpp"
 #include "playback/graph/tracktion_ContainerClipNode.cpp"
 #include "playback/graph/tracktion_DynamicOffsetNode.cpp"
