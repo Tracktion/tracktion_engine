@@ -102,6 +102,13 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
     if (! preparedNode->graph->rootNode)
         return -1;
 
+    // Publish the current PreparedNode to the pool threads. This must happen in
+    // every process call that could have swapped a new PreparedNode in via
+    // retainRealTime above (including the single-threaded paths below), so that
+    // by the time postNewGraph destroys a retired PreparedNode, the pool
+    // threads can no longer pick it up
+    threadPool->setCurrentNode (preparedNode);
+
     // Reset the stream range
     numSamplesToProcess = pc.numSamples;
     referenceSampleRange = pc.referenceSampleRange;
@@ -157,6 +164,10 @@ void LockFreeMultiThreadedNodePlayer::clearNode()
 {
     // N.B. The threads will be trying to read the preparedNodes so we need to actually stop these first
     clearThreads();
+
+    // The threads have now been stopped so it's safe to reset the current node
+    // pointer, ensuring newly created threads can't read the cleared objects
+    threadPool->setCurrentNode (nullptr);
 
     rootNode = nullptr;
     lastGraphPosted = nullptr;
@@ -273,7 +284,17 @@ void LockFreeMultiThreadedNodePlayer::postNewGraph (std::unique_ptr<NodeGraph> n
 
     lastGraphPosted = newPreparedNode.graph.get();
     lastAudioBufferPoolPosted = newPreparedNode.audioBufferPool.get();
-    preparedNodeObject.pushNonRealTime (std::move (newPreparedNode));
+
+    if (auto retiredPreparedNode = preparedNodeObject.pushNonRealTime (std::move (newPreparedNode)))
+    {
+        // If an old PreparedNode was returned, it was either never swapped in
+        // on the audio thread (so no pool thread can have seen it), or it was
+        // retired by a swap, in which case the audio thread has since published
+        // a newer PreparedNode via setCurrentNode. Either way, no pool thread
+        // can newly obtain it, but one could still be part-way through reading
+        // it, so wait for them to finish before it is destroyed
+        threadPool->waitForThreadsToQuiesce();
+    }
 }
 
 //==============================================================================
@@ -367,8 +388,6 @@ void LockFreeMultiThreadedNodePlayer::resetProcessQueue (PreparedNode& preparedN
     // Make sure this is only incremented after all the nodes have been queued
     // or the threads will start queueing Nodes at the same time
     numNodesQueued += numNodesJustQueued;
-
-    threadPool->setCurrentNode (&preparedNode);
 
     if (int numThreadsToSignal = (int) numNodesQueued.load(); numThreadsToSignal > 1)
         threadPool->signal (numThreadsToSignal);

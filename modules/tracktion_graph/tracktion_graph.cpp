@@ -42,6 +42,7 @@
 
 #include "tracktion_graph/tracktion_MultiThreadedNodePlayer.cpp"
 #include "tracktion_graph/tracktion_LockFreeMultiThreadedNodePlayer.cpp"
+#include "tracktion_graph/tracktion_LockFreeMultiThreadedNodePlayer.test.cpp"
 #include "tracktion_graph/tracktion_NodePlayerThreadPools.cpp"
 
 #include "tracktion_graph/nodes/tracktion_ConnectedNode.test.cpp"

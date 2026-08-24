@@ -165,13 +165,37 @@ public:
         */
         bool process()
         {
-            if (auto cpn = currentPreparedNode.load())
-                return player.processNextFreeNode (*cpn);
+            // The numActiveProcessCalls counter brackets all access to the
+            // current PreparedNode from pool threads so that
+            // waitForThreadsToQuiesce can tell when a retired PreparedNode can
+            // no longer be being read and is safe to destroy. The default
+            // sequentially-consistent ordering is required for that guarantee
+            numActiveProcessCalls.fetch_add (1);
+            bool processedAnyNodes = false;
 
-            return false;
+            if (auto cpn = currentPreparedNode.load())
+                processedAnyNodes = player.processNextFreeNode (*cpn);
+
+            numActiveProcessCalls.fetch_sub (1);
+
+            return processedAnyNodes;
         }
 
-        /** Sets the current PreparedNode in use. This should live as long as the threads are running once set. */
+        /** Waits until no pool threads are inside a process() call.
+            Call this from a non-real-time thread, once a retired PreparedNode is no
+            longer reachable via setCurrentNode, to ensure no pool threads can still
+            be reading it before it is destroyed.
+        */
+        void waitForThreadsToQuiesce()
+        {
+            while (numActiveProcessCalls.load() != 0)
+                std::this_thread::yield();
+        }
+
+        /** Sets the current PreparedNode in use.
+            Once set, this must stay alive until a newer PreparedNode has been set
+            here and waitForThreadsToQuiesce has subsequently returned.
+        */
         void setCurrentNode (LockFreeMultiThreadedNodePlayer::PreparedNode* nodeInUse)
         {
             currentPreparedNode = nodeInUse;
@@ -184,6 +208,7 @@ public:
 
     private:
         std::atomic<bool> threadsShouldExit { false };
+        std::atomic<int> numActiveProcessCalls { 0 };
         std::atomic<LockFreeMultiThreadedNodePlayer::PreparedNode*> currentPreparedNode { nullptr };
     };
 
