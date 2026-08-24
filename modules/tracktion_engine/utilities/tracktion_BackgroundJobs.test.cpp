@@ -38,6 +38,10 @@ TEST_SUITE ("tracktion_engine")
 
         job.setName ("New name");
         CHECK_EQ (manager.getJobInfo (0).name, juce::String ("New name"));
+
+        // Take the job out of the pool before it goes out of scope or the pool
+        // could call runJob() on a destroyed object
+        manager.removeJob (&job, true, 30000);
     }
 }
 
