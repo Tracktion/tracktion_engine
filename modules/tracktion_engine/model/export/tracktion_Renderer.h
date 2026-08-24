@@ -199,12 +199,16 @@ public:
         std::unique_ptr<tracktion::graph::PlayHead> playHead;
         std::unique_ptr<tracktion::graph::PlayHeadState> playHeadState;
         std::unique_ptr<ProcessState> processState;
-        std::unique_ptr<NodeRenderContext> nodeRenderContext;
 
         std::atomic<float> progressInternal { 0.0f };
         std::atomic<float>& progress;
         juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* sourceToUpdate = nullptr;
         CancellationCheck cancellationCheck;
+
+        // Declared last so it's destroyed first: ~NodeRenderContext calls back into
+        // this task (shouldCancel, the result fields), so every other member has to
+        // still be alive when a deferred context is destroyed with the task
+        std::unique_ptr<NodeRenderContext> nodeRenderContext;
 
         //==============================================================================
         bool renderAudio (Renderer::Parameters&);
@@ -357,7 +361,12 @@ public:
         friend EditRenderer;
 
         std::thread renderThread;
-        std::unique_ptr<ScopedThreadExitStatusEnabler> threadExitEnabler;
+
+        // Registers renderThread for signalThreadShouldExit. Owned here rather
+        // than by the thread body so the registration spans the thread's whole
+        // lifetime: engaged before it runs, destroyed after ~Handle joins it
+        std::optional<ScopedThreadExitStatusEnabler> threadExitEnabler;
+
         std::atomic<float> progress { 0.0f };
         std::atomic<bool> hasBeenCancelled { false };
         std::shared_ptr<juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver> thumbnailToUpdate;

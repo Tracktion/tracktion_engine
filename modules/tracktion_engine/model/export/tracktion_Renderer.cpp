@@ -477,7 +477,13 @@ bool Renderer::RenderTask::renderAudio (Renderer::Parameters& r)
     if (! nodeRenderContext->renderNextBlock (progress))
         return false;
 
-    nodeRenderContext.reset();
+    // A cancelled render can't tear the graph down here: the cancelling thread is
+    // typically blocked waiting for this one, so the message-thread hop in
+    // ~NodeRenderContext would fail and the plugins would end up deinitialised on
+    // this thread. Leave the context for whichever thread destroys the task
+    if (! shouldCancel())
+        nodeRenderContext.reset();
+
     progress = 1.0f;
 
     return true;
@@ -866,14 +872,16 @@ EditRenderer::Handle::~Handle()
 {
     cancel();
 
-    // Signal the thread to exit so any blocking calls it makes to the message
-    // thread return rather than deadlocking against the join below
-    if (threadExitEnabler)
-        signalThreadShouldExit (threadExitEnabler->getID());
-
     // A render which failed to build its graph never started a thread
     if (renderThread.joinable())
+    {
+        // Signal the thread to exit so any blocking calls it makes to the message
+        // thread return rather than deadlocking against the join below. The
+        // registration is owned by this Handle so it's guaranteed to still exist,
+        // even if the thread has already finished
+        signalThreadShouldExit (renderThread.get_id());
         renderThread.join();
+    }
 
     // A cancelled render hands its task over rather than destroying it on the render
     // thread, as the graph holds plugins which have to be deleted on the message thread
@@ -926,19 +934,15 @@ auto EditRenderer::render (Renderer::Parameters r,
     renderHandle->renderThread = std::thread ([threadStarted,
                                               destFile,
                                               handlePtr,
-                                              handleRef = std::weak_ptr (renderHandle),
                                               &hasBeenCancelledFlag = renderHandle->hasBeenCancelled,
                                               finishedCallback = std::move (finishedCallback_),
                                               task = std::move (renderTask),
                                               scopedRenderState = std::move (srs)]() mutable
     {
-        if (auto h = handleRef.lock())
-        {
-            h->threadExitEnabler = std::make_unique<ScopedThreadExitStatusEnabler>();
-            handleRef.reset();
-        }
-
-        threadStarted->signal();
+        // Don't do anything until the controlling thread has registered this
+        // thread's exit status below, so every blocking call made here is
+        // guaranteed to be interruptible by ~Handle
+        threadStarted->wait();
 
         for (;;)
         {
@@ -954,6 +958,15 @@ auto EditRenderer::render (Renderer::Parameters r,
             if (task->runJob() == juce::ThreadPoolJob::jobNeedsRunningAgain)
                 continue;
 
+            // A cancellation noticed inside runJob ends up here rather than at the
+            // check above, with the task still holding its graph, so it has to be
+            // handed over in the same way rather than destroyed on this thread
+            if (hasBeenCancelledFlag)
+            {
+                handlePtr->taskToDestroy = std::move (task);
+                return finishedCallback (tl::unexpected (NEEDS_TRANS("Cancelled")));
+            }
+
             // Finished. Destroy the task before calling back as its teardown needs the
             // message thread which callers will usually only dispatch until the callback
             const auto err = task->errorMessage;
@@ -966,8 +979,12 @@ auto EditRenderer::render (Renderer::Parameters r,
         }
     });
 
-    // Wait until the thread has started so it's properly registered with the ExitStatusEnabler
-    threadStarted->wait();
+    // Register the thread for signalThreadShouldExit, letting ~Handle interrupt
+    // any blocking message-thread calls it makes before joining it. Registering
+    // here rather than in the thread body means the registration exists before
+    // the thread does any work and until after the join, by construction
+    renderHandle->threadExitEnabler.emplace (renderHandle->renderThread.get_id());
+    threadStarted->signal();
 
     return renderHandle;
 }
