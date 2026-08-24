@@ -88,6 +88,7 @@
 #define GRAPH_UNIT_TESTS_AUDIOBUFFERPOOL                1
 #define GRAPH_UNIT_TESTS_SEMAPHORE                      1
 #define GRAPH_UNIT_TESTS_ALLOCATION                     1
+#define GRAPH_UNIT_TESTS_LOCKFREENODEPLAYER             1
 
 // Benchmarks
 #define CORE_BENCHMARKS_TEMPO                           1
