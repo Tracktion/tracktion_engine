@@ -170,6 +170,98 @@ namespace clip_launcher_test_utilities
     }
 
     //==============================================================================
+    /** A multi-track, multi-scene Edit where every slot contains a test tone at
+        a unique frequency, so each clip's presence in the mixed output can be
+        verified independently. The first two tracks are audio, the last two are
+        MIDI driven by a sine synth.
+    */
+    struct SceneTestContext
+    {
+        std::unique_ptr<Edit> edit;
+        std::vector<std::unique_ptr<juce::TemporaryFile>> files;
+        std::vector<AudioFile> audioFilesToMap;
+        std::vector<std::vector<double>> frequencies;                       // [scene][track]
+        std::vector<std::vector<std::shared_ptr<LaunchHandle>>> handles;    // [scene][track]
+
+        static constexpr int numAudioTracks = 2, numMidiTracks = 2;
+    };
+
+    inline SceneTestContext createSceneTestEdit (Engine& engine, int numScenes)
+    {
+        // Integer audio frequencies give a whole number of cycles over the 4s
+        // files so the default full-length loop is seamless. No frequency,
+        // audio or MIDI, collides with a harmonic of a concurrent one
+        static constexpr int audioFrequencies[2][SceneTestContext::numAudioTracks] = { { 220, 330 }, { 262, 494 } };
+        static constexpr int midiNotes[2][SceneTestContext::numMidiTracks] = { { 69, 73 }, { 62, 79 } };
+        assert (numScenes <= 2);
+
+        SceneTestContext ctx;
+        ctx.edit = test_utilities::createTestEdit (engine, SceneTestContext::numAudioTracks + SceneTestContext::numMidiTracks,
+                                                   Edit::EditRole::forEditing);
+        auto tracks = getAudioTracks (*ctx.edit);
+
+        for (auto t : tracks)
+            t->getClipSlotList().ensureNumberOfSlots (numScenes);
+
+        ctx.edit->getSceneList().ensureNumberOfScenes (numScenes);
+
+        for (int i = 0; i < SceneTestContext::numMidiTracks; ++i)
+            addSineSynthPlugin (*tracks[SceneTestContext::numAudioTracks + i]);
+
+        for (int scene = 0; scene < numScenes; ++scene)
+        {
+            std::vector<double> sceneFrequencies;
+            std::vector<std::shared_ptr<LaunchHandle>> sceneHandles;
+
+            for (int t = 0; t < SceneTestContext::numAudioTracks; ++t)
+            {
+                auto file = graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, 4.0, 1, (float) audioFrequencies[scene][t]);
+                auto slot = tracks[t]->getClipSlotList().getClipSlots()[scene];
+                auto clip = insertAudioClipIntoSlot (*slot, file->getFile());
+
+                sceneFrequencies.push_back (audioFrequencies[scene][t]);
+                sceneHandles.push_back (clip->getLaunchHandle());
+                ctx.audioFilesToMap.emplace_back (engine, file->getFile());
+                ctx.files.push_back (std::move (file));
+            }
+
+            for (int t = 0; t < SceneTestContext::numMidiTracks; ++t)
+            {
+                auto slot = tracks[SceneTestContext::numAudioTracks + t]->getClipSlotList().getClipSlots()[scene];
+                auto clip = insertMidiClipIntoSlot (*slot, 4_bd);
+                clip->getSequence().addNote (midiNotes[scene][t], 0_bp, 4_bd, 127, 0, nullptr);
+
+                sceneFrequencies.push_back (juce::MidiMessage::getMidiNoteInHertz (midiNotes[scene][t]));
+                sceneHandles.push_back (clip->getLaunchHandle());
+            }
+
+            ctx.frequencies.push_back (std::move (sceneFrequencies));
+            ctx.handles.push_back (std::move (sceneHandles));
+        }
+
+        return ctx;
+    }
+
+    /** Checks each clip in a scene is audible (or not) in a range of the output. */
+    inline void checkSceneAudible (const choc::buffer::ChannelArrayBuffer<float>& output,
+                                   const SceneTestContext& ctx, int scene,
+                                   TimeRange range, bool shouldBeAudible)
+    {
+        for (size_t i = 0; i < ctx.frequencies[(size_t) scene].size(); ++i)
+        {
+            const auto frequency = ctx.frequencies[(size_t) scene][i];
+            const bool isAudioTrack = i < SceneTestContext::numAudioTracks;
+            CAPTURE (scene);
+            CAPTURE (frequency);
+
+            if (shouldBeAudible)
+                CHECK_GT (getToneMagnitude (output, range, frequency), isAudioTrack ? 0.5f : 0.05f);
+            else
+                CHECK_LT (getToneMagnitude (output, range, frequency), isAudioTrack ? 0.05f : 0.01f);
+        }
+    }
+
+    //==============================================================================
     struct LaunchPosition
     {
         MonotonicBeat monotonicBeat;
@@ -588,6 +680,100 @@ TEST_SUITE ("tracktion_engine")
         CHECK_GT (getToneMagnitude (output, tr (1.2, 2.8), noteFreq), 0.05f);
         CHECK_GT (getToneMagnitude (output, tr (3.2, 4.8), noteFreq), 0.05f);
         CHECK_GT (getToneMagnitude (output, tr (5.2, 6.8), noteFreq), 0.05f);
+    }
+
+    //==============================================================================
+    TEST_CASE ("Clip launcher: launching a scene starts all clips (mixed audio and MIDI)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto ctx = createSceneTestEdit (engine, 1);
+
+        // Queue the whole scene then start the transport, as launching a scene
+        // from stopped does in the app
+        for (auto& handle : ctx.handles[0])
+            handle->play ({});
+
+        ctx.edit->getTransport().play (false);
+
+        for (auto& af : ctx.audioFilesToMap)
+            test_utilities::waitForFileToBeMapped (af);
+
+        process (player, 4_td);
+
+        // Every clip in the scene must be heard
+        checkSceneAudible (player.getOutput(), ctx, 0, tr (0.3, 3.9), true);
+    }
+
+    TEST_CASE ("Clip launcher: quantised scene launch starts all clips together")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto ctx = createSceneTestEdit (engine, 1);
+        ctx.edit->getTransport().play (false);
+
+        for (auto& af : ctx.audioFilesToMap)
+            test_utilities::waitForFileToBeMapped (af);
+
+        process (player, 1.5_td);
+
+        // Launch the whole scene at the next bar boundary (4s)
+        auto launchPos = getNextQuantisedLaunchPosition (*ctx.edit, LaunchQType::bar);
+        REQUIRE (launchPos);
+        CHECK (launchPos->editTime == TimePosition::fromSeconds (4.0));
+
+        for (auto& handle : ctx.handles[0])
+            handle->play (launchPos->monotonicBeat);
+
+        process (player, 5.5_td); // to 7s
+
+        const auto output = player.getOutput();
+        CHECK_LT (getRMSLevel (output, tr (0.0, 3.9)), 0.005f);
+        checkSceneAudible (output, ctx, 0, tr (4.3, 6.9), true);
+    }
+
+    TEST_CASE ("Clip launcher: switching scenes moves all tracks to the new scene")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto ctx = createSceneTestEdit (engine, 2);
+        ctx.edit->getTransport().play (false);
+
+        for (auto& af : ctx.audioFilesToMap)
+            test_utilities::waitForFileToBeMapped (af);
+
+        process (player, 1_td);
+
+        for (auto& handle : ctx.handles[0])
+            handle->play ({});
+
+        process (player, 5_td); // to 6s
+
+        // Switch to the second scene at the next bar boundary (8s): launch its
+        // clips and stop the first scene's, as launching a scene row does
+        auto switchPos = getNextQuantisedLaunchPosition (*ctx.edit, LaunchQType::bar);
+        REQUIRE (switchPos);
+        CHECK (switchPos->editTime == TimePosition::fromSeconds (8.0));
+
+        for (auto& handle : ctx.handles[1])
+            handle->play (switchPos->monotonicBeat);
+
+        for (auto& handle : ctx.handles[0])
+            handle->stop (switchPos->monotonicBeat);
+
+        process (player, 5_td); // to 11s
+
+        const auto output = player.getOutput();
+
+        // First scene only before the switch, second scene only after it
+        checkSceneAudible (output, ctx, 0, tr (1.3, 7.9), true);
+        checkSceneAudible (output, ctx, 1, tr (1.3, 7.9), false);
+
+        checkSceneAudible (output, ctx, 1, tr (8.3, 10.9), true);
+        checkSceneAudible (output, ctx, 0, tr (8.3, 10.9), false);
     }
 }
 
