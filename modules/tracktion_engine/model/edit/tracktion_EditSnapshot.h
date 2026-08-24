@@ -122,7 +122,7 @@ private:
 
     juce::Array<EditItemID> trackIDs;
     juce::Array<juce::File> editClipRefs, clipSourceRefs;
-    double length = 0.0, markIn = 0.0, markOut = 0.0, tempo = 0.0;
+    double length = 0.0, maxClipEnd = 0.0, markIn = 0.0, markOut = 0.0, tempo = 0.0;
     bool marksActive = false;
     int timeSigNumerator = 4, timeSigDenominator = 4, pitch = 60;
     juce::Array<Marker> markers;

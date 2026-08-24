@@ -191,6 +191,11 @@ void EditSnapshot::refreshFromXml (const juce::XmlElement& xml,
     int audioTrackNameNumber = 1;
     addSubTracksRecursively (xml, audioTrackNameNumber);
     numAudioTracks = audioTracks.countNumberOfSetBits();
+
+    // The length isn't stored in the Edit XML so if no cached length was
+    // provided (e.g. there's no ProjectItem), fall back to the last clip end
+    if (length == 0.0)
+        length = maxClipEnd;
 }
 
 int EditSnapshot::audioToGlobalTrackIndex (int audioIndex) const
@@ -224,7 +229,7 @@ void EditSnapshot::refresh()
         return;
 
     name = pi ? pi->getName() : sourceFile.getFileNameWithoutExtension();
-    setState (newState, TimeDuration::fromSeconds (pi->getLength()));
+    setState (newState, TimeDuration::fromSeconds (pi != nullptr ? pi->getLength() : 0.0));
     refreshFromState();
 }
 
@@ -249,6 +254,7 @@ void EditSnapshot::clear()
     editClipRefs.clear();
     clipSourceRefs.clear();
     length = 0.0;
+    maxClipEnd = 0.0;
     markIn = 0.0;
     markOut = 0.0;
     tempo = 0.0;
@@ -282,6 +288,9 @@ void EditSnapshot::addClipSources (const juce::XmlElement& track)
         auto file = ProjectItemRef (source).resolve (engine, project ? project->getDefaultDirectory()
                                                                      : sourceFile.getParentDirectory());
         clipSourceRefs.add (file);
+
+        maxClipEnd = std::max (maxClipEnd, clip->getDoubleAttribute (IDs::start)
+                                            + clip->getDoubleAttribute (IDs::length));
     }
 }
 
