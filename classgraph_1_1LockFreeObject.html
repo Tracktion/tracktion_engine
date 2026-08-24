@@ -98,11 +98,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ae548f4be1cd792a0fa0aec40527b6f98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an initially empty object.  <br /></td></tr>
 <tr class="separator:ae548f4be1cd792a0fa0aec40527b6f98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c163660214254135728f3d475f11abe" id="r_a8c163660214254135728f3d475f11abe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgraph_1_1LockFreeObject.html#a8c163660214254135728f3d475f11abe">clear</a> ()</td></tr>
-<tr class="memdesc:a8c163660214254135728f3d475f11abe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the object and any pending object by assigining them defaultly constructed objects.  <br /></td></tr>
+<tr class="memdesc:a8c163660214254135728f3d475f11abe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the current and any pending object.  <br /></td></tr>
 <tr class="separator:a8c163660214254135728f3d475f11abe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1be3cf006f4e3efe06e9002bd59896e4" id="r_a1be3cf006f4e3efe06e9002bd59896e4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgraph_1_1LockFreeObject.html#a1be3cf006f4e3efe06e9002bd59896e4">pushNonRealTime</a> (ObjectType &amp;&amp;newObj)</td></tr>
-<tr class="memdesc:a1be3cf006f4e3efe06e9002bd59896e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pushes a new object to be picked up on the real time thread.  <br /></td></tr>
-<tr class="separator:a1be3cf006f4e3efe06e9002bd59896e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1a31bc2109e098d7e9260cddd56278b" id="r_af1a31bc2109e098d7e9260cddd56278b"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; ObjectType &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgraph_1_1LockFreeObject.html#af1a31bc2109e098d7e9260cddd56278b">pushNonRealTime</a> (ObjectType &amp;&amp;newObj)</td></tr>
+<tr class="memdesc:af1a31bc2109e098d7e9260cddd56278b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pushes a new object to be picked up on the real time thread.  <br /></td></tr>
+<tr class="separator:af1a31bc2109e098d7e9260cddd56278b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a11b1b731ebb92adbe8599f4b2ea6c61e" id="r_a11b1b731ebb92adbe8599f4b2ea6c61e"><td class="memItemLeft" align="right" valign="top">ObjectType *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgraph_1_1LockFreeObject.html#a11b1b731ebb92adbe8599f4b2ea6c61e">retainRealTime</a> ()</td></tr>
 <tr class="memdesc:a11b1b731ebb92adbe8599f4b2ea6c61e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retains the object for use in a real time thread.  <br /></td></tr>
 <tr class="separator:a11b1b731ebb92adbe8599f4b2ea6c61e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -117,6 +117,7 @@ Public Member Functions</h2></td></tr>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename ObjectType&gt;<br />
 class graph::LockFreeObject&lt; ObjectType &gt;</div><p>Manages access to an object in a way that means it is lock-free to access from a real-time thread. </p>
 <p>This initially starts empty so call pushNonRealTime to queue an object. You can then get at this object using retainRealTime. It's thread safe to call pushNonRealTime as many times as you like, retainRealTime will just return the old object whilst those calls are in progress. Calls to pushNonRealTime may have to wait for the real time access to complete, signified by a call to releaseRealTime.</p>
+<p>Objects are stored on the heap so they have a stable identity: once an object has been swapped in by retainRealTime, its address never changes and its contents are never written by this class again. When a subsequent push is consumed on the real-time thread, the previous object is retired rather than mutated, and ownership of it is handed back to the caller from the next pushNonRealTime call so it can be destroyed once any concurrent readers of it have finished.</p>
 <p>Additionally, you may want to clear the objects e.g. releasing some resource they have stored. This can be done with the clear call. Whilst this is happening, retainRealTime will still be lock-free but will return nullptr signifying no object can be used.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classgraph_1_1LockFreeObject_1_1ScopedRealTimeAccess.html" title="Helper class to automatically retain/release real time access to an object.">ScopedRealTimeAccess</a> </dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -160,12 +161,13 @@ template&lt;typename ObjectType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Clears the object and any pending object by assigining them defaultly constructed objects. </p>
+<p>Clears the current and any pending object. </p>
+<p>N.B. This destroys the objects so only call it once no other threads can be concurrently reading them (including any object previously swapped in by retainRealTime whose pointer readers may still hold). </p>
 
 </div>
 </div>
-<a id="a1be3cf006f4e3efe06e9002bd59896e4" name="a1be3cf006f4e3efe06e9002bd59896e4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1be3cf006f4e3efe06e9002bd59896e4">&#9670;&#160;</a></span>pushNonRealTime()</h2>
+<a id="af1a31bc2109e098d7e9260cddd56278b" name="af1a31bc2109e098d7e9260cddd56278b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1a31bc2109e098d7e9260cddd56278b">&#9670;&#160;</a></span>pushNonRealTime()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -173,7 +175,7 @@ template&lt;typename ObjectType &gt; </div>
 template&lt;typename ObjectType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classgraph_1_1LockFreeObject.html">graph::LockFreeObject</a>&lt; ObjectType &gt;::pushNonRealTime </td>
+          <td class="memname">std::unique_ptr&lt; ObjectType &gt; <a class="el" href="classgraph_1_1LockFreeObject.html">graph::LockFreeObject</a>&lt; ObjectType &gt;::pushNonRealTime </td>
           <td>(</td>
           <td class="paramtype">ObjectType &amp;&amp;&#160;</td>
           <td class="paramname"><em>newObj</em></td><td>)</td>
@@ -183,6 +185,7 @@ template&lt;typename ObjectType &gt; </div>
 </div><div class="memdoc">
 
 <p>Pushes a new object to be picked up on the real time thread. </p>
+<p>Returns the object this replaces which will either be a previously pushed object that was never swapped in on the real-time thread, or an object that has been retired by a retainRealTime call swapping in a newer one. In the latter case, other threads may still be reading the retired object if they obtained its pointer before the swap, so callers must wait for those readers to finish before destroying it. </p>
 
 </div>
 </div>
@@ -204,7 +207,7 @@ template&lt;typename ObjectType &gt; </div>
 </div><div class="memdoc">
 
 <p>Retains the object for use in a real time thread. </p>
-<p>If a previous push call has finished, this will update and use the newly pushed object. If a clear call is in progress this will return nullptr.</p>
+<p>If a previous push call has finished, this will update and use the newly pushed object. If a clear call is in progress, or no object has been pushed yet, this will return nullptr.</p>
 <p>This must be matched with a corresponding call to <a class="el" href="classgraph_1_1LockFreeObject.html#a3a8d5cfabaddae6ef3ede37268d5ed63" title="Releases the use of the object from a previous call to retainRealTime.">releaseRealTime()</a>. To Ensure this, use the <a class="el" href="classgraph_1_1LockFreeObject_1_1ScopedRealTimeAccess.html" title="Helper class to automatically retain/release real time access to an object.">ScopedRealTimeAccess</a> helper class. </p>
 
 </div>
@@ -257,7 +260,7 @@ template&lt;typename ObjectType &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 24 2026 16:10:14 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Aug 24 2026 16:48:07 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

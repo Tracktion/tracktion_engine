@@ -41569,10 +41569,10 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
+      <type>std::unique_ptr&lt; ObjectType &gt;</type>
       <name>pushNonRealTime</name>
       <anchorfile>classgraph_1_1LockFreeObject.html</anchorfile>
-      <anchor>a1be3cf006f4e3efe06e9002bd59896e4</anchor>
+      <anchor>af1a31bc2109e098d7e9260cddd56278b</anchor>
       <arglist>(ObjectType &amp;&amp;newObj)</arglist>
     </member>
     <member kind="function">
@@ -71576,6 +71576,13 @@
       <name>process</name>
       <anchorfile>structgraph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html</anchorfile>
       <anchor>a81c7f8b06fee23af54af25d593d9905c</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>waitForThreadsToQuiesce</name>
+      <anchorfile>structgraph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html</anchorfile>
+      <anchor>a060ddccd0ec08238c7f334be63aea6e8</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">

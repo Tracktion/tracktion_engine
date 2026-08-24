@@ -130,6 +130,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a81c7f8b06fee23af54af25d593d9905c" id="r_a81c7f8b06fee23af54af25d593d9905c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#a81c7f8b06fee23af54af25d593d9905c">process</a> ()</td></tr>
 <tr class="memdesc:a81c7f8b06fee23af54af25d593d9905c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process the next chain of Nodes.  <br /></td></tr>
 <tr class="separator:a81c7f8b06fee23af54af25d593d9905c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a060ddccd0ec08238c7f334be63aea6e8" id="r_a060ddccd0ec08238c7f334be63aea6e8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#a060ddccd0ec08238c7f334be63aea6e8">waitForThreadsToQuiesce</a> ()</td></tr>
+<tr class="memdesc:a060ddccd0ec08238c7f334be63aea6e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits until no pool threads are inside a <a class="el" href="structgraph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#a81c7f8b06fee23af54af25d593d9905c" title="Process the next chain of Nodes.">process()</a> call.  <br /></td></tr>
+<tr class="separator:a060ddccd0ec08238c7f334be63aea6e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54fad1ea0f11184200b14c0fd97c73a4" id="r_a54fad1ea0f11184200b14c0fd97c73a4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structgraph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#a54fad1ea0f11184200b14c0fd97c73a4">setCurrentNode</a> (LockFreeMultiThreadedNodePlayer::PreparedNode *nodeInUse)</td></tr>
 <tr class="memdesc:a54fad1ea0f11184200b14c0fd97c73a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the current PreparedNode in use.  <br /></td></tr>
 <tr class="separator:a54fad1ea0f11184200b14c0fd97c73a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -483,6 +486,26 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a060ddccd0ec08238c7f334be63aea6e8" name="a060ddccd0ec08238c7f334be63aea6e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a060ddccd0ec08238c7f334be63aea6e8">&#9670;&#160;</a></span>waitForThreadsToQuiesce()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void graph::LockFreeMultiThreadedNodePlayer::ThreadPool::waitForThreadsToQuiesce </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Waits until no pool threads are inside a <a class="el" href="structgraph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html#a81c7f8b06fee23af54af25d593d9905c" title="Process the next chain of Nodes.">process()</a> call. </p>
+<p>Call this from a non-real-time thread, once a retired PreparedNode is no longer reachable via setCurrentNode, to ensure no pool threads can still be reading it before it is destroyed. </p>
+
+</div>
+</div>
 <a id="a54fad1ea0f11184200b14c0fd97c73a4" name="a54fad1ea0f11184200b14c0fd97c73a4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a54fad1ea0f11184200b14c0fd97c73a4">&#9670;&#160;</a></span>setCurrentNode()</h2>
 
@@ -500,7 +523,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Sets the current PreparedNode in use. </p>
-<p>This should live as long as the threads are running once set. </p>
+<p>Once set, this must stay alive until a newer PreparedNode has been set here and waitForThreadsToQuiesce has subsequently returned. </p>
 
 </div>
 </div>
@@ -525,7 +548,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 24 2026 16:10:14 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Aug 24 2026 16:48:07 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
