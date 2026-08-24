@@ -65923,6 +65923,13 @@
     </member>
     <member kind="function">
       <type></type>
+      <name>ScopedThreadExitStatusEnabler</name>
+      <anchorfile>structengine_1_1ScopedThreadExitStatusEnabler.html</anchorfile>
+      <anchor>acd92d386e5485a0379c957a078217c9a</anchor>
+      <arglist>(std::thread::id)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
       <name>~ScopedThreadExitStatusEnabler</name>
       <anchorfile>structengine_1_1ScopedThreadExitStatusEnabler.html</anchorfile>
       <anchor>acff547a683cfb1fc38542d6c427af766</anchor>

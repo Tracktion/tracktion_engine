@@ -90,6 +90,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a53a3401f52b8d3c6719cdfc7bd2823c0" id="r_a53a3401f52b8d3c6719cdfc7bd2823c0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1ScopedThreadExitStatusEnabler.html#a53a3401f52b8d3c6719cdfc7bd2823c0">ScopedThreadExitStatusEnabler</a> ()</td></tr>
 <tr class="memdesc:a53a3401f52b8d3c6719cdfc7bd2823c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables the current thread to query shouldCurrentThreadExit and other threads to call signalThreadShouldExit.  <br /></td></tr>
 <tr class="separator:a53a3401f52b8d3c6719cdfc7bd2823c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd92d386e5485a0379c957a078217c9a" id="r_acd92d386e5485a0379c957a078217c9a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1ScopedThreadExitStatusEnabler.html#acd92d386e5485a0379c957a078217c9a">ScopedThreadExitStatusEnabler</a> (std::thread::id)</td></tr>
+<tr class="memdesc:acd92d386e5485a0379c957a078217c9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">As above, but registers the given thread rather than the calling one.  <br /></td></tr>
+<tr class="separator:acd92d386e5485a0379c957a078217c9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acff547a683cfb1fc38542d6c427af766" id="r_acff547a683cfb1fc38542d6c427af766"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1ScopedThreadExitStatusEnabler.html#acff547a683cfb1fc38542d6c427af766">~ScopedThreadExitStatusEnabler</a> ()</td></tr>
 <tr class="memdesc:acff547a683cfb1fc38542d6c427af766"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleans up the exit status.  <br /></td></tr>
 <tr class="separator:acff547a683cfb1fc38542d6c427af766"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -120,7 +123,7 @@ Public Member Functions</h2></td></tr>
 <div class="ttc" id="astructengine_1_1ScopedThreadExitStatusEnabler_html"><div class="ttname"><a href="structengine_1_1ScopedThreadExitStatusEnabler.html">engine::ScopedThreadExitStatusEnabler</a></div><div class="ttdoc">Enables the calling thread to be cancelled from another thread and the calling thread to be able to q...</div><div class="ttdef"><b>Definition</b> tracktion_engine/utilities/tracktion_Threads.h:45</div></div>
 </div><!-- fragment --> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a53a3401f52b8d3c6719cdfc7bd2823c0" name="a53a3401f52b8d3c6719cdfc7bd2823c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a53a3401f52b8d3c6719cdfc7bd2823c0">&#9670;&#160;</a></span>ScopedThreadExitStatusEnabler()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a53a3401f52b8d3c6719cdfc7bd2823c0">&#9670;&#160;</a></span>ScopedThreadExitStatusEnabler() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -135,6 +138,35 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Enables the current thread to query shouldCurrentThreadExit and other threads to call signalThreadShouldExit. </p>
+
+</div>
+</div>
+<a id="acd92d386e5485a0379c957a078217c9a" name="acd92d386e5485a0379c957a078217c9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd92d386e5485a0379c957a078217c9a">&#9670;&#160;</a></span>ScopedThreadExitStatusEnabler() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">engine::ScopedThreadExitStatusEnabler::ScopedThreadExitStatusEnabler </td>
+          <td>(</td>
+          <td class="paramtype">std::thread::id&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>As above, but registers the given thread rather than the calling one. </p>
+<p>Use this from a controlling thread straight after creating the thread, so the registration exists for the thread's whole lifetime by construction: it can then be signalled at any point up to the join with no possibility of the registration not having appeared yet or having already gone. Destroy this after joining the thread. </p>
 
 </div>
 </div>
@@ -183,7 +215,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 24 2026 12:59:33 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Aug 24 2026 14:29:09 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
