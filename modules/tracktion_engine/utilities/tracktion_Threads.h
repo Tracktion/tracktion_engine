@@ -44,6 +44,15 @@ struct ScopedThreadExitStatusEnabler
     */
     ScopedThreadExitStatusEnabler();
 
+    /** As above, but registers the given thread rather than the calling one.
+        Use this from a controlling thread straight after creating the thread, so
+        the registration exists for the thread's whole lifetime by construction:
+        it can then be signalled at any point up to the join with no possibility
+        of the registration not having appeared yet or having already gone.
+        Destroy this after joining the thread.
+    */
+    explicit ScopedThreadExitStatusEnabler (std::thread::id);
+
     /** Cleans up the exit status. */
     ~ScopedThreadExitStatusEnabler();
 

@@ -92,6 +92,12 @@ ScopedThreadExitStatusEnabler::ScopedThreadExitStatusEnabler()
     details::prepareThreadForShouldExit (threadID);
 }
 
+ScopedThreadExitStatusEnabler::ScopedThreadExitStatusEnabler (std::thread::id id)
+    : threadID (id)
+{
+    details::prepareThreadForShouldExit (threadID);
+}
+
 ScopedThreadExitStatusEnabler::~ScopedThreadExitStatusEnabler()
 {
     details::threadHasExited (threadID);

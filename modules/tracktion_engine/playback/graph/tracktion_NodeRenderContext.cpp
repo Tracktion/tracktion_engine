@@ -199,7 +199,7 @@ NodeRenderContext::~NodeRenderContext()
 
         // Normalising a cancelled render re-reads and re-encodes the whole partial file
         // only for the result to be thrown away, so skip it and let the file be deleted
-        if (needsToNormaliseAndTrim && ! owner.shouldCancel())
+        if (needsToNormaliseAndTrim && ! wasCancelled && ! owner.shouldCancel())
             owner.performNormalisingAndTrimming (originalParams, r);
     }
     catch (const std::exception& err)
@@ -223,6 +223,7 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
 
     if (owner.shouldCancel())
     {
+        wasCancelled = true;
         writer->closeForWriting();
         r.destFile.deleteFile();
 

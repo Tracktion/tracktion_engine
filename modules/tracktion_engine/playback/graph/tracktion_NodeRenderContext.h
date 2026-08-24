@@ -77,6 +77,11 @@ private:
     Renderer::Parameters r, originalParams;
     bool needsToNormaliseAndTrim = false;
 
+    // Set when renderNextBlock notices a cancellation. The destructor can't use
+    // owner.shouldCancel() for this as a cancelled context may be destroyed later
+    // on the message thread, where the cancelling thread's state isn't visible
+    bool wasCancelled = false;
+
     std::unique_ptr<tracktion::graph::PlayHead> playHead;
     std::unique_ptr<tracktion::graph::PlayHeadState> playHeadState;
     std::unique_ptr<ProcessState> processState;
