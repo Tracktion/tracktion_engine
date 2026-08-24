@@ -394,6 +394,85 @@ TEST_CASE ("LoopingMidiNode")
     }
 }
 
+TEST_CASE ("LoopingMidiNode two-byte messages in note-off map")
+{
+    // A 2-byte message (e.g. program change or channel pressure) whose data byte
+    // matches a sounding note's pitch and channel used to be probed with
+    // choc::midi::Message::isNoteOff(), which reads the non-existent velocity
+    // byte and asserts
+    choc::midi::Sequence seq;
+
+    const uint8_t noteOn[]          = { 0x92, 53, 100 };
+    const uint8_t programChange[]   = { 0xc2, 53 };
+    const uint8_t channelPressure[] = { 0xd2, 53 };
+    const uint8_t noteOff[]         = { 0x82, 53, 0 };
+
+    seq.events.push_back ({ 0.0,  choc::midi::LongMessage (noteOn, sizeof (noteOn)) });
+    seq.events.push_back ({ 0.25, choc::midi::LongMessage (programChange, sizeof (programChange)) });
+    seq.events.push_back ({ 0.5,  choc::midi::LongMessage (channelPressure, sizeof (channelPressure)) });
+    seq.events.push_back ({ 1.0,  choc::midi::LongMessage (noteOff, sizeof (noteOff)) });
+
+    std::vector<std::pair<size_t, size_t>> noteOffMap;
+    MidiHelpers::createNoteOffMap (noteOffMap, seq);
+
+    // The note-on must map to the real note-off, not the program change
+    REQUIRE_EQ (noteOffMap.size(), static_cast<size_t> (1));
+    CHECK_EQ (noteOffMap[0].first, static_cast<size_t> (0));
+    CHECK_EQ (noteOffMap[0].second, static_cast<size_t> (3));
+
+    // The rest of the sequence-caching pipeline also probes these messages
+    QuantisationType quantisation;
+    quantisation.setType ("1/16");
+    quantisation.setIsQuantisingNoteOffs (true);
+    MidiHelpers::applyQuantisationToSequence (quantisation, true, seq, noteOffMap);
+
+    auto& gtm = tracktion::engine::Engine::getEngines()[0]->getGrooveTemplateManager();
+    REQUIRE (gtm.getNumTemplates() > 0);
+    MidiHelpers::applyGrooveToSequence (*gtm.getTemplate (0), 1.0f, seq);
+
+    seq.sortEvents();
+    MidiHelpers::createNoteOffMap (noteOffMap, seq);
+    MidiHelpers::clipSequenceToRange (seq, { 0.0, 4.0 }, noteOffMap);
+
+    CHECK_EQ (seq.events.size(), static_cast<size_t> (4));
+}
+
+TEST_CASE ("LoopingMidiNode program change colliding with note pitch")
+{
+    // End-to-end version of the above: a mid-clip program change whose program
+    // number matches an earlier note's pitch used to assert when the clip's
+    // playback sequence was cached
+    using namespace looping_midi_test_helpers;
+
+    auto& engine = *tracktion::engine::Engine::getEngines()[0];
+    auto edit = Edit::createSingleTrackEdit (engine);
+    auto mc = getAudioTracks (*edit)[0]->insertMIDIClip ({ 0_tp, 0_tp }, nullptr);
+
+    auto& sequence = mc->getSequence();
+    sequence.addNote (53, 0_bp, 2_bd, 100, 0, nullptr);
+    sequence.addControllerEvent (1_bp, MidiControllerEvent::programChangeType, 53 << 7, nullptr);
+
+    mc->setUsesProxy (false);
+    mc->setEnd (edit->tempoSequence.toTime (4_bp), true);
+    mc->setNumberOfLoops (1);
+
+    const auto ts = tracktion::graph::test_utilities::getTestSetups()[0];
+    const auto rendered = renderMidiClip (*mc, ts, { 0_tp, mc->getPosition().getEnd() });
+
+    int numNoteOns = 0, numNoteOffs = 0, numProgramChanges = 0;
+
+    for (auto meh : rendered)
+    {
+        if (meh->message.isNoteOn())            ++numNoteOns;
+        else if (meh->message.isNoteOff())      ++numNoteOffs;
+        else if (meh->message.isProgramChange()) ++numProgramChanges;
+    }
+
+    CHECK_EQ (numNoteOns, 1);
+    CHECK_EQ (numNoteOffs, 1);
+    CHECK_EQ (numProgramChanges, 1);
+}
+
 } // TEST_SUITE
 
 } // namespace tracktion::inline engine

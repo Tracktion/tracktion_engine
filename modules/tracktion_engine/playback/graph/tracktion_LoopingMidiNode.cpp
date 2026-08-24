@@ -363,6 +363,13 @@ namespace MidiHelpers
         return dest;
     }
 
+    /** choc's Message::isNoteOn/isNoteOff read the velocity byte, which asserts for
+        messages shorter than 3 bytes (e.g. program change, channel pressure), so the
+        length has to be checked before them.
+    */
+    inline bool isNoteOn (const choc::midi::LongMessage& m)                 { return m.size() == 3 && m.isNoteOn(); }
+    inline bool isNoteOff (const choc::midi::LongMessage& m)                { return m.size() == 3 && m.isNoteOff(); }
+
     inline void createNoteOffMap (std::vector<std::pair<size_t, size_t>>& noteOffMap,
                                   const choc::midi::Sequence& seq)
     {
@@ -373,10 +380,7 @@ namespace MidiHelpers
         {
             const auto& m = seq.events[i].message;
 
-            if (! m.isShortMessage())
-                continue;
-
-            if (m.isNoteOn())
+            if (isNoteOn (m))
             {
                 const auto note = m.getNoteNumber();
                 const auto chan = m.getChannel0to15();
@@ -385,12 +389,9 @@ namespace MidiHelpers
                 {
                     const auto& m2 = seq.events[j].message;
 
-                    if (! m2.isShortMessage())
-                        continue;
-
-                    if (m2.getNoteNumber() == note
-                         && m2.getChannel0to15() == chan
-                         && m2.isNoteOff())
+                    if (isNoteOff (m2)
+                         && m2.getNoteNumber() == note
+                         && m2.getChannel0to15() == chan)
                     {
                         noteOffMap.emplace_back (std::make_pair (i, j));
                         break;
@@ -453,12 +454,9 @@ namespace MidiHelpers
                        {
                            --index;
 
-                           if (! e.message.isShortMessage())
-                               return;
-
                            const auto& m = e.message;
 
-                           if (m.isNoteOn())
+                           if (isNoteOn (m))
                            {
                                const auto noteOnTime = q.roundBeatToNearest (BeatPosition::fromBeats (e.timeStamp)).inBeats();
 
@@ -484,7 +482,7 @@ namespace MidiHelpers
 
                                e.timeStamp = noteOnTime;
                            }
-                           else if (m.isNoteOff() && quantiseNoteOffs)
+                           else if (quantiseNoteOffs && isNoteOff (m))
                            {
                                e.timeStamp = q.roundBeatUp (BeatPosition::fromBeats (e.timeStamp)).inBeats();
                            }
@@ -494,7 +492,7 @@ namespace MidiHelpers
     inline void applyGrooveToSequence (const GrooveTemplate& groove, float grooveStrength, choc::midi::Sequence& ms)
     {
         for (auto& e : ms)
-            if (e.message.isNoteOn() || e.message.isNoteOff())
+            if (isNoteOn (e.message) || isNoteOff (e.message))
                 e.timeStamp = groove.beatsTimeToGroovyTime (BeatPosition::fromBeats (e.timeStamp), grooveStrength).inBeats();
     }
 
@@ -549,7 +547,7 @@ namespace MidiHelpers
                     auto e = sourceSequence.events[i];
                     const auto& m = e.message;
 
-                    if (! m.isNoteOn())
+                    if (! isNoteOn (m))
                         continue;
 
                     if (auto noteOffEvent = getNoteOff (i, sourceSequence, noteOffMap))
@@ -588,7 +586,7 @@ namespace MidiHelpers
             const auto& e = sourceSequence.events[i];
             const auto& m = e.message;
 
-            if (! m.isNoteOn())
+            if (! isNoteOn (m))
                 continue;
 
             if (! channelNumbers.contains ((int) m.getChannel1to16()))
@@ -620,9 +618,8 @@ namespace MidiHelpers
 
         // First adjust all the note times
         for (auto& m : sequence)
-            if (m.message.isShortMessage())
-                if (auto& sm = m.message; sm.isNoteOn() || sm.isNoteOff())
-                   m.timeStamp = clipRange.clipValue (m.timeStamp);
+            if (isNoteOn (m.message) || isNoteOff (m.message))
+                m.timeStamp = clipRange.clipValue (m.timeStamp);
 
         // Then change the timestamps of an zero or negative length notes
         for (int i = (int) sequence.events.size(); --i >= 0;)
@@ -631,7 +628,7 @@ namespace MidiHelpers
             const auto& e = sequence.events[index];
             const auto& m = e.message;
 
-            if (! m.isNoteOn())
+            if (! isNoteOn (m))
                 continue;
 
             if (auto noteOffIndex = getNoteOffIndex (index, noteOffMap))
