@@ -236,7 +236,17 @@ inline void ThreadPoolJobWithProgress::setName (const juce::String& newName)
     setJobName (newName);
 
     if (manager != nullptr)
+    {
+        {
+            const juce::ScopedLock sl (manager->jobsLock);
+
+            for (auto pair : manager->jobs)
+                if (&pair->job == this)
+                    pair->info.name = newName;
+        }
+
         manager->triggerAsyncUpdate();
+    }
 }
 
 inline void ThreadPoolJobWithProgress::prepareForJobDeletion()
