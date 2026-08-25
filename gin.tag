@@ -44151,12 +44151,12 @@
       <anchor>aa6dbc7bb70b93cd07362778fdf04ea2f</anchor>
       <arglist>()=default</arglist>
     </member>
-    <member kind="function">
-      <type></type>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
       <name>~MessageThreadCallback</name>
       <anchorfile>classengine_1_1MessageThreadCallback.html</anchorfile>
-      <anchor>a527b6a29888965efa76d24f47642273e</anchor>
-      <arglist>() override</arglist>
+      <anchor>a6844e24f7babbb554777e35f59bc2c1f</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>bool</type>

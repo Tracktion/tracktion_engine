@@ -94,8 +94,9 @@ Inheritance diagram for engine::MessageThreadCallback:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aa6dbc7bb70b93cd07362778fdf04ea2f" id="r_aa6dbc7bb70b93cd07362778fdf04ea2f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1MessageThreadCallback.html#aa6dbc7bb70b93cd07362778fdf04ea2f">MessageThreadCallback</a> ()=default</td></tr>
 <tr class="separator:aa6dbc7bb70b93cd07362778fdf04ea2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a527b6a29888965efa76d24f47642273e" id="r_a527b6a29888965efa76d24f47642273e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1MessageThreadCallback.html#a527b6a29888965efa76d24f47642273e">~MessageThreadCallback</a> () override</td></tr>
-<tr class="separator:a527b6a29888965efa76d24f47642273e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6844e24f7babbb554777e35f59bc2c1f" id="r_a6844e24f7babbb554777e35f59bc2c1f"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1MessageThreadCallback.html#a6844e24f7babbb554777e35f59bc2c1f">~MessageThreadCallback</a> ()</td></tr>
+<tr class="memdesc:a6844e24f7babbb554777e35f59bc2c1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blocks until any in-flight callback has finished and prevents a pending one from starting, so the message thread can never touch a dangling this.  <br /></td></tr>
+<tr class="separator:a6844e24f7babbb554777e35f59bc2c1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa53ec52ee53c12e58494d3398cb687c8" id="r_aa53ec52ee53c12e58494d3398cb687c8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1MessageThreadCallback.html#aa53ec52ee53c12e58494d3398cb687c8">hasFinished</a> () const noexcept</td></tr>
 <tr class="memdesc:aa53ec52ee53c12e58494d3398cb687c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the callback has completed.  <br /></td></tr>
 <tr class="separator:aa53ec52ee53c12e58494d3398cb687c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -133,8 +134,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a527b6a29888965efa76d24f47642273e" name="a527b6a29888965efa76d24f47642273e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a527b6a29888965efa76d24f47642273e">&#9670;&#160;</a></span>~MessageThreadCallback()</h2>
+<a id="a6844e24f7babbb554777e35f59bc2c1f" name="a6844e24f7babbb554777e35f59bc2c1f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6844e24f7babbb554777e35f59bc2c1f">&#9670;&#160;</a></span>~MessageThreadCallback()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -143,7 +144,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">engine::MessageThreadCallback::~MessageThreadCallback </td>
+          <td class="memname">virtual engine::MessageThreadCallback::~MessageThreadCallback </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -151,10 +152,12 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Blocks until any in-flight callback has finished and prevents a pending one from starting, so the message thread can never touch a dangling this. </p>
 
 </div>
 </div>
@@ -242,7 +245,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 25 2026 10:18:55 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Aug 25 2026 12:45:07 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
