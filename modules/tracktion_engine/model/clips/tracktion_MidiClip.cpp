@@ -287,17 +287,6 @@ std::unique_ptr<MidiList> MidiClip::createSequenceLooped (MidiList& sourceSequen
     }
 }
 
-MidiClip::ScopedEventsList::ScopedEventsList (MidiClip& c, SelectedMidiEvents* e)
-    : clip (c)
-{
-    clip.setSelectedEvents (e);
-}
-
-MidiClip::ScopedEventsList::~ScopedEventsList()
-{
-    clip.setSelectedEvents (nullptr);
-}
-
 //==============================================================================
 void MidiClip::extendStart (TimePosition newStartTime)
 {
@@ -806,11 +795,6 @@ void MidiClip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Iden
         else if (id == IDs::currentTake)
         {
             currentTake.forceUpdateOfCachedValue();
-
-            for (SelectionManager::Iterator sm; sm.next();)
-                if (sm->isSelected (getSelectedEvents()))
-                    sm->deselectAll();
-
             clearCachedLoopSequence();
         }
         else if (id == IDs::launchQuantisation || id == IDs::useClipLaunchQuantisation)
