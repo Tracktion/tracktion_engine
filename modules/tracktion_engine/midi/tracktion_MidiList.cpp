@@ -1912,7 +1912,6 @@ juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const Mid
 
     auto& notes = list.getNotes();
     const auto numNotes = notes.size();
-    auto selectedEvents = clip.getSelectedEvents();
 
     auto grooveTemplate = clip.edit.engine.getGrooveTemplateManager().getTemplateByName (clip.getGrooveTemplate());
 
@@ -1957,9 +1956,6 @@ juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const Mid
         {
             auto& note = *notes.getUnchecked (i);
 
-            if (selectedEvents != nullptr && ! selectedEvents->isSelected (&note))
-                continue;
-
             // check for subsequent overlaps
             auto thisNoteStart = note.getStartBeat();
 
@@ -1994,12 +1990,7 @@ juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const Mid
         MPEChannelAssigner assigner (destSequence, clip, timeBase, grooveTemplate);
 
         for (auto note : notes)
-        {
-            if (selectedEvents != nullptr && ! selectedEvents->isSelected (note))
-                continue;
-
             assigner.addNote (*note);
-        }
     }
 
     // Add the SysEx events:
