@@ -666,7 +666,7 @@
     <path>build/tracktion_engine/model/clips/</path>
     <filename>tracktion__MidiClip_8h.html</filename>
     <class kind="class">engine::MidiClip</class>
-    <class kind="struct">engine::MidiClip::ScopedEventsList</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::MidiClip::LoopedSequenceType &gt;</class>
     <namespace>engine</namespace>
     <namespace>juce</namespace>
   </compound>
@@ -44446,7 +44446,6 @@
     <name>engine::MidiClip</name>
     <filename>classengine_1_1MidiClip.html</filename>
     <base>engine::Clip</base>
-    <class kind="struct">engine::MidiClip::ScopedEventsList</class>
     <member kind="enumeration">
       <type></type>
       <name>LoopedSequenceType</name>
@@ -44518,13 +44517,6 @@
       <anchorfile>classengine_1_1MidiClip.html</anchorfile>
       <anchor>acfb3c4cde2bd09fdc1ea9281011f6dea</anchor>
       <arglist>(MidiList &amp;sourceSequence)</arglist>
-    </member>
-    <member kind="function">
-      <type>const SelectedMidiEvents *</type>
-      <name>getSelectedEvents</name>
-      <anchorfile>classengine_1_1MidiClip.html</anchorfile>
-      <anchor>a9ba73233869773d7a55437fcc77df972</anchor>
-      <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -65625,24 +65617,6 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>engine::MidiClip::ScopedEventsList</name>
-    <filename>structengine_1_1MidiClip_1_1ScopedEventsList.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>ScopedEventsList</name>
-      <anchorfile>structengine_1_1MidiClip_1_1ScopedEventsList.html</anchorfile>
-      <anchor>aaedb10cf5edcda093e754ed52131dac3</anchor>
-      <arglist>(MidiClip &amp;, SelectedMidiEvents *)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>~ScopedEventsList</name>
-      <anchorfile>structengine_1_1MidiClip_1_1ScopedEventsList.html</anchorfile>
-      <anchor>a85c0d92ec5a91da83c90097bf35761d8</anchor>
-      <arglist>()</arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
     <name>engine::WaveInputRecordingThread::ScopedInitialiser</name>
     <filename>structengine_1_1WaveInputRecordingThread_1_1ScopedInitialiser.html</filename>
     <member kind="function">
@@ -77433,6 +77407,24 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>juce::VariantConverter&lt; tracktion::engine::MidiClip::LoopedSequenceType &gt;</name>
+    <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1MidiClip_1_1LoopedSequenceType_01_4.html</filename>
+    <member kind="function" static="yes">
+      <type>static tracktion::engine::MidiClip::LoopedSequenceType</type>
+      <name>fromVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1MidiClip_1_1LoopedSequenceType_01_4.html</anchorfile>
+      <anchor>a1dbf1d6cce152efe68e9da21d415ed4a</anchor>
+      <arglist>(const var &amp;v)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static var</type>
+      <name>toVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1MidiClip_1_1LoopedSequenceType_01_4.html</anchorfile>
+      <anchor>ad9b5a268832128eceffd040671a5025c</anchor>
+      <arglist>(tracktion::engine::MidiClip::LoopedSequenceType v)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>juce::VariantConverter&lt; tracktion::engine::PatternGenerator::Mode &gt;</name>
     <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1PatternGenerator_1_1Mode_01_4.html</filename>
     <member kind="function" static="yes">
@@ -85596,6 +85588,7 @@
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::CurveModifierType &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::FollowAction &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::LaunchQType &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::MidiClip::LoopedSequenceType &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::PatternGenerator::Mode &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::RenderOptions::AddRenderOptions &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::RenderOptions::RenderType &gt;</class>
@@ -85884,7 +85877,7 @@
     <class kind="struct">engine::LaunchHandle::SplitStatus</class>
     <class kind="class">engine::MarkerClip</class>
     <class kind="class">engine::MidiClip</class>
-    <class kind="struct">engine::MidiClip::ScopedEventsList</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::MidiClip::LoopedSequenceType &gt;</class>
     <class kind="class">engine::ReverseRenderJob</class>
     <class kind="class">engine::StepClip</class>
     <class kind="struct">engine::StepClip::Channel</class>

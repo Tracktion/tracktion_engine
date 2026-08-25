@@ -74,7 +74,6 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
@@ -91,12 +90,6 @@ Inheritance diagram for engine::MidiClip:</div>
 <div class="center"><iframe scrolling="no" frameborder="0" src="classengine_1_1MidiClip__inherit__graph.svg" width="394" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1MidiClip_1_1ScopedEventsList.html">ScopedEventsList</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Temporarily limits the notes to use.  <a href="structengine_1_1MidiClip_1_1ScopedEventsList.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:a776bf16e1361b92f652ed45ab7b9604d" id="r_a776bf16e1361b92f652ed45ab7b9604d"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1MidiClip.html#a776bf16e1361b92f652ed45ab7b9604d">LoopedSequenceType</a> : int { <a class="el" href="classengine_1_1MidiClip.html#a776bf16e1361b92f652ed45ab7b9604dad75973f0eaa6f6e708e0c4447d0267b3">loopRangeDefinesAllRepetitions</a> = 0
@@ -166,8 +159,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:afb829f2614065f3417fd4e082371ab75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acfb3c4cde2bd09fdc1ea9281011f6dea" id="r_acfb3c4cde2bd09fdc1ea9281011f6dea"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classengine_1_1MidiList.html">MidiList</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1MidiClip.html#acfb3c4cde2bd09fdc1ea9281011f6dea">createSequenceLooped</a> (<a class="el" href="classengine_1_1MidiList.html">MidiList</a> &amp;<a class="el" href="classengine_1_1Clip.html#ae4df20e49385f4b2c7acc86c30bac186">sourceSequence</a>)</td></tr>
 <tr class="separator:acfb3c4cde2bd09fdc1ea9281011f6dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ba73233869773d7a55437fcc77df972" id="r_a9ba73233869773d7a55437fcc77df972"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classengine_1_1Clip.html#ae4df20e49385f4b2c7acc86c30bac186">const</a> <a class="el" href="classengine_1_1SelectedMidiEvents.html">SelectedMidiEvents</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1MidiClip.html#a9ba73233869773d7a55437fcc77df972">getSelectedEvents</a> () <a class="el" href="classengine_1_1Clip.html#ae4df20e49385f4b2c7acc86c30bac186">const</a></td></tr>
-<tr class="separator:a9ba73233869773d7a55437fcc77df972"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a712b43e5e19ed28cfe2932cecb2051b8" id="r_a712b43e5e19ed28cfe2932cecb2051b8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classengine_1_1Clip.html#ae4df20e49385f4b2c7acc86c30bac186">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1MidiClip.html#a712b43e5e19ed28cfe2932cecb2051b8">setUsesProxy</a> (<a class="el" href="classengine_1_1Clip.html#ae4df20e49385f4b2c7acc86c30bac186">bool</a> <a class="el" href="classengine_1_1MidiClip.html#ade12f933d264b87e92aaaff3b07fdd4d">canUseProxy</a>) <a class="el" href="classengine_1_1Clip.html#ae4df20e49385f4b2c7acc86c30bac186">noexcept</a></td></tr>
 <tr class="memdesc:a712b43e5e19ed28cfe2932cecb2051b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can be used to disable proxy sequence generation for this clip.  <br /></td></tr>
 <tr class="separator:a712b43e5e19ed28cfe2932cecb2051b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -968,23 +959,6 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramtype"><a class="el" href="classengine_1_1MidiList.html">MidiList</a> &amp;&#160;</td>
           <td class="paramname"><em>sourceSequence</em></td><td>)</td>
           <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a9ba73233869773d7a55437fcc77df972" name="a9ba73233869773d7a55437fcc77df972"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9ba73233869773d7a55437fcc77df972">&#9670;&#160;</a></span>getSelectedEvents()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classengine_1_1Clip.html#ae4df20e49385f4b2c7acc86c30bac186">const</a> <a class="el" href="classengine_1_1SelectedMidiEvents.html">SelectedMidiEvents</a> * engine::MidiClip::getSelectedEvents </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2788,7 +2762,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 25 2026 12:45:07 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Aug 25 2026 13:00:46 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
