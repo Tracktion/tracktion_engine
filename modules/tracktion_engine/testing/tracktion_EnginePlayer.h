@@ -195,10 +195,21 @@ inline void waitForFileToBeMapped (const AudioFile& af)
     using namespace std::literals;
     assert (af.engine);
 
+    // A file only gets mapped whilst something holds a cache Reader for it, so
+    // waiting on a file no playing Edit references would otherwise spin forever
+    const auto timeout = std::chrono::steady_clock::now() + 30s;
+
     for (;;)
     {
         if (af.engine->getAudioFileManager().cache.hasMappedReader (af, 0))
             return;
+
+        if (std::chrono::steady_clock::now() > timeout)
+        {
+            TRACKTION_LOG_ERROR ("waitForFileToBeMapped timed out: " + af.getFile().getFullPathName());
+            jassertfalse;
+            return;
+        }
 
         std::this_thread::sleep_for (100ms);
     }
