@@ -5799,6 +5799,13 @@
       <anchor>a9ddc52b1b6466eb32b42bf6b8df44598</anchor>
       <arglist></arglist>
     </member>
+    <member kind="variable">
+      <type>std::function&lt; bool()&gt;</type>
+      <name>shouldAbort</name>
+      <anchorfile>structengine_1_1AudioAnalysisOptions.html</anchorfile>
+      <anchor>aba83df8ac515ebbcb4d90eed55c3edf8</anchor>
+      <arglist></arglist>
+    </member>
   </compound>
   <compound kind="struct">
     <name>graph::Node::AudioAndMidiBuffer</name>
@@ -81215,8 +81222,8 @@
       <type>tl::expected&lt; juce::var, juce::String &gt;</type>
       <name>analyseAudioFile</name>
       <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>a2907d263bda3abddc6640ad146cf1f7c</anchor>
-      <arglist>(Engine &amp;, const juce::File &amp;, const std::vector&lt; AudioFileAnalyser * &gt; &amp;)</arglist>
+      <anchor>a34660c6938250c31f7551858ccfa4392</anchor>
+      <arglist>(Engine &amp;, const juce::File &amp;, const std::vector&lt; AudioFileAnalyser * &gt; &amp;, const std::function&lt; bool()&gt; &amp;shouldAbort={})</arglist>
     </member>
     <member kind="function">
       <type>tl::expected&lt; juce::var, juce::String &gt;</type>

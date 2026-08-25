@@ -176,7 +176,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wraps an atomic with an interface compatible with var so it can be used within CachedValues in a thread safe way.  <a href="structengine_1_1AtomicWrapper.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1AudioAnalysisOptions.html">AudioAnalysisOptions</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for the standard <a class="el" href="namespaceengine.html#a2907d263bda3abddc6640ad146cf1f7c" title="Streams an audio file once through the given analysers, returning their combined results as a JSON-st...">analyseAudioFile()</a> convenience overload.  <a href="structengine_1_1AudioAnalysisOptions.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for the standard <a class="el" href="namespaceengine.html#a34660c6938250c31f7551858ccfa4392" title="Streams an audio file once through the given analysers, returning their combined results as a JSON-st...">analyseAudioFile()</a> convenience overload.  <a href="structengine_1_1AudioAnalysisOptions.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioBufferSnapshot.html">AudioBufferSnapshot</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1516,9 +1516,9 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a2907d263bda3abddc6640ad146cf1f7c" id="r_a2907d263bda3abddc6640ad146cf1f7c"><td class="memItemLeft" align="right" valign="top">tl::expected&lt; juce::var, juce::String &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#a2907d263bda3abddc6640ad146cf1f7c">analyseAudioFile</a> (<a class="el" href="classengine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;, const std::vector&lt; <a class="el" href="classengine_1_1AudioFileAnalyser.html">AudioFileAnalyser</a> * &gt; &amp;)</td></tr>
-<tr class="memdesc:a2907d263bda3abddc6640ad146cf1f7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Streams an audio file once through the given analysers, returning their combined results as a JSON-style object with the file's basic properties (sampleRate, channels, seconds) always included.  <br /></td></tr>
-<tr class="separator:a2907d263bda3abddc6640ad146cf1f7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34660c6938250c31f7551858ccfa4392" id="r_a34660c6938250c31f7551858ccfa4392"><td class="memItemLeft" align="right" valign="top">tl::expected&lt; juce::var, juce::String &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#a34660c6938250c31f7551858ccfa4392">analyseAudioFile</a> (<a class="el" href="classengine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;, const std::vector&lt; <a class="el" href="classengine_1_1AudioFileAnalyser.html">AudioFileAnalyser</a> * &gt; &amp;, const std::function&lt; bool()&gt; &amp;shouldAbort={})</td></tr>
+<tr class="memdesc:a34660c6938250c31f7551858ccfa4392"><td class="mdescLeft">&#160;</td><td class="mdescRight">Streams an audio file once through the given analysers, returning their combined results as a JSON-style object with the file's basic properties (sampleRate, channels, seconds) always included.  <br /></td></tr>
+<tr class="separator:a34660c6938250c31f7551858ccfa4392"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07c8afbe5d439bb348320aafb28a956a" id="r_a07c8afbe5d439bb348320aafb28a956a"><td class="memItemLeft" align="right" valign="top">tl::expected&lt; juce::var, juce::String &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#a07c8afbe5d439bb348320aafb28a956a">analyseAudioFile</a> (<a class="el" href="classengine_1_1Engine.html">Engine</a> &amp;, const juce::File &amp;, const <a class="el" href="structengine_1_1AudioAnalysisOptions.html">AudioAnalysisOptions</a> &amp;={})</td></tr>
 <tr class="memdesc:a07c8afbe5d439bb348320aafb28a956a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Analyses a file with the standard level/spectrum/envelope analysers.  <br /></td></tr>
 <tr class="separator:a07c8afbe5d439bb348320aafb28a956a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3303,8 +3303,8 @@ template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a2907d263bda3abddc6640ad146cf1f7c" name="a2907d263bda3abddc6640ad146cf1f7c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2907d263bda3abddc6640ad146cf1f7c">&#9670;&#160;</a></span>analyseAudioFile() <span class="overload">[1/2]</span></h2>
+<a id="a34660c6938250c31f7551858ccfa4392" name="a34660c6938250c31f7551858ccfa4392"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34660c6938250c31f7551858ccfa4392">&#9670;&#160;</a></span>analyseAudioFile() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3325,7 +3325,13 @@ template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const std::vector&lt; <a class="el" href="classengine_1_1AudioFileAnalyser.html">AudioFileAnalyser</a> * &gt; &amp;&#160;</td>
-          <td class="paramname">&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::function&lt; bool()&gt; &amp;&#160;</td>
+          <td class="paramname"><em>shouldAbort</em> = <code>{}</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3338,9 +3344,9 @@ template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;
 <p>Streams an audio file once through the given analysers, returning their combined results as a JSON-style object with the file's basic properties (sampleRate, channels, seconds) always included. </p>
 <p>All values are rounded for compactness: the output is designed to be read by an LLM. </p>
 
-<p class="reference">References <a class="el" href="namespaceengine.html#a2907d263bda3abddc6640ad146cf1f7c">analyseAudioFile()</a>.</p>
+<p class="reference">References <a class="el" href="namespaceengine.html#a34660c6938250c31f7551858ccfa4392">analyseAudioFile()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="namespaceengine.html#a07c8afbe5d439bb348320aafb28a956a">analyseAudioFile()</a>, and <a class="el" href="namespaceengine.html#a2907d263bda3abddc6640ad146cf1f7c">analyseAudioFile()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="namespaceengine.html#a07c8afbe5d439bb348320aafb28a956a">analyseAudioFile()</a>, and <a class="el" href="namespaceengine.html#a34660c6938250c31f7551858ccfa4392">analyseAudioFile()</a>.</p>
 
 </div>
 </div>
@@ -3379,7 +3385,7 @@ template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;
 <p>Analyses a file with the standard level/spectrum/envelope analysers. </p>
 <p>Level stats: sample peak, oversampled true peak, RMS, EBU R128 loudness (integrated, max momentary, max short-term - BS.1770-4 K-weighting and gating), loudness range in LU (EBU Tech 3342), clipped-sample count and the ratio of silent time. Spectrum: third-octave band energies relative to the loudest band, plus spectral centroid, 85% rolloff and low/mid/high balance. Envelope: peak and RMS in dB over evenly-spaced windows. </p>
 
-<p class="reference">References <a class="el" href="namespaceengine.html#a2907d263bda3abddc6640ad146cf1f7c">analyseAudioFile()</a>.</p>
+<p class="reference">References <a class="el" href="namespaceengine.html#a34660c6938250c31f7551858ccfa4392">analyseAudioFile()</a>.</p>
 
 </div>
 </div>
@@ -14139,7 +14145,7 @@ template&lt;typename... Properties&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 25 2026 13:43:20 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Aug 25 2026 21:24:01 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
