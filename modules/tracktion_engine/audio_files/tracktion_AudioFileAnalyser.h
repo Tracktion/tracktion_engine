@@ -47,6 +47,11 @@ struct AudioAnalysisOptions
     bool spectrum = true;       ///< Banded energies, spectral centroid/rolloff, low/mid/high balance
     bool envelope = true;       ///< Downsampled peak/RMS dynamics curve over time
     int envelopePoints = 100;   ///< Number of points in the dynamics curve
+
+    /** Checked between blocks while the file streams; return true to abort
+        the analysis, which then fails rather than returning partial results.
+        Lets a caller's thread shut down promptly mid-way through a long file. */
+    std::function<bool()> shouldAbort;
 };
 
 //==============================================================================
@@ -56,7 +61,8 @@ struct AudioAnalysisOptions
     for compactness: the output is designed to be read by an LLM.
 */
 tl::expected<juce::var, juce::String> analyseAudioFile (Engine&, const juce::File&,
-                                                        const std::vector<AudioFileAnalyser*>&);
+                                                        const std::vector<AudioFileAnalyser*>&,
+                                                        const std::function<bool()>& shouldAbort = {});
 
 /** Analyses a file with the standard level/spectrum/envelope analysers.
     Level stats: sample peak, oversampled true peak, RMS, EBU R128 loudness

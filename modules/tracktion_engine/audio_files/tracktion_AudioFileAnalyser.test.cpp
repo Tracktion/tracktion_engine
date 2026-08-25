@@ -269,6 +269,21 @@ TEST_SUITE ("tracktion_engine")
                                             AudioAnalysisOptions());
             CHECK (! result.has_value());
         }
+
+        SUBCASE ("an aborted analysis fails rather than returning partial results")
+        {
+            juce::TemporaryFile file (".wav");
+            writeTestFile<juce::WavAudioFormat> (file.getFile(), 44100.0, 1, 4 * 44100, 32, [] (int, int i)
+            {
+                return 0.5f * std::sin (juce::MathConstants<float>::twoPi * 220.0f * (float) i / 44100.0f);
+            });
+
+            AudioAnalysisOptions options;
+            options.shouldAbort = [] { return true; };
+
+            auto result = analyseAudioFile (*Engine::getEngines()[0], file.getFile(), options);
+            CHECK (! result.has_value());
+        }
     }
 }
 
