@@ -713,8 +713,10 @@ struct RubberBandStretcher  : public TimeStretcher::Stretcher
         rubberBandStretcher.reset();
 
         // Resetting the stretcher restores its start delay so the padding and
-        // dropping needs to be set up again by the next setSpeedAndPitch call
+        // dropping needs to be set up again by the next setSpeedAndPitch call,
+        // and a new stream will need its final block marking again when flushed
         numSamplesToDrop = -1;
+        hasDoneFinalBlock = false;
     }
 
     bool setSpeedAndPitch (float speedRatio, float semitonesUp) override
