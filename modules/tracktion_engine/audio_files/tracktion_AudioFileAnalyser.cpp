@@ -359,7 +359,8 @@ namespace audio_analysis_utils
 
 //==============================================================================
 tl::expected<juce::var, juce::String> analyseAudioFile (Engine& engine, const juce::File& file,
-                                                        const std::vector<AudioFileAnalyser*>& analysers)
+                                                        const std::vector<AudioFileAnalyser*>& analysers,
+                                                        const std::function<bool()>& shouldAbort)
 {
     using namespace audio_analysis_utils;
 
@@ -382,6 +383,9 @@ tl::expected<juce::var, juce::String> analyseAudioFile (Engine& engine, const ju
 
     for (SampleCount position = 0; position < (SampleCount) reader->lengthInSamples;)
     {
+        if (shouldAbort && shouldAbort())
+            return tl::unexpected (TRANS("Analysis cancelled"));
+
         const auto numThisTime = (int) std::min ((SampleCount) blockSize,
                                                  (SampleCount) reader->lengthInSamples - position);
 
@@ -421,7 +425,7 @@ tl::expected<juce::var, juce::String> analyseAudioFile (Engine& engine, const ju
     for (auto& analyser : owned)
         analysers.push_back (analyser.get());
 
-    return analyseAudioFile (engine, file, analysers);
+    return analyseAudioFile (engine, file, analysers, options.shouldAbort);
 }
 
 } // namespace tracktion::inline engine
