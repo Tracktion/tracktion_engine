@@ -155,14 +155,22 @@ private:
 
 //==============================================================================
 /** Calls a function on the message thread checking a calling thread for an exit signal. */
-class MessageThreadCallback   : private juce::AsyncUpdater
+class MessageThreadCallback
 {
 public:
     MessageThreadCallback() = default;
-    ~MessageThreadCallback() override       { cancelPendingUpdate(); }
+
+    /** Blocks until any in-flight callback has finished and prevents a pending
+        one from starting, so the message thread can never touch a dangling this.
+    */
+    virtual ~MessageThreadCallback()
+    {
+        const std::scoped_lock sl (state->mutex);
+        state->cancelled = true;
+    }
 
     /** Returns true if the callback has completed. */
-    bool hasFinished() const noexcept       { return finished; }
+    bool hasFinished() const noexcept       { return state->finished; }
 
     /** Triggers the callback to happen on the message thread and blocks
         until it has returned or the thread signals it should exit.
@@ -171,22 +179,26 @@ public:
     {
         if (juce::MessageManager::getInstance()->isThisTheMessageThread())
         {
-            handleAsyncUpdate();
+            performOnMessageThread (*this, *state);
             return;
         }
 
-        triggerAsyncUpdate();
+        // The state is co-owned by the lambda so the waiter can always be
+        // safely signalled, even if this object has been destroyed. The this
+        // pointer is only used under the state mutex whilst not cancelled,
+        // which excludes the destructor
+        juce::MessageManager::callAsync ([this, s = state]
+                                         {
+                                             performOnMessageThread (*this, *s);
+                                         });
 
         if (auto job = juce::ThreadPoolJob::getCurrentThreadPoolJob())
         {
             while (! (job->shouldExit() || hasFinished()))
-                waiter.wait (50);
+                state->waiter.wait (50);
 
             if (job->shouldExit())
-            {
-                hasBeenCancelled = true;
-                cancelPendingUpdate();
-            }
+                cancel();
 
             return;
         }
@@ -194,13 +206,10 @@ public:
         if (auto thread = juce::Thread::getCurrentThread())
         {
             while (! (thread->threadShouldExit() || hasFinished()))
-                waiter.wait (50);
+                state->waiter.wait (50);
 
             if (thread->threadShouldExit())
-            {
-                hasBeenCancelled = true;
-                cancelPendingUpdate();
-            }
+                cancel();
 
             return;
         }
@@ -208,13 +217,10 @@ public:
         if (isCurrentThreadSupplyingExitStatus())
         {
             while (! (shouldCurrentThreadExit() || hasFinished()))
-                waiter.wait (50);
+                state->waiter.wait (50);
 
             if (shouldCurrentThreadExit())
-            {
-                hasBeenCancelled = true;
-                cancelPendingUpdate();
-            }
+                cancel();
 
             return;
         }
@@ -222,7 +228,7 @@ public:
         // If you get a deadlock here, it's probably because your MessageManager isn't
         // actually running and dispatching messages. This shouldn't be called with a
         // blocked message manager
-        waiter.wait();
+        state->waiter.wait();
 
         if (! hasFinished())
         {
@@ -234,20 +240,35 @@ public:
     virtual void performAction() = 0;
 
 private:
-    std::atomic<bool> finished { false }, hasBeenCancelled { false };
-    juce::WaitableEvent waiter;
+    struct State
+    {
+        std::mutex mutex;
+        std::atomic<bool> finished { false }, cancelled { false };
+        juce::WaitableEvent waiter;
+    };
 
-    void handleAsyncUpdate() override
+    std::shared_ptr<State> state { std::make_shared<State>() };
+
+    static void performOnMessageThread (MessageThreadCallback& callback, State& s)
     {
         CRASH_TRACER
         TRACKTION_ASSERT_MESSAGE_THREAD
+        const std::scoped_lock sl (s.mutex);
 
-        if (hasBeenCancelled)
+        if (s.cancelled)
             return;
 
-        performAction();
-        finished = true;
-        waiter.signal();
+        callback.performAction();
+        s.finished = true;
+        s.waiter.signal();
+    }
+
+    // Blocks until any in-flight callback has finished, then prevents a
+    // pending one from running
+    void cancel()
+    {
+        const std::scoped_lock sl (state->mutex);
+        state->cancelled = true;
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MessageThreadCallback)
