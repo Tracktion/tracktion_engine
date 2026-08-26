@@ -205,6 +205,85 @@ TEST_SUITE ("tracktion_engine")
         CHECK_EQ ((double) peakDb[8], doctest::Approx (-1.9).epsilon (0.1));
     }
 
+    TEST_CASE ("AudioFileAnalyser stereo field statistics")
+    {
+        auto sine = [] (float frequency, int i) { return std::sin (juce::MathConstants<float>::twoPi * frequency * (float) i / 44100.0f); };
+
+        SUBCASE ("a dual-mono file is fully correlated, mono-width and centred")
+        {
+            juce::TemporaryFile file (".wav");
+            writeTestFile<juce::WavAudioFormat> (file.getFile(), 44100.0, 2, 2 * 44100, 32, [&] (int, int i)
+            {
+                return 0.5f * sine (997.0f, i);
+            });
+
+            auto stereo = analyse (file.getFile()).getProperty ("stereo", juce::var());
+            REQUIRE (! stereo.isVoid());
+
+            CHECK_EQ (num (stereo, "correlation"), doctest::Approx (1.0).epsilon (0.01));
+            CHECK_EQ (num (stereo, "minCorrelation"), doctest::Approx (1.0).epsilon (0.01));
+            CHECK_EQ (num (stereo, "width"), doctest::Approx (0.0).epsilon (0.01));
+            CHECK_EQ (num (stereo, "balance"), doctest::Approx (0.0).epsilon (0.01));
+            CHECK_EQ (num (stereo, "monoLossDb"), doctest::Approx (0.0).epsilon (0.05));
+
+            auto lowBand = stereo.getProperty ("lowBand", juce::var());
+            CHECK_EQ (num (lowBand, "correlation"), doctest::Approx (1.0).epsilon (0.01));
+        }
+
+        SUBCASE ("an out-of-phase file is anti-correlated, pure side, and cancels in mono")
+        {
+            juce::TemporaryFile file (".wav");
+            writeTestFile<juce::WavAudioFormat> (file.getFile(), 44100.0, 2, 2 * 44100, 32, [&] (int ch, int i)
+            {
+                return (ch == 0 ? 0.5f : -0.5f) * sine (997.0f, i);
+            });
+
+            auto stereo = analyse (file.getFile()).getProperty ("stereo", juce::var());
+            REQUIRE (! stereo.isVoid());
+
+            CHECK_EQ (num (stereo, "correlation"), doctest::Approx (-1.0).epsilon (0.01));
+            CHECK_EQ (num (stereo, "width"), doctest::Approx (1.0).epsilon (0.01));
+            CHECK_GT (num (stereo, "monoLossDb"), 20.0);
+        }
+
+        SUBCASE ("the low band is judged separately, catching wide highs over mono bass")
+        {
+            // In-phase 100Hz bass under out-of-phase 3kHz content: the wideband
+            // correlation collapses but the low band stays mono-compatible
+            juce::TemporaryFile file (".wav");
+            writeTestFile<juce::WavAudioFormat> (file.getFile(), 44100.0, 2, 2 * 44100, 32, [&] (int ch, int i)
+            {
+                return 0.35f * sine (100.0f, i) + (ch == 0 ? 0.35f : -0.35f) * sine (3000.0f, i);
+            });
+
+            auto stereo = analyse (file.getFile()).getProperty ("stereo", juce::var());
+            REQUIRE (! stereo.isVoid());
+
+            CHECK_LT (std::abs (num (stereo, "correlation")), 0.1);
+
+            auto lowBand = stereo.getProperty ("lowBand", juce::var());
+            CHECK_GT (num (lowBand, "correlation"), 0.9);
+            CHECK_LT (num (lowBand, "width"), 0.1);
+        }
+
+        SUBCASE ("a mono file reports null, and the option removes the key entirely")
+        {
+            juce::TemporaryFile file (".wav");
+            writeTestFile<juce::WavAudioFormat> (file.getFile(), 44100.0, 1, 44100, 32, [&] (int, int i)
+            {
+                return 0.5f * sine (220.0f, i);
+            });
+
+            auto v = analyse (file.getFile());
+            CHECK (v.hasProperty ("stereo"));
+            CHECK (v.getProperty ("stereo", juce::var (1)).isVoid());
+
+            AudioAnalysisOptions options;
+            options.stereo = false;
+            CHECK (! analyse (file.getFile(), options).hasProperty ("stereo"));
+        }
+    }
+
     TEST_CASE ("AudioFileAnalyser handles other formats and channel counts")
     {
         auto stereoSin = [] (int, int i)
