@@ -46,6 +46,7 @@ struct AudioAnalysisOptions
     bool levels = true;         ///< Peak, true peak, RMS, LUFS, clipping, silence ratio
     bool spectrum = true;       ///< Banded energies, spectral centroid/rolloff, low/mid/high balance
     bool envelope = true;       ///< Downsampled peak/RMS dynamics curve over time
+    bool stereo = true;         ///< Phase correlation, stereo width/balance, mono compatibility
     int envelopePoints = 100;   ///< Number of points in the dynamics curve
 
     /** Checked between blocks while the file streams; return true to abort
@@ -72,6 +73,9 @@ tl::expected<juce::var, juce::String> analyseAudioFile (Engine&, const juce::Fil
     Spectrum: third-octave band energies relative to the loudest band, plus
     spectral centroid, 85% rolloff and low/mid/high balance.
     Envelope: peak and RMS in dB over evenly-spaced windows.
+    Stereo: phase correlation (overall and worst 400ms window), stereo width
+    and balance, mono summing loss, and a low-band (sub-200Hz) correlation and
+    width for mono-bass checks. Null for mono files.
 */
 tl::expected<juce::var, juce::String> analyseAudioFile (Engine&, const juce::File&,
                                                         const AudioAnalysisOptions& = {});

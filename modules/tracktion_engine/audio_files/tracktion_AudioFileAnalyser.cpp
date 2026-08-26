@@ -297,6 +297,111 @@ namespace audio_analysis_utils
     };
 
     //==============================================================================
+    /** Stereo field statistics: correlation, width, balance and mono
+        compatibility, overall plus a low-band pass for mono-bass checks.
+    */
+    struct StereoAnalyser final : public AudioFileAnalyser
+    {
+        void prepare (const AudioFileInfo& info) override
+        {
+            numChannels = info.numChannels;
+
+            if (numChannels < 2)
+                return;
+
+            fullBand.prepare (info.sampleRate, 2, maxBlockSize);
+            lowBand.prepare (info.sampleRate, 2, maxBlockSize);
+
+            // A 2nd-order Butterworth low-pass at 200Hz for the low-band pass
+            const double k = std::tan (juce::MathConstants<double>::pi * 200.0 / info.sampleRate);
+            const double q = 0.70710678;
+            const double a0 = 1.0 + k / q + k * k;
+
+            for (auto& filter : lowpass)
+            {
+                filter.b0 = k * k / a0;
+                filter.b1 = 2.0 * filter.b0;
+                filter.b2 = filter.b0;
+                filter.a1 = 2.0 * (k * k - 1.0) / a0;
+                filter.a2 = (1.0 - k / q + k * k) / a0;
+            }
+        }
+
+        void process (const juce::AudioBuffer<float>& buffer, int numSamples) override
+        {
+            if (numChannels < 2 || buffer.getNumChannels() < 2)
+                return;
+
+            fullBand.process (buffer.getArrayOfReadPointers(), 2, numSamples);
+
+            if ((int) filtered[0].size() < numSamples)
+                for (auto& channel : filtered)
+                    channel.resize ((size_t) numSamples);
+
+            for (int ch = 0; ch < 2; ++ch)
+            {
+                auto data = buffer.getReadPointer (ch);
+
+                for (int i = 0; i < numSamples; ++i)
+                    filtered[(size_t) ch][(size_t) i] = (float) lowpass[(size_t) ch].process (data[i]);
+            }
+
+            const float* channels[] = { filtered[0].data(), filtered[1].data() };
+            lowBand.process (channels, 2, numSamples);
+        }
+
+        void addResults (juce::DynamicObject& result) override
+        {
+            if (numChannels < 2)
+            {
+                result.setProperty ("stereo", juce::var());
+                return;
+            }
+
+            fullBand.flush();
+            lowBand.flush();
+
+            const auto full = fullBand.getReadings();
+            const auto low = lowBand.getReadings();
+
+            auto stereo = new juce::DynamicObject();
+            stereo->setProperty ("correlation", full.overallValid ? juce::var (rounded (full.overallCorrelation, 2)) : juce::var());
+            stereo->setProperty ("minCorrelation", full.windowValid ? juce::var (rounded (full.minCorrelation, 2)) : juce::var());
+            stereo->setProperty ("width", full.overallValid ? juce::var (rounded (full.overallWidth, 2)) : juce::var());
+            stereo->setProperty ("balance", full.overallValid ? juce::var (rounded (full.overallBalance, 2)) : juce::var());
+            stereo->setProperty ("monoLossDb", full.overallValid ? juce::var (rounded (full.monoLossDb)) : juce::var());
+
+            auto lowBandResult = new juce::DynamicObject();
+            lowBandResult->setProperty ("correlation", low.overallValid ? juce::var (rounded (low.overallCorrelation, 2)) : juce::var());
+            lowBandResult->setProperty ("width", low.overallValid ? juce::var (rounded (low.overallWidth, 2)) : juce::var());
+            stereo->setProperty ("lowBand", juce::var (lowBandResult));
+
+            result.setProperty ("stereo", juce::var (stereo));
+        }
+
+        static constexpr int maxBlockSize = 8192;
+
+        struct Biquad
+        {
+            double b0 = 1.0, b1 = 0.0, b2 = 0.0, a1 = 0.0, a2 = 0.0;
+            double x1 = 0.0, x2 = 0.0, y1 = 0.0, y2 = 0.0;
+
+            double process (double x) noexcept
+            {
+                const auto y = b0 * x + b1 * x1 + b2 * x2 - a1 * y1 - a2 * y2;
+                x2 = x1; x1 = x;
+                y2 = y1; y1 = y;
+                return y;
+            }
+        };
+
+        int numChannels = 0;
+        StereoFieldAnalyser fullBand, lowBand;
+        std::array<Biquad, 2> lowpass;
+        std::array<std::vector<float>, 2> filtered;
+    };
+
+    //==============================================================================
     /** A downsampled peak/RMS envelope exposing the file's dynamics over time. */
     struct EnvelopeAnalyser final : public AudioFileAnalyser
     {
@@ -419,6 +524,7 @@ tl::expected<juce::var, juce::String> analyseAudioFile (Engine& engine, const ju
     if (options.levels)     owned.push_back (std::make_unique<LevelAnalyser>());
     if (options.spectrum)   owned.push_back (std::make_unique<SpectralAnalyser>());
     if (options.envelope)   owned.push_back (std::make_unique<EnvelopeAnalyser> (options.envelopePoints));
+    if (options.stereo)     owned.push_back (std::make_unique<StereoAnalyser>());
 
     std::vector<AudioFileAnalyser*> analysers;
 
