@@ -83,6 +83,12 @@ public:
         drops when the two channels are summed to mono ((l+r)/2 against the
         per-channel average): 0 for centred material, 3 for uncorrelated or
         hard-panned material, large for phase-cancelling material.
+
+        The alignment readings estimate a whole-signal timing offset between the
+        two channels by cross-correlating them over a range of lags, which is
+        what correlation alone cannot tell you: correlation says the channels
+        disagree, alignment says by how much and in which direction. A positive
+        delay means the right channel arrives later than the left.
     */
     struct Readings
     {
@@ -96,8 +102,13 @@ public:
         float overallWidth       = 0.0f;    /**< Since prepare() or the last reset, 0..1. */
         float monoLossDb         = 0.0f;    /**< Overall mono summing loss, in dB (positive = quieter in mono). */
 
+        float interChannelDelayMs      = 0.0f;  /**< Right-channel delay relative to left, in ms (negative = left is late). */
+        int   interChannelDelaySamples = 0;     /**< The same offset at the prepared sample rate. */
+        bool  polarityInverted         = false; /**< True when the channels match best at inverted polarity. */
+
         bool windowValid         = false;   /**< False until 400ms of non-silent audio has been processed. */
         bool overallValid        = false;   /**< False until any non-silent block has been processed. */
+        bool alignmentValid      = false;   /**< False until the channels match strongly enough at some lag to trust the estimate. */
     };
 
     /** Returns the current readings. Lock-free, callable from any thread. */
@@ -113,9 +124,21 @@ private:
     static constexpr int windowBlocks = 4;          // 400ms at the 100ms hop
     static constexpr double silenceThreshold = 1.0e-12;
 
+    // The lag search runs on a decimated copy of the signal: box-averaging down
+    // to ~8kHz is a crude but adequate anti-alias filter, and gross channel
+    // timing is a low-frequency question. That keeps the search to roughly 130k
+    // multiply-accumulates per 100ms block instead of millions at full rate.
+    static constexpr double alignmentSearchSeconds = 0.005;     // +/-5ms of lag
+    static constexpr double alignmentWindowSeconds = 0.2;
+    static constexpr double alignmentTargetRate = 8000.0;
+    static constexpr float alignmentMinCorrelation = 0.5f;      // below this a "peak" is just noise
+    static constexpr float alignmentPeakRatio = 1.2f;           // how far the peak must stand above the next-best one
+
     void processSamples (const float* const* channels, int numChannels, int startSample, int numSamples) noexcept;
+    void pushAlignmentSample (double l, double r) noexcept;
     void finishBlock() noexcept;
     void updateReadings() noexcept;
+    void updateAlignment() noexcept;
     void publish() noexcept;
     void resetMeasurement() noexcept;
 
@@ -128,6 +151,14 @@ private:
     int windowPos = 0, numBlocksSeen = 0;
 
     BlockSums overallSums;
+
+    // Decimated ring buffers for the lag search, plus linearised scratch copies
+    // so the inner correlation loop is a straight walk with no modular indexing
+    int decimationFactor = 1, decimateCount = 0;
+    double decimateAccumL = 0.0, decimateAccumR = 0.0;
+    std::vector<float> alignmentL, alignmentR, scratchL, scratchR, lagCurve;
+    int alignmentWindowSamples = 0, maxLagSamples = 0;
+    int alignmentPos = 0, alignmentFilled = 0;
 
     Readings currentReadings;
     crill::seqlock_object<Readings> publishedReadings { Readings() };

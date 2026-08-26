@@ -69,6 +69,18 @@ void StereoFieldAnalyser::prepare (double newSampleRate, int newNumChannels, int
     maxBlockSize = std::max (1, newMaxBlockSize);
     blockSamples = std::max (1, (int) std::llround (sampleRate * 0.1));
 
+    decimationFactor = std::max (1, (int) std::llround (sampleRate / alignmentTargetRate));
+    const auto decimatedRate = sampleRate / decimationFactor;
+    alignmentWindowSamples = std::max (2, (int) std::llround (decimatedRate * alignmentWindowSeconds));
+    maxLagSamples = juce::jlimit (1, alignmentWindowSamples / 4,
+                                  (int) std::llround (decimatedRate * alignmentSearchSeconds));
+
+    alignmentL.assign ((size_t) alignmentWindowSamples, 0.0f);
+    alignmentR.assign ((size_t) alignmentWindowSamples, 0.0f);
+    scratchL.assign ((size_t) alignmentWindowSamples, 0.0f);
+    scratchR.assign ((size_t) alignmentWindowSamples, 0.0f);
+    lagCurve.assign ((size_t) (2 * maxLagSamples + 1), 0.0f);
+
     resetRequested.store (false, std::memory_order_relaxed);
     resetMeasurement();
     publish();
@@ -109,6 +121,8 @@ void StereoFieldAnalyser::processSamples (const float* const* channelData, int n
         blockSums.ll += l * l;
         blockSums.rr += r * r;
         blockSums.lr += l * r;
+
+        pushAlignmentSample (l, r);
 
         if (++samplesIntoBlock >= blockSamples)
             finishBlock();
@@ -155,6 +169,7 @@ void StereoFieldAnalyser::finishBlock() noexcept
     samplesIntoBlock = 0;
 
     updateReadings();
+    updateAlignment();
 }
 
 void StereoFieldAnalyser::updateReadings() noexcept
@@ -199,6 +214,146 @@ void StereoFieldAnalyser::updateReadings() noexcept
     }
 }
 
+void StereoFieldAnalyser::pushAlignmentSample (double l, double r) noexcept
+{
+    if (alignmentWindowSamples <= 0)
+        return;
+
+    decimateAccumL += l;
+    decimateAccumR += r;
+
+    if (++decimateCount < decimationFactor)
+        return;
+
+    const auto scale = 1.0 / decimationFactor;
+    alignmentL[(size_t) alignmentPos] = (float) (decimateAccumL * scale);
+    alignmentR[(size_t) alignmentPos] = (float) (decimateAccumR * scale);
+
+    alignmentPos = (alignmentPos + 1) % alignmentWindowSamples;
+    alignmentFilled = std::min (alignmentFilled + 1, alignmentWindowSamples);
+
+    decimateCount = 0;
+    decimateAccumL = 0.0;
+    decimateAccumR = 0.0;
+}
+
+void StereoFieldAnalyser::updateAlignment() noexcept
+{
+    // Hold the previous estimate until there's a full window to search
+    if (alignmentWindowSamples <= 0 || alignmentFilled < alignmentWindowSamples)
+        return;
+
+    const auto n = alignmentWindowSamples;
+
+    // Linearise the ring buffers oldest-to-newest so the inner loop can index
+    // straight through them
+    for (int i = 0; i < n; ++i)
+    {
+        const auto src = (size_t) ((alignmentPos + i) % n);
+        scratchL[(size_t) i] = alignmentL[src];
+        scratchR[(size_t) i] = alignmentR[src];
+    }
+
+    double energyL = 0.0, energyR = 0.0;
+
+    for (int i = 0; i < n; ++i)
+    {
+        energyL += (double) scratchL[(size_t) i] * scratchL[(size_t) i];
+        energyR += (double) scratchR[(size_t) i] * scratchR[(size_t) i];
+    }
+
+    if (energyL < silenceThreshold || energyR < silenceThreshold)
+    {
+        currentReadings.alignmentValid = false;
+        return;
+    }
+
+    // A single normalisation from the whole-window energies, rather than a
+    // per-lag one: the lag range is a small fraction of the window, so the
+    // difference is negligible and it keeps the search to one pass per lag
+    const auto norm = 1.0 / std::sqrt (energyL * energyR);
+
+    auto correlationAtLag = [this, n, norm] (int lag)
+    {
+        // sum over l[i] * r[i + lag], across the overlapping region only
+        const auto first = std::max (0, -lag);
+        const auto last = std::min (n, n - lag);
+        double sum = 0.0;
+
+        for (int i = first; i < last; ++i)
+            sum += (double) scratchL[(size_t) i] * scratchR[(size_t) (i + lag)];
+
+        return sum * norm;
+    };
+
+    const auto numLags = 2 * maxLagSamples + 1;
+    auto bestIndex = 0;
+    auto bestMagnitude = -1.0f;
+
+    for (int i = 0; i < numLags; ++i)
+    {
+        const auto value = (float) correlationAtLag (i - maxLagSamples);
+        lagCurve[(size_t) i] = value;
+
+        if (std::abs (value) > bestMagnitude)
+        {
+            bestMagnitude = std::abs (value);
+            bestIndex = i;
+        }
+    }
+
+    if (bestMagnitude < alignmentMinCorrelation)
+    {
+        // Independent channels produce a low, flat curve with no real peak -
+        // reporting its argmax would be inventing a number
+        currentReadings.alignmentValid = false;
+        return;
+    }
+
+    // A sustained tone correlates just as well at every multiple of its period,
+    // so a tall peak is not by itself enough: require it to stand clear of the
+    // best rival outside its own lobe, otherwise the offset is ambiguous
+    const auto exclusion = std::max (2, maxLagSamples / 10);
+    auto runnerUpMagnitude = 0.0f;
+
+    for (int i = 0; i < numLags; ++i)
+        if (std::abs (i - bestIndex) > exclusion)
+            runnerUpMagnitude = std::max (runnerUpMagnitude, std::abs (lagCurve[(size_t) i]));
+
+    if (bestMagnitude < runnerUpMagnitude * alignmentPeakRatio)
+    {
+        currentReadings.alignmentValid = false;
+        return;
+    }
+
+    const auto bestLag = bestIndex - maxLagSamples;
+    const auto bestValue = lagCurve[(size_t) bestIndex];
+
+    // Parabolic interpolation about the peak, so the estimate is not limited to
+    // whole decimated samples. Work on the curve scaled by the peak's sign so an
+    // inverted-polarity match interpolates the same way.
+    const auto sign = bestValue < 0.0f ? -1.0f : 1.0f;
+    auto refinedLag = (double) bestLag;
+
+    if (bestIndex > 0 && bestIndex < numLags - 1)
+    {
+        const auto y0 = sign * lagCurve[(size_t) (bestIndex - 1)];
+        const auto y1 = sign * bestValue;
+        const auto y2 = sign * lagCurve[(size_t) (bestIndex + 1)];
+        const auto denom = y0 - 2.0f * y1 + y2;
+
+        if (std::abs (denom) > 1.0e-12f)
+            refinedLag += juce::jlimit (-1.0, 1.0, (double) (0.5f * (y0 - y2) / denom));
+    }
+
+    const auto delayInSourceSamples = refinedLag * decimationFactor;
+
+    currentReadings.interChannelDelaySamples = (int) std::llround (delayInSourceSamples);
+    currentReadings.interChannelDelayMs = (float) (delayInSourceSamples * 1000.0 / sampleRate);
+    currentReadings.polarityInverted = bestValue < 0.0f;
+    currentReadings.alignmentValid = true;
+}
+
 void StereoFieldAnalyser::publish() noexcept
 {
     publishedReadings.store (currentReadings);
@@ -212,6 +367,15 @@ void StereoFieldAnalyser::resetMeasurement() noexcept
     windowPos = 0;
     numBlocksSeen = 0;
     overallSums = {};
+
+    decimateCount = 0;
+    decimateAccumL = 0.0;
+    decimateAccumR = 0.0;
+    alignmentPos = 0;
+    alignmentFilled = 0;
+    std::fill (alignmentL.begin(), alignmentL.end(), 0.0f);
+    std::fill (alignmentR.begin(), alignmentR.end(), 0.0f);
+
     currentReadings = {};
 }
 
