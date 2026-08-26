@@ -297,6 +297,304 @@ namespace audio_analysis_utils
     };
 
     //==============================================================================
+    /** A time x frequency-band level matrix with per-band summary stats and
+        buildup detection: the "how does each part of the spectrum move over
+        time" view the whole-file SpectralAnalyser average can't give.
+
+        Levels are in dB relative to the loudest band/slice cell, so 0 is the
+        loudest moment anywhere in the spectrogram.
+    */
+    struct SpectrogramAnalyser final : public AudioFileAnalyser
+    {
+        SpectrogramAnalyser (int numSlicesToUse, bool useThirdOctave)
+            : requestedSlices (juce::jlimit (1, 1000, numSlicesToUse)),
+              thirdOctave (useThirdOctave)
+        {}
+
+        struct Band
+        {
+            juce::String name;
+            double lowHz, highHz;
+        };
+
+        void prepare (const AudioFileInfo& info) override
+        {
+            sampleRate = info.sampleRate;
+            numChannels = std::max (1, info.numChannels);
+            lengthSeconds = info.getLengthInSeconds();
+
+            fifo.resize ((size_t) fftSize, 0.0f);
+            window.resize ((size_t) fftSize);
+            juce::dsp::WindowingFunction<float>::fillWindowingTables (window.data(), (size_t) fftSize,
+                                                                      juce::dsp::WindowingFunction<float>::hann, false);
+
+            if (thirdOctave)
+            {
+                static constexpr double centres[] = { 20.0, 25.0, 31.5, 40.0, 50.0, 63.0, 80.0, 100.0, 125.0, 160.0,
+                                                      200.0, 250.0, 315.0, 400.0, 500.0, 630.0, 800.0, 1000.0, 1250.0, 1600.0,
+                                                      2000.0, 2500.0, 3150.0, 4000.0, 5000.0, 6300.0, 8000.0, 10000.0, 12500.0, 16000.0, 20000.0 };
+                const auto halfBand = std::pow (2.0, 1.0 / 6.0);
+
+                for (auto centre : centres)
+                    bands.push_back ({ juce::String ((int) centre) + "Hz", centre / halfBand, centre * halfBand });
+            }
+            else
+            {
+                bands = { { "sub", 20.0, 60.0 },        { "bass", 60.0, 150.0 },
+                          { "lowMid", 150.0, 400.0 },   { "mid", 400.0, 1000.0 },
+                          { "highMid", 1000.0, 2500.0 },{ "presence", 2500.0, 5000.0 },
+                          { "high", 5000.0, 10000.0 },  { "air", 10000.0, 20000.0 } };
+            }
+
+            // Map each FFT bin to its band once
+            const auto binHz = sampleRate / (double) fftSize;
+            bandForBin.assign ((size_t) fftSize / 2, -1);
+
+            for (size_t bin = 1; bin < bandForBin.size(); ++bin)
+            {
+                const auto frequency = binHz * (double) bin;
+
+                for (size_t band = 0; band < bands.size(); ++band)
+                {
+                    if (frequency >= bands[band].lowHz && frequency < bands[band].highHz)
+                    {
+                        bandForBin[bin] = (int) band;
+                        break;
+                    }
+                }
+            }
+        }
+
+        void process (const juce::AudioBuffer<float>& buffer, int numSamples) override
+        {
+            for (int i = 0; i < numSamples; ++i)
+            {
+                // Mono downmix
+                float value = 0.0f;
+
+                for (int ch = 0; ch < std::min (numChannels, buffer.getNumChannels()); ++ch)
+                    value += buffer.getSample (ch, i);
+
+                fifo[(size_t) fifoPos++] = value / (float) numChannels;
+
+                if (fifoPos == fftSize)
+                    analyseFrame();
+            }
+        }
+
+        void analyseFrame()
+        {
+            std::vector<float> frame ((size_t) fftSize * 2, 0.0f);
+
+            for (int i = 0; i < fftSize; ++i)
+                frame[(size_t) i] = fifo[(size_t) i] * window[(size_t) i];
+
+            fft.performFrequencyOnlyForwardTransform (frame.data(), true);
+
+            std::vector<double> bandEnergies (bands.size(), 0.0);
+
+            for (size_t bin = 1; bin < bandForBin.size(); ++bin)
+                if (const auto band = bandForBin[bin]; band >= 0)
+                    bandEnergies[(size_t) band] += (double) frame[bin] * (double) frame[bin];
+
+            frameBandEnergies.push_back (std::move (bandEnergies));
+
+            // 50% hop
+            std::copy (fifo.begin() + fftSize / 2, fifo.end(), fifo.begin());
+            fifoPos = fftSize / 2;
+        }
+
+        void addResults (juce::DynamicObject& result) override
+        {
+            // Analyse a partial tail frame rather than dropping it
+            if (fifoPos > fftSize / 2 || frameBandEnergies.empty())
+            {
+                if (fifoPos > 0)
+                {
+                    std::fill (fifo.begin() + fifoPos, fifo.end(), 0.0f);
+                    fifoPos = fftSize;
+                    analyseFrame();
+                }
+
+                if (frameBandEnergies.empty())
+                {
+                    result.setProperty ("spectrogram", juce::var());
+                    return;
+                }
+            }
+
+            const auto numFrames = (int) frameBandEnergies.size();
+            const auto numSlices = std::min (requestedSlices, numFrames);
+            const auto numBands = bands.size();
+
+            // Mean band power per slice
+            std::vector<std::vector<double>> slicePowers ((size_t) numSlices, std::vector<double> (numBands, 0.0));
+
+            for (int slice = 0; slice < numSlices; ++slice)
+            {
+                const auto begin = slice * numFrames / numSlices;
+                const auto end = std::max (begin + 1, (slice + 1) * numFrames / numSlices);
+
+                for (auto frame = begin; frame < end; ++frame)
+                    for (size_t band = 0; band < numBands; ++band)
+                        slicePowers[(size_t) slice][band] += frameBandEnergies[(size_t) frame][band];
+
+                for (size_t band = 0; band < numBands; ++band)
+                    slicePowers[(size_t) slice][band] /= (double) (end - begin);
+            }
+
+            double maxPower = 0.0;
+
+            for (auto& slice : slicePowers)
+                for (auto power : slice)
+                    maxPower = std::max (maxPower, power);
+
+            const auto toDb = [maxPower] (double power)
+            {
+                if (maxPower <= 0.0)
+                    return (double) silenceFloorDb;
+
+                return std::max ((double) silenceFloorDb, 10.0 * std::log10 (std::max (1.0e-12, power / maxPower)));
+            };
+
+            const auto sliceSeconds = lengthSeconds > 0.0 ? lengthSeconds / (double) numSlices : 0.0;
+            const auto sliceTime = [sliceSeconds] (int slice) { return rounded ((slice + 0.5) * sliceSeconds, 2); };
+
+            auto spectrogram = new juce::DynamicObject();
+            spectrogram->setProperty ("sliceSeconds", rounded (sliceSeconds, 3));
+            spectrogram->setProperty ("numSlices", numSlices);
+
+            juce::Array<juce::var> bandResults, buildups;
+
+            std::vector<std::vector<double>> bandLevels (numBands, std::vector<double> ((size_t) numSlices));
+
+            struct Candidate
+            {
+                double rise = 0.0;
+                int from = 0, to = 0;
+            };
+
+            std::vector<Candidate> candidates (numBands);
+
+            for (size_t band = 0; band < numBands; ++band)
+            {
+                auto& levels = bandLevels[band];
+                juce::Array<juce::var> levelsDb;
+                double peakDb = silenceFloorDb, minDb = 0.0, sum = 0.0;
+                int peakSlice = 0;
+
+                for (int slice = 0; slice < numSlices; ++slice)
+                {
+                    const auto db = toDb (slicePowers[(size_t) slice][band]);
+                    levels[(size_t) slice] = db;
+                    levelsDb.add (rounded (db));
+                    sum += db;
+                    minDb = std::min (minDb, db);
+
+                    if (db > peakDb)
+                    {
+                        peakDb = db;
+                        peakSlice = slice;
+                    }
+                }
+
+                auto bandResult = new juce::DynamicObject();
+                bandResult->setProperty ("name", bands[band].name);
+                bandResult->setProperty ("lowHz", (int) bands[band].lowHz);
+                bandResult->setProperty ("highHz", (int) bands[band].highHz);
+                bandResult->setProperty ("meanDb", rounded (sum / (double) numSlices));
+                bandResult->setProperty ("peakDb", rounded (peakDb));
+                bandResult->setProperty ("peakSeconds", sliceTime (peakSlice));
+                bandResult->setProperty ("rangeDb", rounded (peakDb - minDb));
+                bandResult->setProperty ("levelsDb", levelsDb);
+                bandResults.add (juce::var (bandResult));
+
+                // Buildup candidate: the largest rise from a running minimum,
+                // ignoring near-silent slices so a fade-in from digital
+                // silence doesn't count
+                constexpr double silenceGateDb = -50.0;
+                double runningMin = 0.0;
+                int runningMinSlice = -1;
+                auto& candidate = candidates[band];
+
+                for (int slice = 0; slice < numSlices; ++slice)
+                {
+                    const auto db = levels[(size_t) slice];
+
+                    if (db <= silenceGateDb)
+                        continue;
+
+                    if (runningMinSlice >= 0 && db - runningMin > candidate.rise)
+                    {
+                        candidate.rise = db - runningMin;
+                        candidate.from = runningMinSlice;
+                        candidate.to = slice;
+                    }
+
+                    if (runningMinSlice < 0 || db < runningMin)
+                    {
+                        runningMin = db;
+                        runningMinSlice = slice;
+                    }
+                }
+            }
+
+            // Second pass so leakage shadows can be recognised: a rising tone's
+            // window skirts rise identically in the neighbouring bands, so a
+            // buildup is dropped when an adjacent band also rose and sits well
+            // above this one at the buildup's end - the louder band carries
+            // the report. Quiet endings are dropped outright.
+            constexpr double buildupThresholdDb = 6.0, significanceDb = -30.0, shadowMarginDb = 10.0;
+
+            for (size_t band = 0; band < numBands; ++band)
+            {
+                const auto& candidate = candidates[band];
+
+                if (candidate.rise < buildupThresholdDb
+                     || bandLevels[band][(size_t) candidate.to] <= significanceDb)
+                    continue;
+
+                auto isShadowedBy = [&] (size_t other)
+                {
+                    return candidates[other].rise >= buildupThresholdDb
+                            && bandLevels[other][(size_t) candidate.to]
+                                 - bandLevels[band][(size_t) candidate.to] >= shadowMarginDb;
+                };
+
+                if ((band > 0 && isShadowedBy (band - 1))
+                     || (band + 1 < numBands && isShadowedBy (band + 1)))
+                    continue;
+
+                auto buildup = new juce::DynamicObject();
+                buildup->setProperty ("band", bands[band].name);
+                buildup->setProperty ("fromSeconds", sliceTime (candidate.from));
+                buildup->setProperty ("toSeconds", sliceTime (candidate.to));
+                buildup->setProperty ("riseDb", rounded (candidate.rise));
+                buildups.add (juce::var (buildup));
+            }
+
+            spectrogram->setProperty ("bands", bandResults);
+            spectrogram->setProperty ("buildups", buildups);
+            result.setProperty ("spectrogram", juce::var (spectrogram));
+        }
+
+        static constexpr int fftOrder = 12;
+        static constexpr int fftSize = 1 << fftOrder;
+
+        const int requestedSlices;
+        const bool thirdOctave;
+
+        double sampleRate = 44100.0, lengthSeconds = 0.0;
+        int numChannels = 1;
+        juce::dsp::FFT fft { fftOrder };
+        std::vector<float> fifo, window;
+        int fifoPos = 0;
+        std::vector<Band> bands;
+        std::vector<int> bandForBin;
+        std::vector<std::vector<double>> frameBandEnergies;
+    };
+
+    //==============================================================================
     /** Stereo field statistics: correlation, width, balance and mono
         compatibility, overall plus a low-band pass for mono-bass checks.
     */
@@ -525,6 +823,7 @@ tl::expected<juce::var, juce::String> analyseAudioFile (Engine& engine, const ju
     if (options.spectrum)   owned.push_back (std::make_unique<SpectralAnalyser>());
     if (options.envelope)   owned.push_back (std::make_unique<EnvelopeAnalyser> (options.envelopePoints));
     if (options.stereo)     owned.push_back (std::make_unique<StereoAnalyser>());
+    if (options.spectrogram) owned.push_back (std::make_unique<SpectrogramAnalyser> (options.spectrogramSlices, options.spectrogramThirdOctave));
 
     std::vector<AudioFileAnalyser*> analysers;
 
