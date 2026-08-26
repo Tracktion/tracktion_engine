@@ -150,6 +150,14 @@
     <namespace>engine</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_StereoFieldAnalyser.h</name>
+    <path>build/tracktion_engine/audio_files/</path>
+    <filename>tracktion__StereoFieldAnalyser_8h.html</filename>
+    <class kind="class">engine::StereoFieldAnalyser</class>
+    <class kind="struct">engine::StereoFieldAnalyser::Readings</class>
+    <namespace>engine</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_ControlSurface.h</name>
     <path>build/tracktion_engine/control_surfaces/</path>
     <filename>tracktion__ControlSurface_8h.html</filename>
@@ -5793,10 +5801,38 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
+      <type>bool</type>
+      <name>stereo</name>
+      <anchorfile>structengine_1_1AudioAnalysisOptions.html</anchorfile>
+      <anchor>a3dd4eb0062ec6b0d71fa22bfa0ab56a3</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>spectrogram</name>
+      <anchorfile>structengine_1_1AudioAnalysisOptions.html</anchorfile>
+      <anchor>a8530997956bcfe20dee6757494d454bd</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
       <type>int</type>
       <name>envelopePoints</name>
       <anchorfile>structengine_1_1AudioAnalysisOptions.html</anchorfile>
       <anchor>a9ddc52b1b6466eb32b42bf6b8df44598</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>spectrogramSlices</name>
+      <anchorfile>structengine_1_1AudioAnalysisOptions.html</anchorfile>
+      <anchor>aa5735bb0d0deb4c7fc7a2e8c21be20cc</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>spectrogramThirdOctave</name>
+      <anchorfile>structengine_1_1AudioAnalysisOptions.html</anchorfile>
+      <anchor>a6355691a9122443c42039fd3360e79be</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -61793,6 +61829,80 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>engine::StereoFieldAnalyser::Readings</name>
+    <filename>structengine_1_1StereoFieldAnalyser_1_1Readings.html</filename>
+    <member kind="variable">
+      <type>float</type>
+      <name>correlation</name>
+      <anchorfile>structengine_1_1StereoFieldAnalyser_1_1Readings.html</anchorfile>
+      <anchor>a9848cfc53380bfcbe61039b6c91452f9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>minCorrelation</name>
+      <anchorfile>structengine_1_1StereoFieldAnalyser_1_1Readings.html</anchorfile>
+      <anchor>ab968d07dae3984609bbb40ca22df8f79</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>balance</name>
+      <anchorfile>structengine_1_1StereoFieldAnalyser_1_1Readings.html</anchorfile>
+      <anchor>a9c4e82edb52be43d6d53c8c3511a82dc</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>width</name>
+      <anchorfile>structengine_1_1StereoFieldAnalyser_1_1Readings.html</anchorfile>
+      <anchor>a1e16fb250fddeacf4257594cabc1fae3</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>overallCorrelation</name>
+      <anchorfile>structengine_1_1StereoFieldAnalyser_1_1Readings.html</anchorfile>
+      <anchor>a024701c45a751dbf457c23fd41d34c83</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>overallBalance</name>
+      <anchorfile>structengine_1_1StereoFieldAnalyser_1_1Readings.html</anchorfile>
+      <anchor>a6186bf3b0212344fcafad43a7cb92a32</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>overallWidth</name>
+      <anchorfile>structengine_1_1StereoFieldAnalyser_1_1Readings.html</anchorfile>
+      <anchor>a52b6cb143156d1be13c7d019a6b4b3ac</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>monoLossDb</name>
+      <anchorfile>structengine_1_1StereoFieldAnalyser_1_1Readings.html</anchorfile>
+      <anchor>a63d7bc3471be5a2980c974bb2b2e38ca</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>windowValid</name>
+      <anchorfile>structengine_1_1StereoFieldAnalyser_1_1Readings.html</anchorfile>
+      <anchor>a13394fb0f62ce744187c86e9ba4ad6c7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>overallValid</name>
+      <anchorfile>structengine_1_1StereoFieldAnalyser_1_1Readings.html</anchorfile>
+      <anchor>ab8d14ef93db39218661d561ee549f773</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>engine::TransportControl::ReallocationInhibitor</name>
     <filename>structengine_1_1TransportControl_1_1ReallocationInhibitor.html</filename>
     <member kind="function">
@@ -69833,6 +69943,60 @@
       <anchorfile>structengine_1_1StepVolumeEffect.html</anchorfile>
       <anchor>a2eadb3282b6d1b637b6d3258a69619ea</anchor>
       <arglist>() const override</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>engine::StereoFieldAnalyser</name>
+    <filename>classengine_1_1StereoFieldAnalyser.html</filename>
+    <class kind="struct">engine::StereoFieldAnalyser::Readings</class>
+    <member kind="function">
+      <type></type>
+      <name>StereoFieldAnalyser</name>
+      <anchorfile>classengine_1_1StereoFieldAnalyser.html</anchorfile>
+      <anchor>ade67d1d27f27035861a49bf90773bb56</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prepare</name>
+      <anchorfile>classengine_1_1StereoFieldAnalyser.html</anchorfile>
+      <anchor>a8df9c7846fa3435e23079db3910356ff</anchor>
+      <arglist>(double sampleRate, int numChannels, int maxBlockSize)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>process</name>
+      <anchorfile>classengine_1_1StereoFieldAnalyser.html</anchorfile>
+      <anchor>a10ae40ad037408bd0e69424ef7cead93</anchor>
+      <arglist>(choc::buffer::ChannelArrayView&lt; const float &gt; block) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>process</name>
+      <anchorfile>classengine_1_1StereoFieldAnalyser.html</anchorfile>
+      <anchor>a25c625be3380cf9342ce47d2f0bbe9fd</anchor>
+      <arglist>(const float *const *channels, int numChannels, int numSamples) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>flush</name>
+      <anchorfile>classengine_1_1StereoFieldAnalyser.html</anchorfile>
+      <anchor>a1727791825ebfd8a5aea45badde782c5</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>requestReset</name>
+      <anchorfile>classengine_1_1StereoFieldAnalyser.html</anchorfile>
+      <anchor>ab9819e3af78f3a236cbe9c0f82c931ec</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>Readings</type>
+      <name>getReadings</name>
+      <anchorfile>classengine_1_1StereoFieldAnalyser.html</anchorfile>
+      <anchor>a9573bcd71d67951b4ad5b9205d01407e</anchor>
+      <arglist>() const noexcept</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -80728,6 +80892,7 @@
     <class kind="class">engine::StepClip</class>
     <class kind="class">engine::StepModifier</class>
     <class kind="struct">engine::StepVolumeEffect</class>
+    <class kind="class">engine::StereoFieldAnalyser</class>
     <class kind="struct">engine::StopwatchTimer</class>
     <class kind="struct">engine::SuffixedParameter</class>
     <class kind="struct">engine::SyncPoint</class>
@@ -85702,6 +85867,8 @@
     <class kind="class">engine::RecordingThumbnailManager</class>
     <class kind="struct">engine::RecordingThumbnailManager::Thumbnail</class>
     <class kind="class">engine::SmartThumbnail</class>
+    <class kind="class">engine::StereoFieldAnalyser</class>
+    <class kind="struct">engine::StereoFieldAnalyser::Readings</class>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-control_surfaces</name>

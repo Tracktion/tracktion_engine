@@ -96,9 +96,21 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a48c31941162d5a285bba924c56d10e7e" id="r_a48c31941162d5a285bba924c56d10e7e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1AudioAnalysisOptions.html#a48c31941162d5a285bba924c56d10e7e">envelope</a> = true</td></tr>
 <tr class="memdesc:a48c31941162d5a285bba924c56d10e7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Downsampled peak/RMS dynamics curve over time.  <br /></td></tr>
 <tr class="separator:a48c31941162d5a285bba924c56d10e7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dd4eb0062ec6b0d71fa22bfa0ab56a3" id="r_a3dd4eb0062ec6b0d71fa22bfa0ab56a3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1AudioAnalysisOptions.html#a3dd4eb0062ec6b0d71fa22bfa0ab56a3">stereo</a> = true</td></tr>
+<tr class="memdesc:a3dd4eb0062ec6b0d71fa22bfa0ab56a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Phase correlation, stereo width/balance, mono compatibility.  <br /></td></tr>
+<tr class="separator:a3dd4eb0062ec6b0d71fa22bfa0ab56a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8530997956bcfe20dee6757494d454bd" id="r_a8530997956bcfe20dee6757494d454bd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1AudioAnalysisOptions.html#a8530997956bcfe20dee6757494d454bd">spectrogram</a> = true</td></tr>
+<tr class="memdesc:a8530997956bcfe20dee6757494d454bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Per-band level over time, with band stats and buildup detection.  <br /></td></tr>
+<tr class="separator:a8530997956bcfe20dee6757494d454bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ddc52b1b6466eb32b42bf6b8df44598" id="r_a9ddc52b1b6466eb32b42bf6b8df44598"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1AudioAnalysisOptions.html#a9ddc52b1b6466eb32b42bf6b8df44598">envelopePoints</a> = 100</td></tr>
 <tr class="memdesc:a9ddc52b1b6466eb32b42bf6b8df44598"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of points in the dynamics curve.  <br /></td></tr>
 <tr class="separator:a9ddc52b1b6466eb32b42bf6b8df44598"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5735bb0d0deb4c7fc7a2e8c21be20cc" id="r_aa5735bb0d0deb4c7fc7a2e8c21be20cc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1AudioAnalysisOptions.html#aa5735bb0d0deb4c7fc7a2e8c21be20cc">spectrogramSlices</a> = 60</td></tr>
+<tr class="memdesc:aa5735bb0d0deb4c7fc7a2e8c21be20cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of time slices in the spectrogram.  <br /></td></tr>
+<tr class="separator:aa5735bb0d0deb4c7fc7a2e8c21be20cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6355691a9122443c42039fd3360e79be" id="r_a6355691a9122443c42039fd3360e79be"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1AudioAnalysisOptions.html#a6355691a9122443c42039fd3360e79be">spectrogramThirdOctave</a> = false</td></tr>
+<tr class="memdesc:a6355691a9122443c42039fd3360e79be"><td class="mdescLeft">&#160;</td><td class="mdescRight">31 third-octave bands instead of the 8 broad mixing bands  <br /></td></tr>
+<tr class="separator:a6355691a9122443c42039fd3360e79be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba83df8ac515ebbcb4d90eed55c3edf8" id="r_aba83df8ac515ebbcb4d90eed55c3edf8"><td class="memItemLeft" align="right" valign="top">std::function&lt; bool()&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1AudioAnalysisOptions.html#aba83df8ac515ebbcb4d90eed55c3edf8">shouldAbort</a></td></tr>
 <tr class="memdesc:aba83df8ac515ebbcb4d90eed55c3edf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checked between blocks while the file streams; return true to abort the analysis, which then fails rather than returning partial results.  <br /></td></tr>
 <tr class="separator:aba83df8ac515ebbcb4d90eed55c3edf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -154,6 +166,38 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a3dd4eb0062ec6b0d71fa22bfa0ab56a3" name="a3dd4eb0062ec6b0d71fa22bfa0ab56a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3dd4eb0062ec6b0d71fa22bfa0ab56a3">&#9670;&#160;</a></span>stereo</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool engine::AudioAnalysisOptions::stereo = true</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Phase correlation, stereo width/balance, mono compatibility. </p>
+
+</div>
+</div>
+<a id="a8530997956bcfe20dee6757494d454bd" name="a8530997956bcfe20dee6757494d454bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8530997956bcfe20dee6757494d454bd">&#9670;&#160;</a></span>spectrogram</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool engine::AudioAnalysisOptions::spectrogram = true</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Per-band level over time, with band stats and buildup detection. </p>
+
+</div>
+</div>
 <a id="a9ddc52b1b6466eb32b42bf6b8df44598" name="a9ddc52b1b6466eb32b42bf6b8df44598"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9ddc52b1b6466eb32b42bf6b8df44598">&#9670;&#160;</a></span>envelopePoints</h2>
 
@@ -167,6 +211,38 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Number of points in the dynamics curve. </p>
+
+</div>
+</div>
+<a id="aa5735bb0d0deb4c7fc7a2e8c21be20cc" name="aa5735bb0d0deb4c7fc7a2e8c21be20cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5735bb0d0deb4c7fc7a2e8c21be20cc">&#9670;&#160;</a></span>spectrogramSlices</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int engine::AudioAnalysisOptions::spectrogramSlices = 60</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Maximum number of time slices in the spectrogram. </p>
+
+</div>
+</div>
+<a id="a6355691a9122443c42039fd3360e79be" name="a6355691a9122443c42039fd3360e79be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6355691a9122443c42039fd3360e79be">&#9670;&#160;</a></span>spectrogramThirdOctave</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool engine::AudioAnalysisOptions::spectrogramThirdOctave = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>31 third-octave bands instead of the 8 broad mixing bands </p>
 
 </div>
 </div>
@@ -193,7 +269,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 25 2026 21:24:01 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Wed Aug 26 2026 13:44:09 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

@@ -997,6 +997,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1StepVolumeEffect.html">StepVolumeEffect</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1StereoFieldAnalyser.html">StereoFieldAnalyser</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A real-time-safe stereo field analyser: phase correlation, stereo balance and stereo width, over a short sliding window and over the whole measurement.  <a href="classengine_1_1StereoFieldAnalyser.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1StopwatchTimer.html">StopwatchTimer</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1SuffixedParameter.html">SuffixedParameter</a></td></tr>
@@ -3383,7 +3386,7 @@ template&lt;typename Type , typename Constrainer  = DummyConstrainer&lt;Type&gt;
 </div><div class="memdoc">
 
 <p>Analyses a file with the standard level/spectrum/envelope analysers. </p>
-<p>Level stats: sample peak, oversampled true peak, RMS, EBU R128 loudness (integrated, max momentary, max short-term - BS.1770-4 K-weighting and gating), loudness range in LU (EBU Tech 3342), clipped-sample count and the ratio of silent time. Spectrum: third-octave band energies relative to the loudest band, plus spectral centroid, 85% rolloff and low/mid/high balance. Envelope: peak and RMS in dB over evenly-spaced windows. </p>
+<p>Level stats: sample peak, oversampled true peak, RMS, EBU R128 loudness (integrated, max momentary, max short-term - BS.1770-4 K-weighting and gating), loudness range in LU (EBU Tech 3342), clipped-sample count and the ratio of silent time, plus derived dynamics statistics: crest factor, PLR, PSR and transient density. Spectrum: third-octave band energies relative to the loudest band, plus spectral centroid, 85% rolloff and low/mid/high balance. Envelope: peak and RMS in dB over evenly-spaced windows. Stereo: phase correlation (overall and worst 400ms window), stereo width and balance, mono summing loss, and a low-band (sub-200Hz) correlation and width for mono-bass checks. Null for mono files. Spectrogram: per-band level over time (broad mixing bands by default, or third-octave), each band with its own summary stats, plus detected buildups (sustained level rises within one band). </p>
 
 <p class="reference">References <a class="el" href="namespaceengine.html#a34660c6938250c31f7551858ccfa4392">analyseAudioFile()</a>.</p>
 
@@ -14145,7 +14148,7 @@ template&lt;typename... Properties&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 25 2026 21:24:01 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Wed Aug 26 2026 13:44:09 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

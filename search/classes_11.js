@@ -12,7 +12,7 @@ var searchData=
   ['range_9',['Range',['../structengine_1_1VSTXML_1_1Range.html',1,'engine::VSTXML']]],
   ['readaheadtimestretcher_10',['ReadAheadTimeStretcher',['../classengine_1_1ReadAheadTimeStretcher.html',1,'engine']]],
   ['reader_11',['Reader',['../classengine_1_1AudioFileCache_1_1Reader.html',1,'engine::AudioFileCache']]],
-  ['readings_12',['Readings',['../structengine_1_1LoudnessMeter_1_1Readings.html',1,'engine::LoudnessMeter']]],
+  ['readings_12',['readings',['../structengine_1_1LoudnessMeter_1_1Readings.html',1,'engine::LoudnessMeter::Readings'],['../structengine_1_1StereoFieldAnalyser_1_1Readings.html',1,'engine::StereoFieldAnalyser::Readings']]],
   ['reallocationinhibitor_13',['ReallocationInhibitor',['../structengine_1_1TransportControl_1_1ReallocationInhibitor.html',1,'engine::TransportControl']]],
   ['realtimeprioritydisabler_14',['RealtimePriorityDisabler',['../structengine_1_1EditPlaybackContext_1_1RealtimePriorityDisabler.html',1,'engine::EditPlaybackContext']]],
   ['realtimespinlock_15',['RealTimeSpinLock',['../classgraph_1_1RealTimeSpinLock.html',1,'graph']]],

@@ -82,14 +82,15 @@ var searchData=
   ['splitstatus_79',['SplitStatus',['../structengine_1_1LaunchHandle_1_1SplitStatus.html',1,'engine::LaunchHandle']]],
   ['splittimelinerange_80',['SplitTimelineRange',['../structgraph_1_1SplitTimelineRange.html',1,'graph']]],
   ['stage_81',['Stage',['../structengine_1_1BreakpointOscillatorModifier_1_1Stage.html',1,'engine::BreakpointOscillatorModifier']]],
-  ['statistics_82',['statistics',['../structengine_1_1Renderer_1_1Statistics.html',1,'engine::Renderer::Statistics'],['../structgraph_1_1PerformanceMeasurement_1_1Statistics.html',1,'graph::PerformanceMeasurement::Statistics']]],
+  ['statistics_82',['statistics',['../structgraph_1_1PerformanceMeasurement_1_1Statistics.html',1,'graph::PerformanceMeasurement::Statistics'],['../structengine_1_1Renderer_1_1Statistics.html',1,'engine::Renderer::Statistics']]],
   ['stepclip_83',['StepClip',['../classengine_1_1StepClip.html',1,'engine']]],
   ['stepmodifier_84',['StepModifier',['../classengine_1_1StepModifier.html',1,'engine']]],
   ['stepvolumeeffect_85',['StepVolumeEffect',['../structengine_1_1StepVolumeEffect.html',1,'engine']]],
-  ['stoprecordingparameters_86',['StopRecordingParameters',['../structengine_1_1InputDeviceInstance_1_1StopRecordingParameters.html',1,'engine::InputDeviceInstance']]],
-  ['stopwatchtimer_87',['StopwatchTimer',['../structengine_1_1StopwatchTimer.html',1,'engine']]],
-  ['suffixedparameter_88',['SuffixedParameter',['../structengine_1_1SuffixedParameter.html',1,'engine']]],
-  ['summingnode_89',['SummingNode',['../classgraph_1_1SummingNode.html',1,'graph']]],
-  ['syncpoint_90',['SyncPoint',['../structengine_1_1SyncPoint.html',1,'engine']]],
-  ['syncrange_91',['SyncRange',['../structengine_1_1SyncRange.html',1,'engine']]]
+  ['stereofieldanalyser_86',['StereoFieldAnalyser',['../classengine_1_1StereoFieldAnalyser.html',1,'engine']]],
+  ['stoprecordingparameters_87',['StopRecordingParameters',['../structengine_1_1InputDeviceInstance_1_1StopRecordingParameters.html',1,'engine::InputDeviceInstance']]],
+  ['stopwatchtimer_88',['StopwatchTimer',['../structengine_1_1StopwatchTimer.html',1,'engine']]],
+  ['suffixedparameter_89',['SuffixedParameter',['../structengine_1_1SuffixedParameter.html',1,'engine']]],
+  ['summingnode_90',['SummingNode',['../classgraph_1_1SummingNode.html',1,'graph']]],
+  ['syncpoint_91',['SyncPoint',['../structengine_1_1SyncPoint.html',1,'engine']]],
+  ['syncrange_92',['SyncRange',['../structengine_1_1SyncRange.html',1,'engine']]]
 ];
