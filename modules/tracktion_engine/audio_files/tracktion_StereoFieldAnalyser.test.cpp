@@ -405,6 +405,15 @@ TEST_SUITE ("tracktion_engine")
         for (int i = 0; i < 4; ++i)
             processInBlocks (analyser, buffer, { 256, 512, 1024 });
 
+        // The sums are cheap enough that a loaded CI runner may not schedule
+        // the poller before the passes above finish, so keep feeding audio
+        // until it has read at least once (with a deadline so a genuinely
+        // stuck poller still fails rather than hanging)
+        const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds (10);
+
+        while (numPolls.load() == 0 && std::chrono::steady_clock::now() < deadline)
+            processInBlocks (analyser, buffer, { 512 });
+
         processing = false;
         poller.join();
 
