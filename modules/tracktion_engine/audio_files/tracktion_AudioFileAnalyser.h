@@ -47,7 +47,10 @@ struct AudioAnalysisOptions
     bool spectrum = true;       ///< Banded energies, spectral centroid/rolloff, low/mid/high balance
     bool envelope = true;       ///< Downsampled peak/RMS dynamics curve over time
     bool stereo = true;         ///< Phase correlation, stereo width/balance, mono compatibility
+    bool spectrogram = true;    ///< Per-band level over time, with band stats and buildup detection
     int envelopePoints = 100;   ///< Number of points in the dynamics curve
+    int spectrogramSlices = 60; ///< Maximum number of time slices in the spectrogram
+    bool spectrogramThirdOctave = false;    ///< 31 third-octave bands instead of the 8 broad mixing bands
 
     /** Checked between blocks while the file streams; return true to abort
         the analysis, which then fails rather than returning partial results.
@@ -76,6 +79,9 @@ tl::expected<juce::var, juce::String> analyseAudioFile (Engine&, const juce::Fil
     Stereo: phase correlation (overall and worst 400ms window), stereo width
     and balance, mono summing loss, and a low-band (sub-200Hz) correlation and
     width for mono-bass checks. Null for mono files.
+    Spectrogram: per-band level over time (broad mixing bands by default, or
+    third-octave), each band with its own summary stats, plus detected
+    buildups (sustained level rises within one band).
 */
 tl::expected<juce::var, juce::String> analyseAudioFile (Engine&, const juce::File&,
                                                         const AudioAnalysisOptions& = {});

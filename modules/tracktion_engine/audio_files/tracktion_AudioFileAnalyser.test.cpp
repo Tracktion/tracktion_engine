@@ -205,6 +205,163 @@ TEST_SUITE ("tracktion_engine")
         CHECK_EQ ((double) peakDb[8], doctest::Approx (-1.9).epsilon (0.1));
     }
 
+    TEST_CASE ("AudioFileAnalyser spectrogram")
+    {
+        auto sine = [] (float frequency, int i) { return std::sin (juce::MathConstants<float>::twoPi * frequency * (float) i / 44100.0f); };
+
+        auto findBand = [] (const juce::var& spectrogram, const juce::String& name) -> juce::var
+        {
+            auto bands = spectrogram.getProperty ("bands", juce::var());
+
+            for (int i = 0; i < bands.size(); ++i)
+                if (bands[i].getProperty ("name", juce::var()).toString() == name)
+                    return bands[i];
+
+            return {};
+        };
+
+        SUBCASE ("a steady tone dominates its band in every slice, with no buildups")
+        {
+            juce::TemporaryFile file (".wav");
+            writeTestFile<juce::WavAudioFormat> (file.getFile(), 44100.0, 1, 4 * 44100, 32, [&] (int, int i)
+            {
+                return 0.5f * sine (1000.0f, i);
+            });
+
+            AudioAnalysisOptions options;
+            options.spectrogramSlices = 8;
+
+            auto spectrogram = analyse (file.getFile(), options).getProperty ("spectrogram", juce::var());
+            REQUIRE (! spectrogram.isVoid());
+
+            CHECK_EQ ((int) spectrogram.getProperty ("numSlices", 0), 8);
+            CHECK_EQ (num (spectrogram, "sliceSeconds"), doctest::Approx (0.5).epsilon (0.01));
+            CHECK_EQ (spectrogram.getProperty ("buildups", juce::var()).size(), 0);
+
+            // 1kHz sits at the edge of the mid band (400-1000): the tone must
+            // dominate one of the two bands it straddles, and stay steady
+            auto mid = findBand (spectrogram, "mid");
+            auto highMid = findBand (spectrogram, "highMid");
+            REQUIRE (! mid.isVoid());
+            REQUIRE (! highMid.isVoid());
+
+            const auto loudest = std::max (num (mid, "peakDb"), num (highMid, "peakDb"));
+            CHECK_EQ (loudest, doctest::Approx (0.0).epsilon (0.01));
+
+            auto sub = findBand (spectrogram, "sub");
+            CHECK_LT (num (sub, "meanDb"), -40.0);
+
+            auto levels = (num (mid, "peakDb") > num (highMid, "peakDb") ? mid : highMid).getProperty ("levelsDb", juce::var());
+            REQUIRE (levels.size() == 8);
+
+            for (int i = 0; i < levels.size(); ++i)
+                CHECK_GT ((double) levels[i], -1.0);
+        }
+
+        SUBCASE ("a crescendo in one band is flagged as a buildup in that band only")
+        {
+            // Steady 2kHz reference plus an 80Hz tone stepping up 4dB per second
+            juce::TemporaryFile file (".wav");
+            writeTestFile<juce::WavAudioFormat> (file.getFile(), 44100.0, 1, 8 * 44100, 32, [&] (int, int i)
+            {
+                const auto second = i / 44100;
+                const auto bassGain = 0.05f * std::pow (10.0f, (float) second * 4.0f / 20.0f);
+                return 0.25f * sine (2000.0f, i) + bassGain * sine (80.0f, i);
+            });
+
+            AudioAnalysisOptions options;
+            options.spectrogramSlices = 16;
+
+            auto spectrogram = analyse (file.getFile(), options).getProperty ("spectrogram", juce::var());
+            // Exactly one buildup: the leakage skirts rising alongside the
+            // tone in neighbouring bands are below the significance gate
+            auto buildups = spectrogram.getProperty ("buildups", juce::var());
+            REQUIRE (buildups.size() == 1);
+
+            auto buildup = buildups[0];
+            CHECK_EQ (buildup.getProperty ("band", juce::var()).toString(), juce::String ("bass"));
+
+            // ~28dB total rise over the file, detected in time order
+            CHECK_GT (num (buildup, "riseDb"), 20.0);
+            CHECK_LT (num (buildup, "fromSeconds"), num (buildup, "toSeconds"));
+
+            auto bass = findBand (spectrogram, "bass");
+            CHECK_GT (num (bass, "rangeDb"), 20.0);
+            CHECK_GT (num (bass, "peakSeconds"), 6.0);
+        }
+
+        SUBCASE ("an upward sweep peaks each band in ascending time order")
+        {
+            // 100Hz to 8kHz exponential sweep over 8s
+            juce::TemporaryFile file (".wav");
+            writeTestFile<juce::WavAudioFormat> (file.getFile(), 44100.0, 1, 8 * 44100, 32, [] (int, int i)
+            {
+                const auto t = (double) i / 44100.0;
+                const auto k = std::log (8000.0 / 100.0) / 8.0;
+                const auto phase = juce::MathConstants<double>::twoPi * 100.0 * (std::exp (k * t) - 1.0) / k;
+                return 0.5f * (float) std::sin (phase);
+            });
+
+            auto spectrogram = analyse (file.getFile()).getProperty ("spectrogram", juce::var());
+
+            CHECK_LT (num (findBand (spectrogram, "bass"), "peakSeconds"),
+                      num (findBand (spectrogram, "mid"), "peakSeconds"));
+            CHECK_LT (num (findBand (spectrogram, "mid"), "peakSeconds"),
+                      num (findBand (spectrogram, "presence"), "peakSeconds"));
+        }
+
+        SUBCASE ("third-octave mode agrees with the average spectrum's loudest band")
+        {
+            juce::TemporaryFile file (".wav");
+            writeTestFile<juce::WavAudioFormat> (file.getFile(), 44100.0, 1, 2 * 44100, 32, [&] (int, int i)
+            {
+                return 0.5f * sine (1000.0f, i);
+            });
+
+            AudioAnalysisOptions options;
+            options.spectrogramThirdOctave = true;
+
+            auto v = analyse (file.getFile(), options);
+            auto spectrogram = v.getProperty ("spectrogram", juce::var());
+            auto bands = spectrogram.getProperty ("bands", juce::var());
+            REQUIRE (bands.size() == 31);
+
+            juce::String loudestBand;
+            double loudestDb = -1000.0;
+
+            for (int i = 0; i < bands.size(); ++i)
+            {
+                if (num (bands[i], "meanDb") > loudestDb)
+                {
+                    loudestDb = num (bands[i], "meanDb");
+                    loudestBand = bands[i].getProperty ("name", juce::var()).toString();
+                }
+            }
+
+            CHECK_EQ (loudestBand, juce::String ("1000Hz"));
+        }
+
+        SUBCASE ("slices are clamped to the frames available, and the option removes the key")
+        {
+            // 0.25s: only a few FFT frames exist, far fewer than 60 slices
+            juce::TemporaryFile file (".wav");
+            writeTestFile<juce::WavAudioFormat> (file.getFile(), 44100.0, 1, 11025, 32, [&] (int, int i)
+            {
+                return 0.5f * sine (440.0f, i);
+            });
+
+            auto spectrogram = analyse (file.getFile()).getProperty ("spectrogram", juce::var());
+            REQUIRE (! spectrogram.isVoid());
+            const auto numSlices = (int) spectrogram.getProperty ("numSlices", 0);
+            CHECK_GT (numSlices, 0);
+            CHECK_LT (numSlices, 60);
+
+            AudioAnalysisOptions options;
+            options.spectrogram = false;
+            CHECK (! analyse (file.getFile(), options).hasProperty ("spectrogram"));
+        }
+    }
+
     TEST_CASE ("AudioFileAnalyser stereo field statistics")
     {
         auto sine = [] (float frequency, int i) { return std::sin (juce::MathConstants<float>::twoPi * frequency * (float) i / 44100.0f); };
