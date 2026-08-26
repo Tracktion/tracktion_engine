@@ -729,6 +729,12 @@ namespace audio_analysis_utils
             stereo->setProperty ("balance", full.overallValid ? juce::var (rounded (full.overallBalance, 2)) : juce::var());
             stereo->setProperty ("monoLossDb", full.overallValid ? juce::var (rounded (full.monoLossDb)) : juce::var());
 
+            // Null unless the channels matched strongly enough at some lag for
+            // the offset to mean anything
+            stereo->setProperty ("delayMs", full.alignmentValid ? juce::var (rounded (full.interChannelDelayMs, 3)) : juce::var());
+            stereo->setProperty ("delaySamples", full.alignmentValid ? juce::var (full.interChannelDelaySamples) : juce::var());
+            stereo->setProperty ("polarityInverted", full.alignmentValid ? juce::var (full.polarityInverted) : juce::var());
+
             auto lowBandResult = new juce::DynamicObject();
             lowBandResult->setProperty ("correlation", low.overallValid ? juce::var (rounded (low.overallCorrelation, 2)) : juce::var());
             lowBandResult->setProperty ("width", low.overallValid ? juce::var (rounded (low.overallWidth, 2)) : juce::var());

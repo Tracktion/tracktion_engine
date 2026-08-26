@@ -421,6 +421,161 @@ TEST_SUITE ("tracktion_engine")
         CHECK_GT (numPolls.load(), 0);
         CHECK (analyser.getReadings().windowValid);
     }
+
+    //==============================================================================
+    TEST_CASE ("StereoFieldAnalyser inter-channel alignment")
+    {
+        using namespace stereo_field_tests;
+
+        // Noise correlates well at exactly one lag, which is what an alignment
+        // estimator needs; a pure tone would match at every period.
+        auto makeDelayedNoise = [] (int numSamples, int delaySamples, float gain)
+        {
+            juce::Random random (1234);
+
+            // Both reads are offset by |delay|, and the right channel's by a
+            // further |delay| when the delay is negative
+            const auto offset = std::abs (delaySamples);
+            std::vector<float> source ((size_t) (numSamples + 2 * offset + 1));
+
+            for (auto& v : source)
+                v = random.nextFloat() * 2.0f - 1.0f;
+
+            return makeStereoBuffer (numSamples, [&source, delaySamples, offset, gain] (int i)
+            {
+                // Positive delaySamples => the right channel is later
+                const auto l = source[(size_t) (i + offset)];
+                const auto r = gain * source[(size_t) (i + offset - delaySamples)];
+                return std::pair<float, float> { l, r };
+            });
+        };
+
+        const auto numSamples = 3 * (int) testSampleRate;
+
+        SUBCASE ("identical channels report no delay")
+        {
+            auto readings = analyse (makeDelayedNoise (numSamples, 0, 1.0f));
+
+            REQUIRE (readings.alignmentValid);
+            CHECK_EQ (readings.interChannelDelaySamples, 0);
+            CHECK_EQ (readings.interChannelDelayMs, doctest::Approx (0.0).epsilon (0.01));
+            CHECK_FALSE (readings.polarityInverted);
+        }
+
+        SUBCASE ("a delayed right channel reports a positive delay")
+        {
+            // 60 samples at 44.1kHz is ~1.36ms, well inside the +/-5ms search
+            auto readings = analyse (makeDelayedNoise (numSamples, 60, 1.0f));
+
+            REQUIRE (readings.alignmentValid);
+            CHECK_EQ (readings.interChannelDelaySamples, doctest::Approx (60).epsilon (0.15));
+            CHECK_EQ (readings.interChannelDelayMs,
+                      doctest::Approx (60.0 * 1000.0 / testSampleRate).epsilon (0.15));
+            CHECK_FALSE (readings.polarityInverted);
+        }
+
+        SUBCASE ("a delayed left channel reports a negative delay")
+        {
+            auto readings = analyse (makeDelayedNoise (numSamples, -60, 1.0f));
+
+            REQUIRE (readings.alignmentValid);
+            CHECK_LT (readings.interChannelDelaySamples, 0);
+            CHECK_EQ (readings.interChannelDelaySamples, doctest::Approx (-60).epsilon (0.15));
+        }
+
+        SUBCASE ("an inverted channel is detected without disturbing the delay")
+        {
+            auto readings = analyse (makeDelayedNoise (numSamples, 0, -1.0f));
+
+            REQUIRE (readings.alignmentValid);
+            CHECK (readings.polarityInverted);
+            CHECK_EQ (readings.interChannelDelaySamples, 0);
+
+            // ...and the correlation reading still reports the cancellation
+            CHECK_LT (readings.correlation, -0.9f);
+        }
+
+        SUBCASE ("inversion and delay are reported together")
+        {
+            auto readings = analyse (makeDelayedNoise (numSamples, 40, -1.0f));
+
+            REQUIRE (readings.alignmentValid);
+            CHECK (readings.polarityInverted);
+            CHECK_EQ (readings.interChannelDelaySamples, doctest::Approx (40).epsilon (0.2));
+        }
+
+        SUBCASE ("independent channels report no usable alignment")
+        {
+            juce::Random random (99);
+
+            auto readings = analyse (makeStereoBuffer (numSamples, [&random] (int)
+            {
+                return std::pair<float, float> { random.nextFloat() * 2.0f - 1.0f,
+                                                 random.nextFloat() * 2.0f - 1.0f };
+            }));
+
+            // There is no true offset here, so inventing one would be worse
+            // than admitting the estimate is unusable
+            CHECK_FALSE (readings.alignmentValid);
+        }
+
+        SUBCASE ("a sustained tone is too ambiguous to align")
+        {
+            // A pure tone correlates just as strongly at every multiple of its
+            // period, so there is no single true offset to report
+            auto readings = analyse (makeStereoBuffer (numSamples, [] (int i)
+            {
+                const auto value = sine (i, 997.0, 0.5f);
+                return std::pair<float, float> { value, value };
+            }));
+
+            CHECK_FALSE (readings.alignmentValid);
+        }
+
+        SUBCASE ("silence reports no usable alignment")
+        {
+            auto readings = analyse (makeStereoBuffer (numSamples, [] (int)
+            {
+                return std::pair<float, float> { 0.0f, 0.0f };
+            }));
+
+            CHECK_FALSE (readings.alignmentValid);
+        }
+
+        SUBCASE ("the estimate does not depend on the block sizes it is fed")
+        {
+            auto buffer = makeDelayedNoise (numSamples, 60, 1.0f);
+
+            auto a = analyse (buffer, { 512 });
+            auto b = analyse (buffer, { 1, 33, 4096, 129 });
+
+            REQUIRE (a.alignmentValid);
+            REQUIRE (b.alignmentValid);
+            CHECK_EQ (a.interChannelDelaySamples, b.interChannelDelaySamples);
+            CHECK_EQ (a.interChannelDelayMs, doctest::Approx (b.interChannelDelayMs).epsilon (0.001));
+            CHECK_EQ (a.polarityInverted, b.polarityInverted);
+        }
+
+        SUBCASE ("a reset clears the alignment estimate")
+        {
+            StereoFieldAnalyser analyser;
+            analyser.prepare (testSampleRate, 2, 8192);
+
+            processInBlocks (analyser, makeDelayedNoise (numSamples, 60, 1.0f), { 512 });
+            REQUIRE (analyser.getReadings().alignmentValid);
+
+            analyser.requestReset();
+
+            // The reset is picked up on the next block, and the estimate stays
+            // invalid until a fresh window has been filled
+            processInBlocks (analyser, makeStereoBuffer (256, [] (int)
+            {
+                return std::pair<float, float> { 0.0f, 0.0f };
+            }), { 256 });
+
+            CHECK_FALSE (analyser.getReadings().alignmentValid);
+        }
+    }
 }
 
 } // namespace tracktion::inline engine
