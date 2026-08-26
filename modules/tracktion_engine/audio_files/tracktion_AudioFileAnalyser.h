@@ -72,7 +72,8 @@ tl::expected<juce::var, juce::String> analyseAudioFile (Engine&, const juce::Fil
     Level stats: sample peak, oversampled true peak, RMS, EBU R128 loudness
     (integrated, max momentary, max short-term - BS.1770-4 K-weighting and
     gating), loudness range in LU (EBU Tech 3342), clipped-sample count and the
-    ratio of silent time.
+    ratio of silent time, plus derived dynamics statistics: crest factor, PLR,
+    PSR and transient density.
     Spectrum: third-octave band energies relative to the loudest band, plus
     spectral centroid, 85% rolloff and low/mid/high balance.
     Envelope: peak and RMS in dB over evenly-spaced windows.

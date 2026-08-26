@@ -205,6 +205,73 @@ TEST_SUITE ("tracktion_engine")
         CHECK_EQ ((double) peakDb[8], doctest::Approx (-1.9).epsilon (0.1));
     }
 
+    TEST_CASE ("AudioFileAnalyser dynamics statistics")
+    {
+        SUBCASE ("a sine has 3dB of crest, PLR and PSR, and no transients")
+        {
+            // 997Hz at -6dBFS: peak -6.02, RMS/integrated/short-term -9.03
+            juce::TemporaryFile file (".wav");
+            writeTestFile<juce::WavAudioFormat> (file.getFile(), 44100.0, 1, 4 * 44100, 32, [] (int, int i)
+            {
+                return 0.5f * std::sin (juce::MathConstants<float>::twoPi * 997.0f * (float) i / 44100.0f);
+            });
+
+            auto dynamics = analyse (file.getFile()).getProperty ("dynamics", juce::var());
+            REQUIRE (! dynamics.isVoid());
+
+            CHECK_EQ (num (dynamics, "crestFactorDb"), doctest::Approx (3.0).epsilon (0.02));
+            CHECK_EQ (num (dynamics, "plrDb"), doctest::Approx (3.0).epsilon (0.05));
+            CHECK_EQ (num (dynamics, "psrDb"), doctest::Approx (3.0).epsilon (0.05));
+            CHECK_EQ (num (dynamics, "transientsPerSecond"), 0.0);
+        }
+
+        SUBCASE ("a square wave has no crest at all")
+        {
+            juce::TemporaryFile file (".wav");
+            writeTestFile<juce::WavAudioFormat> (file.getFile(), 44100.0, 1, 2 * 44100, 32, [] (int, int i)
+            {
+                return std::sin (juce::MathConstants<float>::twoPi * 220.0f * (float) i / 44100.0f) >= 0.0f ? 0.5f : -0.5f;
+            });
+
+            auto dynamics = analyse (file.getFile()).getProperty ("dynamics", juce::var());
+            CHECK_EQ (num (dynamics, "crestFactorDb"), doctest::Approx (0.0).epsilon (0.02));
+        }
+
+        SUBCASE ("a click train's transient density matches its rate")
+        {
+            // 10ms noise bursts every 250ms over quiet noise: 4 onsets a second
+            juce::TemporaryFile file (".wav");
+            juce::Random random (5);
+            writeTestFile<juce::WavAudioFormat> (file.getFile(), 44100.0, 1, 8 * 44100, 32, [&] (int, int i)
+            {
+                const auto positionInBurstCycle = i % 11025;
+                const auto noise = random.nextFloat() - 0.5f;
+                return positionInBurstCycle < 441 ? 0.9f * noise : 0.02f * noise;
+            });
+
+            auto dynamics = analyse (file.getFile()).getProperty ("dynamics", juce::var());
+
+            // The first second is detector warm-up, so allow it to be missed
+            CHECK_GT (num (dynamics, "transientsPerSecond"), 3.0);
+            CHECK_LT (num (dynamics, "transientsPerSecond"), 5.0);
+        }
+
+        SUBCASE ("loudness-derived stats are null when the file is too short to measure them")
+        {
+            // 1s: integrated is valid but no 3s short-term window ever fills
+            juce::TemporaryFile file (".wav");
+            writeTestFile<juce::WavAudioFormat> (file.getFile(), 44100.0, 1, 44100, 32, [] (int, int i)
+            {
+                return 0.5f * std::sin (juce::MathConstants<float>::twoPi * 997.0f * (float) i / 44100.0f);
+            });
+
+            auto dynamics = analyse (file.getFile()).getProperty ("dynamics", juce::var());
+            CHECK (! dynamics.getProperty ("plrDb", juce::var()).isVoid());
+            CHECK (dynamics.getProperty ("psrDb", juce::var()).isVoid());
+            CHECK (dynamics.getProperty ("transientsPerSecond", juce::var (1)).isVoid());
+        }
+    }
+
     TEST_CASE ("AudioFileAnalyser spectrogram")
     {
         auto sine = [] (float frequency, int i) { return std::sin (juce::MathConstants<float>::twoPi * frequency * (float) i / 44100.0f); };

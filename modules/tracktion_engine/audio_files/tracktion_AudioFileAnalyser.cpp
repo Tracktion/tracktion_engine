@@ -35,6 +35,7 @@ namespace audio_analysis_utils
             sampleRate = info.sampleRate;
             numChannels = std::max (1, info.numChannels);
             gatingBlockSamples = std::max (1, (int) std::llround (sampleRate * 0.1));
+            transientBlockSamples = std::max (1, (int) std::llround (sampleRate * 0.05));
 
             meter.prepare (sampleRate, numChannels, maxBlockSize);
         }
@@ -67,18 +68,59 @@ namespace audio_analysis_utils
                                                                  (choc::buffer::FrameCount) numSamples));
 
             // The silence ratio's per-block unweighted energy, on the same
-            // 100ms grid as the meter's gating blocks
+            // 100ms grid as the meter's gating blocks, and the transient
+            // counter's finer 50ms grid
             for (int i = 0; i < numSamples; ++i)
             {
+                double frameEnergy = 0.0;
+
                 for (int ch = 0; ch < numChannelsToUse; ++ch)
                 {
                     const double sample = buffer.getSample (ch, i);
-                    plainBlockEnergy += sample * sample;
+                    frameEnergy += sample * sample;
                 }
+
+                plainBlockEnergy += frameEnergy;
+                transientBlockEnergy += frameEnergy;
 
                 if (++samplesIntoBlock >= gatingBlockSamples)
                     finishSilenceBlock();
+
+                if (++samplesIntoTransientBlock >= transientBlockSamples)
+                    finishTransientBlock();
             }
+        }
+
+        void finishTransientBlock()
+        {
+            // An onset is a block whose energy jumps well above the recent
+            // average - the same idea as the engine's BeatDetect, kept coarse
+            // on purpose: this is a density statistic, not a beat grid
+            constexpr int historyBlocks = 20;   // 1s of history
+            constexpr double onsetRatio = 4.0;  // 6dB above the running mean
+
+            if ((int) energyHistory.size() >= historyBlocks)
+            {
+                const auto mean = historyEnergySum / (double) energyHistory.size();
+
+                if (transientBlockEnergy > onsetRatio * std::max (1.0e-12, mean) && ! previousBlockWasOnset)
+                {
+                    ++numTransients;
+                    previousBlockWasOnset = true;
+                }
+                else
+                {
+                    previousBlockWasOnset = false;
+                }
+
+                historyEnergySum -= energyHistory.front();
+                energyHistory.pop_front();
+            }
+
+            energyHistory.push_back (transientBlockEnergy);
+            historyEnergySum += transientBlockEnergy;
+            transientBlockEnergy = 0.0;
+            samplesIntoTransientBlock = 0;
         }
 
         void finishSilenceBlock()
@@ -115,6 +157,18 @@ namespace audio_analysis_utils
             result.setProperty ("maxMomentaryLufs", readings.momentaryValid ? juce::var (rounded (readings.maxMomentaryLufs)) : juce::var());
             result.setProperty ("maxShortTermLufs", readings.shortTermValid ? juce::var (rounded (readings.maxShortTermLufs)) : juce::var());
             result.setProperty ("loudnessRangeLu", readings.loudnessRangeValid ? juce::var (rounded (readings.loudnessRangeLu)) : juce::var());
+
+            // Derived dynamics statistics: how squashed is this?
+            // Crest = sample peak over RMS; PLR = true peak over integrated
+            // loudness; PSR = true peak over the loudest short-term window
+            auto dynamics = new juce::DynamicObject();
+            dynamics->setProperty ("crestFactorDb", rounded (safeDb (peak) - safeDb (rms)));
+            dynamics->setProperty ("plrDb", readings.integratedValid ? juce::var (rounded (readings.truePeakDb - readings.integratedLufs)) : juce::var());
+            dynamics->setProperty ("psrDb", readings.shortTermValid ? juce::var (rounded (readings.truePeakDb - readings.maxShortTermLufs)) : juce::var());
+
+            const auto seconds = (double) totalSamplesPerChannel / sampleRate;
+            dynamics->setProperty ("transientsPerSecond", seconds > 1.0 ? juce::var (rounded ((double) numTransients / seconds, 2)) : juce::var());
+            result.setProperty ("dynamics", juce::var (dynamics));
         }
 
         static constexpr int maxBlockSize = 8192;
@@ -131,6 +185,12 @@ namespace audio_analysis_utils
         int gatingBlockSamples = 4410, samplesIntoBlock = 0;
         double plainBlockEnergy = 0.0;
         int silentBlocks = 0, totalBlocks = 0;
+
+        int transientBlockSamples = 2205, samplesIntoTransientBlock = 0;
+        double transientBlockEnergy = 0.0, historyEnergySum = 0.0;
+        std::deque<double> energyHistory;
+        int numTransients = 0;
+        bool previousBlockWasOnset = false;
     };
 
     //==============================================================================
