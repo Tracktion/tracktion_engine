@@ -111,16 +111,29 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a63d7bc3471be5a2980c974bb2b2e38ca" id="r_a63d7bc3471be5a2980c974bb2b2e38ca"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1StereoFieldAnalyser_1_1Readings.html#a63d7bc3471be5a2980c974bb2b2e38ca">monoLossDb</a> = 0.0f</td></tr>
 <tr class="memdesc:a63d7bc3471be5a2980c974bb2b2e38ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overall mono summing loss, in dB (positive = quieter in mono).  <br /></td></tr>
 <tr class="separator:a63d7bc3471be5a2980c974bb2b2e38ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2169175ce3f739e628f820d461720f5f" id="r_a2169175ce3f739e628f820d461720f5f"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1StereoFieldAnalyser_1_1Readings.html#a2169175ce3f739e628f820d461720f5f">interChannelDelayMs</a> = 0.0f</td></tr>
+<tr class="memdesc:a2169175ce3f739e628f820d461720f5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Right-channel delay relative to left, in ms (negative = left is late).  <br /></td></tr>
+<tr class="separator:a2169175ce3f739e628f820d461720f5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac657629684f6415db61131193a57460a" id="r_ac657629684f6415db61131193a57460a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1StereoFieldAnalyser_1_1Readings.html#ac657629684f6415db61131193a57460a">interChannelDelaySamples</a> = 0</td></tr>
+<tr class="memdesc:ac657629684f6415db61131193a57460a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The same offset at the prepared sample rate.  <br /></td></tr>
+<tr class="separator:ac657629684f6415db61131193a57460a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ef7a491ca1b093d03a6c14e6587da99" id="r_a3ef7a491ca1b093d03a6c14e6587da99"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1StereoFieldAnalyser_1_1Readings.html#a3ef7a491ca1b093d03a6c14e6587da99">polarityInverted</a> = false</td></tr>
+<tr class="memdesc:a3ef7a491ca1b093d03a6c14e6587da99"><td class="mdescLeft">&#160;</td><td class="mdescRight">True when the channels match best at inverted polarity.  <br /></td></tr>
+<tr class="separator:a3ef7a491ca1b093d03a6c14e6587da99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13394fb0f62ce744187c86e9ba4ad6c7" id="r_a13394fb0f62ce744187c86e9ba4ad6c7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1StereoFieldAnalyser_1_1Readings.html#a13394fb0f62ce744187c86e9ba4ad6c7">windowValid</a> = false</td></tr>
 <tr class="memdesc:a13394fb0f62ce744187c86e9ba4ad6c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">False until 400ms of non-silent audio has been processed.  <br /></td></tr>
 <tr class="separator:a13394fb0f62ce744187c86e9ba4ad6c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8d14ef93db39218661d561ee549f773" id="r_ab8d14ef93db39218661d561ee549f773"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1StereoFieldAnalyser_1_1Readings.html#ab8d14ef93db39218661d561ee549f773">overallValid</a> = false</td></tr>
 <tr class="memdesc:ab8d14ef93db39218661d561ee549f773"><td class="mdescLeft">&#160;</td><td class="mdescRight">False until any non-silent block has been processed.  <br /></td></tr>
 <tr class="separator:ab8d14ef93db39218661d561ee549f773"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a227929b17fb86bd3a9854d38b4ed2572" id="r_a227929b17fb86bd3a9854d38b4ed2572"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1StereoFieldAnalyser_1_1Readings.html#a227929b17fb86bd3a9854d38b4ed2572">alignmentValid</a> = false</td></tr>
+<tr class="memdesc:a227929b17fb86bd3a9854d38b4ed2572"><td class="mdescLeft">&#160;</td><td class="mdescRight">False until the channels match strongly enough at some lag to trust the estimate.  <br /></td></tr>
+<tr class="separator:a227929b17fb86bd3a9854d38b4ed2572"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A snapshot of the analyser's current readings. </p>
-<p>Correlation is the Pearson correlation of the two channels: +1 for identical (mono-compatible), 0 for unrelated, negative for phase-cancelling material. Balance is the energy split, -1 hard left to +1 hard right. Width is the side energy as a fraction of mid + side energy: 0 for mono, 0.5 for uncorrelated channels, 1 for pure side (out-of-phase) content. monoLossDb is how many dB the overall level drops when the two channels are summed to mono ((l+r)/2 against the per-channel average): 0 for centred material, 3 for uncorrelated or hard-panned material, large for phase-cancelling material. </p>
+<p>Correlation is the Pearson correlation of the two channels: +1 for identical (mono-compatible), 0 for unrelated, negative for phase-cancelling material. Balance is the energy split, -1 hard left to +1 hard right. Width is the side energy as a fraction of mid + side energy: 0 for mono, 0.5 for uncorrelated channels, 1 for pure side (out-of-phase) content. monoLossDb is how many dB the overall level drops when the two channels are summed to mono ((l+r)/2 against the per-channel average): 0 for centred material, 3 for uncorrelated or hard-panned material, large for phase-cancelling material.</p>
+<p>The alignment readings estimate a whole-signal timing offset between the two channels by cross-correlating them over a range of lags, which is what correlation alone cannot tell you: correlation says the channels disagree, alignment says by how much and in which direction. A positive delay means the right channel arrives later than the left. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a9848cfc53380bfcbe61039b6c91452f9" name="a9848cfc53380bfcbe61039b6c91452f9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9848cfc53380bfcbe61039b6c91452f9">&#9670;&#160;</a></span>correlation</h2>
@@ -250,6 +263,54 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a2169175ce3f739e628f820d461720f5f" name="a2169175ce3f739e628f820d461720f5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2169175ce3f739e628f820d461720f5f">&#9670;&#160;</a></span>interChannelDelayMs</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float engine::StereoFieldAnalyser::Readings::interChannelDelayMs = 0.0f</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Right-channel delay relative to left, in ms (negative = left is late). </p>
+
+</div>
+</div>
+<a id="ac657629684f6415db61131193a57460a" name="ac657629684f6415db61131193a57460a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac657629684f6415db61131193a57460a">&#9670;&#160;</a></span>interChannelDelaySamples</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int engine::StereoFieldAnalyser::Readings::interChannelDelaySamples = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The same offset at the prepared sample rate. </p>
+
+</div>
+</div>
+<a id="a3ef7a491ca1b093d03a6c14e6587da99" name="a3ef7a491ca1b093d03a6c14e6587da99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ef7a491ca1b093d03a6c14e6587da99">&#9670;&#160;</a></span>polarityInverted</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool engine::StereoFieldAnalyser::Readings::polarityInverted = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>True when the channels match best at inverted polarity. </p>
+
+</div>
+</div>
 <a id="a13394fb0f62ce744187c86e9ba4ad6c7" name="a13394fb0f62ce744187c86e9ba4ad6c7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a13394fb0f62ce744187c86e9ba4ad6c7">&#9670;&#160;</a></span>windowValid</h2>
 
@@ -282,13 +343,29 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a227929b17fb86bd3a9854d38b4ed2572" name="a227929b17fb86bd3a9854d38b4ed2572"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a227929b17fb86bd3a9854d38b4ed2572">&#9670;&#160;</a></span>alignmentValid</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool engine::StereoFieldAnalyser::Readings::alignmentValid = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>False until the channels match strongly enough at some lag to trust the estimate. </p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="tracktion__StereoFieldAnalyser_8h.html">tracktion_StereoFieldAnalyser.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Aug 26 2026 13:44:10 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Wed Aug 26 2026 20:33:48 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

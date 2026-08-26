@@ -61888,6 +61888,27 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
+      <type>float</type>
+      <name>interChannelDelayMs</name>
+      <anchorfile>structengine_1_1StereoFieldAnalyser_1_1Readings.html</anchorfile>
+      <anchor>a2169175ce3f739e628f820d461720f5f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
+      <name>interChannelDelaySamples</name>
+      <anchorfile>structengine_1_1StereoFieldAnalyser_1_1Readings.html</anchorfile>
+      <anchor>ac657629684f6415db61131193a57460a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>polarityInverted</name>
+      <anchorfile>structengine_1_1StereoFieldAnalyser_1_1Readings.html</anchorfile>
+      <anchor>a3ef7a491ca1b093d03a6c14e6587da99</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
       <type>bool</type>
       <name>windowValid</name>
       <anchorfile>structengine_1_1StereoFieldAnalyser_1_1Readings.html</anchorfile>
@@ -61899,6 +61920,13 @@
       <name>overallValid</name>
       <anchorfile>structengine_1_1StereoFieldAnalyser_1_1Readings.html</anchorfile>
       <anchor>ab8d14ef93db39218661d561ee549f773</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>alignmentValid</name>
+      <anchorfile>structengine_1_1StereoFieldAnalyser_1_1Readings.html</anchorfile>
+      <anchor>a227929b17fb86bd3a9854d38b4ed2572</anchor>
       <arglist></arglist>
     </member>
   </compound>

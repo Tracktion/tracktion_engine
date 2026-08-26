@@ -351,7 +351,7 @@ var searchData=
   ['countpointsinregion_348',['countPointsInRegion',['../classengine_1_1AutomationCurve.html#a833f94892017d516f9c1966809f32cf8',1,'engine::AutomationCurve']]],
   ['counttemposinregion_349',['countTemposInRegion',['../classengine_1_1TempoSequence.html#a12ae888f2bb602919583908de0e045dc',1,'engine::TempoSequence']]],
   ['cpu_350',['cpu',['../namespaceengine.html#a37f708109fdbdb9329a540048b1a040fad9747e2da342bdb995f6389533ad1a3d',1,'engine']]],
-  ['cpumetertimer_351',['cpumetertimer',['../structengine_1_1MackieMCU_1_1CpuMeterTimer.html#a10eea7cc455246f9b8d07a0c121af4c2',1,'engine::MackieMCU::CpuMeterTimer::CpuMeterTimer()'],['../structengine_1_1MackieMCU_1_1CpuMeterTimer.html',1,'engine::MackieMCU::CpuMeterTimer'],['../classengine_1_1MackieMCU.html#a34337897e553764f9d730b13b30cc0f2',1,'engine::MackieMCU::cpuMeterTimer']]],
+  ['cpumetertimer_351',['cpumetertimer',['../classengine_1_1MackieMCU.html#a34337897e553764f9d730b13b30cc0f2',1,'engine::MackieMCU::cpuMeterTimer'],['../structengine_1_1MackieMCU_1_1CpuMeterTimer.html',1,'engine::MackieMCU::CpuMeterTimer'],['../structengine_1_1MackieMCU_1_1CpuMeterTimer.html#a10eea7cc455246f9b8d07a0c121af4c2',1,'engine::MackieMCU::CpuMeterTimer::CpuMeterTimer()']]],
   ['cputimercallback_352',['cpuTimerCallback',['../classengine_1_1MackieMCU.html#a667cf82a347d6cd5738f11e8579378fc',1,'engine::MackieMCU']]],
   ['cpuvisible_353',['cpuVisible',['../classengine_1_1MackieMCU.html#a9305fbb82d928e90ad9174b51793da2b',1,'engine::MackieMCU']]],
   ['crash_5ftracer_354',['CRASH_TRACER',['../tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17',1,'tracktion_CrashTracer.h']]],
