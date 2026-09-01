@@ -31,17 +31,6 @@ namespace editnode_test_helpers
         return createNodeForEdit (edit, params);
     }
 
-    static juce::BigInteger getTracksMask (const juce::Array<Track*>& tracks)
-    {
-        juce::BigInteger tracksMask;
-
-        for (auto t : tracks)
-            tracksMask.setBit (t->getIndexInEditTrackList());
-
-        jassert (tracksMask.countNumberOfSetBits() == tracks.size());
-        return tracksMask;
-    }
-
     static Renderer::Statistics logStats (Renderer::Statistics stats)
     {
         MESSAGE (("Stats: peak " + juce::String (stats.peak) + ", avg " + juce::String (stats.average) + ", duration " + juce::String (stats.audioDuration)).toStdString());
@@ -51,7 +40,7 @@ namespace editnode_test_helpers
     static void expectPeak (Edit& edit, TimeRange tr, juce::Array<Track*> tracks, float expectedPeak)
     {
         auto blockSize = edit.engine.getDeviceManager().getBlockSize();
-        auto stats = logStats (Renderer::measureStatistics ("", edit, tr, getTracksMask (tracks), blockSize));
+        auto stats = logStats (Renderer::measureStatistics ("", edit, tr, toBitSet (tracks), blockSize));
         CHECK_MESSAGE (juce::isWithin (stats.peak, expectedPeak, 0.01f),
                        (juce::String ("Expected peak: ") + juce::String (expectedPeak, 4)).toStdString());
     }
@@ -59,7 +48,7 @@ namespace editnode_test_helpers
     static void expectRMS (Edit& edit, TimeRange tr, juce::Array<Track*> tracks, float expectedRMS)
     {
         auto blockSize = edit.engine.getDeviceManager().getBlockSize();
-        auto stats = logStats (Renderer::measureStatistics ("", edit, tr, getTracksMask (tracks), blockSize));
+        auto stats = logStats (Renderer::measureStatistics ("", edit, tr, toBitSet (tracks), blockSize));
         CHECK_MESSAGE (juce::isWithin (stats.average, expectedRMS, 0.01f),
                        (juce::String ("Expected RMS: ") + juce::String (expectedRMS, 4)).toStdString());
     }

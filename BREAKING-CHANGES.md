@@ -3,6 +3,20 @@
 ___
 
 ### Change
+`toBitSet (const juce::Array<Track*>&)` now returns a bitset of only the tracks passed in.
+
+#### Possible Issues
+Previously it ignored its argument and set a bit for every track in the Edit, so anything built from it addressed the whole Edit. Code that passed a subset of tracks - most visibly `Renderer::Parameters::tracksToDo` and `Renderer::measureStatistics()` - will now render or measure just that subset instead of everything.
+
+#### Workaround
+Pass `getAllTracks (edit)` where the whole Edit really is wanted, or leave `Renderer::Parameters::tracksToDo` empty, which already means "all tracks".
+
+#### Rationale
+The function used its argument only to reach the Edit and then looped over every track, which contradicted its documented behaviour and silently broke subset rendering. See issue #399.
+
+___
+
+### Change
 `Plugin` has a new pure virtual method `getBusses()` which every subclass must implement.
 
 #### Possible Issues

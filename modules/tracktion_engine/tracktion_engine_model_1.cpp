@@ -37,6 +37,7 @@ using namespace std::literals;
 #include "model/edit/tracktion_Edit.cpp"
 #include "model/edit/tracktion_Edit.test.cpp"
 #include "model/edit/tracktion_EditUtilities.cpp"
+#include "model/edit/tracktion_EditUtilities.test.cpp"
 #include "model/edit/tracktion_Scene.cpp"
 #include "model/edit/tracktion_SourceFileReference.cpp"
 #include "model/edit/tracktion_SourceFileReference.test.cpp"
