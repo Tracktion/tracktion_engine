@@ -11,7 +11,6 @@
 #pragma once
 
 #include <span>
-#include "../../../3rd_party/nanorange/tracktion_nanorange.hpp"
 
 namespace tracktion::inline engine
 {
@@ -118,7 +117,7 @@ inline std::shared_ptr<ClipContext> createClipContext (Clip& c)
     // Create groups
     ctx->sceneIndex = static_cast<size_t> (c.getClipSlot()->getIndex());
 
-    for (auto groupView : nano::split_view (allSceneHandles, { nullptr }))
+    for (auto groupView : split (allSceneHandles, nullptr))
     {
         std::vector<std::shared_ptr<LaunchHandle>> group;
 

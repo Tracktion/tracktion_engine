@@ -14,7 +14,6 @@
 #include <chrono>
 
 #include "3rd_party/magic_enum/tracktion_magic_enum.hpp"
-#include "3rd_party/nanorange/tracktion_nanorange.hpp"
 
 using namespace std::literals;
 
