@@ -412,6 +412,93 @@ namespace wavenode_test_helpers
             // After clip: should be silent
             expectAudioBuffer (testContext->buffer, 0, toSamples ({ toPosition (fileLength) + fileLength, fileLength }, ts.sampleRate), 0.0f, 0.0f);
         }
+
+        // Check the stretchers' latency compensation lines the source up with the timeline
+        // rather than just producing some audio at roughly the right place. The source has
+        // a silent second of its three so a mis-compensated stretcher moves the onsets.
+        // The clip offset matters here as the compensation has to survive the reader being
+        // repositioned, not just started from the beginning of the file
+        {
+            const auto onsetFileLength = 3_td;
+            const auto numOnsetFrames = (choc::buffer::FrameCount) toSamples (toPosition (onsetFileLength), ts.sampleRate);
+            const auto oneSecondOfFrames = numOnsetFrames / 3;
+            auto onsetBuffer = choc::buffer::createChannelArrayBuffer (1, numOnsetFrames,
+                                                                       [=] (auto, auto frame) -> float
+                                                                       {
+                                                                           if (frame >= oneSecondOfFrames && frame < oneSecondOfFrames * 2)
+                                                                               return 0.0f;
+
+                                                                           return (float) std::sin (juce::MathConstants<double>::twoPi * 220.0
+                                                                                                     * (double) frame / ts.sampleRate);
+                                                                       });
+            auto onsetFile = writeToTemporaryFile<juce::WavAudioFormat> (onsetBuffer.getView(), ts.sampleRate, 0);
+            AudioFile onsetAudioFile (engine, onsetFile->getFile());
+
+            auto getRMS = [] (juce::AudioBuffer<float>& buffer, juce::Range<int64_t> range)
+                          {
+                              return buffer.getRMSLevel (0, (int) range.getStart(), (int) range.getLength());
+                          };
+
+            for (auto mode : syncTestModes)
+            {
+                for (auto readAhead : { WaveNodeRealTime::ReadAhead::no, WaveNodeRealTime::ReadAhead::yes })
+                {
+                    // Read-ahead doesn't currently support every algorithm, SoundTouch
+                    // produces no output at all through it
+                    if (readAhead == WaveNodeRealTime::ReadAhead::yes && mode == TimeStretcher::Mode::soundtouchBetter)
+                        continue;
+
+                    // Each entry is the clip's source offset and the sections of the timeline
+                    // that must then be audible, the clip always starting at 1s
+                    const std::pair<TimeDuration, std::array<bool, 3>> offsetsAndExpectedSections[] =
+                    {
+                        { 0_td, { true, false, true } },
+                        { 1_td, { false, true, false } }
+                    };
+
+                    for (auto [offset, expectedSections] : offsetsAndExpectedSections)
+                    {
+                        CAPTURE (magic_enum::enum_name (mode));
+                        CAPTURE (readAhead == WaveNodeRealTime::ReadAhead::yes);
+                        CAPTURE (offset.inSeconds());
+
+                        auto node = std::make_unique<WaveNodeRealTime> (onsetAudioFile,
+                                                                        TimeRange (1_tp, onsetFileLength - offset),
+                                                                        offset,
+                                                                        TimeRange(),
+                                                                        LiveClipLevel(),
+                                                                        1.0,
+                                                                        ChannelConfiguration::discreteChannels (onsetAudioFile.getNumChannels()),
+                                                                        ChannelConfiguration::discreteChannels (1),
+                                                                        processState,
+                                                                        EditItemID(),
+                                                                        true,
+                                                                        ResamplingQuality::lagrange,
+                                                                        SpeedFadeDescription(),
+                                                                        std::nullopt,
+                                                                        mode,
+                                                                        TimeStretcher::ElastiqueProOptions(),
+                                                                        0.0f,
+                                                                        readAhead);
+
+                        auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 5.0);
+
+                        for (size_t section = 0; section < expectedSections.size(); ++section)
+                        {
+                            CAPTURE (section);
+                            const auto sectionStart = 1.0 + (double) section;
+                            const auto range = toSamples ({ TimePosition::fromSeconds (sectionStart + 0.05),
+                                                            TimePosition::fromSeconds (sectionStart + 0.95) }, ts.sampleRate);
+
+                            if (expectedSections[section])
+                                CHECK_GT (getRMS (testContext->buffer, range), 0.5f);
+                            else
+                                CHECK_LT (getRMS (testContext->buffer, range), 0.05f);
+                        }
+                    }
+                }
+            }
+        }
     }
 } // namespace wavenode_test_helpers
 
