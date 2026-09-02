@@ -79,6 +79,7 @@ extern "C" char MacGetMacFSRefForREXDLL (FSRef* fsRef)
 #include "utilities/tracktion_Envelope.cpp"
 #include "utilities/tracktion_FileUtilities.cpp"
 #include "utilities/tracktion_Oscillators.cpp"
+#include "utilities/tracktion_Oscillators.test.cpp"
 #include "utilities/tracktion_PropertyStorage.cpp"
 #include "utilities/tracktion_ParameterHelpers.cpp"
 #include "utilities/tracktion_UIBehaviour.cpp"
