@@ -49,6 +49,7 @@
 #define ENGINE_UNIT_TESTS_LOOP_INFO                     1
 #define ENGINE_UNIT_TESTS_MIDILIST                      1
 #define ENGINE_UNIT_TESTS_MODIFIERS                     1
+#define ENGINE_UNIT_TESTS_OSCILLATORS                   1
 #define ENGINE_UNIT_TESTS_PAN_LAW                       1
 #define ENGINE_UNIT_TESTS_PATCHBAY                     1
 #define ENGINE_UNIT_TESTS_PLAYBACK                      1
