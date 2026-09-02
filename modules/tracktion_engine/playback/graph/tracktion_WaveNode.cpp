@@ -733,18 +733,23 @@ public:
             return;
 
         // Back up the source to provide real audio context for the warmup
-        auto backupPos = std::max (SampleCount (0), static_cast<SampleCount> (readPosition) - latencySamples);
+        const auto position = static_cast<SampleCount> (readPosition);
+        const auto backupPos = std::max (SampleCount (0), position - latencySamples);
         source->setPosition (backupPos);
 
-        // Feed real audio and discard output until we've passed the latency region
+        // The stretcher's output lags its input by latencySamples so to line the next
+        // output frame up with readPosition, the frames between backupPos and
+        // readPosition have to be discarded as well as the latency region itself
+        const auto numToDiscard = static_cast<int> (position - backupPos) + latencySamples;
         int outputDiscarded = 0;
 
-        while (outputDiscarded < latencySamples)
+        while (outputDiscarded < numToDiscard)
         {
-            feedAndProcess();
+            if (! feedAndProcess())
+                break;
 
             const int available = outputFifo.getNumReady();
-            const int toDiscard = std::min (latencySamples - outputDiscarded, available);
+            const int toDiscard = std::min (numToDiscard - outputDiscarded, available);
 
             if (toDiscard > 0)
             {
@@ -904,18 +909,25 @@ public:
         if (latencySamples <= 0)
             return;
 
-        auto backupPos = std::max (SampleCount (0), static_cast<SampleCount> (readPosition) - latencySamples);
+        const auto position = static_cast<SampleCount> (readPosition);
+        const auto backupPos = std::max (SampleCount (0), position - latencySamples);
         source->setPosition (backupPos);
 
+        // The stretcher's output lags its input by latencySamples so to line the next
+        // output frame up with readPosition, the frames between backupPos and
+        // readPosition have to be discarded as well as the latency region itself
+        const auto numToDiscard = static_cast<int> (position - backupPos) + latencySamples;
         int outputDiscarded = 0;
 
-        while (outputDiscarded < latencySamples)
+        while (outputDiscarded < numToDiscard)
         {
             if (const auto numToPush = timeStretcher.getFramesRecomended(); numToPush > 0)
                 readSourceAndPushFrames (numToPush);
 
-            AudioScratchBuffer discardBuf (numChannels, chunkSize);
-            const int numRead = timeStretcher.popData (discardBuf.buffer.getArrayOfWritePointers(), chunkSize);
+            // Only ever discard up to the target so the stretcher isn't left ahead of readPosition
+            const int numThisTime = std::min (chunkSize, numToDiscard - outputDiscarded);
+            AudioScratchBuffer discardBuf (numChannels, numThisTime);
+            const int numRead = timeStretcher.popData (discardBuf.buffer.getArrayOfWritePointers(), numThisTime);
 
             if (numRead <= 0)
                 break;
