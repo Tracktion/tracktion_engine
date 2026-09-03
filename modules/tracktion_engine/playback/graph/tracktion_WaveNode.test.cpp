@@ -378,8 +378,9 @@ namespace wavenode_test_helpers
         };
 
         for (auto mode : syncTestModes)
+        for (auto readAhead : { WaveNodeRealTime::ReadAhead::no, WaveNodeRealTime::ReadAhead::yes })
         {
-            MESSAGE (magic_enum::enum_name (mode));
+            MESSAGE (magic_enum::enum_name (mode) << (readAhead == WaveNodeRealTime::ReadAhead::yes ? std::string_view (", read-ahead") : std::string_view()));
             auto node = std::make_unique<WaveNodeRealTime> (squareAudioFile,
                                                             TimeRange (1_tp, fileLength),
                                                             0_td,
@@ -394,7 +395,10 @@ namespace wavenode_test_helpers
                                                             ResamplingQuality::lagrange,
                                                             SpeedFadeDescription(),
                                                             std::nullopt,
-                                                            mode);
+                                                            mode,
+                                                            TimeStretcher::ElastiqueProOptions(),
+                                                            0.0f,
+                                                            readAhead);
 
             auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, (fileLength * 3.0).inSeconds());
 
@@ -445,8 +449,9 @@ TEST_CASE ("WaveNode")
 
 #endif
 
-// Currently only works with RubberBand
-#if ENGINE_UNIT_TESTS_WAVENODE_READAHEAD && TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND
+#if ENGINE_UNIT_TESTS_WAVENODE_READAHEAD \
+    && (TRACKTION_ENABLE_TIMESTRETCH_RUBBERBAND || TRACKTION_ENABLE_TIMESTRETCH_SOUNDTOUCH \
+        || TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH || TRACKTION_ENABLE_TIMESTRETCH_ELASTIQUE)
 TEST_SUITE("tracktion_engine")
 {
     TEST_CASE ("Playback single audio clip using read-ahead")
