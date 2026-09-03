@@ -144,6 +144,9 @@ public:
 
     /** Returns the expected number of frames required to generate some output.
         This should be queried each block and the returned number of frames be passes to processData.
+        Passing this many frames to processData must always produce at least one block of output,
+        including the first call after a reset, so implementations account for any internal
+        buffering their algorithm needs before it emits. This never exceeds getMaxFramesNeeded.
     */
     int getFramesNeeded() const;
 

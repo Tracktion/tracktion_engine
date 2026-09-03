@@ -324,6 +324,46 @@ void runSmallBlockLatencyTest (tracktion::engine::TimeStretcher::Mode mode)
     CHECK (maxFrames >= stretcher.getLatencySamples());
 }
 
+// getFramesNeeded() must report enough frames to get at least one block out of processData,
+// including the very first call after initialisation or a reset, and must never exceed
+// getMaxFramesNeeded() so callers can size their FIFOs from it
+void runFramesNeededContractTest (tracktion::engine::TimeStretcher::Mode mode)
+{
+    for (double sampleRate : { 44100.0, 96000.0 })
+    for (int blockSize : { 64, 512 })
+    for (auto [speedRatio, semitones] : { std::pair { 1.0f, 0.0f }, std::pair { 0.5f, 0.0f }, std::pair { 2.0f, 0.0f },
+                                          std::pair { 1.0f, 12.0f }, std::pair { 1.0f, -12.0f } })
+    {
+        CAPTURE (sampleRate); CAPTURE (blockSize); CAPTURE (speedRatio); CAPTURE (semitones);
+
+        const int numChannels = 2;
+        tracktion::engine::TimeStretcher stretcher;
+        stretcher.initialise (sampleRate, blockSize, numChannels, mode, {}, true);
+        stretcher.setSpeedAndPitch (speedRatio, semitones);
+
+        const int maxFramesNeeded = stretcher.getMaxFramesNeeded();
+        const auto source = createSinBuffer (sampleRate, numChannels, 440.0f);
+        juce::AudioBuffer<float> output (numChannels, blockSize);
+
+        auto pushFramesNeededOnce = [&]
+        {
+            const int framesNeeded = stretcher.getFramesNeeded();
+            CHECK (framesNeeded > 0);
+            CHECK (framesNeeded <= maxFramesNeeded);
+            REQUIRE (framesNeeded <= source.getNumSamples());
+
+            return stretcher.processData (source.getArrayOfReadPointers(), framesNeeded,
+                                          output.getArrayOfWritePointers());
+        };
+
+        CHECK (pushFramesNeededOnce() > 0);
+
+        stretcher.reset();
+        stretcher.setSpeedAndPitch (speedRatio, semitones);
+        CHECK (pushFramesNeededOnce() > 0);
+    }
+}
+
 } // anonymous namespace
 
 TEST_SUITE ("tracktion_engine")
@@ -337,6 +377,7 @@ TEST_SUITE ("tracktion_engine")
             runPitchShiftTest (mode);
             runTimestretchTest (mode);
             runLatencyTest (mode);
+            runFramesNeededContractTest (mode);
         }
        #endif
 
@@ -347,6 +388,7 @@ TEST_SUITE ("tracktion_engine")
             runPitchShiftTest (mode);
             runTimestretchTest (mode);
             runLatencyTest (mode);
+            runFramesNeededContractTest (mode);
         }
        #endif
 
@@ -358,6 +400,7 @@ TEST_SUITE ("tracktion_engine")
             runTimestretchTest (mode);
             runLatencyTest (mode);
             runSmallBlockLatencyTest (mode);
+            runFramesNeededContractTest (mode);
         }
        #endif
 

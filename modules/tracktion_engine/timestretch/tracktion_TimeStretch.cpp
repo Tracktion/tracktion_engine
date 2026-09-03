@@ -499,16 +499,31 @@ struct SoundTouchStretcher  : public TimeStretcher::Stretcher,
             setSetting (SETTING_SEQUENCE_MS, 60);
             setSetting (SETTING_SEEKWINDOW_MS, 25);
         }
+
+        // SoundTouch buffers its initial latency worth of input before it emits anything and
+        // that latency grows with the tempo, so size the maximum for the slowest supported
+        // speed (0.25, i.e. tempo 4) plus one block's worth of input at the fastest (4)
+        setTempo (1.0f / minSupportedSpeedRatio);
+        maxFramesNeeded = getSetting (SETTING_INITIAL_LATENCY)
+                            + juce::roundToInt (samplesPerOutputBuffer * maxSupportedSpeedRatio);
+        setTempo (1.0f);
+        initialLatency = getSetting (SETTING_INITIAL_LATENCY);
     }
 
     bool isOk() const override      { return true; }
-    void reset() override           { clear(); }
+
+    void reset() override
+    {
+        clear();
+        hasProducedOutput = false;
+    }
 
     bool setSpeedAndPitch (float speedRatio, float semitonesUp) override
     {
         setTempo (1.0f / speedRatio);
         setPitchSemiTones (semitonesUp);
         inputOutputSampleRatio = getInputOutputSampleRatio();
+        initialLatency = getSetting (SETTING_INITIAL_LATENCY);
 
         return true;
     }
@@ -517,14 +532,23 @@ struct SoundTouchStretcher  : public TimeStretcher::Stretcher,
     {
         const int numAvailable = (int) numSamples();
         const int numRequiredForOneBlock = juce::roundToInt (samplesPerOutputBuffer * inputOutputSampleRatio);
+        const int numRequiredForOutput = std::max (0, numRequiredForOneBlock - numAvailable);
 
-        return std::max (0, numRequiredForOneBlock - numAvailable);
+        if (hasProducedOutput || numAvailable > 0)
+            return numRequiredForOutput;
+
+        // Until the first batch has been produced, SoundTouch needs its initial latency
+        // worth of input buffered before it will emit anything, so ask for enough to get
+        // the first block out in one go rather than reporting a single block's worth and
+        // returning nothing from processData for several calls
+        const int numToPrime = initialLatency + numRequiredForOneBlock - (int) numUnprocessedSamples();
+
+        return juce::jlimit (0, maxFramesNeeded, std::max (numRequiredForOutput, numToPrime));
     }
 
     int getMaxFramesNeeded() const override
     {
-        // This was derived by experimentation
-        return 8192;
+        return maxFramesNeeded;
     }
 
     int processData (const float* const* inChannels, int numSamples, float* const* outChannels) override
@@ -539,7 +563,10 @@ struct SoundTouchStretcher  : public TimeStretcher::Stretcher,
         const int numToRead = std::min (numAvailable, samplesPerOutputBuffer);
 
         if (numToRead > 0)
+        {
+            hasProducedOutput = true;
             return readOutput (outChannels, 0, numToRead);
+        }
 
         return 0;
     }
@@ -560,8 +587,13 @@ struct SoundTouchStretcher  : public TimeStretcher::Stretcher,
     }
 
 private:
+    // Speed ratios outside this range still work but getFramesNeeded is clamped to
+    // getMaxFramesNeeded so the first block may take more than one process call
+    static constexpr float minSupportedSpeedRatio = 0.25f, maxSupportedSpeedRatio = 4.0f;
+
     int numChannels = 0, samplesPerOutputBuffer = 0;
-    bool hasDoneFinalBlock = false;
+    int maxFramesNeeded = 0, initialLatency = 0;
+    bool hasDoneFinalBlock = false, hasProducedOutput = false;
     double inputOutputSampleRatio = 1.0;
 
     int readOutput (float* const* outChannels, int offset, int numNeeded)

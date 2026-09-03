@@ -717,8 +717,9 @@ public:
             inputFifo.write (scratchBuffer.buffer);
         }
 
+        // N.B. processData only ever writes up to chunkSize frames to the output FIFO
+        // so that's all the space that needs to be free, not numThisTime
         assert (inputFifo.getNumReady() >= numThisTime);
-        assert (outputFifo.getFreeSpace() >= numThisTime);
         assert (outputFifo.getFreeSpace() >= chunkSize);
         timeStretcher.processData (inputFifo, numThisTime, outputFifo);
 
