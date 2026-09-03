@@ -93,6 +93,9 @@ public:
 
     /** Retrieves some samples from the output buffer.
         N.B. If there aren't enough samples already processed this will do the processing so its cost can vary.
+        Some algorithms have to be primed with far more input than getFramesNeeded reports
+        before they emit their first block. If this returns fewer samples than requested,
+        push more frames (@see getFramesRecomended) and call this again.
         @returns The number of samples read
     */
     int popData (float* const* outChannels, int numSamples);

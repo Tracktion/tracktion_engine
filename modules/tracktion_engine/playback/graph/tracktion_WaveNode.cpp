@@ -717,8 +717,9 @@ public:
             inputFifo.write (scratchBuffer.buffer);
         }
 
+        // N.B. processData only ever writes up to chunkSize frames to the output FIFO
+        // so that's all the space that needs to be free, not numThisTime
         assert (inputFifo.getNumReady() >= numThisTime);
-        assert (outputFifo.getFreeSpace() >= numThisTime);
         assert (outputFifo.getFreeSpace() >= chunkSize);
         timeStretcher.processData (inputFifo, numThisTime, outputFifo);
 
@@ -841,6 +842,12 @@ public:
             if (! readSourceAndPushFrames (numToPush))
                 return false;
 
+        // Some algorithms (e.g. SoundTouch) have to be primed with far more input than
+        // getFramesNeeded reports before they emit their first block. Cap this at a second
+        // of source material so an algorithm that can't produce any output doesn't spin here
+        const int maxNumFramesToPrime = juce::roundToInt (getSampleRate());
+        int numFramesPrimed = 0;
+
         for (auto numFramesLeft = numFramesToDo; numFramesLeft > 0;)
         {
             const auto maxNumFramesThisTime = std::min (chunkSize, numFramesLeft);
@@ -852,6 +859,17 @@ public:
 
                 if (numRead == 0)
                 {
+                    // Keep priming the stretcher until it starts producing output
+                    if (const auto numToPush = timeStretcher.getFramesRecomended();
+                        numToPush > 0 && numFramesPrimed < maxNumFramesToPrime)
+                    {
+                        if (! readSourceAndPushFrames (numToPush))
+                            return false;
+
+                        numFramesPrimed += numToPush;
+                        continue;
+                    }
+
                     destBuffer.clear();
                     return false;
                 }
