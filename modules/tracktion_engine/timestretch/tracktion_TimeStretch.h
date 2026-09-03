@@ -144,6 +144,10 @@ public:
 
     /** Returns the expected number of frames required to generate some output.
         This should be queried each block and the returned number of frames be passes to processData.
+        N.B. Some algorithms (e.g. SoundTouch) buffer several blocks of input internally before
+        they emit anything so processData can return 0 frames for a number of blocks after a
+        reset, even if this many frames have been pushed. Callers must keep pushing frames and
+        processing until output appears rather than treating an empty block as a failure.
     */
     int getFramesNeeded() const;
 
