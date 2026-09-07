@@ -44,18 +44,42 @@
 //==============================================================================
 
 #include <cstddef>
+#include <cstdint>
 #include <functional>
+#include <type_traits>
 
 namespace tracktion::inline core {
 
 //==============================================================================
 //==============================================================================
-/** Hashes a type with a given seed, modifying the seed. */
+/** Applies a 64-bit finaliser to fully mix the bits of a value.
+    This is the splitmix64 finaliser: every input bit affects roughly half of the
+    output bits, which the original boost-style shift/add combine did not do.
+    Without this, combining values that only differ by small amounts (such as
+    sequential EditItemIDs) produces outputs that also only differ by small
+    amounts, so later combines can cancel them out and collide.
+*/
+[[ nodiscard ]] inline std::uint64_t hash_mix (std::uint64_t x) noexcept
+{
+    x ^= x >> 30;
+    x *= 0xbf58476d1ce4e5b9ull;
+    x ^= x >> 27;
+    x *= 0x94d049bb133111ebull;
+    x ^= x >> 31;
+    return x;
+}
+
+/** Hashes a type with a given seed, modifying the seed.
+    The seed is multiplied by an odd constant before the value is added so the
+    result isn't symmetric in (seed, value), then the whole thing is fully mixed.
+*/
 template<typename T>
 void hash_combine (size_t& seed, const T& v)
 {
     static_assert (! std::is_pointer_v<T>, "Using a pointer here is almost certainly incorrect as it will change on each run");
-    seed ^= std::hash<T>()(v) + 0x9e3779b9 + (seed * 65537u) + (seed / 3u);
+    constexpr std::uint64_t goldenRatio = 0x9e3779b97f4a7c15ull;
+    seed = static_cast<size_t> (hash_mix ((static_cast<std::uint64_t> (seed) + 1) * goldenRatio
+                                          + static_cast<std::uint64_t> (std::hash<T>()(v))));
 }
 
 /** Hashes a range with a default seed and returns the new hash value. */

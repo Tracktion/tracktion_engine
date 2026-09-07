@@ -3,6 +3,20 @@
 ___
 
 ### Change
+`core::hash_combine` (and therefore `core::hash` and `core::hash_range`) uses a new mixing function, so every value it produces has changed.
+
+#### Possible Issues
+The old function was close to affine, so combining values that differed by small amounts (e.g. sequential `EditItemID`s) could produce identical results. This caused duplicate playback graph node IDs, which made nodes adopt state from the wrong node when the graph was rebuilt. Any hash values you have persisted or cached across runs (e.g. as cache keys or change-detection stamps) will no longer match the values produced by the new function. Within the engine, cached audio thumbnails will be regenerated and `PatternGenerator` note hashes stored in Edits are upgraded automatically on load.
+
+#### Workaround
+Treat previously stored hash values as stale and regenerate them. If you need to recognise values produced by the old function, its formula was `seed ^= std::hash<T>()(v) + 0x9e3779b9 + (seed * 65537u) + (seed / 3u)`.
+
+#### Rationale
+Node IDs and state hashes need a mixer where every input bit affects the output, otherwise structurally similar subgraphs collide.
+
+___
+
+### Change
 `toBitSet (const juce::Array<Track*>&)` now returns a bitset of only the tracks passed in.
 
 #### Possible Issues
