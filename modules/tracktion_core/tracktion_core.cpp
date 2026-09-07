@@ -37,6 +37,7 @@ using namespace std::literals;
 
 //==============================================================================
 #include "utilities/tracktion_AlgorithmAdapters.test.cpp"
+#include "utilities/tracktion_Hash.test.cpp"
 #include "utilities/tracktion_Tempo.test.cpp"
 #include "utilities/tracktion_Time.test.cpp"
 #include "utilities/tracktion_TimeRange.test.cpp"

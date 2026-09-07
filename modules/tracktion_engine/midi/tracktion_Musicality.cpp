@@ -852,10 +852,14 @@ MidiClip* PatternGenerator::getMidiClip() const
 
 void PatternGenerator::editFinishedLoading()
 {
-    // Update the note hash from v1 to v2 if required
+    // Upgrade the note hash from an older version if required
     if (auto mc = getMidiClip())
-        if (patternHash == hashNotes (mc->getSequence(), 1))
-            patternHash = hashNotes (mc->getSequence(), 2);
+    {
+        auto& sequence = mc->getSequence();
+
+        if (patternHash == hashNotes (sequence, 1) || patternHash == hashNotes (sequence, 2))
+            patternHash = hashNotes (sequence, 3);
+    }
 
     if (mode != Mode::off)
         autoUpdateManager = std::make_unique<AutoUpdateManager> (*this);
@@ -2154,7 +2158,7 @@ void PatternGenerator::playGuideChord (int idx) const
 void PatternGenerator::updateHash()
 {
     if (auto mc = getMidiClip())
-        patternHash = hashNotes (mc->getSequence(), 2);
+        patternHash = hashNotes (mc->getSequence(), 3);
     else
         patternHash = 0;
 }
@@ -2164,10 +2168,24 @@ void PatternGenerator::clearHash()
     patternHash = 0;
 }
 
+namespace
+{
+    /** The core::hash_combine formula used by version 2 of the pattern hash,
+        retained so hashes stored in older Edits can be recognised and upgraded.
+    */
+    size_t legacyPatternHashV2 (size_t seed, int v)
+    {
+        seed ^= std::hash<int>()(v) + 0x9e3779b9 + (seed * 65537u) + (seed / 3u);
+        return seed;
+    }
+}
+
 HashCode PatternGenerator::hashNotes (MidiList& sequence, int version)
 {
     // Version 1 of this hash had a bug where just changing mute would
-    // generate hash collisions
+    // generate hash collisions.
+    // Version 2 mixed each note with the old core::hash_combine formula.
+    // Version 3 mixes each note with the current core::hash_combine.
     HashCode hash = sequence.getNumNotes() + 1;
 
     for (auto note : sequence.getNotes())
@@ -2179,7 +2197,9 @@ HashCode PatternGenerator::hashNotes (MidiList& sequence, int version)
               ^ static_cast<HashCode> (note->isMute() ? 877 : 947)
               ^ static_cast<HashCode> (note->getVelocity() * 3083);
 
-        if (version > 1)
+        if (version == 2)
+            hash = static_cast<HashCode> (legacyPatternHashV2 (static_cast<size_t> (hash), 7));
+        else if (version >= 3)
             hash = static_cast<HashCode> (core::hash (static_cast<size_t> (hash), 7));
     }
 
@@ -2202,7 +2222,7 @@ void PatternGenerator::setAutoUpdate (bool on)
 bool PatternGenerator::getAutoUpdate()
 {
     if (auto mc = getMidiClip())
-        return autoUpdate && patternHash == hashNotes (mc->getSequence(), 2);
+        return autoUpdate && patternHash == hashNotes (mc->getSequence(), 3);
 
     return false;
 }
