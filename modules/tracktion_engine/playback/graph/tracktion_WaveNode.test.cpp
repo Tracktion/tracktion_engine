@@ -447,11 +447,6 @@ namespace wavenode_test_helpers
             {
                 for (auto readAhead : { WaveNodeRealTime::ReadAhead::no, WaveNodeRealTime::ReadAhead::yes })
                 {
-                    // Read-ahead doesn't currently support every algorithm, SoundTouch
-                    // produces no output at all through it
-                    if (readAhead == WaveNodeRealTime::ReadAhead::yes && mode == TimeStretcher::Mode::soundtouchBetter)
-                        continue;
-
                     // Each entry is the clip's source offset and the sections of the timeline
                     // that must then be audible, the clip always starting at 1s
                     const std::pair<TimeDuration, std::array<bool, 3>> offsetsAndExpectedSections[] =
