@@ -255,7 +255,7 @@ juce::BigInteger toBitSet (const juce::Array<Track*>& tracks)
     {
         auto allTracks = getAllTracks (first->edit);
 
-        for (auto t : allTracks)
+        for (auto t : tracks)
             if (int index = allTracks.indexOf (t); index >= 0)
                 bitset.setBit (index);
     }

@@ -114,17 +114,6 @@ TEST_SUITE ("tracktion_engine")
     }
 }
 
-static juce::BigInteger getTracksMask (const juce::Array<Track*>& tracks)
-{
-    juce::BigInteger tracksMask;
-
-    for (auto t : tracks)
-        tracksMask.setBit (t->getIndexInEditTrackList());
-
-    jassert (tracksMask.countNumberOfSetBits() == tracks.size());
-    return tracksMask;
-}
-
 template<typename AudioFormatType>
 static std::unique_ptr<juce::TemporaryFile> getSinFile (double sampleRate)
 {
@@ -168,7 +157,7 @@ static std::unique_ptr<juce::TemporaryFile> getSinFile (double sampleRate)
 static void expectPeak (Edit& edit, TimeRange tr, juce::Array<Track*> tracks, float expectedPeak)
 {
     auto blockSize = edit.engine.getDeviceManager().getBlockSize();
-    auto stats = Renderer::measureStatistics ("PDC Tests", edit, tr, getTracksMask (tracks), blockSize);
+    auto stats = Renderer::measureStatistics ("PDC Tests", edit, tr, toBitSet (tracks), blockSize);
     MESSAGE ("Stats: peak " * juce::String (stats.peak).toStdString()
              * ", avg " * juce::String (stats.average).toStdString()
              * ", duration " * juce::String (stats.audioDuration).toStdString());

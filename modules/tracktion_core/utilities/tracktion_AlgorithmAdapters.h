@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <ranges>
+
 namespace tracktion::inline core {
 
 template<class Container, class T, class BinaryOperation>
@@ -115,6 +117,39 @@ template<class T, std::ranges::input_range R>
 void append_range (std::vector<T>& v, R&& r)
 {
     std::ranges::copy (r, std::back_inserter (v));
+}
+
+/** Returns a view of the first numElements of a container.
+    Unlike std::views::take, numElements is clamped so a negative count gives an
+    empty view rather than undefined behaviour.
+*/
+template<class Container>
+auto take (Container& container, std::ptrdiff_t numElements)
+{
+    return std::views::take (container, std::max (std::ptrdiff_t (0), numElements));
+}
+
+/** Splits a container in to groups of consecutive elements separated by a delimiter value.
+    Empty groups caused by leading, trailing or adjacent delimiters are included in the result,
+    as are the empty groups std::views::split would produce.
+    N.B. This is a stand-in for std::views::split which needs libstdc++ 12 or later (P2210R2)
+    and so can't be used whilst the engine is built with gcc-11.
+*/
+template<class Container>
+std::vector<std::vector<typename Container::value_type>> split (const Container& container,
+                                                                const typename Container::value_type& delimiter)
+{
+    std::vector<std::vector<typename Container::value_type>> groups (1);
+
+    for (const auto& v : container)
+    {
+        if (v == delimiter)
+            groups.emplace_back();
+        else
+            groups.back().push_back (v);
+    }
+
+    return groups;
 }
 
 

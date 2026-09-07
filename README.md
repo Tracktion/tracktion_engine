@@ -99,7 +99,6 @@ Tracktion Engine utilises and contains copies of the following libraries. Please
 - [crill](https://www.github.com/crill-dev/crill) - BSL-1.0
 - [expected](https://www.github.com/TartanLlama/expected) - CC0 1.0
 - [libsamplerate](https://www.github.com/libsndfile/libsamplerate) - BSD-2-Clause
-- [nanorange](https://www.github.com/tcbrindle/NanoRange) - BSL-1.0
 - [rigtorp/MPMCQueue](https://www.github.com/rigtorp/MPMCQueue) - MIT
 - [magic_enum](https://www.github.com/Neargye/magic_enum) - MIT
 - [farbot](https://www.github.com/hogliux/farbot) - MIT

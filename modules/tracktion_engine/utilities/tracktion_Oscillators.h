@@ -77,6 +77,7 @@ private:
 
     BandlimitedWaveLookupTables::Ptr lookupTables;
 
+    juce::Random random;
     std::default_random_engine generator;
     std::normal_distribution<float> normalDistribution {0.0f, 0.1f};
 };
@@ -103,6 +104,7 @@ public:
 
 private:
     juce::OwnedArray<Oscillator> oscillators;
+    juce::Random random;
 
     int voices = 1;
     float detune = 0, spread = 0, gain = 1.0f, note = 69.0f, pan = 0.0f;

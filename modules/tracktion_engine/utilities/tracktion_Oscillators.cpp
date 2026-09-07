@@ -60,8 +60,7 @@ static float sawDown (float phase, float freq, double sampleRate)
 //==============================================================================
 void Oscillator::start()
 {
-    static juce::Random r;
-    phase = r.nextFloat();
+    phase = random.nextFloat();
 }
 
 void Oscillator::setSampleRate (double sr)
@@ -203,11 +202,9 @@ MultiVoiceOscillator::MultiVoiceOscillator (int maxVoices)
 
 void MultiVoiceOscillator::start()
 {
-    static juce::Random r;
-
     for (int i = 0; i < oscillators.size(); i += 2)
     {
-        float phase = r.nextFloat();
+        const float phase = random.nextFloat();
         oscillators[i + 0]->start (phase);
         oscillators[i + 1]->start (phase);
     }

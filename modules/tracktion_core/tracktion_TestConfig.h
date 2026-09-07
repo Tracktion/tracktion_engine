@@ -36,6 +36,7 @@
 #define ENGINE_UNIT_TESTS_DAWPROJECT                    1
 #define ENGINE_UNIT_TESTS_DELAY_PLUGIN                  1
 #define ENGINE_UNIT_TESTS_EDIT                          1
+#define ENGINE_UNIT_TESTS_EDIT_UTILITIES                1
 #define ENGINE_UNIT_TESTS_EDITCLIP                      1
 #define ENGINE_UNIT_TESTS_EDIT_LOADER                   1
 #define ENGINE_UNIT_TESTS_EDIT_TIME                     1
@@ -49,6 +50,7 @@
 #define ENGINE_UNIT_TESTS_LOOP_INFO                     1
 #define ENGINE_UNIT_TESTS_MIDILIST                      1
 #define ENGINE_UNIT_TESTS_MODIFIERS                     1
+#define ENGINE_UNIT_TESTS_OSCILLATORS                   1
 #define ENGINE_UNIT_TESTS_PAN_LAW                       1
 #define ENGINE_UNIT_TESTS_PATCHBAY                     1
 #define ENGINE_UNIT_TESTS_PLAYBACK                      1
@@ -68,6 +70,7 @@
 #define ENGINE_UNIT_TESTS_AUDIO_FILE_ANALYSER           1
 #define ENGINE_UNIT_TESTS_AUDIO_FILE_CACHE              1
 #define ENGINE_UNIT_TESTS_LOUDNESS_METER                1
+#define ENGINE_UNIT_TESTS_STEREO_FIELD_ANALYSER         1
 #define ENGINE_UNIT_TESTS_EXTERNALPLUGIN                1
 #define ENGINE_UNIT_TESTS_VOLPANPLUGIN                  1
 #define ENGINE_UNIT_TESTS_LEVELMETERPLUGIN              1
