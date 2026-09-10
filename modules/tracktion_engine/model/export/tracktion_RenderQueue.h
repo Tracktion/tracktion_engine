@@ -69,13 +69,20 @@ public:
         };
 
         //==============================================================================
+        /** This job's state. Safe to call from any thread. */
         State getState() const                                  { return state; }
         juce::String getName() const                            { return planned.name; }
 
         /** The parameters this job renders with. */
         const Renderer::Parameters& getParameters() const       { return planned.params; }
 
-        /** Returns this job's progress, 0 to 1. */
+        /** Returns this job's progress, 0 to 1.
+
+            Safe to call from any thread: the render already writes its progress to
+            an atomic, and the handle holding it is published under a lock. Polling
+            this is the supported way to follow a render from a thread that is
+            blocked waiting for it, which is what a background script does.
+        */
         float getProgress() const;
 
         /** Returns the rendered file once the job has completed. */
@@ -103,11 +110,26 @@ public:
         explicit Job (PlannedRenderJob p) : planned (std::move (p)) {}
 
         PlannedRenderJob planned;
-        State state = State::pending;
+
+        // Atomic so getState()/getProgress() can be polled while the message
+        // thread advances the queue
+        std::atomic<State> state { State::pending };
+
         juce::File resultFile;
         juce::String error;
         std::shared_ptr<juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver> thumbnail;
+
+        /** Guards handle for the same reason. Only ever held long enough to copy
+            the pointer - never while a handle is released, because that joins the
+            render thread and would stall any thread polling progress. */
+        mutable std::mutex handleMutex;
         std::shared_ptr<EditRenderer::Handle> handle;
+
+        std::shared_ptr<EditRenderer::Handle> getHandle() const;
+
+        /** Publishes a new handle and returns the old one, for the caller to
+            release where it chooses. Never releases it under the lock. */
+        std::shared_ptr<EditRenderer::Handle> setHandle (std::shared_ptr<EditRenderer::Handle>);
 
         /** Set on the render thread the moment the render returns, before the
             message-thread hop that updates state. ~RenderQueue can run in between
@@ -157,7 +179,11 @@ public:
     /** Returns true once every job has completed, failed or been cancelled. */
     bool hasFinished() const;
 
-    /** Returns the overall progress of the queue, 0 to 1. */
+    /** Returns the overall progress of the queue, 0 to 1.
+        Message thread only - it walks the job list, which the message thread may
+        append to at any time. To follow a queue from another thread, keep the
+        JobPtrs you care about and poll Job::getProgress(), which is thread safe.
+    */
     float getTotalProgress() const;
 
     //==============================================================================
