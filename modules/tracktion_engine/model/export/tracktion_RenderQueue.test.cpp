@@ -503,6 +503,77 @@ TEST_SUITE ("tracktion_engine")
             CHECK_LT (maxDiff, 0.001f);
         }
     }
+
+    TEST_CASE ("RenderQueue progress can be polled from another thread")
+    {
+        // A background script blocks its own thread waiting for a render, so it
+        // has to be able to follow the progress from there. Run under TSan to
+        // check the state/handle publication, not just that the numbers arrive.
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine, 1);
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0);
+
+        for (auto t : getAudioTracks (*edit))
+            insertWaveClip (*t, {}, sinFile->getFile(), { .time = { 0_tp, 5_tp } },
+                            DeleteExistingClips::no);
+
+        auto destDir = juce::File::createTempFile ({});
+        destDir.createDirectory();
+
+        RenderQueue queue;
+
+        for (auto& spec : createPerTrackSpecifications (*edit, {}, destDir))
+            queue.addJob (*createRenderJob (*edit, spec));
+
+        REQUIRE_EQ (queue.getJobs().size(), (size_t) 1);
+
+        auto job = queue.getJobs()[0];
+        std::atomic<bool> allFinished { false };
+        queue.onFinished = [&] { allFinished = true; };
+
+        // Poll from a second thread for the whole life of the render
+        std::atomic<bool> pollerShouldStop { false };
+        std::atomic<int> pollCount { 0 };
+        std::atomic<float> highestSeen { -1.0f };
+        std::atomic<bool> sawOutOfRange { false };
+
+        std::thread poller ([&]
+        {
+            while (! pollerShouldStop)
+            {
+                const auto p = job->getProgress();
+                [[maybe_unused]] const auto s = job->getState();
+
+                if (p < 0.0f || p > 1.0f)
+                    sawOutOfRange = true;
+
+                highestSeen = std::max (highestSeen.load(), p);
+                ++pollCount;
+
+                std::this_thread::sleep_for (std::chrono::milliseconds (1));
+            }
+        });
+
+        queue.start();
+        test_utilities::runDispatchLoopUntilTrue (allFinished);
+
+        pollerShouldStop = true;
+        poller.join();
+
+        CHECK (queue.hasFinished());
+        CHECK_GT (pollCount.load(), 0);
+        CHECK_FALSE (sawOutOfRange.load());
+
+        // The poller has to have seen real progress, not just the 0 it starts at
+        CHECK_GT (highestSeen.load(), 0.0f);
+
+        // And once the job is done, any thread sees it complete
+        CHECK_EQ (job->getState(), RenderQueue::Job::State::completed);
+        CHECK_EQ (job->getProgress(), 1.0f);
+
+        destDir.deleteRecursively();
+    }
 }
 
 } // namespace tracktion::inline engine

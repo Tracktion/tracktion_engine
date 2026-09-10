@@ -41,15 +41,34 @@ ScopedTrackMuter::~ScopedTrackMuter()
 }
 
 //==============================================================================
+std::shared_ptr<EditRenderer::Handle> RenderQueue::Job::getHandle() const
+{
+    const std::lock_guard lock (handleMutex);
+    return handle;
+}
+
+std::shared_ptr<EditRenderer::Handle> RenderQueue::Job::setHandle (std::shared_ptr<EditRenderer::Handle> newHandle)
+{
+    std::shared_ptr<EditRenderer::Handle> previous;
+
+    {
+        const std::lock_guard lock (handleMutex);
+        previous = std::exchange (handle, std::move (newHandle));
+    }
+
+    // Returned rather than dropped here: releasing the last reference joins the
+    // render thread, which must not happen while the lock is held
+    return previous;
+}
+
 float RenderQueue::Job::getProgress() const
 {
-    TRACKTION_ASSERT_MESSAGE_THREAD
-
+    // Deliberately callable from any thread - see the header
     if (state == State::completed)
         return 1.0f;
 
-    if (handle != nullptr)
-        return handle->getProgress();
+    if (auto h = getHandle())
+        return h->getProgress();
 
     return 0.0f;
 }
@@ -66,8 +85,8 @@ void RenderQueue::Job::cancel()
     {
         state = State::cancelled;
 
-        if (handle != nullptr)
-            handle->cancel();
+        if (auto h = getHandle())
+            h->cancel();
     }
 }
 
@@ -91,9 +110,9 @@ RenderQueue::~RenderQueue()
     // would throw away a complete file.
     for (auto& job : jobs)
     {
-        if (job->handle != nullptr)
+        if (auto h = job->setHandle (nullptr))
         {
-            job->handle = nullptr;   // joins the render thread, so renderSucceeded has settled
+            h.reset();   // joins the render thread, so renderSucceeded has settled
 
             if (! job->renderSucceeded)
                 job->planned.params.destFile.deleteFile();
@@ -125,7 +144,7 @@ void RenderQueue::start()
     // If a job is running (or its finished callback is still in flight), the
     // queue will advance itself; starting another job now would run two at once
     for (auto& job : jobs)
-        if (job->state == Job::State::active || job->handle != nullptr)
+        if (job->state == Job::State::active || job->getHandle() != nullptr)
             return;
 
     startNextJob();
@@ -218,18 +237,18 @@ void RenderQueue::startNextJob()
         // The finished callback arrives on the render thread, so hop back to the
         // message thread. The job pointer keeps the Job alive; the alive flag
         // skips advancing the queue if the queue itself has gone.
-        job.handle = EditRenderer::render (job.planned.params,
-                                           [alive = std::weak_ptr<bool> (aliveFlag), this, jobPtr] (auto renderResult)
-                                           {
-                                               jobPtr->renderSucceeded = renderResult.has_value();
+        job.setHandle (EditRenderer::render (job.planned.params,
+                                             [alive = std::weak_ptr<bool> (aliveFlag), this, jobPtr] (auto renderResult)
+                                             {
+                                                 jobPtr->renderSucceeded = renderResult.has_value();
 
-                                               juce::MessageManager::callAsync ([alive, this, jobPtr, result = std::move (renderResult)]() mutable
-                                               {
-                                                   if (auto stillAlive = alive.lock(); stillAlive != nullptr && *stillAlive)
-                                                       handleJobFinished (*jobPtr, std::move (result));
-                                               });
-                                           },
-                                           job.thumbnail);
+                                                 juce::MessageManager::callAsync ([alive, this, jobPtr, result = std::move (renderResult)]() mutable
+                                                 {
+                                                     if (auto stillAlive = alive.lock(); stillAlive != nullptr && *stillAlive)
+                                                         handleJobFinished (*jobPtr, std::move (result));
+                                                 });
+                                             },
+                                             job.thumbnail));
         return;
     }
 
@@ -240,7 +259,10 @@ void RenderQueue::startNextJob()
 void RenderQueue::handleJobFinished (Job& job, tl::expected<juce::File, std::string> result)
 {
     TRACKTION_ASSERT_MESSAGE_THREAD
-    job.handle = nullptr;
+
+    // Released here rather than inside setHandle, but still on the message thread
+    // and at the same point in the sequence as before
+    job.setHandle (nullptr).reset();
     job.muteScope.reset();
 
     // A job cancelled while active has already been marked cancelled
