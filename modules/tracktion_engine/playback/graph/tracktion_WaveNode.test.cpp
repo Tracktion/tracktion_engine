@@ -499,6 +499,71 @@ namespace wavenode_test_helpers
             }
         }
     }
+
+    /** Checks the source lines up with the timeline to the sample, not just roughly.
+        Proxy-file clips play through a WaveNode, so any resampler latency it leaves
+        uncompensated shows up as a phase offset against the same file playing
+        elsewhere (e.g. a Clip FX Invert failing to null against its source).
+    */
+    template<typename NodeType>
+    static void runSampleAlignmentTests (graph::test_utilities::TestSetup ts)
+    {
+        using namespace tracktion::graph::test_utilities;
+        auto& engine = *Engine::getEngines()[0];
+
+        // Impulses at the first frame and part way through. The clip starts on a block
+        // boundary so the first frame checks the resampler has no history to flush
+        const choc::buffer::FrameCount impulseFrames[] = { 0, 1000 };
+        const auto numFileFrames = (choc::buffer::FrameCount) ts.sampleRate;
+        auto impulseBuffer = choc::buffer::createChannelArrayBuffer (1, numFileFrames,
+                                                                     [&] (auto, auto frame) -> float
+                                                                     {
+                                                                         return std::find (std::begin (impulseFrames), std::end (impulseFrames), frame)
+                                                                                  != std::end (impulseFrames) ? 1.0f : 0.0f;
+                                                                     });
+        auto impulseFile = writeToTemporaryFile<juce::WavAudioFormat> (impulseBuffer.getView(), ts.sampleRate);
+        AudioFile impulseAudioFile (engine, impulseFile->getFile());
+
+        tracktion::graph::PlayHead playHead;
+        tracktion::graph::PlayHeadState playHeadState (playHead);
+        ProcessState processState (playHeadState);
+        playHead.playSyncedToRange ({ 0, std::numeric_limits<int64_t>::max() });
+
+        const auto clipStartSample = (int) ts.blockSize * 10;
+        const auto clipStart = TimePosition::fromSamples (clipStartSample, ts.sampleRate);
+
+        auto node = makeNode<NodeType> (impulseAudioFile,
+                                        TimeRange (clipStart, 1_td),
+                                        TimeDuration(),
+                                        TimeRange(),
+                                        LiveClipLevel(),
+                                        1.0,
+                                        ChannelConfiguration::discreteChannels (impulseAudioFile.getNumChannels()),
+                                        ChannelConfiguration::discreteChannels (1),
+                                        processState,
+                                        EditItemID(),
+                                        true);
+
+        auto testContext = createTracktionTestContext (processState, std::move (node), ts, 1, 2.0);
+        auto& output = testContext->buffer;
+
+        CAPTURE (ts.sampleRate);
+        CAPTURE (ts.blockSize);
+        CAPTURE (ts.randomiseBlockSizes);
+
+        for (auto frame : impulseFrames)
+        {
+            CAPTURE (frame);
+            const auto outputFrame = clipStartSample + (int) frame;
+            CHECK (output.getSample (0, outputFrame) == doctest::Approx (1.0f).epsilon (0.001));
+
+            for (int delta : { -2, -1, 1, 2 })
+            {
+                CAPTURE (delta);
+                CHECK (std::abs (output.getSample (0, outputFrame + delta)) < 0.001f);
+            }
+        }
+    }
 } // namespace wavenode_test_helpers
 
 TEST_SUITE ("tracktion_engine")
@@ -513,6 +578,7 @@ TEST_CASE ("WaveNode")
         runBasicTests<WaveNode> ("WaveNode", ts, true);
         runBasicTests<WaveNode> ("WaveNode", ts, false);
         runLoopedTimelineTests<WaveNode> ("WaveNode", ts);
+        runSampleAlignmentTests<WaveNode> (ts);
     }
 
     MESSAGE ("WaveNodeRealTime");
@@ -522,6 +588,7 @@ TEST_CASE ("WaveNode")
         runBasicTests<WaveNodeRealTime> ("WaveNodeRealTime", ts, true);
         runBasicTests<WaveNodeRealTime> ("WaveNodeRealTime", ts, false);
         runLoopedTimelineTests<WaveNodeRealTime> ("WaveNodeRealTime", ts);
+        runSampleAlignmentTests<WaveNodeRealTime> (ts);
         runDynamicOffsetTests (ts);
         runTimestretchedTests (ts);
     }

@@ -1597,6 +1597,7 @@ struct WaveNode::PerChannelState
 
     juce::LagrangeInterpolator resampler;
     float lastSample = 0;
+    bool resamplerNeedsPriming = true;
 };
 
 
@@ -1703,8 +1704,10 @@ int64_t WaveNode::editPositionToFileSample (int64_t timelinePosition) const noex
 
 int64_t WaveNode::editTimeToFileSample (TimePosition editTime) const noexcept
 {
-    return (int64_t) ((editTime - toDuration (editPosition.getStart() - offset)).inSeconds()
-                       * originalSpeedRatio * audioFileSampleRate + 0.5);
+    // N.B. floor rather than truncate so times before the clip start (which happen when a
+    // block straddles it) round to the nearest sample like all the others
+    return (int64_t) std::floor ((editTime - toDuration (editPosition.getStart() - offset)).inSeconds()
+                                  * originalSpeedRatio * audioFileSampleRate + 0.5);
 }
 
 bool WaveNode::updateFileSampleRate()
@@ -1786,7 +1789,13 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
     auto numChannels = (choc::buffer::ChannelCount) destChannels.size();
     assert (pc.buffers.audio.getNumChannels() == numChannels);
 
-    AudioScratchBuffer fileData ((int) numChannels, numFileSamples + 2);
+    // The resampler's output lags its input by its base latency, so read that many extra
+    // frames and feed the resampler from that far in. After a reset, the skipped frames
+    // prime its history so the first output frame lines up with fileStart
+    constexpr int resamplerLatency = static_cast<int> (juce::LagrangeInterpolator::getBaseLatency());
+    const auto numFileSamplesToRead = numFileSamples + resamplerLatency + 2;
+
+    AudioScratchBuffer fileData ((int) numChannels, numFileSamplesToRead);
 
     uint32_t lastSampleFadeLength = 0;
 
@@ -1794,7 +1803,7 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
     {
         SCOPED_REALTIME_CHECK
 
-        if (reader->readSamples (numFileSamples + 2, fileData.buffer, destChannels, 0,
+        if (reader->readSamples (numFileSamplesToRead, fileData.buffer, destChannels, 0,
                                  sourceChannels,
                                  isOfflineRender ? 5000 : 3))
         {
@@ -1833,6 +1842,7 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
         for (auto state : *channelState)
         {
             state->resampler.reset();
+            state->resamplerNeedsPriming = true;
             state->lastSample = 0.0;
         }
 
@@ -1866,7 +1876,14 @@ void WaveNode::processSection (ProcessContext& pc, juce::Range<int64_t> timeline
             const auto dest = destBuffer.getIterator (channel).sample;
 
             auto& state = *channelState->getUnchecked ((int) channel);
-            state.resampler.processAdding (ratio, src, dest, (int) numFrames, gains[channel & 1]);
+
+            if (std::exchange (state.resamplerNeedsPriming, false))
+            {
+                float discarded[resamplerLatency];
+                state.resampler.process (1.0, src, discarded, resamplerLatency);
+            }
+
+            state.resampler.processAdding (ratio, src + resamplerLatency, dest, (int) numFrames, gains[channel & 1]);
 
             if (lastSampleFadeLength > 0)
             {
