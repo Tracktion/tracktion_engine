@@ -139,6 +139,41 @@ TEST_SUITE ("tracktion_engine")
                         });
         }
     }
+
+    TEST_CASE ("4OSC plays a note timestamped in the last half-sample of a block")
+    {
+        // A timestamp this close to the end of the block rounds up to the block length.
+        // Messages like this must still be played rather than dropped.
+        auto edit = Edit::createSingleTrackEdit (*Engine::getEngines()[0]);
+        Plugin::Ptr pluginPtr = edit->getPluginCache().createNewPlugin (FourOscPlugin::xmlTypeName, {});
+        auto synth = dynamic_cast<FourOscPlugin*> (pluginPtr.get());
+        REQUIRE (synth != nullptr);
+
+        constexpr double sampleRate = 44100.0;
+        constexpr int blockSize = 512;
+        synth->baseClassInitialise ({ 0_tp, sampleRate, blockSize });
+
+        juce::AudioBuffer<float> buffer (2, blockSize);
+        MidiMessageArray midi;
+        auto blockStart = 0_tp;
+
+        auto processBlock = [&]
+        {
+            buffer.clear();
+            const auto blockEnd = blockStart + TimeDuration::fromSeconds (blockSize / sampleRate);
+            synth->applyToBuffer ({ &buffer, 0, blockSize, &midi, 0.0, { blockStart, blockEnd }, true, false, false, false });
+            midi.clear();
+            blockStart = blockEnd;
+
+            return buffer.getMagnitude (0, blockSize);
+        };
+
+        midi.addMidiMessage (juce::MidiMessage::noteOn (1, 69, 1.0f), (blockSize - 0.25) / sampleRate, {});
+        processBlock();
+        CHECK (processBlock() > 0.01f);
+
+        synth->baseClassDeinitialise();
+    }
 }
 
 } // namespace tracktion::inline engine
