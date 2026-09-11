@@ -270,7 +270,19 @@ void FolderBasedProject::setName (const juce::String& newName)
         auto dst = folder.getParentDirectory().getChildFile (juce::File::createLegalFileName (newName));
 
         if (folder.moveFileTo (dst) || folder.moveFileTo (dst))
+        {
+            const juce::ScopedLock sl (itemLock);
+
+            // Drop the items for files at the old location and rescan, otherwise
+            // they'd point at files that no longer exist and scanFolder() would
+            // keep them as external items, listing everything twice
+            for (int i = cachedItems.size(); --i >= 0;)
+                if (cachedItems.getReference (i)->getSourceFile().isAChildOf (folder))
+                    cachedItems.remove (i);
+
             folder = dst;
+            itemsScanned = false;
+        }
 
         owner.projectManager.updateProjectFile (owner, folder);
         owner.projectManager.saveList();

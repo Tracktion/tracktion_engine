@@ -2834,6 +2834,57 @@ TEST_SUITE ("tracktion_engine")
         cleanup();
     }
 
+    TEST_CASE ("FolderBasedProject: setName doesn't leave items behind in the old folder")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto projectFolder = tempDir.getChildFile ("rename_items_test");
+        projectFolder.createDirectory();
+        projectFolder.getChildFile ("Song.tracktionedit").create();
+        projectFolder.getChildFile ("audio.wav").create();
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+        REQUIRE (project->getNumProjectItems() == 2);
+
+        project->setName ("renamed_items_test");
+        auto newFolder = project->getProjectFile();
+        REQUIRE (newFolder.isDirectory());
+        REQUIRE (! projectFolder.exists());
+
+        auto checkItems = [&]
+        {
+            CHECK (project->getNumProjectItems() == 2);
+
+            for (auto item : project->getAllProjectItems())
+            {
+                CHECK (item->getSourceFile().isAChildOf (newFolder));
+                CHECK (item->getSourceFile().existsAsFile());
+            }
+
+            CHECK (project->getProjectItemForFile (newFolder.getChildFile ("Song.tracktionedit")) != nullptr);
+        };
+
+        checkItems();
+
+        // The Projects tab rescans after a rename, which used to keep the stale items
+        // as "external" ones and list every file twice (waveform_beta#1245)
+        project->reload (Project::ReloadMode::immediate);
+        checkItems();
+
+        cleanup();
+    }
+
     TEST_CASE ("FileBasedProject: removeProjectItem")
     {
         auto& engine = *Engine::getEngines()[0];
