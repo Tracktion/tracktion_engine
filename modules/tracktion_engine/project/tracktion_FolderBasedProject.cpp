@@ -564,23 +564,34 @@ void FolderBasedProject::sourceFileMoved (const juce::File& oldFile, const juce:
     auto oldRef = ProjectItemRef::fromPath (oldFile.getRelativePathFrom (projectDir));
     auto newRef = ProjectItemRef::fromPath (newFile.getRelativePathFrom (projectDir), owner);
 
-    // Helper lambda to reassign refs in a single edit
+    // Helper lambda to reassign refs in a single edit, returning true if any were changed.
+    // Edits that don't reference the moved file mustn't be re-saved, as a save counts as a
+    // user save (e.g. it triggers the app's auto-backup)
     auto reassignInEdit = [&] (Edit& edit)
     {
+        bool anyReassigned = false;
+
         for (auto exportable : Exportable::addAllExportables (edit))
+        {
             for (auto& item : exportable->getReferencedItems())
+            {
                 if (item.itemRef == oldRef)
+                {
                     exportable->reassignReferencedItem (item, newRef, 0.0);
+                    anyReassigned = true;
+                }
+            }
+        }
+
+        return anyReassigned;
     };
 
     // 1. Update all currently open edits belonging to this project
     for (auto edit : owner.engine.getActiveEdits().getEdits())
     {
         if (edit != nullptr && owner.projectManager.getProject (*edit).get() == &owner)
-        {
-            reassignInEdit (*edit);
-            EditFileOperations (*edit).save (false, true, false);
-        }
+            if (reassignInEdit (*edit))
+                EditFileOperations (*edit).save (false, true, false);
     }
 
     // 2. Update closed edit files on disk
@@ -605,9 +616,8 @@ void FolderBasedProject::sourceFileMoved (const juce::File& oldFile, const juce:
                 {
                     auto ed = loadEditForExamining (owner.projectManager, item->getProjectItemRef());
 
-                    if (ed != nullptr)
+                    if (ed != nullptr && reassignInEdit (*ed))
                     {
-                        reassignInEdit (*ed);
                         EditFileOperations saveOps (*ed);
                         jassert (saveOps.getEditFile() == editFile);
                         saveOps.save (false, true, false);
