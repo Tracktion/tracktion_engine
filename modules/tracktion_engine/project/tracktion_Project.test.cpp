@@ -1717,6 +1717,56 @@ TEST_SUITE ("tracktion_engine")
         }
     }
 
+    TEST_CASE ("FolderBasedProject: renaming an Edit doesn't re-save Edits that don't reference it")
+    {
+        // Creating a project from a template renames each Edit. That used to re-save
+        // every closed Edit, which made the app auto-backup the brand new project.
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        auto projectPath = tempDir.getChildFile ("test_folder_project");
+        REQUIRE (projectPath.createDirectory());
+
+        {
+            ProjectManager::TempProject tp (pm, projectPath, false);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+
+            auto editItem1 = project->createNewEdit();
+            auto editItem2 = project->createNewEdit();
+            REQUIRE (editItem1 != nullptr);
+            REQUIRE (editItem2 != nullptr);
+
+            for (auto item : { editItem1, editItem2 })
+            {
+                auto edit = createEmptyEdit (engine, item->getSourceFile());
+                edit->setProjectItemRef (item->getProjectItemRef());
+                edit->ensureNumberOfAudioTracks (1);
+                CHECK (test_utilities::saveEditSync (*edit));
+            }
+
+            project->save();
+
+            // Backdate the Edit files so any re-save shows up as a new modification time
+            const auto pastTime = juce::Time (2020, 0, 1, 12, 0);
+            const auto cutOff = juce::Time (2021, 0, 1, 12, 0);
+            CHECK (editItem1->getSourceFile().setLastModificationTime (pastTime));
+            CHECK (editItem2->getSourceFile().setLastModificationTime (pastTime));
+
+            editItem1->setName ("Renamed Edit", ProjectItem::SetNameMode::forceRenameSynchronous);
+
+            auto renamedFile = editItem1->getSourceFile();
+            CHECK (renamedFile.getFileNameWithoutExtension() == "Renamed Edit");
+            REQUIRE (renamedFile.existsAsFile());
+
+            CHECK (renamedFile.getLastModificationTime() < cutOff);
+            CHECK (editItem2->getSourceFile().getLastModificationTime() < cutOff);
+        }
+
+        tempDir.deleteRecursively (false);
+    }
+
     TEST_CASE ("ProjectID: basic operations")
     {
         // Default-constructed is invalid
