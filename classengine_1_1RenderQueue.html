@@ -359,6 +359,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the overall progress of the queue, 0 to 1. </p>
+<p>Message thread only - it walks the job list, which the message thread may append to at any time. To follow a queue from another thread, keep the JobPtrs you care about and poll <a class="el" href="classengine_1_1RenderQueue_1_1Job.html#aa9f50f776a4fb1d45afe3179df6d526a" title="Returns this job&#39;s progress, 0 to 1.">Job::getProgress()</a>, which is thread safe. </p>
 
 </div>
 </div>
@@ -417,7 +418,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 7 2026 15:12:56 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sat Sep 12 2026 07:54:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
