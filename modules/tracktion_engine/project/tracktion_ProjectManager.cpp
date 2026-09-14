@@ -532,6 +532,19 @@ Project::Ptr ProjectManager::createNewProject (const juce::File& projectFile,
     return newProj;
 }
 
+/** An Edit extracted from a template keeps the template's creationTime and the file times stored
+    in the archive, so this re-stamps it as created now. Rewriting the file also updates its
+    modification time.
+*/
+static void markTemplateEditAsNew (const juce::File& editFile)
+{
+    if (auto xml = juce::parseXMLIfTagMatches (editFile, IDs::EDIT))
+    {
+        xml->setAttribute (IDs::creationTime, juce::String (juce::Time::getCurrentTime().toMilliseconds()));
+        xml->writeTo (editFile);
+    }
+}
+
 Project::Ptr ProjectManager::createNewProjectFromTemplate (const juce::String& name, const juce::File& lastPath,
                                                            const juce::File& archiveFile, juce::ValueTree folder,
                                                            ProjectType projectType)
@@ -635,8 +648,11 @@ Project::Ptr ProjectManager::createNewProjectFromTemplate (const juce::String& n
                 auto mo = proj->getProjectItemAt (i);
 
                 if (mo->isEdit())
+                {
                     mo->setName (name + " " + TRANS("Edit") + " " + juce::String (editNum++),
                                  ProjectItem::SetNameMode::forceRenameSynchronous);
+                    markTemplateEditAsNew (mo->getSourceFile());
+                }
             }
 
             proj->createDefaultFolders();
