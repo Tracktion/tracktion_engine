@@ -92,6 +92,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a469b29fcffdbea2526af2597c8f413df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28d76dceed9ef113eec2d1bf91694946" id="r_a28d76dceed9ef113eec2d1bf91694946"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1PluginScanHelpers_1_1CustomScanner.html#a28d76dceed9ef113eec2d1bf91694946">findPluginTypesFor</a> (juce::AudioPluginFormat &amp;format, juce::OwnedArray&lt; juce::PluginDescription &gt; &amp;result, const juce::String &amp;fileOrIdentifier) override</td></tr>
 <tr class="separator:a28d76dceed9ef113eec2d1bf91694946"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaec484fcf8c1c8ebc48dfa70678a0dce" id="r_aaec484fcf8c1c8ebc48dfa70678a0dce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1PluginScanHelpers_1_1CustomScanner.html#aaec484fcf8c1c8ebc48dfa70678a0dce">keepUpdateTimesOfUnchangedPlugins</a> (juce::OwnedArray&lt; juce::PluginDescription &gt; &amp;result)</td></tr>
+<tr class="memdesc:aaec484fcf8c1c8ebc48dfa70678a0dce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Some formats (e.g.  <br /></td></tr>
+<tr class="separator:aaec484fcf8c1c8ebc48dfa70678a0dce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ddb0a321867d89050e3c597a9bf4327" id="r_a0ddb0a321867d89050e3c597a9bf4327"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1PluginScanHelpers_1_1CustomScanner.html#a0ddb0a321867d89050e3c597a9bf4327">findTypes</a> (juce::AudioPluginFormat &amp;format, juce::OwnedArray&lt; juce::PluginDescription &gt; &amp;result, const juce::String &amp;fileOrIdentifier)</td></tr>
+<tr class="separator:a0ddb0a321867d89050e3c597a9bf4327"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7438ecb4b891850ec0bbd050b85dd21c" id="r_a7438ecb4b891850ec0bbd050b85dd21c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1PluginScanHelpers_1_1CustomScanner.html#a7438ecb4b891850ec0bbd050b85dd21c">scanFinished</a> () override</td></tr>
 <tr class="separator:a7438ecb4b891850ec0bbd050b85dd21c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:affdc0a4aa5f3efeacc7fd41243a1e8dc" id="r_affdc0a4aa5f3efeacc7fd41243a1e8dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1PluginScanHelpers_1_1CustomScanner.html#affdc0a4aa5f3efeacc7fd41243a1e8dc">cancelScan</a> ()</td></tr>
@@ -173,6 +178,61 @@ Public Attributes</h2></td></tr>
 <span class="mlabels"><span class="mlabel">override</span></span>  </td>
   </tr>
 </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aaec484fcf8c1c8ebc48dfa70678a0dce" name="aaec484fcf8c1c8ebc48dfa70678a0dce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaec484fcf8c1c8ebc48dfa70678a0dce">&#9670;&#160;</a></span>keepUpdateTimesOfUnchangedPlugins()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void engine::PluginScanHelpers::CustomScanner::keepUpdateTimesOfUnchangedPlugins </td>
+          <td>(</td>
+          <td class="paramtype">juce::OwnedArray&lt; juce::PluginDescription &gt; &amp;&#160;</td>
+          <td class="paramname"><em>result</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Some formats (e.g. </p>
+<p>LV2) re-describe every plugin on each scan, which would stamp them all as just updated. This keeps the existing update time if the plugin hasn't changed. </p>
+
+</div>
+</div>
+<a id="a0ddb0a321867d89050e3c597a9bf4327" name="a0ddb0a321867d89050e3c597a9bf4327"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ddb0a321867d89050e3c597a9bf4327">&#9670;&#160;</a></span>findTypes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool engine::PluginScanHelpers::CustomScanner::findTypes </td>
+          <td>(</td>
+          <td class="paramtype">juce::AudioPluginFormat &amp;&#160;</td>
+          <td class="paramname"><em>format</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::OwnedArray&lt; juce::PluginDescription &gt; &amp;&#160;</td>
+          <td class="paramname"><em>result</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>fileOrIdentifier</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
 </div><div class="memdoc">
 
 <p class="reference">References <a class="el" href="tracktion__CrashTracer_8h.html#aa3c9c9aaf3db474439041b1ac5babb17">CRASH_TRACER</a>.</p>
@@ -361,7 +421,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 14 2026 09:50:37 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Sep 14 2026 14:04:28 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

@@ -25206,6 +25206,20 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>keepUpdateTimesOfUnchangedPlugins</name>
+      <anchorfile>structengine_1_1PluginScanHelpers_1_1CustomScanner.html</anchorfile>
+      <anchor>aaec484fcf8c1c8ebc48dfa70678a0dce</anchor>
+      <arglist>(juce::OwnedArray&lt; juce::PluginDescription &gt; &amp;result)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>findTypes</name>
+      <anchorfile>structengine_1_1PluginScanHelpers_1_1CustomScanner.html</anchorfile>
+      <anchor>a0ddb0a321867d89050e3c597a9bf4327</anchor>
+      <arglist>(juce::AudioPluginFormat &amp;format, juce::OwnedArray&lt; juce::PluginDescription &gt; &amp;result, const juce::String &amp;fileOrIdentifier)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>scanFinished</name>
       <anchorfile>structengine_1_1PluginScanHelpers_1_1CustomScanner.html</anchorfile>
       <anchor>a7438ecb4b891850ec0bbd050b85dd21c</anchor>

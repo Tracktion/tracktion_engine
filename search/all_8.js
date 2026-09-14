@@ -929,7 +929,7 @@ var searchData=
   ['getplaybacktime_926',['getPlaybackTime',['../classengine_1_1MidiNote.html#a0c0c723a295285cba017be10b35a4587',1,'engine::MidiNote']]],
   ['getplayedmonotonicrange_927',['getPlayedMonotonicRange',['../classengine_1_1LaunchHandle.html#aaa1d59ec70720866819d7cc737cc8e9c',1,'engine::LaunchHandle']]],
   ['getplayedrange_928',['getPlayedRange',['../classengine_1_1LaunchHandle.html#a5d4806431e2c70cba2b2965d1f94ce92',1,'engine::LaunchHandle']]],
-  ['getplayhead_929',['getplayhead',['../classengine_1_1TracktionEngineNode.html#a2463b5679f6d7eb52f64fe903cc94283',1,'engine::TracktionEngineNode::getPlayHead()'],['../classengine_1_1AutomationCurveModifier.html#a93c412af58b958f4eae4a0280d9dd468',1,'engine::AutomationCurveModifier::getPlayhead()'],['../classengine_1_1AudioClipBase.html#a1c9a553769d118a608e4437692b3f464',1,'engine::AudioClipBase::getPlayhead()']]],
+  ['getplayhead_929',['getplayhead',['../classengine_1_1AutomationCurveModifier.html#a93c412af58b958f4eae4a0280d9dd468',1,'engine::AutomationCurveModifier::getPlayhead()'],['../classengine_1_1AudioClipBase.html#a1c9a553769d118a608e4437692b3f464',1,'engine::AudioClipBase::getPlayhead()'],['../classengine_1_1TracktionEngineNode.html#a2463b5679f6d7eb52f64fe903cc94283',1,'engine::TracktionEngineNode::getPlayHead()']]],
   ['getplayheadstate_930',['getPlayHeadState',['../classengine_1_1TracktionEngineNode.html#a53180867fd4c11ac09b64f02967b56ac',1,'engine::TracktionEngineNode']]],
   ['getplayingstatus_931',['getPlayingStatus',['../classengine_1_1LaunchHandle.html#a76a3d5b3314e66da6c1e6eb8e04da3e3',1,'engine::LaunchHandle']]],
   ['getplayoutsyncposition_932',['getPlayoutSyncPosition',['../classgraph_1_1PlayHead.html#ac68de992becb5fb4fb240e359c14037a',1,'graph::PlayHead']]],
