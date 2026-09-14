@@ -473,6 +473,48 @@ TEST_CASE ("LoopingMidiNode program change colliding with note pitch")
     CHECK_EQ (numProgramChanges, 1);
 }
 
+TEST_CASE ("LoopingMidiNode overlapping notes of the same pitch")
+{
+    // A note overlapping the next note of the same pitch used to be exported with
+    // no note-off, giving on, on, off. ExternalPlugin ignores a note-on for a note
+    // that is already sounding, so the second note was never sent to the plugin
+    // (Tracktion/waveform_beta#1179)
+    auto& engine = *tracktion::engine::Engine::getEngines()[0];
+    auto edit = Edit::createSingleTrackEdit (engine);
+    auto mc = getAudioTracks (*edit)[0]->insertMIDIClip ({ 0_tp, edit->tempoSequence.toTime (8_bp) }, nullptr);
+
+    auto& sequence = mc->getSequence();
+    sequence.addNote (48, 0_bp, 2_bd, 127, 0, nullptr);
+    sequence.addNote (48, BeatPosition::fromBeats (1.999999999999989), 2_bd, 100, 0, nullptr); // Overlaps by a rounding error
+    sequence.addNote (60, 4_bp, 2_bd, 127, 0, nullptr);
+    sequence.addNote (60, 5_bp, 2_bd, 100, 0, nullptr); // Overlaps by a beat
+
+    for (auto timeBase : { MidiList::TimeBase::seconds, MidiList::TimeBase::beats, MidiList::TimeBase::beatsRaw })
+    {
+        const auto midiMessageSequence = sequence.exportToPlaybackMidiSequence (*mc, timeBase, false);
+
+        for (int noteNumber : { 48, 60 })
+        {
+            std::vector<juce::MidiMessage> noteEvents;
+
+            for (auto meh : midiMessageSequence)
+                if (meh->message.isNoteOnOrOff() && meh->message.getNoteNumber() == noteNumber)
+                    noteEvents.push_back (meh->message);
+
+            REQUIRE_EQ (noteEvents.size(), static_cast<size_t> (4));
+            CHECK (noteEvents[0].isNoteOn());
+            CHECK (noteEvents[1].isNoteOff());
+            CHECK (noteEvents[2].isNoteOn());
+            CHECK (noteEvents[3].isNoteOff());
+
+            // The first note is cut short where the second one starts
+            // (the beats and seconds time bases nudge note-offs back slightly)
+            CHECK_LE (noteEvents[1].getTimeStamp(), noteEvents[2].getTimeStamp());
+            CHECK (juce::isWithin (noteEvents[1].getTimeStamp(), noteEvents[2].getTimeStamp(), 0.001));
+        }
+    }
+}
+
 } // TEST_SUITE
 
 } // namespace tracktion::inline engine
