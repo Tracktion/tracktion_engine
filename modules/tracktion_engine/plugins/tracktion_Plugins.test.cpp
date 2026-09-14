@@ -531,6 +531,88 @@ TEST_SUITE ("tracktion_engine")
 }
 #endif
 
+TEST_SUITE ("tracktion_engine")
+{
+    TEST_CASE ("Rescanning an unchanged plugin keeps its info update time")
+    {
+        // Mimics LV2, which always gets re-described when scanning for new or updated plugins
+        struct ScanTestFormat  : public juce::AudioPluginFormat
+        {
+            juce::PluginDescription desc;
+
+            juce::String getName() const override                                           { return "ScanTestFormat"; }
+            bool fileMightContainThisPluginType (const juce::String&) override              { return true; }
+            juce::String getNameOfPluginFromIdentifier (const juce::String& s) override     { return s; }
+            bool pluginNeedsRescanning (const juce::PluginDescription&) override            { return true; }
+            bool doesPluginStillExist (const juce::PluginDescription&) override             { return true; }
+            bool canScanForPlugins() const override                                         { return true; }
+            bool isTrivialToScan() const override                                           { return true; }
+            juce::FileSearchPath getDefaultLocationsToSearch() override                     { return {}; }
+            bool requiresUnblockedMessageThreadDuringCreation (const juce::PluginDescription&) const override { return false; }
+
+            juce::StringArray searchPathsForPlugins (const juce::FileSearchPath&, bool, bool) override
+            {
+                return { desc.fileOrIdentifier };
+            }
+
+            void findAllTypesForFile (juce::OwnedArray<juce::PluginDescription>& results, const juce::String&) override
+            {
+                auto d = desc;
+                d.lastInfoUpdateTime = juce::Time::getCurrentTime();
+                results.add (new juce::PluginDescription (d));
+            }
+
+            void createPluginInstance (const juce::PluginDescription&, double, int, PluginCreationCallback callback) override
+            {
+                callback (nullptr, {});
+            }
+        };
+
+        auto& engine = *Engine::getEngines()[0];
+        auto& list = engine.getPluginManager().knownPluginList;
+
+        ScanTestFormat format;
+        format.desc.name = "Scan Test";
+        format.desc.pluginFormatName = format.getName();
+        format.desc.fileOrIdentifier = "urn:tracktion:scan-test";
+        format.desc.uniqueId = 1202;
+        format.desc.version = "1.0";
+        format.desc.lastFileModTime = juce::Time (1'000'000);
+
+        const auto originalUpdateTime = juce::Time (2'000'000);
+        auto existing = format.desc;
+        existing.lastInfoUpdateTime = originalUpdateTime;
+        list.addType (existing);
+        const juce::ScopeGuard removeTestType { [&] { list.removeType (existing); } };
+
+        auto rescan = [&]
+        {
+            juce::OwnedArray<juce::PluginDescription> found;
+            list.scanAndAddFile (format.desc.fileOrIdentifier, false, found, format);
+            auto desc = list.getTypeForFile (format.desc.fileOrIdentifier);
+            REQUIRE (desc != nullptr);
+            return desc->lastInfoUpdateTime;
+        };
+
+        SUBCASE ("Unchanged plugin")
+        {
+            CHECK (rescan() == originalUpdateTime);
+        }
+
+        SUBCASE ("Modified plugin file")
+        {
+            format.desc.lastFileModTime = juce::Time (3'000'000);
+            CHECK (rescan() > originalUpdateTime);
+        }
+
+        SUBCASE ("New plugin version")
+        {
+            format.desc.version = "1.1";
+            CHECK (rescan() > originalUpdateTime);
+        }
+    }
+}
+
 } // namespace tracktion::inline engine
 
 #endif //TRACKTION_UNIT_TESTS
