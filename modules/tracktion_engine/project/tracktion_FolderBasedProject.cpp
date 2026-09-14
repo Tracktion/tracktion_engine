@@ -477,8 +477,15 @@ bool FolderBasedProject::removeProjectItem (const ProjectItemRef& ref, bool dele
                     item->deselect();
 
                     if (deleteSourceMaterial)
+                    {
                         if (! item->deleteSourceFile())
                             return false;
+
+                        // Otherwise a new file with the same name would inherit the description.
+                        // Kept when the file stays, as the next rescan brings the item back
+                        const juce::ScopedLock sl2 (propertyLock);
+                        properties.remove (getItemDescriptionKey (item->getSourceFile()));
+                    }
                 }
 
                 cachedItems.remove (index);
@@ -572,6 +579,23 @@ void FolderBasedProject::changed()
 
 void FolderBasedProject::sourceFileMoved (const juce::File& oldFile, const juce::File& newFile)
 {
+    // Descriptions are stored under a path-based key, so carry it over to the new path
+    {
+        const juce::ScopedLock sl (propertyLock);
+        auto oldKey = getItemDescriptionKey (oldFile);
+
+        if (properties.contains (oldKey))
+        {
+            properties.set (getItemDescriptionKey (newFile), properties[oldKey]);
+            properties.remove (oldKey);
+        }
+    }
+
+    // The moved item already points at newFile, so this also persists a description
+    // that was changed but not saved yet, before the reload below discards the item
+    syncItemDescriptionsToProperties();
+    savePropertiesToFile();
+
     auto projectDir = getDefaultDirectory();
     auto oldRef = ProjectItemRef::fromPath (oldFile.getRelativePathFrom (projectDir));
     auto newRef = ProjectItemRef::fromPath (newFile.getRelativePathFrom (projectDir), owner);
