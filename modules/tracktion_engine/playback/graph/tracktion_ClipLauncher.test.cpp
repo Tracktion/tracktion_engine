@@ -510,6 +510,55 @@ TEST_SUITE ("tracktion_engine")
         CHECK_LT (getToneMagnitude (output, tr (5.1, 7.9), 330.0), 0.05f);
     }
 
+    TEST_CASE ("Clip launcher: retriggering a playing clip doesn't click (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+
+        // A low frequency sine changes by less than 0.01 per sample, and it
+        // starts at zero so a restart on one of its peaks is a full-scale step
+        constexpr double frequency = 55.0;
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, 8.0, 1, (float) frequency);
+        auto clip = insertAudioClipIntoSlot (*slot, sinFile->getFile());
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        launchHandle->play ({});
+        edit->getTransport().play (false);
+        test_utilities::waitForFileToBeMapped (AudioFile (engine, sinFile->getFile()));
+
+        process (player, 1.5_td);
+
+        // Retrigger mid-block, on a peak of the playing sine
+        const auto retriggerTime = TimePosition::fromSeconds (2.0 + 0.25 / frequency);
+        const auto retriggerBeat = edit->tempoSequence.toBeats (retriggerTime);
+
+        auto epc = edit->getTransport().getCurrentPlaybackContext();
+        REQUIRE (epc);
+        auto syncPoint = epc->getSyncPoint();
+        REQUIRE (syncPoint);
+
+        launchHandle->play (MonotonicBeat { syncPoint->monotonicBeat.v + (retriggerBeat - syncPoint->beat) });
+        process (player, 1_td);
+
+        auto playedRange = launchHandle->getPlayedRange();
+        REQUIRE (playedRange);
+        CHECK (playedRange->getStart().inBeats() == doctest::Approx (retriggerBeat.inBeats()).epsilon (0.001));
+
+        const auto output = player.getOutput();
+        const auto startSample = toSamples (TimePosition::fromSeconds (1.9), sampleRate);
+        const auto endSample = toSamples (TimePosition::fromSeconds (2.4), sampleRate);
+        float maxStep = 0.0f;
+
+        for (auto i = startSample + 1; i < endSample; ++i)
+            maxStep = std::max (maxStep, std::abs (output.getSample (0, (choc::buffer::FrameCount) i)
+                                                   - output.getSample (0, (choc::buffer::FrameCount) (i - 1))));
+
+        CHECK_LT (maxStep, 0.1f);
+    }
+
     TEST_CASE ("Clip launcher: switching between arranger and launcher (audio)")
     {
         auto& engine = *Engine::getEngines()[0];
