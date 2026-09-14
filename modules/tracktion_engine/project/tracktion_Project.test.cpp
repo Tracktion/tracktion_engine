@@ -1180,6 +1180,143 @@ TEST_SUITE ("tracktion_engine")
         cleanup();
     }
 
+    TEST_CASE ("FolderBasedProject: item description survives rename")
+    {
+        // Descriptions are stored under a path-based key, so a rename used to leave
+        // the description behind on the old path (Tracktion/waveform_beta#1246)
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto projectFolder = tempDir.getChildFile ("desc_rename_folder");
+        projectFolder.createDirectory();
+
+        auto wavFile = projectFolder.getChildFile ("audio.wav");
+        wavFile.create();
+
+        {
+            ProjectManager::TempProject tp (pm, projectFolder, false);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+            REQUIRE (project->isValid());
+
+            auto checkDescriptionAfterRescan = [&] (const juce::File& f, const juce::String& expected)
+            {
+                project->reload (Project::ReloadMode::immediate);
+                auto item = project->getProjectItemForFile (f);
+                REQUIRE (item != nullptr);
+                CHECK (item->getDescription() == expected);
+            };
+
+            SUBCASE ("saved description on a closed Edit")
+            {
+                auto editItem = project->createNewEdit();
+                REQUIRE (editItem != nullptr);
+                auto oldFile = editItem->getSourceFile();
+
+                editItem->setDescription ("Saved description");
+                project->save();
+
+                editItem->setName ("Renamed Edit", ProjectItem::SetNameMode::forceRenameSynchronous);
+                auto newFile = editItem->getSourceFile();
+                REQUIRE (newFile != oldFile);
+                REQUIRE (newFile.existsAsFile());
+
+                checkDescriptionAfterRescan (newFile, "Saved description");
+
+                // Simulate an app restart, reading the description back from project_info.json
+                {
+                    ProjectManager::TempProject tp2 (pm, projectFolder, false);
+                    REQUIRE (tp2.project != nullptr);
+                    auto item2 = tp2.project->getProjectItemForFile (newFile);
+                    REQUIRE (item2 != nullptr);
+                    CHECK (item2->getDescription() == "Saved description");
+                }
+
+                // A new file with the old name mustn't inherit the description
+                REQUIRE (oldFile.create());
+                checkDescriptionAfterRescan (oldFile, {});
+            }
+
+            SUBCASE ("unsaved description")
+            {
+                auto editItem = project->createNewEdit();
+                REQUIRE (editItem != nullptr);
+
+                editItem->setDescription ("Unsaved description");
+                editItem->setName ("Renamed Edit", ProjectItem::SetNameMode::forceRenameSynchronous);
+
+                checkDescriptionAfterRescan (editItem->getSourceFile(), "Unsaved description");
+            }
+
+            SUBCASE ("open Edit")
+            {
+                auto editItem = project->createNewEdit();
+                REQUIRE (editItem != nullptr);
+
+                auto edit = createEmptyEdit (engine, editItem->getSourceFile());
+                edit->setProjectItemRef (editItem->getProjectItemRef());
+                CHECK (test_utilities::saveEditSync (*edit));
+
+                editItem->setDescription ("Open Edit description");
+                project->save();
+
+                editItem->setName ("Renamed Edit", ProjectItem::SetNameMode::forceRenameSynchronous);
+
+                checkDescriptionAfterRescan (editItem->getSourceFile(), "Open Edit description");
+            }
+
+            SUBCASE ("audio file")
+            {
+                auto waveItem = project->getProjectItemForFile (wavFile);
+                REQUIRE (waveItem != nullptr);
+
+                waveItem->setDescription ("Audio description");
+                project->save();
+
+                waveItem->setName ("Renamed Audio", ProjectItem::SetNameMode::forceRenameSynchronous);
+                auto newFile = waveItem->getSourceFile();
+                REQUIRE (newFile != wavFile);
+
+                checkDescriptionAfterRescan (newFile, "Audio description");
+            }
+
+            SUBCASE ("removing an item without deleting its file keeps the description")
+            {
+                auto waveItem = project->getProjectItemForFile (wavFile);
+                REQUIRE (waveItem != nullptr);
+
+                waveItem->setDescription ("Audio description");
+                project->save();
+
+                CHECK (project->removeProjectItem (waveItem->getProjectItemRef(), false));
+                project->save();
+
+                checkDescriptionAfterRescan (wavFile, "Audio description");
+            }
+
+            SUBCASE ("deleting an item doesn't leave its description behind")
+            {
+                auto waveItem = project->getProjectItemForFile (wavFile);
+                REQUIRE (waveItem != nullptr);
+
+                waveItem->setDescription ("Audio description");
+                project->save();
+
+                CHECK (project->removeProjectItem (waveItem->getProjectItemRef(), true));
+                REQUIRE_FALSE (wavFile.existsAsFile());
+                project->save();
+
+                REQUIRE (wavFile.create());
+                checkDescriptionAfterRescan (wavFile, {});
+            }
+        }
+
+        tempDir.deleteRecursively (false);
+    }
+
     TEST_CASE ("ProjectUtilities: consolidate single Edit")
     {
         auto& engine = *Engine::getEngines()[0];
