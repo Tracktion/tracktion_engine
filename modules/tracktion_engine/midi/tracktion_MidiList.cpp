@@ -339,8 +339,20 @@ static void addExpressiveNoteToSequence (juce::MidiMessageSequence& seq, const M
 }
 
 //==============================================================================
+static double getNoteEdgeTime (const MidiClip& clip, MidiList::TimeBase tb, const MidiNote& note,
+                               MidiNote::NoteEdge edge, const GrooveTemplate* grooveTemplate)
+{
+    switch (tb)
+    {
+        case MidiList::TimeBase::beatsRaw:  return edge == MidiNote::startEdge ? note.getStartBeat().inBeats() : note.getEndBeat().inBeats();
+        case MidiList::TimeBase::beats:     return note.getPlaybackBeats (edge, clip, grooveTemplate).inBeats();
+        case MidiList::TimeBase::seconds:   [[ fallthrough ]];
+        default:                            return note.getPlaybackTime (edge, clip, grooveTemplate).inSeconds();
+    }
+}
+
 static void addToSequence (juce::MidiMessageSequence& seq, const MidiClip& clip, MidiList::TimeBase tb,
-                           const MidiNote& note, int channelNumber, bool addNoteUp,
+                           const MidiNote& note, int channelNumber, const MidiNote* nextOverlappingNote,
                            const GrooveTemplate* grooveTemplate)
 {
     jassert (channelNumber < 17); // SysEx?
@@ -348,43 +360,18 @@ static void addToSequence (juce::MidiMessageSequence& seq, const MidiClip& clip,
     if (note.isMute() || note.getLengthBeats() <= BeatDuration::fromBeats (0.00001))
         return;
 
-    const auto downTime = [&]
-    {
-        switch (tb)
-        {
-            case MidiList::TimeBase::beatsRaw:  return note.getStartBeat().inBeats();
-            case MidiList::TimeBase::beats:     return note.getPlaybackBeats (MidiNote::startEdge, clip, grooveTemplate).inBeats();
-            case MidiList::TimeBase::seconds:   [[ fallthrough ]];
-            default:                            return note.getPlaybackTime (MidiNote::startEdge, clip, grooveTemplate).inSeconds();
-        }
-    }();
+    const auto downTime = getNoteEdgeTime (clip, tb, note, MidiNote::startEdge, grooveTemplate);
+    auto upTime = getNoteEdgeTime (clip, tb, note, MidiNote::endEdge, grooveTemplate);
 
-    auto velocity = (uint8_t) note.getVelocity();
-    int noteNumber = note.getNoteNumber();
+    // If the next note of the same pitch starts before this one ends, end this one there.
+    // Otherwise the next note-on arrives while this note is still on and gets ignored as a duplicate
+    if (nextOverlappingNote != nullptr)
+        upTime = std::min (upTime, getNoteEdgeTime (clip, tb, *nextOverlappingNote, MidiNote::startEdge, grooveTemplate));
 
-    if (addNoteUp)
+    if (upTime > downTime && upTime > 0.0)
     {
-        // nudge the note-up backwards just a bit to make sure the ordering is correct
-        const auto upTime = [&]
-        {
-            switch (tb)
-            {
-                case MidiList::TimeBase::beatsRaw:  return note.getEndBeat().inBeats();
-                case MidiList::TimeBase::beats:     return note.getPlaybackBeats (MidiNote::endEdge, clip, grooveTemplate).inBeats();
-                case MidiList::TimeBase::seconds:   [[ fallthrough ]];
-                default:                            return note.getPlaybackTime (MidiNote::endEdge, clip, grooveTemplate).inSeconds();
-            }
-        }();
-
-        if (upTime > downTime && upTime > 0.0)
-        {
-            seq.addEvent (juce::MidiMessage::noteOn (channelNumber, noteNumber, velocity), std::max (0.0, downTime));
-            seq.addEvent (juce::MidiMessage::noteOff (channelNumber, noteNumber, static_cast<uint8_t> (note.getNoteOffVelocity())), upTime);
-        }
-    }
-    else if (downTime >= 0.0)
-    {
-        seq.addEvent (juce::MidiMessage::noteOn (channelNumber, noteNumber, velocity), downTime);
+        seq.addEvent (juce::MidiMessage::noteOn (channelNumber, note.getNoteNumber(), (uint8_t) note.getVelocity()), std::max (0.0, downTime));
+        seq.addEvent (juce::MidiMessage::noteOff (channelNumber, note.getNoteNumber(), static_cast<uint8_t> (note.getNoteOffVelocity())), upTime);
     }
 }
 
@@ -1964,7 +1951,7 @@ juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const Mid
 
             auto thisNoteEnd = note.getEndBeat();
             auto noteNum = note.getNoteNumber();
-            bool useNoteUp = true;
+            const MidiNote* nextOverlappingNote = nullptr;
 
             for (int j = i + 1; j < numNotes; ++j)
             {
@@ -1976,13 +1963,13 @@ juce::MidiMessageSequence MidiList::createDefaultPlaybackMidiSequence (const Mid
 
                 if (note2.getNoteNumber() == noteNum)
                 {
-                    useNoteUp = false;
+                    nextOverlappingNote = &note2;
                     break;
                 }
             }
 
             if (thisNoteEnd > firstNoteBeat)
-                addToSequence (destSequence, clip, timeBase, note, channelNumber, useNoteUp, grooveTemplate);
+                addToSequence (destSequence, clip, timeBase, note, channelNumber, nextOverlappingNote, grooveTemplate);
         }
     }
     else
