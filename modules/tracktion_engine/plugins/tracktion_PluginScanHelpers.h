@@ -269,6 +269,29 @@ struct CustomScanner  : public juce::KnownPluginList::CustomScanner
                              juce::OwnedArray<juce::PluginDescription>& result,
                              const juce::String& fileOrIdentifier) override
     {
+        const auto succeeded = findTypes (format, result, fileOrIdentifier);
+        keepUpdateTimesOfUnchangedPlugins (result);
+        return succeeded;
+    }
+
+    /** Some formats (e.g. LV2) re-describe every plugin on each scan, which would stamp them
+        all as just updated. This keeps the existing update time if the plugin hasn't changed.
+    */
+    void keepUpdateTimesOfUnchangedPlugins (juce::OwnedArray<juce::PluginDescription>& result)
+    {
+        for (const auto& existing : engine.getPluginManager().knownPluginList.getTypes())
+            for (auto desc : result)
+                if (desc != nullptr
+                     && desc->isDuplicateOf (existing)
+                     && desc->lastFileModTime == existing.lastFileModTime
+                     && desc->version == existing.version)
+                    desc->lastInfoUpdateTime = existing.lastInfoUpdateTime;
+    }
+
+    bool findTypes (juce::AudioPluginFormat& format,
+                    juce::OwnedArray<juce::PluginDescription>& result,
+                    const juce::String& fileOrIdentifier)
+    {
         CRASH_TRACER
 
         if (engine.getPluginManager().usesSeparateProcessForScanning()
