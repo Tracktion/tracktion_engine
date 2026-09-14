@@ -692,6 +692,69 @@ TEST_SUITE ("tracktion_engine")
         cleanup();
     }
 
+    TEST_CASE ("ProjectManager: Edits in a project created from a template are stamped as new")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        // A template Edit created and last saved long ago, as it would be by Save As Template
+        const auto oldTime = juce::Time (2020, 0, 1, 12, 0);
+        auto templateEditFile = tempDir.getChildFile ("template_src").getChildFile ("Template Edit.tracktionedit");
+        REQUIRE (templateEditFile.create());
+
+        {
+            auto state = createEmptyEdit (engine);
+            state.setProperty (IDs::creationTime, oldTime.toMilliseconds(), nullptr);
+            auto xml = state.createXml();
+            REQUIRE (xml != nullptr);
+            REQUIRE (xml->writeTo (templateEditFile));
+        }
+
+        REQUIRE (templateEditFile.setLastModificationTime (oldTime));
+
+        // The zip entry stores the file's time, which extraction restores
+        auto templateZip = tempDir.getChildFile ("template.zip");
+
+        {
+            juce::ZipFile::Builder builder;
+            builder.addFile (templateEditFile, 9, templateEditFile.getFileName());
+            juce::FileOutputStream os (templateZip);
+            REQUIRE (os.openedOk());
+            REQUIRE (builder.writeToStream (os, nullptr));
+        }
+
+        const auto startTime = juce::Time::getCurrentTime() - juce::RelativeTime::seconds (5.0);
+        auto proj = pm.createNewProjectFromTemplate ("From Template", tempDir, templateZip,
+                                                     pm.getActiveProjectsFolder(), ProjectType::folderBased);
+        REQUIRE (proj != nullptr);
+
+        int numEdits = 0;
+
+        for (int i = 0; i < proj->getNumProjectItems(); ++i)
+        {
+            if (auto item = proj->getProjectItemAt (i); item != nullptr && item->isEdit())
+            {
+                ++numEdits;
+                auto editFile = item->getSourceFile();
+                REQUIRE (editFile.existsAsFile());
+
+                auto state = loadValueTree (editFile, IDs::EDIT);
+                REQUIRE (state.isValid());
+                CHECK (juce::Time (static_cast<juce::int64> (state[IDs::creationTime])) >= startTime);
+                CHECK (editFile.getLastModificationTime() >= startTime);
+            }
+        }
+
+        CHECK (numEdits == 1);
+
+        pm.removeProjectFromList (proj->getProjectFile());
+        proj = nullptr;
+        tempDir.deleteRecursively (false);
+    }
+
     TEST_CASE ("Project: convert file-based to folder-based")
     {
         auto& engine = *Engine::getEngines()[0];
