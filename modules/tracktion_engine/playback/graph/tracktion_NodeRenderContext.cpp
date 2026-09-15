@@ -547,7 +547,7 @@ juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
     playHead->stop();
 
     if (outputSequence.getNumEvents() == 0)
-        return TRANS("No MIDI found to render");
+        return TRANS("No MIDI data to write, so no file was created");
 
     if (! Renderer::RenderTask::addMidiMetaDataAndWriteToFile (r.destFile, std::move (outputSequence), r.edit->tempoSequence))
         return TRANS("Unable to write to destination file");
