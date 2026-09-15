@@ -290,6 +290,11 @@ public:
 
     void setPosition (TimePosition t) override
     {
+        // If the position has jumped, reset so the interpolator doesn't blend in samples from the
+        // old position. This also clears the latency offset so it's re-compensated on the next read
+        if (std::abs (toSamples (t, destSampleRate) - getPosition()) > 1)
+            reset();
+
         source->setPosition (t + timeSourceIsAheadDueToLatency);
     }
 

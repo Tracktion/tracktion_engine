@@ -262,6 +262,8 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
     localProcessState.setSyncRange (ps.getSyncRange());
 
     // Update the offset for compatible Nodes
+    bool retriggered = false;
+
     if (playStartTime)
     {
         const auto clipEditOffset = editBeatRange.getStart() - unloopedClipBeatRange.getStart();
@@ -270,6 +272,7 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
         if (! almostEqual (lastOffset.inBeats(), offset.inBeats(), 0.0000001))
         {
             lastOffset = offset;
+            retriggered = wasPlaying;
 
             // Force the playheadJumped state to true in order to send note-offs.
             localPlayheadState.playheadJumped = true;
@@ -293,17 +296,31 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
     copyIfNotAliased (pc.buffers.audio, sourceBuffers.audio);
     pc.buffers.midi.copyFrom (sourceBuffers.midi);
 
-    // Update last samples
+    // Update last samples. If the clip has jumped back to its start whilst playing, fade out the
+    // jump from the last sample rather than fading in the new audio, so its start transient is kept
     if (lastSamples)
     {
         const auto numChannels = pc.buffers.audio.size.numChannels;
         const auto numFrames = pc.buffers.audio.size.numFrames;
+        const auto retriggerFadeLength = retriggered ? std::min (numFrames, 40u) : 0u;
         jassert (lastSamples->size() == static_cast<size_t> (numChannels));
 
         for (choc::buffer::ChannelCount channel = 0; channel < numChannels; ++channel)
         {
             const auto dest = pc.buffers.audio.getIterator (channel).sample;
             auto& lastSample = (*lastSamples)[(size_t) channel];
+
+            if (retriggerFadeLength > 0)
+            {
+                const auto jump = lastSample - dest[0];
+
+                for (uint32_t i = 0; i < retriggerFadeLength; ++i)
+                {
+                    const auto alpha = static_cast<float> (i) / static_cast<float> (retriggerFadeLength);
+                    dest[i] += jump * (1.0f - alpha);
+                }
+            }
+
             lastSample = dest[numFrames - 1];
         }
     }
