@@ -866,6 +866,7 @@ TEST_SUITE ("tracktion_engine")
         struct MidiResult
         {
             bool succeeded = false;
+            juce::String error;
             int numTracksInFile = 0;
             std::vector<std::pair<int, double>> noteOns;
             std::vector<std::pair<int, int>> timeSigs;      ///< numerator/denominator meta events
@@ -890,7 +891,10 @@ TEST_SUITE ("tracktion_engine")
             result.succeeded = queue.getJobs()[0]->getState() == RenderQueue::Job::State::completed;
 
             if (! result.succeeded)
+            {
+                result.error = queue.getJobs()[0]->getError();
                 return result;
+            }
 
             juce::FileInputStream in (spec.destination);
             juce::MidiFile midiFile;
@@ -1029,6 +1033,43 @@ TEST_SUITE ("tracktion_engine")
             REQUIRE_EQ (result.noteOns.size(), (size_t) 1);
             CHECK_EQ (result.noteOns[0].first, 72);
             CHECK_EQ (result.noteOns[0].second, doctest::Approx (2.0 * ticksPerBeat));
+        }
+
+        SUBCASE ("an inaudible track has no MIDI to write, so no file is created and the error says so")
+        {
+            auto edit = test_utilities::createTestEdit (engine, 2);
+            auto tracks = getAudioTracks (*edit);
+            REQUIRE_GE (tracks.size(), 2);
+
+            addMidiClip (*tracks[0], { 0_tp, 1_tp }, 60);
+            addMidiClip (*tracks[1], { 0_tp, 1_tp }, 72);
+
+            auto renderTrack = [&] (Track& track)
+            {
+                juce::TemporaryFile destFile (".mid");
+                RenderSpecification spec;
+                spec.destination = destFile.getFile();
+                spec.format = RenderFormat::midi;
+                spec.time = TimeRange { 0_tp, 4_tp };
+                spec.tracks = { track.itemID };
+
+                auto result = renderToMidi (*edit, spec);
+                CHECK_FALSE (spec.destination.existsAsFile());
+                return result;
+            };
+
+            // Muted: the muting node clears the track's MIDI, leaving nothing to write
+            tracks[0]->setMute (true);
+            const auto muted = renderTrack (*tracks[0]);
+            CHECK_FALSE (muted.succeeded);
+            CHECK_EQ (muted.error, TRANS("No MIDI data to write, so no file was created"));
+            tracks[0]->setMute (false);
+
+            // Not soloed while another track is
+            tracks[1]->setSolo (true);
+            const auto unsoloed = renderTrack (*tracks[0]);
+            CHECK_FALSE (unsoloed.succeeded);
+            CHECK_EQ (unsoloed.error, TRANS("No MIDI data to write, so no file was created"));
         }
 
         SUBCASE ("a whole-Edit render flattens every track into one MIDI track")
