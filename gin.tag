@@ -82756,6 +82756,13 @@
       <arglist>(Edit &amp;, const RenderSpecification &amp;)</arglist>
     </member>
     <member kind="function">
+      <type>int</type>
+      <name>getWidestOutputDeviceChannelCount</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>ae2bc7fc4d0680112d40a98df10b41b5f</anchor>
+      <arglist>(Edit &amp;)</arglist>
+    </member>
+    <member kind="function">
       <type>std::vector&lt; RenderSpecification &gt;</type>
       <name>createPerTrackSpecifications</name>
       <anchorfile>namespaceengine.html</anchorfile>

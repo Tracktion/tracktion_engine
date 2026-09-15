@@ -2092,6 +2092,9 @@ requires (std::is_same_v&lt;Type, <a class="el" href="classengine_1_1Edit.html">
 <tr class="memitem:a18364f02ab4e2b30d08bbd2acb535d62" id="r_a18364f02ab4e2b30d08bbd2acb535d62"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structengine_1_1PlannedRenderJob.html">PlannedRenderJob</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#a18364f02ab4e2b30d08bbd2acb535d62">createRenderJob</a> (<a class="el" href="classengine_1_1Edit.html">Edit</a> &amp;, const <a class="el" href="structengine_1_1RenderSpecification.html">RenderSpecification</a> &amp;)</td></tr>
 <tr class="memdesc:a18364f02ab4e2b30d08bbd2acb535d62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the render job for a valid specification.  <br /></td></tr>
 <tr class="separator:a18364f02ab4e2b30d08bbd2acb535d62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2bc7fc4d0680112d40a98df10b41b5f" id="r_ae2bc7fc4d0680112d40a98df10b41b5f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#ae2bc7fc4d0680112d40a98df10b41b5f">getWidestOutputDeviceChannelCount</a> (<a class="el" href="classengine_1_1Edit.html">Edit</a> &amp;)</td></tr>
+<tr class="memdesc:ae2bc7fc4d0680112d40a98df10b41b5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the channel count of the widest enabled wave output device the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>'s tracks output to, or 0 if none of them reach one.  <br /></td></tr>
+<tr class="separator:ae2bc7fc4d0680112d40a98df10b41b5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae34a9b5538d5c1f5584dc038a6cd7ed6" id="r_ae34a9b5538d5c1f5584dc038a6cd7ed6"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structengine_1_1RenderSpecification.html">RenderSpecification</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#ae34a9b5538d5c1f5584dc038a6cd7ed6">createPerTrackSpecifications</a> (<a class="el" href="classengine_1_1Edit.html">Edit</a> &amp;, const <a class="el" href="structengine_1_1RenderSpecification.html">RenderSpecification</a> &amp;base, const juce::File &amp;directory)</td></tr>
 <tr class="memdesc:ae34a9b5538d5c1f5584dc038a6cd7ed6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates one specification per track from a template, for rendering each track to its own file in the given directory.  <br /></td></tr>
 <tr class="separator:ae34a9b5538d5c1f5584dc038a6cd7ed6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -9155,6 +9158,31 @@ requires (std::is_same_v&lt;Type, <a class="el" href="classengine_1_1Edit.html">
 
 </div>
 </div>
+<a id="ae2bc7fc4d0680112d40a98df10b41b5f" name="ae2bc7fc4d0680112d40a98df10b41b5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2bc7fc4d0680112d40a98df10b41b5f">&#9670;&#160;</a></span>getWidestOutputDeviceChannelCount()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int engine::getWidestOutputDeviceChannelCount </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classengine_1_1Edit.html">Edit</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the channel count of the widest enabled wave output device the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>'s tracks output to, or 0 if none of them reach one. </p>
+<p>Routing into another track counts the device that track outputs to, and a submix's children count through the submix's own output. This is what an empty ("auto") channelLayout renders, with a minimum of stereo. </p>
+
+<p class="reference">References <a class="el" href="namespaceengine.html#ae2bc7fc4d0680112d40a98df10b41b5f">getWidestOutputDeviceChannelCount()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="namespaceengine.html#ae2bc7fc4d0680112d40a98df10b41b5f">getWidestOutputDeviceChannelCount()</a>.</p>
+
+</div>
+</div>
 <a id="ae34a9b5538d5c1f5584dc038a6cd7ed6" name="ae34a9b5538d5c1f5584dc038a6cd7ed6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae34a9b5538d5c1f5584dc038a6cd7ed6">&#9670;&#160;</a></span>createPerTrackSpecifications()</h2>
 
@@ -14148,7 +14176,7 @@ template&lt;typename... Properties&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 15 2026 12:43:08 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Sep 15 2026 18:14:53 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
