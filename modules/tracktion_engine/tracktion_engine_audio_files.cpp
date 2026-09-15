@@ -68,6 +68,7 @@ extern "C"
 #include "audio_files/tracktion_BufferedAudioReader.cpp"
 
 #include "midi/tracktion_MidiList.cpp"
+#include "midi/tracktion_MidiList.test.cpp"
 #include "midi/tracktion_MidiProgramManager.cpp"
 #include "midi/tracktion_Musicality.cpp"
 #include "midi/tracktion_SelectedMidiEvents.cpp"
