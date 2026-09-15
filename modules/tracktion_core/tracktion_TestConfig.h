@@ -40,6 +40,7 @@
 #define ENGINE_UNIT_TESTS_EDITCLIP                      1
 #define ENGINE_UNIT_TESTS_EDIT_LOADER                   1
 #define ENGINE_UNIT_TESTS_EDIT_TIME                     1
+#define ENGINE_UNIT_TESTS_EXTERNAL_CONTROLLER           1
 #define ENGINE_UNIT_TESTS_FREEZE                        1
 #define ENGINE_UNIT_TESTS_FOLLOW_ACTIONS                1
 #define ENGINE_UNIT_TESTS_LATENCY                       1

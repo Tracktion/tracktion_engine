@@ -238,6 +238,11 @@ TimeRange UIBehaviour::getEditingRange (Edit& e)
     return e.getTransport().getLoopRange();
 }
 
+juce::Colour UIBehaviour::getClipColourForControlSurface (const Clip& c)
+{
+    return c.getColour();
+}
+
 void UIBehaviour::recreatePluginWindowContentAsync (Plugin& p)
 {
     p.windowState->recreateWindowIfShowing();

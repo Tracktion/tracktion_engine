@@ -171,6 +171,14 @@ public:
         selected items that includes all clips that should be edited with the selected
         clip */
     virtual SelectableList getAssociatedClipsToEdit (const SelectableList& items)   { return items; }
+
+    //==============================================================================
+    /** Should return the colour a control surface should use to show a clip, e.g. on
+        clip launcher pads. Override this if your UI draws clips in a different colour
+        to Clip::getColour(), such as using the colour of the track they're on.
+        By default this returns the clip's colour.
+    */
+    virtual juce::Colour getClipColourForControlSurface (const Clip&);
 };
 
 } // namespace tracktion::inline engine

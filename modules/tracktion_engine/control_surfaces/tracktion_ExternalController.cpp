@@ -1049,6 +1049,18 @@ void ExternalController::clearPadColours()
     }
 }
 
+int ExternalController::getPadColourIndex (juce::Colour colour, bool limitedPadColours)
+{
+    if (colour.isTransparent())
+        return 0;
+
+    if (limitedPadColours)
+        return 1;
+
+    const auto numColours = 19;
+    return juce::jlimit (0, numColours - 1, juce::roundToInt (colour.getHue() * static_cast<float> (numColours - 1) + 1.0f));
+}
+
 void ExternalController::updatePadColours()
 {
     auto& ecm = getExternalControllerManager();
@@ -1094,16 +1106,10 @@ void ExternalController::updatePadColours()
                         {
                             if (auto c = slot->getClip())
                             {
-                                auto col = c->getColour();
+                                colourIdx = getPadColourIndex (engine.getUIBehaviour().getClipColourForControlSurface (*c), cs.limitedPadColours);
 
-                                if (! col.isTransparent())
-                                {
-                                    auto numColours = 19;
-                                    auto newHue = col.getHue();
-
-                                    colourIdx = cs.limitedPadColours ? 1 : juce::jlimit (0, numColours - 1, juce::roundToInt (newHue * static_cast<float> (numColours - 1) + 1.0f));
+                                if (colourIdx != 0)
                                     break;
-                                }
                             }
                         }
                     }
@@ -1130,15 +1136,7 @@ void ExternalController::updatePadColours()
                         }
                         else if (auto c = slot->getClip())
                         {
-                            auto col = c->getColour();
-
-                            if (! col.isTransparent())
-                            {
-                                auto numColours = 19;
-                                auto newHue = col.getHue();
-
-                                colourIdx = cs.limitedPadColours ? 1 : juce::jlimit (0, numColours - 1, juce::roundToInt (newHue * static_cast<float> (numColours - 1) + 1.0f));
-                            }
+                            colourIdx = getPadColourIndex (engine.getUIBehaviour().getClipColourForControlSurface (*c), cs.limitedPadColours);
 
                             if (auto tc = getTransport())
                             {
