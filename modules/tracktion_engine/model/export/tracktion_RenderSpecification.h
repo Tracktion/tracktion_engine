@@ -148,8 +148,9 @@ struct RenderSpecification
     int bitDepth = 16;                      ///< The bit depth to render at
     int quality = 0;                        ///< Format-specific quality index, for formats that use one
 
-    /** Output channel layout: empty for auto-detect from the Edit,
-        or one of "mono", "stereo", "5.1", "7.1".
+    /** Output channel layout: empty for auto, or one of "mono", "stereo", "5.1", "7.1".
+        Auto renders as many channels as the widest output device the Edit's
+        tracks play through, and at least stereo. @see getWidestOutputDeviceChannelCount
     */
     juce::String channelLayout;
 
@@ -224,6 +225,14 @@ struct PlannedRenderJob
     returns nullopt.
 */
 std::optional<PlannedRenderJob> createRenderJob (Edit&, const RenderSpecification&);
+
+/** Returns the channel count of the widest enabled wave output device the
+    Edit's tracks output to, or 0 if none of them reach one. Routing into
+    another track counts the device that track outputs to, and a submix's
+    children count through the submix's own output. This is what an empty
+    ("auto") channelLayout renders, with a minimum of stereo.
+*/
+int getWidestOutputDeviceChannelCount (Edit&);
 
 /** Creates one specification per track from a template, for rendering each
     track to its own file in the given directory. The template's tracks list

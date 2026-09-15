@@ -12,6 +12,7 @@
 
 #include "../../../3rd_party/doctest/tracktion_doctest.hpp"
 #include "../../utilities/tracktion_TestUtilities.h"
+#include "../../testing/tracktion_EnginePlayer.h"
 #include "../../../tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
 
 namespace tracktion::inline engine
@@ -402,6 +403,128 @@ TEST_SUITE ("tracktion_engine")
             CHECK (! job->params.trimSilenceAtEnds);  // forced off for wrapped renders
             CHECK_EQ (job->params.endAllowance, TimeDuration());  // no tail-reporting plugins here
         }
+    }
+
+    TEST_CASE ("RenderSpecification auto channel layout follows the widest output device in use")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512, .inputChannels = 0, .outputChannels = 8,
+                                                       .inputNames = {}, .outputNames = {} });
+
+        // Eight device channels grouped as a 6-channel device and a stereo device
+        auto& dm = engine.getDeviceManager();
+        dm.setAllWaveOutputsToNumChannels (6);
+        const juce::ScopeGuard restoreStereoOutputs { [&dm] { dm.setAllWaveOutputsToNumChannels (2); } };
+
+        auto devices = dm.getWaveOutputDevices();
+        REQUIRE_EQ (devices.size(), (size_t) 2);
+        REQUIRE_EQ (devices[0]->getChannels().getNumChannels(), 6);
+        REQUIRE_EQ (devices[1]->getChannels().getNumChannels(), 2);
+        const auto surroundID = devices[0]->getDeviceID();
+        const auto stereoID = devices[1]->getDeviceID();
+
+        auto edit = test_utilities::createTestEdit (engine, 2);
+        auto tracks = getAudioTracks (*edit);
+
+        juce::TemporaryFile destFile (".wav");
+        RenderSpecification spec;
+        spec.destination = destFile.getFile();
+        spec.time = TimeRange (0_tp, 1_tp);    // the tracks are empty, so there's no edit length to render
+
+        auto autoChannels = [&]
+        {
+            auto job = createRenderJob (*edit, spec);
+            REQUIRE (job.has_value());
+            return job->params.channelConfig.getNumChannels();
+        };
+
+        SUBCASE ("an unused surround device doesn't widen a stereo render")
+        {
+            for (auto t : tracks)
+                t->getOutput().setOutputToDeviceID (stereoID);
+
+            CHECK_EQ (getWidestOutputDeviceChannelCount (*edit), 2);
+            CHECK_EQ (autoChannels(), 2);
+        }
+
+        SUBCASE ("a track outputting to the surround device makes it a 6-channel render")
+        {
+            tracks[0]->getOutput().setOutputToDeviceID (stereoID);
+            tracks[1]->getOutput().setOutputToDeviceID (surroundID);
+
+            CHECK_EQ (getWidestOutputDeviceChannelCount (*edit), 6);
+            CHECK_EQ (autoChannels(), 6);
+        }
+
+        SUBCASE ("a track routed into another track counts the device that track outputs to")
+        {
+            tracks[0]->getOutput().setOutputToTrack (tracks[1]);
+            tracks[1]->getOutput().setOutputToDeviceID (stereoID);
+
+            CHECK_EQ (getWidestOutputDeviceChannelCount (*edit), 2);
+
+            tracks[1]->getOutput().setOutputToDeviceID (surroundID);
+            CHECK_EQ (getWidestOutputDeviceChannelCount (*edit), 6);
+        }
+
+        SUBCASE ("a submix's children count through the submix's own output")
+        {
+            for (auto t : tracks)
+                t->getOutput().setOutputToDeviceID (stereoID);
+
+            auto submix = edit->insertNewFolderTrack ({ nullptr, nullptr }, nullptr, true);
+            REQUIRE (submix != nullptr);
+            auto firstChild = edit->insertNewAudioTrack ({ submix.get(), nullptr }, nullptr);
+            auto secondChild = edit->insertNewAudioTrack ({ submix.get(), firstChild.get() }, nullptr);
+            REQUIRE (firstChild != nullptr);
+            REQUIRE (secondChild != nullptr);
+            REQUIRE (submix->isSubmixFolder());
+
+            // The submix's output is held by its first child; the others' own settings are bypassed
+            REQUIRE_EQ (submix->getOutput(), &firstChild->getOutput());
+            submix->getOutput()->setOutputToDeviceID (stereoID);
+            secondChild->getOutput().setOutputToDeviceID (surroundID);
+            CHECK_EQ (autoChannels(), 2);
+
+            submix->getOutput()->setOutputToDeviceID (surroundID);
+            CHECK_EQ (autoChannels(), 6);
+        }
+
+        SUBCASE ("an explicit layout ignores the devices")
+        {
+            tracks[1]->getOutput().setOutputToDeviceID (surroundID);
+            spec.channelLayout = "stereo";
+            CHECK_EQ (autoChannels(), 2);
+        }
+    }
+
+    TEST_CASE ("RenderSpecification auto channel layout is at least stereo")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512, .inputChannels = 0, .outputChannels = 2,
+                                                       .inputNames = {}, .outputNames = {} });
+
+        // Two mono devices: the widest in use is 1 channel, but Auto still renders stereo
+        auto& dm = engine.getDeviceManager();
+        dm.setAllWaveOutputsToNumChannels (1);
+        const juce::ScopeGuard restoreStereoOutputs { [&dm] { dm.setAllWaveOutputsToNumChannels (2); } };
+
+        auto devices = dm.getWaveOutputDevices();
+        REQUIRE_EQ (devices.size(), (size_t) 2);
+        REQUIRE_EQ (devices[0]->getChannels().getNumChannels(), 1);
+
+        auto edit = test_utilities::createTestEdit (engine, 1);
+        getAudioTracks (*edit)[0]->getOutput().setOutputToDeviceID (devices[0]->getDeviceID());
+        CHECK_EQ (getWidestOutputDeviceChannelCount (*edit), 1);
+
+        juce::TemporaryFile destFile (".wav");
+        RenderSpecification spec;
+        spec.destination = destFile.getFile();
+        spec.time = TimeRange (0_tp, 1_tp);
+
+        auto job = createRenderJob (*edit, spec);
+        REQUIRE (job.has_value());
+        CHECK_EQ (job->params.channelConfig.getNumChannels(), 2);
     }
 
     TEST_CASE ("RenderSpecification advanced selection: muted tracks and submixes")
