@@ -173,12 +173,19 @@ public:
     virtual SelectableList getAssociatedClipsToEdit (const SelectableList& items)   { return items; }
 
     //==============================================================================
-    /** Should return the colour a control surface should use to show a clip, e.g. on
-        clip launcher pads. Override this if your UI draws clips in a different colour
-        to Clip::getColour(), such as using the colour of the track they're on.
-        By default this returns the clip's colour.
+    /** Should return the number of clip colours in your UI's palette. Control surfaces
+        are sent clip colours as an index in the range 1 to this number.
+        By default this returns 18.
     */
-    virtual juce::Colour getClipColourForControlSurface (const Clip&);
+    virtual int getNumClipColourIndexes()                                           { return 18; }
+
+    /** Should return the palette index a control surface should use to show a clip,
+        e.g. on clip launcher pads. This should be 0 if the clip has no colour, otherwise
+        1 to getNumClipColourIndexes(). Override this if your UI draws clips using a
+        different colour to Clip::getColour(), such as the colour of the track they're on.
+        By default this quantises the hue of Clip::getColour().
+    */
+    virtual int getClipColourIndexForControlSurface (const Clip&);
 };
 
 } // namespace tracktion::inline engine

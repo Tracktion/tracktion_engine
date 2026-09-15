@@ -111,12 +111,6 @@ public:
     void updatePadColours();
     void clearPadColours();
 
-    /** Returns the pad colour index sent to ControlSurface::padStateChanged() for a clip colour.
-        This is 0 for a transparent colour, otherwise 1 for limited pad colour surfaces or
-        1-18 for the hue slot of the colour.
-    */
-    static int getPadColourIndex (juce::Colour, bool limitedPadColours);
-
     int getNumFaderChannels() const noexcept;
     int getFaderIndexInActiveRegion (int num) const noexcept;
     juce::Range<int> getActiveChannels() const noexcept;

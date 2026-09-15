@@ -18,22 +18,7 @@ namespace tracktion::inline engine
 
 TEST_SUITE ("tracktion_engine")
 {
-    TEST_CASE ("ExternalController: palette hues map to distinct pad colour indices")
-    {
-        const int numPaletteColours = 18;
-
-        for (int i = 0; i < numPaletteColours; ++i)
-        {
-            auto colour = juce::Colours::red.withHue ((float) i / (float) numPaletteColours).withSaturation (0.7f);
-            CHECK_EQ (ExternalController::getPadColourIndex (colour, false), i + 1);
-        }
-
-        CHECK_EQ (ExternalController::getPadColourIndex (juce::Colours::transparentBlack, false), 0);
-        CHECK_EQ (ExternalController::getPadColourIndex (juce::Colours::transparentBlack, true), 0);
-        CHECK_EQ (ExternalController::getPadColourIndex (juce::Colours::blue, true), 1);
-    }
-
-    TEST_CASE ("ExternalController: control surface clip colour defaults to the clip's colour")
+    TEST_CASE ("ExternalController: default clip colour index for control surfaces")
     {
         auto& engine = *Engine::getEngines()[0];
         auto edit = test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
@@ -46,11 +31,36 @@ TEST_SUITE ("tracktion_engine")
         auto clip = insertMIDIClip (*slot, { TimePosition(), TimePosition::fromSeconds (1.0) });
         REQUIRE (clip != nullptr);
 
-        auto clipColour = juce::Colours::red.withHue (5.0f / 18.0f).withSaturation (0.7f);
-        clip->setColour (clipColour);
-        track->setColour (juce::Colours::red.withHue (11.0f / 18.0f).withSaturation (0.7f));
+        SUBCASE ("Palette hues map to distinct indexes and the track colour is ignored")
+        {
+            UIBehaviour ui;
+            const auto numIndexes = ui.getNumClipColourIndexes();
+            CHECK_EQ (numIndexes, 18);
 
-        CHECK (engine.getUIBehaviour().getClipColourForControlSurface (*clip) == clipColour);
+            track->setColour (juce::Colours::red.withHue (11.0f / 18.0f).withSaturation (0.7f));
+
+            for (int i = 0; i < numIndexes; ++i)
+            {
+                clip->setColour (juce::Colours::red.withHue ((float) i / (float) numIndexes).withSaturation (0.7f));
+                CHECK_EQ (ui.getClipColourIndexForControlSurface (*clip), i + 1);
+            }
+        }
+
+        SUBCASE ("The number of indexes comes from the UIBehaviour")
+        {
+            struct NineColourUIBehaviour : public UIBehaviour
+            {
+                int getNumClipColourIndexes() override  { return 9; }
+            };
+
+            NineColourUIBehaviour ui;
+
+            clip->setColour (juce::Colours::red.withHue (4.0f / 9.0f).withSaturation (0.7f));
+            CHECK_EQ (ui.getClipColourIndexForControlSurface (*clip), 5);
+
+            clip->setColour (juce::Colours::red.withHue (8.0f / 9.0f).withSaturation (0.7f));
+            CHECK_EQ (ui.getClipColourIndexForControlSurface (*clip), 9);
+        }
     }
 }
 

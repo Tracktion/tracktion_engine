@@ -1049,16 +1049,10 @@ void ExternalController::clearPadColours()
     }
 }
 
-int ExternalController::getPadColourIndex (juce::Colour colour, bool limitedPadColours)
+static int getPadColourIndex (Engine& engine, const Clip& clip, bool limitedPadColours)
 {
-    if (colour.isTransparent())
-        return 0;
-
-    if (limitedPadColours)
-        return 1;
-
-    const auto numColours = 19;
-    return juce::jlimit (0, numColours - 1, juce::roundToInt (colour.getHue() * static_cast<float> (numColours - 1) + 1.0f));
+    const auto index = engine.getUIBehaviour().getClipColourIndexForControlSurface (clip);
+    return (limitedPadColours && index != 0) ? 1 : index;
 }
 
 void ExternalController::updatePadColours()
@@ -1106,7 +1100,7 @@ void ExternalController::updatePadColours()
                         {
                             if (auto c = slot->getClip())
                             {
-                                colourIdx = getPadColourIndex (engine.getUIBehaviour().getClipColourForControlSurface (*c), cs.limitedPadColours);
+                                colourIdx = getPadColourIndex (engine, *c, cs.limitedPadColours);
 
                                 if (colourIdx != 0)
                                     break;
@@ -1136,7 +1130,7 @@ void ExternalController::updatePadColours()
                         }
                         else if (auto c = slot->getClip())
                         {
-                            colourIdx = getPadColourIndex (engine.getUIBehaviour().getClipColourForControlSurface (*c), cs.limitedPadColours);
+                            colourIdx = getPadColourIndex (engine, *c, cs.limitedPadColours);
 
                             if (auto tc = getTransport())
                             {
