@@ -33,7 +33,22 @@ public:
 
     void restorePluginStateFromValueTree (const juce::ValueTree&) override;
 
+    void setDepth (float value);
+    float getDepth();
+
+    void setSpeed (float value); 
+    float getSpeed();
+
+    void setWidth (float value);
+    float getWidth();
+
+    void setMix (float value);
+    float getMix();
+
     juce::CachedValue<float> depthMs, width, mixProportion, speedHz;
+
+    AutomatableParameter::Ptr depthParam, speedParam, 
+                             widthParam, mixParam;
 
 private:
     //==============================================================================
