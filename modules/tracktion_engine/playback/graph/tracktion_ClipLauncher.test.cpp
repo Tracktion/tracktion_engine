@@ -522,6 +522,12 @@ TEST_SUITE ("tracktion_engine")
         constexpr double frequency = 55.0;
         auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, 8.0, 1, (float) frequency);
         auto clip = insertAudioClipIntoSlot (*slot, sinFile->getFile());
+
+        // The default time-stretch mode depends on which stretchers are built so pin one that
+        // every test build enables
+        clip->setTimeStretchMode (TimeStretcher::soundtouchBetter);
+        REQUIRE (clip->getTimeStretchMode() == TimeStretcher::soundtouchBetter);
+
         auto launchHandle = clip->getLaunchHandle();
         REQUIRE (launchHandle);
 
@@ -579,11 +585,18 @@ TEST_SUITE ("tracktion_engine")
         auto file = graph::test_utilities::writeToTemporaryFile<juce::WavAudioFormat> (buffer.getView(), sampleRate, 0);
         auto clip = insertAudioClipIntoSlot (*slot, file->getFile());
 
-        // The sample-alignment check below needs a stretcher whose output is sample-accurate at a
-        // 1:1 ratio. The default mode depends on which stretchers are built (e.g. RubberBand isn't
-        // sample-accurate) so pin one that's always available
-        clip->setTimeStretchMode (TimeStretcher::signalsmithDefault);
-        REQUIRE (clip->getTimeStretchMode() == TimeStretcher::signalsmithDefault);
+        // The default time-stretch mode depends on which stretchers are built so pin one. The
+        // sample-alignment check below needs a stretcher whose output is sample-accurate at a 1:1
+        // ratio, which Signalsmith is but RubberBand and SoundTouch aren't, so it's only made when
+        // Signalsmith is built. Otherwise SoundTouch, which every test build enables, is used
+       #if TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
+        constexpr auto stretchMode = TimeStretcher::signalsmithDefault;
+       #else
+        constexpr auto stretchMode = TimeStretcher::soundtouchBetter;
+       #endif
+
+        clip->setTimeStretchMode (stretchMode);
+        REQUIRE (clip->getTimeStretchMode() == stretchMode);
 
         auto launchHandle = clip->getLaunchHandle();
         REQUIRE (launchHandle);
@@ -622,7 +635,12 @@ TEST_SUITE ("tracktion_engine")
         }
 
         CHECK_GT (firstPeak, 0.9f);
+
+       #if TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
         CHECK_LT (maxError, 0.05f);
+       #else
+        juce::ignoreUnused (maxError);
+       #endif
     }
 
     TEST_CASE ("Clip launcher: switching between arranger and launcher (audio)")
