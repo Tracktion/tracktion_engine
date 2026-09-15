@@ -505,10 +505,13 @@ std::optional<PlannedRenderJob> createRenderJob (Edit& edit, const RenderSpecifi
         params.ditheringEnabled      = spec.dither;
         params.metadata              = translateMetadataForFormat (spec.metadata, spec.format);
 
+        // Auto is as wide as the widest device the Edit plays through, not the render
+        // graph, which a multi-output plugin can widen past the Edit's own layout
         if (spec.channelLayout == "mono")           params.mustRenderInMono = true;
         else if (spec.channelLayout == "stereo")    params.channelConfig = ChannelConfiguration::stereo();
         else if (spec.channelLayout == "5.1")       params.channelConfig = ChannelConfiguration::surround5_1();
         else if (spec.channelLayout == "7.1")       params.channelConfig = ChannelConfiguration::surround7_1();
+        else                                        params.channelConfig = ChannelConfiguration::canonical (std::max (2, getWidestOutputDeviceChannelCount (edit)));
 
         if (spec.wrapRemainder)
         {
@@ -554,6 +557,25 @@ std::optional<PlannedRenderJob> createRenderJob (Edit& edit, const RenderSpecifi
                                      : spec.destination.getFileNameWithoutExtension();
 
     return PlannedRenderJob { name, std::move (params), mutedTracks };
+}
+
+int getWidestOutputDeviceChannelCount (Edit& edit)
+{
+    int widest = 0;
+
+    for (auto t : getAllTracks (edit))
+    {
+        // A submix's children play through the submix, which counts its own output
+        if (t->isPartOfSubmix())
+            continue;
+
+        if (auto output = getTrackOutput (*t))
+            if (auto device = dynamic_cast<WaveOutputDevice*> (output->getOutputDevice (true)))
+                if (device->isEnabled())
+                    widest = std::max (widest, device->getChannels().getNumChannels());
+    }
+
+    return widest;
 }
 
 std::vector<RenderSpecification> createPerTrackSpecifications (Edit& edit,
