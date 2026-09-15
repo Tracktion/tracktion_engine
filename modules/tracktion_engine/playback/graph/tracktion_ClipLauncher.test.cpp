@@ -559,6 +559,65 @@ TEST_SUITE ("tracktion_engine")
         CHECK_LT (maxStep, 0.1f);
     }
 
+    TEST_CASE ("Clip launcher: retriggering a playing clip keeps its start transient (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+
+        // A 1kHz sine for the first second, starting at zero and peaking after
+        // 11 samples like a drum hit, then silence for the rest of the file
+        constexpr double frequency = 1000.0;
+        const auto numToneFrames = (choc::buffer::FrameCount) sampleRate;
+        auto buffer = choc::buffer::createChannelArrayBuffer (1, (int) (sampleRate * 8.0),
+                                                              [=] (auto, auto frame)
+                                                              {
+                                                                  return frame < numToneFrames ? (float) std::sin (juce::MathConstants<double>::twoPi * frequency * frame / sampleRate)
+                                                                                               : 0.0f;
+                                                              });
+        auto file = graph::test_utilities::writeToTemporaryFile<juce::WavAudioFormat> (buffer.getView(), sampleRate, 0);
+        auto clip = insertAudioClipIntoSlot (*slot, file->getFile());
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        launchHandle->play ({});
+        edit->getTransport().play (false);
+        test_utilities::waitForFileToBeMapped (AudioFile (engine, file->getFile()));
+
+        process (player, 1.5_td);
+
+        // Retrigger mid-block, whilst the clip is silent
+        const auto retriggerTime = TimePosition::fromSeconds (2.25);
+        const auto retriggerBeat = edit->tempoSequence.toBeats (retriggerTime);
+
+        auto epc = edit->getTransport().getCurrentPlaybackContext();
+        REQUIRE (epc);
+        auto syncPoint = epc->getSyncPoint();
+        REQUIRE (syncPoint);
+
+        launchHandle->play (MonotonicBeat { syncPoint->monotonicBeat.v + (retriggerBeat - syncPoint->beat) });
+        process (player, 1_td);
+
+        // There's no jump to smooth, so the first half-cycle of the restarted tone should come
+        // through at full level and sample-aligned with the retrigger point (i.e. with no stale
+        // resampler history or uncompensated latency)
+        const auto output = player.getOutput();
+        const auto retriggerSample = toSamples (retriggerTime, sampleRate);
+        float firstPeak = 0.0f, maxError = 0.0f;
+
+        for (int i = 0; i < 22; ++i)
+        {
+            const auto sample = output.getSample (0, (choc::buffer::FrameCount) (retriggerSample + i));
+            const auto expected = (float) std::sin (juce::MathConstants<double>::twoPi * frequency * i / sampleRate);
+            firstPeak = std::max (firstPeak, std::abs (sample));
+            maxError = std::max (maxError, std::abs (sample - expected));
+        }
+
+        CHECK_GT (firstPeak, 0.9f);
+        CHECK_LT (maxError, 0.05f);
+    }
+
     TEST_CASE ("Clip launcher: switching between arranger and launcher (audio)")
     {
         auto& engine = *Engine::getEngines()[0];

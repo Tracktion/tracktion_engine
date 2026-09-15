@@ -296,7 +296,8 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
     copyIfNotAliased (pc.buffers.audio, sourceBuffers.audio);
     pc.buffers.midi.copyFrom (sourceBuffers.midi);
 
-    // Update last samples, fading from them if the clip has jumped back to its start whilst playing
+    // Update last samples. If the clip has jumped back to its start whilst playing, fade out the
+    // jump from the last sample rather than fading in the new audio, so its start transient is kept
     if (lastSamples)
     {
         const auto numChannels = pc.buffers.audio.size.numChannels;
@@ -309,10 +310,15 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
             const auto dest = pc.buffers.audio.getIterator (channel).sample;
             auto& lastSample = (*lastSamples)[(size_t) channel];
 
-            for (uint32_t i = 0; i < retriggerFadeLength; ++i)
+            if (retriggerFadeLength > 0)
             {
-                const auto alpha = static_cast<float> (i) / static_cast<float> (retriggerFadeLength);
-                dest[i] = alpha * dest[i] + lastSample * (1.0f - alpha);
+                const auto jump = lastSample - dest[0];
+
+                for (uint32_t i = 0; i < retriggerFadeLength; ++i)
+                {
+                    const auto alpha = static_cast<float> (i) / static_cast<float> (retriggerFadeLength);
+                    dest[i] += jump * (1.0f - alpha);
+                }
             }
 
             lastSample = dest[numFrames - 1];
