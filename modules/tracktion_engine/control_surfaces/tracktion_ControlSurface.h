@@ -137,6 +137,16 @@ public:
     // state 2: pulse
     virtual void padStateChanged ([[maybe_unused]] int channelNumber, [[maybe_unused]] int sceneNumber, [[maybe_unused]] int colourIdx, [[maybe_unused]] int state) {}
 
+    // As padStateChanged, but also passes the colour the UI draws the pad's clip in
+    // (see UIBehaviour::getClipColourForControlSurface), or transparent if the pad has
+    // no clip colour, e.g. because it's empty, playing or recording.
+    // By default this calls padStateChanged.
+    virtual void padColourStateChanged (int channelNumber, int sceneNumber, int colourIdx,
+                                        [[maybe_unused]] juce::Colour colour, int state)
+    {
+        padStateChanged (channelNumber, sceneNumber, colourIdx, state);
+    }
+
     // Are any clips on the track playing.
     virtual void clipsPlayingStateChanged ([[maybe_unused]] int channel, [[maybe_unused]] bool isPlaying) {}
 

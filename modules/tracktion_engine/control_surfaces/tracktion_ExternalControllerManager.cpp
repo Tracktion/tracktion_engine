@@ -132,6 +132,8 @@ private:
         {
             if (i == IDs::name)
                 owner.updateDeviceState();
+            else if (i == IDs::colour)
+                updatePads.set (true); // clips can be shown in their track's colour
         }
     }
 
