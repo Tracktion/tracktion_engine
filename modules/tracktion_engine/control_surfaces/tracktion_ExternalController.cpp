@@ -1044,7 +1044,7 @@ void ExternalController::clearPadColours()
         {
             cs.clipsPlayingStateChanged (track, false);
             for (auto scene = 0; scene < cs.numberOfTrackPads; scene++)
-                cs.padStateChanged (track, scene, 0, 0);
+                cs.padColourStateChanged (track, scene, 0, {}, 0);
         }
     }
 }
@@ -1091,6 +1091,7 @@ void ExternalController::updatePadColours()
             {
                 auto colourIdx = 0;
                 auto state = 0;
+                juce::Colour colour;
 
                 if (auto ft = dynamic_cast<FolderTrack*> (ecm.getChannelTrack (track + channelStart)))
                 {
@@ -1103,7 +1104,10 @@ void ExternalController::updatePadColours()
                                 colourIdx = getPadColourIndex (engine, *c, cs.limitedPadColours);
 
                                 if (colourIdx != 0)
+                                {
+                                    colour = engine.getUIBehaviour().getClipColourForControlSurface (*c);
                                     break;
+                                }
                             }
                         }
                     }
@@ -1131,6 +1135,7 @@ void ExternalController::updatePadColours()
                         else if (auto c = slot->getClip())
                         {
                             colourIdx = getPadColourIndex (engine, *c, cs.limitedPadColours);
+                            colour = engine.getUIBehaviour().getClipColourForControlSurface (*c);
 
                             if (auto tc = getTransport())
                             {
@@ -1139,11 +1144,13 @@ void ExternalController::updatePadColours()
                                     if (lh->getPlayingStatus() == LaunchHandle::PlayState::playing)
                                     {
                                         colourIdx = cs.limitedPadColours ? 2 : 8;
+                                        colour = {};
                                         state = tc->isPlaying() ? 2 : 1;
                                     }
                                     else if (lh->getQueuedStatus() == LaunchHandle::QueueState::playQueued)
                                     {
                                         colourIdx = cs.limitedPadColours ? 2 : 8;;
+                                        colour = {};
                                         state = 1;
                                     }
                                 }
@@ -1185,7 +1192,7 @@ void ExternalController::updatePadColours()
                     }
                 }
 
-                cs.padStateChanged (track, scene, colourIdx, state);
+                cs.padColourStateChanged (track, scene, colourIdx, colour, state);
             }
         }
     }

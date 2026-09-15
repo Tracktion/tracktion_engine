@@ -61,6 +61,54 @@ TEST_SUITE ("tracktion_engine")
             clip->setColour (juce::Colours::red.withHue (8.0f / 9.0f).withSaturation (0.7f));
             CHECK_EQ (ui.getClipColourIndexForControlSurface (*clip), 9);
         }
+
+        SUBCASE ("The clip colour defaults to the clip's own colour")
+        {
+            UIBehaviour ui;
+            const auto clipColour = juce::Colours::red.withHue (5.0f / 18.0f).withSaturation (0.7f);
+            clip->setColour (clipColour);
+            track->setColour (juce::Colours::red.withHue (11.0f / 18.0f).withSaturation (0.7f));
+
+            CHECK (ui.getClipColourForControlSurface (*clip) == clipColour);
+        }
+
+        SUBCASE ("The default index follows the clip colour the UIBehaviour returns")
+        {
+            struct BlueClipsUIBehaviour : public UIBehaviour
+            {
+                juce::Colour getClipColourForControlSurface (const Clip&) override
+                {
+                    return juce::Colours::red.withHue (12.0f / 18.0f).withSaturation (0.7f);
+                }
+            };
+
+            BlueClipsUIBehaviour ui;
+            clip->setColour (juce::Colours::red.withHue (2.0f / 18.0f).withSaturation (0.7f));
+
+            CHECK_EQ (ui.getClipColourIndexForControlSurface (*clip), 13);
+        }
+    }
+
+    TEST_CASE ("ControlSurface: pad colour changes forward to padStateChanged by default")
+    {
+        auto& engine = *Engine::getEngines()[0];
+
+        struct RecordingControlSurface : public ControlSurface
+        {
+            using ControlSurface::ControlSurface;
+
+            void padStateChanged (int channel, int scene, int colourIdx, int state) override
+            {
+                lastCall = { channel, scene, colourIdx, state };
+            }
+
+            std::array<int, 4> lastCall { -1, -1, -1, -1 };
+        };
+
+        RecordingControlSurface cs (engine.getExternalControllerManager());
+        cs.padColourStateChanged (2, 3, 7, juce::Colours::blue, 1);
+
+        CHECK (cs.lastCall == std::array<int, 4> { 2, 3, 7, 1 });
     }
 }
 

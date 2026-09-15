@@ -238,9 +238,14 @@ TimeRange UIBehaviour::getEditingRange (Edit& e)
     return e.getTransport().getLoopRange();
 }
 
+juce::Colour UIBehaviour::getClipColourForControlSurface (const Clip& c)
+{
+    return c.getColour();
+}
+
 int UIBehaviour::getClipColourIndexForControlSurface (const Clip& c)
 {
-    const auto colour = c.getColour();
+    const auto colour = getClipColourForControlSurface (c);
 
     if (colour.isTransparent())
         return 0;
