@@ -170,6 +170,51 @@ TEST_SUITE ("tracktion_engine")
         CHECK (wave->getTrack() == &c.getTrack (1));
     }
 
+    TEST_CASE ("ClipDefaults: moving a clip in to a slot prepares it for the launcher")
+    {
+        using namespace clip_defaults_tests;
+
+        auto& engine = *Engine::getEngines()[0];
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0, 1, 220.0f);
+
+        TestContext c (engine, 1, 2);
+
+        SUBCASE ("Audio from the arrangement")
+        {
+            auto wave = insertWaveClipInto (c.getTrack (0), sinFile->getFile());
+            REQUIRE (wave != nullptr);
+            REQUIRE (! wave->isLooping());
+
+            CHECK (wave->moveTo (c.getSlot (0, 0)));
+            CHECK (wave->getClipSlot() == &c.getSlot (0, 0));
+            CHECK (wave->isLooping());
+            CHECK (wave->getAutoTempo());
+            CHECK (wave->getPosition().getStart() == 0_tp);
+        }
+
+        SUBCASE ("MIDI from the arrangement")
+        {
+            auto midi = insertMIDIClip (c.getTrack (0), { 1_tp, TimePosition::fromSeconds (3.0) });
+            REQUIRE (midi != nullptr);
+
+            CHECK (midi->moveTo (c.getSlot (0, 0)));
+            CHECK (midi->isLooping());
+            CHECK (midi->getPosition().getStart() == 0_tp);
+        }
+
+        SUBCASE ("A clip already in the launcher keeps its settings")
+        {
+            auto wave = insertWaveClipInto (c.getSlot (0, 0), sinFile->getFile());
+            REQUIRE (wave != nullptr);
+            clearLoopAndTempoSettings (*wave);
+
+            CHECK (wave->moveTo (c.getSlot (0, 1)));
+            CHECK (wave->getClipSlot() == &c.getSlot (0, 1));
+            CHECK (! wave->isLooping());
+            CHECK (! wave->getAutoTempo());
+        }
+    }
+
     TEST_CASE ("ClipDefaults: copying a launcher clip to another slot keeps its settings")
     {
         using namespace clip_defaults_tests;

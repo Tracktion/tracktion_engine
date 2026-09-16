@@ -932,6 +932,11 @@ bool isArrangerTrack (const ClipOwner& t)                       { return dynamic
 //==============================================================================
 bool canContainMIDI (const ClipOwner& co)
 {
+    // A slot holds the same clips as the track it belongs to
+    if (auto cs = dynamic_cast<const ClipSlot*> (&co))
+        if (auto trackOwner = dynamic_cast<const ClipOwner*> (&cs->track))
+            return canContainMIDI (*trackOwner);
+
     if (auto track = dynamic_cast<const Track*> (&co))
         return isAudioTrack (*track);
 
@@ -942,6 +947,11 @@ bool canContainAudio (const ClipOwner& co)
 {
     if (dynamic_cast<const ContainerClip*> (&co) != nullptr)
         return true;
+
+    // A slot holds the same clips as the track it belongs to
+    if (auto cs = dynamic_cast<const ClipSlot*> (&co))
+        if (auto trackOwner = dynamic_cast<const ClipOwner*> (&cs->track))
+            return canContainAudio (*trackOwner);
 
     if (auto track = dynamic_cast<const Track*> (&co))
         return isAudioTrack (*track);
