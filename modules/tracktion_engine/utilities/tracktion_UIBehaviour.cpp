@@ -238,6 +238,22 @@ TimeRange UIBehaviour::getEditingRange (Edit& e)
     return e.getTransport().getLoopRange();
 }
 
+juce::Colour UIBehaviour::getClipColourForControlSurface (const Clip& c)
+{
+    return c.getColour();
+}
+
+int UIBehaviour::getClipColourIndexForControlSurface (const Clip& c)
+{
+    const auto colour = getClipColourForControlSurface (c);
+
+    if (colour.isTransparent())
+        return 0;
+
+    const auto numIndexes = getNumClipColourIndexes();
+    return juce::jlimit (1, numIndexes, juce::roundToInt (colour.getHue() * static_cast<float> (numIndexes)) + 1);
+}
+
 void UIBehaviour::recreatePluginWindowContentAsync (Plugin& p)
 {
     p.windowState->recreateWindowIfShowing();

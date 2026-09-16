@@ -38,6 +38,7 @@
   - `AudioFileManager` support for registering in-memory audio data as clip sources
   - New `TRACKTION_SANITISE_PLUGIN_OUTPUT` and `TRACKTION_ENABLE_PLUGIN_CPU_MEASUREMENT` flags
   - Engine unit tests converted from juce::UnitTest to doctest
+  - Control surface clip pads can match the host's clip colours: new `UIBehaviour::getClipColourForControlSurface()`, `getClipColourIndexForControlSurface()` and `getNumClipColourIndexes()`, plus `ControlSurface::padColourStateChanged()` which passes the clip colour to surfaces. Pads now also refresh when a track's colour changes
   - Tons of bug fixes, optimisations and API improvements
 
 ## v3.2

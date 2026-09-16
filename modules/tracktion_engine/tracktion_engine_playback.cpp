@@ -314,6 +314,7 @@ static inline void sprintf (char* dest, size_t maxLength, const char* format, ..
 #include "control_surfaces/tracktion_ControlSurface.cpp"
 #include "control_surfaces/tracktion_ExternalControllerManager.cpp"
 #include "control_surfaces/tracktion_ExternalController.cpp"
+#include "control_surfaces/tracktion_ExternalController.test.cpp"
 #include "control_surfaces/tracktion_CustomControlSurface.cpp"
 
 #if TRACKTION_ENABLE_CONTROL_SURFACES
