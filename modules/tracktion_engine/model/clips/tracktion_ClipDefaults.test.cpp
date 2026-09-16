@@ -54,16 +54,10 @@ namespace clip_defaults_tests
         std::unique_ptr<Edit> edit;
     };
 
-    /** Inserts a clip's state in to another owner the way a copy does: a new
-        item ID on a copy of the state. This is the path drag-copy, paste and
-        scene paste all funnel through today.
-    */
+    /** Copies a clip in to another owner, the way a drag-copy or duplicate does. */
     inline Clip* insertCopyOfClip (Clip& source, ClipOwner& destination)
     {
-        auto newState = source.state.createCopy();
-        source.edit.createNewItemID().writeID (newState, nullptr);
-
-        return insertClipWithState (destination, newState);
+        return insertClipCopy (destination, ClipCopy::fromClip (source).withNewItemID (source.edit));
     }
 
     inline WaveAudioClip::Ptr insertWaveClipInto (ClipOwner& owner, const juce::File& f)
@@ -91,14 +85,14 @@ namespace clip_defaults_tests
     {
         bool autoInitialiseDeviceManager() override     { return false; }
 
-        void newClipAdded (Clip& c, bool fromRecording) override
+        void newClipCreated (Clip& c, bool fromRecording) override
         {
-            ++numClipsAdded;
+            ++numClipsCreated;
             lastWasFromRecording = fromRecording;
             juce::ignoreUnused (c);
         }
 
-        int numClipsAdded = 0;
+        int numClipsCreated = 0;
         bool lastWasFromRecording = false;
     };
 }
@@ -178,14 +172,14 @@ TEST_SUITE ("tracktion_engine")
         CHECK (wave->getTrack() == &c.getTrack (1));
     }
 
-    TEST_CASE ("ClipDefaults: copying a launcher clip to another slot keeps its settings"
-               * doctest::should_fail())
+    TEST_CASE ("ClipDefaults: copying a launcher clip to another slot keeps its settings")
     {
         using namespace clip_defaults_tests;
 
-        // Tracktion/waveform_beta#1032: the slot branch of insertClipWithState
-        // applies the launcher defaults to every insert, so a copy of a clip
-        // whose looping and tempo remapping were turned off gets them back.
+        // Tracktion/waveform_beta#1032: a copy of a launcher clip whose looping
+        // and tempo remapping had been turned off used to get them back, because
+        // the slot branch of insertClipWithState applied the launcher defaults to
+        // every insert.
         auto& engine = *Engine::getEngines()[0];
         auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0, 1, 220.0f);
 
@@ -205,8 +199,7 @@ TEST_SUITE ("tracktion_engine")
         CHECK (copy->getSyncType() == Clip::syncAbsolute);
     }
 
-    TEST_CASE ("ClipDefaults: pasting a launcher clip keeps its settings"
-               * doctest::should_fail())
+    TEST_CASE ("ClipDefaults: pasting a launcher clip keeps its settings")
     {
         using namespace clip_defaults_tests;
 
@@ -242,13 +235,12 @@ TEST_SUITE ("tracktion_engine")
         CHECK (! pasted->getAutoTempo());
     }
 
-    TEST_CASE ("ClipDefaults: the app is told about clips once per creation"
-               * doctest::should_fail())
+    TEST_CASE ("ClipDefaults: the app is told about clips once per creation")
     {
         using namespace clip_defaults_tests;
 
-        // newClipAdded fires from ClipList::newObjectAdded, i.e. on every child
-        // add, so moves and copies look like new clips to the app.
+        // newClipCreated is called from the creation route only, so moves and
+        // copies aren't reported to the app as new clips.
         // NB: this temporarily becomes Engine::instance; safe here because the
         // engine TestRunner never calls Engine::getInstance() and other tests use
         // getEngines().
@@ -263,12 +255,12 @@ TEST_SUITE ("tracktion_engine")
 
         auto wave = insertWaveClipInto (c.getTrack (0), sinFile->getFile());
         REQUIRE (wave != nullptr);
-        CHECK_EQ (behaviourPtr->numClipsAdded, 1);
+        CHECK_EQ (behaviourPtr->numClipsCreated, 1);
 
         // Moving a clip isn't creating one.
-        behaviourPtr->numClipsAdded = 0;
+        behaviourPtr->numClipsCreated = 0;
         CHECK (wave->moveTo (c.getTrack (1)));
-        CHECK_EQ (behaviourPtr->numClipsAdded, 0);
+        CHECK_EQ (behaviourPtr->numClipsCreated, 0);
     }
 }
 

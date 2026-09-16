@@ -73,8 +73,9 @@ struct ClipOwner::ClipList : public ValueTreeObjectList<Clip>,
 
         objectAddedOrRemoved (c);
 
-        if (c && ! edit.getUndoManager().isPerformingUndoRedo())
-            edit.engine.getEngineBehaviour().newClipAdded (*c, edit.getTransport().isRecordingStopping());
+        // NB: EngineBehaviour::newClipCreated is called from insertClipWithState,
+        // i.e. only when a clip is created. This is also called for moves, paste
+        // and split, where the clip already exists.
     }
 
     void objectRemoved (Clip* c) override
@@ -262,179 +263,279 @@ namespace clip_owner
     }
 }
 
-Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
+namespace clip_owner
 {
-    CRASH_TRACER
-    jassert (clipState.isValid());
-    jassert (! clipState.getParent().isValid());
-
-    auto& edit = clipOwner.getClipOwnerEdit();
-    auto& engineBehaviour = edit.engine.getEngineBehaviour();
-
-    if (clipState.hasType (IDs::MIDICLIP))
+    /** Fills in the defaults that have to be on the state before the Clip is
+        created, either because the Clip's constructor would overwrite them or
+        because other values are derived from them.
+    */
+    static void applyCreationStateDefaults (Edit& edit, juce::ValueTree& clipState)
     {
-        setPropertyIfMissing (clipState, IDs::sync, engineBehaviour.areMidiClipsRemappedWhenTempoChanges()
-                                                       ? Clip::syncBarsBeats : Clip::syncAbsolute, nullptr);
-    }
-    else if (clipState.hasType (IDs::AUDIOCLIP) || clipState.hasType (IDs::EDITCLIP))
-    {
-        if (! clipState.getChildWithName (IDs::LOOPINFO).isValid())
+        auto& engineBehaviour = edit.engine.getEngineBehaviour();
+
+        if (clipState.hasType (IDs::MIDICLIP))
         {
-            auto sourceFile = SourceFileReference::findFileFromString (edit, clipState[IDs::source]);
-
-            if (sourceFile.exists())
+            setPropertyIfMissing (clipState, IDs::sync, engineBehaviour.areMidiClipsRemappedWhenTempoChanges()
+                                                           ? Clip::syncBarsBeats : Clip::syncAbsolute, nullptr);
+        }
+        else if (clipState.hasType (IDs::AUDIOCLIP) || clipState.hasType (IDs::EDITCLIP))
+        {
+            if (! clipState.getChildWithName (IDs::LOOPINFO).isValid())
             {
-                auto loopInfo = AudioFile (edit.engine, sourceFile).getInfo().loopInfo;
+                auto sourceFile = SourceFileReference::findFileFromString (edit, clipState[IDs::source]);
 
-                if (loopInfo.getRootNote() != -1)
-                    clipState.setProperty (IDs::autoPitch, true, nullptr);
-
-                if (loopInfo.isLoopable())
+                if (sourceFile.exists())
                 {
-                    clipState.setProperty (IDs::autoTempo, true, nullptr);
-                    clipState.setProperty (IDs::stretchMode, true, nullptr);
-                    clipState.setProperty (IDs::elastiqueMode, (int) TimeStretcher::elastiquePro, nullptr);
+                    auto loopInfo = AudioFile (edit.engine, sourceFile).getInfo().loopInfo;
 
-                    auto& ts = edit.tempoSequence;
+                    if (loopInfo.getRootNote() != -1)
+                        clipState.setProperty (IDs::autoPitch, true, nullptr);
 
-                    auto startBeat = ts.toBeats (TimePosition::fromSeconds (static_cast<double> (clipState[IDs::start])));
-                    auto endBeat   = startBeat + BeatDuration::fromBeats (loopInfo.getNumBeats());
-                    auto newLength = ts.toTime (endBeat) - ts.toTime (startBeat);
+                    if (loopInfo.isLoopable())
+                    {
+                        clipState.setProperty (IDs::autoTempo, true, nullptr);
+                        clipState.setProperty (IDs::elastiqueMode, (int) TimeStretcher::elastiquePro, nullptr);
 
-                    clipState.setProperty (IDs::length, newLength.inSeconds(), nullptr);
+                        auto& ts = edit.tempoSequence;
+
+                        auto startBeat = ts.toBeats (TimePosition::fromSeconds (static_cast<double> (clipState[IDs::start])));
+                        auto endBeat   = startBeat + BeatDuration::fromBeats (loopInfo.getNumBeats());
+                        auto newLength = ts.toTime (endBeat) - ts.toTime (startBeat);
+
+                        clipState.setProperty (IDs::length, newLength.inSeconds(), nullptr);
+                    }
+                    else if (clipState.hasType (IDs::EDITCLIP))
+                    {
+                        clipState.setProperty (IDs::autoTempo, true, nullptr);
+                    }
+
+                    auto loopSate = loopInfo.state;
+
+                    if (loopSate.getNumProperties() > 0 || loopSate.getNumChildren() > 0)
+                        clipState.addChild (loopSate.createCopy(), -1, nullptr);
                 }
-                else if (clipState.hasType (IDs::EDITCLIP))
-                {
-                    clipState.setProperty (IDs::autoTempo, true, nullptr);
-                }
-
-                auto loopSate = loopInfo.state;
-
-                if (loopSate.getNumProperties() > 0 || loopSate.getNumChildren() > 0)
-                    clipState.addChild (loopSate.createCopy(), -1, nullptr);
             }
-        }
 
-        if (! clipState.hasProperty (IDs::sync))
-        {
-            if (clipState.getProperty (IDs::autoTempo))
-                clipState.setProperty (IDs::sync, (int) engineBehaviour.areAutoTempoClipsRemappedWhenTempoChanges()
-                                                           ? Clip::syncBarsBeats : Clip::syncAbsolute, nullptr);
-            else
-                clipState.setProperty (IDs::sync, (int) engineBehaviour.areAudioClipsRemappedWhenTempoChanges()
-                                                           ? Clip::syncBarsBeats : Clip::syncAbsolute, nullptr);
-        }
+            if (! clipState.hasProperty (IDs::sync))
+            {
+                if (clipState.getProperty (IDs::autoTempo))
+                    clipState.setProperty (IDs::sync, (int) engineBehaviour.areAutoTempoClipsRemappedWhenTempoChanges()
+                                                               ? Clip::syncBarsBeats : Clip::syncAbsolute, nullptr);
+                else
+                    clipState.setProperty (IDs::sync, (int) engineBehaviour.areAudioClipsRemappedWhenTempoChanges()
+                                                               ? Clip::syncBarsBeats : Clip::syncAbsolute, nullptr);
+            }
 
-        if (! clipState.hasProperty (IDs::autoCrossfade))
-            if (edit.engine.getPropertyStorage().getProperty (SettingID::xFade, 0))
-                clipState.setProperty (IDs::autoCrossfade, true, nullptr);
+            if (! clipState.hasProperty (IDs::autoCrossfade))
+                if (edit.engine.getPropertyStorage().getProperty (SettingID::xFade, 0))
+                    clipState.setProperty (IDs::autoCrossfade, true, nullptr);
+        }
     }
 
-    if (clipOwner.getClips().size() < engineBehaviour.getEditLimits().maxClipsInTrack)
+    /** Adds a clip state to an owner and returns the Clip that was created for it.
+        This is the plain insert: no defaults of any kind are applied.
+    */
+    static Clip* addClipState (ClipOwner& clipOwner, juce::ValueTree& clipState)
     {
+        CRASH_TRACER
+        jassert (clipState.isValid());
+        jassert (! clipState.getParent().isValid());
+
+        auto& edit = clipOwner.getClipOwnerEdit();
+
+        if (clipOwner.getClips().size() >= edit.engine.getEngineBehaviour().getEditLimits().maxClipsInTrack)
+        {
+            edit.engine.getUIBehaviour().showWarningMessage (TRANS("Can't add any more clips to this track!"));
+            return {};
+        }
+
         if (auto clipSlot = dynamic_cast<ClipSlot*> (clipOwner.getClipOwnerSelectable()))
             if (auto existingClip = clipSlot->getClip())
                 existingClip->removeFromParent();
 
         clipOwner.getClipOwnerState().addChild (clipState, -1, &edit.getUndoManager());
 
-        if (auto newClip = findClipForState (clipOwner, clipState))
+        return findClipForState (clipOwner, clipState);
+    }
+
+    /** Applies the defaults that need a constructed Clip, i.e. the ones that come
+        from the owner or go through the Clip's own setters.
+    */
+    static void applyCreationClipDefaults (ClipOwner& clipOwner, Clip& newClip, const juce::ValueTree& clipState)
+    {
+        auto& edit = clipOwner.getClipOwnerEdit();
+        auto& engineBehaviour = edit.engine.getEngineBehaviour();
+
+        auto applyTrackColour = [&newClip] (Track& t)
         {
-            if (auto at = dynamic_cast<AudioTrack*> (clipOwner.getClipOwnerSelectable()))
+            if (newClip.getColour() == newClip.getDefaultColour())
             {
-                if (newClip->getColour() == newClip->getDefaultColour())
-                {
-                    auto col = at->getColour();
-
-                    float hue = col.isTransparent() ? ((at->getIndexInEditTrackList() % 18) * 1.0f / 18.0f) : col.getHue();
-                    newClip->setColour (newClip->getDefaultColour().withHue (hue));
-                }
-
-                if (auto acb = dynamic_cast<AudioClipBase*> (newClip))
-                {
-                    if (engineBehaviour.autoAddClipEdgeFades())
-                        if (! (clipState.hasProperty (IDs::fadeIn) && clipState.hasProperty (IDs::fadeOut)))
-                            acb->applyEdgeFades();
-
-                    const auto defaults = engineBehaviour.getClipDefaults();
-
-                    if (! clipState.hasProperty (IDs::proxyAllowed))
-                        acb->setUsesProxy (defaults.useProxyFile);
-
-                    if (! clipState.hasProperty (IDs::resamplingQuality))
-                        acb->setResamplingQuality (defaults.resamplingQuality);
-                }
+                auto col = t.getColour();
+                float hue = col.isTransparent() ? ((t.getIndexInEditTrackList() % 18) * 1.0f / 18.0f) : col.getHue();
+                newClip.setColour (newClip.getDefaultColour().withHue (hue));
             }
-            else if (auto cs = dynamic_cast<ClipSlot*> (clipOwner.getClipOwnerSelectable()))
+        };
+
+        if (auto at = dynamic_cast<AudioTrack*> (clipOwner.getClipOwnerSelectable()))
+        {
+            applyTrackColour (*at);
+
+            if (auto acb = dynamic_cast<AudioClipBase*> (&newClip))
             {
-                if (newClip->getColour() == newClip->getDefaultColour())
-                {
-                    auto col = cs->track.getColour();
-                    float hue = col.isTransparent() ? ((cs->track.getIndexInEditTrackList() % 18) * 1.0f / 18.0f) : col.getHue();
-                    newClip->setColour (newClip->getDefaultColour().withHue (hue));
-                }
+                if (engineBehaviour.autoAddClipEdgeFades())
+                    if (! (clipState.hasProperty (IDs::fadeIn) && clipState.hasProperty (IDs::fadeOut)))
+                        acb->applyEdgeFades();
 
-                if (auto acb = dynamic_cast<AudioClipBase*> (newClip))
-                {
-                    if (acb->effectsEnabled())
-                        acb->enableEffects (false, false);
+                const auto defaults = engineBehaviour.getClipDefaults();
 
-                    acb->setUsesProxy (false);
-                    acb->setAutoTempo (true);
-                    acb->setStart (0_tp, false, true);
+                if (! clipState.hasProperty (IDs::proxyAllowed))
+                    acb->setUsesProxy (defaults.useProxyFile);
 
-                    if (! acb->isLooping())
-                        acb->setLoopRangeBeats ({ 0_bp, acb->getLengthInBeats() });
-                }
-                else if (auto mc = dynamic_cast<MidiClip*> (newClip))
-                {
-                    mc->setUsesProxy (false);
-                    mc->setStart (0_tp, false, true);
-
-                    if (! mc->isLooping ())
-                        mc->setLoopRangeBeats (mc->getEditBeatRange());
-                }
-                else if (auto sc = dynamic_cast<StepClip*> (newClip))
-                {
-                    sc->setStart (0_tp, false, true);
-
-                    if (! sc->isLooping())
-                        sc->setLoopRangeBeats ({ 0_bp, sc->getLengthInBeats() });
-                }
+                if (! clipState.hasProperty (IDs::resamplingQuality))
+                    acb->setResamplingQuality (defaults.resamplingQuality);
             }
+        }
+        else if (auto cs = dynamic_cast<ClipSlot*> (clipOwner.getClipOwnerSelectable()))
+        {
+            applyTrackColour (cs->track);
+        }
 
-            // Auto-detect ARA plugin from iXML chunks for newly added audio clips
-            if (auto acb = dynamic_cast<AudioClipBase*> (newClip))
+        // Auto-detect ARA plugin from iXML chunks for newly added audio clips
+        if (auto acb = dynamic_cast<AudioClipBase*> (&newClip))
+        {
+            if (acb->araPluginDescription.get().name.isEmpty())
             {
-                if (acb->araPluginDescription.get().name.isEmpty())
-                {
-                    auto araResult = detectARAFromIXMLChunks (edit.engine, acb->getAudioFile().getFile());
+                auto araResult = detectARAFromIXMLChunks (edit.engine, acb->getAudioFile().getFile());
 
-                    if (araResult.isValid())
+                if (araResult.isValid())
+                {
+                    acb->setTimeStretchMode (TimeStretcher::ara);
+                    acb->araPluginDescription.setValue (araResult.pluginDescription, nullptr);
+
+                    if (araResult.archiveData.getSize() > 0)
                     {
-                        acb->setTimeStretchMode (TimeStretcher::ara);
-                        acb->araPluginDescription.setValue (araResult.pluginDescription, nullptr);
+                        acb->setupARA (true);
 
-                        if (araResult.archiveData.getSize() > 0)
-                        {
-                            acb->setupARA (true);
-
-                            if (auto proxy = acb->getARAProxy(); proxy != nullptr && proxy->isValid())
-                                proxy->restoreARAArchiveForPaste (araResult.archiveData,
-                                                                  araResult.persistentID,
-                                                                  {}, // archivedModID
-                                                                  araResult.documentArchiveID);
-                        }
+                        if (auto proxy = acb->getARAProxy(); proxy != nullptr && proxy->isValid())
+                            proxy->restoreARAArchiveForPaste (araResult.archiveData,
+                                                              araResult.persistentID,
+                                                              {}, // archivedModID
+                                                              araResult.documentArchiveID);
                     }
                 }
             }
-
-            return newClip;
         }
     }
-    else
+
+    static bool isClipSlot (ClipOwner& clipOwner)
     {
-        edit.engine.getUIBehaviour().showWarningMessage (TRANS("Can't add any more clips to this track!"));
+        return dynamic_cast<ClipSlot*> (clipOwner.getClipOwnerSelectable()) != nullptr;
+    }
+}
+
+//==============================================================================
+void prepareClipForLauncher (Clip& clip)
+{
+    if (auto acb = dynamic_cast<AudioClipBase*> (&clip))
+    {
+        if (acb->effectsEnabled())
+            acb->enableEffects (false, false);
+
+        acb->setUsesProxy (false);
+        acb->setAutoTempo (true);
+        acb->setStart (0_tp, false, true);
+
+        if (! acb->isLooping())
+            acb->setLoopRangeBeats ({ 0_bp, acb->getLengthInBeats() });
+    }
+    else if (auto mc = dynamic_cast<MidiClip*> (&clip))
+    {
+        mc->setUsesProxy (false);
+        mc->setStart (0_tp, false, true);
+
+        if (! mc->isLooping())
+            mc->setLoopRangeBeats (mc->getEditBeatRange());
+    }
+    else if (auto sc = dynamic_cast<StepClip*> (&clip))
+    {
+        sc->setStart (0_tp, false, true);
+
+        if (! sc->isLooping())
+            sc->setLoopRangeBeats ({ 0_bp, sc->getLengthInBeats() });
+    }
+}
+
+//==============================================================================
+ClipCopy::ClipCopy (juce::ValueTree stateToUse, bool wasInLauncher)
+    : state (std::move (stateToUse)), sourceWasInLauncher (wasInLauncher)
+{
+}
+
+ClipCopy ClipCopy::fromClip (const Clip& clip)
+{
+    return { clip.state.createCopy(), const_cast<Clip&> (clip).getClipSlot() != nullptr };
+}
+
+ClipCopy ClipCopy::fromClipboardState (juce::ValueTree stateToUse, bool sourceWasInLauncher)
+{
+    return { std::move (stateToUse), sourceWasInLauncher };
+}
+
+ClipCopy ClipCopy::withNewItemID (Edit& edit) const
+{
+    auto newState = state.createCopy();
+    edit.createNewItemID().writeID (newState, nullptr);
+    assignNewIDsToAutomationCurveModifiers (edit, newState);
+
+    return { std::move (newState), sourceWasInLauncher };
+}
+
+Clip* insertClipCopy (ClipOwner& clipOwner, const ClipCopy& clipCopy)
+{
+    CRASH_TRACER
+    auto clipState = clipCopy.getState();
+
+    if (auto newClip = clip_owner::addClipState (clipOwner, clipState))
+    {
+        // A clip that's already a launcher clip keeps the settings it has; one
+        // coming from the arrangement needs converting.
+        if (clip_owner::isClipSlot (clipOwner) && ! clipCopy.wasInLauncher())
+            prepareClipForLauncher (*newClip);
+
+        return newClip;
+    }
+
+    return {};
+}
+
+//==============================================================================
+Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
+{
+    CRASH_TRACER
+    auto& edit = clipOwner.getClipOwnerEdit();
+
+    clip_owner::applyCreationStateDefaults (edit, clipState);
+
+    if (auto newClip = clip_owner::addClipState (clipOwner, clipState))
+    {
+        clip_owner::applyCreationClipDefaults (clipOwner, *newClip, clipState);
+
+        if (! edit.getUndoManager().isPerformingUndoRedo())
+        {
+            auto& engineBehaviour = edit.engine.getEngineBehaviour();
+            const auto fromRecording = edit.getTransport().isRecordingStopping();
+
+            engineBehaviour.newClipCreated (*newClip, fromRecording);
+
+            JUCE_BEGIN_IGNORE_DEPRECATION_WARNINGS
+            engineBehaviour.newClipAdded (*newClip, fromRecording);
+            JUCE_END_IGNORE_DEPRECATION_WARNINGS
+        }
+
+        if (clip_owner::isClipSlot (clipOwner))
+            prepareClipForLauncher (*newClip);
+
+        return newClip;
     }
 
     jassertfalse;
@@ -731,7 +832,9 @@ Clip* split (Clip& clip, const TimePosition time)
         edit.createNewItemID().writeID (newClipState, nullptr);
         assignNewIDsToAutomationCurveModifiers (clip.edit, newClipState);
 
-        if (auto newClip = insertClipWithState (*parent, newClipState))
+        // The second half of a split is the same clip, so it keeps its settings
+        if (auto newClip = insertClipCopy (*parent, ClipCopy::fromClipboardState (newClipState,
+                                                                                 clip.getClipSlot() != nullptr)))
         {
             // special case for waveaudio clips that may have fade in/out
             if (auto acb = dynamic_cast<AudioClipBase*> (newClip))

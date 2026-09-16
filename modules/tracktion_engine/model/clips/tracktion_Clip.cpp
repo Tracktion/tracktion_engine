@@ -500,8 +500,16 @@ bool Clip::moveTo (ClipOwner& newParent)
     }
     else if (auto cs = dynamic_cast<ClipSlot*> (&newParent))
     {
+        const bool wasInLauncher = getClipSlot() != nullptr;
+
         Clip::Ptr refHolder (this);
         cs->setClip (this);
+
+        // Clips already in the launcher keep their own settings
+        if (! wasInLauncher)
+            prepareClipForLauncher (*this);
+
+        return true;
     }
 
     return false;

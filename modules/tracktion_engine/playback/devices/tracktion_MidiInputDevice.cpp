@@ -1459,11 +1459,7 @@ public:
                     {
                         if (auto slot = getFreeSlot (*track))
                         {
-                            mc->setUsesProxy (false);
-                            mc->setStart (0_tp, false, true);
-
-                            if (! mc->isLooping ())
-                                mc->setLoopRangeBeats (mc->getEditBeatRange());
+                            prepareClipForLauncher (*mc);
 
                             mc->removeFromParent();
                             slot->setClip (mc);

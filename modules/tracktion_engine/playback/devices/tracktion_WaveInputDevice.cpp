@@ -1155,11 +1155,7 @@ public:
             {
                 if (auto slot = getFreeSlot (*dstTrack))
                 {
-                    newClip->setUsesProxy (false);
-                    newClip->setStart (0_tp, false, true);
-
-                    if (! newClip->isLooping())
-                        newClip->setLoopRangeBeats ({ 0_bp, newClip->getLengthInBeats() });
+                    prepareClipForLauncher (*newClip);
 
                     newClip->removeFromParent();
                     slot->setClip (newClip.get());

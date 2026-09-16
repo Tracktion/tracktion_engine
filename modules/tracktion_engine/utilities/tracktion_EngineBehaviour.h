@@ -265,7 +265,15 @@ public:
     /// Returns the defaults to be applied to new clips.
     virtual ClipDefaults getClipDefaults()                                          { return {}; }
 
+    /// Allows a newly created clip to be customised.
+    /// This is called once, when a clip is created, after the engine's own
+    /// defaults have been applied and before a clip in a ClipSlot is prepared for
+    /// the launcher. It isn't called when an existing clip is moved, copied,
+    /// pasted or split.
+    virtual void newClipCreated (Clip&, [[ maybe_unused ]] bool fromRecording)      {}
+
     /// Allows a new clip to be customised.
+    [[deprecated ("Use newClipCreated instead")]]
     virtual void newClipAdded (Clip&, [[ maybe_unused ]] bool fromRecording)        {}
 
     struct ControlSurfaces
