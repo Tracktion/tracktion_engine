@@ -1,0 +1,277 @@
+/*
+    ,--.                     ,--.     ,--.  ,--.
+  ,-'  '-.,--.--.,--,--.,---.|  |,-.,-'  '-.`--' ,---. ,--,--,      Copyright 2024
+  '-.  .-'|  .--' ,-.  | .--'|     /'-.  .-',--.| .-. ||      \   Tracktion Software
+    |  |  |  |  \ '-'  \ `--.|  \  \  |  |  |  |' '-' '|  ||  |       Corporation
+    `---' `--'   `--`--'`---'`--'`--' `---' `--' `---' `--''--'    www.tracktion.com
+
+    Tracktion Engine uses a GPL/commercial licence - see LICENCE.md for details.
+*/
+
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_CLIP_DEFAULTS
+
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+#include "../../../tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
+
+namespace tracktion::inline engine
+{
+
+//==============================================================================
+/** Characterisation tests for the defaults applied to clips.
+
+    These pin down which defaults are applied when a clip is created, and which
+    of a clip's settings survive being moved or copied. Cases marked
+    should_fail() describe the behaviour we want but don't have yet - they flip
+    to passing when the creation/transfer split lands.
+*/
+namespace clip_defaults_tests
+{
+    struct TestContext
+    {
+        TestContext (Engine& e, int numTracks, int numSlots)
+            : edit (test_utilities::createTestEdit (e, numTracks))
+        {
+            for (auto t : getAudioTracks (*edit))
+                t->getClipSlotList().ensureNumberOfSlots (numSlots);
+
+            edit->getSceneList().ensureNumberOfScenes (numSlots);
+        }
+
+        AudioTrack& getTrack (int index)
+        {
+            auto t = getAudioTracks (*edit)[index];
+            assert (t != nullptr);
+            return *t;
+        }
+
+        ClipSlot& getSlot (int trackIndex, int slotIndex)
+        {
+            auto s = getTrack (trackIndex).getClipSlotList().getClipSlots()[slotIndex];
+            assert (s != nullptr);
+            return *s;
+        }
+
+        std::unique_ptr<Edit> edit;
+    };
+
+    /** Inserts a clip's state in to another owner the way a copy does: a new
+        item ID on a copy of the state. This is the path drag-copy, paste and
+        scene paste all funnel through today.
+    */
+    inline Clip* insertCopyOfClip (Clip& source, ClipOwner& destination)
+    {
+        auto newState = source.state.createCopy();
+        source.edit.createNewItemID().writeID (newState, nullptr);
+
+        return insertClipWithState (destination, newState);
+    }
+
+    inline WaveAudioClip::Ptr insertWaveClipInto (ClipOwner& owner, const juce::File& f)
+    {
+        return insertWaveClip (owner, f.getFileNameWithoutExtension(), f,
+                               {{ 0_tp, TimeDuration::fromSeconds (4.0) }},
+                               DeleteExistingClips::no);
+    }
+
+    /** Turns a launcher clip in to one with non-default settings: no looping and
+        no tempo remapping, which is what the user does in
+        Tracktion/waveform_beta#1032.
+    */
+    inline void clearLoopAndTempoSettings (AudioClipBase& c)
+    {
+        c.disableLooping();
+        c.setAutoTempo (false);
+        c.setSyncType (Clip::syncAbsolute);
+    }
+
+    /** Counts EngineBehaviour callbacks so tests can assert how often the app is
+        told about a clip.
+    */
+    struct CountingEngineBehaviour : public EngineBehaviour
+    {
+        bool autoInitialiseDeviceManager() override     { return false; }
+
+        void newClipAdded (Clip& c, bool fromRecording) override
+        {
+            ++numClipsAdded;
+            lastWasFromRecording = fromRecording;
+            juce::ignoreUnused (c);
+        }
+
+        int numClipsAdded = 0;
+        bool lastWasFromRecording = false;
+    };
+}
+
+TEST_SUITE ("tracktion_engine")
+{
+    TEST_CASE ("ClipDefaults: new clips on a track")
+    {
+        using namespace clip_defaults_tests;
+
+        auto& engine = *Engine::getEngines()[0];
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0, 1, 220.0f);
+
+        TestContext c (engine, 1, 1);
+
+        auto wave = insertWaveClipInto (c.getTrack (0), sinFile->getFile());
+        REQUIRE (wave != nullptr);
+
+        // A track clip is left alone: no looping, no forced tempo remapping and
+        // the position it was given.
+        CHECK (! wave->isLooping());
+        CHECK (! wave->getAutoTempo());
+        CHECK (wave->canUseProxy());
+        CHECK (wave->getPosition().getStart() == 0_tp);
+    }
+
+    TEST_CASE ("ClipDefaults: new clips in a clip slot")
+    {
+        using namespace clip_defaults_tests;
+
+        auto& engine = *Engine::getEngines()[0];
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0, 1, 220.0f);
+
+        TestContext c (engine, 1, 2);
+
+        SUBCASE ("Audio")
+        {
+            auto wave = insertWaveClipInto (c.getSlot (0, 0), sinFile->getFile());
+            REQUIRE (wave != nullptr);
+
+            // Launcher clips are made loopable and beat-based, and start at 0.
+            CHECK (wave->isLooping());
+            CHECK (wave->getAutoTempo());
+            CHECK (! wave->canUseProxy());
+            CHECK (wave->getPosition().getStart() == 0_tp);
+        }
+
+        SUBCASE ("MIDI")
+        {
+            auto midi = insertMIDIClip (c.getSlot (0, 1), { 0_tp, TimePosition::fromSeconds (2.0) });
+            REQUIRE (midi != nullptr);
+
+            CHECK (midi->isLooping());
+            CHECK (! midi->canUseProxy());
+            CHECK (midi->getPosition().getStart() == 0_tp);
+        }
+    }
+
+    TEST_CASE ("ClipDefaults: moving a clip between tracks keeps its settings")
+    {
+        using namespace clip_defaults_tests;
+
+        auto& engine = *Engine::getEngines()[0];
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0, 1, 220.0f);
+
+        TestContext c (engine, 2, 1);
+
+        auto wave = insertWaveClipInto (c.getTrack (0), sinFile->getFile());
+        REQUIRE (wave != nullptr);
+        wave->setAutoTempo (true);
+        wave->setUsesProxy (false);
+
+        CHECK (wave->moveTo (c.getTrack (1)));
+
+        CHECK (wave->getAutoTempo());
+        CHECK (! wave->canUseProxy());
+        CHECK (wave->getTrack() == &c.getTrack (1));
+    }
+
+    TEST_CASE ("ClipDefaults: copying a launcher clip to another slot keeps its settings"
+               * doctest::should_fail())
+    {
+        using namespace clip_defaults_tests;
+
+        // Tracktion/waveform_beta#1032: the slot branch of insertClipWithState
+        // applies the launcher defaults to every insert, so a copy of a clip
+        // whose looping and tempo remapping were turned off gets them back.
+        auto& engine = *Engine::getEngines()[0];
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0, 1, 220.0f);
+
+        TestContext c (engine, 1, 2);
+
+        auto source = insertWaveClipInto (c.getSlot (0, 0), sinFile->getFile());
+        REQUIRE (source != nullptr);
+        clearLoopAndTempoSettings (*source);
+        REQUIRE (! source->isLooping());
+        REQUIRE (! source->getAutoTempo());
+
+        auto copy = dynamic_cast<AudioClipBase*> (insertCopyOfClip (*source, c.getSlot (0, 1)));
+        REQUIRE (copy != nullptr);
+
+        CHECK (! copy->isLooping());
+        CHECK (! copy->getAutoTempo());
+        CHECK (copy->getSyncType() == Clip::syncAbsolute);
+    }
+
+    TEST_CASE ("ClipDefaults: pasting a launcher clip keeps its settings"
+               * doctest::should_fail())
+    {
+        using namespace clip_defaults_tests;
+
+        // The Cmd+D / paste route. Clipboard::Clips records slotOffset for a clip
+        // copied from a slot, so the paste knows the source was in the launcher.
+        auto& engine = *Engine::getEngines()[0];
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0, 1, 220.0f);
+
+        TestContext c (engine, 1, 2);
+
+        auto source = insertWaveClipInto (c.getSlot (0, 0), sinFile->getFile());
+        REQUIRE (source != nullptr);
+        clearLoopAndTempoSettings (*source);
+
+        Clipboard::Clips content;
+        content.addSelectedClips ({ source.get() }, Edit::getMaximumEditTimeRange(),
+                                  Clipboard::Clips::AutomationLocked::no);
+        REQUIRE (content.clips.size() == 1);
+        CHECK (content.clips[0].slotOffset.has_value());
+
+        EditInsertPoint insertPoint (*c.edit);
+        Clipboard::ContentType::EditPastingOptions opts (*c.edit, insertPoint);
+        opts.silent = true;
+        opts.startTrack = &c.getTrack (0);
+        opts.targetClipOwnerID = c.getSlot (0, 1).getClipOwnerID();
+
+        CHECK (content.pasteIntoEdit (opts));
+
+        auto pasted = dynamic_cast<AudioClipBase*> (c.getSlot (0, 1).getClip());
+        REQUIRE (pasted != nullptr);
+
+        CHECK (! pasted->isLooping());
+        CHECK (! pasted->getAutoTempo());
+    }
+
+    TEST_CASE ("ClipDefaults: the app is told about clips once per creation"
+               * doctest::should_fail())
+    {
+        using namespace clip_defaults_tests;
+
+        // newClipAdded fires from ClipList::newObjectAdded, i.e. on every child
+        // add, so moves and copies look like new clips to the app.
+        // NB: this temporarily becomes Engine::instance; safe here because the
+        // engine TestRunner never calls Engine::getInstance() and other tests use
+        // getEngines().
+        auto behaviour = std::make_unique<CountingEngineBehaviour>();
+        auto behaviourPtr = behaviour.get();
+
+        Engine engine { juce::String ("tracktion_clip_defaults_test"), nullptr, std::move (behaviour) };
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0, 1, 220.0f);
+
+        TestContext c (engine, 2, 1);
+
+        auto wave = insertWaveClipInto (c.getTrack (0), sinFile->getFile());
+        REQUIRE (wave != nullptr);
+        CHECK_EQ (behaviourPtr->numClipsAdded, 1);
+
+        // Moving a clip isn't creating one.
+        behaviourPtr->numClipsAdded = 0;
+        CHECK (wave->moveTo (c.getTrack (1)));
+        CHECK_EQ (behaviourPtr->numClipsAdded, 0);
+    }
+}
+
+} // namespace tracktion::inline engine
+
+#endif // TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_CLIP_DEFAULTS
