@@ -3282,7 +3282,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
                 {
                     wc->setLoopInfo (af.getInfo().loopInfo);
 
-                    engine.getEngineBehaviour().newClipAdded (*wc, false);
+                    engine.getEngineBehaviour().newClipCreated (*wc, false);
                 }
 
                 auto& targetTempo = editToMatch->tempoSequence.getTempoAt (TimePosition::fromSeconds (0.01));
@@ -3292,7 +3292,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
                 {
                     auto firstTempo = edit->tempoSequence.getTempo (0);
                     firstTempo->setBpm (targetTempo.getBpm());
-                    engine.getEngineBehaviour().newClipAdded (*wc, false);
+                    engine.getEngineBehaviour().newClipCreated (*wc, false);
 
                     edit->setTimecodeFormat (editToMatch->getTimecodeFormat());
                     AudioFileInfo wi = wc->getWaveInfo();
@@ -3315,7 +3315,7 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingFile (Engine& engine, const j
                 {
                     auto firstPitch = edit->pitchSequence.getPitch (0);
                     firstPitch->setPitch (targetPitch->getPitch());
-                    engine.getEngineBehaviour().newClipAdded (*wc, false);
+                    engine.getEngineBehaviour().newClipCreated (*wc, false);
 
                     edit->pitchSequence.copyFrom (editToMatch->pitchSequence);
                     if (wc->getLoopInfo().getRootNote() != -1)
@@ -3351,7 +3351,8 @@ std::unique_ptr<Edit> Edit::createEditForPreviewingClip (Clip& clip)
 
     if (auto track = getFirstAudioTrack (*edit))
     {
-        if (auto c = track->insertClipWithState (clip.state.createCopy()))
+        // A preview Edit holds a copy of the clip, so it must keep its settings
+        if (auto c = insertClipCopy (*track, ClipCopy::fromClip (clip)))
         {
             if (! clip.isMidi() && clip.getSourceFileReference().getSourceProjectItemRef().isRelativePath())
                 c->getSourceFileReference().setToFile (clip.getSourceFileReference().getFile(), SourceFileReference::PathStyle::alwaysAbsolute, false);

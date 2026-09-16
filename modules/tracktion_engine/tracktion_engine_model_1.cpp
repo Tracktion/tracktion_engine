@@ -91,6 +91,7 @@ using namespace std::literals;
 #include "model/clips/tracktion_ClipEffects.cpp"
 #include "model/clips/tracktion_ClipEffects.test.cpp"
 #include "model/clips/tracktion_ClipOwner.cpp"
+#include "model/clips/tracktion_ClipDefaults.test.cpp"
 #include "model/clips/tracktion_WarpTimeManager.cpp"
 
 #ifdef __GNUC__

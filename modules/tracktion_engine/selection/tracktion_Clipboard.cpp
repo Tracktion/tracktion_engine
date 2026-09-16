@@ -201,18 +201,11 @@ static TimePosition doPasteMIDIFileIntoEdit (Edit& edit, const juce::File& midiF
                                                         clipState, clipName, TrackItem::Type::midi,
                                                         { timeRange, 0_td }, DeleteExistingClips::no, false))
                 {
+                    // NB: a clip created in a ClipSlot is prepared for the launcher
+                    // by insertClipWithState
                     if (auto mc = dynamic_cast<MidiClip*> (newClip))
-                    {
-                        if (mc->getClipSlot() != nullptr)
-                        {
-                            mc->setUsesProxy (false);
-                            mc->setStart (0_tp, false, true);
-                            mc->setLoopRangeBeats (mc->getEditBeatRange());
-                        }
-
                         if (importAsNoteExpression)
-                            mc->setMPEMode(true);
-                    }
+                            mc->setMPEMode (true);
 
                     newClipEndTime = std::max (newClipEndTime, newClip->getPosition().getEnd());
                 }
@@ -522,17 +515,7 @@ static void doProjectItemsPaste (const Clipboard::ProjectItems& items,
                         if (pastingOptions.snapBWavsToOriginalTime)
                             newClip->snapToOriginalBWavTime();
 
-                        // Set sensible defaults for new launcher clips
-                        if (newClip->getClipSlot())
-                        {
-                            if (newClip->effectsEnabled())
-                                newClip->enableEffects (false, false);
-
-                            newClip->setUsesProxy (false);
-                            newClip->setAutoTempo (true);
-                            newClip->setStart (0_tp, false, true);
-                            newClip->setLoopRangeBeats ({ 0_bp, newClip->getLengthInBeats() });
-                        }
+                        // NB: launcher defaults are applied by insertWaveClip
                     }
 
                 }
@@ -553,16 +536,7 @@ static void doProjectItemsPaste (const Clipboard::ProjectItems& items,
                         newClipEndTime = newClip->getPosition().getEnd();
                         itemsAdded.add (newClip.get());
 
-                        // Set sensible defaults for new launcher clips
-                        if (newClip->getClipSlot())
-                        {
-                            if (newClip->effectsEnabled())
-                                newClip->enableEffects (false, false);
-
-                            newClip->setUsesProxy (false);
-                            newClip->setAutoTempo (true);
-                            newClip->setLoopRangeBeats ({ 0_bp, newClip->getLengthInBeats() });
-                        }
+                        // NB: launcher defaults are applied by insertEditClip
                     }
                 }
 
@@ -777,10 +751,10 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects,
                                             IDs::fadeOut, fadeOut.overlaps (inOutPoints) ? fadeOut.getIntersectionWith (inOutPoints).getLength().inSeconds() : 0.0);
                 }
 
-                // Also flush these properties so the defaults aren't picked up
-                addValueTreeProperties (info.state,
-                                        IDs::proxyAllowed, acb->canUseProxy(),
-                                        IDs::resamplingQuality, juce::VariantConverter<ResamplingQuality>::toVar (acb->getResamplingQuality()));
+                // NB: proxyAllowed and resamplingQuality used to be flushed here so
+                // the "if missing" checks in insertClipWithState didn't overwrite
+                // them. Pasting a clip no longer applies creation defaults, so the
+                // clip's own state is used as it is.
 
                 // Store ARA plugin state (e.g. Melodyne note edits) so it survives copy/paste
                 if (auto proxy = acb->getARAProxy(); proxy != nullptr && proxy->isValid())
@@ -1067,7 +1041,7 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
         {
             if (auto markerTrack = options.edit.getMarkerTrack())
             {
-                if (auto newClip = markerTrack->insertClipWithState (newClipState))
+                if (auto newClip = insertClipCopy (*markerTrack, ClipCopy::fromClipboardState (newClipState, false)))
                 {
                     itemsAdded.add (newClip);
 
@@ -1084,7 +1058,7 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
         {
             if (auto chordTrack = options.edit.getChordTrack())
             {
-                if (auto newClip = chordTrack->insertClipWithState (newClipState))
+                if (auto newClip = insertClipCopy (*chordTrack, ClipCopy::fromClipboardState (newClipState, false)))
                     itemsAdded.add (newClip);
             }
         }
@@ -1092,7 +1066,7 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
         {
             if (auto arrangerTrack = options.edit.getArrangerTrack())
             {
-                if (auto newClip = arrangerTrack->insertClipWithState (newClipState))
+                if (auto newClip = insertClipCopy (*arrangerTrack, ClipCopy::fromClipboardState (newClipState, false)))
                     itemsAdded.add (newClip);
             }
         }
@@ -1135,13 +1109,15 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
                     if (auto existingClip = clipSlot->getClip())
                         existingClip->removeFromParent();
 
-                    if (auto newClip = insertClipWithState (*clipSlot, newClipState))
+                    if (auto newClip = insertClipCopy (*clipSlot, ClipCopy::fromClipboardState (newClipState,
+                                                                                                clip.slotOffset.has_value())))
                         itemsAdded.add (newClip);
                 }
             }
             else if (auto clipTrack = dynamic_cast<ClipTrack*> (targetTrack->getSiblingTrack (clip.trackOffset, false)))
             {
-                if (auto newClip = clipTrack->insertClipWithState (newClipState))
+                if (auto newClip = insertClipCopy (*clipTrack, ClipCopy::fromClipboardState (newClipState,
+                                                                                             clip.slotOffset.has_value())))
                     itemsAdded.add (newClip);
             }
             else
@@ -1396,7 +1372,8 @@ bool Clipboard::Scenes::pasteIntoEdit (const EditPastingOptions& options) const
                     auto newClipState = clip.createCopy();
                     EditItemID::remapIDs (newClipState, nullptr, options.edit, &remappedIDs);
 
-                    insertClipWithState (*slot, newClipState);
+                    // Scene clips always come from the launcher, so they keep their settings
+                    insertClipCopy (*slot, ClipCopy::fromClipboardState (newClipState, true));
                 }
             }
             itemsAdded.add (newScene);
