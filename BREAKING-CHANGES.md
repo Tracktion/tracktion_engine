@@ -3,6 +3,34 @@
 ___
 
 ### Change
+`EngineBehaviour::newClipAdded` is deprecated and replaced by `EngineBehaviour::newClipCreated`. It's now only called when a clip is created, and it's called later than before.
+
+#### Possible Issues
+`newClipAdded` used to be called from `ClipOwner::ClipList::newObjectAdded`, i.e. whenever a clip object was added outside undo/redo. That included moves through `Clip::moveTo` and `ClipSlot::setClip`, `duplicateClip`, clipboard paste and split. Both callbacks are now made from `insertClipWithState` only, so those cases no longer call either of them. They're also called after the engine's own clip defaults have been applied rather than during `addChild`, so an override that checks `Clip::getColour() == Clip::getDefaultColour()` now sees the colour the engine has already set. Overriding a deprecated virtual doesn't warn, so an app that overrides `newClipAdded` compiles unchanged and silently stops being called for moves, paste and split.
+
+#### Workaround
+Override `newClipCreated` instead. If you relied on being told about moves or copies, listen for the clip being added to its new owner instead, e.g. via `ClipOwner::clipAddedOrRemoved` or a `ValueTree::Listener` on the owner's state.
+
+#### Rationale
+Applying the defaults for a new clip to clips that were only moved or copied reset settings the user had chosen, e.g. a launcher clip's loop and tempo-remap settings when it was duplicated. Creating a clip and moving or copying one are now separate operations, and the callback follows the same split.
+
+___
+
+### Change
+`duplicateClip` now goes through the same insert path as everything else, so it respects `EditLimits::maxClipsInTrack`.
+
+#### Possible Issues
+It used to append the copy to the track's state unconditionally. It can now return `nullptr` when the track is full, and shows a warning message through `UIBehaviour::showWarningMessage`. Code that dereferences the result without checking, or that duplicates in a loop, can hit both.
+
+#### Workaround
+Check the returned pointer. If you need to duplicate without the limit or the message, copy the state yourself with `EditItemID::remapIDs` and add it to the owner's state.
+
+#### Rationale
+`duplicateClip` bypassed the clip-limit check that every other insert applies.
+
+___
+
+### Change
 `core::hash_combine` (and therefore `core::hash` and `core::hash_range`) uses a new mixing function, so every value it produces has changed.
 
 #### Possible Issues

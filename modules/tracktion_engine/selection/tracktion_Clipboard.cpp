@@ -1041,7 +1041,7 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
         {
             if (auto markerTrack = options.edit.getMarkerTrack())
             {
-                if (auto newClip = markerTrack->insertClipWithState (newClipState))
+                if (auto newClip = insertClipCopy (*markerTrack, ClipCopy::fromClipboardState (newClipState, false)))
                 {
                     itemsAdded.add (newClip);
 
@@ -1058,7 +1058,7 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
         {
             if (auto chordTrack = options.edit.getChordTrack())
             {
-                if (auto newClip = chordTrack->insertClipWithState (newClipState))
+                if (auto newClip = insertClipCopy (*chordTrack, ClipCopy::fromClipboardState (newClipState, false)))
                     itemsAdded.add (newClip);
             }
         }
@@ -1066,7 +1066,7 @@ bool Clipboard::Clips::pasteIntoEdit (const EditPastingOptions& options) const
         {
             if (auto arrangerTrack = options.edit.getArrangerTrack())
             {
-                if (auto newClip = arrangerTrack->insertClipWithState (newClipState))
+                if (auto newClip = insertClipCopy (*arrangerTrack, ClipCopy::fromClipboardState (newClipState, false)))
                     itemsAdded.add (newClip);
             }
         }

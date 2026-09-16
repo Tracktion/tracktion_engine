@@ -273,7 +273,9 @@ public:
     virtual void newClipCreated (Clip&, [[ maybe_unused ]] bool fromRecording)      {}
 
     /// Allows a new clip to be customised.
-    [[deprecated ("Use newClipCreated instead")]]
+    [[deprecated ("Use newClipCreated instead. NB: this is no longer called when a "
+                  "clip is moved, copied, pasted or split, and is called after the "
+                  "engine's clip defaults have been applied")]]
     virtual void newClipAdded (Clip&, [[ maybe_unused ]] bool fromRecording)        {}
 
     struct ControlSurfaces

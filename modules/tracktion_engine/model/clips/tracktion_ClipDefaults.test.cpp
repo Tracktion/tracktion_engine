@@ -17,12 +17,10 @@ namespace tracktion::inline engine
 {
 
 //==============================================================================
-/** Characterisation tests for the defaults applied to clips.
+/** Tests for the defaults applied to clips.
 
     These pin down which defaults are applied when a clip is created, and which
-    of a clip's settings survive being moved or copied. Cases marked
-    should_fail() describe the behaviour we want but don't have yet - they flip
-    to passing when the creation/transfer split lands.
+    of a clip's settings survive being moved or copied.
 */
 namespace clip_defaults_tests
 {
@@ -197,6 +195,68 @@ TEST_SUITE ("tracktion_engine")
         CHECK (! copy->isLooping());
         CHECK (! copy->getAutoTempo());
         CHECK (copy->getSyncType() == Clip::syncAbsolute);
+    }
+
+    TEST_CASE ("ClipDefaults: a copy keeps its own colour but is given one if it has none")
+    {
+        using namespace clip_defaults_tests;
+
+        auto& engine = *Engine::getEngines()[0];
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0, 1, 220.0f);
+
+        TestContext c (engine, 2, 1);
+
+        auto source = insertWaveClipInto (c.getTrack (0), sinFile->getFile());
+        REQUIRE (source != nullptr);
+
+        SUBCASE ("An explicit colour survives")
+        {
+            source->setColour (juce::Colours::hotpink);
+
+            auto copy = insertCopyOfClip (*source, c.getTrack (1));
+            REQUIRE (copy != nullptr);
+            CHECK (copy->getColour() == juce::Colours::hotpink);
+        }
+
+        SUBCASE ("A clip with no colour property gets the track's hue")
+        {
+            // i.e. a clip from an Edit saved before clips had a colour
+            auto stateWithNoColour = source->state.createCopy();
+            stateWithNoColour.removeProperty (IDs::colour, nullptr);
+            EditItemID::remapIDs (stateWithNoColour, nullptr, *c.edit);
+
+            auto copy = insertClipCopy (c.getTrack (1), ClipCopy::fromClipboardState (stateWithNoColour, false));
+            REQUIRE (copy != nullptr);
+            CHECK (copy->getColour() != copy->getDefaultColour());
+        }
+    }
+
+    TEST_CASE ("ClipDefaults: a one-shot isn't made to loop in the launcher")
+    {
+        using namespace clip_defaults_tests;
+
+        auto& engine = *Engine::getEngines()[0];
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 5.0, 1, 220.0f);
+
+        TestContext c (engine, 1, 1);
+
+        auto wave = insertWaveClipInto (c.getTrack (0), sinFile->getFile());
+        REQUIRE (wave != nullptr);
+
+        // oneShot comes from the file's metadata, so set it on the LoopInfo state
+        auto loopInfo = wave->getLoopInfo();
+        loopInfo.state.setProperty (IDs::oneShot, true, nullptr);
+        wave->setLoopInfo (loopInfo);
+        REQUIRE (wave->getLoopInfo().isOneShot());
+
+        // Copying it in to a slot prepares it for the launcher, but a single hit
+        // shouldn't be looped
+        auto copy = dynamic_cast<AudioClipBase*> (insertCopyOfClip (*wave, c.getSlot (0, 0)));
+        REQUIRE (copy != nullptr);
+
+        CHECK (! copy->isLooping());
+        CHECK (copy->getAutoTempo());
+        CHECK (copy->getPosition().getStart() == 0_tp);
     }
 
     TEST_CASE ("ClipDefaults: pasting a launcher clip keeps its settings")

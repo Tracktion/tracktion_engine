@@ -334,8 +334,10 @@ Clip::Ptr duplicateClip (const Clip& c)
     {
         jassert (! t->state.getChildWithProperty (IDs::id, newClipID).isValid());
 
-        // The copy is of an existing clip, so it keeps that clip's settings
-        if (auto newClip = insertClipCopy (*t, ClipCopy::fromClipboardState (n, c.getClipSlot() != nullptr)))
+        // The copy is of an existing clip, so it keeps that clip's settings.
+        // NB: this always targets the clip's track, even for a launcher clip,
+        // since Clip::getClipTrack resolves to the slot's host track.
+        if (auto newClip = insertClipCopy (*t, ClipCopy::fromClipboardState (n, false)))
             return newClip;
     }
     else

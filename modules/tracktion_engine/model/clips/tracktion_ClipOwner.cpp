@@ -358,14 +358,12 @@ namespace clip_owner
         return findClipForState (clipOwner, clipState);
     }
 
-    /** Applies the defaults that need a constructed Clip, i.e. the ones that come
-        from the owner or go through the Clip's own setters.
+    /** Gives a clip that still has the default colour the hue of the track it's
+        gone in to. Copies get this too, so a clip from an older Edit with no
+        colour property doesn't stay the default colour.
     */
-    static void applyCreationClipDefaults (ClipOwner& clipOwner, Clip& newClip, const juce::ValueTree& clipState)
+    static void applyTrackColourIfDefault (ClipOwner& clipOwner, Clip& newClip)
     {
-        auto& edit = clipOwner.getClipOwnerEdit();
-        auto& engineBehaviour = edit.engine.getEngineBehaviour();
-
         auto applyTrackColour = [&newClip] (Track& t)
         {
             if (newClip.getColour() == newClip.getDefaultColour())
@@ -377,9 +375,21 @@ namespace clip_owner
         };
 
         if (auto at = dynamic_cast<AudioTrack*> (clipOwner.getClipOwnerSelectable()))
-        {
             applyTrackColour (*at);
+        else if (auto cs = dynamic_cast<ClipSlot*> (clipOwner.getClipOwnerSelectable()))
+            applyTrackColour (cs->track);
+    }
 
+    /** Applies the defaults that need a constructed Clip, i.e. the ones that come
+        from the owner or go through the Clip's own setters.
+    */
+    static void applyCreationClipDefaults (ClipOwner& clipOwner, Clip& newClip, const juce::ValueTree& clipState)
+    {
+        auto& edit = clipOwner.getClipOwnerEdit();
+        auto& engineBehaviour = edit.engine.getEngineBehaviour();
+
+        if (dynamic_cast<AudioTrack*> (clipOwner.getClipOwnerSelectable()) != nullptr)
+        {
             if (auto acb = dynamic_cast<AudioClipBase*> (&newClip))
             {
                 if (engineBehaviour.autoAddClipEdgeFades())
@@ -394,10 +404,6 @@ namespace clip_owner
                 if (! clipState.hasProperty (IDs::resamplingQuality))
                     acb->setResamplingQuality (defaults.resamplingQuality);
             }
-        }
-        else if (auto cs = dynamic_cast<ClipSlot*> (clipOwner.getClipOwnerSelectable()))
-        {
-            applyTrackColour (cs->track);
         }
 
         // Auto-detect ARA plugin from iXML chunks for newly added audio clips
@@ -445,7 +451,9 @@ void prepareClipForLauncher (Clip& clip)
         acb->setAutoTempo (true);
         acb->setStart (0_tp, false, true);
 
-        if (! acb->isLooping())
+        // A one-shot isn't meant to loop, e.g. a single drum hit, so it's left
+        // to play once when it's launched
+        if (! acb->isLooping() && ! acb->getLoopInfo().isOneShot())
             acb->setLoopRangeBeats ({ 0_bp, acb->getLengthInBeats() });
     }
     else if (auto mc = dynamic_cast<MidiClip*> (&clip))
@@ -484,7 +492,7 @@ ClipCopy ClipCopy::fromClipboardState (juce::ValueTree stateToUse, bool sourceWa
 ClipCopy ClipCopy::withNewItemID (Edit& edit) const
 {
     auto newState = state.createCopy();
-    edit.createNewItemID().writeID (newState, nullptr);
+    EditItemID::remapIDs (newState, nullptr, edit);
     assignNewIDsToAutomationCurveModifiers (edit, newState);
 
     return { std::move (newState), sourceWasInLauncher };
@@ -493,10 +501,17 @@ ClipCopy ClipCopy::withNewItemID (Edit& edit) const
 Clip* insertClipCopy (ClipOwner& clipOwner, const ClipCopy& clipCopy)
 {
     CRASH_TRACER
+    auto& edit = clipOwner.getClipOwnerEdit();
     auto clipState = clipCopy.getState();
+
+    // The fill-ins only apply to properties the state doesn't have, so a copy
+    // keeps everything the user set on the original
+    clip_owner::applyCreationStateDefaults (edit, clipState);
 
     if (auto newClip = clip_owner::addClipState (clipOwner, clipState))
     {
+        clip_owner::applyTrackColourIfDefault (clipOwner, *newClip);
+
         // A clip that's already a launcher clip keeps the settings it has; one
         // coming from the arrangement needs converting.
         if (clip_owner::isClipSlot (clipOwner) && ! clipCopy.wasInLauncher())
@@ -518,6 +533,7 @@ Clip* insertClipWithState (ClipOwner& clipOwner, juce::ValueTree clipState)
 
     if (auto newClip = clip_owner::addClipState (clipOwner, clipState))
     {
+        clip_owner::applyTrackColourIfDefault (clipOwner, *newClip);
         clip_owner::applyCreationClipDefaults (clipOwner, *newClip, clipState);
 
         if (! edit.getUndoManager().isPerformingUndoRedo())
