@@ -19732,6 +19732,13 @@
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
+      <name>padColourStateChanged</name>
+      <anchorfile>classengine_1_1ControlSurface.html</anchorfile>
+      <anchor>ac0c02ebd5c17834604830c64a6f6d878</anchor>
+      <arglist>(int channelNumber, int sceneNumber, int colourIdx, juce::Colour colour, int state)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>clipsPlayingStateChanged</name>
       <anchorfile>classengine_1_1ControlSurface.html</anchorfile>
       <anchor>a1bcd1bd26e1c0115d084f0c374754813</anchor>
@@ -76931,6 +76938,27 @@
       <anchorfile>classengine_1_1UIBehaviour.html</anchorfile>
       <anchor>a0e53a1a916ebb583769d7785147fbdac</anchor>
       <arglist>(const SelectableList &amp;items)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual int</type>
+      <name>getNumClipColourIndexes</name>
+      <anchorfile>classengine_1_1UIBehaviour.html</anchorfile>
+      <anchor>aa5adc2c32c2def68799cbaf8c361d883</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual int</type>
+      <name>getClipColourIndexForControlSurface</name>
+      <anchorfile>classengine_1_1UIBehaviour.html</anchorfile>
+      <anchor>a28be1812d0e78930f08bb9f096336cd7</anchor>
+      <arglist>(const Clip &amp;)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual juce::Colour</type>
+      <name>getClipColourForControlSurface</name>
+      <anchorfile>classengine_1_1UIBehaviour.html</anchorfile>
+      <anchor>a5557bb6f026753c8ab7ce0b260eb1ec6</anchor>
+      <arglist>(const Clip &amp;)</arglist>
     </member>
   </compound>
   <compound kind="struct">

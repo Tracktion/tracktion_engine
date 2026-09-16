@@ -244,6 +244,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0e53a1a916ebb583769d7785147fbdac" id="r_a0e53a1a916ebb583769d7785147fbdac"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structengine_1_1SelectableList.html">SelectableList</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1UIBehaviour.html#a0e53a1a916ebb583769d7785147fbdac">getAssociatedClipsToEdit</a> (const <a class="el" href="structengine_1_1SelectableList.html">SelectableList</a> &amp;items)</td></tr>
 <tr class="memdesc:a0e53a1a916ebb583769d7785147fbdac"><td class="mdescLeft">&#160;</td><td class="mdescRight">If your UI has the concept of edit groups, you should return an expanded list of selected items that includes all clips that should be edited with the selected clip.  <br /></td></tr>
 <tr class="separator:a0e53a1a916ebb583769d7785147fbdac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5adc2c32c2def68799cbaf8c361d883" id="r_aa5adc2c32c2def68799cbaf8c361d883"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1UIBehaviour.html#aa5adc2c32c2def68799cbaf8c361d883">getNumClipColourIndexes</a> ()</td></tr>
+<tr class="memdesc:aa5adc2c32c2def68799cbaf8c361d883"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the number of clip colours in your UI's palette.  <br /></td></tr>
+<tr class="separator:aa5adc2c32c2def68799cbaf8c361d883"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28be1812d0e78930f08bb9f096336cd7" id="r_a28be1812d0e78930f08bb9f096336cd7"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1UIBehaviour.html#a28be1812d0e78930f08bb9f096336cd7">getClipColourIndexForControlSurface</a> (const <a class="el" href="classengine_1_1Clip.html">Clip</a> &amp;)</td></tr>
+<tr class="memdesc:a28be1812d0e78930f08bb9f096336cd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the palette index a control surface should use to show a clip, e.g.  <br /></td></tr>
+<tr class="separator:a28be1812d0e78930f08bb9f096336cd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5557bb6f026753c8ab7ce0b260eb1ec6" id="r_a5557bb6f026753c8ab7ce0b260eb1ec6"><td class="memItemLeft" align="right" valign="top">virtual juce::Colour&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1UIBehaviour.html#a5557bb6f026753c8ab7ce0b260eb1ec6">getClipColourForControlSurface</a> (const <a class="el" href="classengine_1_1Clip.html">Clip</a> &amp;)</td></tr>
+<tr class="memdesc:a5557bb6f026753c8ab7ce0b260eb1ec6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return the colour a control surface should use to show a clip, e.g.  <br /></td></tr>
+<tr class="separator:a5557bb6f026753c8ab7ce0b260eb1ec6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Create a subclass of <a class="el" href="classengine_1_1UIBehaviour.html" title="Create a subclass of UIBehaviour to custom UI elements created by the engine.">UIBehaviour</a> to custom UI elements created by the engine. </p>
@@ -2246,13 +2255,99 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="aa5adc2c32c2def68799cbaf8c361d883" name="aa5adc2c32c2def68799cbaf8c361d883"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5adc2c32c2def68799cbaf8c361d883">&#9670;&#160;</a></span>getNumClipColourIndexes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int engine::UIBehaviour::getNumClipColourIndexes </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Should return the number of clip colours in your UI's palette. </p>
+<p>Control surfaces are sent clip colours as an index in the range 1 to this number. By default this returns 18. </p>
+
+</div>
+</div>
+<a id="a28be1812d0e78930f08bb9f096336cd7" name="a28be1812d0e78930f08bb9f096336cd7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28be1812d0e78930f08bb9f096336cd7">&#9670;&#160;</a></span>getClipColourIndexForControlSurface()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int engine::UIBehaviour::getClipColourIndexForControlSurface </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classengine_1_1Clip.html">Clip</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Should return the palette index a control surface should use to show a clip, e.g. </p>
+<p>on clip launcher pads. This should be 0 if the clip has no colour, otherwise 1 to <a class="el" href="classengine_1_1UIBehaviour.html#aa5adc2c32c2def68799cbaf8c361d883" title="Should return the number of clip colours in your UI&#39;s palette.">getNumClipColourIndexes()</a>. By default this quantises the hue of <a class="el" href="classengine_1_1UIBehaviour.html#a5557bb6f026753c8ab7ce0b260eb1ec6" title="Should return the colour a control surface should use to show a clip, e.g.">getClipColourForControlSurface()</a>. </p>
+
+</div>
+</div>
+<a id="a5557bb6f026753c8ab7ce0b260eb1ec6" name="a5557bb6f026753c8ab7ce0b260eb1ec6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5557bb6f026753c8ab7ce0b260eb1ec6">&#9670;&#160;</a></span>getClipColourForControlSurface()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual juce::Colour engine::UIBehaviour::getClipColourForControlSurface </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classengine_1_1Clip.html">Clip</a> &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Should return the colour a control surface should use to show a clip, e.g. </p>
+<p>on clip launcher pads. Override this if your UI draws clips using a different colour to <a class="el" href="classengine_1_1Clip.html#ae7216cb5dc0d09fd4d7e39e9dbfc2582" title="Returns the colour property of this clip.">Clip::getColour()</a>, such as a user palette or the colour of the track they're on. By default this returns <a class="el" href="classengine_1_1Clip.html#ae7216cb5dc0d09fd4d7e39e9dbfc2582" title="Returns the colour property of this clip.">Clip::getColour()</a>. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="tracktion__UIBehaviour_8h.html">tracktion_UIBehaviour.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 15 2026 18:22:59 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Wed Sep 16 2026 09:21:10 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

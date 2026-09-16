@@ -139,6 +139,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:adbb4282229fa6b8b86cbd77f52747ebe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2f67ae978a4d0f6a38bd0b9965984a79" id="r_a2f67ae978a4d0f6a38bd0b9965984a79"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ControlSurface.html#a2f67ae978a4d0f6a38bd0b9965984a79">padStateChanged</a> (int channelNumber, int sceneNumber, int colourIdx, int state)</td></tr>
 <tr class="separator:a2f67ae978a4d0f6a38bd0b9965984a79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0c02ebd5c17834604830c64a6f6d878" id="r_ac0c02ebd5c17834604830c64a6f6d878"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ControlSurface.html#ac0c02ebd5c17834604830c64a6f6d878">padColourStateChanged</a> (int channelNumber, int sceneNumber, int colourIdx, juce::Colour colour, int state)</td></tr>
+<tr class="separator:ac0c02ebd5c17834604830c64a6f6d878"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1bcd1bd26e1c0115d084f0c374754813" id="r_a1bcd1bd26e1c0115d084f0c374754813"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ControlSurface.html#a1bcd1bd26e1c0115d084f0c374754813">clipsPlayingStateChanged</a> (int channel, bool isPlaying)</td></tr>
 <tr class="separator:a1bcd1bd26e1c0115d084f0c374754813"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad77a8a91ce8c249d24dcb43c8d71b6d8" id="r_ad77a8a91ce8c249d24dcb43c8d71b6d8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ControlSurface.html#ad77a8a91ce8c249d24dcb43c8d71b6d8">channelLevelChanged</a> (int channel, std::span&lt; const float &gt; levels)</td></tr>
@@ -1297,6 +1299,60 @@ Additional Inherited Members</h2></td></tr>
           <td></td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>colourIdx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>state</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac0c02ebd5c17834604830c64a6f6d878" name="ac0c02ebd5c17834604830c64a6f6d878"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0c02ebd5c17834604830c64a6f6d878">&#9670;&#160;</a></span>padColourStateChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void engine::ControlSurface::padColourStateChanged </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>channelNumber</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>sceneNumber</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>colourIdx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::Colour&#160;</td>
+          <td class="paramname"><em>colour</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -5105,7 +5161,7 @@ template&lt;size_t size&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 15 2026 18:22:59 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Wed Sep 16 2026 09:21:09 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
