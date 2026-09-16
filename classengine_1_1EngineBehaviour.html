@@ -248,6 +248,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a239fbfacb8600f019b34f8d89d1f63ab" id="r_a239fbfacb8600f019b34f8d89d1f63ab"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structengine_1_1EngineBehaviour_1_1ClipDefaults.html">ClipDefaults</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1EngineBehaviour.html#a239fbfacb8600f019b34f8d89d1f63ab">getClipDefaults</a> ()</td></tr>
 <tr class="memdesc:a239fbfacb8600f019b34f8d89d1f63ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the defaults to be applied to new clips.  <br /></td></tr>
 <tr class="separator:a239fbfacb8600f019b34f8d89d1f63ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee169c68317a75871d68bee2a832ce5c" id="r_aee169c68317a75871d68bee2a832ce5c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1EngineBehaviour.html#aee169c68317a75871d68bee2a832ce5c">newClipCreated</a> (<a class="el" href="classengine_1_1Clip.html">Clip</a> &amp;, bool fromRecording)</td></tr>
+<tr class="memdesc:aee169c68317a75871d68bee2a832ce5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows a newly created clip to be customised.  <br /></td></tr>
+<tr class="separator:aee169c68317a75871d68bee2a832ce5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a9249103db7323771301185fb5fc93d" id="r_a7a9249103db7323771301185fb5fc93d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1EngineBehaviour.html#a7a9249103db7323771301185fb5fc93d">newClipAdded</a> (<a class="el" href="classengine_1_1Clip.html">Clip</a> &amp;, bool fromRecording)</td></tr>
 <tr class="memdesc:a7a9249103db7323771301185fb5fc93d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows a new clip to be customised.  <br /></td></tr>
 <tr class="separator:a7a9249103db7323771301185fb5fc93d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1942,6 +1945,45 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="aee169c68317a75871d68bee2a832ce5c" name="aee169c68317a75871d68bee2a832ce5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee169c68317a75871d68bee2a832ce5c">&#9670;&#160;</a></span>newClipCreated()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void engine::EngineBehaviour::newClipCreated </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classengine_1_1Clip.html">Clip</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>fromRecording</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Allows a newly created clip to be customised. </p>
+<p>This is called once, when a clip is created, after the engine's own defaults have been applied and before a clip in a <a class="el" href="classengine_1_1ClipSlot.html" title="Represents a slot on a track that a Clip can live in to be played as a launched clip.">ClipSlot</a> is prepared for the launcher. It isn't called when an existing clip is moved, copied, pasted or split. </p>
+
+</div>
+</div>
 <a id="a7a9249103db7323771301185fb5fc93d" name="a7a9249103db7323771301185fb5fc93d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7a9249103db7323771301185fb5fc93d">&#9670;&#160;</a></span>newClipAdded()</h2>
 
@@ -2051,7 +2093,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 16 2026 09:21:10 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Wed Sep 16 2026 19:20:22 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

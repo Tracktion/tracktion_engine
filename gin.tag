@@ -596,6 +596,7 @@
     <path>build/tracktion_engine/model/clips/</path>
     <filename>tracktion__ClipOwner_8h.html</filename>
     <class kind="class">engine::ClipOwner</class>
+    <class kind="class">engine::ClipCopy</class>
     <namespace>engine</namespace>
   </compound>
   <compound kind="file">
@@ -16548,6 +16549,45 @@
       <arglist>(juce::ChangeListener *)</arglist>
     </member>
   </compound>
+  <compound kind="class">
+    <name>engine::ClipCopy</name>
+    <filename>classengine_1_1ClipCopy.html</filename>
+    <member kind="function">
+      <type>ClipCopy</type>
+      <name>withNewItemID</name>
+      <anchorfile>classengine_1_1ClipCopy.html</anchorfile>
+      <anchor>af40092b17afc74ec7a9e138accd22ea6</anchor>
+      <arglist>(Edit &amp;) const</arglist>
+    </member>
+    <member kind="function">
+      <type>const juce::ValueTree &amp;</type>
+      <name>getState</name>
+      <anchorfile>classengine_1_1ClipCopy.html</anchorfile>
+      <anchor>a7ce83500bd4b938aa1b693bd02ac40de</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>wasInLauncher</name>
+      <anchorfile>classengine_1_1ClipCopy.html</anchorfile>
+      <anchor>a91ab58589c6fe38fddd0970fe9cf6202</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static ClipCopy</type>
+      <name>fromClip</name>
+      <anchorfile>classengine_1_1ClipCopy.html</anchorfile>
+      <anchor>aa5021ef0e3ad6c2e13d91c4800c88a81</anchor>
+      <arglist>(const Clip &amp;)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static ClipCopy</type>
+      <name>fromClipboardState</name>
+      <anchorfile>classengine_1_1ClipCopy.html</anchorfile>
+      <anchor>a740bc70c515b1d490ca788606959033f</anchor>
+      <arglist>(juce::ValueTree stateToUse, bool sourceWasInLauncher)</arglist>
+    </member>
+  </compound>
   <compound kind="struct">
     <name>engine::EngineBehaviour::ClipDefaults</name>
     <filename>structengine_1_1EngineBehaviour_1_1ClipDefaults.html</filename>
@@ -31030,6 +31070,13 @@
       <anchorfile>classengine_1_1EngineBehaviour.html</anchorfile>
       <anchor>a239fbfacb8600f019b34f8d89d1f63ab</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>newClipCreated</name>
+      <anchorfile>classengine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>aee169c68317a75871d68bee2a832ce5c</anchor>
+      <arglist>(Clip &amp;, bool fromRecording)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -80690,6 +80737,7 @@
     <class kind="class">engine::ClickNode</class>
     <class kind="class">engine::Clip</class>
     <class kind="class">engine::Clipboard</class>
+    <class kind="class">engine::ClipCopy</class>
     <class kind="class">engine::ClipEffect</class>
     <class kind="class">engine::ClipEffects</class>
     <class kind="struct">engine::ClipLevel</class>
@@ -81788,6 +81836,20 @@
       <anchorfile>namespaceengine.html</anchorfile>
       <anchor>aa30c8e84ead8323ec55b5f6419e3459e</anchor>
       <arglist>(ClipOwner &amp;, const juce::ValueTree &amp;stateToUse, const juce::String &amp;name, TrackItem::Type, ClipPosition, DeleteExistingClips, bool allowSpottingAdjustment)</arglist>
+    </member>
+    <member kind="function">
+      <type>Clip *</type>
+      <name>insertClipCopy</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a190341a5c9d93acedfe5dcd1b58dc774</anchor>
+      <arglist>(ClipOwner &amp;, const ClipCopy &amp;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prepareClipForLauncher</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>af724b2a9a5bd10a475b4d0cdf98f8fbf</anchor>
+      <arglist>(Clip &amp;)</arglist>
     </member>
     <member kind="function">
       <type>Clip *</type>
@@ -86111,6 +86173,7 @@
     <class kind="struct">engine::ReverseEffect</class>
     <class kind="struct">engine::InvertEffect</class>
     <class kind="class">engine::ClipOwner</class>
+    <class kind="class">engine::ClipCopy</class>
     <class kind="class">engine::CollectionClip</class>
     <class kind="class">engine::CompManager</class>
     <class kind="class">engine::CompFactory</class>

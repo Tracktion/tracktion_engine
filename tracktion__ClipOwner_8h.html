@@ -87,6 +87,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ClipOwner.html">engine::ClipOwner</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base class for items that can contain clips.  <a href="classengine_1_1ClipOwner.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ClipCopy.html">engine::ClipCopy</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds a copy of an existing clip's state, along with whether that clip was in the launcher.  <a href="classengine_1_1ClipCopy.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
@@ -110,11 +113,17 @@ Functions</h2></td></tr>
 <tr class="memdesc:a3a83c66d05368f44faf254ba2e95ff9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a clip with the given ID if the <a class="el" href="classengine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a> contains it.  <br /></td></tr>
 <tr class="separator:a3a83c66d05368f44faf254ba2e95ff9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a472cc7fc2fd4d3ea11b0f761002d102d" id="r_a472cc7fc2fd4d3ea11b0f761002d102d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classengine_1_1Clip.html">Clip</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#a472cc7fc2fd4d3ea11b0f761002d102d">engine::insertClipWithState</a> (<a class="el" href="classengine_1_1ClipOwner.html">ClipOwner</a> &amp;, juce::ValueTree)</td></tr>
-<tr class="memdesc:a472cc7fc2fd4d3ea11b0f761002d102d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a clip with the given state in to the <a class="el" href="classengine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a>'s clip list.  <br /></td></tr>
+<tr class="memdesc:a472cc7fc2fd4d3ea11b0f761002d102d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a clip with the given state in the <a class="el" href="classengine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a>'s clip list.  <br /></td></tr>
 <tr class="separator:a472cc7fc2fd4d3ea11b0f761002d102d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa30c8e84ead8323ec55b5f6419e3459e" id="r_aa30c8e84ead8323ec55b5f6419e3459e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classengine_1_1Clip.html">Clip</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#aa30c8e84ead8323ec55b5f6419e3459e">engine::insertClipWithState</a> (<a class="el" href="classengine_1_1ClipOwner.html">ClipOwner</a> &amp;, const juce::ValueTree &amp;stateToUse, const juce::String &amp;name, <a class="el" href="classengine_1_1TrackItem.html#ab919abf28cd728b3e0a752886412d323">TrackItem::Type</a>, <a class="el" href="structengine_1_1ClipPosition.html">ClipPosition</a>, <a class="el" href="namespaceengine.html#a1520e7b938da93238f67025c2229b33c">DeleteExistingClips</a>, bool allowSpottingAdjustment)</td></tr>
-<tr class="memdesc:aa30c8e84ead8323ec55b5f6419e3459e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a clip with the given state in to the <a class="el" href="classengine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a>'s clip list.  <br /></td></tr>
+<tr class="memdesc:aa30c8e84ead8323ec55b5f6419e3459e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a clip with the given state in the <a class="el" href="classengine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a>'s clip list.  <br /></td></tr>
 <tr class="separator:aa30c8e84ead8323ec55b5f6419e3459e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a190341a5c9d93acedfe5dcd1b58dc774" id="r_a190341a5c9d93acedfe5dcd1b58dc774"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classengine_1_1Clip.html">Clip</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#a190341a5c9d93acedfe5dcd1b58dc774">engine::insertClipCopy</a> (<a class="el" href="classengine_1_1ClipOwner.html">ClipOwner</a> &amp;, const <a class="el" href="classengine_1_1ClipCopy.html">ClipCopy</a> &amp;)</td></tr>
+<tr class="memdesc:a190341a5c9d93acedfe5dcd1b58dc774"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a copy of an existing clip in to the <a class="el" href="classengine_1_1ClipOwner.html" title="Base class for items that can contain clips.">ClipOwner</a>'s clip list.  <br /></td></tr>
+<tr class="separator:a190341a5c9d93acedfe5dcd1b58dc774"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af724b2a9a5bd10a475b4d0cdf98f8fbf" id="r_af724b2a9a5bd10a475b4d0cdf98f8fbf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#af724b2a9a5bd10a475b4d0cdf98f8fbf">engine::prepareClipForLauncher</a> (<a class="el" href="classengine_1_1Clip.html">Clip</a> &amp;)</td></tr>
+<tr class="memdesc:af724b2a9a5bd10a475b4d0cdf98f8fbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies the settings a clip needs to be used in the launcher: no clip effects or proxy, starting at 0 and looping over its length.  <br /></td></tr>
+<tr class="separator:af724b2a9a5bd10a475b4d0cdf98f8fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac977c34bb6ce3292225db054c54e9071" id="r_ac977c34bb6ce3292225db054c54e9071"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classengine_1_1Clip.html">Clip</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine.html#ac977c34bb6ce3292225db054c54e9071">engine::insertNewClip</a> (<a class="el" href="classengine_1_1ClipOwner.html">ClipOwner</a> &amp;, <a class="el" href="classengine_1_1TrackItem.html#ab919abf28cd728b3e0a752886412d323">TrackItem::Type</a>, <a class="el" href="structengine_1_1EditTimeRange.html">EditTimeRange</a>)</td></tr>
 <tr class="memdesc:ac977c34bb6ce3292225db054c54e9071"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a new clip with the given type and a default name.  <br /></td></tr>
 <tr class="separator:ac977c34bb6ce3292225db054c54e9071"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -217,7 +226,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 16 2026 09:21:09 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Wed Sep 16 2026 19:20:21 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
