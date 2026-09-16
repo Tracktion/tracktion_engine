@@ -326,16 +326,16 @@ Clip::Ptr duplicateClip (const Clip& c)
 {
     auto n = c.state.createCopy();
     EditItemID::remapIDs (n, nullptr, c.edit);
-    auto newClipID = EditItemID::fromID (n);
+    [[ maybe_unused ]] auto newClipID = EditItemID::fromID (n);
     jassert (newClipID != EditItemID::fromID (c.state));
     jassert (c.edit.clipCache.findItem (newClipID) == nullptr);
 
     if (auto t = c.getClipTrack())
     {
         jassert (! t->state.getChildWithProperty (IDs::id, newClipID).isValid());
-        t->state.appendChild (n, c.getUndoManager());
 
-        if (auto newClip = t->findClipForID (newClipID))
+        // The copy is of an existing clip, so it keeps that clip's settings
+        if (auto newClip = insertClipCopy (*t, ClipCopy::fromClipboardState (n, c.getClipSlot() != nullptr)))
             return newClip;
     }
     else

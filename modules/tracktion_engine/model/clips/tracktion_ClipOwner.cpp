@@ -473,7 +473,7 @@ ClipCopy::ClipCopy (juce::ValueTree stateToUse, bool wasInLauncher)
 
 ClipCopy ClipCopy::fromClip (const Clip& clip)
 {
-    return { clip.state.createCopy(), const_cast<Clip&> (clip).getClipSlot() != nullptr };
+    return { clip.state.createCopy(), clip.getClipSlot() != nullptr };
 }
 
 ClipCopy ClipCopy::fromClipboardState (juce::ValueTree stateToUse, bool sourceWasInLauncher)
