@@ -205,10 +205,16 @@ private:
 //==============================================================================
 AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, ClipOwner& targetParent)
     : Clip (v, targetParent, id, t),
-      loopInfo (edit.engine, state.getOrCreateChildWithName (IDs::LOOPINFO, getUndoManager()), getUndoManager()),
+      loopInfo (edit.engine, state.getOrCreateChildWithName (IDs::LOOPINFO, nullptr), getUndoManager()),
       pluginList (edit),
       lastProxy (edit.engine)
 {
+    // N.B. Nothing in this constructor may write to the state via the UndoManager.
+    // A clip can be constructed whilst an undo is in progress (undoing a record or a
+    // clip deletion re-adds the clip's state), and UndoManager::perform refuses to
+    // re-enter, so any undoable write made here is silently discarded.
+    // Corrections to derived geometry and old-Edit migrations are made with a null
+    // UndoManager instead.
     auto um = getUndoManager();
 
     level->dbGain.referTo (state, IDs::gain, um);
@@ -245,9 +251,9 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
 
     // Keep this in to handle old edits..
     if (state.getProperty (IDs::timeStretch))
-        timeStretchMode = juce::VariantConverter<TimeStretcher::Mode>::fromVar (state.getProperty (IDs::stretchMode));
+        timeStretchMode.setValue (juce::VariantConverter<TimeStretcher::Mode>::fromVar (state.getProperty (IDs::stretchMode)), nullptr);
 
-    timeStretchMode = TimeStretcher::checkModeIsAvailable (timeStretchMode);
+    timeStretchMode.setValue (TimeStretcher::checkModeIsAvailable (timeStretchMode), nullptr);
 
     autoPitch.referTo (state, IDs::autoPitch, um);
     autoPitchMode.referTo (state, IDs::autoPitchMode, um);
@@ -256,7 +262,7 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
     isReversed.referTo (state, IDs::isReversed, um);
     autoDetectBeats.referTo (state, IDs::autoDetectBeats, um);
 
-    level->pan = juce::jlimit (-1.0f, 1.0f, static_cast<float> (level->pan.get()));
+    level->pan.setValue (juce::jlimit (-1.0f, 1.0f, static_cast<float> (level->pan.get())), nullptr);
     checkFadeLengthsForOverrun();
 
     useClipLaunchQuantisation.referTo (state, IDs::useClipLaunchQuantisation, um);
@@ -750,8 +756,12 @@ void AudioClipBase::checkFadeLengthsForOverrun()
     if (fadeIn + fadeOut > len)
     {
         const double scale = len / (fadeIn + fadeOut);
-        fadeIn = fadeIn * scale;
-        fadeOut = fadeOut * scale;
+
+        // This is derived geometry, not user data, and it can be corrected whilst a clip is
+        // being constructed. If that happens during an undo, an undoable write would re-enter
+        // UndoManager::perform, which refuses it and silently discards the correction.
+        fadeIn.setValue (fadeIn * scale, nullptr);
+        fadeOut.setValue (fadeOut * scale, nullptr);
     }
 
     // also check the auto fades
