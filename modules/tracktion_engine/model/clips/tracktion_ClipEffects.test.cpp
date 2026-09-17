@@ -19,6 +19,128 @@ namespace tracktion::inline engine
 
 TEST_SUITE ("tracktion_engine")
 {
+    //==============================================================================
+    /** A test-only plugin that records the PluginInitialisationInfo it was prepared
+        with so tests can check a render initialised it for the correct rate.
+    */
+    class SampleRateProbePlugin  : public Plugin
+    {
+    public:
+        SampleRateProbePlugin (PluginCreationInfo info)  : Plugin (info) {}
+        ~SampleRateProbePlugin() override                       { notifyListenersOfDeletion(); }
+
+        static const char* getPluginName()                      { return "Sample Rate Probe"; }
+        static constexpr const char* xmlTypeName = "sampleRateProbe";
+
+        juce::String getName() const override                   { return getPluginName(); }
+        juce::String getPluginType() override                   { return xmlTypeName; }
+        juce::String getSelectableDescription() override         { return getName(); }
+
+        BusLayout getBusses() const override                    { return BusLayout::singleStereoInOut(); }
+
+        void initialise (const PluginInitialisationInfo& info) override
+        {
+            initialisedSampleRate = info.sampleRate;
+            initialisedBlockSize = info.blockSizeSamples;
+        }
+
+        void deinitialise() override {}
+        void applyToBuffer (const PluginRenderContext&) override {}
+        void restorePluginStateFromValueTree (const juce::ValueTree&) override {}
+
+        std::atomic<double> initialisedSampleRate { 0.0 };
+        std::atomic<int> initialisedBlockSize { 0 };
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SampleRateProbePlugin)
+    };
+
+    /** Runs the ClipEffects render chain for a clip to completion. */
+    inline AudioFile renderClipEffects (AudioClipBase& clip)
+    {
+        auto& engine = clip.edit.engine;
+        auto proxyFile = RenderManager::getAudioFileForHash (engine, clip.edit.getTempDirectory (true), clip.getHash());
+        auto job = clip.getRenderJob (proxyFile);
+        REQUIRE (job != nullptr);
+
+        // Process one tick so the 'started' message submits the job to the thread pool
+        juce::MessageManager::getInstance()->runDispatchLoopUntil (1);
+
+        while (engine.getRenderManager().getNumJobs() > 0)
+            juce::MessageManager::getInstance()->runDispatchLoopUntil (1);
+
+        return proxyFile;
+    }
+
+    TEST_CASE ("ClipEffects: PluginEffect is prepared at the render sample rate")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        engine.getPluginManager().createBuiltInType<SampleRateProbePlugin>();
+
+        // Deliberately not 44100 - that's the ProcessState default, so a rate-agnostic
+        // bug would pass at 44100 but fail here
+        constexpr double fileSampleRate = 96000.0;
+
+        auto edit = test_utilities::createTestEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (fileSampleRate, 0.1, 2);
+        auto clip = insertWaveClip (*track, {}, sinFile->getFile(),
+                                    { .time = { 0_tp, 0.1_tp } },
+                                    DeleteExistingClips::no);
+        REQUIRE (clip != nullptr);
+
+        clip->enableEffects (true, false);
+        auto effectsState = clip->state.getChildWithName (IDs::EFFECTS);
+        REQUIRE (effectsState.isValid());
+
+        auto probe = edit->getPluginCache().createNewPlugin (SampleRateProbePlugin::xmlTypeName, {});
+        REQUIRE (probe != nullptr);
+
+        auto effectState = createValueTree (IDs::EFFECT,
+                                            IDs::type, juce::VariantConverter<ClipEffect::EffectType>::toVar (ClipEffect::EffectType::filter));
+        effectState.addChild (probe->state, -1, nullptr);
+
+        SUBCASE ("Single effect")
+        {
+            effectsState.addChild (effectState, -1, nullptr);
+        }
+
+        SUBCASE ("Chained after another effect")
+        {
+            // The plugin stage's source is the previous stage's destination, which
+            // doesn't exist yet when the render jobs are created
+            effectsState.addChild (ClipEffect::create (ClipEffect::EffectType::volume), -1, nullptr);
+            effectsState.addChild (effectState, -1, nullptr);
+        }
+
+        auto clipEffects = clip->getClipEffects();
+        REQUIRE (clipEffects != nullptr);
+
+        PluginEffect* pluginEffect = nullptr;
+
+        for (auto ce : *clipEffects)
+            if (auto pe = dynamic_cast<PluginEffect*> (ce))
+                pluginEffect = pe;
+
+        REQUIRE (pluginEffect != nullptr);
+
+        auto probePlugin = dynamic_cast<SampleRateProbePlugin*> (pluginEffect->plugin.get());
+        REQUIRE (probePlugin != nullptr);
+
+        auto proxyFile = renderClipEffects (*clip);
+        REQUIRE (proxyFile.getFile().existsAsFile());
+
+        // The plugin must be initialised for the rate it is actually rendered at,
+        // not the ProcessState's default
+        CHECK (probePlugin->initialisedSampleRate.load() == doctest::Approx (fileSampleRate));
+        CHECK (probePlugin->initialisedBlockSize.load() == 512);
+
+        // ...and the render itself must keep the source's rate and channel count
+        auto info = proxyFile.getInfo();
+        CHECK (info.sampleRate == doctest::Approx (fileSampleRate));
+        CHECK (info.numChannels == 2);
+    }
+
     TEST_CASE ("ClipEffects: MakeMono renders both output channels")
     {
         auto& engine = *Engine::getEngines()[0];
