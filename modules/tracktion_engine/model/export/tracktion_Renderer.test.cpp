@@ -849,6 +849,77 @@ TEST_SUITE ("tracktion_engine")
         edit->getTempDirectory (false).deleteRecursively();
         afm.unregisterMemoryBuffer (key);
     }
+
+    TEST_CASE ("Renderer: missing source file fails the render instead of retrying forever")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine);
+
+        const auto fileLength = 1_td;
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, fileLength.inSeconds());
+        const auto sourceFile = sinFile->getFile();
+
+        auto track = getAudioTracks (*edit)[0];
+        REQUIRE (insertWaveClip (*track, {}, sourceFile, { .time = { 0_tp, fileLength } },
+                                 DeleteExistingClips::no) != nullptr);
+
+        // Pull the source out from under the Edit, as happens when a user moves or
+        // deletes a sample that a saved Edit still references
+        engine.getAudioFileManager().releaseAllFiles();
+        REQUIRE (sourceFile.deleteFile());
+        engine.getAudioFileManager().checkFilesForChanges();
+
+        juce::TemporaryFile destFile (".wav");
+        Renderer::Parameters params (*edit);
+        params.destFile = destFile.getFile();
+        params.time = { 0_tp, fileLength };
+        params.audioFormat = engine.getAudioFileFormatManager().getWavFormat();
+        params.tracksToDo = toBitSet (getAllTracks (*edit));
+        params.checkNodesForAudio = false;
+        params.sourceReadyTimeout = TimeDuration::fromSeconds (1.0);
+
+        std::atomic<bool> callbackFinished { false };
+        bool renderFailed = false;
+        std::string errorMessage;
+
+        auto handle = EditRenderer::render (std::move (params),
+                                            [&] (tl::expected<juce::File, std::string> res)
+                                            {
+                                                renderFailed = ! res.has_value();
+
+                                                if (! res.has_value())
+                                                    errorMessage = res.error();
+
+                                                callbackFinished = true;
+                                            });
+
+        // The source can never resolve, so the render has to give up rather than spin
+        const auto giveUpTime = juce::Time::getMillisecondCounter() + 30000;
+
+        while (! callbackFinished && juce::Time::getMillisecondCounter() < giveUpTime)
+            juce::MessageManager::getInstance()->runDispatchLoopUntil (10);
+
+        CHECK (callbackFinished.load());
+
+        if (callbackFinished)
+        {
+            CHECK (renderFailed);
+            CHECK (juce::String (errorMessage).containsIgnoreCase ("source file"));
+            CHECK_FALSE (destFile.getFile().existsAsFile());
+        }
+        else
+        {
+            // Don't leave a spinning render thread behind for the rest of the suite
+            handle->cancel();
+
+            while (! callbackFinished)
+                juce::MessageManager::getInstance()->runDispatchLoopUntil (10);
+        }
+
+        handle.reset();
+        engine.getAudioFileManager().releaseAllFiles();
+        edit->getTempDirectory (false).deleteRecursively();
+    }
 }
 
 #endif

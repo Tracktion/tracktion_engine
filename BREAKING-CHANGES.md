@@ -3,6 +3,20 @@
 ___
 
 ### Change
+A render now fails with an error if a clip's source file can't be read, instead of retrying forever.
+
+#### Possible Issues
+`NodeRenderContext` waits for the graph's leaf nodes to become ready before rendering each block, which is how it waits for proxies and rendered sources to be generated. That wait had no bound, so a source file that had been deleted, moved or become unreadable made the render spin indefinitely - `Renderer::renderToFile` never returned. The wait is now bounded by `Renderer::Parameters::sourceReadyTimeout` (10 seconds by default). The timer is reset for as long as any proxy or render job is running, so waits for something the engine is actually generating are still unbounded. An app that generates a clip's source file itself, with a mechanism the engine doesn't know about, will now see such a render fail after the timeout rather than wait.
+
+#### Workaround
+Set `Renderer::Parameters::sourceReadyTimeout` to a longer duration, or to a zero or negative duration to restore the old unbounded wait.
+
+#### Rationale
+Callers had no way to tell a slow render from one hung on a missing file, and no error was ever reported. Bounding the wait turns it into a normal render failure with a message.
+
+___
+
+### Change
 `EngineBehaviour::newClipAdded` is deprecated and replaced by `EngineBehaviour::newClipCreated`. It's now only called when a clip is created, and it's called later than before.
 
 #### Possible Issues

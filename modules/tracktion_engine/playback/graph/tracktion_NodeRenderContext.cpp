@@ -32,6 +32,50 @@ namespace
         plugins.addArray (insideRacks);
         return plugins;
     }
+
+    /** Returns true if anything that a leaf node could be waiting on is currently being
+        generated. While that's the case a render that isn't ready to process is still
+        making progress, so the source timeout shouldn't be counting down.
+    */
+    static bool isAnySourceBeingGenerated (Engine& engine)
+    {
+        return engine.getAudioFileManager().proxyGenerator.isAnyProxyBeingGenerated()
+                || engine.getRenderManager().getNumJobs() > 0;
+    }
+
+    /** Tracks how long a render has been waiting for its leaf nodes without anything being
+        generated for it, and returns true once that exceeds the timeout. A source file that
+        has been deleted or moved never resolves, so without this the render retries forever.
+
+        @param waitStartTime    the millisecond counter at which the current stalled wait began,
+                                or 0 if the nodes were ready last time. Updated in place.
+    */
+    static bool hasStalledWaitingForSources (Engine& engine, TimeDuration timeout, uint32_t& waitStartTime)
+    {
+        if (timeout.inSeconds() <= 0.0)
+            return false;
+
+        const auto now = juce::Time::getMillisecondCounter();
+
+        if (isAnySourceBeingGenerated (engine))
+        {
+            waitStartTime = 0;
+            return false;
+        }
+
+        if (waitStartTime == 0)
+        {
+            waitStartTime = now;
+            return false;
+        }
+
+        return (now - waitStartTime) > (uint32_t) juce::roundToInt (timeout.inSeconds() * 1000.0);
+    }
+
+    static juce::String getSourceTimeoutErrorMessage()
+    {
+        return TRANS("Timed out waiting for a clip's source file. It may have been deleted, moved or be unreadable");
+    }
 }
 
 
@@ -210,6 +254,12 @@ NodeRenderContext::~NodeRenderContext()
     }
 }
 
+bool NodeRenderContext::hasTimedOutWaitingForSources()
+{
+    return hasStalledWaitingForSources (r.edit->engine, r.sourceReadyTimeout,
+                                        timeWaitingForSourcesStarted);
+}
+
 bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
 {
     CRASH_TRACER
@@ -291,8 +341,24 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
         return true;
     }();
 
-    while (! (leafNodesReady || owner.shouldCancel()))
-        return false;
+    if (! (leafNodesReady || owner.shouldCancel()))
+    {
+        if (! hasTimedOutWaitingForSources())
+            return false;
+
+        writer->closeForWriting();
+        r.destFile.deleteFile();
+
+        playHead->stop();
+        Renderer::RenderTask::setAllPluginsRealtime (plugins, true);
+
+        owner.errorMessage = getSourceTimeoutErrorMessage();
+        TRACKTION_LOG_ERROR (owner.errorMessage);
+
+        return true;
+    }
+
+    timeWaitingForSourcesStarted = 0;
 
     const auto bufferSize = r.blockSizeForAudio + 256;
     const auto numFrames = (choc::buffer::FrameCount) referenceSampleRange.getLength();
@@ -490,12 +556,17 @@ juce::String NodeRenderContext::renderMidi (Renderer::RenderTask& owner,
         return true;
     };
 
+    uint32_t timeWaitingForSources = 0;
+
     while (! leafNodesReady())
     {
         juce::Thread::sleep (100);
 
         if (owner.shouldCancel())
             return TRANS("Render cancelled");
+
+        if (hasStalledWaitingForSources (r.edit->engine, r.sourceReadyTimeout, timeWaitingForSources))
+            return getSourceTimeoutErrorMessage();
     }
 
     // Then render the blocks
