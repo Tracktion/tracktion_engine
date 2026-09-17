@@ -141,6 +141,75 @@ TEST_SUITE ("tracktion_engine")
         CHECK (info.numChannels == 2);
     }
 
+    TEST_CASE ("ClipEffects: Node-based effects render at the source's rate and channel count")
+    {
+        // Every effect which renders through AudioNodeRenderJob builds its Node from the
+        // job's builder, once the source has been rendered. Exercise each of those builders.
+        auto& engine = *Engine::getEngines()[0];
+
+        constexpr double fileSampleRate = 48000.0;
+        constexpr double clipLength = 0.5;
+
+        auto edit = test_utilities::createTestEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (fileSampleRate, clipLength, 2);
+        auto clip = insertWaveClip (*track, {}, sinFile->getFile(),
+                                    { .time = { 0_tp, TimePosition::fromSeconds (clipLength) } },
+                                    DeleteExistingClips::no);
+        REQUIRE (clip != nullptr);
+
+        clip->enableEffects (true, false);
+        auto effectsState = clip->state.getChildWithName (IDs::EFFECTS);
+        REQUIRE (effectsState.isValid());
+
+        auto effectState = ClipEffect::create (ClipEffect::EffectType::volume);
+
+        SUBCASE ("Volume")
+        {
+        }
+
+        SUBCASE ("Fade in/out")
+        {
+            effectState = ClipEffect::create (ClipEffect::EffectType::fadeInOut);
+            effectState.setProperty (IDs::fadeIn, 0.1, nullptr);
+            effectState.setProperty (IDs::fadeOut, 0.1, nullptr);
+        }
+
+        SUBCASE ("Tape start/stop")
+        {
+            effectState = ClipEffect::create (ClipEffect::EffectType::tapeStartStop);
+            effectState.setProperty (IDs::fadeIn, 0.1, nullptr);
+            effectState.setProperty (IDs::fadeOut, 0.1, nullptr);
+        }
+
+        SUBCASE ("Step volume")
+        {
+            // Defaults to every other step muted, so the TimedMutingNode path is used
+            effectState = ClipEffect::create (ClipEffect::EffectType::stepVolume);
+        }
+
+        SUBCASE ("Pitch shift")
+        {
+            // Creates its own PitchShiftPlugin
+            effectState = ClipEffect::create (ClipEffect::EffectType::pitchShift);
+        }
+
+        effectsState.addChild (effectState, -1, nullptr);
+
+        auto clipEffects = clip->getClipEffects();
+        REQUIRE (clipEffects != nullptr);
+        REQUIRE (clipEffects->size() == 1);
+
+        auto proxyFile = renderClipEffects (*clip);
+        REQUIRE (proxyFile.getFile().existsAsFile());
+
+        auto info = proxyFile.getInfo();
+        CHECK (info.sampleRate == doctest::Approx (fileSampleRate));
+        CHECK (info.numChannels == 2);
+        CHECK (info.lengthInSamples > 0);
+    }
+
     TEST_CASE ("ClipEffects: MakeMono renders both output channels")
     {
         auto& engine = *Engine::getEngines()[0];
