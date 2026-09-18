@@ -879,6 +879,67 @@ TEST_SUITE("tracktion_engine")
             CHECK (clip->getPosition().time == positionBeforeTrim.time);
         }
     }
+
+    TEST_CASE("Fade length correction isn't undoable")
+    {
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+        auto& undoManager = edit->getUndoManager();
+
+        auto clip = dynamic_cast<AudioClipBase*> (insertNewClip (*track, TrackItem::Type::wave, { 2_tp, 3_tp }));
+        REQUIRE (clip != nullptr);
+
+        // A comp remnant can be left with fades that are longer than the clip itself
+        const auto length = TimeDuration::fromSeconds (0.00999999999999979);
+        auto clipState = clip->state;
+        clipState.setProperty (IDs::length, length.inSeconds(), nullptr);
+        clipState.setProperty (IDs::fadeIn, 0.0, nullptr);
+        clipState.setProperty (IDs::fadeOut, 0.02, nullptr);
+
+        SUBCASE ("Correcting the fades during construction isn't undoable")
+        {
+            track->state.removeChild (clipState, nullptr);
+            undoManager.clearUndoHistory();
+            undoManager.beginNewTransaction();
+
+            track->state.addChild (clipState, -1, nullptr);
+            const double correctedFadeOut = clipState[IDs::fadeOut];
+            CHECK (correctedFadeOut == doctest::Approx (length.inSeconds()));
+
+            // Undoing back past the clip's construction mustn't revert the correction
+            while (undoManager.canUndo())
+                undoManager.undo();
+
+            CHECK (double (clipState[IDs::fadeOut]) == doctest::Approx (correctedFadeOut));
+        }
+
+        SUBCASE ("Fades are corrected when a clip is rebuilt during an undo")
+        {
+            undoManager.clearUndoHistory();
+            undoManager.beginNewTransaction();
+            clip->removeFromParent();
+            REQUIRE (track->getClips().isEmpty());
+
+            undoManager.beginNewTransaction();
+            undoManager.undo();
+
+            REQUIRE (track->getClips().size() == 1);
+            auto rebuiltClip = dynamic_cast<AudioClipBase*> (track->getClips()[0]);
+            REQUIRE (rebuiltClip != nullptr);
+            CHECK (rebuiltClip->getFadeIn() + rebuiltClip->getFadeOut() <= length);
+
+            // The correction has to reach the state, not just the CachedValue, or it's
+            // lost the next time the Edit is loaded
+            const double fadeInInState  = rebuiltClip->state[IDs::fadeIn];
+            const double fadeOutInState = rebuiltClip->state[IDs::fadeOut];
+            CHECK (fadeInInState + fadeOutInState <= length.inSeconds());
+            CHECK (fadeOutInState == doctest::Approx (length.inSeconds()));
+
+            // The undo history must still be intact
+            CHECK (undoManager.canRedo());
+        }
+    }
 }
 
 } // namespace tracktion::inline engine
