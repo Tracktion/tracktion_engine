@@ -391,12 +391,24 @@ struct AudioNodeRenderJob  : public ClipEffect::ClipEffectRenderJob
         return new AudioNodeRenderJob (e, dest, src, blockSizeToUse);
     }
 
-    void initialise (std::unique_ptr<tracktion::graph::Node> nodeToUse,
+    /** A function which builds the Node to render, given the job and the sample rate
+        the render will run at.
+    */
+    using NodeBuilder = std::function<std::unique_ptr<tracktion::graph::Node> (AudioNodeRenderJob&, double sampleRate)>;
+
+    /** Initialises the job with a function that builds the Node once the render sample
+        rate is known.
+        The source file may not have been rendered yet when the job is created (it can be
+        the output of an earlier effect in the chain), so anything which needs the sample
+        rate or channel count - notably a PluginNode, which initialises its plugin in its
+        constructor - must be built from here rather than up-front.
+    */
+    void initialise (NodeBuilder nodeBuilderToUse,
                      double prerollTimeSeconds = 0)
     {
         prerollTime = prerollTimeSeconds;
-        node = std::move (nodeToUse);
-        jassert (node != nullptr);
+        nodeBuilder = std::move (nodeBuilderToUse);
+        jassert (nodeBuilder != nullptr);
     }
 
     bool setUpRender() override
@@ -599,12 +611,20 @@ private:
         MidiMessageArray midiBuffer;
     };
 
-    std::unique_ptr<tracktion::graph::Node> node;
+    NodeBuilder nodeBuilder;
     std::unique_ptr<RenderContext> renderContext;
     double prerollTime = 0;
 
     void createAndPrepareRenderContext()
     {
+        // By this point the source has been rendered by any preceding jobs so its
+        // sample rate is the rate this render will actually run at
+        const auto renderSampleRate = source.getInfo().sampleRate;
+        jassert (renderSampleRate > 0.0);
+
+        auto node = nodeBuilder (*this, renderSampleRate);
+        jassert (node != nullptr);
+
         auto numChannels = node->getNodeProperties().numberOfChannels;
 
         renderContext = std::make_unique<RenderContext> (std::move (node), processState,
@@ -742,16 +762,18 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> VolumeEffect::c
     auto timeRange = TimeRange (0s, sourceLength);
     jassert (! timeRange.isEmpty());
 
-    auto sourceInfo = sourceFile.getInfo();
     const int blockSize = 128;
 
     auto job = AudioNodeRenderJob::create (edit.engine, getDestinationFile(), sourceFile, blockSize);
 
-    auto waveNode = job->createWaveNodeForFile (sourceFile, timeRange);
+    job->initialise ([p = plugin, sourceFile, timeRange] (AudioNodeRenderJob& j, double sampleRate)
+                     {
+                         auto waveNode = j.createWaveNodeForFile (sourceFile, timeRange);
 
-    job->initialise (std::make_unique<PluginNode> (std::move (waveNode), plugin,
-                                                   sourceInfo.sampleRate, (int) job->blockSize, nullptr,
-                                                   job->processState, true, false, -1));
+                         return std::make_unique<PluginNode> (std::move (waveNode), p,
+                                                              sampleRate, (int) j.blockSize, nullptr,
+                                                              j.processState, true, false, -1);
+                     });
     return job;
 }
 
@@ -854,7 +876,6 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> FadeInOutEffect
     jassert (! timeRange.isEmpty());
 
     auto job = AudioNodeRenderJob::create (edit.engine, destFile, sourceFile, 128);
-    auto n = job->createWaveNodeForFile (sourceFile, timeRange);
 
     auto speedRatio = clipEffects.getSpeedRatioEstimate();
     auto effectRange = clipEffects.getEffectsRange();
@@ -864,52 +885,63 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> FadeInOutEffect
     const TimeRange fadeInRange (effectRange.getStart(), effectRange.getStart() + fadeIn);
     const TimeRange fadeOutRange (effectRange.getEnd() - fadeOut, effectRange.getEnd());
 
-    switch (getType())
+    // Capture the effect's properties now - the Node is built later, when the render runs
+    const auto type = getType();
+    const auto hasFade = fadeIn.get() > TimeDuration() || fadeOut.get() > TimeDuration();
+    const auto inType = fadeInType.get();
+    const auto outType = fadeOutType.get();
+
+    job->initialise ([sourceFile, sourceLength, timeRange, effectRange, fadeInRange, fadeOutRange, type, hasFade, inType, outType]
+                     (AudioNodeRenderJob& j, double) -> std::unique_ptr<tracktion::graph::Node>
     {
-        case EffectType::fadeInOut:
-            if (fadeIn.get() > TimeDuration() || fadeOut.get() > TimeDuration())
-                n = tracktion::graph::makeNode<FadeInOutNode> (std::move (n),
-                                                               job->processState,
-                                                               fadeInRange, fadeOutRange,
-                                                               fadeInType, fadeOutType,
-                                                               true);
+        auto n = j.createWaveNodeForFile (sourceFile, timeRange);
 
-            break;
+        switch (type)
+        {
+            case EffectType::fadeInOut:
+                if (hasFade)
+                    n = tracktion::graph::makeNode<FadeInOutNode> (std::move (n),
+                                                                   j.processState,
+                                                                   fadeInRange, fadeOutRange,
+                                                                   inType, outType,
+                                                                   true);
 
-        case EffectType::tapeStartStop:
-            if (fadeIn.get() > TimeDuration() || fadeOut.get() > TimeDuration())
-            {
-                auto channelConfig = ChannelConfiguration::discreteChannels (std::max (sourceFile.getInfo().numChannels, 1));
-                n = tracktion::graph::makeNode<SpeedRampWaveNode> (sourceFile, timeRange, TimeDuration(), TimeRange(), LiveClipLevel(), 1.0,
-                                                                   channelConfig, channelConfig,
-                                                                   job->processState,
-                                                                   EditItemID(), true,
-                                                                   SpeedFadeDescription { fadeInRange, fadeOutRange, fadeInType, fadeOutType });
-            }
+                break;
 
-            break;
+            case EffectType::tapeStartStop:
+                if (hasFade)
+                {
+                    auto channelConfig = ChannelConfiguration::discreteChannels (std::max (sourceFile.getInfo().numChannels, 1));
+                    n = tracktion::graph::makeNode<SpeedRampWaveNode> (sourceFile, timeRange, TimeDuration(), TimeRange(), LiveClipLevel(), 1.0,
+                                                                       channelConfig, channelConfig,
+                                                                       j.processState,
+                                                                       EditItemID(), true,
+                                                                       SpeedFadeDescription { fadeInRange, fadeOutRange, inType, outType });
+                }
 
-        case EffectType::none:
-        case EffectType::volume:
-        case EffectType::stepVolume:
-        case EffectType::pitchShift:
-        case EffectType::warpTime:
-        case EffectType::normalise:
-        case EffectType::makeMono:
-        case EffectType::reverse:
-        case EffectType::invert:
-        case EffectType::filter:
-        default:
-            jassertfalse;
-            break;
-    }
+                break;
 
-    n = tracktion::graph::makeNode<TimedMutingNode> (std::move (n),
-                                                     juce::Array<TimeRange> { TimeRange (0s, effectRange.getStart()),
-                                                                              TimeRange (effectRange.getEnd(), sourceLength) },
-                                                     job->playHeadState);
+            case EffectType::none:
+            case EffectType::volume:
+            case EffectType::stepVolume:
+            case EffectType::pitchShift:
+            case EffectType::warpTime:
+            case EffectType::normalise:
+            case EffectType::makeMono:
+            case EffectType::reverse:
+            case EffectType::invert:
+            case EffectType::filter:
+            default:
+                jassertfalse;
+                break;
+        }
 
-    job->initialise (std::move (n));
+        return tracktion::graph::makeNode<TimedMutingNode> (std::move (n),
+                                                            juce::Array<TimeRange> { TimeRange (0s, effectRange.getStart()),
+                                                                                     TimeRange (effectRange.getEnd(), sourceLength) },
+                                                            j.playHeadState);
+    });
+
     return job;
 }
 
@@ -1034,28 +1066,33 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> StepVolumeEffec
 
     auto job = AudioNodeRenderJob::create (edit.engine, destFile, sourceFile, AudioNodeRenderJob::defaultBlockSize);
 
-    auto node = job->createWaveNodeForFile (sourceFile, timeRange);
-
     auto muteTimes = TrackCompManager::TrackComp::getMuteTimes (nonMuteTimes);
 
-    if (! muteTimes.isEmpty())
+    job->initialise ([sourceFile, timeRange, nonMuteTimes, muteTimes, fade]
+                     (AudioNodeRenderJob& j, double) -> std::unique_ptr<tracktion::graph::Node>
     {
-        node = tracktion::graph::makeNode<TimedMutingNode> (std::move (node), muteTimes, job->playHeadState);
+        auto node = j.createWaveNodeForFile (sourceFile, timeRange);
 
-        for (auto r : nonMuteTimes)
+        if (! muteTimes.isEmpty())
         {
-            auto fadeIn = r.withLength (fade).withStart (r.getStart() - 0.0001s);
-            auto fadeOut = fadeIn.movedToEndAt (r.getEnd() + 0.0001s);
+            node = tracktion::graph::makeNode<TimedMutingNode> (std::move (node), muteTimes, j.playHeadState);
 
-            if (! (fadeIn.isEmpty() && fadeOut.isEmpty()))
-                node = tracktion::graph::makeNode<FadeInOutNode> (std::move (node), job->processState,
-                                                                  fadeIn, fadeOut,
-                                                                  AudioFadeCurve::convex,
-                                                                  AudioFadeCurve::convex, false);
+            for (auto r : nonMuteTimes)
+            {
+                auto fadeIn = r.withLength (fade).withStart (r.getStart() - 0.0001s);
+                auto fadeOut = fadeIn.movedToEndAt (r.getEnd() + 0.0001s);
+
+                if (! (fadeIn.isEmpty() && fadeOut.isEmpty()))
+                    node = tracktion::graph::makeNode<FadeInOutNode> (std::move (node), j.processState,
+                                                                      fadeIn, fadeOut,
+                                                                      AudioFadeCurve::convex,
+                                                                      AudioFadeCurve::convex, false);
+            }
         }
-    }
 
-    job->initialise (std::move (node));
+        return node;
+    });
+
     return job;
 }
 
@@ -1197,13 +1234,16 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> PitchShiftEffec
 
     auto job = AudioNodeRenderJob::create (edit.engine, getDestinationFile(), sourceFile, blockSize);
 
-    auto node = job->createWaveNodeForFile (sourceFile, timeRange);
-
     // Use 1.0 second of preroll to be safe. We can't ask the plugin since it
     // may not be initialized yet
-    job->initialise (std::make_unique<PluginNode> (std::move (node), plugin,
-                                                   job->processState.sampleRate, (int) job->blockSize, nullptr,
-                                                   job->processState, true, false, -1),
+    job->initialise ([p = plugin, sourceFile, timeRange] (AudioNodeRenderJob& j, double sampleRate)
+                     {
+                         auto node = j.createWaveNodeForFile (sourceFile, timeRange);
+
+                         return std::make_unique<PluginNode> (std::move (node), p,
+                                                              sampleRate, (int) j.blockSize, nullptr,
+                                                              j.processState, true, false, -1);
+                     },
                      1.0);
 
     return job;
@@ -1420,23 +1460,26 @@ juce::ReferenceCountedObjectPtr<ClipEffect::ClipEffectRenderJob> PluginEffect::c
     const int blockSize = 512;
     auto job = AudioNodeRenderJob::create (edit.engine, getDestinationFile(), sourceFile, blockSize);
 
-    auto n = job->createWaveNodeForFile (sourceFile, timeRange);
-
     if (plugin != nullptr)
-    {
         plugin->setProcessingEnabled (true);
-
-        n = std::make_unique<PluginNode> (std::move (n), plugin,
-                                          job->processState.sampleRate, (int) job->blockSize, nullptr,
-                                          job->processState, true, false, -1);
-    }
 
     if (pluginUnloadInhibitor != nullptr)
         pluginUnloadInhibitor->increaseForJob (30 * 1000, job);
 
     // Use 1.0 second of preroll to be safe. We can't ask the plugin since it
     // may not be initialized yet
-    job->initialise (std::move (n), 1.0);
+    job->initialise ([p = plugin, sourceFile, timeRange] (AudioNodeRenderJob& j, double sampleRate) -> std::unique_ptr<tracktion::graph::Node>
+                     {
+                         auto n = j.createWaveNodeForFile (sourceFile, timeRange);
+
+                         if (p == nullptr)
+                             return n;
+
+                         return std::make_unique<PluginNode> (std::move (n), p,
+                                                              sampleRate, (int) j.blockSize, nullptr,
+                                                              j.processState, true, false, -1);
+                     },
+                     1.0);
 
     return job;
 }
