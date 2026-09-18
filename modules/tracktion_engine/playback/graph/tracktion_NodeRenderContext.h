@@ -107,10 +107,6 @@ private:
     static const int sleepCounterMax = 100;
     int sleepCounter = 0;
 
-    // Wall-clock time at which the current wait for leaf nodes began, or 0 when the
-    // nodes were last ready. Used to bound waits on sources that never resolve
-    uint32_t timeWaitingForSourcesStarted = 0;
-
     std::unique_ptr<tempo::Sequence::Position> currentTempoPosition;
     float peak = 0;
     double rmsTotal = 0;
@@ -133,12 +129,6 @@ private:
     };
 
     WriteResult writeAudioBlock (choc::buffer::ChannelArrayView<float>);
-
-    //==============================================================================
-    /** Returns true if the render has been waiting for its leaf nodes for longer than
-        Renderer::Parameters::sourceReadyTimeout without anything being generated for it.
-    */
-    bool hasTimedOutWaitingForSources();
 };
 
 } // namespace tracktion::inline engine

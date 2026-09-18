@@ -3,16 +3,13 @@
 ___
 
 ### Change
-A render now fails with an error if a clip's source file can't be read, instead of retrying forever.
+A clip whose playback file can't be read, and that isn't going to generate one, no longer gets a node in the playback graph.
 
 #### Possible Issues
-`NodeRenderContext` waits for the graph's leaf nodes to become ready before rendering each block, which is how it waits for proxies and rendered sources to be generated. That wait had no bound, so a source file that had been deleted, moved or become unreadable made the render spin indefinitely - `Renderer::renderToFile` never returned. The wait is now bounded by `Renderer::Parameters::sourceReadyTimeout` (10 seconds by default). The timer is reset for as long as any proxy or render job is running, so waits for something the engine is actually generating are still unbounded. An app that generates a clip's source file itself, with a mechanism the engine doesn't know about, will now see such a render fail after the timeout rather than wait.
-
-#### Workaround
-Set `Renderer::Parameters::sourceReadyTimeout` to a longer duration, or to a zero or negative duration to restore the old unbounded wait.
+`createNodeForAudioClip` already returned no node for a null playback file; it now also returns none when the playback file is invalid and `AudioClipBase::isGeneratingPlaybackFile()` is false, i.e. the source has been deleted, moved or is unreadable and no proxy or source render is going to produce it. Such a clip is silent, as before, but it no longer appears in the graph at all, so code walking the graph won't find a node for it. A subclass that produces its playback file through a mechanism the engine doesn't know about should override `needsRender()`/`requiresRenderingSource()` so `isGeneratingPlaybackFile()` reports it, otherwise its clips will be dropped from the graph instead of waited for.
 
 #### Rationale
-Callers had no way to tell a slow render from one hung on a missing file, and no error was ever reported. Bounding the wait turns it into a normal render failure with a message.
+`WaveNode::isReadyToProcess` returns false until its file can be read, which is how a render waits for proxies. For a source that will never appear that wait never ended, so `Renderer::renderToFile` retried forever with no error. Not building the node keeps the wait for files that really are coming and removes it for files that aren't.
 
 ___
 

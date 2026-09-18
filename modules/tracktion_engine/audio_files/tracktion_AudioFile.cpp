@@ -327,12 +327,6 @@ bool AudioProxyGenerator::isProxyBeingGenerated (const AudioFile& proxyFile) con
     return findJob (proxyFile) != nullptr;
 }
 
-bool AudioProxyGenerator::isAnyProxyBeingGenerated() const noexcept
-{
-    const juce::ScopedLock sl (jobListLock);
-    return ! activeJobs.isEmpty();
-}
-
 float AudioProxyGenerator::getProportionComplete (const AudioFile& proxyFile) const noexcept
 {
     const juce::ScopedLock sl (jobListLock);

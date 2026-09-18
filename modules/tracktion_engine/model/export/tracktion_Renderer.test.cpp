@@ -850,23 +850,26 @@ TEST_SUITE ("tracktion_engine")
         afm.unregisterMemoryBuffer (key);
     }
 
-    TEST_CASE ("Renderer: missing source file fails the render instead of retrying forever")
+    TEST_CASE ("Renderer: missing source file doesn't stall the render")
     {
         auto& engine = *Engine::getEngines()[0];
-        auto edit = test_utilities::createTestEdit (engine);
+        auto edit = test_utilities::createTestEdit (engine, 2);
 
         const auto fileLength = 1_td;
-        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, fileLength.inSeconds());
-        const auto sourceFile = sinFile->getFile();
+        auto presentFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, fileLength.inSeconds());
+        auto missingFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, fileLength.inSeconds());
+        const auto sourceToDelete = missingFile->getFile();
 
-        auto track = getAudioTracks (*edit)[0];
-        REQUIRE (insertWaveClip (*track, {}, sourceFile, { .time = { 0_tp, fileLength } },
+        auto tracks = getAudioTracks (*edit);
+        REQUIRE (insertWaveClip (*tracks[0], {}, presentFile->getFile(), { .time = { 0_tp, fileLength } },
+                                 DeleteExistingClips::no) != nullptr);
+        REQUIRE (insertWaveClip (*tracks[1], {}, sourceToDelete, { .time = { 0_tp, fileLength } },
                                  DeleteExistingClips::no) != nullptr);
 
-        // Pull the source out from under the Edit, as happens when a user moves or
+        // Pull one source out from under the Edit, as happens when a user moves or
         // deletes a sample that a saved Edit still references
         engine.getAudioFileManager().releaseAllFiles();
-        REQUIRE (sourceFile.deleteFile());
+        REQUIRE (sourceToDelete.deleteFile());
         engine.getAudioFileManager().checkFilesForChanges();
 
         juce::TemporaryFile destFile (".wav");
@@ -875,25 +878,18 @@ TEST_SUITE ("tracktion_engine")
         params.time = { 0_tp, fileLength };
         params.audioFormat = engine.getAudioFileFormatManager().getWavFormat();
         params.tracksToDo = toBitSet (getAllTracks (*edit));
-        params.checkNodesForAudio = false;
-        params.sourceReadyTimeout = TimeDuration::fromSeconds (1.0);
 
         std::atomic<bool> callbackFinished { false };
-        bool renderFailed = false;
-        std::string errorMessage;
+        bool renderSucceeded = false;
 
         auto handle = EditRenderer::render (std::move (params),
                                             [&] (tl::expected<juce::File, std::string> res)
                                             {
-                                                renderFailed = ! res.has_value();
-
-                                                if (! res.has_value())
-                                                    errorMessage = res.error();
-
+                                                renderSucceeded = res.has_value();
                                                 callbackFinished = true;
                                             });
 
-        // The source can never resolve, so the render has to give up rather than spin
+        // The missing source can never appear, so the render has to finish rather than spin
         const auto giveUpTime = juce::Time::getMillisecondCounter() + 30000;
 
         while (! callbackFinished && juce::Time::getMillisecondCounter() < giveUpTime)
@@ -903,9 +899,12 @@ TEST_SUITE ("tracktion_engine")
 
         if (callbackFinished)
         {
-            CHECK (renderFailed);
-            CHECK (juce::String (errorMessage).containsIgnoreCase ("source file"));
-            CHECK_FALSE (destFile.getFile().existsAsFile());
+            CHECK (renderSucceeded);
+
+            // The track with the readable source still renders; the missing one is just silent
+            auto buffer = test_utilities::loadFileInToBuffer (engine, destFile.getFile());
+            REQUIRE (buffer.has_value());
+            CHECK (buffer->getMagnitude (0, buffer->getNumSamples()) > 0.1f);
         }
         else
         {
@@ -920,6 +919,7 @@ TEST_SUITE ("tracktion_engine")
         engine.getAudioFileManager().releaseAllFiles();
         edit->getTempDirectory (false).deleteRecursively();
     }
+
 }
 
 #endif

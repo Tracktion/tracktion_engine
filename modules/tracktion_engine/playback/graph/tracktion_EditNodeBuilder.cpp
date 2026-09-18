@@ -419,6 +419,12 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
     // Trigger proxy render if it needs it
     clip.beginRenderingNewProxyIfNeeded();
 
+    // A playback file that can't be read and that the clip isn't going to generate will never
+    // appear - the source has been deleted, moved or is unreadable. Building a node for it would
+    // leave a leaf that never reports itself ready, which makes an offline render wait forever
+    if (! playFile.isValid() && ! clip.isGeneratingPlaybackFile())
+        return {};
+
     std::unique_ptr<Node> node;
 
     if (clip.canUseProxy())

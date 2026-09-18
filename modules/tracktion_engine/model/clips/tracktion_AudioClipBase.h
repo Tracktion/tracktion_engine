@@ -552,6 +552,19 @@ public:
     /** Triggers creation of a new proxy file if one is required. */
     void beginRenderingNewProxyIfNeeded();
 
+    /** Returns true if the playback file is one the clip is going to generate,
+        i.e. a proxy or a rendered source.
+
+        A playback file that doesn't exist yet is normal for these clips and will
+        appear once the render completes, so callers should wait for it. If this
+        returns false and the playback file still can't be read, the source has
+        been deleted, moved or is otherwise unreadable and will never appear.
+
+        N.B. Call this after beginRenderingNewProxyIfNeeded so any render that is
+        needed has been started.
+    */
+    bool isGeneratingPlaybackFile();
+
     /** Returns an AudioSegmentList describing this file if it is using auto-tempo.
         This can be useful for drawing waveforms.
         [[ message_thread ]]

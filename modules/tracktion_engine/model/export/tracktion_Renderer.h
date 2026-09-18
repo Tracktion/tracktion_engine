@@ -100,15 +100,6 @@ public:
         bool ditheringEnabled = false;                          ///< If true, low-level noise will be added to the output for non-float formats
         bool checkNodesForAudio = true;                         ///< If true, attempting to render an Edit that doesn't produce audio will fail
 
-        TimeDuration sourceReadyTimeout
-            = TimeDuration::fromSeconds (10.0);                 /**< How long the render will wait for a clip's source file to become
-                                                                     readable before failing with an error. A source that has been
-                                                                     deleted or moved never resolves, so without this the render would
-                                                                     retry forever. The timer is reset for as long as any proxy or
-                                                                     render job is running, so this only bounds waits where nothing is
-                                                                     being generated. Set to a zero or negative duration to wait
-                                                                     indefinitely. */
-
         int quality = 0;                                        ///< For audio formats that support it, the desired quality index @see juce::AudioFormat::createWriterFor
         juce::StringPairArray metadata;                         ///< A map of meta data to add to the file
 

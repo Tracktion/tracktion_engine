@@ -19,10 +19,6 @@ public:
     void deleteProxy (const AudioFile& proxyFile);
 
     bool isProxyBeingGenerated (const AudioFile& proxyFile) const noexcept;
-
-    /** Returns true if any proxy generation job is currently in progress. */
-    bool isAnyProxyBeingGenerated() const noexcept;
-
     float getProportionComplete (const AudioFile& proxyFile) const noexcept;
 
     //==============================================================================
