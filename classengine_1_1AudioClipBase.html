@@ -488,6 +488,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad05ab1a34140c91a3ceafd8f01aa965e" id="r_ad05ab1a34140c91a3ceafd8f01aa965e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classengine_1_1Clip.html#ae4df20e49385f4b2c7acc86c30bac186">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioClipBase.html#ad05ab1a34140c91a3ceafd8f01aa965e">beginRenderingNewProxyIfNeeded</a> ()</td></tr>
 <tr class="memdesc:ad05ab1a34140c91a3ceafd8f01aa965e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triggers creation of a new proxy file if one is required.  <br /></td></tr>
 <tr class="separator:ad05ab1a34140c91a3ceafd8f01aa965e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78890764ccdc9a6ab33c87fb432d6d15" id="r_a78890764ccdc9a6ab33c87fb432d6d15"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classengine_1_1Clip.html#ae4df20e49385f4b2c7acc86c30bac186">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioClipBase.html#a78890764ccdc9a6ab33c87fb432d6d15">isGeneratingPlaybackFile</a> ()</td></tr>
+<tr class="memdesc:a78890764ccdc9a6ab33c87fb432d6d15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the playback file is one the clip is going to generate, i.e.  <br /></td></tr>
+<tr class="separator:a78890764ccdc9a6ab33c87fb432d6d15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d1b07bf0dcded7aba4722827d0ab297" id="r_a9d1b07bf0dcded7aba4722827d0ab297"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classengine_1_1Clip.html#ae4df20e49385f4b2c7acc86c30bac186">const</a> <a class="el" href="classengine_1_1AudioSegmentList.html">AudioSegmentList</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioClipBase.html#a9d1b07bf0dcded7aba4722827d0ab297">getAudioSegmentList</a> ()</td></tr>
 <tr class="memdesc:a9d1b07bf0dcded7aba4722827d0ab297"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an <a class="el" href="classengine_1_1AudioSegmentList.html" title="Holds a list of audio regions for playback of things like warp time.">AudioSegmentList</a> describing this file if it is using auto-tempo.  <br /></td></tr>
 <tr class="separator:a9d1b07bf0dcded7aba4722827d0ab297"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3910,6 +3913,28 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a78890764ccdc9a6ab33c87fb432d6d15" name="a78890764ccdc9a6ab33c87fb432d6d15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78890764ccdc9a6ab33c87fb432d6d15">&#9670;&#160;</a></span>isGeneratingPlaybackFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classengine_1_1Clip.html#ae4df20e49385f4b2c7acc86c30bac186">bool</a> engine::AudioClipBase::isGeneratingPlaybackFile </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if the playback file is one the clip is going to generate, i.e. </p>
+<p>a proxy or a rendered source.</p>
+<p>A playback file that doesn't exist yet is normal for these clips and will appear once the render completes, so callers should wait for it. If this returns false and the playback file still can't be read, the source has been deleted, moved or is otherwise unreadable and will never appear.</p>
+<p>N.B. Call this after beginRenderingNewProxyIfNeeded so any render that is needed has been started. </p>
+
+</div>
+</div>
 <a id="a9d1b07bf0dcded7aba4722827d0ab297" name="a9d1b07bf0dcded7aba4722827d0ab297"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9d1b07bf0dcded7aba4722827d0ab297">&#9670;&#160;</a></span>getAudioSegmentList()</h2>
 
@@ -6040,7 +6065,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 21 2026 16:43:56 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Sep 21 2026 16:52:31 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

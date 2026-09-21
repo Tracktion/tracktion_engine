@@ -6889,6 +6889,13 @@
       <arglist>()</arglist>
     </member>
     <member kind="function">
+      <type>bool</type>
+      <name>isGeneratingPlaybackFile</name>
+      <anchorfile>classengine_1_1AudioClipBase.html</anchorfile>
+      <anchor>a78890764ccdc9a6ab33c87fb432d6d15</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
       <type>const AudioSegmentList &amp;</type>
       <name>getAudioSegmentList</name>
       <anchorfile>classengine_1_1AudioClipBase.html</anchorfile>
