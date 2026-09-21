@@ -684,6 +684,26 @@ juce::Array<ClipEffect*> getAllClipEffects (Edit& edit)
     return res;
 }
 
+void removeAllContentClips (Edit& edit)
+{
+    for (auto t : getClipTracks (edit))
+    {
+        for (int i = t->getClips().size(); --i >= 0;)
+        {
+            auto clip = t->getClips().getUnchecked (i);
+
+            if (clip->type != TrackItem::Type::video
+                  && clip->type != TrackItem::Type::marker)
+                clip->removeFromParent();
+        }
+    }
+
+    for (auto t : getAudioTracks (edit))
+        for (auto s : t->getClipSlotList().getClipSlots())
+            if (auto c = s->getClip())
+                c->removeFromParent();
+}
+
 
 //==============================================================================
 ClipOwner* findClipOwnerForID (const Edit& edit, EditItemID id)

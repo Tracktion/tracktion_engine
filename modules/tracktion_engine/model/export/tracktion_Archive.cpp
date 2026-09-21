@@ -37,11 +37,13 @@ bool isArchive (Engine& engine, const juce::File& file)
 //==============================================================================
 ArchiveJob::ArchiveJob (Source src,
                         const juce::File& dest,
-                        CompressionLevel level)
+                        CompressionLevel level,
+                        bool shouldIncludeClips)
     : ThreadPoolJobWithProgress (TRANS("Archiving") + "..."),
       source (std::move (src)),
       destZipFile (dest),
-      compressionLevel (level)
+      compressionLevel (level),
+      includeClips (shouldIncludeClips)
 {
 }
 
@@ -149,6 +151,10 @@ bool ArchiveJob::copyToTempDir()
 
     if (auto project = std::get_if<Project*> (&source))
     {
+        // A whole-Project archive copies the project folder wholesale, so there'd
+        // be nothing gained by stripping clips - the material is already there.
+        jassert (includeClips);
+
         // Flush any pending changes before copying
         (*project)->save();
 
@@ -260,6 +266,13 @@ bool ArchiveJob::copyToTempDir()
 
         if (edit != nullptr)
         {
+            // Strip the clips before collecting the referenced material, so the
+            // audio they point at is never copied into the temp project at all.
+            // This examining copy is never saved - the same strip is applied to
+            // the destination Edit below, which is what gets written to disk.
+            if (! includeClips)
+                removeAllContentClips (*edit);
+
             struct ExportableUpdate
             {
                 ProjectItemRef oldRef;
@@ -381,7 +394,7 @@ bool ArchiveJob::copyToTempDir()
             // message thread before consolidate() runs.
             bool destEditLoadFailed = false;
 
-            juce::MessageManager::callSync ([&engine, &destEditItem, &exportablesToUpdate, &destEditLoadFailed]
+            juce::MessageManager::callSync ([this, &engine, &destEditItem, &exportablesToUpdate, &destEditLoadFailed]
                                             {
                                                 auto destEdit = loadEditForExamining (engine.getProjectManager(),
                                                                                       destEditItem->getProjectItemRef());
@@ -391,6 +404,12 @@ bool ArchiveJob::copyToTempDir()
                                                     destEditLoadFailed = true;
                                                     return;
                                                 }
+
+                                                // destEditFile is a byte copy of the source Edit so it still
+                                                // contains the clips. consolidate() reloads it from disk, so
+                                                // the strip has to be persisted by the writeToFile below.
+                                                if (! includeClips)
+                                                    removeAllContentClips (*destEdit);
 
                                                 for (auto destExportable : Exportable::addAllExportables (*destEdit))
                                                 {

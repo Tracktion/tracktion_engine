@@ -184,6 +184,16 @@ SelectableList getClipSelectionWithCollectionClipContents (const SelectableList&
 /** Returns all clip effects */
 juce::Array<ClipEffect*> getAllClipEffects (Edit& edit);
 
+/** Removes all the content clips from an Edit, leaving its structure intact.
+
+    Video and marker clips are kept, as they describe the Edit rather than its
+    content. Clips in clip slots are removed along with those on the timeline.
+
+    This is used when exporting or archiving an Edit without its material, e.g.
+    when saving it as a template.
+*/
+void removeAllContentClips (Edit&);
+
 //==============================================================================
 // MIDI
 //==============================================================================

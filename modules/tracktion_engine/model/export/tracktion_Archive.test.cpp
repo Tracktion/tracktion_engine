@@ -3523,6 +3523,133 @@ TEST_SUITE ("tracktion_engine")
         CHECK (extractedFiles.size() > 0);
     }
 
+    TEST_CASE ("Archive: single Edit archive without clips")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = createTestTempDir();
+        auto tempDirFile = juce::File (tempDir.file.string());
+
+        auto projectFolder = tempDirFile.getChildFile ("no_clips_project");
+        ProjectManager::TempProject tp (pm, projectFolder, true, ProjectType::folderBased);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        auto editItem = project->createNewEdit();
+        REQUIRE (editItem != nullptr);
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile != nullptr);
+
+        {
+            auto edit = createEmptyEdit (engine, editItem->getSourceFile());
+            edit->setProjectItemRef (editItem->getProjectItemRef());
+
+            edit->ensureNumberOfAudioTracks (2);
+            auto audioTracks = getAudioTracks (*edit);
+            REQUIRE (audioTracks.size() >= 2);
+
+            // A timeline wave clip, a timeline MIDI clip, a clip-slot wave clip
+            // and a marker. Everything but the marker should be stripped.
+            auto waveClip = insertWaveClip (*audioTracks[0], "TestWave",
+                                            sinFile->getFile(),
+                                            { { 0_tp, TimePosition::fromSeconds (2.0) } },
+                                            DeleteExistingClips::no);
+            REQUIRE (waveClip != nullptr);
+
+            auto midiClip = insertMIDIClip (*audioTracks[1], "TestMIDI",
+                                            { 0_tp, TimePosition::fromSeconds (4.0) });
+            REQUIRE (midiClip != nullptr);
+            midiClip->getSequence().addNote (60, BeatPosition::fromBeats (0.0),
+                                             BeatDuration::fromBeats (1.0), 100, 0, nullptr);
+
+            edit->getSceneList().ensureNumberOfScenes (1);
+            audioTracks[0]->getClipSlotList().ensureNumberOfSlots (1);
+            auto slot = audioTracks[0]->getClipSlotList().getClipSlots()[0];
+            REQUIRE (slot != nullptr);
+            REQUIRE (insertWaveClip (*slot, "SlotWave", sinFile->getFile(),
+                                     { { 0_tp, TimePosition::fromSeconds (2.0) } },
+                                     DeleteExistingClips::no) != nullptr);
+
+            REQUIRE (edit->getMarkerManager().createMarker (1, 0_tp,
+                                                            TimeDuration::fromSeconds (1.0),
+                                                            nullptr) != nullptr);
+
+            CHECK (test_utilities::saveEditSync (*edit));
+        }
+
+        project->save();
+
+        // Archive the same Edit twice, with and without its clips
+        auto withClipsFile = tempDirFile.getChildFile ("with_clips.zip");
+        {
+            ArchiveJob job (editItem.get(), withClipsFile,
+                            ArchiveJob::CompressionLevel::normal, true);
+            job.runJob();
+            CHECK_MESSAGE (job.getError().isEmpty(), job.getError().toStdString());
+        }
+
+        auto withoutClipsFile = tempDirFile.getChildFile ("without_clips.zip");
+        {
+            ArchiveJob job (editItem.get(), withoutClipsFile,
+                            ArchiveJob::CompressionLevel::normal, false);
+            job.runJob();
+            CHECK_MESSAGE (job.getError().isEmpty(), job.getError().toStdString());
+        }
+
+        REQUIRE (withClipsFile.existsAsFile());
+        REQUIRE (withoutClipsFile.existsAsFile());
+        CHECK (isArchive (engine, withoutClipsFile));
+
+        // The audio shouldn't have been archived at all, so the zip should be
+        // much smaller than the one that includes the clips
+        CHECK (withoutClipsFile.getSize() < withClipsFile.getSize());
+
+        auto countWaveEntries = [] (const juce::File& f)
+        {
+            juce::ZipFile zip (f);
+            int num = 0;
+
+            for (int i = 0; i < zip.getNumEntries(); ++i)
+                if (auto entry = zip.getEntry (i))
+                    if (entry->filename.endsWithIgnoreCase (".wav"))
+                        ++num;
+
+            return num;
+        };
+
+        CHECK (countWaveEntries (withClipsFile) > 0);
+        CHECK (countWaveEntries (withoutClipsFile) == 0);
+
+        // The Edit itself should still be there, with its tracks but no clips
+        auto extractDir = tempDirFile.getChildFile ("extracted_no_clips");
+        extractDir.createDirectory();
+
+        juce::ZipFile zip (withoutClipsFile);
+        REQUIRE (zip.uncompressTo (extractDir).wasOk());
+
+        juce::Array<juce::File> editFiles;
+        extractDir.findChildFiles (editFiles, juce::File::findFiles, true, "*.tracktionedit");
+        REQUIRE (editFiles.size() == 1);
+
+        auto extractedEdit = loadEditFromFile (engine, editFiles[0], Edit::forExamining);
+        REQUIRE (extractedEdit != nullptr);
+
+        CHECK (getAudioTracks (*extractedEdit).size() == 2);
+
+        for (auto t : getAudioTracks (*extractedEdit))
+        {
+            CHECK (t->getClips().isEmpty());
+
+            for (auto s : t->getClipSlotList().getClipSlots())
+                CHECK (s->getClip() == nullptr);
+        }
+
+        // Markers describe the Edit rather than its content, so they're kept
+        CHECK (extractedEdit->getMarkerManager().getMarkers().size() == 1);
+    }
+
     TEST_CASE ("Archive: single Edit archive bundles extra files from EngineBehaviour")
     {
         // A single-edit archive only copies the edit plus its referenced ProjectItems.
