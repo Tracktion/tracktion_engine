@@ -5017,8 +5017,8 @@
       <type></type>
       <name>ArchiveJob</name>
       <anchorfile>classengine_1_1ArchiveJob.html</anchorfile>
-      <anchor>ad4b8ecfddcaf37251fc20f8e42caeca8</anchor>
-      <arglist>(Source source, const juce::File &amp;destZipFile, CompressionLevel)</arglist>
+      <anchor>a43cb6908e2aae45b91bd5803d7f7377d</anchor>
+      <arglist>(Source source, const juce::File &amp;destZipFile, CompressionLevel, bool includeClips=true)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -82459,6 +82459,13 @@
       <anchorfile>namespaceengine.html</anchorfile>
       <anchor>a6c2635f53d40aded87f70d0a23a6d8aa</anchor>
       <arglist>(Edit &amp;edit)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>removeAllContentClips</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a7ca99d76af3f2c9c3b78d93fb1e7d674</anchor>
+      <arglist>(Edit &amp;)</arglist>
     </member>
     <member kind="function">
       <type>MidiNote *</type>

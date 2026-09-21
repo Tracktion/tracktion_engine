@@ -110,8 +110,9 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad4b8ecfddcaf37251fc20f8e42caeca8" id="r_ad4b8ecfddcaf37251fc20f8e42caeca8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ArchiveJob.html#ad4b8ecfddcaf37251fc20f8e42caeca8">ArchiveJob</a> (<a class="el" href="classengine_1_1ArchiveJob.html#afb04e3ea68ceb8914ce3e28d98a8e9c8">Source</a> source, const juce::File &amp;destZipFile, <a class="el" href="classengine_1_1ArchiveJob.html#ac5eba08a7d406580a9edd8794ee1158f">CompressionLevel</a>)</td></tr>
-<tr class="separator:ad4b8ecfddcaf37251fc20f8e42caeca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43cb6908e2aae45b91bd5803d7f7377d" id="r_a43cb6908e2aae45b91bd5803d7f7377d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ArchiveJob.html#a43cb6908e2aae45b91bd5803d7f7377d">ArchiveJob</a> (<a class="el" href="classengine_1_1ArchiveJob.html#afb04e3ea68ceb8914ce3e28d98a8e9c8">Source</a> source, const juce::File &amp;destZipFile, <a class="el" href="classengine_1_1ArchiveJob.html#ac5eba08a7d406580a9edd8794ee1158f">CompressionLevel</a>, bool includeClips=true)</td></tr>
+<tr class="memdesc:a43cb6908e2aae45b91bd5803d7f7377d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a job to archive a <a class="el" href="classengine_1_1Project.html" title="A tracktion project.">Project</a> or single <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>.  <br /></td></tr>
+<tr class="separator:a43cb6908e2aae45b91bd5803d7f7377d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a491eaedaaffbfb68258519a8c9d4929e" id="r_a491eaedaaffbfb68258519a8c9d4929e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ArchiveJob.html#a491eaedaaffbfb68258519a8c9d4929e">~ArchiveJob</a> () override</td></tr>
 <tr class="separator:a491eaedaaffbfb68258519a8c9d4929e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a591d5f0cb760e47792e8d2afee043083" id="r_a591d5f0cb760e47792e8d2afee043083"><td class="memItemLeft" align="right" valign="top">JobStatus&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1ArchiveJob.html#a591d5f0cb760e47792e8d2afee043083">runJob</a> () override</td></tr>
@@ -193,8 +194,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ad4b8ecfddcaf37251fc20f8e42caeca8" name="ad4b8ecfddcaf37251fc20f8e42caeca8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad4b8ecfddcaf37251fc20f8e42caeca8">&#9670;&#160;</a></span>ArchiveJob()</h2>
+<a id="a43cb6908e2aae45b91bd5803d7f7377d" name="a43cb6908e2aae45b91bd5803d7f7377d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43cb6908e2aae45b91bd5803d7f7377d">&#9670;&#160;</a></span>ArchiveJob()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -215,7 +216,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classengine_1_1ArchiveJob.html#ac5eba08a7d406580a9edd8794ee1158f">CompressionLevel</a>&#160;</td>
-          <td class="paramname">&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>includeClips</em> = <code>true</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -224,6 +231,10 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Creates a job to archive a <a class="el" href="classengine_1_1Project.html" title="A tracktion project.">Project</a> or single <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>. </p>
+<p>If includeClips is false, the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>'s clips are stripped before its referenced material is collected, so the archive contains the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>'s structure but none of its audio. Video and marker clips are kept.</p>
+<p>N.B. includeClips is only honoured for a single-Edit (<a class="el" href="classengine_1_1ProjectItem.html" title="Represents a file-based resource that is used in a project.">ProjectItem</a>) source - a whole-Project archive always includes the clips. </p>
 
 </div>
 </div>
@@ -377,7 +388,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 18 2026 14:58:51 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Sep 21 2026 14:57:29 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

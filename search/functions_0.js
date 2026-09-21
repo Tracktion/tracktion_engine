@@ -144,7 +144,7 @@ var searchData=
   ['arafactoryinitguard_141',['ARAFactoryInitGuard',['../structARAFactoryInitGuard.html#a9e5efef1c93d1b7d5a959c07443d467c',1,'ARAFactoryInitGuard']]],
   ['arafilereader_142',['arafilereader',['../classengine_1_1ARAFileReader.html#a9ce239944c1786e0b01f5f0d3353c26a',1,'engine::ARAFileReader::ARAFileReader(Edit &amp;, AudioClipBase &amp;, ARAFileReader &amp;oneToClone)'],['../classengine_1_1ARAFileReader.html#a8d5e50ebd180442129aaa63f056c4e4c',1,'engine::ARAFileReader::ARAFileReader(Edit &amp;, AudioClipBase &amp;)']]],
   ['aranode_143',['ARANode',['../classengine_1_1ARANode.html#aa99a705bddce36139238cdde41ba7452',1,'engine::ARANode']]],
-  ['archivejob_144',['ArchiveJob',['../classengine_1_1ArchiveJob.html#ad4b8ecfddcaf37251fc20f8e42caeca8',1,'engine::ArchiveJob']]],
+  ['archivejob_144',['ArchiveJob',['../classengine_1_1ArchiveJob.html#a43cb6908e2aae45b91bd5803d7f7377d',1,'engine::ArchiveJob']]],
   ['areallobjectsofuniformtype_145',['areAllObjectsOfUniformType',['../classengine_1_1SelectableClass.html#a954c6fb8824c729e9b964c0ef0103fa0',1,'engine::SelectableClass']]],
   ['areanyclipsusingfile_146',['areanyclipsusingfile',['../classengine_1_1Edit.html#a6e59208382099d5d36f7c8901b6fdb19',1,'engine::Edit::areAnyClipsUsingFile()'],['../classengine_1_1ClipTrack.html#a6d55f85c488b72b18dc522b9707dc935',1,'engine::ClipTrack::areAnyClipsUsingFile()']]],
   ['areanynotesactive_147',['areAnyNotesActive',['../structengine_1_1ActiveNoteList.html#a5bdb2aa215fe88dc5793504d6273065f',1,'engine::ActiveNoteList']]],
