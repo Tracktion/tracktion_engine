@@ -39,9 +39,19 @@ public:
         defaultLevel  = -1
     };
 
+    /** Creates a job to archive a Project or single Edit.
+
+        If includeClips is false, the Edit's clips are stripped before its
+        referenced material is collected, so the archive contains the Edit's
+        structure but none of its audio. Video and marker clips are kept.
+
+        N.B. includeClips is only honoured for a single-Edit (ProjectItem)
+        source - a whole-Project archive always includes the clips.
+    */
     ArchiveJob (Source source,
                 const juce::File& destZipFile,
-                CompressionLevel);
+                CompressionLevel,
+                bool includeClips = true);
 
     ~ArchiveJob() override;
 
@@ -62,6 +72,7 @@ private:
     Source source;
     juce::File destZipFile;
     CompressionLevel compressionLevel;
+    const bool includeClips;
     std::atomic<float> progress { 0.0f };
     juce::String errorMessage;
 
