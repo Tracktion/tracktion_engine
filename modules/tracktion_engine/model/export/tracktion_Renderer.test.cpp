@@ -849,6 +849,77 @@ TEST_SUITE ("tracktion_engine")
         edit->getTempDirectory (false).deleteRecursively();
         afm.unregisterMemoryBuffer (key);
     }
+
+    TEST_CASE ("Renderer: missing source file doesn't stall the render")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine, 2);
+
+        const auto fileLength = 1_td;
+        auto presentFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, fileLength.inSeconds());
+        auto missingFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, fileLength.inSeconds());
+        const auto sourceToDelete = missingFile->getFile();
+
+        auto tracks = getAudioTracks (*edit);
+        REQUIRE (insertWaveClip (*tracks[0], {}, presentFile->getFile(), { .time = { 0_tp, fileLength } },
+                                 DeleteExistingClips::no) != nullptr);
+        REQUIRE (insertWaveClip (*tracks[1], {}, sourceToDelete, { .time = { 0_tp, fileLength } },
+                                 DeleteExistingClips::no) != nullptr);
+
+        // Pull one source out from under the Edit, as happens when a user moves or
+        // deletes a sample that a saved Edit still references
+        engine.getAudioFileManager().releaseAllFiles();
+        REQUIRE (sourceToDelete.deleteFile());
+        engine.getAudioFileManager().checkFilesForChanges();
+
+        juce::TemporaryFile destFile (".wav");
+        Renderer::Parameters params (*edit);
+        params.destFile = destFile.getFile();
+        params.time = { 0_tp, fileLength };
+        params.audioFormat = engine.getAudioFileFormatManager().getWavFormat();
+        params.tracksToDo = toBitSet (getAllTracks (*edit));
+
+        std::atomic<bool> callbackFinished { false };
+        bool renderSucceeded = false;
+
+        auto handle = EditRenderer::render (std::move (params),
+                                            [&] (tl::expected<juce::File, std::string> res)
+                                            {
+                                                renderSucceeded = res.has_value();
+                                                callbackFinished = true;
+                                            });
+
+        // The missing source can never appear, so the render has to finish rather than spin
+        const auto giveUpTime = juce::Time::getMillisecondCounter() + 30000;
+
+        while (! callbackFinished && juce::Time::getMillisecondCounter() < giveUpTime)
+            juce::MessageManager::getInstance()->runDispatchLoopUntil (10);
+
+        CHECK (callbackFinished.load());
+
+        if (callbackFinished)
+        {
+            CHECK (renderSucceeded);
+
+            // The track with the readable source still renders; the missing one is just silent
+            auto buffer = test_utilities::loadFileInToBuffer (engine, destFile.getFile());
+            REQUIRE (buffer.has_value());
+            CHECK (buffer->getMagnitude (0, buffer->getNumSamples()) > 0.1f);
+        }
+        else
+        {
+            // Don't leave a spinning render thread behind for the rest of the suite
+            handle->cancel();
+
+            while (! callbackFinished)
+                juce::MessageManager::getInstance()->runDispatchLoopUntil (10);
+        }
+
+        handle.reset();
+        engine.getAudioFileManager().releaseAllFiles();
+        edit->getTempDirectory (false).deleteRecursively();
+    }
+
 }
 
 #endif

@@ -28,6 +28,7 @@
   - New `RenderQueue` running specifications sequentially, with progress, cancellation, appending whilst running and partial-file cleanup
   - Stem rendering: muted tracks can be rendered, and source tracks keep processing whilst muted so sidechains and aux buses still feed them
   - Loudness normalisation to a LUFS target with a true-peak ceiling, and a wrap-remainder mode folding a render's tail back onto its start
+  - Renders no longer spin forever on a clip whose source file is missing: a clip with an unreadable source that isn't being generated is left out of the graph and renders as silence
 - Analysis
   - New real-time-safe `LoudnessMeter` measuring EBU R128 momentary/short-term/gated-integrated loudness, EBU Tech 3342 loudness range and oversampled true peak
   - New `AudioFileAnalyser` reporting loudness, spectral and dynamics statistics for an audio file
