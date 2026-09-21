@@ -301,6 +301,13 @@ void PluginNode::process (ProcessContext& pc)
 //==============================================================================
 void PluginNode::initialisePlugin (double sampleRateToUse, int blockSizeToUse)
 {
+    // The plugin is initialised here, in the constructor, and Plugin::baseClassInitialise
+    // only re-runs initialise() when the rate or block size changes, so a placeholder rate
+    // passed in here can't be corrected later - it has to be the rate this Node will be
+    // prepared and processed at
+    jassert (sampleRateToUse > 0.0);
+    jassert (blockSizeToUse > 0);
+
     plugin->baseClassInitialise ({ 0_tp, sampleRateToUse, blockSizeToUse });
     isInitialised = true;
 
