@@ -180,9 +180,6 @@ extern void cleanUpDanglingPlugins();
 
 Project::Ptr convertToFolderBasedProject (Project& project)
 {
-    // Called on the message thread, which is also where plugin instances get freed
-    jassert (juce::MessageManager::existsAndIsCurrentThread());
-
     // Only convert valid file-based projects
     if (! project.getProjectID().isValid() || ! project.getProjectFile().existsAsFile())
         return nullptr;
@@ -230,7 +227,8 @@ Project::Ptr convertToFolderBasedProject (Project& project)
 
                 // Plugin instances are deleted asynchronously on the message thread,
                 // which this loop blocks, so free them now rather than letting every
-                // Edit's plugins pile up until the conversion ends
+                // Edit's plugins pile up until the conversion ends. ArchiveJob runs
+                // this off the message thread, where the async deleter isn't blocked.
                 edit.reset();
 
                 if (juce::MessageManager::existsAndIsCurrentThread())
