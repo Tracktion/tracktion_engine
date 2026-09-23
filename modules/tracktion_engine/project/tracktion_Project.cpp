@@ -176,7 +176,7 @@ void Project::reload (ReloadMode mode)                                      { im
 void Project::setNewProjectId (ProjectID newID)                             { impl->setNewProjectId (newID); }
 
 //==============================================================================
-extern void cleanUpDanglingPlugins();
+extern void deleteQueuedPlugins();
 
 Project::Ptr convertToFolderBasedProject (Project& project)
 {
@@ -232,7 +232,7 @@ Project::Ptr convertToFolderBasedProject (Project& project)
                 edit.reset();
 
                 if (juce::MessageManager::existsAndIsCurrentThread())
-                    cleanUpDanglingPlugins();
+                    deleteQueuedPlugins();
             }
         }
     }

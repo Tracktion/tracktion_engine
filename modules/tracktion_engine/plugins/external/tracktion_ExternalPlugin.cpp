@@ -209,6 +209,13 @@ struct AsyncPluginDeleter  : private juce::Timer,
             onEmptyCallback();
     }
 
+    /** Deletes all the queued plugins now, rather than one per timer callback. */
+    void deleteQueuedPlugins()
+    {
+        while (! plugins.isEmpty() && ! recursive)
+            timerCallback();
+    }
+
     void timerCallback() override
     {
         if (plugins.isEmpty())
@@ -247,6 +254,14 @@ JUCE_IMPLEMENT_SINGLETON (AsyncPluginDeleter)
 void cleanUpDanglingPlugins()
 {
     AsyncPluginDeleter::deleteInstance();
+}
+
+void deleteQueuedPlugins()
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+
+    if (auto d = AsyncPluginDeleter::getInstanceWithoutCreating())
+        d->deleteQueuedPlugins();
 }
 
 void waitForPluginDeletion (std::function<void()> onComplete)
