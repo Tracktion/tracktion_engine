@@ -13,6 +13,7 @@
 #include "../../../3rd_party/doctest/tracktion_doctest.hpp"
 #include "../../utilities/tracktion_TestUtilities.h"
 #include "../../../tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
+#include "../../testing/tracktion_EnginePlayer.h"
 
 namespace tracktion::inline engine
 {
@@ -722,6 +723,65 @@ TEST_SUITE("tracktion_engine")
 
 #if ENGINE_UNIT_TESTS_FREEZE
 
+namespace freeze_test_helpers
+{
+    /** Builds and runs the live (non-render) graph, which is the only one that plays freeze files,
+        and returns the RMS of the second half so any file cache warm-up at the start is ignored.
+    */
+    inline float getLivePlaybackRMS (Edit& edit, TimeDuration length)
+    {
+        graph::test_utilities::TestSetup ts;
+        ts.sampleRate = 44100.0;
+        ts.blockSize = 256;
+
+        tracktion::graph::PlayHead playHead;
+        tracktion::graph::PlayHeadState playHeadState { playHead };
+        ProcessState processState { playHeadState, edit.tempoSequence };
+
+        CreateNodeParams params { processState };
+        params.sampleRate = ts.sampleRate;
+        params.blockSize = ts.blockSize;
+        params.forRendering = false;
+
+        auto node = createNodeForEdit (edit, params);
+        REQUIRE (node != nullptr);
+
+        graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::move (node), processState, ts.sampleRate, ts.blockSize,
+                                                                                                                    graph::getPoolCreatorFunction (graph::ThreadPoolStrategy::realTime)),
+                                                                             ts, 2, length.inSeconds(), true);
+        testContext.setPlayHead (&playHeadState.playHead);
+        playHeadState.playHead.playSyncedToRange ({});
+        auto result = testContext.processAll();
+
+        const auto halfLength = result->buffer.getNumSamples() / 2;
+        return result->buffer.getRMSLevel (0, halfLength, result->buffer.getNumSamples() - halfLength);
+    }
+
+    /** Plays the track live unfrozen, freezes it, plays it again and checks the two match. */
+    inline void checkFrozenTrackMatchesUnfrozenPlayback (Edit& edit, AudioTrack& track)
+    {
+        edit.getMasterVolumePlugin()->setVolumeDb (0.0f);
+        const auto length = TimeDuration::fromSeconds (2.0);
+
+        // Control: the unfrozen track is audible when played live, so a silent frozen track
+        // is down to the freeze rather than the test harness
+        const auto unfrozenRMS = getLivePlaybackRMS (edit, length);
+        REQUIRE_GT (unfrozenRMS, 0.05f);
+
+        track.setFrozen (true, AudioTrack::individualFreeze);
+        REQUIRE (track.isFrozen (AudioTrack::individualFreeze));
+        REQUIRE (TemporaryFileManager::getFreezeFileForTrack (track).existsAsFile());
+
+        const auto frozenRMS = getLivePlaybackRMS (edit, length);
+        CHECK_MESSAGE (std::abs (frozenRMS - unfrozenRMS) <= unfrozenRMS * 0.1f,
+                       ("Frozen RMS " + juce::String (frozenRMS, 4) + " vs unfrozen RMS " + juce::String (unfrozenRMS, 4)).toStdString());
+
+        track.setFrozen (false, AudioTrack::individualFreeze);
+        edit.engine.getAudioFileManager().releaseAllFiles();
+        edit.getTempDirectory (false).deleteRecursively();
+    }
+}
+
 TEST_SUITE ("tracktion_engine")
 {
     TEST_CASE ("Track Freeze: End allowance")
@@ -787,6 +847,112 @@ TEST_SUITE ("tracktion_engine")
             engine.getAudioFileManager().releaseAllFiles();
             edit->getTempDirectory (false).deleteRecursively();
             CHECK (! freezeFile.getFile().exists());
+        }
+    }
+
+    TEST_CASE ("Track Freeze: Frozen wave clip track is audible in the playback graph")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0, 2, 220.0f);
+        insertWaveClip (*track, {}, sinFile->getFile(), { .time = { 0_tp, 2_tp } },
+                        DeleteExistingClips::no);
+
+        freeze_test_helpers::checkFrozenTrackMatchesUnfrozenPlayback (*edit, *track);
+    }
+
+    TEST_CASE ("Track Freeze: Frozen synth track is audible in the playback graph")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& storage = engine.getPropertyStorage();
+        const auto oldFreezePoint = storage.getProperty (SettingID::freezePoint, 1);
+
+        for (auto position : { FreezePointPlugin::beforeAllPlugins, FreezePointPlugin::preFader, FreezePointPlugin::postFader })
+        {
+            CAPTURE ((int) position);
+            storage.setProperty (SettingID::freezePoint, (int) position);
+
+            auto edit = test_utilities::createTestEdit (engine);
+            auto track = getAudioTracks (*edit)[0];
+
+            auto synth = edit->getPluginCache().createNewPlugin (FourOscPlugin::xmlTypeName, {});
+            REQUIRE (synth != nullptr);
+            track->pluginList.insertPlugin (*synth, 0, nullptr);
+
+            auto midiClip = track->insertMIDIClip ({ 0_tp, 2_tp }, nullptr);
+            midiClip->getSequence().addNote (57, BeatPosition(), BeatDuration::fromBeats (4.0), 127, 0, nullptr);
+
+            freeze_test_helpers::checkFrozenTrackMatchesUnfrozenPlayback (*edit, *track);
+        }
+
+        storage.setProperty (SettingID::freezePoint, oldFreezePoint);
+    }
+
+    TEST_CASE ("Track Freeze: Group freezing a track that can't be rendered unfreezes it")
+    {
+        // A group-frozen track is removed from the live graph and played back from its output
+        // device's freeze file, so if it's left out of every device render it must not stay
+        // frozen or it goes silent
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+        auto track = getAudioTracks (*edit)[0];
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        insertWaveClip (*track, {}, sinFile->getFile(), { .time = { 0_tp, 2_tp } },
+                        DeleteExistingClips::no);
+
+        SUBCASE ("Muted track")
+        {
+            track->setMute (true);
+        }
+
+        SUBCASE ("Output device unavailable")
+        {
+            track->getOutput().setOutputToDeviceID ("no_such_device");
+        }
+
+        // Edits to the track unfreeze it, so let those settle before freezing
+        juce::MessageManager::getInstance()->runDispatchLoopUntil (500);
+
+        track->setFrozen (true, Track::groupFreeze);
+        REQUIRE (track->isFrozen (Track::groupFreeze));
+
+        // The freeze render happens asynchronously once the frozen flag changes
+        for (int i = 0; i < 200 && track->isFrozen (Track::groupFreeze); ++i)
+            juce::MessageManager::getInstance()->runDispatchLoopUntil (10);
+
+        CHECK_FALSE (track->isFrozen (Track::groupFreeze));
+        CHECK (TemporaryFileManager::getFrozenTrackFiles (*edit).isEmpty());
+    }
+
+    TEST_CASE ("Track Freeze: Group freeze matches a track to its output device")
+    {
+        // Group freezing renders one file per output device from the tracks that output to it,
+        // so a track has to match its device whether its output is a device ID or the default alias
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512, .inputChannels = 0, .outputChannels = 2,
+                                                       .inputNames = {}, .outputNames = {} });
+
+        auto& dm = engine.getDeviceManager();
+        auto defaultWaveOut = dm.getDefaultWaveOutDevice();
+        REQUIRE (defaultWaveOut != nullptr);
+        REQUIRE (defaultWaveOut->isEnabled());
+
+        auto edit = test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+        auto& output = getAudioTracks (*edit)[0]->getOutput();
+
+        SUBCASE ("Default audio output")
+        {
+            output.setOutputToDefaultDevice (false);
+            CHECK (output.outputsToDevice (defaultWaveOut->getName(), true));
+        }
+
+        SUBCASE ("Specific output device")
+        {
+            output.setOutputToDeviceID (defaultWaveOut->getDeviceID());
+            CHECK (output.outputsToDevice (defaultWaveOut->getName(), true));
         }
     }
 }
