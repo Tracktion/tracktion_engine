@@ -15,6 +15,7 @@ namespace tracktion::inline engine {
 // Defined in ExternalPlugin.cpp to clean up plugins waiting to be deleted
 extern void cleanUpDanglingPlugins();
 extern void waitForPluginDeletion (std::function<void()> onComplete);
+extern void deleteQueuedPlugins();
 
 //==============================================================================
 inline SettingID getPluginListPropertyName()

@@ -176,6 +176,8 @@ void Project::reload (ReloadMode mode)                                      { im
 void Project::setNewProjectId (ProjectID newID)                             { impl->setNewProjectId (newID); }
 
 //==============================================================================
+extern void deleteQueuedPlugins();
+
 Project::Ptr convertToFolderBasedProject (Project& project)
 {
     // Only convert valid file-based projects
@@ -222,6 +224,15 @@ Project::Ptr convertToFolderBasedProject (Project& project)
 
                     EditFileOperations (*edit).save (false, true, false);
                 }
+
+                // Plugin instances are deleted asynchronously on the message thread,
+                // which this loop blocks, so free them now rather than letting every
+                // Edit's plugins pile up until the conversion ends. ArchiveJob runs
+                // this off the message thread, where the async deleter isn't blocked.
+                edit.reset();
+
+                if (juce::MessageManager::existsAndIsCurrentThread())
+                    deleteQueuedPlugins();
             }
         }
     }
