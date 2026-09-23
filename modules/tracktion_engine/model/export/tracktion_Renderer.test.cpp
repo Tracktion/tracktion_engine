@@ -13,6 +13,7 @@
 #include "../../../3rd_party/doctest/tracktion_doctest.hpp"
 #include "../../utilities/tracktion_TestUtilities.h"
 #include "../../../tracktion_graph/tracktion_graph/tracktion_TestUtilities.h"
+#include "../../testing/tracktion_EnginePlayer.h"
 
 namespace tracktion::inline engine
 {
@@ -887,6 +888,72 @@ TEST_SUITE ("tracktion_engine")
         }
 
         storage.setProperty (SettingID::freezePoint, oldFreezePoint);
+    }
+
+    TEST_CASE ("Track Freeze: Group freezing a track that can't be rendered unfreezes it")
+    {
+        // A group-frozen track is removed from the live graph and played back from its output
+        // device's freeze file, so if it's left out of every device render it must not stay
+        // frozen or it goes silent
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+        auto track = getAudioTracks (*edit)[0];
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        insertWaveClip (*track, {}, sinFile->getFile(), { .time = { 0_tp, 2_tp } },
+                        DeleteExistingClips::no);
+
+        SUBCASE ("Muted track")
+        {
+            track->setMute (true);
+        }
+
+        SUBCASE ("Output device unavailable")
+        {
+            track->getOutput().setOutputToDeviceID ("no_such_device");
+        }
+
+        // Edits to the track unfreeze it, so let those settle before freezing
+        juce::MessageManager::getInstance()->runDispatchLoopUntil (500);
+
+        track->setFrozen (true, Track::groupFreeze);
+        REQUIRE (track->isFrozen (Track::groupFreeze));
+
+        // The freeze render happens asynchronously once the frozen flag changes
+        for (int i = 0; i < 200 && track->isFrozen (Track::groupFreeze); ++i)
+            juce::MessageManager::getInstance()->runDispatchLoopUntil (10);
+
+        CHECK_FALSE (track->isFrozen (Track::groupFreeze));
+        CHECK (TemporaryFileManager::getFrozenTrackFiles (*edit).isEmpty());
+    }
+
+    TEST_CASE ("Track Freeze: Group freeze matches a track to its output device")
+    {
+        // Group freezing renders one file per output device from the tracks that output to it,
+        // so a track has to match its device whether its output is a device ID or the default alias
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512, .inputChannels = 0, .outputChannels = 2,
+                                                       .inputNames = {}, .outputNames = {} });
+
+        auto& dm = engine.getDeviceManager();
+        auto defaultWaveOut = dm.getDefaultWaveOutDevice();
+        REQUIRE (defaultWaveOut != nullptr);
+        REQUIRE (defaultWaveOut->isEnabled());
+
+        auto edit = test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+        auto& output = getAudioTracks (*edit)[0]->getOutput();
+
+        SUBCASE ("Default audio output")
+        {
+            output.setOutputToDefaultDevice (false);
+            CHECK (output.outputsToDevice (defaultWaveOut->getName(), true));
+        }
+
+        SUBCASE ("Specific output device")
+        {
+            output.setOutputToDeviceID (defaultWaveOut->getDeviceID());
+            CHECK (output.outputsToDevice (defaultWaveOut->getName(), true));
+        }
     }
 }
 

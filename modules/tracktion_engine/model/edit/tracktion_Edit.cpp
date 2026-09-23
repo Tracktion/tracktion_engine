@@ -2597,12 +2597,14 @@ void Edit::updateFrozenTracks()
     AudioFile::deleteFiles (engine, TemporaryFileManager::getFrozenTrackFiles (*this));
 
     auto& dm = engine.getDeviceManager();
+    juce::Array<AudioTrack*> renderedTracks;
 
     for (int j = dm.getNumOutputDevices(); --j >= 0;)
     {
         if (auto outputDevice = dynamic_cast<WaveOutputDevice*> (dm.getOutputDeviceAt (j)))
         {
             juce::BigInteger frozen;
+            juce::Array<AudioTrack*> tracksForDevice;
             TimeDuration length;
             int i = 0;
 
@@ -2615,6 +2617,7 @@ void Edit::updateFrozenTracks()
                          && ! at->isMuted (true))
                     {
                         frozen.setBit (i, true);
+                        tracksForDevice.add (at);
                         length = juce::jmax (length, at->getLengthIncludingInputTracks());
                     }
                 }
@@ -2624,6 +2627,7 @@ void Edit::updateFrozenTracks()
 
             if (frozen.countNumberOfSetBits() > 0 && length > TimeDuration())
             {
+                renderedTracks.addArray (tracksForDevice);
                 length = length + TimeDuration::fromSeconds (5.0);
 
                 for (auto sm : getSelectionManagers (*this))
@@ -2673,6 +2677,25 @@ void Edit::updateFrozenTracks()
             }
         }
     }
+
+    // Group-frozen tracks are removed from the playback graph, so any that didn't make it in to
+    // a device's freeze file (e.g. because they're muted or their output device isn't available)
+    // would be silent. Unfreeze them instead
+    juce::StringArray unrenderedTrackNames;
+
+    for (auto at : getAudioTracks (*this))
+    {
+        if (at->isFrozen (Track::groupFreeze) && ! renderedTracks.contains (at))
+        {
+            at->frozen = false;
+            at->changed();
+            unrenderedTrackNames.add (at->getName());
+        }
+    }
+
+    if (! unrenderedTrackNames.isEmpty())
+        engine.getUIBehaviour().showWarningMessage (TRANS("Couldn't freeze XTRKX because the track is muted or its output device isn't available")
+                                                      .replace ("XTRKX", unrenderedTrackNames.joinIntoString (", ")));
 
     SelectionManager::refreshAllPropertyPanels();
 }

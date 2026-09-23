@@ -88,6 +88,11 @@ bool TrackOutput::outputsToDevice (const juce::String& deviceName, bool compareD
     if (outputDevice.get().equalsIgnoreCase (deviceName))
         return true;
 
+    // The output is stored as a device ID, so compare the name of the device it refers to
+    if (auto device = owner.edit.engine.getDeviceManager().findOutputDeviceForID (outputDevice))
+        if (device->getName().equalsIgnoreCase (deviceName))
+            return true;
+
     if (compareDefaultDevices)
     {
         auto& dm = owner.edit.engine.getDeviceManager();
