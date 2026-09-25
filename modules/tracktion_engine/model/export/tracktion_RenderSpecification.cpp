@@ -184,6 +184,65 @@ namespace render_spec_utils
         return result;
     }
 
+    /** The clips that can be heard in a render: the spec's clips if it names
+        any, otherwise every clip on the rendered audio tracks - all of them for
+        a whole-Edit render, and a submix's children with the submix.
+    */
+    static juce::Array<Clip*> findRenderedClips (Edit& edit, const RenderSpecification& spec)
+    {
+        juce::Array<Clip*> clips;
+
+        if (! spec.clips.isEmpty())
+        {
+            for (auto id : spec.clips)
+                if (auto c = findClipForID (edit, id))
+                    clips.add (c);
+
+            return clips;
+        }
+
+        juce::Array<AudioTrack*> tracks;
+
+        if (spec.tracks.isEmpty())
+            tracks = getAudioTracks (edit);
+        else
+            for (auto [track, index] : resolveTracks (edit, spec.tracks))
+                if (auto at = dynamic_cast<AudioTrack*> (track))
+                    tracks.addIfNotAlreadyThere (at);
+                else
+                    for (auto sub : track->getAllAudioSubTracks (true))
+                        tracks.addIfNotAlreadyThere (sub);
+
+        for (auto t : tracks)
+            clips.addArray (t->getClips());
+
+        return clips;
+    }
+
+    /** How far past the end of the range a render with includeTails runs:
+        up to renderTailAllowanceSeconds, but never into the next clip on the
+        rendered tracks, and not at all if a clip plays across the end - the
+        render graph would keep playing it, so the "tail" would really be the
+        next section of the arrangement.
+    */
+    static TimeDuration findTailAllowance (Edit& edit, const RenderSpecification& spec, TimePosition rangeEnd)
+    {
+        auto limit = rangeEnd + TimeDuration::fromSeconds (renderTailAllowanceSeconds);
+
+        for (auto c : findRenderedClips (edit, spec))
+        {
+            const auto clipRange = c->getEditTimeRange();
+
+            if (clipRange.getStart() < rangeEnd && clipRange.getEnd() > rangeEnd)
+                return {};
+
+            if (clipRange.getStart() >= rangeEnd)
+                limit = std::min (limit, clipRange.getStart());
+        }
+
+        return limit - rangeEnd;
+    }
+
     /** Like RenderOptions::findEndAllowance but substitutes the wrap-remainder
         cap for infinite tail reports rather than ignoring them, and caps the
         result so runaway feedback can't stall a render.
@@ -223,6 +282,7 @@ juce::var RenderSpecification::toJSON() const
     }
 
     obj->setProperty ("wrapRemainder", wrapRemainder);
+    obj->setProperty ("includeTails", includeTails);
     obj->setProperty ("destination", destination.getFullPathName());
     obj->setProperty ("format", toString (format));
     obj->setProperty ("sampleRate", sampleRate);
@@ -257,7 +317,7 @@ juce::var RenderSpecification::toJSON() const
 RenderSpecification RenderSpecification::fromJSON (const juce::var& v, juce::StringArray* unknownKeys)
 {
     static const juce::StringArray knownKeys { "tracks", "mutedTracks", "includeSourceTracks", "clips", "startTime", "endTime",
-                                              "wrapRemainder", "destination", "format", "sampleRate",
+                                              "wrapRemainder", "includeTails", "destination", "format", "sampleRate",
                                               "bitDepth", "quality", "channelLayout", "normalise",
                                               "normaliseByRMS", "normaliseByLUFS", "normaliseToLevelDb",
                                               "limitTruePeak", "truePeakCeilingDb", "trimSilence",
@@ -285,6 +345,7 @@ RenderSpecification RenderSpecification::fromJSON (const juce::var& v, juce::Str
     spec.includeSourceTracks = get ("includeSourceTracks", spec.includeSourceTracks);
     spec.clips              = EditItemID::parseStringList (get ("clips", juce::String()));
     spec.wrapRemainder      = get ("wrapRemainder", spec.wrapRemainder);
+    spec.includeTails       = get ("includeTails", spec.includeTails);
     spec.destination        = juce::File (get ("destination", juce::String()).toString());
     spec.format             = renderFormatFromString (get ("format", toString (spec.format)).toString())
                                   .value_or (spec.format);
@@ -517,6 +578,12 @@ std::optional<PlannedRenderJob> createRenderJob (Edit& edit, const RenderSpecifi
         {
             params.wrapRemainder = true;
             params.endAllowance = findWrapRemainderTail (edit, spec.tracks);
+        }
+        else if (spec.includeTails)
+        {
+            // The render context stops early once the output falls silent,
+            // so this is an upper bound rather than a fixed length
+            params.endAllowance = findTailAllowance (edit, spec, params.time.getEnd());
         }
     }
 

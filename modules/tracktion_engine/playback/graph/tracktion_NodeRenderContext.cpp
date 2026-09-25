@@ -175,6 +175,8 @@ NodeRenderContext::NodeRenderContext (Renderer::RenderTask& owner_, Renderer::Pa
     playHead->setPosition (toSamples (r.time.getStart(), r.sampleRateForAudio));
 
     samplesToWrite = tracktion::toSamples ((r.time.getLength() + r.endAllowance), r.sampleRateForAudio);
+    rangeLengthInSamples = tracktion::toSamples (r.time.getLength(), r.sampleRateForAudio);
+    samplesPastRangeStart = 0;
 
     if (sourceToUpdate != nullptr)
         sourceToUpdate->reset (numOutputChans, r.sampleRateForAudio, samplesToWrite);
@@ -355,6 +357,28 @@ bool NodeRenderContext::renderNextBlock (std::atomic<float>& progressToUpdate)
 
             blockSize = numSamplesDone;
             blockOffset = destView.getNumFrames() - blockSize;
+        }
+
+        if (blockSize > 0 && r.endAllowance > 0_td)
+        {
+            // Once into the end allowance, a silent stretch means the tail has
+            // finished: stop at the end of the range or of the last audible block,
+            // rather than writing the silence that proved it
+            const auto numInRange = (uint32_t) juce::jlimit ((int64_t) 0, (int64_t) blockSize,
+                                                             rangeLengthInSamples - samplesPastRangeStart);
+
+            if (numInRange < blockSize
+                 && renderingBuffer.getMagnitude ((int) (blockOffset + numInRange),
+                                                  (int) (blockSize - numInRange)) <= thresholdForStopping)
+            {
+                if (numInRange > 0)
+                    if (writeAudioBlock (destView.getFrameRange ({ blockOffset, blockOffset + numInRange })) == WriteResult::failed)
+                        return true;
+
+                return true;
+            }
+
+            samplesPastRangeStart += blockSize;
         }
 
         if (blockSize > 0)

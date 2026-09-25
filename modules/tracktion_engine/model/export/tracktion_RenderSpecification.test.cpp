@@ -31,6 +31,7 @@ TEST_SUITE ("tracktion_engine")
         spec.clips.add (EditItemID::fromRawID (2002));
         spec.time = TimeRange (TimePosition::fromSeconds (1.5), TimePosition::fromSeconds (4.25));
         spec.wrapRemainder = true;
+        spec.includeTails = false;
         spec.destination = juce::File::getSpecialLocation (juce::File::tempDirectory).getChildFile ("renders");
         spec.format = RenderFormat::flac;
         spec.sampleRate = 96000.0;
@@ -60,6 +61,7 @@ TEST_SUITE ("tracktion_engine")
         CHECK_EQ (restored.time->getStart(), spec.time->getStart());
         CHECK_EQ (restored.time->getEnd(), spec.time->getEnd());
         CHECK_EQ (restored.wrapRemainder, spec.wrapRemainder);
+        CHECK_EQ (restored.includeTails, spec.includeTails);
         CHECK_EQ (restored.destination, spec.destination);
         CHECK (toString (restored.format) == toString (spec.format));
         CHECK_EQ (restored.sampleRate, spec.sampleRate);
@@ -93,6 +95,7 @@ TEST_SUITE ("tracktion_engine")
             CHECK_EQ (parsed.bitDepth, 16);
             CHECK (parsed.limitTruePeak);                   // the true-peak ceiling is on by default...
             CHECK_EQ (parsed.truePeakCeilingDb, -1.0f);     // ...at -1 dBTP
+            CHECK (parsed.includeTails);                    // tails are on unless turned off
             CHECK (! parsed.time.has_value());
             CHECK_EQ (unknownKeys, juce::StringArray { "someFutureKey" });
         }
@@ -369,6 +372,7 @@ TEST_SUITE ("tracktion_engine")
             CHECK (! job->params.ditheringEnabled);
             CHECK (! job->params.wrapRemainder);
             CHECK (! job->params.mustRenderInMono);
+            CHECK_EQ (job->params.endAllowance, TimeDuration());   // no tail for MIDI
         }
 
         SUBCASE ("channel layouts map to the expected parameters")
@@ -386,6 +390,56 @@ TEST_SUITE ("tracktion_engine")
 
             spec.channelLayout = "5.1";
             CHECK_EQ (createRenderJob (*edit, spec)->params.channelConfig.getNumChannels(), 6);
+        }
+
+        SUBCASE ("tails run for the full allowance when nothing plays after the range")
+        {
+            juce::TemporaryFile destFile (".wav");
+
+            RenderSpecification spec;
+            spec.destination = destFile.getFile();
+
+            auto job = createRenderJob (*edit, spec);
+            REQUIRE (job.has_value());
+            CHECK_EQ (job->params.endAllowance, TimeDuration::fromSeconds (renderTailAllowanceSeconds));
+
+            spec.includeTails = false;
+            CHECK_EQ (createRenderJob (*edit, spec)->params.endAllowance, TimeDuration());
+        }
+
+        SUBCASE ("tails stop at the next clip on the rendered tracks")
+        {
+            juce::TemporaryFile destFile (".wav");
+            auto laterClip = insertWaveClip (*tracks[0], {}, sinFile->getFile(), { .time = { 3_tp, 4_tp } },
+                                             DeleteExistingClips::no);
+            REQUIRE (laterClip != nullptr);
+
+            RenderSpecification spec;
+            spec.destination = destFile.getFile();
+            spec.time = TimeRange (0_tp, 1_tp);
+            CHECK_EQ (createRenderJob (*edit, spec)->params.endAllowance, 2_td);
+
+            // A clip on a track that isn't rendered can't be heard, so doesn't limit the tail
+            spec.tracks = { tracks[1]->itemID };
+            CHECK_EQ (createRenderJob (*edit, spec)->params.endAllowance, TimeDuration::fromSeconds (renderTailAllowanceSeconds));
+
+            // Nor can a clip left out of a clip-limited render
+            spec.tracks = { tracks[0]->itemID };
+            for (auto c : tracks[0]->getClips())
+                if (c != laterClip.get())
+                    spec.clips.add (c->itemID);
+
+            CHECK_EQ (createRenderJob (*edit, spec)->params.endAllowance, TimeDuration::fromSeconds (renderTailAllowanceSeconds));
+        }
+
+        SUBCASE ("there is no tail when a clip plays across the end of the range")
+        {
+            juce::TemporaryFile destFile (".wav");
+
+            RenderSpecification spec;
+            spec.destination = destFile.getFile();
+            spec.time = TimeRange (0_tp, TimePosition::fromSeconds (0.5));
+            CHECK_EQ (createRenderJob (*edit, spec)->params.endAllowance, TimeDuration());
         }
 
         SUBCASE ("wrap remainder uses the plugin-reported tail")
@@ -750,6 +804,74 @@ TEST_SUITE ("tracktion_engine")
 
             // ...and push more of this sub-LSB signal above the quantisation floor
             CHECK_GT (countNonZeroSamples (dithered), countNonZeroSamples (undithered));
+        }
+    }
+
+    TEST_CASE ("RenderSpecification tails")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+
+        // A synth note held to the end of the range, whose release rings on past it
+        auto synth = dynamic_cast<FourOscPlugin*> (edit->getPluginCache().createNewPlugin (FourOscPlugin::xmlTypeName, {}).get());
+        REQUIRE (synth != nullptr);
+        static auto patch = "<PLUGIN type=\"4osc\" id=\"1069\" enabled=\"1\" filterType=\"1\" presetName=\"4OSC: Organ\" filterFreq=\"127.0\" ampAttack=\"0.60000002384185791016\" ampDecay=\"10.0\" ampSustain=\"100.0\" ampRelease=\"0.40000000596046447754\" waveShape1=\"4\" tune2=\"-24.0\" waveShape2=\"4\"> <MODMATRIX/> </PLUGIN>";
+
+        if (auto e = juce::parseXML (patch))
+            if (auto v = juce::ValueTree::fromXml (*e); v.isValid())
+                synth->restorePluginStateFromValueTree (v);
+
+        track->pluginList.insertPlugin (*synth, 0, nullptr);
+
+        auto midiClip = track->insertMIDIClip ({ 0_tp, 1_tp }, nullptr);
+        REQUIRE (midiClip != nullptr);
+        const auto clipEndBeat = edit->tempoSequence.toBeats (1_tp);
+        midiClip->getSequence().addNote (69, BeatPosition(), BeatDuration::fromBeats (clipEndBeat.inBeats()), 127, 0, nullptr);
+
+        RenderSpecification spec;
+        spec.time = TimeRange (0_tp, 1_tp);
+
+        auto render = [&] (const juce::File& dest) -> juce::AudioBuffer<float>
+        {
+            spec.destination = dest;
+            auto job = createRenderJob (*edit, spec);
+            REQUIRE (job.has_value());
+
+            RenderQueue queue;
+            queue.addJob (std::move (*job));
+
+            std::atomic<bool> done { false };
+            queue.onFinished = [&] { done = true; };
+            queue.start();
+            test_utilities::runDispatchLoopUntilTrue (done);
+            REQUIRE (queue.getJobs()[0]->getState() == RenderQueue::Job::State::completed);
+
+            auto buffer = test_utilities::loadFileInToBuffer (engine, dest);
+            REQUIRE (buffer.has_value());
+            return *buffer;
+        };
+
+        SUBCASE ("the release past the end of the range is captured, and the render stops once it's silent")
+        {
+            juce::TemporaryFile destFile (".wav");
+            auto buffer = render (destFile.getFile());
+
+            const int rangeEnd = 44100;
+            REQUIRE_GT (buffer.getNumSamples(), rangeEnd);
+            CHECK_GT (buffer.getMagnitude (rangeEnd, std::min (4410, buffer.getNumSamples() - rangeEnd)), 0.001f);
+
+            // Stopped at silence, well short of the 10 s allowance
+            CHECK_LT (buffer.getNumSamples() / 44100.0, 2.0);
+        }
+
+        SUBCASE ("without tails the render ends at the end of the range")
+        {
+            juce::TemporaryFile destFile (".wav");
+            spec.includeTails = false;
+            auto buffer = render (destFile.getFile());
+
+            CHECK_EQ (buffer.getNumSamples(), 44100);
         }
     }
 
