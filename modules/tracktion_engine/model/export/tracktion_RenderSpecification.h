@@ -75,6 +75,11 @@ bool formatSupportsTagMetadata (RenderFormat);
 */
 juce::StringPairArray translateMetadataForFormat (const juce::StringPairArray&, RenderFormat);
 
+/** The longest a render runs past the end of its range when
+    RenderSpecification::includeTails is set.
+*/
+inline constexpr double renderTailAllowanceSeconds = 10.0;
+
 //==============================================================================
 /**
     A plain-data description of a single render operation: one output file.
@@ -131,6 +136,18 @@ struct RenderSpecification
     */
     bool wrapRemainder = false;
 
+    /** If true, rendering carries on past the end of the range for up to
+        renderTailAllowanceSeconds so reverb and delay tails aren't cut off,
+        stopping as soon as the output falls silent. A fixed allowance rather
+        than the plugins' reported tails, as many plugins report none.
+
+        The allowance never runs into the next clip on the rendered tracks, and
+        there is none if a clip plays across the end of the range, so a render
+        of part of the Edit never picks up the start of the next section.
+        Ignored when wrapRemainder is set (it has its own tail) and for MIDI.
+    */
+    bool includeTails = true;
+
     //==============================================================================
     /** The destination file to write to. */
     juce::File destination;
@@ -140,7 +157,7 @@ struct RenderSpecification
         RenderFormat::midi writes a MIDI file rather than audio, capturing the
         MIDI arriving at the render graph's output. The audio-only options below
         (bit depth, quality, channel layout, the normalise family, dither,
-        trimSilence and wrapRemainder) don't apply and are ignored; sampleRate
+        trimSilence, wrapRemainder and includeTails) don't apply and are ignored; sampleRate
         still sets the rate the graph is processed at. @see usePlugins
     */
     RenderFormat format = RenderFormat::wav;
