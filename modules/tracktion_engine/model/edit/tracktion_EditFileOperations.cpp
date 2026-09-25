@@ -572,7 +572,7 @@ std::unique_ptr<Edit> loadEditForExamining (ProjectManager& pm, ProjectItemRef r
     {
         assert (p->isFolderBased());
         auto editFile = ref.resolve (p->engine);
-        auto edit = loadEditFromFile (p->engine, editFile, role);
+        auto edit = loadEditFromFile (p->engine, editFile, role, loadContext);
 
         if (edit)
             edit->setProjectItemRef (ref);
