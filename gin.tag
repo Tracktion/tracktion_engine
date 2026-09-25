@@ -63648,6 +63648,13 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
+      <type>bool</type>
+      <name>includeTails</name>
+      <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
+      <anchor>a75a816508044898e9924173b85b8a765</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
       <type>juce::File</type>
       <name>destination</name>
       <anchorfile>structengine_1_1RenderSpecification.html</anchorfile>
@@ -83950,6 +83957,13 @@
       <anchorfile>namespaceengine.html</anchorfile>
       <anchor>a6a4a6c0985c2730826bd63a517fdf4bd</anchor>
       <arglist>(juce::ValueTree &amp;tree, const juce::Identifier &amp;type, const juce::Identifier &amp;property, const juce::var &amp;propertyValue, juce::UndoManager *undoManager)</arglist>
+    </member>
+    <member kind="variable">
+      <type>constexpr double</type>
+      <name>renderTailAllowanceSeconds</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a116b4432e527dde2d0fa071a64e5c054</anchor>
+      <arglist></arglist>
     </member>
     <member kind="variable">
       <type>const char *const</type>

@@ -119,6 +119,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:af4d31cdb7198329c8c8674caad1a01fc" id="r_af4d31cdb7198329c8c8674caad1a01fc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1RenderSpecification.html#af4d31cdb7198329c8c8674caad1a01fc">wrapRemainder</a> = false</td></tr>
 <tr class="memdesc:af4d31cdb7198329c8c8674caad1a01fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">If true, the plugin tail past the end of the range is rendered and mixed back onto the start of the file so it loops seamlessly.  <br /></td></tr>
 <tr class="separator:af4d31cdb7198329c8c8674caad1a01fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75a816508044898e9924173b85b8a765" id="r_a75a816508044898e9924173b85b8a765"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1RenderSpecification.html#a75a816508044898e9924173b85b8a765">includeTails</a> = true</td></tr>
+<tr class="memdesc:a75a816508044898e9924173b85b8a765"><td class="mdescLeft">&#160;</td><td class="mdescRight">If true, rendering carries on past the end of the range for up to renderTailAllowanceSeconds so reverb and delay tails aren't cut off, stopping as soon as the output falls silent.  <br /></td></tr>
+<tr class="separator:a75a816508044898e9924173b85b8a765"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d5a6359ff755c818554c2cd69eb64bf" id="r_a1d5a6359ff755c818554c2cd69eb64bf"><td class="memItemLeft" align="right" valign="top">juce::File&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1RenderSpecification.html#a1d5a6359ff755c818554c2cd69eb64bf">destination</a></td></tr>
 <tr class="memdesc:a1d5a6359ff755c818554c2cd69eb64bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">The destination file to write to.  <br /></td></tr>
 <tr class="separator:a1d5a6359ff755c818554c2cd69eb64bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -341,6 +344,24 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a75a816508044898e9924173b85b8a765" name="a75a816508044898e9924173b85b8a765"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75a816508044898e9924173b85b8a765">&#9670;&#160;</a></span>includeTails</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool engine::RenderSpecification::includeTails = true</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>If true, rendering carries on past the end of the range for up to renderTailAllowanceSeconds so reverb and delay tails aren't cut off, stopping as soon as the output falls silent. </p>
+<p>A fixed allowance rather than the plugins' reported tails, as many plugins report none.</p>
+<p>The allowance never runs into the next clip on the rendered tracks, and there is none if a clip plays across the end of the range, so a render of part of the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> never picks up the start of the next section. Ignored when wrapRemainder is set (it has its own tail) and for MIDI. </p>
+
+</div>
+</div>
 <a id="a1d5a6359ff755c818554c2cd69eb64bf" name="a1d5a6359ff755c818554c2cd69eb64bf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1d5a6359ff755c818554c2cd69eb64bf">&#9670;&#160;</a></span>destination</h2>
 
@@ -370,7 +391,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The format to write. </p>
-<p><a class="el" href="namespaceengine.html#a3f0cb9989dc30bafaad719176696cc10aa5f4ed7e858bf18cc1f2c0e35e7301e7" title="Writes a MIDI file rather than audio.">RenderFormat::midi</a> writes a MIDI file rather than audio, capturing the MIDI arriving at the render graph's output. The audio-only options below (bit depth, quality, channel layout, the normalise family, dither, trimSilence and wrapRemainder) don't apply and are ignored; sampleRate still sets the rate the graph is processed at. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="structengine_1_1RenderSpecification.html#a4841b15041911b6bccdb323b73c2d549" title="Include track plugins.">usePlugins</a> </dd></dl>
+<p><a class="el" href="namespaceengine.html#a3f0cb9989dc30bafaad719176696cc10aa5f4ed7e858bf18cc1f2c0e35e7301e7" title="Writes a MIDI file rather than audio.">RenderFormat::midi</a> writes a MIDI file rather than audio, capturing the MIDI arriving at the render graph's output. The audio-only options below (bit depth, quality, channel layout, the normalise family, dither, trimSilence, wrapRemainder and includeTails) don't apply and are ignored; sampleRate still sets the rate the graph is processed at. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="structengine_1_1RenderSpecification.html#a4841b15041911b6bccdb323b73c2d549" title="Include track plugins.">usePlugins</a> </dd></dl>
 
 </div>
 </div>
@@ -639,7 +660,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 25 2026 11:56:36 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Fri Sep 25 2026 13:38:50 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
