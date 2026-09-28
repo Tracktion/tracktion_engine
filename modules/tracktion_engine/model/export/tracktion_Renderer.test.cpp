@@ -757,6 +757,23 @@ namespace freeze_test_helpers
         return result->buffer.getRMSLevel (0, halfLength, result->buffer.getNumSamples() - halfLength);
     }
 
+    /** Plays the Edit through the live device graph (as the app does) and returns the RMS of
+        the second half of channel 0, so any file cache warm-up at the start is ignored.
+    */
+    inline float getDevicePlaybackRMS (test_utilities::EnginePlayer& player, Edit& edit, TimeDuration length)
+    {
+        auto& tc = edit.getTransport();
+        tc.freePlaybackContext();
+        tc.setPosition (0_tp);
+        tc.play (false);
+
+        auto buffer = player.process (toSamples (length, player.getParams().sampleRate));
+        tc.stop (false, true);
+
+        const auto half = buffer.getNumSamples() / 2;
+        return buffer.getRMSLevel (0, half, buffer.getNumSamples() - half);
+    }
+
     /** Plays the track live unfrozen, freezes it, plays it again and checks the two match. */
     inline void checkFrozenTrackMatchesUnfrozenPlayback (Edit& edit, AudioTrack& track)
     {
@@ -890,6 +907,182 @@ TEST_SUITE ("tracktion_engine")
         storage.setProperty (SettingID::freezePoint, oldFreezePoint);
     }
 
+    TEST_CASE ("Track Freeze: Frozen synth wrapped in a multi-output rack is audible")
+    {
+        // Wrapping a multi-out instrument (e.g. Kontakt) creates a rack with one output per plugin
+        // output, but the track still only uses the rack instance's stereo channel mapping
+        auto& engine = *Engine::getEngines()[0];
+
+        for (int numRackOutputs : { 2, 16, 64 })
+        {
+            CAPTURE (numRackOutputs);
+
+            auto edit = test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+            edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
+            auto track = getAudioTracks (*edit)[0];
+
+            auto synth = edit->getPluginCache().createNewPlugin (FourOscPlugin::xmlTypeName, {});
+            REQUIRE (synth != nullptr);
+
+            Plugin::Array plugins;
+            plugins.add (synth);
+            auto rackType = RackType::createTypeToWrapPlugins (plugins, *edit);
+            REQUIRE (rackType != nullptr);
+
+            // Connect the synth to every extra output, as a multi-out plugin's wrapper would be
+            while (rackType->getOutputNames().size() < numRackOutputs + 1) // +1 for the MIDI output
+            {
+                const auto pin = rackType->getOutputNames().size();
+                rackType->addOutput (-1, "Output " + juce::String (pin));
+                rackType->addConnection (synth->itemID, 1 + (pin - 1) % 2, {}, pin);
+            }
+
+            auto rackInstance = dynamic_cast<RackInstance*> (track->pluginList.insertPlugin (RackInstance::create (*rackType), 0).get());
+            REQUIRE (rackInstance != nullptr);
+            CHECK_EQ (rackInstance->getNumOutputChannels(), 2);
+
+            auto midiClip = track->insertMIDIClip ({ 0_tp, 2_tp }, nullptr);
+            midiClip->getSequence().addNote (57, BeatPosition(), BeatDuration::fromBeats (4.0), 127, 0, nullptr);
+            juce::MessageManager::getInstance()->runDispatchLoopUntil (200);
+
+            const auto length = TimeDuration::fromSeconds (2.0);
+            const auto unfrozenRMS = freeze_test_helpers::getLivePlaybackRMS (*edit, length);
+            REQUIRE_GT (unfrozenRMS, 0.05f);
+
+            track->setFrozen (true, AudioTrack::individualFreeze);
+            REQUIRE (track->isFrozen (AudioTrack::individualFreeze));
+
+            const auto freezeFile = AudioFile (engine, TemporaryFileManager::getFreezeFileForTrack (*track));
+            REQUIRE (freezeFile.getFile().existsAsFile());
+            CHECK_LE (freezeFile.getInfo().numChannels, 2);
+
+            const auto frozenRMS = freeze_test_helpers::getLivePlaybackRMS (*edit, length);
+            CHECK_MESSAGE (std::abs (frozenRMS - unfrozenRMS) <= unfrozenRMS * 0.1f,
+                           ("Frozen RMS " + juce::String (frozenRMS, 4) + " vs unfrozen RMS " + juce::String (unfrozenRMS, 4)
+                             + ", freeze file channels " + juce::String (freezeFile.getInfo().numChannels)
+                             + ", size " + juce::File::descriptionOfSizeInBytes (freezeFile.getFile().getSize())).toStdString());
+
+            track->setFrozen (false, AudioTrack::individualFreeze);
+            engine.getAudioFileManager().releaseAllFiles();
+            edit->getTempDirectory (false).deleteRecursively();
+        }
+    }
+
+    TEST_CASE ("Track Freeze: Freeze Point tracks routed elsewhere play back in the live graph")
+    {
+        // Only the plugins before the Freeze Point are rendered, so anything after it
+        // (sends, racks) has to keep working from the freeze file, as does a sidechain
+        // keyed from the frozen track
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512, .inputChannels = 0, .outputChannels = 2,
+                                                       .inputNames = {}, .outputNames = {} });
+
+        auto sin330 = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0, 2, 330.0f);
+        auto edit = test_utilities::createTestEdit (engine, 2, Edit::EditRole::forEditing);
+        edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
+        auto tracks = getAudioTracks (*edit);
+        auto& cache = edit->getPluginCache();
+
+        // Track 1: synth -> Freeze Point
+        tracks[0]->pluginList.insertPlugin (cache.createNewPlugin (FourOscPlugin::xmlTypeName, {}), 0, nullptr);
+        tracks[0]->pluginList.insertPlugin (cache.createNewPlugin (FreezePointPlugin::xmlTypeName, {}), 1, nullptr);
+        auto midiClip = tracks[0]->insertMIDIClip ({ 0_tp, 2_tp }, nullptr);
+        midiClip->getSequence().addNote (57, BeatPosition(), BeatDuration::fromBeats (4.0), 127, 0, nullptr);
+
+        SUBCASE ("Aux send after the Freeze Point")
+        {
+            tracks[0]->pluginList.insertPlugin (cache.createNewPlugin (AuxSendPlugin::xmlTypeName, {}), 2, nullptr);
+            tracks[1]->pluginList.insertPlugin (cache.createNewPlugin (AuxReturnPlugin::xmlTypeName, {}), 0, nullptr);
+        }
+
+        SUBCASE ("Rack after the Freeze Point")
+        {
+            Plugin::Array plugins;
+            plugins.add (cache.getOrCreatePluginFor (VolumeAndPanPlugin::create()));
+            auto rackType = RackType::createTypeToWrapPlugins (plugins, *edit);
+            tracks[0]->pluginList.insertPlugin (RackInstance::create (*rackType), 2);
+        }
+
+        SUBCASE ("Frozen track keys a sidechain")
+        {
+            insertWaveClip (*tracks[1], {}, sin330->getFile(), { .time = { 0_tp, 2_tp } }, DeleteExistingClips::no);
+
+            auto plugin = cache.createNewPlugin (CompressorPlugin::xmlTypeName, {});
+            tracks[1]->pluginList.insertPlugin (plugin, 0, nullptr);
+            auto comp = dynamic_cast<CompressorPlugin*> (plugin.get());
+            REQUIRE (comp != nullptr);
+            comp->useSidechainTrigger = true;
+            comp->setSidechainSourceID (tracks[0]->itemID);
+            comp->guessSidechainRouting();
+            comp->setThreshold (0.05f);
+            comp->setRatio (0.1f);
+        }
+
+        juce::MessageManager::getInstance()->runDispatchLoopUntil (200);
+        const auto length = 2_td;
+
+        const auto unfrozenRMS = freeze_test_helpers::getDevicePlaybackRMS (player, *edit, length);
+        REQUIRE_GT (unfrozenRMS, 0.05f);
+
+        tracks[0]->setFrozen (true, AudioTrack::individualFreeze);
+        REQUIRE (tracks[0]->isFrozen (AudioTrack::individualFreeze));
+
+        const auto frozenRMS = freeze_test_helpers::getDevicePlaybackRMS (player, *edit, length);
+        CHECK_MESSAGE (std::abs (frozenRMS - unfrozenRMS) <= unfrozenRMS * 0.1f,
+                       ("Frozen RMS " + juce::String (frozenRMS, 4) + " vs unfrozen RMS " + juce::String (unfrozenRMS, 4)).toStdString());
+
+        tracks[0]->setFrozen (false, AudioTrack::individualFreeze);
+        midiClip = nullptr;
+        edit->getTempDirectory (false).deleteRecursively();
+        edit = nullptr;
+        engine.getAudioFileManager().releaseAllFiles();
+    }
+
+    TEST_CASE ("Track Freeze: the freeze file format reads back as many channels as it wrote")
+    {
+        // Freeze files are written in the engine's own float format, which has to read
+        // back every channel a render can produce (Racks have up to 64 outputs)
+        auto& engine = *Engine::getEngines()[0];
+        auto format = engine.getAudioFileFormatManager().getFrozenFileFormat();
+        REQUIRE (format != nullptr);
+
+        for (int numChannels : { 1, 2, 16, 17, 32, 64 })
+        {
+            CAPTURE (numChannels);
+            juce::TemporaryFile tempFile (".freeze");
+            const AudioFile audioFile (engine, tempFile.getFile());
+
+            {
+                AudioFileWriter writer (audioFile, format, numChannels, 44100.0, 32, {}, 0);
+                REQUIRE (writer.isOpen());
+
+                juce::AudioBuffer<float> buffer (numChannels, 4410);
+
+                for (int chan = 0; chan < numChannels; ++chan)
+                    juce::FloatVectorOperations::fill (buffer.getWritePointer (chan), (float) (chan + 1) / 100.0f, buffer.getNumSamples());
+
+                REQUIRE (writer.appendBuffer (buffer, buffer.getNumSamples()));
+            }
+
+            engine.getAudioFileManager().checkFileForChanges (audioFile);
+            const auto info = audioFile.getInfo();
+            CHECK_EQ (info.numChannels, numChannels);
+            CHECK_EQ (info.lengthInSamples, 4410);
+
+            if (auto buffer = test_utilities::loadFileInToBuffer (engine, tempFile.getFile()))
+            {
+                REQUIRE_EQ (buffer->getNumChannels(), numChannels);
+                CHECK_EQ (buffer->getSample (numChannels - 1, 100), doctest::Approx ((float) numChannels / 100.0f));
+            }
+            else
+            {
+                FAIL_CHECK ("Couldn't read the file back");
+            }
+
+            engine.getAudioFileManager().releaseFile (audioFile);
+        }
+    }
+
     TEST_CASE ("Track Freeze: Group freezing a track that can't be rendered unfreezes it")
     {
         // A group-frozen track is removed from the live graph and played back from its output
@@ -925,6 +1118,55 @@ TEST_SUITE ("tracktion_engine")
 
         CHECK_FALSE (track->isFrozen (Track::groupFreeze));
         CHECK (TemporaryFileManager::getFrozenTrackFiles (*edit).isEmpty());
+    }
+
+    TEST_CASE ("Track Freeze: Frozen track is audible in different track layouts")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine, 3, Edit::EditRole::forEditing);
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0, 2, 220.0f);
+
+        AudioTrack::Ptr track;
+
+        SUBCASE ("Third track")
+        {
+            track = getAudioTracks (*edit)[2];
+        }
+
+        SUBCASE ("After a folder")
+        {
+            auto folder = edit->insertNewFolderTrack (TrackInsertPoint (nullptr, nullptr), nullptr, false);
+            edit->insertNewAudioTrack (TrackInsertPoint (folder.get(), nullptr), nullptr);
+            track = edit->insertNewAudioTrack (TrackInsertPoint (nullptr, folder.get()), nullptr);
+        }
+
+        SUBCASE ("After a submix")
+        {
+            auto folder = edit->insertNewFolderTrack (TrackInsertPoint (nullptr, nullptr), nullptr, true);
+            edit->insertNewAudioTrack (TrackInsertPoint (folder.get(), nullptr), nullptr);
+            track = edit->insertNewAudioTrack (TrackInsertPoint (nullptr, folder.get()), nullptr);
+        }
+
+        SUBCASE ("Inside a folder")
+        {
+            auto folder = edit->insertNewFolderTrack (TrackInsertPoint (nullptr, nullptr), nullptr, false);
+            edit->insertNewAudioTrack (TrackInsertPoint (folder.get(), nullptr), nullptr);
+            track = edit->insertNewAudioTrack (TrackInsertPoint (folder.get(), nullptr), nullptr);
+        }
+
+        SUBCASE ("After marker and chord tracks")
+        {
+            edit->ensureMarkerTrack();
+            edit->ensureChordTrack();
+            edit->ensureArrangerTrack();
+            track = getAudioTracks (*edit)[1];
+        }
+
+        REQUIRE (track != nullptr);
+        insertWaveClip (*track, {}, sinFile->getFile(), { .time = { 0_tp, 2_tp } }, DeleteExistingClips::no);
+        juce::MessageManager::getInstance()->runDispatchLoopUntil (200);
+
+        freeze_test_helpers::checkFrozenTrackMatchesUnfrozenPlayback (*edit, *track);
     }
 
     TEST_CASE ("Track Freeze: Group freeze matches a track to its output device")

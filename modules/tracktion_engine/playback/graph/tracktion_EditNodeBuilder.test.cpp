@@ -12,6 +12,7 @@
 #if TRACKTION_UNIT_TESTS && GRAPH_UNIT_TESTS_EDITNODE
 
 #include "../../utilities/tracktion_TestUtilities.h"
+#include "../../testing/tracktion_EnginePlayer.h"
 #include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
 
 namespace tracktion::inline engine {
@@ -813,6 +814,188 @@ TEST_CASE ("Generator plugin Node: SilentNode stays silent with node memory shar
         auto silentBuffer = toAudioBuffer (silent->getProcessedOutput().audio);
         CHECK (silentBuffer.getMagnitude (0, silentBuffer.getNumSamples()) == 0.0f);
     }
+}
+
+//==============================================================================
+namespace routing_test_helpers
+{
+    /** Wraps a VolumeAndPanPlugin in a Rack and connects it to numOutputs rack outputs,
+        as wrapping a multi-out instrument does.
+    */
+    inline RackType::Ptr createWrapperRack (Edit& edit, int numOutputs)
+    {
+        auto volPan = edit.getPluginCache().getOrCreatePluginFor (VolumeAndPanPlugin::create());
+        Plugin::Array plugins;
+        plugins.add (volPan);
+        auto rackType = RackType::createTypeToWrapPlugins (plugins, edit);
+
+        while (rackType->getOutputNames().size() < numOutputs + 1) // +1 for the MIDI output
+        {
+            const auto pin = rackType->getOutputNames().size();
+            rackType->addOutput (-1, "Output " + juce::String (pin));
+            rackType->addConnection (volPan->itemID, 1 + (pin - 1) % 2, {}, pin);
+        }
+
+        return rackType;
+    }
+
+    inline RackInstance* insertRackInstance (AudioTrack& track, RackType& rackType)
+    {
+        return dynamic_cast<RackInstance*> (track.pluginList.insertPlugin (RackInstance::create (rackType), 0).get());
+    }
+
+    inline CompressorPlugin* insertSidechainedCompressor (AudioTrack& track, AudioTrack& source)
+    {
+        auto plugin = track.edit.getPluginCache().createNewPlugin (CompressorPlugin::xmlTypeName, {});
+        track.pluginList.insertPlugin (plugin, 0, nullptr);
+        auto comp = dynamic_cast<CompressorPlugin*> (plugin.get());
+        REQUIRE (comp != nullptr);
+        comp->useSidechainTrigger = true;
+        comp->setSidechainSourceID (source.itemID);
+        comp->guessSidechainRouting();
+        comp->setThreshold (0.05f);
+        comp->setRatio (0.1f);
+        return comp;
+    }
+
+    /** Plays the Edit through the live device graph (as the app does) and returns the RMS of
+        the second half of channel 0, so any file cache warm-up at the start is ignored.
+    */
+    inline float getDevicePlaybackRMS (test_utilities::EnginePlayer& player, Edit& edit, TimeDuration length)
+    {
+        auto& tc = edit.getTransport();
+        tc.freePlaybackContext();
+        tc.setPosition (0_tp);
+        tc.play (false);
+
+        auto buffer = player.process (toSamples (length, player.getParams().sampleRate));
+        tc.stop (false, true);
+
+        const auto half = buffer.getNumSamples() / 2;
+        return buffer.getRMSLevel (0, half, buffer.getNumSamples() - half);
+    }
+}
+
+TEST_CASE ("Edit Node Builder: routing doesn't widen a stereo render")
+{
+    // Racks, sends, sidechains and bus tracks are all processed off to the side of the
+    // track's own signal path, so none of them should change the channel count of the
+    // Edit's output. Renders size their files from this, so a wider graph means a
+    // wider file full of silent channels
+    using namespace routing_test_helpers;
+    auto& engine = *Engine::getEngines()[0];
+
+    auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0, 2, 220.0f);
+    auto edit = test_utilities::createTestEdit (engine, 2);
+    auto tracks = getAudioTracks (*edit);
+    insertWaveClip (*tracks[0], {}, sinFile->getFile(), { .time = { 0_tp, 1_tp } }, DeleteExistingClips::no);
+
+    SUBCASE ("No routing")                              {}
+    SUBCASE ("Wrapped rack with 2 connected outputs")   { insertRackInstance (*tracks[0], *createWrapperRack (*edit, 2)); }
+    SUBCASE ("Wrapped rack with 64 connected outputs")  { insertRackInstance (*tracks[0], *createWrapperRack (*edit, 64)); }
+
+    SUBCASE ("Two instances of one rack type")
+    {
+        auto rackType = createWrapperRack (*edit, 2);
+        insertRackInstance (*tracks[0], *rackType);
+        insertRackInstance (*tracks[1], *rackType);
+    }
+
+    SUBCASE ("Aux send and return")
+    {
+        tracks[0]->pluginList.insertPlugin (edit->getPluginCache().createNewPlugin (AuxSendPlugin::xmlTypeName, {}), 0, nullptr);
+        tracks[1]->pluginList.insertPlugin (edit->getPluginCache().createNewPlugin (AuxReturnPlugin::xmlTypeName, {}), 0, nullptr);
+    }
+
+    SUBCASE ("Sidechain source")
+    {
+        insertSidechainedCompressor (*tracks[1], *tracks[0]);
+    }
+
+    SUBCASE ("Bus track")
+    {
+        tracks[0]->pluginList.insertPlugin (edit->getPluginCache().createNewPlugin (AuxSendPlugin::xmlTypeName, {}), 0, nullptr);
+        tracks[1]->getOutput().setOutputToNone();
+        tracks[1]->pluginList.insertPlugin (edit->getPluginCache().createNewPlugin (AuxReturnPlugin::xmlTypeName, {}), 0, nullptr);
+    }
+
+    {
+        tracktion::graph::PlayHead playHead;
+        tracktion::graph::PlayHeadState playHeadState { playHead };
+        ProcessState processState { playHeadState, edit->tempoSequence };
+
+        auto node = editnode_test_helpers::createNode (*edit, processState, 44100.0, 512);
+        REQUIRE (node != nullptr);
+        CHECK_EQ (node->getNodeProperties().numberOfChannels, 2);
+    }
+
+    auto render = test_utilities::renderToAudioBuffer (*edit);
+    CHECK_EQ (render.buffer.getNumChannels(), 2);
+    CHECK_GT (test_utilities::getRMSLevel (render, { 0_tp, 1_tp }, 0), 0.1f);
+
+    engine.getAudioFileManager().releaseAllFiles();
+    edit->getTempDirectory (false).deleteRecursively();
+}
+
+TEST_CASE ("Edit Node Builder: live device graph routing")
+{
+    // The live graph groups tracks by output device and sinks tracks with no output,
+    // which the render graph used by most tests doesn't do
+    using namespace routing_test_helpers;
+    auto& engine = *Engine::getEngines()[0];
+    test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512, .inputChannels = 0, .outputChannels = 2,
+                                                   .inputNames = {}, .outputNames = {} });
+
+    auto sin220 = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0, 2, 220.0f);
+    auto sin330 = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0, 2, 330.0f);
+    auto edit = test_utilities::createTestEdit (engine, 2, Edit::EditRole::forEditing);
+    edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
+    auto tracks = getAudioTracks (*edit);
+    auto sourceClip = insertWaveClip (*tracks[0], {}, sin220->getFile(), { .time = { 0_tp, 2_tp } }, DeleteExistingClips::no);
+    const auto length = 2_td;
+
+    SUBCASE ("Track with a rack plays")
+    {
+        insertRackInstance (*tracks[0], *createWrapperRack (*edit, 2));
+        CHECK_EQ (getDevicePlaybackRMS (player, *edit, length), doctest::Approx (0.707f).epsilon (0.05));
+    }
+
+    SUBCASE ("Track with a 64-output rack plays")
+    {
+        insertRackInstance (*tracks[0], *createWrapperRack (*edit, 64));
+        CHECK_EQ (getDevicePlaybackRMS (player, *edit, length), doctest::Approx (0.707f).epsilon (0.05));
+    }
+
+    SUBCASE ("Bus track feeds an aux return on another track")
+    {
+        // Track 1 has no output, so it's only heard through its aux send
+        tracks[0]->getOutput().setOutputToNone();
+        tracks[0]->pluginList.insertPlugin (edit->getPluginCache().createNewPlugin (AuxSendPlugin::xmlTypeName, {}), 0, nullptr);
+        tracks[1]->pluginList.insertPlugin (edit->getPluginCache().createNewPlugin (AuxReturnPlugin::xmlTypeName, {}), 0, nullptr);
+
+        CHECK_EQ (getDevicePlaybackRMS (player, *edit, length), doctest::Approx (0.707f).epsilon (0.05));
+    }
+
+    SUBCASE ("Bus track keys a sidechain")
+    {
+        // Track 1 has no output, so it's only heard through the compressor it keys
+        tracks[0]->getOutput().setOutputToNone();
+        insertWaveClip (*tracks[1], {}, sin330->getFile(), { .time = { 0_tp, 2_tp } }, DeleteExistingClips::no);
+        insertSidechainedCompressor (*tracks[1], *tracks[0]);
+
+        sourceClip->setMuted (true);
+        const auto unkeyedRMS = getDevicePlaybackRMS (player, *edit, length);
+        REQUIRE_GT (unkeyedRMS, 0.1f);
+
+        sourceClip->setMuted (false);
+        const auto keyedRMS = getDevicePlaybackRMS (player, *edit, length);
+        CHECK_MESSAGE (keyedRMS < unkeyedRMS * 0.7f,
+                       ("Keyed RMS " + juce::String (keyedRMS, 4) + " vs unkeyed RMS " + juce::String (unkeyedRMS, 4)).toStdString());
+    }
+
+    sourceClip = nullptr;
+    edit = nullptr;
+    engine.getAudioFileManager().releaseAllFiles();
 }
 
 } // TEST_SUITE
