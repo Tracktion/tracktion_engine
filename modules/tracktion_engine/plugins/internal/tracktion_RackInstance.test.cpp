@@ -601,6 +601,16 @@ TEST_SUITE("tracktion_engine")
         const auto stats = Renderer::measureStatistics ({}, *edit, { 0.1_tp, 0.9_tp }, toBitSet (getAllTracks (*edit)), 512);
         CHECK_EQ (stats.peak, doctest::Approx (2.0f).epsilon (0.02));
 
+        // Rendering to a file takes a different path, so check that too, turning the tracks
+        // down to avoid clipping the fixed-point file
+        for (auto t : tracks)
+            t->getVolumePlugin()->setVolumeDb (-12.0f);
+
+        auto render = test_utilities::renderToAudioBuffer (*edit);
+        const auto startSample = (int) toSamples (0.1_td, render.sampleRate);
+        const auto numSamples = (int) toSamples (0.8_td, render.sampleRate);
+        CHECK_EQ (render.buffer.getMagnitude (0, startSample, numSamples), doctest::Approx (2.0f * dbToGain (-12.0f)).epsilon (0.02));
+
         engine.getAudioFileManager().releaseAllFiles();
         edit->getTempDirectory (false).deleteRecursively();
     }
