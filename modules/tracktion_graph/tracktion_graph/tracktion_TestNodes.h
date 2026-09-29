@@ -766,6 +766,11 @@ public:
         auto props = input->getNodeProperties();
         hash_combine (props.nodeID, sinkNodeMagicHash);
 
+        // Nothing is output, so don't make the Nodes this feeds in to any wider
+        props.hasAudio = false;
+        props.hasMidi = false;
+        props.numberOfChannels = 0;
+
         return props;
     }
 

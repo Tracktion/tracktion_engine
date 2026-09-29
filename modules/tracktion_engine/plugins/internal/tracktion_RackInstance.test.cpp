@@ -490,6 +490,120 @@ TEST_SUITE("tracktion_engine")
             CHECK (rackInstance->getInputMapping (0) == 1);
         }
     }
+
+    TEST_CASE ("Rack instance: stereo instance of a 64-output rack")
+    {
+        // Wrapping a multi-out instrument gives the rack one output per plugin output,
+        // but a default instance only maps the first two back on to the track
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0, 2, 220.0f);
+        insertWaveClip (*track, {}, sinFile->getFile(), { .time = { 0_tp, 1_tp } }, DeleteExistingClips::no);
+
+        auto volPan = edit->getPluginCache().getOrCreatePluginFor (VolumeAndPanPlugin::create());
+        Plugin::Array plugins;
+        plugins.add (volPan);
+        auto rackType = RackType::createTypeToWrapPlugins (plugins, *edit);
+
+        while (rackType->getOutputNames().size() < 65) // 64 audio outputs + MIDI
+        {
+            const auto pin = rackType->getOutputNames().size();
+            rackType->addOutput (-1, "Output " + juce::String (pin));
+            rackType->addConnection (volPan->itemID, 1 + (pin - 1) % 2, {}, pin);
+        }
+
+        auto rackInstance = dynamic_cast<RackInstance*> (track->pluginList.insertPlugin (RackInstance::create (*rackType), 0).get());
+        REQUIRE (rackInstance != nullptr);
+        CHECK_EQ (rackInstance->getNumOutputChannels(), 2);
+
+        auto render = test_utilities::renderToAudioBuffer (*edit);
+        REQUIRE_GE (render.buffer.getNumChannels(), 2);
+        CHECK_EQ (test_utilities::getRMSLevel (render, { 0_tp, 1_tp }, 0), doctest::Approx (0.707f).epsilon (0.02));
+        CHECK_EQ (test_utilities::getRMSLevel (render, { 0_tp, 1_tp }, 1), doctest::Approx (0.707f).epsilon (0.02));
+
+        engine.getAudioFileManager().releaseAllFiles();
+        edit->getTempDirectory (false).deleteRecursively();
+    }
+
+    TEST_CASE ("Rack instance: every instance of a rack type returns the rack's output")
+    {
+        // Instances of the same rack type all send into, and return from, one shared rack
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine, 2);
+        auto tracks = getAudioTracks (*edit);
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0, 2, 220.0f);
+
+        for (auto t : tracks)
+            insertWaveClip (*t, {}, sinFile->getFile(), { .time = { 0_tp, 1_tp } }, DeleteExistingClips::no);
+
+        Plugin::Array plugins;
+        plugins.add (edit->getPluginCache().getOrCreatePluginFor (VolumeAndPanPlugin::create()));
+        auto rackType = RackType::createTypeToWrapPlugins (plugins, *edit);
+
+        auto instance1 = dynamic_cast<RackInstance*> (tracks[0]->pluginList.insertPlugin (RackInstance::create (*rackType), 0).get());
+        auto instance2 = dynamic_cast<RackInstance*> (tracks[1]->pluginList.insertPlugin (RackInstance::create (*rackType), 0).get());
+        REQUIRE (instance1 != nullptr);
+        REQUIRE (instance2 != nullptr);
+
+        // N.B. measureStatistics doesn't clip, unlike rendering to a fixed-point file
+        auto getPeak = [&] { return Renderer::measureStatistics ({}, *edit, { 0_tp, 1_tp }, toBitSet (getAllTracks (*edit)), 512).peak; };
+
+        // The rack sums both tracks (2.0) and each instance returns that sum
+        CHECK_EQ (getPeak(), doctest::Approx (4.0f).epsilon (0.01));
+
+        // With track 2's instance fully dry it returns its own input, and still sends to the rack
+        instance2->wetGain->setParameter (0.0f, juce::dontSendNotification);
+        instance2->dryGain->setParameter (1.0f, juce::dontSendNotification);
+        CHECK_EQ (getPeak(), doctest::Approx (3.0f).epsilon (0.01));
+
+        engine.getAudioFileManager().releaseAllFiles();
+        edit->getTempDirectory (false).deleteRecursively();
+    }
+
+    TEST_CASE ("Rack instance: latency inside a rack is compensated")
+    {
+        // A plugin's latency inside a rack reaches the track through the rack's return,
+        // so the other tracks have to be delayed to match
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        engine.getPluginManager().createBuiltInType<LatencyPlugin>();
+
+        auto edit = test_utilities::createTestEdit (engine, 2);
+        auto tracks = getAudioTracks (*edit);
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0, 2, 220.0f);
+
+        for (auto t : tracks)
+            insertWaveClip (*t, {}, sinFile->getFile(), { .time = { 0_tp, 1_tp } }, DeleteExistingClips::no);
+
+        auto latency = edit->getPluginCache().createNewPlugin (LatencyPlugin::xmlTypeName, {});
+        REQUIRE (latency != nullptr);
+
+        // Half a cycle of 220Hz, so the two tracks would cancel out if the latency wasn't compensated
+        dynamic_cast<LatencyPlugin&> (*latency).latencyTimeSeconds = 0.5f / 220.0f;
+
+        SUBCASE ("Directly on the track")
+        {
+            tracks[0]->pluginList.insertPlugin (latency, 0, nullptr);
+        }
+
+        SUBCASE ("Inside a rack")
+        {
+            Plugin::Array plugins;
+            plugins.add (latency);
+            auto rackType = RackType::createTypeToWrapPlugins (plugins, *edit);
+            REQUIRE (tracks[0]->pluginList.insertPlugin (RackInstance::create (*rackType), 0) != nullptr);
+        }
+
+        // N.B. measureStatistics doesn't clip, unlike rendering to a fixed-point file
+        const auto stats = Renderer::measureStatistics ({}, *edit, { 0.1_tp, 0.9_tp }, toBitSet (getAllTracks (*edit)), 512);
+        CHECK_EQ (stats.peak, doctest::Approx (2.0f).epsilon (0.02));
+
+        engine.getAudioFileManager().releaseAllFiles();
+        edit->getTempDirectory (false).deleteRecursively();
+    }
 }
 #endif
 

@@ -15,6 +15,9 @@ static int getFloatFileHeaderIntV2()  { return (int) juce::ByteOrder::littleEndi
 
 
 //==============================================================================
+// Freeze files can hold every output of a Rack, which is up to 64 channels
+static constexpr unsigned int maxFloatFileChannels = 64;
+
 class FloatAudioFormatReader  : public juce::AudioFormatReader
 {
 public:
@@ -33,7 +36,7 @@ public:
             bigEndian       = in->readShort() != 0;
             bitsPerSample   = 32;
 
-            if (sampleRate < 32000 || sampleRate > 192000 || numChannels < 1 || numChannels > 16)
+            if (sampleRate < 32000 || sampleRate > 192000 || numChannels < 1 || numChannels > maxFloatFileChannels)
                 sampleRate = 0;
         }
         else if (header == getFloatFileHeaderIntV2())
@@ -45,7 +48,7 @@ public:
             bigEndian       = in->readShort() != 0;
             bitsPerSample   = 32;
 
-            if (sampleRate < 32000 || sampleRate > 192000 || numChannels < 1 || numChannels > 16)
+            if (sampleRate < 32000 || sampleRate > 192000 || numChannels < 1 || numChannels > maxFloatFileChannels)
                 sampleRate = 0;
         }
     }
