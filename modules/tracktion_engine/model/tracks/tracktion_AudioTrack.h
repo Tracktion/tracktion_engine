@@ -105,6 +105,12 @@ public:
     void removeFreezePoint();
     void freezeTrackAsync() const;
 
+    /** Returns the other tracks fed by the plugins before this track's Freeze Point, through a
+        shared Rack or an aux send. Freezing bypasses those plugins, so these tracks would go
+        silent and the track can't be frozen individually.
+    */
+    juce::Array<Track*> getTracksFedByFreezablePlugins();
+
     //==============================================================================
     bool hasAnyLiveInputs();
     bool hasAnyTracksFeedingIn();
@@ -169,6 +175,24 @@ public:
         FreezePointRemovalInhibitor (AudioTrack&);
         ~FreezePointRemovalInhibitor();
         AudioTrack& track;
+    };
+
+    /** While in scope, the warnings from tracks which can't be frozen are collected and shown
+        as a single message when it goes out of scope, rather than one per track.
+        Use this when freezing several tracks at once.
+    */
+    struct ScopedFreezeWarningCollector
+    {
+        ScopedFreezeWarningCollector (Edit&);
+        ~ScopedFreezeWarningCollector();
+
+        Edit& edit;
+        juce::StringArray tracksNotFrozen; /**< Each track's name and why it couldn't be frozen. */
+
+    private:
+        ScopedFreezeWarningCollector* previous = nullptr;
+
+        JUCE_DECLARE_NON_COPYABLE (ScopedFreezeWarningCollector)
     };
 
     //==============================================================================
@@ -248,6 +272,7 @@ private:
 
     //==============================================================================
     void freezeTrack();
+    void showCantFreezeWarning (const juce::String& message, const juce::String& reason);
     bool insertFreezePointIfRequired();
     int getIndexOfDefaultFreezePoint();
     int getIndexOfFreezePoint();

@@ -1012,8 +1012,23 @@ void AudioTrack::setFrozen (bool b, FreezeType type)
         {
             if (b && getOutput().getDestinationTrack() != nullptr)
             {
-                edit.engine.getUIBehaviour().showWarningMessage (TRANS("Tracks which output to another track can't themselves be frozen; "
-                                                                       "instead, you should freeze the track they input into."));
+                showCantFreezeWarning (TRANS("Tracks which output to another track can't themselves be frozen; "
+                                             "instead, you should freeze the track they input into."),
+                                       TRANS("It outputs to another track"));
+            }
+            else if (auto fedTracks = b ? getTracksFedByFreezablePlugins() : juce::Array<Track*>(); ! fedTracks.isEmpty())
+            {
+                juce::StringArray names;
+
+                for (auto t : fedTracks)
+                    names.add ("\"" + t->getName() + "\"");
+
+                showCantFreezeWarning (TRANS("\"XTRKX\" can't be frozen because plugins before its Freeze Point feed other tracks (XLSTX) "
+                                             "through a Rack or aux send, and those tracks would go silent.")
+                                         .replace ("XTRKX", getName())
+                                         .replace ("XLSTX", names.joinIntoString (", ")),
+                                       TRANS("Plugins before its Freeze Point feed XLSTX through a Rack or aux send")
+                                         .replace ("XLSTX", names.joinIntoString (", ")));
             }
             else
             {
@@ -1037,8 +1052,9 @@ void AudioTrack::setFrozen (bool b, FreezeType type)
 
                 if (b && (getOutput().getDestinationTrack() != nullptr || outputsToSubmixTrack()))
                 {
-                    edit.engine.getUIBehaviour().showWarningMessage (TRANS("Tracks which output to another track can't themselves be frozen; "
-                                                                           "instead, you should freeze the track they input into."));
+                    showCantFreezeWarning (TRANS("Tracks which output to another track can't themselves be frozen; "
+                                                 "instead, you should freeze the track they input into."),
+                                           TRANS("It outputs to another track"));
                 }
                 else
                 {
@@ -1059,6 +1075,35 @@ bool AudioTrack::canContainPlugin (Plugin* p) const
 }
 
 //==============================================================================
+//==============================================================================
+static AudioTrack::ScopedFreezeWarningCollector* activeFreezeWarningCollector = nullptr;
+
+AudioTrack::ScopedFreezeWarningCollector::ScopedFreezeWarningCollector (Edit& e)
+    : edit (e), previous (activeFreezeWarningCollector)
+{
+    JUCE_ASSERT_MESSAGE_THREAD
+    activeFreezeWarningCollector = this;
+}
+
+AudioTrack::ScopedFreezeWarningCollector::~ScopedFreezeWarningCollector()
+{
+    activeFreezeWarningCollector = previous;
+
+    if (previous != nullptr)
+        previous->tracksNotFrozen.addArray (tracksNotFrozen);
+    else if (! tracksNotFrozen.isEmpty())
+        edit.engine.getUIBehaviour().showWarningMessage (TRANS("These tracks couldn't be frozen:")
+                                                         + "\n\n" + tracksNotFrozen.joinIntoString ("\n"));
+}
+
+void AudioTrack::showCantFreezeWarning (const juce::String& message, const juce::String& reason)
+{
+    if (auto collector = activeFreezeWarningCollector; collector != nullptr && &collector->edit == &edit)
+        collector->tracksNotFrozen.add ("\"" + getName() + "\": " + reason);
+    else
+        edit.engine.getUIBehaviour().showWarningMessage (message);
+}
+
 AudioTrack::FreezePointRemovalInhibitor::FreezePointRemovalInhibitor (AudioTrack& at) : track (at)  { ++track.freezePointRemovalInhibitor; }
 AudioTrack::FreezePointRemovalInhibitor::~FreezePointRemovalInhibitor()                             { --track.freezePointRemovalInhibitor; }
 
@@ -1123,6 +1168,49 @@ void AudioTrack::freezeTrack()
     }
 
     changed();
+}
+
+juce::Array<Track*> AudioTrack::getTracksFedByFreezablePlugins()
+{
+    // Without a Freeze Point, freezing inserts one at the default position (or the end)
+    auto freezeIndex = getIndexOfFreezePoint();
+
+    if (freezeIndex < 0)
+        freezeIndex = getIndexOfDefaultFreezePoint();
+
+    if (freezeIndex < 0)
+        freezeIndex = pluginList.size();
+
+    juce::Array<Track*> tracks;
+
+    auto addOwnerTrack = [this, &tracks] (Plugin& p)
+    {
+        if (auto t = p.getOwnerTrack(); t != nullptr && t != this)
+            tracks.addIfNotAlreadyThere (t);
+    };
+
+    for (int i = 0; i < std::min (freezeIndex, pluginList.size()); ++i)
+    {
+        auto p = pluginList[i];
+
+        if (! p->isEnabled())
+            continue;
+
+        if (auto rackInstance = dynamic_cast<RackInstance*> (p); rackInstance != nullptr && rackInstance->type != nullptr)
+        {
+            for (auto instance : getRackInstancesInEditForType (*rackInstance->type))
+                addOwnerTrack (*instance);
+        }
+        else if (auto send = dynamic_cast<AuxSendPlugin*> (p))
+        {
+            for (auto other : edit.getPluginCache().getPlugins())
+                if (auto auxReturn = dynamic_cast<AuxReturnPlugin*> (other))
+                    if (auxReturn->busNumber == send->getBusNumber())
+                        addOwnerTrack (*auxReturn);
+        }
+    }
+
+    return tracks;
 }
 
 int AudioTrack::getIndexOfFreezePoint()
