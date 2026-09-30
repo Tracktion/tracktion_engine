@@ -100,7 +100,7 @@ public:
 
     //==============================================================================
     bool isFrozen (FreezeType) const override;
-    void setFrozen (bool, FreezeType) override;
+    [[nodiscard]] juce::Result setFrozen (bool, FreezeType) override;
     void insertFreezePointAfterPlugin (const Plugin::Ptr&);
     void removeFreezePoint();
     void freezeTrackAsync() const;
@@ -175,24 +175,6 @@ public:
         FreezePointRemovalInhibitor (AudioTrack&);
         ~FreezePointRemovalInhibitor();
         AudioTrack& track;
-    };
-
-    /** While in scope, the warnings from tracks which can't be frozen are collected and shown
-        as a single message when it goes out of scope, rather than one per track.
-        Use this when freezing several tracks at once.
-    */
-    struct ScopedFreezeWarningCollector
-    {
-        ScopedFreezeWarningCollector (Edit&);
-        ~ScopedFreezeWarningCollector();
-
-        Edit& edit;
-        juce::StringArray tracksNotFrozen; /**< Each track's name and why it couldn't be frozen. */
-
-    private:
-        ScopedFreezeWarningCollector* previous = nullptr;
-
-        JUCE_DECLARE_NON_COPYABLE (ScopedFreezeWarningCollector)
     };
 
     //==============================================================================
@@ -272,7 +254,6 @@ private:
 
     //==============================================================================
     void freezeTrack();
-    void showCantFreezeWarning (const juce::String& message, const juce::String& reason);
     bool insertFreezePointIfRequired();
     int getIndexOfDefaultFreezePoint();
     int getIndexOfFreezePoint();

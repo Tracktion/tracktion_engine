@@ -100,7 +100,8 @@ public:
     BusLayout getBusses() const override   { return BusLayout::singlePassThrough(); }
 
     bool isTrackFrozen() const;
-    void freezeTrack (bool shouldBeFrozen);
+    /** Freezes or unfreezes the track, returning why if it couldn't be frozen. @see Track::setFrozen */
+    [[nodiscard]] juce::Result freezeTrack (bool shouldBeFrozen);
 
 private:
     //==============================================================================

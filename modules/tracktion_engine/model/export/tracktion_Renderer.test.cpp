@@ -823,7 +823,7 @@ namespace freeze_test_helpers
         const auto unfrozenRMS = getLivePlaybackRMS (edit, length);
         REQUIRE_GT (unfrozenRMS, 0.05f);
 
-        track.setFrozen (true, AudioTrack::individualFreeze);
+        REQUIRE (track.setFrozen (true, AudioTrack::individualFreeze).wasOk());
         REQUIRE (track.isFrozen (AudioTrack::individualFreeze));
         REQUIRE (TemporaryFileManager::getFreezeFileForTrack (track).existsAsFile());
 
@@ -831,7 +831,7 @@ namespace freeze_test_helpers
         CHECK_MESSAGE (std::abs (frozenRMS - unfrozenRMS) <= unfrozenRMS * 0.1f,
                        ("Frozen RMS " + juce::String (frozenRMS, 4) + " vs unfrozen RMS " + juce::String (unfrozenRMS, 4)).toStdString());
 
-        track.setFrozen (false, AudioTrack::individualFreeze);
+        track.unfreeze (AudioTrack::individualFreeze);
         edit.engine.getAudioFileManager().releaseAllFiles();
         edit.getTempDirectory (false).deleteRecursively();
     }
@@ -875,7 +875,7 @@ TEST_SUITE ("tracktion_engine")
         const auto expectedTotalLength = trackLength + TimeDuration::fromSeconds (tailLength);
 
         {
-            track->setFrozen (true, AudioTrack::individualFreeze);
+            REQUIRE (track->setFrozen (true, AudioTrack::individualFreeze).wasOk());
             const auto freezeFile = AudioFile (engine, TemporaryFileManager::getFreezeFileForTrack (*track));
             CHECK (std::abs (freezeFile.getLength() - expectedTotalLength.inSeconds()) <= 0.001);
 
@@ -885,7 +885,7 @@ TEST_SUITE ("tracktion_engine")
         }
 
         {
-            track->setFrozen (false, AudioTrack::individualFreeze);
+            track->unfreeze (AudioTrack::individualFreeze);
 
             // Create a new track and set the destination of the first one to this
             auto track2 = edit->insertNewAudioTrack ({ {},{} }, nullptr);
@@ -895,7 +895,7 @@ TEST_SUITE ("tracktion_engine")
                            "End allowance of new empty track is not 0");
 
             // Now freeze this track and it should contain track's end allowance
-            track2->setFrozen (true, AudioTrack::individualFreeze);
+            REQUIRE (track2->setFrozen (true, AudioTrack::individualFreeze).wasOk());
             const auto freezeFile = AudioFile (engine, TemporaryFileManager::getFreezeFileForTrack (*track2));
             CHECK (std::abs (freezeFile.getLength() - expectedTotalLength.inSeconds()) <= 0.001);
 
@@ -987,7 +987,7 @@ TEST_SUITE ("tracktion_engine")
             const auto unfrozenRMS = freeze_test_helpers::getLivePlaybackRMS (*edit, length);
             REQUIRE_GT (unfrozenRMS, 0.05f);
 
-            track->setFrozen (true, AudioTrack::individualFreeze);
+            REQUIRE (track->setFrozen (true, AudioTrack::individualFreeze).wasOk());
             REQUIRE (track->isFrozen (AudioTrack::individualFreeze));
 
             const auto freezeFile = AudioFile (engine, TemporaryFileManager::getFreezeFileForTrack (*track));
@@ -1000,7 +1000,7 @@ TEST_SUITE ("tracktion_engine")
                              + ", freeze file channels " + juce::String (freezeFile.getInfo().numChannels)
                              + ", size " + juce::File::descriptionOfSizeInBytes (freezeFile.getFile().getSize())).toStdString());
 
-            track->setFrozen (false, AudioTrack::individualFreeze);
+            track->unfreeze (AudioTrack::individualFreeze);
             engine.getAudioFileManager().releaseAllFiles();
             edit->getTempDirectory (false).deleteRecursively();
         }
@@ -1062,14 +1062,14 @@ TEST_SUITE ("tracktion_engine")
         const auto unfrozenRMS = freeze_test_helpers::getDevicePlaybackRMS (player, *edit, length);
         REQUIRE_GT (unfrozenRMS, 0.05f);
 
-        tracks[0]->setFrozen (true, AudioTrack::individualFreeze);
+        REQUIRE (tracks[0]->setFrozen (true, AudioTrack::individualFreeze).wasOk());
         REQUIRE (tracks[0]->isFrozen (AudioTrack::individualFreeze));
 
         const auto frozenRMS = freeze_test_helpers::getDevicePlaybackRMS (player, *edit, length);
         CHECK_MESSAGE (std::abs (frozenRMS - unfrozenRMS) <= unfrozenRMS * 0.1f,
                        ("Frozen RMS " + juce::String (frozenRMS, 4) + " vs unfrozen RMS " + juce::String (unfrozenRMS, 4)).toStdString());
 
-        tracks[0]->setFrozen (false, AudioTrack::individualFreeze);
+        tracks[0]->unfreeze (AudioTrack::individualFreeze);
         midiClip = nullptr;
         edit->getTempDirectory (false).deleteRecursively();
         edit = nullptr;
@@ -1125,7 +1125,9 @@ TEST_SUITE ("tracktion_engine")
         const auto unfrozenRMS = freeze_test_helpers::getLivePlaybackRMS (*edit, length);
         REQUIRE_GT (unfrozenRMS, 0.05f);
 
-        trackToFreeze->setFrozen (true, AudioTrack::individualFreeze);
+        const auto result = trackToFreeze->setFrozen (true, AudioTrack::individualFreeze);
+        CHECK (result.failed());
+        CHECK (result.getErrorMessage().contains ("\"" + fedTrack->getName() + "\""));
         CHECK (! trackToFreeze->isFrozen (AudioTrack::individualFreeze));
         CHECK (! TemporaryFileManager::getFreezeFileForTrack (*trackToFreeze).exists());
 
@@ -1133,37 +1135,6 @@ TEST_SUITE ("tracktion_engine")
         CHECK (std::abs (afterRMS - unfrozenRMS) <= unfrozenRMS * 0.01f);
 
         edit->getTempDirectory (false).deleteRecursively();
-    }
-
-    TEST_CASE ("Track Freeze: Freezing several tracks collects the ones that can't be frozen")
-    {
-        auto& engine = *Engine::getEngines()[0];
-        auto edit = freeze_test_helpers::createMultiOutRackEdit (engine);
-        auto tracks = getAudioTracks (*edit);
-        tracks[0]->setName ("Synth");
-        tracks[1]->setName ("Kick");
-
-        {
-            const AudioTrack::ScopedFreezeWarningCollector outer (*edit);
-
-            {
-                const AudioTrack::ScopedFreezeWarningCollector inner (*edit);
-
-                for (auto t : tracks)
-                    t->setFrozen (true, AudioTrack::individualFreeze);
-
-                CHECK_EQ (inner.tracksNotFrozen.size(), 2);
-                CHECK (inner.tracksNotFrozen[0].startsWith ("\"Synth\""));
-                CHECK (inner.tracksNotFrozen[0].contains ("\"Kick\""));
-                CHECK (inner.tracksNotFrozen[1].startsWith ("\"Kick\""));
-            }
-
-            // Nested collectors pass their tracks on so only the outer one shows a message
-            CHECK_EQ (outer.tracksNotFrozen.size(), 2);
-        }
-
-        for (auto t : tracks)
-            CHECK (! t->isFrozen (AudioTrack::individualFreeze));
     }
 
     TEST_CASE ("Track Freeze: Tracks with racks and sends that only feed themselves can be frozen")
@@ -1276,7 +1247,7 @@ TEST_SUITE ("tracktion_engine")
         // Edits to the track unfreeze it, so let those settle before freezing
         juce::MessageManager::getInstance()->runDispatchLoopUntil (500);
 
-        track->setFrozen (true, Track::groupFreeze);
+        REQUIRE (track->setFrozen (true, Track::groupFreeze).wasOk());
         REQUIRE (track->isFrozen (Track::groupFreeze));
 
         // The freeze render happens asynchronously once the frozen flag changes
@@ -1398,7 +1369,7 @@ TEST_SUITE ("tracktion_engine")
         clip->setActiveChannelConfiguration (ChannelConfiguration::discreteChannels ((int) numSourceChannels));
 
         // Freeze the track
-        track->setFrozen (true, AudioTrack::individualFreeze);
+        REQUIRE (track->setFrozen (true, AudioTrack::individualFreeze).wasOk());
 
         // Verify the freeze file has the correct channel count
         const auto freezeFile = AudioFile (engine, TemporaryFileManager::getFreezeFileForTrack (*track));

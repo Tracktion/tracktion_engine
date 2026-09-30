@@ -136,8 +136,20 @@ public:
     /** Returns true if this track is frozen using the given type. */
     virtual bool isFrozen (FreezeType) const                    { return false; }
 
-    /** Attempts to freeze or unfreeze the track using a given FreezeType. */
-    virtual void setFrozen (bool /*shouldBeFrozen*/, FreezeType){}
+    /** Attempts to freeze or unfreeze the track using a given FreezeType.
+
+        Returns a failed Result with a message for the user if the track can't be frozen.
+        This used to show that message itself; to keep that behaviour, show it at the call site:
+        @code
+        if (auto r = track.setFrozen (true, Track::individualFreeze); r.failed())
+            track.edit.engine.getUIBehaviour().showWarningMessage (r.getErrorMessage());
+        @endcode
+        To unfreeze, use unfreeze(), which can't fail.
+    */
+    [[nodiscard]] virtual juce::Result setFrozen (bool /*shouldBeFrozen*/, FreezeType)  { return juce::Result::ok(); }
+
+    /** Unfreezes the track. anyFreeze removes both group and individual freezes. */
+    void unfreeze (FreezeType);
 
     /** Returns true if this track should be hidden from view. */
     bool isHidden() const                                       { return hidden; }

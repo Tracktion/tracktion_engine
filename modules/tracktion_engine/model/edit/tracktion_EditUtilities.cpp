@@ -367,8 +367,7 @@ void deleteRegionOfClip (Clip& c, TimeRange timeRangeToDelete)
 
     if (auto track = c.getClipTrack())
     {
-        track->setFrozen (false, Track::groupFreeze);
-        track->setFrozen (false, Track::individualFreeze);
+        track->unfreeze (Track::anyFreeze);
 
         const auto clipTimeRange = c.getEditTimeRange();
 

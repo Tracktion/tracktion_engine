@@ -85,14 +85,16 @@ private:
     {
         if (compareAndReset (triggerFreeze))
         {
+            // Nothing else asked for this freeze, so show why it failed here
             if (! owner.isFrozen (groupFreeze))
-                owner.setFrozen (true, Track::individualFreeze);
+                if (auto r = owner.setFrozen (true, Track::individualFreeze); r.failed())
+                    owner.edit.engine.getUIBehaviour().showWarningMessage (r.getErrorMessage());
         }
 
         if (compareAndReset (updateFreeze))
         {
             if (owner.isFrozen (Track::individualFreeze) && (! owner.hasFreezePointPlugin()))
-                owner.setFrozen (false, individualFreeze);
+                owner.unfreeze (individualFreeze);
         }
     }
 
@@ -181,7 +183,7 @@ void AudioTrack::initialise()
         getClipSlotList().ensureNumberOfSlots (edit.getSceneList().getNumScenes());
 
     if (frozenIndividually && ! getFreezeFile().existsAsFile())
-        setFrozen (false, individualFreeze);
+        unfreeze (individualFreeze);
 
     output->initialise();
 }
@@ -1004,36 +1006,36 @@ bool AudioTrack::isFrozen (FreezeType t) const
                           : (t == groupFreeze ? frozen : frozenIndividually);
 }
 
-void AudioTrack::setFrozen (bool b, FreezeType type)
+juce::Result AudioTrack::setFrozen (bool b, FreezeType type)
 {
+    const auto outputsToAnotherTrack = [this]
+    {
+        return juce::Result::fail (TRANS("\"XTRKX\" outputs to another track so can't be frozen itself; "
+                                         "instead, you should freeze the track it inputs into.")
+                                     .replace ("XTRKX", getName()));
+    };
+
     if (type == individualFreeze)
     {
         if (frozenIndividually != b)
         {
             if (b && getOutput().getDestinationTrack() != nullptr)
-            {
-                showCantFreezeWarning (TRANS("Tracks which output to another track can't themselves be frozen; "
-                                             "instead, you should freeze the track they input into."),
-                                       TRANS("It outputs to another track"));
-            }
-            else if (auto fedTracks = b ? getTracksFedByFreezablePlugins() : juce::Array<Track*>(); ! fedTracks.isEmpty())
+                return outputsToAnotherTrack();
+
+            if (auto fedTracks = b ? getTracksFedByFreezablePlugins() : juce::Array<Track*>(); ! fedTracks.isEmpty())
             {
                 juce::StringArray names;
 
                 for (auto t : fedTracks)
                     names.add ("\"" + t->getName() + "\"");
 
-                showCantFreezeWarning (TRANS("\"XTRKX\" can't be frozen because plugins before its Freeze Point feed other tracks (XLSTX) "
-                                             "through a Rack or aux send, and those tracks would go silent.")
-                                         .replace ("XTRKX", getName())
-                                         .replace ("XLSTX", names.joinIntoString (", ")),
-                                       TRANS("Plugins before its Freeze Point feed XLSTX through a Rack or aux send")
-                                         .replace ("XLSTX", names.joinIntoString (", ")));
+                return juce::Result::fail (TRANS("\"XTRKX\" can't be frozen because plugins before its Freeze Point feed other tracks (XLSTX) "
+                                                 "through a Rack or aux send, and those tracks would go silent.")
+                                             .replace ("XTRKX", getName())
+                                             .replace ("XLSTX", names.joinIntoString (", ")));
             }
-            else
-            {
-                frozenIndividually = b;
-            }
+
+            frozenIndividually = b;
         }
     }
     else
@@ -1051,18 +1053,14 @@ void AudioTrack::setFrozen (bool b, FreezeType type)
                 };
 
                 if (b && (getOutput().getDestinationTrack() != nullptr || outputsToSubmixTrack()))
-                {
-                    showCantFreezeWarning (TRANS("Tracks which output to another track can't themselves be frozen; "
-                                                 "instead, you should freeze the track they input into."),
-                                           TRANS("It outputs to another track"));
-                }
-                else
-                {
-                    frozen = b;
-                }
+                    return outputsToAnotherTrack();
+
+                frozen = b;
             }
         }
     }
+
+    return juce::Result::ok();
 }
 
 bool AudioTrack::canContainPlugin (Plugin* p) const
@@ -1075,35 +1073,6 @@ bool AudioTrack::canContainPlugin (Plugin* p) const
 }
 
 //==============================================================================
-//==============================================================================
-static AudioTrack::ScopedFreezeWarningCollector* activeFreezeWarningCollector = nullptr;
-
-AudioTrack::ScopedFreezeWarningCollector::ScopedFreezeWarningCollector (Edit& e)
-    : edit (e), previous (activeFreezeWarningCollector)
-{
-    JUCE_ASSERT_MESSAGE_THREAD
-    activeFreezeWarningCollector = this;
-}
-
-AudioTrack::ScopedFreezeWarningCollector::~ScopedFreezeWarningCollector()
-{
-    activeFreezeWarningCollector = previous;
-
-    if (previous != nullptr)
-        previous->tracksNotFrozen.addArray (tracksNotFrozen);
-    else if (! tracksNotFrozen.isEmpty())
-        edit.engine.getUIBehaviour().showWarningMessage (TRANS("These tracks couldn't be frozen:")
-                                                         + "\n\n" + tracksNotFrozen.joinIntoString ("\n"));
-}
-
-void AudioTrack::showCantFreezeWarning (const juce::String& message, const juce::String& reason)
-{
-    if (auto collector = activeFreezeWarningCollector; collector != nullptr && &collector->edit == &edit)
-        collector->tracksNotFrozen.add ("\"" + getName() + "\": " + reason);
-    else
-        edit.engine.getUIBehaviour().showWarningMessage (message);
-}
-
 AudioTrack::FreezePointRemovalInhibitor::FreezePointRemovalInhibitor (AudioTrack& at) : track (at)  { ++track.freezePointRemovalInhibitor; }
 AudioTrack::FreezePointRemovalInhibitor::~FreezePointRemovalInhibitor()                             { --track.freezePointRemovalInhibitor; }
 
@@ -1163,7 +1132,7 @@ void AudioTrack::freezeTrack()
     if (! r.destFile.existsAsFile())
     {
         edit.engine.getUIBehaviour().showWarningMessage (TRANS("Nothing to freeze"));
-        setFrozen (false, individualFreeze);
+        unfreeze (individualFreeze);
         return;
     }
 
