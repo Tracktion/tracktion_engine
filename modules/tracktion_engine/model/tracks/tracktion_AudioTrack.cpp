@@ -1029,13 +1029,17 @@ juce::Result AudioTrack::setFrozen (bool b, FreezeType type)
                 for (auto t : fedTracks)
                     names.add ("\"" + t->getName() + "\"");
 
-                return juce::Result::fail (TRANS("\"XTRKX\" can't be frozen because plugins before its Freeze Point feed other tracks (XLSTX) "
-                                                 "through a Rack or aux send, and those tracks would go silent.")
+                return juce::Result::fail (TRANS("\"XTRKX\" can't be frozen because plugins before its Freeze Point are connected to other tracks (XLSTX) "
+                                                 "through a Rack or aux send, and freezing would break that connection.")
                                              .replace ("XTRKX", getName())
                                              .replace ("XLSTX", names.joinIntoString (", ")));
             }
 
             frozenIndividually = b;
+
+            // Freezing renders straight away and unfreezes the track if nothing was rendered
+            if (b && ! frozenIndividually)
+                return juce::Result::fail (TRANS("\"XTRKX\" has nothing to freeze").replace ("XTRKX", getName()));
         }
     }
     else
@@ -1129,9 +1133,9 @@ void AudioTrack::freezeTrack()
     freezePlugins (juce::Range<int> (0, getIndexOfFreezePoint()));
     setMute (shouldBeMuted);
 
+    // setFrozen reports this as a failure
     if (! r.destFile.existsAsFile())
     {
-        edit.engine.getUIBehaviour().showWarningMessage (TRANS("Nothing to freeze"));
         unfreeze (individualFreeze);
         return;
     }

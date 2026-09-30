@@ -1137,6 +1137,19 @@ TEST_SUITE ("tracktion_engine")
         edit->getTempDirectory (false).deleteRecursively();
     }
 
+    TEST_CASE ("Track Freeze: Freezing a track with nothing to render fails")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+        auto track = getAudioTracks (*edit)[0];
+        track->setName ("Empty");
+
+        const auto result = track->setFrozen (true, AudioTrack::individualFreeze);
+        CHECK (result.failed());
+        CHECK (result.getErrorMessage().contains ("\"Empty\""));
+        CHECK (! track->isFrozen (AudioTrack::individualFreeze));
+    }
+
     TEST_CASE ("Track Freeze: Tracks with racks and sends that only feed themselves can be frozen")
     {
         auto& engine = *Engine::getEngines()[0];

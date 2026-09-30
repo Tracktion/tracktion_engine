@@ -106,8 +106,8 @@ public:
     void freezeTrackAsync() const;
 
     /** Returns the other tracks fed by the plugins before this track's Freeze Point, through a
-        shared Rack or an aux send. Freezing bypasses those plugins, so these tracks would go
-        silent and the track can't be frozen individually.
+        shared Rack or an aux send. Freezing bypasses those plugins, which would break those
+        connections, so the track can't be frozen individually.
     */
     juce::Array<Track*> getTracksFedByFreezablePlugins();
 
