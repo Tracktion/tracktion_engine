@@ -177,8 +177,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7bf724543cebe52e37472fe011b2ef8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3200e2721f181f92584be9e0e246b990" id="r_a3200e2721f181f92584be9e0e246b990"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classengine_1_1Plugin.html#a50c8008ff5281d1a6d4bbb2c19c532be">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1FreezePointPlugin.html#a3200e2721f181f92584be9e0e246b990">isTrackFrozen</a> () <a class="el" href="classengine_1_1Plugin.html#a50c8008ff5281d1a6d4bbb2c19c532be">const</a></td></tr>
 <tr class="separator:a3200e2721f181f92584be9e0e246b990"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46cb35daeb98388dc3ccca19eee45c78" id="r_a46cb35daeb98388dc3ccca19eee45c78"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classengine_1_1Plugin.html#a50c8008ff5281d1a6d4bbb2c19c532be">void</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1FreezePointPlugin.html#a46cb35daeb98388dc3ccca19eee45c78">freezeTrack</a> (<a class="el" href="classengine_1_1Plugin.html#a50c8008ff5281d1a6d4bbb2c19c532be">bool</a> <a class="el" href="classengine_1_1Plugin.html#a50c8008ff5281d1a6d4bbb2c19c532be">shouldBeFrozen</a>)</td></tr>
-<tr class="separator:a46cb35daeb98388dc3ccca19eee45c78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fe4e6ebc2115f51a72e9fe407194717" id="r_a6fe4e6ebc2115f51a72e9fe407194717"><td class="memItemLeft" align="right" valign="top">juce::Result&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1FreezePointPlugin.html#a6fe4e6ebc2115f51a72e9fe407194717">freezeTrack</a> (<a class="el" href="classengine_1_1Plugin.html#a50c8008ff5281d1a6d4bbb2c19c532be">bool</a> <a class="el" href="classengine_1_1Plugin.html#a50c8008ff5281d1a6d4bbb2c19c532be">shouldBeFrozen</a>)</td></tr>
+<tr class="memdesc:a6fe4e6ebc2115f51a72e9fe407194717"><td class="mdescLeft">&#160;</td><td class="mdescRight">Freezes or unfreezes the track, returning why if it couldn't be frozen.  <br /></td></tr>
+<tr class="separator:a6fe4e6ebc2115f51a72e9fe407194717"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classengine_1_1Plugin"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classengine_1_1Plugin')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classengine_1_1Plugin.html">engine::Plugin</a></td></tr>
 <tr class="memitem:aac2d6d88198e84287cdfb6d73a6ccd93 inherit pub_methods_classengine_1_1Plugin" id="r_aac2d6d88198e84287cdfb6d73a6ccd93"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Plugin.html#aac2d6d88198e84287cdfb6d73a6ccd93">Plugin</a> (<a class="el" href="structengine_1_1PluginCreationInfo.html">PluginCreationInfo</a>)</td></tr>
 <tr class="separator:aac2d6d88198e84287cdfb6d73a6ccd93 inherit pub_methods_classengine_1_1Plugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1241,14 +1242,14 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a46cb35daeb98388dc3ccca19eee45c78" name="a46cb35daeb98388dc3ccca19eee45c78"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46cb35daeb98388dc3ccca19eee45c78">&#9670;&#160;</a></span>freezeTrack()</h2>
+<a id="a6fe4e6ebc2115f51a72e9fe407194717" name="a6fe4e6ebc2115f51a72e9fe407194717"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6fe4e6ebc2115f51a72e9fe407194717">&#9670;&#160;</a></span>freezeTrack()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classengine_1_1Plugin.html#a50c8008ff5281d1a6d4bbb2c19c532be">void</a> engine::FreezePointPlugin::freezeTrack </td>
+          <td class="memname">juce::Result engine::FreezePointPlugin::freezeTrack </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classengine_1_1Plugin.html#a50c8008ff5281d1a6d4bbb2c19c532be">bool</a>&#160;</td>
           <td class="paramname"><em>shouldBeFrozen</em></td><td>)</td>
@@ -1256,6 +1257,9 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Freezes or unfreezes the track, returning why if it couldn't be frozen. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classengine_1_1Track.html#a90123d4ccde704b0a9162fdc9bf186b9" title="Attempts to freeze or unfreeze the track using a given FreezeType.">Track::setFrozen</a> </dd></dl>
 
 </div>
 </div>
@@ -1288,7 +1292,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 30 2026 10:24:23 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Wed Sep 30 2026 21:11:19 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

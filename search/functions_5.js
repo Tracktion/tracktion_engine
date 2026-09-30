@@ -124,7 +124,7 @@ var searchData=
   ['freeresources_121',['freeresources',['../classengine_1_1PitchSequence.html#afa17b8ed4bc040f8f25f1fc82488e6f3',1,'engine::PitchSequence::freeResources()'],['../classengine_1_1TempoSequence.html#a0c6fe893baf08fe7815983c2cfa2ede1',1,'engine::TempoSequence::freeResources()']]],
   ['freezepointplugin_122',['FreezePointPlugin',['../classengine_1_1FreezePointPlugin.html#a7665421e9de4647669d3efd8bdbe5fdd',1,'engine::FreezePointPlugin']]],
   ['freezepointremovalinhibitor_123',['FreezePointRemovalInhibitor',['../structengine_1_1AudioTrack_1_1FreezePointRemovalInhibitor.html#a5449b0cbdad06bcdf509c9bce69060ff',1,'engine::AudioTrack::FreezePointRemovalInhibitor']]],
-  ['freezetrack_124',['freezeTrack',['../classengine_1_1FreezePointPlugin.html#a46cb35daeb98388dc3ccca19eee45c78',1,'engine::FreezePointPlugin']]],
+  ['freezetrack_124',['freezeTrack',['../classengine_1_1FreezePointPlugin.html#a6fe4e6ebc2115f51a72e9fe407194717',1,'engine::FreezePointPlugin']]],
   ['freezetrackasync_125',['freezeTrackAsync',['../classengine_1_1AudioTrack.html#afa8e0f2721a9077029a6cca1a5562b16',1,'engine::AudioTrack']]],
   ['frequencytomidinote_126',['frequencyToMidiNote',['../namespaceengine.html#a0f260a657b637bf6d352a4e139e6a4a8',1,'engine']]],
   ['fromabsolutepath_127',['fromAbsolutePath',['../classengine_1_1ProjectItemRef.html#a9e84b5b47ef13940705ede1343ef47a2',1,'engine::ProjectItemRef']]],

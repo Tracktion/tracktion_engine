@@ -9509,10 +9509,10 @@
       <arglist>(FreezeType) const override</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
+      <type>juce::Result</type>
       <name>setFrozen</name>
       <anchorfile>classengine_1_1AudioTrack.html</anchorfile>
-      <anchor>a17d94a4e4944e0ae606c834373224662</anchor>
+      <anchor>a76296a3ac281295bfaa6d78fd9dd5660</anchor>
       <arglist>(bool, FreezeType) override</arglist>
     </member>
     <member kind="function">
@@ -9535,6 +9535,13 @@
       <anchorfile>classengine_1_1AudioTrack.html</anchorfile>
       <anchor>afa8e0f2721a9077029a6cca1a5562b16</anchor>
       <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>juce::Array&lt; Track * &gt;</type>
+      <name>getTracksFedByFreezablePlugins</name>
+      <anchorfile>classengine_1_1AudioTrack.html</anchorfile>
+      <anchor>a587bf902d347026fadb6bbf33fa81da2</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -36449,10 +36456,10 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
+      <type>juce::Result</type>
       <name>freezeTrack</name>
       <anchorfile>classengine_1_1FreezePointPlugin.html</anchorfile>
-      <anchor>a46cb35daeb98388dc3ccca19eee45c78</anchor>
+      <anchor>a6fe4e6ebc2115f51a72e9fe407194717</anchor>
       <arglist>(bool shouldBeFrozen)</arglist>
     </member>
     <member kind="function" static="yes">
@@ -73595,11 +73602,18 @@
       <arglist>(FreezeType) const</arglist>
     </member>
     <member kind="function" virtualness="virtual">
-      <type>virtual void</type>
+      <type>virtual juce::Result</type>
       <name>setFrozen</name>
       <anchorfile>classengine_1_1Track.html</anchorfile>
-      <anchor>afbdb78134a474eba1fcdb6ad1cef2c44</anchor>
+      <anchor>a90123d4ccde704b0a9162fdc9bf186b9</anchor>
       <arglist>(bool, FreezeType)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>unfreeze</name>
+      <anchorfile>classengine_1_1Track.html</anchorfile>
+      <anchor>a096f8f1c4044981772f796331a68ec4a</anchor>
+      <arglist>(FreezeType)</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
