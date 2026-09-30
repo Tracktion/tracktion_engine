@@ -774,6 +774,44 @@ namespace freeze_test_helpers
         return buffer.getRMSLevel (0, half, buffer.getNumSamples() - half);
     }
 
+    /** Mimics a multi-out wrapper: one rack wrapping a synth with two stereo outputs, an instance
+        on the first track with the MIDI playing outputs 1/2 and an instance on the second pulling 3/4.
+    */
+    inline std::unique_ptr<Edit> createMultiOutRackEdit (Engine& engine)
+    {
+        auto edit = test_utilities::createTestEdit (engine, 2, Edit::EditRole::forEditing);
+        edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
+        auto tracks = getAudioTracks (*edit);
+
+        auto synth = edit->getPluginCache().createNewPlugin (FourOscPlugin::xmlTypeName, {});
+        REQUIRE (synth != nullptr);
+
+        Plugin::Array plugins;
+        plugins.add (synth);
+        auto rackType = RackType::createTypeToWrapPlugins (plugins, *edit);
+        REQUIRE (rackType != nullptr);
+
+        for (int pin : { 3, 4 })
+        {
+            rackType->addOutput (-1, "Output " + juce::String (pin));
+            rackType->addConnection (synth->itemID, pin - 2, {}, pin);
+        }
+
+        tracks[0]->pluginList.insertPlugin (RackInstance::create (*rackType), 0);
+        tracks[0]->insertMIDIClip ({ 0_tp, 2_tp }, nullptr)->getSequence()
+            .addNote (57, BeatPosition(), BeatDuration::fromBeats (4.0), 127, 0, nullptr);
+
+        auto secondOutput = dynamic_cast<RackInstance*> (tracks[1]->pluginList.insertPlugin (RackInstance::create (*rackType), 0).get());
+        REQUIRE (secondOutput != nullptr);
+        secondOutput->setInputMapping (0, 3);
+        secondOutput->setInputMapping (1, 4);
+        secondOutput->setOutputMapping (0, 3);
+        secondOutput->setOutputMapping (1, 4);
+
+        juce::MessageManager::getInstance()->runDispatchLoopUntil (200);
+        return edit;
+    }
+
     /** Plays the track live unfrozen, freezes it, plays it again and checks the two match. */
     inline void checkFrozenTrackMatchesUnfrozenPlayback (Edit& edit, AudioTrack& track)
     {
@@ -785,7 +823,7 @@ namespace freeze_test_helpers
         const auto unfrozenRMS = getLivePlaybackRMS (edit, length);
         REQUIRE_GT (unfrozenRMS, 0.05f);
 
-        track.setFrozen (true, AudioTrack::individualFreeze);
+        REQUIRE (track.setFrozen (true, AudioTrack::individualFreeze).wasOk());
         REQUIRE (track.isFrozen (AudioTrack::individualFreeze));
         REQUIRE (TemporaryFileManager::getFreezeFileForTrack (track).existsAsFile());
 
@@ -793,7 +831,7 @@ namespace freeze_test_helpers
         CHECK_MESSAGE (std::abs (frozenRMS - unfrozenRMS) <= unfrozenRMS * 0.1f,
                        ("Frozen RMS " + juce::String (frozenRMS, 4) + " vs unfrozen RMS " + juce::String (unfrozenRMS, 4)).toStdString());
 
-        track.setFrozen (false, AudioTrack::individualFreeze);
+        track.unfreeze (AudioTrack::individualFreeze);
         edit.engine.getAudioFileManager().releaseAllFiles();
         edit.getTempDirectory (false).deleteRecursively();
     }
@@ -837,7 +875,7 @@ TEST_SUITE ("tracktion_engine")
         const auto expectedTotalLength = trackLength + TimeDuration::fromSeconds (tailLength);
 
         {
-            track->setFrozen (true, AudioTrack::individualFreeze);
+            REQUIRE (track->setFrozen (true, AudioTrack::individualFreeze).wasOk());
             const auto freezeFile = AudioFile (engine, TemporaryFileManager::getFreezeFileForTrack (*track));
             CHECK (std::abs (freezeFile.getLength() - expectedTotalLength.inSeconds()) <= 0.001);
 
@@ -847,7 +885,7 @@ TEST_SUITE ("tracktion_engine")
         }
 
         {
-            track->setFrozen (false, AudioTrack::individualFreeze);
+            track->unfreeze (AudioTrack::individualFreeze);
 
             // Create a new track and set the destination of the first one to this
             auto track2 = edit->insertNewAudioTrack ({ {},{} }, nullptr);
@@ -857,7 +895,7 @@ TEST_SUITE ("tracktion_engine")
                            "End allowance of new empty track is not 0");
 
             // Now freeze this track and it should contain track's end allowance
-            track2->setFrozen (true, AudioTrack::individualFreeze);
+            REQUIRE (track2->setFrozen (true, AudioTrack::individualFreeze).wasOk());
             const auto freezeFile = AudioFile (engine, TemporaryFileManager::getFreezeFileForTrack (*track2));
             CHECK (std::abs (freezeFile.getLength() - expectedTotalLength.inSeconds()) <= 0.001);
 
@@ -949,7 +987,7 @@ TEST_SUITE ("tracktion_engine")
             const auto unfrozenRMS = freeze_test_helpers::getLivePlaybackRMS (*edit, length);
             REQUIRE_GT (unfrozenRMS, 0.05f);
 
-            track->setFrozen (true, AudioTrack::individualFreeze);
+            REQUIRE (track->setFrozen (true, AudioTrack::individualFreeze).wasOk());
             REQUIRE (track->isFrozen (AudioTrack::individualFreeze));
 
             const auto freezeFile = AudioFile (engine, TemporaryFileManager::getFreezeFileForTrack (*track));
@@ -962,7 +1000,7 @@ TEST_SUITE ("tracktion_engine")
                              + ", freeze file channels " + juce::String (freezeFile.getInfo().numChannels)
                              + ", size " + juce::File::descriptionOfSizeInBytes (freezeFile.getFile().getSize())).toStdString());
 
-            track->setFrozen (false, AudioTrack::individualFreeze);
+            track->unfreeze (AudioTrack::individualFreeze);
             engine.getAudioFileManager().releaseAllFiles();
             edit->getTempDirectory (false).deleteRecursively();
         }
@@ -1024,18 +1062,131 @@ TEST_SUITE ("tracktion_engine")
         const auto unfrozenRMS = freeze_test_helpers::getDevicePlaybackRMS (player, *edit, length);
         REQUIRE_GT (unfrozenRMS, 0.05f);
 
-        tracks[0]->setFrozen (true, AudioTrack::individualFreeze);
+        REQUIRE (tracks[0]->setFrozen (true, AudioTrack::individualFreeze).wasOk());
         REQUIRE (tracks[0]->isFrozen (AudioTrack::individualFreeze));
 
         const auto frozenRMS = freeze_test_helpers::getDevicePlaybackRMS (player, *edit, length);
         CHECK_MESSAGE (std::abs (frozenRMS - unfrozenRMS) <= unfrozenRMS * 0.1f,
                        ("Frozen RMS " + juce::String (frozenRMS, 4) + " vs unfrozen RMS " + juce::String (unfrozenRMS, 4)).toStdString());
 
-        tracks[0]->setFrozen (false, AudioTrack::individualFreeze);
+        tracks[0]->unfreeze (AudioTrack::individualFreeze);
         midiClip = nullptr;
         edit->getTempDirectory (false).deleteRecursively();
         edit = nullptr;
         engine.getAudioFileManager().releaseAllFiles();
+    }
+
+    TEST_CASE ("Track Freeze: Tracks feeding other tracks before the Freeze Point can't be frozen")
+    {
+        // Freezing bypasses the plugins before the Freeze Point, so a shared rack or an aux send
+        // there would stop feeding the other tracks and they'd go silent (#1146)
+        auto& engine = *Engine::getEngines()[0];
+        std::unique_ptr<Edit> edit;
+        AudioTrack* trackToFreeze = nullptr;
+        Track* fedTrack = nullptr;
+
+        SUBCASE ("The MIDI track of a multi-out rack")
+        {
+            edit = freeze_test_helpers::createMultiOutRackEdit (engine);
+            trackToFreeze = getAudioTracks (*edit)[0];
+            fedTrack = getAudioTracks (*edit)[1];
+        }
+
+        SUBCASE ("An output track of a multi-out rack")
+        {
+            edit = freeze_test_helpers::createMultiOutRackEdit (engine);
+            trackToFreeze = getAudioTracks (*edit)[1];
+            fedTrack = getAudioTracks (*edit)[0];
+        }
+
+        SUBCASE ("An aux send before the Freeze Point")
+        {
+            edit = test_utilities::createTestEdit (engine, 2, Edit::EditRole::forEditing);
+            edit->getMasterVolumePlugin()->setVolumeDb (0.0f);
+            auto tracks = getAudioTracks (*edit);
+            auto& cache = edit->getPluginCache();
+
+            tracks[0]->pluginList.insertPlugin (cache.createNewPlugin (FourOscPlugin::xmlTypeName, {}), 0, nullptr);
+            tracks[0]->pluginList.insertPlugin (cache.createNewPlugin (AuxSendPlugin::xmlTypeName, {}), 1, nullptr);
+            tracks[0]->pluginList.insertPlugin (cache.createNewPlugin (FreezePointPlugin::xmlTypeName, {}), 2, nullptr);
+            tracks[1]->pluginList.insertPlugin (cache.createNewPlugin (AuxReturnPlugin::xmlTypeName, {}), 0, nullptr);
+            tracks[0]->insertMIDIClip ({ 0_tp, 2_tp }, nullptr)->getSequence()
+                .addNote (57, BeatPosition(), BeatDuration::fromBeats (4.0), 127, 0, nullptr);
+            juce::MessageManager::getInstance()->runDispatchLoopUntil (200);
+
+            trackToFreeze = tracks[0];
+            fedTrack = tracks[1];
+        }
+
+        REQUIRE (trackToFreeze != nullptr);
+        CHECK_EQ (trackToFreeze->getTracksFedByFreezablePlugins(), juce::Array<Track*> { fedTrack });
+
+        const auto length = TimeDuration::fromSeconds (2.0);
+        const auto unfrozenRMS = freeze_test_helpers::getLivePlaybackRMS (*edit, length);
+        REQUIRE_GT (unfrozenRMS, 0.05f);
+
+        const auto result = trackToFreeze->setFrozen (true, AudioTrack::individualFreeze);
+        CHECK (result.failed());
+        CHECK (result.getErrorMessage().contains ("\"" + fedTrack->getName() + "\""));
+        CHECK (! trackToFreeze->isFrozen (AudioTrack::individualFreeze));
+        CHECK (! TemporaryFileManager::getFreezeFileForTrack (*trackToFreeze).exists());
+
+        const auto afterRMS = freeze_test_helpers::getLivePlaybackRMS (*edit, length);
+        CHECK (std::abs (afterRMS - unfrozenRMS) <= unfrozenRMS * 0.01f);
+
+        edit->getTempDirectory (false).deleteRecursively();
+    }
+
+    TEST_CASE ("Track Freeze: Freezing a track with nothing to render fails")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+        auto track = getAudioTracks (*edit)[0];
+        track->setName ("Empty");
+
+        const auto result = track->setFrozen (true, AudioTrack::individualFreeze);
+        CHECK (result.failed());
+        CHECK (result.getErrorMessage().contains ("\"Empty\""));
+        CHECK (! track->isFrozen (AudioTrack::individualFreeze));
+    }
+
+    TEST_CASE ("Track Freeze: Tracks with racks and sends that only feed themselves can be frozen")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine, 2, Edit::EditRole::forEditing);
+        auto tracks = getAudioTracks (*edit);
+        auto& cache = edit->getPluginCache();
+
+        // A rack with no other instances, and an aux send with no return
+        Plugin::Array plugins;
+        plugins.add (cache.getOrCreatePluginFor (VolumeAndPanPlugin::create()));
+        auto rackType = RackType::createTypeToWrapPlugins (plugins, *edit);
+        tracks[0]->pluginList.insertPlugin (RackInstance::create (*rackType), 0);
+        tracks[0]->pluginList.insertPlugin (cache.createNewPlugin (AuxSendPlugin::xmlTypeName, {}), 1, nullptr);
+        CHECK (tracks[0]->getTracksFedByFreezablePlugins().isEmpty());
+
+        SUBCASE ("A return after the Freeze Point is fine")
+        {
+            tracks[0]->pluginList.insertPlugin (cache.createNewPlugin (AuxReturnPlugin::xmlTypeName, {}), -1, nullptr);
+            CHECK (tracks[0]->getTracksFedByFreezablePlugins().isEmpty());
+        }
+
+        SUBCASE ("Plugins after the Freeze Point don't count")
+        {
+            tracks[0]->pluginList.insertPlugin (cache.createNewPlugin (FreezePointPlugin::xmlTypeName, {}), 0, nullptr);
+            tracks[1]->pluginList.insertPlugin (cache.createNewPlugin (AuxReturnPlugin::xmlTypeName, {}), 0, nullptr);
+            tracks[1]->pluginList.insertPlugin (RackInstance::create (*rackType), 0);
+            CHECK (tracks[0]->getTracksFedByFreezablePlugins().isEmpty());
+        }
+
+        SUBCASE ("Disabled sends don't count")
+        {
+            tracks[1]->pluginList.insertPlugin (cache.createNewPlugin (AuxReturnPlugin::xmlTypeName, {}), 0, nullptr);
+            CHECK_EQ (tracks[0]->getTracksFedByFreezablePlugins(), juce::Array<Track*> { tracks[1] });
+
+            tracks[0]->pluginList.findFirstPluginOfType<AuxSendPlugin>()->setEnabled (false);
+            CHECK (tracks[0]->getTracksFedByFreezablePlugins().isEmpty());
+        }
     }
 
     TEST_CASE ("Track Freeze: the freeze file format reads back as many channels as it wrote")
@@ -1109,7 +1260,7 @@ TEST_SUITE ("tracktion_engine")
         // Edits to the track unfreeze it, so let those settle before freezing
         juce::MessageManager::getInstance()->runDispatchLoopUntil (500);
 
-        track->setFrozen (true, Track::groupFreeze);
+        REQUIRE (track->setFrozen (true, Track::groupFreeze).wasOk());
         REQUIRE (track->isFrozen (Track::groupFreeze));
 
         // The freeze render happens asynchronously once the frozen flag changes
@@ -1231,7 +1382,7 @@ TEST_SUITE ("tracktion_engine")
         clip->setActiveChannelConfiguration (ChannelConfiguration::discreteChannels ((int) numSourceChannels));
 
         // Freeze the track
-        track->setFrozen (true, AudioTrack::individualFreeze);
+        REQUIRE (track->setFrozen (true, AudioTrack::individualFreeze).wasOk());
 
         // Verify the freeze file has the correct channel count
         const auto freezeFile = AudioFile (engine, TemporaryFileManager::getFreezeFileForTrack (*track));

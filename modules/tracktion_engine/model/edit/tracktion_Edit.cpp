@@ -2127,7 +2127,7 @@ void Edit::deleteTrack (Track* t)
         jassert (! (t->isMasterTrack() || t->isMarkerTrack() || t->isTempoTrack() || t->isChordTrack()));
 
         t->deselect();
-        t->setFrozen (false, Track::groupFreeze);
+        t->unfreeze (Track::groupFreeze);
 
         // Remove any modifier assignments
         if (auto modifierList = t->getModifierList())

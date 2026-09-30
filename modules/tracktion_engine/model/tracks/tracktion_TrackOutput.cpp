@@ -48,7 +48,7 @@ void TrackOutput::updateOutput()
 {
     // Also called after edit has created all the tracks - check our output isn't dangling
     for (auto t = getDestinationTrack(); t != nullptr; t = t->getOutput().getDestinationTrack())
-        t->setFrozen (false, Track::groupFreeze);
+        t->unfreeze (Track::groupFreeze);
 
     auto oldTrackID = destTrackID;
     destTrackID = {};
@@ -74,7 +74,7 @@ void TrackOutput::updateOutput()
 
     owner.edit.restartPlayback();
     owner.changed();
-    owner.setFrozen (false, Track::groupFreeze);
+    owner.unfreeze (Track::groupFreeze);
 }
 
 //==============================================================================

@@ -127,7 +127,7 @@ void Clip::initialise()
         if (auto f = track->getParentFolderTrack())
             f->setDirtyClips();
 
-        track->setFrozen (false, Track::groupFreeze);
+        track->unfreeze (Track::groupFreeze);
     }
 
     cancelAnyPendingUpdates();
@@ -350,7 +350,7 @@ void Clip::changed()
     Selectable::changed();
 
     if (auto track = getTrack())
-        track->setFrozen (false, Track::groupFreeze);
+        track->unfreeze (Track::groupFreeze);
 
     if (! cloneInProgress && isLinked() && ! edit.isLoading())
         updateLinkedClipsCaller.triggerAsyncUpdate();

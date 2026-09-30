@@ -100,10 +100,16 @@ public:
 
     //==============================================================================
     bool isFrozen (FreezeType) const override;
-    void setFrozen (bool, FreezeType) override;
+    [[nodiscard]] juce::Result setFrozen (bool, FreezeType) override;
     void insertFreezePointAfterPlugin (const Plugin::Ptr&);
     void removeFreezePoint();
     void freezeTrackAsync() const;
+
+    /** Returns the other tracks fed by the plugins before this track's Freeze Point, through a
+        shared Rack or an aux send. Freezing bypasses those plugins, which would break those
+        connections, so the track can't be frozen individually.
+    */
+    juce::Array<Track*> getTracksFedByFreezablePlugins();
 
     //==============================================================================
     bool hasAnyLiveInputs();

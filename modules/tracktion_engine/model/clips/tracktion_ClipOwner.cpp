@@ -572,7 +572,7 @@ Clip* insertClipWithState (ClipOwner& parent,
         position.time.getEnd() = Edit::getMaximumEditEnd();
 
     if (auto track = dynamic_cast<Track*> (&parent))
-        track->setFrozen (false, Track::groupFreeze);
+        track->unfreeze (Track::groupFreeze);
 
     if (deleteExistingClips == DeleteExistingClips::yes)
         deleteRegion (parent, position.time);
@@ -757,8 +757,7 @@ juce::Array<Clip*> deleteRegion (ClipOwner& parent, TimeRange range)
     CRASH_TRACER
     if (auto track = dynamic_cast<Track*> (&parent))
     {
-        track->setFrozen (false, Track::groupFreeze);
-        track->setFrozen (false, Track::individualFreeze);
+        track->unfreeze (Track::anyFreeze);
     }
 
     // make a copied list first, as they'll get moved out-of-order..
@@ -781,8 +780,7 @@ juce::Array<Clip*> deleteRegion (Clip& c, TimeRange range)
     CRASH_TRACER
     if (auto track = dynamic_cast<Track*> (c.getParent()))
     {
-        track->setFrozen (false, Track::groupFreeze);
-        track->setFrozen (false, Track::individualFreeze);
+        track->unfreeze (Track::anyFreeze);
     }
 
     auto pos = c.getPosition();
@@ -839,7 +837,7 @@ Clip* split (Clip& clip, const TimePosition time)
     auto& edit = clip.edit;
 
     if (auto track = dynamic_cast<Track*> (parent))
-        track->setFrozen (false, Track::groupFreeze);
+        track->unfreeze (Track::groupFreeze);
 
     if (clip.getPosition().time.reduced (0.001s).contains (time)
          && ! clip.isGrouped())
