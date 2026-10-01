@@ -201,6 +201,8 @@ struct EditPlaybackContext::NodePlaybackContext
     {
         jassert (sampleRate > 0.0);
         jassert (blockSize > 0);
+        nodeSampleRate = sampleRate;
+        nodeBlockSize = blockSize;
         blockSize = juce::roundToInt (blockSize * (1.0 + (10.0 * 0.01))); // max speed comp
         player.setLatencyCompensationEnabled (editPlaybackContext.edit.isLatencyCompensationEnabled());
         player.setNode (std::move (node), sampleRate, blockSize);
@@ -212,6 +214,22 @@ struct EditPlaybackContext::NodePlaybackContext
     void clearNode()
     {
         player.clearNode();
+        nodeSampleRate = 0.0;
+        nodeBlockSize = 0;
+    }
+
+    /** Plugins only re-run initialise() when the rate or block size changes, and
+        that must never happen whilst a graph is still processing them. So if the
+        next graph uses a different format, stop and destroy the current one first,
+        which synchronously deinitialises its plugins.
+    */
+    void clearNodeIfFormatChanged (double newSampleRate, int newBlockSize)
+    {
+        if (nodeSampleRate == 0.0 && nodeBlockSize == 0)
+            return;
+
+        if (nodeSampleRate != newSampleRate || nodeBlockSize != newBlockSize)
+            clearNode();
     }
 
     int getLatencySamples() const
@@ -436,6 +454,8 @@ private:
     const size_t maxNumThreads;
 
     int latencySamples = 0;
+    double nodeSampleRate = 0.0;
+    int nodeBlockSize = 0;
     choc::buffer::FrameCount numSamplesToProcess = 0;
     juce::Range<double> referenceStreamRange;
     std::atomic<double> pendingPosition { 0.0 }, pendingPositionJumpTime { 0.0 };
@@ -668,6 +688,11 @@ void EditPlaybackContext::createNode()
     cnp.allowClipSlots = engineBehaviour.areClipSlotsEnabled();
     cnp.readAheadTimeStretchNodes = engineBehaviour.enableReadAheadForTimeStretchNodes();
     cnp.insertOptionalLastStageNodeForDevice = insertOptionalLastStageNodeForDeviceCallback;
+
+    // Building the new graph initialises its plugins, so the old graph mustn't
+    // still be processing them if that would re-run their initialise()
+    nodePlaybackContext->clearNodeIfFormatChanged (cnp.sampleRate, cnp.blockSize);
+
     auto editNode = createNodeForEdit (*this, audiblePlaybackTime, cnp);
 
     nodePlaybackContext->setNode (std::move (editNode), cnp.sampleRate, cnp.blockSize);
