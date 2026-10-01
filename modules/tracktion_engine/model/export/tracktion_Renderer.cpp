@@ -11,13 +11,6 @@
 namespace tracktion::inline engine
 {
 
-void Renderer::turnOffAllPlugins (Edit& edit)
-{
-    for (auto f : getAllPlugins (edit, true))
-        while (! f->baseClassNeedsInitialising())
-            f->baseClassDeinitialise();
-}
-
 namespace render_utils
 {
     std::unique_ptr<Renderer::RenderTask> createRenderTask (Renderer::Parameters r, juce::String desc,
@@ -44,7 +37,13 @@ namespace render_utils
         cnp.tracksToProcessWhileMuted = r.tracksToProcessWhileMuted;
 
         std::unique_ptr<tracktion::graph::Node> node;
-        callBlocking ([&r, &node, &cnp] { node = createNodeForEdit (*r.edit, cnp); });
+        callBlocking ([&r, &node, &cnp]
+                      {
+                          // A ScopedRenderStatus must be held so the playback graph has been
+                          // freed (deinitialising its plugins) before the render graph is built
+                          jassert (r.edit->isRendering());
+                          node = createNodeForEdit (*r.edit, cnp);
+                      });
 
         if (! node)
             return {};
@@ -146,7 +145,13 @@ Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
     cnp.allowClipSlots = r.edit->engine.getEngineBehaviour().areClipSlotsEnabled();
     cnp.tracksToProcessWhileMuted = r.tracksToProcessWhileMuted;
 
-    callBlocking ([this, &r, &cnp] { graphNode = createNodeForEdit (*r.edit, cnp); });
+    callBlocking ([this, &r, &cnp]
+                  {
+                      // A ScopedRenderStatus must be held so the playback graph has been
+                      // freed (deinitialising its plugins) before the render graph is built
+                      jassert (r.edit->isRendering());
+                      graphNode = createNodeForEdit (*r.edit, cnp);
+                  });
 }
 
 Renderer::RenderTask::RenderTask (const juce::String& taskDescription,
@@ -628,7 +633,6 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
     const Renderer::ScopedClipSlotDisabler slotDisabler (edit, tracks);
 
     TransportControl::stopAllTransports (engine, false, true);
-    turnOffAllPlugins (edit);
 
     if (tracksToDo.countNumberOfSetBits() > 0)
     {
@@ -662,8 +666,6 @@ bool Renderer::renderToFile (const juce::String& taskDescription,
         }
     }
 
-    turnOffAllPlugins (edit);
-
     return outputFile.existsAsFile();
 }
 
@@ -680,9 +682,11 @@ juce::File Renderer::renderToFile (const juce::String& taskDescription, const Pa
     jassert (r.edit != nullptr);
     jassert (r.engine != nullptr);
 
+    // Frees the playback context (stopping and deinitialising its graph) before the
+    // render graph is built. Stopping the transport alone won't do this if it's
+    // already stopped, as the play-in-stop graph keeps running
+    const Edit::ScopedRenderStatus srs (*r.edit, true);
     TransportControl::stopAllTransports (*r.engine, false, true);
-
-    turnOffAllPlugins (*r.edit);
 
     if (r.tracksToDo.countNumberOfSetBits() > 0
          && r.destFile.hasWriteAccess()
@@ -693,7 +697,6 @@ juce::File Renderer::renderToFile (const juce::String& taskDescription, const Pa
         if (auto task = render_utils::createRenderTask (r, taskDescription, nullptr, nullptr))
         {
             ui.runTaskWithProgressBar (*task);
-            turnOffAllPlugins (*r.edit);
 
             if (r.destFile.existsAsFile())
             {
@@ -780,8 +783,6 @@ Renderer::Statistics Renderer::measureStatistics (const juce::String& taskDescri
     const Edit::ScopedRenderStatus srs (edit, true);
     TransportControl::stopAllTransports (edit.engine, false, true);
 
-    turnOffAllPlugins (edit);
-
     if (tracksToDo.countNumberOfSetBits() > 0)
     {
         Parameters r (edit);
@@ -800,8 +801,6 @@ Renderer::Statistics Renderer::measureStatistics (const juce::String& taskDescri
             result.audioDuration = task->params.resultAudioDuration;
         }
     }
-
-    turnOffAllPlugins (edit);
 
     return result;
 }
@@ -886,7 +885,11 @@ EditRenderer::Handle::~Handle()
     // A cancelled render hands its task over rather than destroying it on the render
     // thread, as the graph holds plugins which have to be deleted on the message thread
     if (taskToDestroy != nullptr)
-        callBlockingCatching ([this] { taskToDestroy.reset(); });
+        callBlockingCatching ([this]
+                              {
+                                  taskToDestroy.reset();
+                                  renderStatusToDestroy.reset();
+                              });
 }
 
 void EditRenderer::Handle::cancel()
@@ -952,6 +955,7 @@ auto EditRenderer::render (Renderer::Parameters r,
                 // blocked joining this thread, so hand it to the handle to destroy once
                 // the join has completed and the message thread is running again
                 handlePtr->taskToDestroy = std::move (task);
+                handlePtr->renderStatusToDestroy = std::move (scopedRenderState);
                 return finishedCallback (tl::unexpected (NEEDS_TRANS("Cancelled")));
             }
 
@@ -964,6 +968,7 @@ auto EditRenderer::render (Renderer::Parameters r,
             if (hasBeenCancelledFlag)
             {
                 handlePtr->taskToDestroy = std::move (task);
+                handlePtr->renderStatusToDestroy = std::move (scopedRenderState);
                 return finishedCallback (tl::unexpected (NEEDS_TRANS("Cancelled")));
             }
 

@@ -224,9 +224,6 @@ public:
     static void checkTargetFile (Engine&, const juce::File&,
                                   std::function<void (bool)> callback);
 
-    /** Deinitialises all the plugins for the Edit. */
-    static void turnOffAllPlugins (Edit&);
-
     //==============================================================================
     /// Blocking render operations
     /// @see EditRenderer below for async render operations
@@ -370,6 +367,11 @@ public:
         std::atomic<float> progress { 0.0f };
         std::atomic<bool> hasBeenCancelled { false };
         std::shared_ptr<juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver> thumbnailToUpdate;
+
+        // A cancelled render also hands over its render status, which has to outlive the
+        // task: releasing it first would let a playback graph be built whilst the render
+        // graph still holds the plugins. Declared before the task so it's destroyed after it
+        std::unique_ptr<Edit::ScopedRenderStatus> renderStatusToDestroy;
 
         // A cancelled render can't tear its graph down on its own thread, so it hands
         // the task over to be destroyed on the message thread once the thread has gone

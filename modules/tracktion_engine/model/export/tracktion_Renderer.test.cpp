@@ -1479,6 +1479,51 @@ TEST_SUITE ("tracktion_engine")
         edit->getTempDirectory (false).deleteRecursively();
     }
 
+    TEST_CASE ("Rendering whilst stopped with play-in-stop frees the playback graph first")
+    {
+        // A render whilst stopped used to leave the play-in-stop graph running and
+        // force every plugin's initialise count to zero underneath it, so building the
+        // render graph re-ran initialise() on plugins the live graph was still processing
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+        edit->playInStopEnabled = true;
+
+        HostedAudioDeviceInterface::Parameters p;
+        p.blockSize = 256;
+        auto player = test_utilities::createEnginePlayer (*edit, p);
+
+        auto track = getAudioTracks (*edit)[0];
+        auto eq = edit->getPluginCache().createNewPlugin (EqualiserPlugin::xmlTypeName, {});
+        REQUIRE (eq != nullptr);
+        track->pluginList.insertPlugin (eq, 0, nullptr);
+        edit->dispatchPendingUpdatesSynchronously();
+
+        auto& tc = edit->getTransport();
+        tc.ensureContextAllocated (true);
+        tc.stop (false, false);
+
+        REQUIRE (tc.isPlayContextActive());
+        REQUIRE (! eq->baseClassNeedsInitialising());
+
+        juce::TemporaryFile destFile (".wav");
+        Renderer::Parameters params (*edit);
+        params.destFile = destFile.getFile();
+        params.audioFormat = engine.getAudioFileFormatManager().getWavFormat();
+        params.time = { 0_tp, 1_tp };
+        params.tracksToDo.setBit (0);
+        params.usePlugins = true;
+        params.sampleRateForAudio = p.sampleRate;
+        params.blockSizeForAudio = 1024; // A different block size forces a full initialise()
+
+        // Stopping an already stopped transport doesn't free the play-in-stop graph,
+        // so the render itself has to
+        Renderer::renderToFile ("Render", params);
+
+        // The playback graph is reallocated afterwards and still holds the plugin
+        CHECK (tc.isPlayContextActive());
+        CHECK (! eq->baseClassNeedsInitialising());
+    }
+
 }
 
 #endif
