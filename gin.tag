@@ -62446,13 +62446,6 @@
       <arglist>(Engine &amp;, const juce::File &amp;, std::function&lt; void(bool)&gt; callback)</arglist>
     </member>
     <member kind="function" static="yes">
-      <type>static void</type>
-      <name>turnOffAllPlugins</name>
-      <anchorfile>classengine_1_1Renderer.html</anchorfile>
-      <anchor>a4e67a3ebfcf969ff477c83191297ee6b</anchor>
-      <arglist>(Edit &amp;)</arglist>
-    </member>
-    <member kind="function" static="yes">
       <type>static ProjectItem::Ptr</type>
       <name>renderToProjectItem</name>
       <anchorfile>classengine_1_1Renderer.html</anchorfile>
