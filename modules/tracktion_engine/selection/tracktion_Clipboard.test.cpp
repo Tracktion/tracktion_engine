@@ -224,6 +224,34 @@ TEST_SUITE ("tracktion_engine")
         edit.reset();
         cleanup();
     }
+
+    TEST_CASE ("Clipboard: pasteInsertingAtCursorPos with a container child clip selected")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine, 1);
+        auto track = getAudioTracks (*edit)[0];
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0);
+        REQUIRE (sinFile != nullptr);
+
+        auto cc = dynamic_cast<ContainerClip*> (insertNewClip (*track, TrackItem::Type::container, { 0_tp, 5_tp }));
+        REQUIRE (cc != nullptr);
+
+        auto child = insertWaveClip (*cc, {}, sinFile->getFile(), {{ 0_tp, 1_tp }}, DeleteExistingClips::no);
+        REQUIRE (child != nullptr);
+        REQUIRE (child->getClipTrack() == nullptr);
+
+        Clipboard::Clips content;
+        content.addClip (0, child->state.createCopy());
+
+        // The selected child clip has no ClipTrack, which used to pass a null
+        // Track to insertSpaceIntoEdit and crash
+        SelectionManager sm (engine);
+        sm.selectOnly (*child);
+
+        EditInsertPoint insertPoint (*edit);
+        CHECK (content.pasteInsertingAtCursorPos (*edit, insertPoint, sm));
+    }
 }
 
 } // namespace tracktion::inline engine

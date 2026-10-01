@@ -32,6 +32,9 @@ namespace
             {
                 for (auto t : onlyTheseTracks)
                 {
+                    if (t == nullptr)
+                        continue;
+
                     if (auto ct = dynamic_cast<ClipTrack*> (t))
                         clipTracks.push_back (ct);
 
@@ -303,7 +306,8 @@ ClipTrack* findFirstClipTrackFromSelection (const SelectableList& items)
 
     if (clipTracks.isEmpty())
         for (auto& clip : items.getItemsOfType<Clip>())
-            clipTracks.add (clip->getClipTrack());
+            if (auto ct = clip->getClipTrack())
+                clipTracks.add (ct);
 
     ClipTrack* firstTrack = nullptr;
     auto firstIndex = std::numeric_limits<int>::max();

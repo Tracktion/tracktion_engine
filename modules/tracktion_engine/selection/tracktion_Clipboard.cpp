@@ -1275,8 +1275,12 @@ static juce::Array<ClipTrack*> findTracksToInsertInto (Edit& edit, EditInsertPoi
 
     for (auto c : sm.getItemsOfType<Clip>())
     {
-        tracks.addIfNotAlreadyThere (c->getClipTrack());
-        insertPoint.setNextInsertPoint (edit.getTransport().position.get(), c->getTrack());
+        // Clips nested in a container clip have no ClipTrack parent
+        if (auto ct = c->getClipTrack())
+        {
+            tracks.addIfNotAlreadyThere (ct);
+            insertPoint.setNextInsertPoint (edit.getTransport().position.get(), ct);
+        }
     }
 
     if (tracks.isEmpty() && noFolders)
