@@ -1466,6 +1466,72 @@ TEST_SUITE ("tracktion_engine")
         CHECK_GT (getToneMagnitude (output, tr (4.2, 5.8), 220.0), 0.5f);
     }
 
+    TEST_CASE ("Clip launcher: disabling a launched or queued clip stops it")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto sinFile = createSineFile (engine, 8.0, 220.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertAudioClipIntoSlot (*slot, sinFile->getFile());
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        edit->getTransport().play (false);
+        launchHandle->play ({});
+        process (player, 1_td);
+        REQUIRE (launchHandle->getPlayingStatus() == LaunchHandle::PlayState::playing);
+
+        // Disabled, it has no playback node, so it would otherwise stay
+        // "playing" and carry on part way through when enabled again
+        clip->disabled = true;
+        CHECK (launchHandle->getQueuedStatus() == LaunchHandle::QueueState::stopQueued);
+
+        clip->disabled = false;
+        launchHandle->stop ({});
+        process (player, 0.5_td);
+        REQUIRE (launchHandle->getPlayingStatus() == LaunchHandle::PlayState::stopped);
+
+        // A queued launch is cancelled
+        launchHandle->play (MonotonicBeat { 100_bp });
+        clip->disabled = true;
+        CHECK (! launchHandle->getQueuedStatus());
+    }
+
+    TEST_CASE ("Clip launcher: follow actions don't launch disabled clips (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto fileA = createSineFile (engine, 8.0, 220.0f);
+        auto fileB = createSineFile (engine, 8.0, 330.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        track->getClipSlotList().ensureNumberOfSlots (2);
+        edit->getSceneList().ensureNumberOfScenes (2);
+        auto clipA = insertAudioClipIntoSlot (*slot, fileA->getFile());
+        auto clipB = insertAudioClipIntoSlot (*track->getClipSlotList().getClipSlots()[1], fileB->getFile());
+
+        // After 2 beats A plays the next clip, which is disabled
+        clipA->followActionDurationType = Clip::FollowActionDurationType::beats;
+        clipA->followActionBeats = 2_bd;
+        auto followActions = clipA->getFollowActions();
+        REQUIRE (followActions);
+        REQUIRE (followActions->getActions().size() == 1);
+        followActions->getActions()[0]->action = FollowAction::trackNext;
+        clipB->disabled = true;
+        edit->getTransport().ensureContextAllocated (true);
+
+        edit->getTransport().play (false);
+        clipA->getLaunchHandle()->play ({});
+        process (player, 4_td);
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (0.2, 1.8), 220.0), 0.5f);
+        CHECK_LT (getRMSLevel (output, tr (2.2, 3.9)), 0.005f);
+        CHECK (clipB->getLaunchHandle()->getPlayingStatus() == LaunchHandle::PlayState::stopped);
+        CHECK (! clipB->getLaunchHandle()->getQueuedStatus());
+    }
+
     TEST_CASE ("Clip launcher: audible content position matches the played range (audio)")
     {
         auto& engine = *Engine::getEngines()[0];
