@@ -1568,6 +1568,59 @@ TEST_SUITE ("tracktion_engine")
         CHECK (clipB->getLaunchHandle()->getPlayingStatus() == LaunchHandle::PlayState::playing);
     }
 
+    TEST_CASE ("Clip launcher: playing and queued clips carry on across graph rebuilds (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto fileA = createSineFile (engine, 16.0, 220.0f);
+        auto fileB = createSineFile (engine, 16.0, 330.0f);
+        auto fileC = createSineFile (engine, 16.0, 440.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        track->getClipSlotList().ensureNumberOfSlots (3);
+        edit->getSceneList().ensureNumberOfScenes (3);
+
+        // The playing clip is in the last slot, so the launcher sorts it ahead of the others
+        auto slots = track->getClipSlotList().getClipSlots();
+        auto clipC = insertAudioClipIntoSlot (*slots[0], fileC->getFile());
+        auto clipB = insertAudioClipIntoSlot (*slots[1], fileB->getFile());
+        auto clipA = insertAudioClipIntoSlot (*slots[2], fileA->getFile());
+        edit->getTransport().ensureContextAllocated (true);
+
+        edit->getTransport().play (false);
+        clipA->getLaunchHandle()->play ({});
+        process (player, 1.5_td);
+
+        // B takes over from A at the next bar (4s, 60bpm 4/4)
+        auto switchPos = getNextQuantisedLaunchPosition (*edit, LaunchQType::bar);
+        REQUIRE (switchPos);
+        CHECK (switchPos->editTime == TimePosition::fromSeconds (4.0));
+        clipB->getLaunchHandle()->play (switchPos->monotonicBeat);
+        clipA->getLaunchHandle()->stop (switchPos->monotonicBeat);
+        process (player, 1_td);     // to 2.5s
+
+        // Rebuild with A playing and B queued, then again with B playing
+        edit->getTransport().ensureContextAllocated (true);
+        process (player, 4_td);     // to 6.5s
+        edit->getTransport().ensureContextAllocated (true);
+        process (player, 1.5_td);   // to 8s
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (0.2, 1.4), 220.0), 0.5f);
+        CHECK_GT (getToneMagnitude (output, tr (2.6, 3.9), 220.0), 0.5f);
+        CHECK_LT (getToneMagnitude (output, tr (0.2, 3.9), 330.0), 0.1f);
+
+        CHECK_GT (getToneMagnitude (output, tr (4.1, 6.4), 330.0), 0.5f);
+        CHECK_GT (getToneMagnitude (output, tr (6.6, 7.9), 330.0), 0.5f);
+        CHECK_LT (getToneMagnitude (output, tr (4.1, 7.9), 220.0), 0.1f);
+
+        CHECK_LT (getToneMagnitude (output, tr (0.2, 7.9), 440.0), 0.1f);
+
+        CHECK (clipA->getLaunchHandle()->getPlayingStatus() == LaunchHandle::PlayState::stopped);
+        CHECK (clipB->getLaunchHandle()->getPlayingStatus() == LaunchHandle::PlayState::playing);
+        CHECK (clipC->getLaunchHandle()->getPlayingStatus() == LaunchHandle::PlayState::stopped);
+    }
+
     TEST_CASE ("Clip launcher: a queued launch survives the playback context being recreated (audio)")
     {
         auto& engine = *Engine::getEngines()[0];

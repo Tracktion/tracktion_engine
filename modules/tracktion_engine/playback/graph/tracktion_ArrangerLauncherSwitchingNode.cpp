@@ -32,6 +32,8 @@ ArrangerLauncherSwitchingNode::ArrangerLauncherSwitchingNode (ProcessState& ps,
         [] (auto& n) { return n.get(); });
     assert (launcherNodesCopy.size() == launcherNodes.size());
     assert (! contains_v (launcherNodesCopy, nullptr));
+
+    rankedLauncherNodes.reserve (launcherNodes.size());
 }
 
 //==============================================================================
@@ -316,8 +318,9 @@ void ArrangerLauncherSwitchingNode::sortPlayingOrQueuedClipsFirst()
     // is updated by the audio thread, so re-reading it inside the comparator
     // could give a node different ranks across comparisons - that breaks the
     // strict weak ordering std::sort requires and is undefined behaviour.
-    std::vector<std::pair<int, std::unique_ptr<SlotControlNode>>> ranked;
-    ranked.reserve (launcherNodes.size());
+    // The scratch space is reserved when the node is built, so this doesn't allocate.
+    auto& ranked = rankedLauncherNodes;
+    assert (ranked.empty() && ranked.capacity() >= launcherNodes.size());
 
     for (auto& n : launcherNodes)
         ranked.emplace_back (stateToValue (n->getLaunchHandle()), std::move (n));
@@ -328,6 +331,8 @@ void ArrangerLauncherSwitchingNode::sortPlayingOrQueuedClipsFirst()
 
     for (auto& r : ranked)
         launcherNodes.push_back (std::move (r.second));
+
+    ranked.clear();
 }
 
 void ArrangerLauncherSwitchingNode::updatePlaySlotsState()
