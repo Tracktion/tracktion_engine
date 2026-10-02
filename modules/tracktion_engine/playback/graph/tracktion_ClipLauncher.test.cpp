@@ -1379,6 +1379,61 @@ TEST_SUITE ("tracktion_engine")
         CHECK_LT (getRMSLevel (output, tr (4.2, 4.9)), 0.005f);
     }
 
+    TEST_CASE ("Clip launcher: going back to the arrangement cancels a queued launch (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto sinFile = createSineFile (engine, 8.0, 220.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertAudioClipIntoSlot (*slot, sinFile->getFile());
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        edit->getTransport().play (false);
+        process (player, 1_td);
+
+        // Queued for the next bar (4s), then back to the arrangement before then
+        auto launchPos = getNextQuantisedLaunchPosition (*edit, LaunchQType::bar);
+        REQUIRE (launchPos);
+        launchHandle->play (launchPos->monotonicBeat);
+        process (player, 1_td); // to 2s
+
+        track->playSlotClips = true;
+        track->playSlotClips = false;
+        CHECK (! launchHandle->getQueuedStatus());
+
+        process (player, 4_td); // to 6s, past the launch point
+
+        const auto output = player.getOutput();
+        CHECK_LT (getRMSLevel (output, tr (0.0, 6.0)), 0.005f);
+        CHECK (launchHandle->getPlayingStatus() == LaunchHandle::PlayState::stopped);
+        CHECK (! track->playSlotClips.get());
+    }
+
+    TEST_CASE ("Clip launcher: a render cancels a queued launch on the rendered tracks (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto sinFile = createSineFile (engine, 8.0, 220.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertAudioClipIntoSlot (*slot, sinFile->getFile());
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        // Renders turn the tracks' slots off for their duration, which stops a
+        // launched clip and so, for the same reason, cancels a queued one
+        launchHandle->play (MonotonicBeat { 4_bp });
+        REQUIRE (launchHandle->getQueuedStatus() == LaunchHandle::QueueState::playQueued);
+
+        {
+            Track::Array tracks;
+            tracks.add (track);
+            const Renderer::ScopedClipSlotDisabler disabler (*edit, tracks);
+        }
+
+        CHECK (! launchHandle->getQueuedStatus());
+    }
+
     TEST_CASE ("Clip launcher: audible content position matches the played range (audio)")
     {
         auto& engine = *Engine::getEngines()[0];
