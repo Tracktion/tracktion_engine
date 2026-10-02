@@ -1009,6 +1009,157 @@ TEST_SUITE ("tracktion_engine")
         CHECK (track->getClips().size() == 2);
     }
 
+    //==============================================================================
+    // Clip automation played live (waveform_beta#1283). The existing curve tests
+    // render offline; these play the Edit through an EnginePlayer as the app does.
+    // Each curve is a step: full level up to the step beat, then the step value
+    //==============================================================================
+    namespace clip_automation_test_utilities
+    {
+        inline AutomationCurveModifier::Ptr addStepCurve (Clip& clip, AutomatableParameter& param,
+                                                          BeatPosition stepBeat, float before, float after)
+        {
+            auto curveMod = clip.getAutomationCurveList (true)->addCurve (param);
+            auto& curve = curveMod->getCurve (CurveModifierType::absolute).curve;
+            curve.addPoint (stepBeat, before, 0.0, nullptr);
+            curve.addPoint (stepBeat, after, 0.0, nullptr);
+            return curveMod;
+        }
+
+        inline VolumeAndPanPlugin& getVolumePluginWithoutSmoothing (AudioTrack& track)
+        {
+            auto volumePlugin = track.getVolumePlugin();
+            REQUIRE (volumePlugin);
+            volumePlugin->smoothingRampTimeSeconds = 0.0;
+            return *volumePlugin;
+        }
+    }
+
+    TEST_CASE ("Clip automation: volume curve on an arranger clip (live)")
+    {
+        using namespace clip_automation_test_utilities;
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto sinFile = createSineFile (engine, 8.0, 220.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertWaveClip (*track, {}, sinFile->getFile(), { tr (0.0, 8.0) }, DeleteExistingClips::no);
+        clip->setUsesProxy (false);
+
+        auto& volumePlugin = getVolumePluginWithoutSmoothing (*track);
+        addStepCurve (*clip, *volumePlugin.volParam, 2_bp, 1.0f, 0.0f);
+
+        edit->getTransport().play (false);
+        process (player, 4_td);
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (0.2, 1.8), 220.0), 0.5f);
+        CHECK_LT (getRMSLevel (output, tr (2.2, 3.9)), 0.005f);
+    }
+
+    TEST_CASE ("Clip automation: volume curve added while the arranger clip plays (live)")
+    {
+        using namespace clip_automation_test_utilities;
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto sinFile = createSineFile (engine, 8.0, 220.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertWaveClip (*track, {}, sinFile->getFile(), { tr (0.0, 8.0) }, DeleteExistingClips::no);
+        clip->setUsesProxy (false);
+
+        auto& volumePlugin = getVolumePluginWithoutSmoothing (*track);
+
+        // As a user draws it: the graph is already playing
+        edit->getTransport().play (false);
+        process (player, 1_td);
+        addStepCurve (*clip, *volumePlugin.volParam, 3_bp, 1.0f, 0.0f);
+
+        // A new curve is picked up by a 10ms timer, which needs the message
+        // loop, so run its update here
+        volumePlugin.volParam->updateStream();
+        process (player, 4_td); // to 5s
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (1.5, 2.8), 220.0), 0.5f);
+        CHECK_LT (getRMSLevel (output, tr (3.5, 4.9)), 0.005f);
+    }
+
+    TEST_CASE ("Clip automation: pan curve on an arranger clip (live)")
+    {
+        using namespace clip_automation_test_utilities;
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams (2));
+
+        auto sinFile = createSineFile (engine, 8.0, 220.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertWaveClip (*track, {}, sinFile->getFile(), { tr (0.0, 8.0) }, DeleteExistingClips::no);
+        clip->setUsesProxy (false);
+
+        // Centre, then hard right from 2s
+        auto& volumePlugin = getVolumePluginWithoutSmoothing (*track);
+        addStepCurve (*clip, *volumePlugin.panParam, 2_bp, 0.0f, 1.0f);
+
+        edit->getTransport().play (false);
+        process (player, 4_td);
+
+        const auto output = player.getOutput();
+        CHECK_GT (getRMSLevel (output, tr (0.2, 1.8), 0), 0.2f);
+        CHECK_GT (getRMSLevel (output, tr (0.2, 1.8), 1), 0.2f);
+
+        CHECK_LT (getRMSLevel (output, tr (2.2, 3.9), 0), 0.005f);
+        CHECK_GT (getRMSLevel (output, tr (2.2, 3.9), 1), 0.4f);
+    }
+
+    TEST_CASE ("Clip automation: volume curve on a launcher clip (live)")
+    {
+        using namespace clip_automation_test_utilities;
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto sinFile = createSineFile (engine, 8.0, 220.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertAudioClipIntoSlot (*slot, sinFile->getFile());
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        // The curve is in the clip's own beats, so it steps 2 beats after the launch
+        auto& volumePlugin = getVolumePluginWithoutSmoothing (*track);
+        addStepCurve (*clip, *volumePlugin.volParam, 2_bp, 1.0f, 0.0f);
+
+        edit->getTransport().play (false);
+        process (player, 1_td);
+        launchHandle->play ({});
+        process (player, 4_td); // to 5s
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (1.2, 2.8), 220.0), 0.5f);
+        CHECK_LT (getRMSLevel (output, tr (3.2, 4.9)), 0.005f);
+    }
+
+    TEST_CASE ("Clip automation: a single-point volume curve holds its value (live)")
+    {
+        using namespace clip_automation_test_utilities;
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto sinFile = createSineFile (engine, 8.0, 220.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertWaveClip (*track, {}, sinFile->getFile(), { tr (0.0, 8.0) }, DeleteExistingClips::no);
+        clip->setUsesProxy (false);
+
+        // The editor draws a single point as a flat line at its value
+        auto& volumePlugin = getVolumePluginWithoutSmoothing (*track);
+        auto curveMod = clip->getAutomationCurveList (true)->addCurve (*volumePlugin.volParam);
+        curveMod->getCurve (CurveModifierType::absolute).curve.addPoint (1_bp, 0.0f, 0.0, nullptr);
+
+        edit->getTransport().play (false);
+        process (player, 3_td);
+
+        const auto output = player.getOutput();
+        CHECK_LT (getRMSLevel (output, tr (0.2, 2.9)), 0.005f);
+    }
+
     TEST_CASE ("Clip launcher: audible content position matches the played range (audio)")
     {
         auto& engine = *Engine::getEngines()[0];
