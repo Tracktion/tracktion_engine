@@ -49,6 +49,10 @@ public:
     /** Determines if the track's arrange clips or clip slots should be audible. */
     juce::CachedValue<AtomicWrapper<bool>> playSlotClips;
 
+    /** @internal Set on the audio thread by a "Return to arrangement" follow action,
+        and applied to playSlotClips on the message thread. */
+    std::atomic<bool> returnToArrangementRequested { false };
+
     //==============================================================================
     /** returns a warning message about this track not being playable, or "" if it's ok */
     juce::String getTrackPlayabilityWarning() const;

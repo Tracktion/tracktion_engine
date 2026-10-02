@@ -1567,6 +1567,54 @@ TEST_SUITE ("tracktion_engine")
         CHECK_GT (getToneMagnitude (output, tr (8.2, 9.8), 220.0), 0.5f);
     }
 
+    TEST_CASE ("Clip launcher: a Return to arrangement follow action returns the track to its arrangement (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto arrangerFile = createSineFile (engine, 12.0, 220.0f);
+        auto slotFile = createSineFile (engine, 8.0, 330.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+
+        insertWaveClip (*track, {}, arrangerFile->getFile(), { tr (0.0, 12.0) }, DeleteExistingClips::no)
+            ->setUsesProxy (false);
+
+        // After 2 beats of playing, return to the arrangement
+        auto slotClip = insertAudioClipIntoSlot (*slot, slotFile->getFile());
+        slotClip->followActionDurationType = Clip::FollowActionDurationType::beats;
+        slotClip->followActionBeats = 2_bd;
+        auto followActions = slotClip->getFollowActions();
+        REQUIRE (followActions);
+        REQUIRE (followActions->getActions().size() == 1);
+        followActions->getActions()[0]->action = FollowAction::globalReturnToArrangement;
+        edit->getTransport().ensureContextAllocated (true);
+
+        edit->getTransport().play (false);
+        process (player, 1_td);
+
+        // As the app's timer would when the slot starts playing
+        slotClip->getLaunchHandle()->play ({});
+        track->playSlotClips = true;
+        process (player, 3_td); // to 4s: the follow action runs at 3s
+
+        // The follow action runs on the audio thread, so it's applied by the
+        // timer on the message thread. Run that here, as there's no message loop
+        auto& timer = static_cast<juce::Timer&> (engine.getBackToArrangerUpdateTimer());
+        timer.timerCallback();
+        CHECK (! track->playSlotClips.get());
+        process (player, 1_td); // to 5s
+        timer.timerCallback();
+        CHECK (! track->playSlotClips.get());
+        process (player, 2_td); // to 7s
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (1.2, 2.8), 330.0), 0.5f);
+        CHECK_LT (getToneMagnitude (output, tr (1.2, 2.8), 220.0), 0.05f);
+
+        CHECK_GT (getToneMagnitude (output, tr (4.2, 6.8), 220.0), 0.5f);
+        CHECK_LT (getToneMagnitude (output, tr (4.2, 6.8), 330.0), 0.05f);
+    }
+
     TEST_CASE ("Clip launcher: audible content position matches the played range (audio)")
     {
         auto& engine = *Engine::getEngines()[0];

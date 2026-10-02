@@ -293,8 +293,9 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
     {
         case globalReturnToArrangement:
         {
+            // This runs on the audio thread, so it can't set the property itself
             return [ctx] (auto)
-                   { ctx->track->playSlotClips = true; };
+                   { ctx->track->returnToArrangementRequested.store (true, std::memory_order_release); };
         }
         case trackAny:
         {

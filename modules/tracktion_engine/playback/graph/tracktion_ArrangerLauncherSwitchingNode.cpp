@@ -407,8 +407,18 @@ ArrangerLauncherSwitchingNode::SlotClipStatus ArrangerLauncherSwitchingNode::get
 //==============================================================================
 void ArrangerLauncherSwitchingNode::sharedTimerCallback()
 {
-    if (activeNode && activeNode->load (std::memory_order_acquire) == this)
-        updatePlaySlotsState();
+    if (! (activeNode && activeNode->load (std::memory_order_acquire) == this))
+        return;
+
+    // A "Return to arrangement" follow action. This stops the track's launcher
+    // clips, so skip switching back to them whilst the one that ran it stops
+    if (track->returnToArrangementRequested.exchange (false, std::memory_order_acq_rel))
+    {
+        track->playSlotClips = false;
+        return;
+    }
+
+    updatePlaySlotsState();
 }
 
 } // namespace tracktion::inline engine
