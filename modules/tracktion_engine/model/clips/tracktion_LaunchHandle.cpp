@@ -38,13 +38,12 @@ std::optional<MonotonicBeat> LaunchHandle::getQueuedEventPosition() const
 
 void LaunchHandle::play (std::optional<MonotonicBeat> pos)
 {
-    pushNextState (QueueState::playQueued, pos);
+    pushNextState ({ QueueState::playQueued, pos, std::nullopt });
 }
 
 void LaunchHandle::playSynced (const LaunchHandle& otherHandle, std::optional<MonotonicBeat> pos)
 {
-    stateToSyncFrom.store (otherHandle.currentState.load());
-    play (pos);
+    pushNextState ({ QueueState::playQueued, pos, otherHandle.currentState.load() });
 }
 
 void LaunchHandle::setLooping (std::optional<BeatDuration> duration)
@@ -82,7 +81,7 @@ void LaunchHandle::stop (std::optional<MonotonicBeat> pos)
         return;
     }
 
-    nextState = NextState { QueueState::stopQueued, pos };
+    nextState = NextState { QueueState::stopQueued, pos, std::nullopt };
 }
 
 bool LaunchHandle::stopAtEndOfPlay (MonotonicBeat pos)
@@ -98,7 +97,7 @@ bool LaunchHandle::stopAtEndOfPlay (MonotonicBeat pos)
 
     // A stop queued for later happens here instead, without a follow action
     const bool alreadyStopping = nextState.has_value();
-    nextState = NextState { QueueState::stopQueued, pos };
+    nextState = NextState { QueueState::stopQueued, pos, std::nullopt };
 
     return ! alreadyStopping;
 }
@@ -161,6 +160,7 @@ auto LaunchHandle::advance (const SyncRange& syncRange, std::optional<BeatDurati
 
     std::optional<QueueState> queuedState       = ns ? std::optional (ns->queuedState) : std::nullopt;
     std::optional<MonotonicBeat> queuedPosition = ns ? std::optional (ns->queuedPosition) : std::nullopt;
+    std::optional<CurrentState> syncFrom        = ns ? ns->stateToSyncFrom : std::nullopt;
 
     auto cs = currentState.load();
 
@@ -292,8 +292,13 @@ auto LaunchHandle::advance (const SyncRange& syncRange, std::optional<BeatDurati
                     if (queuedPosition->v <= blockMonotonicBeatRange.v.getStart())
                     {
                         // Try and sync from another state first
-                        if (auto syncFrom = stateToSyncFrom.load())
+                        if (syncFrom)
                         {
+                            // Carry on from the other state's start, playing for the whole block
+                            splitStatus.playing1 = true;
+                            splitStatus.range1 = blockEditBeatRange;
+                            splitStatus.playStartTime1 = syncFrom->startBeat;
+
                             currentState.store (CurrentState
                                                 {
                                                     syncFrom->startBeat,
@@ -301,10 +306,7 @@ auto LaunchHandle::advance (const SyncRange& syncRange, std::optional<BeatDurati
                                                     blockMonotonicBeatRange.v.getEnd() - syncFrom->startMonotonicBeat.v,
                                                     blockEditBeatRange.getEnd()
                                                 });
-                            currentState.store (syncFrom);
-                            stateToSyncFrom.store (std::nullopt);
                             currentPlayState.store (PlayState::playing, std::memory_order_release);
-                            continuePlayingOrStopped();
                         }
                         else
                         {
@@ -337,7 +339,7 @@ auto LaunchHandle::advance (const SyncRange& syncRange, std::optional<BeatDurati
                         const auto secondSplitLength    = blockMonotonicBeatRange.v.getEnd() - queuedPosition->v;
 
                         // Try and sync from another state first
-                        if (auto syncFrom = stateToSyncFrom.load())
+                        if (syncFrom)
                         {
                             splitStatus.playing1        = playState == PlayState::playing;
                             splitStatus.range1          = blockEditBeatRange.withLength (firstSplitLength);
@@ -347,7 +349,6 @@ auto LaunchHandle::advance (const SyncRange& syncRange, std::optional<BeatDurati
                             splitStatus.playStartTime2  = syncFrom->startBeat;
                             splitStatus.isSplit         = true;
 
-                            stateToSyncFrom.store (std::nullopt);
                             currentState.store (CurrentState
                                                 {
                                                     syncFrom->startBeat,
@@ -490,10 +491,10 @@ auto LaunchHandle::advance (const SyncRange& syncRange, std::optional<BeatDurati
 }
 
 //==============================================================================
-void LaunchHandle::pushNextState (QueueState s, std::optional<MonotonicBeat> b)
+void LaunchHandle::pushNextState (NextState s)
 {
     const std::scoped_lock sl (nextStateMutex);
-    nextState = NextState { s, b };
+    nextState = s;
 }
 
 std::optional<LaunchHandle::NextState> LaunchHandle::peekNextState() const

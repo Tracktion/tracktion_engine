@@ -464,6 +464,80 @@ TEST_CASE ("LaunchHandle: Legato launching")
     }
 }
 
+TEST_CASE ("LaunchHandle: Legato launch edge cases")
+{
+    LaunchHandle sourceHandle, destHandle;
+
+    SyncRange syncRange;
+    auto advancePlayhead = [&] (BeatDuration duration)
+    {
+        auto newEnd = syncRange.end;
+        newEnd.monotonicBeat.v = newEnd.monotonicBeat.v + duration;
+        newEnd.beat = newEnd.beat + duration;
+        syncRange = SyncRange { syncRange.end, newEnd };
+        return syncRange;
+    };
+
+    // The source plays from beat 1
+    sourceHandle.play (MonotonicBeat { 1_bp });
+    sourceHandle.advance (advancePlayhead (3_bd));  // 0-3
+    destHandle.advance (syncRange);
+    REQUIRE (sourceHandle.getPlayingStatus() == LaunchHandle::PlayState::playing);
+
+    SUBCASE ("A legato launch first seen after its position plays in phase from the first block")
+    {
+        // e.g. an unquantised launch, which has passed by the time the audio thread sees it
+        const auto switchBeat = MonotonicBeat { 2_bp };
+        destHandle.playSynced (sourceHandle, switchBeat);
+        sourceHandle.stop (switchBeat);
+
+        auto s = destHandle.advance (advancePlayhead (2_bd));   // 3-5
+        CHECK (destHandle.getPlayingStatus() == LaunchHandle::PlayState::playing);
+        CHECK (! s.isSplit);
+        CHECK (s.playing1);
+        CHECK (s.range1 == BeatRange (3_bp, 5_bp));
+        CHECK (s.playStartTime1 == 1_bp);
+
+        CHECK (destHandle.getPlayedRange() == BeatRange (1_bp, 5_bp));
+        REQUIRE (destHandle.getPlayedMonotonicRange());
+        CHECK (destHandle.getPlayedMonotonicRange()->v == BeatRange (1_bp, 5_bp));
+
+        // And carries on from the same start
+        s = destHandle.advance (advancePlayhead (1_bd));        // 5-6
+        CHECK (s.playing1);
+        CHECK (s.playStartTime1 == 1_bp);
+        CHECK (destHandle.getPlayedRange() == BeatRange (1_bp, 6_bp));
+    }
+
+    SUBCASE ("A relaunch after a cancelled legato launch doesn't sync to the old clip")
+    {
+        destHandle.playSynced (sourceHandle, MonotonicBeat { 8_bp });
+        destHandle.stop ({});
+        CHECK (! destHandle.getQueuedStatus());
+
+        destHandle.play (MonotonicBeat { 4_bp });
+        auto s = destHandle.advance (advancePlayhead (2_bd));   // 3-5
+        CHECK (s.isSplit);
+        CHECK (s.playing2);
+        CHECK (s.playStartTime2 == 4_bp);
+        REQUIRE (destHandle.getPlayedRange());
+        CHECK (destHandle.getPlayedRange()->getStart() == 4_bp);
+    }
+
+    SUBCASE ("A launch replacing a queued legato launch doesn't sync to the old clip")
+    {
+        destHandle.playSynced (sourceHandle, MonotonicBeat { 8_bp });
+        destHandle.play (MonotonicBeat { 4_bp });
+
+        auto s = destHandle.advance (advancePlayhead (2_bd));   // 3-5
+        CHECK (s.isSplit);
+        CHECK (s.playing2);
+        CHECK (s.playStartTime2 == 4_bp);
+        REQUIRE (destHandle.getPlayedRange());
+        CHECK (destHandle.getPlayedRange()->getStart() == 4_bp);
+    }
+}
+
 } // TEST_SUITE
 
 } // namespace tracktion::inline engine

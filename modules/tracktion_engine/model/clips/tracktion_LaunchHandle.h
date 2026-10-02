@@ -131,21 +131,6 @@ private:
     std::atomic<PlayState> currentPlayState { PlayState::stopped };
 
     //==============================================================================
-    // message-write, audio-read/write
-    struct NextState
-    {
-        QueueState queuedState;
-        std::optional<MonotonicBeat> queuedPosition;
-    };
-    static_assert (std::is_trivially_copyable_v<NextState>);
-
-    std::optional<NextState> nextState;
-    mutable crill::spin_mutex nextStateMutex;
-
-    void pushNextState (QueueState, std::optional<MonotonicBeat>);
-    std::optional<NextState> peekNextState() const;
-
-    //==============================================================================
     // audio-write, message-read
     static_assert (std::is_trivially_copyable_v<std::optional<BeatRange>>);
     crill::seqlock_object<std::optional<BeatRange>> previouslyPlayedRange;
@@ -162,9 +147,23 @@ private:
     static_assert (std::is_trivially_copyable_v<std::optional<CurrentState>>);
 
     crill::seqlock_object<std::optional<CurrentState>> currentState;
-
-    crill::seqlock_object<std::optional<CurrentState>> stateToSyncFrom;
     crill::seqlock_object<std::optional<BeatDuration>> loopDuration;
+
+    //==============================================================================
+    // message-write, audio-read/write
+    struct NextState
+    {
+        QueueState queuedState;
+        std::optional<MonotonicBeat> queuedPosition;
+        std::optional<CurrentState> stateToSyncFrom;    // a legato launch's state to carry on from
+    };
+    static_assert (std::is_trivially_copyable_v<NextState>);
+
+    std::optional<NextState> nextState;
+    mutable crill::spin_mutex nextStateMutex;
+
+    void pushNextState (NextState);
+    std::optional<NextState> peekNextState() const;
 
     //==============================================================================
     // audio-write/read, message-read/write
