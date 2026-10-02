@@ -2726,7 +2726,10 @@ void AudioClipBase::updateReversedState()
 
 void AudioClipBase::updateAutoTempoState()
 {
-    if (isLooping())
+    // autoTempo has already been toggled by the time this is called, so the loop
+    // is held in the *other* representation (isLooping() would look at the new, empty one)
+    if (autoTempo ? (loopLength.get() > TimeDuration())
+                  : (loopLengthBeats.get() > BeatDuration()))
     {
         auto bps = edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart());
 

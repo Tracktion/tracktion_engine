@@ -151,6 +151,25 @@ TEST_SUITE ("tracktion_engine")
         auto active = context->clip->getActiveChannelConfiguration();
         CHECK (active == sourceConfig);
     }
+
+    TEST_CASE ("AudioClipBase: loop range survives toggling auto tempo")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto context = AudioClipBaseChannelTestContext::create (engine, 2);
+        REQUIRE (context->clip != nullptr);
+
+        auto& clip = *context->clip;
+        clip.setLoopRange ({ 0_tp, TimePosition::fromSeconds (0.5) });
+        REQUIRE (clip.isLooping());
+
+        clip.setAutoTempo (true);
+        CHECK (clip.isLooping());
+        CHECK (clip.getLoopLengthBeats() > BeatDuration());
+
+        clip.setAutoTempo (false);
+        CHECK (clip.isLooping());
+        CHECK (clip.getLoopLength().inSeconds() == doctest::Approx (0.5).epsilon (0.001));
+    }
 }
 
 } // namespace tracktion::inline engine
