@@ -1621,6 +1621,32 @@ TEST_SUITE ("tracktion_engine")
         CHECK (clipC->getLaunchHandle()->getPlayingStatus() == LaunchHandle::PlayState::stopped);
     }
 
+    TEST_CASE ("Clip launcher: building the playback graph doesn't change the Edit")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+        auto sinFile = createSineFile (engine, 8.0, 220.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+
+        // A launcher clip without follow actions, as loaded from an older Edit
+        auto clipState = insertAudioClipIntoSlot (*slot, sinFile->getFile())->state.createCopy();
+        clipState.removeChild (clipState.getChildWithName (IDs::FOLLOWACTIONS), nullptr);
+        slot->state.removeChild (slot->state.getChildWithName (IDs::AUDIOCLIP), nullptr);
+        slot->state.appendChild (clipState, nullptr);
+        auto clip = slot->getClip();
+        REQUIRE (clip);
+        REQUIRE (! clip->state.getChildWithName (IDs::FOLLOWACTIONS).isValid());
+
+        edit->getUndoManager().clearUndoHistory();
+        edit->resetChangedStatus();
+
+        edit->getTransport().ensureContextAllocated (true);
+        REQUIRE (edit->getTransport().getCurrentPlaybackContext());
+
+        CHECK (! edit->getUndoManager().canUndo());
+        CHECK (! edit->hasChangedSinceSaved());
+    }
+
     TEST_CASE ("Clip launcher: a queued launch survives the playback context being recreated (audio)")
     {
         auto& engine = *Engine::getEngines()[0];

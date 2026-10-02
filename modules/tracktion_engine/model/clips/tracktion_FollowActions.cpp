@@ -433,6 +433,11 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
 
 std::function<void (MonotonicBeat)> createFollowAction (Clip& c)
 {
+    // Without any follow actions there's nothing to create, and getFollowActions()
+    // would add their state to the clip, an undoable change whilst building the graph
+    if (! c.state.getChildWithName (IDs::FOLLOWACTIONS).isValid())
+        return {};
+
     auto followActions = c.getFollowActions();
 
     if (! followActions)
