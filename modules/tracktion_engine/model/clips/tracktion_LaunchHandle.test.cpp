@@ -184,6 +184,24 @@ TEST_CASE ("LaunchHandle: Stopping a queued launch")
         CHECK (h.getQueuedStatus() == LaunchHandle::QueueState::playQueued);
     }
 
+    SUBCASE ("A launch first seen after its position plays in phase from the first block")
+    {
+        LaunchHandle h;
+        h.advance (advanceSync (1_bd));     // 0-1
+        h.advance (advanceSync (1_bd));     // 1-2
+        h.play (MonotonicBeat { 1_bp });    // already passed
+
+        auto s = h.advance (advanceSync (0.5_bd)); // 2-2.5
+        CHECK (s.playing1);
+        REQUIRE (s.playStartTime1);
+        CHECK (s.playStartTime1->inBeats() == doctest::Approx (1.0));
+
+        // The next block carries on from the same start, so nothing jumps
+        auto next = h.advance (advanceSync (0.5_bd));
+        REQUIRE (next.playStartTime1);
+        CHECK (next.playStartTime1->inBeats() == doctest::Approx (1.0));
+    }
+
     SUBCASE ("A stop always cancels a queued play whilst the audio thread advances")
     {
         // The audio thread holds the queue's lock whilst it advances. A stop made

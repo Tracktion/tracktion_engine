@@ -308,14 +308,16 @@ auto LaunchHandle::advance (const SyncRange& syncRange, std::optional<BeatDurati
                         }
                         else
                         {
-                            splitStatus.playing1 = true;
-                            splitStatus.range1 = blockEditBeatRange;
-                            splitStatus.playStartTime1 = splitStatus.range1.getStart();
-
                             if (cs)
                                 previouslyPlayedRange.store (getMonotonicLengthPlayedRange (cs));
 
                             const auto numBeatsSinceLaunch = blockMonotonicBeatRange.v.getEnd() - queuedPosition->v;
+
+                            // Seen after its launch position, so play in phase with it from this
+                            // block, rather than from the clip's start and then jumping next block
+                            splitStatus.playing1 = true;
+                            splitStatus.range1 = blockEditBeatRange;
+                            splitStatus.playStartTime1 = blockEditBeatRange.getEnd() - numBeatsSinceLaunch;
 
                             currentState.store (CurrentState
                                                 {
