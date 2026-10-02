@@ -68,18 +68,21 @@ void LaunchHandle::nudge (BeatDuration duration)
 
 void LaunchHandle::stop (std::optional<MonotonicBeat> pos)
 {
+    // Under the lock, rather than peeking at the queued state, which reports
+    // nothing queued whilst the audio thread holds the lock and so can miss
+    // the play to cancel
+    const std::scoped_lock sl (nextStateMutex);
+
     if (currentPlayState.load (std::memory_order_acquire) == PlayState::stopped)
     {
-        if (getQueuedStatus() == QueueState::playQueued)
-        {
-            const std::scoped_lock sl (nextStateMutex);
+        // Not playing, so cancel a queued play rather than queue a stop
+        if (nextState && nextState->queuedState == QueueState::playQueued)
             nextState = std::nullopt;
-        }
 
         return;
     }
 
-    pushNextState (QueueState::stopQueued, pos);
+    nextState = NextState { QueueState::stopQueued, pos };
 }
 
 std::optional<BeatRange> LaunchHandle::getPlayedRange() const

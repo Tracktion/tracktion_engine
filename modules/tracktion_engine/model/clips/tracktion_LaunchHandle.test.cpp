@@ -124,6 +124,103 @@ TEST_CASE ("LaunchHandle: Edit position jumps")
     }
 }
 
+TEST_CASE ("LaunchHandle: Stopping a queued launch")
+{
+    SyncRange syncRange;
+    auto advanceSync = [&syncRange] (BeatDuration duration)
+                       {
+                           auto end = syncRange.end;
+                           end.monotonicBeat.v = end.monotonicBeat.v + duration;
+                           end.beat = end.beat + duration;
+                           syncRange = SyncRange { syncRange.end, end };
+                           return syncRange;
+                       };
+
+    SUBCASE ("Stopping a stopped handle cancels its queued play")
+    {
+        LaunchHandle h;
+        h.play (MonotonicBeat { 4_bp });
+        REQUIRE (h.getQueuedStatus() == LaunchHandle::QueueState::playQueued);
+
+        h.stop ({});
+        CHECK (! h.getQueuedStatus());
+
+        for (int i = 0; i < 16; ++i)
+            h.advance (advanceSync (0.5_bd));
+
+        CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
+    }
+
+    SUBCASE ("Stopping a playing handle queues a stop")
+    {
+        LaunchHandle h;
+        h.play ({});
+        h.advance (advanceSync (0.5_bd));
+        REQUIRE (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
+
+        h.stop (MonotonicBeat { 2_bp });
+        CHECK (h.getQueuedStatus() == LaunchHandle::QueueState::stopQueued);
+    }
+
+    SUBCASE ("A stop always cancels a queued play whilst the audio thread advances")
+    {
+        // The audio thread holds the queue's lock whilst it advances. A stop made
+        // then used to see nothing queued and leave the play to start later
+        LaunchHandle h;
+        std::atomic<bool> running { true }, paused { false }, pauseRequested { false };
+
+        std::thread audioThread ([&]
+                                 {
+                                     SyncRange range;
+
+                                     while (running)
+                                     {
+                                         if (pauseRequested)
+                                         {
+                                             paused = true;
+
+                                             while (pauseRequested && running)
+                                                 std::this_thread::yield();
+
+                                             paused = false;
+                                             continue;
+                                         }
+
+                                         auto end = range.end;
+                                         end.monotonicBeat.v = end.monotonicBeat.v + 0.001_bd;
+                                         end.beat = end.beat + 0.001_bd;
+                                         range = SyncRange { range.end, end };
+                                         h.advance (range);
+                                     }
+                                 });
+
+        int numMissed = 0;
+
+        // A race, so it's tried many times
+        for (int i = 0; i < 20000; ++i)
+        {
+            h.play (MonotonicBeat { 1.0e6_bp }); // never reached
+            h.stop ({});
+
+            // Pause the audio thread so the queue can be read reliably
+            pauseRequested = true;
+
+            while (! paused)
+                std::this_thread::yield();
+
+            if (h.getQueuedStatus() == LaunchHandle::QueueState::playQueued)
+                ++numMissed;
+
+            pauseRequested = false;
+        }
+
+        running = false;
+        audioThread.join();
+
+        CHECK (numMissed == 0);
+    }
+}
+
 TEST_CASE ("LaunchHandle: Non-quantised launching")
 {
     LaunchHandle h;
