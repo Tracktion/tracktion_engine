@@ -162,6 +162,28 @@ TEST_CASE ("LaunchHandle: Stopping a queued launch")
         CHECK (h.getQueuedStatus() == LaunchHandle::QueueState::stopQueued);
     }
 
+    SUBCASE ("The end of a timed play stops it, unless a play is queued")
+    {
+        LaunchHandle h;
+        CHECK (! h.stopAtEndOfPlay (MonotonicBeat { 1_bp })); // not playing
+
+        h.play ({});
+        h.advance (advanceSync (0.5_bd));
+
+        // Nothing queued: stops, and its follow action should run
+        CHECK (h.stopAtEndOfPlay (MonotonicBeat { 1_bp }));
+        CHECK (h.getQueuedStatus() == LaunchHandle::QueueState::stopQueued);
+
+        // A stop already queued: stops here instead, without a follow action
+        CHECK (! h.stopAtEndOfPlay (MonotonicBeat { 0.75_bp }));
+        CHECK (h.getQueuedEventPosition()->v.inBeats() == doctest::Approx (0.75));
+
+        // A relaunch queued: that carries on instead
+        h.play (MonotonicBeat { 4_bp });
+        CHECK (! h.stopAtEndOfPlay (MonotonicBeat { 1_bp }));
+        CHECK (h.getQueuedStatus() == LaunchHandle::QueueState::playQueued);
+    }
+
     SUBCASE ("A stop always cancels a queued play whilst the audio thread advances")
     {
         // The audio thread holds the queue's lock whilst it advances. A stop made

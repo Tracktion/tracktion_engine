@@ -85,6 +85,24 @@ void LaunchHandle::stop (std::optional<MonotonicBeat> pos)
     nextState = NextState { QueueState::stopQueued, pos };
 }
 
+bool LaunchHandle::stopAtEndOfPlay (MonotonicBeat pos)
+{
+    const std::scoped_lock sl (nextStateMutex);
+
+    if (currentPlayState.load (std::memory_order_acquire) == PlayState::stopped)
+        return false;
+
+    // A relaunch is queued: the user has chosen what happens next
+    if (nextState && nextState->queuedState == QueueState::playQueued)
+        return false;
+
+    // A stop queued for later happens here instead, without a follow action
+    const bool alreadyStopping = nextState.has_value();
+    nextState = NextState { QueueState::stopQueued, pos };
+
+    return ! alreadyStopping;
+}
+
 std::optional<BeatRange> LaunchHandle::getPlayedRange() const
 {
     return getPlayedRange (currentState.load());

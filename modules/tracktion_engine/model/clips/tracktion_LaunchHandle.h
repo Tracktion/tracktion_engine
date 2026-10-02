@@ -60,6 +60,13 @@ public:
     /** Stop playing, optionally at a given beat position. */
     void stop (std::optional<MonotonicBeat>);
 
+    /** Stops at the end of a timed play (a one-shot's length or a follow action's
+        time), unless a play is queued, which then carries on instead.
+        @returns true if this stop was queued and no stop already was, so a
+                 follow action should run
+    */
+    bool stopAtEndOfPlay (MonotonicBeat);
+
     /** Starts playing, as if it was started at the same time as the given LaunchHandle.
         This can optionally be delayed by supplying a MonotonicBeat to start at.
     */

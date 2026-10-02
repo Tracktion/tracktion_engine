@@ -141,14 +141,8 @@ void SlotControlNode::process (ProcessContext& pc)
                 const auto stopPoint = MonotonicBeat { playedMonotonicRange->v.getStart() + *stopDuration };
 
                 if (blockRange.v.contains (stopPoint.v))
-                {
-                    const auto stopQueued = launchHandle->getQueuedStatus() == LaunchHandle::QueueState::stopQueued;
-                    launchHandle->stop (stopPoint);
-
-                    // If there was a stop already queued, ignore the follow action
-                    if (! stopQueued && stopFunction)
+                    if (launchHandle->stopAtEndOfPlay (stopPoint) && stopFunction)
                         stopFunction (stopPoint);
-                }
             }
         }
 

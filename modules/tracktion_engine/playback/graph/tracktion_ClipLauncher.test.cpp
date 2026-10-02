@@ -1434,6 +1434,38 @@ TEST_SUITE ("tracktion_engine")
         CHECK (! launchHandle->getQueuedStatus());
     }
 
+    TEST_CASE ("Clip launcher: relaunching a one-shot before it ends isn't lost to its end (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        // A 2 beat one-shot, launched at 1 so it ends at 3
+        auto sinFile = createSineFile (engine, 2.0, 220.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertAudioClipIntoSlot (*slot, sinFile->getFile());
+        clip->disableLooping();
+        edit->getTransport().ensureContextAllocated (true);
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        edit->getTransport().play (false);
+        process (player, 1_td);
+        launchHandle->play ({});
+        process (player, 1.5_td); // to 2.5s
+
+        // Relaunch at the next bar (4s), after it ends. Its end used to replace
+        // the queued play with a stop
+        auto launchPos = getNextQuantisedLaunchPosition (*edit, LaunchQType::bar);
+        REQUIRE (launchPos);
+        launchHandle->play (launchPos->monotonicBeat);
+        process (player, 3.5_td); // to 6s
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (1.2, 2.8), 220.0), 0.5f);
+        CHECK_LT (getRMSLevel (output, tr (3.2, 3.8)), 0.005f);
+        CHECK_GT (getToneMagnitude (output, tr (4.2, 5.8), 220.0), 0.5f);
+    }
+
     TEST_CASE ("Clip launcher: audible content position matches the played range (audio)")
     {
         auto& engine = *Engine::getEngines()[0];
