@@ -225,7 +225,8 @@ ProjectID FolderBasedProject::getProjectID() const
 
 juce::String FolderBasedProject::getName() const
 {
-    return folder.getFileNameWithoutExtension();
+    // Folders have no extension, so keep any dots in the name (e.g. "Song v1.2")
+    return folder.getFileName();
 }
 
 const juce::File& FolderBasedProject::getProjectFile() const noexcept

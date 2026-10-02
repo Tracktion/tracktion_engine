@@ -3861,6 +3861,27 @@ TEST_SUITE ("tracktion_engine")
 
         cleanup();
     }
+
+    TEST_CASE ("FolderBasedProject: names containing dots are not truncated")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto projectFolder = tempDir.getChildFile ("Song v1.0.26c");
+        projectFolder.createDirectory();
+
+        {
+            ProjectManager::TempProject tp (pm, projectFolder, false);
+            REQUIRE (tp.project != nullptr);
+
+            CHECK (tp.project->getName() == "Song v1.0.26c");
+        }
+
+        tempDir.deleteRecursively (false);
+    }
 }
 
 } // namespace tracktion::inline engine
