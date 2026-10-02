@@ -20,6 +20,102 @@ namespace tracktion::inline engine
 TEST_SUITE ("tracktion_engine")
 {
 
+TEST_CASE ("LaunchHandle: Edit position jumps")
+{
+    // Blocks of 0.5 beats; the Edit beat can jump, the monotonic beat can't
+    SyncRange syncRange;
+    auto advanceSync = [&syncRange] (BeatDuration duration, std::optional<BeatPosition> jumpTo = {})
+                       {
+                           auto start = syncRange.end;
+
+                           if (jumpTo)
+                               start.beat = *jumpTo;
+
+                           auto end = start;
+                           end.monotonicBeat.v = end.monotonicBeat.v + duration;
+                           end.beat = end.beat + duration;
+                           syncRange = SyncRange { start, end };
+
+                           return syncRange;
+                       };
+
+    SUBCASE ("A looping handle keeps its phase when the playhead jumps back past its start")
+    {
+        LaunchHandle h;
+        const auto loopLength = 4_bd;
+        h.advance (advanceSync (1_bd), loopLength);  // 0-1
+        h.play ({});
+        h.advance (advanceSync (1_bd), loopLength);  // starts at 1
+
+        for (int i = 0; i < 4; ++i)
+            h.advance (advanceSync (1_bd), loopLength); // to 6
+
+        // Jump back to 0.5: the start moves back a whole loop to -3
+        auto s = h.advance (advanceSync (0.5_bd, 0.5_bp), loopLength);
+        CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
+        CHECK (s.playing1);
+        REQUIRE (s.playStartTime1);
+        CHECK (s.playStartTime1->inBeats() == doctest::Approx (-3.0));
+
+        auto played = h.getPlayedRange();
+        REQUIRE (played);
+        CHECK (played->getStart().inBeats() == doctest::Approx (-3.0));
+        CHECK (played->getEnd().inBeats() == doctest::Approx (1.0));
+
+        // The monotonic range is unaffected, so timed stops and follow actions are too
+        auto monotonic = h.getPlayedMonotonicRange();
+        REQUIRE (monotonic);
+        CHECK (monotonic->v.getStart().inBeats() == doctest::Approx (1.0));
+        CHECK (monotonic->v.getLength().inBeats() == doctest::Approx (5.5));
+    }
+
+    SUBCASE ("A forward jump keeps the start, and the played range ends at the playhead")
+    {
+        LaunchHandle h;
+        h.play ({});
+        h.advance (advanceSync (1_bd), 4_bd);           // starts at 0
+        auto s = h.advance (advanceSync (1_bd, 10_bp), 4_bd);
+
+        REQUIRE (s.playStartTime1);
+        CHECK (s.playStartTime1->inBeats() == doctest::Approx (0.0));
+
+        auto played = h.getPlayedRange();
+        REQUIRE (played);
+        CHECK (played->getEnd().inBeats() == doctest::Approx (11.0));
+    }
+
+    SUBCASE ("A one-shot handle stops when the playhead jumps")
+    {
+        LaunchHandle h;
+        h.play ({});
+        h.advance (advanceSync (1_bd));
+        CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
+
+        auto s = h.advance (advanceSync (1_bd, 0_bp));
+        CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
+        CHECK (! s.playing1);
+        CHECK (! h.getPlayedRange());
+
+        auto last = h.getLastPlayedRange();
+        REQUIRE (last);
+        CHECK (last->getLength().inBeats() == doctest::Approx (1.0));
+    }
+
+    SUBCASE ("Continuous blocks aren't a jump")
+    {
+        LaunchHandle h;
+        h.play ({});
+
+        for (int i = 0; i < 8; ++i)
+            h.advance (advanceSync (0.5_bd));
+
+        CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
+        auto played = h.getPlayedRange();
+        REQUIRE (played);
+        CHECK (played->getLength().inBeats() == doctest::Approx (4.0));
+    }
+}
+
 TEST_CASE ("LaunchHandle: Non-quantised launching")
 {
     LaunchHandle h;

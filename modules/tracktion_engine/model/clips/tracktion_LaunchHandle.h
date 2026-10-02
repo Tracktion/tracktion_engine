@@ -88,20 +88,27 @@ public:
     /** Advance the state.
         N.B. This should only be called by the audio thread.
         @param SyncRange    The current SyncRange. Used to sync launch positions to
+        @param loopLength   The clip's loop length if it loops. If the Edit position
+                            jumps whilst playing (a relocate, stop-move-play or loop
+                            wrap), a looping handle keeps its phase against the beat
+                            grid, moving its start back by whole loops if it's now
+                            ahead of the playhead. A handle with no loop length stops.
         @returns            The unlooped Edit beat range split if there are
                             different play/stop states.
         [[ audio_thread ]]
     */
-    SplitStatus advance (const SyncRange&);
+    SplitStatus advance (const SyncRange&, std::optional<BeatDuration> loopLength = {});
 
     //==============================================================================
-    /** Returns the Edit beat range this has been playing for.
-        N.B. The length is unlooped and so monotonically increasing.
+    /** Returns the Edit beat range this has been playing for: from the beat it
+        started at (as moved by any Edit position jumps) to the current Edit
+        position. N.B. The length is unlooped.
     */
     std::optional<BeatRange> getPlayedRange() const;
 
     /** Returns the monotonic beat range this has been playing for.
-        N.B. This is really only useful for syncing to other timeline events.
+        N.B. This is really only useful for syncing to other timeline events. Unlike
+        getPlayedRange() it's unaffected by Edit position jumps.
     */
     std::optional<MonotonicBeatRange> getPlayedMonotonicRange() const;
 
@@ -139,7 +146,8 @@ private:
     {
         BeatPosition startBeat;
         MonotonicBeat startMonotonicBeat;
-        BeatDuration duration;
+        BeatDuration duration;      // monotonic
+        BeatPosition editEnd;       // the end of the last block played
     };
     static_assert (std::is_trivially_copyable_v<std::optional<CurrentState>>);
 
@@ -151,6 +159,12 @@ private:
     //==============================================================================
     // audio-write/read, message-read/write
     std::atomic<double> nudgeBeats { 0.0 };
+
+    //==============================================================================
+    // audio-only, used to detect Edit position jumps
+    std::optional<BeatPosition> lastBlockEditEnd;
+
+    static std::optional<BeatRange> getPlayedRange (const std::optional<CurrentState>&);
 };
 
 } // namespace tracktion::inline engine

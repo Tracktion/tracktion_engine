@@ -1160,6 +1160,225 @@ TEST_SUITE ("tracktion_engine")
         CHECK_LT (getRMSLevel (output, tr (0.2, 2.9)), 0.005f);
     }
 
+    //==============================================================================
+    // Launched clips across transport jumps (waveform_beta#1286, #1287). A looping
+    // launched clip keeps its phase against the bar grid: its source position is
+    // (edit beat - launch beat) mod loop length, whichever way the playhead moves.
+    // Clips here are two-tone 4s loops (220Hz then 330Hz) launched at 1s, so the
+    // 330Hz half plays from edit beats 3-5, 7-9... and 220Hz from 1-3, 5-7...
+    //==============================================================================
+    TEST_CASE ("Clip launcher: a backward jump keeps a looping launched clip in phase (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto twoToneFile = createTwoToneFile (engine, 2.0, 220.0f, 330.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertAudioClipIntoSlot (*slot, twoToneFile->getFile());
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        edit->getTransport().play (false);
+        process (player, 1_td);
+        launchHandle->play ({});
+        process (player, 8_td); // to 9s
+
+        // Back to the start while playing. Edit beats 0-1 are 330Hz (as -1 mod 4
+        // is 3), then 220Hz from 1. Today the clip is silent until edit beat 1
+        // and then restarts from its start, which happens to look the same, so
+        // check the 330Hz part
+        edit->getTransport().setPosition (0s);
+        process (player, 3_td); // edit 0 to 3, output 9 to 12
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (9.1, 9.9), 330.0), 0.5f);
+        CHECK_GT (getToneMagnitude (output, tr (10.1, 11.9), 220.0), 0.5f);
+        CHECK (launchHandle->getPlayingStatus() == LaunchHandle::PlayState::playing);
+    }
+
+    TEST_CASE ("Clip launcher: stopping, relocating and playing keeps a looping launched clip playing (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto twoToneFile = createTwoToneFile (engine, 2.0, 220.0f, 330.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertAudioClipIntoSlot (*slot, twoToneFile->getFile());
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        auto& transport = edit->getTransport();
+        transport.play (false);
+        process (player, 1_td);
+        launchHandle->play ({});
+        process (player, 4_td); // to 5s
+
+        // Stop, go back to the start, play again: as Home then Play
+        transport.stop (false, false);
+        process (player, 1_td); // output 5 to 6
+        transport.setPosition (0s);
+        transport.play (false);
+        process (player, 3_td); // edit 0 to 3, output 6 to 9
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (6.1, 6.9), 330.0), 0.5f);
+        CHECK_GT (getToneMagnitude (output, tr (7.1, 8.9), 220.0), 0.5f);
+    }
+
+    TEST_CASE ("Clip launcher: a forward jump keeps the played range and the audio in step (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto twoToneFile = createTwoToneFile (engine, 2.0, 220.0f, 330.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertAudioClipIntoSlot (*slot, twoToneFile->getFile());
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        edit->getTransport().play (false);
+        process (player, 1_td);
+        launchHandle->play ({});
+        process (player, 2_td); // to 3s
+
+        // Forward to edit beat 10, which is 1 beat into the 220Hz half
+        edit->getTransport().setPosition (10s);
+        process (player, 2_td); // edit 10 to 12, output 3 to 5
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (3.1, 3.9), 220.0), 0.5f);
+        CHECK_GT (getToneMagnitude (output, tr (4.1, 4.9), 330.0), 0.5f);
+
+        // The played range ends where the edit is, so a playhead drawn from it
+        // shows what's heard: 3 beats into the loop
+        auto playedRange = launchHandle->getPlayedRange();
+        REQUIRE (playedRange);
+        CHECK (playedRange->getEnd().inBeats() == doctest::Approx (12.0).epsilon (0.001));
+        CHECK (std::fmod (playedRange->getLength().inBeats(), 4.0) == doctest::Approx (3.0).epsilon (0.001));
+    }
+
+    TEST_CASE ("Clip launcher: a transport jump stops a launched one-shot clip (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto sinFile = createSineFile (engine, 8.0, 220.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertAudioClipIntoSlot (*slot, sinFile->getFile());
+        clip->disableLooping();
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        edit->getTransport().play (false);
+        process (player, 1_td);
+        launchHandle->play ({});
+        process (player, 2_td); // to 3s
+
+        edit->getTransport().setPosition (0s);
+        process (player, 2_td); // output 3 to 5
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (1.1, 2.9), 220.0), 0.5f);
+        CHECK_LT (getRMSLevel (output, tr (3.1, 4.9)), 0.005f);
+        CHECK (launchHandle->getPlayingStatus() == LaunchHandle::PlayState::stopped);
+    }
+
+    TEST_CASE ("Clip launcher: an arrangement loop wrapping keeps a looping launched clip in phase (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto twoToneFile = createTwoToneFile (engine, 2.0, 220.0f, 330.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertAudioClipIntoSlot (*slot, twoToneFile->getFile());
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        // A 6 beat arrangement loop, which isn't a whole number of clip loops
+        auto& transport = edit->getTransport();
+        transport.setLoopRange (tr (0.0, 6.0));
+        transport.looping = true;
+        transport.play (false);
+        process (player, 1_td);
+        launchHandle->play ({});
+        process (player, 8_td); // edit 1-6 then 0-3, output 1 to 9
+
+        // After the wrap at output 6s: edit 0-1 is 330Hz, 1-3 is 220Hz
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (6.1, 6.9), 330.0), 0.5f);
+        CHECK_GT (getToneMagnitude (output, tr (7.1, 8.9), 220.0), 0.5f);
+    }
+
+    TEST_CASE ("Clip launcher: a timed stop is unaffected by a transport jump (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto sinFile = createSineFile (engine, 4.0, 220.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertAudioClipIntoSlot (*slot, sinFile->getFile());
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        // A Stop follow action after 6 beats of playing
+        clip->followActionDurationType = Clip::FollowActionDurationType::beats;
+        clip->followActionBeats = 6_bd;
+        auto followActions = clip->getFollowActions();
+        REQUIRE (followActions);
+        REQUIRE (followActions->getActions().size() == 1);
+        followActions->getActions()[0]->action = FollowAction::globalStop;
+
+        // Rebuild the graph with it, as the Edit's change timer would
+        edit->getTransport().ensureContextAllocated (true);
+
+        edit->getTransport().play (false);
+        process (player, 1_td);
+        launchHandle->play ({});
+        process (player, 2_td); // to 3s
+
+        // The jump doesn't change how long it's played for, so it still stops 6s after launching
+        edit->getTransport().setPosition (0s);
+        process (player, 6_td); // output 3 to 9
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (3.2, 6.8), 220.0), 0.5f);
+        CHECK_LT (getRMSLevel (output, tr (7.2, 8.9)), 0.005f);
+    }
+
+    TEST_CASE ("Clip automation: a launcher clip's automation keeps applying after a transport jump (live)")
+    {
+        using namespace clip_automation_test_utilities;
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto sinFile = createSineFile (engine, 4.0, 220.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertAudioClipIntoSlot (*slot, sinFile->getFile());
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        // Full level for the first beat of playing, then silent
+        auto& volumePlugin = getVolumePluginWithoutSmoothing (*track);
+        addStepCurve (*clip, *volumePlugin.volParam, 1_bp, 1.0f, 0.0f);
+
+        edit->getTransport().play (false);
+        process (player, 1_td);
+        launchHandle->play ({});
+        process (player, 2_td); // to 3s
+
+        // Forward to edit beat 9, two whole loops after the launch: the curve
+        // follows the clip's loop, so it's back at the start of it. It used to
+        // stop applying, as the playhead had moved out of the played range
+        edit->getTransport().setPosition (9s);
+        process (player, 2_td); // edit 9 to 11, output 3 to 5
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (1.2, 1.8), 220.0), 0.5f);
+        CHECK_LT (getRMSLevel (output, tr (2.2, 2.9)), 0.005f);
+        CHECK_GT (getToneMagnitude (output, tr (3.2, 3.8), 220.0), 0.5f);
+        CHECK_LT (getRMSLevel (output, tr (4.2, 4.9)), 0.005f);
+    }
+
     TEST_CASE ("Clip launcher: audible content position matches the played range (audio)")
     {
         auto& engine = *Engine::getEngines()[0];

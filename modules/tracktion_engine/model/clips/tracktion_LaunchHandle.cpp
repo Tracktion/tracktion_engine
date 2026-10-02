@@ -84,8 +84,13 @@ void LaunchHandle::stop (std::optional<MonotonicBeat> pos)
 
 std::optional<BeatRange> LaunchHandle::getPlayedRange() const
 {
-    if (auto c = currentState.load())
-        return BeatRange (c->startBeat, c->duration);
+    return getPlayedRange (currentState.load());
+}
+
+std::optional<BeatRange> LaunchHandle::getPlayedRange (const std::optional<CurrentState>& c)
+{
+    if (c)
+        return BeatRange::between (c->startBeat, std::max (c->startBeat, c->editEnd));
 
     return {};
 }
@@ -103,7 +108,7 @@ std::optional<BeatRange> LaunchHandle::getLastPlayedRange() const
     return previouslyPlayedRange.load();
 }
 
-auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
+auto LaunchHandle::advance (const SyncRange& syncRange, std::optional<BeatDuration> loopLength) -> SplitStatus
 {
     const auto blockEditBeatRange = getBeatRange (syncRange);
     const auto blockMonotonicBeatRange = getMonotonicBeatRange (syncRange);
@@ -140,7 +145,7 @@ auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
             splitStatus.playing1 = false;
 
             if (cs)
-                previouslyPlayedRange.store (BeatRange (cs->startBeat, cs->duration));
+                previouslyPlayedRange.store (getPlayedRange (cs));
 
             currentState.store (std::nullopt);
             currentPlayState.store (PlayState::stopped, std::memory_order_release);
@@ -148,6 +153,38 @@ auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
         }
 
         return splitStatus;
+    }
+
+    // An Edit position jump whilst playing: a relocate, stop-move-play or loop wrap
+    const bool editPositionJumped = lastBlockEditEnd.has_value()
+                                     && std::abs ((blockEditBeatRange.getStart() - *lastBlockEditEnd).inBeats()) > 0.0001;
+    lastBlockEditEnd = blockEditBeatRange.getEnd();
+
+    if (editPositionJumped && playState == PlayState::playing && cs)
+    {
+        if (loopLength && *loopLength > 0_bd)
+        {
+            // Keep the phase against the beat grid, so if the clip would now start
+            // ahead of the playhead, start it whole loops earlier
+            if (blockEditBeatRange.getStart() < cs->startBeat)
+            {
+                const auto numLoops = std::ceil ((cs->startBeat - blockEditBeatRange.getStart()).inBeats() / loopLength->inBeats());
+                cs->startBeat = cs->startBeat - *loopLength * numLoops;
+            }
+        }
+        else
+        {
+            // A one-shot has no position to carry on from, so it stops
+            SplitStatus splitStatus;
+            splitStatus.playing1 = false;
+            splitStatus.range1 = blockEditBeatRange;
+
+            previouslyPlayedRange.store (getPlayedRange (cs));
+            currentState.store (std::nullopt);
+            currentPlayState.store (PlayState::stopped, std::memory_order_release);
+
+            return splitStatus;
+        }
     }
 
     SplitStatus splitStatus;
@@ -173,6 +210,7 @@ auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
             }
 
             cs->duration = cs->duration + duration;
+            cs->editEnd = blockEditBeatRange.getEnd();
             currentState.store (cs);
         }
 
@@ -207,7 +245,8 @@ auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
                                 {
                                     *splitStatus.playStartTime2,
                                     MonotonicBeat { blockMonotonicBeatRange.v.getStart() + firstSplitLength },
-                                    secondSplitLength
+                                    secondSplitLength,
+                                    blockEditBeatRange.getEnd()
                                 });
         }
     };
@@ -230,7 +269,8 @@ auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
                                                 {
                                                     syncFrom->startBeat,
                                                     syncFrom->startMonotonicBeat,
-                                                    blockMonotonicBeatRange.v.getEnd() - syncFrom->startMonotonicBeat.v
+                                                    blockMonotonicBeatRange.v.getEnd() - syncFrom->startMonotonicBeat.v,
+                                                    blockEditBeatRange.getEnd()
                                                 });
                             currentState.store (syncFrom);
                             stateToSyncFrom.store (std::nullopt);
@@ -244,7 +284,7 @@ auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
                             splitStatus.playStartTime1 = splitStatus.range1.getStart();
 
                             if (cs)
-                                previouslyPlayedRange.store (BeatRange (cs->startBeat, cs->duration));
+                                previouslyPlayedRange.store (getPlayedRange (cs));
 
                             const auto numBeatsSinceLaunch = blockMonotonicBeatRange.v.getEnd() - queuedPosition->v;
 
@@ -252,7 +292,8 @@ auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
                                                 {
                                                     blockEditBeatRange.getEnd() - numBeatsSinceLaunch,
                                                     *queuedPosition,
-                                                    numBeatsSinceLaunch
+                                                    numBeatsSinceLaunch,
+                                                    blockEditBeatRange.getEnd()
                                                 });
                             currentPlayState.store (PlayState::playing, std::memory_order_release);
                         }
@@ -280,7 +321,8 @@ auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
                                                 {
                                                     syncFrom->startBeat,
                                                     syncFrom->startMonotonicBeat,
-                                                    blockMonotonicBeatRange.v.getEnd() - syncFrom->startMonotonicBeat.v
+                                                    blockMonotonicBeatRange.v.getEnd() - syncFrom->startMonotonicBeat.v,
+                                                    blockEditBeatRange.getEnd()
                                                 });
                             currentPlayState.store (PlayState::playing, std::memory_order_release);
                         }
@@ -298,13 +340,14 @@ auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
                             assert (! splitStatus.range2.isEmpty());
 
                             if (cs)
-                                previouslyPlayedRange.store (BeatRange (cs->startBeat, cs->duration));
+                                previouslyPlayedRange.store (getPlayedRange (cs));
 
                             currentState.store (CurrentState
                                                 {
                                                     *splitStatus.playStartTime2,
                                                     *queuedPosition,
-                                                    secondSplitLength
+                                                    secondSplitLength,
+                                                    blockEditBeatRange.getEnd()
                                                 });
                             currentPlayState.store (PlayState::playing, std::memory_order_release);
                         }
@@ -326,7 +369,8 @@ auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
                                         {
                                             blockEditBeatRange.getStart(),
                                             syncRange.start.monotonicBeat,
-                                            duration
+                                            duration,
+                                            blockEditBeatRange.getEnd()
                                         });
                     currentPlayState.store (PlayState::playing, std::memory_order_release);
                     clearNextState();
@@ -354,7 +398,7 @@ auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
                         splitStatus.playStartTime1 = std::nullopt;
 
                         if (cs)
-                            previouslyPlayedRange.store (BeatRange (cs->startBeat, cs->duration));
+                            previouslyPlayedRange.store (getPlayedRange (cs));
 
                         currentState.store (std::nullopt);
                         currentPlayState.store (PlayState::stopped, std::memory_order_release);
@@ -377,7 +421,7 @@ auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
                         assert(! splitStatus.range2.isEmpty());
 
                         if (cs)
-                            previouslyPlayedRange.store (BeatRange (cs->startBeat, cs->duration));
+                            previouslyPlayedRange.store (getPlayedRange (cs));
 
                         currentState.store (std::nullopt);
                         currentPlayState.store (PlayState::stopped, std::memory_order_release);
@@ -395,7 +439,7 @@ auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
                     splitStatus.playStartTime1  = std::nullopt;
 
                     if (cs)
-                        previouslyPlayedRange.store (BeatRange (cs->startBeat, cs->duration));
+                        previouslyPlayedRange.store (getPlayedRange (cs));
 
                     currentState.store (std::nullopt);
                     currentPlayState.store (PlayState::stopped, std::memory_order_release);
