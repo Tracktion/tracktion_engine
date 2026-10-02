@@ -850,6 +850,10 @@ void TransportControl::ensureContextAllocated (bool alwaysReallocate)
 
 void TransportControl::freePlaybackContext()
 {
+    if (playbackContext)
+        if (auto syncPoint = playbackContext->getSyncPoint())
+            lastContextMonotonicBeat = syncPoint->monotonicBeat;
+
     playbackContext.reset();
     clearPlayingFlags();
     transportState->playbackContextAllocation = std::max (0, transportState->playbackContextAllocation - 1);

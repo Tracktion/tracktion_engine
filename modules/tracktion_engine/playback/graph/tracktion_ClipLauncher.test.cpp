@@ -1532,6 +1532,41 @@ TEST_SUITE ("tracktion_engine")
         CHECK (! clipB->getLaunchHandle()->getQueuedStatus());
     }
 
+    TEST_CASE ("Clip launcher: a queued launch survives the playback context being recreated (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto sinFile = createSineFile (engine, 8.0, 220.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertAudioClipIntoSlot (*slot, sinFile->getFile());
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        auto& transport = edit->getTransport();
+        transport.play (false);
+        process (player, 5_td);
+
+        // Queued for the next bar (8s), then the context is recreated, as minimising
+        // with "stop playback when minimised" or toggling low latency monitoring does
+        auto launchPos = getNextQuantisedLaunchPosition (*edit, LaunchQType::bar);
+        REQUIRE (launchPos);
+        launchHandle->play (launchPos->monotonicBeat);
+
+        transport.stop (false, false);
+        transport.freePlaybackContext();
+        transport.ensureContextAllocated();
+        transport.setPosition (5s);
+        transport.play (false);
+        process (player, 5_td); // edit 5 to 10, output 5 to 10
+
+        // It starts at the bar it was queued for, not when the restarted beat
+        // count catches up with the old one
+        const auto output = player.getOutput();
+        CHECK_LT (getRMSLevel (output, tr (5.2, 7.8)), 0.005f);
+        CHECK_GT (getToneMagnitude (output, tr (8.2, 9.8), 220.0), 0.5f);
+    }
+
     TEST_CASE ("Clip launcher: audible content position matches the played range (audio)")
     {
         auto& engine = *Engine::getEngines()[0];
