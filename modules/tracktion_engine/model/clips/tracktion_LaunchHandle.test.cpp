@@ -77,6 +77,44 @@ TEST_CASE ("LaunchHandle: Edit position jumps")
         CHECK (last->getLength().inBeats() == doctest::Approx (5.5));
     }
 
+    SUBCASE ("A repeating handle keeps repeating after the playhead jumps")
+    {
+        // As the Repeat trigger mode: retrigger every beat, for a 4 beat clip loop or a one-shot
+        for (auto loopLength : { std::optional (4_bd), std::optional<BeatDuration>() })
+        for (auto jumpTo : { 10_bp, 0.25_bp, 2.75_bp })
+        {
+            CAPTURE (jumpTo.inBeats());
+            CAPTURE (loopLength.has_value());
+            syncRange = {};
+            LaunchHandle h;
+            h.setLooping (1_bd);
+            h.advance (advanceSync (0.5_bd), loopLength);   // 0-0.5
+            h.play ({});
+            h.advance (advanceSync (0.5_bd), loopLength);   // starts at 0.5
+
+            int numRepeats = 0;
+
+            for (int i = 0; i < 6; ++i)                     // to 4, repeating at 1.5, 2.5 and 3.5
+                if (h.advance (advanceSync (0.5_bd), loopLength).isSplit)
+                    ++numRepeats;
+
+            CHECK (numRepeats == 3);
+
+            // Jump, then play for a little over a repeat interval
+            numRepeats = 0;
+
+            if (h.advance (advanceSync (0.5_bd, jumpTo), loopLength).isSplit)
+                ++numRepeats;
+
+            for (int i = 0; i < 2; ++i)
+                if (h.advance (advanceSync (0.5_bd), loopLength).isSplit)
+                    ++numRepeats;
+
+            CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
+            CHECK (numRepeats >= 1);
+        }
+    }
+
     SUBCASE ("A forward jump keeps the start, and the played range ends at the playhead")
     {
         LaunchHandle h;

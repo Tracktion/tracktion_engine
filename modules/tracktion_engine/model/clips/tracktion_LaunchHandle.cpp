@@ -191,7 +191,14 @@ auto LaunchHandle::advance (const SyncRange& syncRange, std::optional<BeatDurati
 
     if (editPositionJumped && playState == PlayState::playing && cs)
     {
-        if (loopLength && *loopLength > 0_bd)
+        if (auto repeatDuration = loopDuration.load(); repeatDuration && *repeatDuration > 0_bd)
+        {
+            // Repeating (e.g. the Repeat trigger mode) restarts the clip every repeat,
+            // so keep the repeats on the same grid, starting the last one at or before the playhead
+            const auto numRepeats = std::floor ((blockEditBeatRange.getStart() - cs->startBeat).inBeats() / repeatDuration->inBeats());
+            cs->startBeat = cs->startBeat + *repeatDuration * numRepeats;
+        }
+        else if (loopLength && *loopLength > 0_bd)
         {
             // Keep the phase against the beat grid, so if the clip would now start
             // ahead of the playhead, start it whole loops earlier
