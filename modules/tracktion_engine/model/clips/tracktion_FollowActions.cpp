@@ -313,11 +313,12 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
                            for (;;)
                            {
                                const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (ctx->validSceneHandles.size()) }));
+                               const auto& handle = ctx->validSceneHandles[index];
 
-                               if (index == ctx->sceneIndex)
+                               if (handle == ctx->launchHandle)
                                    continue;
 
-                               ctx->play (ctx->validSceneHandles[index], b);
+                               ctx->play (handle, b);
                                break;
                            }
                        };

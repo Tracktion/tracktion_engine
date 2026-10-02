@@ -1532,6 +1532,42 @@ TEST_SUITE ("tracktion_engine")
         CHECK (! clipB->getLaunchHandle()->getQueuedStatus());
     }
 
+    TEST_CASE ("Clip launcher: a Play Other follow action launches another clip when slots before it are empty (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto fileA = createSineFile (engine, 8.0, 220.0f);
+        auto fileB = createSineFile (engine, 8.0, 330.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        track->getClipSlotList().ensureNumberOfSlots (3);
+        edit->getSceneList().ensureNumberOfScenes (3);
+
+        // The first slot is empty, so A's slot index (1) is B's index among the clips
+        auto slots = track->getClipSlotList().getClipSlots();
+        auto clipA = insertAudioClipIntoSlot (*slots[1], fileA->getFile());
+        auto clipB = insertAudioClipIntoSlot (*slots[2], fileB->getFile());
+
+        // After 2 beats A plays another clip on the track, and the only other one is B
+        clipA->followActionDurationType = Clip::FollowActionDurationType::beats;
+        clipA->followActionBeats = 2_bd;
+        auto followActions = clipA->getFollowActions();
+        REQUIRE (followActions);
+        REQUIRE (followActions->getActions().size() == 1);
+        followActions->getActions()[0]->action = FollowAction::trackOther;
+        edit->getTransport().ensureContextAllocated (true);
+
+        edit->getTransport().play (false);
+        clipA->getLaunchHandle()->play ({});
+        process (player, 4_td);
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (0.2, 1.8), 220.0), 0.5f);
+        CHECK_GT (getToneMagnitude (output, tr (2.2, 3.9), 330.0), 0.5f);
+        CHECK_LT (getToneMagnitude (output, tr (2.2, 3.9), 220.0), 0.1f);
+        CHECK (clipB->getLaunchHandle()->getPlayingStatus() == LaunchHandle::PlayState::playing);
+    }
+
     TEST_CASE ("Clip launcher: a queued launch survives the playback context being recreated (audio)")
     {
         auto& engine = *Engine::getEngines()[0];
