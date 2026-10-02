@@ -67,6 +67,14 @@ TEST_CASE ("LaunchHandle: Edit position jumps")
         REQUIRE (monotonic);
         CHECK (monotonic->v.getStart().inBeats() == doctest::Approx (1.0));
         CHECK (monotonic->v.getLength().inBeats() == doctest::Approx (5.5));
+
+        // As is the length last played, which a performance recording takes as
+        // the recorded length - it handles an arrangement loop wrap itself
+        h.stop ({});
+        h.advance (advanceSync (0.5_bd), loopLength);
+        auto last = h.getLastPlayedRange();
+        REQUIRE (last);
+        CHECK (last->getLength().inBeats() == doctest::Approx (5.5));
     }
 
     SUBCASE ("A forward jump keeps the start, and the played range ends at the playhead")

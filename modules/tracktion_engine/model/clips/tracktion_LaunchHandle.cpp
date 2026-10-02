@@ -95,6 +95,14 @@ std::optional<BeatRange> LaunchHandle::getPlayedRange (const std::optional<Curre
     return {};
 }
 
+std::optional<BeatRange> LaunchHandle::getMonotonicLengthPlayedRange (const std::optional<CurrentState>& c)
+{
+    if (c)
+        return BeatRange (c->startBeat, c->duration);
+
+    return {};
+}
+
 std::optional<MonotonicBeatRange> LaunchHandle::getPlayedMonotonicRange() const
 {
     if (auto c = currentState.load())
@@ -145,7 +153,7 @@ auto LaunchHandle::advance (const SyncRange& syncRange, std::optional<BeatDurati
             splitStatus.playing1 = false;
 
             if (cs)
-                previouslyPlayedRange.store (getPlayedRange (cs));
+                previouslyPlayedRange.store (getMonotonicLengthPlayedRange (cs));
 
             currentState.store (std::nullopt);
             currentPlayState.store (PlayState::stopped, std::memory_order_release);
@@ -179,7 +187,7 @@ auto LaunchHandle::advance (const SyncRange& syncRange, std::optional<BeatDurati
             splitStatus.playing1 = false;
             splitStatus.range1 = blockEditBeatRange;
 
-            previouslyPlayedRange.store (getPlayedRange (cs));
+            previouslyPlayedRange.store (getMonotonicLengthPlayedRange (cs));
             currentState.store (std::nullopt);
             currentPlayState.store (PlayState::stopped, std::memory_order_release);
 
@@ -284,7 +292,7 @@ auto LaunchHandle::advance (const SyncRange& syncRange, std::optional<BeatDurati
                             splitStatus.playStartTime1 = splitStatus.range1.getStart();
 
                             if (cs)
-                                previouslyPlayedRange.store (getPlayedRange (cs));
+                                previouslyPlayedRange.store (getMonotonicLengthPlayedRange (cs));
 
                             const auto numBeatsSinceLaunch = blockMonotonicBeatRange.v.getEnd() - queuedPosition->v;
 
@@ -340,7 +348,7 @@ auto LaunchHandle::advance (const SyncRange& syncRange, std::optional<BeatDurati
                             assert (! splitStatus.range2.isEmpty());
 
                             if (cs)
-                                previouslyPlayedRange.store (getPlayedRange (cs));
+                                previouslyPlayedRange.store (getMonotonicLengthPlayedRange (cs));
 
                             currentState.store (CurrentState
                                                 {
@@ -398,7 +406,7 @@ auto LaunchHandle::advance (const SyncRange& syncRange, std::optional<BeatDurati
                         splitStatus.playStartTime1 = std::nullopt;
 
                         if (cs)
-                            previouslyPlayedRange.store (getPlayedRange (cs));
+                            previouslyPlayedRange.store (getMonotonicLengthPlayedRange (cs));
 
                         currentState.store (std::nullopt);
                         currentPlayState.store (PlayState::stopped, std::memory_order_release);
@@ -421,7 +429,7 @@ auto LaunchHandle::advance (const SyncRange& syncRange, std::optional<BeatDurati
                         assert(! splitStatus.range2.isEmpty());
 
                         if (cs)
-                            previouslyPlayedRange.store (getPlayedRange (cs));
+                            previouslyPlayedRange.store (getMonotonicLengthPlayedRange (cs));
 
                         currentState.store (std::nullopt);
                         currentPlayState.store (PlayState::stopped, std::memory_order_release);
@@ -439,7 +447,7 @@ auto LaunchHandle::advance (const SyncRange& syncRange, std::optional<BeatDurati
                     splitStatus.playStartTime1  = std::nullopt;
 
                     if (cs)
-                        previouslyPlayedRange.store (getPlayedRange (cs));
+                        previouslyPlayedRange.store (getMonotonicLengthPlayedRange (cs));
 
                     currentState.store (std::nullopt);
                     currentPlayState.store (PlayState::stopped, std::memory_order_release);

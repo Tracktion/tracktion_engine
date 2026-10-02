@@ -112,7 +112,10 @@ public:
     */
     std::optional<MonotonicBeatRange> getPlayedMonotonicRange() const;
 
-    /** @internal */
+    /** @internal
+        The range last played before stopping, as a start beat and the length of
+        time it played for, which Edit position jumps don't change.
+    */
     std::optional<BeatRange> getLastPlayedRange() const;
 
 private:
@@ -165,6 +168,7 @@ private:
     std::optional<BeatPosition> lastBlockEditEnd;
 
     static std::optional<BeatRange> getPlayedRange (const std::optional<CurrentState>&);
+    static std::optional<BeatRange> getMonotonicLengthPlayedRange (const std::optional<CurrentState>&);
 };
 
 } // namespace tracktion::inline engine
