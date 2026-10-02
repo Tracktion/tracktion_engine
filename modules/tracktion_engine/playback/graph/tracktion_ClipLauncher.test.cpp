@@ -31,10 +31,10 @@ namespace clip_launcher_test_utilities
     constexpr double sampleRate = 44100.0;
     constexpr int blockSize = 512;
 
-    inline HostedAudioDeviceInterface::Parameters getPlayerParams()
+    inline HostedAudioDeviceInterface::Parameters getPlayerParams (int numOutputChannels = 1)
     {
         return { .sampleRate = sampleRate, .blockSize = blockSize,
-                 .inputChannels = 0, .outputChannels = 1,
+                 .inputChannels = 0, .outputChannels = numOutputChannels,
                  .inputNames = {}, .outputNames = {} };
     }
 
@@ -72,7 +72,8 @@ namespace clip_launcher_test_utilities
         return (float) (2.0 * std::sqrt (std::max (0.0, power)) / (double) numSamples);
     }
 
-    inline float getRMSLevel (const choc::buffer::ChannelArrayBuffer<float>& output, TimeRange range)
+    inline float getRMSLevel (const choc::buffer::ChannelArrayBuffer<float>& output, TimeRange range,
+                              int channel = 0)
     {
         const auto startSample = toSamples (range.getStart(), sampleRate);
         const auto endSample = std::min (toSamples (range.getEnd(), sampleRate),
@@ -86,7 +87,7 @@ namespace clip_launcher_test_utilities
 
         for (auto i = startSample; i < endSample; ++i)
         {
-            const double s = output.getSample (0, (choc::buffer::FrameCount) i);
+            const double s = output.getSample ((choc::buffer::ChannelCount) channel, (choc::buffer::FrameCount) i);
             sum += s * s;
         }
 
@@ -94,23 +95,119 @@ namespace clip_launcher_test_utilities
     }
 
     //==============================================================================
-    /** Creates a mono wav file where the first half is a sine at freq1 and the
-        second half a sine at freq2, so tests can detect which part of the source
-        is being played.
+    /** A mono audio file held in memory and registered with the AudioFileManager.
+        Clips using it read it synchronously, so they're audible from their first
+        block. Files on disk are read through the AudioFileCache, whose reads time
+        out while EnginePlayer runs faster than real time, which made the first
+        launch of a clip ~150ms late.
+
+        The clip readers point at this buffer, so create it before the Edit that
+        uses it: it must outlive the Edit.
     */
-    inline std::unique_ptr<juce::TemporaryFile> createTwoToneFile (double durationOfEachToneSeconds,
-                                                                   float freq1, float freq2)
+    struct MemoryAudioFile
+    {
+        MemoryAudioFile (Engine& e, const choc::buffer::ChannelArrayBuffer<float>& source)
+            : engine (e),
+              buffer (1, source.getNumFrames()),
+              file ("/memory/clip-launcher-test-" + juce::Uuid().toString() + ".wav")
+        {
+            copy (buffer, source);
+            engine.getAudioFileManager().registerMemoryBuffer (file.getFullPathName().toStdString(),
+                                                               buffer.getView(), sampleRate);
+        }
+
+        ~MemoryAudioFile()
+        {
+            engine.getAudioFileManager().unregisterMemoryBuffer (file.getFullPathName().toStdString());
+        }
+
+        juce::File getFile() const      { return file; }
+
+        Engine& engine;
+        choc::buffer::InterleavedBuffer<float> buffer;
+        const juce::File file;
+
+        JUCE_DECLARE_NON_COPYABLE (MemoryAudioFile)
+    };
+
+    inline std::unique_ptr<MemoryAudioFile> createMemoryFile (Engine& engine, double durationSeconds,
+                                                              std::function<float (choc::buffer::FrameCount)> getSample)
+    {
+        auto buffer = choc::buffer::createChannelArrayBuffer (1, (int) (sampleRate * durationSeconds),
+                                                              [&] (auto, auto frame) { return getSample (frame); });
+        return std::make_unique<MemoryAudioFile> (engine, buffer);
+    }
+
+    inline float getSineSample (double frequency, choc::buffer::FrameCount frame)
+    {
+        return (float) std::sin (juce::MathConstants<double>::twoPi * frequency * frame / sampleRate);
+    }
+
+    /** Creates a mono in-memory sine file. */
+    inline std::unique_ptr<MemoryAudioFile> createSineFile (Engine& engine, double durationSeconds, float frequency)
+    {
+        return createMemoryFile (engine, durationSeconds,
+                                 [=] (auto frame) { return getSineSample (frequency, frame); });
+    }
+
+    /** Creates a mono in-memory file where the first half is a sine at freq1 and
+        the second half a sine at freq2, so tests can detect which part of the
+        source is being played.
+    */
+    inline std::unique_ptr<MemoryAudioFile> createTwoToneFile (Engine& engine, double durationOfEachToneSeconds,
+                                                               float freq1, float freq2)
     {
         const auto numFramesPerTone = (choc::buffer::FrameCount) (sampleRate * durationOfEachToneSeconds);
-        auto buffer = choc::buffer::createChannelArrayBuffer (1, (int) (numFramesPerTone * 2),
-                                                              [=] (auto, auto frame)
-                                                              {
-                                                                  const auto freq = frame < numFramesPerTone ? freq1 : freq2;
-                                                                  const auto localFrame = frame < numFramesPerTone ? frame : frame - numFramesPerTone;
-                                                                  return (float) std::sin (juce::MathConstants<double>::twoPi * freq * localFrame / sampleRate);
-                                                              });
 
-        return graph::test_utilities::writeToTemporaryFile<juce::WavAudioFormat> (buffer.getView(), sampleRate, 0);
+        return createMemoryFile (engine, durationOfEachToneSeconds * 2.0,
+                                 [=] (auto frame)
+                                 {
+                                     return frame < numFramesPerTone ? getSineSample (freq1, frame)
+                                                                     : getSineSample (freq2, frame - numFramesPerTone);
+                                 });
+    }
+
+    /** Finds when the output changes from fromFreq to toFreq, e.g. the midpoint
+        of a createTwoToneFile source, to within a few milliseconds.
+        Returns nullopt if fromFreq isn't followed by toFreq within the range.
+    */
+    inline std::optional<TimePosition> findToneChange (const choc::buffer::ChannelArrayBuffer<float>& output,
+                                                       TimeRange searchRange, double fromFreq, double toFreq)
+    {
+        // A window half-way across the change has equal magnitudes of both
+        // tones, so the first window dominated by toFreq is centred on it
+        constexpr double windowSeconds = 0.05, hopSeconds = 0.002, minMagnitude = 0.1;
+        bool seenFromFreq = false;
+
+        for (auto t = searchRange.getStart().inSeconds(); t + windowSeconds <= searchRange.getEnd().inSeconds(); t += hopSeconds)
+        {
+            const auto window = tr (t, t + windowSeconds);
+            const auto fromMagnitude = getToneMagnitude (output, window, fromFreq);
+            const auto toMagnitude = getToneMagnitude (output, window, toFreq);
+
+            if (fromMagnitude > toMagnitude && fromMagnitude > minMagnitude)
+                seenFromFreq = true;
+            else if (seenFromFreq && toMagnitude > fromMagnitude && toMagnitude > minMagnitude)
+                return TimePosition::fromSeconds (t + windowSeconds / 2.0);
+        }
+
+        return {};
+    }
+
+    /** Returns the position within a createTwoToneFile source that is audible
+        at outputTime, measured from the tone change found in searchRange
+        (which is source position durationOfEachToneSeconds). Compare it with
+        LaunchHandle::getPlayedRange() to check the UI and audio agree.
+        Assumes the clip didn't loop or jump between the change and outputTime.
+    */
+    inline std::optional<TimeDuration> getAudibleContentPosition (const choc::buffer::ChannelArrayBuffer<float>& output,
+                                                                  TimeRange searchRange, double freq1, double freq2,
+                                                                  double durationOfEachToneSeconds, TimePosition outputTime)
+    {
+        if (auto change = findToneChange (output, searchRange, freq1, freq2))
+            return TimeDuration::fromSeconds (durationOfEachToneSeconds) + (outputTime - *change);
+
+        return {};
     }
 
     //==============================================================================
@@ -177,9 +274,8 @@ namespace clip_launcher_test_utilities
     */
     struct SceneTestContext
     {
+        std::vector<std::unique_ptr<MemoryAudioFile>> files;    // N.B. declared before the Edit to outlive it
         std::unique_ptr<Edit> edit;
-        std::vector<std::unique_ptr<juce::TemporaryFile>> files;
-        std::vector<AudioFile> audioFilesToMap;
         std::vector<std::vector<double>> frequencies;                       // [scene][track]
         std::vector<std::vector<std::shared_ptr<LaunchHandle>>> handles;    // [scene][track]
 
@@ -215,13 +311,12 @@ namespace clip_launcher_test_utilities
 
             for (int t = 0; t < SceneTestContext::numAudioTracks; ++t)
             {
-                auto file = graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, 4.0, 1, (float) audioFrequencies[scene][t]);
+                auto file = createSineFile (engine, 4.0, (float) audioFrequencies[scene][t]);
                 auto slot = tracks[t]->getClipSlotList().getClipSlots()[scene];
                 auto clip = insertAudioClipIntoSlot (*slot, file->getFile());
 
                 sceneFrequencies.push_back (audioFrequencies[scene][t]);
                 sceneHandles.push_back (clip->getLaunchHandle());
-                ctx.audioFilesToMap.emplace_back (engine, file->getFile());
                 ctx.files.push_back (std::move (file));
             }
 
@@ -298,14 +393,13 @@ TEST_SUITE ("tracktion_engine")
         auto& engine = *Engine::getEngines()[0];
         test_utilities::EnginePlayer player (engine, getPlayerParams());
 
+        auto sinFile = createSineFile (engine, 8.0, 220.0f);
         auto [edit, track, slot] = createEditWithClipSlot (engine);
-        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, 8.0, 1, 220.0f);
         auto clip = insertAudioClipIntoSlot (*slot, sinFile->getFile());
         auto launchHandle = clip->getLaunchHandle();
         REQUIRE (launchHandle);
 
         edit->getTransport().play (false);
-        test_utilities::waitForFileToBeMapped (AudioFile (engine, sinFile->getFile()));
 
         process (player, 1_td);
         launchHandle->play ({});
@@ -324,14 +418,13 @@ TEST_SUITE ("tracktion_engine")
         auto& engine = *Engine::getEngines()[0];
         test_utilities::EnginePlayer player (engine, getPlayerParams());
 
+        auto twoToneFile = createTwoToneFile (engine, 4.0, 220.0f, 330.0f);
         auto [edit, track, slot] = createEditWithClipSlot (engine);
-        auto twoToneFile = createTwoToneFile (4.0, 220.0f, 330.0f);
         auto clip = insertAudioClipIntoSlot (*slot, twoToneFile->getFile());
         auto launchHandle = clip->getLaunchHandle();
         REQUIRE (launchHandle);
 
         edit->getTransport().play (false);
-        test_utilities::waitForFileToBeMapped (AudioFile (engine, twoToneFile->getFile()));
 
         process (player, 5_td);
         launchHandle->play ({});
@@ -351,14 +444,13 @@ TEST_SUITE ("tracktion_engine")
         auto& engine = *Engine::getEngines()[0];
         test_utilities::EnginePlayer player (engine, getPlayerParams());
 
+        auto sinFile = createSineFile (engine, 8.0, 220.0f);
         auto [edit, track, slot] = createEditWithClipSlot (engine);
-        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, 8.0, 1, 220.0f);
         auto clip = insertAudioClipIntoSlot (*slot, sinFile->getFile());
         auto launchHandle = clip->getLaunchHandle();
         REQUIRE (launchHandle);
 
         edit->getTransport().play (false);
-        test_utilities::waitForFileToBeMapped (AudioFile (engine, sinFile->getFile()));
 
         process (player, 1.5_td);
 
@@ -389,8 +481,8 @@ TEST_SUITE ("tracktion_engine")
         auto& engine = *Engine::getEngines()[0];
         test_utilities::EnginePlayer player (engine, getPlayerParams());
 
+        auto twoToneFile = createTwoToneFile (engine, 4.0, 220.0f, 330.0f);
         auto [edit, track, slot] = createEditWithClipSlot (engine);
-        auto twoToneFile = createTwoToneFile (4.0, 220.0f, 330.0f);
 
         // Offset of 4s skips the whole 220Hz section. Looping is disabled so
         // this is a one-shot clip that should auto-stop when it finishes.
@@ -403,7 +495,6 @@ TEST_SUITE ("tracktion_engine")
         REQUIRE (launchHandle);
 
         edit->getTransport().play (false);
-        test_utilities::waitForFileToBeMapped (AudioFile (engine, twoToneFile->getFile()));
 
         process (player, 1_td);
         launchHandle->play ({});
@@ -425,8 +516,8 @@ TEST_SUITE ("tracktion_engine")
         auto& engine = *Engine::getEngines()[0];
         test_utilities::EnginePlayer player (engine, getPlayerParams());
 
+        auto twoToneFile = createTwoToneFile (engine, 4.0, 220.0f, 330.0f);
         auto [edit, track, slot] = createEditWithClipSlot (engine);
-        auto twoToneFile = createTwoToneFile (4.0, 220.0f, 330.0f);
 
         // Looping over the whole file (the slot clip default), starting 4s in
         // (the 330Hz section)
@@ -435,7 +526,6 @@ TEST_SUITE ("tracktion_engine")
         REQUIRE (launchHandle);
 
         edit->getTransport().play (false);
-        test_utilities::waitForFileToBeMapped (AudioFile (engine, twoToneFile->getFile()));
 
         process (player, 1_td);
         launchHandle->play ({});
@@ -459,14 +549,13 @@ TEST_SUITE ("tracktion_engine")
         auto& engine = *Engine::getEngines()[0];
         test_utilities::EnginePlayer player (engine, getPlayerParams());
 
+        auto sinFile = createSineFile (engine, 2.0, 220.0f);
         auto [edit, track, slot] = createEditWithClipSlot (engine);
-        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, 2.0, 1, 220.0f);
         auto clip = insertAudioClipIntoSlot (*slot, sinFile->getFile());
         auto launchHandle = clip->getLaunchHandle();
         REQUIRE (launchHandle);
 
         edit->getTransport().play (false);
-        test_utilities::waitForFileToBeMapped (AudioFile (engine, sinFile->getFile()));
 
         process (player, 1_td);
         launchHandle->play ({});
@@ -484,15 +573,14 @@ TEST_SUITE ("tracktion_engine")
         auto& engine = *Engine::getEngines()[0];
         test_utilities::EnginePlayer player (engine, getPlayerParams());
 
+        auto twoToneFile = createTwoToneFile (engine, 4.0, 220.0f, 330.0f);
         auto [edit, track, slot] = createEditWithClipSlot (engine);
-        auto twoToneFile = createTwoToneFile (4.0, 220.0f, 330.0f);
         auto clip = insertAudioClipIntoSlot (*slot, twoToneFile->getFile());
         auto launchHandle = clip->getLaunchHandle();
         REQUIRE (launchHandle);
 
         launchHandle->play ({});
         edit->getTransport().play (false);
-        test_utilities::waitForFileToBeMapped (AudioFile (engine, twoToneFile->getFile()));
 
         process (player, 5_td);
 
@@ -515,12 +603,11 @@ TEST_SUITE ("tracktion_engine")
         auto& engine = *Engine::getEngines()[0];
         test_utilities::EnginePlayer player (engine, getPlayerParams());
 
-        auto [edit, track, slot] = createEditWithClipSlot (engine);
-
         // A low frequency sine changes by less than 0.01 per sample, and it
         // starts at zero so a restart on one of its peaks is a full-scale step
         constexpr double frequency = 55.0;
-        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, 8.0, 1, (float) frequency);
+        auto sinFile = createSineFile (engine, 8.0, (float) frequency);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
         auto clip = insertAudioClipIntoSlot (*slot, sinFile->getFile());
 
         // The default time-stretch mode depends on which stretchers are built so pin one that
@@ -533,7 +620,6 @@ TEST_SUITE ("tracktion_engine")
 
         launchHandle->play ({});
         edit->getTransport().play (false);
-        test_utilities::waitForFileToBeMapped (AudioFile (engine, sinFile->getFile()));
 
         process (player, 1.5_td);
 
@@ -570,19 +656,13 @@ TEST_SUITE ("tracktion_engine")
         auto& engine = *Engine::getEngines()[0];
         test_utilities::EnginePlayer player (engine, getPlayerParams());
 
-        auto [edit, track, slot] = createEditWithClipSlot (engine);
-
         // A 1kHz sine for the first second, starting at zero and peaking after
         // 11 samples like a drum hit, then silence for the rest of the file
         constexpr double frequency = 1000.0;
         const auto numToneFrames = (choc::buffer::FrameCount) sampleRate;
-        auto buffer = choc::buffer::createChannelArrayBuffer (1, (int) (sampleRate * 8.0),
-                                                              [=] (auto, auto frame)
-                                                              {
-                                                                  return frame < numToneFrames ? (float) std::sin (juce::MathConstants<double>::twoPi * frequency * frame / sampleRate)
-                                                                                               : 0.0f;
-                                                              });
-        auto file = graph::test_utilities::writeToTemporaryFile<juce::WavAudioFormat> (buffer.getView(), sampleRate, 0);
+        auto file = createMemoryFile (engine, 8.0,
+                                      [=] (auto frame) { return frame < numToneFrames ? getSineSample (frequency, frame) : 0.0f; });
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
         auto clip = insertAudioClipIntoSlot (*slot, file->getFile());
 
         // The default time-stretch mode depends on which stretchers are built so pin one. The
@@ -603,7 +683,6 @@ TEST_SUITE ("tracktion_engine")
 
         launchHandle->play ({});
         edit->getTransport().play (false);
-        test_utilities::waitForFileToBeMapped (AudioFile (engine, file->getFile()));
 
         process (player, 1.5_td);
 
@@ -648,20 +727,18 @@ TEST_SUITE ("tracktion_engine")
         auto& engine = *Engine::getEngines()[0];
         test_utilities::EnginePlayer player (engine, getPlayerParams());
 
+        auto arrangerFile = createSineFile (engine, 12.0, 220.0f);
+        auto slotFile = createSineFile (engine, 8.0, 330.0f);
         auto [edit, track, slot] = createEditWithClipSlot (engine);
 
-        auto arrangerFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, 12.0, 1, 220.0f);
         insertWaveClip (*track, {}, arrangerFile->getFile(), { tr (0.0, 12.0) }, DeleteExistingClips::no)
             ->setUsesProxy (false);
 
-        auto slotFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (sampleRate, 8.0, 1, 330.0f);
         auto slotClip = insertAudioClipIntoSlot (*slot, slotFile->getFile());
         auto launchHandle = slotClip->getLaunchHandle();
         REQUIRE (launchHandle);
 
         edit->getTransport().play (false);
-        test_utilities::waitForFileToBeMapped (AudioFile (engine, arrangerFile->getFile()));
-        test_utilities::waitForFileToBeMapped (AudioFile (engine, slotFile->getFile()));
 
         process (player, 2_td);
 
@@ -830,9 +907,6 @@ TEST_SUITE ("tracktion_engine")
 
         ctx.edit->getTransport().play (false);
 
-        for (auto& af : ctx.audioFilesToMap)
-            test_utilities::waitForFileToBeMapped (af);
-
         process (player, 4_td);
 
         // Every clip in the scene must be heard
@@ -846,9 +920,6 @@ TEST_SUITE ("tracktion_engine")
 
         auto ctx = createSceneTestEdit (engine, 1);
         ctx.edit->getTransport().play (false);
-
-        for (auto& af : ctx.audioFilesToMap)
-            test_utilities::waitForFileToBeMapped (af);
 
         process (player, 1.5_td);
 
@@ -874,9 +945,6 @@ TEST_SUITE ("tracktion_engine")
 
         auto ctx = createSceneTestEdit (engine, 2);
         ctx.edit->getTransport().play (false);
-
-        for (auto& af : ctx.audioFilesToMap)
-            test_utilities::waitForFileToBeMapped (af);
 
         process (player, 1_td);
 
@@ -907,6 +975,67 @@ TEST_SUITE ("tracktion_engine")
 
         checkSceneAudible (output, ctx, 1, tr (8.3, 10.9), true);
         checkSceneAudible (output, ctx, 0, tr (8.3, 10.9), false);
+    }
+
+    //==============================================================================
+    TEST_CASE ("Clip launcher: audible content position matches the played range (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto twoToneFile = createTwoToneFile (engine, 4.0, 220.0f, 330.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertAudioClipIntoSlot (*slot, twoToneFile->getFile());
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        edit->getTransport().play (false);
+
+        process (player, 5_td);
+        launchHandle->play ({});
+        process (player, 6_td); // to 11s
+
+        const auto output = player.getOutput();
+        const auto endTime = TimePosition::fromSeconds (output.getNumFrames() / sampleRate);
+
+        // Launched at 5s, so the source's tone change is heard at 9s
+        auto change = findToneChange (output, tr (5.1, 10.9), 220.0, 330.0);
+        REQUIRE (change);
+        CHECK_LT (std::abs (change->inSeconds() - 9.0), 0.02);
+
+        auto contentPosition = getAudibleContentPosition (output, tr (5.1, 10.9), 220.0, 330.0, 4.0, endTime);
+        REQUIRE (contentPosition);
+
+        // 60bpm: 1 beat == 1 second
+        auto playedRange = launchHandle->getPlayedRange();
+        REQUIRE (playedRange);
+        CHECK_LT (std::abs (contentPosition->inSeconds() - playedRange->getLength().inBeats()), 0.02);
+    }
+
+    TEST_CASE ("Clip launcher: per-channel level follows the track pan (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams (2));
+
+        auto sinFile = createSineFile (engine, 4.0, 220.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertAudioClipIntoSlot (*slot, sinFile->getFile());
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        auto volumePlugin = track->getVolumePlugin();
+        REQUIRE (volumePlugin);
+        volumePlugin->setPan (1.0f);
+
+        edit->getTransport().play (false);
+
+        launchHandle->play ({});
+        process (player, 2_td);
+
+        const auto output = player.getOutput();
+        REQUIRE (output.getNumChannels() == 2);
+        CHECK_LT (getRMSLevel (output, tr (0.5, 1.9), 0), 0.005f);
+        CHECK_GT (getRMSLevel (output, tr (0.5, 1.9), 1), 0.4f);
     }
 }
 
