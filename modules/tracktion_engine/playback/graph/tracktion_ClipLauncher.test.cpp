@@ -978,6 +978,37 @@ TEST_SUITE ("tracktion_engine")
     }
 
     //==============================================================================
+    TEST_CASE ("Clip launcher: launcher clips can't be split or merged")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        track->getClipSlotList().ensureNumberOfSlots (2);
+        edit->getSceneList().ensureNumberOfScenes (2);
+        auto otherSlot = track->getClipSlotList().getClipSlots()[1];
+
+        auto clip = insertMidiClipIntoSlot (*slot, 4_bd);
+        auto otherClip = insertMidiClipIntoSlot (*otherSlot, 4_bd);
+        REQUIRE (clip);
+        REQUIRE (otherClip);
+
+        // The merged clip would go on the arranger and the launcher clips be removed
+        auto arrangerClip = insertMIDIClip (*track, tr (4.0, 8.0));
+        CHECK (mergeMidiClips ({ clip.get(), otherClip.get() }).failed());
+        CHECK (mergeMidiClips ({ clip.get(), arrangerClip.get() }).failed());
+        CHECK (slot->getClip() == clip.get());
+        CHECK (otherSlot->getClip() == otherClip.get());
+        CHECK (track->getClips().size() == 1);
+
+        // Inserting the second half in to the slot would evict the original
+        CHECK (split (*clip, TimePosition::fromSeconds (2.0)) == nullptr);
+        CHECK (slot->getClip() == clip.get());
+        CHECK (clip->getPosition().getLength() == TimeDuration::fromSeconds (4.0));
+
+        // Arranger clips still split
+        CHECK (split (*arrangerClip, TimePosition::fromSeconds (6.0)) != nullptr);
+        CHECK (track->getClips().size() == 2);
+    }
+
     TEST_CASE ("Clip launcher: audible content position matches the played range (audio)")
     {
         auto& engine = *Engine::getEngines()[0];
