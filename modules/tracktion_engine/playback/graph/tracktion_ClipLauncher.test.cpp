@@ -1647,6 +1647,84 @@ TEST_SUITE ("tracktion_engine")
         CHECK (! edit->hasChangedSinceSaved());
     }
 
+    TEST_CASE ("Scenes: moving a scene moves every track's slot with it")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine, 2, Edit::EditRole::forEditing);
+        auto& sceneList = edit->getSceneList();
+        sceneList.ensureNumberOfScenes (3);
+        auto tracks = getAudioTracks (*edit);
+
+        const auto initialScenes = sceneList.getScenes();
+
+        for (int i = 0; i < initialScenes.size(); ++i)
+            initialScenes[i]->name = juce::String ("Scene ") + juce::String (i);
+
+        // One track is missing its last slot, e.g. from an older Edit
+        auto& shortSlots = tracks[1]->getClipSlotList();
+        shortSlots.deleteSlot (*shortSlots.getClipSlots()[2]);
+
+        auto clipIn = [&] (AudioTrack& t, int slotIndex)
+        {
+            return insertMIDIClip (*t.getClipSlotList().getClipSlots()[slotIndex], "Clip", { 0_tp, 1_tp });
+        };
+
+        auto clip0 = clipIn (*tracks[0], 0);
+        auto clip1 = clipIn (*tracks[1], 0);
+
+        auto checkOrder = [&] (std::initializer_list<int> sceneNumbers, int clipSlotIndex)
+        {
+            auto scenes = sceneList.getScenes();
+            REQUIRE (scenes.size() == (int) sceneNumbers.size());
+
+            int i = 0;
+
+            for (auto n : sceneNumbers)
+                CHECK (scenes[i++]->name.get() == juce::String ("Scene ") + juce::String (n));
+
+            for (auto t : tracks)
+                CHECK (t->getClipSlotList().getClipSlots().size() == scenes.size());
+
+            CHECK (clip0->getClipSlot()->getIndex() == clipSlotIndex);
+            CHECK (clip1->getClipSlot()->getIndex() == clipSlotIndex);
+        };
+
+        edit->getUndoManager().beginNewTransaction();
+        sceneList.moveScene (0, 2);
+        checkOrder ({ 1, 2, 0 }, 2);
+
+        edit->getUndoManager().beginNewTransaction();
+        sceneList.moveScene (2, 1);
+        checkOrder ({ 1, 0, 2 }, 1);
+
+        // Out of range moves do nothing
+        sceneList.moveScene (0, 3);
+        sceneList.moveScene (-1, 0);
+        checkOrder ({ 1, 0, 2 }, 1);
+
+        edit->getUndoManager().undo();
+        checkOrder ({ 1, 2, 0 }, 2);
+    }
+
+    TEST_CASE ("Scenes: deleting a scene on a track with fewer slots than scenes")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = test_utilities::createTestEdit (engine, 2, Edit::EditRole::forEditing);
+        auto& sceneList = edit->getSceneList();
+        sceneList.ensureNumberOfScenes (3);
+        auto tracks = getAudioTracks (*edit);
+
+        // e.g. an Edit saved with a slot missing on one track
+        auto& slots = tracks[1]->getClipSlotList();
+        slots.deleteSlot (*slots.getClipSlots()[2]);
+        REQUIRE (slots.getClipSlots().size() == 2);
+
+        sceneList.deleteScene (*sceneList.getScenes()[2]);
+        CHECK (sceneList.getNumScenes() == 2);
+        CHECK (tracks[0]->getClipSlotList().getClipSlots().size() == 2);
+        CHECK (slots.getClipSlots().size() == 2);
+    }
+
     TEST_CASE ("Clip launcher: a queued launch survives the playback context being recreated (audio)")
     {
         auto& engine = *Engine::getEngines()[0];
