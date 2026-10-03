@@ -838,10 +838,12 @@ void AudioTrack::valueTreePropertyChanged (juce::ValueTree& v, const juce::Ident
         {
             playSlotClips.forceUpdateOfCachedValue();
 
+            // Back to the arrangement: stop the launched clips and cancel any
+            // queued to start, or they'd start later and switch the track back
             if (! playSlotClips.get())
                 for (auto cs : getClipSlotList().getClipSlots())
                     if (auto c = cs->getClip())
-                        if (auto lh = c->getLaunchHandle(); lh->getPlayingStatus() == LaunchHandle::PlayState::playing)
+                        if (auto lh = c->getLaunchHandle())
                             lh->stop ({});
         }
         else if (i == IDs::compGroup)

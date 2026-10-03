@@ -511,10 +511,9 @@ struct MemoryBufferReader  : public AudioFormatReaderWithTimeout
                       juce::int64 startSampleInFile,
                       int numSamples) override
     {
-        auto destOffset = static_cast<choc::buffer::FrameCount> (startOffsetInDestBuffer);
-        auto destEnd = static_cast<choc::buffer::FrameCount> (startOffsetInDestBuffer + numSamples);
-        auto srcStart = static_cast<choc::buffer::FrameCount> (startSampleInFile);
-        auto srcAvailable = sourceBuffer.getNumFrames() - std::min (srcStart, sourceBuffer.getNumFrames());
+        using choc::buffer::FrameCount;
+        auto destOffset = static_cast<FrameCount> (startOffsetInDestBuffer);
+        auto destEnd = static_cast<FrameCount> (startOffsetInDestBuffer + numSamples);
 
         // usesFloatingPointData = true, so int** is really float**
         auto dest = choc::buffer::createChannelArrayView (reinterpret_cast<float* const*> (destSamples),
@@ -522,10 +521,19 @@ struct MemoryBufferReader  : public AudioFormatReaderWithTimeout
                                                           destEnd)
                         .getFrameRange ({ destOffset, destEnd });
 
-        auto src = sourceBuffer.getFrameRange ({ srcStart, srcStart + std::min (srcAvailable,
-                                                                                static_cast<choc::buffer::FrameCount> (numSamples)) });
+        // Frames before the start or after the end of the buffer are silent
+        const auto numSourceFrames = static_cast<juce::int64> (sourceBuffer.getNumFrames());
+        const auto srcStart = std::clamp (startSampleInFile, juce::int64 (0), numSourceFrames);
+        const auto srcEnd = std::clamp (startSampleInFile + numSamples, juce::int64 (0), numSourceFrames);
 
-        choc::buffer::copyIntersectionAndClearOutside (dest, src);
+        dest.clear();
+
+        if (srcEnd > srcStart)
+            choc::buffer::copyIntersection (dest.getFrameRange ({ static_cast<FrameCount> (srcStart - startSampleInFile),
+                                                                  static_cast<FrameCount> (srcEnd - startSampleInFile) }),
+                                            sourceBuffer.getFrameRange ({ static_cast<FrameCount> (srcStart),
+                                                                          static_cast<FrameCount> (srcEnd) }));
+
         return true;
     }
 

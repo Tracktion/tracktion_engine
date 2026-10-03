@@ -201,7 +201,9 @@ void removeAllContentClips (Edit&);
 /** Returns the MidiNote with a given state. */
 MidiNote* findNoteForState (const Edit&, const juce::ValueTree&);
 
-/** Merges a set of MIDI clips in to one new one. */
+/** Merges a set of MIDI clips in to one new one.
+    Fails if any of the clips are in a ClipSlot.
+*/
 juce::Result mergeMidiClips (juce::Array<MidiClip*>, SelectionManager* sm = nullptr);
 
 /** Helper function to read a file to a number of MidiLists. */

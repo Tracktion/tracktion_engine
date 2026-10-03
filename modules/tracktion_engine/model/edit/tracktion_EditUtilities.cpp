@@ -895,6 +895,11 @@ MidiNote* findNoteForState (const Edit& edit, const juce::ValueTree& v)
 
 juce::Result mergeMidiClips (juce::Array<MidiClip*> clips, SelectionManager* sm)
 {
+    // The merged clip goes on the arranger, so a launcher clip would be lost from its slot
+    for (auto c : clips)
+        if (c->getClipSlot() != nullptr)
+            return juce::Result::fail (TRANS("Unable to merge launcher clips"));
+
     for (auto c : clips)
         if (c->getClipTrack() == nullptr || c->getClipTrack()->isFrozen (Track::anyFreeze))
             return juce::Result::fail (TRANS("Unable to merge clips on frozen tracks"));

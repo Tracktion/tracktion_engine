@@ -834,6 +834,10 @@ Clip* split (Clip& clip, const TimePosition time)
     if (parent == nullptr)
         return {};
 
+    // A slot holds one clip, so inserting the second half would evict the first
+    if (clip.getClipSlot() != nullptr)
+        return {};
+
     auto& edit = clip.edit;
 
     if (auto track = dynamic_cast<Track*> (parent))

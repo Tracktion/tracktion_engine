@@ -204,6 +204,10 @@ public:
     /** Returns the active EditPlaybackContext if this Edit is attached to the DeviceManager for playback. */
     EditPlaybackContext* getCurrentPlaybackContext() const      { return playbackContext.get(); }
 
+    /** @internal Where the last freed playback context's monotonic beat count got to,
+        so a new one carries on from it. */
+    MonotonicBeat getLastContextMonotonicBeat() const           { return lastContextMonotonicBeat; }
+
     /** Returns true if this Edit is attached to the DeviceManager for playback. */
     bool isPlayContextActive() const                            { return playbackContext != nullptr; }
 
@@ -398,6 +402,7 @@ private:
     struct TransportState;
     std::unique_ptr<TransportState> transportState;
     std::unique_ptr<EditPlaybackContext> playbackContext;
+    MonotonicBeat lastContextMonotonicBeat;     // where a freed context's beat count got to
     juce::ListenerList<Listener> listeners;
 
     TimecodeSnapType currentSnapType;

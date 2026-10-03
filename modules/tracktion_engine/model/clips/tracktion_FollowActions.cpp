@@ -35,10 +35,23 @@ struct ClipContext
     AudioTrack::Ptr track;
     std::shared_ptr<LaunchHandle> launchHandle;
     std::vector<std::shared_ptr<LaunchHandle>> allSceneHandles;
-    std::vector<std::shared_ptr<LaunchHandle>> validSceneHandles;
+    std::vector<std::shared_ptr<LaunchHandle>> validSceneHandles;   // enabled clips
+    std::vector<std::shared_ptr<LaunchHandle>> disabledHandles;
     std::vector<std::vector<std::shared_ptr<LaunchHandle>>> groups;
     size_t sceneIndex = 0, groupIndex = 0, indexInGroup = 0;
     juce::Random random;
+
+    bool isDisabled (const std::shared_ptr<LaunchHandle>& h) const
+    {
+        return contains_v (disabledHandles, h);
+    }
+
+    /** Disabled clips can't be launched, so a follow action targeting one does nothing. */
+    void play (const std::shared_ptr<LaunchHandle>& h, MonotonicBeat b) const
+    {
+        if (h && ! isDisabled (h))
+            h->play (b);
+    }
 
     size_t getIndexInValidHandles() const
     {
@@ -102,7 +115,11 @@ inline std::shared_ptr<ClipContext> createClipContext (Clip& c)
             auto lh = clip->getLaunchHandle();
             allSceneHandles.push_back (lh);
 
-            if (lh)
+            // Disabled clips stay in the groups, so their shape doesn't change,
+            // but aren't chosen by the track's actions. The clip itself is playing
+            if (lh && clip->disabled.get() && clip != &c)
+                ctx->disabledHandles.push_back (std::move (lh));
+            else if (lh)
                 ctx->validSceneHandles.emplace_back (std::move (lh));
         }
         else
@@ -276,15 +293,16 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
     {
         case globalReturnToArrangement:
         {
+            // This runs on the audio thread, so it can't set the property itself
             return [ctx] (auto)
-                   { ctx->track->playSlotClips = true; };
+                   { ctx->track->returnToArrangementRequested.store (true, std::memory_order_release); };
         }
         case trackAny:
         {
             return [ctx] (auto b)
                    {
                        const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (ctx->validSceneHandles.size()) }));
-                       ctx->validSceneHandles[index]->play (b);
+                       ctx->play (ctx->validSceneHandles[index], b);
                    };
         }
         case trackOther:
@@ -295,11 +313,12 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
                            for (;;)
                            {
                                const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (ctx->validSceneHandles.size()) }));
+                               const auto& handle = ctx->validSceneHandles[index];
 
-                               if (index == ctx->sceneIndex)
+                               if (handle == ctx->launchHandle)
                                    continue;
 
-                               ctx->validSceneHandles[index]->play (b);
+                               ctx->play (handle, b);
                                break;
                            }
                        };
@@ -311,7 +330,7 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
             return [ctx, &group = ctx->getGroup()] (auto b)
                    {
                        const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (group.size()) }));
-                       group[index]->play (b);
+                       ctx->play (group[index], b);
                    };
         }
         case currentGroupOther:
@@ -326,7 +345,7 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
                                if (index == ctx->indexInGroup)
                                    continue;
 
-                               group[index]->play (b);
+                               ctx->play (group[index], b);
                                break;
                            }
                        };
@@ -339,7 +358,7 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
                 return [ctx, group] (auto b)
                        {
                            const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (group->size()) }));
-                           (*group)[index]->play (b);
+                           ctx->play ((*group)[index], b);
                        };
 
             break;
@@ -350,7 +369,7 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
                 return [ctx, group] (auto b)
                        {
                            const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (group->size()) }));
-                           (*group)[index]->play (b);
+                           ctx->play ((*group)[index], b);
                        };
 
             break;
@@ -359,7 +378,7 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
         {
             if (ctx->groups.size() > 1)
                 return [ctx] (auto b)
-                       { ctx->getOtherGroup()->front()->play (b); };
+                       { ctx->play (ctx->getOtherGroup()->front(), b); };
 
             break;
         }
@@ -367,7 +386,7 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
         {
             if (ctx->groups.size() > 1)
                 return [ctx] (auto b)
-                       { ctx->getOtherGroup()->back()->play (b); };
+                       { ctx->play (ctx->getOtherGroup()->back(), b); };
 
             break;
         }
@@ -378,7 +397,7 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
                        {
                            auto group = ctx->getOtherGroup();
                            const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (group->size()) }));
-                           (*group)[index]->play (b);
+                           ctx->play ((*group)[index], b);
                        };
 
             break;
@@ -402,7 +421,7 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
         case nextGroupLast:
         {
             // All these are know at graph build time
-            if (auto lh = getLaunchHandle (*ctx, followAction))
+            if (auto lh = getLaunchHandle (*ctx, followAction); lh && ! ctx->isDisabled (lh))
                 return [lh] (auto b) { lh->play (b); };
 
             break;
@@ -414,6 +433,11 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
 
 std::function<void (MonotonicBeat)> createFollowAction (Clip& c)
 {
+    // Without any follow actions there's nothing to create, and getFollowActions()
+    // would add their state to the clip, an undoable change whilst building the graph
+    if (! c.state.getChildWithName (IDs::FOLLOWACTIONS).isValid())
+        return {};
+
     auto followActions = c.getFollowActions();
 
     if (! followActions)

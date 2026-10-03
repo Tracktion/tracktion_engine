@@ -229,13 +229,40 @@ void SceneList::deleteScene (Scene& scene)
     for (auto at : getAudioTracks (edit))
     {
         auto& csl = at->getClipSlotList();
-        auto cs = csl.getClipSlots()[index];
-        assert (cs != nullptr);
 
-        if (auto clip = cs->getClip())
-            clip->removeFromParent();
+        // A track can be missing slots, e.g. from an older Edit
+        if (auto cs = csl.getClipSlots()[index])
+        {
+            if (auto clip = cs->getClip())
+                clip->removeFromParent();
 
-        csl.deleteSlot (*csl.getClipSlots()[index]);
+            csl.deleteSlot (*cs);
+        }
+    }
+}
+
+void SceneList::moveScene (int currentIndex, int newIndex)
+{
+    const int numScenes = size();
+
+    if (currentIndex == newIndex
+         || ! juce::isPositiveAndBelow (currentIndex, numScenes)
+         || ! juce::isPositiveAndBelow (newIndex, numScenes))
+        return;
+
+    auto um = &edit.getUndoManager();
+    parent.moveChild (parent.indexOf (objects[currentIndex]->state),
+                      parent.indexOf (objects[newIndex]->state), um);
+
+    for (auto at : getAudioTracks (edit))
+    {
+        // Fill in any missing slots, so each track's slots stay in line with the scenes
+        auto& csl = at->getClipSlotList();
+        csl.ensureNumberOfSlots (numScenes);
+
+        const auto slots = csl.getClipSlots();
+        csl.state.moveChild (csl.state.indexOf (slots[currentIndex]->state),
+                             csl.state.indexOf (slots[newIndex]->state), um);
     }
 }
 
