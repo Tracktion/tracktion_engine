@@ -1760,6 +1760,43 @@ TEST_SUITE ("tracktion_engine")
         CHECK_GT (getToneMagnitude (output, tr (8.2, 9.8), 220.0), 0.5f);
     }
 
+    TEST_CASE ("Clip launcher: rendering an Edit includes the arrangement of a track left playing its launcher (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto arrangerFile = createSineFile (engine, 2.0, 220.0f);
+        auto slotFile = createSineFile (engine, 2.0, 330.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+
+        insertWaveClip (*track, {}, arrangerFile->getFile(), { tr (0.0, 2.0) }, DeleteExistingClips::no)
+            ->setUsesProxy (false);
+        insertAudioClipIntoSlot (*slot, slotFile->getFile());
+
+        // Left playing its launcher, as after launching a clip, which is saved with the Edit
+        track->playSlotClips = true;
+
+        juce::TemporaryFile destFile (".wav");
+        Renderer::Parameters params (*edit);
+        params.destFile = destFile.getFile();
+        params.audioFormat = engine.getAudioFileFormatManager().getWavFormat();
+        params.time = { 0_tp, 2_tp };
+        params.tracksToDo = toBitSet (getAllTracks (*edit));
+        params.sampleRateForAudio = 44100.0;
+        params.blockSizeForAudio = 512;
+
+        const auto file = Renderer::renderToFile ("Render", params);
+        REQUIRE (file.existsAsFile());
+
+        auto buffer = test_utilities::loadFileInToBuffer (engine, file);
+        REQUIRE (buffer);
+        choc::buffer::ChannelArrayBuffer<float> output (choc::buffer::Size::create (buffer->getNumChannels(), buffer->getNumSamples()));
+        choc::buffer::copy (output, toBufferView (*buffer));
+        CHECK_GT (getToneMagnitude (output, tr (0.1, 1.9), 220.0), 0.5f);
+        CHECK_LT (getToneMagnitude (output, tr (0.1, 1.9), 330.0), 0.1f);
+
+        // The render doesn't leave the track's launcher switched off
+        CHECK (track->playSlotClips.get());
+    }
+
     TEST_CASE ("Clip launcher: a Return to arrangement follow action returns the track to its arrangement (audio)")
     {
         auto& engine = *Engine::getEngines()[0];

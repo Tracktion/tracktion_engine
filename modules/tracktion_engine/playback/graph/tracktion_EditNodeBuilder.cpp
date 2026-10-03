@@ -1134,7 +1134,10 @@ std::unique_ptr<tracktion::graph::Node> createClipsNode (AudioTrack& at, const T
     if (auto araNode = createARAClipsNode (clips, trackMuteState, params))
         arrangerNodes.push_back (std::move (araNode));
 
-    if (! params.allowClipSlots)
+    // Renders play the arrangement. Launcher clips are only played live, and a render
+    // graph would otherwise skip the arrangement of a track left playing its launcher
+    // and advance the clips' live launch handles
+    if (! params.allowClipSlots || params.forRendering)
     {
         if (arrangerNodes.empty())
             return {};
