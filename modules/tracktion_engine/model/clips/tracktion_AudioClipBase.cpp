@@ -2754,9 +2754,9 @@ void AudioClipBase::updateAutoTempoState()
         else
         {
             // convert beat based looping to time based looping
-            auto start  = TimePosition::fromSeconds (loopStartBeats.get().inBeats()  / bps);
-            auto length = TimeDuration::fromSeconds (loopLengthBeats.get().inBeats() / bps);
-            TimeRange range (start, start + length);
+            auto newStart  = TimePosition::fromSeconds (loopStartBeats.get().inBeats()  / bps);
+            auto newLength = TimeDuration::fromSeconds (loopLengthBeats.get().inBeats() / bps);
+            TimeRange range (newStart, newStart + newLength);
 
             if (auto sourceLen = getSourceLength(); sourceLen > 0s)
                 range = clampTimeLoopRange (range, sourceLen, getSpeedRatio());
