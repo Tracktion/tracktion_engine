@@ -500,7 +500,12 @@ Project::Ptr ProjectManager::createNewProject (const juce::File& projectFile,
 
     auto newProj = createNewProject (projectFile);
     newProj->createNewProjectId();
-    newProj->setName (projectFile.getFileName().upToLastOccurrenceOf (".", false, false));
+
+    // A folder-based project's name is its folder name, so renaming it here
+    // would move the folder (e.g. "Song v1.2" to "Song v1")
+    if (! newProj->isFolderBased())
+        newProj->setName (projectFile.getFileName().upToLastOccurrenceOf (".", false, false));
+
     newProj->setDescription (TRANS("Created") + ": " + juce::Time::getCurrentTime().toString (true, false));
 
     if (newProj->save())

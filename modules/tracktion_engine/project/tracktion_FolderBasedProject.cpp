@@ -268,9 +268,14 @@ void FolderBasedProject::setName (const juce::String& newName)
 {
     auto legalName = juce::File::createLegalFileName (newName);
 
-    if (getName() != legalName)
+    if (legalName.isNotEmpty() && getName() != legalName)
     {
         auto dst = folder.getParentDirectory().getChildFile (legalName);
+
+        // moveFileTo() deletes anything already at dst, so don't rename onto an existing
+        // file or folder. On case-insensitive file systems a case-only rename is the same folder
+        if (dst.exists() && dst != folder)
+            return;
 
         if (folder.moveFileTo (dst) || folder.moveFileTo (dst))
         {
