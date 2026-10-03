@@ -1760,6 +1760,63 @@ TEST_SUITE ("tracktion_engine")
         CHECK_GT (getToneMagnitude (output, tr (8.2, 9.8), 220.0), 0.5f);
     }
 
+    TEST_CASE ("Clip launcher: a launched clip follows a tempo change in the tempo map (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        // 4 beats of 220Hz then 4 of 330Hz at the Edit's 60bpm
+        auto twoToneFile = createTwoToneFile (engine, 4.0, 220.0f, 330.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertAudioClipIntoSlot (*slot, twoToneFile->getFile());
+        REQUIRE (clip->getAutoTempo());
+
+        // Twice as fast from beat 2
+        edit->tempoSequence.insertTempo (2_bp, 120.0, 0.0f);
+        const auto toneChangeTime = edit->tempoSequence.toTime (4_bp);
+        REQUIRE (toneChangeTime < 3.6_tp);
+        edit->getTransport().ensureContextAllocated (true);
+
+        edit->getTransport().play (false);
+        clip->getLaunchHandle()->play ({});
+        process (player, 5_td);
+
+        // The change between the tones is still on beat 4
+        const auto output = player.getOutput();
+        auto change = findToneChange (output, tr (0.5, 4.5), 220.0, 330.0);
+        REQUIRE (change);
+        CHECK (change->inSeconds() == doctest::Approx (toneChangeTime.inSeconds()).epsilon (0.02));
+    }
+
+    TEST_CASE ("Clip launcher: a launched clip keeps playing when the tempo is changed whilst playing (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto twoToneFile = createTwoToneFile (engine, 4.0, 220.0f, 330.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertAudioClipIntoSlot (*slot, twoToneFile->getFile());
+        edit->getTransport().ensureContextAllocated (true);
+
+        edit->getTransport().play (false);
+        clip->getLaunchHandle()->play ({});
+        process (player, 1_td);
+
+        edit->tempoSequence.getTempo (0)->setBpm (120.0);
+        edit->getTransport().ensureContextAllocated (true);
+        process (player, 4_td);
+
+        // It carries on from beat 1 at the new tempo, rather than jumping to where
+        // 1s falls in the new tempo, so the tones change 3 beats (1.5s) later
+        const auto output = player.getOutput();
+        CHECK (clip->getLaunchHandle()->getPlayingStatus() == LaunchHandle::PlayState::playing);
+        CHECK_GT (getRMSLevel (output, tr (1.1, 4.9)), 0.1f);
+
+        auto change = findToneChange (output, tr (0.5, 4.5), 220.0, 330.0);
+        REQUIRE (change);
+        CHECK (change->inSeconds() == doctest::Approx (2.5).epsilon (0.04));
+    }
+
     TEST_CASE ("Clip launcher: rendering an Edit includes the arrangement of a track left playing its launcher (audio)")
     {
         auto& engine = *Engine::getEngines()[0];
