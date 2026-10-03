@@ -351,7 +351,7 @@ void AudioClipBase::cloneFrom (Clip* c)
     {
         Clip::cloneFrom (other);
 
-        const bool wasLooping = loopLengthBeats.get() > BeatDuration() || loopLength.get() > TimeDuration();
+        const bool wasLooping = hasLoop (true) || hasLoop (false);
 
         level->dbGain       .setValue (other->level->dbGain, nullptr);
         level->pan          .setValue (other->level->pan, nullptr);
@@ -385,7 +385,7 @@ void AudioClipBase::cloneFrom (Clip* c)
 
         copyValueTree (loopInfo.state, other->loopInfo.state, nullptr);
 
-        const bool isLooping = loopLengthBeats.get() > BeatDuration() || loopLength.get() > TimeDuration();
+        const bool isLooping = hasLoop (true) || hasLoop (false);
 
         if (! isLooping && wasLooping)
             disableLooping();
@@ -1071,6 +1071,17 @@ BeatDuration AudioClipBase::getLoopLengthBeats() const
     return BeatDuration::fromBeats (loopLength.get().inSeconds() * edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart()));
 }
 
+static TimeRange clampTimeLoopRange (TimeRange range, TimeDuration sourceLen, double speedRatio)
+{
+    // limits the number of times longer than the source file length the loop length can be
+    const double maxMultiplesOfSourceLengthForLooping = 50.0;
+
+    auto start  = juce::jlimit (0_tp, toPosition (sourceLen) / speedRatio, range.getStart());
+    auto length = juce::jlimit (0_td, sourceLen * maxMultiplesOfSourceLengthForLooping / speedRatio, range.getLength());
+
+    return { start, start + length };
+}
+
 void AudioClipBase::setLoopRange (TimeRange newRange)
 {
     if (autoTempo)
@@ -1087,11 +1098,9 @@ void AudioClipBase::setLoopRange (TimeRange newRange)
 
         if (sourceLen > 0s)
         {
-            // limits the number of times longer than the source file length the loop length can be
-            const double maxMultiplesOfSourceLengthForLooping = 50.0;
-
-            auto newStart  = juce::jlimit (0_tp, toPosition (sourceLen) / getSpeedRatio(), newRange.getStart());
-            auto newLength = juce::jlimit (0_td, sourceLen * maxMultiplesOfSourceLengthForLooping / getSpeedRatio(), newRange.getLength());
+            auto clamped   = clampTimeLoopRange (newRange, sourceLen, getSpeedRatio());
+            auto newStart  = clamped.getStart();
+            auto newLength = clamped.getLength();
 
             if (loopStart != newStart || loopLength != newLength)
             {
@@ -2728,25 +2737,33 @@ void AudioClipBase::updateAutoTempoState()
 {
     // autoTempo has already been toggled by the time this is called, so the loop
     // is held in the *other* representation (isLooping() would look at the new, empty one)
-    if (autoTempo ? (loopLength.get() > TimeDuration())
-                  : (loopLengthBeats.get() > BeatDuration()))
+    if (hasLoop (! autoTempo))
     {
-        auto bps = edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart());
+        auto& ts = edit.tempoSequence;
+        auto clipStart = getPosition().getStart();
+        auto bps = ts.getBeatsPerSecondAt (clipStart);
 
         if (autoTempo)
         {
-            // convert time based looping to beat based looping
-            loopStartBeats  = BeatPosition::fromBeats (loopStart.get().inSeconds()  * bps);
-            loopLengthBeats = BeatDuration::fromBeats (loopLength.get().inSeconds() * bps);
+            // convert time based looping to beat based looping (the same way setLoopRange does)
+            loopStartBeats  = BeatPosition::fromBeats (loopStart.get().inSeconds() * bps);
+            loopLengthBeats = ts.toBeats (clipStart + loopLength.get()) - ts.toBeats (clipStart);
 
             loopStart  = 0_tp;
             loopLength = 0_td;
         }
         else
         {
-            // convert beat based looping to time based looping
-            loopStart  = TimePosition::fromSeconds (loopStartBeats.get().inBeats()  / bps);
-            loopLength = TimeDuration::fromSeconds (loopLengthBeats.get().inBeats() / bps);
+            // convert beat based looping to time based looping (the inverse of the above)
+            auto start  = TimePosition::fromSeconds (loopStartBeats.get().inBeats() / bps);
+            auto length = ts.toTime (ts.toBeats (clipStart) + loopLengthBeats.get()) - clipStart;
+            TimeRange range (start, start + length);
+
+            if (auto sourceLen = getSourceLength(); sourceLen > 0s)
+                range = clampTimeLoopRange (range, sourceLen, getSpeedRatio());
+
+            loopStart  = range.getStart();
+            loopLength = range.getLength();
 
             loopStartBeats  = 0_bp;
             loopLengthBeats = 0_bd;
