@@ -151,7 +151,6 @@ TEST_SUITE ("tracktion_engine")
         auto active = context->clip->getActiveChannelConfiguration();
         CHECK (active == sourceConfig);
     }
-
 }
 
 } // namespace tracktion::inline engine
@@ -215,28 +214,31 @@ TEST_SUITE ("tracktion_engine")
         CHECK (clip->getLoopLength().inSeconds() == doctest::Approx (0.5));
     }
 
-    TEST_CASE ("AudioClipBase: toggling auto tempo converts loop length using the tempo map")
+    TEST_CASE ("AudioClipBase: toggling auto tempo keeps the reported loop with a tempo change")
     {
         auto& engine = *Engine::getEngines()[0];
         auto context = AudioClipBaseLoopTestContext::create (engine);
         auto& ts = context->edit->tempoSequence;
-        const auto startBps = ts.getBeatsPerSecondAt (0_tp);
-        ts.insertTempo (1_bp, startBps * 60.0 * 2.0, 0.0f);
+        ts.insertTempo (1_bp, ts.getBeatsPerSecondAt (0_tp) * 60.0 * 2.0, 0.0f);
 
         auto clip = context->insertClip ({ 0_tp, 1_tp });
         REQUIRE (clip != nullptr);
 
-        clip->setLoopRange ({ 0_tp, 2_tp });
+        // The tempo doubles inside the loop
+        clip->setLoopRange ({ TimePosition::fromSeconds (0.5), TimePosition::fromSeconds (2.5) });
         REQUIRE (clip->isLooping());
 
-        // The tempo doubles inside the loop so a single tempo conversion would give a different length
-        const auto expectedBeats = ts.toBeats (2_tp) - ts.toBeats (0_tp);
-        REQUIRE (expectedBeats.inBeats() != doctest::Approx (2.0 * startBps));
+        const auto startBeats  = clip->getLoopStartBeats().inBeats();
+        const auto lengthBeats = clip->getLoopLengthBeats().inBeats();
 
         clip->setAutoTempo (true);
-        CHECK (clip->getLoopLengthBeats().inBeats() == doctest::Approx (expectedBeats.inBeats()));
+        CHECK (clip->getLoopStart().inSeconds() == doctest::Approx (0.5));
+        CHECK (clip->getLoopLength().inSeconds() == doctest::Approx (2.0));
+        CHECK (clip->getLoopStartBeats().inBeats() == doctest::Approx (startBeats));
+        CHECK (clip->getLoopLengthBeats().inBeats() == doctest::Approx (lengthBeats));
 
         clip->setAutoTempo (false);
+        CHECK (clip->getLoopStart().inSeconds() == doctest::Approx (0.5));
         CHECK (clip->getLoopLength().inSeconds() == doctest::Approx (2.0));
     }
 

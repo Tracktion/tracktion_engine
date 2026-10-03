@@ -2739,24 +2739,23 @@ void AudioClipBase::updateAutoTempoState()
     // is held in the *other* representation (isLooping() would look at the new, empty one)
     if (hasLoop (! autoTempo))
     {
-        auto& ts = edit.tempoSequence;
-        auto clipStart = getPosition().getStart();
-        auto bps = ts.getBeatsPerSecondAt (clipStart);
+        auto bps = edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart());
 
         if (autoTempo)
         {
-            // convert time based looping to beat based looping (the same way setLoopRange does)
-            loopStartBeats  = BeatPosition::fromBeats (loopStart.get().inSeconds() * bps);
-            loopLengthBeats = ts.toBeats (clipStart + loopLength.get()) - ts.toBeats (clipStart);
+            // convert time based looping to beat based looping
+            // (uses a single tempo, the same as getLoopLength() etc., so the reported loop doesn't change)
+            loopStartBeats  = BeatPosition::fromBeats (loopStart.get().inSeconds()  * bps);
+            loopLengthBeats = BeatDuration::fromBeats (loopLength.get().inSeconds() * bps);
 
             loopStart  = 0_tp;
             loopLength = 0_td;
         }
         else
         {
-            // convert beat based looping to time based looping (the inverse of the above)
-            auto start  = TimePosition::fromSeconds (loopStartBeats.get().inBeats() / bps);
-            auto length = ts.toTime (ts.toBeats (clipStart) + loopLengthBeats.get()) - clipStart;
+            // convert beat based looping to time based looping
+            auto start  = TimePosition::fromSeconds (loopStartBeats.get().inBeats()  / bps);
+            auto length = TimeDuration::fromSeconds (loopLengthBeats.get().inBeats() / bps);
             TimeRange range (start, start + length);
 
             if (auto sourceLen = getSourceLength(); sourceLen > 0s)
