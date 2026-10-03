@@ -3861,6 +3861,144 @@ TEST_SUITE ("tracktion_engine")
 
         cleanup();
     }
+
+    TEST_CASE ("FolderBasedProject: names containing dots are not truncated")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+        const juce::ScopeGuard cleanup { [&tempDir] { tempDir.deleteRecursively (false); } };
+
+        auto projectFolder = tempDir.getChildFile ("Song v1.0.26c");
+        projectFolder.createDirectory();
+
+        // An Edit from before the fix, named after the truncated project name
+        projectFolder.getChildFile ("Song v1.0 Edit 3" + juce::String (editFileSuffix)).create();
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        REQUIRE (tp.project != nullptr);
+
+        CHECK (tp.project->getName() == "Song v1.0.26c");
+
+        auto newEdit = tp.project->createNewEdit();
+        REQUIRE (newEdit != nullptr);
+        CHECK (newEdit->getName() == "Song v1.0.26c Edit 4");
+    }
+
+    TEST_CASE ("FolderBasedProject: setName with illegal characters is a no-op the second time")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+        const juce::ScopeGuard cleanup { [&tempDir] { tempDir.deleteRecursively (false); } };
+
+        auto projectFolder = tempDir.getChildFile ("Song");
+        projectFolder.createDirectory();
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        REQUIRE (tp.project != nullptr);
+
+        tp.project->setName ("Song: v1.0");
+        const auto legalName = juce::File::createLegalFileName ("Song: v1.0");
+        CHECK (tp.project->getName() == legalName);
+
+        test_utilities::runDispatchLoop (50);
+
+        struct ChangeListener : public SelectableListener
+        {
+            bool notified = false;
+            void selectableObjectChanged (Selectable*) override { notified = true; }
+            void selectableObjectAboutToBeDeleted (Selectable*) override {}
+        } changeListener;
+
+        // Setting the same name again, or a name with no legal characters, shouldn't
+        // try to move the folder or report a change
+        {
+            tp.project->addSelectableListener (&changeListener);
+            const juce::ScopeGuard removeListener { [&] { tp.project->removeSelectableListener (&changeListener); } };
+
+            tp.project->setName ("Song: v1.0");
+            tp.project->setName ({});
+            test_utilities::runDispatchLoop (50);
+        }
+
+        CHECK_FALSE (changeListener.notified);
+        CHECK (tp.project->getName() == legalName);
+        CHECK (tempDir.getChildFile (legalName).isDirectory());
+    }
+
+    TEST_CASE ("FolderBasedProject: setName doesn't replace an existing file or folder")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+        const juce::ScopeGuard cleanup { [&tempDir] { tempDir.deleteRecursively (false); } };
+
+        auto projectFolder = tempDir.getChildFile ("Song");
+        projectFolder.createDirectory();
+
+        auto existingFile = tempDir.getChildFile ("Mix");
+        REQUIRE (existingFile.replaceWithText ("keep me"));
+
+        auto existingFolder = tempDir.getChildFile ("Master");
+        REQUIRE (existingFolder.createDirectory());
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        REQUIRE (tp.project != nullptr);
+
+        tp.project->setName ("Mix");
+        CHECK (existingFile.loadFileAsString() == "keep me");
+
+        tp.project->setName ("Master");
+        CHECK (existingFolder.isDirectory());
+
+        CHECK (tp.project->getProjectFile() == projectFolder);
+        CHECK (tp.project->getName() == "Song");
+        CHECK (projectFolder.isDirectory());
+    }
+
+    TEST_CASE ("ProjectManager: creating a folder-based project keeps dots in its name")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+        const juce::ScopeGuard cleanup { [&tempDir] { tempDir.deleteRecursively (false); } };
+
+        auto projectFolder = tempDir.getChildFile ("Song v1.0.26c");
+        REQUIRE (projectFolder.createDirectory());
+
+        auto proj = pm.createNewProject (projectFolder, pm.getActiveProjectsFolder(), ProjectType::folderBased);
+        const juce::ScopeGuard removeProject { [&] { pm.removeProjectFromList (projectFolder); proj = nullptr; } };
+        REQUIRE (proj != nullptr);
+
+        // The folder mustn't be renamed to the name truncated at the last dot
+        CHECK (projectFolder.isDirectory());
+        CHECK_FALSE (tempDir.getChildFile ("Song v1.0").exists());
+        CHECK (proj->getProjectFile() == projectFolder);
+        CHECK (proj->getName() == "Song v1.0.26c");
+        CHECK (pm.getProject (projectFolder) == proj);
+
+        int numEdits = 0;
+
+        for (int i = 0; i < proj->getNumProjectItems(); ++i)
+        {
+            if (auto item = proj->getProjectItemAt (i); item != nullptr && item->isEdit())
+            {
+                ++numEdits;
+                CHECK (item->getName() == "Song v1.0.26c Edit 1");
+            }
+        }
+
+        CHECK (numEdits == 1);
+    }
 }
 
 } // namespace tracktion::inline engine
