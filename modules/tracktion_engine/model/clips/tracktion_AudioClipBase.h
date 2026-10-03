@@ -313,7 +313,7 @@ public:
     /** @internal */
     bool canLoop() const override;
     /** @internal */
-    bool isLooping() const override                     { return getAutoTempo() ? (loopLengthBeats > BeatDuration()) : (loopLength > TimeDuration()); }
+    bool isLooping() const override                     { return hasLoop (getAutoTempo()); }
     /** @internal */
     bool beatBasedLooping() const override              { return isLooping() && getAutoTempo(); }
     /** @internal */
@@ -788,6 +788,9 @@ private:
     void updateReversedState();
     void updateAutoTempoState();
     void updateClipEffectsState();
+
+    /** Returns true if the beat-based or time-based loop representation holds a loop. */
+    bool hasLoop (bool beatBased) const     { return beatBased ? (loopLengthBeats > BeatDuration()) : (loopLength > TimeDuration()); }
 
     enum { updateCrossfadesFlag = 0, updateCrossfadesOverlappedFlag = 1 };
     void updateAutoCrossfades (bool updateOverlapped);
