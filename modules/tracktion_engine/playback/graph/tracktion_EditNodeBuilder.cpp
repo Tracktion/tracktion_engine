@@ -1126,8 +1126,20 @@ std::unique_ptr<tracktion::graph::Node> createClipsNode (AudioTrack& at, const T
 {
     // Renders play what's heard with nothing launched, so a track left playing its
     // launcher is silent. Its launcher clips aren't rendered either, so a render
-    // doesn't advance their live launch handles
-    if (params.allowClipSlots && params.forRendering && at.playSlotClips.get())
+    // doesn't advance their live launch handles. A render of particular arranger
+    // clips (a clip render) still plays them
+    auto isRenderingArrangerClipsOnTrack = [&at, &params]
+    {
+        if (params.allowedClips != nullptr)
+            for (auto c : *params.allowedClips)
+                if (c->getClipSlot() == nullptr && c->getTrack() == &at)
+                    return true;
+
+        return false;
+    };
+
+    if (params.allowClipSlots && params.forRendering && at.playSlotClips.get()
+         && ! isRenderingArrangerClipsOnTrack())
         return {};
 
     std::vector<std::unique_ptr<Node>> arrangerNodes;

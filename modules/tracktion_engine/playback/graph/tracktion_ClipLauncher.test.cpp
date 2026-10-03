@@ -1901,6 +1901,24 @@ TEST_SUITE ("tracktion_engine")
 
         // The render doesn't switch the track back to its arrangement
         CHECK (tracks[0]->playSlotClips.get());
+
+        // Rendering that track's arranger clip itself (a clip render) does play it
+        auto arrangerClip = tracks[0]->getClips()[0];
+        REQUIRE (arrangerClip);
+        params.allowedClips = { arrangerClip };
+        juce::TemporaryFile clipDestFile (".wav");
+        params.destFile = clipDestFile.getFile();
+
+        const auto clipFile = Renderer::renderToFile ("Render", params);
+        REQUIRE (clipFile.existsAsFile());
+
+        auto clipBuffer = test_utilities::loadFileInToBuffer (engine, clipFile);
+        REQUIRE (clipBuffer);
+        choc::buffer::ChannelArrayBuffer<float> clipOutput (choc::buffer::Size::create (clipBuffer->getNumChannels(), clipBuffer->getNumSamples()));
+        choc::buffer::copy (clipOutput, toBufferView (*clipBuffer));
+        CHECK_GT (getToneMagnitude (clipOutput, tr (0.1, 1.9), 220.0), 0.5f);
+        CHECK_LT (getToneMagnitude (clipOutput, tr (0.1, 1.9), 330.0), 0.05f);
+        CHECK_LT (getToneMagnitude (clipOutput, tr (0.1, 1.9), 440.0), 0.05f);
     }
 
     TEST_CASE ("Clip launcher: a Return to arrangement follow action returns the track to its arrangement (audio)")
