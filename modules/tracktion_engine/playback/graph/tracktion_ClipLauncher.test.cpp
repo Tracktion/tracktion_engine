@@ -1760,6 +1760,46 @@ TEST_SUITE ("tracktion_engine")
         CHECK_GT (getToneMagnitude (output, tr (8.2, 9.8), 220.0), 0.5f);
     }
 
+    TEST_CASE ("Clip launcher: recording into a clip slot puts the recording in the slot (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto params = getPlayerParams();
+        params.inputChannels = 1;
+        test_utilities::EnginePlayer player (engine, params);
+
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto& tc = edit->getTransport();
+        tc.ensureContextAllocated();
+
+        // 2s of 220Hz in to the input
+        juce::AudioBuffer<float> input (1, static_cast<int> (2.0 * params.sampleRate));
+
+        for (int i = 0; i < input.getNumSamples(); ++i)
+            input.setSample (0, i, 0.5f * std::sin (juce::MathConstants<float>::twoPi * 220.0f * (float) i / (float) params.sampleRate));
+
+        auto dest = edit->getCurrentPlaybackContext()->getAllInputs()[0]->setTarget (slot->itemID, false, nullptr);
+        REQUIRE (dest);
+        (*dest)->recordEnabled = true;
+        edit->dispatchPendingUpdatesSynchronously();
+
+        test_utilities::TempCurrentWorkingDirectory tempDir;
+        tc.record (false);
+        player.process (input);
+        tc.stop (false, true);
+
+        // The recording is in the slot, not on the arranger. N.B. Launching it isn't
+        // tested here: a newly recorded file can't be mapped without a message loop
+        CHECK (track->getClips().isEmpty());
+        auto recordedClip = dynamic_cast<WaveAudioClip*> (slot->getClip());
+        REQUIRE (recordedClip);
+
+        auto recordedFile = recordedClip->getSourceFileReference().getFile();
+        auto recorded = test_utilities::loadFileInToBuffer (engine, recordedFile);
+        REQUIRE (recorded);
+        CHECK (recorded->getNumSamples() == input.getNumSamples());
+        CHECK_GT (recorded->getRMSLevel (0, 0, recorded->getNumSamples()), 0.3f);
+    }
+
     TEST_CASE ("Clip launcher: a launched clip follows a tempo change in the tempo map (audio)")
     {
         auto& engine = *Engine::getEngines()[0];
