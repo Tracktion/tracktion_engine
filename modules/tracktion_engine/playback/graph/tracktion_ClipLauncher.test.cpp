@@ -1857,19 +1857,27 @@ TEST_SUITE ("tracktion_engine")
         CHECK (change->inSeconds() == doctest::Approx (2.5).epsilon (0.04));
     }
 
-    TEST_CASE ("Clip launcher: rendering an Edit includes the arrangement of a track left playing its launcher (audio)")
+    TEST_CASE ("Clip launcher: rendering an Edit leaves out a track left playing its launcher (audio)")
     {
         auto& engine = *Engine::getEngines()[0];
         auto arrangerFile = createSineFile (engine, 2.0, 220.0f);
         auto slotFile = createSineFile (engine, 2.0, 330.0f);
-        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto otherFile = createSineFile (engine, 2.0, 440.0f);
 
-        insertWaveClip (*track, {}, arrangerFile->getFile(), { tr (0.0, 2.0) }, DeleteExistingClips::no)
+        auto edit = test_utilities::createTestEdit (engine, 2, Edit::EditRole::forEditing);
+        auto tracks = getAudioTracks (*edit);
+        tracks[0]->getClipSlotList().ensureNumberOfSlots (1);
+        edit->getSceneList().ensureNumberOfScenes (1);
+
+        insertWaveClip (*tracks[0], {}, arrangerFile->getFile(), { tr (0.0, 2.0) }, DeleteExistingClips::no)
             ->setUsesProxy (false);
-        insertAudioClipIntoSlot (*slot, slotFile->getFile());
+        insertAudioClipIntoSlot (*tracks[0]->getClipSlotList().getClipSlots()[0], slotFile->getFile());
+        insertWaveClip (*tracks[1], {}, otherFile->getFile(), { tr (0.0, 2.0) }, DeleteExistingClips::no)
+            ->setUsesProxy (false);
 
-        // Left playing its launcher, as after launching a clip, which is saved with the Edit
-        track->playSlotClips = true;
+        // The first track is left playing its launcher, as after launching a clip, which is
+        // saved with the Edit. With nothing launched it plays nothing, so it renders silent
+        tracks[0]->playSlotClips = true;
 
         juce::TemporaryFile destFile (".wav");
         Renderer::Parameters params (*edit);
@@ -1887,11 +1895,12 @@ TEST_SUITE ("tracktion_engine")
         REQUIRE (buffer);
         choc::buffer::ChannelArrayBuffer<float> output (choc::buffer::Size::create (buffer->getNumChannels(), buffer->getNumSamples()));
         choc::buffer::copy (output, toBufferView (*buffer));
-        CHECK_GT (getToneMagnitude (output, tr (0.1, 1.9), 220.0), 0.5f);
-        CHECK_LT (getToneMagnitude (output, tr (0.1, 1.9), 330.0), 0.1f);
+        CHECK_GT (getToneMagnitude (output, tr (0.1, 1.9), 440.0), 0.5f);
+        CHECK_LT (getToneMagnitude (output, tr (0.1, 1.9), 220.0), 0.05f);
+        CHECK_LT (getToneMagnitude (output, tr (0.1, 1.9), 330.0), 0.05f);
 
-        // The render doesn't leave the track's launcher switched off
-        CHECK (track->playSlotClips.get());
+        // The render doesn't switch the track back to its arrangement
+        CHECK (tracks[0]->playSlotClips.get());
     }
 
     TEST_CASE ("Clip launcher: a Return to arrangement follow action returns the track to its arrangement (audio)")

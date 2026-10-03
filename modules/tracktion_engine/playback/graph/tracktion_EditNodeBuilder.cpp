@@ -1124,6 +1124,12 @@ std::unique_ptr<tracktion::graph::Node> createARAClipsNode (const juce::Array<Cl
 std::unique_ptr<tracktion::graph::Node> createClipsNode (AudioTrack& at, const TrackMuteState& trackMuteState,
                                                          const CreateNodeParams& params)
 {
+    // Renders play what's heard with nothing launched, so a track left playing its
+    // launcher is silent. Its launcher clips aren't rendered either, so a render
+    // doesn't advance their live launch handles
+    if (params.allowClipSlots && params.forRendering && at.playSlotClips.get())
+        return {};
+
     std::vector<std::unique_ptr<Node>> arrangerNodes;
     const auto trackID = at.itemID;
     const auto& clips = at.getClips();
@@ -1134,9 +1140,6 @@ std::unique_ptr<tracktion::graph::Node> createClipsNode (AudioTrack& at, const T
     if (auto araNode = createARAClipsNode (clips, trackMuteState, params))
         arrangerNodes.push_back (std::move (araNode));
 
-    // Renders play the arrangement. Launcher clips are only played live, and a render
-    // graph would otherwise skip the arrangement of a track left playing its launcher
-    // and advance the clips' live launch handles
     if (! params.allowClipSlots || params.forRendering)
     {
         if (arrangerNodes.empty())

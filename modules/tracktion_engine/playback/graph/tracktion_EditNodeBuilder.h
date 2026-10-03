@@ -26,7 +26,7 @@ struct CreateNodeParams
     int blockSize = 256;                                /**< The block size to use. */
     const juce::Array<Clip*>* allowedClips = nullptr;   /**< The clips to include. If nullptr, all clips will be included. */
     juce::Array<Track*>* allowedTracks = nullptr;       /**< The tracks to include. If nullptr, all tracks will be included. */
-    bool forRendering = false;                          /**< If the node is for rendering or not. In renders, freeze files won't be used and launcher clips aren't played. */
+    bool forRendering = false;                          /**< If the node is for rendering or not. In renders, freeze files won't be used, launcher clips aren't played and a track playing its launcher is silent. */
     bool includePlugins = true;                         /**< Whether to include track plugins. */
     bool includeMasterPlugins = true;                   /**< Whether to include master plugins, fades and volume. */
     bool includeBypassedPlugins = true;                 /**< If false, bypassed plugins will be completely ommited from the graph. */
