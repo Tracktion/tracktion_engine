@@ -3869,18 +3869,60 @@ TEST_SUITE ("tracktion_engine")
 
         auto tempDir = juce::File::createTempFile ({});
         tempDir.createDirectory();
+        const juce::ScopeGuard cleanup { [&tempDir] { tempDir.deleteRecursively (false); } };
 
         auto projectFolder = tempDir.getChildFile ("Song v1.0.26c");
         projectFolder.createDirectory();
 
+        // An Edit from before the fix, named after the truncated project name
+        projectFolder.getChildFile ("Song v1.0 Edit 3" + juce::String (editFileSuffix)).create();
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        REQUIRE (tp.project != nullptr);
+
+        CHECK (tp.project->getName() == "Song v1.0.26c");
+
+        auto newEdit = tp.project->createNewEdit();
+        REQUIRE (newEdit != nullptr);
+        CHECK (newEdit->getName() == "Song v1.0.26c Edit 4");
+    }
+
+    TEST_CASE ("FolderBasedProject: setName with illegal characters is a no-op the second time")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+        const juce::ScopeGuard cleanup { [&tempDir] { tempDir.deleteRecursively (false); } };
+
+        auto projectFolder = tempDir.getChildFile ("Song");
+        projectFolder.createDirectory();
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        REQUIRE (tp.project != nullptr);
+
+        tp.project->setName ("Song: v1.0");
+        const auto legalName = juce::File::createLegalFileName ("Song: v1.0");
+        CHECK (tp.project->getName() == legalName);
+
+        test_utilities::runDispatchLoop (50);
+
+        struct ChangeListener : public SelectableListener
         {
-            ProjectManager::TempProject tp (pm, projectFolder, false);
-            REQUIRE (tp.project != nullptr);
+            bool notified = false;
+            void selectableObjectChanged (Selectable*) override { notified = true; }
+            void selectableObjectAboutToBeDeleted (Selectable*) override {}
+        } changeListener;
 
-            CHECK (tp.project->getName() == "Song v1.0.26c");
-        }
+        // Setting the same name again shouldn't try to move the folder or report a change
+        tp.project->addSelectableListener (&changeListener);
+        tp.project->setName ("Song: v1.0");
+        test_utilities::runDispatchLoop (50);
+        tp.project->removeSelectableListener (&changeListener);
 
-        tempDir.deleteRecursively (false);
+        CHECK_FALSE (changeListener.notified);
+        CHECK (tp.project->getName() == legalName);
     }
 }
 

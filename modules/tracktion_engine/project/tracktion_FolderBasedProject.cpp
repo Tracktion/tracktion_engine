@@ -266,9 +266,11 @@ juce::File FolderBasedProject::getDirectoryForMedia (ProjectItem::Category categ
 
 void FolderBasedProject::setName (const juce::String& newName)
 {
-    if (getName() != newName)
+    auto legalName = juce::File::createLegalFileName (newName);
+
+    if (getName() != legalName)
     {
-        auto dst = folder.getParentDirectory().getChildFile (juce::File::createLegalFileName (newName));
+        auto dst = folder.getParentDirectory().getChildFile (legalName);
 
         if (folder.moveFileTo (dst) || folder.moveFileTo (dst))
         {
@@ -512,18 +514,23 @@ ProjectItem::Ptr FolderBasedProject::createNewEdit()
     int maxSuffix = 0;
     auto items = getAllProjectItems();
 
+    // Edits created before dotted names were kept used the name truncated at the
+    // last dot, so count those too to carry on the numbering
+    auto prefix = getName() + " Edit ";
+    auto legacyPrefix = folder.getFileNameWithoutExtension() + " Edit ";
+
     for (auto& item : items)
     {
         if (item->isEdit())
         {
             auto nm = item->getName();
 
-            if (nm.startsWithIgnoreCase (getName() + " Edit "))
+            if (nm.startsWithIgnoreCase (prefix) || nm.startsWithIgnoreCase (legacyPrefix))
                 maxSuffix = std::max (maxSuffix, nm.getTrailingIntValue());
         }
     }
 
-    auto name = getName() + " Edit ";
+    auto name = prefix;
     name << (maxSuffix + 1);
 
     auto f = folder.getNonexistentChildFile (name, editFileSuffix, false);
