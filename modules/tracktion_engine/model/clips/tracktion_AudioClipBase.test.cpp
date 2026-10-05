@@ -264,6 +264,11 @@ TEST_SUITE ("tracktion_engine")
         CHECK (clip->getLoopRange().getStart().inSeconds() == doctest::Approx (loopRange.getStart().inSeconds()));
         CHECK (clip->getLoopRange().getEnd().inSeconds() == doctest::Approx (loopRange.getEnd().inSeconds()));
 
+        // The seconds and beats ranges differ only by the clip start tempo
+        const auto loopRangeBeats = clip->getLoopRangeBeats();
+        CHECK (loopRangeBeats.getStart().inBeats() == doctest::Approx (clip->getLoopRange().getStart().inSeconds() * bps));
+        CHECK (loopRangeBeats.getEnd().inBeats() == doctest::Approx (clip->getLoopRange().getEnd().inSeconds() * bps));
+
         const auto startBeats  = clip->getLoopStartBeats().inBeats();
         const auto lengthBeats = clip->getLoopLengthBeats().inBeats();
 

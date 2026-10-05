@@ -238,7 +238,10 @@ public:
     /** Returns the loop range in beats. */
     BeatRange getLoopRangeBeats() const                     { return { getLoopStartBeats(), getLoopLengthBeats() }; }
 
-    /** Sets the loop range the clip should use in seconds. */
+    /** Sets the loop range the clip should use in seconds.
+        Clips that loop in beats convert this to beats, so use setLoopRangeBeats()
+        for those when the exact loop matters.
+    */
     virtual void setLoopRange (TimeRange)                   {}
     /** Sets the loop range the clip should use in beats. */
     virtual void setLoopRangeBeats (BeatRange)              {}

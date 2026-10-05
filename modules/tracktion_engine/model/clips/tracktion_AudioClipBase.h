@@ -307,7 +307,15 @@ public:
     /** Returns the LoopInfo being used to describe this clip. */
     LoopInfo& getLoopInfo()                             { return loopInfo; }
 
-    /** Returns the loop range in seconds. */
+    /** Returns the loop range in seconds.
+
+        With auto tempo on, the loop is stored in beats and this converts it with the
+        single tempo at the clip start, as do getLoopStart(), getLoopLength() and
+        setLoopRange(). That keeps setLoopRange (getLoopRange()) from changing the loop,
+        but if the tempo changes inside the loop the seconds won't match how long it
+        plays on the timeline. Use getLoopRangeBeats() and setLoopRangeBeats() when the
+        exact loop matters.
+    */
     TimeRange getLoopRange() const;
 
     /** @internal */
