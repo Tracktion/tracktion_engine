@@ -598,7 +598,7 @@ void Clip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifi
             // one would otherwise carry on part way through when it's enabled again
             disabled.forceUpdateOfCachedValue();
 
-            if (disabled.get())
+            if (disabled.get() && getClipSlot() != nullptr)
                 if (auto lh = getLaunchHandle())
                     lh->stop ({});
         }
