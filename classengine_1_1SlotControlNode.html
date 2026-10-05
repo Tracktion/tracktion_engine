@@ -89,8 +89,8 @@ Inheritance diagram for engine::SlotControlNode:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a68aeeef2842c7c907bab1178555a648b" id="r_a68aeeef2842c7c907bab1178555a648b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1SlotControlNode.html#a68aeeef2842c7c907bab1178555a648b">SlotControlNode</a> (<a class="el" href="structengine_1_1ProcessState.html">ProcessState</a> &amp;editProcessState, std::shared_ptr&lt; <a class="el" href="classengine_1_1LaunchHandle.html">LaunchHandle</a> &gt;, std::optional&lt; BeatDuration &gt; stopDuration, std::function&lt; void(<a class="el" href="structengine_1_1MonotonicBeat.html">MonotonicBeat</a>)&gt; stopFunction, <a class="el" href="structengine_1_1EditItemID.html">EditItemID</a> slotID, std::unique_ptr&lt; Node &gt; input)</td></tr>
-<tr class="separator:a68aeeef2842c7c907bab1178555a648b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af94dc65baefe01e8b0fc2f11437ac78c" id="r_af94dc65baefe01e8b0fc2f11437ac78c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1SlotControlNode.html#af94dc65baefe01e8b0fc2f11437ac78c">SlotControlNode</a> (<a class="el" href="structengine_1_1ProcessState.html">ProcessState</a> &amp;editProcessState, std::shared_ptr&lt; <a class="el" href="classengine_1_1LaunchHandle.html">LaunchHandle</a> &gt;, std::optional&lt; BeatDuration &gt; loopLength, std::optional&lt; BeatDuration &gt; stopDuration, std::function&lt; void(<a class="el" href="structengine_1_1MonotonicBeat.html">MonotonicBeat</a>)&gt; stopFunction, <a class="el" href="structengine_1_1EditItemID.html">EditItemID</a> slotID, std::unique_ptr&lt; Node &gt; input)</td></tr>
+<tr class="separator:af94dc65baefe01e8b0fc2f11437ac78c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29355bf693c9326d42cbf28c412194f0" id="r_a29355bf693c9326d42cbf28c412194f0"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classengine_1_1LaunchHandle.html">LaunchHandle</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1SlotControlNode.html#a29355bf693c9326d42cbf28c412194f0">getLaunchHandle</a> () const</td></tr>
 <tr class="separator:a29355bf693c9326d42cbf28c412194f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae361f2bf6e29a7a9aecfe74c3c97d7b0" id="r_ae361f2bf6e29a7a9aecfe74c3c97d7b0"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classengine_1_1LaunchHandle.html">LaunchHandle</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1SlotControlNode.html#ae361f2bf6e29a7a9aecfe74c3c97d7b0">getLaunchHandleIfNotUnique</a> () const</td></tr>
@@ -159,8 +159,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a05d58555e0e8e315c4ab862f0d406004 inherit pub_methods_classengine_1_1TracktionEngineNode"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a68aeeef2842c7c907bab1178555a648b" name="a68aeeef2842c7c907bab1178555a648b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a68aeeef2842c7c907bab1178555a648b">&#9670;&#160;</a></span>SlotControlNode()</h2>
+<a id="af94dc65baefe01e8b0fc2f11437ac78c" name="af94dc65baefe01e8b0fc2f11437ac78c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af94dc65baefe01e8b0fc2f11437ac78c">&#9670;&#160;</a></span>SlotControlNode()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -176,6 +176,12 @@ Public Member Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classengine_1_1LaunchHandle.html">LaunchHandle</a> &gt;&#160;</td>
           <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::optional&lt; BeatDuration &gt;&#160;</td>
+          <td class="paramname"><em>loopLength</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -430,7 +436,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Oct 5 2026 12:53:48 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Oct 5 2026 14:12:01 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

@@ -678,6 +678,8 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:abe6671c957d003ca42f349db46459503" id="r_abe6671c957d003ca42f349db46459503"><td class="memItemLeft" align="right" valign="top">juce::CachedValue&lt; <a class="el" href="structengine_1_1AtomicWrapper.html">AtomicWrapper</a>&lt; <a class="el" href="classengine_1_1Track.html#af8587bc174758dc74fb985c5ad9d48df">bool</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioTrack.html#abe6671c957d003ca42f349db46459503">playSlotClips</a></td></tr>
 <tr class="memdesc:abe6671c957d003ca42f349db46459503"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if the track's arrange clips or clip slots should be audible.  <br /></td></tr>
 <tr class="separator:abe6671c957d003ca42f349db46459503"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5850afc1b637ab27464602a1931ff51e" id="r_a5850afc1b637ab27464602a1931ff51e"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; <a class="el" href="classengine_1_1Track.html#af8587bc174758dc74fb985c5ad9d48df">bool</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1AudioTrack.html#a5850afc1b637ab27464602a1931ff51e">returnToArrangementRequested</a> { <a class="el" href="classengine_1_1Track.html#af8587bc174758dc74fb985c5ad9d48df">false</a> }</td></tr>
+<tr class="separator:a5850afc1b637ab27464602a1931ff51e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_attribs_classengine_1_1Track"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classengine_1_1Track')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classengine_1_1Track.html">engine::Track</a></td></tr>
 <tr class="memitem:abaaf4c1858b6f3b0d973b081d8c207bb inherit pub_attribs_classengine_1_1Track" id="r_abaaf4c1858b6f3b0d973b081d8c207bb"><td class="memItemLeft" align="right" valign="top">juce::ValueTree&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Track.html#abaaf4c1858b6f3b0d973b081d8c207bb">state</a></td></tr>
 <tr class="memdesc:abaaf4c1858b6f3b0d973b081d8c207bb inherit pub_attribs_classengine_1_1Track"><td class="mdescLeft">&#160;</td><td class="mdescRight">The state of this <a class="el" href="classengine_1_1Track.html" title="Base class for tracks which contain clips and plugins and can be added to Edit[s].">Track</a>.  <br /></td></tr>
@@ -2620,13 +2622,28 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a5850afc1b637ab27464602a1931ff51e" name="a5850afc1b637ab27464602a1931ff51e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5850afc1b637ab27464602a1931ff51e">&#9670;&#160;</a></span>returnToArrangementRequested</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::atomic&lt;<a class="el" href="classengine_1_1Track.html#af8587bc174758dc74fb985c5ad9d48df">bool</a>&gt; engine::AudioTrack::returnToArrangementRequested { <a class="el" href="classengine_1_1Track.html#af8587bc174758dc74fb985c5ad9d48df">false</a> }</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Set on the audio thread by a "Return to arrangement" follow action, and applied to playSlotClips on the message thread. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="tracktion__AudioTrack_8h.html">tracktion_AudioTrack.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Oct 5 2026 12:53:47 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Oct 5 2026 14:12:00 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

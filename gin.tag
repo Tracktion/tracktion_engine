@@ -9781,6 +9781,13 @@
       <anchor>abe6671c957d003ca42f349db46459503</anchor>
       <arglist></arglist>
     </member>
+    <member kind="variable">
+      <type>std::atomic&lt; bool &gt;</type>
+      <name>returnToArrangementRequested</name>
+      <anchorfile>classengine_1_1AudioTrack.html</anchorfile>
+      <anchor>a5850afc1b637ab27464602a1931ff51e</anchor>
+      <arglist></arglist>
+    </member>
     <member kind="function" protection="protected">
       <type>void</type>
       <name>valueTreePropertyChanged</name>
@@ -39624,6 +39631,13 @@
       <arglist>(std::optional&lt; MonotonicBeat &gt;)</arglist>
     </member>
     <member kind="function">
+      <type>bool</type>
+      <name>stopAtEndOfPlay</name>
+      <anchorfile>classengine_1_1LaunchHandle.html</anchorfile>
+      <anchor>a4b75297f670d68d194b3bcbeda77da7a</anchor>
+      <arglist>(MonotonicBeat)</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>playSynced</name>
       <anchorfile>classengine_1_1LaunchHandle.html</anchorfile>
@@ -39648,8 +39662,8 @@
       <type>SplitStatus</type>
       <name>advance</name>
       <anchorfile>classengine_1_1LaunchHandle.html</anchorfile>
-      <anchor>a759319ade34b79108acc4e5153ba36cb</anchor>
-      <arglist>(const SyncRange &amp;)</arglist>
+      <anchor>a1fb57edf4264663b6f18e1f2f9c409a0</anchor>
+      <arglist>(const SyncRange &amp;, std::optional&lt; BeatDuration &gt; loopLength={})</arglist>
     </member>
     <member kind="function">
       <type>std::optional&lt; BeatRange &gt;</type>
@@ -65469,6 +65483,13 @@
       <anchor>ad0661fdc721e9b7d2152e09c31c4f502</anchor>
       <arglist>(Scene &amp;)</arglist>
     </member>
+    <member kind="function">
+      <type>void</type>
+      <name>moveScene</name>
+      <anchorfile>classengine_1_1SceneList.html</anchorfile>
+      <anchor>a160f0cb2bc6d42482ac4f29c0baf0166</anchor>
+      <arglist>(int currentIndex, int newIndex)</arglist>
+    </member>
     <member kind="variable">
       <type>juce::ValueTree</type>
       <name>state</name>
@@ -68345,8 +68366,8 @@
       <type></type>
       <name>SlotControlNode</name>
       <anchorfile>classengine_1_1SlotControlNode.html</anchorfile>
-      <anchor>a68aeeef2842c7c907bab1178555a648b</anchor>
-      <arglist>(ProcessState &amp;editProcessState, std::shared_ptr&lt; LaunchHandle &gt;, std::optional&lt; BeatDuration &gt; stopDuration, std::function&lt; void(MonotonicBeat)&gt; stopFunction, EditItemID slotID, std::unique_ptr&lt; Node &gt; input)</arglist>
+      <anchor>af94dc65baefe01e8b0fc2f11437ac78c</anchor>
+      <arglist>(ProcessState &amp;editProcessState, std::shared_ptr&lt; LaunchHandle &gt;, std::optional&lt; BeatDuration &gt; loopLength, std::optional&lt; BeatDuration &gt; stopDuration, std::function&lt; void(MonotonicBeat)&gt; stopFunction, EditItemID slotID, std::unique_ptr&lt; Node &gt; input)</arglist>
     </member>
     <member kind="function">
       <type>const LaunchHandle &amp;</type>
@@ -76110,6 +76131,13 @@
       <name>getCurrentPlaybackContext</name>
       <anchorfile>classengine_1_1TransportControl.html</anchorfile>
       <anchor>a34055c1d257f0658af78a2fe5fe384a1</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>MonotonicBeat</type>
+      <name>getLastContextMonotonicBeat</name>
+      <anchorfile>classengine_1_1TransportControl.html</anchorfile>
+      <anchor>a7992528e975ce3d7ad3d07beb5a2a73b</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
