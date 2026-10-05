@@ -2504,6 +2504,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the loop range in seconds. </p>
+<p>With auto tempo on, the loop is stored in beats and this converts it with the single tempo at the clip start, as do <a class="el" href="classengine_1_1AudioClipBase.html#a26f44ee5b21d624c8bb97aca1bbf0f20">getLoopStart()</a>, <a class="el" href="classengine_1_1AudioClipBase.html#a22a65dd168b9a184106f259c170bd145">getLoopLength()</a> and <a class="el" href="classengine_1_1AudioClipBase.html#a94a88a18aa552560ba5439cb259c1448">setLoopRange()</a>. That keeps setLoopRange (<a class="el" href="classengine_1_1AudioClipBase.html#ac1fd00ebda7d710b8bdd95c0a7a4a4fa" title="Returns the loop range in seconds.">getLoopRange()</a>) from changing the loop, but if the tempo changes inside the loop the seconds won't match how long it plays on the timeline. Use <a class="el" href="classengine_1_1Clip.html#aaa2592f9bcaceb5f622dead0b603f304" title="Returns the loop range in beats.">getLoopRangeBeats()</a> and <a class="el" href="classengine_1_1AudioClipBase.html#a70bfc747cc59dab583c6d9e9dd5ab47b">setLoopRangeBeats()</a> when the exact loop matters. </p>
 
 </div>
 </div>
@@ -6065,7 +6066,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Oct 3 2026 13:16:11 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Mon Oct 5 2026 12:53:47 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
