@@ -269,6 +269,14 @@ TEST_SUITE ("tracktion_engine")
         CHECK (read (-2, 4) == std::vector<float> { 0.0f, 0.0f, 1.0f, 1.0f });
         CHECK (read (-10, 4) == std::vector<float> { 0.0f, 0.0f, 0.0f, 0.0f });
 
+        // Null destination channels are skipped, as AudioFileCache passes for unused channels
+        {
+            std::vector<float> right (4, -1.0f);
+            float* chans[] = { nullptr, right.data() };
+            CHECK (reader->readSamples (reinterpret_cast<int* const*> (chans), 2, 0, 98, 4));
+            CHECK (right == std::vector<float> { 1.0f, 1.0f, 0.0f, 0.0f });
+        }
+
         afm.unregisterMemoryBuffer (key);
     }
 }
