@@ -1532,6 +1532,43 @@ TEST_SUITE ("tracktion_engine")
         CHECK (! clipB->getLaunchHandle()->getQueuedStatus());
     }
 
+    TEST_CASE ("Clip launcher: group follow actions skip disabled clips (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto fileA = createSineFile (engine, 8.0, 220.0f);
+        auto fileB = createSineFile (engine, 8.0, 330.0f);
+        auto fileC = createSineFile (engine, 8.0, 440.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        track->getClipSlotList().ensureNumberOfSlots (3);
+        edit->getSceneList().ensureNumberOfScenes (3);
+        auto slots = track->getClipSlotList().getClipSlots();
+        auto clipA = insertAudioClipIntoSlot (*slots[0], fileA->getFile());
+        auto clipB = insertAudioClipIntoSlot (*slots[1], fileB->getFile());
+        auto clipC = insertAudioClipIntoSlot (*slots[2], fileC->getFile());
+
+        // After 2 beats A plays the next clip in its group. B is disabled, so that's C
+        clipA->followActionDurationType = Clip::FollowActionDurationType::beats;
+        clipA->followActionBeats = 2_bd;
+        auto followActions = clipA->getFollowActions();
+        REQUIRE (followActions);
+        REQUIRE (followActions->getActions().size() == 1);
+        followActions->getActions()[0]->action = FollowAction::currentGroupNext;
+        clipB->disabled = true;
+        edit->getTransport().ensureContextAllocated (true);
+
+        edit->getTransport().play (false);
+        clipA->getLaunchHandle()->play ({});
+        process (player, 4_td);
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (0.2, 1.8), 220.0), 0.5f);
+        CHECK_GT (getToneMagnitude (output, tr (2.2, 3.9), 440.0), 0.5f);
+        CHECK (clipB->getLaunchHandle()->getPlayingStatus() == LaunchHandle::PlayState::stopped);
+        CHECK (clipC->getLaunchHandle()->getPlayingStatus() == LaunchHandle::PlayState::playing);
+    }
+
     TEST_CASE ("Clip launcher: a Play Other follow action launches another clip when slots before it are empty (audio)")
     {
         auto& engine = *Engine::getEngines()[0];
