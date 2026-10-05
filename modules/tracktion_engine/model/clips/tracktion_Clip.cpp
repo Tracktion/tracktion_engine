@@ -592,6 +592,16 @@ void Clip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifi
             sourceFileReference.source.forceUpdateOfCachedValue();
             sourceMediaChanged();
         }
+        else if (id == IDs::disabled)
+        {
+            // A disabled launcher clip has no playback node, so a launched or queued
+            // one would otherwise carry on part way through when it's enabled again
+            disabled.forceUpdateOfCachedValue();
+
+            if (disabled.get() && getClipSlot() != nullptr)
+                if (auto lh = getLaunchHandle())
+                    lh->stop ({});
+        }
         else if (id == IDs::colour || id == IDs::speed
                  || id == IDs::sync || id == IDs::linkID)
         {

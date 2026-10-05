@@ -198,7 +198,9 @@ juce::Array<Clip*> deleteRegion (Clip&, TimeRange);
 /** Splits the given clp owner at the time and returns any newly created clips. */
 juce::Array<Clip*> split (ClipOwner&, TimePosition);
 
-/** Splits the given clip at the time and returns the newly created clip. */
+/** Splits the given clip at the time and returns the newly created clip.
+    Clips in a ClipSlot can't be split, so this returns nullptr for them.
+*/
 Clip* split (Clip&, TimePosition);
 
 /** Returns true if the clip owner contains any MIDI clips. */

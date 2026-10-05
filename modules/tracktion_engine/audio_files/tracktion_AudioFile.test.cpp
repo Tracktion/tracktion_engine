@@ -225,6 +225,60 @@ TEST_SUITE ("tracktion_engine")
             CHECK_EQ (info.getLengthInSeconds(), 1.0);
         }
     }
+
+    TEST_CASE ("Memory buffer reader: reads outside the buffer are silent")
+    {
+        auto& engine = *Engine::getEngines().getFirst();
+        auto& afm = engine.getAudioFileManager();
+
+        // 100 frames of 1.0 in 2 channels
+        choc::buffer::InterleavedBuffer<float> source (2, 100);
+        choc::buffer::setAllFrames (source, [] { return 1.0f; });
+
+        const auto key = juce::File::getSpecialLocation (juce::File::tempDirectory)
+                            .getChildFile ("memory_buffer_reader_test.wav").getFullPathName().toStdString();
+        afm.registerMemoryBuffer (key, source.getView(), 44100.0);
+
+        auto reader = afm.createMemoryReader (AudioFile (engine, juce::File (key)));
+        REQUIRE (reader);
+
+        auto read = [&reader] (juce::int64 start, int numSamples)
+        {
+            juce::AudioBuffer<float> dest (2, numSamples);
+            dest.clear();
+            CHECK (reader->readSamples (reinterpret_cast<int* const*> (dest.getArrayOfWritePointers()),
+                                        2, 0, start, numSamples));
+
+            std::vector<float> samples;
+
+            for (int i = 0; i < numSamples; ++i)
+                samples.push_back (dest.getSample (1, i));
+
+            return samples;
+        };
+
+        // Inside, and across the end
+        CHECK (read (10, 4) == std::vector<float> { 1.0f, 1.0f, 1.0f, 1.0f });
+        CHECK (read (98, 4) == std::vector<float> { 1.0f, 1.0f, 0.0f, 0.0f });
+
+        // Entirely past the end, as a one-shot clip's offset reaching the end of its file
+        CHECK (read (100, 4) == std::vector<float> { 0.0f, 0.0f, 0.0f, 0.0f });
+        CHECK (read (150, 4) == std::vector<float> { 0.0f, 0.0f, 0.0f, 0.0f });
+
+        // Before the start
+        CHECK (read (-2, 4) == std::vector<float> { 0.0f, 0.0f, 1.0f, 1.0f });
+        CHECK (read (-10, 4) == std::vector<float> { 0.0f, 0.0f, 0.0f, 0.0f });
+
+        // Null destination channels are skipped, as AudioFileCache passes for unused channels
+        {
+            std::vector<float> right (4, -1.0f);
+            float* chans[] = { nullptr, right.data() };
+            CHECK (reader->readSamples (reinterpret_cast<int* const*> (chans), 2, 0, 98, 4));
+            CHECK (right == std::vector<float> { 1.0f, 1.0f, 0.0f, 0.0f });
+        }
+
+        afm.unregisterMemoryBuffer (key);
+    }
 }
 
 } // namespace tracktion::inline engine

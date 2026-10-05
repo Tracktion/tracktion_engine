@@ -519,6 +519,12 @@ EditPlaybackContext::EditPlaybackContext (TransportControl& tc)
                                                                      EditPlaybackContextInternal::getMaxNumThreadsToUse (edit));
         contextSyncroniser = std::make_unique<ContextSyncroniser>();
 
+        // Carry on the previous context's beat count, as clip launches are queued and
+        // timed against it. Starting again from 0 would leave them waiting to catch up
+        SyncPoint startSyncPoint;
+        startSyncPoint.monotonicBeat = transport.getLastContextMonotonicBeat();
+        nodePlaybackContext->processState.setSyncRange ({ startSyncPoint, startSyncPoint });
+
         // This ensures the referenceSampleRange of the new context has been synced
         edit.engine.getDeviceManager().addContext (this);
 

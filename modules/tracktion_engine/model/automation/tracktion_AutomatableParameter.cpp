@@ -582,13 +582,10 @@ private:
 
             std::unique_ptr<AutomationIterator> newStream;
 
+            // Unlike track automation, a clip curve with a single point holds
+            // that value, as the curve editor draws it
             if (curveInfo.curve.getNumPoints() > 0)
-            {
-                auto s = std::make_unique<AutomationIterator> (curveInfo.curve.edit, curveInfo.curve);
-
-                if (! s->isEmpty())
-                    newStream = std::move (s);
-            }
+                newStream = std::make_unique<AutomationIterator> (curveInfo.curve.edit, curveInfo.curve);
 
             {
                 const juce::ScopedLock sl (parameterStreamLock);

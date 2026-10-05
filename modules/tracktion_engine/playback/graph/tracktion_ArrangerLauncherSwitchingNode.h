@@ -144,6 +144,7 @@ private:
     std::unique_ptr<Node> arrangerNode;
     std::vector<std::unique_ptr<SlotControlNode>> launcherNodes;
     std::vector<SlotControlNode*> launcherNodesCopy;
+    std::vector<std::pair<int, std::unique_ptr<SlotControlNode>>> rankedLauncherNodes; // Reserved scratch space for sorting on the audio thread
     std::shared_ptr<SampleFader> launcherSampleFader, arrangerSampleFader;
     std::shared_ptr<ActiveNoteList> arrangerActiveNoteList;
     std::shared_ptr<std::atomic<ArrangerLauncherSwitchingNode*>> activeNode;
