@@ -1086,10 +1086,11 @@ void AudioClipBase::setLoopRange (TimeRange newRange)
 {
     if (autoTempo)
     {
-        auto pos = getPosition();
-        auto& ts = edit.tempoSequence;
-        auto newStart = BeatPosition::fromBeats (newRange.getStart().inSeconds() * ts.getBeatsPerSecondAt (pos.getStart()));
-        auto newLength = ts.toBeats (pos.getStart() + newRange.getLength()) - ts.toBeats (pos.getStart());
+        // Use the single tempo at the clip start, the same conversion as the loop getters,
+        // so setting the range they report leaves the loop unchanged
+        auto bps = edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart());
+        auto newStart  = BeatPosition::fromBeats (newRange.getStart().inSeconds() * bps);
+        auto newLength = BeatDuration::fromBeats (newRange.getLength().inSeconds() * bps);
         setLoopRangeBeats ({ newStart, newStart + newLength });
     }
     else
