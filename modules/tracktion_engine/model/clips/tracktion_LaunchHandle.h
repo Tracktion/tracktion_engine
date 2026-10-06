@@ -94,22 +94,21 @@ public:
 
     /** Advance the state.
         N.B. This should only be called by the audio thread.
-        @param SyncRange    The current SyncRange. Used to sync launch positions to
-        @param loopLength   The clip's loop length if it loops. If the Edit position
-                            jumps whilst playing (a relocate, stop-move-play or loop
-                            wrap), a looping handle keeps its phase against the beat
-                            grid, moving its start back by whole loops if it's now
-                            ahead of the playhead. A handle with no loop length stops.
+        @param SyncRange    The current SyncRange. Used to sync launch positions to.
+                            A playing handle runs on its monotonic beats, so if the
+                            Edit position jumps (a relocate, stop-move-play or loop
+                            wrap) it carries on from where it was.
         @returns            The unlooped Edit beat range split if there are
                             different play/stop states.
         [[ audio_thread ]]
     */
-    SplitStatus advance (const SyncRange&, std::optional<BeatDuration> loopLength = {});
+    SplitStatus advance (const SyncRange&);
 
     //==============================================================================
     /** Returns the Edit beat range this has been playing for: from the beat it
-        started at (as moved by any Edit position jumps) to the current Edit
-        position. N.B. The length is unlooped.
+        would have started at to reach where it is now, to the current Edit
+        position. An Edit position jump moves its start with it.
+        N.B. The length is unlooped.
     */
     std::optional<BeatRange> getPlayedRange() const;
 
@@ -168,10 +167,6 @@ private:
     //==============================================================================
     // audio-write/read, message-read/write
     std::atomic<double> nudgeBeats { 0.0 };
-
-    //==============================================================================
-    // audio-only, used to detect Edit position jumps
-    std::optional<BeatPosition> lastBlockEditEnd;
 
     static std::optional<BeatRange> getPlayedRange (const std::optional<CurrentState>&);
     static std::optional<BeatRange> getMonotonicLengthPlayedRange (const std::optional<CurrentState>&);

@@ -136,7 +136,7 @@ std::optional<BeatRange> LaunchHandle::getLastPlayedRange() const
     return previouslyPlayedRange.load();
 }
 
-auto LaunchHandle::advance (const SyncRange& syncRange, std::optional<BeatDuration> loopLength) -> SplitStatus
+auto LaunchHandle::advance (const SyncRange& syncRange) -> SplitStatus
 {
     const auto blockEditBeatRange = getBeatRange (syncRange);
     const auto blockMonotonicBeatRange = getMonotonicBeatRange (syncRange);
@@ -184,44 +184,20 @@ auto LaunchHandle::advance (const SyncRange& syncRange, std::optional<BeatDurati
         return splitStatus;
     }
 
-    // An Edit position jump whilst playing: a relocate, stop-move-play or loop wrap
-    const bool editPositionJumped = lastBlockEditEnd.has_value()
-                                     && std::abs ((blockEditBeatRange.getStart() - *lastBlockEditEnd).inBeats()) > 0.0001;
-    lastBlockEditEnd = blockEditBeatRange.getEnd();
-
-    if (editPositionJumped && playState == PlayState::playing && cs)
+    // The Edit beat a monotonic beat falls on, as this block is played
+    auto toEditBeat = [&] (MonotonicBeat b)
     {
-        if (auto repeatDuration = loopDuration.load(); repeatDuration && *repeatDuration > 0_bd)
-        {
-            // Repeating (e.g. the Repeat trigger mode) restarts the clip every repeat,
-            // so keep the repeats on the same grid, starting the last one at or before the playhead
-            const auto numRepeats = std::floor ((blockEditBeatRange.getStart() - cs->startBeat).inBeats() / repeatDuration->inBeats());
-            cs->startBeat = cs->startBeat + *repeatDuration * numRepeats;
-        }
-        else if (loopLength && *loopLength > 0_bd)
-        {
-            // Keep the phase against the beat grid, so if the clip would now start
-            // ahead of the playhead, start it whole loops earlier
-            if (blockEditBeatRange.getStart() < cs->startBeat)
-            {
-                const auto numLoops = std::ceil ((cs->startBeat - blockEditBeatRange.getStart()).inBeats() / loopLength->inBeats());
-                cs->startBeat = cs->startBeat - *loopLength * numLoops;
-            }
-        }
-        else
-        {
-            // A one-shot has no position to carry on from, so it stops
-            SplitStatus splitStatus;
-            splitStatus.playing1 = false;
-            splitStatus.range1 = blockEditBeatRange;
+        return blockEditBeatRange.getStart() - (blockMonotonicBeatRange.v.getStart() - b.v);
+    };
 
-            previouslyPlayedRange.store (getMonotonicLengthPlayedRange (cs));
-            currentState.store (std::nullopt);
-            currentPlayState.store (PlayState::stopped, std::memory_order_release);
-
-            return splitStatus;
-        }
-    }
+    // Launched clips run on the monotonic clock, so an Edit position jump (a relocate,
+    // stop-move-play or arrangement loop wrap) doesn't change what they play. Their
+    // start is kept at the Edit beat they'd have started on for this block, which only
+    // moves on a jump (the threshold stops rounding moving it, which would retrigger the clip)
+    if (playState == PlayState::playing && cs)
+        if (const auto startBeat = toEditBeat (cs->startMonotonicBeat);
+            std::abs ((startBeat - cs->startBeat).inBeats()) > 0.0001)
+            cs->startBeat = startBeat;
 
     SplitStatus splitStatus;
 
@@ -304,11 +280,11 @@ auto LaunchHandle::advance (const SyncRange& syncRange, std::optional<BeatDurati
                             // Carry on from the other state's start, playing for the whole block
                             splitStatus.playing1 = true;
                             splitStatus.range1 = blockEditBeatRange;
-                            splitStatus.playStartTime1 = syncFrom->startBeat;
+                            splitStatus.playStartTime1 = toEditBeat (syncFrom->startMonotonicBeat);
 
                             currentState.store (CurrentState
                                                 {
-                                                    syncFrom->startBeat,
+                                                    toEditBeat (syncFrom->startMonotonicBeat),
                                                     syncFrom->startMonotonicBeat,
                                                     blockMonotonicBeatRange.v.getEnd() - syncFrom->startMonotonicBeat.v,
                                                     blockEditBeatRange.getEnd()
@@ -353,12 +329,12 @@ auto LaunchHandle::advance (const SyncRange& syncRange, std::optional<BeatDurati
                             splitStatus.playStartTime1  = cs ? std::optional (cs->startBeat) : std::nullopt;
                             splitStatus.playing2        = true;
                             splitStatus.range2          = BeatRange::endingAt (blockEditBeatRange.getEnd(), secondSplitLength);
-                            splitStatus.playStartTime2  = syncFrom->startBeat;
+                            splitStatus.playStartTime2  = toEditBeat (syncFrom->startMonotonicBeat);
                             splitStatus.isSplit         = true;
 
                             currentState.store (CurrentState
                                                 {
-                                                    syncFrom->startBeat,
+                                                    toEditBeat (syncFrom->startMonotonicBeat),
                                                     syncFrom->startMonotonicBeat,
                                                     blockMonotonicBeatRange.v.getEnd() - syncFrom->startMonotonicBeat.v,
                                                     blockEditBeatRange.getEnd()

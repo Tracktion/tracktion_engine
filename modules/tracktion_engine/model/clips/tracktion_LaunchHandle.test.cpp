@@ -39,27 +39,26 @@ TEST_CASE ("LaunchHandle: Edit position jumps")
                            return syncRange;
                        };
 
-    SUBCASE ("A looping handle keeps its phase when the playhead jumps back past its start")
+    SUBCASE ("A playing handle carries on from where it was when the playhead jumps back")
     {
         LaunchHandle h;
-        const auto loopLength = 4_bd;
-        h.advance (advanceSync (1_bd), loopLength);  // 0-1
+        h.advance (advanceSync (1_bd));     // 0-1
         h.play ({});
-        h.advance (advanceSync (1_bd), loopLength);  // starts at 1
+        h.advance (advanceSync (1_bd));     // starts at 1
 
         for (int i = 0; i < 4; ++i)
-            h.advance (advanceSync (1_bd), loopLength); // to 6
+            h.advance (advanceSync (1_bd)); // to 6, 5 beats in
 
-        // Jump back to 0.5: the start moves back a whole loop to -3
-        auto s = h.advance (advanceSync (0.5_bd, 0.5_bp), loopLength);
+        // Jump back to 0.5: still 5 beats in, so it started at -4.5
+        auto s = h.advance (advanceSync (0.5_bd, 0.5_bp));
         CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
         CHECK (s.playing1);
         REQUIRE (s.playStartTime1);
-        CHECK (s.playStartTime1->inBeats() == doctest::Approx (-3.0));
+        CHECK (s.playStartTime1->inBeats() == doctest::Approx (-4.5));
 
         auto played = h.getPlayedRange();
         REQUIRE (played);
-        CHECK (played->getStart().inBeats() == doctest::Approx (-3.0));
+        CHECK (played->getStart().inBeats() == doctest::Approx (-4.5));
         CHECK (played->getEnd().inBeats() == doctest::Approx (1.0));
 
         // The monotonic range is unaffected, so timed stops and follow actions are too
@@ -71,66 +70,64 @@ TEST_CASE ("LaunchHandle: Edit position jumps")
         // As is the length last played, which a performance recording takes as
         // the recorded length - it handles an arrangement loop wrap itself
         h.stop ({});
-        h.advance (advanceSync (0.5_bd), loopLength);
+        h.advance (advanceSync (0.5_bd));
         auto last = h.getLastPlayedRange();
         REQUIRE (last);
         CHECK (last->getLength().inBeats() == doctest::Approx (5.5));
     }
 
-    SUBCASE ("A repeating handle keeps repeating after the playhead jumps")
+    SUBCASE ("A repeating handle keeps repeating on its own grid after the playhead jumps")
     {
-        // As the Repeat trigger mode: retrigger every beat, for a 4 beat clip loop or a one-shot
-        for (auto loopLength : { std::optional (4_bd), std::optional<BeatDuration>() })
+        // As the Repeat trigger mode: retrigger every beat
         for (auto jumpTo : { 10_bp, 0.25_bp, 2.75_bp })
         {
             CAPTURE (jumpTo.inBeats());
-            CAPTURE (loopLength.has_value());
             syncRange = {};
             LaunchHandle h;
             h.setLooping (1_bd);
-            h.advance (advanceSync (0.5_bd), loopLength);   // 0-0.5
+            h.advance (advanceSync (0.5_bd));   // 0-0.5
             h.play ({});
-            h.advance (advanceSync (0.5_bd), loopLength);   // starts at 0.5
+            h.advance (advanceSync (0.5_bd));   // starts at 0.5
 
             int numRepeats = 0;
 
-            for (int i = 0; i < 6; ++i)                     // to 4, repeating at 1.5, 2.5 and 3.5
-                if (h.advance (advanceSync (0.5_bd), loopLength).isSplit)
+            for (int i = 0; i < 6; ++i)         // to 4, repeating at 1.5, 2.5 and 3.5
+                if (h.advance (advanceSync (0.5_bd)).isSplit)
                     ++numRepeats;
 
             CHECK (numRepeats == 3);
 
-            // Jump, then play for a little over a repeat interval
+            // Jump, then play for 1.5 beats: it repeats once, a beat after the last
+            // repeat, as if there was no jump
             numRepeats = 0;
 
-            if (h.advance (advanceSync (0.5_bd, jumpTo), loopLength).isSplit)
-                ++numRepeats;
-
-            for (int i = 0; i < 2; ++i)
-                if (h.advance (advanceSync (0.5_bd), loopLength).isSplit)
+            for (int i = 0; i < 3; ++i)
+                if (h.advance (advanceSync (0.5_bd, i == 0 ? std::optional (jumpTo) : std::nullopt)).isSplit)
                     ++numRepeats;
 
             CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
-            CHECK (numRepeats >= 1);
+            CHECK (numRepeats == 1);
         }
     }
 
-    SUBCASE ("A forward jump keeps the start, and the played range ends at the playhead")
+    SUBCASE ("A forward jump keeps its position, and the played range ends at the playhead")
     {
         LaunchHandle h;
         h.play ({});
-        h.advance (advanceSync (1_bd), 4_bd);           // starts at 0
-        auto s = h.advance (advanceSync (1_bd, 10_bp), 4_bd);
+        h.advance (advanceSync (1_bd));     // starts at 0
+        auto s = h.advance (advanceSync (1_bd, 10_bp));
 
+        // 1 beat in at 10, so it started at 9
         REQUIRE (s.playStartTime1);
-        CHECK (s.playStartTime1->inBeats() == doctest::Approx (0.0));
+        CHECK (s.playStartTime1->inBeats() == doctest::Approx (9.0));
 
         auto played = h.getPlayedRange();
         REQUIRE (played);
         CHECK (played->getEnd().inBeats() == doctest::Approx (11.0));
+        CHECK (played->getLength().inBeats() == doctest::Approx (2.0));
     }
 
-    SUBCASE ("A one-shot handle stops when the playhead jumps")
+    SUBCASE ("A one-shot handle carries on when the playhead jumps")
     {
         LaunchHandle h;
         h.play ({});
@@ -138,13 +135,10 @@ TEST_CASE ("LaunchHandle: Edit position jumps")
         CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
 
         auto s = h.advance (advanceSync (1_bd, 0_bp));
-        CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::stopped);
-        CHECK (! s.playing1);
-        CHECK (! h.getPlayedRange());
-
-        auto last = h.getLastPlayedRange();
-        REQUIRE (last);
-        CHECK (last->getLength().inBeats() == doctest::Approx (1.0));
+        CHECK (h.getPlayingStatus() == LaunchHandle::PlayState::playing);
+        CHECK (s.playing1);
+        REQUIRE (s.playStartTime1);
+        CHECK (s.playStartTime1->inBeats() == doctest::Approx (-1.0));
     }
 
     SUBCASE ("Continuous blocks aren't a jump")
