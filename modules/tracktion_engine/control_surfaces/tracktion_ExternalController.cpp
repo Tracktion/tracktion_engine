@@ -774,7 +774,7 @@ void ExternalController::userPressedGoToMarker (int marker)
     if (auto tc = getTransport())
         if (auto ed = getEdit())
             if (auto mc = ed->getMarkerManager().getMarkers().getObjectPointer (marker + startMarkerNumber))
-                tc->setPosition (mc->getPosition().getStart());
+                tc->jumpTo (mc->getPosition().getStart());
 }
 
 void ExternalController::updateParameters()

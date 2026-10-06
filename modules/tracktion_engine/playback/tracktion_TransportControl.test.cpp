@@ -44,6 +44,43 @@ namespace tracktion::inline engine {
             CHECK (graph::test_utilities::buffersAreEqual (output, toBufferView (squareBuffer), 0.01f));
         }
 
+        TEST_CASE ("jumpTo moves straight away by default")
+        {
+            auto& engine = *Engine::getEngines()[0];
+            test_utilities::EnginePlayer player (engine, { .sampleRate = 44100.0, .blockSize = 512, .inputChannels = 0, .outputChannels = 1,
+                                                           .inputNames = {}, .outputNames = {} });
+
+            // A square wave from 10s to 15s, and silence before it
+            auto edit = engine::test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+            auto& tc = edit->getTransport();
+            auto squareFile = graph::test_utilities::getSquareFile<juce::WavAudioFormat> (44100.0, 5.0);
+            AudioFile af (engine, squareFile->getFile());
+            auto clip = insertWaveClip (*getAudioTracks (*edit)[0], {}, af.getFile(), { { 10_tp, 15_tp } }, DeleteExistingClips::no);
+            clip->setUsesProxy (false);
+
+            tc.play (false);
+            test_utilities::waitForFileToBeMapped (af);
+            player.process (44100);
+
+            // With no EngineBehaviour deferring it, a jump whilst playing happens in the next block
+            tc.jumpTo (10_tp);
+            player.process (44100);
+
+            auto output = player.getOutput();
+            auto rms = [&output] (int start, int end)
+            {
+                double sum = 0.0;
+
+                for (int i = start; i < end; ++i)
+                    sum += output.getSample (0, (choc::buffer::FrameCount) i) * output.getSample (0, (choc::buffer::FrameCount) i);
+
+                return std::sqrt (sum / (end - start));
+            };
+
+            CHECK_LT (rms (0, 44000), 0.001);
+            CHECK_GT (rms (44100 + 1024, 88200), 0.5);
+        }
+
         TEST_CASE ("Transport position set whilst stopped isn't quantised to samples")
         {
             auto& engine = *Engine::getEngines()[0];
