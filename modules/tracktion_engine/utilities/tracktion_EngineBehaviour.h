@@ -194,8 +194,8 @@ public:
     /// archive can recreate their relative layout.
     virtual juce::Array<juce::File> getExtraFilesToArchive (Edit&)                   { return {}; }
 
-    /// Called when the user moves the transport while it's playing (jumping to a
-    /// marker, or skipping to the next/previous time of interest) via
+    /// Called when the user moves the transport while it's playing (e.g. jumping
+    /// to a marker) via
     /// TransportControl::jumpTo(). Return a time to defer the jump until, e.g. to
     /// quantise it to the launch quantisation, or nothing to jump straight away.
     virtual std::optional<TimePosition> getTimeToJumpAt (TransportControl&, TimePosition /*newPosition*/)  { return {}; }

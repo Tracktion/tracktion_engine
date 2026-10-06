@@ -1821,8 +1821,8 @@ void toEnd (TransportControl& tc, const SelectableList& items)
     tc.setPosition (tc.getPosition() > selectionEnd - 0.001s ? toPosition (tc.edit.getLength()) : selectionEnd);
 }
 
-void tabBack (TransportControl& tc)     { tc.jumpTo (tc.edit.getPreviousTimeOfInterest (tc.getPosition() - 0.001s)); }
-void tabForward (TransportControl& tc)  { tc.jumpTo (tc.edit.getNextTimeOfInterest     (tc.getPosition() + 0.001s)); }
+void tabBack (TransportControl& tc)     { tc.setPosition (tc.edit.getPreviousTimeOfInterest (tc.getPosition() - 0.001s)); }
+void tabForward (TransportControl& tc)  { tc.setPosition (tc.edit.getNextTimeOfInterest     (tc.getPosition() + 0.001s)); }
 
 void markIn (TransportControl& tc)      { tc.setLoopIn  (tc.getPosition()); }
 void markOut (TransportControl& tc)     { tc.setLoopOut (tc.getPosition()); }
