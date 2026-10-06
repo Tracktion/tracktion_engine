@@ -39662,8 +39662,8 @@
       <type>SplitStatus</type>
       <name>advance</name>
       <anchorfile>classengine_1_1LaunchHandle.html</anchorfile>
-      <anchor>a1fb57edf4264663b6f18e1f2f9c409a0</anchor>
-      <arglist>(const SyncRange &amp;, std::optional&lt; BeatDuration &gt; loopLength={})</arglist>
+      <anchor>a759319ade34b79108acc4e5153ba36cb</anchor>
+      <arglist>(const SyncRange &amp;)</arglist>
     </member>
     <member kind="function">
       <type>std::optional&lt; BeatRange &gt;</type>
@@ -68366,8 +68366,8 @@
       <type></type>
       <name>SlotControlNode</name>
       <anchorfile>classengine_1_1SlotControlNode.html</anchorfile>
-      <anchor>af94dc65baefe01e8b0fc2f11437ac78c</anchor>
-      <arglist>(ProcessState &amp;editProcessState, std::shared_ptr&lt; LaunchHandle &gt;, std::optional&lt; BeatDuration &gt; loopLength, std::optional&lt; BeatDuration &gt; stopDuration, std::function&lt; void(MonotonicBeat)&gt; stopFunction, EditItemID slotID, std::unique_ptr&lt; Node &gt; input)</arglist>
+      <anchor>a68aeeef2842c7c907bab1178555a648b</anchor>
+      <arglist>(ProcessState &amp;editProcessState, std::shared_ptr&lt; LaunchHandle &gt;, std::optional&lt; BeatDuration &gt; stopDuration, std::function&lt; void(MonotonicBeat)&gt; stopFunction, EditItemID slotID, std::unique_ptr&lt; Node &gt; input)</arglist>
     </member>
     <member kind="function">
       <type>const LaunchHandle &amp;</type>

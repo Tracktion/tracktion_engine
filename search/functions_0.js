@@ -106,7 +106,7 @@ var searchData=
   ['addwastedmidimessageslistener_103',['addWastedMidiMessagesListener',['../classengine_1_1Edit.html#a64a1b9bc3e8b69cc76771da144ed1c7b',1,'engine::Edit']]],
   ['addwaveinputdeviceinstance_104',['addWaveInputDeviceInstance',['../classengine_1_1EditPlaybackContext.html#a5882e655f81919f539516da98816ebeb',1,'engine::EditPlaybackContext']]],
   ['addwithcrossfade_105',['addWithCrossfade',['../structengine_1_1AudioFadeCurve.html#a238c2a74c29559ea307d5909e9a7f49b',1,'engine::AudioFadeCurve']]],
-  ['advance_106',['advance',['../classengine_1_1LaunchHandle.html#a1fb57edf4264663b6f18e1f2f9c409a0',1,'engine::LaunchHandle']]],
+  ['advance_106',['advance',['../classengine_1_1LaunchHandle.html#a759319ade34b79108acc4e5153ba36cb',1,'engine::LaunchHandle']]],
   ['airwindowsautomatableparameter_107',['AirWindowsAutomatableParameter',['../classengine_1_1AirWindowsAutomatableParameter.html#a24bcd9e8a5bcf362003979285152260f',1,'engine::AirWindowsAutomatableParameter']]],
   ['airwindowsbase_108',['AirWindowsBase',['../classengine_1_1AirWindowsBase.html#ad1e842fafbaf857551d3cc7552b57ea7',1,'engine::AirWindowsBase']]],
   ['airwindowscallback_109',['AirWindowsCallback',['../classengine_1_1AirWindowsCallback.html#ab0ee3cbca1ff7c8cda68d19232b760b6',1,'engine::AirWindowsCallback']]],

@@ -139,11 +139,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a682b63522dc440d92b36d0d60daed2fb" id="r_a682b63522dc440d92b36d0d60daed2fb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1LaunchHandle.html#a682b63522dc440d92b36d0d60daed2fb">nudge</a> (BeatDuration)</td></tr>
 <tr class="memdesc:a682b63522dc440d92b36d0d60daed2fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Moves the playhead by a given number of beats.  <br /></td></tr>
 <tr class="separator:a682b63522dc440d92b36d0d60daed2fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fb57edf4264663b6f18e1f2f9c409a0" id="r_a1fb57edf4264663b6f18e1f2f9c409a0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structengine_1_1LaunchHandle_1_1SplitStatus.html">SplitStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1LaunchHandle.html#a1fb57edf4264663b6f18e1f2f9c409a0">advance</a> (const <a class="el" href="structengine_1_1SyncRange.html">SyncRange</a> &amp;, std::optional&lt; BeatDuration &gt; loopLength={})</td></tr>
-<tr class="memdesc:a1fb57edf4264663b6f18e1f2f9c409a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance the state.  <br /></td></tr>
-<tr class="separator:a1fb57edf4264663b6f18e1f2f9c409a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a759319ade34b79108acc4e5153ba36cb" id="r_a759319ade34b79108acc4e5153ba36cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structengine_1_1LaunchHandle_1_1SplitStatus.html">SplitStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1LaunchHandle.html#a759319ade34b79108acc4e5153ba36cb">advance</a> (const <a class="el" href="structengine_1_1SyncRange.html">SyncRange</a> &amp;)</td></tr>
+<tr class="memdesc:a759319ade34b79108acc4e5153ba36cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance the state.  <br /></td></tr>
+<tr class="separator:a759319ade34b79108acc4e5153ba36cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d4806431e2c70cba2b2965d1f94ce92" id="r_a5d4806431e2c70cba2b2965d1f94ce92"><td class="memItemLeft" align="right" valign="top">std::optional&lt; BeatRange &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1LaunchHandle.html#a5d4806431e2c70cba2b2965d1f94ce92">getPlayedRange</a> () const</td></tr>
-<tr class="memdesc:a5d4806431e2c70cba2b2965d1f94ce92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> beat range this has been playing for: from the beat it started at (as moved by any <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> position jumps) to the current <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> position.  <br /></td></tr>
+<tr class="memdesc:a5d4806431e2c70cba2b2965d1f94ce92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> beat range this has been playing for: from the beat it would have started at to reach where it is now, to the current <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> position.  <br /></td></tr>
 <tr class="separator:a5d4806431e2c70cba2b2965d1f94ce92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaa1d59ec70720866819d7cc737cc8e9c" id="r_aaa1d59ec70720866819d7cc737cc8e9c"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structengine_1_1MonotonicBeatRange.html">MonotonicBeatRange</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1LaunchHandle.html#aaa1d59ec70720866819d7cc737cc8e9c">getPlayedMonotonicRange</a> () const</td></tr>
 <tr class="memdesc:aaa1d59ec70720866819d7cc737cc8e9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the monotonic beat range this has been playing for.  <br /></td></tr>
@@ -446,8 +446,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a1fb57edf4264663b6f18e1f2f9c409a0" name="a1fb57edf4264663b6f18e1f2f9c409a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1fb57edf4264663b6f18e1f2f9c409a0">&#9670;&#160;</a></span>advance()</h2>
+<a id="a759319ade34b79108acc4e5153ba36cb" name="a759319ade34b79108acc4e5153ba36cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a759319ade34b79108acc4e5153ba36cb">&#9670;&#160;</a></span>advance()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -456,18 +456,8 @@ Public Member Functions</h2></td></tr>
           <td class="memname"><a class="el" href="structengine_1_1LaunchHandle_1_1SplitStatus.html">SplitStatus</a> engine::LaunchHandle::advance </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structengine_1_1SyncRange.html">SyncRange</a> &amp;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
-          <td class="paramtype">std::optional&lt; BeatDuration &gt;&#160;</td>
-          <td class="paramname"><em>loopLength</em> = <code>{}</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -475,8 +465,7 @@ Public Member Functions</h2></td></tr>
 <p>Advance the state. </p>
 <p>N.B. This should only be called by the audio thread. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname"><a class="el" href="structengine_1_1SyncRange.html">SyncRange</a></td><td>The current <a class="el" href="structengine_1_1SyncRange.html">SyncRange</a>. Used to sync launch positions to </td></tr>
-    <tr><td class="paramname">loopLength</td><td>The clip's loop length if it loops. If the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> position jumps whilst playing (a relocate, stop-move-play or loop wrap), a looping handle keeps its phase against the beat grid, moving its start back by whole loops if it's now ahead of the playhead. A handle with no loop length stops. </td></tr>
+    <tr><td class="paramname"><a class="el" href="structengine_1_1SyncRange.html">SyncRange</a></td><td>The current <a class="el" href="structengine_1_1SyncRange.html">SyncRange</a>. Used to sync launch positions to. A playing handle runs on its monotonic beats, so if the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> position jumps (a relocate, stop-move-play or loop wrap) it carries on from where it was. </td></tr>
   </table>
   </dd>
 </dl>
@@ -499,8 +488,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Returns the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> beat range this has been playing for: from the beat it started at (as moved by any <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> position jumps) to the current <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> position. </p>
-<p>N.B. The length is unlooped. </p>
+<p>Returns the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> beat range this has been playing for: from the beat it would have started at to reach where it is now, to the current <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> position. </p>
+<p>An <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> position jump moves its start with it. N.B. The length is unlooped. </p>
 
 </div>
 </div>
@@ -520,7 +509,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the monotonic beat range this has been playing for. </p>
-<p>N.B. This is really only useful for syncing to other timeline events. Unlike <a class="el" href="classengine_1_1LaunchHandle.html#a5d4806431e2c70cba2b2965d1f94ce92" title="Returns the Edit beat range this has been playing for: from the beat it started at (as moved by any E...">getPlayedRange()</a> it's unaffected by <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> position jumps. </p>
+<p>N.B. This is really only useful for syncing to other timeline events. Unlike <a class="el" href="classengine_1_1LaunchHandle.html#a5d4806431e2c70cba2b2965d1f94ce92" title="Returns the Edit beat range this has been playing for: from the beat it would have started at to reac...">getPlayedRange()</a> it's unaffected by <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> position jumps. </p>
 
 </div>
 </div>
@@ -548,7 +537,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Oct 5 2026 14:12:01 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Oct 6 2026 16:18:53 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
