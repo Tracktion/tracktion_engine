@@ -1175,6 +1175,20 @@ void TransportControl::setPosition (TimePosition timeToMoveTo, TimePosition time
     sendChangeMessage();
 }
 
+void TransportControl::jumpTo (TimePosition t)
+{
+    if (isPlaying())
+    {
+        if (auto timeToJumpAt = engine.getEngineBehaviour().getTimeToJumpAt (*this, t))
+        {
+            setPosition (t, *timeToJumpAt);
+            return;
+        }
+    }
+
+    setPosition (t);
+}
+
 void TransportControl::setUserDragging (bool b)
 {
     CRASH_TRACER

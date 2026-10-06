@@ -440,14 +440,14 @@ namespace AppFunctions
     {
         if (auto transport = getActiveTransport())
             if (auto clip = transport->edit.getMarkerManager().getNextMarker (transport->getPosition()))
-                transport->setPosition (clip->getPosition().getStart());
+                transport->jumpTo (clip->getPosition().getStart());
     }
 
     void moveToPrevMarker()
     {
         if (auto transport = getActiveTransport())
             if (auto clip = transport->edit.getMarkerManager().getPrevMarker (transport->getPosition()))
-                transport->setPosition (clip->getPosition().getStart());
+                transport->jumpTo (clip->getPosition().getStart());
     }
 
     void redo()

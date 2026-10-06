@@ -160,6 +160,12 @@ public:
     /** Sets a new transport position to take effect at a given time. */
     void setPosition (TimePosition timeToMoveTo, TimePosition timeToPerformJump);
 
+    /** Moves the transport as a user's jump, e.g. to a marker. While playing, the
+        EngineBehaviour can defer it (see EngineBehaviour::getTimeToJumpAt),
+        otherwise it moves straight away.
+    */
+    void jumpTo (TimePosition);
+
     /** Signifies a scrub-drag operation has started/stopped.
         While dragging, a short section of the play position is looped repeatedly.
     */

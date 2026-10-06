@@ -194,6 +194,12 @@ public:
     /// archive can recreate their relative layout.
     virtual juce::Array<juce::File> getExtraFilesToArchive (Edit&)                   { return {}; }
 
+    /// Called when the user moves the transport while it's playing (e.g. jumping
+    /// to a marker) via
+    /// TransportControl::jumpTo(). Return a time to defer the jump until, e.g. to
+    /// quantise it to the launch quantisation, or nothing to jump straight away.
+    virtual std::optional<TimePosition> getTimeToJumpAt (TransportControl&, TimePosition /*newPosition*/)  { return {}; }
+
     /// If this returns false, ClipSlot Clips won't be included in the playback graph
     /// and arranger track clips will always be audible.
     virtual bool areClipSlotsEnabled()                                              { return true; }
