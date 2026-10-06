@@ -1053,8 +1053,6 @@ std::vector<std::unique_ptr<SlotControlNode>> createNodeForLauncherClips (const 
 
                 auto controlNode = std::make_unique<SlotControlNode> (params.processState,
                                                                       std::move (launchHandle),
-                                                                      clip->isLooping() ? std::optional (clip->getLoopLengthBeats())
-                                                                                        : std::nullopt,
                                                                       clipDuration,
                                                                       createFollowAction (*clip),
                                                                       slot->itemID,

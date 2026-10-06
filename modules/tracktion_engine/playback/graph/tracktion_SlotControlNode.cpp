@@ -14,14 +14,12 @@ namespace tracktion::inline engine {
 
 SlotControlNode::SlotControlNode (ProcessState& ps,
                                   std::shared_ptr<LaunchHandle> launchHandle_,
-                                  std::optional<BeatDuration> loopLength_,
                                   std::optional<BeatDuration> stopDuration_,
                                   std::function<void (MonotonicBeat)> stopFunction_,
                                   EditItemID slotID_,
                                   std::unique_ptr<Node> input_)
     : TracktionEngineNode (ps),
       launchHandle (std::move (launchHandle_)),
-      loopLength (loopLength_),
       stopDuration (stopDuration_),
       stopFunction (std::move (stopFunction_)),
       slotID (slotID_),
@@ -146,7 +144,7 @@ void SlotControlNode::process (ProcessContext& pc)
             }
         }
 
-        if (auto splitStatus = launchHandle->advance (syncRange, loopLength);
+        if (auto splitStatus = launchHandle->advance (syncRange);
             ! splitStatus.range1.isEmpty())
         {
             // If we've just started playing, we need to check if we should have actually stopped and just cancel if so
@@ -168,7 +166,7 @@ void SlotControlNode::process (ProcessContext& pc)
     }
     else if (launchHandle->getQueuedStatus() == LaunchHandle::QueueState::stopQueued)
     {
-        launchHandle->advance (syncRange, loopLength);
+        launchHandle->advance (syncRange);
     }
 }
 
@@ -365,7 +363,7 @@ void SlotControlNode::processStop (ProcessContext& pc, double timestampForMidiNo
     if (launchHandle->getQueuedStatus() == LaunchHandle::QueueState::stopQueued)
         launchHandle->stop ({});
 
-    launchHandle->advance (getProcessState().getSyncRange(), loopLength);
+    launchHandle->advance (getProcessState().getSyncRange());
 }
 
 } // namespace tracktion::inline engine
