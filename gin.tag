@@ -30967,6 +30967,13 @@
       <arglist>(Edit &amp;)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
+      <type>virtual std::optional&lt; TimePosition &gt;</type>
+      <name>getTimeToJumpAt</name>
+      <anchorfile>classengine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>a543d6ddf1ed4b3428f485ba309195185</anchor>
+      <arglist>(TransportControl &amp;, TimePosition)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
       <type>virtual bool</type>
       <name>areClipSlotsEnabled</name>
       <anchorfile>classengine_1_1EngineBehaviour.html</anchorfile>
@@ -76048,6 +76055,13 @@
       <anchorfile>classengine_1_1TransportControl.html</anchorfile>
       <anchor>a6af6a6f8a77602f1bdac180ebd74e0e6</anchor>
       <arglist>(TimePosition timeToMoveTo, TimePosition timeToPerformJump)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>jumpTo</name>
+      <anchorfile>classengine_1_1TransportControl.html</anchorfile>
+      <anchor>a602684a112c288d90446e219fe6971e6</anchor>
+      <arglist>(TimePosition)</arglist>
     </member>
     <member kind="function">
       <type>void</type>

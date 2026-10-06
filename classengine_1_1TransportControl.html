@@ -170,6 +170,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6af6a6f8a77602f1bdac180ebd74e0e6" id="r_a6af6a6f8a77602f1bdac180ebd74e0e6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1TransportControl.html#a6af6a6f8a77602f1bdac180ebd74e0e6">setPosition</a> (TimePosition timeToMoveTo, TimePosition timeToPerformJump)</td></tr>
 <tr class="memdesc:a6af6a6f8a77602f1bdac180ebd74e0e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a new transport position to take effect at a given time.  <br /></td></tr>
 <tr class="separator:a6af6a6f8a77602f1bdac180ebd74e0e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a602684a112c288d90446e219fe6971e6" id="r_a602684a112c288d90446e219fe6971e6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1TransportControl.html#a602684a112c288d90446e219fe6971e6">jumpTo</a> (TimePosition)</td></tr>
+<tr class="memdesc:a602684a112c288d90446e219fe6971e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Moves the transport as a user's jump, e.g.  <br /></td></tr>
+<tr class="separator:a602684a112c288d90446e219fe6971e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c0d973c32d7bbb1f31830f119d11820" id="r_a9c0d973c32d7bbb1f31830f119d11820"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1TransportControl.html#a9c0d973c32d7bbb1f31830f119d11820">setUserDragging</a> (bool)</td></tr>
 <tr class="memdesc:a9c0d973c32d7bbb1f31830f119d11820"><td class="mdescLeft">&#160;</td><td class="mdescRight">Signifies a scrub-drag operation has started/stopped.  <br /></td></tr>
 <tr class="separator:a9c0d973c32d7bbb1f31830f119d11820"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -807,6 +810,27 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Sets a new transport position to take effect at a given time. </p>
+
+</div>
+</div>
+<a id="a602684a112c288d90446e219fe6971e6" name="a602684a112c288d90446e219fe6971e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a602684a112c288d90446e219fe6971e6">&#9670;&#160;</a></span>jumpTo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void engine::TransportControl::jumpTo </td>
+          <td>(</td>
+          <td class="paramtype">TimePosition&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Moves the transport as a user's jump, e.g. </p>
+<p>to a marker. While playing, the <a class="el" href="classengine_1_1EngineBehaviour.html" title="Provides custom handlers to control various aspects of the engine&#39;s behaviour.">EngineBehaviour</a> can defer it (see <a class="el" href="classengine_1_1EngineBehaviour.html#a543d6ddf1ed4b3428f485ba309195185" title="Called when the user moves the transport while it&#39;s playing (e.g.">EngineBehaviour::getTimeToJumpAt</a>), otherwise it moves straight away. </p>
 
 </div>
 </div>
@@ -1747,7 +1771,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 6 2026 16:18:54 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Oct 6 2026 19:23:04 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

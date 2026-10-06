@@ -206,6 +206,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac7abc6c3d60a93140c863d084103a010" id="r_ac7abc6c3d60a93140c863d084103a010"><td class="memItemLeft" align="right" valign="top">virtual juce::Array&lt; juce::File &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1EngineBehaviour.html#ac7abc6c3d60a93140c863d084103a010">getExtraFilesToArchive</a> (<a class="el" href="classengine_1_1Edit.html">Edit</a> &amp;)</td></tr>
 <tr class="memdesc:ac7abc6c3d60a93140c863d084103a010"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return any extra loose files the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> depends on that aren't tracked as ProjectItems (e.g.  <br /></td></tr>
 <tr class="separator:ac7abc6c3d60a93140c863d084103a010"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a543d6ddf1ed4b3428f485ba309195185" id="r_a543d6ddf1ed4b3428f485ba309195185"><td class="memItemLeft" align="right" valign="top">virtual std::optional&lt; TimePosition &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1EngineBehaviour.html#a543d6ddf1ed4b3428f485ba309195185">getTimeToJumpAt</a> (<a class="el" href="classengine_1_1TransportControl.html">TransportControl</a> &amp;, TimePosition)</td></tr>
+<tr class="memdesc:a543d6ddf1ed4b3428f485ba309195185"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the user moves the transport while it's playing (e.g.  <br /></td></tr>
+<tr class="separator:a543d6ddf1ed4b3428f485ba309195185"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3bb2532dd394f41f58506cf7dd450896" id="r_a3bb2532dd394f41f58506cf7dd450896"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1EngineBehaviour.html#a3bb2532dd394f41f58506cf7dd450896">areClipSlotsEnabled</a> ()</td></tr>
 <tr class="memdesc:a3bb2532dd394f41f58506cf7dd450896"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this returns false, <a class="el" href="classengine_1_1ClipSlot.html" title="Represents a slot on a track that a Clip can live in to be played as a launched clip.">ClipSlot</a> Clips won't be included in the playback graph and arranger track clips will always be audible.  <br /></td></tr>
 <tr class="separator:a3bb2532dd394f41f58506cf7dd450896"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1450,6 +1453,45 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a543d6ddf1ed4b3428f485ba309195185" name="a543d6ddf1ed4b3428f485ba309195185"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a543d6ddf1ed4b3428f485ba309195185">&#9670;&#160;</a></span>getTimeToJumpAt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::optional&lt; TimePosition &gt; engine::EngineBehaviour::getTimeToJumpAt </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classengine_1_1TransportControl.html">TransportControl</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">TimePosition&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called when the user moves the transport while it's playing (e.g. </p>
+<p>jumping to a marker) via <a class="el" href="classengine_1_1TransportControl.html#a602684a112c288d90446e219fe6971e6" title="Moves the transport as a user&#39;s jump, e.g.">TransportControl::jumpTo()</a>. Return a time to defer the jump until, e.g. to quantise it to the launch quantisation, or nothing to jump straight away. </p>
+
+</div>
+</div>
 <a id="a3bb2532dd394f41f58506cf7dd450896" name="a3bb2532dd394f41f58506cf7dd450896"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3bb2532dd394f41f58506cf7dd450896">&#9670;&#160;</a></span>areClipSlotsEnabled()</h2>
 
@@ -2093,7 +2135,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 6 2026 16:18:53 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Oct 6 2026 19:23:04 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>
