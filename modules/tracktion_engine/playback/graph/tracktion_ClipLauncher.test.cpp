@@ -1160,6 +1160,108 @@ TEST_SUITE ("tracktion_engine")
         CHECK_LT (getRMSLevel (output, tr (0.2, 2.9)), 0.005f);
     }
 
+    TEST_CASE ("Clip automation: a track moved in to a submix folder keeps its clip automation (live)")
+    {
+        using namespace clip_automation_test_utilities;
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto sinFile = createSineFile (engine, 8.0, 220.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto clip = insertWaveClip (*track, {}, sinFile->getFile(), { tr (0.0, 8.0) }, DeleteExistingClips::no);
+        clip->setUsesProxy (false);
+
+        auto& volumePlugin = getVolumePluginWithoutSmoothing (*track);
+        addStepCurve (*clip, *volumePlugin.volParam, 2_bp, 1.0f, 0.0f);
+
+        auto submix = edit->insertNewFolderTrack ({ nullptr, track }, nullptr, true);
+        edit->moveTrack (track, { submix.get(), nullptr });
+        REQUIRE (track->getParentFolderTrack() == submix.get());
+
+        edit->getTransport().play (false);
+        process (player, 4_td);
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (0.2, 1.8), 220.0), 0.4f);
+        CHECK_LT (getRMSLevel (output, tr (2.2, 3.9)), 0.005f);
+    }
+
+    // A redo re-adds the parameter's curve assignment before the clip's curve, which
+    // left the parameter not following it (waveform_beta#1283)
+    TEST_CASE ("Clip automation: a pasted clip's automation plays after undo and redo (live)")
+    {
+        using namespace clip_automation_test_utilities;
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto sinFile = createSineFile (engine, 8.0, 220.0f);
+        auto edit = test_utilities::createTestEdit (engine, 2, Edit::EditRole::forEditing);
+        auto& um = edit->getUndoManager();
+        auto sourceTrack = getAudioTracks (*edit)[0];
+        auto destTrack = getAudioTracks (*edit)[1];
+
+        auto clip = insertWaveClip (*sourceTrack, {}, sinFile->getFile(), { tr (0.0, 8.0) }, DeleteExistingClips::no);
+        clip->setUsesProxy (false);
+        addStepCurve (*clip, *sourceTrack->getVolumePlugin()->volParam, 2_bp, 1.0f, 0.0f);
+        sourceTrack->setMute (true);
+        um.beginNewTransaction();
+
+        Clipboard::Clips content;
+        content.addSelectedClips ({ clip.get() }, Edit::getMaximumEditTimeRange(),
+                                  Clipboard::Clips::AutomationLocked::no);
+        EditInsertPoint insertPoint (*edit);
+        Clipboard::ContentType::EditPastingOptions opts (*edit, insertPoint);
+        opts.silent = true;
+        opts.startTrack = destTrack;
+        REQUIRE (content.pasteIntoEdit (opts));
+        um.beginNewTransaction();
+
+        um.undo();
+        um.redo();
+        REQUIRE (destTrack->getClips().size() == 1);
+
+        auto& volumePlugin = getVolumePluginWithoutSmoothing (*destTrack);
+        CHECK (volumePlugin.volParam->isAutomationActive());
+
+        edit->getTransport().play (false);
+        process (player, 4_td);
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (0.2, 1.8), 220.0), 0.4f);
+        CHECK_LT (getRMSLevel (output, tr (2.2, 3.9)), 0.005f);
+    }
+
+    TEST_CASE ("Clip automation: a clip and curve added in one step play after undo and redo (live)")
+    {
+        using namespace clip_automation_test_utilities;
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto sinFile = createSineFile (engine, 8.0, 220.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto& um = edit->getUndoManager();
+        um.beginNewTransaction();
+
+        auto clip = insertWaveClip (*track, {}, sinFile->getFile(), { tr (0.0, 8.0) }, DeleteExistingClips::no);
+        clip->setUsesProxy (false);
+        addStepCurve (*clip, *track->getVolumePlugin()->volParam, 2_bp, 1.0f, 0.0f);
+        um.beginNewTransaction();
+
+        um.undo();
+        um.redo();
+        REQUIRE (track->getClips().size() == 1);
+
+        auto& volumePlugin = getVolumePluginWithoutSmoothing (*track);
+        CHECK (volumePlugin.volParam->isAutomationActive());
+
+        edit->getTransport().play (false);
+        process (player, 4_td);
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (0.2, 1.8), 220.0), 0.4f);
+        CHECK_LT (getRMSLevel (output, tr (2.2, 3.9)), 0.005f);
+    }
+
     //==============================================================================
     // Launched clips across transport jumps (waveform_beta#1286, #1287). Launched
     // clips run on the monotonic clock, so a jump in the Edit position (a relocate,

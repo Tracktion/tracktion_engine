@@ -844,6 +844,12 @@ private:
         auto newCurveMod = new AutomationCurveModifier (edit, v, destID, getPositionDelegate, getClipPositionDelegate);
         newCurveMod->incReferenceCount();
 
+        // A redo can re-add the parameter's assignment before this modifier, which
+        // leaves the parameter not following the curve, so connect it now
+        if (! edit.isLoading())
+            if (auto param = getParameter (*newCurveMod))
+                param->automationCurveModifierCreated (newCurveMod->itemID);
+
         return newCurveMod;
     }
 
