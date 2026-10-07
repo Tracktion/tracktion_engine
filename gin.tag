@@ -10547,6 +10547,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>automationCurveModifierCreated</name>
+      <anchorfile>classengine_1_1AutomatableParameter.html</anchorfile>
+      <anchor>aeba3ebbade4527979ed0fc92f5ae5783</anchor>
+      <arglist>(EditItemID automationCurveModifierID)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>resetRecordingStatus</name>
       <anchorfile>classengine_1_1AutomatableParameter.html</anchorfile>
       <anchor>a7f7495debfeca6d0a784d89f9a18945f</anchor>
