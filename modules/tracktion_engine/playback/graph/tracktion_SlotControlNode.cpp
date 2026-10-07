@@ -265,16 +265,24 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
 
         if (! almostEqual (lastOffset.inBeats(), offset.inBeats(), 0.0000001))
         {
+            // An Edit position jump (e.g. an arrangement loop wrap) changes the offset but not the
+            // clip position, so the clip carries on without sending note-offs or restriking held notes
+            const auto clipStart = editBeatRange.getStart() - offset;
+            const bool clipPositionJumped = ! wasPlaying || std::abs ((clipStart - nextClipStart).inBeats()) > 0.001;
+
             lastOffset = offset;
-            retriggered = wasPlaying;
+            retriggered = wasPlaying && clipPositionJumped;
 
             // Force the playheadJumped state to true in order to send note-offs.
-            localPlayheadState.playheadJumped = true;
+            if (clipPositionJumped)
+                localPlayheadState.playheadJumped = true;
 
             for (auto n : offsetNodes)
                 n->setDynamicOffsetBeats (offset);
         }
     }
+
+    nextClipStart = editBeatRange.getEnd() - lastOffset;
 
     // Prepare ordered Nodes
     for (auto& node : orderedNodes)
@@ -288,7 +296,9 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
     auto sourceBuffers = input->getProcessedOutput();
     assert (sourceBuffers.audio.size == pc.buffers.audio.size);
     copyIfNotAliased (pc.buffers.audio, sourceBuffers.audio);
-    pc.buffers.midi.copyFrom (sourceBuffers.midi);
+
+    // The MIDI buffer is the whole block's, which may have the MIDI of an earlier section in it
+    pc.buffers.midi.mergeFromWithOffset (sourceBuffers.midi, (editTimeRange.getStart() - getEditTimeRange().getStart()).inSeconds());
 
     // Update last samples. If the clip has jumped back to its start whilst playing, fade out the
     // jump from the last sample rather than fading in the new audio, so its start transient is kept
