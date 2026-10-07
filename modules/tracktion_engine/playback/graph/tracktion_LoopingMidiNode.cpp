@@ -850,7 +850,7 @@ public:
                                 juce::Array<juce::MidiMessage>& controllerMessagesScratchBuffer) override
     {
         generator.createMessagesForTime (destBuffer,
-                                         editBeatPosition,
+                                         editBeatPosition + cachedSequenceOffset,
                                          noteList,
                                          channelNumbers,
                                          clipLevel,
@@ -861,14 +861,16 @@ public:
     ActiveNoteList getNotesOnAtTime (EditBeatPosition time, juce::Range<int> channelNumbers, LiveClipLevel& clipLevel) override
     {
         return MidiHelpers::getNotesOnAtTime (currentSequence, noteOffMap,
-                                              time,
+                                              time + cachedSequenceOffset,
                                               channelNumbers,
                                               clipLevel);
     }
 
+    // The cached sequence's times have the offset added, which getEvent() removes,
+    // so it's added to the times passed in to look them up in the cached sequence
     void setTime (EditBeatPosition editBeatPosition) override
     {
-        generator.setTime (editBeatPosition);
+        generator.setTime (editBeatPosition + cachedSequenceOffset);
     }
 
     void cacheSequence (double offsetBeats, std::optional<juce::Range<double>> clipRange) override

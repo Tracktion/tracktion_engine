@@ -267,6 +267,75 @@ namespace clip_launcher_test_utilities
     }
 
     //==============================================================================
+    /** A test-only plugin that records the note-ons and note-offs a track sends it,
+        timed by the output samples it has processed, so tests can check a note is
+        struck and released exactly once (which a tone measurement can't).
+    */
+    class MidiProbePlugin  : public Plugin
+    {
+    public:
+        MidiProbePlugin (PluginCreationInfo info)  : Plugin (info) {}
+        ~MidiProbePlugin() override                             { notifyListenersOfDeletion(); }
+
+        static const char* getPluginName()                      { return "MIDI Probe"; }
+        static constexpr const char* xmlTypeName = "midiProbe";
+
+        juce::String getName() const override                   { return getPluginName(); }
+        juce::String getPluginType() override                   { return xmlTypeName; }
+        juce::String getSelectableDescription() override        { return getName(); }
+        BusLayout getBusses() const override                    { return BusLayout::singleStereoInOut(); }
+        bool takesMidiInput() override                          { return true; }
+
+        void initialise (const PluginInitialisationInfo&) override {}
+        void deinitialise() override {}
+        void restorePluginStateFromValueTree (const juce::ValueTree&) override {}
+
+        void applyToBuffer (const PluginRenderContext& fc) override
+        {
+            if (fc.bufferForMidiMessages != nullptr)
+                for (auto& m : *fc.bufferForMidiMessages)
+                    if (m.isNoteOnOrOff())
+                        events.push_back ({ m.isNoteOn(), m.getNoteNumber(),
+                                            (double) numSamplesProcessed / sampleRate + m.getTimeStamp() });
+
+            numSamplesProcessed += fc.bufferNumSamples;
+        }
+
+        struct Event
+        {
+            bool isNoteOn = false;
+            int noteNumber = 0;
+            double outputTime = 0.0;
+        };
+
+        /** Returns the note-ons or note-offs of a note sent within an output range. */
+        int countEvents (bool noteOns, int noteNumber, TimeRange range) const
+        {
+            return (int) std::count_if (events.begin(), events.end(),
+                                        [&] (const Event& e)
+                                        {
+                                            return e.isNoteOn == noteOns && e.noteNumber == noteNumber
+                                                    && range.contains (TimePosition::fromSeconds (e.outputTime));
+                                        });
+        }
+
+        std::vector<Event> events;
+        int64_t numSamplesProcessed = 0;
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiProbePlugin)
+    };
+
+    /** Adds a MidiProbePlugin to the start of a track's plugins. */
+    inline MidiProbePlugin& addMidiProbePlugin (AudioTrack& track)
+    {
+        track.edit.engine.getPluginManager().createBuiltInType<MidiProbePlugin>();
+        auto probe = dynamic_cast<MidiProbePlugin*> (track.edit.getPluginCache().createNewPlugin (MidiProbePlugin::xmlTypeName, {}).get());
+        assert (probe != nullptr);
+        track.pluginList.insertPlugin (*probe, 0, nullptr);
+        return *probe;
+    }
+
+    //==============================================================================
     /** A multi-track, multi-scene Edit where every slot contains a test tone at
         a unique frequency, so each clip's presence in the mixed output can be
         verified independently. The first two tracks are audio, the last two are
@@ -1363,6 +1432,256 @@ TEST_SUITE ("tracktion_engine")
         CHECK_GT (getToneMagnitude (output, tr (1.2, 3.9), noteFreq), 0.05f);
         CHECK_GT (getToneMagnitude (output, tr (4.05, 4.5), noteFreq), 0.05f);
         CHECK_GT (getToneMagnitude (output, tr (4.5, 7.9), noteFreq), 0.05f);
+    }
+
+    TEST_CASE ("Clip launcher: an arrangement loop wrap doesn't restrike a held note (MIDI)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto& probe = addMidiProbePlugin (*track);
+
+        auto clip = insertMidiClipIntoSlot (*slot, 8_bd);
+        clip->getSequence().addNote (69, 0_bp, 8_bd, 127, 0, nullptr);
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        auto& transport = edit->getTransport();
+        transport.setLoopRange (tr (0.0, 4.0));
+        transport.looping = true;
+        transport.play (false);
+        process (player, 1_td);
+        launchHandle->play ({});
+        process (player, 7_td); // wrapping at output 4s, to 8s
+
+        // Struck once at the launch and held through the wrap at 4s, not cut and struck again
+        CHECK_EQ (probe.countEvents (true, 69, tr (0.0, 8.0)), 1);
+        CHECK_EQ (probe.countEvents (false, 69, tr (0.0, 8.0)), 0);
+    }
+
+    TEST_CASE ("Clip launcher: an arrangement loop wrap in a later clip loop doesn't drop a held note (MIDI)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto& probe = addMidiProbePlugin (*track);
+
+        auto clip = insertMidiClipIntoSlot (*slot, 4_bd);
+        clip->getSequence().addNote (69, 0_bp, 4_bd, 127, 0, nullptr);
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        auto& transport = edit->getTransport();
+        transport.setLoopRange (tr (0.0, 6.0));
+        transport.looping = true;
+        transport.play (false);
+        process (player, 1_td);
+        launchHandle->play ({});
+        process (player, 7_td); // clip loops at output 5s, wraps at 6s, to 8s
+
+        // The wrap at 6s is in the clip's second loop: the note struck at 5s is held to 8s
+        CHECK_EQ (probe.countEvents (true, 69, tr (4.9, 8.0)), 1);
+        CHECK_EQ (probe.countEvents (false, 69, tr (5.1, 8.0)), 0);
+    }
+
+    TEST_CASE ("Clip launcher: stopping and playing restrikes a note held in a later clip loop (MIDI)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto& probe = addMidiProbePlugin (*track);
+
+        auto clip = insertMidiClipIntoSlot (*slot, 4_bd);
+        clip->getSequence().addNote (69, 0_bp, 4_bd, 127, 0, nullptr);
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        auto& transport = edit->getTransport();
+        transport.play (false);
+        process (player, 1_td);
+        launchHandle->play ({});
+        process (player, 5_td); // clip loops at output 5s, to 6s
+
+        // Stopping releases the note. Playing again carries on 1 beat in to the
+        // clip's second loop, so the held note has to be struck again
+        transport.stop (false, false);
+        process (player, 1_td); // output 6 to 7
+        transport.play (false);
+        process (player, 1_td); // output 7 to 8
+
+        CHECK_EQ (probe.countEvents (false, 69, tr (5.9, 7.0)), 1);
+        CHECK_EQ (probe.countEvents (true, 69, tr (6.9, 7.1)), 1);
+        CHECK_EQ (probe.countEvents (false, 69, tr (7.1, 8.0)), 0);
+    }
+
+    TEST_CASE ("Clip launcher: retriggering a clip mid-block keeps the note-offs before it (MIDI)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        auto& probe = addMidiProbePlugin (*track);
+
+        // Note 60 ends just before the relaunch, in the same block (5.9985s to 6.0101s)
+        auto clip = insertMidiClipIntoSlot (*slot, 8_bd);
+        clip->getSequence().addNote (60, 0_bp, 1.999_bd, 127, 0, nullptr);
+        clip->getSequence().addNote (69, 0_bp, 8_bd, 127, 0, nullptr);
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        auto& transport = edit->getTransport();
+        transport.play (false);
+        process (player, 1_td);
+
+        auto launchPos = getNextQuantisedLaunchPosition (*edit, LaunchQType::bar);
+        REQUIRE (launchPos);
+        launchHandle->play (launchPos->monotonicBeat); // starts at 4s
+        process (player, 4_td); // to 5s
+
+        // Relaunch 2 beats in, mid-block, just after note 60 ends
+        launchHandle->play (MonotonicBeat { launchPos->monotonicBeat.v + 2.0_bd });
+        process (player, 2_td); // to 7s
+
+        // Note 60: struck at 4s, released at ~6s, struck again at 6s
+        CHECK_EQ (probe.countEvents (true, 60, tr (3.9, 4.1)), 1);
+        CHECK_EQ (probe.countEvents (false, 60, tr (5.9, 6.1)), 1);
+        CHECK_EQ (probe.countEvents (true, 60, tr (5.9, 6.1)), 1);
+
+        // And the relaunch's note-ons are at 6s, not earlier in the block
+        for (auto& e : probe.events)
+            if (e.isNoteOn && e.outputTime > 5.0)
+                CHECK_GE (e.outputTime, 5.999);
+    }
+
+    TEST_CASE ("Clip launcher: switching scenes with an arrangement loop doesn't leave notes stuck or struck twice (MIDI)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        // Like the session in Tracktion/waveform_beta#1286: identical 16 beat clips in
+        // several scenes, a string holding one note for the whole clip and a piano
+        // whose chords are held across bars, with a 4 bar arrangement loop
+        constexpr int numScenes = 3;
+        auto edit = test_utilities::createTestEdit (engine, 2, Edit::EditRole::forEditing);
+        edit->getSceneList().ensureNumberOfScenes (numScenes);
+        std::vector<MidiProbePlugin*> probes;
+        std::vector<std::vector<std::shared_ptr<LaunchHandle>>> handles; // [track][scene], null for an empty slot
+
+        for (auto track : getAudioTracks (*edit))
+        {
+            track->getClipSlotList().ensureNumberOfSlots (numScenes);
+            probes.push_back (&addMidiProbePlugin (*track));
+            const bool isString = probes.size() == 1;
+            auto& trackHandles = handles.emplace_back();
+
+            for (int scene = 0; scene < numScenes; ++scene)
+            {
+                // The string has no clip in the last scene, so switching to it stops the string
+                if (isString && scene == numScenes - 1)
+                {
+                    trackHandles.push_back (nullptr);
+                    continue;
+                }
+
+                auto clip = insertMidiClipIntoSlot (*track->getClipSlotList().getClipSlots()[scene], 16_bd);
+                auto& seq = clip->getSequence();
+
+                if (isString)
+                {
+                    seq.addNote (72, 0_bp, 16_bd, 127, 0, nullptr);
+                }
+                else
+                {
+                    for (auto [start, length] : { std::pair (0.5, 2.25), std::pair (3.5, 2.9), std::pair (8.0, 3.5), std::pair (12.0, 4.0) })
+                        for (int note : { 51, 58, 62 })
+                            seq.addNote (note, BeatPosition::fromBeats (start), BeatDuration::fromBeats (length), 100, 0, nullptr);
+                }
+
+                trackHandles.push_back (clip->getLaunchHandle());
+            }
+        }
+
+        auto& transport = edit->getTransport();
+        transport.setLoopRange (tr (0.0, 16.0));
+        transport.looping = true;
+        transport.play (false);
+        process (player, 1_td);
+
+        // Launch a scene as the launcher does: play each track's clip in it and stop the others
+        auto launchScene = [&] (int scene, LaunchQType q)
+        {
+            const auto pos = getNextQuantisedLaunchPosition (*edit, q);
+            REQUIRE (pos);
+
+            for (auto& trackHandles : handles)
+            {
+                for (int s = 0; s < numScenes; ++s)
+                {
+                    if (auto& h = trackHandles[(size_t) s]; h && s == scene)
+                        h->play (pos->monotonicBeat);
+                    else if (h)
+                        h->stop (pos->monotonicBeat);
+                }
+            }
+        };
+
+        // Scene changes and relaunches, quantised to bars and unquantised, wrapping the arrangement loop often
+        const std::pair<int, LaunchQType> launches[] = { { 0, LaunchQType::bar }, { 1, LaunchQType::bar }, { 0, LaunchQType::bar },
+                                                         { 0, LaunchQType::bar }, { 2, LaunchQType::bar }, { 1, LaunchQType::none },
+                                                         { 0, LaunchQType::bar }, { 1, LaunchQType::none }, { 2, LaunchQType::bar },
+                                                         { 0, LaunchQType::bar }, { 0, LaunchQType::none }, { 1, LaunchQType::bar } };
+
+        for (auto [scene, q] : launches)
+        {
+            launchScene (scene, q);
+            process (player, 7.3_td);
+        }
+
+        // Stop everything, then the transport
+        for (auto& trackHandles : handles)
+            for (auto& h : trackHandles)
+                if (h)
+                    h->stop ({});
+
+        process (player, 1_td);
+        transport.stop (false, false);
+        process (player, 1_td);
+
+        // Every note-on is ended by a note-off before the note is struck again, and nothing is left on
+        for (auto probe : probes)
+        {
+            auto events = probe->events;
+            // Ordered as plugins get them, with note-offs before note-ons at the same time
+            std::stable_sort (events.begin(), events.end(), [] (auto& a, auto& b)
+                                                            {
+                                                                if (a.outputTime == b.outputTime)
+                                                                    return ! a.isNoteOn && b.isNoteOn;
+
+                                                                return a.outputTime < b.outputTime;
+                                                            });
+            std::map<int, bool> noteIsOn;
+            int numNoteOns = 0;
+
+            for (auto& e : events)
+            {
+                CAPTURE (e.noteNumber);
+                CAPTURE (e.outputTime);
+                CHECK (noteIsOn[e.noteNumber] != e.isNoteOn);
+                noteIsOn[e.noteNumber] = e.isNoteOn;
+                numNoteOns += e.isNoteOn ? 1 : 0;
+            }
+
+            CHECK_GT (numNoteOns, 5);
+
+            for (auto [note, isOn] : noteIsOn)
+            {
+                CAPTURE (note);
+                CHECK (! isOn);
+            }
+        }
     }
 
     TEST_CASE ("Clip launcher: a timed stop is unaffected by a transport jump (audio)")
