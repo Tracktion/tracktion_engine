@@ -270,8 +270,11 @@ bool ArchiveJob::copyToTempDir()
             // audio they point at is never copied into the temp project at all.
             // This examining copy is never saved - the same strip is applied to
             // the destination Edit below, which is what gets written to disk.
+            // Removing a clip updates its parent, which must happen on the
+            // message thread; this job thread waits, so nothing else touches
+            // the Edit meanwhile.
             if (! includeClips)
-                removeAllContentClips (*edit);
+                juce::MessageManager::callSync ([&edit] { removeAllContentClips (*edit); });
 
             struct ExportableUpdate
             {
