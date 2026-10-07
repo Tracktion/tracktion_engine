@@ -711,6 +711,20 @@ struct AutomatableParameter::AutomationSourceList  : private ValueTreeObjectList
         return {};
     }
 
+    /** An assignment added before its AutomationCurveModifier existed has no source,
+        so this creates it as if the assignment had just been added.
+    */
+    void addMissingSourceForAutomationCurve (EditItemID automationCurveModifierID)
+    {
+        TRACKTION_ASSERT_MESSAGE_THREAD
+
+        for (auto v : parent)
+            if (v.hasType (IDs::AUTOMATIONCURVE)
+                && EditItemID::fromProperty (v, IDs::source) == automationCurveModifierID
+                && indexOf (v) < 0)
+                valueTreeChildAdded (parent, v);
+    }
+
 private:
     const AutomatableParameter& parameter;
     std::atomic<int> numSources { 0 };
@@ -1111,6 +1125,13 @@ bool AutomatableParameter::removeModifier (ModifierSource& source)
     }
 
     return false;
+}
+
+void AutomatableParameter::automationCurveModifierCreated (EditItemID automationCurveModifierID)
+{
+    // A source list created later will find the modifier itself
+    if (automationSourceList)
+        automationSourceList->addMissingSourceForAutomationCurve (automationCurveModifierID);
 }
 
 bool AutomatableParameter::hasActiveModifierAssignments() const
