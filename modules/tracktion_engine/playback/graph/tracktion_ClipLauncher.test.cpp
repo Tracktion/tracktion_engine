@@ -95,7 +95,7 @@ namespace clip_launcher_test_utilities
     }
 
     //==============================================================================
-    /** A mono audio file held in memory and registered with the AudioFileManager.
+    /** An audio file held in memory and registered with the AudioFileManager.
         Clips using it read it synchronously, so they're audible from their first
         block. Files on disk are read through the AudioFileCache, whose reads time
         out while EnginePlayer runs faster than real time, which made the first
@@ -108,7 +108,7 @@ namespace clip_launcher_test_utilities
     {
         MemoryAudioFile (Engine& e, const choc::buffer::ChannelArrayBuffer<float>& source)
             : engine (e),
-              buffer (1, source.getNumFrames()),
+              buffer (source.getNumChannels(), source.getNumFrames()),
               file ("/memory/clip-launcher-test-" + juce::Uuid().toString() + ".wav")
         {
             copy (buffer, source);

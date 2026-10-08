@@ -18,25 +18,79 @@ namespace tracktion::inline engine
 {
 
 //==============================================================================
-// Randomised clip launcher tests. Each seed builds an Edit of MIDI clips in
-// slots and a random schedule of launches, stops and waits, plays it through
-// an EnginePlayer and checks the MIDI each track's plugins get:
-//  - invariants: a note is never struck while it's already on, and nothing is
-//    left on at the end
-//  - a model: the note-ons and note-offs the LaunchHandle calls made should
-//    give, worked out from the clips' notes (see getExpectedEvents)
+// Randomised clip launcher tests. Each seed builds an Edit of audio and MIDI
+// clips in slots and a random schedule of launches, stops and waits, plays it
+// through an EnginePlayer and checks what each track's plugins get against a
+// model of what the LaunchHandle calls made should play (see getPlayIntervals):
+//  - MIDI tracks: every note-on and note-off, worked out from the clips' notes,
+//    and that a note is never struck while it's already on or left on
+//  - audio tracks: every frame. An audio clip is one cycle of a sine and cosine,
+//    so its phase says where in the clip it is, at a level saying which clip it
+//    is, so each frame shows which clip is playing from where
 //
 // Each schedule is also played with graph rebuilds between its steps and with
 // an arrangement loop, neither of which should change what launched clips play.
 //
 // Set TE_CLIP_LAUNCHER_FUZZ_SEEDS to run more seeds, TE_CLIP_LAUNCHER_FUZZ_SEED
-// to run one, and TE_CLIP_LAUNCHER_FUZZ_DUMP to print the events.
+// to run one, and TE_CLIP_LAUNCHER_FUZZ_DUMP to print the MIDI events.
 //==============================================================================
 namespace clip_launcher_fuzz
 {
     using namespace clip_launcher_test_utilities;
 
-    enum class StepType { wait, launchScene, launchClip, stopTrack, stopAll, rebuild };
+    //==============================================================================
+    /** A test-only plugin that records the first two channels of audio a track
+        sends it, so each track's launched clips can be checked on their own.
+    */
+    class AudioProbePlugin  : public Plugin
+    {
+    public:
+        AudioProbePlugin (PluginCreationInfo info)  : Plugin (info) {}
+        ~AudioProbePlugin() override                            { notifyListenersOfDeletion(); }
+
+        static const char* getPluginName()                      { return "Audio Probe"; }
+        static constexpr const char* xmlTypeName = "audioProbe";
+
+        juce::String getName() const override                   { return getPluginName(); }
+        juce::String getPluginType() override                   { return xmlTypeName; }
+        juce::String getSelectableDescription() override        { return getName(); }
+        BusLayout getBusses() const override                    { return BusLayout::singleStereoInOut(); }
+
+        void initialise (const PluginInitialisationInfo&) override {}
+        void deinitialise() override {}
+        void restorePluginStateFromValueTree (const juce::ValueTree&) override {}
+
+        void applyToBuffer (const PluginRenderContext& fc) override
+        {
+            for (int chan = 0; chan < 2; ++chan)
+                for (int i = 0; i < fc.bufferNumSamples; ++i)
+                    samples[(size_t) chan].push_back (fc.destBuffer != nullptr && chan < fc.destBuffer->getNumChannels()
+                                                        ? fc.destBuffer->getSample (chan, fc.bufferStartSample + i) : 0.0f);
+        }
+
+        std::array<std::vector<float>, 2> samples;
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioProbePlugin)
+    };
+
+    /** Adds an AudioProbePlugin to the start of a track's plugins. */
+    inline AudioProbePlugin& addAudioProbePlugin (AudioTrack& track)
+    {
+        track.edit.engine.getPluginManager().createBuiltInType<AudioProbePlugin>();
+        auto probe = dynamic_cast<AudioProbePlugin*> (track.edit.getPluginCache().createNewPlugin (AudioProbePlugin::xmlTypeName, {}).get());
+        assert (probe != nullptr);
+        track.pluginList.insertPlugin (*probe, 0, nullptr);
+        return *probe;
+    }
+
+    /** The level of an audio clip, which says which scene it's in. */
+    inline float getAudioClipLevel (int scene)
+    {
+        return 0.2f + 0.15f * (float) scene;
+    }
+
+    //==============================================================================
+    enum class StepType { wait, launchScene, launchClip, stopTrack, stopAll, rebuild, changeClip };
 
     struct Step
     {
@@ -56,12 +110,16 @@ namespace clip_launcher_fuzz
     {
         double lengthBeats = 4.0;
         bool looping = true;
-        std::vector<NoteSpec> notes;
+        std::vector<NoteSpec> notes;    // MIDI clips only
     };
 
     struct Scenario
     {
-        int numTracks = 3, numScenes = 4;
+        static constexpr int numAudioTracks = 2, numMidiTracks = 3;
+        static constexpr int numTracks = numAudioTracks + numMidiTracks, numScenes = 4;
+
+        static bool isAudioTrack (int t)    { return t < numAudioTracks; }
+
         std::vector<std::vector<std::optional<ClipSpec>>> clips;    // [track][scene]
         std::vector<Step> steps;
     };
@@ -87,8 +145,11 @@ namespace clip_launcher_fuzz
 
     struct Result
     {
-        std::vector<Events> events;     // [track]
+        std::vector<Events> events;                             // [track], empty for audio tracks
+        std::vector<std::array<std::vector<float>, 2>> audio;   // [track], empty for MIDI tracks
         std::vector<Command> commands;
+        std::vector<double> rebuildsOfChangedClips;             // A changed clip's wave node fades from the old one's
+        double arrangementLoopLength = 0.0;                     // Starting at 0, 0 for no loop
         double endTime = 0.0;
     };
 
@@ -96,15 +157,17 @@ namespace clip_launcher_fuzz
     inline juce::String describe (const Step& s)
     {
         auto q = juce::String (getLaunchQTypeChoices()[(int) s.quantisation]);
+        auto clip = "t" + juce::String (s.track) + " s" + juce::String (s.scene);
 
         switch (s.type)
         {
             case StepType::wait:        return "wait " + juce::String (s.seconds, 3) + "s";
             case StepType::launchScene: return "launch scene " + juce::String (s.scene) + " (" + q + ")";
-            case StepType::launchClip:  return "launch clip t" + juce::String (s.track) + " s" + juce::String (s.scene) + " (" + q + ")";
+            case StepType::launchClip:  return "launch clip " + clip + " (" + q + ")";
             case StepType::stopTrack:   return "stop track " + juce::String (s.track) + " (" + q + ")";
             case StepType::stopAll:     return "stop all";
             case StepType::rebuild:     return "rebuild graph";
+            case StepType::changeClip:  return "change clip " + clip + " resampling quality";
         }
 
         return {};
@@ -115,10 +178,21 @@ namespace clip_launcher_fuzz
         juce::String s;
 
         for (int t = 0; t < sc.numTracks; ++t)
+        {
             for (int sl = 0; sl < sc.numScenes; ++sl)
+            {
                 if (auto& c = sc.clips[(size_t) t][(size_t) sl])
-                    s << "clip t" << t << " s" << sl << ": " << c->lengthBeats << " beats"
-                      << (c->looping ? " looping" : " one-shot") << ", " << (int) c->notes.size() << " notes\n";
+                {
+                    s << "clip t" << t << " s" << sl << ": " << (sc.isAudioTrack (t) ? "audio, " : "MIDI, ")
+                      << c->lengthBeats << " beats" << (c->looping ? " looping" : " one-shot");
+
+                    if (! sc.isAudioTrack (t))
+                        s << ", " << (int) c->notes.size() << " notes";
+
+                    s << "\n";
+                }
+            }
+        }
 
         double time = 0.5;
 
@@ -129,6 +203,16 @@ namespace clip_launcher_fuzz
             if (step.type == StepType::wait)
                 time += step.seconds;
         }
+
+        return s;
+    }
+
+    inline juce::String describe (const Events& events)
+    {
+        juce::String s;
+
+        for (auto& e : events)
+            s << "  " << (e.isNoteOn ? "on  " : "off ") << e.noteNumber << " at " << juce::String (e.outputTime, 5) << "s\n";
 
         return s;
     }
@@ -150,10 +234,19 @@ namespace clip_launcher_fuzz
                     continue;
                 }
 
-                static constexpr double lengths[] = { 2.0, 4.0, 5.0, 8.0, 16.0 };
                 ClipSpec c;
-                c.lengthBeats = lengths[r.nextInt (5)];
                 c.looping = r.nextInt (4) != 0;
+
+                if (sc.isAudioTrack (t))
+                {
+                    static constexpr double lengths[] = { 2.0, 4.0, 5.0, 8.0 };
+                    c.lengthBeats = lengths[r.nextInt (4)];
+                    sc.clips[(size_t) t].push_back (std::move (c));
+                    continue;
+                }
+
+                static constexpr double lengths[] = { 2.0, 4.0, 5.0, 8.0, 16.0 };
+                c.lengthBeats = lengths[r.nextInt (5)];
 
                 // Each scene uses its own notes, so a track's events can be told apart by
                 // clip. A note number is used once per clip, so the source never overlaps itself
@@ -201,10 +294,11 @@ namespace clip_launcher_fuzz
             const auto x = r.nextInt (100);
 
             if (x < 35)         s = { StepType::wait, 0, 0, LaunchQType::none, 0.05 + r.nextDouble() * 6.0 };
-            else if (x < 52)    s = { StepType::launchScene, 0, r.nextInt (sc.numScenes), randomQ(), 0.0 };
-            else if (x < 69)    s = { StepType::launchClip, r.nextInt (sc.numTracks), r.nextInt (sc.numScenes), randomQ(), 0.0 };
-            else if (x < 76)    s = { StepType::stopTrack, r.nextInt (sc.numTracks), 0, randomQ(), 0.0 };
-            else if (x < 80)    s = { StepType::stopAll, 0, 0, LaunchQType::none, 0.0 };
+            else if (x < 51)    s = { StepType::launchScene, 0, r.nextInt (sc.numScenes), randomQ(), 0.0 };
+            else if (x < 67)    s = { StepType::launchClip, r.nextInt (sc.numTracks), r.nextInt (sc.numScenes), randomQ(), 0.0 };
+            else if (x < 74)    s = { StepType::stopTrack, r.nextInt (sc.numTracks), 0, randomQ(), 0.0 };
+            else if (x < 78)    s = { StepType::stopAll, 0, 0, LaunchQType::none, 0.0 };
+            else if (x < 82)    s = { StepType::changeClip, r.nextInt (sc.numAudioTracks), r.nextInt (sc.numScenes), LaunchQType::none, 0.0 };
             else                s = { StepType::rebuild, 0, 0, LaunchQType::none, 0.0 };
 
             sc.steps.push_back (s);
@@ -217,32 +311,54 @@ namespace clip_launcher_fuzz
     inline Result run (Engine& engine, const Scenario& sc, Variant variant)
     {
         test_utilities::EnginePlayer player (engine, getPlayerParams());
+        std::vector<std::unique_ptr<MemoryAudioFile>> files;    // N.B. declared before the Edit to outlive it
 
         auto edit = test_utilities::createTestEdit (engine, sc.numTracks, Edit::EditRole::forEditing);
         edit->getSceneList().ensureNumberOfScenes (sc.numScenes);
         auto tracks = getAudioTracks (*edit);
-        std::vector<MidiProbePlugin*> probes;
-        std::vector<std::vector<std::shared_ptr<LaunchHandle>>> handles;    // [track][scene], null for an empty slot
+        std::vector<MidiProbePlugin*> midiProbes;
+        std::vector<AudioProbePlugin*> audioProbes;
+        std::vector<std::vector<Clip::Ptr>> clips;      // [track][scene], null for an empty slot
 
         for (int t = 0; t < sc.numTracks; ++t)
         {
             auto track = tracks[t];
             track->getClipSlotList().ensureNumberOfSlots (sc.numScenes);
-            probes.push_back (&addMidiProbePlugin (*track));
-            auto& trackHandles = handles.emplace_back();
+            midiProbes.push_back (sc.isAudioTrack (t) ? nullptr : &addMidiProbePlugin (*track));
+            audioProbes.push_back (sc.isAudioTrack (t) ? &addAudioProbePlugin (*track) : nullptr);
+            auto& trackClips = clips.emplace_back();
 
             for (int scene = 0; scene < sc.numScenes; ++scene)
             {
                 auto& spec = sc.clips[(size_t) t][(size_t) scene];
+                auto slot = track->getClipSlotList().getClipSlots()[scene];
 
                 if (! spec)
                 {
-                    trackHandles.push_back (nullptr);
+                    trackClips.push_back (nullptr);
                     continue;
                 }
 
-                auto clip = insertMidiClipIntoSlot (*track->getClipSlotList().getClipSlots()[scene],
-                                                    BeatDuration::fromBeats (spec->lengthBeats));
+                if (sc.isAudioTrack (t))
+                {
+                    const auto numFrames = (choc::buffer::FrameCount) (spec->lengthBeats * sampleRate);
+                    const auto level = getAudioClipLevel (scene);
+                    auto source = choc::buffer::createChannelArrayBuffer (2, numFrames, [&] (auto chan, auto frame)
+                                                                          {
+                                                                              const auto phase = juce::MathConstants<double>::twoPi * frame / numFrames;
+                                                                              return level * (float) (chan == 0 ? std::sin (phase) : std::cos (phase));
+                                                                          });
+                    files.push_back (std::make_unique<MemoryAudioFile> (engine, source));
+                    auto clip = insertAudioClipIntoSlot (*slot, files.back()->getFile());
+
+                    if (! spec->looping)
+                        clip->disableLooping();
+
+                    trackClips.push_back (clip);
+                    continue;
+                }
+
+                auto clip = insertMidiClipIntoSlot (*slot, BeatDuration::fromBeats (spec->lengthBeats));
 
                 if (! spec->looping)
                     clip->disableLooping();
@@ -251,7 +367,7 @@ namespace clip_launcher_fuzz
                     clip->getSequence().addNote (n.number, BeatPosition::fromBeats (n.start), BeatDuration::fromBeats (n.length),
                                                  100, 0, nullptr);
 
-                trackHandles.push_back (clip->getLaunchHandle());
+                trackClips.push_back (clip);
             }
         }
 
@@ -266,7 +382,9 @@ namespace clip_launcher_fuzz
         }
 
         Result result;
+        result.arrangementLoopLength = variant.arrangementLoop ? 20.0 : 0.0;
         int64_t numSamplesProcessed = 0;
+        bool clipChangedSinceRebuild = false;
 
         auto processFor = [&] (TimeDuration d)
         {
@@ -290,12 +408,12 @@ namespace clip_launcher_fuzz
             return std::nullopt;
         };
 
-        // Calls play or stop on a handle, logging it for the model
+        // Calls play or stop on a clip's handle, logging it for the model
         auto call = [&] (int t, int scene, bool play, std::optional<MonotonicBeat> pos)
         {
-            auto& h = handles[(size_t) t][(size_t) scene];
+            auto& clip = clips[(size_t) t][(size_t) scene];
 
-            if (! h)
+            if (! clip)
                 return;
 
             std::optional<double> position;
@@ -307,9 +425,9 @@ namespace clip_launcher_fuzz
             result.commands.push_back ({ now(), t, scene, play, position });
 
             if (play)
-                h->play (pos);
+                clip->getLaunchHandle()->play (pos);
             else
-                h->stop (pos);
+                clip->getLaunchHandle()->stop (pos);
         };
 
         // Launches a track's clip and stops its others, as the launcher does
@@ -338,7 +456,7 @@ namespace clip_launcher_fuzz
                 }
 
                 case StepType::launchClip:
-                    if (handles[(size_t) step.track][(size_t) step.scene])
+                    if (clips[(size_t) step.track][(size_t) step.scene])
                         launchOnTrack (step.track, step.scene, getPosition (step.quantisation));
 
                     break;
@@ -362,7 +480,23 @@ namespace clip_launcher_fuzz
 
                 case StepType::rebuild:
                     if (variant.includeRebuilds)
+                    {
                         transport.ensureContextAllocated (true);
+
+                        if (std::exchange (clipChangedSinceRebuild, false))
+                            result.rebuildsOfChangedClips.push_back (now());
+                    }
+
+                    break;
+
+                case StepType::changeClip:
+                    // Changes the clip's wave node, but not what it plays
+                    if (auto clip = dynamic_cast<AudioClipBase*> (clips[(size_t) step.track][(size_t) step.scene].get()))
+                    {
+                        clip->setResamplingQuality (clip->getResamplingQuality() == ResamplingQuality::lagrange
+                                                        ? ResamplingQuality::sincBest : ResamplingQuality::lagrange);
+                        clipChangedSinceRebuild = true;
+                    }
 
                     break;
             }
@@ -378,8 +512,12 @@ namespace clip_launcher_fuzz
         transport.stop (false, false);
         processFor (1_td);
 
-        for (auto probe : probes)
-            result.events.push_back (probe->events);
+        for (int t = 0; t < sc.numTracks; ++t)
+        {
+            result.events.push_back (midiProbes[(size_t) t] != nullptr ? midiProbes[(size_t) t]->events : Events());
+            result.audio.push_back (audioProbes[(size_t) t] != nullptr ? audioProbes[(size_t) t]->samples
+                                                                       : std::array<std::vector<float>, 2>());
+        }
 
         return result;
     }
@@ -413,24 +551,17 @@ namespace clip_launcher_fuzz
         return failures;
     }
 
-    inline juce::String describe (const Events& events)
-    {
-        juce::String s;
-
-        for (auto& e : events)
-            s << "  " << (e.isNoteOn ? "on  " : "off ") << e.noteNumber << " at " << juce::String (e.outputTime, 5) << "s\n";
-
-        return s;
-    }
-
     //==============================================================================
-    /** A model of what launched clips should play, from the LaunchHandle calls a run
-        made. It follows the LaunchHandle rules: one queued play or stop per handle
-        (a later call replaces it), a stop when stopped cancels a queued play, a
-        one-shot stops at its end unless a play is queued, and launched clips run on
-        the monotonic clock so the arrangement loop and graph rebuilds don't matter.
+    using Intervals = std::vector<std::pair<double, double>>;
+
+    /** A model of when each clip should play, from the LaunchHandle calls a run made,
+        as [start, end) output times. It follows the LaunchHandle rules: one queued
+        play or stop per handle (a later call replaces it), a stop when stopped
+        cancels a queued play, a one-shot stops at its end unless a play is queued,
+        and launched clips run on the monotonic clock so the arrangement loop and
+        graph rebuilds don't matter. A one-shot's content ends at its length.
     */
-    inline std::vector<Events> getExpectedEvents (const Scenario& sc, const std::vector<Command>& commands, double endTime)
+    inline std::vector<std::vector<Intervals>> getPlayIntervals (const Scenario& sc, const Result& result)
     {
         struct Handle
         {
@@ -439,7 +570,7 @@ namespace clip_launcher_fuzz
             double start = 0.0;
             struct Queued { bool play; double time; };
             std::optional<Queued> queued;
-            std::vector<std::pair<double, double>> intervals;
+            Intervals intervals;
 
             void startPlaying (double t)
             {
@@ -523,7 +654,7 @@ namespace clip_launcher_fuzz
             }
         };
 
-        for (auto& c : commands)
+        for (auto& c : result.commands)
         {
             advanceTo (c.time);
             auto& h = handles[(size_t) c.track][(size_t) c.scene];
@@ -548,30 +679,56 @@ namespace clip_launcher_fuzz
             }
         }
 
-        advanceTo (endTime);
+        advanceTo (result.endTime);
 
-        std::vector<Events> expected ((size_t) sc.numTracks);
+        std::vector<std::vector<Intervals>> intervals ((size_t) sc.numTracks, std::vector<Intervals> ((size_t) sc.numScenes));
 
         for (size_t t = 0; t < handles.size(); ++t)
         {
-            for (auto& h : handles[t])
+            for (size_t s = 0; s < handles[t].size(); ++s)
             {
+                auto& h = handles[t][s];
+
                 if (h.spec == nullptr)
                     continue;
 
-                h.stopPlaying (endTime);
-                const auto length = h.spec->lengthBeats;
+                h.stopPlaying (result.endTime);
 
                 for (auto [start, end] : h.intervals)
+                    intervals[t][s].emplace_back (start, h.spec->looping ? end : std::min (end, start + h.spec->lengthBeats));
+            }
+        }
+
+        return intervals;
+    }
+
+    /** Returns the note-ons and note-offs the model says each MIDI track should get. */
+    inline std::vector<Events> getExpectedEvents (const Scenario& sc, const Result& result)
+    {
+        const auto intervals = getPlayIntervals (sc, result);
+        std::vector<Events> expected ((size_t) sc.numTracks);
+
+        for (int t = 0; t < sc.numTracks; ++t)
+        {
+            if (sc.isAudioTrack (t))
+                continue;
+
+            for (int s = 0; s < sc.numScenes; ++s)
+            {
+                auto& spec = sc.clips[(size_t) t][(size_t) s];
+
+                if (! spec)
+                    continue;
+
+                const auto length = spec->lengthBeats;
+
+                for (auto [start, end] : intervals[(size_t) t][(size_t) s])
                 {
                     for (int loop = 0; start + loop * length < end; ++loop)
                     {
-                        if (loop > 0 && ! h.spec->looping)
-                            break;
-
                         const auto loopStart = start + loop * length;
 
-                        for (auto& n : h.spec->notes)
+                        for (auto& n : spec->notes)
                         {
                             const auto on = loopStart + n.start;
                             const auto off = std::min ({ on + n.length, loopStart + length, end });
@@ -579,8 +736,8 @@ namespace clip_launcher_fuzz
                             if (on >= end || off - on < 1.0e-6)
                                 continue;
 
-                            expected[t].push_back ({ true, n.number, on });
-                            expected[t].push_back ({ false, n.number, off });
+                            expected[(size_t) t].push_back ({ true, n.number, on });
+                            expected[(size_t) t].push_back ({ false, n.number, off });
                         }
                     }
                 }
@@ -590,16 +747,17 @@ namespace clip_launcher_fuzz
         return expected;
     }
 
-    /** Compares a run's events with the model's, note by note. */
-    inline std::vector<juce::String> compareWithModel (const Scenario& sc, const Result& result, double toleranceSeconds)
+    /** Compares the MIDI tracks' events with the model's, note by note. */
+    inline std::vector<juce::String> compareMidiWithModel (const Scenario& sc, const Result& result, double toleranceSeconds)
     {
-        const auto expected = getExpectedEvents (sc, result.commands, result.endTime);
+        const auto expected = getExpectedEvents (sc, result);
         std::vector<juce::String> differences;
 
         if (juce::SystemStats::getEnvironmentVariable ("TE_CLIP_LAUNCHER_FUZZ_DUMP", {}).isNotEmpty())
             for (size_t t = 0; t < expected.size(); ++t)
-                std::cout << "track " << t << ": " << expected[t].size() << " expected, " << result.events[t].size() << " played\n"
-                          << "expected:\n" << describe (expected[t]);
+                if (! sc.isAudioTrack ((int) t))
+                    std::cout << "track " << t << ": " << expected[t].size() << " expected, " << result.events[t].size() << " played\n"
+                              << "expected:\n" << describe (expected[t]);
 
         auto byNote = [] (const Events& events)
         {
@@ -661,13 +819,134 @@ namespace clip_launcher_fuzz
         return differences;
     }
 
+    /** Checks every frame of the audio tracks shows the clip the model says should be
+        playing, from the position it should be at, or silence. Frames close to a
+        start or stop are skipped, as they're faded, as are those close to a rebuild
+        after a clip change, where the new wave node fades from the old one.
+    */
+    inline std::vector<juce::String> compareAudioWithModel (const Scenario& sc, const Result& result)
+    {
+        constexpr int64_t fadeFrames = 64;
+        constexpr double silence = 0.001;
+
+        // Sinc resampling dips the level by ~1.5% just before a loop point, as its window reads past it
+        constexpr double levelTolerance = 0.02;
+        constexpr double positionToleranceFrames = 2.0;
+
+        const auto intervals = getPlayIntervals (sc, result);
+        const auto endFrame = toSamples (TimePosition::fromSeconds (result.endTime), sampleRate);
+        auto toFrame = [] (double seconds) { return (int64_t) std::llround (seconds * sampleRate); };
+        std::vector<juce::String> differences;
+
+        for (int t = 0; t < sc.numAudioTracks; ++t)
+        {
+            struct Section
+            {
+                int scene;
+                int64_t start, end, length;
+            };
+
+            std::vector<Section> sections;
+            std::vector<std::pair<int64_t, int64_t>> skipped;   // [start, end) frame ranges
+
+            auto skipAround = [&] (int64_t frame, int64_t numFrames) { skipped.emplace_back (frame - numFrames, frame + numFrames); };
+
+            for (int s = 0; s < sc.numScenes; ++s)
+            {
+                if (auto& spec = sc.clips[(size_t) t][(size_t) s])
+                {
+                    for (auto [start, end] : intervals[(size_t) t][(size_t) s])
+                    {
+                        sections.push_back ({ s, toFrame (start), toFrame (end), toFrame (spec->lengthBeats) });
+                        skipAround (sections.back().start, fadeFrames);
+                        skipAround (sections.back().end, fadeFrames);
+                    }
+                }
+            }
+
+            for (auto rebuild : result.rebuildsOfChangedClips)
+                skipAround (toFrame (rebuild), blockSize + fadeFrames);
+
+            // N.B. A wave node reads the block after an arrangement loop wrap as a jump, so it
+            // re-seeks and crossfades from its last sample, up to 3 frames out (see
+            // WaveNodeRealTime::processSection). Launched clips shouldn't need to
+            if (result.arrangementLoopLength > 0.0)
+                for (auto wrap = result.arrangementLoopLength; wrap < result.endTime; wrap += result.arrangementLoopLength)
+                    skipped.emplace_back (toFrame (wrap), toFrame (wrap) + fadeFrames);
+
+            std::sort (skipped.begin(), skipped.end());
+
+            auto& sine = result.audio[(size_t) t][0];
+            auto& cosine = result.audio[(size_t) t][1];
+            const auto numFrames = std::min ((int64_t) sine.size(), endFrame);
+            size_t skippedIndex = 0;
+            int64_t numBadFrames = 0;
+            std::optional<juce::String> firstBadFrame;
+
+            for (int64_t f = 0; f < numFrames; ++f)
+            {
+                while (skippedIndex < skipped.size() && skipped[skippedIndex].second <= f)
+                    ++skippedIndex;
+
+                if (skippedIndex < skipped.size() && skipped[skippedIndex].first <= f)
+                    continue;
+
+                const Section* expected = nullptr;
+
+                for (auto& section : sections)
+                    if (section.start <= f && f < section.end)
+                        expected = &section;
+
+                const auto level = std::hypot (sine[(size_t) f], cosine[(size_t) f]);
+                const auto phase = std::atan2 ((double) sine[(size_t) f], (double) cosine[(size_t) f]) / juce::MathConstants<double>::twoPi;
+                bool ok = false;
+                juce::String expectedDescription, gotDescription = "level " + juce::String (level, 4);
+
+                if (expected == nullptr)
+                {
+                    ok = level < silence;
+                    expectedDescription = "silence";
+                }
+                else
+                {
+                    const auto expectedPosition = (double) ((f - expected->start) % expected->length);
+                    const auto length = (double) expected->length;
+                    auto difference = phase * length - expectedPosition;
+                    difference -= length * std::round (difference / length);
+
+                    ok = std::abs (level - getAudioClipLevel (expected->scene)) < levelTolerance
+                         && std::abs (difference) <= positionToleranceFrames;
+                    expectedDescription = "scene " + juce::String (expected->scene) + " at " + juce::String ((int) expectedPosition);
+                    gotDescription << " at " + juce::String (expectedPosition + difference, 1);
+                }
+
+                if (ok)
+                    continue;
+
+                if (! firstBadFrame)
+                    firstBadFrame = "at " + juce::String ((double) f / sampleRate, 5) + "s expected " + expectedDescription
+                                     + ", got " + gotDescription;
+
+                ++numBadFrames;
+            }
+
+            if (firstBadFrame)
+                differences.push_back ("audio track " + juce::String (t) + ": " + juce::String (numBadFrames) + " frames wrong, first "
+                                       + *firstBadFrame);
+        }
+
+        return differences;
+    }
+
+    //==============================================================================
     inline void dump (const juce::String& name, const Result& result)
     {
         if (juce::SystemStats::getEnvironmentVariable ("TE_CLIP_LAUNCHER_FUZZ_DUMP", {}).isEmpty())
             return;
 
         for (size_t t = 0; t < result.events.size(); ++t)
-            std::cout << name << " track " << t << ":\n" << describe (result.events[t]);
+            if (! Scenario::isAudioTrack ((int) t))
+                std::cout << name << " track " << t << ":\n" << describe (result.events[t]);
     }
 
     inline std::vector<int> getSeeds()
@@ -710,7 +989,7 @@ TEST_SUITE ("tracktion_engine")
     using namespace clip_launcher_fuzz;
 
     // Restruck notes are sent 0.1ms late (see MidiNodeHelpers::createMessagesForTime)
-    constexpr double modelTolerance = 0.00015;
+    constexpr double midiTolerance = 0.00015;
 
     inline void checkVariant (Variant variant, const char* name)
     {
@@ -722,26 +1001,27 @@ TEST_SUITE ("tracktion_engine")
             const auto result = run (engine, sc, variant);
             dump (name, result);
             report (seed, sc, juce::String (name) + ", note balance", checkNoteBalance (result));
-            report (seed, sc, juce::String (name) + ", model", compareWithModel (sc, result, modelTolerance));
+            report (seed, sc, juce::String (name) + ", MIDI model", compareMidiWithModel (sc, result, midiTolerance));
+            report (seed, sc, juce::String (name) + ", audio model", compareAudioWithModel (sc, result));
         }
     }
 
-    TEST_CASE ("Clip launcher fuzz: launched clips play what the model expects (MIDI)")
+    TEST_CASE ("Clip launcher fuzz: launched clips play what the model expects")
     {
         checkVariant ({ .includeRebuilds = false, .arrangementLoop = false }, "plain");
     }
 
-    TEST_CASE ("Clip launcher fuzz: graph rebuilds don't change what launched clips play (MIDI)")
+    TEST_CASE ("Clip launcher fuzz: graph rebuilds don't change what launched clips play")
     {
         checkVariant ({ .includeRebuilds = true, .arrangementLoop = false }, "rebuilds");
     }
 
-    TEST_CASE ("Clip launcher fuzz: the arrangement loop doesn't change what launched clips play (MIDI)")
+    TEST_CASE ("Clip launcher fuzz: the arrangement loop doesn't change what launched clips play")
     {
         checkVariant ({ .includeRebuilds = false, .arrangementLoop = true }, "arrangement loop");
     }
 
-    TEST_CASE ("Clip launcher fuzz: graph rebuilds with the arrangement loop (MIDI)")
+    TEST_CASE ("Clip launcher fuzz: graph rebuilds with the arrangement loop")
     {
         checkVariant ({ .includeRebuilds = true, .arrangementLoop = true }, "rebuilds and arrangement loop");
     }
