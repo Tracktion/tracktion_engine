@@ -90,7 +90,7 @@ namespace clip_launcher_fuzz
     }
 
     //==============================================================================
-    enum class StepType { wait, launchScene, launchClip, stopTrack, stopAll, rebuild, changeClip };
+    enum class StepType { wait, launchScene, launchClip, launchLegato, stopTrack, stopAll, rebuild, changeClip };
 
     struct Step
     {
@@ -141,6 +141,7 @@ namespace clip_launcher_fuzz
         int track = 0, scene = 0;
         bool play = false;
         std::optional<double> position;
+        std::optional<int> syncedFromScene; // A legato launch's, the clip it takes over the phase of
     };
 
     struct Result
@@ -164,6 +165,7 @@ namespace clip_launcher_fuzz
             case StepType::wait:        return "wait " + juce::String (s.seconds, 3) + "s";
             case StepType::launchScene: return "launch scene " + juce::String (s.scene) + " (" + q + ")";
             case StepType::launchClip:  return "launch clip " + clip + " (" + q + ")";
+            case StepType::launchLegato: return "launch a clip legato from t" + juce::String (s.track) + " s" + juce::String (s.scene) + " (" + q + ")";
             case StepType::stopTrack:   return "stop track " + juce::String (s.track) + " (" + q + ")";
             case StepType::stopAll:     return "stop all";
             case StepType::rebuild:     return "rebuild graph";
@@ -295,7 +297,8 @@ namespace clip_launcher_fuzz
 
             if (x < 35)         s = { StepType::wait, 0, 0, LaunchQType::none, 0.05 + r.nextDouble() * 6.0 };
             else if (x < 51)    s = { StepType::launchScene, 0, r.nextInt (sc.numScenes), randomQ(), 0.0 };
-            else if (x < 67)    s = { StepType::launchClip, r.nextInt (sc.numTracks), r.nextInt (sc.numScenes), randomQ(), 0.0 };
+            else if (x < 56)    s = { StepType::launchClip, r.nextInt (sc.numTracks), r.nextInt (sc.numScenes), randomQ(), 0.0 };
+            else if (x < 67)    s = { StepType::launchLegato, r.nextInt (sc.numTracks), r.nextInt (sc.numScenes), randomQ(), 0.0 };
             else if (x < 74)    s = { StepType::stopTrack, r.nextInt (sc.numTracks), 0, randomQ(), 0.0 };
             else if (x < 78)    s = { StepType::stopAll, 0, 0, LaunchQType::none, 0.0 };
             else if (x < 82)    s = { StepType::changeClip, r.nextInt (sc.numAudioTracks), r.nextInt (sc.numScenes), LaunchQType::none, 0.0 };
@@ -408,6 +411,13 @@ namespace clip_launcher_fuzz
             return std::nullopt;
         };
 
+        auto getSyncPoint = [&] { return *transport.getCurrentPlaybackContext()->getSyncPoint(); };
+
+        auto toOutputTime = [&] (MonotonicBeat b)
+        {
+            return now() + (b.v - getSyncPoint().monotonicBeat.v).inBeats();
+        };
+
         // Calls play or stop on a clip's handle, logging it for the model
         auto call = [&] (int t, int scene, bool play, std::optional<MonotonicBeat> pos)
         {
@@ -416,13 +426,7 @@ namespace clip_launcher_fuzz
             if (! clip)
                 return;
 
-            std::optional<double> position;
-
-            if (pos)
-                if (auto syncPoint = transport.getCurrentPlaybackContext()->getSyncPoint())
-                    position = now() + (pos->v - syncPoint->monotonicBeat.v).inBeats();
-
-            result.commands.push_back ({ now(), t, scene, play, position });
+            result.commands.push_back ({ now(), t, scene, play, pos ? std::optional (toOutputTime (*pos)) : std::nullopt, std::nullopt });
 
             if (play)
                 clip->getLaunchHandle()->play (pos);
@@ -460,6 +464,61 @@ namespace clip_launcher_fuzz
                         launchOnTrack (step.track, step.scene, getPosition (step.quantisation));
 
                     break;
+
+                case StepType::launchLegato:
+                {
+                    // Legato only matters with another clip playing on the track, so this uses the
+                    // first track from the step's that has one, and a clip on it that isn't playing
+                    auto isPlaying = [&] (int t, int s)
+                    {
+                        auto& c = clips[(size_t) t][(size_t) s];
+                        return c && c->getLaunchHandle()->getPlayingStatus() == LaunchHandle::PlayState::playing;
+                    };
+
+                    std::optional<std::pair<int, int>> target;
+
+                    for (int i = 0; i < sc.numTracks && ! target; ++i)
+                    {
+                        const auto t = (step.track + i) % sc.numTracks;
+                        bool anyPlaying = false;
+
+                        for (int s = 0; s < sc.numScenes; ++s)
+                            anyPlaying = anyPlaying || isPlaying (t, s);
+
+                        for (int j = 0; j < sc.numScenes && anyPlaying && ! target; ++j)
+                            if (const auto s = (step.scene + j) % sc.numScenes; clips[(size_t) t][(size_t) s] && ! isPlaying (t, s))
+                                target = std::pair (t, s);
+                    }
+
+                    if (! target)
+                        break;
+
+                    // As ClipLauncherBehaviour's launchClip does for a clip in legato mode: it takes
+                    // over the phase of the track's playing clip from its launch position
+                    const auto [track, scene] = *target;
+                    const auto pos = getPosition (step.quantisation);
+                    std::shared_ptr<LaunchHandle> handleToSyncFrom;
+                    int sceneToSyncFrom = 0;
+
+                    for (int s = 0; s < sc.numScenes; ++s)
+                    {
+                        if (s == scene || ! clips[(size_t) track][(size_t) s])
+                            continue;
+
+                        if (auto other = clips[(size_t) track][(size_t) s]->getLaunchHandle(); other->getPlayedMonotonicRange())
+                        {
+                            handleToSyncFrom = std::make_shared<LaunchHandle> (*other);
+                            sceneToSyncFrom = s;
+                        }
+
+                        call (track, s, false, pos);
+                    }
+
+                    const auto launchPos = pos.value_or (getSyncPoint().monotonicBeat);
+                    result.commands.push_back ({ now(), track, scene, true, toOutputTime (launchPos), sceneToSyncFrom });
+                    clips[(size_t) track][(size_t) scene]->getLaunchHandle()->playSynced (*handleToSyncFrom, launchPos);
+                    break;
+                }
 
                 case StepType::stopTrack:
                 {
@@ -552,14 +611,23 @@ namespace clip_launcher_fuzz
     }
 
     //==============================================================================
-    using Intervals = std::vector<std::pair<double, double>>;
+    /** When a clip plays, and where its content starts, which is earlier than when it
+        plays if it's taken over the phase of another clip with a legato launch.
+    */
+    struct Interval
+    {
+        double start = 0.0, end = 0.0, contentStart = 0.0;
+    };
+
+    using Intervals = std::vector<Interval>;
 
     /** A model of when each clip should play, from the LaunchHandle calls a run made,
-        as [start, end) output times. It follows the LaunchHandle rules: one queued
-        play or stop per handle (a later call replaces it), a stop when stopped
-        cancels a queued play, a one-shot stops at its end unless a play is queued,
-        and launched clips run on the monotonic clock so the arrangement loop and
-        graph rebuilds don't matter. A one-shot's content ends at its length.
+        in output times. It follows the LaunchHandle rules: one queued play or stop
+        per handle (a later call replaces it), a stop when stopped cancels a queued
+        play, a one-shot stops at its end unless a play is queued, a synced play
+        carries on from the other clip's start, and launched clips run on the
+        monotonic clock so the arrangement loop and graph rebuilds don't matter.
+        A one-shot's content ends at its length.
     */
     inline std::vector<std::vector<Intervals>> getPlayIntervals (const Scenario& sc, const Result& result)
     {
@@ -567,23 +635,24 @@ namespace clip_launcher_fuzz
         {
             const ClipSpec* spec = nullptr;
             bool playing = false, endHandled = false;
-            double start = 0.0;
-            struct Queued { bool play; double time; };
+            double start = 0.0, contentStart = 0.0;
+            struct Queued { bool play; double time; std::optional<double> syncedStart; };
             std::optional<Queued> queued;
             Intervals intervals;
 
-            void startPlaying (double t)
+            void startPlaying (double t, double contentStartToUse)
             {
                 stopPlaying (t);
                 playing = true;
                 endHandled = false;
                 start = t;
+                contentStart = contentStartToUse;
             }
 
             void stopPlaying (double t)
             {
                 if (playing && t > start)
-                    intervals.emplace_back (start, t);
+                    intervals.push_back ({ start, t, contentStart });
 
                 playing = false;
             }
@@ -618,7 +687,7 @@ namespace clip_launcher_fuzz
 
                         if (h.playing && ! h.spec->looping && ! h.endHandled)
                         {
-                            if (const auto end = h.start + h.spec->lengthBeats; end < nextTime)
+                            if (const auto end = h.contentStart + h.spec->lengthBeats; end < nextTime)
                             {
                                 next = &h;
                                 nextTime = end;
@@ -648,7 +717,7 @@ namespace clip_launcher_fuzz
                 next->queued.reset();
 
                 if (queued.play)
-                    next->startPlaying (queued.time);
+                    next->startPlaying (queued.time, queued.syncedStart.value_or (queued.time));
                 else
                     next->stopPlaying (queued.time);
             }
@@ -666,7 +735,13 @@ namespace clip_launcher_fuzz
 
             if (c.play)
             {
-                h.queued = Handle::Queued { true, time };
+                std::optional<double> syncedStart;
+
+                if (c.syncedFromScene)
+                    if (auto& other = handles[(size_t) c.track][(size_t) *c.syncedFromScene]; other.playing)
+                        syncedStart = other.contentStart;
+
+                h.queued = Handle::Queued { true, time, syncedStart };
             }
             else if (! h.playing)
             {
@@ -675,7 +750,7 @@ namespace clip_launcher_fuzz
             }
             else
             {
-                h.queued = Handle::Queued { false, time };
+                h.queued = Handle::Queued { false, time, std::nullopt };
             }
         }
 
@@ -694,8 +769,9 @@ namespace clip_launcher_fuzz
 
                 h.stopPlaying (result.endTime);
 
-                for (auto [start, end] : h.intervals)
-                    intervals[t][s].emplace_back (start, h.spec->looping ? end : std::min (end, start + h.spec->lengthBeats));
+                for (auto i : h.intervals)
+                    intervals[t][s].push_back ({ i.start, h.spec->looping ? i.end : std::min (i.end, i.contentStart + h.spec->lengthBeats),
+                                                 i.contentStart });
             }
         }
 
@@ -722,18 +798,17 @@ namespace clip_launcher_fuzz
 
                 const auto length = spec->lengthBeats;
 
-                for (auto [start, end] : intervals[(size_t) t][(size_t) s])
+                for (auto i : intervals[(size_t) t][(size_t) s])
                 {
-                    for (int loop = 0; start + loop * length < end; ++loop)
+                    for (auto loopStart = i.contentStart; loopStart < i.end; loopStart += length)
                     {
-                        const auto loopStart = start + loop * length;
-
                         for (auto& n : spec->notes)
                         {
-                            const auto on = loopStart + n.start;
-                            const auto off = std::min ({ on + n.length, loopStart + length, end });
+                            // A note already on where a legato launch starts is struck there
+                            const auto on = std::max (loopStart + n.start, i.start);
+                            const auto off = std::min ({ loopStart + n.start + n.length, loopStart + length, i.end });
 
-                            if (on >= end || off - on < 1.0e-6)
+                            if (on >= i.end || off - on < 1.0e-4)
                                 continue;
 
                             expected[(size_t) t].push_back ({ true, n.number, on });
@@ -779,10 +854,28 @@ namespace clip_launcher_fuzz
             return notes;
         };
 
+        // A note-off for a note that isn't on is harmless, so it's left out. Inconsistent
+        // tolerances on beat positions can send one where a clip loops on a block boundary
+        auto withoutRedundantNoteOffs = [] (const Events& events)
+        {
+            Events played;
+            std::map<int, bool> noteIsOn;
+
+            for (auto& e : events)
+            {
+                if (e.isNoteOn || noteIsOn[e.noteNumber])
+                    played.push_back (e);
+
+                noteIsOn[e.noteNumber] = e.isNoteOn;
+            }
+
+            return played;
+        };
+
         for (size_t t = 0; t < expected.size(); ++t)
         {
             auto expectedNotes = byNote (expected[t]);
-            auto actualNotes = byNote (result.events[t]);
+            auto actualNotes = byNote (withoutRedundantNoteOffs (result.events[t]));
             std::set<int> noteNumbers;
 
             for (auto& [n, list] : expectedNotes)  noteNumbers.insert (n);
@@ -843,7 +936,7 @@ namespace clip_launcher_fuzz
             struct Section
             {
                 int scene;
-                int64_t start, end, length;
+                int64_t start, end, contentStart, length;
             };
 
             std::vector<Section> sections;
@@ -855,9 +948,9 @@ namespace clip_launcher_fuzz
             {
                 if (auto& spec = sc.clips[(size_t) t][(size_t) s])
                 {
-                    for (auto [start, end] : intervals[(size_t) t][(size_t) s])
+                    for (auto i : intervals[(size_t) t][(size_t) s])
                     {
-                        sections.push_back ({ s, toFrame (start), toFrame (end), toFrame (spec->lengthBeats) });
+                        sections.push_back ({ s, toFrame (i.start), toFrame (i.end), toFrame (i.contentStart), toFrame (spec->lengthBeats) });
                         skipAround (sections.back().start, fadeFrames);
                         skipAround (sections.back().end, fadeFrames);
                     }
@@ -909,7 +1002,7 @@ namespace clip_launcher_fuzz
                 }
                 else
                 {
-                    const auto expectedPosition = (double) ((f - expected->start) % expected->length);
+                    const auto expectedPosition = (double) ((f - expected->contentStart) % expected->length);
                     const auto length = (double) expected->length;
                     auto difference = phase * length - expectedPosition;
                     difference -= length * std::round (difference / length);
