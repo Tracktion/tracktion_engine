@@ -1243,6 +1243,14 @@ public:
             return;
         }
 
+        // An event is played in the section whose samples it rounds to: one less than half a
+        // sample before the end is left to the next section, which plays it at its start.
+        // Section boundaries are often musical positions, e.g. a launch, a stop or a loop
+        // start, so events on them come out either side by rounding errors in their beats
+        const auto halfSample = numSamples > 0 ? beatDurationOfOneSample / 2.0 : 0.0;
+        const auto sectionStart = clipIntersection.getStart().inBeats() - halfSample;
+        const auto sectionEnd = clipIntersection.getEnd().inBeats() - halfSample;
+
         // This turns notes off that are no longer playing due to a change in the sequence
         // It is only called when the sequence changes
         if (shouldSendNoteOffsForNotesNoLongerPlaying)
@@ -1278,14 +1286,14 @@ public:
 
         if (shouldCreateMessagesForTime)
         {
-            generator->createMessagesForTime (destBuffer, clipIntersection.getStart().inBeats(),
+            generator->createMessagesForTime (destBuffer, sectionStart,
                                               *activeNoteList,
                                               channelNumbers, clipLevel, useMPEChannelMode, midiSourceID,
                                               controllerMessagesScratchBuffer);
             shouldCreateMessagesForTime = false;
 
             // Ensure generator is initialised
-            generator->setTime (clipIntersection.getStart().inBeats());
+            generator->setTime (sectionStart);
         }
 
         // Iterate notes in blocks
@@ -1298,14 +1306,18 @@ public:
                 auto e = generator->getEvent();
                 const EditBeatPosition editBeatPosition = e.getTimeStamp();
 
-                // Ensure we stop at the clip end
-                if (editBeatPosition >= clipIntersection.getEnd().inBeats())
+                // Ensure we stop at the clip end. Note-offs up to it are played in this section,
+                // nudged back below, so they're not lost (which leads to stuck notes)
+                if (editBeatPosition >= clipIntersection.getEnd().inBeats()
+                    || (editBeatPosition >= sectionEnd && ! e.isNoteOff()))
                     break;
 
                 BlockBeatPosition blockBeatPosition = editBeatPosition - sectionEditBeatRange.getStart().inBeats();
 
-                // This time correction is due to rounding errors accumulating and casuing events to be slightly negative in a block
-                if (blockBeatPosition < -0.000001)
+                // Skip events played by the previous section, and note-offs for notes that aren't on,
+                // e.g. the end of the previous loop when this section starts on a loop's start
+                if (editBeatPosition < sectionStart
+                    || (e.isNoteOff() && ! activeNoteList->isNoteActive (e.getChannel(), e.getNoteNumber())))
                 {
                     generator->advance();
                     continue;

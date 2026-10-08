@@ -809,8 +809,9 @@ namespace clip_launcher_fuzz
                     {
                         for (auto& n : spec->notes)
                         {
-                            // A note already on where a legato launch starts is struck there
-                            const auto on = std::max (loopStart + n.start, i.start);
+                            // A note already on where a legato launch starts is struck just after it
+                            // (see MidiNodeHelpers::createMessagesForTime)
+                            const auto on = loopStart + n.start < i.start ? i.start + 0.0001 : loopStart + n.start;
                             const auto off = std::min ({ loopStart + n.start + n.length, loopStart + length, i.end });
 
                             if (on >= i.end || off - on < 1.0e-4)
@@ -859,28 +860,10 @@ namespace clip_launcher_fuzz
             return notes;
         };
 
-        // A note-off for a note that isn't on is harmless, so it's left out. Inconsistent
-        // tolerances on beat positions can send one where a clip loops on a block boundary
-        auto withoutRedundantNoteOffs = [] (const Events& events)
-        {
-            Events played;
-            std::map<int, bool> noteIsOn;
-
-            for (auto& e : events)
-            {
-                if (e.isNoteOn || noteIsOn[e.noteNumber])
-                    played.push_back (e);
-
-                noteIsOn[e.noteNumber] = e.isNoteOn;
-            }
-
-            return played;
-        };
-
         for (size_t t = 0; t < expected.size(); ++t)
         {
             auto expectedNotes = byNote (expected[t]);
-            auto actualNotes = byNote (withoutRedundantNoteOffs (result.events[t]));
+            auto actualNotes = byNote (result.events[t]);
             std::set<int> noteNumbers;
 
             for (auto& [n, list] : expectedNotes)  noteNumbers.insert (n);
@@ -1086,8 +1069,9 @@ TEST_SUITE ("tracktion_engine")
 {
     using namespace clip_launcher_fuzz;
 
-    // Restruck notes are sent 0.1ms late (see MidiNodeHelpers::createMessagesForTime)
-    constexpr double midiTolerance = 0.00015;
+    // An event less than half a sample before the end of a block is played at the start of the
+    // next, and a note-off on a clip's end is nudged back a sample
+    constexpr double midiTolerance = 1.5 / sampleRate;
 
     inline void checkVariant (Variant variant, const char* name)
     {
