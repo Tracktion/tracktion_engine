@@ -2166,6 +2166,70 @@ TEST_SUITE ("tracktion_engine")
         CHECK (clipC->getLaunchHandle()->getPlayingStatus() == LaunchHandle::PlayState::stopped);
     }
 
+    TEST_CASE ("Clip launcher: a clip synced after its loop's last note plays its next loops (MIDI)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        track->getClipSlotList().ensureNumberOfSlots (2);
+        auto& probe = addMidiProbePlugin (*track);
+
+        auto pad = insertMidiClipIntoSlot (*track->getClipSlotList().getClipSlots()[0], 4_bd);
+        pad->getSequence().addNote (60, 0_bp, 4_bd, 100, 0, nullptr);
+
+        // Only one short note, at the start of each loop
+        auto hit = insertMidiClipIntoSlot (*track->getClipSlotList().getClipSlots()[1], 4_bd);
+        hit->getSequence().addNote (62, 0_bp, 0.25_bd, 100, 0, nullptr);
+
+        edit->getTransport().ensureContextAllocated (true);
+        edit->getTransport().play (false);
+        process (player, 0.5_td);
+
+        const auto padLaunch = getNextQuantisedLaunchPosition (*edit, LaunchQType::quarter);
+        REQUIRE (padLaunch);
+        pad->getLaunchHandle()->play (padLaunch->monotonicBeat);
+        process (player, 2.6_td);
+
+        // Takes over the pad's phase at 4s, after the hit's note in that loop
+        const auto hitLaunch = getNextQuantisedLaunchPosition (*edit, LaunchQType::quarter);
+        REQUIRE (hitLaunch);
+        CHECK (hitLaunch->editTime == TimePosition::fromSeconds (4.0));
+        hit->getLaunchHandle()->playSynced (LaunchHandle (*pad->getLaunchHandle()), hitLaunch->monotonicBeat);
+        pad->getLaunchHandle()->stop (hitLaunch->monotonicBeat);
+        process (player, 6_td);
+
+        // The pad started at 1s, so the hit's loops start at 5s and 9s
+        CHECK (probe.countEvents (true, 62, tr (3.9, 4.9)) == 0);
+        CHECK (probe.countEvents (true, 62, tr (4.9, 5.1)) == 1);
+        CHECK (probe.countEvents (true, 62, tr (8.9, 9.1)) == 1);
+    }
+
+    TEST_CASE ("Clip launcher: a looped arranger clip played from after its loop's last note plays its next loops (MIDI)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+        auto edit = test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+        auto track = getAudioTracks (*edit)[0];
+        auto& probe = addMidiProbePlugin (*track);
+
+        // A 4 beat loop with one short note at its start, looped to 16 beats
+        auto clip = insertMIDIClip (*track, tr (0.0, 4.0));
+        clip->setUsesProxy (false);
+        clip->getSequence().addNote (62, 0_bp, 0.25_bd, 100, 0, nullptr);
+        clip->setLoopRangeBeats ({ 0_bp, 4_bp });
+        clip->setEnd (TimePosition::fromSeconds (16.0), true);
+
+        edit->getTransport().setPosition (TimePosition::fromSeconds (2.5));
+        edit->getTransport().ensureContextAllocated (true);
+        edit->getTransport().play (false);
+        process (player, 10_td);
+
+        // Played from 2.5s, so the loops at 4s, 8s and 12s are heard at 1.5s, 5.5s and 9.5s
+        CHECK (probe.countEvents (true, 62, tr (1.4, 1.6)) == 1);
+        CHECK (probe.countEvents (true, 62, tr (5.4, 5.6)) == 1);
+        CHECK (probe.countEvents (true, 62, tr (9.4, 9.6)) == 1);
+    }
+
     TEST_CASE ("Clip launcher: a one-shot carrying on to a queued relaunch plays nothing past its end")
     {
         auto& engine = *Engine::getEngines()[0];

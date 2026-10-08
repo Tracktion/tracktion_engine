@@ -1004,6 +1004,14 @@ public:
 
             setLoopIndex (static_cast<int> (clipPos / loopTimes.getLength()));
             generator->setTime (sequencePos);
+
+            // Past the loop's last event, so carry on from the next loop, as advance() does.
+            // Otherwise this is exhausted and nothing advances it to the next loop
+            if (generator->exhausted())
+            {
+                setLoopIndex (loopIndex + 1);
+                generator->setTime (0.0);
+            }
         }
     }
 
