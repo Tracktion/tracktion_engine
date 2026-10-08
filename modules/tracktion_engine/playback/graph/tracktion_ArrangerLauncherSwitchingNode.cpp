@@ -152,7 +152,7 @@ void ArrangerLauncherSwitchingNode::process (ProcessContext& pc)
     const auto playArranger = ! track->playSlotClips.get();
     const auto slotStatus = getSlotsStatus (launcherNodes,
                                             editBeatRange,
-                                            getProcessState().getSyncPoint().monotonicBeat);
+                                            getProcessState().getSyncRange().start.monotonicBeat);
 
     launcherSampleFader->apply (destAudioView, SampleFader::FadeType::fadeOut);
     arrangerSampleFader->apply (destAudioView, SampleFader::FadeType::fadeOut);
@@ -167,8 +167,6 @@ void ArrangerLauncherSwitchingNode::process (ProcessContext& pc)
 void ArrangerLauncherSwitchingNode::processLauncher (ProcessContext& pc, const SlotClipStatus& slotStatus)
 {
     auto destAudioView = pc.buffers.audio;
-    const auto numFrames = destAudioView.getNumFrames();
-    const auto editBeatRange = getEditBeatRange();
 
     if (! launcherNodes.empty())
     {
@@ -189,22 +187,13 @@ void ArrangerLauncherSwitchingNode::processLauncher (ProcessContext& pc, const S
 
                 launcherNode->Node::process (pc.numSamples, pc.referenceSampleRange);
 
-                const bool slotIsPlaying = lh.getPlayingStatus() == playing;
                 auto sourceBuffers = launcherNode->getProcessedOutput();
                 const auto numSourceChannels = sourceBuffers.audio.getNumChannels();
 
-                // We can add the whole block here as if the slot is stopped, part of the buffer will just be silent
+                // We can add the whole block here as if the slot is stopped, part of the buffer will just be silent.
+                // A slot that stops fades itself out (see SlotControlNode::processStop)
                 choc::buffer::add (destAudioView.getFirstChannels (numSourceChannels), sourceBuffers.audio);
                 pc.buffers.midi.mergeFrom (sourceBuffers.midi);
-
-                if (slotWasPlaying && ! slotIsPlaying)
-                {
-                    // Ramp out last 10 samples
-                    const auto endFrame = beatToSamplePosition (slotStatus.beatsUntilQueuedStopTrimmedToBlock,
-                                                                editBeatRange.getLength(), numFrames);
-                    launcherSampleFader->trigger (10);
-                    launcherSampleFader->applyAt (destAudioView,  endFrame, SampleFader::FadeType::fadeOut);
-                }
             }
         }
     }
@@ -394,16 +383,7 @@ ArrangerLauncherSwitchingNode::SlotClipStatus ArrangerLauncherSwitchingNode::get
         }
 
         if (lh.getQueuedStatus() == LaunchHandle::QueueState::stopQueued)
-        {
             status.anyClipsQueued = true;
-            const auto queuedPos = lh.getQueuedEventPosition();
-
-            if (! queuedPos)
-                status.beatsUntilQueuedStopTrimmedToBlock = 0_bd;
-
-            if (queuedPos && blockRange.contains (queuedPos->v))
-                status.beatsUntilQueuedStopTrimmedToBlock = queuedPos->v - blockRange.getStart();
-        }
     }
 
     return status;

@@ -89,7 +89,7 @@ public:
     template<typename Buffer>
     void applyAt (Buffer& buffer, choc::buffer::FrameCount frameNum, FadeType fadeType)
     {
-        apply (buffer.getFrameRange (choc::buffer::FrameRange { .start = frameNum, .end = buffer.getNumFrames() - frameNum }),
+        apply (buffer.getFrameRange (choc::buffer::FrameRange { .start = frameNum, .end = buffer.getNumFrames() }),
                fadeType);
     }
 
@@ -167,7 +167,6 @@ private:
         bool anyClipsQueued = false;
         std::optional<BeatDuration> beatsUntilQueuedStart;
         std::optional<BeatDuration> beatsUntilQueuedStartTrimmedToBlock;
-        std::optional<BeatDuration> beatsUntilQueuedStopTrimmedToBlock;
     };
 
     static SlotClipStatus getSlotsStatus (const std::vector<std::unique_ptr<SlotControlNode>>&,

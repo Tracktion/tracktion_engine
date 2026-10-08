@@ -95,7 +95,7 @@ namespace clip_launcher_test_utilities
     }
 
     //==============================================================================
-    /** A mono audio file held in memory and registered with the AudioFileManager.
+    /** An audio file held in memory and registered with the AudioFileManager.
         Clips using it read it synchronously, so they're audible from their first
         block. Files on disk are read through the AudioFileCache, whose reads time
         out while EnginePlayer runs faster than real time, which made the first
@@ -108,7 +108,7 @@ namespace clip_launcher_test_utilities
     {
         MemoryAudioFile (Engine& e, const choc::buffer::ChannelArrayBuffer<float>& source)
             : engine (e),
-              buffer (1, source.getNumFrames()),
+              buffer (source.getNumChannels(), source.getNumFrames()),
               file ("/memory/clip-launcher-test-" + juce::Uuid().toString() + ".wav")
         {
             copy (buffer, source);
@@ -2164,6 +2164,155 @@ TEST_SUITE ("tracktion_engine")
         CHECK (clipA->getLaunchHandle()->getPlayingStatus() == LaunchHandle::PlayState::stopped);
         CHECK (clipB->getLaunchHandle()->getPlayingStatus() == LaunchHandle::PlayState::playing);
         CHECK (clipC->getLaunchHandle()->getPlayingStatus() == LaunchHandle::PlayState::stopped);
+    }
+
+    TEST_CASE ("Clip launcher: a clip synced after its loop's last note plays its next loops (MIDI)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        track->getClipSlotList().ensureNumberOfSlots (2);
+        auto& probe = addMidiProbePlugin (*track);
+
+        auto pad = insertMidiClipIntoSlot (*track->getClipSlotList().getClipSlots()[0], 4_bd);
+        pad->getSequence().addNote (60, 0_bp, 4_bd, 100, 0, nullptr);
+
+        // Only one short note, at the start of each loop
+        auto hit = insertMidiClipIntoSlot (*track->getClipSlotList().getClipSlots()[1], 4_bd);
+        hit->getSequence().addNote (62, 0_bp, 0.25_bd, 100, 0, nullptr);
+
+        edit->getTransport().ensureContextAllocated (true);
+        edit->getTransport().play (false);
+        process (player, 0.5_td);
+
+        const auto padLaunch = getNextQuantisedLaunchPosition (*edit, LaunchQType::quarter);
+        REQUIRE (padLaunch);
+        pad->getLaunchHandle()->play (padLaunch->monotonicBeat);
+        process (player, 2.6_td);
+
+        // Takes over the pad's phase at 4s, after the hit's note in that loop
+        const auto hitLaunch = getNextQuantisedLaunchPosition (*edit, LaunchQType::quarter);
+        REQUIRE (hitLaunch);
+        CHECK (hitLaunch->editTime == TimePosition::fromSeconds (4.0));
+        hit->getLaunchHandle()->playSynced (LaunchHandle (*pad->getLaunchHandle()), hitLaunch->monotonicBeat);
+        pad->getLaunchHandle()->stop (hitLaunch->monotonicBeat);
+        process (player, 6_td);
+
+        // The pad started at 1s, so the hit's loops start at 5s and 9s
+        CHECK (probe.countEvents (true, 62, tr (3.9, 4.9)) == 0);
+        CHECK (probe.countEvents (true, 62, tr (4.9, 5.1)) == 1);
+        CHECK (probe.countEvents (true, 62, tr (8.9, 9.1)) == 1);
+    }
+
+    TEST_CASE ("Clip launcher: a looped arranger clip played from after its loop's last note plays its next loops (MIDI)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+        auto edit = test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+        auto track = getAudioTracks (*edit)[0];
+        auto& probe = addMidiProbePlugin (*track);
+
+        // A 4 beat loop with one short note at its start, looped to 16 beats
+        auto clip = insertMIDIClip (*track, tr (0.0, 4.0));
+        clip->setUsesProxy (false);
+        clip->getSequence().addNote (62, 0_bp, 0.25_bd, 100, 0, nullptr);
+        clip->setLoopRangeBeats ({ 0_bp, 4_bp });
+        clip->setEnd (TimePosition::fromSeconds (16.0), true);
+
+        edit->getTransport().setPosition (TimePosition::fromSeconds (2.5));
+        edit->getTransport().ensureContextAllocated (true);
+        edit->getTransport().play (false);
+        process (player, 10_td);
+
+        // Played from 2.5s, so the loops at 4s, 8s and 12s are heard at 1.5s, 5.5s and 9.5s
+        CHECK (probe.countEvents (true, 62, tr (1.4, 1.6)) == 1);
+        CHECK (probe.countEvents (true, 62, tr (5.4, 5.6)) == 1);
+        CHECK (probe.countEvents (true, 62, tr (9.4, 9.6)) == 1);
+    }
+
+    TEST_CASE ("Clip launcher: a one-shot carrying on to a queued relaunch plays nothing past its end")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+        auto file = createSineFile (engine, 4.0, 220.0f);
+        auto edit = test_utilities::createTestEdit (engine, 2, Edit::EditRole::forEditing);
+        edit->getSceneList().ensureNumberOfScenes (1);
+        auto tracks = getAudioTracks (*edit);
+
+        for (auto t : tracks)
+            t->getClipSlotList().ensureNumberOfSlots (1);
+
+        // A 2 beat audio one-shot of a 4 beat file
+        auto audioClip = insertAudioClipIntoSlot (*tracks[0]->getClipSlotList().getClipSlots()[0], file->getFile());
+        audioClip->disableLooping();
+        audioClip->setLength (2_td, true);
+
+        // A 4 beat MIDI one-shot with a note held past its end
+        auto midiClip = insertMidiClipIntoSlot (*tracks[1]->getClipSlotList().getClipSlots()[0], 4_bd);
+        midiClip->disableLooping();
+        midiClip->getSequence().addNote (60, 3_bp, 3_bd, 100, 0, nullptr);
+        auto& probe = addMidiProbePlugin (*tracks[1]);
+
+        edit->getTransport().ensureContextAllocated (true);
+        edit->getTransport().play (false);
+        process (player, 0.5_td);
+
+        // Both launch at 1s, so the audio ends at 3s and the MIDI at 5s
+        const auto launch = getNextQuantisedLaunchPosition (*edit, LaunchQType::quarter);
+        REQUIRE (launch);
+        audioClip->getLaunchHandle()->play (launch->monotonicBeat);
+        midiClip->getLaunchHandle()->play (launch->monotonicBeat);
+        process (player, 1.5_td);
+
+        // Both are relaunched at 8s, so they carry on past their ends to it
+        const auto relaunch = getNextQuantisedLaunchPosition (*edit, LaunchQType::twoBars);
+        REQUIRE (relaunch);
+        CHECK (relaunch->editTime == TimePosition::fromSeconds (8.0));
+        audioClip->getLaunchHandle()->play (relaunch->monotonicBeat);
+        midiClip->getLaunchHandle()->play (relaunch->monotonicBeat);
+        process (player, 7_td);
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (1.1, 2.9), 220.0), 0.5f);
+        CHECK_LT (getRMSLevel (output, tr (3.1, 7.9)), 0.001f);
+        CHECK_GT (getToneMagnitude (output, tr (8.1, 8.9), 220.0), 0.5f);
+
+        // The held note ends at the clip's end, not its own end or the relaunch
+        CHECK (probe.countEvents (true, 60, tr (3.9, 4.1)) == 1);
+        CHECK (probe.countEvents (false, 60, tr (4.99, 5.01)) == 1);
+        CHECK (probe.countEvents (false, 60, tr (5.01, 8.5)) == 0);
+    }
+
+    TEST_CASE ("Clip launcher: a launched clip keeps its position across graph rebuilds (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+
+        for (bool changeClip : { false, true })
+        {
+            CAPTURE (changeClip);
+            test_utilities::EnginePlayer player (engine, getPlayerParams());
+            auto file = createTwoToneFile (engine, 4.0, 220.0f, 330.0f);
+            auto [edit, track, slot] = createEditWithClipSlot (engine);
+            auto clip = insertAudioClipIntoSlot (*slot, file->getFile());
+            edit->getTransport().ensureContextAllocated (true);
+
+            edit->getTransport().play (false);
+            process (player, 0.5_td);
+            clip->getLaunchHandle()->play ({});
+            process (player, 1.5_td);
+
+            // A changed clip's wave node doesn't take over the old one's state
+            if (changeClip)
+                clip->setResamplingQuality (ResamplingQuality::sincBest);
+
+            edit->getTransport().ensureContextAllocated (true);
+            process (player, 5_td);
+
+            // Launched at 0.5s, so the second tone starts at 4.5s
+            const auto change = findToneChange (player.getOutput(), tr (3.0, 6.5), 220.0, 330.0);
+            REQUIRE (change);
+            CHECK (change->inSeconds() == doctest::Approx (4.5).epsilon (0.005));
+        }
     }
 
     TEST_CASE ("Clip launcher: building the playback graph doesn't change the Edit")

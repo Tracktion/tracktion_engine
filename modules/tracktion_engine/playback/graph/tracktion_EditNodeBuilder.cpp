@@ -28,6 +28,18 @@ namespace
         launcher
     };
 
+    /** The range of a launched clip's content, from 0, where its SlotControlNode's offset
+        puts the clip's start. A one-shot's ends at its length, so when it carries on to
+        a queued relaunch, nothing past its end plays.
+    */
+    BeatRange getLauncherContentRange (const Clip& clip)
+    {
+        if (clip.isLooping())
+            return { 0_bp, BeatPosition::fromBeats (std::numeric_limits<double>::max()) };
+
+        return { 0_bp, clip.getLengthInBeats() };
+    }
+
     template<typename PluginType>
     juce::Array<PluginType*> getAllPluginsOfType (Edit& edit)
     {
@@ -554,7 +566,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                     .audioFile = playFile,
                     .timeStretchMode = timeStretcherMode,
                     .elastiqueProOptions = timeStretcherOpts,
-                    .editTime = BeatRange (0_bp, BeatPosition::fromBeats (std::numeric_limits<double>::max())),
+                    .editTime = getLauncherContentRange (clip),
                     .offset = clip.getOffsetInBeats(),
                     .loopSection = clip.getLoopRangeBeats(),
                     .liveClipLevel = clip.getLiveClipLevel(),
@@ -673,7 +685,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, c
     {
         std::vector<juce::MidiMessageSequence> sequences;
         sequences.emplace_back (clip.getSequence().exportToPlaybackMidiSequence (clip, timeBase, generateMPE));
-        const auto clipBeatRange = role == ClipRole::launcher ? BeatRange (0_bp, BeatPosition::fromBeats (std::numeric_limits<double>::max()))
+        const auto clipBeatRange = role == ClipRole::launcher ? getLauncherContentRange (clip)
                                                               : BeatRange (clip.getStartBeat(), clip.getEndBeat());
 
         return graph::makeNode<LoopingMidiNode> (std::move (sequences),
@@ -736,7 +748,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForStepClip (StepClip& clip, c
         for (int i = clip.usesProbability() ? 64 : 1; --i >= 0;)
             sequences.push_back (clip.generateMidiSequence (MidiList::TimeBase::beatsRaw));
 
-        const auto clipBeatRange = BeatRange (0_bp, BeatPosition::fromBeats (std::numeric_limits<double>::max()));
+        const auto clipBeatRange = getLauncherContentRange (clip);
         node = graph::makeNode<LoopingMidiNode> (std::move (sequences),
                                                  juce::Range<int> (1, 16),
                                                  false,
@@ -826,7 +838,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForContainerClip (ContainerCli
 
         auto offsetNode = std::make_unique<DynamicOffsetNode> (params.processState,
                                                                clip.itemID,
-                                                               role == ClipRole::launcher ? BeatRange (0_bp, BeatPosition::fromBeats (std::numeric_limits<double>::max()))
+                                                               role == ClipRole::launcher ? getLauncherContentRange (clip)
                                                                                           : clip.getEditBeatRange(),
                                                                clip.getOffsetInBeats(),
                                                                clip.getLoopRangeBeats(),
