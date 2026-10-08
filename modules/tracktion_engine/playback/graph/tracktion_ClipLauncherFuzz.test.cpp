@@ -354,10 +354,10 @@ namespace clip_launcher_fuzz
                     files.push_back (std::make_unique<MemoryAudioFile> (engine, source));
                     auto clip = insertAudioClipIntoSlot (*slot, files.back()->getFile());
 
-                    // The default mode depends on the build. Signalsmith is in every build these tests
-                    // run in, and plays a clip at its own tempo unchanged, whereas e.g. RubberBand's
-                    // output is ~10% too loud for over 1000 frames after a clip starts
+                    // The default time-stretcher depends on the build (see compareAudioWithModel)
+                   #if TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
                     clip->setTimeStretchMode (TimeStretcher::signalsmithDefault);
+                   #endif
 
                     if (! spec->looping)
                         clip->disableLooping();
@@ -1100,7 +1100,12 @@ TEST_SUITE ("tracktion_engine")
             dump (name, result);
             report (seed, sc, juce::String (name) + ", note balance", checkNoteBalance (result));
             report (seed, sc, juce::String (name) + ", MIDI model", compareMidiWithModel (sc, result, midiTolerance));
+            // Signalsmith plays a clip at its own tempo unchanged, but other time-stretchers change
+            // its start, e.g. RubberBand's output is ~10% too loud for over 1000 frames and
+            // SoundTouch's is late by its latency, so audio is only checked with Signalsmith
+           #if TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
             report (seed, sc, juce::String (name) + ", audio model", compareAudioWithModel (sc, result));
+           #endif
         }
     }
 
