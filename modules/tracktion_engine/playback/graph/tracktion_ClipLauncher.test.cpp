@@ -2166,6 +2166,38 @@ TEST_SUITE ("tracktion_engine")
         CHECK (clipC->getLaunchHandle()->getPlayingStatus() == LaunchHandle::PlayState::stopped);
     }
 
+    TEST_CASE ("Clip launcher: a launched clip keeps its position across graph rebuilds (audio)")
+    {
+        auto& engine = *Engine::getEngines()[0];
+
+        for (bool changeClip : { false, true })
+        {
+            CAPTURE (changeClip);
+            test_utilities::EnginePlayer player (engine, getPlayerParams());
+            auto file = createTwoToneFile (engine, 4.0, 220.0f, 330.0f);
+            auto [edit, track, slot] = createEditWithClipSlot (engine);
+            auto clip = insertAudioClipIntoSlot (*slot, file->getFile());
+            edit->getTransport().ensureContextAllocated (true);
+
+            edit->getTransport().play (false);
+            process (player, 0.5_td);
+            clip->getLaunchHandle()->play ({});
+            process (player, 1.5_td);
+
+            // A changed clip's wave node doesn't take over the old one's state
+            if (changeClip)
+                clip->setResamplingQuality (ResamplingQuality::sincBest);
+
+            edit->getTransport().ensureContextAllocated (true);
+            process (player, 5_td);
+
+            // Launched at 0.5s, so the second tone starts at 4.5s
+            const auto change = findToneChange (player.getOutput(), tr (3.0, 6.5), 220.0, 330.0);
+            REQUIRE (change);
+            CHECK (change->inSeconds() == doctest::Approx (4.5).epsilon (0.005));
+        }
+    }
+
     TEST_CASE ("Clip launcher: building the playback graph doesn't change the Edit")
     {
         auto& engine = *Engine::getEngines()[0];
