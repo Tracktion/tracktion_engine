@@ -2166,6 +2166,59 @@ TEST_SUITE ("tracktion_engine")
         CHECK (clipC->getLaunchHandle()->getPlayingStatus() == LaunchHandle::PlayState::stopped);
     }
 
+    TEST_CASE ("Clip launcher: a one-shot carrying on to a queued relaunch plays nothing past its end")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+        auto file = createSineFile (engine, 4.0, 220.0f);
+        auto edit = test_utilities::createTestEdit (engine, 2, Edit::EditRole::forEditing);
+        edit->getSceneList().ensureNumberOfScenes (1);
+        auto tracks = getAudioTracks (*edit);
+
+        for (auto t : tracks)
+            t->getClipSlotList().ensureNumberOfSlots (1);
+
+        // A 2 beat audio one-shot of a 4 beat file
+        auto audioClip = insertAudioClipIntoSlot (*tracks[0]->getClipSlotList().getClipSlots()[0], file->getFile());
+        audioClip->disableLooping();
+        audioClip->setLength (2_td, true);
+
+        // A 4 beat MIDI one-shot with a note held past its end
+        auto midiClip = insertMidiClipIntoSlot (*tracks[1]->getClipSlotList().getClipSlots()[0], 4_bd);
+        midiClip->disableLooping();
+        midiClip->getSequence().addNote (60, 3_bp, 3_bd, 100, 0, nullptr);
+        auto& probe = addMidiProbePlugin (*tracks[1]);
+
+        edit->getTransport().ensureContextAllocated (true);
+        edit->getTransport().play (false);
+        process (player, 0.5_td);
+
+        // Both launch at 1s, so the audio ends at 3s and the MIDI at 5s
+        const auto launch = getNextQuantisedLaunchPosition (*edit, LaunchQType::quarter);
+        REQUIRE (launch);
+        audioClip->getLaunchHandle()->play (launch->monotonicBeat);
+        midiClip->getLaunchHandle()->play (launch->monotonicBeat);
+        process (player, 1.5_td);
+
+        // Both are relaunched at 8s, so they carry on past their ends to it
+        const auto relaunch = getNextQuantisedLaunchPosition (*edit, LaunchQType::twoBars);
+        REQUIRE (relaunch);
+        CHECK (relaunch->editTime == TimePosition::fromSeconds (8.0));
+        audioClip->getLaunchHandle()->play (relaunch->monotonicBeat);
+        midiClip->getLaunchHandle()->play (relaunch->monotonicBeat);
+        process (player, 7_td);
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (1.1, 2.9), 220.0), 0.5f);
+        CHECK_LT (getRMSLevel (output, tr (3.1, 7.9)), 0.001f);
+        CHECK_GT (getToneMagnitude (output, tr (8.1, 8.9), 220.0), 0.5f);
+
+        // The held note ends at the clip's end, not its own end or the relaunch
+        CHECK (probe.countEvents (true, 60, tr (3.9, 4.1)) == 1);
+        CHECK (probe.countEvents (false, 60, tr (4.99, 5.01)) == 1);
+        CHECK (probe.countEvents (false, 60, tr (5.01, 8.5)) == 0);
+    }
+
     TEST_CASE ("Clip launcher: a launched clip keeps its position across graph rebuilds (audio)")
     {
         auto& engine = *Engine::getEngines()[0];
