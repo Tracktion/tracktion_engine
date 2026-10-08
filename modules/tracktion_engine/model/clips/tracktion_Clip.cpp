@@ -692,8 +692,14 @@ std::pair<std::function<CurvePosition()>, std::function<ClipPositionInfo()>> Cli
         [position = clipPosition, handle = std::move (clipLauncherHandle)]
         {
             if (handle)
+            {
                 if (auto playedRange = handle->getPlayedRange())
                     return CurvePosition { playedRange->getStart() - position->getOffsetInBeats(), *playedRange };
+
+                // A launcher clip that isn't playing has no range in the Edit,
+                // so its curves mustn't apply to the track's other clips
+                return CurvePosition { position->getContentStartBeat(), BeatRange() };
+            }
 
             return CurvePosition { position->getContentStartBeat(), position->getEditBeatRange() };
         };

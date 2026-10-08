@@ -1206,6 +1206,37 @@ TEST_SUITE ("tracktion_engine")
         CHECK_LT (getRMSLevel (output, tr (3.2, 4.9)), 0.005f);
     }
 
+    TEST_CASE ("Clip automation: a launcher clip's curve doesn't apply to other launched clips on its track (live)")
+    {
+        // waveform_beta#1298
+        using namespace clip_automation_test_utilities;
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto sinFile = createSineFile (engine, 8.0, 220.0f);
+        auto [edit, track, slot] = createEditWithClipSlot (engine);
+        track->getClipSlotList().ensureNumberOfSlots (2);
+        edit->getSceneList().ensureNumberOfScenes (2);
+        auto otherSlot = track->getClipSlotList().getClipSlots()[1];
+
+        // A silent curve on a clip that's never launched
+        auto automatedClip = insertAudioClipIntoSlot (*slot, sinFile->getFile());
+        auto& volumePlugin = getVolumePluginWithoutSmoothing (*track);
+        addStepCurve (*automatedClip, *volumePlugin.volParam, 0_bp, 0.0f, 0.0f);
+
+        auto clip = insertAudioClipIntoSlot (*otherSlot, sinFile->getFile());
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        edit->getTransport().play (false);
+        process (player, 1_td);
+        launchHandle->play ({});
+        process (player, 4_td); // to 5s
+
+        const auto output = player.getOutput();
+        CHECK_GT (getToneMagnitude (output, tr (1.2, 4.9), 220.0), 0.5f);
+    }
+
     TEST_CASE ("Clip automation: a single-point volume curve holds its value (live)")
     {
         using namespace clip_automation_test_utilities;
