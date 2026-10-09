@@ -123,6 +123,8 @@ void MidiNode::processSection (Node::ProcessContext& pc,
 
     const auto localTime = sectionEditRange - editRange.getStart();
     const bool mute = clipLevel.isMute();
+    const bool lastSectionWasInClip = lastSectionEnd && std::abs (*lastSectionEnd - sectionEditRange.getStart()) < 1.0e-9;
+    lastSectionEnd = sectionEditRange.getEnd();
 
     if (mute)
     {
@@ -135,10 +137,10 @@ void MidiNode::processSection (Node::ProcessContext& pc,
         return;
     }
 
-    // Contiguous sections carry on from each other exactly, so the one with the clip's start is the
-    // first section that reaches the clip, whatever their lengths
+    // A section starting just after the clip's start only needs to play notes on at its start if the
+    // last section didn't, as it would if it ended just after the start
     if (! getPlayHeadState().isContiguousWithPreviousBlock()
-        || localTime.getStart() <= 0.0
+        || (localTime.getStart() <= 0.00001 && ! lastSectionWasInClip)
         || shouldCreateMessagesForTime)
     {
         const auto numEventsBefore = pc.buffers.midi.size();
