@@ -257,10 +257,13 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
         localPlayheadState.firstBlockOfLoop = true;
     }
 
+    auto& ps = getProcessState();
+
+    // Uses the same playhead, so needs the same offset to get the same beats after a tempo change
+    localProcessState.setBeatOffset (ps.getBeatOffset());
     localProcessState.setPlaybackSpeedRatio (getPlaybackSpeedRatio());
     localProcessState.update (getSampleRate(), pc.referenceSampleRange,
                               ProcessState::UpdateContinuityFlags::no);
-    auto& ps = getProcessState();
     localProcessState.setSyncRange (ps.getSyncRange());
 
     // Update the offset for compatible Nodes

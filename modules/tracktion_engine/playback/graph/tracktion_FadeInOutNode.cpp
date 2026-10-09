@@ -141,6 +141,17 @@ FadeInOutNode::FadeInOutNode (std::unique_ptr<tracktion::graph::Node> inputNode,
                         tracktion::graph::AllocateAudioBuffer::yes });
 }
 
+FadeInOutNode::FadeInOutNode (std::unique_ptr<tracktion::graph::Node> inputNode,
+                              ProcessState& ps,
+                              BeatRange position, TimeDuration fadeInLength, TimeDuration fadeOutLength,
+                              AudioFadeCurve::Type fadeInType_, AudioFadeCurve::Type fadeOutType_,
+                              bool clearSamplesOutsideFade)
+    : FadeInOutNode (std::move (inputNode), ps, {}, {}, fadeInType_, fadeOutType_, clearSamplesOutsideFade)
+{
+    beatPositionedFades = BeatPositionedFades { position, fadeInLength, fadeOutLength, {} };
+    updateBeatPositionedFades();
+}
+
 //==============================================================================
 void FadeInOutNode::setDynamicOffsetTime (TimeDuration newOffset)
 {
@@ -171,6 +182,7 @@ bool FadeInOutNode::isReadyToProcess()
 
 void FadeInOutNode::process (ProcessContext& pc)
 {
+    updateBeatPositionedFades();
     const auto editTimeRange = getEditTimeRange();
 
     auto sourceBuffers = input->getProcessedOutput();
@@ -194,6 +206,22 @@ void FadeInOutNode::process (ProcessContext& pc)
                                 fadeIn + dynamicOffset, fadeInType,
                                 fadeOut + dynamicOffset, fadeOutType,
                                 clearExtraSamples);
+}
+
+void FadeInOutNode::updateBeatPositionedFades()
+{
+    if (! beatPositionedFades)
+        return;
+
+    if (auto tempoSequence = getProcessState().getTempoSequence();
+        tempoSequence != nullptr && beatPositionedFades->tempoHash != tempoSequence->hash())
+    {
+        beatPositionedFades->tempoHash = tempoSequence->hash();
+        const auto start = tempoSequence->toTime (beatPositionedFades->position.getStart());
+        const auto end = tempoSequence->toTime (beatPositionedFades->position.getEnd());
+        fadeIn = { start, start + beatPositionedFades->fadeInLength };
+        fadeOut = { end - beatPositionedFades->fadeOutLength, end };
+    }
 }
 
 bool FadeInOutNode::renderingNeeded (const TimeRange timelineRange)

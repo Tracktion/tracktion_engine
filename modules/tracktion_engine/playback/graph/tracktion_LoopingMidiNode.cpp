@@ -1230,6 +1230,8 @@ public:
                                                 : 0.0;
 
         const auto clipIntersection = sectionEditBeatRange.getIntersectionWith (editRange + *dynamicOffsetBeats);
+        const auto lastSection = std::exchange (lastSectionInClip, std::nullopt);
+        const bool lastSectionWasInClip = lastSection && std::abs ((lastSection->end - sectionEditBeatRange.getStart()).inBeats()) < 1.0e-9;
 
         if (clipIntersection.isEmpty())
         {
@@ -1246,10 +1248,14 @@ public:
         // An event is played in the section whose samples it rounds to: one less than half a
         // sample before the end is left to the next section, which plays it at its start.
         // Section boundaries are often musical positions, e.g. a launch, a stop or a loop
-        // start, so events on them come out either side by rounding errors in their beats
+        // start, so events on them come out either side by rounding errors in their beats.
+        // Carrying on from the last section, events are played from where it stopped, as half a sample in
+        // beats changes with the tempo and would otherwise leave events between them unplayed or played twice
         const auto halfSample = numSamples > 0 ? beatDurationOfOneSample / 2.0 : 0.0;
-        const auto sectionStart = clipIntersection.getStart().inBeats() - halfSample;
+        const auto sectionStart = (lastSectionWasInClip && isContiguousWithPreviousBlock) ? lastSection->eventsEnd
+                                                                                         : clipIntersection.getStart().inBeats() - halfSample;
         const auto sectionEnd = clipIntersection.getEnd().inBeats() - halfSample;
+        lastSectionInClip = SectionEnd { sectionEditBeatRange.getEnd(), sectionEnd };
 
         // This turns notes off that are no longer playing due to a change in the sequence
         // It is only called when the sequence changes
@@ -1273,8 +1279,10 @@ public:
             shouldSendNoteOffsForNotesNoLongerPlaying = false;
         }
 
+        // A section starting just after the clip's start only needs to play notes on at its start if the
+        // last section didn't, as it would if it ended just after the start
         if (! isContiguousWithPreviousBlock
-            || blockStartBeatRelativeToClip <= 0.00001_bd)
+            || (blockStartBeatRelativeToClip <= 0.00001_bd && ! lastSectionWasInClip))
         {
             MidiNodeHelpers::createNoteOffs (*activeNoteList,
                                              destBuffer,
@@ -1420,6 +1428,16 @@ private:
     bool initialised = false;
 
     bool shouldCreateMessagesForTime = false, shouldSendNoteOffsForNotesNoLongerPlaying = false;
+
+    // Where the last section in the clip ended and where it stopped playing events, so they carry on from there
+    struct SectionEnd
+    {
+        BeatPosition end;
+        double eventsEnd = 0.0;
+    };
+
+    std::optional<SectionEnd> lastSectionInClip;
+
     juce::Array<juce::MidiMessage> controllerMessagesScratchBuffer;
 };
 

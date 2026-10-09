@@ -403,6 +403,28 @@ TEST_SUITE ("tracktion_core")
                 CHECK (pos.getKey() == tempo::Key { 42, 1 });
             }
         }
+
+        SUBCASE ("Position follows the sequence being replaced")
+        {
+            // The engine replaces the sequence in place when the tempo changes, and
+            // Positions referring to it carry on being used
+            tempo::Sequence seq ({{ BeatPosition(), 120.0, 1.0f }, { BeatPosition::fromBeats (8), 240.0, 1.0f }},
+                                 {{ BeatPosition(), 4, 4, false }},
+                                 tempo::LengthOfOneBeat::isAlwaysACrotchet);
+            tempo::Sequence::Position pos (seq);
+
+            pos.set (4.5s);
+            CHECK (pos.getBeats().inBeats() == doctest::Approx (10.0));
+
+            // Moving the tempo change to beat 12 puts 5s back in the first section
+            seq = tempo::Sequence ({{ BeatPosition(), 120.0, 1.0f }, { BeatPosition::fromBeats (12), 240.0, 1.0f }},
+                                   {{ BeatPosition(), 4, 4, false }},
+                                   tempo::LengthOfOneBeat::isAlwaysACrotchet);
+
+            pos.set (5s);
+            CHECK (pos.getBeats().inBeats() == doctest::Approx (seq.toBeats (5s).inBeats()));
+            CHECK (pos.getTempo() == doctest::Approx (120.0));
+        }
     }
 }
 

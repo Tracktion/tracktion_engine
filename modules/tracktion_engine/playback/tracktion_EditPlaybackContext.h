@@ -111,6 +111,11 @@ public:
     /** This will increase/decrease playback speed by changing the tempo, maintaining pitch where possible. */
     void setTempoAdjustment (double plusOrMinusProportion);
 
+    /** Tells this the beats of a loop range about to be given to its playhead, which is only
+        in whole samples. If the tempo changes the playhead's loop is moved to keep it on these.
+    */
+    void setLoopBeats (BeatRange);
+
     /** Posts a transport position change.
         Using the second parameter it's possible to delay position changes in order to quantise them to some musical sense.
         Pending changes will be cancelled automatically if:
