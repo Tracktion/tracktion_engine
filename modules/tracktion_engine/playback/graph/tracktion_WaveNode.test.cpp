@@ -668,7 +668,7 @@ TEST_CASE ("WaveNode")
     }
 }
 
-TEST_CASE ("WaveNode: a sinc-resampled clip plays a steady tone at a non-unity speed")
+TEST_CASE ("WaveNode: a resampled clip plays a steady tone")
 {
     using namespace wavenode_test_helpers;
     using namespace tracktion::graph::test_utilities;
@@ -691,9 +691,9 @@ TEST_CASE ("WaveNode: a sinc-resampled clip plays a steady tone at a non-unity s
 
     for (auto ts : getTestSetups())
     {
-        for (auto quality : { ResamplingQuality::sincFast, ResamplingQuality::sincMedium, ResamplingQuality::sincBest })
+        for (auto quality : { ResamplingQuality::lagrange, ResamplingQuality::sincFast, ResamplingQuality::sincMedium, ResamplingQuality::sincBest })
         {
-            for (auto speedRatio : { 1.5, 0.75 })
+            for (auto speedRatio : { 1.5, 1.0, 0.75 })
             {
                 CAPTURE (ts.sampleRate);
                 CAPTURE (ts.blockSize);

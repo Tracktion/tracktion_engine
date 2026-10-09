@@ -273,29 +273,30 @@ public:
         for (auto& r : resamplers)
             r.reset();
 
+        subSamplePos = 1.0;
         hasBeenReset = true;
-        timeSourceIsAheadDueToLatency = {};
     }
 
     SampleCount getPosition() override
     {
-        const auto sourcePosition = TimePosition::fromSamples (source->getPosition(), source->getSampleRate());
-        return toSamples (sourcePosition - timeSourceIsAheadDueToLatency, destSampleRate);
+        return getReadPosition();
     }
 
     void setPosition (SampleCount t) override
     {
-        setPosition (TimePosition::fromSamples (t, destSampleRate));
+        // Carry on from where the last block ended rather than re-seeking the source to a rounded
+        // position, which would skip or repeat a sample under the interpolators
+        if (! hasBeenReset && std::abs (t - getReadPosition()) <= 1)
+            return;
+
+        // The position has jumped, so reset to stop the interpolators blending in samples from the old position
+        readPosition = (double) t;
+        reset();
     }
 
     void setPosition (TimePosition t) override
     {
-        // If the position has jumped, reset so the interpolator doesn't blend in samples from the
-        // old position. This also clears the latency offset so it's re-compensated on the next read
-        if (std::abs (toSamples (t, destSampleRate) - getPosition()) > 1)
-            reset();
-
-        source->setPosition (t + timeSourceIsAheadDueToLatency);
+        setPosition (toSamples (t, destSampleRate));
     }
 
     /** Sets a ratio to increase or decrease playback speed. */
@@ -319,71 +320,83 @@ public:
 
     bool readSamples (choc::buffer::ChannelArrayView<float>& destBuffer) override
     {
-        using namespace choc::buffer;
         const auto numChannels = destBuffer.getNumChannels();
-        assert (numChannels <= (ChannelCount) resamplers.size());
-        assert (destBuffer.getNumChannels() == numChannels);
-
-        const auto ratio = sampleRatio * speedRatio;
-        const auto numDestFrames = destBuffer.getNumFrames();
-        const int numSourceFramesToRead = static_cast<int> ((numDestFrames * ratio) + 0.5);
+        assert (numChannels <= (choc::buffer::ChannelCount) resamplers.size());
+        bool ok = true;
 
         if (std::exchange (hasBeenReset, false))
         {
-            constexpr auto baseLatencyNumSamples = static_cast<FrameCount> (juce::LagrangeInterpolator::getBaseLatency());
-            timeSourceIsAheadDueToLatency = TimeDuration::fromSamples (baseLatencyNumSamples, destSampleRate);
-            const auto modifiedNumSourceFramesToRead = numSourceFramesToRead + static_cast<int> (baseLatencyNumSamples);
-            const auto numFramesToDrop = static_cast<FrameCount> (std::lround (baseLatencyNumSamples / ratio));
-            const auto modifiedNumDestFrames = numDestFrames + numFramesToDrop;
+            // Start the source at the read position and give the interpolators their latency's worth of it
+            // at unity speed, so the first frame they produce lines up with the read position
+            source->setPosition (TimePosition::fromSamples (getReadPosition(), destSampleRate));
 
-            AudioScratchBuffer destDataScratch ((int) numChannels, static_cast<int> (modifiedNumDestFrames));
-            auto destScratchView = toBufferView (destDataScratch.buffer);
-            destScratchView.clear();
-
-            if (! readResampling (destScratchView, *source, modifiedNumSourceFramesToRead,
-                                  resamplers, std::to_array (gains)))
-                return false;
-
-            copy (destBuffer, destScratchView.fromFrame (numFramesToDrop));
-            return true;
+            constexpr auto latencyNumFrames = static_cast<int> (juce::LagrangeInterpolator::getBaseLatency());
+            AudioScratchBuffer latencyScratch ((int) numChannels, latencyNumFrames);
+            auto latencyView = toBufferView (latencyScratch.buffer);
+            latencyView.clear();
+            ok = readResampling (latencyView, 1.0);
         }
 
-        return readResampling (destBuffer, *source, numSourceFramesToRead,
-                               resamplers, std::to_array (gains));
+        readPosition += destBuffer.getNumFrames() * speedRatio;
+
+        return readResampling (destBuffer, sampleRatio * speedRatio) && ok;
     }
 
     const double destSampleRate;
     const double sourceSampleRate { source->getSampleRate() };
     const double sampleRatio { sourceSampleRate / destSampleRate  };
-    double speedRatio = 1.0;
+    double speedRatio = 1.0, readPosition = 0.0, subSamplePos = 1.0;
     std::vector<juce::LagrangeInterpolator> resamplers;
     float gains[2] = { 1.0f, 1.0f };
-    TimeDuration timeSourceIsAheadDueToLatency;
     bool hasBeenReset = true;
 
-    static bool readResampling (choc::buffer::ChannelArrayView<float> destBuffer,
-                                AudioReader& sourceReader, int numSourceFramesToRead,
-                                std::vector<juce::LagrangeInterpolator>& resamplers_,
-                                const std::array<float, 2> gains)
+    SampleCount getReadPosition() const
+    {
+        // Rounds rather than truncates as a block straddling the start of a clip reads from before it
+        return static_cast<SampleCount> (std::llround (readPosition));
+    }
+
+    /** Steps the interpolators' sub-sample position on by a number of frames, returning how many source
+        samples they'll use. This mirrors juce::GenericInterpolator so the source can be read exactly as
+        far as they get, rather than skipping or repeating samples between blocks.
+    */
+    int advanceSubSamplePos (double ratio, choc::buffer::FrameCount numFrames)
+    {
+        int numSourceFrames = 0;
+
+        for (choc::buffer::FrameCount i = 0; i < numFrames; ++i)
+        {
+            while (subSamplePos >= 1.0)
+            {
+                ++numSourceFrames;
+                subSamplePos -= 1.0;
+            }
+
+            subSamplePos += ratio;
+        }
+
+        return numSourceFrames;
+    }
+
+    bool readResampling (choc::buffer::ChannelArrayView<float> destBuffer, double ratio)
     {
         const auto numChannels = destBuffer.getNumChannels();
         const auto numDestFrames = destBuffer.getNumFrames();
+        const auto numSourceFrames = advanceSubSamplePos (ratio, numDestFrames);
 
-        AudioScratchBuffer fileData ((int) numChannels, numSourceFramesToRead);
+        AudioScratchBuffer fileData ((int) numChannels, numSourceFrames);
         auto fileDataView = toBufferView (fileData.buffer);
-        const bool ok = sourceReader.readSamples (fileDataView);
-
-        const auto resamplerRatio = static_cast<double> (numSourceFramesToRead) / numDestFrames;
+        const bool ok = source->readSamples (fileDataView);
 
         for (choc::buffer::ChannelCount channel = 0; channel < numChannels; ++channel)
         {
-            if (channel < (choc::buffer::ChannelCount) resamplers_.size())
+            if (channel < (choc::buffer::ChannelCount) resamplers.size())
             {
                 const auto src = fileData.buffer.getReadPointer ((int) channel);
                 const auto dest = destBuffer.getChannel (channel).data.data;
 
-                auto& resampler = resamplers_[(size_t) channel];
-                resampler.processAdding (resamplerRatio, src, dest, (int) numDestFrames, gains[channel & 1]);
+                [[maybe_unused]] const auto numUsed = resamplers[(size_t) channel].processAdding (ratio, src, dest, (int) numDestFrames, gains[channel & 1]);
+                assert (numUsed == numSourceFrames);
             }
             else
             {
