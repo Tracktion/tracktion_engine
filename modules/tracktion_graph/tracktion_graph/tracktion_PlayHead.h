@@ -176,6 +176,7 @@ private:
     void setSyncPositions (SyncPositions newPositions)  { syncPositions.store (newPositions); }
 
     void userInteraction()  { userInteractionTime = std::chrono::system_clock::now(); }
+    int64_t clipToLoopRange (int64_t position) const;
 };
 
 
@@ -234,15 +235,21 @@ inline int64_t PlayHead::getUnloopedPosition() const
 
 inline void PlayHead::overridePosition (int64_t newPosition)
 {
-    if (looping && rollInToLoop)
-        newPosition = std::min (newPosition, timelinePlayRange.load().getEnd());
-    else if (looping)
-        newPosition = timelinePlayRange.load().clipValue (newPosition);
-
     SyncPositions newSyncPositions;
     newSyncPositions.referenceSyncPosition = referenceSampleRange.load().getStart();
-    newSyncPositions.playoutSyncPosition = newPosition;
+    newSyncPositions.playoutSyncPosition = clipToLoopRange (newPosition);
     setSyncPositions (newSyncPositions);
+}
+
+inline int64_t PlayHead::clipToLoopRange (int64_t position) const
+{
+    if (looping && rollInToLoop)
+        return std::min (position, timelinePlayRange.load().getEnd());
+
+    if (looping)
+        return timelinePlayRange.load().clipValue (position);
+
+    return position;
 }
 
 //==============================================================================
@@ -260,12 +267,25 @@ inline void PlayHead::setLoopRange (bool loop, juce::Range<int64_t> loopRange, b
 {
     if (looping != loop || (loop && loopRange != getLoopRange()))
     {
-        auto lastPos = getPosition();
+        // Keeps the position at the reference position it's read at, so it doesn't move
+        // if a new block's started in between
+        const auto referencePosition = referenceSampleRange.load().getStart();
+        const auto lastPos = referenceSamplePositionToTimelinePosition (referencePosition);
         looping = loop;
         timelinePlayRange.store (loopRange);
 
         if (updatePosition)
-            setPosition (lastPos);
+        {
+            // The old sync positions could be anywhere in the new range, so keep the playhead where
+            // it was. That's only a jump if it's now outside the loop
+            SyncPositions newSyncPositions;
+            newSyncPositions.referenceSyncPosition = referencePosition;
+            newSyncPositions.playoutSyncPosition = clipToLoopRange (lastPos);
+            setSyncPositions (newSyncPositions);
+
+            if (referenceSamplePositionToTimelinePosition (referencePosition) != lastPos)
+                userInteraction();
+        }
     }
 }
 

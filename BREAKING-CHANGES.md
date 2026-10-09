@@ -3,6 +3,42 @@
 ___
 
 ### Change
+Arrangement MIDI clips that play a pre-looped sequence (`MidiClip::canUseProxy()`, the default) and arrangement step clips now play it in beats rather than seconds.
+
+#### Possible Issues
+Their `MidiNode` is now built with `MidiList::TimeBase::beats` and the clip's range in beats, so code walking the playback graph that relied on these being in seconds will see beats. A clip with absolute sync, which doesn't move with a tempo change, plays on its old beats rather than its old times until the graph's rebuilt.
+
+#### Rationale
+A tempo change is heard straight away, before the graph's rebuilt. Playing in seconds left the notes at their old times until then, so playback skipped or struck notes twice whilst a tempo was being changed (see docs/Tempo_Changes_During_Playback.md).
+
+___
+
+### Change
+`TracktionNodePlayer` now splits a block at every tempo change in it, however close together they are.
+
+#### Possible Issues
+Nodes and plugins get more, shorter, process calls where the tempo changes, most of all with curved tempos, which change every quarter of a beat or so.
+
+#### Rationale
+It used to look for the next change from the end of the block, so it rarely split one, and never within 128 samples of its start. A block with more than one tempo has its events placed as if it had their average, which put them up to tens of samples out.
+
+___
+
+### Change
+`PlayHead::setLoopRange` with `updatePosition` only counts as a jump (a user interaction) if the playhead's position isn't in the new loop.
+
+#### Possible Issues
+Changing the loop range whilst playing used to be a jump almost every time, so nodes stopped their notes and crossfaded their audio. They now carry on unless the playhead has to move.
+
+#### Workaround
+To force a jump, call `PlayHead::setPosition` after changing the range.
+
+#### Rationale
+The transport re-sends the loop to the playhead periodically and moves it with its beats when the tempo changes. Each of those was a jump, which interrupted playback whilst the tempo was being changed.
+
+___
+
+### Change
 A clip whose playback file can't be read, and that isn't going to generate one, no longer gets a node in the playback graph.
 
 #### Possible Issues

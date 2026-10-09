@@ -290,16 +290,39 @@ struct EditPlaybackContext::NodePlaybackContext
         blockLengthScaleFactor = 1.0 + std::clamp (plusOrMinusProportion, -0.5, 0.5);
     }
 
+    void setExactLoopTimes (TimeRange times)
+    {
+        exactLoopTimes.store ({ toSamples (times, getSampleRate()), times });
+    }
+
+    /** If the tempo has changed since the last block, puts the playhead back on the beat
+        it got to, so playback carries on seamlessly. The loop is kept on the same beats too,
+        as the Edit's is (see EditTimecodeRemapperSnapshot).
+    */
     void checkForTempoSequenceChanges()
     {
         const auto& internalSequence = tempoSequence.getInternalSequence();
 
-        if (internalSequence.hash() == tempoState.hash)
+        // Nothing has played yet, so there's no beat to keep the playhead on
+        if (! tempoState.hash || internalSequence.hash() == *tempoState.hash)
             return;
 
-        const auto lastPositionRemapped = internalSequence.toTime (tempoState.lastBeatPosition);
-        const auto lastSampleRemapped = toSamples (lastPositionRemapped, getSampleRate());
-        playHead.overridePosition (lastSampleRemapped);
+        const auto sampleRate = getSampleRate();
+
+        // This is first as the position is clipped to the loop
+        if (tempoState.loopBeats)
+        {
+            tempoState.loopSamples = toSamples (TimeRange (internalSequence.toTime (tempoState.loopBeats->getStart()),
+                                                           internalSequence.toTime (tempoState.loopBeats->getEnd())),
+                                                sampleRate);
+            playHead.setLoopRange (true, tempoState.loopSamples, false);
+        }
+
+        playHead.overridePosition (toSamples (internalSequence.toTime (tempoState.lastBeatPosition), sampleRate));
+
+        // That's the nearest sample to the beat, so make up the difference to carry on from exactly it
+        const auto newPosition = TimePosition::fromSamples (playHead.getPosition(), sampleRate);
+        processState.setBeatOffset (tempoState.lastBeatPosition - internalSequence.toBeats (newPosition));
     }
 
     void nextBlockStarted()
@@ -427,8 +450,7 @@ struct EditPlaybackContext::NodePlaybackContext
             player.process (pc);
         }
 
-        tempoState = { tempoSequence.getInternalSequence().hash(),
-                       processState.editBeatRange.getEnd() };
+        updateTempoState();
     }
 
     double getSampleRate() const
@@ -466,11 +488,47 @@ private:
 
     struct TempoState
     {
-        size_t hash = 0;
-        BeatPosition lastBeatPosition;
+        std::optional<size_t> hash;             // Of the tempo map the last block was played with
+        BeatPosition lastBeatPosition;          // Where the last block ended
+        std::optional<BeatRange> loopBeats;     // The beats of the loop, if looping
+        juce::Range<int64_t> loopSamples;       // The loop range loopBeats is the beats of
     };
 
     TempoState tempoState;
+
+    struct ExactLoopTimes
+    {
+        juce::Range<int64_t> samples;
+        TimeRange times;
+    };
+
+    crill::seqlock_object<ExactLoopTimes> exactLoopTimes { ExactLoopTimes() };
+
+    void updateTempoState()
+    {
+        const auto& internalSequence = tempoSequence.getInternalSequence();
+        tempoState.hash = internalSequence.hash();
+        tempoState.lastBeatPosition = processState.editBeatRange.getEnd();
+
+        if (! playHead.isLooping())
+        {
+            tempoState.loopBeats.reset();
+        }
+        else if (const auto loopRange = playHead.getLoopRange();
+                 ! tempoState.loopBeats || loopRange != tempoState.loopSamples)
+        {
+            // The loop's been set, e.g. by the transport, so these are its beats. Otherwise they're
+            // kept, so rounding the loop to whole samples after each tempo change doesn't add up.
+            // Its exact times are used if they're known, as a range rounded to whole samples at one
+            // tempo can be several out at a slower one
+            const auto exact = exactLoopTimes.load();
+            const auto loopTimes = exact.samples == loopRange ? exact.times
+                                                              : timeRangeFromSamples (loopRange, getSampleRate());
+            tempoState.loopBeats = BeatRange (internalSequence.toBeats (loopTimes.getStart()),
+                                              internalSequence.toBeats (loopTimes.getEnd()));
+            tempoState.loopSamples = loopRange;
+        }
+    }
 
     juce::Range<int64_t> getReferenceSampleRange() const
     {
@@ -1148,6 +1206,12 @@ void EditPlaybackContext::setSpeedCompensation (double plusOrMinus)
 {
     if (nodePlaybackContext)
         nodePlaybackContext->setSpeedCompensation (plusOrMinus);
+}
+
+void EditPlaybackContext::setExactLoopTimes (TimeRange times)
+{
+    if (nodePlaybackContext)
+        nodePlaybackContext->setExactLoopTimes (times);
 }
 
 void EditPlaybackContext::setTempoAdjustment (double plusOrMinusProportion)

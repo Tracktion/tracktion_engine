@@ -784,9 +784,11 @@ void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
 
             auto pos = c->getPosition();
 
+            // Any change has to be applied, however small, as dragging a tempo makes many small
+            // changes and skipping them would leave the clip off its beats
             if (std::abs ((pos.getStart() - newStart).inSeconds())
                  + std::abs ((pos.getEnd() - newEnd).inSeconds())
-                 + std::abs ((pos.getOffset() - newOffset).inSeconds()) > 0.001)
+                 + std::abs ((pos.getOffset() - newOffset).inSeconds()) > 1.0e-9)
             {
                 if (c->getSyncType() == Clip::syncAbsolute)
                     continue;

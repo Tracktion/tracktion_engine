@@ -75,7 +75,7 @@ private:
 
     tracktion::graph::NodeProperties nodeProperties;
 
-    void prefetchGroup (juce::Range<int64_t>, TimeRange, BeatRange);
+    void prefetchGroup (juce::Range<int64_t>, BeatRange);
     void queueNoteOffsForClipsNoLongerPresent (const CombiningNode&);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CombiningNode)

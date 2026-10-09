@@ -573,7 +573,12 @@ struct TransportControl::PlayHeadWrapper
     void play (TimeRange timeRange, bool looped)
     {
         if (auto ph = getNodePlayHead())
+        {
+            if (looped)
+                transport.playbackContext->setExactLoopTimes (timeRange);
+
             ph->play (tracktion::toSamples (timeRange, getSampleRate()), looped);
+        }
     }
 
     void setRollInToLoop (TimePosition prerollStartTime)
@@ -661,7 +666,12 @@ struct TransportControl::PlayHeadWrapper
     void setLoopTimes (bool loop, TimeRange newRange)
     {
         if (auto ph = getNodePlayHead())
+        {
+            if (loop)
+                transport.playbackContext->setExactLoopTimes (newRange);
+
             ph->setLoopRange (loop, tracktion::toSamples (newRange, getSampleRate()));
+        }
     }
 
     void setUserIsDragging (bool isDragging)

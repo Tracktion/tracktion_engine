@@ -44,6 +44,12 @@ struct ProcessState
     */
     void setPlaybackSpeedRatio (double newRatio);
 
+    /** Offsets the beats worked out from the playhead's time, until it next jumps or loops.
+        After a tempo change the playhead can only be put on the sample nearest the beat it had
+        got to, so this makes up the difference to carry on from exactly that beat.
+    */
+    void setBeatOffset (BeatDuration);
+
     /** Sets the TempoSequence this state utilises. */
     void setTempoSequence (const tempo::Sequence*);
 
@@ -86,6 +92,7 @@ struct ProcessState
 private:
     const tempo::Sequence* tempoSequence = nullptr;
     std::unique_ptr<tempo::Sequence::Position> tempoPosition;
+    BeatDuration beatOffset;
     crill::seqlock_object<SyncRange> syncRange { SyncRange() };
 };
 

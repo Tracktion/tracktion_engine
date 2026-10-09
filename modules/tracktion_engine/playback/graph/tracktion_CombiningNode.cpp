@@ -19,11 +19,14 @@ namespace combining_node_utils
     // how much extra time to give a track before it gets cut off - to allow for plugins
     // that ring on.
     static constexpr BeatDuration decayTimeAllowance { 8_bd };
-    static constexpr int secondsPerGroup = 8;
 
-    static inline constexpr int timeToGroupIndex (TimePosition t) noexcept
+    // Groups are in beats, as that's what the inputs' ranges are, so a tempo change doesn't
+    // put the playhead in a group that its inputs weren't added to
+    static constexpr int beatsPerGroup = 16;
+
+    static inline constexpr int beatToGroupIndex (BeatPosition b) noexcept
     {
-        return static_cast<int> (t.inSeconds()) / secondsPerGroup;
+        return static_cast<int> (b.inBeats()) / beatsPerGroup;
     }
 }
 
@@ -182,11 +185,10 @@ void CombiningNode::addInput (std::unique_ptr<Node> input, BeatRange beatRange)
     auto tan = inputs.insert (i, new TimedNode (std::move (input), beatRange));
 
     // add the node to any groups it's near to.
-    const auto& ts = *getProcessState().getTempoSequence();
-    const auto overlapTime = TimeDuration::fromSeconds (combining_node_utils::secondsPerGroup / 2 + 2);
-    const auto timeRange = toTime (ts, beatRange).expanded (overlapTime);
-    const auto start = std::max (0, combining_node_utils::timeToGroupIndex (timeRange.getStart()));
-    const auto end   = std::max (0, combining_node_utils::timeToGroupIndex (timeRange.getEnd()));
+    const auto overlap = BeatDuration::fromBeats (combining_node_utils::beatsPerGroup / 2 + 2);
+    const auto groupRange = beatRange.expanded (overlap);
+    const auto start = std::max (0, combining_node_utils::beatToGroupIndex (groupRange.getStart()));
+    const auto end   = std::max (0, combining_node_utils::beatToGroupIndex (groupRange.getEnd()));
 
     while (groups.size() <= end)
         groups.add (new juce::Array<TimedNode*>());
@@ -274,13 +276,13 @@ void CombiningNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
 {
     SCOPED_REALTIME_CHECK
 
-    const auto editTime = getEditTimeRange();
-    prefetchGroup (referenceSampleRange, editTime, getEditBeatRange());
+    const auto editBeats = getEditBeatRange();
+    prefetchGroup (referenceSampleRange, editBeats);
 
     // Update ready to process state based on nodes intersecting this time
     isReadyToProcessBlock.store (true, std::memory_order_release);
 
-    if (auto g = groups[combining_node_utils::timeToGroupIndex (editTime.getStart())])
+    if (auto g = groups[combining_node_utils::beatToGroupIndex (editBeats.getStart())])
     {
         for (auto tan : *g)
         {
@@ -304,7 +306,7 @@ void CombiningNode::process (ProcessContext& pc)
     pc.buffers.midi.mergeFromAndClear (noteOffEventsToSend);
 
     // Then process the list
-    if (auto g = groups[combining_node_utils::timeToGroupIndex (getEditTimeRange().getStart())])
+    if (auto g = groups[combining_node_utils::beatToGroupIndex (editBeats.getStart())])
     {
         for (auto tan : *g)
         {
@@ -337,9 +339,9 @@ size_t CombiningNode::getAllocatedBytes() const
     return size;
 }
 
-void CombiningNode::prefetchGroup (juce::Range<int64_t> referenceSampleRange, TimeRange editTime, BeatRange editBeats)
+void CombiningNode::prefetchGroup (juce::Range<int64_t> referenceSampleRange, BeatRange editBeats)
 {
-    if (auto g = groups[combining_node_utils::timeToGroupIndex (editTime.getStart())])
+    if (auto g = groups[combining_node_utils::beatToGroupIndex (editBeats.getStart())])
     {
         for (auto tan : *g)
         {

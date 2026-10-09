@@ -52,10 +52,13 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
     if (! tempoPosition)
         return;
 
+    if (updateContinuityFlags == UpdateContinuityFlags::yes && ! playHeadState.isContiguousWithPreviousBlock())
+        beatOffset = {};
+
     tempoPosition->set (editTimeRange.getStart());
-    const auto beatStart = tempoPosition->getBeats();
+    const auto beatStart = tempoPosition->getBeats() + beatOffset;
     tempoPosition->set (editTimeRange.getEnd());
-    const auto beatEnd = tempoPosition->getBeats();
+    const auto beatEnd = tempoPosition->getBeats() + beatOffset;
     editBeatRange = { beatStart, beatEnd };
 
     if (updateContinuityFlags == UpdateContinuityFlags::no)
@@ -84,6 +87,11 @@ void ProcessState::update (double newSampleRate, juce::Range<int64_t> newReferen
 void ProcessState::setPlaybackSpeedRatio (double newRatio)
 {
     playbackSpeedRatio = newRatio;
+}
+
+void ProcessState::setBeatOffset (BeatDuration newOffset)
+{
+    beatOffset = newOffset;
 }
 
 void ProcessState::setTempoSequence (const tempo::Sequence* ts)
