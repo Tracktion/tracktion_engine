@@ -691,7 +691,7 @@ TEST_CASE ("WaveNode: a sinc-resampled clip plays a steady tone at a non-unity s
 
     for (auto ts : getTestSetups())
     {
-        for (auto quality : { ResamplingQuality::sincMedium, ResamplingQuality::sincBest })
+        for (auto quality : { ResamplingQuality::sincFast, ResamplingQuality::sincMedium, ResamplingQuality::sincBest })
         {
             for (auto speedRatio : { 1.5, 0.75 })
             {
