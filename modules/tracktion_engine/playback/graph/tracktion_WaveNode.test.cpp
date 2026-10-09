@@ -668,6 +668,92 @@ TEST_CASE ("WaveNode")
     }
 }
 
+TEST_CASE ("WaveNode: a sinc-resampled clip plays a steady tone at a non-unity speed")
+{
+    using namespace wavenode_test_helpers;
+    using namespace tracktion::graph::test_utilities;
+    auto& engine = *Engine::getEngines()[0];
+
+    // A stereo sine and cosine, so the level and phase of each frame of the output can be checked.
+    // The file's rate differs from some of the output rates so sample rate conversion is covered too
+    constexpr double fileSampleRate = 44100.0, toneFrequency = 440.0;
+    constexpr float toneLevel = 0.5f;
+    auto toneBuffer = choc::buffer::createChannelArrayBuffer (2, (choc::buffer::FrameCount) (fileSampleRate * 4.0),
+                                                              [] (auto chan, auto frame)
+                                                              {
+                                                                  const auto phase = juce::MathConstants<double>::twoPi * toneFrequency * frame / fileSampleRate;
+                                                                  return toneLevel * (float) (chan == 0 ? std::sin (phase) : std::cos (phase));
+                                                              });
+    auto toneFile = writeToTemporaryFile<juce::WavAudioFormat> (toneBuffer.getView(), fileSampleRate);
+    AudioFile toneAudioFile (engine, toneFile->getFile());
+
+    const auto clipLength = 2_td;
+
+    for (auto ts : getTestSetups())
+    {
+        for (auto quality : { ResamplingQuality::sincMedium, ResamplingQuality::sincBest })
+        {
+            for (auto speedRatio : { 1.5, 0.75 })
+            {
+                CAPTURE (ts.sampleRate);
+                CAPTURE (ts.blockSize);
+                CAPTURE (ts.randomiseBlockSizes);
+                CAPTURE (static_cast<int> (quality));
+                CAPTURE (speedRatio);
+
+                tracktion::graph::PlayHead playHead;
+                tracktion::graph::PlayHeadState playHeadState (playHead);
+                ProcessState processState (playHeadState);
+                playHead.playSyncedToRange ({ 0, std::numeric_limits<int64_t>::max() });
+
+                // Time-stretching is disabled so the speed is applied by the resampler itself
+                auto node = makeNode<WaveNodeRealTime> (toneAudioFile,
+                                                        TimeRange (0_tp, clipLength),
+                                                        TimeDuration(),
+                                                        TimeRange(),
+                                                        LiveClipLevel(),
+                                                        speedRatio,
+                                                        ChannelConfiguration::discreteChannels (2),
+                                                        ChannelConfiguration::discreteChannels (2),
+                                                        processState,
+                                                        EditItemID(),
+                                                        true,
+                                                        quality);
+
+                auto testContext = createTracktionTestContext (processState, std::move (node), ts, 2, clipLength.inSeconds());
+
+                // Skip the resampler warming up at the start and running off the end of the clip
+                const auto& output = testContext->buffer;
+                REQUIRE (output.getNumChannels() == 2);
+                const auto l = output.getReadPointer (0), r = output.getReadPointer (1);
+                const auto start = toSamples (TimeDuration::fromSeconds (0.05), ts.sampleRate);
+                const auto end = std::min (toSamples (clipLength - TimeDuration::fromSeconds (0.05), ts.sampleRate), (int64_t) output.getNumSamples());
+                REQUIRE (end > start);
+
+                const auto phaseStep = juce::MathConstants<double>::twoPi * toneFrequency * speedRatio / ts.sampleRate;
+                int64_t numBadFrames = 0;
+                double firstBadSeconds = 0.0;
+
+                for (auto f = start; f < end; ++f)
+                {
+                    const auto level = std::hypot ((double) l[f], (double) r[f]);
+                    auto phaseError = std::atan2 (l[f], r[f]) - std::atan2 (l[f - 1], r[f - 1]) - phaseStep;
+                    phaseError -= juce::MathConstants<double>::twoPi * std::round (phaseError / juce::MathConstants<double>::twoPi);
+
+                    if (std::abs (level - toneLevel) <= toneLevel * 0.05 && std::abs (phaseError) <= 0.05)
+                        continue;
+
+                    if (numBadFrames++ == 0)
+                        firstBadSeconds = (double) f / ts.sampleRate;
+                }
+
+                INFO ("First bad frame at " << firstBadSeconds << "s");
+                CHECK (numBadFrames == 0);
+            }
+        }
+    }
+}
+
 } // TEST_SUITE
 
 #endif
