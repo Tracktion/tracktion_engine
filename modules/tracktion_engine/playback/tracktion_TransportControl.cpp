@@ -575,7 +575,7 @@ struct TransportControl::PlayHeadWrapper
         if (auto ph = getNodePlayHead())
         {
             if (looped)
-                transport.playbackContext->setExactLoopTimes (timeRange);
+                transport.playbackContext->setLoopBeats (transport.edit.tempoSequence.toBeats (timeRange));
 
             ph->play (tracktion::toSamples (timeRange, getSampleRate()), looped);
         }
@@ -668,7 +668,7 @@ struct TransportControl::PlayHeadWrapper
         if (auto ph = getNodePlayHead())
         {
             if (loop)
-                transport.playbackContext->setExactLoopTimes (newRange);
+                transport.playbackContext->setLoopBeats (transport.edit.tempoSequence.toBeats (newRange));
 
             ph->setLoopRange (loop, tracktion::toSamples (newRange, getSampleRate()));
         }

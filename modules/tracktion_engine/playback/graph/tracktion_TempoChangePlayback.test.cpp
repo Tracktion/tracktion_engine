@@ -596,7 +596,7 @@ namespace tempo_change_tests
                     {
                         if (auto ph = epc->getNodePlayHead())
                         {
-                            epc->setExactLoopTimes (transport.getLoopRange());
+                            epc->setLoopBeats (transport.edit.tempoSequence.toBeats (transport.getLoopRange()));
                             ph->setLoopRange (true, toSamples (transport.getLoopRange(), sampleRate));
                         }
                     }

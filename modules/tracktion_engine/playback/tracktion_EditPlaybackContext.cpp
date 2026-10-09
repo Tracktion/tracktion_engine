@@ -290,9 +290,9 @@ struct EditPlaybackContext::NodePlaybackContext
         blockLengthScaleFactor = 1.0 + std::clamp (plusOrMinusProportion, -0.5, 0.5);
     }
 
-    void setExactLoopTimes (TimeRange times)
+    void setLoopBeats (BeatRange beats)
     {
-        exactLoopTimes.store ({ toSamples (times, getSampleRate()), times });
+        loopBeats.store (beats);
     }
 
     /** If the tempo has changed since the last block, puts the playhead back on the beat
@@ -310,13 +310,8 @@ struct EditPlaybackContext::NodePlaybackContext
         const auto sampleRate = getSampleRate();
 
         // This is first as the position is clipped to the loop
-        if (tempoState.loopBeats)
-        {
-            tempoState.loopSamples = toSamples (TimeRange (internalSequence.toTime (tempoState.loopBeats->getStart()),
-                                                           internalSequence.toTime (tempoState.loopBeats->getEnd())),
-                                                sampleRate);
-            playHead.setLoopRange (true, tempoState.loopSamples, false);
-        }
+        if (const auto beats = loopBeats.load(); playHead.isLooping() && ! beats.isEmpty())
+            playHead.setLoopRange (true, toSamples (toTime (beats, internalSequence), sampleRate), false);
 
         playHead.overridePosition (toSamples (internalSequence.toTime (tempoState.lastBeatPosition), sampleRate));
 
@@ -450,7 +445,8 @@ struct EditPlaybackContext::NodePlaybackContext
             player.process (pc);
         }
 
-        updateTempoState();
+        tempoState = { tempoSequence.getInternalSequence().hash(),
+                       processState.editBeatRange.getEnd() };
     }
 
     double getSampleRate() const
@@ -490,45 +486,12 @@ private:
     {
         std::optional<size_t> hash;             // Of the tempo map the last block was played with
         BeatPosition lastBeatPosition;          // Where the last block ended
-        std::optional<BeatRange> loopBeats;     // The beats of the loop, if looping
-        juce::Range<int64_t> loopSamples;       // The loop range loopBeats is the beats of
     };
 
     TempoState tempoState;
 
-    struct ExactLoopTimes
-    {
-        juce::Range<int64_t> samples;
-        TimeRange times;
-    };
-
-    crill::seqlock_object<ExactLoopTimes> exactLoopTimes { ExactLoopTimes() };
-
-    void updateTempoState()
-    {
-        const auto& internalSequence = tempoSequence.getInternalSequence();
-        tempoState.hash = internalSequence.hash();
-        tempoState.lastBeatPosition = processState.editBeatRange.getEnd();
-
-        if (! playHead.isLooping())
-        {
-            tempoState.loopBeats.reset();
-        }
-        else if (const auto loopRange = playHead.getLoopRange();
-                 ! tempoState.loopBeats || loopRange != tempoState.loopSamples)
-        {
-            // The loop's been set, e.g. by the transport, so these are its beats. Otherwise they're
-            // kept, so rounding the loop to whole samples after each tempo change doesn't add up.
-            // Its exact times are used if they're known, as a range rounded to whole samples at one
-            // tempo can be several out at a slower one
-            const auto exact = exactLoopTimes.load();
-            const auto loopTimes = exact.samples == loopRange ? exact.times
-                                                              : timeRangeFromSamples (loopRange, getSampleRate());
-            tempoState.loopBeats = BeatRange (internalSequence.toBeats (loopTimes.getStart()),
-                                              internalSequence.toBeats (loopTimes.getEnd()));
-            tempoState.loopSamples = loopRange;
-        }
-    }
+    // The beats of the loop the transport last gave the playhead, which is only in whole samples
+    crill::seqlock_object<BeatRange> loopBeats { BeatRange() };
 
     juce::Range<int64_t> getReferenceSampleRange() const
     {
@@ -1208,10 +1171,10 @@ void EditPlaybackContext::setSpeedCompensation (double plusOrMinus)
         nodePlaybackContext->setSpeedCompensation (plusOrMinus);
 }
 
-void EditPlaybackContext::setExactLoopTimes (TimeRange times)
+void EditPlaybackContext::setLoopBeats (BeatRange beats)
 {
     if (nodePlaybackContext)
-        nodePlaybackContext->setExactLoopTimes (times);
+        nodePlaybackContext->setLoopBeats (beats);
 }
 
 void EditPlaybackContext::setTempoAdjustment (double plusOrMinusProportion)
