@@ -58,6 +58,7 @@ private:
     {
         BeatRange position;
         TimeDuration fadeInLength, fadeOutLength;
+        std::optional<size_t> tempoHash;    // Of the tempo map the fades were last worked out with
     };
 
     std::optional<BeatPositionedFades> beatPositionedFades;

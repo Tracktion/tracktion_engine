@@ -50,6 +50,9 @@ struct ProcessState
     */
     void setBeatOffset (BeatDuration);
 
+    /** Returns the offset set by setBeatOffset. */
+    BeatDuration getBeatOffset() const                  { return beatOffset; }
+
     /** Sets the TempoSequence this state utilises. */
     void setTempoSequence (const tempo::Sequence*);
 

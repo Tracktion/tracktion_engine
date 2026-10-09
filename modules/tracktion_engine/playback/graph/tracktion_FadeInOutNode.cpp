@@ -148,7 +148,7 @@ FadeInOutNode::FadeInOutNode (std::unique_ptr<tracktion::graph::Node> inputNode,
                               bool clearSamplesOutsideFade)
     : FadeInOutNode (std::move (inputNode), ps, {}, {}, fadeInType_, fadeOutType_, clearSamplesOutsideFade)
 {
-    beatPositionedFades = BeatPositionedFades { position, fadeInLength, fadeOutLength };
+    beatPositionedFades = BeatPositionedFades { position, fadeInLength, fadeOutLength, {} };
     updateBeatPositionedFades();
 }
 
@@ -213,8 +213,10 @@ void FadeInOutNode::updateBeatPositionedFades()
     if (! beatPositionedFades)
         return;
 
-    if (auto tempoSequence = getProcessState().getTempoSequence())
+    if (auto tempoSequence = getProcessState().getTempoSequence();
+        tempoSequence != nullptr && beatPositionedFades->tempoHash != tempoSequence->hash())
     {
+        beatPositionedFades->tempoHash = tempoSequence->hash();
         const auto start = tempoSequence->toTime (beatPositionedFades->position.getStart());
         const auto end = tempoSequence->toTime (beatPositionedFades->position.getEnd());
         fadeIn = { start, start + beatPositionedFades->fadeInLength };

@@ -1173,6 +1173,7 @@ void EditPlaybackContext::setSpeedCompensation (double plusOrMinus)
 
 void EditPlaybackContext::setLoopBeats (BeatRange beats)
 {
+    TRACKTION_ASSERT_MESSAGE_THREAD // Only one thread can store these
     if (nodePlaybackContext)
         nodePlaybackContext->setLoopBeats (beats);
 }

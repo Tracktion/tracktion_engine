@@ -7,6 +7,7 @@ Arrangement MIDI clips that play a pre-looped sequence (`MidiClip::canUseProxy()
 
 #### Possible Issues
 Their `MidiNode` is now built with `MidiList::TimeBase::beats` and the clip's range in beats, so code walking the playback graph that relied on these being in seconds will see beats. A clip with absolute sync, which doesn't move with a tempo change, plays on its old beats rather than its old times until the graph's rebuilt.
+A step clip's groove is now applied on the Edit's beats, as a MIDI clip's is, rather than from the clip's start, so a clip starting off the groove's grid swings differently.
 
 #### Rationale
 A tempo change is heard straight away, before the graph's rebuilt. Playing in seconds left the notes at their old times until then, so playback skipped or struck notes twice whilst a tempo was being changed (see docs/Tempo_Changes_During_Playback.md).
