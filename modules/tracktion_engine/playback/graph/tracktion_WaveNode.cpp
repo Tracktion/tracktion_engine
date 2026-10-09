@@ -163,88 +163,6 @@ public:
 };
 
 //==============================================================================
-class LoopReader final  : public SingleInputAudioReader
-{
-public:
-    LoopReader (std::unique_ptr<AudioReader> input, SampleRange loopRangeToUse)
-        : SingleInputAudioReader (std::move (input)), loopRange (loopRangeToUse)
-    {
-    }
-
-    LoopReader (std::unique_ptr<AudioReader> input, TimeRange loopRangeToUse)
-        : SingleInputAudioReader (std::move (input)), loopRange (toSamples (loopRangeToUse, source->getSampleRate()))
-    {
-    }
-
-    void setPosition (SampleCount t) override
-    {
-        const auto loopStart = loopRange.getStart();
-        const auto loopLength = loopRange.getLength();
-
-        if (loopLength > 0)
-        {
-            if (t >= 0)
-                t = loopStart + (t % loopLength);
-            else
-                t = loopStart + juce::negativeAwareModulo (t, loopLength);
-        }
-
-        source->setPosition (t);
-    }
-
-    void setPosition (TimePosition t) override
-    {
-        setPosition (toSamples (t, getSampleRate()));
-    }
-
-    bool readSamples (choc::buffer::ChannelArrayView<float>& destBuffer) override
-    {
-        using choc::buffer::FrameCount;
-
-        const auto loopStart = loopRange.getStart();
-        const auto loopLength = loopRange.getLength();
-
-        if (loopLength == 0)
-            return source->readSamples (destBuffer);
-
-        const auto numFrames = static_cast<SampleCount> (destBuffer.getNumFrames());
-
-        auto readPos = source->getPosition();
-
-        if (readPos >= loopStart + loopLength)
-            readPos -= loopLength;
-
-        int numSamplesToDo = (int) numFrames;
-        SampleCount startOffsetInDestBuffer = 0;
-        bool allOk = true;
-
-        while (numSamplesToDo > 0)
-        {
-            jassert (juce::isPositiveAndBelow (readPos - loopStart, loopLength));
-
-            const auto numToRead = std::min ((SampleCount) numSamplesToDo, loopStart + loopLength - readPos);
-
-            source->setPosition (readPos);
-            auto destSubsection = destBuffer.getFrameRange ({ (FrameCount) startOffsetInDestBuffer, (FrameCount) (startOffsetInDestBuffer + numToRead) });
-            allOk = source->readSamples (destSubsection) && allOk;
-
-            readPos += numToRead;
-
-            if (readPos >= loopStart + loopLength)
-                readPos -= loopLength;
-
-            startOffsetInDestBuffer += numToRead;
-            numSamplesToDo -= (int) numToRead;
-        }
-
-        return allOk;
-    }
-
-    const SampleRange loopRange;
-};
-
-
-//==============================================================================
 class ResamplerReader : public SingleInputAudioReader
 {
 public:
@@ -1006,16 +924,34 @@ inline WarpedTime warpTime (const WarpMap& map, TimePosition time)
 }
 
 //==============================================================================
+/** Reads a source through a time-stretcher, following a warp map.
+
+    If the clip loops, loopRange is the loop in warped time and positions in it count from its
+    start, the same as a looped AudioFileCacheReader. The source must be looped by the source
+    times of the loop (getSourceLoopRange), below the time-stretcher, so it plays one continuous
+    stream through the loop points rather than being reset at each. This therefore reads the
+    source as if it wasn't looped.
+*/
 class WarpReader final  : public SingleInputAudioReader
 {
 public:
     WarpReader (std::unique_ptr<AudioReader> input,
                 WarpMap warpMap,
+                SampleRange loopRangeToUse,
                 TimeStretcher::Mode mode,
                 TimeStretcher::ElastiqueProOptions options)
         : SingleInputAudioReader (std::make_unique<TimeStretchReader> (std::move (input), mode, options)),
-          reader (static_cast<TimeStretchReader*> (source.get())), map (std::move (warpMap))
+          reader (static_cast<TimeStretchReader*> (source.get())), map (std::move (warpMap)),
+          loopRange (loopRangeToUse), sourceLoopRange (getSourceLoopRange (map, loopRange, getSampleRate()))
     {
+    }
+
+    /** Returns the source samples a loop in warped time plays, which the source must loop. */
+    static SampleRange getSourceLoopRange (const WarpMap& map, SampleRange loopRange, double sampleRate)
+    {
+        auto toSource = [&] (SampleCount warped) { return toSamples (warpTime (map, TimePosition::fromSamples (warped, sampleRate)).position, sampleRate); };
+
+        return { toSource (loopRange.getStart()), toSource (loopRange.getEnd()) };
     }
 
     SampleCount getPosition() override
@@ -1034,32 +970,47 @@ public:
             return;
 
         readPosition = t;
-        setSourcePosition (t);
+        source->setPosition ((SampleCount) std::llround (getSourcePosition (t)));
     }
 
     bool readSamples (choc::buffer::ChannelArrayView<float>& destBuffer) override
     {
-        const auto unwarpedStartTime = TimePosition::fromSamples (readPosition, getSampleRate());
-        const auto ratio = warpTime (map, unwarpedStartTime).stretchRatio;
-
-        reader->setSpeed (ratio);
-        readPosition += (SampleCount) destBuffer.getNumFrames();
+        if (const auto numFrames = (SampleCount) destBuffer.getNumFrames(); numFrames > 0)
+        {
+            // Plays the source this block covers, so the time-stretcher follows the warp map
+            // however the block lines up with its markers and loop points, and doesn't drift from it
+            const auto sourceStart = getSourcePosition (readPosition);
+            readPosition += numFrames;
+            reader->setSpeed ((getSourcePosition (readPosition) - sourceStart) / (double) numFrames);
+        }
 
         return reader->readSamples (destBuffer);
     }
 
 private:
     TimeStretchReader* reader = nullptr;
-    WarpMap map;
+    const WarpMap map;
+    const SampleRange loopRange, sourceLoopRange;
     SampleCount readPosition = 0;
 
-    void setSourcePosition (SampleCount pos)
+    /** Returns the source position, in samples, to read a warped position from.
+        A looped position carries on through the loops a source loop length at a time.
+    */
+    double getSourcePosition (SampleCount position)
+    {
+        if (loopRange.isEmpty())
+            return toSourceSamples (position);
+
+        const auto numLoops = (SampleCount) std::floor ((double) position / (double) loopRange.getLength());
+
+        return (double) (numLoops * sourceLoopRange.getLength() - sourceLoopRange.getStart())
+                + toSourceSamples (loopRange.getStart() + position - numLoops * loopRange.getLength());
+    }
+
+    double toSourceSamples (SampleCount warpedPosition)
     {
         const auto sampleRate = getSampleRate();
-        const auto sourceTime = TimePosition::fromSamples (pos, sampleRate);
-        const auto warpedTime = warpTime (map, sourceTime).position;
-        const auto warpedSamplePos = toSamples (warpedTime, sampleRate);
-        source->setPosition (warpedSamplePos);
+        return warpTime (map, TimePosition::fromSamples (warpedPosition, sampleRate)).position.inSeconds() * sampleRate;
     }
 };
 
@@ -2207,12 +2158,12 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
 
     if (warpMap)
     {
-        // If we're using a warp map, the looping as to be applied above the warp so the loop times don't get warped
-        // This can have performance hits though
-        loopReader = std::make_unique<WarpReader> (std::move (audioFileCacheReader), std::move (*warpMap), timeStretcherMode, elastiqueProOptions);
-
-        if (! sourceLoopRange.isEmpty())
-            loopReader = std::make_unique<LoopReader> (std::move (loopReader), sourceLoopRange);
+        // With a warp map, the loop is in warped time. The source is looped by its source times, below
+        // the WarpReader's time-stretcher, so that plays one continuous stream through the loop points too
+        const auto fileSampleRate = audioFileCacheReader->getSampleRate();
+        const auto warpedLoopRange = toSamples (sourceLoopRange, fileSampleRate);
+        audioFileCacheReader->reader->setLoopRange (WarpReader::getSourceLoopRange (*warpMap, warpedLoopRange, fileSampleRate));
+        loopReader = std::make_unique<WarpReader> (std::move (audioFileCacheReader), std::move (*warpMap), warpedLoopRange, timeStretcherMode, elastiqueProOptions);
     }
     else
     {
