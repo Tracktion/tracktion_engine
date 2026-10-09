@@ -49,7 +49,6 @@ private:
     int currentIndex = 0;
     MPESourceID midiSourceID = createUniqueMPESourceID();
     bool wasMute = false, shouldCreateMessagesForTime = false;
-    std::optional<double> lastSectionEnd;   // Where the last section in the clip ended, so its start isn't played twice
 
     juce::Array<juce::MidiMessage> controllerMessagesScratchBuffer;
 
