@@ -1484,16 +1484,23 @@ namespace tempo_change_tests
                 const AudioRegion region { spec.start, spec.start + spec.length, spec.fadeSeconds, std::nullopt };
                 const auto name = "audio clip " + juce::String ((int) c);
                 rep.add (name + " source position", checkClipPlayheads (result, audioTrack, (int) c, region, editMappings));
+
+                // Other time-stretchers change the output, e.g. SoundTouch's is late by its latency,
+                // so it's only checked with Signalsmith (see makeBeatBased)
+               #if TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
                 rep.add (name + " output", checkToneContinuity (result.audio[audioTrack], region, editMappings,
                                                                                  result.endOutputSample));
+               #endif
             }
 
             {
                 const AudioRegion region { 0.0, 1.0e6, 0.0, sc.launcherAudioLength };
                 rep.add ("launched audio source position",
                         checkClipPlayheads (result, launcherAudioTrack, (int) sc.audioClips.size(), region, launchedMappings));
+               #if TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
                 rep.add ("launched audio output",
                         checkToneContinuity (result.audio[launcherAudioTrack], region, launchedMappings, result.endOutputSample));
+               #endif
             }
 
             rep.fail (seed, sc, variant, result);
