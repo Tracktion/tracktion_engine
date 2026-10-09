@@ -845,6 +845,223 @@ TEST_SUITE ("tracktion_engine")
 
 #endif // ENGINE_UNIT_TESTS_WAVENODE_CHANNEL_ROUTING
 
+// Signalsmith passes a steady tone through cleanly so the output can be checked closely
+#if ENGINE_UNIT_TESTS_PLAYBACK && ENGINE_UNIT_TESTS_CLIP_LAUNCHER && TRACKTION_ENABLE_TIMESTRETCH_SIGNALSMITH
+
+namespace looped_beat_based_clip_tests
+{
+    constexpr double fileBpm = 120.0;
+
+    /** Adds a clip to the first track that plays a file in beats at fileBpm, stretched in real time,
+        looping part of it until clipEnd.
+    */
+    inline AudioClipBase& addLoopedBeatBasedClip (Edit& edit, const juce::File& file, double fileNumBeats,
+                                                  BeatRange loopRange, BeatPosition clipEnd)
+    {
+        auto clip = insertWaveClip (*getAudioTracks (edit)[0], {}, file, { { 0_tp, 1_tp } }, DeleteExistingClips::no);
+        clip->setUsesProxy (false);
+        clip->setAutoTempo (true);
+        clip->getLoopInfo().setNumBeats (fileNumBeats);
+        clip->setTimeStretchMode (TimeStretcher::signalsmithDefault);
+        clip->setLoopRangeBeats (loopRange);
+        clip->setPosition ({ { 0_tp, edit.tempoSequence.toTime (clipEnd) } });
+
+        return *clip;
+    }
+}
+
+TEST_SUITE ("tracktion_engine")
+{
+    TEST_CASE ("WaveNode: a time-stretched beat-based clip loops seamlessly")
+    {
+        using namespace clip_launcher_test_utilities;
+        using namespace looped_beat_based_clip_tests;
+
+        // A stereo sine and cosine, so the level and phase of each frame of the output can be checked.
+        // At 120bpm, 440Hz is a whole number of cycles a beat, so the 1.5 beat file loops seamlessly
+        constexpr double fileNumBeats = 1.5, toneFrequency = 440.0;
+        constexpr float toneLevel = 0.5f;
+
+        auto& engine = *Engine::getEngines()[0];
+        const auto numFileFrames = (choc::buffer::FrameCount) std::llround (fileNumBeats * 60.0 / fileBpm * sampleRate);
+        MemoryAudioFile file (engine, choc::buffer::createChannelArrayBuffer (2, numFileFrames, [] (auto chan, auto frame)
+                                                                               {
+                                                                                   const auto phase = juce::MathConstants<double>::twoPi * toneFrequency * frame / sampleRate;
+                                                                                   return toneLevel * (float) (chan == 0 ? std::sin (phase) : std::cos (phase));
+                                                                               }));
+
+        // An 8 beat clip looping the file every 1.5 beats
+        auto createEdit = [&] (double bpm)
+        {
+            auto edit = engine::test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+            edit->tempoSequence.getTempo (0)->setBpm (bpm);
+            addLoopedBeatBasedClip (*edit, file.getFile(), fileNumBeats, { 0_bp, BeatPosition::fromBeats (fileNumBeats) }, 8_bp);
+
+            return edit;
+        };
+
+        // Checks the output keeps the tone's level and steps its phase on steadily, from a while after
+        // the clip starts (the time-stretcher takes a while to start it) to its end
+        auto checkToneIsContinuous = [&] (const juce::AudioBuffer<float>& output, double outputSampleRate, TimeDuration clipLength)
+        {
+            const auto l = output.getReadPointer (0), r = output.getReadPointer (1);
+            const auto start = toSamples (TimeDuration::fromSeconds (0.15), outputSampleRate);
+            const auto end = std::min (toSamples (clipLength - TimeDuration::fromSeconds (0.01), outputSampleRate), (int64_t) output.getNumSamples());
+            REQUIRE (end > start);
+
+            // The track's pan law scales the level, so compare it with the usual level
+            std::vector<double> levels;
+
+            for (auto f = start; f < end; ++f)
+                levels.push_back (std::hypot ((double) l[f], (double) r[f]));
+
+            auto sortedLevels = levels;
+            std::nth_element (sortedLevels.begin(), sortedLevels.begin() + (std::ptrdiff_t) sortedLevels.size() / 2, sortedLevels.end());
+            const auto usualLevel = sortedLevels[sortedLevels.size() / 2];
+            CHECK (usualLevel > toneLevel * 0.5);
+
+            const auto phaseStep = juce::MathConstants<double>::twoPi * toneFrequency / outputSampleRate;
+            int64_t numBadFrames = 0;
+            double firstBadSeconds = 0.0;
+
+            for (auto f = start; f < end; ++f)
+            {
+                auto phaseError = std::atan2 (l[f], r[f]) - std::atan2 (l[f - 1], r[f - 1]) - phaseStep;
+                phaseError -= juce::MathConstants<double>::twoPi * std::round (phaseError / juce::MathConstants<double>::twoPi);
+
+                if (std::abs (levels[(size_t) (f - start)] - usualLevel) <= usualLevel * 0.25 && std::abs (phaseError) <= 0.4)
+                    continue;
+
+                if (numBadFrames++ == 0)
+                    firstBadSeconds = (double) f / outputSampleRate;
+            }
+
+            INFO ("First bad frame at " << firstBadSeconds << "s");
+            CHECK (numBadFrames == 0);
+        };
+
+        // Playing uses a ReadAheadTimeStretchReader (the TestRunner enables it) and rendering a TimeStretchReader
+        for (auto bpm : { 100.0, 150.0 })
+        {
+            CAPTURE (bpm);
+
+            {
+                INFO ("Playing");
+                test_utilities::EnginePlayer player (engine, getPlayerParams (2));
+                auto edit = createEdit (bpm);
+                const auto clipLength = edit->tempoSequence.toTime (8_bp) - 0_tp;
+
+                edit->getTransport().play (false);
+                const auto output = player.process (toSamples (clipLength + TimeDuration::fromSeconds (0.1), sampleRate));
+                checkToneIsContinuous (output, sampleRate, clipLength);
+            }
+
+            {
+                INFO ("Rendering");
+                auto edit = createEdit (bpm);
+                const auto clipLength = edit->tempoSequence.toTime (8_bp) - 0_tp;
+                const auto render = engine::test_utilities::renderToAudioBuffer (*edit);
+
+                REQUIRE (render.buffer.getNumChannels() == 2);
+                checkToneIsContinuous (render.buffer, render.sampleRate, clipLength);
+            }
+        }
+    }
+
+    TEST_CASE ("WaveNode: a time-stretched beat-based clip loops the right part of its file")
+    {
+        using namespace clip_launcher_test_utilities;
+        using namespace looped_beat_based_clip_tests;
+
+        // A file of three 1 beat tones, so which part of it is playing can be told from the output
+        constexpr std::array<double, 3> toneFrequencies { 440.0, 880.0, 1320.0 };
+        const auto framesPerBeat = (choc::buffer::FrameCount) std::llround (60.0 / fileBpm * sampleRate);
+
+        auto& engine = *Engine::getEngines()[0];
+        MemoryAudioFile file (engine, choc::buffer::createChannelArrayBuffer (1, framesPerBeat * 3, [&] (auto, auto frame)
+                                                                               {
+                                                                                   const auto frequency = toneFrequencies[(size_t) (frame / framesPerBeat)];
+                                                                                   return (float) std::sin (juce::MathConstants<double>::twoPi * frequency * frame / sampleRate);
+                                                                               }));
+
+        // A part of the loop, in beats from its start, and the tone that should play in it
+        struct Part
+        {
+            double start, end;
+            size_t tone;
+        };
+
+        // Plays a 9 beat clip looping part of the file and checks the middle of each part of each loop plays its tone
+        auto checkLoop = [&] (double bpm, BeatRange loopRange, std::optional<WarpMarker> warpMarker, std::vector<Part> parts)
+        {
+            test_utilities::EnginePlayer player (engine, getPlayerParams (1));
+            auto edit = engine::test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+            auto& ts = edit->tempoSequence;
+            ts.getTempo (0)->setBpm (bpm);
+            auto& clip = addLoopedBeatBasedClip (*edit, file.getFile(), 3.0, loopRange, 9_bp);
+
+            if (warpMarker)
+            {
+                clip.setWarpTime (true);
+                clip.getWarpTimeManager().insertMarker (*warpMarker);
+            }
+
+            edit->getTransport().play (false);
+            player.process (toSamples (ts.toTime (9_bp), sampleRate));
+            const auto output = player.getOutput();
+
+            const auto loopLength = loopRange.getLength().inBeats();
+
+            for (double loopStart = 0.0; loopStart + loopLength <= 9.0; loopStart += loopLength)
+            {
+                for (auto part : parts)
+                {
+                    const auto quarter = (part.end - part.start) / 4.0;
+                    const TimeRange window (ts.toTime (BeatPosition::fromBeats (loopStart + part.start + quarter)),
+                                            ts.toTime (BeatPosition::fromBeats (loopStart + part.end - quarter)));
+
+                    // The time-stretcher takes a while to start the clip
+                    if (window.getStart().inSeconds() < 0.2)
+                        continue;
+
+                    CAPTURE (loopStart);
+                    CAPTURE (part.start);
+                    const auto magnitude = getToneMagnitude (output, window, toneFrequencies[part.tone]);
+                    CHECK (magnitude > 0.25f);
+
+                    for (size_t other = 0; other < toneFrequencies.size(); ++other)
+                        if (other != part.tone)
+                            CHECK (getToneMagnitude (output, window, toneFrequencies[other]) < magnitude * 0.25f);
+                }
+            }
+        };
+
+        for (auto bpm : { 100.0, 150.0 })
+        {
+            CAPTURE (bpm);
+
+            // Positions in a loop count from its start, so a loop that doesn't start at the
+            // start of the file checks the source is looped from the right place
+            {
+                INFO ("Without a warp map");
+                checkLoop (bpm, { 1_bp, 3_bp }, {}, { { 0.0, 1.0, 1 }, { 1.0, 2.0, 2 } });
+            }
+
+            // With a warp map, the loop is in warped time. Warping the second tone's start from 0.5s
+            // to 0.75s slows the first tone down to 1.5 beats and speeds the others up to 0.75 beats.
+            // N.B. The WarpReader's time-stretcher is still reset where it loops, so the output
+            // isn't seamless there, but the middle of each part should play its tone
+            {
+                INFO ("With a warp map");
+                checkLoop (bpm, { 0_bp, 3_bp }, WarpMarker (TimePosition::fromSeconds (0.5), TimePosition::fromSeconds (0.75)),
+                           { { 0.0, 1.5, 0 }, { 1.5, 2.25, 1 }, { 2.25, 3.0, 2 } });
+            }
+        }
+    }
+}
+
+#endif
+
 } // namespace tracktion::inline engine
 
 #endif //TRACKTION_UNIT_TESTS
