@@ -890,12 +890,19 @@ TEST_SUITE ("tracktion_engine")
                                                                                    return toneLevel * (float) (chan == 0 ? std::sin (phase) : std::cos (phase));
                                                                                }));
 
-        // An 8 beat clip looping the file every 1.5 beats
-        auto createEdit = [&] (double bpm)
+        // An 8 beat clip looping the whole file. A warp map moves the middle of the file
+        // earlier, so the clip speeds up then slows down through each loop
+        auto createEdit = [&] (double bpm, bool warped)
         {
             auto edit = engine::test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
             edit->tempoSequence.getTempo (0)->setBpm (bpm);
-            addLoopedBeatBasedClip (*edit, file.getFile(), fileNumBeats, { 0_bp, BeatPosition::fromBeats (fileNumBeats) }, 8_bp);
+            auto& clip = addLoopedBeatBasedClip (*edit, file.getFile(), fileNumBeats, { 0_bp, BeatPosition::fromBeats (fileNumBeats) }, 8_bp);
+
+            if (warped)
+            {
+                clip.setWarpTime (true);
+                clip.getWarpTimeManager().insertMarker ({ TimePosition::fromSeconds (0.375), TimePosition::fromSeconds (0.3) });
+            }
 
             return edit;
         };
@@ -941,29 +948,34 @@ TEST_SUITE ("tracktion_engine")
         };
 
         // Playing uses a ReadAheadTimeStretchReader (the TestRunner enables it) and rendering a TimeStretchReader
-        for (auto bpm : { 100.0, 150.0 })
+        for (auto warped : { false, true })
         {
-            CAPTURE (bpm);
+            CAPTURE (warped);
 
+            for (auto bpm : { 100.0, 150.0 })
             {
-                INFO ("Playing");
-                test_utilities::EnginePlayer player (engine, getPlayerParams (2));
-                auto edit = createEdit (bpm);
-                const auto clipLength = edit->tempoSequence.toTime (8_bp) - 0_tp;
+                CAPTURE (bpm);
 
-                edit->getTransport().play (false);
-                const auto output = player.process (toSamples (clipLength + TimeDuration::fromSeconds (0.1), sampleRate));
-                checkToneIsContinuous (output, sampleRate, clipLength);
-            }
+                {
+                    INFO ("Playing");
+                    test_utilities::EnginePlayer player (engine, getPlayerParams (2));
+                    auto edit = createEdit (bpm, warped);
+                    const auto clipLength = edit->tempoSequence.toTime (8_bp) - 0_tp;
 
-            {
-                INFO ("Rendering");
-                auto edit = createEdit (bpm);
-                const auto clipLength = edit->tempoSequence.toTime (8_bp) - 0_tp;
-                const auto render = engine::test_utilities::renderToAudioBuffer (*edit);
+                    edit->getTransport().play (false);
+                    const auto output = player.process (toSamples (clipLength + TimeDuration::fromSeconds (0.1), sampleRate));
+                    checkToneIsContinuous (output, sampleRate, clipLength);
+                }
 
-                REQUIRE (render.buffer.getNumChannels() == 2);
-                checkToneIsContinuous (render.buffer, render.sampleRate, clipLength);
+                {
+                    INFO ("Rendering");
+                    auto edit = createEdit (bpm, warped);
+                    const auto clipLength = edit->tempoSequence.toTime (8_bp) - 0_tp;
+                    const auto render = engine::test_utilities::renderToAudioBuffer (*edit);
+
+                    REQUIRE (render.buffer.getNumChannels() == 2);
+                    checkToneIsContinuous (render.buffer, render.sampleRate, clipLength);
+                }
             }
         }
     }
@@ -1048,13 +1060,17 @@ TEST_SUITE ("tracktion_engine")
             }
 
             // With a warp map, the loop is in warped time. Warping the second tone's start from 0.5s
-            // to 0.75s slows the first tone down to 1.5 beats and speeds the others up to 0.75 beats.
-            // N.B. The WarpReader's time-stretcher is still reset where it loops, so the output
-            // isn't seamless there, but the middle of each part should play its tone
+            // to 0.75s slows the first tone down to 1.5 beats and speeds the others up to 0.75 beats
+            const WarpMarker warpMarker (TimePosition::fromSeconds (0.5), TimePosition::fromSeconds (0.75));
+
             {
                 INFO ("With a warp map");
-                checkLoop (bpm, { 0_bp, 3_bp }, WarpMarker (TimePosition::fromSeconds (0.5), TimePosition::fromSeconds (0.75)),
-                           { { 0.0, 1.5, 0 }, { 1.5, 2.25, 1 }, { 2.25, 3.0, 2 } });
+                checkLoop (bpm, { 0_bp, 3_bp }, warpMarker, { { 0.0, 1.5, 0 }, { 1.5, 2.25, 1 }, { 2.25, 3.0, 2 } });
+            }
+
+            {
+                INFO ("With a warp map, looping from beat 1");
+                checkLoop (bpm, { 1_bp, 3_bp }, warpMarker, { { 0.0, 0.5, 0 }, { 0.5, 1.25, 1 }, { 1.25, 2.0, 2 } });
             }
         }
     }
