@@ -165,16 +165,17 @@ void WaveAudioClip::reassignReferencedItem (const ReferencedItem& item,
         }
         else
         {
+            // Not undoable, see AudioClipBase::reassignReferencedItem
             auto newFile = newRef.resolve (edit.engine);
             auto path = SourceFileReference::findPathFromFile (edit, newFile, true);
 
             if (indexInList == getCurrentTake())
-                sourceFileReference.setToFile (newFile, SourceFileReference::PathStyle::chooseBest, false);
+                sourceFileReference.source.setValue (path, nullptr);
 
             auto take = getTakesTree().getChild (indexInList);
 
             if (take.isValid())
-                take.setProperty (IDs::source, path, getUndoManager());
+                take.setProperty (IDs::source, path, nullptr);
         }
     }
     else

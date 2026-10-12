@@ -1917,6 +1917,90 @@ TEST_SUITE ("tracktion_engine")
         }
     }
 
+    TEST_CASE ("FolderBasedProject: undoing a clip rename keeps clips on their renamed source file")
+    {
+        // Renaming a clip can also rename its source file. Moving the file can't be undone,
+        // so undoing the rename has to leave every clip that uses it on the renamed file
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto projectPath = tempDir.getChildFile ("test_folder_project");
+        projectPath.createDirectory();
+
+        {
+            ProjectManager::TempProject tp (pm, projectPath, false);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+            REQUIRE (project->isValid());
+
+            auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+            REQUIRE (sinFile != nullptr);
+
+            auto wavFile = project->getDefaultDirectory().getChildFile ("source_audio.wav");
+            sinFile->getFile().copyFileTo (wavFile);
+            REQUIRE (wavFile.existsAsFile());
+
+            auto audioItem = project->createNewItem (wavFile, ProjectItem::waveItemType(),
+                                                     "source_audio", {},
+                                                     ProjectItem::Category::imported, false);
+            REQUIRE (audioItem != nullptr);
+
+            auto editItem = project->createNewEdit();
+            REQUIRE (editItem != nullptr);
+
+            auto edit = createEmptyEdit (engine, editItem->getSourceFile());
+            edit->setProjectItemRef (editItem->getProjectItemRef());
+            edit->ensureNumberOfAudioTracks (1);
+
+            auto audioTracks = getAudioTracks (*edit);
+            REQUIRE (audioTracks.size() >= 1);
+
+            auto clip1 = insertWaveClip (*audioTracks[0], "Clip", wavFile,
+                                         { { 0_tp, TimePosition::fromSeconds (1.0) } },
+                                         DeleteExistingClips::no);
+            auto clip2 = insertWaveClip (*audioTracks[0], "Clip", wavFile,
+                                         { { TimePosition::fromSeconds (1.0), TimePosition::fromSeconds (2.0) } },
+                                         DeleteExistingClips::no);
+            REQUIRE (clip1 != nullptr);
+            REQUIRE (clip2 != nullptr);
+            CHECK (test_utilities::saveEditSync (*edit));
+
+            // Clip::setName renames the source item itself when this is on, but asynchronously
+            auto& storage = engine.getPropertyStorage();
+            const auto renamesSource = storage.getProperty (SettingID::renameClipRenamesSource);
+            storage.setProperty (SettingID::renameClipRenamesSource, false);
+
+            auto& um = edit->getUndoManager();
+            um.beginNewTransaction();
+
+            clip1->setName ("Renamed");
+            audioItem->setName ("Renamed", ProjectItem::SetNameMode::forceRenameSynchronous);
+
+            storage.setProperty (SettingID::renameClipRenamesSource, renamesSource);
+
+            auto renamedFile = wavFile.getSiblingFile ("Renamed.wav");
+            REQUIRE (renamedFile.existsAsFile());
+            REQUIRE (! wavFile.existsAsFile());
+            CHECK (clip1->getSourceFileReference().getFile() == renamedFile);
+            CHECK (clip2->getSourceFileReference().getFile() == renamedFile);
+
+            CHECK (um.undo());
+            CHECK (clip1->getName() == "Clip");
+            CHECK (clip1->getSourceFileReference().getFile() == renamedFile);
+            CHECK (clip2->getSourceFileReference().getFile() == renamedFile);
+
+            CHECK (um.redo());
+            CHECK (clip1->getName() == "Renamed");
+            CHECK (clip1->getSourceFileReference().getFile() == renamedFile);
+            CHECK (clip2->getSourceFileReference().getFile() == renamedFile);
+        }
+
+        tempDir.deleteRecursively (false);
+    }
+
     TEST_CASE ("FolderBasedProject: renaming an Edit doesn't re-save Edits that don't reference it")
     {
         // Creating a project from a template renames each Edit. That used to re-save
