@@ -998,6 +998,78 @@ TEST_CASE ("Edit Node Builder: live device graph routing")
     engine.getAudioFileManager().releaseAllFiles();
 }
 
+TEST_CASE ("Edit Node Builder: node IDs are stable between graph builds")
+{
+    // Nodes find their counterpart in the previous graph by ID to carry state over a
+    // rebuild, so building the same Edit twice has to give the same set of IDs
+    auto& engine = *Engine::getEngines()[0];
+    auto edit = test_utilities::createTestEdit (engine, 1);
+
+    struct GraphInfo
+    {
+        std::vector<std::pair<std::string, size_t>> nodeIDs;
+        std::string description;
+    };
+
+    auto buildGraph = [&]
+    {
+        graph::PlayHead playHead;
+        graph::PlayHeadState playHeadState { playHead };
+        ProcessState processState { playHeadState, edit->tempoSequence };
+
+        auto nodeGraph = createNodeGraph (editnode_test_helpers::createNode (*edit, processState, 44100.0, 256), false);
+        graph::test_utilities::expectUniqueNodeIDs (*nodeGraph->rootNode, true);
+
+        GraphInfo info;
+        info.description = graph::test_utilities::createGraphDescription (*nodeGraph->rootNode);
+
+        for (auto n : nodeGraph->orderedNodes)
+            info.nodeIDs.emplace_back (typeid (*n).name(), n->getNodeProperties().nodeID);
+
+        std::sort (info.nodeIDs.begin(), info.nodeIDs.end());
+        return info;
+    };
+
+    SUBCASE ("Rack with an unconnected modifier")
+    {
+        auto rack = edit->getRackList().addNewRack();
+        rack->getModifierList().insertModifier (juce::ValueTree (IDs::LFO), 0, nullptr);
+        getAudioTracks (*edit)[0]->pluginList.insertPlugin (RackInstance::create (*rack), 0);
+    }
+
+    SUBCASE ("Aux sends and returns")
+    {
+        // 4 source tracks each with two sends to a shared bus and one to their own,
+        // returning on 5 more tracks
+        edit->ensureNumberOfAudioTracks (9);
+        auto tracks = getAudioTracks (*edit);
+
+        auto insertAux = [&] (AudioTrack& t, const char* type, int bus)
+        {
+            auto p = edit->getPluginCache().createNewPlugin (type, {});
+            t.pluginList.insertPlugin (p, 0, nullptr);
+
+            if (auto send = dynamic_cast<AuxSendPlugin*> (p.get()))
+                send->busNumber = bus;
+            else if (auto ret = dynamic_cast<AuxReturnPlugin*> (p.get()))
+                ret->busNumber = bus;
+        };
+
+        for (int i = 0; i < 4; ++i)
+            for (int bus : { 0, 0, i + 1 })
+                insertAux (*tracks[i], AuxSendPlugin::xmlTypeName, bus);
+
+        for (int bus = 0; bus < 5; ++bus)
+            insertAux (*tracks[4 + bus], AuxReturnPlugin::xmlTypeName, bus);
+    }
+
+    const auto first = buildGraph();
+    const auto second = buildGraph();
+    INFO ("First build:\n" << first.description);
+    INFO ("Second build:\n" << second.description);
+    CHECK (first.nodeIDs == second.nodeIDs);
+}
+
 } // TEST_SUITE
 
 } // namespace tracktion::inline engine
