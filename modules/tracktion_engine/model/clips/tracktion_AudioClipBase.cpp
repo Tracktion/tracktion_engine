@@ -1654,7 +1654,9 @@ juce::Array<Exportable::ReferencedItem> AudioClipBase::getReferencedItems()
     {
         for (auto& ref : results)
         {
-            auto wi = edit.engine.getAudioFileManager().getAudioFile (ref.itemRef).getInfo();
+            // Resolve via the Edit as the clip does. Looking a path up through the
+            // ProjectManager searches every item of every open project
+            auto wi = AudioFile (edit.engine, SourceFileReference::findFileFromString (edit, ref.itemRef.toString())).getInfo();
 
             if (wi.sampleRate > 0)
             {
@@ -1685,8 +1687,10 @@ void AudioClipBase::reassignReferencedItem (const ReferencedItem& item,
         }
         else
         {
+            // A path is only reassigned to follow a file that has changed on disk. That can't
+            // be undone so this mustn't be either, or an undo would restore the old path
             auto newFile = newRef.resolve (edit.engine);
-            sourceFileReference.setToFile (newFile, SourceFileReference::PathStyle::chooseBest, false);
+            sourceFileReference.source.setValue (SourceFileReference::findPathFromFile (edit, newFile, true), nullptr);
         }
     }
     else
