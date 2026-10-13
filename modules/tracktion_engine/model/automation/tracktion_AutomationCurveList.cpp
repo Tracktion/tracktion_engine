@@ -798,6 +798,15 @@ public:
         return { objects.begin(), objects.end() };
     }
 
+    void setPositionDelegate (std::function<CurvePosition()> newDelegate)
+    {
+        assert (newDelegate);
+        getPositionDelegate = std::move (newDelegate);
+
+        for (auto curve : objects)
+            curve->setPositionDelegate (getPositionDelegate);
+    }
+
     AutomationCurveModifier::Ptr addCurve (const AutomatableParameter& destParam)
     {
         auto limits = destParam.getValueRange();
@@ -913,6 +922,11 @@ AutomationCurveModifier::Ptr AutomationCurveList::addCurve (const AutomatablePar
 void AutomationCurveList::removeCurve (int idx)
 {
     list->removeCurve (idx);
+}
+
+void AutomationCurveList::setPositionDelegate (std::function<CurvePosition()> newDelegate)
+{
+    list->setPositionDelegate (std::move (newDelegate));
 }
 
 void AutomationCurveList::addListener (Listener& l)
