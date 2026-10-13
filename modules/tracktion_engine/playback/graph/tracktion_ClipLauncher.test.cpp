@@ -294,9 +294,14 @@ namespace clip_launcher_test_utilities
         {
             if (fc.bufferForMidiMessages != nullptr)
                 for (auto& m : *fc.bufferForMidiMessages)
+                {
+                    const auto outputTime = (double) numSamplesProcessed / sampleRate + m.getTimeStamp();
+
                     if (m.isNoteOnOrOff())
-                        events.push_back ({ m.isNoteOn(), m.getNoteNumber(),
-                                            (double) numSamplesProcessed / sampleRate + m.getTimeStamp() });
+                        events.push_back ({ m.isNoteOn(), m.getNoteNumber(), outputTime });
+                    else if (m.isProgramChange())
+                        programChangeTimes.push_back (outputTime);
+                }
 
             numSamplesProcessed += fc.bufferNumSamples;
         }
@@ -320,6 +325,7 @@ namespace clip_launcher_test_utilities
         }
 
         std::vector<Event> events;
+        std::vector<double> programChangeTimes;
         int64_t numSamplesProcessed = 0;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidiProbePlugin)
