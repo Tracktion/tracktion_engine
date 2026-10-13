@@ -11362,6 +11362,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>setPositionDelegate</name>
+      <anchorfile>classengine_1_1AutomationCurveList.html</anchorfile>
+      <anchor>ab266b62b779569b31ce26852a3419aec</anchor>
+      <arglist>(std::function&lt; CurvePosition()&gt;)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>addListener</name>
       <anchorfile>classengine_1_1AutomationCurveList.html</anchorfile>
       <anchor>a711b8f2ac8300f316d24346ca1c5def6</anchor>
