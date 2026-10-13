@@ -1887,6 +1887,56 @@ TEST_SUITE ("tracktion_engine")
         CHECK_LT (getRMSLevel (output, tr (6.2, 6.9)), 0.005f);
     }
 
+    TEST_CASE ("Clip automation: a reloaded launcher clip's automation applies on every loop (live)")
+    {
+        using namespace clip_automation_test_utilities;
+        auto& engine = *Engine::getEngines()[0];
+        test_utilities::EnginePlayer player (engine, getPlayerParams());
+
+        auto sinFile = createSineFile (engine, 4.0, 220.0f);
+        juce::ValueTree editState;
+
+        {
+            auto [edit, track, slot] = createEditWithClipSlot (engine);
+            auto clip = insertAudioClipIntoSlot (*slot, sinFile->getFile());
+
+            // Full level for the first beat of each clip loop, then silent
+            addStepCurve (*clip, *track->getVolumePlugin()->volParam, 1_bp, 1.0f, 0.0f);
+            editState = edit->state.createCopy();
+        }
+
+        // The curve now exists as the clip is constructed. It used to be positioned by
+        // the clip's own range, so stopped applying once the Edit played past
+        // that (waveform_beta#1303)
+        auto edit = loadEditFromState (engine, editState);
+        auto track = getAudioTracks (*edit)[0];
+        getVolumePluginWithoutSmoothing (*track);
+        auto clip = track->getClipSlotList().getClipSlots()[0]->getClip();
+        REQUIRE (clip);
+        auto launchHandle = clip->getLaunchHandle();
+        REQUIRE (launchHandle);
+
+        // An 8 beat arrangement loop, so two clip loops
+        auto& transport = edit->getTransport();
+        transport.setLoopRange (tr (0.0, 8.0));
+        transport.looping = true;
+        transport.play (false);
+        process (player, 1_td);
+        launchHandle->play ({});
+        process (player, 17_td); // to 18s, the arrangement wraps at 8s and 16s
+
+        const auto output = player.getOutput();
+
+        for (auto loopStart : { 1.0, 5.0, 9.0, 13.0, 17.0 })
+        {
+            CAPTURE (loopStart);
+            CHECK_GT (getToneMagnitude (output, tr (loopStart + 0.2, loopStart + 0.8), 220.0), 0.5f);
+
+            if (loopStart < 17.0)
+                CHECK_LT (getRMSLevel (output, tr (loopStart + 1.2, loopStart + 3.9)), 0.005f);
+        }
+    }
+
     TEST_CASE ("Clip launcher: going back to the arrangement cancels a queued launch (audio)")
     {
         auto& engine = *Engine::getEngines()[0];

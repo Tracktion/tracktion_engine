@@ -352,6 +352,11 @@ public:
     /** Removes the curve at the given index. */
     void removeCurve (int idx);
 
+    /** @internal
+        Sets the position delegate of the current curves and any added later.
+    */
+    void setPositionDelegate (std::function<CurvePosition()>);
+
     //==============================================================================
     /**
         Listener interface.

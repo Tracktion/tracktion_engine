@@ -117,6 +117,11 @@ void Clip::initialise()
 
     const juce::ScopedValueSetter<bool> initialiser (isInitialised, false, true);
 
+    // The constructor creates the curve list before the subclass can supply its
+    // launch handle, so a launcher clip's curves need their position delegate updating
+    if (automationCurveList)
+        automationCurveList->setPositionDelegate (getAutomationCurveListDelegates().first);
+
     if (sourceFileReference.isUsingProjectReference())
         sourceMediaChanged();
 
@@ -311,10 +316,9 @@ void Clip::updateAutomationCurveListDestinations()
     if (auto automation = getAutomationCurveList (false))
     {
         for (auto curve : automation->getItems())
-        {
             updateRelativeDestinationOrRemove (*automation, *curve, *this);
-            curve->setPositionDelegate (getAutomationCurveListDelegates().first);
-        }
+
+        automation->setPositionDelegate (getAutomationCurveListDelegates().first);
     }
 }
 
