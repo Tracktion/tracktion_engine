@@ -137,9 +137,12 @@ void MidiNode::processSection (Node::ProcessContext& pc,
 
     if (! getPlayHeadState().isContiguousWithPreviousBlock() || localTime.getStart() <= 0.00001 || shouldCreateMessagesForTime)
     {
+        const auto numEventsBefore = pc.buffers.midi.size();
         MidiNodeHelpers::createMessagesForTime (pc.buffers.midi, sequence, localTime.getStart(),
                                                 channelNumbers, clipLevel, useMPEChannelMode, midiSourceID,
                                                 controllerMessagesScratchBuffer);
+        MidiNodeHelpers::clampTimeStamps (pc.buffers.midi, numEventsBefore,
+                                          localTime.getLength() * secondsPerTimeBase * (pc.numSamples - 1) / pc.numSamples);
         shouldCreateMessagesForTime = false;
     }
 

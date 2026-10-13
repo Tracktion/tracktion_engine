@@ -14,6 +14,17 @@ namespace tracktion::inline engine {
 
 namespace MidiNodeHelpers
 {
+    /** Moves any messages from an index on that are timestamped after a time back to it.
+        Notes struck just after a jump (see createMessagesForTime) are dropped if they're after the
+        end of the section, which can be shorter than their offset, e.g. just after a loop's wrapped.
+    */
+    inline void clampTimeStamps (MidiMessageArray& midi, int startIndex, double maxTimeStamp)
+    {
+        for (int i = startIndex; i < midi.size(); ++i)
+            if (midi[i].getTimeStamp() > maxTimeStamp)
+                midi[i].setTimeStamp (maxTimeStamp);
+    }
+
     inline void createMessagesForTime (MidiMessageArray& destBuffer,
                                        juce::MidiMessageSequence& sourceSequence,
                                        double time,
