@@ -81,6 +81,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a9f70e28eb3a614a12971c748b6e2da0b" id="r_a9f70e28eb3a614a12971c748b6e2da0b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine_1_1MidiNodeHelpers.html#a9f70e28eb3a614a12971c748b6e2da0b">clampTimeStamps</a> (<a class="el" href="structengine_1_1MidiMessageArray.html">MidiMessageArray</a> &amp;<a class="el" href="namespaceengine.html#a3f0cb9989dc30bafaad719176696cc10aa5f4ed7e858bf18cc1f2c0e35e7301e7">midi</a>, int startIndex, double maxTimeStamp)</td></tr>
+<tr class="memdesc:a9f70e28eb3a614a12971c748b6e2da0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Moves any messages from an index on that are timestamped after a time back to it.  <br /></td></tr>
+<tr class="separator:a9f70e28eb3a614a12971c748b6e2da0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85fa341d765bf591970a0e9e48aa434e" id="r_a85fa341d765bf591970a0e9e48aa434e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine_1_1MidiNodeHelpers.html#a85fa341d765bf591970a0e9e48aa434e">createMessagesForTime</a> (<a class="el" href="structengine_1_1MidiMessageArray.html">MidiMessageArray</a> &amp;destBuffer, juce::MidiMessageSequence &amp;sourceSequence, double time, juce::Range&lt; int &gt; channelNumbers, <a class="el" href="structengine_1_1LiveClipLevel.html">LiveClipLevel</a> &amp;clipLevel, bool useMPEChannelMode, <a class="el" href="namespaceengine.html#a88807deb890ec480dcabe757a6a1e925">MPESourceID</a> midiSourceID, juce::Array&lt; juce::MidiMessage &gt; &amp;controllerMessagesScratchBuffer)</td></tr>
 <tr class="separator:a85fa341d765bf591970a0e9e48aa434e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8dc5edd28a8308ab103c1905e9ffa1f0" id="r_a8dc5edd28a8308ab103c1905e9ffa1f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceengine_1_1MidiNodeHelpers.html#a8dc5edd28a8308ab103c1905e9ffa1f0">createNoteOffs</a> (<a class="el" href="structengine_1_1MidiMessageArray.html">MidiMessageArray</a> &amp;destination, const juce::MidiMessageSequence &amp;sourceSequence, <a class="el" href="namespaceengine.html#a88807deb890ec480dcabe757a6a1e925">MPESourceID</a> midiSourceID, double time, double midiTimeOffset, bool isPlaying)</td></tr>
@@ -92,6 +95,47 @@ Functions</h2></td></tr>
 <tr class="separator:a93b1c20e4c90fde63a8b84d3d128a234"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a9f70e28eb3a614a12971c748b6e2da0b" name="a9f70e28eb3a614a12971c748b6e2da0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f70e28eb3a614a12971c748b6e2da0b">&#9670;&#160;</a></span>clampTimeStamps()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void engine::MidiNodeHelpers::clampTimeStamps </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structengine_1_1MidiMessageArray.html">MidiMessageArray</a> &amp;&#160;</td>
+          <td class="paramname"><em>midi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>startIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>maxTimeStamp</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Moves any messages from an index on that are timestamped after a time back to it. </p>
+<p>Notes struck just after a jump (see createMessagesForTime) are dropped if they're after the end of the section, which can be shorter than their offset, e.g. just after a loop's wrapped. </p>
+
+<p class="reference">References <a class="el" href="namespaceengine_1_1MidiNodeHelpers.html#a9f70e28eb3a614a12971c748b6e2da0b">clampTimeStamps()</a>, and <a class="el" href="namespaceengine.html#a3f0cb9989dc30bafaad719176696cc10aa5f4ed7e858bf18cc1f2c0e35e7301e7">engine::midi</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="namespaceengine_1_1MidiNodeHelpers.html#a9f70e28eb3a614a12971c748b6e2da0b">clampTimeStamps()</a>.</p>
+
+</div>
+</div>
 <a id="a85fa341d765bf591970a0e9e48aa434e" name="a85fa341d765bf591970a0e9e48aa434e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a85fa341d765bf591970a0e9e48aa434e">&#9670;&#160;</a></span>createMessagesForTime()</h2>
 
@@ -301,7 +345,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 13 2026 11:34:00 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Tue Oct 13 2026 15:26:58 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

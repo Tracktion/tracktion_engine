@@ -85122,6 +85122,13 @@
     <filename>namespaceengine_1_1MidiNodeHelpers.html</filename>
     <member kind="function">
       <type>void</type>
+      <name>clampTimeStamps</name>
+      <anchorfile>namespaceengine_1_1MidiNodeHelpers.html</anchorfile>
+      <anchor>a9f70e28eb3a614a12971c748b6e2da0b</anchor>
+      <arglist>(MidiMessageArray &amp;midi, int startIndex, double maxTimeStamp)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>createMessagesForTime</name>
       <anchorfile>namespaceengine_1_1MidiNodeHelpers.html</anchorfile>
       <anchor>a85fa341d765bf591970a0e9e48aa434e</anchor>
