@@ -460,6 +460,7 @@ inline value::Value parse (text::UTF8Pointer text, bool parseBareValue)
 
             for (;;)
             {
+                auto charStart = current;
                 auto c = pop();
 
                 if (c == '"')
@@ -483,6 +484,9 @@ inline value::Value parse (text::UTF8Pointer text, bool parseBareValue)
                         default:   break;
                     }
                 }
+
+                if (c == 0)
+                    throwError ("Unexpected EOF in string constant", charStart);
 
                 char utf8Bytes[8];
                 auto numBytes = text::convertUnicodeCodepointToUTF8 (utf8Bytes, c);

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(choc_tests)
 
-add_executable(choc_tests choc_tests.cpp)
+add_executable(choc_tests choc_tests.cpp choc_tests.h)
 
 # To test V8, there needs to be a suitable folder somewhere with a build
 # set(V8_LOCATION "/path_to_your_v8_folder/v8")
@@ -28,7 +28,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR
 
     # Enable additional Clang warnings
     if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wint-conversion -Woverloaded-virtual -Wshorten-64-to-32 -Wconditional-uninitialized -Wconstant-conversion -Wunused-private-field -Wbool-conversion -Wextra-semi -Wshadow-uncaptured-local")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wint-conversion -Woverloaded-virtual -Wshorten-64-to-32 -Wconditional-uninitialized -Wconstant-conversion -Wunused-private-field -Wbool-conversion -Wextra-semi -Wshadow-uncaptured-local -Wdeprecated-declarations -Wdangling-assignment-gsl")
 
         # V8 screws up the sanitizer...
         if (DEFINED V8_LOCATION)
