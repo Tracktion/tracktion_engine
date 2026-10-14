@@ -52,11 +52,11 @@
 #include <climits>
 #include <cmath>
 #include <algorithm>
-#include <codecvt>
-#include <locale>
 
 #if defined(_WIN32)
-#include <windows.h>
+ #include <windows.h>
+#else
+ #include "../../../text/choc_UTF8.h"
 #endif
 
 // Static variable definitions.
@@ -78,7 +78,7 @@ std::string convertCharPointerToStdString(const char *text)
 template<> inline
 std::string convertCharPointerToStdString(const wchar_t* text)
 {
-#if defined(_MSC_VER)
+#if defined(_WIN32)
   if (!text)
     return std::string();
   const int wchars = (int)wcslen(text);
@@ -92,7 +92,12 @@ std::string convertCharPointerToStdString(const wchar_t* text)
   WideCharToMultiByte(CP_UTF8, 0, text, wchars, &nret[0], nchars, 0, 0);
   return nret;
 #else
-  return std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>>{}.to_bytes(text);
+  std::string result;
+
+  while (*text)
+    choc::text::appendUTF8 (result, static_cast<choc::text::UnicodeChar> (*text++));
+
+  return result;
 #endif
 }
 

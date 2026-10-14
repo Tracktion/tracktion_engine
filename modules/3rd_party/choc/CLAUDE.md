@@ -92,6 +92,7 @@ The project uses its own minimal unit test framework defined in `choc/platform/c
 - `CHOC_EXPECT_EQ(a, b)` - Assert equality with detailed error messages
 - `CHOC_EXPECT_NE(a, b)` - Assert inequality
 - `CHOC_EXPECT_NEAR(a, b, tolerance)` - Assert floating-point near-equality
+- `CHOC_EXPECT_THROW(expr)` - Assert that evaluating `expr` throws an exception
 - `CHOC_FAIL(message)` - Explicitly fail a test with message
 
 ### Code Style

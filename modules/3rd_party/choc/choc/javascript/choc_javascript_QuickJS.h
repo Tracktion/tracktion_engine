@@ -64181,9 +64181,12 @@ struct QuickJSContext  : public Context::Pimpl
         ValuePtr operator[] (uint32_t index) const    { return takeValue (JS_GetPropertyUint32 (context, value, index)); }
         ValuePtr operator[] (const char* name) const  { return takeValue (JS_GetPropertyStr (context, value, name)); }
 
-        choc::value::Value toChocValue() const
+        choc::value::Value toChocValue (uint32_t depth = 0) const
         {
             CHOC_ASSERT (context != nullptr);
+
+            if (depth > 32)
+                return {};
 
             if (JS_IsNumber (value))
             {
@@ -64210,9 +64213,9 @@ struct QuickJSContext  : public Context::Pimpl
                 uint32_t len = 0;
                 JS_ToUint32 (context, &len, lengthProp.get());
 
-                return choc::value::createArray (len, [this] (uint32_t i)
+                return choc::value::createArray (len, [this, depth] (uint32_t i)
                 {
-                    return (*this)[i].toChocValue();
+                    return (*this)[i].toChocValue (depth + 1);
                 });
             }
 
@@ -64256,11 +64259,11 @@ struct QuickJSContext  : public Context::Pimpl
                     obj = std::move (proto);
                 }
 
-                auto o = choc::value::createObject (hasClassName ? (*this)[objectNameAttribute].toChocValue().toString()
+                auto o = choc::value::createObject (hasClassName ? (*this)[objectNameAttribute].toChocValue (depth + 1).toString()
                                                                  : std::string());
 
                 for (auto& propName : propNames)
-                    o.setMember (propName, (*this)[propName.c_str()].toChocValue());
+                    o.setMember (propName, (*this)[propName.c_str()].toChocValue (depth + 1));
 
                 return o;
             }

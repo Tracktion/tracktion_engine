@@ -105149,8 +105149,11 @@ struct DuktapeContext  : public Context::Pimpl
         return duk_push_undefined (context);
     }
 
-    static choc::value::Value readValue (duktape::duk_context* ctx, duktape::duk_idx_t index)
+    static choc::value::Value readValue (duktape::duk_context* ctx, duktape::duk_idx_t index, uint32_t depth = 0)
     {
+        if (depth > 32)
+            return {};
+
         switch (duk_get_type (ctx, index))
         {
             case DUK_TYPE_NULL:      return {};
@@ -105182,7 +105185,7 @@ struct DuktapeContext  : public Context::Pimpl
                                                      [&] (uint32_t i) -> choc::value::Value
                     {
                         duk_get_prop_index (ctx, index, static_cast<duktape::duk_uarridx_t> (i));
-                        auto element = readValue (ctx, -1);
+                        auto element = readValue (ctx, -1, depth + 1);
                         duk_pop (ctx);
                         return element;
                     });
@@ -105211,7 +105214,7 @@ struct DuktapeContext  : public Context::Pimpl
 
                 while (anyRemaining)
                 {
-                    object.addMember (duk_to_string (ctx, -2), readValue (ctx, -1));
+                    object.addMember (duk_to_string (ctx, -2), readValue (ctx, -1, depth + 1));
                     duk_pop_2 (ctx);
                     anyRemaining = duk_next (ctx, -1, 1);
                 }

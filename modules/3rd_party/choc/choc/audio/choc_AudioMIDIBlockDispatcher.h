@@ -121,6 +121,11 @@ struct AudioMIDIBlockDispatcher
     /// a millisecond so probably good enough for most live situations.
     uint32_t midiTimingGranularityFrames = 32;
 
+    /// The clock function used to timestamp incoming MIDI events and to mark the boundaries
+    /// between processed blocks. By default it reads the system's high-resolution steady clock,
+    /// but you can provide your own source - e.g. to feed deterministic timestamps from a test.
+    std::function<MIDIEventTime()> getCurrentTime = [] { return HighResolutionSteadyClock::now(); };
+
 private:
     //==============================================================================
     choc::buffer::ChannelArrayView<float> nextOutputBlock;
@@ -165,7 +170,7 @@ inline void AudioMIDIBlockDispatcher::reset (double sampleRate, size_t midiFIFOC
 inline void AudioMIDIBlockDispatcher::addMIDIEvent (MIDIDeviceID deviceID, const void* data, uint32_t size)
 {
     midiFIFO.push (sizeof (MIDIEventTime) + sizeof (MIDIDeviceID) + size,
-                  [time = HighResolutionSteadyClock::now(), deviceID, data, size] (void* dest)
+                  [time = getCurrentTime(), deviceID, data, size] (void* dest)
     {
         auto d = static_cast<char*> (dest);
         choc::memory::writeNativeEndian (d, time);
@@ -245,7 +250,12 @@ void AudioMIDIBlockDispatcher::processInChunks (Callback&& process)
             {
                 auto eventTime = midiMessageTimes[endOfMIDI];
 
-                if (eventTime > chunkToDo.start)
+                // midiTimingGranularityFrames is a *minimum* chunk size: only split the block
+                // here if this event lies at least that many frames past the current chunk's
+                // start. Events closer than that are grouped into the current chunk (and hence
+                // rendered at chunkToDo.start), which guarantees every chunk is at least the
+                // granularity - except for a natural short remainder at the end of the buffer.
+                if (eventTime >= chunkToDo.start + midiTimingGranularityFrames)
                 {
                     chunkToDo.end = eventTime;
                     break;
@@ -284,7 +294,7 @@ inline void AudioMIDIBlockDispatcher::fetchMIDIBlockFromFIFO (choc::fifo::Variab
     midiMessageTimes.clear();
 
     auto blockStartTime = lastBlockTime;
-    lastBlockTime = HighResolutionSteadyClock::now();
+    lastBlockTime = getCurrentTime();
 
     while (midiFIFOBatchOp.pop ([&] (const void* d, uint32_t totalSize)
     {
@@ -301,13 +311,20 @@ inline void AudioMIDIBlockDispatcher::fetchMIDIBlockFromFIFO (choc::fifo::Variab
 
             frameIndex = 0;
         }
-        else if (frameIndex > static_cast<int32_t> (numFramesNeeded))
+        else if (frameIndex >= static_cast<int32_t> (numFramesNeeded))
         {
+            // An event landing on (or past) the block's end boundary belongs at the last
+            // valid frame. Clamping with '>' instead of '>=' would leave an event at exactly
+            // numFramesNeeded unclamped, and processInChunks() would then open a chunk
+            // boundary at the block end and drop the event (there is no following chunk).
             frameIndex = static_cast<int32_t> (numFramesNeeded) - 1;
         }
 
-        auto snappedIndex = static_cast<uint32_t> (frameIndex) % midiTimingGranularityFrames;
-        midiMessageTimes.push_back (snappedIndex);
+        // Record the event's exact frame position. The granularity (a *minimum* chunk
+        // size) isn't applied here - it's enforced in processInChunks(), which only opens
+        // a new chunk when an event lies at least midiTimingGranularityFrames past the
+        // current chunk's start.
+        midiMessageTimes.push_back (static_cast<uint32_t> (frameIndex));
 
         data += sizeof (MIDIEventTime);
         auto deviceID = choc::memory::readNativeEndian<MIDIDeviceID> (data);
