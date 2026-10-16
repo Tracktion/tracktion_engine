@@ -373,10 +373,15 @@ void LockFreeMultiThreadedNodePlayer::resetProcessQueue (PreparedNode& preparedN
 
     size_t numNodesJustQueued = 0;
 
-    // Make sure the counters are reset for all nodes before queueing any
+    // Make sure the counters are reset for all nodes before queueing any.
+    // Only queue the leaf Nodes, going by their input count rather than their counter:
+    // a pool thread that saw numNodesQueued > 0 at the end of the last block can still
+    // dequeue and process a leaf queued here, and so take a later Node's counter to 0
+    // whilst this loop is running. That Node is then queued by that thread, so queueing
+    // it here too would process it twice
     for (auto& playbackNode : preparedNode.playbackNodes)
     {
-        if (playbackNode->numInputsToBeProcessed.load (std::memory_order_acquire) == 0)
+        if (playbackNode->numInputs == 0)
         {
             jassert (! playbackNode->hasBeenQueued);
             playbackNode->hasBeenQueued = true;
