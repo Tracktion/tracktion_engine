@@ -754,6 +754,19 @@ void ExternalPlugin::forceFullReinitialise()
         t->refreshCurrentAutoParam();
 }
 
+void ExternalPlugin::recreatePluginInstance()
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD
+
+    // Detach the playback context first, so nothing on the audio thread can be
+    // using the old instance or its parameters while they're deleted
+    const Edit::ScopedRenderStatus srs (edit, true);
+
+    flushPluginStateToValueTree();
+    deletePluginInstance();
+    forceFullReinitialise();
+}
+
 void ExternalPlugin::updateDebugName()
 {
     debugName = desc.name + " (" + desc.pluginFormatName + ")";
