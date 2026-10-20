@@ -86781,6 +86781,15 @@
     <subgroup>tracktion_engine-utilities</subgroup>
   </compound>
   <compound kind="group">
+    <name>tracktion_graph</name>
+    <title>tracktion_graph</title>
+    <filename>group__tracktion__graph.html</filename>
+    <subgroup>tracktion_graph-3rd_party</subgroup>
+    <subgroup>tracktion_graph-docs</subgroup>
+    <subgroup>tracktion_graph-tracktion_graph</subgroup>
+    <subgroup>tracktion_graph-utilities</subgroup>
+  </compound>
+  <compound kind="group">
     <name>tracktion_graph-tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph-tracktion__graph.html</filename>
@@ -86827,15 +86836,6 @@
     <class kind="struct">graph::test_utilities::TestSetup</class>
     <class kind="struct">graph::test_utilities::TestContext</class>
     <class kind="struct">graph::test_utilities::TestProcess</class>
-  </compound>
-  <compound kind="group">
-    <name>tracktion_graph</name>
-    <title>tracktion_graph</title>
-    <filename>group__tracktion__graph.html</filename>
-    <subgroup>tracktion_graph-3rd_party</subgroup>
-    <subgroup>tracktion_graph-docs</subgroup>
-    <subgroup>tracktion_graph-tracktion_graph</subgroup>
-    <subgroup>tracktion_graph-utilities</subgroup>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-utilities</name>
