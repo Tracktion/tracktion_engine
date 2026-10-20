@@ -23,9 +23,10 @@ if (MSVC)
     set (CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
-# If we are compiling for macOS we want to target OS versions down to 10.15
-if (APPLE)
-    set (CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE INTERNAL "")
+# If we are compiling for macOS we want to target OS versions down to 12.0,
+# unless a parent project has already chosen its own deployment target
+if (APPLE AND NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+    set (CMAKE_OSX_DEPLOYMENT_TARGET "12.0" CACHE INTERNAL "")
 endif()
 
 
