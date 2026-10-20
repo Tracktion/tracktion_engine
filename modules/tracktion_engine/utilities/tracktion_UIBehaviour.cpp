@@ -41,8 +41,8 @@ void UIBehaviour::showOkCancelAlertBoxAsync (const juce::String& title, const ju
                      .withIconType (juce::MessageBoxIconType::QuestionIcon)
                      .withTitle (title)
                      .withMessage (message)
-                     .withButton (ok.isNotEmpty() ? ok : TRANS("OK"))
-                     .withButton (cancel.isNotEmpty() ? cancel : TRANS("Cancel"));
+                     .withButton (ok.isNotEmpty() ? ok : TRANS("OK"), 1)
+                     .withButton (cancel.isNotEmpty() ? cancel : TRANS("Cancel"), 0);
 
     juce::AlertWindow::showAsync (options, [cb = std::move (callback)] (int result)
     {
@@ -60,9 +60,9 @@ void UIBehaviour::showYesNoCancelAlertBoxAsync (const juce::String& title, const
                      .withIconType (juce::MessageBoxIconType::QuestionIcon)
                      .withTitle (title)
                      .withMessage (message)
-                     .withButton (yes.isNotEmpty() ? yes : TRANS("Yes"))
-                     .withButton (no.isNotEmpty() ? no : TRANS("No"))
-                     .withButton (cancel.isNotEmpty() ? cancel : TRANS("Cancel"));
+                     .withButton (yes.isNotEmpty() ? yes : TRANS("Yes"), 1)
+                     .withButton (no.isNotEmpty() ? no : TRANS("No"), 2)
+                     .withButton (cancel.isNotEmpty() ? cancel : TRANS("Cancel"), 0);
 
     juce::AlertWindow::showAsync (options, [cb = std::move (callback)] (int result)
     {
