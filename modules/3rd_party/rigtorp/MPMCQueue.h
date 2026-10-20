@@ -105,7 +105,9 @@ template <typename T> struct Slot {
 
   // Align to avoid false sharing between adjacent slots
   alignas(hardwareInterferenceSize) std::atomic<size_t> turn = {0};
-  typename std::aligned_storage<sizeof(T), alignof(T)>::type storage;
+  // std::aligned_storage is deprecated in C++23 (and no longer reachable
+  // without <type_traits> in recent libc++), so use a plain aligned buffer
+  alignas(T) unsigned char storage[sizeof(T)];
 };
 
 template <typename T, typename Allocator = AlignedAllocator<Slot<T>>>
