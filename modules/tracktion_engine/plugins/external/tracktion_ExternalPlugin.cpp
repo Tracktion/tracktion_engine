@@ -845,8 +845,9 @@ void ExternalPlugin::refreshParameterValues()
             p->valueChangedByPlugin();
 }
 
-static std::unique_ptr<juce::PluginDescription> findMatchingPluginDescription (Engine& engine, const juce::PluginDescription& desc)
+static std::unique_ptr<juce::PluginDescription> findMatchingPluginDescription (Edit& edit, const juce::PluginDescription& desc)
 {
+    auto& engine = edit.engine;
     auto& pm = engine.getPluginManager();
 
     if (desc.uniqueId != 0)
@@ -865,7 +866,7 @@ static std::unique_ptr<juce::PluginDescription> findMatchingPluginDescription (E
             if (d.fileOrIdentifier == desc.fileOrIdentifier)
                 return std::make_unique<juce::PluginDescription> (d);
 
-        return engine.getEngineBehaviour().findDescriptionForFileOrID (desc.fileOrIdentifier);
+        return engine.getEngineBehaviour().findDescriptionForFileOrIDInEdit (edit, desc.fileOrIdentifier);
     }
 
     return {};
@@ -940,7 +941,7 @@ std::unique_ptr<juce::PluginDescription> ExternalPlugin::findMatchingPlugin() co
             return p;
     }
 
-    if (auto p = findMatchingPluginDescription (engine, desc))
+    if (auto p = findMatchingPluginDescription (edit, desc))
         return p;
 
     if (auto p = findDescForName (engine, desc.name, getPreferredFormat (desc)))
