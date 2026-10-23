@@ -194,6 +194,19 @@ public:
     /// archive can recreate their relative layout.
     virtual juce::Array<juce::File> getExtraFilesToArchive (Edit&)                   { return {}; }
 
+    /// A loose file to bundle into an archive, and the relative path (using '/'
+    /// separators) it should take inside the archived project.
+    struct ExtraFileToArchive
+    {
+        juce::File file;
+        juce::String pathInArchive;
+    };
+
+    /// Like getExtraFilesToArchive, but each file names its own path inside the
+    /// archived project, so files living outside the source project's directory
+    /// (e.g. a plugin patch referenced from another project) can be bundled too.
+    virtual std::vector<ExtraFileToArchive> getExtraFilesToArchiveWithPaths (Edit&)  { return {}; }
+
     /// Called when the user moves the transport while it's playing (e.g. jumping
     /// to a marker) via
     /// TransportControl::jumpTo(). Return a time to defer the jump until, e.g. to

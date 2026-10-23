@@ -393,6 +393,19 @@ bool ArchiveJob::copyToTempDir()
                 }
             }
 
+            // Extra files that name their own path inside the archive, which lets
+            // them come from outside the source project dir.
+            for (auto& extraFile : engine.getEngineBehaviour().getExtraFilesToArchiveWithPaths (*edit))
+            {
+                auto destFile = projectDir.getChildFile (extraFile.pathInArchive);
+
+                if (! extraFile.file.existsAsFile() || ! destFile.isAChildOf (projectDir) || destFile.existsAsFile())
+                    continue;
+
+                destFile.getParentDirectory().createDirectory();
+                extraFile.file.copyFileTo (destFile);
+            }
+
             // Reassign refs on the dest Edit, then let it destruct on the
             // message thread before consolidate() runs.
             bool destEditLoadFailed = false;
