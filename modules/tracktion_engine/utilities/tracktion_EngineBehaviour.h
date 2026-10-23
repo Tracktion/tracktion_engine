@@ -187,13 +187,6 @@ public:
     /// If you have any special plugins that access items in the Edit, you need to reassign them
     virtual void reassignReferencedItem (ExternalPlugin&, const Exportable::ReferencedItem&, ProjectItemRef, double)  {}
 
-    /// Return any extra loose files the Edit depends on that aren't tracked as
-    /// ProjectItems (e.g. plugin patch files living in a project subfolder).
-    /// These are bundled when archiving a single Edit so they survive the
-    /// round-trip. Paths should live under the source project's directory so the
-    /// archive can recreate their relative layout.
-    virtual juce::Array<juce::File> getExtraFilesToArchive (Edit&)                   { return {}; }
-
     /// A loose file to bundle into an archive, and the relative path (using '/'
     /// separators) it should take inside the archived project.
     struct ExtraFileToArchive
@@ -202,10 +195,11 @@ public:
         juce::String pathInArchive;
     };
 
-    /// Like getExtraFilesToArchive, but each file names its own path inside the
-    /// archived project, so files living outside the source project's directory
-    /// (e.g. a plugin patch referenced from another project) can be bundled too.
-    virtual std::vector<ExtraFileToArchive> getExtraFilesToArchiveWithPaths (Edit&)  { return {}; }
+    /// Return any extra loose files the Edit depends on that aren't tracked as
+    /// ProjectItems (e.g. plugin patch files), each with its path inside the
+    /// archived project. These are bundled when archiving a single Edit so they
+    /// survive the round-trip, wherever the files live.
+    virtual std::vector<ExtraFileToArchive> getExtraFilesToArchive (Edit&)          { return {}; }
 
     /// Called when the user moves the transport while it's playing (e.g. jumping
     /// to a marker) via

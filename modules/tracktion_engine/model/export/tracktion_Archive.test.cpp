@@ -3650,20 +3650,21 @@ TEST_SUITE ("tracktion_engine")
         CHECK (extractedEdit->getMarkerManager().getMarkers().size() == 1);
     }
 
+    /// Reports whichever extra files a test plants, for the archive to bundle
+    struct ArchiveExtraFilesBehaviour : public EngineBehaviour
+    {
+        std::vector<ExtraFileToArchive> extraFiles;
+        bool autoInitialiseDeviceManager() override                                 { return false; }
+        std::vector<ExtraFileToArchive> getExtraFilesToArchive (Edit&) override     { return extraFiles; }
+    };
+
     TEST_CASE ("Archive: single Edit archive bundles extra files from EngineBehaviour")
     {
         // A single-edit archive only copies the edit plus its referenced ProjectItems.
         // Loose files an Edit depends on (e.g. plugin patch folders) are reported via
-        // EngineBehaviour::getExtraFilesToArchive and must survive the round-trip with
-        // their layout relative to the project dir preserved. We drive that with a
-        // dedicated Engine whose behaviour reports a planted patch folder.
-        struct ArchiveExtraFilesBehaviour : public EngineBehaviour
-        {
-            juce::Array<juce::File> extraFiles;
-            bool autoInitialiseDeviceManager() override                   { return false; }
-            juce::Array<juce::File> getExtraFilesToArchive (Edit&) override { return extraFiles; }
-        };
-
+        // EngineBehaviour::getExtraFilesToArchive and must survive the round-trip at
+        // the paths they name. We drive that with a dedicated Engine whose behaviour
+        // reports a planted patch folder.
         auto behaviour = std::make_unique<ArchiveExtraFilesBehaviour>();
         auto* behaviourPtr = behaviour.get();
 
@@ -3705,7 +3706,8 @@ TEST_SUITE ("tracktion_engine")
         auto viewFile = viewDir.getChildFile ("index.html");
         viewFile.replaceWithText ("<!doctype html><html><body>view</body></html>");
 
-        behaviourPtr->extraFiles = { manifestFile, viewFile };
+        behaviourPtr->extraFiles = { { manifestFile, "patches/TestPatch/patch.json" },
+                                     { viewFile, "patches/TestPatch/view/index.html" } };
 
         // Archive the single edit.
         auto archiveFile = tempDirFile.getChildFile ("test_archive.zip");
@@ -3743,15 +3745,8 @@ TEST_SUITE ("tracktion_engine")
     TEST_CASE ("Archive: single Edit archive bundles extra files from outside the project at their given paths")
     {
         // A copied project folder can leave an Edit depending on loose files in the
-        // original project. getExtraFilesToArchiveWithPaths lets the app name where
-        // each one goes in the archive, so they're bundled rather than dropped.
-        struct ArchiveExtraFilesBehaviour : public EngineBehaviour
-        {
-            std::vector<ExtraFileToArchive> extraFiles;
-            bool autoInitialiseDeviceManager() override                                      { return false; }
-            std::vector<ExtraFileToArchive> getExtraFilesToArchiveWithPaths (Edit&) override { return extraFiles; }
-        };
-
+        // original project. getExtraFilesToArchive names where each one goes in the
+        // archive, so they're bundled rather than dropped.
         auto behaviour = std::make_unique<ArchiveExtraFilesBehaviour>();
         auto* behaviourPtr = behaviour.get();
 
