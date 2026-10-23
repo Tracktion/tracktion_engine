@@ -54,6 +54,14 @@ public:
     /// Gives an opportunity to load custom plugins for those that have been registered as custom formats but not added to the list.
     virtual std::unique_ptr<juce::PluginDescription> findDescriptionForFileOrID (const juce::String&)   { return {}; }
 
+    /// Like findDescriptionForFileOrID, but called with the Edit the plugin is being loaded
+    /// into, so the host can resolve references against that Edit's project first (e.g.
+    /// plugin resources copied along with a project folder). Defaults to findDescriptionForFileOrID.
+    virtual std::unique_ptr<juce::PluginDescription> findDescriptionForFileOrIDInEdit (Edit&, const juce::String& fileOrID)
+    {
+        return findDescriptionForFileOrID (fileOrID);
+    }
+
     /// Should return if the given plugin is disabled or not.
     /// ExternalPlugins will use this to determine if they should load themselves or not.
     /// This can be called often so should be quick to execute.
