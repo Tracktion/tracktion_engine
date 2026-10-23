@@ -227,7 +227,7 @@ The `tracktion_Archive.h` header provides a new archive system that replaces the
 - **Folder-based projects**: copies the project folder to a temp directory, consolidates the copy, then zips it.
 - **File-based projects**: converts to folder-based in a temp directory first, then consolidates and zips as above.
 
-In both cases the work happens on a temporary copy - the user's project folder is never modified. Applications can bundle extra resources into archives by overriding `EngineBehaviour::getExtraFilesToArchive (Edit&)`.
+In both cases the work happens on a temporary copy - the user's project folder is never modified. Applications can bundle extra resources into single-Edit archives by overriding `EngineBehaviour::getExtraFilesToArchive (Edit&)`, giving each file's path inside the archived project. The files can live anywhere, including outside the source project.
 
 ```cpp
 ArchiveJob::Source source = &myProject;

@@ -370,27 +370,18 @@ bool ArchiveJob::copyToTempDir()
             }
 
             // Copy any extra loose files the Edit depends on that aren't tracked
-            // as ProjectItems (e.g. plugin patch folders). These are preserved
-            // with their layout relative to the source project dir so references
-            // into them can be relocated after extraction.
-            if (auto srcProject = (*projectItem)->getProject())
+            // as ProjectItems (e.g. plugin patch folders), at the path each one
+            // names inside the archive so references into them can be relocated
+            // after extraction.
+            for (auto& extraFile : engine.getEngineBehaviour().getExtraFilesToArchive (*edit))
             {
-                auto srcProjectDir = srcProject->getDefaultDirectory();
+                auto destFile = projectDir.getChildFile (extraFile.pathInArchive);
 
-                for (auto& extraFile : engine.getEngineBehaviour().getExtraFilesToArchive (*edit))
-                {
-                    if (! extraFile.existsAsFile() || ! extraFile.isAChildOf (srcProjectDir))
-                        continue;
+                if (! extraFile.file.existsAsFile() || ! destFile.isAChildOf (projectDir) || destFile.existsAsFile())
+                    continue;
 
-                    auto relPath = extraFile.getRelativePathFrom (srcProjectDir);
-                    auto destFile = projectDir.getChildFile (relPath);
-
-                    if (destFile.existsAsFile())
-                        continue;
-
-                    destFile.getParentDirectory().createDirectory();
-                    extraFile.copyFileTo (destFile);
-                }
+                destFile.getParentDirectory().createDirectory();
+                extraFile.file.copyFileTo (destFile);
             }
 
             // Reassign refs on the dest Edit, then let it destruct on the
