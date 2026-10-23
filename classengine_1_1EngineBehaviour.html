@@ -93,6 +93,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1EngineBehaviour_1_1ControlSurfaces.html">ControlSurfaces</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1EngineBehaviour_1_1ExtraFileToArchive.html">ExtraFileToArchive</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A loose file to bundle into an archive, and the relative path (using '/' separators) it should take inside the archived project.  <a href="structengine_1_1EngineBehaviour_1_1ExtraFileToArchive.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structengine_1_1EngineBehaviour_1_1LevelMeterSettings.html">LevelMeterSettings</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -111,6 +114,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8bbcf0c7948f04b03ad31f17d2cf4449" id="r_a8bbcf0c7948f04b03ad31f17d2cf4449"><td class="memItemLeft" align="right" valign="top">virtual std::unique_ptr&lt; juce::PluginDescription &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1EngineBehaviour.html#a8bbcf0c7948f04b03ad31f17d2cf4449">findDescriptionForFileOrID</a> (const juce::String &amp;)</td></tr>
 <tr class="memdesc:a8bbcf0c7948f04b03ad31f17d2cf4449"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives an opportunity to load custom plugins for those that have been registered as custom formats but not added to the list.  <br /></td></tr>
 <tr class="separator:a8bbcf0c7948f04b03ad31f17d2cf4449"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abeb1db5b238b98b0247e911a32293cac" id="r_abeb1db5b238b98b0247e911a32293cac"><td class="memItemLeft" align="right" valign="top">virtual std::unique_ptr&lt; juce::PluginDescription &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1EngineBehaviour.html#abeb1db5b238b98b0247e911a32293cac">findDescriptionForFileOrIDInEdit</a> (<a class="el" href="classengine_1_1Edit.html">Edit</a> &amp;, const juce::String &amp;fileOrID)</td></tr>
+<tr class="memdesc:abeb1db5b238b98b0247e911a32293cac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Like findDescriptionForFileOrID, but called with the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> the plugin is being loaded into, so the host can resolve references against that <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>'s project first (e.g.  <br /></td></tr>
+<tr class="separator:abeb1db5b238b98b0247e911a32293cac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe98a135547f0a5314c5216cd906b7e3" id="r_abe98a135547f0a5314c5216cd906b7e3"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1EngineBehaviour.html#abe98a135547f0a5314c5216cd906b7e3">isPluginDisabled</a> (const juce::String &amp;)</td></tr>
 <tr class="memdesc:abe98a135547f0a5314c5216cd906b7e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should return if the given plugin is disabled or not.  <br /></td></tr>
 <tr class="separator:abe98a135547f0a5314c5216cd906b7e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -203,9 +209,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aab35e208edefd3d200f31e7557060dd9" id="r_aab35e208edefd3d200f31e7557060dd9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1EngineBehaviour.html#aab35e208edefd3d200f31e7557060dd9">reassignReferencedItem</a> (<a class="el" href="classengine_1_1ExternalPlugin.html">ExternalPlugin</a> &amp;, const <a class="el" href="structengine_1_1Exportable_1_1ReferencedItem.html">Exportable::ReferencedItem</a> &amp;, <a class="el" href="classengine_1_1ProjectItemRef.html">ProjectItemRef</a>, double)</td></tr>
 <tr class="memdesc:aab35e208edefd3d200f31e7557060dd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">If you have any special plugins that access items in the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>, you need to reassign them.  <br /></td></tr>
 <tr class="separator:aab35e208edefd3d200f31e7557060dd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7abc6c3d60a93140c863d084103a010" id="r_ac7abc6c3d60a93140c863d084103a010"><td class="memItemLeft" align="right" valign="top">virtual juce::Array&lt; juce::File &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1EngineBehaviour.html#ac7abc6c3d60a93140c863d084103a010">getExtraFilesToArchive</a> (<a class="el" href="classengine_1_1Edit.html">Edit</a> &amp;)</td></tr>
-<tr class="memdesc:ac7abc6c3d60a93140c863d084103a010"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return any extra loose files the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> depends on that aren't tracked as ProjectItems (e.g.  <br /></td></tr>
-<tr class="separator:ac7abc6c3d60a93140c863d084103a010"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6b4b8ac2c76d2ebcef88fbc057a09e7" id="r_aa6b4b8ac2c76d2ebcef88fbc057a09e7"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; <a class="el" href="structengine_1_1EngineBehaviour_1_1ExtraFileToArchive.html">ExtraFileToArchive</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1EngineBehaviour.html#aa6b4b8ac2c76d2ebcef88fbc057a09e7">getExtraFilesToArchive</a> (<a class="el" href="classengine_1_1Edit.html">Edit</a> &amp;)</td></tr>
+<tr class="memdesc:aa6b4b8ac2c76d2ebcef88fbc057a09e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return any extra loose files the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> depends on that aren't tracked as ProjectItems (e.g.  <br /></td></tr>
+<tr class="separator:aa6b4b8ac2c76d2ebcef88fbc057a09e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a543d6ddf1ed4b3428f485ba309195185" id="r_a543d6ddf1ed4b3428f485ba309195185"><td class="memItemLeft" align="right" valign="top">virtual std::optional&lt; TimePosition &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1EngineBehaviour.html#a543d6ddf1ed4b3428f485ba309195185">getTimeToJumpAt</a> (<a class="el" href="classengine_1_1TransportControl.html">TransportControl</a> &amp;, TimePosition)</td></tr>
 <tr class="memdesc:a543d6ddf1ed4b3428f485ba309195185"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the user moves the transport while it's playing (e.g.  <br /></td></tr>
 <tr class="separator:a543d6ddf1ed4b3428f485ba309195185"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -400,6 +406,45 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Gives an opportunity to load custom plugins for those that have been registered as custom formats but not added to the list. </p>
+
+</div>
+</div>
+<a id="abeb1db5b238b98b0247e911a32293cac" name="abeb1db5b238b98b0247e911a32293cac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abeb1db5b238b98b0247e911a32293cac">&#9670;&#160;</a></span>findDescriptionForFileOrIDInEdit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::unique_ptr&lt; juce::PluginDescription &gt; engine::EngineBehaviour::findDescriptionForFileOrIDInEdit </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classengine_1_1Edit.html">Edit</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>fileOrID</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Like findDescriptionForFileOrID, but called with the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> the plugin is being loaded into, so the host can resolve references against that <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a>'s project first (e.g. </p>
+<p>plugin resources copied along with a project folder). Defaults to findDescriptionForFileOrID. </p>
 
 </div>
 </div>
@@ -1424,8 +1469,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac7abc6c3d60a93140c863d084103a010" name="ac7abc6c3d60a93140c863d084103a010"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac7abc6c3d60a93140c863d084103a010">&#9670;&#160;</a></span>getExtraFilesToArchive()</h2>
+<a id="aa6b4b8ac2c76d2ebcef88fbc057a09e7" name="aa6b4b8ac2c76d2ebcef88fbc057a09e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6b4b8ac2c76d2ebcef88fbc057a09e7">&#9670;&#160;</a></span>getExtraFilesToArchive()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1434,7 +1479,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual juce::Array&lt; juce::File &gt; engine::EngineBehaviour::getExtraFilesToArchive </td>
+          <td class="memname">virtual std::vector&lt; <a class="el" href="structengine_1_1EngineBehaviour_1_1ExtraFileToArchive.html">ExtraFileToArchive</a> &gt; engine::EngineBehaviour::getExtraFilesToArchive </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classengine_1_1Edit.html">Edit</a> &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -1449,7 +1494,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Return any extra loose files the <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> depends on that aren't tracked as ProjectItems (e.g. </p>
-<p>plugin patch files living in a project subfolder). These are bundled when archiving a single <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> so they survive the round-trip. Paths should live under the source project's directory so the archive can recreate their relative layout. </p>
+<p>plugin patch files), each with its path inside the archived project. These are bundled when archiving a single <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> so they survive the round-trip, wherever the files live. </p>
 
 </div>
 </div>
@@ -2135,7 +2180,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 20 2026 11:13:04 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Fri Oct 23 2026 16:51:32 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

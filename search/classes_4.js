@@ -44,5 +44,6 @@ var searchData=
   ['externalcontroller_41',['ExternalController',['../classengine_1_1ExternalController.html',1,'engine']]],
   ['externalcontrollermanager_42',['ExternalControllerManager',['../classengine_1_1ExternalControllerManager.html',1,'engine']]],
   ['externalplayheadsynchroniser_43',['ExternalPlayheadSynchroniser',['../classengine_1_1ExternalPlayheadSynchroniser.html',1,'engine']]],
-  ['externalplugin_44',['ExternalPlugin',['../classengine_1_1ExternalPlugin.html',1,'engine']]]
+  ['externalplugin_44',['ExternalPlugin',['../classengine_1_1ExternalPlugin.html',1,'engine']]],
+  ['extrafiletoarchive_45',['ExtraFileToArchive',['../structengine_1_1EngineBehaviour_1_1ExtraFileToArchive.html',1,'engine::EngineBehaviour']]]
 ];

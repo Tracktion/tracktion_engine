@@ -2484,6 +2484,7 @@
     <class kind="struct">engine::EditLimits</class>
     <class kind="struct">engine::EditDefaults</class>
     <class kind="class">engine::EngineBehaviour</class>
+    <class kind="struct">engine::EngineBehaviour::ExtraFileToArchive</class>
     <class kind="struct">engine::EngineBehaviour::LevelMeterSettings</class>
     <class kind="struct">engine::EngineBehaviour::ClipDefaults</class>
     <class kind="struct">engine::EngineBehaviour::ControlSurfaces</class>
@@ -30706,6 +30707,7 @@
     <filename>classengine_1_1EngineBehaviour.html</filename>
     <class kind="struct">engine::EngineBehaviour::ClipDefaults</class>
     <class kind="struct">engine::EngineBehaviour::ControlSurfaces</class>
+    <class kind="struct">engine::EngineBehaviour::ExtraFileToArchive</class>
     <class kind="struct">engine::EngineBehaviour::LevelMeterSettings</class>
     <member kind="function">
       <type></type>
@@ -30741,6 +30743,13 @@
       <anchorfile>classengine_1_1EngineBehaviour.html</anchorfile>
       <anchor>a8bbcf0c7948f04b03ad31f17d2cf4449</anchor>
       <arglist>(const juce::String &amp;)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual std::unique_ptr&lt; juce::PluginDescription &gt;</type>
+      <name>findDescriptionForFileOrIDInEdit</name>
+      <anchorfile>classengine_1_1EngineBehaviour.html</anchorfile>
+      <anchor>abeb1db5b238b98b0247e911a32293cac</anchor>
+      <arglist>(Edit &amp;, const juce::String &amp;fileOrID)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual bool</type>
@@ -30974,10 +30983,10 @@
       <arglist>(ExternalPlugin &amp;, const Exportable::ReferencedItem &amp;, ProjectItemRef, double)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
-      <type>virtual juce::Array&lt; juce::File &gt;</type>
+      <type>virtual std::vector&lt; ExtraFileToArchive &gt;</type>
       <name>getExtraFilesToArchive</name>
       <anchorfile>classengine_1_1EngineBehaviour.html</anchorfile>
-      <anchor>ac7abc6c3d60a93140c863d084103a010</anchor>
+      <anchor>aa6b4b8ac2c76d2ebcef88fbc057a09e7</anchor>
       <arglist>(Edit &amp;)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
@@ -34213,6 +34222,24 @@
       <name>xmlTypeName</name>
       <anchorfile>classengine_1_1ExternalPlugin.html</anchorfile>
       <anchor>a599033e1f719b9e510f9d0668de3f640</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>engine::EngineBehaviour::ExtraFileToArchive</name>
+    <filename>structengine_1_1EngineBehaviour_1_1ExtraFileToArchive.html</filename>
+    <member kind="variable">
+      <type>juce::File</type>
+      <name>file</name>
+      <anchorfile>structengine_1_1EngineBehaviour_1_1ExtraFileToArchive.html</anchorfile>
+      <anchor>a294c0b5cfe6ebffcf3b2f650eae31ae7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>juce::String</type>
+      <name>pathInArchive</name>
+      <anchorfile>structengine_1_1EngineBehaviour_1_1ExtraFileToArchive.html</anchorfile>
+      <anchor>a1998652354d438f0137f7a46f4dde2a1</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -86887,6 +86914,7 @@
     <class kind="struct">engine::EditLimits</class>
     <class kind="struct">engine::EditDefaults</class>
     <class kind="class">engine::EngineBehaviour</class>
+    <class kind="struct">engine::EngineBehaviour::ExtraFileToArchive</class>
     <class kind="struct">engine::EngineBehaviour::LevelMeterSettings</class>
     <class kind="struct">engine::EngineBehaviour::ClipDefaults</class>
     <class kind="struct">engine::EngineBehaviour::ControlSurfaces</class>
