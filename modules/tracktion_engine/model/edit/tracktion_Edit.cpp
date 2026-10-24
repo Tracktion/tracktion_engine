@@ -1033,7 +1033,7 @@ void Edit::removeZeroLengthClips()
 
     for (auto t : getClipTracks (*this))
         for (auto& c : t->getClips())
-            if (c->getPosition().getLength().inSeconds() <= 0.0)
+            if (c->getPosition().getLength() < Clip::minimumLength)
                 clipsToRemove.add (c);
 
     for (auto& c : clipsToRemove)

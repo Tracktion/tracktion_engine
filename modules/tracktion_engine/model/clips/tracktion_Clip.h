@@ -198,6 +198,12 @@ public:
     /** Returns the maximum length this clip can have. */
     virtual TimeDuration getMaximumLength()               { return toDuration (Edit::getMaximumEditEnd()); }
 
+    /** Clips shorter than this can't hold a single sample at any supported sample rate.
+        Floating-point rounding when trimming can leave them behind, so they're treated as
+        empty: they're removed when an Edit loads and never added to the playback graph.
+    */
+    static constexpr TimeDuration minimumLength = TimeDuration::fromSeconds (1.0e-6);
+
     /** Returns extra time before the clip start that needs processing (e.g., ARA head time). */
     virtual TimeDuration getHead() const                  { return {}; }
 

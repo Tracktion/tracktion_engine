@@ -900,6 +900,64 @@ TEST_SUITE("tracktion_engine")
         }
     }
 
+    TEST_CASE("Deleting a region doesn't leave a rounding-error sliver of a clip")
+    {
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine);
+        edit->tempoSequence.getTempo (0)->setBpm (150.0);
+        auto track = getAudioTracks (*edit)[0];
+
+        // At 150 BPM beat 444 converts to a time one rounding error after 177.6s
+        const auto clipStart = TimePosition::fromSeconds (177.6);
+        const auto rangeStart = edit->tempoSequence.toTime (444_bp);
+        REQUIRE (rangeStart > clipStart);
+        REQUIRE (rangeStart - clipStart < Clip::minimumLength);
+
+        auto clip = track->insertMIDIClip ({ clipStart, 180_tp }, nullptr);
+        REQUIRE (clip != nullptr);
+
+        SUBCASE ("ClipTrack::deleteRegion")
+        {
+            track->deleteRegion ({ rangeStart, 181_tp }, nullptr);
+            CHECK (track->getClips().isEmpty());
+        }
+
+        SUBCASE ("deleteRegionOfClip")
+        {
+            deleteRegionOfClip (*clip, { rangeStart, 181_tp });
+            CHECK (track->getClips().isEmpty());
+        }
+
+        SUBCASE ("Inserting a clip over it")
+        {
+            insertClipWithState (*track, {}, "New", TrackItem::Type::midi, { { rangeStart, 181_tp } },
+                                 DeleteExistingClips::yes, false);
+            REQUIRE (track->getClips().size() == 1);
+            CHECK (track->getClips()[0]->getPosition().getStart() == rangeStart);
+        }
+    }
+
+    TEST_CASE("Clips shorter than the minimum length are removed on load")
+    {
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        juce::ValueTree editState;
+
+        {
+            auto edit = Edit::createSingleTrackEdit (engine);
+            auto track = getAudioTracks (*edit)[0];
+            track->insertMIDIClip ({ 1_tp, 2_tp }, nullptr);
+            auto sliver = track->insertMIDIClip ({ 4_tp, 5_tp }, nullptr);
+            sliver->setPosition ({ { 4_tp, TimeDuration::fromSeconds (1.0e-14) } });
+            REQUIRE (getAudioTracks (*edit)[0]->getClips().size() == 2);
+            editState = edit->state.createCopy();
+        }
+
+        auto edit = loadEditFromState (engine, editState);
+        auto clips = getAudioTracks (*edit)[0]->getClips();
+        REQUIRE (clips.size() == 1);
+        CHECK (clips[0]->getPosition().time == TimeRange (1_tp, 2_tp));
+    }
+
     TEST_CASE("Fade length correction isn't undoable")
     {
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
