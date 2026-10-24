@@ -16308,6 +16308,13 @@
       <anchor>a8d81224c0cb0d5ee0a7b30d9e7643e8c</anchor>
       <arglist></arglist>
     </member>
+    <member kind="variable" static="yes">
+      <type>static constexpr TimeDuration</type>
+      <name>minimumLength</name>
+      <anchorfile>classengine_1_1Clip.html</anchorfile>
+      <anchor>a3a3c78aedee13c125c69b3df3dd0503f</anchor>
+      <arglist></arglist>
+    </member>
     <member kind="function" protection="protected">
       <type>void</type>
       <name>setCurrentSourceFile</name>

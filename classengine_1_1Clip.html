@@ -79,6 +79,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classengine_1_1Clip-members.html">List of all members</a>  </div>
@@ -595,6 +596,12 @@ Public Attributes</h2></td></tr>
 <tr class="inherit_header pub_attribs_classengine_1_1Selectable"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classengine_1_1Selectable')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classengine_1_1Selectable.html">engine::Selectable</a></td></tr>
 <tr class="memitem:aa5fa1ad5190990dc335f7d2c7898df1f inherit pub_attribs_classengine_1_1Selectable" id="r_aa5fa1ad5190990dc335f7d2c7898df1f"><td class="memItemLeft" align="right" valign="top">WeakRef::Master&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Selectable.html#aa5fa1ad5190990dc335f7d2c7898df1f">masterReference</a></td></tr>
 <tr class="separator:aa5fa1ad5190990dc335f7d2c7898df1f inherit pub_attribs_classengine_1_1Selectable"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a3a3c78aedee13c125c69b3df3dd0503f" id="r_a3a3c78aedee13c125c69b3df3dd0503f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classengine_1_1Clip.html#ae4df20e49385f4b2c7acc86c30bac186">static</a> <a class="el" href="classengine_1_1Clip.html#ae4df20e49385f4b2c7acc86c30bac186">constexpr</a> <a class="el" href="classengine_1_1Clip.html#ae4df20e49385f4b2c7acc86c30bac186">TimeDuration</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classengine_1_1Clip.html#a3a3c78aedee13c125c69b3df3dd0503f">minimumLength</a> = TimeDuration::fromSeconds (1.0e-6)</td></tr>
+<tr class="memdesc:a3a3c78aedee13c125c69b3df3dd0503f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clips shorter than this can't hold a single sample at any supported sample rate.  <br /></td></tr>
+<tr class="separator:a3a3c78aedee13c125c69b3df3dd0503f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -3698,6 +3705,31 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a3a3c78aedee13c125c69b3df3dd0503f" name="a3a3c78aedee13c125c69b3df3dd0503f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a3c78aedee13c125c69b3df3dd0503f">&#9670;&#160;</a></span>minimumLength</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classengine_1_1Clip.html#ae4df20e49385f4b2c7acc86c30bac186">constexpr</a> <a class="el" href="classengine_1_1Clip.html#ae4df20e49385f4b2c7acc86c30bac186">TimeDuration</a> engine::Clip::minimumLength = TimeDuration::fromSeconds (1.0e-6)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Clips shorter than this can't hold a single sample at any supported sample rate. </p>
+<p>Floating-point rounding when trimming can leave them behind, so they're treated as empty: they're removed when an <a class="el" href="classengine_1_1Edit.html" title="The Tracktion Edit class!">Edit</a> loads and never added to the playback graph. </p>
+
+</div>
+</div>
 <a id="a0fbd300345138e27c11b5036c6a818a6" name="a0fbd300345138e27c11b5036c6a818a6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0fbd300345138e27c11b5036c6a818a6">&#9670;&#160;</a></span>state</h2>
 
@@ -4149,7 +4181,7 @@ Protected Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 23 2026 16:51:32 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Sat Oct 24 2026 13:01:34 for TracktionEngine by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

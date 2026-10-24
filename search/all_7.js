@@ -179,7 +179,7 @@ var searchData=
   ['foldwrapremainder_176',['foldWrapRemainder',['../classengine_1_1Renderer_1_1RenderTask.html#a48012202ed1edf323a72639dc8309d12',1,'engine::Renderer::RenderTask']]],
   ['followaction_177',['FollowAction',['../namespaceengine.html#a8adf9568644e9fd569d34ea8751bfdde',1,'engine']]],
   ['followactionbeats_178',['followActionBeats',['../classengine_1_1Clip.html#aa14cebbf2dd763c9b7f3acaca105be87',1,'engine::Clip']]],
-  ['followactiondurationtype_179',['followactiondurationtype',['../classengine_1_1Clip.html#ac15880c0b4e9ebbcb958af5081aefd5e',1,'engine::Clip::FollowActionDurationType'],['../classengine_1_1Clip.html#a36a7927ba63e9b3c53f4dd4b584d7a3f',1,'engine::Clip::followActionDurationType']]],
+  ['followactiondurationtype_179',['followactiondurationtype',['../classengine_1_1Clip.html#a36a7927ba63e9b3c53f4dd4b584d7a3f',1,'engine::Clip::followActionDurationType'],['../classengine_1_1Clip.html#ac15880c0b4e9ebbcb958af5081aefd5e',1,'engine::Clip::FollowActionDurationType']]],
   ['followactiondurationtypefromstring_180',['followActionDurationTypeFromString',['../namespaceengine_1_1details.html#a636437e485242559b366e8955bfa9f89',1,'engine::details']]],
   ['followactionfromstring_181',['followActionFromString',['../namespaceengine.html#abdd5df14dbfdae7b1283b27cbb3a1fae',1,'engine']]],
   ['followactionnumloops_182',['followActionNumLoops',['../classengine_1_1Clip.html#a1b4a791bd5fed6013580284241982f87',1,'engine::Clip']]],
