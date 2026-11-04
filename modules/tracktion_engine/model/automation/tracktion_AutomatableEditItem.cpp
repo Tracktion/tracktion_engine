@@ -263,6 +263,19 @@ void AutomatableEditItem::updateLastPlaybackTime()
 void AutomatableEditItem::clearParameterList()
 {
     automatableParams.clear();
+
+    {
+        // The cleared parameters can't be found to be removed from the active list
+        // later, so drop them now or they'd keep following their automation forever.
+        // N.B. swap under the lock here to minimise the time held
+        juce::ReferenceCountedArray<AutomatableParameter> nowActiveParams;
+
+        {
+            const std::scoped_lock sl (activeParameterLock);
+            std::swap (activeParameters, nowActiveParams);
+        }
+    }
+
     rebuildParameterTree();
 }
 
