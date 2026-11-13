@@ -1,0 +1,5 @@
+<map id="engine::soundtouch::FIFOSampleBuffer" name="engine::soundtouch::FIFOSampleBuffer">
+<area shape="rect" id="Node000001" title="Sample buffer working in FIFO (first&#45;in&#45;first&#45;out) principle." alt="" coords="5,98,154,143"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1soundtouch_1_1FIFOSamplePipe.html" title="Abstract base class for FIFO (first&#45;in&#45;first&#45;out) sample processing classes." alt="" coords="5,5,154,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,64,82,99,77,97,78,68"/>
+</map>

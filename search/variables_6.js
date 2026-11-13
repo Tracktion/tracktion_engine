@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['gain_0',['gain',['../structtracktion_1_1engine_1_1ChannelMap_1_1Entry.html#a03d4390b5515b018d5259690e92df2fa',1,'tracktion::engine::ChannelMap::Entry::gain'],['../classengine_1_1AuxSendPlugin.html#a58f1b004c15feb4f46aa898c8cae2941',1,'engine::AuxSendPlugin::gain']]],
+  ['gain_0',['gain',['../classengine_1_1AuxSendPlugin.html#a58f1b004c15feb4f46aa898c8cae2941',1,'engine::AuxSendPlugin::gain'],['../structtracktion_1_1engine_1_1ChannelMap_1_1Entry.html#a03d4390b5515b018d5259690e92df2fa',1,'tracktion::engine::ChannelMap::Entry::gain']]],
   ['gain1_1',['gain1',['../structengine_1_1AudioFadeCurve_1_1CrossfadeLevels.html#a311875819bf3bbae466895b5915c6514',1,'engine::AudioFadeCurve::CrossfadeLevels']]],
   ['gain2_2',['gain2',['../structengine_1_1AudioFadeCurve_1_1CrossfadeLevels.html#a40776c5dda9e17f9f96c00294274499d',1,'engine::AudioFadeCurve::CrossfadeLevels']]],
-  ['gaindb_3',['gaindb',['../classengine_1_1EnvelopeFollowerModifier.html#afdaf9a234d7a83c21c6e468601046112',1,'engine::EnvelopeFollowerModifier::gainDb'],['../structengine_1_1PatchBayPlugin_1_1Wire.html#a9b22e541257fd6a1c572047f3660b373',1,'engine::PatchBayPlugin::Wire::gainDb'],['../structengine_1_1SamplerPlugin_1_1SamplerSound.html#accb61163fd36edc212a64f310bbe90ed',1,'engine::SamplerPlugin::SamplerSound::gainDb']]],
+  ['gaindb_3',['gainDb',['../classengine_1_1EnvelopeFollowerModifier.html#afdaf9a234d7a83c21c6e468601046112',1,'engine::EnvelopeFollowerModifier::gainDb'],['../structengine_1_1PatchBayPlugin_1_1Wire.html#a9b22e541257fd6a1c572047f3660b373',1,'engine::PatchBayPlugin::Wire::gainDb'],['../structengine_1_1SamplerPlugin_1_1SamplerSound.html#accb61163fd36edc212a64f310bbe90ed',1,'engine::SamplerPlugin::SamplerSound::gainDb']]],
   ['gaindbparam_4',['gainDbParam',['../classengine_1_1EnvelopeFollowerModifier.html#a5b453c87ea0f3e8a60739dd2a4d5dd32',1,'engine::EnvelopeFollowerModifier']]],
   ['gainlevel_5',['gainLevel',['../classengine_1_1AuxSendPlugin.html#a7b5a90bde21ba18d0065cab9963aab69',1,'engine::AuxSendPlugin']]],
   ['gainparam_6',['gainParam',['../classengine_1_1ImpulseResponsePlugin.html#ad20e1ccf62642d71a61f3f9f7974f0fb',1,'engine::ImpulseResponsePlugin']]],

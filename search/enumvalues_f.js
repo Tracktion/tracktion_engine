@@ -30,7 +30,7 @@ var searchData=
   ['pending_27',['pending',['../classengine_1_1RenderQueue_1_1Job.html#a1e4b60bf096d70393589a26ebbf4dd4aa7c6c2e5d48ab37a007cbf70d3ea25fa4',1,'engine::RenderQueue::Job']]],
   ['phrygian_28',['phrygian',['../classengine_1_1Scale.html#a8d437faf380d41429819c1ac6f79b0bba78f3464232e268c9fe455254afd4752d',1,'engine::Scale']]],
   ['physicalmididevice_29',['physicalMidiDevice',['../classengine_1_1InputDevice.html#a18ea4a67e3b8add187770a846858dcdfa81c971fbb995d9de4ba2aca853412c5d',1,'engine::InputDevice']]],
-  ['pitch_30',['pitch',['../classengine_1_1TrackItem.html#ab919abf28cd728b3e0a752886412d323a8ee0b79fb35b0efe85b44c0ee243f8d5',1,'engine::TrackItem::pitch'],['../classengine_1_1MIDITrackerModifier.html#a2836aff90f695fd0e7ffe0ec5280def6af708e9a79230f9867d34d037fdf8212b',1,'engine::MIDITrackerModifier::pitch']]],
+  ['pitch_30',['pitch',['../classengine_1_1MIDITrackerModifier.html#a2836aff90f695fd0e7ffe0ec5280def6af708e9a79230f9867d34d037fdf8212b',1,'engine::MIDITrackerModifier::pitch'],['../classengine_1_1TrackItem.html#ab919abf28cd728b3e0a752886412d323a8ee0b79fb35b0efe85b44c0ee243f8d5',1,'engine::TrackItem::pitch']]],
   ['pitchshift_31',['pitchShift',['../classengine_1_1ClipEffect.html#ad2485113a8437c897734b9d260fca25bae58221b85ed046db6f874130f9683e68',1,'engine::ClipEffect']]],
   ['pitchtrack_32',['pitchTrack',['../classengine_1_1AudioClipBase.html#affb9ff36efe704d0bed2ae204a08484ba5cea078187cedc9b6f424233ded44ca4',1,'engine::AudioClipBase']]],
   ['pitchwheeltype_33',['pitchWheelType',['../classengine_1_1MidiControllerEvent.html#a8bdd5b496bf2aa07b20b6146861ea57da3e7b3cd6ec1c4e565faff85793247f66',1,'engine::MidiControllerEvent']]],

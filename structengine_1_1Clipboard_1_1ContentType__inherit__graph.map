@@ -1,27 +1,27 @@
 <map id="engine::Clipboard::ContentType" name="engine::Clipboard::ContentType">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,357,149,397"/>
-<area shape="rect" id="Node000002" href="$structengine_1_1Clipboard_1_1AutomationPoints.html" title=" " alt="" coords="197,5,341,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,343,91,283,112,207,145,127,168,90,195,55,210,43,214,48,199,59,173,93,150,130,117,209,96,285,85,344"/>
-<area shape="rect" id="Node000003" href="$structengine_1_1Clipboard_1_1Clips.html" title=" " alt="" coords="197,69,341,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="83,344,98,295,120,236,152,174,172,145,196,119,211,107,215,111,199,123,177,149,157,177,125,238,103,297,89,345"/>
-<area shape="rect" id="Node000004" href="$structengine_1_1Clipboard_1_1MIDIEvents.html" title=" " alt="" coords="197,133,341,173"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="89,344,130,265,160,222,196,183,213,171,216,176,199,187,164,225,134,268,94,346"/>
-<area shape="rect" id="Node000005" href="$structengine_1_1Clipboard_1_1Modifiers.html" title=" " alt="" coords="197,197,341,237"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="99,345,141,296,196,247,216,235,219,240,199,251,145,299,103,348"/>
-<area shape="rect" id="Node000006" href="$structengine_1_1Clipboard_1_1Pitches.html" title=" " alt="" coords="197,261,341,301"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="126,348,196,311,221,299,224,304,199,316,128,353"/>
-<area shape="rect" id="Node000007" href="$structengine_1_1Clipboard_1_1Plugins.html" title=" " alt="" coords="197,325,341,365"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="163,360,197,355,198,360,163,366"/>
-<area shape="rect" id="Node000008" href="$structengine_1_1Clipboard_1_1ProjectItems.html" title=" " alt="" coords="197,389,341,429"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="163,389,198,395,197,400,163,394"/>
-<area shape="rect" id="Node000009" href="$structengine_1_1Clipboard_1_1Scenes.html" title=" " alt="" coords="197,453,341,493"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="128,402,199,439,224,451,221,456,196,444,126,407"/>
-<area shape="rect" id="Node000010" href="$structengine_1_1Clipboard_1_1Takes.html" title=" " alt="" coords="197,517,341,557"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="103,407,145,455,199,503,219,515,216,520,196,507,141,459,99,410"/>
-<area shape="rect" id="Node000011" href="$structengine_1_1Clipboard_1_1TempoChanges.html" title=" " alt="" coords="197,581,341,621"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="94,409,134,487,164,530,199,567,216,579,213,583,196,571,160,533,130,490,89,411"/>
-<area shape="rect" id="Node000012" href="$structengine_1_1Clipboard_1_1TimeSigs.html" title=" " alt="" coords="197,645,341,685"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="89,410,103,458,125,517,157,578,177,606,199,631,215,643,211,647,196,635,172,609,152,580,120,519,98,460,83,411"/>
-<area shape="rect" id="Node000013" href="$structengine_1_1Clipboard_1_1Tracks.html" title=" " alt="" coords="197,709,341,749"/>
-<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="85,410,96,470,117,546,150,625,173,662,199,695,214,707,210,711,195,699,168,665,145,627,112,547,91,471,80,411"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,387,149,431"/>
+<area shape="rect" id="Node000002" href="$structengine_1_1Clipboard_1_1AutomationPoints.html" title=" " alt="" coords="197,5,340,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,371,89,306,110,224,125,181,144,138,167,98,195,61,211,48,209,53,199,64,171,100,148,141,130,183,115,226,95,307,84,372"/>
+<area shape="rect" id="Node000003" href="$structengine_1_1Clipboard_1_1Clips.html" title=" " alt="" coords="197,75,340,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="83,371,97,319,119,255,151,189,171,158,195,130,212,118,209,122,199,134,176,161,156,192,124,257,102,320,88,372"/>
+<area shape="rect" id="Node000004" href="$structengine_1_1Clipboard_1_1MIDIEvents.html" title=" " alt="" coords="197,144,340,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="89,371,129,287,159,240,195,199,214,187,211,191,198,203,163,244,134,289,94,373"/>
+<area shape="rect" id="Node000005" href="$structengine_1_1Clipboard_1_1Modifiers.html" title=" " alt="" coords="197,213,340,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="100,373,141,320,195,268,216,256,213,261,198,272,145,324,104,375"/>
+<area shape="rect" id="Node000006" href="$structengine_1_1Clipboard_1_1Pitches.html" title=" " alt="" coords="197,283,340,327"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="127,376,195,337,221,326,218,330,198,342,131,380"/>
+<area shape="rect" id="Node000007" href="$structengine_1_1Clipboard_1_1Plugins.html" title=" " alt="" coords="197,352,340,397"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="163,391,198,386,194,389,166,395"/>
+<area shape="rect" id="Node000008" href="$structengine_1_1Clipboard_1_1ProjectItems.html" title=" " alt="" coords="197,421,340,466"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="163,422,199,429,194,432,165,427"/>
+<area shape="rect" id="Node000009" href="$structengine_1_1Clipboard_1_1Scenes.html" title=" " alt="" coords="197,491,340,535"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="128,437,198,476,222,489,217,491,195,481,129,442"/>
+<area shape="rect" id="Node000010" href="$structengine_1_1Clipboard_1_1Takes.html" title=" " alt="" coords="197,560,340,605"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="102,442,145,494,198,546,217,559,212,560,195,550,141,498,102,447"/>
+<area shape="rect" id="Node000011" href="$structengine_1_1Clipboard_1_1TempoChanges.html" title=" " alt="" coords="197,629,340,674"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="92,443,134,529,163,574,198,615,215,629,210,629,195,619,159,578,129,531,91,449"/>
+<area shape="rect" id="Node000012" href="$structengine_1_1Clipboard_1_1TimeSigs.html" title=" " alt="" coords="197,699,340,743"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="86,444,102,498,124,561,156,626,176,657,199,684,213,698,208,698,195,688,171,660,151,629,119,563,97,499,85,449"/>
+<area shape="rect" id="Node000013" href="$structengine_1_1Clipboard_1_1Tracks.html" title=" " alt="" coords="197,768,340,813"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="82,444,95,511,115,592,130,635,148,677,171,718,199,754,213,768,207,767,195,757,167,720,144,680,125,637,110,594,89,512,82,450"/>
 </map>

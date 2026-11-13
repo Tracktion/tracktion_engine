@@ -1,7 +1,7 @@
 <map id="engine::CompManager" name="engine::CompManager">
-<area shape="rect" id="Node000001" title=" " alt="" coords="131,5,301,31"/>
-<area shape="rect" id="Node000002" href="$classengine_1_1MidiCompManager.html" title=" " alt="" coords="5,79,203,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,40,124,81,121,76,185,36"/>
-<area shape="rect" id="Node000003" href="$classengine_1_1WaveCompManager.html" title=" " alt="" coords="227,79,432,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="248,36,312,76,309,81,245,40"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="131,5,300,33"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1MidiCompManager.html" title=" " alt="" coords="5,81,202,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,41,125,83,122,78,180,42"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1WaveCompManager.html" title=" " alt="" coords="225,81,430,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="249,39,310,81,305,80,247,44"/>
 </map>

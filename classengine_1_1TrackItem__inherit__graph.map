@@ -1,33 +1,33 @@
 <map id="engine::TrackItem" name="engine::TrackItem">
-<area shape="rect" id="Node000001" title="Base class for EditItems that live in a Track, e.g." alt="" coords="196,203,335,228"/>
-<area shape="rect" id="Node000004" href="$classengine_1_1Clip.html" title="A clip in an edit." alt="" coords="420,128,519,153"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="306,195,382,163,421,151,422,156,384,169,308,199"/>
-<area shape="rect" id="Node000014" href="$classengine_1_1CollectionClip.html" title=" " alt="" coords="387,177,551,203"/>
-<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="348,202,387,198,387,203,349,208"/>
-<area shape="rect" id="Node000015" href="$classengine_1_1PitchSetting.html" title=" " alt="" coords="393,227,545,252"/>
-<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="349,222,393,228,393,233,348,228"/>
-<area shape="rect" id="Node000016" href="$classengine_1_1TimeSigSetting.html" title=" " alt="" coords="383,276,556,301"/>
-<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="307,231,384,262,419,273,418,278,382,267,305,236"/>
-<area shape="rect" id="Node000002" href="$classengine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="12,177,141,203"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,198,196,203,195,209,154,203"/>
-<area shape="rect" id="Node000003" href="$classengine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,227,148,252"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="162,226,195,222,196,227,162,231"/>
-<area shape="rect" id="Node000005" href="$classengine_1_1ArrangerClip.html" title=" " alt="" coords="611,5,765,31"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="493,117,542,78,603,40,631,28,633,33,605,44,545,82,496,121"/>
-<area shape="rect" id="Node000006" href="$classengine_1_1AudioClipBase.html" title="Base class for Clips that produce some kind of audio e.g." alt="" coords="604,55,772,80"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="515,120,603,89,640,78,641,83,605,94,517,125"/>
-<area shape="rect" id="Node000010" href="$classengine_1_1ChordClip.html" title=" " alt="" coords="619,104,757,129"/>
-<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="532,131,619,122,619,127,533,136"/>
-<area shape="rect" id="Node000011" href="$classengine_1_1MarkerClip.html" title=" " alt="" coords="616,153,760,179"/>
-<area shape="poly" id="edge10_Node000004_Node000011" title=" " alt="" coords="533,145,616,155,615,160,532,151"/>
-<area shape="rect" id="Node000012" href="$classengine_1_1MidiClip.html" title=" " alt="" coords="625,203,751,228"/>
-<area shape="poly" id="edge11_Node000004_Node000012" title=" " alt="" coords="533,155,557,164,605,189,638,200,636,205,603,194,555,168,531,160"/>
-<area shape="rect" id="Node000013" href="$classengine_1_1StepClip.html" title=" " alt="" coords="624,252,752,277"/>
-<area shape="poly" id="edge12_Node000004_Node000013" title=" " alt="" coords="533,151,558,164,575,183,582,202,590,221,606,239,626,250,623,254,602,243,585,224,577,204,570,186,554,168,531,155"/>
-<area shape="rect" id="Node000007" href="$classengine_1_1ContainerClip.html" title="A clip that can contain multiple other clips and mix their output together." alt="" coords="825,5,987,31"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="757,49,848,28,850,33,759,54"/>
-<area shape="rect" id="Node000008" href="$classengine_1_1EditClip.html" title="This is the main source of an Edit clip and is responsible for managing its properties." alt="" coords="844,55,968,80"/>
-<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="786,65,844,65,844,70,786,70"/>
-<area shape="rect" id="Node000009" href="$classengine_1_1WaveAudioClip.html" title="An audio clip that uses an audio file as its source." alt="" coords="820,104,992,129"/>
-<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="759,80,850,101,848,107,757,86"/>
+<area shape="rect" id="Node000001" title="Base class for EditItems that live in a Track, e.g." alt="" coords="195,213,332,241"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1Clip.html" title="A clip in an edit." alt="" coords="417,135,515,162"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="306,204,379,173,419,162,414,164,381,178,308,209"/>
+<area shape="rect" id="Node000014" href="$classengine_1_1CollectionClip.html" title=" " alt="" coords="384,187,548,214"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="347,214,387,211,381,212,348,219"/>
+<area shape="rect" id="Node000015" href="$classengine_1_1PitchSetting.html" title=" " alt="" coords="390,239,542,266"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="347,235,393,243,387,243,348,240"/>
+<area shape="rect" id="Node000016" href="$classengine_1_1TimeSigSetting.html" title=" " alt="" coords="380,291,552,318"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="310,245,381,275,418,290,413,290,379,280,309,251"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1EditItem.html" title="Base class for objects that live inside an edit &#45; e.g." alt="" coords="12,187,140,214"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,209,197,217,192,218,156,214"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1Selectable.html" title="Base class for things that can be selected, and whose properties can appear in the properties panel." alt="" coords="5,239,147,266"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="162,238,197,236,192,237,163,243"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1ArrangerClip.html" title=" " alt="" coords="607,5,761,33"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="492,122,540,82,599,43,631,33,626,35,602,48,543,86,495,126"/>
+<area shape="rect" id="Node000006" href="$classengine_1_1AudioClipBase.html" title="Base class for Clips that produce some kind of audio e.g." alt="" coords="600,57,768,85"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="517,126,599,95,639,85,634,86,601,100,519,131"/>
+<area shape="rect" id="Node000010" href="$classengine_1_1ChordClip.html" title=" " alt="" coords="616,109,752,137"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="530,138,618,130,613,132,531,144"/>
+<area shape="rect" id="Node000011" href="$classengine_1_1MarkerClip.html" title=" " alt="" coords="612,161,756,189"/>
+<area shape="poly" id="edge10_Node000004_Node000011" title=" " alt="" coords="531,154,614,166,609,167,531,159"/>
+<area shape="rect" id="Node000012" href="$classengine_1_1MidiClip.html" title=" " alt="" coords="621,213,747,241"/>
+<area shape="poly" id="edge11_Node000004_Node000012" title=" " alt="" coords="530,164,553,173,601,198,636,213,631,213,599,203,551,178,530,169"/>
+<area shape="rect" id="Node000013" href="$classengine_1_1StepClip.html" title=" " alt="" coords="620,265,748,293"/>
+<area shape="poly" id="edge12_Node000004_Node000013" title=" " alt="" coords="531,160,554,173,571,193,579,213,586,232,602,250,624,265,619,264,599,255,582,235,574,215,567,196,551,177,530,165"/>
+<area shape="rect" id="Node000007" href="$classengine_1_1ContainerClip.html" title="A clip that can contain multiple other clips and mix their output together." alt="" coords="821,5,982,33"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="759,51,843,33,838,34,761,56"/>
+<area shape="rect" id="Node000008" href="$classengine_1_1EditClip.html" title="This is the main source of an Edit clip and is responsible for managing its properties." alt="" coords="840,57,963,85"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="783,69,842,71,837,72,784,74"/>
+<area shape="rect" id="Node000009" href="$classengine_1_1WaveAudioClip.html" title="An audio clip that uses an audio file as its source." alt="" coords="816,109,987,137"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="760,87,843,109,837,109,760,92"/>
 </map>

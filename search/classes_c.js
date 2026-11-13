@@ -8,7 +8,7 @@ var searchData=
   ['macroparameterlist_5',['MacroParameterList',['../classengine_1_1MacroParameterList.html',1,'engine']]],
   ['makemonoeffect_6',['MakeMonoEffect',['../structengine_1_1MakeMonoEffect.html',1,'engine']]],
   ['mappedfileandreader_7',['MappedFileAndReader',['../structengine_1_1AudioFileUtils_1_1MappedFileAndReader.html',1,'engine::AudioFileUtils']]],
-  ['mapping_8',['mapping',['../structengine_1_1CustomControlSurface_1_1Mapping.html',1,'engine::CustomControlSurface::Mapping'],['../structengine_1_1ParameterControlMappings_1_1Mapping.html',1,'engine::ParameterControlMappings::Mapping']]],
+  ['mapping_8',['Mapping',['../structengine_1_1CustomControlSurface_1_1Mapping.html',1,'engine::CustomControlSurface::Mapping'],['../structengine_1_1ParameterControlMappings_1_1Mapping.html',1,'engine::ParameterControlMappings::Mapping']]],
   ['mappings_9',['Mappings',['../structengine_1_1MidiPatchBayPlugin_1_1Mappings.html',1,'engine::MidiPatchBayPlugin']]],
   ['mappingset_10',['MappingSet',['../structengine_1_1CustomControlSurface_1_1MappingSet.html',1,'engine::CustomControlSurface']]],
   ['marker_11',['Marker',['../structengine_1_1EditSnapshot_1_1Marker.html',1,'engine::EditSnapshot']]],
@@ -38,7 +38,7 @@ var searchData=
   ['midimessagearray_35',['MidiMessageArray',['../structengine_1_1MidiMessageArray.html',1,'engine']]],
   ['midimessagewithsource_36',['MidiMessageWithSource',['../structengine_1_1MidiMessageWithSource.html',1,'engine']]],
   ['midimodifierplugin_37',['MidiModifierPlugin',['../classengine_1_1MidiModifierPlugin.html',1,'engine']]],
-  ['midinode_38',['midinode',['../classengine_1_1MidiNode.html',1,'engine::MidiNode'],['../classgraph_1_1MidiNode.html',1,'graph::MidiNode']]],
+  ['midinode_38',['MidiNode',['../classengine_1_1MidiNode.html',1,'engine::MidiNode'],['../classgraph_1_1MidiNode.html',1,'graph::MidiNode']]],
   ['midinote_39',['MidiNote',['../classengine_1_1MidiNote.html',1,'engine']]],
   ['midinotedispatcher_40',['MidiNoteDispatcher',['../classengine_1_1MidiNoteDispatcher.html',1,'engine']]],
   ['midioutputdevice_41',['MidiOutputDevice',['../classengine_1_1MidiOutputDevice.html',1,'engine']]],
@@ -64,8 +64,9 @@ var searchData=
   ['monotonicbeatrange_61',['MonotonicBeatRange',['../structengine_1_1MonotonicBeatRange.html',1,'engine']]],
   ['mousehoverdetector_62',['MouseHoverDetector',['../classengine_1_1MouseHoverDetector.html',1,'engine']]],
   ['mpestarttrimmer_63',['MPEStartTrimmer',['../structengine_1_1MPEStartTrimmer.html',1,'engine']]],
-  ['multithreadednodeplayer_64',['multithreadednodeplayer',['../classengine_1_1MultiThreadedNodePlayer.html',1,'engine::MultiThreadedNodePlayer'],['../classgraph_1_1MultiThreadedNodePlayer.html',1,'graph::MultiThreadedNodePlayer']]],
-  ['multivoiceoscillator_65',['MultiVoiceOscillator',['../classengine_1_1MultiVoiceOscillator.html',1,'engine']]],
-  ['musicalcontextfunctions_66',['MusicalContextFunctions',['../structMusicalContextFunctions.html',1,'']]],
-  ['musicalcontextwrapper_67',['MusicalContextWrapper',['../classMusicalContextWrapper.html',1,'']]]
+  ['multi_5fposition_5finfo_64',['multi_position_info',['../structgraph_1_1farbot_1_1detail_1_1multi__position__info.html',1,'graph::farbot::detail']]],
+  ['multithreadednodeplayer_65',['MultiThreadedNodePlayer',['../classengine_1_1MultiThreadedNodePlayer.html',1,'engine::MultiThreadedNodePlayer'],['../classgraph_1_1MultiThreadedNodePlayer.html',1,'graph::MultiThreadedNodePlayer']]],
+  ['multivoiceoscillator_66',['MultiVoiceOscillator',['../classengine_1_1MultiVoiceOscillator.html',1,'engine']]],
+  ['musicalcontextfunctions_67',['MusicalContextFunctions',['../structMusicalContextFunctions.html',1,'']]],
+  ['musicalcontextwrapper_68',['MusicalContextWrapper',['../classMusicalContextWrapper.html',1,'']]]
 ];

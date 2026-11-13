@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
-<tagfile doxygen_version="1.9.8">
+<tagfile doxygen_version="1.15.0">
   <compound kind="file">
     <name>tracktion_FFmpegEncoderAudioFormat.h</name>
     <path>build/tracktion_engine/audio_files/formats/</path>
@@ -38,6 +38,20 @@
     <name>tracktion_RexFileFormat.h</name>
     <path>build/tracktion_engine/audio_files/formats/</path>
     <filename>tracktion__RexFileFormat_8h.html</filename>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_engine/audio_files/tracktion_AudioFifo.h</name>
+    <path>build/tracktion_engine/audio_files/</path>
+    <filename>tracktion__engine_2audio__files_2tracktion__AudioFifo_8h.html</filename>
+    <class kind="class">engine::AudioFifo</class>
+    <namespace>engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_graph/utilities/tracktion_AudioFifo.h</name>
+    <path>build/tracktion_graph/utilities/</path>
+    <filename>tracktion__graph_2utilities_2tracktion__AudioFifo_8h.html</filename>
+    <class kind="class">graph::AudioFifo</class>
+    <namespace>graph</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_AudioFile.h</name>
@@ -536,6 +550,9 @@
     <class kind="struct">engine::AudioClipPlayhead</class>
     <class kind="class">engine::AudioClipBase</class>
     <class kind="struct">engine::AudioClipBase::ProxyRenderingInfo</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::AudioClipBase::FadeBehaviour &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::AudioClipBase::AutoPitchMode &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; PluginDescription &gt;</class>
     <namespace>engine</namespace>
     <namespace>juce</namespace>
   </compound>
@@ -760,6 +777,7 @@
     <class kind="struct">engine::EditItemID</class>
     <class kind="class">engine::EditItem</class>
     <class kind="struct">engine::EditItemCache</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::EditItemID &gt;</class>
     <namespace>engine</namespace>
     <namespace>juce</namespace>
   </compound>
@@ -878,6 +896,7 @@
     <class kind="class">engine::TimecodeDuration</class>
     <class kind="struct">engine::TimecodeDisplayFormat</class>
     <class kind="struct">engine::TimecodeDisplayIterator</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::TimecodeDisplayFormat &gt;</class>
     <namespace>engine</namespace>
     <namespace>juce</namespace>
   </compound>
@@ -1377,6 +1396,20 @@
     <filename>tracktion__ModifierNode_8h.html</filename>
     <class kind="class">engine::ModifierNode</class>
     <namespace>engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_engine/playback/graph/tracktion_MultiThreadedNodePlayer.h</name>
+    <path>build/tracktion_engine/playback/graph/</path>
+    <filename>tracktion__engine_2playback_2graph_2tracktion__MultiThreadedNodePlayer_8h.html</filename>
+    <class kind="class">engine::MultiThreadedNodePlayer</class>
+    <namespace>engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_graph/tracktion_graph/tracktion_MultiThreadedNodePlayer.h</name>
+    <path>build/tracktion_graph/tracktion_graph/</path>
+    <filename>tracktion__graph_2tracktion__graph_2tracktion__MultiThreadedNodePlayer_8h.html</filename>
+    <class kind="class">graph::MultiThreadedNodePlayer</class>
+    <namespace>graph</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_NodeRenderContext.h</name>
@@ -2159,6 +2192,7 @@
     <filename>tracktion__ProjectItemID_8h.html</filename>
     <class kind="class">engine::ProjectID</class>
     <class kind="class">engine::ProjectItemID</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::ProjectItemID &gt;</class>
     <namespace>engine</namespace>
     <namespace>juce</namespace>
   </compound>
@@ -2167,6 +2201,7 @@
     <path>build/tracktion_engine/project/</path>
     <filename>tracktion__ProjectItemRef_8h.html</filename>
     <class kind="class">engine::ProjectItemRef</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::ProjectItemRef &gt;</class>
     <namespace>engine</namespace>
     <namespace>juce</namespace>
   </compound>
@@ -2294,8 +2329,99 @@
     <name>tracktion_TempoDetect.h</name>
     <path>build/tracktion_engine/timestretch/</path>
     <filename>tracktion__TempoDetect_8h.html</filename>
+    <class kind="class">engine::soundtouch::FIFOSamplePipe</class>
+    <class kind="class">engine::soundtouch::FIFOProcessor</class>
+    <class kind="class">engine::soundtouch::FIFOSampleBuffer</class>
+    <class kind="struct">engine::soundtouch::BEAT</class>
+    <class kind="class">engine::soundtouch::IIR2_filter</class>
+    <class kind="class">engine::soundtouch::BPMDetect</class>
     <class kind="class">engine::TempoDetect</class>
     <namespace>engine</namespace>
+    <namespace>engine::soundtouch</namespace>
+    <member kind="define">
+      <type>#define</type>
+      <name>_BPMDetect_H_</name>
+      <anchorfile>tracktion__TempoDetect_8h.html</anchorfile>
+      <anchor>a9f9112752adaacb7e014184d3cb0bd97</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>STTypes_H</name>
+      <anchorfile>tracktion__TempoDetect_8h.html</anchorfile>
+      <anchor>af5542472778bd3d65d0ec5fc8e9c40ed</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>SOUNDTOUCH_ALIGN_POINTER_16</name>
+      <anchorfile>tracktion__TempoDetect_8h.html</anchorfile>
+      <anchor>a055f14196edd4abc04e76b54bae286e6</anchor>
+      <arglist>(x)</arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>SOUNDTOUCH_MAX_CHANNELS</name>
+      <anchorfile>tracktion__TempoDetect_8h.html</anchorfile>
+      <anchor>ad648b546a941d46fafc52c400c03a1d8</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>SOUNDTOUCH_FLOAT_SAMPLES</name>
+      <anchorfile>tracktion__TempoDetect_8h.html</anchorfile>
+      <anchor>a62f4ac2b6b40a49bfe8baa24fbd33011</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>SOUNDTOUCH_ALLOW_NONEXACT_SIMD_OPTIMIZATION</name>
+      <anchorfile>tracktion__TempoDetect_8h.html</anchorfile>
+      <anchor>a763dec40e108c35817520cb8d4e79ea9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>ST_THROW_RT_ERROR</name>
+      <anchorfile>tracktion__TempoDetect_8h.html</anchorfile>
+      <anchor>ae72519a46bbdde7041ca622751edbfe7</anchor>
+      <arglist>(x)</arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>FIFOSampleBuffer_H</name>
+      <anchorfile>tracktion__TempoDetect_8h.html</anchorfile>
+      <anchor>a797b03feaf75c3efe041c1c1b1960a01</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>FIFOSamplePipe_H</name>
+      <anchorfile>tracktion__TempoDetect_8h.html</anchorfile>
+      <anchor>a59ad6423a2d946a707e1898fb025fa87</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>MIN_BPM</name>
+      <anchorfile>tracktion__TempoDetect_8h.html</anchorfile>
+      <anchor>a98f35e97e71593c8e230d6f54be67744</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>MAX_BPM_RANGE</name>
+      <anchorfile>tracktion__TempoDetect_8h.html</anchorfile>
+      <anchor>a1526b44e1047ec418928cbd4fbed9315</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>MAX_BPM_VALID</name>
+      <anchorfile>tracktion__TempoDetect_8h.html</anchorfile>
+      <anchor>a44eea6dbcbd1c287191b5f33ad2e2866</anchor>
+      <arglist></arglist>
+    </member>
   </compound>
   <compound kind="file">
     <name>tracktion_TimeStretch.h</name>
@@ -2333,6 +2459,7 @@
     <filename>tracktion__AtomicWrapper_8h.html</filename>
     <class kind="struct">engine::DummyConstrainer</class>
     <class kind="struct">engine::AtomicWrapper</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::AtomicWrapper&lt; T, C, L, S &gt; &gt;</class>
     <namespace>engine</namespace>
     <namespace>juce</namespace>
   </compound>
@@ -2363,6 +2490,7 @@
     <filename>tracktion__AudioUtilities_8h.html</filename>
     <class kind="class">engine::AudioMidiFifo</class>
     <class kind="class">engine::AudioBufferSnapshot</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::ResamplingQuality &gt;</class>
     <namespace>engine</namespace>
     <namespace>juce</namespace>
   </compound>
@@ -2634,6 +2762,37 @@
     <namespace>engine</namespace>
   </compound>
   <compound kind="file">
+    <name>tracktion_engine/utilities/tracktion_TestUtilities.h</name>
+    <path>build/tracktion_engine/utilities/</path>
+    <filename>tracktion__engine_2utilities_2tracktion__TestUtilities_8h.html</filename>
+    <namespace>engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_graph/tracktion_graph/tracktion_TestUtilities.h</name>
+    <path>build/tracktion_graph/tracktion_graph/</path>
+    <filename>tracktion__graph_2tracktion__graph_2tracktion__TestUtilities_8h.html</filename>
+    <includes id="tracktion__FloatAudioFileFormat_8h" name="tracktion_FloatAudioFileFormat.h" local="yes" import="no" module="no" objc="no">../../tracktion_engine/audio_files/formats/tracktion_FloatAudioFileFormat.h</includes>
+    <class kind="struct">graph::test_utilities::SineOscillator</class>
+    <class kind="struct">graph::test_utilities::TestSetup</class>
+    <class kind="struct">graph::test_utilities::TestContext</class>
+    <class kind="struct">graph::test_utilities::TestProcess</class>
+    <namespace>graph</namespace>
+    <namespace>graph::test_utilities</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_engine/utilities/tracktion_Threads.h</name>
+    <path>build/tracktion_engine/utilities/</path>
+    <filename>tracktion__engine_2utilities_2tracktion__Threads_8h.html</filename>
+    <class kind="struct">engine::ScopedThreadExitStatusEnabler</class>
+    <namespace>engine</namespace>
+  </compound>
+  <compound kind="file">
+    <name>tracktion_graph/utilities/tracktion_Threads.h</name>
+    <path>build/tracktion_graph/utilities/</path>
+    <filename>tracktion__graph_2utilities_2tracktion__Threads_8h.html</filename>
+    <namespace>graph</namespace>
+  </compound>
+  <compound kind="file">
     <name>tracktion_Types.h</name>
     <path>build/tracktion_engine/utilities/</path>
     <filename>tracktion__Types_8h.html</filename>
@@ -2711,20 +2870,6 @@
     <namespace>graph</namespace>
   </compound>
   <compound kind="file">
-    <name>tracktion_engine/playback/graph/tracktion_MultiThreadedNodePlayer.h</name>
-    <path>build/tracktion_engine/playback/graph/</path>
-    <filename>tracktion__engine_2playback_2graph_2tracktion__MultiThreadedNodePlayer_8h.html</filename>
-    <class kind="class">engine::MultiThreadedNodePlayer</class>
-    <namespace>engine</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_graph/tracktion_graph/tracktion_MultiThreadedNodePlayer.h</name>
-    <path>build/tracktion_graph/tracktion_graph/</path>
-    <filename>tracktion__graph_2tracktion__graph_2tracktion__MultiThreadedNodePlayer_8h.html</filename>
-    <class kind="class">graph::MultiThreadedNodePlayer</class>
-    <namespace>graph</namespace>
-  </compound>
-  <compound kind="file">
     <name>tracktion_Node.h</name>
     <path>build/tracktion_graph/tracktion_graph/</path>
     <filename>tracktion__Node_8h.html</filename>
@@ -2789,24 +2934,6 @@
     <namespace>graph</namespace>
   </compound>
   <compound kind="file">
-    <name>tracktion_engine/utilities/tracktion_TestUtilities.h</name>
-    <path>build/tracktion_engine/utilities/</path>
-    <filename>tracktion__engine_2utilities_2tracktion__TestUtilities_8h.html</filename>
-    <namespace>engine</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_graph/tracktion_graph/tracktion_TestUtilities.h</name>
-    <path>build/tracktion_graph/tracktion_graph/</path>
-    <filename>tracktion__graph_2tracktion__graph_2tracktion__TestUtilities_8h.html</filename>
-    <includes id="tracktion__FloatAudioFileFormat_8h" name="tracktion_FloatAudioFileFormat.h" local="yes" import="no" module="no" objc="no">../../tracktion_engine/audio_files/formats/tracktion_FloatAudioFileFormat.h</includes>
-    <class kind="struct">graph::test_utilities::SineOscillator</class>
-    <class kind="struct">graph::test_utilities::TestSetup</class>
-    <class kind="struct">graph::test_utilities::TestContext</class>
-    <class kind="struct">graph::test_utilities::TestProcess</class>
-    <namespace>graph</namespace>
-    <namespace>graph::test_utilities</namespace>
-  </compound>
-  <compound kind="file">
     <name>tracktion_Utility.h</name>
     <path>build/tracktion_graph/tracktion_graph/</path>
     <filename>tracktion__Utility_8h.html</filename>
@@ -2816,28 +2943,28 @@
     <name>tracktion_AudioBufferPool.h</name>
     <path>build/tracktion_graph/utilities/</path>
     <filename>tracktion__AudioBufferPool_8h.html</filename>
+    <class kind="class">graph::farbot::fifo</class>
+    <class kind="struct">graph::farbot::detail::fifo_manip</class>
+    <class kind="struct">graph::farbot::detail::fifo_manip&lt; T, false, false &gt;</class>
+    <class kind="struct">graph::farbot::detail::fifo_manip&lt; T, false, true &gt;</class>
+    <class kind="struct">graph::farbot::detail::thread_info</class>
+    <class kind="struct">graph::farbot::detail::multi_position_info</class>
+    <class kind="struct">graph::farbot::detail::read_or_writer</class>
+    <class kind="struct">graph::farbot::detail::read_or_writer&lt; T, is_writer, true, false, MAX_THREADS &gt;</class>
+    <class kind="struct">graph::farbot::detail::read_or_writer&lt; T, is_writer, true, true, MAX_THREADS &gt;</class>
+    <class kind="struct">graph::farbot::detail::read_or_writer&lt; T, is_writer, false, true, MAX_THREADS &gt;</class>
+    <class kind="class">graph::farbot::detail::fifo_impl</class>
     <class kind="class">graph::AudioBufferPool</class>
     <namespace>graph</namespace>
+    <namespace>graph::farbot</namespace>
+    <namespace>graph::farbot::detail</namespace>
+    <namespace>graph::farbot::fifo_options</namespace>
   </compound>
   <compound kind="file">
     <name>tracktion_AudioBufferStack.h</name>
     <path>build/tracktion_graph/utilities/</path>
     <filename>tracktion__AudioBufferStack_8h.html</filename>
     <class kind="class">graph::AudioBufferStack</class>
-    <namespace>graph</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_engine/audio_files/tracktion_AudioFifo.h</name>
-    <path>build/tracktion_engine/audio_files/</path>
-    <filename>tracktion__engine_2audio__files_2tracktion__AudioFifo_8h.html</filename>
-    <class kind="class">engine::AudioFifo</class>
-    <namespace>engine</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_graph/utilities/tracktion_AudioFifo.h</name>
-    <path>build/tracktion_graph/utilities/</path>
-    <filename>tracktion__graph_2utilities_2tracktion__AudioFifo_8h.html</filename>
-    <class kind="class">graph::AudioFifo</class>
     <namespace>graph</namespace>
   </compound>
   <compound kind="file">
@@ -2900,19 +3027,6 @@
     <class kind="class">graph::LightweightSemaphore</class>
     <namespace>moodycamel</namespace>
     <namespace>moodycamel::details</namespace>
-    <namespace>graph</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_engine/utilities/tracktion_Threads.h</name>
-    <path>build/tracktion_engine/utilities/</path>
-    <filename>tracktion__engine_2utilities_2tracktion__Threads_8h.html</filename>
-    <class kind="struct">engine::ScopedThreadExitStatusEnabler</class>
-    <namespace>engine</namespace>
-  </compound>
-  <compound kind="file">
-    <name>tracktion_graph/utilities/tracktion_Threads.h</name>
-    <path>build/tracktion_graph/utilities/</path>
-    <filename>tracktion__graph_2utilities_2tracktion__Threads_8h.html</filename>
     <namespace>graph</namespace>
   </compound>
   <compound kind="file">
@@ -3984,109 +4098,109 @@
     <member kind="enumvalue">
       <name>alphaTrackF1</name>
       <anchorfile>classengine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>aa8b5440636c9ba5fb46b94c10c2dba7eaead35bffb2ffbd879f88915c4c034286</anchor>
+      <anchor>a1e4e7cc9d3c44c369bd7cca4eff8afb2aead35bffb2ffbd879f88915c4c034286</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>alphaTrackF2</name>
       <anchorfile>classengine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>aa8b5440636c9ba5fb46b94c10c2dba7ea83f472bbecef10938cf5a8e2cdb71f59</anchor>
+      <anchor>a1e4e7cc9d3c44c369bd7cca4eff8afb2a83f472bbecef10938cf5a8e2cdb71f59</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>alphaTrackF3</name>
       <anchorfile>classengine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>aa8b5440636c9ba5fb46b94c10c2dba7eae47c094737fecb74c8f67dfb95bba9a9</anchor>
+      <anchor>a1e4e7cc9d3c44c369bd7cca4eff8afb2ae47c094737fecb74c8f67dfb95bba9a9</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>alphaTrackF4</name>
       <anchorfile>classengine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>aa8b5440636c9ba5fb46b94c10c2dba7ea59fd88d5e3149899fb06e608de5a6acc</anchor>
+      <anchor>a1e4e7cc9d3c44c369bd7cca4eff8afb2a59fd88d5e3149899fb06e608de5a6acc</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>alphaTrackF5</name>
       <anchorfile>classengine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>aa8b5440636c9ba5fb46b94c10c2dba7ea97bbe612bc4ca007b2e06b0c2a9ae99a</anchor>
+      <anchor>a1e4e7cc9d3c44c369bd7cca4eff8afb2a97bbe612bc4ca007b2e06b0c2a9ae99a</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>alphaTrackF6</name>
       <anchorfile>classengine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>aa8b5440636c9ba5fb46b94c10c2dba7ea95af66dd2a77b7510a1cc0764264f949</anchor>
+      <anchor>a1e4e7cc9d3c44c369bd7cca4eff8afb2a95af66dd2a77b7510a1cc0764264f949</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>alphaTrackF7</name>
       <anchorfile>classengine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>aa8b5440636c9ba5fb46b94c10c2dba7eaaff17be3f91854b79e735b24140b5e97</anchor>
+      <anchor>a1e4e7cc9d3c44c369bd7cca4eff8afb2aaff17be3f91854b79e735b24140b5e97</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>alphaTrackF8</name>
       <anchorfile>classengine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>aa8b5440636c9ba5fb46b94c10c2dba7ea359933f5efd6598a014de105555585b2</anchor>
+      <anchor>a1e4e7cc9d3c44c369bd7cca4eff8afb2a359933f5efd6598a014de105555585b2</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>alphaTrackFoot</name>
       <anchorfile>classengine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>aa8b5440636c9ba5fb46b94c10c2dba7eabd7c15ae74c4f0adfbf8aff131be0bb2</anchor>
+      <anchor>a1e4e7cc9d3c44c369bd7cca4eff8afb2abd7c15ae74c4f0adfbf8aff131be0bb2</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>alphaTrackF1</name>
       <anchorfile>classengine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>aa8b5440636c9ba5fb46b94c10c2dba7eaead35bffb2ffbd879f88915c4c034286</anchor>
+      <anchor>a1e4e7cc9d3c44c369bd7cca4eff8afb2aead35bffb2ffbd879f88915c4c034286</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>alphaTrackF2</name>
       <anchorfile>classengine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>aa8b5440636c9ba5fb46b94c10c2dba7ea83f472bbecef10938cf5a8e2cdb71f59</anchor>
+      <anchor>a1e4e7cc9d3c44c369bd7cca4eff8afb2a83f472bbecef10938cf5a8e2cdb71f59</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>alphaTrackF3</name>
       <anchorfile>classengine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>aa8b5440636c9ba5fb46b94c10c2dba7eae47c094737fecb74c8f67dfb95bba9a9</anchor>
+      <anchor>a1e4e7cc9d3c44c369bd7cca4eff8afb2ae47c094737fecb74c8f67dfb95bba9a9</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>alphaTrackF4</name>
       <anchorfile>classengine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>aa8b5440636c9ba5fb46b94c10c2dba7ea59fd88d5e3149899fb06e608de5a6acc</anchor>
+      <anchor>a1e4e7cc9d3c44c369bd7cca4eff8afb2a59fd88d5e3149899fb06e608de5a6acc</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>alphaTrackF5</name>
       <anchorfile>classengine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>aa8b5440636c9ba5fb46b94c10c2dba7ea97bbe612bc4ca007b2e06b0c2a9ae99a</anchor>
+      <anchor>a1e4e7cc9d3c44c369bd7cca4eff8afb2a97bbe612bc4ca007b2e06b0c2a9ae99a</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>alphaTrackF6</name>
       <anchorfile>classengine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>aa8b5440636c9ba5fb46b94c10c2dba7ea95af66dd2a77b7510a1cc0764264f949</anchor>
+      <anchor>a1e4e7cc9d3c44c369bd7cca4eff8afb2a95af66dd2a77b7510a1cc0764264f949</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>alphaTrackF7</name>
       <anchorfile>classengine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>aa8b5440636c9ba5fb46b94c10c2dba7eaaff17be3f91854b79e735b24140b5e97</anchor>
+      <anchor>a1e4e7cc9d3c44c369bd7cca4eff8afb2aaff17be3f91854b79e735b24140b5e97</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>alphaTrackF8</name>
       <anchorfile>classengine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>aa8b5440636c9ba5fb46b94c10c2dba7ea359933f5efd6598a014de105555585b2</anchor>
+      <anchor>a1e4e7cc9d3c44c369bd7cca4eff8afb2a359933f5efd6598a014de105555585b2</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>alphaTrackFoot</name>
       <anchorfile>classengine_1_1AlphaTrackControlSurface.html</anchorfile>
-      <anchor>aa8b5440636c9ba5fb46b94c10c2dba7eabd7c15ae74c4f0adfbf8aff131be0bb2</anchor>
+      <anchor>a1e4e7cc9d3c44c369bd7cca4eff8afb2abd7c15ae74c4f0adfbf8aff131be0bb2</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -7548,11 +7662,11 @@
   <compound kind="struct">
     <name>engine::AudioFadeCurve</name>
     <filename>structengine_1_1AudioFadeCurve.html</filename>
-    <class kind="struct">engine::AudioFadeCurve::Concave</class>
-    <class kind="struct">engine::AudioFadeCurve::Convex</class>
-    <class kind="struct">engine::AudioFadeCurve::CrossfadeLevels</class>
     <class kind="struct">engine::AudioFadeCurve::Linear</class>
+    <class kind="struct">engine::AudioFadeCurve::Convex</class>
+    <class kind="struct">engine::AudioFadeCurve::Concave</class>
     <class kind="struct">engine::AudioFadeCurve::SCurve</class>
+    <class kind="struct">engine::AudioFadeCurve::CrossfadeLevels</class>
     <member kind="enumeration">
       <type></type>
       <name>Type</name>
@@ -8646,8 +8760,8 @@
   <compound kind="struct">
     <name>engine::AudioFileUtils</name>
     <filename>structengine_1_1AudioFileUtils.html</filename>
-    <class kind="class">engine::AudioFileUtils::EnvelopeFollower</class>
     <class kind="struct">engine::AudioFileUtils::MappedFileAndReader</class>
+    <class kind="class">engine::AudioFileUtils::EnvelopeFollower</class>
     <member kind="function" static="yes">
       <type>static juce::AudioFormatReader *</type>
       <name>createReaderFor</name>
@@ -10101,9 +10215,9 @@
     <name>engine::AutomatableParameter</name>
     <filename>classengine_1_1AutomatableParameter.html</filename>
     <base>engine::Selectable</base>
-    <class kind="struct">engine::AutomatableParameter::Listener</class>
-    <class kind="struct">engine::AutomatableParameter::ModifierAssignment</class>
     <class kind="struct">engine::AutomatableParameter::ModifierSource</class>
+    <class kind="struct">engine::AutomatableParameter::ModifierAssignment</class>
+    <class kind="struct">engine::AutomatableParameter::Listener</class>
     <class kind="struct">engine::AutomatableParameter::ScopedActiveParameter</class>
     <member kind="typedef">
       <type>juce::ReferenceCountedObjectPtr&lt; AutomatableParameter &gt;</type>
@@ -11389,10 +11503,10 @@
     <base>engine::EditItem</base>
     <base>engine::Selectable</base>
     <base>engine::AutomatableParameter::ModifierSource</base>
-    <class kind="class">engine::AutomationCurveModifier::Assignment</class>
-    <class kind="struct">engine::AutomationCurveModifier::CurveInfo</class>
     <class kind="struct">engine::AutomationCurveModifier::CurveTiming</class>
+    <class kind="struct">engine::AutomationCurveModifier::CurveInfo</class>
     <class kind="struct">engine::AutomationCurveModifier::Listener</class>
+    <class kind="class">engine::AutomationCurveModifier::Assignment</class>
     <member kind="typedef">
       <type>juce::ReferenceCountedObjectPtr&lt; AutomationCurveModifier &gt;</type>
       <name>Ptr</name>
@@ -11831,13 +11945,6 @@
       <anchorfile>structengine_1_1Clipboard_1_1AutomationPoints.html</anchorfile>
       <anchor>a1a48546d049b579a223a89e6ce1a248f</anchor>
       <arglist>(Edit &amp;, EditInsertPoint &amp;, SelectionManager *) const</arglist>
-    </member>
-    <member kind="function">
-      <type>virtual bool</type>
-      <name>pasteIntoEdit</name>
-      <anchorfile>structengine_1_1Clipboard_1_1AutomationPoints.html</anchorfile>
-      <anchor>a8515e573947dba446a7e2537e5a6b635</anchor>
-      <arglist>(const EditPastingOptions &amp;) const</arglist>
     </member>
     <member kind="variable">
       <type>std::vector&lt; CurveSection &gt;</type>
@@ -12711,6 +12818,24 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>engine::soundtouch::BEAT</name>
+    <filename>structengine_1_1soundtouch_1_1BEAT.html</filename>
+    <member kind="variable">
+      <type>float</type>
+      <name>pos</name>
+      <anchorfile>structengine_1_1soundtouch_1_1BEAT.html</anchorfile>
+      <anchor>aeffb8b728a75379233e7e6da6d328081</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>float</type>
+      <name>strength</name>
+      <anchorfile>structengine_1_1soundtouch_1_1BEAT.html</anchorfile>
+      <anchor>a75cf2630f68fe0863f95948b2205d7fd</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>engine::WaveNodeRealTime::BeatConfig</name>
     <filename>structengine_1_1WaveNodeRealTime_1_1BeatConfig.html</filename>
     <member kind="variable">
@@ -12994,6 +13119,213 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>engine::soundtouch::BPMDetect</name>
+    <filename>classengine_1_1soundtouch_1_1BPMDetect.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>BPMDetect</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>a42d56487e391a2762bc620f6540295ef</anchor>
+      <arglist>(int numChannels, int sampleRate)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~BPMDetect</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>a202e6b27b0779b624be5b4d1233af93f</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>inputSamples</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>aac9eb800b614c811e2191a148d4bcc21</anchor>
+      <arglist>(const soundtouch::SAMPLETYPE *samples, int numSamples)</arglist>
+    </member>
+    <member kind="function">
+      <type>float</type>
+      <name>getBpm</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>abaf4e507ab12c4347925588ecd80e3d4</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getBeats</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>a2cd2f87d0602c73ac860854de74291a7</anchor>
+      <arglist>(float *pos, float *strength, int max_num)</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>updateXCorr</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>a199bb4b2ec3a729abcf16e0edf9ee4ab</anchor>
+      <arglist>(int process_samples)</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>int</type>
+      <name>decimate</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>a80ed6741f0c401e564cdff0703287bc5</anchor>
+      <arglist>(soundtouch::SAMPLETYPE *dest, const soundtouch::SAMPLETYPE *src, int numsamples)</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>calcEnvelope</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>a34c21ae913d74c4bfc659bb07f8cd5d3</anchor>
+      <arglist>(soundtouch::SAMPLETYPE *samples, int numsamples)</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>removeBias</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>a6ec00bbb4e9f07a4d6c8c2b1e61cc6e5</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>updateBeatPos</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>af879fcd1a03fda620949ea3985582af5</anchor>
+      <arglist>(int process_samples)</arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>float *</type>
+      <name>xcorr</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>a8efead14251652787d3edbb8db8c9732</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>int</type>
+      <name>decimateCount</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>a8b73b3303326b1b66dcbeae9889c60e5</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>soundtouch::LONG_SAMPLETYPE</type>
+      <name>decimateSum</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>a2cc076ac1ad328a5d5c5b8cc07db5da0</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>int</type>
+      <name>decimateBy</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>a85a81f78f0a25beba119b24f064b4904</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>int</type>
+      <name>windowLen</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>a2eb63ca9a617bb1d4aa934681c9f4c99</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>int</type>
+      <name>channels</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>a9ec558fc78cec82189e480a915e01592</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>int</type>
+      <name>sampleRate</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>af9cc8e2f7426a2b4051db46792e595ec</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>int</type>
+      <name>windowStart</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>a82999e28bf7ac5516bd4d0c148ce7c15</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>float *</type>
+      <name>hamw</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>af2f73dec7cc2177cbf0e3a6359f780bb</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>float *</type>
+      <name>hamw2</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>a5c2499e26af1cd77724c9aa790f2107d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>int</type>
+      <name>pos</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>a1c22cad178799dfc9b5342080a7a1841</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>int</type>
+      <name>peakPos</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>acd2742283f5bca9185510ea854eed963</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>int</type>
+      <name>beatcorr_ringbuffpos</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>ac42b070e06841a4b4ce3edccb994b17d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>int</type>
+      <name>init_scaler</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>a1c8e56f3e507e538aaa25e8f48be7b11</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>float</type>
+      <name>peakVal</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>a3092e9d90a9a2987e6b244871807f5a6</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>float *</type>
+      <name>beatcorr_ringbuff</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>ab409e4debe0d230316ad80c996a4a21b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>soundtouch::FIFOSampleBuffer *</type>
+      <name>buffer</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>aefd239950e4297f4774f982fd1709600</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>std::vector&lt; BEAT &gt;</type>
+      <name>beats</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>af9a39179e53eb8026e932537992f5b2a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>IIR2_filter</type>
+      <name>beat_lpf</name>
+      <anchorfile>classengine_1_1soundtouch_1_1BPMDetect.html</anchorfile>
+      <anchor>a1e84c53c615618499bdaac2a02713853</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>engine::BreakpointOscillatorModifier</name>
     <filename>classengine_1_1BreakpointOscillatorModifier.html</filename>
     <base>engine::Modifier</base>
@@ -13104,13 +13436,6 @@
       <anchorfile>classengine_1_1BreakpointOscillatorModifier.html</anchorfile>
       <anchor>aa02da3c8aa256fabee7cd634dfd40cc7</anchor>
       <arglist>(int index) const</arglist>
-    </member>
-    <member kind="function">
-      <type>virtual void</type>
-      <name>initialise</name>
-      <anchorfile>classengine_1_1BreakpointOscillatorModifier.html</anchorfile>
-      <anchor>a3f0273eef48ffa4cda3957420852c12d</anchor>
-      <arglist>()=0</arglist>
     </member>
     <member kind="function">
       <type>virtual void</type>
@@ -16501,19 +16826,19 @@
   <compound kind="class">
     <name>engine::Clipboard</name>
     <filename>classengine_1_1Clipboard.html</filename>
-    <class kind="struct">engine::Clipboard::AutomationPoints</class>
-    <class kind="struct">engine::Clipboard::Clips</class>
     <class kind="struct">engine::Clipboard::ContentType</class>
-    <class kind="struct">engine::Clipboard::MIDIEvents</class>
-    <class kind="struct">engine::Clipboard::Modifiers</class>
-    <class kind="struct">engine::Clipboard::Pitches</class>
-    <class kind="struct">engine::Clipboard::Plugins</class>
     <class kind="struct">engine::Clipboard::ProjectItems</class>
+    <class kind="struct">engine::Clipboard::Clips</class>
     <class kind="struct">engine::Clipboard::Scenes</class>
-    <class kind="struct">engine::Clipboard::Takes</class>
-    <class kind="struct">engine::Clipboard::TempoChanges</class>
-    <class kind="struct">engine::Clipboard::TimeSigs</class>
     <class kind="struct">engine::Clipboard::Tracks</class>
+    <class kind="struct">engine::Clipboard::TempoChanges</class>
+    <class kind="struct">engine::Clipboard::AutomationPoints</class>
+    <class kind="struct">engine::Clipboard::MIDIEvents</class>
+    <class kind="struct">engine::Clipboard::Pitches</class>
+    <class kind="struct">engine::Clipboard::TimeSigs</class>
+    <class kind="struct">engine::Clipboard::Plugins</class>
+    <class kind="struct">engine::Clipboard::Takes</class>
+    <class kind="struct">engine::Clipboard::Modifiers</class>
     <member kind="function">
       <type></type>
       <name>Clipboard</name>
@@ -16853,7 +17178,7 @@
   <compound kind="class">
     <name>engine::ClipEffects</name>
     <filename>classengine_1_1ClipEffects.html</filename>
-    <base>ValueTreeObjectList&lt; ClipEffect &gt;</base>
+    <base>engine::ValueTreeObjectList&lt; ClipEffect &gt;</base>
     <class kind="struct">engine::ClipEffects::Listener</class>
     <class kind="struct">engine::ClipEffects::RenderInhibitor</class>
     <member kind="function">
@@ -17312,8 +17637,8 @@
     <name>engine::Clipboard::Clips</name>
     <filename>structengine_1_1Clipboard_1_1Clips.html</filename>
     <base>engine::Clipboard::ContentType</base>
-    <class kind="struct">engine::Clipboard::Clips::AutomationCurveSection</class>
     <class kind="struct">engine::Clipboard::Clips::ClipInfo</class>
+    <class kind="struct">engine::Clipboard::Clips::AutomationCurveSection</class>
     <member kind="enumeration">
       <type></type>
       <name>AutomationLocked</name>
@@ -17509,7 +17834,7 @@
   <compound kind="class">
     <name>engine::ClipSlotList</name>
     <filename>classengine_1_1ClipSlotList.html</filename>
-    <base protection="private">ValueTreeObjectList&lt; ClipSlot &gt;</base>
+    <base protection="private">engine::ValueTreeObjectList&lt; ClipSlot &gt;</base>
     <member kind="function">
       <type></type>
       <name>ClipSlotList</name>
@@ -22324,8 +22649,8 @@
     <name>engine::CustomControlSurface</name>
     <filename>classengine_1_1CustomControlSurface.html</filename>
     <base>engine::ControlSurface</base>
-    <class kind="struct">engine::CustomControlSurface::Mapping</class>
     <class kind="struct">engine::CustomControlSurface::MappingSet</class>
+    <class kind="struct">engine::CustomControlSurface::Mapping</class>
     <member kind="enumeration">
       <type></type>
       <name>ActionID</name>
@@ -25752,7 +26077,7 @@
   <compound kind="struct">
     <name>engine::InputDeviceInstance::DestinationList</name>
     <filename>structengine_1_1InputDeviceInstance_1_1DestinationList.html</filename>
-    <base>ValueTreeObjectList&lt; Destination &gt;</base>
+    <base>engine::ValueTreeObjectList&lt; Destination &gt;</base>
     <member kind="function">
       <type></type>
       <name>DestinationList</name>
@@ -26813,14 +27138,14 @@
     <name>engine::Edit</name>
     <filename>classengine_1_1Edit.html</filename>
     <base>engine::Selectable</base>
-    <class kind="struct">engine::Edit::GlobalMacros</class>
     <class kind="struct">engine::Edit::LoadContext</class>
-    <class kind="struct">engine::Edit::LoadFinishedCallback</class>
-    <class kind="struct">engine::Edit::Metadata</class>
     <class kind="struct">engine::Edit::Options</class>
-    <class kind="struct">engine::Edit::SaveInhibitor</class>
     <class kind="struct">engine::Edit::ScopedRenderStatus</class>
     <class kind="struct">engine::Edit::UndoTransactionInhibitor</class>
+    <class kind="struct">engine::Edit::GlobalMacros</class>
+    <class kind="struct">engine::Edit::SaveInhibitor</class>
+    <class kind="struct">engine::Edit::Metadata</class>
+    <class kind="struct">engine::Edit::LoadFinishedCallback</class>
     <class kind="struct">engine::Edit::WastedMidiMessagesListener</class>
     <member kind="enumeration">
       <type></type>
@@ -29356,8 +29681,8 @@
   <compound kind="class">
     <name>engine::EditPlaybackContext</name>
     <filename>classengine_1_1EditPlaybackContext.html</filename>
-    <class kind="struct">engine::EditPlaybackContext::RealtimePriorityDisabler</class>
     <class kind="struct">engine::EditPlaybackContext::ScopedDeviceListReleaser</class>
+    <class kind="struct">engine::EditPlaybackContext::RealtimePriorityDisabler</class>
     <member kind="function">
       <type></type>
       <name>EditPlaybackContext</name>
@@ -29793,36 +30118,36 @@
       <type>friend TimePosition</type>
       <name>toTime</name>
       <anchorfile>structengine_1_1EditPosition.html</anchorfile>
-      <anchor>aa2e5522a7fdd93ca4ca434b48f38a52c</anchor>
-      <arglist>(EditPosition, const TempoSequence &amp;)</arglist>
+      <anchor>a4bf5ce5e49238bff2f2e2e37c092a0b4</anchor>
+      <arglist>(EditPosition et, const TempoSequence &amp;ts)</arglist>
     </member>
     <member kind="friend" protection="private">
       <type>friend BeatPosition</type>
       <name>toBeats</name>
       <anchorfile>structengine_1_1EditPosition.html</anchorfile>
-      <anchor>a6a4b616a777f8679f85f6105dfd70536</anchor>
-      <arglist>(EditPosition, const TempoSequence &amp;)</arglist>
+      <anchor>aef2da354a60b982d0520e8b74587b58f</anchor>
+      <arglist>(EditPosition et, const TempoSequence &amp;ts)</arglist>
     </member>
     <member kind="friend" protection="private">
       <type>friend TimePosition</type>
       <name>toTime</name>
       <anchorfile>structengine_1_1EditPosition.html</anchorfile>
-      <anchor>a40a3b6afe30a9021db66e7ced7ea831f</anchor>
-      <arglist>(EditPosition, const tempo::Sequence &amp;)</arglist>
+      <anchor>ae612f95f00ca40c84a31aeeeca3b9a15</anchor>
+      <arglist>(EditPosition et, const tempo::Sequence &amp;ts)</arglist>
     </member>
     <member kind="friend" protection="private">
       <type>friend BeatPosition</type>
       <name>toBeats</name>
       <anchorfile>structengine_1_1EditPosition.html</anchorfile>
-      <anchor>af85d93a608d7e73eff50c7ce106f6484</anchor>
-      <arglist>(EditPosition, const tempo::Sequence &amp;)</arglist>
+      <anchor>a3003b6e3bb56d4d413905e9813d20630</anchor>
+      <arglist>(EditPosition et, const tempo::Sequence &amp;ts)</arglist>
     </member>
     <member kind="friend" protection="private">
       <type>friend double</type>
       <name>toUnderlying</name>
       <anchorfile>structengine_1_1EditPosition.html</anchorfile>
-      <anchor>aac43196f250c6f8b06601f9c08764ade</anchor>
-      <arglist>(EditPosition)</arglist>
+      <anchor>a46ed7b46ff594dcd7dd6bab67bab467b</anchor>
+      <arglist>(EditPosition et)</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -30039,8 +30364,8 @@
   <compound kind="class">
     <name>engine::EditSnapshot</name>
     <filename>classengine_1_1EditSnapshot.html</filename>
-    <class kind="struct">engine::EditSnapshot::Listener</class>
     <class kind="struct">engine::EditSnapshot::Marker</class>
+    <class kind="struct">engine::EditSnapshot::Listener</class>
     <member kind="typedef">
       <type>juce::ReferenceCountedObjectPtr&lt; EditSnapshot &gt;</type>
       <name>Ptr</name>
@@ -30396,29 +30721,29 @@
       <type>friend TimeRange</type>
       <name>toTime</name>
       <anchorfile>structengine_1_1EditTimeRange.html</anchorfile>
-      <anchor>a4fbead3db91f22cc94ac9c9cadd6e14f</anchor>
-      <arglist>(EditTimeRange, const TempoSequence &amp;)</arglist>
+      <anchor>a3c8502eef50ceaecefdf5f0931dfd092</anchor>
+      <arglist>(EditTimeRange r, const TempoSequence &amp;ts)</arglist>
     </member>
     <member kind="friend" protection="private">
       <type>friend BeatRange</type>
       <name>toBeats</name>
       <anchorfile>structengine_1_1EditTimeRange.html</anchorfile>
-      <anchor>a9158d1fcc9d2f987af342f391f1ce7fb</anchor>
-      <arglist>(EditTimeRange, const TempoSequence &amp;)</arglist>
+      <anchor>a669629a0e94006ced440941089eb988f</anchor>
+      <arglist>(EditTimeRange r, const TempoSequence &amp;ts)</arglist>
     </member>
     <member kind="friend" protection="private">
       <type>friend TimeRange</type>
       <name>toTime</name>
       <anchorfile>structengine_1_1EditTimeRange.html</anchorfile>
-      <anchor>a44f8ed593a32e342ea317bcd7f71f35c</anchor>
-      <arglist>(EditTimeRange, const tempo::Sequence &amp;)</arglist>
+      <anchor>afb2293d1bae01a5b98827f2dcdbf50a0</anchor>
+      <arglist>(EditTimeRange r, const tempo::Sequence &amp;ts)</arglist>
     </member>
     <member kind="friend" protection="private">
       <type>friend BeatRange</type>
       <name>toBeats</name>
       <anchorfile>structengine_1_1EditTimeRange.html</anchorfile>
-      <anchor>a946b769ea99c14443a77cbec76f3eb6f</anchor>
-      <arglist>(EditTimeRange, const tempo::Sequence &amp;)</arglist>
+      <anchor>a979b1e10029f21e4a30be8afdfdfb676</anchor>
+      <arglist>(EditTimeRange r, const tempo::Sequence &amp;ts)</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -30712,10 +31037,10 @@
   <compound kind="class">
     <name>engine::EngineBehaviour</name>
     <filename>classengine_1_1EngineBehaviour.html</filename>
-    <class kind="struct">engine::EngineBehaviour::ClipDefaults</class>
-    <class kind="struct">engine::EngineBehaviour::ControlSurfaces</class>
     <class kind="struct">engine::EngineBehaviour::ExtraFileToArchive</class>
     <class kind="struct">engine::EngineBehaviour::LevelMeterSettings</class>
+    <class kind="struct">engine::EngineBehaviour::ClipDefaults</class>
+    <class kind="struct">engine::EngineBehaviour::ControlSurfaces</class>
     <member kind="function">
       <type></type>
       <name>EngineBehaviour</name>
@@ -34367,6 +34692,372 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>graph::farbot::fifo</name>
+    <filename>classgraph_1_1farbot_1_1fifo.html</filename>
+    <templarg>typename T</templarg>
+    <templarg>fifo_options::concurrency consumer_concurrency</templarg>
+    <templarg>fifo_options::concurrency producer_concurrency</templarg>
+    <templarg>fifo_options::full_empty_failure_mode consumer_failure_mode</templarg>
+    <templarg>fifo_options::full_empty_failure_mode producer_failure_mode</templarg>
+    <templarg>std::size_t MAX_THREADS</templarg>
+    <member kind="function">
+      <type></type>
+      <name>fifo</name>
+      <anchorfile>classgraph_1_1farbot_1_1fifo.html</anchorfile>
+      <anchor>a7698053d6c0cb782bd2942e5d248a59c</anchor>
+      <arglist>(int capacity)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>push</name>
+      <anchorfile>classgraph_1_1farbot_1_1fifo.html</anchorfile>
+      <anchor>a6c7323082e5124d2221191392709bb64</anchor>
+      <arglist>(T &amp;&amp;result)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>pop</name>
+      <anchorfile>classgraph_1_1farbot_1_1fifo.html</anchorfile>
+      <anchor>a0c281e968e0c56ecb9170b2cb6ae4e62</anchor>
+      <arglist>(T &amp;result)</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>graph::farbot::detail::fifo_impl</name>
+    <filename>classgraph_1_1farbot_1_1detail_1_1fifo__impl.html</filename>
+    <templarg>typename T</templarg>
+    <templarg>bool consumer_concurrency</templarg>
+    <templarg>bool producer_concurrency</templarg>
+    <templarg>bool consumer_failure_mode</templarg>
+    <templarg>bool producer_failure_mode</templarg>
+    <templarg>std::size_t MAX_THREADS</templarg>
+    <member kind="function">
+      <type></type>
+      <name>fifo_impl</name>
+      <anchorfile>classgraph_1_1farbot_1_1detail_1_1fifo__impl.html</anchorfile>
+      <anchor>ae554e76030d5f3893241a928d34484bd</anchor>
+      <arglist>(int capacity)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>push</name>
+      <anchorfile>classgraph_1_1farbot_1_1detail_1_1fifo__impl.html</anchorfile>
+      <anchor>ad1c1edccb574b5734519f7533d33fd63</anchor>
+      <arglist>(T &amp;&amp;result)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>pop</name>
+      <anchorfile>classgraph_1_1farbot_1_1detail_1_1fifo__impl.html</anchorfile>
+      <anchor>a5f65d6089e66aca428980e80e2aa457a</anchor>
+      <arglist>(T &amp;result)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>graph::farbot::detail::fifo_manip</name>
+    <filename>structgraph_1_1farbot_1_1detail_1_1fifo__manip.html</filename>
+    <templarg>typename T</templarg>
+    <templarg>bool isWrite</templarg>
+    <templarg>bool swap_when_read</templarg>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>access</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1fifo__manip.html</anchorfile>
+      <anchor>aa5341cb747d130a5704ce25de62fb961</anchor>
+      <arglist>(T &amp;&amp;slot, T &amp;&amp;arg)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>graph::farbot::detail::fifo_manip&lt; T, false, false &gt;</name>
+    <filename>structgraph_1_1farbot_1_1detail_1_1fifo__manip_3_01T_00_01false_00_01false_01_4.html</filename>
+    <templarg>typename T</templarg>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>access</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1fifo__manip_3_01T_00_01false_00_01false_01_4.html</anchorfile>
+      <anchor>a6d03b0f22e0fc08859511241d53e7292</anchor>
+      <arglist>(T &amp;&amp;slot, T &amp;&amp;arg)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>graph::farbot::detail::fifo_manip&lt; T, false, true &gt;</name>
+    <filename>structgraph_1_1farbot_1_1detail_1_1fifo__manip_3_01T_00_01false_00_01true_01_4.html</filename>
+    <templarg>typename T</templarg>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>access</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1fifo__manip_3_01T_00_01false_00_01true_01_4.html</anchorfile>
+      <anchor>aaafe47575117525d693a5628612454ef</anchor>
+      <arglist>(T &amp;&amp;slot, T &amp;&amp;arg)</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>engine::soundtouch::FIFOProcessor</name>
+    <filename>classengine_1_1soundtouch_1_1FIFOProcessor.html</filename>
+    <base>engine::soundtouch::FIFOSamplePipe</base>
+    <member kind="function" virtualness="virtual">
+      <type>virtual uint</type>
+      <name>receiveSamples</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
+      <anchor>a4c8e6ef8a0c9b3d5916e41f87934c4da</anchor>
+      <arglist>(SAMPLETYPE *outBuffer, uint maxSamples)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual uint</type>
+      <name>receiveSamples</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
+      <anchor>a35a446b621f0b877d76a52996a49f76b</anchor>
+      <arglist>(uint maxSamples)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual uint</type>
+      <name>numSamples</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
+      <anchor>a6493fb4479898eda9e0291c32adc016d</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual int</type>
+      <name>isEmpty</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
+      <anchor>aafa210209efb05198561876ced181e5c</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual uint</type>
+      <name>adjustAmountOfSamples</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
+      <anchor>a48d0c44bcb52406e07d65459bd1ce4b1</anchor>
+      <arglist>(uint numSamples)</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>setOutPipe</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
+      <anchor>a84ff828f97b8eabd6c7d58b8864d6eae</anchor>
+      <arglist>(FIFOSamplePipe *pOutput)</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type></type>
+      <name>FIFOProcessor</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
+      <anchor>ad72af37f17d6c1bbcbea82b47aca776b</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type></type>
+      <name>FIFOProcessor</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
+      <anchor>a057a8046fb041455b2155ffcfbeffb21</anchor>
+      <arglist>(FIFOSamplePipe *pOutput)</arglist>
+    </member>
+    <member kind="function" protection="protected" virtualness="virtual">
+      <type>virtual</type>
+      <name>~FIFOProcessor</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
+      <anchor>acf1640f2d8f7d2aae3a59bace895dc80</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" protection="protected" virtualness="virtual">
+      <type>virtual SAMPLETYPE *</type>
+      <name>ptrBegin</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
+      <anchor>a22d7bc5b3bdfaecc2eceea553a67ae5a</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>FIFOSamplePipe *</type>
+      <name>output</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOProcessor.html</anchorfile>
+      <anchor>a65290558e1215f1612a5f221d100d2e5</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>engine::soundtouch::FIFOSampleBuffer</name>
+    <filename>classengine_1_1soundtouch_1_1FIFOSampleBuffer.html</filename>
+    <base>engine::soundtouch::FIFOSamplePipe</base>
+    <member kind="function">
+      <type></type>
+      <name>FIFOSampleBuffer</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
+      <anchor>a0a9e26ddd3e9c1d9ac0ece8e16b39e94</anchor>
+      <arglist>(int numChannels=2)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~FIFOSampleBuffer</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
+      <anchor>a8ea0f4da3b66deb2e4320ab3e0331902</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual SAMPLETYPE *</type>
+      <name>ptrBegin</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
+      <anchor>a3a504909d4365b8f4e83b16e6a079e03</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>SAMPLETYPE *</type>
+      <name>ptrEnd</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
+      <anchor>ab1d7ac35bde5a933bcfb2625b4a8c6d3</anchor>
+      <arglist>(uint slackCapacity)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>putSamples</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
+      <anchor>a455f269eae998337e77f509a0e9cb5df</anchor>
+      <arglist>(const SAMPLETYPE *samples, uint numSamples)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>putSamples</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
+      <anchor>ae4c0b644ee51821e125f1741555753aa</anchor>
+      <arglist>(uint numSamples)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual uint</type>
+      <name>receiveSamples</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
+      <anchor>a3cfd59505b89784a8a22e18e9203f3f3</anchor>
+      <arglist>(SAMPLETYPE *output, uint maxSamples)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual uint</type>
+      <name>receiveSamples</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
+      <anchor>a9e0adacaf993f017eaf6931e7aaeef5e</anchor>
+      <arglist>(uint maxSamples)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual uint</type>
+      <name>numSamples</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
+      <anchor>acca77740cdcc2975d391b83344d6f48a</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setChannels</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
+      <anchor>a6d16ab24e81c2dc99547eaebdc22759c</anchor>
+      <arglist>(int numChannels)</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>getChannels</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
+      <anchor>a4d53c16495eb45dbf920a7844155626b</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual int</type>
+      <name>isEmpty</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
+      <anchor>a1f0bc462812d605462b701d3636d0361</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>clear</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
+      <anchor>ab48cc0d8c7b403dc7d968342b22c14b6</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>uint</type>
+      <name>adjustAmountOfSamples</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSampleBuffer.html</anchorfile>
+      <anchor>a4f1efd557149c2ac44451276e6d3ac17</anchor>
+      <arglist>(uint numSamples)</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>engine::soundtouch::FIFOSamplePipe</name>
+    <filename>classengine_1_1soundtouch_1_1FIFOSamplePipe.html</filename>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~FIFOSamplePipe</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
+      <anchor>ace584702b2b6c0290b0d13015dc3213f</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual SAMPLETYPE *</type>
+      <name>ptrBegin</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
+      <anchor>a994504c0ceff2a21a70bdbf466ea8cd3</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>putSamples</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
+      <anchor>a60f18d8df5b154e1bef13e7302fbc2bf</anchor>
+      <arglist>(const SAMPLETYPE *samples, uint numSamples)=0</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>moveSamples</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
+      <anchor>abcb0f60a14adf8bfb21c3e121bedf7f0</anchor>
+      <arglist>(FIFOSamplePipe &amp;other)</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual uint</type>
+      <name>receiveSamples</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
+      <anchor>af80f50179e7830add0ebda5157298e4a</anchor>
+      <arglist>(SAMPLETYPE *output, uint maxSamples)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual uint</type>
+      <name>receiveSamples</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
+      <anchor>afcdb2e1c757da53215d2fa5951c6a033</anchor>
+      <arglist>(uint maxSamples)=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual uint</type>
+      <name>numSamples</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
+      <anchor>ab7dc34d00fc5a2a5a8620939d1527567</anchor>
+      <arglist>() const =0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual int</type>
+      <name>isEmpty</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
+      <anchor>a3a47cfb269ba579fb621737de1c899a4</anchor>
+      <arglist>() const =0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>clear</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
+      <anchor>a5f2d09bcf79baaa09e32ebdd3b3f737f</anchor>
+      <arglist>()=0</arglist>
+    </member>
+    <member kind="function" virtualness="pure">
+      <type>virtual uint</type>
+      <name>adjustAmountOfSamples</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
+      <anchor>a43ecc7738fb7055e9b97365a42b6c1ad</anchor>
+      <arglist>(uint numSamples)=0</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>bool</type>
+      <name>verifyNumberOfChannels</name>
+      <anchorfile>classengine_1_1soundtouch_1_1FIFOSamplePipe.html</anchorfile>
+      <anchor>a865784e9dc01deb0052a70a85a71171b</anchor>
+      <arglist>(int nChannels) const</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>engine::FileBasedProject</name>
     <filename>classengine_1_1FileBasedProject.html</filename>
     <base>engine::ProjectBase</base>
@@ -35449,10 +36140,10 @@
     <filename>classengine_1_1FourOscPlugin.html</filename>
     <base>engine::Plugin</base>
     <base protection="private">engine::LevelMeasurer::Client</base>
-    <class kind="struct">engine::FourOscPlugin::LFOParams</class>
-    <class kind="struct">engine::FourOscPlugin::ModAssign</class>
-    <class kind="struct">engine::FourOscPlugin::MODEnvParams</class>
     <class kind="struct">engine::FourOscPlugin::OscParams</class>
+    <class kind="struct">engine::FourOscPlugin::LFOParams</class>
+    <class kind="struct">engine::FourOscPlugin::MODEnvParams</class>
+    <class kind="struct">engine::FourOscPlugin::ModAssign</class>
     <member kind="enumeration">
       <type></type>
       <name>ModSource</name>
@@ -36344,10 +37035,10 @@
     <name>engine::FreezePointPlugin</name>
     <filename>classengine_1_1FreezePointPlugin.html</filename>
     <base>engine::Plugin</base>
+    <class kind="struct">engine::FreezePointPlugin::ScopedTrackUnsoloer</class>
+    <class kind="struct">engine::FreezePointPlugin::ScopedTrackSoloIsolator</class>
     <class kind="struct">engine::FreezePointPlugin::ScopedPluginDisabler</class>
     <class kind="struct">engine::FreezePointPlugin::ScopedTrackFreezer</class>
-    <class kind="struct">engine::FreezePointPlugin::ScopedTrackSoloIsolator</class>
-    <class kind="struct">engine::FreezePointPlugin::ScopedTrackUnsoloer</class>
     <member kind="enumeration">
       <type></type>
       <name>Position</name>
@@ -37341,6 +38032,24 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>engine::soundtouch::IIR2_filter</name>
+    <filename>classengine_1_1soundtouch_1_1IIR2__filter.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>IIR2_filter</name>
+      <anchorfile>classengine_1_1soundtouch_1_1IIR2__filter.html</anchorfile>
+      <anchor>a95b21f25267bc71cbd731afd06dd66ff</anchor>
+      <arglist>(const double *lpf_coeffs)</arglist>
+    </member>
+    <member kind="function">
+      <type>float</type>
+      <name>update</name>
+      <anchorfile>classengine_1_1soundtouch_1_1IIR2__filter.html</anchorfile>
+      <anchor>a612ebc8df52b73822b89e39b311ea164</anchor>
+      <arglist>(float x)</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>engine::ImpulseResponsePlugin</name>
     <filename>classengine_1_1ImpulseResponsePlugin.html</filename>
     <base>engine::Plugin</base>
@@ -37804,20 +38513,20 @@
   <compound kind="class">
     <name>engine::InputDeviceInstance</name>
     <filename>classengine_1_1InputDeviceInstance.html</filename>
-    <class kind="struct">engine::InputDeviceInstance::Consumer</class>
-    <class kind="struct">engine::InputDeviceInstance::Destination</class>
-    <class kind="struct">engine::InputDeviceInstance::DestinationList</class>
-    <class kind="struct">engine::InputDeviceInstance::MidiInputDestination</class>
-    <class kind="class">engine::InputDeviceInstance::RecordingContext</class>
     <class kind="struct">engine::InputDeviceInstance::RecordingParameters</class>
+    <class kind="class">engine::InputDeviceInstance::RecordingContext</class>
     <class kind="struct">engine::InputDeviceInstance::StopRecordingParameters</class>
-    <class kind="struct">engine::InputDeviceInstance::VirtualMidiInputDestination</class>
+    <class kind="struct">engine::InputDeviceInstance::Destination</class>
     <class kind="struct">engine::InputDeviceInstance::WaveInputDestination</class>
+    <class kind="struct">engine::InputDeviceInstance::MidiInputDestination</class>
+    <class kind="struct">engine::InputDeviceInstance::VirtualMidiInputDestination</class>
+    <class kind="struct">engine::InputDeviceInstance::DestinationList</class>
+    <class kind="struct">engine::InputDeviceInstance::Consumer</class>
     <member kind="typedef">
       <type>std::vector&lt; tl::expected&lt; std::unique_ptr&lt; RecordingContext &gt;, juce::String &gt; &gt;</type>
       <name>PreparedContext</name>
       <anchorfile>classengine_1_1InputDeviceInstance.html</anchorfile>
-      <anchor>aa4c4c5eb1f4e5aba17010464f68ac6e5</anchor>
+      <anchor>a8ec91f7069af9074a0901bf218374c73</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -40430,13 +41139,6 @@
       <type>virtual void</type>
       <name>initialise</name>
       <anchorfile>classengine_1_1LFOModifier.html</anchorfile>
-      <anchor>a3f0273eef48ffa4cda3957420852c12d</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function">
-      <type>virtual void</type>
-      <name>initialise</name>
-      <anchorfile>classengine_1_1LFOModifier.html</anchorfile>
       <anchor>ad7c47949dc4b4eb7d55867e7870d840e</anchor>
       <arglist>(double, int)</arglist>
     </member>
@@ -42618,8 +43320,8 @@
     <name>engine::MackieMCU</name>
     <filename>classengine_1_1MackieMCU.html</filename>
     <base>engine::ControlSurface</base>
-    <class kind="struct">engine::MackieMCU::AuxTimer</class>
     <class kind="struct">engine::MackieMCU::CpuMeterTimer</class>
+    <class kind="struct">engine::MackieMCU::AuxTimer</class>
     <member kind="enumeration">
       <type></type>
       <name>AssignmentMode</name>
@@ -42654,31 +43356,31 @@
     <member kind="enumvalue">
       <name>mcuFootswitch1Key</name>
       <anchorfile>classengine_1_1MackieMCU.html</anchorfile>
-      <anchor>a41f1e4a29780832cc3ad12ed719b5374aede82748d85ac5f276c3aaea8bd378df</anchor>
+      <anchor>a0d4393083b44d54b35b6b8fd3bdff100aede82748d85ac5f276c3aaea8bd378df</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>mcuFootswitch2Key</name>
       <anchorfile>classengine_1_1MackieMCU.html</anchorfile>
-      <anchor>a41f1e4a29780832cc3ad12ed719b5374a75f985afe60d89088caae06cb80f95b1</anchor>
+      <anchor>a0d4393083b44d54b35b6b8fd3bdff100a75f985afe60d89088caae06cb80f95b1</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>maxNumSurfaces</name>
       <anchorfile>classengine_1_1MackieMCU.html</anchorfile>
-      <anchor>aaead13ea3052b01f78859ab1f0c2b548a330eac050d56f7230ca1049df16b4f75</anchor>
+      <anchor>ab6428b7bbf62f86350362dce92825fb9a330eac050d56f7230ca1049df16b4f75</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>maxNumChannels</name>
       <anchorfile>classengine_1_1MackieMCU.html</anchorfile>
-      <anchor>aaead13ea3052b01f78859ab1f0c2b548a8cef3212192712beb5d8a6e370e6264e</anchor>
+      <anchor>ab6428b7bbf62f86350362dce92825fb9a8cef3212192712beb5d8a6e370e6264e</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>maxCharsOnDisplay</name>
       <anchorfile>classengine_1_1MackieMCU.html</anchorfile>
-      <anchor>aaead13ea3052b01f78859ab1f0c2b548ac7f345b6bdcfb4b05677be64f3ddbd22</anchor>
+      <anchor>ab6428b7bbf62f86350362dce92825fb9ac7f345b6bdcfb4b05677be64f3ddbd22</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
@@ -42708,31 +43410,31 @@
     <member kind="enumvalue">
       <name>mcuFootswitch1Key</name>
       <anchorfile>classengine_1_1MackieMCU.html</anchorfile>
-      <anchor>a41f1e4a29780832cc3ad12ed719b5374aede82748d85ac5f276c3aaea8bd378df</anchor>
+      <anchor>a0d4393083b44d54b35b6b8fd3bdff100aede82748d85ac5f276c3aaea8bd378df</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>mcuFootswitch2Key</name>
       <anchorfile>classengine_1_1MackieMCU.html</anchorfile>
-      <anchor>a41f1e4a29780832cc3ad12ed719b5374a75f985afe60d89088caae06cb80f95b1</anchor>
+      <anchor>a0d4393083b44d54b35b6b8fd3bdff100a75f985afe60d89088caae06cb80f95b1</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>maxNumSurfaces</name>
       <anchorfile>classengine_1_1MackieMCU.html</anchorfile>
-      <anchor>aaead13ea3052b01f78859ab1f0c2b548a330eac050d56f7230ca1049df16b4f75</anchor>
+      <anchor>ab6428b7bbf62f86350362dce92825fb9a330eac050d56f7230ca1049df16b4f75</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>maxNumChannels</name>
       <anchorfile>classengine_1_1MackieMCU.html</anchorfile>
-      <anchor>aaead13ea3052b01f78859ab1f0c2b548a8cef3212192712beb5d8a6e370e6264e</anchor>
+      <anchor>ab6428b7bbf62f86350362dce92825fb9a8cef3212192712beb5d8a6e370e6264e</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>maxCharsOnDisplay</name>
       <anchorfile>classengine_1_1MackieMCU.html</anchorfile>
-      <anchor>aaead13ea3052b01f78859ab1f0c2b548ac7f345b6bdcfb4b05677be64f3ddbd22</anchor>
+      <anchor>ab6428b7bbf62f86350362dce92825fb9ac7f345b6bdcfb4b05677be64f3ddbd22</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -45601,13 +46303,6 @@
       <anchor>a1a48546d049b579a223a89e6ce1a248f</anchor>
       <arglist>(Edit &amp;, EditInsertPoint &amp;, SelectionManager *) const</arglist>
     </member>
-    <member kind="function">
-      <type>virtual bool</type>
-      <name>pasteIntoEdit</name>
-      <anchorfile>structengine_1_1Clipboard_1_1MIDIEvents.html</anchorfile>
-      <anchor>a8515e573947dba446a7e2537e5a6b635</anchor>
-      <arglist>(const EditPastingOptions &amp;) const</arglist>
-    </member>
     <member kind="variable">
       <type>std::vector&lt; juce::ValueTree &gt;</type>
       <name>notes</name>
@@ -45759,8 +46454,8 @@
     <name>engine::MidiInputDevice</name>
     <filename>classengine_1_1MidiInputDevice.html</filename>
     <base>engine::InputDevice</base>
-    <class kind="struct">engine::MidiInputDevice::MidiKeyChangeDispatcher</class>
     <class kind="struct">engine::MidiInputDevice::NoteFilterRange</class>
+    <class kind="struct">engine::MidiInputDevice::MidiKeyChangeDispatcher</class>
     <member kind="enumeration">
       <type></type>
       <name>MergeMode</name>
@@ -46359,8 +47054,8 @@
   <compound kind="class">
     <name>engine::MidiLearnState</name>
     <filename>classengine_1_1MidiLearnState.html</filename>
-    <class kind="struct">engine::MidiLearnState::Listener</class>
     <class kind="struct">engine::MidiLearnState::ScopedChangeCaller</class>
+    <class kind="struct">engine::MidiLearnState::Listener</class>
     <member kind="enumeration">
       <type></type>
       <name>ChangeType</name>
@@ -46909,20 +47604,6 @@
   <compound kind="struct">
     <name>engine::MidiMessageArray</name>
     <filename>structengine_1_1MidiMessageArray.html</filename>
-    <member kind="typedef">
-      <type>tracktion::engine::MidiMessageWithSource</type>
-      <name>MidiMessageWithSource</name>
-      <anchorfile>structengine_1_1MidiMessageArray.html</anchorfile>
-      <anchor>af2edff578ec6c79acea8d319d2eeeb23</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="typedef">
-      <type>tracktion::engine::MPESourceID</type>
-      <name>MPESourceID</name>
-      <anchorfile>structengine_1_1MidiMessageArray.html</anchorfile>
-      <anchor>a450b645b8f04d13a0f12545f122a5bb9</anchor>
-      <arglist></arglist>
-    </member>
     <member kind="function">
       <type>bool</type>
       <name>isEmpty</name>
@@ -49090,13 +49771,6 @@
       <type>virtual void</type>
       <name>initialise</name>
       <anchorfile>classengine_1_1MIDITrackerModifier.html</anchorfile>
-      <anchor>a3f0273eef48ffa4cda3957420852c12d</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function">
-      <type>virtual void</type>
-      <name>initialise</name>
-      <anchorfile>classengine_1_1MIDITrackerModifier.html</anchorfile>
       <anchor>ad7c47949dc4b4eb7d55867e7870d840e</anchor>
       <arglist>(double, int)</arglist>
     </member>
@@ -49667,7 +50341,7 @@
   <compound kind="class">
     <name>engine::ModifierList</name>
     <filename>classengine_1_1ModifierList.html</filename>
-    <base protection="private">ValueTreeObjectList&lt; Modifier &gt;</base>
+    <base protection="private">engine::ValueTreeObjectList&lt; Modifier &gt;</base>
     <member kind="function">
       <type></type>
       <name>ModifierList</name>
@@ -49868,13 +50542,6 @@
       <anchor>a1a48546d049b579a223a89e6ce1a248f</anchor>
       <arglist>(Edit &amp;, EditInsertPoint &amp;, SelectionManager *) const</arglist>
     </member>
-    <member kind="function">
-      <type>virtual bool</type>
-      <name>pasteIntoEdit</name>
-      <anchorfile>structengine_1_1Clipboard_1_1Modifiers.html</anchorfile>
-      <anchor>a8515e573947dba446a7e2537e5a6b635</anchor>
-      <arglist>(const EditPastingOptions &amp;) const</arglist>
-    </member>
     <member kind="variable">
       <type>std::vector&lt; juce::ValueTree &gt;</type>
       <name>modifiers</name>
@@ -50024,6 +50691,39 @@
       <anchorfile>structengine_1_1MPEStartTrimmer.html</anchorfile>
       <anchor>aac378b1c57c3a07f57b1a7e344199ee6</anchor>
       <arglist>(juce::Array&lt; juce::MidiMessage &gt; &amp;mpeMessagesToAddAtStart, const choc::midi::Sequence &amp;data, size_t trimIndex, int channel1to16)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>graph::farbot::detail::multi_position_info</name>
+    <filename>structgraph_1_1farbot_1_1detail_1_1multi__position__info.html</filename>
+    <templarg>std::size_t MAX_THREADS</templarg>
+    <member kind="function">
+      <type>std::atomic&lt; std::uint32_t &gt; &amp;</type>
+      <name>get_tpos</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1multi__position__info.html</anchorfile>
+      <anchor>a6b9cf505269a68b241bff7a5474d11e9</anchor>
+      <arglist>() noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>std::uint32_t</type>
+      <name>getpos</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1multi__position__info.html</anchorfile>
+      <anchor>adbda943545eb1be5373e06fd5fcdd3d7</anchor>
+      <arglist>(std::uint32_t min) const noexcept</arglist>
+    </member>
+    <member kind="variable">
+      <type>std::atomic&lt; std::uint32_t &gt;</type>
+      <name>num_threads</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1multi__position__info.html</anchorfile>
+      <anchor>a9dee60849afec4c466781dec8c55c8f2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::array&lt; thread_info, MAX_THREADS &gt;</type>
+      <name>tinfos</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1multi__position__info.html</anchorfile>
+      <anchor>add946bfad376ad032239bc1a7e98204a</anchor>
+      <arglist></arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -50407,8 +51107,8 @@
     <name>graph::Node</name>
     <filename>classgraph_1_1Node.html</filename>
     <class kind="struct">graph::Node::AudioAndMidiBuffer</class>
-    <class kind="struct">graph::Node::ProcessContext</class>
     <class kind="struct">graph::Node::TransformOptions</class>
+    <class kind="struct">graph::Node::ProcessContext</class>
     <member kind="function">
       <type></type>
       <name>Node</name>
@@ -51702,8 +52402,8 @@
   <compound kind="class">
     <name>engine::ParameterChangeHandler</name>
     <filename>classengine_1_1ParameterChangeHandler.html</filename>
-    <class kind="struct">engine::ParameterChangeHandler::Disabler</class>
     <class kind="struct">engine::ParameterChangeHandler::Listener</class>
+    <class kind="struct">engine::ParameterChangeHandler::Disabler</class>
     <member kind="function">
       <type></type>
       <name>ParameterChangeHandler</name>
@@ -54043,13 +54743,6 @@
       <anchor>aed2ff3218e05f00daf0f550ca11580a1</anchor>
       <arglist>(juce::MidiInput *, const juce::MidiMessage &amp;) override</arglist>
     </member>
-    <member kind="function">
-      <type>virtual void</type>
-      <name>handleIncomingMidiMessage</name>
-      <anchorfile>classengine_1_1PhysicalMidiInputDevice.html</anchorfile>
-      <anchor>a5d89fe28f3eaad4ec40bd242111b0a19</anchor>
-      <arglist>(const juce::MidiMessage &amp;, MPESourceID)=0</arglist>
-    </member>
     <member kind="variable">
       <type>bool</type>
       <name>isTakingControllerMessages</name>
@@ -54135,13 +54828,6 @@
       <anchorfile>structengine_1_1Clipboard_1_1Pitches.html</anchorfile>
       <anchor>a1a48546d049b579a223a89e6ce1a248f</anchor>
       <arglist>(Edit &amp;, EditInsertPoint &amp;, SelectionManager *) const</arglist>
-    </member>
-    <member kind="function">
-      <type>virtual bool</type>
-      <name>pasteIntoEdit</name>
-      <anchorfile>structengine_1_1Clipboard_1_1Pitches.html</anchorfile>
-      <anchor>a8515e573947dba446a7e2537e5a6b635</anchor>
-      <arglist>(const EditPastingOptions &amp;) const</arglist>
     </member>
     <member kind="variable">
       <type>std::vector&lt; juce::ValueTree &gt;</type>
@@ -55284,9 +55970,9 @@
     <base>engine::MacroParameterElement</base>
     <base protection="protected">engine::ValueTreeAllEventListener</base>
     <class kind="struct">engine::Plugin::BusLayout</class>
+    <class kind="struct">engine::Plugin::Wire</class>
     <class kind="struct">engine::Plugin::EditorComponent</class>
     <class kind="struct">engine::Plugin::WindowState</class>
-    <class kind="struct">engine::Plugin::Wire</class>
     <member kind="enumeration">
       <type></type>
       <name>Type</name>
@@ -57086,13 +57772,6 @@
       <anchor>a1a48546d049b579a223a89e6ce1a248f</anchor>
       <arglist>(Edit &amp;, EditInsertPoint &amp;, SelectionManager *) const</arglist>
     </member>
-    <member kind="function">
-      <type>virtual bool</type>
-      <name>pasteIntoEdit</name>
-      <anchorfile>structengine_1_1Clipboard_1_1Plugins.html</anchorfile>
-      <anchor>a8515e573947dba446a7e2537e5a6b635</anchor>
-      <arglist>(const EditPastingOptions &amp;) const</arglist>
-    </member>
     <member kind="variable">
       <type>std::vector&lt; juce::ValueTree &gt;</type>
       <name>plugins</name>
@@ -57150,9 +57829,9 @@
   <compound kind="struct">
     <name>engine::PluginScanHelpers</name>
     <filename>structengine_1_1PluginScanHelpers.html</filename>
-    <class kind="struct">engine::PluginScanHelpers::CustomScanner</class>
-    <class kind="struct">engine::PluginScanHelpers::PluginScanChildProcess</class>
     <class kind="struct">engine::PluginScanHelpers::PluginScanMasterProcess</class>
+    <class kind="struct">engine::PluginScanHelpers::PluginScanChildProcess</class>
+    <class kind="struct">engine::PluginScanHelpers::CustomScanner</class>
     <member kind="function" static="yes">
       <type>static juce::MemoryBlock</type>
       <name>createScanMessage</name>
@@ -59453,13 +60132,6 @@
       <anchor>a1a48546d049b579a223a89e6ce1a248f</anchor>
       <arglist>(Edit &amp;, EditInsertPoint &amp;, SelectionManager *) const</arglist>
     </member>
-    <member kind="function">
-      <type>virtual bool</type>
-      <name>pasteIntoEdit</name>
-      <anchorfile>structengine_1_1Clipboard_1_1ProjectItems.html</anchorfile>
-      <anchor>a8515e573947dba446a7e2537e5a6b635</anchor>
-      <arglist>(const EditPastingOptions &amp;) const</arglist>
-    </member>
     <member kind="variable">
       <type>std::vector&lt; ItemInfo &gt;</type>
       <name>itemIDs</name>
@@ -60678,7 +61350,7 @@
       <type>std::vector&lt; std::tuple&lt; int, int, AutomatableParameter::Ptr &gt; &gt;</type>
       <name>ChannelMap</name>
       <anchorfile>classengine_1_1RackInstanceNode.html</anchorfile>
-      <anchor>a77f4341209eeced99d71d151e09f6fcd</anchor>
+      <anchor>a81c9362fdffb9904477caeda18d13465</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -61490,13 +62162,6 @@
       <type>virtual void</type>
       <name>initialise</name>
       <anchorfile>classengine_1_1RandomModifier.html</anchorfile>
-      <anchor>a3f0273eef48ffa4cda3957420852c12d</anchor>
-      <arglist>()=0</arglist>
-    </member>
-    <member kind="function">
-      <type>virtual void</type>
-      <name>initialise</name>
-      <anchorfile>classengine_1_1RandomModifier.html</anchorfile>
       <anchor>ad7c47949dc4b4eb7d55867e7870d840e</anchor>
       <arglist>(double, int)</arglist>
     </member>
@@ -61691,6 +62356,148 @@
       <name>inclusiveHigh</name>
       <anchorfile>structengine_1_1VSTXML_1_1Range.html</anchorfile>
       <anchor>a17524ccd924a720c0c892a86aff6c668</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>graph::farbot::detail::read_or_writer</name>
+    <filename>structgraph_1_1farbot_1_1detail_1_1read__or__writer.html</filename>
+    <templarg>typename T</templarg>
+    <templarg>bool is_writer</templarg>
+    <templarg>bool single_consumer_producer</templarg>
+    <templarg>bool overwrite_or_return_zero</templarg>
+    <templarg>std::size_t MAX_THREADS</templarg>
+    <member kind="function">
+      <type>std::uint32_t</type>
+      <name>getpos</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1read__or__writer.html</anchorfile>
+      <anchor>afbd13b512983da3dbf7712943063c524</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>push_or_pop</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1read__or__writer.html</anchorfile>
+      <anchor>a2db4794140e0f3ce0fadca581cd7ac8f</anchor>
+      <arglist>(std::vector&lt; T &gt; &amp;s, T &amp;&amp;arg, std::uint32_t max) noexcept</arglist>
+    </member>
+    <member kind="variable">
+      <type>std::atomic&lt; std::uint32_t &gt;</type>
+      <name>reserve</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1read__or__writer.html</anchorfile>
+      <anchor>accf017d622aba0406b06144c8fb5787f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>multi_position_info&lt; MAX_THREADS &gt;</type>
+      <name>posinfo</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1read__or__writer.html</anchorfile>
+      <anchor>a13fc37d13bd7b85724a1028d2eba52b2</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>graph::farbot::detail::read_or_writer&lt; T, is_writer, false, true, MAX_THREADS &gt;</name>
+    <filename>structgraph_1_1farbot_1_1detail_1_1read__or__writer_3_01T_00_01is__writer_00_01false_00_01true_00_01MAX__THREADS_01_4.html</filename>
+    <templarg>typename T</templarg>
+    <templarg>bool is_writer</templarg>
+    <templarg>std::size_t MAX_THREADS</templarg>
+    <member kind="function">
+      <type>std::uint32_t</type>
+      <name>getpos</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1read__or__writer_3_01T_00_01is__writer_00_01false_00_01true_00_01MAX__THREADS_01_4.html</anchorfile>
+      <anchor>a12311a5866870ef6f384431eab9842eb</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>push_or_pop</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1read__or__writer_3_01T_00_01is__writer_00_01false_00_01true_00_01MAX__THREADS_01_4.html</anchorfile>
+      <anchor>a9178c5607535ba3f0a6b774917b38d19</anchor>
+      <arglist>(std::vector&lt; T &gt; &amp;s, T &amp;&amp;arg, std::uint32_t) noexcept</arglist>
+    </member>
+    <member kind="variable">
+      <type>multi_position_info&lt; MAX_THREADS &gt;</type>
+      <name>posinfo</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1read__or__writer_3_01T_00_01is__writer_00_01false_00_01true_00_01MAX__THREADS_01_4.html</anchorfile>
+      <anchor>ad8e8ead45613999b9e5606f62260b13c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::atomic&lt; std::uint32_t &gt;</type>
+      <name>reserve</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1read__or__writer_3_01T_00_01is__writer_00_01false_00_01true_00_01MAX__THREADS_01_4.html</anchorfile>
+      <anchor>a06199143557393d8e0c4451216297ddb</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>graph::farbot::detail::read_or_writer&lt; T, is_writer, true, false, MAX_THREADS &gt;</name>
+    <filename>structgraph_1_1farbot_1_1detail_1_1read__or__writer_3_01T_00_01is__writer_00_01true_00_01false_00_01MAX__THREADS_01_4.html</filename>
+    <templarg>typename T</templarg>
+    <templarg>bool is_writer</templarg>
+    <templarg>std::size_t MAX_THREADS</templarg>
+    <member kind="function">
+      <type>std::uint32_t</type>
+      <name>getpos</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1read__or__writer_3_01T_00_01is__writer_00_01true_00_01false_00_01MAX__THREADS_01_4.html</anchorfile>
+      <anchor>af18188e249edd4f9989c4f0cea64d03e</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>push_or_pop</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1read__or__writer_3_01T_00_01is__writer_00_01true_00_01false_00_01MAX__THREADS_01_4.html</anchorfile>
+      <anchor>af5d4c07206f95561963b55520218a0a9</anchor>
+      <arglist>(std::vector&lt; T &gt; &amp;s, T &amp;&amp;arg, std::uint32_t max) noexcept</arglist>
+    </member>
+    <member kind="variable">
+      <type>std::atomic&lt; std::uint32_t &gt;</type>
+      <name>reserve</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1read__or__writer_3_01T_00_01is__writer_00_01true_00_01false_00_01MAX__THREADS_01_4.html</anchorfile>
+      <anchor>a5f08e7e5c3150e202f9a0373f244c8c9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>multi_position_info&lt; MAX_THREADS &gt;</type>
+      <name>posinfo</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1read__or__writer.html</anchorfile>
+      <anchor>a13fc37d13bd7b85724a1028d2eba52b2</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>graph::farbot::detail::read_or_writer&lt; T, is_writer, true, true, MAX_THREADS &gt;</name>
+    <filename>structgraph_1_1farbot_1_1detail_1_1read__or__writer_3_01T_00_01is__writer_00_01true_00_01true_00_01MAX__THREADS_01_4.html</filename>
+    <templarg>typename T</templarg>
+    <templarg>bool is_writer</templarg>
+    <templarg>std::size_t MAX_THREADS</templarg>
+    <member kind="function">
+      <type>std::uint32_t</type>
+      <name>getpos</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1read__or__writer_3_01T_00_01is__writer_00_01true_00_01true_00_01MAX__THREADS_01_4.html</anchorfile>
+      <anchor>a5362bef9662ac2b04ec607b78d346a6b</anchor>
+      <arglist>() const noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>push_or_pop</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1read__or__writer_3_01T_00_01is__writer_00_01true_00_01true_00_01MAX__THREADS_01_4.html</anchorfile>
+      <anchor>a3ee2f81bfca1c668aaa2b543c0e5f540</anchor>
+      <arglist>(std::vector&lt; T &gt; &amp;s, T &amp;&amp;arg, std::uint32_t) noexcept</arglist>
+    </member>
+    <member kind="variable">
+      <type>std::atomic&lt; std::uint32_t &gt;</type>
+      <name>reserve</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1read__or__writer_3_01T_00_01is__writer_00_01true_00_01true_00_01MAX__THREADS_01_4.html</anchorfile>
+      <anchor>a5d74251f843967d2c2aea7855d3a2f70</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>multi_position_info&lt; MAX_THREADS &gt;</type>
+      <name>posinfo</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1read__or__writer.html</anchorfile>
+      <anchor>a13fc37d13bd7b85724a1028d2eba52b2</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -62503,10 +63310,10 @@
     <name>engine::Renderer</name>
     <filename>classengine_1_1Renderer.html</filename>
     <class kind="struct">engine::Renderer::Parameters</class>
-    <class kind="struct">engine::Renderer::RenderResult</class>
     <class kind="class">engine::Renderer::RenderTask</class>
-    <class kind="struct">engine::Renderer::ScopedClipSlotDisabler</class>
     <class kind="struct">engine::Renderer::Statistics</class>
+    <class kind="struct">engine::Renderer::RenderResult</class>
+    <class kind="struct">engine::Renderer::ScopedClipSlotDisabler</class>
     <member kind="function" static="yes">
       <type>static void</type>
       <name>checkTargetFile</name>
@@ -65488,7 +66295,7 @@
   <compound kind="class">
     <name>engine::SceneList</name>
     <filename>classengine_1_1SceneList.html</filename>
-    <base protection="private">ValueTreeObjectList&lt; Scene &gt;</base>
+    <base protection="private">engine::ValueTreeObjectList&lt; Scene &gt;</base>
     <member kind="function">
       <type></type>
       <name>SceneList</name>
@@ -65599,13 +66406,6 @@
       <anchorfile>structengine_1_1Clipboard_1_1Scenes.html</anchorfile>
       <anchor>a1a48546d049b579a223a89e6ce1a248f</anchor>
       <arglist>(Edit &amp;, EditInsertPoint &amp;, SelectionManager *) const</arglist>
-    </member>
-    <member kind="function">
-      <type>virtual bool</type>
-      <name>pasteIntoEdit</name>
-      <anchorfile>structengine_1_1Clipboard_1_1Scenes.html</anchorfile>
-      <anchor>a8515e573947dba446a7e2537e5a6b635</anchor>
-      <arglist>(const EditPastingOptions &amp;) const</arglist>
     </member>
     <member kind="variable">
       <type>std::vector&lt; SceneInfo &gt;</type>
@@ -66727,10 +67527,10 @@
     <name>engine::SelectableClass</name>
     <filename>classengine_1_1SelectableClass.html</filename>
     <class kind="struct">engine::SelectableClass::AddClipboardEntryParams</class>
-    <class kind="struct">engine::SelectableClass::ClassInstance</class>
-    <class kind="struct">engine::SelectableClass::ClassInstanceBase</class>
     <class kind="struct">engine::SelectableClass::DeleteSelectedParams</class>
     <class kind="struct">engine::SelectableClass::SelectOtherObjectsParams</class>
+    <class kind="struct">engine::SelectableClass::ClassInstanceBase</class>
+    <class kind="struct">engine::SelectableClass::ClassInstance</class>
     <member kind="enumeration">
       <type></type>
       <name>Relationship</name>
@@ -67514,9 +68314,9 @@
     <filename>classengine_1_1SelectionManager.html</filename>
     <base protection="private">engine::SelectableListener</base>
     <class kind="struct">engine::SelectionManager::ChangedSelectionDetector</class>
-    <class kind="struct">engine::SelectionManager::ComponentWithSelectionManager</class>
-    <class kind="struct">engine::SelectionManager::Iterator</class>
     <class kind="struct">engine::SelectionManager::ScopedSelectionState</class>
+    <class kind="struct">engine::SelectionManager::Iterator</class>
+    <class kind="struct">engine::SelectionManager::ComponentWithSelectionManager</class>
     <member kind="function">
       <type></type>
       <name>SelectionManager</name>
@@ -68725,7 +69525,7 @@
     <name>engine::SortedValueTreeObjectList</name>
     <filename>structengine_1_1SortedValueTreeObjectList.html</filename>
     <templarg>typename ObjectType</templarg>
-    <base protection="protected">engine::ValueTreeObjectList</base>
+    <base protection="protected">engine::ValueTreeObjectList&lt; ObjectType, CriticalSectionType &gt;</base>
     <member kind="function">
       <type></type>
       <name>SortedValueTreeObjectList</name>
@@ -69855,7 +70655,7 @@
     <member kind="enumvalue">
       <name>maxNumSteps</name>
       <anchorfile>classengine_1_1StepModifier.html</anchorfile>
-      <anchor>a2979684026f64f05a8d5c0f999906ff9aa4e5351504ffa5c4fb38625e5f592bae</anchor>
+      <anchor>a62db9fd2af2865eb0bcb6eabef69a2e8aa4e5351504ffa5c4fb38625e5f592bae</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
@@ -69875,7 +70675,7 @@
     <member kind="enumvalue">
       <name>maxNumSteps</name>
       <anchorfile>classengine_1_1StepModifier.html</anchorfile>
-      <anchor>a2979684026f64f05a8d5c0f999906ff9aa4e5351504ffa5c4fb38625e5f592bae</anchor>
+      <anchor>a62db9fd2af2865eb0bcb6eabef69a2e8aa4e5351504ffa5c4fb38625e5f592bae</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -69961,13 +70761,6 @@
       <anchorfile>classengine_1_1StepModifier.html</anchorfile>
       <anchor>a2e57a394a3219b5df796cdd2bbf802dc</anchor>
       <arglist>() override</arglist>
-    </member>
-    <member kind="function">
-      <type>virtual void</type>
-      <name>initialise</name>
-      <anchorfile>classengine_1_1StepModifier.html</anchorfile>
-      <anchor>a3f0273eef48ffa4cda3957420852c12d</anchor>
-      <arglist>()=0</arglist>
     </member>
     <member kind="function">
       <type>virtual void</type>
@@ -70557,13 +71350,6 @@
       <anchorfile>structengine_1_1Clipboard_1_1TempoChanges.html</anchorfile>
       <anchor>a1a48546d049b579a223a89e6ce1a248f</anchor>
       <arglist>(Edit &amp;, EditInsertPoint &amp;, SelectionManager *) const</arglist>
-    </member>
-    <member kind="function">
-      <type>virtual bool</type>
-      <name>pasteIntoEdit</name>
-      <anchorfile>structengine_1_1Clipboard_1_1TempoChanges.html</anchorfile>
-      <anchor>a8515e573947dba446a7e2537e5a6b635</anchor>
-      <arglist>(const EditPastingOptions &amp;) const</arglist>
     </member>
     <member kind="variable">
       <type>std::vector&lt; TempoChange &gt;</type>
@@ -71809,6 +72595,24 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>graph::farbot::detail::thread_info</name>
+    <filename>structgraph_1_1farbot_1_1detail_1_1thread__info.html</filename>
+    <member kind="variable">
+      <type>std::atomic&lt; std::thread::id &gt;</type>
+      <name>tid</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1thread__info.html</anchorfile>
+      <anchor>a442f82b491072f3de8672db338b81241</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::atomic&lt; std::uint32_t &gt;</type>
+      <name>pos</name>
+      <anchorfile>structgraph_1_1farbot_1_1detail_1_1thread__info.html</anchorfile>
+      <anchor>ad4b3f2b7b1c4f862c04e9a95ef18327e</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>graph::LockFreeMultiThreadedNodePlayer::ThreadPool</name>
     <filename>structgraph_1_1LockFreeMultiThreadedNodePlayer_1_1ThreadPool.html</filename>
     <member kind="function">
@@ -72564,13 +73368,6 @@
       <anchorfile>structengine_1_1Clipboard_1_1TimeSigs.html</anchorfile>
       <anchor>a1a48546d049b579a223a89e6ce1a248f</anchor>
       <arglist>(Edit &amp;, EditInsertPoint &amp;, SelectionManager *) const</arglist>
-    </member>
-    <member kind="function">
-      <type>virtual bool</type>
-      <name>pasteIntoEdit</name>
-      <anchorfile>structengine_1_1Clipboard_1_1TimeSigs.html</anchorfile>
-      <anchor>a8515e573947dba446a7e2537e5a6b635</anchor>
-      <arglist>(const EditPastingOptions &amp;) const</arglist>
     </member>
     <member kind="variable">
       <type>std::vector&lt; juce::ValueTree &gt;</type>
@@ -74226,7 +75023,7 @@
     <name>engine::TrackCompManager::TrackComp</name>
     <filename>structengine_1_1TrackCompManager_1_1TrackComp.html</filename>
     <base>engine::Selectable</base>
-    <base>ValueTreeObjectList&lt; CompSection &gt;</base>
+    <base>engine::ValueTreeObjectList&lt; CompSection &gt;</base>
     <class kind="struct">engine::TrackCompManager::TrackComp::Section</class>
     <member kind="enumeration">
       <type></type>
@@ -74853,7 +75650,7 @@
   <compound kind="struct">
     <name>engine::TrackList</name>
     <filename>structengine_1_1TrackList.html</filename>
-    <base>ValueTreeObjectList&lt; Track &gt;</base>
+    <base>engine::ValueTreeObjectList&lt; Track &gt;</base>
     <member kind="function">
       <type></type>
       <name>TrackList</name>
@@ -75429,13 +76226,6 @@
       <anchor>a1a48546d049b579a223a89e6ce1a248f</anchor>
       <arglist>(Edit &amp;, EditInsertPoint &amp;, SelectionManager *) const</arglist>
     </member>
-    <member kind="function">
-      <type>virtual bool</type>
-      <name>pasteIntoEdit</name>
-      <anchorfile>structengine_1_1Clipboard_1_1Tracks.html</anchorfile>
-      <anchor>a8515e573947dba446a7e2537e5a6b635</anchor>
-      <arglist>(const EditPastingOptions &amp;) const</arglist>
-    </member>
     <member kind="variable">
       <type>std::vector&lt; juce::ValueTree &gt;</type>
       <name>tracks</name>
@@ -75953,10 +76743,10 @@
   <compound kind="class">
     <name>engine::TransportControl</name>
     <filename>classengine_1_1TransportControl.html</filename>
-    <class kind="struct">engine::TransportControl::Listener</class>
     <class kind="struct">engine::TransportControl::ReallocationInhibitor</class>
-    <class kind="struct">engine::TransportControl::ScopedContextAllocator</class>
     <class kind="struct">engine::TransportControl::ScopedPlaybackRestarter</class>
+    <class kind="struct">engine::TransportControl::ScopedContextAllocator</class>
+    <class kind="struct">engine::TransportControl::Listener</class>
     <member kind="function">
       <type></type>
       <name>TransportControl</name>
@@ -77590,6 +78380,46 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>juce::VariantConverter&lt; PluginDescription &gt;</name>
+    <filename>structjuce_1_1VariantConverter_3_01PluginDescription_01_4.html</filename>
+    <member kind="function" static="yes">
+      <type>static PluginDescription</type>
+      <name>fromVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01PluginDescription_01_4.html</anchorfile>
+      <anchor>ae6cd641bb3a99fdc3639d1162f7fab03</anchor>
+      <arglist>(const var &amp;v)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static var</type>
+      <name>toVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01PluginDescription_01_4.html</anchorfile>
+      <anchor>a6ed5b99ac718ef268898375fe4bc6fae</anchor>
+      <arglist>(const PluginDescription &amp;pd)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>juce::VariantConverter&lt; tracktion::AtomicWrapper&lt; T, C, L, S &gt; &gt;</name>
+    <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1AtomicWrapper_3_01T_00_01C_00_01L_00_01S_01_4_01_4.html</filename>
+    <templarg>typename T</templarg>
+    <templarg>typename C</templarg>
+    <templarg>auto L</templarg>
+    <templarg>auto S</templarg>
+    <member kind="function" static="yes">
+      <type>static T</type>
+      <name>fromVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1AtomicWrapper_3_01T_00_01C_00_01L_00_01S_01_4_01_4.html</anchorfile>
+      <anchor>a69e8ee29d2a9766dcb84f5ba84c87c5d</anchor>
+      <arglist>(const var &amp;v)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static var</type>
+      <name>toVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1AtomicWrapper_3_01T_00_01C_00_01L_00_01S_01_4_01_4.html</anchorfile>
+      <anchor>a6b5009a7483b5460580984410c3e1b02</anchor>
+      <arglist>(T v)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>juce::VariantConverter&lt; tracktion::core::BeatDuration &gt;</name>
     <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1core_1_1BeatDuration_01_4.html</filename>
     <member kind="function" static="yes">
@@ -77659,6 +78489,42 @@
       <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1core_1_1TimePosition_01_4.html</anchorfile>
       <anchor>ab574534cc15a5db314c510b67af9a345</anchor>
       <arglist>(tracktion::core::TimePosition v)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>juce::VariantConverter&lt; tracktion::engine::AudioClipBase::AutoPitchMode &gt;</name>
+    <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1AudioClipBase_1_1AutoPitchMode_01_4.html</filename>
+    <member kind="function" static="yes">
+      <type>static tracktion::engine::AudioClipBase::AutoPitchMode</type>
+      <name>fromVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1AudioClipBase_1_1AutoPitchMode_01_4.html</anchorfile>
+      <anchor>a59ef38a0ebcc9d529c3e76b83fe23951</anchor>
+      <arglist>(const var &amp;v)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static var</type>
+      <name>toVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1AudioClipBase_1_1AutoPitchMode_01_4.html</anchorfile>
+      <anchor>a9c5780890db2294ec4a2bc301c204cc9</anchor>
+      <arglist>(tracktion::engine::AudioClipBase::AutoPitchMode v)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>juce::VariantConverter&lt; tracktion::engine::AudioClipBase::FadeBehaviour &gt;</name>
+    <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1AudioClipBase_1_1FadeBehaviour_01_4.html</filename>
+    <member kind="function" static="yes">
+      <type>static tracktion::engine::AudioClipBase::FadeBehaviour</type>
+      <name>fromVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1AudioClipBase_1_1FadeBehaviour_01_4.html</anchorfile>
+      <anchor>ac366c761f794eee29da7ef71ea6cc6eb</anchor>
+      <arglist>(const var &amp;v)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static var</type>
+      <name>toVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1AudioClipBase_1_1FadeBehaviour_01_4.html</anchorfile>
+      <anchor>a67bce4613592b199227981ca455d41e8</anchor>
+      <arglist>(tracktion::engine::AudioClipBase::FadeBehaviour v)</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -77770,6 +78636,24 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>juce::VariantConverter&lt; tracktion::engine::EditItemID &gt;</name>
+    <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1EditItemID_01_4.html</filename>
+    <member kind="function" static="yes">
+      <type>static tracktion::engine::EditItemID</type>
+      <name>fromVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1EditItemID_01_4.html</anchorfile>
+      <anchor>a3901dd24cbdca45a16e65c107b4e83d6</anchor>
+      <arglist>(const juce::var &amp;v)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static juce::var</type>
+      <name>toVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1EditItemID_01_4.html</anchorfile>
+      <anchor>a5d271dd3021420f68ecdde70f9b4e083</anchor>
+      <arglist>(const tracktion::engine::EditItemID &amp;v)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>juce::VariantConverter&lt; tracktion::engine::FollowAction &gt;</name>
     <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1FollowAction_01_4.html</filename>
     <member kind="function" static="yes">
@@ -77842,6 +78726,42 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>juce::VariantConverter&lt; tracktion::engine::ProjectItemID &gt;</name>
+    <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1ProjectItemID_01_4.html</filename>
+    <member kind="function" static="yes">
+      <type>static tracktion::engine::ProjectItemID</type>
+      <name>fromVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1ProjectItemID_01_4.html</anchorfile>
+      <anchor>a00611a72daa79fc0a34676e70da6ff6b</anchor>
+      <arglist>(const var &amp;v)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static var</type>
+      <name>toVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1ProjectItemID_01_4.html</anchorfile>
+      <anchor>a9c9b643b2ac74922b2aa91b1e8e9b74d</anchor>
+      <arglist>(const tracktion::engine::ProjectItemID &amp;v)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>juce::VariantConverter&lt; tracktion::engine::ProjectItemRef &gt;</name>
+    <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1ProjectItemRef_01_4.html</filename>
+    <member kind="function" static="yes">
+      <type>static tracktion::engine::ProjectItemRef</type>
+      <name>fromVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1ProjectItemRef_01_4.html</anchorfile>
+      <anchor>a61b9ff94fb8837e592931350c4ccd7d9</anchor>
+      <arglist>(const var &amp;v)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static var</type>
+      <name>toVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1ProjectItemRef_01_4.html</anchorfile>
+      <anchor>aff3475b37059fb5b515efb269b9ad091</anchor>
+      <arglist>(const tracktion::engine::ProjectItemRef &amp;v)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>juce::VariantConverter&lt; tracktion::engine::RenderOptions::AddRenderOptions &gt;</name>
     <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1RenderOptions_1_1AddRenderOptions_01_4.html</filename>
     <member kind="function" static="yes">
@@ -77896,6 +78816,24 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>juce::VariantConverter&lt; tracktion::engine::ResamplingQuality &gt;</name>
+    <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1ResamplingQuality_01_4.html</filename>
+    <member kind="function" static="yes">
+      <type>static tracktion::engine::ResamplingQuality</type>
+      <name>fromVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1ResamplingQuality_01_4.html</anchorfile>
+      <anchor>a96c1fa50451723aa1ca03c4591a9d394</anchor>
+      <arglist>(const var &amp;v)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static var</type>
+      <name>toVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1ResamplingQuality_01_4.html</anchorfile>
+      <anchor>a6a0e1da2090a5991160ffd7a3156ac34</anchor>
+      <arglist>(tracktion::engine::ResamplingQuality v)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>juce::VariantConverter&lt; tracktion::engine::Scale::ScaleType &gt;</name>
     <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1Scale_1_1ScaleType_01_4.html</filename>
     <member kind="function" static="yes">
@@ -77911,6 +78849,24 @@
       <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1Scale_1_1ScaleType_01_4.html</anchorfile>
       <anchor>ac034483969ac2377e1387a90ad10404b</anchor>
       <arglist>(tracktion::engine::Scale::ScaleType v)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>juce::VariantConverter&lt; tracktion::engine::TimecodeDisplayFormat &gt;</name>
+    <filename>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1TimecodeDisplayFormat_01_4.html</filename>
+    <member kind="function" static="yes">
+      <type>static tracktion::engine::TimecodeDisplayFormat</type>
+      <name>fromVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1TimecodeDisplayFormat_01_4.html</anchorfile>
+      <anchor>a50577ea90a690296805a924cecffe15f</anchor>
+      <arglist>(const var &amp;v)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static var</type>
+      <name>toVar</name>
+      <anchorfile>structjuce_1_1VariantConverter_3_01tracktion_1_1engine_1_1TimecodeDisplayFormat_01_4.html</anchorfile>
+      <anchor>af02d6a871e255330cf0843ebc141fb5b</anchor>
+      <arglist>(tracktion::engine::TimecodeDisplayFormat t)</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -78260,13 +79216,6 @@
       <anchorfile>classengine_1_1VirtualMidiInputDevice.html</anchorfile>
       <anchor>aed2ff3218e05f00daf0f550ca11580a1</anchor>
       <arglist>(juce::MidiInput *, const juce::MidiMessage &amp;) override</arglist>
-    </member>
-    <member kind="function">
-      <type>virtual void</type>
-      <name>handleIncomingMidiMessage</name>
-      <anchorfile>classengine_1_1VirtualMidiInputDevice.html</anchorfile>
-      <anchor>a5d89fe28f3eaad4ec40bd242111b0a19</anchor>
-      <arglist>(const juce::MidiMessage &amp;, MPESourceID)=0</arglist>
     </member>
     <member kind="variable">
       <type>const bool</type>
@@ -78683,12 +79632,12 @@
     <name>engine::VSTXML</name>
     <filename>classengine_1_1VSTXML.html</filename>
     <class kind="struct">engine::VSTXML::Base</class>
-    <class kind="struct">engine::VSTXML::Entry</class>
-    <class kind="struct">engine::VSTXML::Group</class>
     <class kind="struct">engine::VSTXML::Param</class>
+    <class kind="struct">engine::VSTXML::Group</class>
     <class kind="struct">engine::VSTXML::Range</class>
-    <class kind="struct">engine::VSTXML::Template</class>
+    <class kind="struct">engine::VSTXML::Entry</class>
     <class kind="struct">engine::VSTXML::ValueType</class>
+    <class kind="struct">engine::VSTXML::Template</class>
     <member kind="function">
       <type>const Param *</type>
       <name>getParamForID</name>
@@ -80756,513 +81705,535 @@
   <compound kind="namespace">
     <name>engine</name>
     <filename>namespaceengine.html</filename>
-    <namespace>engine::AppFunctions</namespace>
-    <namespace>engine::benchmark_utilities</namespace>
-    <namespace>engine::Click</namespace>
-    <namespace>engine::ClipConstants</namespace>
-    <namespace>engine::dawproject</namespace>
-    <namespace>engine::detail</namespace>
-    <namespace>engine::details</namespace>
-    <namespace>engine::IDs</namespace>
-    <namespace>engine::legacy</namespace>
-    <namespace>engine::MidiNodeHelpers</namespace>
-    <namespace>engine::modifier</namespace>
     <namespace>engine::ModifierCommon</namespace>
     <namespace>engine::PredefinedWavetable</namespace>
-    <namespace>engine::ProjectUtilities</namespace>
-    <namespace>engine::RackNodeBuilder</namespace>
+    <namespace>engine::modifier</namespace>
+    <namespace>engine::detail</namespace>
+    <namespace>engine::ClipConstants</namespace>
+    <namespace>engine::details</namespace>
+    <namespace>engine::legacy</namespace>
     <namespace>engine::render_utils</namespace>
+    <namespace>engine::benchmark_utilities</namespace>
+    <namespace>engine::Click</namespace>
+    <namespace>engine::MidiNodeHelpers</namespace>
+    <namespace>engine::RackNodeBuilder</namespace>
+    <namespace>engine::dawproject</namespace>
+    <namespace>engine::ProjectUtilities</namespace>
+    <namespace>engine::soundtouch</namespace>
+    <namespace>engine::AppFunctions</namespace>
     <namespace>engine::TracktionBinaryData</namespace>
-    <class kind="class">engine::AbletonLink</class>
-    <class kind="struct">engine::ActiveEdits</class>
-    <class kind="struct">engine::ActiveNoteList</class>
-    <class kind="class">engine::AirWindowsAutomatableParameter</class>
-    <class kind="class">engine::AirWindowsBase</class>
-    <class kind="class">engine::AirWindowsCallback</class>
-    <class kind="class">engine::AirWindowsPlugin</class>
-    <class kind="class">engine::AlphaTrackControlSurface</class>
-    <class kind="struct">engine::ARADocumentHolder</class>
-    <class kind="class">engine::ARAFileReader</class>
-    <class kind="struct">engine::ARAIXMLResult</class>
-    <class kind="class">engine::ARANode</class>
-    <class kind="class">engine::ARAPluginBinding</class>
-    <class kind="class">engine::ArchiveJob</class>
-    <class kind="class">engine::ArrangerClip</class>
-    <class kind="class">engine::ArrangerLauncherSwitchingNode</class>
-    <class kind="class">engine::ArrangerTrack</class>
-    <class kind="struct">engine::AsyncCaller</class>
-    <class kind="struct">engine::AsyncFunctionCaller</class>
-    <class kind="struct">engine::AtomicWrapper</class>
-    <class kind="struct">engine::AudioAnalysisOptions</class>
-    <class kind="class">engine::AudioBufferSnapshot</class>
-    <class kind="class">engine::AudioClipBase</class>
-    <class kind="struct">engine::AudioClipPlayhead</class>
-    <class kind="struct">engine::AudioFadeCurve</class>
+    <namespace>engine::IDs</namespace>
+    <class kind="class">engine::FloatAudioFormat</class>
+    <class kind="class">engine::LAMEManager</class>
+    <class kind="struct">engine::MemoryMappedFileReader</class>
+    <class kind="class">engine::BufferingAudioReaderWrapper</class>
     <class kind="class">engine::AudioFifo</class>
+    <class kind="struct">engine::AudioFileInfo</class>
     <class kind="class">engine::AudioFile</class>
     <class kind="class">engine::AudioFileAnalyser</class>
+    <class kind="struct">engine::AudioAnalysisOptions</class>
+    <class kind="struct">engine::AudioFormatReaderWithTimeout</class>
     <class kind="class">engine::AudioFileCache</class>
-    <class kind="class">engine::AudioFileFormatManager</class>
-    <class kind="struct">engine::AudioFileInfo</class>
     <class kind="class">engine::AudioFileManager</class>
     <class kind="struct">engine::AudioFileUtils</class>
     <class kind="class">engine::AudioFileWriter</class>
-    <class kind="struct">engine::AudioFormatReaderWithTimeout</class>
-    <class kind="class">engine::AudioMidiFifo</class>
+    <class kind="class">engine::AudioFileFormatManager</class>
     <class kind="class">engine::AudioProxyGenerator</class>
-    <class kind="class">engine::AudioScratchBuffer</class>
-    <class kind="class">engine::AudioSegmentList</class>
-    <class kind="class">engine::AudioTrack</class>
-    <class kind="class">engine::AutomatableEditItem</class>
-    <class kind="class">engine::AutomatableParameter</class>
-    <class kind="struct">engine::AutomatableParameterID</class>
-    <class kind="class">engine::AutomatableParameterTree</class>
-    <class kind="class">engine::AutomationCurve</class>
-    <class kind="class">engine::AutomationCurveList</class>
-    <class kind="class">engine::AutomationCurveModifier</class>
-    <class kind="struct">engine::AutomationCurvePlayhead</class>
-    <class kind="class">engine::AutomationDragDropTarget</class>
-    <class kind="struct">engine::AutomationIterator</class>
-    <class kind="class">engine::AutomationRecordManager</class>
-    <class kind="class">engine::AutomationTrack</class>
-    <class kind="class">engine::AuxReturnPlugin</class>
-    <class kind="class">engine::AuxSendNode</class>
-    <class kind="class">engine::AuxSendPlugin</class>
-    <class kind="class">engine::BackgroundJobManager</class>
-    <class kind="class">engine::BandlimitedWaveLookupTables</class>
-    <class kind="struct">engine::BaseAndModValue</class>
-    <class kind="struct">engine::BeatDetect</class>
-    <class kind="struct">engine::BlockingFunction</class>
-    <class kind="class">engine::BreakpointOscillatorModifier</class>
-    <class kind="class">engine::BufferedAudioFileManager</class>
     <class kind="class">engine::BufferedAudioReader</class>
-    <class kind="class">engine::BufferedFileReader</class>
     <class kind="class">engine::BufferedFileReaderWrapper</class>
-    <class kind="class">engine::BufferingAudioReaderWrapper</class>
-    <class kind="class">engine::ChannelMapperPlugin</class>
-    <class kind="class">engine::Chord</class>
-    <class kind="class">engine::ChordClip</class>
-    <class kind="class">engine::ChordTrack</class>
-    <class kind="class">engine::ChorusPlugin</class>
-    <class kind="class">engine::ClickGenerator</class>
-    <class kind="class">engine::ClickNode</class>
-    <class kind="class">engine::Clip</class>
-    <class kind="class">engine::Clipboard</class>
-    <class kind="class">engine::ClipCopy</class>
-    <class kind="class">engine::ClipEffect</class>
-    <class kind="class">engine::ClipEffects</class>
-    <class kind="struct">engine::ClipLevel</class>
-    <class kind="class">engine::ClipOwner</class>
-    <class kind="struct">engine::ClipPosition</class>
-    <class kind="struct">engine::ClipPositionBeats</class>
-    <class kind="struct">engine::ClipPositionInfo</class>
-    <class kind="class">engine::ClipSlot</class>
-    <class kind="class">engine::ClipSlotList</class>
-    <class kind="class">engine::ClipTrack</class>
-    <class kind="class">engine::CollectionClip</class>
-    <class kind="struct">engine::ColourArea</class>
-    <class kind="class">engine::CombiningNode</class>
-    <class kind="class">engine::CompFactory</class>
-    <class kind="class">engine::CompManager</class>
-    <class kind="class">engine::CompressorPlugin</class>
-    <class kind="class">engine::ConstrainedCachedValue</class>
-    <class kind="class">engine::ContainerClip</class>
-    <class kind="class">engine::ContainerClipNode</class>
-    <class kind="class">engine::ControlSurface</class>
-    <class kind="struct">engine::CrashStackTracer</class>
-    <class kind="struct">engine::CreateNodeParams</class>
-    <class kind="class">engine::CurveEditor</class>
-    <class kind="class">engine::CurveEditorPoint</class>
-    <class kind="struct">engine::CurvePoint</class>
-    <class kind="struct">engine::CurvePosition</class>
-    <class kind="class">engine::CustomControlSurface</class>
-    <class kind="struct">engine::DbTimePair</class>
-    <class kind="struct">engine::DeadMansPedalMessage</class>
-    <class kind="struct">engine::DelayBufferBase</class>
-    <class kind="class">engine::DelayPlugin</class>
-    <class kind="class">engine::DeviceManager</class>
-    <class kind="struct">engine::DiscreteLabelledParameter</class>
-    <class kind="struct">engine::Ditherer</class>
-    <class kind="struct">engine::DummyConstrainer</class>
-    <class kind="class">engine::DynamicallyOffsettableNodeBase</class>
-    <class kind="class">engine::DynamicOffsetNode</class>
-    <class kind="class">engine::Edit</class>
-    <class kind="class">engine::EditClip</class>
-    <class kind="struct">engine::EditDefaults</class>
-    <class kind="struct">engine::EditDeleter</class>
-    <class kind="class">engine::EditFileOperations</class>
-    <class kind="class">engine::EditInputDevices</class>
-    <class kind="class">engine::EditInsertPoint</class>
-    <class kind="class">engine::EditItem</class>
-    <class kind="struct">engine::EditItemCache</class>
-    <class kind="struct">engine::EditItemID</class>
-    <class kind="struct">engine::EditLimits</class>
-    <class kind="class">engine::EditLoader</class>
-    <class kind="struct">engine::EditNodeBuilder</class>
-    <class kind="class">engine::EditPlaybackContext</class>
-    <class kind="struct">engine::EditPosition</class>
-    <class kind="class">engine::EditPositionWithTempoSequence</class>
-    <class kind="class">engine::EditRenderer</class>
-    <class kind="class">engine::EditRenderJob</class>
-    <class kind="class">engine::EditSnapshot</class>
-    <class kind="struct">engine::EditTimecodeRemapperSnapshot</class>
-    <class kind="struct">engine::EditTimeRange</class>
-    <class kind="class">engine::Engine</class>
-    <class kind="class">engine::EngineBehaviour</class>
-    <class kind="class">engine::EnvelopeFollowerModifier</class>
-    <class kind="class">engine::EqualiserPlugin</class>
-    <class kind="class">engine::ExpEnvelope</class>
-    <class kind="class">engine::Exportable</class>
-    <class kind="class">engine::ExternalAutomatableParameter</class>
-    <class kind="class">engine::ExternalController</class>
-    <class kind="class">engine::ExternalControllerManager</class>
-    <class kind="class">engine::ExternalPlayheadSynchroniser</class>
-    <class kind="class">engine::ExternalPlugin</class>
-    <class kind="struct">engine::FadeInOutEffect</class>
-    <class kind="class">engine::FadeInOutNode</class>
-    <class kind="class">engine::FileBasedProject</class>
-    <class kind="struct">engine::FileDragList</class>
-    <class kind="class">engine::FloatAudioFormat</class>
-    <class kind="class">engine::FolderBasedProject</class>
-    <class kind="class">engine::FolderTrack</class>
-    <class kind="class">engine::FollowActions</class>
-    <class kind="class">engine::FourOscPlugin</class>
-    <class kind="class">engine::FreezePointPlugin</class>
-    <class kind="class">engine::GrooveTemplate</class>
-    <class kind="class">engine::GrooveTemplateManager</class>
-    <class kind="struct">engine::HertzTag</class>
-    <class kind="class">engine::HostedAudioDeviceInterface</class>
-    <class kind="class">engine::HostedMidiInputDeviceNode</class>
-    <class kind="class">engine::IconProG2</class>
-    <class kind="class">engine::ImpulseResponsePlugin</class>
-    <class kind="class">engine::InputDevice</class>
-    <class kind="class">engine::InputDeviceInstance</class>
-    <class kind="struct">engine::InputProvider</class>
-    <class kind="class">engine::InsertNode</class>
-    <class kind="class">engine::InsertPlugin</class>
-    <class kind="class">engine::InsertSendNode</class>
-    <class kind="struct">engine::InvertEffect</class>
-    <class kind="struct">engine::KeyResult</class>
-    <class kind="class">engine::LambdaSelectableListener</class>
-    <class kind="class">engine::LambdaTimer</class>
-    <class kind="class">engine::LambdaValueTreeAllEventListener</class>
-    <class kind="class">engine::LAMEManager</class>
-    <class kind="class">engine::LatencyPlugin</class>
-    <class kind="class">engine::LauncherClipPlaybackHandle</class>
-    <class kind="class">engine::LaunchHandle</class>
-    <class kind="class">engine::LaunchQuantisation</class>
-    <class kind="class">engine::LevelMeasurer</class>
-    <class kind="class">engine::LevelMeasurerProcessingNode</class>
-    <class kind="class">engine::LevelMeasuringNode</class>
-    <class kind="class">engine::LevelMeterPlugin</class>
-    <class kind="class">engine::LFOModifier</class>
-    <class kind="class">engine::LinEnvelope</class>
-    <class kind="struct">engine::LiveClipLevel</class>
-    <class kind="class">engine::LiveMidiInjectingNode</class>
-    <class kind="class">engine::LiveMidiOutputNode</class>
+    <class kind="class">engine::BufferedAudioFileManager</class>
+    <class kind="class">engine::BufferedFileReader</class>
     <class kind="class">engine::LoopInfo</class>
-    <class kind="class">engine::LoopingMidiNode</class>
     <class kind="class">engine::LoudnessMeter</class>
-    <class kind="class">engine::LowPassPlugin</class>
+    <class kind="class">engine::RecordingThumbnailManager</class>
+    <class kind="class">engine::SmartThumbnail</class>
+    <class kind="class">engine::StereoFieldAnalyser</class>
+    <class kind="struct">engine::ParameterSetting</class>
+    <class kind="struct">engine::MarkerSetting</class>
+    <class kind="struct">engine::MidiID</class>
+    <class kind="class">engine::ControlSurface</class>
+    <class kind="class">engine::CustomControlSurface</class>
+    <class kind="class">engine::ExternalController</class>
+    <class kind="struct">engine::ColourArea</class>
+    <class kind="class">engine::ExternalControllerManager</class>
+    <class kind="class">engine::AlphaTrackControlSurface</class>
+    <class kind="class">engine::IconProG2</class>
     <class kind="class">engine::MackieC4</class>
     <class kind="class">engine::MackieMCU</class>
     <class kind="class">engine::MackieXT</class>
-    <class kind="class">engine::MacroParameter</class>
-    <class kind="class">engine::MacroParameterElement</class>
-    <class kind="class">engine::MacroParameterList</class>
-    <class kind="struct">engine::MakeMonoEffect</class>
-    <class kind="class">engine::MarkerClip</class>
-    <class kind="class">engine::MarkerManager</class>
-    <class kind="struct">engine::MarkerSetting</class>
-    <class kind="class">engine::MarkerTrack</class>
-    <class kind="class">engine::MasterTrack</class>
-    <class kind="struct">engine::MemoryMappedFileReader</class>
-    <class kind="class">engine::MessageThreadCallback</class>
-    <class kind="class">engine::MidiAssignable</class>
+    <class kind="class">engine::NovationRemoteSl</class>
+    <class kind="class">engine::RemoteSLCompact</class>
+    <class kind="class">engine::TranzportControlSurface</class>
+    <class kind="struct">engine::ActiveNoteList</class>
     <class kind="struct">engine::MidiChannel</class>
-    <class kind="class">engine::MidiClip</class>
-    <class kind="class">engine::MidiCompManager</class>
     <class kind="class">engine::MidiControllerEvent</class>
     <class kind="struct">engine::MidiExpression</class>
-    <class kind="struct">engine::MidiID</class>
-    <class kind="class">engine::MidiInputDevice</class>
-    <class kind="class">engine::MidiInputDeviceNode</class>
-    <class kind="class">engine::MidiLearnState</class>
     <class kind="class">engine::MidiList</class>
-    <class kind="struct">engine::MidiMessageArray</class>
-    <class kind="struct">engine::MidiMessageWithSource</class>
-    <class kind="class">engine::MidiModifierPlugin</class>
-    <class kind="class">engine::MidiNode</class>
     <class kind="class">engine::MidiNote</class>
-    <class kind="class">engine::MidiNoteDispatcher</class>
-    <class kind="class">engine::MidiOutputDevice</class>
-    <class kind="class">engine::MidiOutputDeviceInstance</class>
-    <class kind="class">engine::MidiOutputDeviceInstanceInjectingNode</class>
-    <class kind="class">engine::MidiPatchBayPlugin</class>
     <class kind="class">engine::MidiProgramManager</class>
     <class kind="class">engine::MidiSysexEvent</class>
-    <class kind="class">engine::MIDITrackerModifier</class>
-    <class kind="struct">engine::MinBeatConstrainer</class>
-    <class kind="struct">engine::Modifier</class>
-    <class kind="class">engine::ModifierList</class>
-    <class kind="class">engine::ModifierNode</class>
-    <class kind="struct">engine::ModifierTimer</class>
-    <class kind="struct">engine::MonotonicBeat</class>
-    <class kind="struct">engine::MonotonicBeatRange</class>
-    <class kind="class">engine::MouseHoverDetector</class>
-    <class kind="struct">engine::MPEStartTrimmer</class>
-    <class kind="class">engine::MultiThreadedNodePlayer</class>
-    <class kind="class">engine::MultiVoiceOscillator</class>
-    <class kind="class">engine::NodeRenderContext</class>
-    <class kind="struct">engine::NormaliseEffect</class>
-    <class kind="class">engine::NovationRemoteSl</class>
-    <class kind="struct">engine::OldEditConversion</class>
-    <class kind="class">engine::Oscillator</class>
-    <class kind="class">engine::OutputDevice</class>
-    <class kind="class">engine::OutputDeviceInstance</class>
-    <class kind="class">engine::ParameterChangeHandler</class>
-    <class kind="class">engine::ParameterControlMappings</class>
-    <class kind="class">engine::ParameterisableDragDropSource</class>
-    <class kind="struct">engine::ParameterSetting</class>
-    <class kind="struct">engine::ParameterWithStateValue</class>
-    <class kind="class">engine::PatchBayPlugin</class>
+    <class kind="class">engine::Chord</class>
+    <class kind="class">engine::Scale</class>
     <class kind="class">engine::PatternGenerator</class>
-    <class kind="class">engine::PhaserPlugin</class>
-    <class kind="class">engine::PhysicalMidiInputDevice</class>
-    <class kind="struct">engine::Pitch</class>
-    <class kind="class">engine::PitchSequence</class>
-    <class kind="class">engine::PitchSetting</class>
-    <class kind="struct">engine::PitchShiftEffect</class>
-    <class kind="class">engine::PitchShiftPlugin</class>
-    <class kind="struct">engine::PlannedRenderJob</class>
-    <class kind="class">engine::PlayHeadPositionNode</class>
-    <class kind="class">engine::Plugin</class>
-    <class kind="class">engine::PluginCache</class>
-    <class kind="struct">engine::PluginComponent</class>
-    <class kind="struct">engine::PluginCreationInfo</class>
-    <class kind="struct">engine::PluginEffect</class>
-    <class kind="struct">engine::PluginInitialisationInfo</class>
-    <class kind="class">engine::PluginList</class>
-    <class kind="class">engine::PluginManager</class>
-    <class kind="class">engine::PluginNode</class>
-    <class kind="struct">engine::PluginRenderContext</class>
-    <class kind="struct">engine::PluginScanHelpers</class>
-    <class kind="struct">engine::PluginWetDryAutomatableParam</class>
-    <class kind="struct">engine::PluginWindowState</class>
-    <class kind="struct">engine::ProcessState</class>
-    <class kind="class">engine::Project</class>
-    <class kind="class">engine::ProjectBase</class>
-    <class kind="class">engine::ProjectID</class>
-    <class kind="class">engine::ProjectItem</class>
-    <class kind="class">engine::ProjectItemID</class>
-    <class kind="class">engine::ProjectItemRef</class>
-    <class kind="class">engine::ProjectManager</class>
-    <class kind="class">engine::PropertyStorage</class>
-    <class kind="class">engine::QuantisationType</class>
-    <class kind="struct">engine::RackConnection</class>
-    <class kind="class">engine::RackInstance</class>
-    <class kind="class">engine::RackInstanceNode</class>
-    <class kind="class">engine::RackNodePlayer</class>
-    <class kind="class">engine::RackReturnNode</class>
-    <class kind="class">engine::RackType</class>
-    <class kind="class">engine::RackTypeList</class>
+    <class kind="struct">engine::KeyResult</class>
+    <class kind="class">engine::SelectedMidiEvents</class>
+    <class kind="class">engine::BreakpointOscillatorModifier</class>
+    <class kind="class">engine::EnvelopeFollowerModifier</class>
+    <class kind="class">engine::LFOModifier</class>
+    <class kind="class">engine::MIDITrackerModifier</class>
     <class kind="struct">engine::Ramp</class>
     <class kind="class">engine::RandomModifier</class>
-    <class kind="class">engine::ReadAheadTimeStretcher</class>
-    <class kind="class">engine::RecordingThumbnailManager</class>
-    <class kind="class">engine::ReferenceCountedValueTree</class>
-    <class kind="class">engine::ReferencedMaterialList</class>
-    <class kind="class">engine::RemoteSLCompact</class>
-    <class kind="class">engine::Renderer</class>
-    <class kind="class">engine::RenderManager</class>
-    <class kind="class">engine::RenderOptions</class>
-    <class kind="class">engine::RenderQueue</class>
-    <class kind="struct">engine::RenderSpecification</class>
-    <class kind="class">engine::ReverbPlugin</class>
-    <class kind="struct">engine::ReverseEffect</class>
-    <class kind="class">engine::ReverseRenderJob</class>
-    <class kind="class">engine::SafeScopedListener</class>
-    <class kind="class">engine::SafeSelectable</class>
-    <class kind="class">engine::SampleFader</class>
-    <class kind="class">engine::SamplerPlugin</class>
-    <class kind="class">engine::Scale</class>
-    <class kind="class">engine::Scene</class>
-    <class kind="class">engine::SceneList</class>
-    <class kind="class">engine::SceneWatcher</class>
-    <class kind="struct">engine::ScopedCpuMeter</class>
-    <class kind="struct">engine::ScopedDirectoryDeleter</class>
-    <class kind="class">engine::ScopedListener</class>
-    <class kind="struct">engine::ScopedPluginUnloadInhibitor</class>
-    <class kind="class">engine::ScopedSteadyLoad</class>
-    <class kind="struct">engine::ScopedThreadExitStatusEnabler</class>
-    <class kind="class">engine::ScopedTrackMuter</class>
-    <class kind="class">engine::ScopedWaitCursor</class>
-    <class kind="struct">engine::ScreenSaverDefeater</class>
-    <class kind="class">engine::Selectable</class>
-    <class kind="class">engine::SelectableClass</class>
-    <class kind="class">engine::SelectableClassWithPan</class>
-    <class kind="class">engine::SelectableClassWithVolume</class>
-    <class kind="struct">engine::SelectableList</class>
-    <class kind="class">engine::SelectableListener</class>
-    <class kind="class">engine::SelectedMidiEvents</class>
-    <class kind="class">engine::SelectionManager</class>
-    <class kind="class">engine::SharedLevelMeasurer</class>
-    <class kind="class">engine::SharedLevelMeasuringNode</class>
-    <class kind="class">engine::SharedTimer</class>
-    <class kind="class">engine::SimpleLFO</class>
-    <class kind="class">engine::SlotControlNode</class>
-    <class kind="class">engine::SmartThumbnail</class>
-    <class kind="class">engine::SoftwareMidiOutputDevice</class>
-    <class kind="struct">engine::SortedValueTreeObjectList</class>
-    <class kind="class">engine::SourceFileReference</class>
-    <class kind="struct">engine::SpeedFadeDescription</class>
-    <class kind="class">engine::SpeedRampWaveNode</class>
-    <class kind="struct">engine::Spline</class>
-    <class kind="class">engine::StepClip</class>
     <class kind="class">engine::StepModifier</class>
-    <class kind="struct">engine::StepVolumeEffect</class>
-    <class kind="class">engine::StereoFieldAnalyser</class>
-    <class kind="struct">engine::StopwatchTimer</class>
-    <class kind="struct">engine::SuffixedParameter</class>
-    <class kind="struct">engine::SyncPoint</class>
-    <class kind="struct">engine::SyncRange</class>
-    <class kind="class">engine::TempoDetect</class>
-    <class kind="class">engine::TemporaryFileManager</class>
-    <class kind="class">engine::TempoSequence</class>
-    <class kind="class">engine::TempoSetting</class>
-    <class kind="class">engine::TempoTrack</class>
-    <class kind="class">engine::TextPlugin</class>
-    <class kind="class">engine::ThreadPoolJobWithProgress</class>
-    <class kind="struct">engine::TimecodeDisplayFormat</class>
-    <class kind="struct">engine::TimecodeDisplayIterator</class>
-    <class kind="class">engine::TimecodeDuration</class>
-    <class kind="struct">engine::TimecodeSnapType</class>
-    <class kind="class">engine::TimedMutingNode</class>
-    <class kind="class">engine::TimeSigSetting</class>
-    <class kind="class">engine::TimeStretcher</class>
-    <class kind="class">engine::TimeStretchingWaveNode</class>
-    <class kind="class">engine::ToneGeneratorPlugin</class>
-    <class kind="class">engine::Track</class>
-    <class kind="struct">engine::TrackAutomationSection</class>
-    <class kind="class">engine::TrackCompManager</class>
-    <class kind="struct">engine::TrackInsertPoint</class>
-    <class kind="class">engine::TrackItem</class>
-    <class kind="struct">engine::TrackList</class>
-    <class kind="class">engine::TrackMidiInputDeviceNode</class>
-    <class kind="class">engine::TrackMuteState</class>
-    <class kind="class">engine::TrackMutingNode</class>
-    <class kind="class">engine::TrackOutput</class>
-    <class kind="struct">engine::TrackSection</class>
-    <class kind="class">engine::TracktionEngineNode</class>
-    <class kind="class">engine::TracktionNodePlayer</class>
-    <class kind="class">engine::TrackWaveInputDeviceNode</class>
-    <class kind="struct">engine::TransparentToMouseInTrackItemComp</class>
-    <class kind="class">engine::TransportControl</class>
-    <class kind="class">engine::TranzportControlSurface</class>
-    <class kind="class">engine::UIBehaviour</class>
-    <class kind="class">engine::ValueSmoother</class>
-    <class kind="struct">engine::ValueTreeAllEventListener</class>
-    <class kind="struct">engine::ValueTreeComparator</class>
-    <class kind="class">engine::ValueTreeObjectList</class>
-    <class kind="class">engine::ValueTreePropertyChangedListener</class>
-    <class kind="class">engine::VCAPlugin</class>
-    <class kind="class">engine::VirtualMidiInputDevice</class>
-    <class kind="class">engine::VolumeAndPanPlugin</class>
+    <class kind="class">engine::AutomatableEditItem</class>
+    <class kind="class">engine::AutomatableParameter</class>
+    <class kind="class">engine::AutomationDragDropTarget</class>
+    <class kind="class">engine::ParameterisableDragDropSource</class>
+    <class kind="struct">engine::AutomationIterator</class>
+    <class kind="class">engine::AutomatableParameterTree</class>
+    <class kind="class">engine::AutomationCurve</class>
+    <class kind="struct">engine::MinBeatConstrainer</class>
+    <class kind="struct">engine::AutomatableParameterID</class>
+    <class kind="struct">engine::CurvePosition</class>
+    <class kind="struct">engine::ClipPositionInfo</class>
+    <class kind="struct">engine::AutomationCurvePlayhead</class>
+    <class kind="class">engine::AutomationCurveModifier</class>
+    <class kind="struct">engine::BaseAndModValue</class>
+    <class kind="class">engine::AutomationCurveList</class>
+    <class kind="class">engine::AutomationRecordManager</class>
+    <class kind="class">engine::MacroParameter</class>
+    <class kind="class">engine::MacroParameterList</class>
+    <class kind="class">engine::MacroParameterElement</class>
+    <class kind="class">engine::MidiLearnState</class>
+    <class kind="class">engine::MidiAssignable</class>
+    <class kind="struct">engine::ModifierTimer</class>
+    <class kind="struct">engine::Modifier</class>
+    <class kind="class">engine::ModifierList</class>
+    <class kind="class">engine::ParameterChangeHandler</class>
+    <class kind="class">engine::ParameterControlMappings</class>
+    <class kind="class">engine::ArrangerClip</class>
+    <class kind="struct">engine::AudioClipPlayhead</class>
+    <class kind="class">engine::AudioClipBase</class>
+    <class kind="class">engine::AudioSegmentList</class>
+    <class kind="class">engine::ChordClip</class>
+    <class kind="struct">engine::ClipLevel</class>
+    <class kind="struct">engine::LiveClipLevel</class>
+    <class kind="class">engine::Clip</class>
+    <class kind="class">engine::ClipEffect</class>
+    <class kind="class">engine::ClipEffects</class>
+    <class kind="struct">engine::ScopedPluginUnloadInhibitor</class>
     <class kind="struct">engine::VolumeEffect</class>
-    <class kind="class">engine::VSTXML</class>
-    <class kind="struct">engine::WarpMarker</class>
-    <class kind="struct">engine::WarpPoint</class>
+    <class kind="struct">engine::FadeInOutEffect</class>
+    <class kind="struct">engine::StepVolumeEffect</class>
+    <class kind="struct">engine::PitchShiftEffect</class>
     <class kind="struct">engine::WarpTimeEffect</class>
-    <class kind="class">engine::WarpTimeFactory</class>
+    <class kind="struct">engine::PluginEffect</class>
+    <class kind="struct">engine::NormaliseEffect</class>
+    <class kind="struct">engine::MakeMonoEffect</class>
+    <class kind="struct">engine::ReverseEffect</class>
+    <class kind="struct">engine::InvertEffect</class>
+    <class kind="class">engine::ClipOwner</class>
+    <class kind="class">engine::ClipCopy</class>
+    <class kind="class">engine::CollectionClip</class>
+    <class kind="class">engine::CompManager</class>
+    <class kind="class">engine::CompFactory</class>
+    <class kind="class">engine::WaveCompManager</class>
+    <class kind="class">engine::MidiCompManager</class>
+    <class kind="class">engine::ContainerClip</class>
+    <class kind="class">engine::EditClip</class>
+    <class kind="class">engine::EditRenderJob</class>
+    <class kind="class">engine::FollowActions</class>
+    <class kind="class">engine::LauncherClipPlaybackHandle</class>
+    <class kind="class">engine::LaunchHandle</class>
+    <class kind="class">engine::MarkerClip</class>
+    <class kind="class">engine::MidiClip</class>
+    <class kind="class">engine::ReverseRenderJob</class>
+    <class kind="class">engine::StepClip</class>
+    <class kind="struct">engine::WarpMarker</class>
     <class kind="class">engine::WarpTimeManager</class>
+    <class kind="class">engine::WarpTimeFactory</class>
     <class kind="class">engine::WarpTimeRenderJob</class>
     <class kind="class">engine::WaveAudioClip</class>
-    <class kind="class">engine::WaveCompManager</class>
+    <class kind="class">engine::Edit</class>
+    <class kind="struct">engine::EditDeleter</class>
+    <class kind="struct">engine::ActiveEdits</class>
+    <class kind="class">engine::EditFileOperations</class>
+    <class kind="class">engine::EditInsertPoint</class>
+    <class kind="struct">engine::EditItemID</class>
+    <class kind="class">engine::EditItem</class>
+    <class kind="struct">engine::EditItemCache</class>
+    <class kind="class">engine::EditLoader</class>
+    <class kind="class">engine::EditSnapshot</class>
+    <class kind="class">engine::GrooveTemplate</class>
+    <class kind="class">engine::GrooveTemplateManager</class>
+    <class kind="class">engine::LaunchQuantisation</class>
+    <class kind="class">engine::MarkerManager</class>
+    <class kind="struct">engine::OldEditConversion</class>
+    <class kind="class">engine::PitchSequence</class>
+    <class kind="class">engine::PitchSetting</class>
+    <class kind="class">engine::QuantisationType</class>
+    <class kind="class">engine::Scene</class>
+    <class kind="class">engine::SceneWatcher</class>
+    <class kind="class">engine::SceneList</class>
+    <class kind="class">engine::SourceFileReference</class>
+    <class kind="class">engine::TempoSequence</class>
+    <class kind="struct">engine::EditTimecodeRemapperSnapshot</class>
+    <class kind="class">engine::TempoSetting</class>
+    <class kind="struct">engine::TimecodeSnapType</class>
+    <class kind="class">engine::TimecodeDuration</class>
+    <class kind="struct">engine::TimecodeDisplayFormat</class>
+    <class kind="struct">engine::TimecodeDisplayIterator</class>
+    <class kind="class">engine::TimeSigSetting</class>
+    <class kind="class">engine::ArchiveJob</class>
+    <class kind="class">engine::Exportable</class>
+    <class kind="class">engine::ReferencedMaterialList</class>
+    <class kind="class">engine::Renderer</class>
+    <class kind="class">engine::EditRenderer</class>
+    <class kind="class">engine::RenderManager</class>
+    <class kind="class">engine::RenderOptions</class>
+    <class kind="class">engine::ScopedTrackMuter</class>
+    <class kind="class">engine::RenderQueue</class>
+    <class kind="struct">engine::RenderSpecification</class>
+    <class kind="struct">engine::PlannedRenderJob</class>
+    <class kind="class">engine::ArrangerTrack</class>
+    <class kind="class">engine::AudioTrack</class>
+    <class kind="class">engine::AutomationTrack</class>
+    <class kind="class">engine::ChordTrack</class>
+    <class kind="class">engine::ClipSlot</class>
+    <class kind="class">engine::ClipSlotList</class>
+    <class kind="class">engine::ClipTrack</class>
+    <class kind="struct">engine::EditPosition</class>
+    <class kind="class">engine::EditPositionWithTempoSequence</class>
+    <class kind="struct">engine::EditTimeRange</class>
+    <class kind="struct">engine::ClipPosition</class>
+    <class kind="struct">engine::ClipPositionBeats</class>
+    <class kind="class">engine::FolderTrack</class>
+    <class kind="class">engine::MarkerTrack</class>
+    <class kind="class">engine::MasterTrack</class>
+    <class kind="class">engine::TempoTrack</class>
+    <class kind="class">engine::Track</class>
+    <class kind="class">engine::TrackCompManager</class>
+    <class kind="class">engine::TrackItem</class>
+    <class kind="class">engine::TrackOutput</class>
+    <class kind="struct">engine::TrackInsertPoint</class>
+    <class kind="struct">engine::TrackList</class>
+    <class kind="struct">engine::TrackSection</class>
+    <class kind="struct">engine::TrackAutomationSection</class>
+    <class kind="class">engine::InputDevice</class>
+    <class kind="class">engine::InputDeviceInstance</class>
+    <class kind="class">engine::MidiInputDevice</class>
+    <class kind="class">engine::MidiOutputDevice</class>
+    <class kind="class">engine::SoftwareMidiOutputDevice</class>
+    <class kind="class">engine::MidiOutputDeviceInstance</class>
+    <class kind="class">engine::OutputDevice</class>
+    <class kind="class">engine::OutputDeviceInstance</class>
+    <class kind="class">engine::PhysicalMidiInputDevice</class>
+    <class kind="class">engine::VirtualMidiInputDevice</class>
     <class kind="struct">engine::WaveDeviceDescription</class>
     <class kind="struct">engine::WaveDeviceDescriptionList</class>
     <class kind="class">engine::WaveInputDevice</class>
-    <class kind="class">engine::WaveInputDeviceNode</class>
     <class kind="class">engine::WaveInputRecordingThread</class>
-    <class kind="class">engine::WaveNode</class>
-    <class kind="class">engine::WaveNodeRealTime</class>
     <class kind="class">engine::WaveOutputDevice</class>
     <class kind="class">engine::WaveOutputDeviceInstance</class>
+    <class kind="class">engine::ARANode</class>
+    <class kind="class">engine::SampleFader</class>
+    <class kind="class">engine::ArrangerLauncherSwitchingNode</class>
+    <class kind="class">engine::AuxSendNode</class>
+    <class kind="class">engine::ClickGenerator</class>
+    <class kind="class">engine::ClickNode</class>
+    <class kind="class">engine::CombiningNode</class>
+    <class kind="class">engine::ContainerClipNode</class>
+    <class kind="class">engine::DynamicOffsetNode</class>
+    <class kind="struct">engine::CreateNodeParams</class>
+    <class kind="struct">engine::EditNodeBuilder</class>
+    <class kind="class">engine::FadeInOutNode</class>
+    <class kind="class">engine::HostedMidiInputDeviceNode</class>
+    <class kind="class">engine::InsertNode</class>
+    <class kind="class">engine::InsertSendNode</class>
+    <class kind="class">engine::LevelMeasurerProcessingNode</class>
+    <class kind="class">engine::LevelMeasuringNode</class>
+    <class kind="class">engine::LiveMidiInjectingNode</class>
+    <class kind="class">engine::LiveMidiOutputNode</class>
+    <class kind="class">engine::LoopingMidiNode</class>
+    <class kind="class">engine::MidiInputDeviceNode</class>
+    <class kind="class">engine::MidiNode</class>
+    <class kind="class">engine::MidiOutputDeviceInstanceInjectingNode</class>
+    <class kind="class">engine::ModifierNode</class>
+    <class kind="class">engine::MultiThreadedNodePlayer</class>
+    <class kind="class">engine::NodeRenderContext</class>
+    <class kind="class">engine::PlayHeadPositionNode</class>
+    <class kind="class">engine::PluginNode</class>
+    <class kind="class">engine::RackInstanceNode</class>
+    <class kind="struct">engine::InputProvider</class>
+    <class kind="class">engine::RackNodePlayer</class>
+    <class kind="class">engine::RackReturnNode</class>
+    <class kind="class">engine::SharedLevelMeasuringNode</class>
+    <class kind="class">engine::SlotControlNode</class>
+    <class kind="struct">engine::SpeedFadeDescription</class>
+    <class kind="class">engine::SpeedRampWaveNode</class>
+    <class kind="class">engine::TimedMutingNode</class>
+    <class kind="class">engine::TimeStretchingWaveNode</class>
+    <class kind="class">engine::TrackMidiInputDeviceNode</class>
+    <class kind="class">engine::TrackMuteState</class>
+    <class kind="class">engine::TrackMutingNode</class>
+    <class kind="struct">engine::ProcessState</class>
+    <class kind="class">engine::TracktionEngineNode</class>
+    <class kind="class">engine::DynamicallyOffsettableNodeBase</class>
+    <class kind="class">engine::TracktionNodePlayer</class>
+    <class kind="class">engine::TrackWaveInputDeviceNode</class>
+    <class kind="class">engine::WaveInputDeviceNode</class>
+    <class kind="struct">engine::WarpPoint</class>
+    <class kind="class">engine::WaveNode</class>
+    <class kind="class">engine::WaveNodeRealTime</class>
+    <class kind="class">engine::AbletonLink</class>
+    <class kind="class">engine::DeviceManager</class>
+    <class kind="class">engine::EditInputDevices</class>
+    <class kind="class">engine::EditPlaybackContext</class>
+    <class kind="class">engine::HostedAudioDeviceInterface</class>
+    <class kind="struct">engine::DbTimePair</class>
+    <class kind="class">engine::LevelMeasurer</class>
+    <class kind="class">engine::SharedLevelMeasurer</class>
+    <class kind="class">engine::MidiNoteDispatcher</class>
+    <class kind="struct">engine::MPEStartTrimmer</class>
+    <class kind="class">engine::ScopedSteadyLoad</class>
+    <class kind="class">engine::TransportControl</class>
+    <class kind="class">engine::AirWindowsCallback</class>
+    <class kind="class">engine::AirWindowsPlugin</class>
+    <class kind="class">engine::AirWindowsBase</class>
+    <class kind="class">engine::AirWindowsAutomatableParameter</class>
+    <class kind="class">engine::ARAFileReader</class>
+    <class kind="struct">engine::ARAIXMLResult</class>
+    <class kind="class">engine::ARAPluginBinding</class>
+    <class kind="struct">engine::ARADocumentHolder</class>
+    <class kind="class">engine::ChorusPlugin</class>
+    <class kind="class">engine::CompressorPlugin</class>
+    <class kind="struct">engine::DelayBufferBase</class>
+    <class kind="class">engine::DelayPlugin</class>
+    <class kind="class">engine::EqualiserPlugin</class>
+    <class kind="class">engine::ValueSmoother</class>
+    <class kind="class">engine::SimpleLFO</class>
+    <class kind="class">engine::FourOscPlugin</class>
+    <class kind="class">engine::ImpulseResponsePlugin</class>
+    <class kind="class">engine::LatencyPlugin</class>
+    <class kind="class">engine::LowPassPlugin</class>
+    <class kind="class">engine::MidiModifierPlugin</class>
+    <class kind="class">engine::MidiPatchBayPlugin</class>
+    <class kind="class">engine::PatchBayPlugin</class>
+    <class kind="class">engine::PhaserPlugin</class>
+    <class kind="class">engine::PitchShiftPlugin</class>
+    <class kind="class">engine::ReverbPlugin</class>
+    <class kind="class">engine::SamplerPlugin</class>
+    <class kind="class">engine::ToneGeneratorPlugin</class>
+    <class kind="class">engine::ExternalAutomatableParameter</class>
+    <class kind="class">engine::ExternalPlugin</class>
+    <class kind="struct">engine::PluginWetDryAutomatableParam</class>
+    <class kind="class">engine::VSTXML</class>
+    <class kind="class">engine::AuxReturnPlugin</class>
+    <class kind="class">engine::AuxSendPlugin</class>
+    <class kind="class">engine::ChannelMapperPlugin</class>
+    <class kind="class">engine::FreezePointPlugin</class>
+    <class kind="class">engine::InsertPlugin</class>
+    <class kind="class">engine::LevelMeterPlugin</class>
+    <class kind="class">engine::RackInstance</class>
+    <class kind="struct">engine::RackConnection</class>
+    <class kind="class">engine::RackType</class>
+    <class kind="class">engine::RackTypeList</class>
+    <class kind="class">engine::TextPlugin</class>
+    <class kind="class">engine::VCAPlugin</class>
+    <class kind="class">engine::VolumeAndPanPlugin</class>
+    <class kind="struct">engine::PluginCreationInfo</class>
+    <class kind="struct">engine::PluginInitialisationInfo</class>
+    <class kind="struct">engine::PluginRenderContext</class>
+    <class kind="class">engine::Plugin</class>
+    <class kind="class">engine::PluginList</class>
+    <class kind="class">engine::PluginManager</class>
+    <class kind="class">engine::PluginCache</class>
+    <class kind="struct">engine::PluginScanHelpers</class>
+    <class kind="struct">engine::PluginWindowState</class>
+    <class kind="class">engine::FileBasedProject</class>
+    <class kind="class">engine::FolderBasedProject</class>
+    <class kind="class">engine::Project</class>
+    <class kind="class">engine::ProjectBase</class>
+    <class kind="class">engine::ProjectItem</class>
+    <class kind="class">engine::ProjectID</class>
+    <class kind="class">engine::ProjectItemID</class>
+    <class kind="class">engine::ProjectItemRef</class>
+    <class kind="class">engine::ProjectManager</class>
+    <class kind="class">engine::Clipboard</class>
+    <class kind="class">engine::SelectableListener</class>
+    <class kind="class">engine::Selectable</class>
+    <class kind="struct">engine::SelectableList</class>
+    <class kind="class">engine::SafeSelectable</class>
+    <class kind="class">engine::LambdaSelectableListener</class>
+    <class kind="class">engine::SelectableClass</class>
+    <class kind="class">engine::SelectableClassWithVolume</class>
+    <class kind="class">engine::SelectableClassWithPan</class>
+    <class kind="class">engine::SelectionManager</class>
+    <class kind="struct">engine::BeatDetect</class>
+    <class kind="class">engine::ReadAheadTimeStretcher</class>
+    <class kind="class">engine::TempoDetect</class>
+    <class kind="class">engine::TimeStretcher</class>
+    <class kind="struct">engine::AsyncCaller</class>
+    <class kind="struct">engine::AsyncFunctionCaller</class>
+    <class kind="class">engine::LambdaTimer</class>
+    <class kind="class">engine::MessageThreadCallback</class>
+    <class kind="struct">engine::BlockingFunction</class>
+    <class kind="struct">engine::DummyConstrainer</class>
+    <class kind="struct">engine::AtomicWrapper</class>
+    <class kind="struct">engine::AudioFadeCurve</class>
+    <class kind="class">engine::AudioScratchBuffer</class>
+    <class kind="class">engine::AudioMidiFifo</class>
+    <class kind="class">engine::AudioBufferSnapshot</class>
+    <class kind="class">engine::ThreadPoolJobWithProgress</class>
+    <class kind="class">engine::BackgroundJobManager</class>
+    <class kind="class">engine::ConstrainedCachedValue</class>
+    <class kind="struct">engine::ScopedCpuMeter</class>
+    <class kind="struct">engine::StopwatchTimer</class>
+    <class kind="struct">engine::CrashStackTracer</class>
+    <class kind="struct">engine::DeadMansPedalMessage</class>
+    <class kind="struct">engine::TransparentToMouseInTrackItemComp</class>
+    <class kind="struct">engine::CurvePoint</class>
+    <class kind="class">engine::CurveEditorPoint</class>
+    <class kind="class">engine::CurveEditor</class>
+    <class kind="struct">engine::Ditherer</class>
+    <class kind="class">engine::Engine</class>
+    <class kind="struct">engine::EditLimits</class>
+    <class kind="struct">engine::EditDefaults</class>
+    <class kind="class">engine::EngineBehaviour</class>
+    <class kind="class">engine::ExpEnvelope</class>
+    <class kind="class">engine::LinEnvelope</class>
+    <class kind="class">engine::ExternalPlayheadSynchroniser</class>
+    <class kind="struct">engine::ScopedDirectoryDeleter</class>
+    <class kind="struct">engine::FileDragList</class>
+    <class kind="class">engine::ScopedWaitCursor</class>
+    <class kind="class">engine::MouseHoverDetector</class>
+    <class kind="class">engine::BandlimitedWaveLookupTables</class>
+    <class kind="class">engine::Oscillator</class>
+    <class kind="class">engine::MultiVoiceOscillator</class>
+    <class kind="struct">engine::DiscreteLabelledParameter</class>
+    <class kind="struct">engine::SuffixedParameter</class>
+    <class kind="struct">engine::ParameterWithStateValue</class>
+    <class kind="struct">engine::Pitch</class>
+    <class kind="struct">engine::PluginComponent</class>
+    <class kind="class">engine::PropertyStorage</class>
+    <class kind="class">engine::SafeScopedListener</class>
+    <class kind="class">engine::ScopedListener</class>
+    <class kind="struct">engine::ScreenSaverDefeater</class>
+    <class kind="struct">engine::HertzTag</class>
+    <class kind="class">engine::SharedTimer</class>
+    <class kind="struct">engine::Spline</class>
+    <class kind="class">engine::TemporaryFileManager</class>
+    <class kind="struct">engine::ScopedThreadExitStatusEnabler</class>
+    <class kind="struct">engine::MonotonicBeat</class>
+    <class kind="struct">engine::MonotonicBeatRange</class>
+    <class kind="struct">engine::SyncPoint</class>
+    <class kind="struct">engine::SyncRange</class>
+    <class kind="class">engine::UIBehaviour</class>
+    <class kind="class">engine::ValueTreeObjectList</class>
+    <class kind="struct">engine::SortedValueTreeObjectList</class>
+    <class kind="struct">engine::ValueTreeAllEventListener</class>
+    <class kind="class">engine::LambdaValueTreeAllEventListener</class>
+    <class kind="class">engine::ValueTreePropertyChangedListener</class>
+    <class kind="struct">engine::ValueTreeComparator</class>
+    <class kind="class">engine::ReferenceCountedValueTree</class>
+    <class kind="struct">engine::MidiMessageArray</class>
+    <class kind="struct">engine::MidiMessageWithSource</class>
     <concept>engine::WeakReferenceable</concept>
     <member kind="typedef">
       <type>std::variant&lt; TimeDuration, BeatDuration &gt;</type>
       <name>EditDuration</name>
       <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>a4f3ea40b6365c23a87e7d774bb8d25e0</anchor>
+      <anchor>a9f321bd643bc8f1d5eccfafea4d8cfb6</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>EditPosition</type>
       <name>EditTime</name>
       <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>a1a359566c0fbcc69932643b3f205737b</anchor>
+      <anchor>a5c61899e3256045f460b9e31f4cefa97</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>ARANode</type>
       <name>MelodyneNode</name>
       <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>affa45b042aef13b89ba30ccd8bec53fb</anchor>
+      <anchor>af86af3317e91120d29dd51300d4e143c</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>std::vector&lt; WarpPoint &gt;</type>
       <name>WarpMap</name>
       <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>a786eddf719f9cabb38ff6261ca0ca8aa</anchor>
+      <anchor>a14e57b29e7cf71b87deee523bd3f2975</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>ARAFileReader</type>
       <name>MelodyneFileReader</name>
       <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>a92a59ec3e466449cf6a75ab669cec5fd</anchor>
+      <anchor>ada2dd435e0d6a0241ebff5ef154c151f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>unsigned int</type>
+      <name>uint</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>a0656cf6b207e6a3fda48ae7e572315ca</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>unsigned long</type>
+      <name>ulong</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>abb39e6fe483099866b3f352306fb16ac</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>ulong</type>
+      <name>ulongptr</name>
+      <anchorfile>namespaceengine.html</anchorfile>
+      <anchor>aba624c16852983b394e4447fb08dbfd1</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>AtomicWrapper&lt; Type, Constrainer, std::memory_order_relaxed, std::memory_order_relaxed &gt;</type>
       <name>AtomicWrapperRelaxed</name>
       <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>a1ffdf8e00604a91df199928d669b7c29</anchor>
+      <anchor>ad6bac69e8c9f27319877e9adb27ce185</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>AtomicWrapper&lt; Type, Constrainer, std::memory_order_acquire, std::memory_order_release &gt;</type>
       <name>AtomicWrapperAcqRel</name>
       <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>ac69f0a21f02145fe8503ebc1773f8f27</anchor>
+      <anchor>a357493ee8973a6454eff529141534dc9</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>int64_t</type>
       <name>SampleCount</name>
       <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>a604493c5b23c9cdd4a8900d6307f5568</anchor>
+      <anchor>a515dd4f9f61e0ebfe625118c122c5a12</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>juce::Range&lt; SampleCount &gt;</type>
       <name>SampleRange</name>
       <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>a25d47643e89728cef0d8e6ce17680bee</anchor>
+      <anchor>a4425696fffcc0fec4568633f5486f03a</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>int64_t</type>
       <name>HashCode</name>
       <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>ae6be128189dcf5bb06e6310b60b542f6</anchor>
+      <anchor>afa361b9eb30d718bdc39b72f110f09ca</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>uint32_t</type>
       <name>MPESourceID</name>
       <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>a88807deb890ec480dcabe757a6a1e925</anchor>
+      <anchor>a39dc3ca612ece0953b46fac400816b3c</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumeration">
@@ -83198,22 +84169,22 @@
       <type>TimePosition</type>
       <name>toTime</name>
       <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>a4e63cb453ef7de6538c9ab892de78c1f</anchor>
-      <arglist>(EditPosition, const TempoSequence &amp;)</arglist>
+      <anchor>abb26c0f0e8a8a0b6cc3ce68748619847</anchor>
+      <arglist>(EditPosition et, const TempoSequence &amp;ts)</arglist>
     </member>
     <member kind="function">
       <type>BeatPosition</type>
       <name>toBeats</name>
       <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>a21fa5e89af45d1e79bf22a30faf05134</anchor>
-      <arglist>(EditPosition, const TempoSequence &amp;)</arglist>
+      <anchor>af01e98b1e370d7462892365cb9439a2a</anchor>
+      <arglist>(EditPosition et, const TempoSequence &amp;ts)</arglist>
     </member>
     <member kind="function">
       <type>double</type>
       <name>toUnderlying</name>
       <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>a1265e0338b9fd880866c3dedf5867d8a</anchor>
-      <arglist>(EditPosition)</arglist>
+      <anchor>a7ca9f2f5b43cd1470267a9f5ddb15900</anchor>
+      <arglist>(EditPosition et)</arglist>
     </member>
     <member kind="function">
       <type>juce::Range&lt; double &gt;</type>
@@ -83240,15 +84211,15 @@
       <type>TimeRange</type>
       <name>toTime</name>
       <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>ad25513629ebca585358724bcb87dec92</anchor>
-      <arglist>(EditTimeRange, const TempoSequence &amp;)</arglist>
+      <anchor>a4521ae647cf7b019105aca65bf47cb43</anchor>
+      <arglist>(EditTimeRange r, const TempoSequence &amp;ts)</arglist>
     </member>
     <member kind="function">
       <type>BeatRange</type>
       <name>toBeats</name>
       <anchorfile>namespaceengine.html</anchorfile>
-      <anchor>ad91ea4a1694842083cf684bfb3aec053</anchor>
-      <arglist>(EditTimeRange, const TempoSequence &amp;)</arglist>
+      <anchor>a9d40f2051b3a3c9419530625f5abb823</anchor>
+      <arglist>(EditTimeRange r, const TempoSequence &amp;ts)</arglist>
     </member>
     <member kind="function">
       <type>ClipPosition</type>
@@ -84932,12 +85903,12 @@
     <name>engine::dawproject</name>
     <filename>namespaceengine_1_1dawproject.html</filename>
     <namespace>engine::dawproject::xml</namespace>
+    <class kind="struct">engine::dawproject::ParseOptions</class>
+    <class kind="struct">engine::dawproject::WriteOptions</class>
     <class kind="class">engine::dawproject::DAWprojectExporter</class>
     <class kind="class">engine::dawproject::DAWprojectImporter</class>
     <class kind="class">engine::dawproject::IDGenerator</class>
     <class kind="class">engine::dawproject::IDRefResolver</class>
-    <class kind="struct">engine::dawproject::ParseOptions</class>
-    <class kind="struct">engine::dawproject::WriteOptions</class>
     <member kind="function">
       <type>std::unique_ptr&lt; Edit &gt;</type>
       <name>parseDAWproject</name>
@@ -85148,8 +86119,8 @@
   <compound kind="namespace">
     <name>engine::legacy</name>
     <filename>namespaceengine_1_1legacy.html</filename>
-    <class kind="class">engine::legacy::ExportJob</class>
     <class kind="class">engine::legacy::TracktionArchiveFile</class>
+    <class kind="class">engine::legacy::ExportJob</class>
   </compound>
   <compound kind="namespace">
     <name>engine::MidiNodeHelpers</name>
@@ -85193,6 +86164,13 @@
   <compound kind="namespace">
     <name>engine::modifier</name>
     <filename>namespaceengine_1_1modifier.html</filename>
+    <member kind="function">
+      <type>juce::StringArray</type>
+      <name>getEnabledNames</name>
+      <anchorfile>namespaceengine_1_1modifier.html</anchorfile>
+      <anchor>a62a308528119a564feb8e8464e06d6f6</anchor>
+      <arglist>()</arglist>
+    </member>
   </compound>
   <compound kind="namespace">
     <name>engine::ModifierCommon</name>
@@ -85479,10 +86457,48 @@
   <compound kind="namespace">
     <name>engine::RackNodeBuilder</name>
     <filename>namespaceengine_1_1RackNodeBuilder.html</filename>
+    <member kind="function">
+      <type>std::unique_ptr&lt; tracktion::graph::Node &gt;</type>
+      <name>createRackNode</name>
+      <anchorfile>namespaceengine_1_1RackNodeBuilder.html</anchorfile>
+      <anchor>a316a98435c790510b0516da04cc71e0d</anchor>
+      <arglist>(tracktion::engine::RackType &amp;, double sampleRate, int blockSize, std::unique_ptr&lt; tracktion::graph::Node &gt;, ProcessState &amp;, bool isRendering)</arglist>
+    </member>
   </compound>
   <compound kind="namespace">
     <name>engine::render_utils</name>
     <filename>namespaceengine_1_1render__utils.html</filename>
+    <member kind="function">
+      <type>std::unique_ptr&lt; Renderer::RenderTask &gt;</type>
+      <name>createRenderTask</name>
+      <anchorfile>namespaceengine_1_1render__utils.html</anchorfile>
+      <anchor>a30a4dbb382756ff429b7368d19d93bca</anchor>
+      <arglist>(Renderer::Parameters, juce::String desc, std::atomic&lt; float &gt; *progressToUpdate, juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver *thumbnail)</arglist>
+    </member>
+  </compound>
+  <compound kind="namespace">
+    <name>engine::soundtouch</name>
+    <filename>namespaceengine_1_1soundtouch.html</filename>
+    <class kind="class">engine::soundtouch::FIFOSamplePipe</class>
+    <class kind="class">engine::soundtouch::FIFOProcessor</class>
+    <class kind="class">engine::soundtouch::FIFOSampleBuffer</class>
+    <class kind="struct">engine::soundtouch::BEAT</class>
+    <class kind="class">engine::soundtouch::IIR2_filter</class>
+    <class kind="class">engine::soundtouch::BPMDetect</class>
+    <member kind="typedef">
+      <type>float</type>
+      <name>SAMPLETYPE</name>
+      <anchorfile>namespaceengine_1_1soundtouch.html</anchorfile>
+      <anchor>a82645292b30824604c4542622e4604ff</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>double</type>
+      <name>LONG_SAMPLETYPE</name>
+      <anchorfile>namespaceengine_1_1soundtouch.html</anchorfile>
+      <anchor>a4fedbcda66abb22b20902aac76d32f23</anchor>
+      <arglist></arglist>
+    </member>
   </compound>
   <compound kind="namespace">
     <name>engine::TracktionBinaryData</name>
@@ -85582,49 +86598,50 @@
   <compound kind="namespace">
     <name>graph</name>
     <filename>namespacegraph.html</filename>
-    <namespace>graph::detail</namespace>
     <namespace>graph::node_player_utils</namespace>
+    <namespace>graph::detail</namespace>
     <namespace>graph::test_utilities</namespace>
+    <namespace>graph::farbot</namespace>
+    <class kind="struct">graph::ChannelConnection</class>
+    <class kind="class">graph::ConnectedNode</class>
+    <class kind="class">graph::LatencyNode</class>
+    <class kind="class">graph::SummingNode</class>
+    <class kind="class">graph::SimpleNodePlayer</class>
+    <class kind="class">graph::LockFreeMultiThreadedNodePlayer</class>
+    <class kind="class">graph::MultiThreadedNodePlayer</class>
+    <class kind="struct">graph::NodeBuffer</class>
+    <class kind="struct">graph::NodeAndID</class>
+    <class kind="struct">graph::NodeGraph</class>
+    <class kind="struct">graph::PlaybackInitialisationInfo</class>
+    <class kind="struct">graph::NodeProperties</class>
+    <class kind="struct">graph::NodeOptimisations</class>
+    <class kind="class">graph::TransformCache</class>
+    <class kind="class">graph::Node</class>
+    <class kind="class">graph::NodePlayer</class>
+    <class kind="struct">graph::SplitTimelineRange</class>
+    <class kind="class">graph::PlayHead</class>
+    <class kind="class">graph::PlayHeadState</class>
+    <class kind="class">graph::ForwardingNode</class>
+    <class kind="class">graph::MidiNode</class>
+    <class kind="class">graph::SinNode</class>
+    <class kind="class">graph::SilentNode</class>
+    <class kind="class">graph::BasicSummingNode</class>
+    <class kind="class">graph::FunctionNode</class>
+    <class kind="class">graph::GainNode</class>
+    <class kind="class">graph::SendNode</class>
+    <class kind="class">graph::ReturnNode</class>
+    <class kind="class">graph::SinkNode</class>
     <class kind="class">graph::AudioBufferPool</class>
     <class kind="class">graph::AudioBufferStack</class>
     <class kind="class">graph::AudioFifo</class>
-    <class kind="class">graph::BasicSummingNode</class>
-    <class kind="struct">graph::ChannelConnection</class>
-    <class kind="class">graph::ConnectedNode</class>
-    <class kind="class">graph::ForwardingNode</class>
-    <class kind="class">graph::FunctionNode</class>
-    <class kind="class">graph::GainNode</class>
-    <class kind="class">graph::LatencyNode</class>
     <class kind="struct">graph::LatencyProcessor</class>
-    <class kind="class">graph::LightweightSemaphore</class>
-    <class kind="class">graph::LockFreeMultiThreadedNodePlayer</class>
     <class kind="class">graph::LockFreeObject</class>
-    <class kind="class">graph::MidiNode</class>
-    <class kind="class">graph::MultiThreadedNodePlayer</class>
-    <class kind="class">graph::Node</class>
-    <class kind="struct">graph::NodeAndID</class>
-    <class kind="struct">graph::NodeBuffer</class>
-    <class kind="struct">graph::NodeGraph</class>
-    <class kind="struct">graph::NodeOptimisations</class>
-    <class kind="class">graph::NodePlayer</class>
-    <class kind="struct">graph::NodeProperties</class>
-    <class kind="class">graph::PerformanceMeasurement</class>
-    <class kind="struct">graph::PlaybackInitialisationInfo</class>
-    <class kind="class">graph::PlayHead</class>
-    <class kind="class">graph::PlayHeadState</class>
-    <class kind="class">graph::RealTimeSpinLock</class>
-    <class kind="class">graph::ReturnNode</class>
-    <class kind="class">graph::ScopedPerformanceMeasurement</class>
     <class kind="struct">graph::ScopedSignpost</class>
+    <class kind="class">graph::PerformanceMeasurement</class>
+    <class kind="class">graph::ScopedPerformanceMeasurement</class>
+    <class kind="class">graph::RealTimeSpinLock</class>
     <class kind="class">graph::Semaphore</class>
-    <class kind="class">graph::SendNode</class>
-    <class kind="class">graph::SilentNode</class>
-    <class kind="class">graph::SimpleNodePlayer</class>
-    <class kind="class">graph::SinkNode</class>
-    <class kind="class">graph::SinNode</class>
-    <class kind="struct">graph::SplitTimelineRange</class>
-    <class kind="class">graph::SummingNode</class>
-    <class kind="class">graph::TransformCache</class>
+    <class kind="class">graph::LightweightSemaphore</class>
     <member kind="enumeration">
       <type></type>
       <name>TransformResult</name>
@@ -85899,6 +86916,49 @@
     <class kind="struct">graph::detail::VisitNodesWithRecordBFS</class>
   </compound>
   <compound kind="namespace">
+    <name>graph::farbot</name>
+    <filename>namespacegraph_1_1farbot.html</filename>
+    <namespace>graph::farbot::detail</namespace>
+    <namespace>graph::farbot::fifo_options</namespace>
+    <class kind="class">graph::farbot::fifo</class>
+  </compound>
+  <compound kind="namespace">
+    <name>graph::farbot::detail</name>
+    <filename>namespacegraph_1_1farbot_1_1detail.html</filename>
+    <class kind="class">graph::farbot::detail::fifo_impl</class>
+    <class kind="struct">graph::farbot::detail::fifo_manip</class>
+    <class kind="struct">graph::farbot::detail::fifo_manip&lt; T, false, false &gt;</class>
+    <class kind="struct">graph::farbot::detail::fifo_manip&lt; T, false, true &gt;</class>
+    <class kind="struct">graph::farbot::detail::thread_info</class>
+    <class kind="struct">graph::farbot::detail::multi_position_info</class>
+    <class kind="struct">graph::farbot::detail::read_or_writer</class>
+    <class kind="struct">graph::farbot::detail::read_or_writer&lt; T, is_writer, true, false, MAX_THREADS &gt;</class>
+    <class kind="struct">graph::farbot::detail::read_or_writer&lt; T, is_writer, true, true, MAX_THREADS &gt;</class>
+    <class kind="struct">graph::farbot::detail::read_or_writer&lt; T, is_writer, false, true, MAX_THREADS &gt;</class>
+  </compound>
+  <compound kind="namespace">
+    <name>graph::farbot::fifo_options</name>
+    <filename>namespacegraph_1_1farbot_1_1fifo__options.html</filename>
+    <member kind="enumeration">
+      <type></type>
+      <name>concurrency</name>
+      <anchorfile>namespacegraph_1_1farbot_1_1fifo__options.html</anchorfile>
+      <anchor>a9bd6bc9bad8a6454877c30055e3858d1</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespacegraph_1_1farbot_1_1fifo__options.html" anchor="a9bd6bc9bad8a6454877c30055e3858d1add5c07036f2975ff4bce568b6511d3bc">single</enumvalue>
+      <enumvalue file="namespacegraph_1_1farbot_1_1fifo__options.html" anchor="a9bd6bc9bad8a6454877c30055e3858d1ace495ab8d79db0d37413d8e95b54e606">multiple</enumvalue>
+    </member>
+    <member kind="enumeration">
+      <type></type>
+      <name>full_empty_failure_mode</name>
+      <anchorfile>namespacegraph_1_1farbot_1_1fifo__options.html</anchorfile>
+      <anchor>a01317c949b4de1ae1e46b8098d7ef33d</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespacegraph_1_1farbot_1_1fifo__options.html" anchor="a01317c949b4de1ae1e46b8098d7ef33da1f3422fd041d0dd86d0a9753a32e40ad">overwrite_or_return_default</enumvalue>
+      <enumvalue file="namespacegraph_1_1farbot_1_1fifo__options.html" anchor="a01317c949b4de1ae1e46b8098d7ef33dac6f52d3febcfec6faff36176d2c1aa97">return_false_on_full_or_empty</enumvalue>
+    </member>
+  </compound>
+  <compound kind="namespace">
     <name>graph::node_player_utils</name>
     <filename>namespacegraph_1_1node__player__utils.html</filename>
     <member kind="function">
@@ -85920,9 +86980,9 @@
     <name>graph::test_utilities</name>
     <filename>namespacegraph_1_1test__utilities.html</filename>
     <class kind="struct">graph::test_utilities::SineOscillator</class>
+    <class kind="struct">graph::test_utilities::TestSetup</class>
     <class kind="struct">graph::test_utilities::TestContext</class>
     <class kind="struct">graph::test_utilities::TestProcess</class>
-    <class kind="struct">graph::test_utilities::TestSetup</class>
     <member kind="function">
       <type>void</type>
       <name>writeToFile</name>
@@ -86018,28 +87078,51 @@
   <compound kind="namespace">
     <name>juce</name>
     <filename>namespacejuce.html</filename>
-    <class kind="struct">juce::VariantConverter&lt; Colour &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion::core::BeatDuration &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion::core::BeatPosition &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion::core::TimeDuration &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion::core::TimePosition &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::AudioFadeCurve::Type &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::AutomationMode &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::Chord::ChordType &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::Clip::FollowActionDurationType &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::Clip::SyncType &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::CurveModifierType &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::FollowAction &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::LaunchQType &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::MidiClip::LoopedSequenceType &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::Scale::ScaleType &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::PatternGenerator::Mode &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::RenderOptions::AddRenderOptions &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::CurveModifierType &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::AutomationMode &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::AudioClipBase::FadeBehaviour &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::AudioClipBase::AutoPitchMode &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; PluginDescription &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::Clip::SyncType &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::Clip::FollowActionDurationType &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::FollowAction &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::MidiClip::LoopedSequenceType &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::EditItemID &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::LaunchQType &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::TimecodeDisplayFormat &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::RenderOptions::RenderType &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::RenderOptions::TargetFileFormat &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::Scale::ScaleType &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::TimeStretcher::ElastiqueProOptions &gt;</class>
-    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::TimeStretcher::Mode &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::RenderOptions::AddRenderOptions &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::core::TimePosition &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::core::TimeDuration &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::core::BeatPosition &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::core::BeatDuration &gt;</class>
     <class kind="struct">juce::VariantConverter&lt; tracktion::engine::TrackCompManager::TrackComp::TimeFormat &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::ProjectItemID &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::ProjectItemRef &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::TimeStretcher::Mode &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::TimeStretcher::ElastiqueProOptions &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::AtomicWrapper&lt; T, C, L, S &gt; &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::AudioFadeCurve::Type &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::ResamplingQuality &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; Colour &gt;</class>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator==</name>
+      <anchorfile>namespacejuce.html</anchorfile>
+      <anchor>a1256c5fd959d42ec781dacbd750c4614</anchor>
+      <arglist>(const PluginDescription &amp;a, const PluginDescription &amp;b)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>operator!=</name>
+      <anchorfile>namespacejuce.html</anchorfile>
+      <anchor>a055cf1740f6d2b18326483ef4c7bce77</anchor>
+      <arglist>(const PluginDescription &amp;a, const PluginDescription &amp;b)</arglist>
+    </member>
   </compound>
   <compound kind="namespace">
     <name>moodycamel</name>
@@ -86054,22 +87137,22 @@
     <name>tracktion</name>
     <filename>namespacetracktion.html</filename>
     <namespace>tracktion::engine</namespace>
+    <class kind="class">tracktion::IODevice</class>
+    <class kind="class">tracktion::ChannelRemappingNode</class>
+    <class kind="struct">tracktion::ChannelIndex</class>
     <class kind="class">tracktion::ChannelConfiguration</class>
     <class kind="struct">tracktion::ChannelConfigurationPreset</class>
-    <class kind="struct">tracktion::ChannelIndex</class>
     <class kind="struct">tracktion::ChannelMap</class>
-    <class kind="class">tracktion::ChannelRemappingNode</class>
-    <class kind="class">tracktion::IODevice</class>
   </compound>
   <compound kind="namespace">
     <name>tracktion::engine</name>
     <filename>namespacetracktion_1_1engine.html</filename>
+    <class kind="class">tracktion::engine::IODevice</class>
+    <class kind="class">tracktion::engine::ChannelRemappingNode</class>
+    <class kind="struct">tracktion::engine::ChannelIndex</class>
     <class kind="class">tracktion::engine::ChannelConfiguration</class>
     <class kind="struct">tracktion::engine::ChannelConfigurationPreset</class>
-    <class kind="struct">tracktion::engine::ChannelIndex</class>
     <class kind="struct">tracktion::engine::ChannelMap</class>
-    <class kind="class">tracktion::engine::ChannelRemappingNode</class>
-    <class kind="class">tracktion::engine::IODevice</class>
     <member kind="function">
       <type>juce::AudioChannelSet::ChannelType</type>
       <name>channelTypeFromAbbreviatedName</name>
@@ -86093,14 +87176,14 @@
     </member>
   </compound>
   <compound kind="group">
-    <name>tracktion_engine-3rd_party</name>
-    <title>3rd_party</title>
-    <filename>group__tracktion__engine-3rd__party.html</filename>
-  </compound>
-  <compound kind="group">
     <name>tracktion_graph-3rd_party</name>
     <title>3rd_party</title>
     <filename>group__tracktion__graph-3rd__party.html</filename>
+  </compound>
+  <compound kind="group">
+    <name>tracktion_engine-3rd_party</name>
+    <title>3rd_party</title>
+    <filename>group__tracktion__engine-3rd__party.html</filename>
   </compound>
   <compound kind="group">
     <name>tracktion_engine-audio_files</name>
@@ -86279,6 +87362,9 @@
     <class kind="struct">engine::AudioClipPlayhead</class>
     <class kind="class">engine::AudioClipBase</class>
     <class kind="struct">engine::AudioClipBase::ProxyRenderingInfo</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::AudioClipBase::FadeBehaviour &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::AudioClipBase::AutoPitchMode &gt;</class>
+    <class kind="struct">juce::VariantConverter&lt; PluginDescription &gt;</class>
     <class kind="class">engine::AudioSegmentList</class>
     <class kind="struct">engine::AudioSegmentList::Segment</class>
     <class kind="class">engine::ChordClip</class>
@@ -86353,6 +87439,7 @@
     <class kind="struct">engine::EditItemID</class>
     <class kind="class">engine::EditItem</class>
     <class kind="struct">engine::EditItemCache</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::EditItemID &gt;</class>
     <class kind="class">engine::EditLoader</class>
     <class kind="class">engine::EditLoader::Handle</class>
     <class kind="class">engine::EditSnapshot</class>
@@ -86379,6 +87466,7 @@
     <class kind="class">engine::TimecodeDuration</class>
     <class kind="struct">engine::TimecodeDisplayFormat</class>
     <class kind="struct">engine::TimecodeDisplayIterator</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::TimecodeDisplayFormat &gt;</class>
     <class kind="class">engine::TimeSigSetting</class>
     <class kind="class">engine::ArchiveJob</class>
     <class kind="class">engine::legacy::TracktionArchiveFile</class>
@@ -86726,7 +87814,9 @@
     <class kind="class">engine::ProjectItem</class>
     <class kind="class">engine::ProjectID</class>
     <class kind="class">engine::ProjectItemID</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::ProjectItemID &gt;</class>
     <class kind="class">engine::ProjectItemRef</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::ProjectItemRef &gt;</class>
     <class kind="class">engine::ProjectManager</class>
     <class kind="struct">engine::ProjectManager::TempProject</class>
     <class kind="struct">engine::ProjectUtilities::EditReferences</class>
@@ -86788,9 +87878,16 @@
     <title>timestretch</title>
     <filename>group__tracktion__engine-timestretch.html</filename>
     <namespace>engine</namespace>
+    <namespace>engine::soundtouch</namespace>
     <namespace>juce</namespace>
     <class kind="struct">engine::BeatDetect</class>
     <class kind="class">engine::ReadAheadTimeStretcher</class>
+    <class kind="class">engine::soundtouch::FIFOSamplePipe</class>
+    <class kind="class">engine::soundtouch::FIFOProcessor</class>
+    <class kind="class">engine::soundtouch::FIFOSampleBuffer</class>
+    <class kind="struct">engine::soundtouch::BEAT</class>
+    <class kind="class">engine::soundtouch::IIR2_filter</class>
+    <class kind="class">engine::soundtouch::BPMDetect</class>
     <class kind="class">engine::TempoDetect</class>
     <class kind="class">engine::TimeStretcher</class>
     <class kind="struct">engine::TimeStretcher::ElastiqueProOptions</class>
@@ -86801,27 +87898,27 @@
     <name>tracktion_engine</name>
     <title>tracktion_engine</title>
     <filename>group__tracktion__engine.html</filename>
-    <subgroup>tracktion_engine-3rd_party</subgroup>
-    <subgroup>tracktion_engine-audio_files</subgroup>
-    <subgroup>tracktion_engine-control_surfaces</subgroup>
-    <subgroup>tracktion_engine-midi</subgroup>
-    <subgroup>tracktion_engine-model</subgroup>
-    <subgroup>tracktion_engine-playback</subgroup>
-    <subgroup>tracktion_engine-plugins</subgroup>
-    <subgroup>tracktion_engine-project</subgroup>
-    <subgroup>tracktion_engine-selection</subgroup>
-    <subgroup>tracktion_engine-testing</subgroup>
     <subgroup>tracktion_engine-timestretch</subgroup>
+    <subgroup>tracktion_engine-selection</subgroup>
+    <subgroup>tracktion_engine-plugins</subgroup>
+    <subgroup>tracktion_engine-playback</subgroup>
+    <subgroup>tracktion_engine-control_surfaces</subgroup>
     <subgroup>tracktion_engine-utilities</subgroup>
+    <subgroup>tracktion_engine-3rd_party</subgroup>
+    <subgroup>tracktion_engine-model</subgroup>
+    <subgroup>tracktion_engine-midi</subgroup>
+    <subgroup>tracktion_engine-testing</subgroup>
+    <subgroup>tracktion_engine-project</subgroup>
+    <subgroup>tracktion_engine-audio_files</subgroup>
   </compound>
   <compound kind="group">
     <name>tracktion_graph</name>
     <title>tracktion_graph</title>
     <filename>group__tracktion__graph.html</filename>
+    <subgroup>tracktion_graph-utilities</subgroup>
     <subgroup>tracktion_graph-3rd_party</subgroup>
     <subgroup>tracktion_graph-docs</subgroup>
     <subgroup>tracktion_graph-tracktion_graph</subgroup>
-    <subgroup>tracktion_graph-utilities</subgroup>
   </compound>
   <compound kind="group">
     <name>tracktion_graph-tracktion_graph</name>
@@ -86872,6 +87969,44 @@
     <class kind="struct">graph::test_utilities::TestProcess</class>
   </compound>
   <compound kind="group">
+    <name>tracktion_graph-utilities</name>
+    <title>utilities</title>
+    <filename>group__tracktion__graph-utilities.html</filename>
+    <namespace>graph</namespace>
+    <namespace>graph::farbot</namespace>
+    <namespace>graph::farbot::detail</namespace>
+    <namespace>graph::farbot::fifo_options</namespace>
+    <namespace>engine</namespace>
+    <namespace>moodycamel</namespace>
+    <namespace>moodycamel::details</namespace>
+    <class kind="class">graph::farbot::fifo</class>
+    <class kind="struct">graph::farbot::detail::fifo_manip</class>
+    <class kind="struct">graph::farbot::detail::fifo_manip&lt; T, false, false &gt;</class>
+    <class kind="struct">graph::farbot::detail::fifo_manip&lt; T, false, true &gt;</class>
+    <class kind="struct">graph::farbot::detail::thread_info</class>
+    <class kind="struct">graph::farbot::detail::multi_position_info</class>
+    <class kind="struct">graph::farbot::detail::read_or_writer</class>
+    <class kind="struct">graph::farbot::detail::read_or_writer&lt; T, is_writer, true, false, MAX_THREADS &gt;</class>
+    <class kind="struct">graph::farbot::detail::read_or_writer&lt; T, is_writer, true, true, MAX_THREADS &gt;</class>
+    <class kind="struct">graph::farbot::detail::read_or_writer&lt; T, is_writer, false, true, MAX_THREADS &gt;</class>
+    <class kind="class">graph::farbot::detail::fifo_impl</class>
+    <class kind="class">graph::AudioBufferPool</class>
+    <class kind="class">graph::AudioBufferStack</class>
+    <class kind="class">graph::AudioFifo</class>
+    <class kind="struct">graph::LatencyProcessor</class>
+    <class kind="class">graph::LockFreeObject</class>
+    <class kind="class">graph::LockFreeObject::ScopedRealTimeAccess</class>
+    <class kind="struct">engine::MidiMessageArray</class>
+    <class kind="struct">engine::MidiMessageWithSource</class>
+    <class kind="struct">graph::ScopedSignpost</class>
+    <class kind="class">graph::PerformanceMeasurement</class>
+    <class kind="struct">graph::PerformanceMeasurement::Statistics</class>
+    <class kind="class">graph::ScopedPerformanceMeasurement</class>
+    <class kind="class">graph::RealTimeSpinLock</class>
+    <class kind="class">graph::Semaphore</class>
+    <class kind="class">graph::LightweightSemaphore</class>
+  </compound>
+  <compound kind="group">
     <name>tracktion_engine-utilities</name>
     <title>utilities</title>
     <filename>group__tracktion__engine-utilities.html</filename>
@@ -86889,6 +88024,7 @@
     <class kind="struct">engine::BlockingFunction</class>
     <class kind="struct">engine::DummyConstrainer</class>
     <class kind="struct">engine::AtomicWrapper</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::AtomicWrapper&lt; T, C, L, S &gt; &gt;</class>
     <class kind="struct">engine::AudioFadeCurve</class>
     <class kind="struct">engine::AudioFadeCurve::Linear</class>
     <class kind="struct">engine::AudioFadeCurve::Convex</class>
@@ -86899,6 +88035,7 @@
     <class kind="class">engine::AudioScratchBuffer</class>
     <class kind="class">engine::AudioMidiFifo</class>
     <class kind="class">engine::AudioBufferSnapshot</class>
+    <class kind="struct">juce::VariantConverter&lt; tracktion::engine::ResamplingQuality &gt;</class>
     <class kind="class">engine::ThreadPoolJobWithProgress</class>
     <class kind="class">engine::BackgroundJobManager</class>
     <class kind="struct">engine::BackgroundJobManager::JobInfo</class>
@@ -86966,28 +88103,542 @@
     <class kind="struct">engine::ValueTreeComparator</class>
     <class kind="class">engine::ReferenceCountedValueTree</class>
   </compound>
-  <compound kind="group">
-    <name>tracktion_graph-utilities</name>
-    <title>utilities</title>
-    <filename>group__tracktion__graph-utilities.html</filename>
-    <namespace>graph</namespace>
-    <namespace>engine</namespace>
-    <namespace>moodycamel</namespace>
-    <namespace>moodycamel::details</namespace>
-    <class kind="class">graph::AudioBufferPool</class>
-    <class kind="class">graph::AudioBufferStack</class>
-    <class kind="class">graph::AudioFifo</class>
-    <class kind="struct">graph::LatencyProcessor</class>
-    <class kind="class">graph::LockFreeObject</class>
-    <class kind="class">graph::LockFreeObject::ScopedRealTimeAccess</class>
-    <class kind="struct">engine::MidiMessageArray</class>
-    <class kind="struct">engine::MidiMessageWithSource</class>
-    <class kind="struct">graph::ScopedSignpost</class>
-    <class kind="class">graph::PerformanceMeasurement</class>
-    <class kind="struct">graph::PerformanceMeasurement::Statistics</class>
-    <class kind="class">graph::ScopedPerformanceMeasurement</class>
-    <class kind="class">graph::RealTimeSpinLock</class>
-    <class kind="class">graph::Semaphore</class>
-    <class kind="class">graph::LightweightSemaphore</class>
+  <compound kind="dir">
+    <name>airwindows</name>
+    <path>build/tracktion_engine/plugins/airwindows/</path>
+    <filename>dir_0c7095da07587fbbf402dbcb8ad72a7f.html</filename>
+    <file>tracktion_AirWindows.h</file>
+    <file>tracktion_AirWindowsBase.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>ARA</name>
+    <path>build/tracktion_engine/plugins/ARA/</path>
+    <filename>dir_ed9436114b8a9af9469b07ad166147b4.html</filename>
+    <file>tracktion_ARAFileReader.h</file>
+    <file>tracktion_ARAPluginFactory.h</file>
+    <file>tracktion_ARAWrapperFunctions.h</file>
+    <file>tracktion_ARAWrapperInterfaces.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>audio_files</name>
+    <path>build/tracktion_engine/audio_files/</path>
+    <filename>dir_6f805909a219796ffc1428f5fa719b84.html</filename>
+    <dir>formats</dir>
+    <file>tracktion_engine/audio_files/tracktion_AudioFifo.h</file>
+    <file>tracktion_AudioFile.h</file>
+    <file>tracktion_AudioFileAnalyser.h</file>
+    <file>tracktion_AudioFileCache.h</file>
+    <file>tracktion_AudioFileManager.h</file>
+    <file>tracktion_AudioFileUtils.h</file>
+    <file>tracktion_AudioFileWriter.h</file>
+    <file>tracktion_AudioFormatManager.h</file>
+    <file>tracktion_AudioProxyGenerator.h</file>
+    <file>tracktion_BufferedAudioReader.h</file>
+    <file>tracktion_BufferedFileReader.h</file>
+    <file>tracktion_LoopInfo.h</file>
+    <file>tracktion_LoudnessMeter.h</file>
+    <file>tracktion_RecordingThumbnailManager.h</file>
+    <file>tracktion_SmartThumbnail.h</file>
+    <file>tracktion_StereoFieldAnalyser.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>automation</name>
+    <path>build/tracktion_engine/model/automation/</path>
+    <filename>dir_84998bde65614f6084b96ab5b6f63d61.html</filename>
+    <dir>modifiers</dir>
+    <file>tracktion_AutomatableEditItem.h</file>
+    <file>tracktion_AutomatableParameter.h</file>
+    <file>tracktion_AutomatableParameterTree.h</file>
+    <file>tracktion_AutomationCurve.h</file>
+    <file>tracktion_AutomationCurveList.h</file>
+    <file>tracktion_AutomationMode.h</file>
+    <file>tracktion_AutomationRecordManager.h</file>
+    <file>tracktion_MacroParameter.h</file>
+    <file>tracktion_MidiLearn.h</file>
+    <file>tracktion_Modifier.h</file>
+    <file>tracktion_ParameterChangeHandler.h</file>
+    <file>tracktion_ParameterControlMappings.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>build</name>
+    <path>build/</path>
+    <filename>dir_4fef79e7177ba769987a8da36c892c5f.html</filename>
+    <dir>tracktion_engine</dir>
+    <dir>tracktion_graph</dir>
+  </compound>
+  <compound kind="dir">
+    <name>clips</name>
+    <path>build/tracktion_engine/model/clips/</path>
+    <filename>dir_dee441237c919cc53ece59194a749c12.html</filename>
+    <file>tracktion_ArrangerClip.h</file>
+    <file>tracktion_AudioClipBase.h</file>
+    <file>tracktion_AudioSegmentList.h</file>
+    <file>tracktion_ChordClip.h</file>
+    <file>tracktion_Clip.h</file>
+    <file>tracktion_ClipEffects.h</file>
+    <file>tracktion_ClipOwner.h</file>
+    <file>tracktion_CollectionClip.h</file>
+    <file>tracktion_CompManager.h</file>
+    <file>tracktion_ContainerClip.h</file>
+    <file>tracktion_EditClip.h</file>
+    <file>tracktion_EditClipRenderJob.h</file>
+    <file>tracktion_FollowActions.h</file>
+    <file>tracktion_LauncherClipPlaybackHandle.h</file>
+    <file>tracktion_LaunchHandle.h</file>
+    <file>tracktion_MarkerClip.h</file>
+    <file>tracktion_MidiClip.h</file>
+    <file>tracktion_ReverseRenderJob.h</file>
+    <file>tracktion_StepClip.h</file>
+    <file>tracktion_WarpTimeManager.h</file>
+    <file>tracktion_WarpTimeRenderJob.h</file>
+    <file>tracktion_WaveAudioClip.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>cmajor</name>
+    <path>build/tracktion_engine/plugins/cmajor/</path>
+    <filename>dir_104e9ab0b0c8656326e9170fdbff3e1b.html</filename>
+    <file>tracktion_CmajorPluginFormat.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>control_surfaces</name>
+    <path>build/tracktion_engine/control_surfaces/</path>
+    <filename>dir_40ee012e3166ec19e3092f515b2cc8b0.html</filename>
+    <dir>types</dir>
+    <file>tracktion_ControlSurface.h</file>
+    <file>tracktion_CustomControlSurface.h</file>
+    <file>tracktion_ExternalController.h</file>
+    <file>tracktion_ExternalControllerManager.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>dawproject</name>
+    <path>build/tracktion_engine/project/dawproject/</path>
+    <filename>dir_3e6f703b9dceaef66f1f4cadf99b9dd5.html</filename>
+    <file>tracktion_DAWproject.h</file>
+    <file>tracktion_DAWprojectExport.h</file>
+    <file>tracktion_DAWprojectImport.h</file>
+    <file>tracktion_DAWprojectMapping.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>devices</name>
+    <path>build/tracktion_engine/playback/devices/</path>
+    <filename>dir_427297f65d2f3c4111d88cd9f7a70ad4.html</filename>
+    <file>tracktion_InputDevice.h</file>
+    <file>tracktion_IODevice.h</file>
+    <file>tracktion_MidiInputDevice.h</file>
+    <file>tracktion_MidiOutputDevice.h</file>
+    <file>tracktion_OutputDevice.h</file>
+    <file>tracktion_PhysicalMidiInputDevice.h</file>
+    <file>tracktion_VirtualMidiInputDevice.h</file>
+    <file>tracktion_WaveDeviceDescription.h</file>
+    <file>tracktion_WaveInputDevice.h</file>
+    <file>tracktion_WaveOutputDevice.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>edit</name>
+    <path>build/tracktion_engine/model/edit/</path>
+    <filename>dir_65aa86d88356522da72386006a2157b4.html</filename>
+    <file>tracktion_Edit.h</file>
+    <file>tracktion_EditFileOperations.h</file>
+    <file>tracktion_EditInsertPoint.h</file>
+    <file>tracktion_EditItem.h</file>
+    <file>tracktion_EditLoader.h</file>
+    <file>tracktion_EditSnapshot.h</file>
+    <file>tracktion_EditUtilities.h</file>
+    <file>tracktion_GrooveTemplate.h</file>
+    <file>tracktion_LaunchQuantisation.h</file>
+    <file>tracktion_MarkerManager.h</file>
+    <file>tracktion_OldEditConversion.h</file>
+    <file>tracktion_PitchSequence.h</file>
+    <file>tracktion_PitchSetting.h</file>
+    <file>tracktion_QuantisationType.h</file>
+    <file>tracktion_Scene.h</file>
+    <file>tracktion_SourceFileReference.h</file>
+    <file>tracktion_TempoSequence.h</file>
+    <file>tracktion_TempoSetting.h</file>
+    <file>tracktion_TimecodeDisplayFormat.h</file>
+    <file>tracktion_TimeSigSetting.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>effects</name>
+    <path>build/tracktion_engine/plugins/effects/</path>
+    <filename>dir_6f3dba41e9dec050260293287610bad2.html</filename>
+    <file>tracktion_Chorus.h</file>
+    <file>tracktion_Compressor.h</file>
+    <file>tracktion_Delay.h</file>
+    <file>tracktion_Equaliser.h</file>
+    <file>tracktion_FourOscPlugin.h</file>
+    <file>tracktion_ImpulseResponsePlugin.h</file>
+    <file>tracktion_LatencyPlugin.h</file>
+    <file>tracktion_LowPass.h</file>
+    <file>tracktion_MidiModifier.h</file>
+    <file>tracktion_MidiPatchBay.h</file>
+    <file>tracktion_PatchBay.h</file>
+    <file>tracktion_Phaser.h</file>
+    <file>tracktion_PitchShift.h</file>
+    <file>tracktion_Reverb.h</file>
+    <file>tracktion_SamplerPlugin.h</file>
+    <file>tracktion_ToneGenerator.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>export</name>
+    <path>build/tracktion_engine/model/export/</path>
+    <filename>dir_1abdc40ec152161c04ab6f8ab5a39c46.html</filename>
+    <file>tracktion_Archive.h</file>
+    <file>tracktion_ArchiveFile.h</file>
+    <file>tracktion_Exportable.h</file>
+    <file>tracktion_ExportJob.h</file>
+    <file>tracktion_ReferencedMaterialList.h</file>
+    <file>tracktion_Renderer.h</file>
+    <file>tracktion_RenderManager.h</file>
+    <file>tracktion_RenderOptions.h</file>
+    <file>tracktion_RenderQueue.h</file>
+    <file>tracktion_RenderSpecification.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>external</name>
+    <path>build/tracktion_engine/plugins/external/</path>
+    <filename>dir_8da2b0ed38da6bdcbac65916456347a7.html</filename>
+    <file>tracktion_ExternalAutomatableParameter.h</file>
+    <file>tracktion_ExternalPlugin.h</file>
+    <file>tracktion_ExternalPluginBlacklist.h</file>
+    <file>tracktion_VSTXML.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>formats</name>
+    <path>build/tracktion_engine/audio_files/formats/</path>
+    <filename>dir_ae9adc537b8a27f74a4f72ab0f51c0b2.html</filename>
+    <file>tracktion_FFmpegEncoderAudioFormat.h</file>
+    <file>tracktion_FloatAudioFileFormat.h</file>
+    <file>tracktion_LAMEManager.h</file>
+    <file>tracktion_LibLameEncoderAudioFormat.h</file>
+    <file>tracktion_MemoryMappedFileReader.h</file>
+    <file>tracktion_RexFileFormat.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>graph</name>
+    <path>build/tracktion_engine/playback/graph/</path>
+    <filename>dir_2b2b4ce835aba06df59efa5dcf9de332.html</filename>
+    <file>tracktion_ARANode.h</file>
+    <file>tracktion_ArrangerLauncherSwitchingNode.h</file>
+    <file>tracktion_AuxSendNode.h</file>
+    <file>tracktion_BenchmarkUtilities.h</file>
+    <file>tracktion_ChannelRemappingNode.h</file>
+    <file>tracktion_ClickNode.h</file>
+    <file>tracktion_CombiningNode.h</file>
+    <file>tracktion_ContainerClipNode.h</file>
+    <file>tracktion_DynamicOffsetNode.h</file>
+    <file>tracktion_EditNodeBuilder.h</file>
+    <file>tracktion_FadeInOutNode.h</file>
+    <file>tracktion_HostedMidiInputDeviceNode.h</file>
+    <file>tracktion_InsertSendNode.h</file>
+    <file>tracktion_LevelMeasurerProcessingNode.h</file>
+    <file>tracktion_LevelMeasuringNode.h</file>
+    <file>tracktion_LiveMidiInjectingNode.h</file>
+    <file>tracktion_LiveMidiOutputNode.h</file>
+    <file>tracktion_LoopingMidiNode.h</file>
+    <file>tracktion_MidiInputDeviceNode.h</file>
+    <file>tracktion_MidiNode.h</file>
+    <file>tracktion_MidiNodeHelpers.h</file>
+    <file>tracktion_MidiOutputDeviceInstanceInjectingNode.h</file>
+    <file>tracktion_ModifierNode.h</file>
+    <file>tracktion_engine/playback/graph/tracktion_MultiThreadedNodePlayer.h</file>
+    <file>tracktion_NodeRenderContext.h</file>
+    <file>tracktion_PlayHeadPositionNode.h</file>
+    <file>tracktion_PluginNode.h</file>
+    <file>tracktion_RackInstanceNode.h</file>
+    <file>tracktion_RackNode.h</file>
+    <file>tracktion_RackReturnNode.h</file>
+    <file>tracktion_SharedLevelMeasuringNode.h</file>
+    <file>tracktion_SlotControlNode.h</file>
+    <file>tracktion_SpeedRampWaveNode.h</file>
+    <file>tracktion_TimedMutingNode.h</file>
+    <file>tracktion_TimeStretchingWaveNode.h</file>
+    <file>tracktion_TrackMidiInputDeviceNode.h</file>
+    <file>tracktion_TrackMutingNode.h</file>
+    <file>tracktion_TracktionEngineNode.h</file>
+    <file>tracktion_TracktionNodePlayer.h</file>
+    <file>tracktion_TrackWaveInputDeviceNode.h</file>
+    <file>tracktion_WaveInputDeviceNode.h</file>
+    <file>tracktion_WaveNode.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>internal</name>
+    <path>build/tracktion_engine/plugins/internal/</path>
+    <filename>dir_386eff1c88961f59a55db777f50afe2e.html</filename>
+    <file>tracktion_AuxReturn.h</file>
+    <file>tracktion_AuxSend.h</file>
+    <file>tracktion_ChannelMapperPlugin.h</file>
+    <file>tracktion_FreezePoint.h</file>
+    <file>tracktion_InsertPlugin.h</file>
+    <file>tracktion_LevelMeter.h</file>
+    <file>tracktion_RackInstance.h</file>
+    <file>tracktion_RackType.h</file>
+    <file>tracktion_ReWirePlugin.h</file>
+    <file>tracktion_TextPlugin.h</file>
+    <file>tracktion_VCA.h</file>
+    <file>tracktion_VolumeAndPan.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>midi</name>
+    <path>build/tracktion_engine/midi/</path>
+    <filename>dir_c4d25cbd364ddd56a942900ef9b19de2.html</filename>
+    <file>tracktion_ActiveNoteList.h</file>
+    <file>tracktion_MidiChannel.h</file>
+    <file>tracktion_MidiControllerEvent.h</file>
+    <file>tracktion_MidiExpression.h</file>
+    <file>tracktion_MidiList.h</file>
+    <file>tracktion_MidiNote.h</file>
+    <file>tracktion_MidiProgramManager.h</file>
+    <file>tracktion_MidiSysexEvent.h</file>
+    <file>tracktion_Musicality.h</file>
+    <file>tracktion_SelectedMidiEvents.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>model</name>
+    <path>build/tracktion_engine/model/</path>
+    <filename>dir_b7f445d3d4c36a756e69c869b6e1e462.html</filename>
+    <dir>automation</dir>
+    <dir>clips</dir>
+    <dir>edit</dir>
+    <dir>export</dir>
+    <dir>tracks</dir>
+  </compound>
+  <compound kind="dir">
+    <name>modifiers</name>
+    <path>build/tracktion_engine/model/automation/modifiers/</path>
+    <filename>dir_1f36a345f94caafad10fe110b48486f4.html</filename>
+    <file>tracktion_BreakpointOscillatorModifier.h</file>
+    <file>tracktion_EnvelopeFollowerModifier.h</file>
+    <file>tracktion_LFOModifier.h</file>
+    <file>tracktion_MIDITrackerModifier.h</file>
+    <file>tracktion_ModifierCommon.h</file>
+    <file>tracktion_ModifierInternal.h</file>
+    <file>tracktion_RandomModifier.h</file>
+    <file>tracktion_StepModifier.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>nodes</name>
+    <path>build/tracktion_graph/tracktion_graph/nodes/</path>
+    <filename>dir_da3232c695224fd44c6603c8263839a4.html</filename>
+    <file>tracktion_ConnectedNode.h</file>
+    <file>tracktion_LatencyNode.h</file>
+    <file>tracktion_SummingNode.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>playback</name>
+    <path>build/tracktion_engine/playback/</path>
+    <filename>dir_a6ec51f85f62c15ca6514cd4ae5070bb.html</filename>
+    <dir>devices</dir>
+    <dir>graph</dir>
+    <file>tracktion_AbletonLink.h</file>
+    <file>tracktion_DeviceManager.h</file>
+    <file>tracktion_EditInputDevices.h</file>
+    <file>tracktion_EditPlaybackContext.h</file>
+    <file>tracktion_HostedAudioDevice.h</file>
+    <file>tracktion_LevelMeasurer.h</file>
+    <file>tracktion_MidiNoteDispatcher.h</file>
+    <file>tracktion_MPEStartTrimmer.h</file>
+    <file>tracktion_ScopedSteadyLoad.h</file>
+    <file>tracktion_TransportControl.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>players</name>
+    <path>build/tracktion_graph/tracktion_graph/players/</path>
+    <filename>dir_faa061da31a1d4cf447873028ffbbf7e.html</filename>
+    <file>tracktion_NodePlayerUtilities.h</file>
+    <file>tracktion_SimpleNodePlayer.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>plugins</name>
+    <path>build/tracktion_engine/plugins/</path>
+    <filename>dir_07322d7ac07adc82e3c508e031435bc6.html</filename>
+    <dir>airwindows</dir>
+    <dir>ARA</dir>
+    <dir>cmajor</dir>
+    <dir>effects</dir>
+    <dir>external</dir>
+    <dir>internal</dir>
+    <file>tracktion_Plugin.h</file>
+    <file>tracktion_PluginList.h</file>
+    <file>tracktion_PluginManager.h</file>
+    <file>tracktion_PluginScanHelpers.h</file>
+    <file>tracktion_PluginWindowState.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>project</name>
+    <path>build/tracktion_engine/project/</path>
+    <filename>dir_f653095d1c659f018da884041ed59f35.html</filename>
+    <dir>dawproject</dir>
+    <file>tracktion_FileBasedProject.h</file>
+    <file>tracktion_FolderBasedProject.h</file>
+    <file>tracktion_Project.h</file>
+    <file>tracktion_ProjectBase.h</file>
+    <file>tracktion_ProjectItem.h</file>
+    <file>tracktion_ProjectItemID.h</file>
+    <file>tracktion_ProjectItemRef.h</file>
+    <file>tracktion_ProjectManager.h</file>
+    <file>tracktion_ProjectUtilities.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>selection</name>
+    <path>build/tracktion_engine/selection/</path>
+    <filename>dir_4f1bee2588b6d858ac0c352fd241a192.html</filename>
+    <file>tracktion_Clipboard.h</file>
+    <file>tracktion_Selectable.h</file>
+    <file>tracktion_SelectableClass.h</file>
+    <file>tracktion_SelectionManager.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>testing</name>
+    <path>build/tracktion_engine/testing/</path>
+    <filename>dir_8e8d34d24729c62ba9db7b3bcff18d43.html</filename>
+    <file>tracktion_EnginePlayer.h</file>
+    <file>tracktion_RoundTripLatency.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>timestretch</name>
+    <path>build/tracktion_engine/timestretch/</path>
+    <filename>dir_9809e087529fdb644336f998bc074eea.html</filename>
+    <file>tracktion_BeatDetect.h</file>
+    <file>tracktion_ReadAheadTimeStretcher.h</file>
+    <file>tracktion_TempoDetect.h</file>
+    <file>tracktion_TimeStretch.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>tracks</name>
+    <path>build/tracktion_engine/model/tracks/</path>
+    <filename>dir_072375b8d90d9a5e873e97ff56ccc251.html</filename>
+    <file>tracktion_ArrangerTrack.h</file>
+    <file>tracktion_AudioTrack.h</file>
+    <file>tracktion_AutomationTrack.h</file>
+    <file>tracktion_ChordTrack.h</file>
+    <file>tracktion_ClipSlot.h</file>
+    <file>tracktion_ClipTrack.h</file>
+    <file>tracktion_EditTime.h</file>
+    <file>tracktion_FolderTrack.h</file>
+    <file>tracktion_MarkerTrack.h</file>
+    <file>tracktion_MasterTrack.h</file>
+    <file>tracktion_TempoTrack.h</file>
+    <file>tracktion_Track.h</file>
+    <file>tracktion_TrackCompManager.h</file>
+    <file>tracktion_TrackItem.h</file>
+    <file>tracktion_TrackOutput.h</file>
+    <file>tracktion_TrackUtils.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>tracktion_engine</name>
+    <path>build/tracktion_engine/</path>
+    <filename>dir_1d7a1dabc3ebaaec1ba8b9628aa9c7ed.html</filename>
+    <dir>audio_files</dir>
+    <dir>control_surfaces</dir>
+    <dir>midi</dir>
+    <dir>model</dir>
+    <dir>playback</dir>
+    <dir>plugins</dir>
+    <dir>project</dir>
+    <dir>selection</dir>
+    <dir>testing</dir>
+    <dir>timestretch</dir>
+    <dir>utilities</dir>
+  </compound>
+  <compound kind="dir">
+    <name>tracktion_graph</name>
+    <path>build/tracktion_graph/</path>
+    <filename>dir_667512c1e4bea9d789dc7a76dd4913ef.html</filename>
+    <dir>tracktion_graph</dir>
+    <dir>utilities</dir>
+  </compound>
+  <compound kind="dir">
+    <name>tracktion_graph</name>
+    <path>build/tracktion_graph/tracktion_graph/</path>
+    <filename>dir_9fecde592575f02b8cc08ba3b4002648.html</filename>
+    <dir>nodes</dir>
+    <dir>players</dir>
+    <file>tracktion_LockFreeMultiThreadedNodePlayer.h</file>
+    <file>tracktion_graph/tracktion_graph/tracktion_MultiThreadedNodePlayer.h</file>
+    <file>tracktion_Node.h</file>
+    <file>tracktion_NodePlayer.h</file>
+    <file>tracktion_NodePlayerThreadPools.h</file>
+    <file>tracktion_PlayHead.h</file>
+    <file>tracktion_PlayHeadState.h</file>
+    <file>tracktion_TestNodes.h</file>
+    <file>tracktion_graph/tracktion_graph/tracktion_TestUtilities.h</file>
+    <file>tracktion_Utility.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>types</name>
+    <path>build/tracktion_engine/control_surfaces/types/</path>
+    <filename>dir_067d254988977fa7444400bf39cf4b9b.html</filename>
+    <file>tracktion_AlphaTrack.h</file>
+    <file>tracktion_IconProG2.h</file>
+    <file>tracktion_MackieC4.h</file>
+    <file>tracktion_MackieMCU.h</file>
+    <file>tracktion_MackieXT.h</file>
+    <file>tracktion_NovationAutomap.h</file>
+    <file>tracktion_NovationRemoteSl.h</file>
+    <file>tracktion_RemoteSLCompact.h</file>
+    <file>tracktion_Tranzport.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>utilities</name>
+    <path>build/tracktion_engine/utilities/</path>
+    <filename>dir_3dcc2903db39d3b7a45435befc280011.html</filename>
+    <file>tracktion_AppFunctions.h</file>
+    <file>tracktion_AsyncFunctionUtils.h</file>
+    <file>tracktion_AtomicWrapper.h</file>
+    <file>tracktion_AudioFadeCurve.h</file>
+    <file>tracktion_AudioScratchBuffer.h</file>
+    <file>tracktion_AudioUtilities.h</file>
+    <file>tracktion_BackgroundJobs.h</file>
+    <file>tracktion_BinaryData.h</file>
+    <file>tracktion_ChannelConfiguration.h</file>
+    <file>tracktion_ChannelMap.h</file>
+    <file>tracktion_ConstrainedCachedValue.h</file>
+    <file>tracktion_CpuMeasurement.h</file>
+    <file>tracktion_CrashTracer.h</file>
+    <file>tracktion_CurveEditor.h</file>
+    <file>tracktion_Ditherer.h</file>
+    <file>tracktion_Engine.h</file>
+    <file>tracktion_EngineBehaviour.h</file>
+    <file>tracktion_Envelope.h</file>
+    <file>tracktion_ExternalPlayheadSynchroniser.h</file>
+    <file>tracktion_FileUtilities.h</file>
+    <file>tracktion_Identifiers.h</file>
+    <file>tracktion_MiscUtilities.h</file>
+    <file>tracktion_MouseHoverDetector.h</file>
+    <file>tracktion_Oscillators.h</file>
+    <file>tracktion_ParameterHelpers.h</file>
+    <file>tracktion_Pitch.h</file>
+    <file>tracktion_PluginComponent.h</file>
+    <file>tracktion_PropertyStorage.h</file>
+    <file>tracktion_SafeScopedListener.h</file>
+    <file>tracktion_ScopedListener.h</file>
+    <file>tracktion_ScreenSaverDefeater.h</file>
+    <file>tracktion_SettingID.h</file>
+    <file>tracktion_SharedTimer.h</file>
+    <file>tracktion_Spline.h</file>
+    <file>tracktion_TemporaryFileManager.h</file>
+    <file>tracktion_engine/utilities/tracktion_TestUtilities.h</file>
+    <file>tracktion_engine/utilities/tracktion_Threads.h</file>
+    <file>tracktion_Types.h</file>
+    <file>tracktion_UIBehaviour.h</file>
+    <file>tracktion_ValueTreeUtilities.h</file>
+  </compound>
+  <compound kind="dir">
+    <name>utilities</name>
+    <path>build/tracktion_graph/utilities/</path>
+    <filename>dir_ef5d148294abea9c8a2750fa522f52a4.html</filename>
+    <file>tracktion_AudioBufferPool.h</file>
+    <file>tracktion_AudioBufferStack.h</file>
+    <file>tracktion_graph/utilities/tracktion_AudioFifo.h</file>
+    <file>tracktion_GlueCode.h</file>
+    <file>tracktion_LatencyProcessor.h</file>
+    <file>tracktion_LockFreeObject.h</file>
+    <file>tracktion_MidiMessageArray.h</file>
+    <file>tracktion_MidiMessageWithSource.h</file>
+    <file>tracktion_PerformanceMeasurement.h</file>
+    <file>tracktion_RealTimeSpinLock.h</file>
+    <file>tracktion_Semaphore.h</file>
+    <file>tracktion_graph/utilities/tracktion_Threads.h</file>
   </compound>
 </tagfile>

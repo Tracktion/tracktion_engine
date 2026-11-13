@@ -1,67 +1,67 @@
 <map id="engine::MacroParameterElement" name="engine::MacroParameterElement">
-<area shape="rect" id="Node000001" title="Base class for elements which can contain macro parameters." alt="" coords="5,648,240,673"/>
-<area shape="rect" id="Node000002" href="$classengine_1_1AudioTrack.html" title=" " alt="" coords="313,573,459,599"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,641,287,607,331,596,332,601,289,613,177,646"/>
-<area shape="rect" id="Node000003" href="$structengine_1_1Edit_1_1GlobalMacros.html" title="Holds the global Macros for the Edit." alt="" coords="288,623,484,648"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="253,645,288,642,288,647,254,651"/>
-<area shape="rect" id="Node000004" href="$classengine_1_1Plugin.html" title="Base class for all audio plugins in the Tracktion Engine." alt="" coords="329,672,443,697"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="254,670,329,677,328,682,253,675"/>
-<area shape="rect" id="Node000033" href="$classengine_1_1RackType.html" title=" " alt="" coords="318,721,454,747"/>
-<area shape="poly" id="edge32_Node000001_Node000033" title=" " alt="" coords="180,675,289,706,336,719,334,724,287,711,179,680"/>
-<area shape="rect" id="Node000005" href="$classengine_1_1AirWindowsPlugin.html" title=" " alt="" coords="551,5,742,31"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="455,675,470,668,482,658,496,635,505,606,513,533,511,445,504,350,498,255,496,167,499,128,505,93,515,64,530,40,550,25,553,29,534,44,520,66,510,95,504,129,501,167,503,255,510,350,517,445,519,533,510,607,501,637,486,661,473,673,458,680"/>
-<area shape="rect" id="Node000006" href="$classengine_1_1AuxReturnPlugin.html" title=" " alt="" coords="555,55,738,80"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="455,675,470,668,482,658,495,637,503,610,511,543,510,462,504,375,499,287,498,206,507,138,516,111,530,89,554,73,557,77,534,93,521,113,512,140,503,207,504,287,510,374,516,462,517,543,509,612,499,639,486,661,473,673,457,680"/>
-<area shape="rect" id="Node000007" href="$classengine_1_1AuxSendPlugin.html" title=" " alt="" coords="561,104,732,129"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="456,675,470,668,482,658,494,639,502,615,510,553,509,479,505,399,500,320,500,246,508,184,517,159,530,139,544,127,560,119,562,124,547,132,534,142,522,161,514,185,505,246,505,319,510,399,514,479,515,553,507,616,498,641,486,661,473,672,458,680"/>
-<area shape="rect" id="Node000008" href="$classengine_1_1ChannelMapperPlugin.html" title="A plugin that applies an explicit channel mapping." alt="" coords="539,153,755,179"/>
-<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="456,675,470,668,482,658,503,628,517,599,524,570,527,541,520,482,504,424,489,366,482,307,485,277,493,247,508,218,530,188,544,177,547,181,534,192,512,221,498,249,490,278,487,307,494,365,509,423,525,481,532,541,530,571,522,601,508,631,486,661,473,672,458,680"/>
-<area shape="rect" id="Node000009" href="$classengine_1_1ChorusPlugin.html" title=" " alt="" coords="567,203,726,228"/>
-<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="455,675,470,668,482,658,501,631,514,605,521,579,523,553,517,501,504,449,491,396,486,344,489,317,496,290,510,264,530,237,547,224,566,216,568,221,549,229,534,241,514,267,501,292,494,318,491,344,496,395,509,448,523,500,528,553,526,580,519,607,506,634,486,661,473,672,458,680"/>
-<area shape="rect" id="Node000010" href="$classengine_1_1CompressorPlugin.html" title=" " alt="" coords="551,252,743,277"/>
-<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="455,675,470,668,482,658,499,635,510,612,517,589,519,566,515,520,504,474,494,427,490,380,493,357,500,334,512,310,530,287,549,273,552,277,534,291,516,313,505,336,498,358,495,381,499,426,509,472,520,519,525,566,522,590,515,614,504,637,486,661,473,672,458,680"/>
-<area shape="rect" id="Node000011" href="$classengine_1_1DelayPlugin.html" title=" " alt="" coords="571,301,723,327"/>
-<area shape="poly" id="edge10_Node000004_Node000011" title=" " alt="" coords="455,675,470,668,482,657,497,638,507,618,516,578,513,539,504,498,496,458,494,417,503,377,514,356,530,336,548,322,569,314,571,319,551,327,534,340,518,359,508,379,499,418,501,457,510,497,518,538,521,579,512,620,502,641,486,661,473,672,458,680"/>
-<area shape="rect" id="Node000012" href="$classengine_1_1EqualiserPlugin.html" title=" " alt="" coords="559,351,734,376"/>
-<area shape="poly" id="edge11_Node000004_Node000012" title=" " alt="" coords="455,675,470,667,482,658,504,624,512,591,511,557,505,523,499,489,498,454,506,420,530,385,558,368,561,372,534,389,511,422,503,455,504,488,510,522,516,557,517,591,509,626,486,661,473,672,458,679"/>
-<area shape="rect" id="Node000013" href="$classengine_1_1ExternalPlugin.html" title="Wraps a juce::AudioPluginInstance (VST2, VST3, AU, etc.) as a tracktion Plugin." alt="" coords="563,400,731,425"/>
-<area shape="poly" id="edge12_Node000004_Node000013" title=" " alt="" coords="455,674,470,667,482,658,501,631,508,603,508,576,505,548,501,519,501,491,510,463,530,435,545,424,561,416,563,421,547,428,534,439,515,465,507,492,506,519,510,547,514,575,514,604,506,633,486,661,473,672,457,679"/>
-<area shape="rect" id="Node000014" href="$classengine_1_1FourOscPlugin.html" title=" " alt="" coords="563,449,730,475"/>
-<area shape="poly" id="edge13_Node000004_Node000014" title=" " alt="" coords="455,674,482,657,498,637,505,616,505,572,505,528,513,506,530,484,545,473,562,466,564,471,548,478,534,488,518,508,511,529,510,572,510,617,502,639,486,661,458,678"/>
-<area shape="rect" id="Node000015" href="$classengine_1_1FreezePointPlugin.html" title=" " alt="" coords="551,499,742,524"/>
-<area shape="poly" id="edge14_Node000004_Node000015" title=" " alt="" coords="455,673,482,657,495,643,501,628,505,597,509,565,517,549,530,533,549,521,552,526,534,537,521,552,514,566,510,597,506,629,499,646,486,661,458,678"/>
-<area shape="rect" id="Node000016" href="$classengine_1_1ImpulseResponsePlugin.html" title="ImpulseResponsePlugin that loads an impulse response and applies it the audio stream." alt="" coords="532,548,761,573"/>
-<area shape="poly" id="edge15_Node000004_Node000016" title=" " alt="" coords="456,671,482,657,498,640,505,621,513,601,530,583,552,571,554,576,534,587,518,604,510,623,503,642,486,661,458,676"/>
-<area shape="rect" id="Node000017" href="$classengine_1_1InsertPlugin.html" title=" " alt="" coords="571,597,722,623"/>
-<area shape="poly" id="edge16_Node000004_Node000017" title=" " alt="" coords="456,666,483,657,507,644,531,632,570,620,571,625,533,636,509,649,485,662,458,671"/>
-<area shape="rect" id="Node000018" href="$classengine_1_1LatencyPlugin.html" title="A test plugin that introduces latency to the incoming signal." alt="" coords="564,647,729,672"/>
-<area shape="poly" id="edge17_Node000004_Node000018" title=" " alt="" coords="457,675,564,665,564,670,458,680"/>
-<area shape="rect" id="Node000019" href="$classengine_1_1LevelMeterPlugin.html" title=" " alt="" coords="553,696,740,721"/>
-<area shape="poly" id="edge18_Node000004_Node000019" title=" " alt="" coords="458,689,553,697,553,703,457,694"/>
-<area shape="rect" id="Node000020" href="$classengine_1_1LowPassPlugin.html" title=" " alt="" coords="562,745,731,771"/>
-<area shape="poly" id="edge19_Node000004_Node000020" title=" " alt="" coords="458,697,485,706,509,718,533,730,576,743,575,748,531,735,507,723,483,711,456,703"/>
-<area shape="rect" id="Node000021" href="$classengine_1_1MidiModifierPlugin.html" title=" " alt="" coords="549,795,744,820"/>
-<area shape="poly" id="edge20_Node000004_Node000021" title=" " alt="" coords="458,693,486,707,503,725,510,744,518,763,534,780,558,792,555,797,530,784,513,766,505,746,498,728,482,711,456,698"/>
-<area shape="rect" id="Node000022" href="$classengine_1_1MidiPatchBayPlugin.html" title=" " alt="" coords="545,844,748,869"/>
-<area shape="poly" id="edge21_Node000004_Node000022" title=" " alt="" coords="458,691,486,707,499,722,506,738,510,770,514,801,521,815,534,829,553,842,551,846,530,833,517,818,509,802,505,771,501,739,495,725,482,711,455,696"/>
-<area shape="rect" id="Node000023" href="$classengine_1_1PatchBayPlugin.html" title=" " alt="" coords="559,893,734,919"/>
-<area shape="poly" id="edge22_Node000004_Node000023" title=" " alt="" coords="458,690,486,707,502,728,510,751,510,795,511,838,518,859,534,879,561,895,558,900,530,883,513,861,506,839,505,795,505,752,498,731,482,711,455,695"/>
-<area shape="rect" id="Node000024" href="$classengine_1_1PhaserPlugin.html" title=" " alt="" coords="567,943,726,968"/>
-<area shape="poly" id="edge23_Node000004_Node000024" title=" " alt="" coords="457,689,473,696,486,707,506,735,514,763,514,792,510,820,507,848,507,875,515,902,534,928,549,940,568,948,566,952,547,944,530,932,510,904,502,876,501,847,505,819,509,791,508,764,501,737,482,711,470,701,455,694"/>
-<area shape="rect" id="Node000025" href="$classengine_1_1PitchShiftPlugin.html" title=" " alt="" coords="559,992,734,1017"/>
-<area shape="poly" id="edge24_Node000004_Node000025" title=" " alt="" coords="458,689,473,696,486,707,509,741,517,776,516,811,510,845,504,879,503,912,512,945,534,977,561,995,558,999,530,981,507,947,498,913,499,878,505,844,511,810,512,776,504,743,482,710,470,701,455,694"/>
-<area shape="rect" id="Node000026" href="$classengine_1_1RackInstance.html" title=" " alt="" coords="566,1041,727,1067"/>
-<area shape="poly" id="edge25_Node000004_Node000026" title=" " alt="" coords="457,689,473,696,486,707,502,727,512,748,521,789,519,829,510,870,502,910,499,949,508,988,519,1007,534,1027,549,1039,567,1047,565,1051,546,1043,530,1031,514,1010,503,990,494,949,497,909,505,869,513,829,516,789,507,750,497,730,482,711,470,700,455,694"/>
-<area shape="rect" id="Node000027" href="$classengine_1_1ReverbPlugin.html" title=" " alt="" coords="567,1091,727,1116"/>
-<area shape="poly" id="edge26_Node000004_Node000027" title=" " alt="" coords="458,689,473,696,486,707,504,730,516,754,522,778,525,801,521,848,510,894,499,940,496,986,498,1009,505,1031,517,1054,534,1076,549,1088,567,1096,565,1101,546,1093,530,1080,512,1056,500,1033,493,1010,490,986,494,940,505,893,516,847,520,801,517,779,511,756,499,733,482,711,470,700,455,693"/>
-<area shape="rect" id="Node000028" href="$classengine_1_1SamplerPlugin.html" title=" " alt="" coords="563,1140,731,1165"/>
-<area shape="poly" id="edge27_Node000004_Node000028" title=" " alt="" coords="458,688,473,696,486,707,506,734,519,760,526,787,529,814,523,867,510,919,497,971,492,1023,494,1049,502,1074,514,1100,534,1125,547,1137,564,1144,561,1149,545,1141,530,1129,510,1103,497,1076,489,1050,486,1023,492,970,505,918,518,866,523,814,521,788,514,762,501,736,482,710,470,700,455,693"/>
-<area shape="rect" id="Node000029" href="$classengine_1_1TextPlugin.html" title=" " alt="" coords="576,1189,717,1215"/>
-<area shape="poly" id="edge28_Node000004_Node000029" title=" " alt="" coords="458,688,473,696,486,707,508,737,522,767,530,797,532,826,525,885,510,944,495,1002,488,1060,490,1089,498,1117,512,1146,534,1175,553,1189,577,1198,575,1203,551,1194,530,1179,508,1149,493,1119,485,1089,483,1060,489,1001,505,943,520,884,527,826,525,798,517,769,503,740,482,710,470,700,455,693"/>
-<area shape="rect" id="Node000030" href="$classengine_1_1ToneGeneratorPlugin.html" title=" " alt="" coords="542,1239,751,1264"/>
-<area shape="poly" id="edge29_Node000004_Node000030" title=" " alt="" coords="458,688,473,696,486,707,499,727,507,752,515,814,515,888,510,968,506,1047,506,1121,514,1182,522,1206,534,1224,549,1236,545,1241,530,1228,517,1208,509,1183,500,1121,500,1047,505,968,509,888,510,814,502,753,494,729,482,710,470,700,456,693"/>
-<area shape="rect" id="Node000031" href="$classengine_1_1VCAPlugin.html" title="The VCA plugin sits on a folder track to control the overall level of all the volume/pan plugins in i..." alt="" coords="576,1288,717,1313"/>
-<area shape="poly" id="edge30_Node000004_Node000031" title=" " alt="" coords="458,688,473,696,486,707,500,729,509,756,517,824,516,905,510,993,505,1080,504,1160,512,1227,521,1253,534,1274,553,1288,577,1296,575,1302,551,1293,530,1277,516,1255,507,1228,498,1160,499,1079,505,992,511,905,512,825,504,757,495,731,482,710,470,700,456,693"/>
-<area shape="rect" id="Node000032" href="$classengine_1_1VolumeAndPanPlugin.html" title="The built&#45;in Tracktion volume/pan plugin." alt="" coords="541,1337,752,1363"/>
-<area shape="poly" id="edge31_Node000004_Node000032" title=" " alt="" coords="458,688,473,696,486,707,501,731,510,760,519,834,517,922,510,1017,503,1112,502,1199,510,1272,520,1301,534,1323,549,1335,545,1339,530,1326,515,1303,505,1273,496,1200,498,1112,505,1017,512,922,514,835,505,762,496,733,482,710,470,700,455,693"/>
+<area shape="rect" id="Node000001" title="Base class for elements which can contain macro parameters." alt="" coords="5,683,240,710"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1AudioTrack.html" title=" " alt="" coords="313,604,458,632"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="180,675,287,642,332,630,328,634,288,647,184,679"/>
+<area shape="rect" id="Node000003" href="$structengine_1_1Edit_1_1GlobalMacros.html" title="Holds the global Macros for the Edit." alt="" coords="288,656,483,684"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="254,681,289,678,285,681,257,685"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1Plugin.html" title="Base class for all audio plugins in the Tracktion Engine." alt="" coords="329,708,442,736"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="254,707,330,715,326,718,257,712"/>
+<area shape="rect" id="Node000033" href="$classengine_1_1RackType.html" title=" " alt="" coords="318,760,453,788"/>
+<area shape="poly" id="edge32_Node000001_Node000033" title=" " alt="" coords="183,713,288,745,333,758,329,761,287,750,185,718"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1AirWindowsPlugin.html" title=" " alt="" coords="550,5,740,33"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="455,711,470,704,481,693,495,670,505,639,511,603,513,562,511,470,504,370,496,270,494,178,497,137,503,100,514,69,529,44,551,29,548,33,533,48,518,71,508,101,502,137,499,178,501,270,509,370,516,469,519,562,516,603,510,640,500,672,485,697,473,708,459,715"/>
+<area shape="rect" id="Node000006" href="$classengine_1_1AuxReturnPlugin.html" title=" " alt="" coords="554,57,736,85"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="455,711,470,704,481,693,494,672,503,644,511,573,510,488,504,396,497,304,496,219,505,148,515,119,529,96,555,79,552,83,533,100,520,121,510,149,501,219,503,304,509,396,515,488,517,573,508,645,499,674,485,697,473,708,459,715"/>
+<area shape="rect" id="Node000007" href="$classengine_1_1AuxSendPlugin.html" title=" " alt="" coords="560,109,730,137"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="455,711,470,704,481,693,493,674,502,648,509,583,509,506,504,422,499,338,498,261,507,195,516,169,529,148,543,136,561,129,558,132,546,141,533,152,521,171,512,196,504,261,504,338,509,422,514,506,515,584,507,649,498,676,485,697,473,708,459,715"/>
+<area shape="rect" id="Node000008" href="$classengine_1_1ChannelMapperPlugin.html" title="A plugin that applies an explicit channel mapping." alt="" coords="538,161,753,189"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="455,711,470,704,481,693,492,676,500,653,508,594,508,524,504,448,500,372,500,302,508,243,517,219,529,200,547,187,544,192,533,204,522,221,514,244,506,302,505,372,509,448,513,524,513,594,505,654,497,678,485,697,473,708,459,715"/>
+<area shape="rect" id="Node000009" href="$classengine_1_1ChorusPlugin.html" title=" " alt="" coords="566,213,724,241"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="455,711,470,704,481,693,501,666,514,638,521,611,523,584,517,529,503,474,489,419,484,364,486,336,494,308,508,280,529,252,546,239,568,231,564,234,548,243,533,256,513,283,499,310,492,337,489,364,495,418,509,473,523,528,529,584,526,612,519,640,505,668,485,697,473,708,459,715"/>
+<area shape="rect" id="Node000010" href="$classengine_1_1CompressorPlugin.html" title=" " alt="" coords="550,265,741,293"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="455,711,469,703,481,693,499,669,510,645,517,621,520,597,515,549,503,500,492,452,488,403,491,378,498,353,510,329,529,304,551,289,548,294,533,308,515,332,503,355,496,379,493,403,497,451,509,499,520,548,525,597,522,622,515,647,503,672,485,697,472,708,459,715"/>
+<area shape="rect" id="Node000011" href="$classengine_1_1DelayPlugin.html" title=" " alt="" coords="570,317,721,345"/>
+<area shape="poly" id="edge10_Node000004_Node000011" title=" " alt="" coords="455,711,481,693,497,672,507,652,516,610,513,568,504,526,495,484,492,442,501,399,512,377,529,356,547,342,571,334,567,338,550,347,533,360,517,380,506,401,497,442,500,483,509,525,518,568,521,610,512,653,501,675,485,697,459,715"/>
+<area shape="rect" id="Node000012" href="$classengine_1_1EqualiserPlugin.html" title=" " alt="" coords="558,369,732,397"/>
+<area shape="poly" id="edge11_Node000004_Node000012" title=" " alt="" coords="455,711,481,693,504,658,512,623,510,588,504,552,497,516,496,480,505,444,529,408,560,390,557,394,533,412,510,446,501,481,503,516,509,551,515,587,517,624,509,660,485,697,459,715"/>
+<area shape="rect" id="Node000013" href="$classengine_1_1ExternalPlugin.html" title="Wraps a juce::AudioPluginInstance (VST2, VST3, AU, etc.) as a tracktion Plugin." alt="" coords="562,421,729,449"/>
+<area shape="poly" id="edge12_Node000004_Node000013" title=" " alt="" coords="455,711,481,693,500,665,508,636,508,608,504,578,500,549,500,519,508,489,529,460,543,449,563,441,559,445,546,453,533,464,513,492,505,520,505,548,509,578,513,607,513,637,505,667,485,697,458,714"/>
+<area shape="rect" id="Node000014" href="$classengine_1_1FourOscPlugin.html" title=" " alt="" coords="562,473,728,501"/>
+<area shape="poly" id="edge13_Node000004_Node000014" title=" " alt="" coords="455,710,481,693,497,672,504,650,504,604,502,581,504,558,512,535,529,512,544,501,564,494,560,497,547,505,533,516,517,537,509,559,508,581,509,604,509,650,502,674,485,697,459,714"/>
+<area shape="rect" id="Node000015" href="$classengine_1_1FreezePointPlugin.html" title=" " alt="" coords="550,525,740,553"/>
+<area shape="poly" id="edge14_Node000004_Node000015" title=" " alt="" coords="455,709,481,693,494,678,501,662,504,630,508,597,515,580,529,564,552,551,548,555,533,568,520,583,513,598,509,630,506,664,498,681,485,697,459,713"/>
+<area shape="rect" id="Node000016" href="$classengine_1_1ImpulseResponsePlugin.html" title="ImpulseResponsePlugin that loads an impulse response and applies it the audio stream." alt="" coords="531,577,759,605"/>
+<area shape="poly" id="edge15_Node000004_Node000016" title=" " alt="" coords="455,707,481,693,497,675,504,655,512,635,529,616,555,604,552,607,533,620,516,638,509,657,502,678,485,697,458,711"/>
+<area shape="rect" id="Node000017" href="$classengine_1_1InsertPlugin.html" title=" " alt="" coords="570,629,720,657"/>
+<area shape="poly" id="edge16_Node000004_Node000017" title=" " alt="" coords="455,702,482,693,506,680,530,667,573,656,569,659,532,672,508,685,484,698,458,707"/>
+<area shape="rect" id="Node000018" href="$classengine_1_1LatencyPlugin.html" title="A test plugin that introduces latency to the incoming signal." alt="" coords="563,681,727,709"/>
+<area shape="poly" id="edge17_Node000004_Node000018" title=" " alt="" coords="456,712,565,702,561,705,459,717"/>
+<area shape="rect" id="Node000019" href="$classengine_1_1LevelMeterPlugin.html" title=" " alt="" coords="552,733,738,761"/>
+<area shape="poly" id="edge18_Node000004_Node000019" title=" " alt="" coords="457,726,554,737,549,739,459,731"/>
+<area shape="rect" id="Node000020" href="$classengine_1_1LowPassPlugin.html" title=" " alt="" coords="561,785,729,813"/>
+<area shape="poly" id="edge19_Node000004_Node000020" title=" " alt="" coords="456,737,484,746,508,758,532,770,574,784,569,786,530,775,506,763,482,751,457,742"/>
+<area shape="rect" id="Node000021" href="$classengine_1_1MidiModifierPlugin.html" title=" " alt="" coords="548,837,742,865"/>
+<area shape="poly" id="edge20_Node000004_Node000021" title=" " alt="" coords="456,732,485,746,502,766,509,786,517,805,533,822,556,836,551,837,529,827,512,808,504,788,497,769,481,751,457,737"/>
+<area shape="rect" id="Node000022" href="$classengine_1_1MidiPatchBayPlugin.html" title=" " alt="" coords="544,889,746,917"/>
+<area shape="poly" id="edge21_Node000004_Node000022" title=" " alt="" coords="457,730,485,746,498,763,506,779,509,813,513,845,520,860,533,874,552,888,547,889,529,879,515,863,508,846,504,813,500,781,494,766,481,751,458,735"/>
+<area shape="rect" id="Node000023" href="$classengine_1_1PatchBayPlugin.html" title=" " alt="" coords="558,941,732,969"/>
+<area shape="poly" id="edge22_Node000004_Node000023" title=" " alt="" coords="456,729,485,747,502,770,509,793,509,839,508,862,509,884,517,905,533,927,561,945,555,946,529,930,512,908,504,885,502,862,504,839,504,794,497,772,481,750,457,734"/>
+<area shape="rect" id="Node000024" href="$classengine_1_1PhaserPlugin.html" title=" " alt="" coords="566,993,724,1021"/>
+<area shape="poly" id="edge23_Node000004_Node000024" title=" " alt="" coords="456,729,485,747,505,776,513,806,513,836,509,865,505,894,505,923,513,951,533,979,549,991,569,1001,563,1001,546,995,529,982,508,953,500,924,500,894,504,865,508,836,508,807,500,779,481,750,457,734"/>
+<area shape="rect" id="Node000025" href="$classengine_1_1PitchShiftPlugin.html" title=" " alt="" coords="558,1045,732,1073"/>
+<area shape="poly" id="edge24_Node000004_Node000025" title=" " alt="" coords="456,728,485,747,509,783,517,820,515,856,509,892,503,927,501,962,510,996,533,1031,560,1050,555,1051,529,1034,505,998,496,962,497,926,504,891,510,855,512,820,504,785,481,750,457,734"/>
+<area shape="rect" id="Node000026" href="$classengine_1_1RackInstance.html" title=" " alt="" coords="565,1097,725,1125"/>
+<area shape="poly" id="edge25_Node000004_Node000026" title=" " alt="" coords="457,728,485,747,501,768,512,790,521,833,518,876,509,918,500,959,497,1001,506,1042,517,1062,533,1083,548,1095,567,1105,562,1105,545,1099,529,1086,513,1065,501,1044,492,1001,495,959,504,917,512,875,516,833,507,792,497,771,481,750,457,733"/>
+<area shape="rect" id="Node000027" href="$classengine_1_1ReverbPlugin.html" title=" " alt="" coords="566,1149,725,1177"/>
+<area shape="poly" id="edge26_Node000004_Node000027" title=" " alt="" coords="456,728,472,736,485,747,503,772,515,797,522,822,525,846,520,895,509,944,497,992,493,1040,496,1063,503,1087,515,1111,533,1135,548,1147,568,1157,562,1158,545,1151,529,1138,510,1114,498,1089,491,1064,488,1040,492,991,503,943,515,895,519,846,517,823,510,799,499,774,481,750,469,740,457,733"/>
+<area shape="rect" id="Node000028" href="$classengine_1_1SamplerPlugin.html" title=" " alt="" coords="562,1201,729,1229"/>
+<area shape="poly" id="edge27_Node000004_Node000028" title=" " alt="" coords="456,728,473,736,485,747,505,775,519,803,526,832,529,860,522,915,509,970,495,1024,489,1079,492,1106,499,1132,513,1160,533,1187,546,1198,564,1208,559,1208,543,1202,529,1190,508,1162,494,1134,486,1106,484,1079,490,1024,503,969,517,914,523,860,521,833,514,805,501,778,481,750,470,740,457,733"/>
+<area shape="rect" id="Node000029" href="$classengine_1_1TextPlugin.html" title=" " alt="" coords="575,1253,715,1281"/>
+<area shape="poly" id="edge28_Node000004_Node000029" title=" " alt="" coords="456,728,473,736,485,747,497,766,505,790,513,849,513,919,509,995,505,1071,506,1140,514,1198,522,1221,533,1239,552,1253,577,1264,572,1264,549,1258,529,1242,517,1223,508,1200,500,1141,500,1071,504,995,508,919,507,849,500,791,492,768,481,750,470,740,458,733"/>
+<area shape="rect" id="Node000030" href="$classengine_1_1ToneGeneratorPlugin.html" title=" " alt="" coords="541,1305,749,1333"/>
+<area shape="poly" id="edge29_Node000004_Node000030" title=" " alt="" coords="456,728,473,736,485,747,498,768,507,794,515,860,514,938,509,1021,504,1105,504,1182,512,1246,521,1271,533,1291,548,1305,543,1304,529,1294,516,1273,507,1247,498,1182,499,1105,504,1021,509,937,509,860,502,795,493,770,481,750,470,740,458,733"/>
+<area shape="rect" id="Node000031" href="$classengine_1_1VCAPlugin.html" title="The VCA plugin sits on a folder track to control the overall level of all the volume/pan plugins in i..." alt="" coords="575,1357,715,1385"/>
+<area shape="poly" id="edge30_Node000004_Node000031" title=" " alt="" coords="456,728,473,736,485,747,499,770,508,799,517,871,515,956,509,1047,503,1139,502,1223,510,1294,520,1321,533,1343,552,1358,577,1369,572,1368,549,1362,529,1346,515,1323,505,1295,496,1223,497,1139,504,1047,510,955,511,871,503,800,494,772,481,750,470,740,458,733"/>
+<area shape="rect" id="Node000032" href="$classengine_1_1VolumeAndPanPlugin.html" title="The built&#45;in Tracktion volume/pan plugin." alt="" coords="540,1409,750,1437"/>
+<area shape="poly" id="edge31_Node000004_Node000032" title=" " alt="" coords="456,728,473,736,485,747,500,772,510,803,516,840,519,881,516,974,509,1073,501,1173,500,1265,502,1305,508,1341,518,1371,533,1395,548,1410,543,1408,529,1398,514,1373,503,1342,497,1306,494,1265,496,1172,504,1073,511,973,513,881,511,841,505,805,495,774,481,750,470,740,458,733"/>
 </map>

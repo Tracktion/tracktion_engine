@@ -82,7 +82,7 @@ var searchData=
   ['splitstatus_79',['SplitStatus',['../structengine_1_1LaunchHandle_1_1SplitStatus.html',1,'engine::LaunchHandle']]],
   ['splittimelinerange_80',['SplitTimelineRange',['../structgraph_1_1SplitTimelineRange.html',1,'graph']]],
   ['stage_81',['Stage',['../structengine_1_1BreakpointOscillatorModifier_1_1Stage.html',1,'engine::BreakpointOscillatorModifier']]],
-  ['statistics_82',['statistics',['../structgraph_1_1PerformanceMeasurement_1_1Statistics.html',1,'graph::PerformanceMeasurement::Statistics'],['../structengine_1_1Renderer_1_1Statistics.html',1,'engine::Renderer::Statistics']]],
+  ['statistics_82',['Statistics',['../structengine_1_1Renderer_1_1Statistics.html',1,'engine::Renderer::Statistics'],['../structgraph_1_1PerformanceMeasurement_1_1Statistics.html',1,'graph::PerformanceMeasurement::Statistics']]],
   ['stepclip_83',['StepClip',['../classengine_1_1StepClip.html',1,'engine']]],
   ['stepmodifier_84',['StepModifier',['../classengine_1_1StepModifier.html',1,'engine']]],
   ['stepvolumeeffect_85',['StepVolumeEffect',['../structengine_1_1StepVolumeEffect.html',1,'engine']]],

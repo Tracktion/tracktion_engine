@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['vst_5fstrncpy_0',['vst_strncpy',['../tracktion__AirWindowsBase_8h.html#ad2237e40a2487b7032283254afde42f6',1,'tracktion_AirWindowsBase.h']]],
-  ['vstint32_1',['VstInt32',['../tracktion__AirWindowsBase_8h.html#a5f77bb76f49c387e79ff210e6cb95c2c',1,'tracktion_AirWindowsBase.h']]],
-  ['vstplugcategory_2',['VstPlugCategory',['../tracktion__AirWindowsBase_8h.html#a519cbcbd6e9bfba49d862592d2321db1',1,'tracktion_AirWindowsBase.h']]]
+  ['max_5fbpm_5frange_0',['MAX_BPM_RANGE',['../tracktion__TempoDetect_8h.html#a1526b44e1047ec418928cbd4fbed9315',1,'tracktion_TempoDetect.h']]],
+  ['max_5fbpm_5fvalid_1',['MAX_BPM_VALID',['../tracktion__TempoDetect_8h.html#a44eea6dbcbd1c287191b5f33ad2e2866',1,'tracktion_TempoDetect.h']]],
+  ['min_5fbpm_2',['MIN_BPM',['../tracktion__TempoDetect_8h.html#a98f35e97e71593c8e230d6f54be67744',1,'tracktion_TempoDetect.h']]]
 ];

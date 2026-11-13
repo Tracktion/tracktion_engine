@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['edit_0',['edit',['../classengine_1_1ProjectItem.html#a623aa1325194ecfee996f3dca418eb58ade95b43bceeb4b998aed4aed5cef1ae7',1,'engine::ProjectItem::edit'],['../classengine_1_1TrackItem.html#ab919abf28cd728b3e0a752886412d323ade95b43bceeb4b998aed4aed5cef1ae7',1,'engine::TrackItem::edit']]],
+  ['edit_0',['edit',['../classengine_1_1TrackItem.html#ab919abf28cd728b3e0a752886412d323ade95b43bceeb4b998aed4aed5cef1ae7',1,'engine::TrackItem::edit'],['../classengine_1_1ProjectItem.html#a623aa1325194ecfee996f3dca418eb58ade95b43bceeb4b998aed4aed5cef1ae7',1,'engine::ProjectItem::edit']]],
   ['editclip_1',['editClip',['../classengine_1_1RenderOptions.html#a6053db83f0df04378b260944ae89e437ae51779bb4944e35c733f0d34f237c90e',1,'engine::RenderOptions']]],
   ['editclippassthroughfilters_2',['editClipPassThroughFilters',['../namespaceengine.html#a37f708109fdbdb9329a540048b1a040fa13e9ee05f30bd1994fa972300ba96f5a',1,'engine']]],
   ['editcliprealtime_3',['editClipRealtime',['../namespaceengine.html#a37f708109fdbdb9329a540048b1a040fa2501b72cee1761c35c2e8b90d2741be3',1,'engine']]],
@@ -15,8 +15,8 @@ var searchData=
   ['effectplugins_12',['effectPlugins',['../classengine_1_1Plugin.html#aff4e17994341b7283990d084aba4f16fa3a8e78d30b23e2d43dd5ad82426cb506',1,'engine::Plugin']]],
   ['eightbars_13',['eightBars',['../namespaceengine.html#a94948ddae3002fe7a19785ca3c4b2906af2deebc8413aae20409eeb10bbd9431c',1,'engine']]],
   ['eighth_14',['eighth',['../namespaceengine_1_1ModifierCommon.html#a482f6d6a86c24f00bbbad1413cbb1513a86a8e4b5b588cd48d9a9694b3ab813c6',1,'engine::ModifierCommon::eighth'],['../namespaceengine.html#a94948ddae3002fe7a19785ca3c4b2906aa76a3a8b8cba2cbe41bd4310b12ad2db',1,'engine::eighth']]],
-  ['eighthd_15',['eighthd',['../namespaceengine_1_1ModifierCommon.html#a482f6d6a86c24f00bbbad1413cbb1513aefcdc152b87a44461c5d70c4e7d4f830',1,'engine::ModifierCommon::eighthD'],['../namespaceengine.html#a94948ddae3002fe7a19785ca3c4b2906a5aa4b6df735b84a7a115dd747ca9d8a2',1,'engine::eighthD']]],
-  ['eightht_16',['eightht',['../namespaceengine_1_1ModifierCommon.html#a482f6d6a86c24f00bbbad1413cbb1513a709cbeea0198d45acb2c7e05eb09c5d2',1,'engine::ModifierCommon::eighthT'],['../namespaceengine.html#a94948ddae3002fe7a19785ca3c4b2906a73910ed0856fbae6996c1fe8cdccc131',1,'engine::eighthT']]],
+  ['eighthd_15',['eighthD',['../namespaceengine_1_1ModifierCommon.html#a482f6d6a86c24f00bbbad1413cbb1513aefcdc152b87a44461c5d70c4e7d4f830',1,'engine::ModifierCommon::eighthD'],['../namespaceengine.html#a94948ddae3002fe7a19785ca3c4b2906a5aa4b6df735b84a7a115dd747ca9d8a2',1,'engine::eighthD']]],
+  ['eightht_16',['eighthT',['../namespaceengine_1_1ModifierCommon.html#a482f6d6a86c24f00bbbad1413cbb1513a709cbeea0198d45acb2c7e05eb09c5d2',1,'engine::ModifierCommon::eighthT'],['../namespaceengine.html#a94948ddae3002fe7a19785ca3c4b2906a73910ed0856fbae6996c1fe8cdccc131',1,'engine::eighthT']]],
   ['eightstepsdown_17',['eightStepsDown',['../classengine_1_1LFOModifier.html#acf8b502cde2f42f3b34d53c9efac0a9daac373bf0f41823ac1d954fd9716580c8',1,'engine::LFOModifier']]],
   ['eightstepsup_18',['eightStepsUp',['../classengine_1_1LFOModifier.html#acf8b502cde2f42f3b34d53c9efac0a9da181f7896bda6c22d3eb2f0cf5ab5b95c',1,'engine::LFOModifier']]],
   ['elastiquedirectefficient_19',['elastiqueDirectEfficient',['../classengine_1_1TimeStretcher.html#a3a3010b423f2d331fbf159f8ed26d989a3333c98d427c83926c35b935e816703a',1,'engine::TimeStretcher']]],

@@ -1,7 +1,7 @@
 <map id="engine::VSTXML::Base" name="engine::VSTXML::Base">
-<area shape="rect" id="Node000001" title=" " alt="" coords="109,5,276,31"/>
-<area shape="rect" id="Node000002" href="$structengine_1_1VSTXML_1_1Group.html" title=" " alt="" coords="5,79,180,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,41,111,81,107,76,164,36"/>
-<area shape="rect" id="Node000003" href="$structengine_1_1VSTXML_1_1Param.html" title=" " alt="" coords="205,79,381,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="221,36,278,76,275,81,218,41"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="108,5,274,33"/>
+<area shape="rect" id="Node000002" href="$structengine_1_1VSTXML_1_1Group.html" title=" " alt="" coords="5,81,179,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,42,111,83,108,78,158,43"/>
+<area shape="rect" id="Node000003" href="$structengine_1_1VSTXML_1_1Param.html" title=" " alt="" coords="203,81,378,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="222,40,276,81,270,80,220,45"/>
 </map>

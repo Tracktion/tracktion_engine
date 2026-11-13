@@ -1,5 +1,5 @@
 <map id="engine::MidiOutputDeviceInstance" name="engine::MidiOutputDeviceInstance">
-<area shape="rect" id="Node000001" title=" " alt="" coords="19,79,210,119"/>
-<area shape="rect" id="Node000002" href="$classengine_1_1OutputDeviceInstance.html" title=" " alt="" coords="5,5,224,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,44,117,79,112,79,112,44"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="19,81,209,126"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1OutputDeviceInstance.html" title=" " alt="" coords="5,5,223,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,47,116,81,112,79,112,51"/>
 </map>

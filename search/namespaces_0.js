@@ -18,5 +18,6 @@ var searchData=
   ['engine_3a_3aprojectutilities_15',['ProjectUtilities',['../namespaceengine_1_1ProjectUtilities.html',1,'engine']]],
   ['engine_3a_3aracknodebuilder_16',['RackNodeBuilder',['../namespaceengine_1_1RackNodeBuilder.html',1,'engine']]],
   ['engine_3a_3arender_5futils_17',['render_utils',['../namespaceengine_1_1render__utils.html',1,'engine']]],
-  ['engine_3a_3atracktionbinarydata_18',['TracktionBinaryData',['../namespaceengine_1_1TracktionBinaryData.html',1,'engine']]]
+  ['engine_3a_3asoundtouch_18',['soundtouch',['../namespaceengine_1_1soundtouch.html',1,'engine']]],
+  ['engine_3a_3atracktionbinarydata_19',['TracktionBinaryData',['../namespaceengine_1_1TracktionBinaryData.html',1,'engine']]]
 ];

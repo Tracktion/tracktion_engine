@@ -33,7 +33,7 @@ var searchData=
   ['elastiqueprooptions_30',['ElastiqueProOptions',['../structengine_1_1TimeStretcher_1_1ElastiqueProOptions.html',1,'engine::TimeStretcher']]],
   ['engine_31',['Engine',['../classengine_1_1Engine.html',1,'engine']]],
   ['enginebehaviour_32',['EngineBehaviour',['../classengine_1_1EngineBehaviour.html',1,'engine']]],
-  ['entry_33',['entry',['../structengine_1_1VSTXML_1_1Entry.html',1,'engine::VSTXML::Entry'],['../structtracktion_1_1engine_1_1ChannelMap_1_1Entry.html',1,'tracktion::engine::ChannelMap::Entry']]],
+  ['entry_33',['Entry',['../structengine_1_1VSTXML_1_1Entry.html',1,'engine::VSTXML::Entry'],['../structtracktion_1_1engine_1_1ChannelMap_1_1Entry.html',1,'tracktion::engine::ChannelMap::Entry']]],
   ['envelopefollower_34',['EnvelopeFollower',['../classengine_1_1AudioFileUtils_1_1EnvelopeFollower.html',1,'engine::AudioFileUtils']]],
   ['envelopefollowermodifier_35',['EnvelopeFollowerModifier',['../classengine_1_1EnvelopeFollowerModifier.html',1,'engine']]],
   ['equaliserplugin_36',['EqualiserPlugin',['../classengine_1_1EqualiserPlugin.html',1,'engine']]],

@@ -19,7 +19,7 @@ var searchData=
   ['wavenoderealtime_16',['WaveNodeRealTime',['../classengine_1_1WaveNodeRealTime.html',1,'engine']]],
   ['waveoutputdevice_17',['WaveOutputDevice',['../classengine_1_1WaveOutputDevice.html',1,'engine']]],
   ['waveoutputdeviceinstance_18',['WaveOutputDeviceInstance',['../classengine_1_1WaveOutputDeviceInstance.html',1,'engine']]],
-  ['windowstate_19',['windowstate',['../structengine_1_1Plugin_1_1WindowState.html',1,'engine::Plugin::WindowState'],['../structengine_1_1RackType_1_1WindowState.html',1,'engine::RackType::WindowState']]],
-  ['wire_20',['wire',['../structengine_1_1PatchBayPlugin_1_1Wire.html',1,'engine::PatchBayPlugin::Wire'],['../structengine_1_1Plugin_1_1Wire.html',1,'engine::Plugin::Wire']]],
+  ['windowstate_19',['WindowState',['../structengine_1_1Plugin_1_1WindowState.html',1,'engine::Plugin::WindowState'],['../structengine_1_1RackType_1_1WindowState.html',1,'engine::RackType::WindowState']]],
+  ['wire_20',['Wire',['../structengine_1_1PatchBayPlugin_1_1Wire.html',1,'engine::PatchBayPlugin::Wire'],['../structengine_1_1Plugin_1_1Wire.html',1,'engine::Plugin::Wire']]],
   ['writeoptions_21',['WriteOptions',['../structengine_1_1dawproject_1_1WriteOptions.html',1,'engine::dawproject']]]
 ];

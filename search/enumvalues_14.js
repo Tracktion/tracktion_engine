@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['uncompressed_0',['uncompressed',['../classengine_1_1legacy_1_1ExportJob.html#abbf83ba1078ffc7e9fdd8f2548f97a1dadfd25ff244b001be7beece9729517779',1,'engine::legacy::ExportJob::uncompressed'],['../classengine_1_1ArchiveJob.html#ac5eba08a7d406580a9edd8794ee1158fadfd25ff244b001be7beece9729517779',1,'engine::ArchiveJob::uncompressed']]],
+  ['uncompressed_0',['uncompressed',['../classengine_1_1ArchiveJob.html#ac5eba08a7d406580a9edd8794ee1158fadfd25ff244b001be7beece9729517779',1,'engine::ArchiveJob::uncompressed'],['../classengine_1_1legacy_1_1ExportJob.html#abbf83ba1078ffc7e9fdd8f2548f97a1dadfd25ff244b001be7beece9729517779',1,'engine::legacy::ExportJob::uncompressed']]],
   ['unknown_1',['unknown',['../classengine_1_1TrackItem.html#ab919abf28cd728b3e0a752886412d323aad921d60486366258809553a3db49a4a',1,'engine::TrackItem']]],
   ['unknowntype_2',['UnknownType',['../classengine_1_1MidiControllerEvent.html#a8bdd5b496bf2aa07b20b6146861ea57da7afcfb5dc6afdbdc32dee4ef56250ad3',1,'engine::MidiControllerEvent']]],
   ['use64bit_3',['use64Bit',['../namespaceengine.html#a37f708109fdbdb9329a540048b1a040fa117764216c0ac64c6b8db535df3eac30',1,'engine']]],

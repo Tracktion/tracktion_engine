@@ -1,7 +1,7 @@
 <map id="engine::PhysicalMidiInputDevice" name="engine::PhysicalMidiInputDevice">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,152,195,192"/>
-<area shape="rect" id="Node000002" href="$classengine_1_1MidiInputDevice.html" title=" " alt="" coords="10,79,190,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,118,103,152,97,152,97,118"/>
-<area shape="rect" id="Node000003" href="$classengine_1_1InputDevice.html" title="Represents an input device." alt="" coords="24,5,176,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="103,44,103,79,97,79,97,44"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,157,194,201"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1MidiInputDevice.html" title=" " alt="" coords="10,81,189,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,123,102,157,97,155,98,127"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1InputDevice.html" title="Represents an input device." alt="" coords="24,5,175,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="101,46,102,81,97,80,98,51"/>
 </map>

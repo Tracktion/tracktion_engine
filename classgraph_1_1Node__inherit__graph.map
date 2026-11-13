@@ -1,29 +1,29 @@
 <map id="graph::Node" name="graph::Node">
-<area shape="rect" id="Node000001" title="Main graph Node processor class." alt="" coords="5,301,107,327"/>
-<area shape="rect" id="Node000002" href="$classengine_1_1WaveNodeRealTime.html" title="An Node that plays back a wave file." alt="" coords="155,5,361,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,287,63,235,78,168,91,133,107,99,128,68,153,40,170,29,173,33,156,44,132,71,112,102,96,135,83,170,68,236,61,288"/>
-<area shape="rect" id="Node000003" href="$classgraph_1_1BasicSummingNode.html" title=" " alt="" coords="159,55,357,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="58,287,68,244,85,190,113,136,131,111,153,89,171,78,174,82,156,93,135,114,117,139,90,192,73,245,64,288"/>
-<area shape="rect" id="Node000004" href="$classgraph_1_1ConnectedNode.html" title="An Node which sums together the multiple inputs adding additional latency to provide a coherent outpu..." alt="" coords="173,104,343,129"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="62,287,74,253,93,213,119,173,153,139,173,127,176,132,156,143,123,176,98,216,79,255,67,289"/>
-<area shape="rect" id="Node000005" href="$classgraph_1_1FunctionNode.html" title=" " alt="" coords="180,153,336,179"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="68,288,102,237,125,210,153,188,179,176,181,181,156,192,129,214,106,240,72,291"/>
-<area shape="rect" id="Node000006" href="$classgraph_1_1GainNode.html" title=" " alt="" coords="193,203,323,228"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="79,290,113,262,154,237,191,224,193,229,156,242,116,266,82,294"/>
-<area shape="rect" id="Node000007" href="$classgraph_1_1LatencyNode.html" title=" " alt="" coords="182,252,334,277"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="118,295,154,286,201,275,202,280,155,291,119,300"/>
-<area shape="rect" id="Node000008" href="$classgraph_1_1MidiNode.html" title="Plays back a MIDI sequence." alt="" coords="193,301,323,327"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="121,311,193,311,193,317,121,317"/>
-<area shape="rect" id="Node000009" href="$classgraph_1_1ReturnNode.html" title=" " alt="" coords="186,351,330,376"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="121,327,206,348,205,353,120,332"/>
-<area shape="rect" id="Node000010" href="$classgraph_1_1SendNode.html" title=" " alt="" coords="191,400,325,425"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="82,334,116,361,156,385,192,398,190,403,154,390,113,365,79,338"/>
-<area shape="rect" id="Node000011" href="$classgraph_1_1SilentNode.html" title="Just a simple audio node that doesn&#39;t take any input so can be used as a stub." alt="" coords="189,449,327,475"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="72,337,106,387,129,413,156,434,189,449,187,454,153,439,126,417,102,391,68,340"/>
-<area shape="rect" id="Node000012" href="$classgraph_1_1SinNode.html" title=" " alt="" coords="197,499,319,524"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="67,339,79,372,98,412,123,451,156,484,176,495,198,502,196,507,174,500,153,488,119,454,93,414,74,374,62,340"/>
-<area shape="rect" id="Node000013" href="$classgraph_1_1SinkNode.html" title="Blocks audio and MIDI input from reaching the outputs." alt="" coords="193,548,323,573"/>
-<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="64,339,73,382,91,435,118,488,135,512,156,533,174,544,194,552,192,557,172,549,153,537,131,516,113,491,86,437,68,384,59,341"/>
-<area shape="rect" id="Node000014" href="$classgraph_1_1SummingNode.html" title="An Node which sums together the multiple inputs adding additional latency to provide a coherent outpu..." alt="" coords="177,597,339,623"/>
-<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="62,340,68,392,84,457,96,492,112,525,132,556,156,583,178,596,175,601,153,587,128,559,107,528,91,494,79,459,63,393,56,341"/>
+<area shape="rect" id="Node000001" title="Main graph Node processor class." alt="" coords="5,317,106,345"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1WaveNodeRealTime.html" title="An Node that plays back a wave file." alt="" coords="154,5,359,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="55,301,62,247,77,177,89,141,106,106,126,73,152,44,173,31,170,36,155,48,131,76,110,108,94,143,82,179,67,247,61,302"/>
+<area shape="rect" id="Node000003" href="$classgraph_1_1BasicSummingNode.html" title=" " alt="" coords="158,57,355,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="58,302,67,257,84,201,112,144,130,119,152,96,174,83,171,88,155,100,134,122,116,147,89,203,72,258,63,303"/>
+<area shape="rect" id="Node000004" href="$classgraph_1_1ConnectedNode.html" title="An Node which sums together the multiple inputs adding additional latency to provide a coherent outpu..." alt="" coords="172,109,341,137"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="62,301,74,266,92,224,118,183,152,148,176,135,173,140,155,152,122,186,97,227,79,268,67,303"/>
+<area shape="rect" id="Node000005" href="$classgraph_1_1FunctionNode.html" title=" " alt="" coords="179,161,334,189"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="68,303,101,250,125,223,152,200,180,187,177,191,155,204,129,226,106,253,73,305"/>
+<area shape="rect" id="Node000006" href="$classgraph_1_1GainNode.html" title=" " alt="" coords="191,213,322,241"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="79,305,113,277,152,251,193,238,189,242,155,256,116,281,84,308"/>
+<area shape="rect" id="Node000007" href="$classgraph_1_1LatencyNode.html" title=" " alt="" coords="181,265,332,293"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="119,312,202,292,198,296,122,317"/>
+<area shape="rect" id="Node000008" href="$classgraph_1_1MidiNode.html" title="Plays back a MIDI sequence." alt="" coords="192,317,320,345"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="120,329,194,329,190,333,123,334"/>
+<area shape="rect" id="Node000009" href="$classgraph_1_1ReturnNode.html" title=" " alt="" coords="185,369,328,397"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="120,345,202,367,198,370,122,351"/>
+<area shape="rect" id="Node000010" href="$classgraph_1_1SendNode.html" title=" " alt="" coords="190,421,322,449"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="81,353,116,381,155,406,192,421,187,423,152,411,113,386,82,358"/>
+<area shape="rect" id="Node000011" href="$classgraph_1_1SilentNode.html" title="Just a simple audio node that doesn&#39;t take any input so can be used as a stub." alt="" coords="188,473,325,501"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="70,356,106,409,129,436,155,458,190,475,185,477,152,463,125,440,101,413,70,361"/>
+<area shape="rect" id="Node000012" href="$classgraph_1_1SinNode.html" title=" " alt="" coords="196,525,316,553"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="64,357,79,394,97,435,122,476,155,510,175,522,199,532,193,533,173,527,152,515,118,479,92,438,74,396,64,363"/>
+<area shape="rect" id="Node000013" href="$classgraph_1_1SinkNode.html" title="Blocks audio and MIDI input from reaching the outputs." alt="" coords="192,577,320,605"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="61,357,72,404,89,459,116,515,134,540,155,562,173,574,194,584,189,584,170,579,152,567,130,544,112,518,84,461,67,406,60,362"/>
+<area shape="rect" id="Node000014" href="$classgraph_1_1SummingNode.html" title="An Node which sums together the multiple inputs adding additional latency to provide a coherent outpu..." alt="" coords="175,629,338,657"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="58,358,67,415,82,484,94,519,110,554,131,586,155,614,177,631,172,630,152,619,126,590,106,557,89,521,77,485,62,416,58,363"/>
 </map>
