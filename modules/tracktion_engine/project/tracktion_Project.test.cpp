@@ -376,6 +376,87 @@ TEST_SUITE ("tracktion_engine")
         cleanup();
     }
 
+    TEST_CASE ("FolderBasedProject: Edit outside the root of its owner project finds files beside it")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        // Outer/Inner/Inner Edit 1.tracktionedit uses Outer/Inner/Recorded/take.wav
+        auto outerFolder = tempDir.getChildFile ("Outer");
+        auto innerFolder = outerFolder.getChildFile ("Inner");
+        auto editFile = innerFolder.getChildFile ("Inner Edit 1.tracktionedit");
+        auto audioFile = innerFolder.getChildFile ("Recorded").getChildFile ("take.wav");
+        REQUIRE (audioFile.getParentDirectory().createDirectory());
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile != nullptr);
+        REQUIRE (sinFile->getFile().copyFileTo (audioFile));
+
+        // Save an Edit whose clip refers to the audio file relative to the Edit file
+        {
+            auto edit = createEmptyEdit (engine, editFile);
+            edit->ensureNumberOfAudioTracks (1);
+
+            // The Edit file has to exist for paths to be made relative to its folder
+            REQUIRE (test_utilities::saveEditSync (*edit));
+
+            auto clip = insertWaveClip (*getAudioTracks (*edit)[0], "Take", audioFile,
+                                        { { 0_tp, TimePosition::fromSeconds (2.0) } },
+                                        DeleteExistingClips::no);
+            REQUIRE (clip != nullptr);
+            REQUIRE (clip->getSourceFileReference().source.get()
+                        == juce::String ("Recorded") + juce::File::getSeparatorString() + "take.wav");
+            REQUIRE (test_utilities::saveEditSync (*edit));
+        }
+
+        // Loads the Edit as an app does, identified by the owner project's item for it
+        auto expectClipFileFoundThrough = [&] (Project& owner)
+        {
+            auto editItem = owner.getProjectItemForFile (editFile);
+            REQUIRE (editItem != nullptr);
+
+            auto itemRef = editItem->getProjectItemRef();
+            REQUIRE (itemRef.getProject().get() == &owner);
+
+            auto edit = Edit::createEdit ({ engine, loadEditFromFile (engine, editFile, itemRef), itemRef });
+            REQUIRE (edit != nullptr);
+
+            auto clips = getAudioTracks (*edit)[0]->getClips();
+            REQUIRE (clips.size() == 1);
+
+            auto clip = dynamic_cast<WaveAudioClip*> (clips[0]);
+            REQUIRE (clip != nullptr);
+            CHECK (clip->getSourceFileReference().getFile() == audioFile);
+            CHECK (clip->getCurrentSourceFile() == audioFile);
+        };
+
+        SUBCASE ("Edit in a subfolder of its project")
+        {
+            ProjectManager::TempProject outer (pm, outerFolder, false);
+            REQUIRE (outer.project != nullptr);
+            expectClipFileFoundThrough (*outer.project);
+        }
+
+        SUBCASE ("Edit in a project inside another project, opened through the outer one")
+        {
+            ProjectManager::TempProject inner (pm, innerFolder, false);
+            ProjectManager::TempProject outer (pm, outerFolder, false);
+            REQUIRE (inner.project != nullptr);
+            REQUIRE (outer.project != nullptr);
+            expectClipFileFoundThrough (*outer.project);
+        }
+
+        cleanup();
+    }
+
     TEST_CASE ("Project: archive and unarchive round-trip")
     {
         auto& engine = *Engine::getEngines()[0];
