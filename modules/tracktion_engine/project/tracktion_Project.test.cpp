@@ -235,6 +235,67 @@ TEST_SUITE ("tracktion_engine")
         cleanup();
     }
 
+    TEST_CASE ("FolderBasedProject: files in a nested project belong to that project only")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0);
+        REQUIRE (sinFile != nullptr);
+
+        auto addAudioFile = [&sinFile] (const juce::File& dest)
+        {
+            REQUIRE (dest.getParentDirectory().createDirectory());
+            REQUIRE (sinFile->getFile().copyFileTo (dest));
+            return dest;
+        };
+
+        // Outer has a file in its root, one in an ordinary subfolder, and a project in the Inner subfolder
+        auto outerFolder = tempDir.getChildFile ("Outer");
+        auto innerFolder = outerFolder.getChildFile ("Inner");
+        auto outerAudioFile = addAudioFile (outerFolder.getChildFile ("Recorded").getChildFile ("outer.wav"));
+        auto subfolderAudioFile = addAudioFile (outerFolder.getChildFile ("Takes").getChildFile ("Recorded").getChildFile ("sub.wav"));
+        auto innerAudioFile = addAudioFile (innerFolder.getChildFile ("Recorded").getChildFile ("inner.wav"));
+
+        ProjectManager::TempProject inner (pm, innerFolder, false);
+        REQUIRE (inner.project != nullptr);
+
+        // Setting a property is what writes a folder-based project's info file
+        inner.project->setDescription ("Inner project");
+        REQUIRE (innerFolder.getChildFile ("project_info.json").existsAsFile());
+
+        auto innerEditItem = inner.project->createNewEdit();
+        REQUIRE (innerEditItem != nullptr);
+        auto innerEditFile = innerEditItem->getSourceFile();
+
+        ProjectManager::TempProject outer (pm, outerFolder, false);
+        REQUIRE (outer.project != nullptr);
+
+        CHECK (outer.project->getProjectItemForFile (outerAudioFile) != nullptr);
+        CHECK (outer.project->getProjectItemForFile (subfolderAudioFile) != nullptr);
+        CHECK (outer.project->getProjectItemForFile (innerAudioFile) == nullptr);
+        CHECK (outer.project->getProjectItemForFile (innerEditFile) == nullptr);
+        CHECK (outer.project->getNumProjectItems() == 2);
+
+        CHECK (inner.project->getProjectItemForFile (innerAudioFile) != nullptr);
+        CHECK (inner.project->getProjectItemForFile (innerEditFile) != nullptr);
+
+        // Still the case after a rescan
+        outer.project->reload (Project::ReloadMode::immediate);
+        CHECK (outer.project->getProjectItemForFile (innerEditFile) == nullptr);
+        CHECK (outer.project->getNumProjectItems() == 2);
+
+        cleanup();
+    }
+
     TEST_CASE ("FolderBasedProject: create with edits and clips")
     {
         auto& engine = *Engine::getEngines()[0];
