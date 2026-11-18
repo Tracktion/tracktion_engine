@@ -47,6 +47,13 @@ public:
     void initialiseFully() override;
     void forceFullReinitialise();
 
+    /** Deletes the plugin instance and creates a new one, keeping its state.
+        Use this when the instance's parameter list has changed in a way it can't
+        publish itself, e.g. a rebuilt Cmajor patch that gained or lost endpoints.
+        Playback is detached for the duration, so this causes a short dropout.
+    */
+    void recreatePluginInstance();
+
     /// Returns an error message if the plugin failed to load
     juce::String getLoadError();
 
