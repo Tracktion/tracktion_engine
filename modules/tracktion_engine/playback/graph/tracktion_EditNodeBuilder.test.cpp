@@ -1070,6 +1070,131 @@ TEST_CASE ("Edit Node Builder: node IDs are stable between graph builds")
     CHECK (first.nodeIDs == second.nodeIDs);
 }
 
+//==============================================================================
+namespace sidechain_test_helpers
+{
+    /** A stereo effect with an extra sidechain input, like the CompressorPlugin, that
+        records the largest value it sees on each input channel.
+    */
+    class SidechainProbePlugin  : public Plugin
+    {
+    public:
+        SidechainProbePlugin (PluginCreationInfo info)  : Plugin (info)
+        {
+            for (auto& v : inputValues)
+                v = 0.0f;
+        }
+
+        ~SidechainProbePlugin() override                        { notifyListenersOfDeletion(); }
+
+        static const char* getPluginName()                      { return "Sidechain Probe"; }
+        static constexpr const char* xmlTypeName = "sidechainProbe";
+
+        juce::String getName() const override                   { return getPluginName(); }
+        juce::String getPluginType() override                   { return xmlTypeName; }
+        juce::String getSelectableDescription() override         { return getName(); }
+        BusLayout getBusses() const override                    { return BusLayout::singleStereoInOut(); }
+        int getNumOutputChannelsGivenInputs (int numInputs) override { return juce::jmin (numInputs, 2); }
+
+        void getChannelNames (juce::StringArray* ins, juce::StringArray* outs) override
+        {
+            Plugin::getChannelNames (ins, outs);
+
+            if (ins != nullptr)
+                ins->add ("Sidechain");
+        }
+
+        void initialise (const PluginInitialisationInfo&) override {}
+        void deinitialise() override {}
+        void restorePluginStateFromValueTree (const juce::ValueTree&) override {}
+
+        void applyToBuffer (const PluginRenderContext& fc) override
+        {
+            if (fc.destBuffer == nullptr || fc.bufferNumSamples == 0)
+                return;
+
+            const int numChannels = fc.destBuffer->getNumChannels();
+            numChannelsSeen = std::max (numChannelsSeen.load(), numChannels);
+            const int sample = fc.bufferStartSample + fc.bufferNumSamples / 2;
+
+            for (int c = 0; c < std::min (numChannels, (int) inputValues.size()); ++c)
+            {
+                const auto v = fc.destBuffer->getSample (c, sample);
+
+                if (std::abs (v) > std::abs (inputValues[(size_t) c].load()))
+                    inputValues[(size_t) c] = v;
+            }
+        }
+
+        std::atomic<int> numChannelsSeen { 0 };
+        std::array<std::atomic<float>, 4> inputValues;
+    };
+
+    /** Creates a 1s file with a constant value on each channel. */
+    inline std::unique_ptr<juce::TemporaryFile> createConstantFile (const std::vector<float>& channelValues)
+    {
+        juce::AudioBuffer<float> buffer ((int) channelValues.size(), 44100);
+
+        for (int c = 0; c < buffer.getNumChannels(); ++c)
+            juce::FloatVectorOperations::fill (buffer.getWritePointer (c), channelValues[(size_t) c], buffer.getNumSamples());
+
+        auto f = std::make_unique<juce::TemporaryFile> (".wav");
+        graph::test_utilities::writeToFile<juce::WavAudioFormat> (f->getFile(), toBufferView (buffer), 44100.0, -1);
+        return f;
+    }
+}
+
+TEST_CASE ("Edit Node Builder: sidechain wires route each channel to the right plugin input")
+{
+    // Sidechain wires always address the plugin's own track as source channels 0-1 and
+    // the sidechain source as 2-3, whatever the tracks' channel counts. Mono tracks used
+    // to shift the sidechain wires by one, mixing the sidechain into the track's right
+    // channel and dropping half of the trigger
+    using namespace sidechain_test_helpers;
+    auto& engine = *Engine::getEngines()[0];
+    engine.getPluginManager().createBuiltInType<SidechainProbePlugin>();
+
+    std::vector<float> trackValues, sidechainValues;
+    float expectedTrigger = 0.0f;
+
+    // The sidechain source is stereo by the time it is sent, so a mono source arrives
+    // on both sidechain channels and the default wiring sums the two into the trigger
+    SUBCASE ("Stereo track, stereo sidechain")  { trackValues = { 0.5f, 0.3f }; sidechainValues = { -0.2f, -0.1f }; expectedTrigger = -0.3f; }
+    SUBCASE ("Mono track, stereo sidechain")    { trackValues = { 0.5f };       sidechainValues = { -0.2f, -0.1f }; expectedTrigger = -0.3f; }
+    SUBCASE ("Stereo track, mono sidechain")    { trackValues = { 0.5f, 0.3f }; sidechainValues = { -0.2f };        expectedTrigger = -0.4f; }
+    SUBCASE ("Mono track, mono sidechain")      { trackValues = { 0.5f };       sidechainValues = { -0.2f };        expectedTrigger = -0.4f; }
+
+    auto edit = test_utilities::createTestEdit (engine, 2);
+    auto tracks = getAudioTracks (*edit);
+    auto trackFile = createConstantFile (trackValues);
+    auto sidechainFile = createConstantFile (sidechainValues);
+    insertWaveClip (*tracks[0], {}, trackFile->getFile(), { .time = { 0_tp, 1_tp } }, DeleteExistingClips::no);
+    insertWaveClip (*tracks[1], {}, sidechainFile->getFile(), { .time = { 0_tp, 1_tp } }, DeleteExistingClips::no);
+
+    auto plugin = edit->getPluginCache().createNewPlugin (SidechainProbePlugin::xmlTypeName, {});
+    tracks[0]->pluginList.insertPlugin (plugin, 0, nullptr);
+    auto probe = dynamic_cast<SidechainProbePlugin*> (plugin.get());
+    REQUIRE (probe != nullptr);
+    REQUIRE (probe->canSidechain());
+    probe->setSidechainSourceID (tracks[1]->itemID);
+    probe->guessSidechainRouting();
+    REQUIRE_EQ (probe->getNumWires(), 4);
+
+    auto render = test_utilities::renderToAudioBuffer (*edit);
+    CHECK_EQ (render.buffer.getNumChannels(), 2);
+
+    // A mono track is converted to stereo before the sidechain is summed in
+    const auto expectedRight = trackValues.size() == 2 ? trackValues[1] : trackValues[0];
+
+    CHECK_EQ (probe->numChannelsSeen.load(), 3);
+    CHECK (probe->inputValues[0].load() == doctest::Approx (trackValues[0]).epsilon (0.001));
+    CHECK (probe->inputValues[1].load() == doctest::Approx (expectedRight).epsilon (0.001));
+    CHECK (probe->inputValues[2].load() == doctest::Approx (expectedTrigger).epsilon (0.001));
+
+    engine.getAudioFileManager().releaseAllFiles();
+    edit->getTempDirectory (false).deleteRecursively();
+}
+
 } // TEST_SUITE
 
 } // namespace tracktion::inline engine
