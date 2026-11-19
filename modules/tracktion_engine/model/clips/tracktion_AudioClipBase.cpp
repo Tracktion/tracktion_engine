@@ -692,7 +692,8 @@ void AudioClipBase::reverseLoopPoints()
 
     if (beatBased)
     {
-        auto bps = edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart());
+        // A ratio of two tempos, and the file's tempo is its bpm / 60, so this compares quarter notes
+        auto bps = edit.tempoSequence.getQuarterNotesPerSecondAt (getPosition().getStart());
         ratio = bps / std::max (1.0, loopInfo.getBeatsPerSecond (wi));
     }
 
@@ -987,8 +988,7 @@ void AudioClipBase::setNumberOfLoops (int num)
 
     if (autoTempo)
     {
-        auto& ts = edit.tempoSequence;
-        auto newStart = BeatPosition::fromBeats (pos.getOffset().inSeconds() * ts.getBeatsPerSecondAt (pos.getStart()));
+        auto newStart = toPosition (getOffsetInBeats());
         setLoopRangeBeats ({ newStart, newStart + getLengthInBeats() });
         setLength (pos.getLength() * num, true);
     }
@@ -1028,7 +1028,7 @@ TimeRange AudioClipBase::getLoopRange() const
     if (! beatBasedLooping())
         return { loopStart, loopStart + loopLength };
 
-    auto bps = edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart());
+    auto bps = edit.tempoSequence.getTimeSigBeatsPerSecondAt (getPosition().getStart());
 
     return { TimePosition::fromSeconds (loopStartBeats.get().inBeats() / bps),
              TimePosition::fromSeconds ((loopStartBeats + loopLengthBeats).inBeats() / bps) };
@@ -1044,7 +1044,7 @@ TimePosition AudioClipBase::getLoopStart() const
     if (! beatBasedLooping())
         return loopStart;
 
-    return TimePosition::fromSeconds (loopStartBeats.get().inBeats() / edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart()));
+    return TimePosition::fromSeconds (loopStartBeats.get().inBeats() / edit.tempoSequence.getTimeSigBeatsPerSecondAt (getPosition().getStart()));
 }
 
 TimeDuration AudioClipBase::getLoopLength() const
@@ -1052,7 +1052,7 @@ TimeDuration AudioClipBase::getLoopLength() const
     if (! beatBasedLooping())
         return loopLength;
 
-    return TimeDuration::fromSeconds (loopLengthBeats.get().inBeats() / edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart()));
+    return TimeDuration::fromSeconds (loopLengthBeats.get().inBeats() / edit.tempoSequence.getTimeSigBeatsPerSecondAt (getPosition().getStart()));
 }
 
 BeatPosition AudioClipBase::getLoopStartBeats() const
@@ -1060,7 +1060,7 @@ BeatPosition AudioClipBase::getLoopStartBeats() const
     if (beatBasedLooping())
         return loopStartBeats;
 
-    return BeatPosition::fromBeats (loopStart.get().inSeconds() * edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart()));
+    return BeatPosition::fromBeats (loopStart.get().inSeconds() * edit.tempoSequence.getTimeSigBeatsPerSecondAt (getPosition().getStart()));
 }
 
 BeatDuration AudioClipBase::getLoopLengthBeats() const
@@ -1068,7 +1068,7 @@ BeatDuration AudioClipBase::getLoopLengthBeats() const
     if (beatBasedLooping())
         return loopLengthBeats;
 
-    return BeatDuration::fromBeats (loopLength.get().inSeconds() * edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart()));
+    return BeatDuration::fromBeats (loopLength.get().inSeconds() * edit.tempoSequence.getTimeSigBeatsPerSecondAt (getPosition().getStart()));
 }
 
 static TimeRange clampTimeLoopRange (TimeRange range, TimeDuration sourceLen, double speedRatio)
@@ -1088,7 +1088,7 @@ void AudioClipBase::setLoopRange (TimeRange newRange)
     {
         // Use the single tempo at the clip start, the same conversion as the loop getters,
         // so setting the range they report leaves the loop unchanged
-        auto bps = edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart());
+        auto bps = edit.tempoSequence.getTimeSigBeatsPerSecondAt (getPosition().getStart());
         auto newStart  = BeatPosition::fromBeats (newRange.getStart().inSeconds() * bps);
         auto newLength = BeatDuration::fromBeats (newRange.getLength().inSeconds() * bps);
         setLoopRangeBeats ({ newStart, newStart + newLength });
@@ -2748,7 +2748,7 @@ void AudioClipBase::updateAutoTempoState()
     // is held in the *other* representation (isLooping() would look at the new, empty one)
     if (hasLoop (! autoTempo))
     {
-        auto bps = edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart());
+        auto bps = edit.tempoSequence.getTimeSigBeatsPerSecondAt (getPosition().getStart());
 
         if (autoTempo)
         {
