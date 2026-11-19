@@ -1674,7 +1674,9 @@ void AudioClipBase::reassignReferencedItem (const ReferencedItem& item,
 {
     Clip::reassignReferencedItem (item, newRef, newStartTime);
 
-    if (getReferencedItems().size() == 1 && item == getReferencedItems().getFirst())
+    auto referencedItems = getReferencedItems();
+
+    if (referencedItems.size() == 1 && item == referencedItems.getFirst())
     {
         if (newRef.isProjectItemID())
         {
