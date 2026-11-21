@@ -457,6 +457,56 @@ TEST_SUITE ("tracktion_engine")
         cleanup();
     }
 
+    TEST_CASE ("SourceFileReference: relative paths are made from the Edit's folder before the Edit file exists")
+    {
+        auto& engine = *Engine::getEngines()[0];
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        // Session/Session.tracktionedit (never saved) uses Session/Recorded/take.wav and Session/beside.wav
+        auto sessionFolder = tempDir.getChildFile ("Session");
+        auto editFile = sessionFolder.getChildFile ("Session.tracktionedit");
+        auto audioFile = sessionFolder.getChildFile ("Recorded").getChildFile ("take.wav");
+        auto besideFile = sessionFolder.getChildFile ("beside.wav");
+        REQUIRE (audioFile.getParentDirectory().createDirectory());
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile != nullptr);
+        REQUIRE (sinFile->getFile().copyFileTo (audioFile));
+        REQUIRE (sinFile->getFile().copyFileTo (besideFile));
+
+        auto edit = createEmptyEdit (engine, editFile);
+        edit->ensureNumberOfAudioTracks (1);
+        REQUIRE (! editFile.existsAsFile());   // the point of this test: nothing has been saved
+
+        auto clip = insertWaveClip (*getAudioTracks (*edit)[0], "Take", audioFile,
+                                    { { 0_tp, TimePosition::fromSeconds (2.0) } },
+                                    DeleteExistingClips::no);
+        REQUIRE (clip != nullptr);
+        CHECK (clip->getSourceFileReference().source.get()
+                  == juce::String ("Recorded") + juce::File::getSeparatorString() + "take.wav");
+        CHECK (clip->getSourceFileReference().getFile() == audioFile);
+        CHECK (clip->getCurrentSourceFile() == audioFile);
+
+        auto clip2 = insertWaveClip (*getAudioTracks (*edit)[0], "Beside", besideFile,
+                                     { { TimePosition::fromSeconds (2.0), TimePosition::fromSeconds (4.0) } },
+                                     DeleteExistingClips::no);
+        REQUIRE (clip2 != nullptr);
+        CHECK (clip2->getSourceFileReference().source.get() == juce::String ("beside.wav"));
+        CHECK (clip2->getSourceFileReference().getFile() == besideFile);
+
+        clip = nullptr;
+        clip2 = nullptr;
+        edit.reset();
+        cleanup();
+    }
+
     TEST_CASE ("Project: archive and unarchive round-trip")
     {
         auto& engine = *Engine::getEngines()[0];

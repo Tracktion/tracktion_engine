@@ -140,8 +140,12 @@ juce::String SourceFileReference::findPathFromFile (Edit& edit, const juce::File
     auto editFile = edit.editFileRetriever ? edit.editFileRetriever()
                                            : getEditFileFromProjectManager (edit);
 
+    // Relative to the Edit's folder, stated explicitly: juce::File::getRelativePathFrom only treats its argument as a
+    // file (and uses the parent folder) when that file exists on disk. For an Edit that has not been saved yet it
+    // treated the Edit file as a folder, so every path came out one level too deep ("../Recorded/take.wav" for a
+    // file beside the Edit) and no reader found it again.
     if (shouldUseRelativePath (edit, newFile, editFile))
-        return newFile.getRelativePathFrom (editFile);
+        return newFile.getRelativePathFrom (editFile.getParentDirectory());
 
     return newFile.getFullPathName();
 }
@@ -164,7 +168,8 @@ juce::File SourceFileReference::findFileFromString (Edit& edit, const juce::Stri
     if (edit.filePathResolver)
         return edit.filePathResolver (sourceDescription);
 
-    return getEditFileFromProjectManager (edit).getChildFile (sourceDescription);
+    // Beside the Edit file, the same base findPathFromFile writes against
+    return getEditFileFromProjectManager (edit).getSiblingFile (sourceDescription);
 }
 
 juce::File SourceFileReference::getFile() const
