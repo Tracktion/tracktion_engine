@@ -88,11 +88,14 @@ public:
 
     SampleCount getPosition() override
     {
-        return reader->getReadPosition();
+        return position;
     }
 
     void setPosition (SampleCount t) override
     {
+        // When looping, the reader wraps this in to the loop but the position returned carries on
+        // from it, so readers above don't see it jump back at each loop end
+        position = t;
         reader->setReadPosition (t);
     }
 
@@ -116,6 +119,8 @@ public:
 
     bool readSamples (choc::buffer::ChannelArrayView<float>& destBuffer) override
     {
+        position += (SampleCount) destBuffer.getNumFrames();
+
         auto buffer = toAudioBuffer (destBuffer);
         return reader->readSamples ((int) destBuffer.getNumFrames(),
                                     buffer,
@@ -126,6 +131,7 @@ public:
     }
 
     AudioFileCache::Reader::Ptr reader;
+    SampleCount position = 0;
     int timeoutMs;
     const ChannelConfiguration destChannelConfig;
     const ChannelConfiguration sourceChannelConfig;
@@ -1250,17 +1256,22 @@ public:
 //==============================================================================
 /** N.B. This has to assume a constant Edit tempo per block.
     The top level Edit player should chunk at tempo changes.
+
+    If the clip loops, its source is looped below this, in source time (sourceLoopRange), so
+    the time-stretcher plays one continuous stream through the loop points rather than
+    being reset at each. This therefore reads the source times as if it wasn't looped.
 */
 class BeatRangeReader final : public AudioReader
 {
 public:
     BeatRangeReader (std::unique_ptr<TimeRangeReader> input,
                      BeatRange loopRange_,
+                     TimeRange sourceLoopRange_,
                      BeatDuration offset_,
                      std::shared_ptr<BeatDuration> dynamicOffset_,
                      tempo::Sequence::Position sourceSequencePosition_)
         : source (std::move (input)),
-          loopRange (loopRange_), offset (offset_),
+          loopRange (loopRange_), sourceLoopRange (sourceLoopRange_), offset (offset_),
           dynamicOffset (std::move (dynamicOffset_)),
           sourceSequencePosition (sourceSequencePosition_)
     {
@@ -1276,7 +1287,8 @@ public:
         // Apply offset first
         const auto beatRangeToRead = br + offset - *dynamicOffset;
 
-        return readLoopedBeatRange (beatRangeToRead, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
+        return source->read ({ getSourceTime (beatRangeToRead.getStart()), getSourceTime (beatRangeToRead.getEnd()) },
+                             destBuffer, editDuration, isContiguous, playbackSpeedRatio);
     }
 
     choc::buffer::ChannelCount getNumChannels() override    { return source->getNumChannels(); }
@@ -1294,69 +1306,29 @@ public:
 private:
     std::unique_ptr<TimeRangeReader> source;
     const BeatRange loopRange;
+    const TimeRange sourceLoopRange;
     const BeatDuration offset;
     std::shared_ptr<BeatDuration> dynamicOffset;
     tempo::Sequence::Position sourceSequencePosition;
 
-    bool readLoopedBeatRange (BeatRange br,
-                              choc::buffer::ChannelArrayView<float>& destBuffer,
-                              TimeDuration editDuration,
-                              bool isContiguous,
-                              double playbackSpeedRatio)
+    /** Returns the source time to read a beat from.
+        A looped beat counts from the loop start, and the looped source wraps a time in to its
+        loop the same way, so this counts on through the loops a source loop length at a time.
+        That's the loop's length in the source's samples, so the two don't drift apart.
+    */
+    TimePosition getSourceTime (BeatPosition beat)
     {
-        using choc::buffer::FrameCount;
-
         if (loopRange.isEmpty())
-            return readBeatRange (br, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
-
-        const auto s = linearPositionToLoopPosition (br.getStart(), loopRange);
-        const auto e = linearPositionToLoopPosition (br.getEnd(), loopRange);
-
-        if (s > e)
         {
-            if (s >= loopRange.getEnd())
-                return readBeatRange ({ loopRange.getStart(), e }, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
-
-            if (e <= loopRange.getStart())
-                return readBeatRange ({ s, loopRange.getEnd() }, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
-
-            // Otherwise range is split
-            const BeatRange br1 (s, loopRange.getEnd());
-            const BeatRange br2 (loopRange.getStart(), e);
-            const auto prop1 = br1.getLength() / br.getLength();
-            const auto prop2 = 1.0 - prop1;
-
-            const auto numFrames = destBuffer.getNumFrames();
-            const auto numFrames1 = static_cast<FrameCount> (std::llround (numFrames * prop1));
-
-            auto buffer1 = destBuffer.getStart (numFrames1);
-            auto buffer2 = destBuffer.getFrameRange ({ numFrames1, numFrames });
-
-            return readBeatRange (br1, buffer1, editDuration * prop1, isContiguous, playbackSpeedRatio)
-                && readBeatRange (br2, buffer2, editDuration * prop2, false, playbackSpeedRatio);
+            sourceSequencePosition.set (beat);
+            return sourceSequencePosition.getTime();
         }
 
-        return readBeatRange ({ s, e }, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
-    }
+        const auto loopLength = loopRange.getLength().inBeats();
+        const auto numLoops = std::floor (beat.inBeats() / loopLength);
+        sourceSequencePosition.set (loopRange.getStart() + BeatDuration::fromBeats (beat.inBeats() - numLoops * loopLength));
 
-    bool readBeatRange (BeatRange br,
-                        choc::buffer::ChannelArrayView<float>& destBuffer,
-                        TimeDuration editDuration,
-                        bool isContiguous,
-                        double playbackSpeedRatio)
-    {
-        // Convert source beat range to source time range
-        sourceSequencePosition.set (br.getStart());
-        const auto startTime = (sourceSequencePosition.getTime());
-        sourceSequencePosition.set (br.getEnd());
-        const auto endTime = (sourceSequencePosition.getTime());
-
-        return source->read ({ startTime, endTime }, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
-    }
-
-    static inline BeatPosition linearPositionToLoopPosition (BeatPosition position, BeatRange loopRange)
-    {
-        return loopRange.getStart() + BeatDuration::fromBeats (std::fmod (position.inBeats(), loopRange.getLength().inBeats()));
+        return toPosition (sourceSequencePosition.getTime() - sourceLoopRange.getStart()) + sourceLoopRange.getLength() * numLoops;
     }
 };
 
@@ -2217,6 +2189,20 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
 
     auto audioFileCacheReader = std::make_unique<AudioFileCacheReader> (std::move (fileCacheReader), isOfflineRender ? 5s : 0ms,
                                                                         destChannels, channelsToUse);
+    const bool isBeatBased = syncTempo == SyncTempo::yes || syncPitch == SyncPitch::yes;
+    auto sourceLoopRange = loopSectionTime;
+
+    // Beat-based clips loop their source in time here too, below the time-stretcher, so it plays one
+    // continuous stream through the loop points rather than being reset at each (see BeatRangeReader).
+    // It's rounded to the file's samples as that's how it loops
+    if (isBeatBased && ! loopSectionBeats.isEmpty())
+    {
+        const auto fileSampleRate = audioFileCacheReader->getSampleRate();
+        const auto loopSamples = toSamples (toTime (*fileTempoSequence, loopSectionBeats), fileSampleRate);
+        sourceLoopRange = { TimePosition::fromSamples (loopSamples.getStart(), fileSampleRate),
+                            TimePosition::fromSamples (loopSamples.getEnd(), fileSampleRate) };
+    }
+
     std::unique_ptr<AudioReader> loopReader;
 
     if (warpMap)
@@ -2225,12 +2211,12 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
         // This can have performance hits though
         loopReader = std::make_unique<WarpReader> (std::move (audioFileCacheReader), std::move (*warpMap), timeStretcherMode, elastiqueProOptions);
 
-        if (! loopSectionTime.isEmpty())
-            loopReader = std::make_unique<LoopReader> (std::move (loopReader), loopSectionTime);
+        if (! sourceLoopRange.isEmpty())
+            loopReader = std::make_unique<LoopReader> (std::move (loopReader), sourceLoopRange);
     }
     else
     {
-        audioFileCacheReader->setLoopRange (loopSectionTime);
+        audioFileCacheReader->setLoopRange (sourceLoopRange);
         loopReader = std::move (audioFileCacheReader);
     }
 
@@ -2285,11 +2271,11 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
         }
     }
 
-    if (syncTempo == SyncTempo::yes || syncPitch == SyncPitch::yes)
+    if (isBeatBased)
     {
         assert (fileTempoSequence);
         auto beatRangeReader    = std::make_unique<BeatRangeReader> (std::move (timeRangeReader),
-                                                                     loopSectionBeats, offsetBeats, dynamicOffsetBeats, *fileTempoPosition);
+                                                                     loopSectionBeats, sourceLoopRange, offsetBeats, dynamicOffsetBeats, *fileTempoPosition);
         auto editToClipBeatReader    = std::make_unique<EditToClipBeatReader> (std::move (beatRangeReader), editPositionBeats, dynamicOffsetBeats);
         basicEditReader = std::make_unique<EditReader> (std::move (editToClipBeatReader), nullptr);
     }
