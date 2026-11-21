@@ -457,6 +457,51 @@ TEST_SUITE ("tracktion_engine")
         cleanup();
     }
 
+    TEST_CASE ("loadEditFromState with the Edit file resolves relative clip sources while loading")
+    {
+        auto& engine = *Engine::getEngines()[0];
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+        auto sessionFolder = tempDir.getChildFile ("Session");
+        auto editFile = sessionFolder.getChildFile ("Session.tracktionedit");
+        auto audioFile = sessionFolder.getChildFile ("Recorded").getChildFile ("take.wav");
+        REQUIRE (audioFile.getParentDirectory().createDirectory());
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile != nullptr);
+        REQUIRE (sinFile->getFile().copyFileTo (audioFile));
+
+        juce::ValueTree state;
+        {
+            auto edit = createEmptyEdit (engine, editFile);
+            edit->ensureNumberOfAudioTracks (1);
+            REQUIRE (test_utilities::saveEditSync (*edit));
+            auto clip = insertWaveClip (*getAudioTracks (*edit)[0], "Take", audioFile,
+                                        { { 0_tp, TimePosition::fromSeconds (2.0) } },
+                                        DeleteExistingClips::no);
+            REQUIRE (clip != nullptr);
+            REQUIRE (clip->getSourceFileReference().source.get()
+                        == juce::String ("Recorded") + juce::File::getSeparatorString() + "take.wav");
+            state = edit->state.createCopy();
+            clip = nullptr;
+        }
+
+        auto edit = loadEditFromState (engine, state, editFile);
+        REQUIRE (edit != nullptr);
+        auto clips = getAudioTracks (*edit)[0]->getClips();
+        REQUIRE (clips.size() == 1);
+        auto clip = dynamic_cast<WaveAudioClip*> (clips[0]);
+        REQUIRE (clip != nullptr);
+        CHECK (clip->getSourceFileReference().getFile() == audioFile);
+        CHECK (clip->getCurrentSourceFile() == audioFile);
+        CHECK (clip->getAudioFile().isValid());
+
+        clip = nullptr;
+        edit.reset();
+        tempDir.deleteRecursively (false);
+    }
+
     TEST_CASE ("Project: archive and unarchive round-trip")
     {
         auto& engine = *Engine::getEngines()[0];

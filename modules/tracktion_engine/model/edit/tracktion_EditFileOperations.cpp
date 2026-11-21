@@ -679,6 +679,12 @@ std::unique_ptr<Edit> loadEditFromState (Engine& engine, const juce::ValueTree& 
     return createEdit (engine, editState, {}, role, loadContext);
 }
 
+std::unique_ptr<Edit> loadEditFromState (Engine& engine, const juce::ValueTree& editState, const juce::File& editFile,
+                                         Edit::EditRole role, Edit::LoadContext* loadContext)
+{
+    return createEdit (engine, editState, [editFile] { return editFile; }, role, loadContext);
+}
+
 std::unique_ptr<Edit> createEmptyEdit (Engine& engine, const juce::File& editFile)
 {
     auto id = ProjectItemID::createNewID (ProjectID{});

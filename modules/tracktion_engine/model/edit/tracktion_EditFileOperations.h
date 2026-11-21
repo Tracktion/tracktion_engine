@@ -61,6 +61,14 @@ std::unique_ptr<Edit> loadEditFromState (Engine&, const juce::ValueTree&,
                                          Edit::EditRole role = Edit::EditRole::forEditing,
                                          Edit::LoadContext* = nullptr);
 
+/** Loads an edit from a ValueTree as above, but with the file the state belongs to, so that clip sources stored
+    relative to that file resolve while the Edit loads. Without it an Edit restored from a saved state (an undo
+    snapshot, an A/B copy) finds none of its relative sources until an editFileRetriever is set afterwards, by
+    which time the clips have cached an invalid AudioFile and play silence. */
+std::unique_ptr<Edit> loadEditFromState (Engine&, const juce::ValueTree&, const juce::File& editFile,
+                                         Edit::EditRole role = Edit::EditRole::forEditing,
+                                         Edit::LoadContext* = nullptr);
+
 /** Creates a new edit for a file, ready for playback / editing */
 std::unique_ptr<Edit> createEmptyEdit (Engine&, const juce::File&);
 
