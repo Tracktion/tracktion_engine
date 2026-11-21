@@ -155,6 +155,49 @@ namespace comp_manager_test
 
 TEST_SUITE ("tracktion_engine")
 {
+    TEST_CASE ("WaveAudioClip: setCurrentTake switches between file-based takes in an Edit without a Project")
+    {
+        auto& engine = *Engine::getEngines()[0];
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+        auto editFile = tempDir.getChildFile ("Session.tracktionedit");
+
+        auto sinFile1 = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        auto sinFile2 = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile1 != nullptr);
+        REQUIRE (sinFile2 != nullptr);
+        auto take1 = tempDir.getChildFile ("take1.wav");
+        auto take2 = tempDir.getChildFile ("take2.wav");
+        REQUIRE (sinFile1->getFile().copyFileTo (take1));
+        REQUIRE (sinFile2->getFile().copyFileTo (take2));
+
+        auto edit = createEmptyEdit (engine, editFile);   // no Project anywhere
+        edit->ensureNumberOfAudioTracks (1);
+
+        auto clip = insertWaveClip (*getAudioTracks (*edit)[0], "Rec", take1,
+                                    { { 0_tp, TimePosition::fromSeconds (2.0) } },
+                                    DeleteExistingClips::no);
+        REQUIRE (clip != nullptr);
+        clip->addTake (take1);
+        clip->addTake (take2);
+        REQUIRE (clip->getNumTakes (false) == 2);
+
+        clip->setCurrentTake (1);
+        CHECK (clip->getNumTakes (false) == 2);            // the take must not be deleted
+        CHECK (clip->getCurrentTake() == 1);
+        CHECK (clip->getSourceFileReference().getFile() == take2);
+
+        clip->setCurrentTake (0);
+        CHECK (clip->getNumTakes (false) == 2);
+        CHECK (clip->getCurrentTake() == 0);
+        CHECK (clip->getSourceFileReference().getFile() == take1);
+
+        clip = nullptr;
+        edit.reset();
+        tempDir.deleteRecursively (false);
+    }
+
     TEST_CASE ("CompManager: addNewComp creates valid comp for file-based project")
     {
         auto& engine = *Engine::getEngines()[0];

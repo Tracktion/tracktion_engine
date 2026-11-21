@@ -248,11 +248,15 @@ int WaveAudioClip::getCurrentTake() const
         currentTakeIndex = -1;
 
         auto takesTree = getTakesTree();
-        auto pid = sourceFileReference.getSourceProjectItemRef().toString();
+        // Compare the stored source strings: a take is stored as the same string the clip's source holds, whether that
+        // is a ProjectItemID or a file path. getSourceProjectItemRef() is empty for a path in an Edit without a Project,
+        // so matching on it never found a file-based take, and CompManager::setActiveTakeIndex then recursed into
+        // setCurrentTake without end.
+        auto pid = sourceFileReference.source.get();
 
         for (int i = takesTree.getNumChildren(); --i >= 0;)
         {
-            if (takesTree.getChild (i).getProperty (IDs::source) == pid)
+            if (takesTree.getChild (i).getProperty (IDs::source).toString() == pid)
             {
                 currentTakeIndex = i;
                 break;
@@ -316,7 +320,9 @@ void WaveAudioClip::setCurrentTake (int takeIndex)
     auto mo = edit.engine.getProjectManager().getProjectItem (takeSourceRef);
     invalidateCurrentTake();
 
-    if (mo != nullptr || getCompManager().isTakeComp (takeIndex))
+    // A take recorded into an Edit with no Project is stored as a file path, not a ProjectItemID; only a
+    // ProjectItemID that no longer resolves is a dead take to drop. (Before: every file-path take was deleted here.)
+    if (mo != nullptr || ! takeSourceRef.isProjectItemID() || getCompManager().isTakeComp (takeIndex))
         sourceFileReference.setToProjectFileReference (takeSourceRef);
     else
         takesTree.removeChild (take, getUndoManager());
