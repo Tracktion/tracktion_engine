@@ -390,6 +390,10 @@ void deleteRegionOfClip (Clip& c, TimeRange timeRangeToDelete)
         else
         {
             c.trimAwayOverlap (timeRangeToDelete);
+
+            // A range ending a rounding error inside the clip would otherwise leave a sliver of it behind
+            if (c.getPosition().getLength() < Clip::minimumLength)
+                c.removeFromParent();
         }
     }
 }

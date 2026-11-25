@@ -628,16 +628,16 @@ void CompFactory::removeComp (CompManager& cm)
 //==============================================================================
 struct WaveCompManager::CompRenderContext
 {
-    CompRenderContext (Engine& e, const juce::Array<ProjectItemRef> takesRefs_, const juce::ValueTree& takeTree_, int activeTakeIndex_,
+    CompRenderContext (Engine& e, const juce::Array<juce::File>& takeFiles_, const juce::ValueTree& takeTree_, int activeTakeIndex_,
                        double sourceTimeMultiplier_, double offset_, double maxLength_, double xFade)
-        : engine (e), takesRefs (takesRefs_), takeTree (takeTree_.createCopy()),
+        : engine (e), takeFiles (takeFiles_), takeTree (takeTree_.createCopy()),
           activeTakeIndex (activeTakeIndex_),
           sourceTimeMultiplier (sourceTimeMultiplier_), offset (offset_), maxLength (maxLength_), crossfadeLength (xFade)
     {
     }
 
     Engine& engine;
-    juce::Array<ProjectItemRef> takesRefs;
+    juce::Array<juce::File> takeFiles;
     const juce::ValueTree takeTree;
     const int activeTakeIndex;
     const double sourceTimeMultiplier, offset, maxLength, crossfadeLength;
@@ -957,8 +957,10 @@ ProjectItemRef WaveCompManager::getProjectItemRefForTake (int takeIndex) const
 
 AudioFile WaveCompManager::getSourceFileForTake (int takeIndex) const
 {
-    auto& e = clip.edit.engine;
-    return AudioFile (e, e.getProjectManager().findSourceFile (getProjectItemRefForTake (takeIndex)));
+    // Takes are written by SourceFileReference, so resolve them the same way, via the Edit.
+    // Looking a path up through the ProjectManager searches every item of every open project
+    return AudioFile (clip.edit.engine,
+                      SourceFileReference::findFileFromString (clip.edit, getProjectItemRefForTake (takeIndex).toString()));
 }
 
 juce::File WaveCompManager::getDefaultTakeFile (int takeIndex) const
@@ -1071,7 +1073,13 @@ WaveCompManager::CompRenderContext* WaveCompManager::createRenderContext() const
 {
     const double xFadeMs = clip.edit.engine.getPropertyStorage().getProperty (SettingID::compCrossfadeMs, 20.0);
 
-    return new CompRenderContext (clip.edit.engine, clip.getTakes(), getActiveTakeTree(), getActiveTakeIndex(),
+    // Resolved here as the render runs on a background thread, away from the Edit
+    juce::Array<juce::File> takeFiles;
+
+    for (auto& takeRef : clip.getTakes())
+        takeFiles.add (SourceFileReference::findFileFromString (clip.edit, takeRef.toString()));
+
+    return new CompRenderContext (clip.edit.engine, takeFiles, getActiveTakeTree(), getActiveTakeIndex(),
                                   getSourceTimeMultiplier(), getOffset(), getMaxCompLength(), xFadeMs / 1000.0);
 }
 
@@ -1105,12 +1113,9 @@ bool WaveCompManager::renderTake (CompRenderContext& context, Edit& edit, AudioF
         auto takeIndex = (int) compSegment.getProperty (IDs::takeIndex);
         auto endTime = double (compSegment.getProperty (IDs::endTime)) / timeRatio;
 
-        if (juce::isPositiveAndBelow (takeIndex, context.takesRefs.size()))
+        if (juce::isPositiveAndBelow (takeIndex, context.takeFiles.size()))
         {
-            const auto takeRef = context.takesRefs[takeIndex];
-            jassert (takeRef.isValid());
-
-            auto takeFile = AudioFile (context.engine, context.engine.getProjectManager().findSourceFile (takeRef));
+            auto takeFile = AudioFile (context.engine, context.takeFiles[takeIndex]);
 
             auto node = tracktion::graph::makeNode<WaveNode> (takeFile, totalRange, TimeDuration(), TimeRange(), LiveClipLevel(), 1.0,
                                                               ChannelConfiguration::discreteChannels (takeFile.getInfo().numChannels),
@@ -1253,9 +1258,9 @@ private:
         // just use the first existing take as the basis for the comp render
         juce::File takeFile;
 
-        for (auto& takeRef : context->takesRefs)
+        for (auto& f : context->takeFiles)
         {
-            takeFile = engine.getProjectManager().findSourceFile (takeRef);
+            takeFile = f;
 
             if (takeFile.existsAsFile())
                 break;

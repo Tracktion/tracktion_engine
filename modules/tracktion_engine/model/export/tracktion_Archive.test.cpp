@@ -3650,20 +3650,21 @@ TEST_SUITE ("tracktion_engine")
         CHECK (extractedEdit->getMarkerManager().getMarkers().size() == 1);
     }
 
+    /// Reports whichever extra files a test plants, for the archive to bundle
+    struct ArchiveExtraFilesBehaviour : public EngineBehaviour
+    {
+        std::vector<ExtraFileToArchive> extraFiles;
+        bool autoInitialiseDeviceManager() override                                 { return false; }
+        std::vector<ExtraFileToArchive> getExtraFilesToArchive (Edit&) override     { return extraFiles; }
+    };
+
     TEST_CASE ("Archive: single Edit archive bundles extra files from EngineBehaviour")
     {
         // A single-edit archive only copies the edit plus its referenced ProjectItems.
         // Loose files an Edit depends on (e.g. plugin patch folders) are reported via
-        // EngineBehaviour::getExtraFilesToArchive and must survive the round-trip with
-        // their layout relative to the project dir preserved. We drive that with a
-        // dedicated Engine whose behaviour reports a planted patch folder.
-        struct ArchiveExtraFilesBehaviour : public EngineBehaviour
-        {
-            juce::Array<juce::File> extraFiles;
-            bool autoInitialiseDeviceManager() override                   { return false; }
-            juce::Array<juce::File> getExtraFilesToArchive (Edit&) override { return extraFiles; }
-        };
-
+        // EngineBehaviour::getExtraFilesToArchive and must survive the round-trip at
+        // the paths they name. We drive that with a dedicated Engine whose behaviour
+        // reports a planted patch folder.
         auto behaviour = std::make_unique<ArchiveExtraFilesBehaviour>();
         auto* behaviourPtr = behaviour.get();
 
@@ -3705,7 +3706,8 @@ TEST_SUITE ("tracktion_engine")
         auto viewFile = viewDir.getChildFile ("index.html");
         viewFile.replaceWithText ("<!doctype html><html><body>view</body></html>");
 
-        behaviourPtr->extraFiles = { manifestFile, viewFile };
+        behaviourPtr->extraFiles = { { manifestFile, "patches/TestPatch/patch.json" },
+                                     { viewFile, "patches/TestPatch/view/index.html" } };
 
         // Archive the single edit.
         auto archiveFile = tempDirFile.getChildFile ("test_archive.zip");
@@ -3738,6 +3740,85 @@ TEST_SUITE ("tracktion_engine")
             CHECK (viewHits.getFirst().loadFileAsString() == viewFile.loadFileAsString());
             CHECK (viewHits.getFirst().getParentDirectory().getFileName() == "view");
         }
+    }
+
+    TEST_CASE ("Archive: single Edit archive bundles extra files from outside the project at their given paths")
+    {
+        // A copied project folder can leave an Edit depending on loose files in the
+        // original project. getExtraFilesToArchive names where each one goes in the
+        // archive, so they're bundled rather than dropped.
+        auto behaviour = std::make_unique<ArchiveExtraFilesBehaviour>();
+        auto* behaviourPtr = behaviour.get();
+
+        // NB: this temporarily becomes Engine::instance; safe here because the engine
+        // TestRunner never calls Engine::getInstance() and other tests use getEngines().
+        Engine engine { juce::String ("tracktion_archive_external_extrafiles_test"), nullptr, std::move (behaviour) };
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = createTestTempDir();
+        auto tempDirFile = juce::File (tempDir.file.string());
+
+        auto projectFolder = tempDirFile.getChildFile ("test_project");
+        ProjectManager::TempProject tp (pm, projectFolder, true, ProjectType::folderBased);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+
+        auto editItem = project->createNewEdit();
+        REQUIRE (editItem != nullptr);
+
+        {
+            auto edit = createEmptyEdit (engine, editItem->getSourceFile());
+            edit->setProjectItemRef (editItem->getProjectItemRef());
+            edit->ensureNumberOfAudioTracks (1);
+            CHECK (test_utilities::saveEditSync (*edit));
+        }
+
+        project->save();
+
+        // The patch folder lives beside the project, not inside it.
+        auto patchDir = tempDirFile.getChildFile ("other_project").getChildFile ("patches").getChildFile ("TestPatch");
+        patchDir.getChildFile ("view").createDirectory();
+
+        auto manifestFile = patchDir.getChildFile ("patch.json");
+        manifestFile.replaceWithText ("{ \"id\": \"test-patch\" }");
+
+        auto viewFile = patchDir.getChildFile ("view").getChildFile ("index.html");
+        viewFile.replaceWithText ("<!doctype html><html><body>view</body></html>");
+
+        behaviourPtr->extraFiles = { { manifestFile, "patches/TestPatch/patch.json" },
+                                     { viewFile, "patches/TestPatch/view/index.html" },
+                                     // Escaping the archived project must be refused
+                                     { manifestFile, "../escaped.json" } };
+
+        auto archiveFile = tempDirFile.getChildFile ("test_archive.zip");
+        ArchiveJob job (editItem.get(), archiveFile, ArchiveJob::CompressionLevel::normal);
+        job.runJob();
+
+        CHECK_MESSAGE (job.getError().isEmpty(), job.getError().toStdString());
+        REQUIRE (archiveFile.existsAsFile());
+
+        juce::ZipFile zip (archiveFile);
+        auto entryIndex = [&zip] (const juce::String& suffix)
+        {
+            for (int i = 0; i < zip.getNumEntries(); ++i)
+                if (zip.getEntry (i)->filename.endsWith (suffix))
+                    return i;
+
+            return -1;
+        };
+
+        CHECK (entryIndex ("patches/TestPatch/patch.json") >= 0);
+        CHECK (entryIndex ("patches/TestPatch/view/index.html") >= 0);
+        CHECK (entryIndex ("escaped.json") < 0);
+
+        auto extractDir = tempDirFile.getChildFile ("extracted");
+        extractDir.createDirectory();
+        REQUIRE (zip.uncompressTo (extractDir).wasOk());
+
+        juce::Array<juce::File> viewHits;
+        extractDir.findChildFiles (viewHits, juce::File::findFiles, true, "index.html");
+        REQUIRE (! viewHits.isEmpty());
+        CHECK (viewHits.getFirst().loadFileAsString() == viewFile.loadFileAsString());
     }
 
     TEST_CASE ("Archive: single Edit archive doesn't corrupt the open Edit")
