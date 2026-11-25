@@ -367,9 +367,10 @@ void WaveAudioClip::deleteAllUnusedTakesConfirmingWithUser (bool)
                                 std::function<void (bool okPressed, bool delFiles)> callback)
     {
         auto w = std::shared_ptr<juce::AlertWindow> (juce::LookAndFeel::getDefaultLookAndFeel()
-                                                        .createAlertWindow (title, message,
-                                                                            {}, {}, {},
-                                                                            juce::AlertWindow::QuestionIcon, 0, nullptr));
+                                                        .createAlertWindowForOptions (juce::MessageBoxOptions()
+                                                                                        .withIconType (juce::MessageBoxIconType::QuestionIcon)
+                                                                                        .withTitle (title)
+                                                                                        .withMessage (message)));
 
         auto delFilesButton = std::make_shared<juce::ToggleButton> (TRANS("Delete Source Files?"));
         delFilesButton->setSize (400, 20);

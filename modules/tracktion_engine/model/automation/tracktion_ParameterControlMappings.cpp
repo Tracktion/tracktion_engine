@@ -690,9 +690,10 @@ void ParameterControlMappings::savePreset (int index)
     auto plugin = plugins[pluginNames[index].getTrailingIntValue()];
 
     auto w = std::shared_ptr<juce::AlertWindow> (juce::LookAndFeel::getDefaultLookAndFeel()
-                                                    .createAlertWindow (TRANS("Plugin mapping preset"),
-                                                                        TRANS("Create a new plugin mapping preset"),
-                                                                        {}, {}, {}, juce::AlertWindow::QuestionIcon, 0, nullptr));
+                                                    .createAlertWindowForOptions (juce::MessageBoxOptions()
+                                                                                    .withIconType (juce::MessageBoxIconType::QuestionIcon)
+                                                                                    .withTitle (TRANS("Plugin mapping preset"))
+                                                                                    .withMessage (TRANS("Create a new plugin mapping preset"))));
 
     w->addTextEditor ("setName", plugin->getName(), TRANS("Name:"));
     w->addButton (TRANS("OK"), 1, juce::KeyPress (juce::KeyPress::returnKey));
@@ -775,10 +776,10 @@ void ParameterControlMappings::loadPreset (int index)
                     cb->setSelectedId (1);
 
                     auto w = std::shared_ptr<juce::AlertWindow> (juce::LookAndFeel::getDefaultLookAndFeel()
-                                                                    .createAlertWindow (TRANS("Select plugin"),
-                                                                                        TRANS("Select plugin to apply preset to:"),
-                                                                                        {}, {}, {},
-                                                                                        juce::AlertWindow::QuestionIcon, 0, nullptr));
+                                                                    .createAlertWindowForOptions (juce::MessageBoxOptions()
+                                                                                                    .withIconType (juce::MessageBoxIconType::QuestionIcon)
+                                                                                                    .withTitle (TRANS("Select plugin"))
+                                                                                                    .withMessage (TRANS("Select plugin to apply preset to:"))));
 
                     w->addCustomComponent (cb.get());
                     w->addButton (TRANS("OK"), 1, juce::KeyPress (juce::KeyPress::returnKey));

@@ -657,6 +657,9 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
 std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& clip, bool includeARA,
                                                                 const CreateNodeParams& params, ClipRole role)
 {
+    if (clip.getPosition().getLength() < Clip::minimumLength)
+        return {};
+
     if (clip.canUseProxy())
     {
         assert (role == ClipRole::arranger);
@@ -879,7 +882,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForContainerClip (ContainerCli
 std::unique_ptr<tracktion::graph::Node> createNodeForClip (Clip& clip, const TrackMuteState& trackMuteState,
                                                            const CreateNodeParams& params, ClipRole role)
 {
-    if (clip.disabled)
+    if (clip.disabled || clip.getPosition().getLength() < Clip::minimumLength)
         return {};
 
     // N.B. This must be checked first as a ContainerClip is an AudioClipBase
