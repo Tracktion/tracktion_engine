@@ -789,7 +789,8 @@ void Clipboard::Clips::addSelectedClips (const SelectableList& selectedObjects,
                 auto& ts = ed.tempoSequence;
                 info.startBeats = BeatPosition::fromBeats ((ts.toBeats (clippedStart) - ts.toBeats (overallStartTime)).inBeats());
                 info.lengthBeats = ts.toBeats (clippedEnd) - ts.toBeats (clippedStart);
-                info.offsetBeats = BeatPosition::fromBeats (ts.getBeatsPerSecondAt (clippedStart) * clippedOffset.inSeconds());
+                // The beats from the content start to the clip start, as TrackItem::getOffsetInBeats() measures them
+                info.offsetBeats = toPosition (ts.toBeats (clippedStart) - ts.toBeats (clippedStart - clippedOffset));
             }
 
             clips.push_back (info);
@@ -894,7 +895,7 @@ static void fixClipTimes (juce::ValueTree& state, const Clipboard::Clips::ClipIn
         auto range = tempoSequence.toTime ({ clip.startBeats + offsetInBeats + slotOffset, clip.startBeats + offsetInBeats + slotOffset + clip.lengthBeats });
         start  = range.getStart();
         length = range.getLength();
-        offset = TimePosition::fromSeconds (clip.offsetBeats.inBeats() / tempoSequence.getBeatsPerSecondAt (start));
+        offset = toPosition (start - tempoSequence.toTime (tempoSequence.toBeats (start) - toDuration (clip.offsetBeats)));
     }
     else
     {
