@@ -1011,7 +1011,10 @@ TEST_CASE ("Edit Node Builder: a track played live through a record enabled MIDI
     auto edit = test_utilities::createTestEdit (engine, 2, Edit::EditRole::forEditing);
     auto tracks = getAudioTracks (*edit);
     tracks[0]->pluginList.insertPlugin (edit->getPluginCache().createNewPlugin (FourOscPlugin::xmlTypeName, {}), 0, nullptr);
-    insertMIDIClip (*tracks[1], { 0_tp, 1_tp });
+
+    for (auto track : tracks)
+        insertMIDIClip (*track, { 0_tp, 1_tp });
+
     insertNewPlugin<LatencyPlugin> (*tracks[1], 0)->latencyTimeSeconds = latencySeconds;
 
     // The hosted MIDI input is added when the DeviceManager scans its MIDI devices, which it does on a timer
@@ -1054,17 +1057,18 @@ TEST_CASE ("Edit Node Builder: a track played live through a record enabled MIDI
     midiDevice.setMonitorMode (InputDevice::MonitorMode::on);
     REQUIRE (midiInput->setTarget (tracks[0]->itemID, false, nullptr));
 
-    // Rebuilds the graph and plays a second of the device sending note ons or offs
-    auto play = [&] (bool recordEnabled, bool noteOn)
+    // Rebuilds the graph, then starts or stops a note on the track and plays a second.
+    // N.B. The note is injected in to the track rather than sent through the device, as a hosted
+    // MIDI device only passes on MIDI from the first EnginePlayer to have its devices scanned
+    auto play = [&, midiSourceID = createUniqueMPESourceID()] (bool recordEnabled, bool noteOn)
     {
         findMidiInput()->setRecordingEnabled (tracks[0]->itemID, recordEnabled);
         edit->dispatchPendingUpdatesSynchronously();
         tc.ensureContextAllocated (true);
 
-        juce::AudioBuffer<float> input (0, (int) sampleRate);
-        juce::MidiBuffer midi;
-        midi.addEvent (noteOn ? juce::MidiMessage::noteOn (1, 69, 1.0f) : juce::MidiMessage::noteOff (1, 69), 0);
-        return player.process (input, midi);
+        tracks[0]->injectLiveMidiMessage (noteOn ? juce::MidiMessage::noteOn (1, 69, 1.0f)
+                                                 : juce::MidiMessage::noteOff (1, 69), midiSourceID);
+        return player.process ((int) sampleRate);
     };
 
     auto getRMS = [&] (const juce::AudioBuffer<float>& buffer, double startSeconds, double endSeconds)
