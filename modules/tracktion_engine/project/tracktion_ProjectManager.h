@@ -100,6 +100,9 @@ public:
     /** Returns every project under the given folder subtree. */
     juce::ReferenceCountedArray<Project> getAllProjects (const juce::ValueTree& folder);
 
+    /** Returns the file or folder of every project in the list, without opening any of them. */
+    juce::Array<juce::File> getAllProjectFiles() const;
+
     //==============================================================================
     /** Extracts a .trkx archive into destDir and adds any contained projects to the list. */
     void unpackArchiveAndAddToList (const juce::File& archiveFile, const juce::File& destDir, juce::ValueTree folder);

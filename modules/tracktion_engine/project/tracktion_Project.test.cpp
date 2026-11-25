@@ -296,6 +296,52 @@ TEST_SUITE ("tracktion_engine")
         cleanup();
     }
 
+    TEST_CASE ("FolderBasedProject: files in a nested project that's only in the project list belong to that project only")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0);
+        REQUIRE (sinFile != nullptr);
+
+        auto outerFolder = tempDir.getChildFile ("Outer");
+        auto innerFolder = outerFolder.getChildFile ("Inner");
+        auto outerAudioFile = outerFolder.getChildFile ("Recorded").getChildFile ("outer.wav");
+        auto innerAudioFile = innerFolder.getChildFile ("Recorded").getChildFile ("inner.wav");
+
+        for (auto& f : { outerAudioFile, innerAudioFile })
+        {
+            REQUIRE (f.getParentDirectory().createDirectory());
+            REQUIRE (sinFile->getFile().copyFileTo (f));
+        }
+
+        // Inner has no properties so no info file, which is how most folder-based projects are
+        auto inner = pm.addProjectToList (innerFolder, false, pm.getActiveProjectsFolder());
+        REQUIRE (inner != nullptr);
+        REQUIRE (! innerFolder.getChildFile ("project_info.json").existsAsFile());
+
+        {
+            ProjectManager::TempProject outer (pm, outerFolder, false);
+            REQUIRE (outer.project != nullptr);
+
+            CHECK (outer.project->getProjectItemForFile (outerAudioFile) != nullptr);
+            CHECK (outer.project->getProjectItemForFile (innerAudioFile) == nullptr);
+            CHECK (outer.project->getNumProjectItems() == 1);
+            CHECK (inner->getProjectItemForFile (innerAudioFile) != nullptr);
+
+            // Still the case after a rescan
+            outer.project->reload (Project::ReloadMode::immediate);
+            CHECK (outer.project->getNumProjectItems() == 1);
+        }
+
+        pm.removeProjectFromList (innerFolder);
+        inner = nullptr;
+        tempDir.deleteRecursively (false);
+    }
+
     TEST_CASE ("FolderBasedProject: create with edits and clips")
     {
         auto& engine = *Engine::getEngines()[0];
