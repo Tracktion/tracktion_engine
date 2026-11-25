@@ -91,7 +91,7 @@ private:
     bool savePropertiesToFile();
 
     void ensureScanned() const;
-    void scanFolder() const;
+    void scanFolder (const juce::Array<juce::File>& otherProjects) const;
     static juce::String inferType (const juce::File&);
     static ProjectItem::Category inferCategory (const juce::File&, const juce::File& root);
 
