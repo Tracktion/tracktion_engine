@@ -21,6 +21,9 @@ namespace tracktion::inline engine {
 class TracktionNodePlayer
 {
 public:
+    /** The fewest samples a block is split in to where the tempo changes in it. */
+    static constexpr int minSectionNumSamples = 64;
+
     /** Creates an NodePlayer to process a Node. */
     TracktionNodePlayer (ProcessState& processStateToUse)
         : playHeadState (processStateToUse.playHeadState),
@@ -196,11 +199,14 @@ private:
 
                 position.set (nextTempoChangePosition);
                 const double proportion = (nextTempoChangePosition - timeRange.getStart()) / timeRange.getLength();
-                const auto numSamples = static_cast<decltype(pc.numSamples)> (std::llround (pc.numSamples * (proportion - startProportion)));
+                const auto numSamples = std::llround (pc.numSamples * (proportion - startProportion));
+                const auto numSamplesLeft = std::llround (pc.numSamples * (1.0 - proportion));
 
-                // Any section left with more than one tempo has its events placed as if it had their
-                // average, which can put them tens of samples out, so this only skips empty sections
-                if (numSamples < 1)
+                // Sections are kept to a minimum size as not all plugins cope with tiny blocks, so close
+                // changes share one. That has its events placed as if it had the average of its tempos,
+                // which puts them out by less than the minimum size, and doesn't build up as every
+                // section still starts and ends on the right beats
+                if (numSamples < minSectionNumSamples || numSamplesLeft < minSectionNumSamples)
                     continue;
 
                 processSubRange (pc, { startProportion, proportion });

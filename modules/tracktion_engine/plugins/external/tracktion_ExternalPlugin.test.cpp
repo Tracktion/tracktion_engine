@@ -501,6 +501,63 @@ TEST_SUITE ("tracktion_engine")
         pm.knownPluginList.removeType (pluginDesc);
         pm.createPluginInstance = prevCallback;
     }
+
+    TEST_CASE ("ExternalPlugin: an unknown identifier is resolved by the host with the plugin's Edit")
+    {
+        // A host can resolve a stale identifier against the Edit's own project (e.g. a
+        // plugin resource copied along with a project folder), so the lookup has to be
+        // handed the Edit the plugin is loading into.
+        struct ResolvingBehaviour : public EngineBehaviour
+        {
+            Edit* editAskedAbout = nullptr;
+            juce::String idAskedAbout;
+
+            bool autoInitialiseDeviceManager() override     { return false; }
+
+            std::unique_ptr<juce::PluginDescription> findDescriptionForFileOrIDInEdit (Edit& e, const juce::String& fileOrID) override
+            {
+                editAskedAbout = &e;
+                idAskedAbout = fileOrID;
+
+                auto d = SidechainTestPlugin().getPluginDescription();
+                d.fileOrIdentifier = "resolved-in-edit";
+                return std::make_unique<juce::PluginDescription> (d);
+            }
+        };
+
+        auto behaviour = std::make_unique<ResolvingBehaviour>();
+        auto* behaviourPtr = behaviour.get();
+
+        // NB: this temporarily becomes Engine::instance; safe here because the engine
+        // TestRunner never calls Engine::getInstance() and other tests use getEngines().
+        Engine engine { juce::String ("tracktion_externalplugin_resolve_test"), nullptr, std::move (behaviour) };
+
+        engine.getPluginManager().createPluginInstance =
+            [] (const juce::PluginDescription& d, double, int, juce::String&) -> std::unique_ptr<juce::AudioPluginInstance>
+            {
+                if (d.fileOrIdentifier == "resolved-in-edit")
+                    return std::make_unique<SidechainTestPlugin>();
+
+                return nullptr;
+            };
+
+        juce::PluginDescription staleDesc;
+        staleDesc.name = "Stale";
+        staleDesc.pluginFormatName = "Test";
+        staleDesc.fileOrIdentifier = "stale-id";
+
+        auto edit = test_utilities::createTestEdit (engine);
+        auto pluginRef = getAudioTracks (*edit)[0]->pluginList.insertPlugin (ExternalPlugin::create (engine, staleDesc), 0);
+        auto externalPlugin = dynamic_cast<ExternalPlugin*> (pluginRef.get());
+        REQUIRE (externalPlugin != nullptr);
+
+        externalPlugin->initialiseFully();
+
+        CHECK (behaviourPtr->editAskedAbout == edit.get());
+        CHECK (behaviourPtr->idAskedAbout == "stale-id");
+        CHECK (externalPlugin->desc.fileOrIdentifier == "resolved-in-edit");
+        CHECK (externalPlugin->getAudioPluginInstance() != nullptr);
+    }
 }
 
 #endif // ENGINE_UNIT_TESTS_EXTERNALPLUGIN

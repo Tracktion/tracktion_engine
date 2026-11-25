@@ -534,8 +534,10 @@ namespace MidiHelpers
                 for (int i = channelNumbers.getStart(); i < channelNumbers.getEnd(); ++i)
                     chocMidiHelpers::createControllerUpdatesForTime (sourceSequence, (uint8_t) i, time, controllerMessagesScratchBuffer);
 
+                // Some of these are timestamped with their position in the sequence, so put them
+                // all at the start, in order, before the notes
                 for (auto& m : controllerMessagesScratchBuffer)
-                    destBuffer.addMidiMessage (m, midiSourceID);
+                    destBuffer.addMidiMessage (m, 0.0, midiSourceID);
             }
 
             if (! clipLevel.isMute())

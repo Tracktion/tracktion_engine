@@ -23,7 +23,7 @@ namespace tracktion::inline engine
 // seamlessly, looped or not, in the arrangement and the launcher.
 //
 // Each seed builds an Edit with a random tempo curve, arrangement MIDI clips (played
-// both in the default seconds-based way and the beat-based way), beat-based audio
+// both from a pre-looped sequence and generated as they play), beat-based audio
 // clips and launched MIDI and audio clips, then plays it while a random schedule
 // changes, drags and moves tempo points. A model of where the playhead should be, on
 // the same beat after every change and looping at the same beats, is checked against
@@ -837,8 +837,9 @@ namespace tempo_change_tests
 
     // An event less than half a sample before the end of a section is played at the start of
     // the next, a note-off on a clip's end is nudged back a sample and splitting a block at a
-    // tempo change rounds to whole samples
-    constexpr double midiToleranceSamples = 2.5;
+    // tempo change rounds to whole samples. Tempo changes closer together than the smallest
+    // section share one, where events are placed as if it had the average of its tempos
+    constexpr double midiToleranceSamples = 2.5 + TracktionNodePlayer::minSectionNumSamples;
 
     // Note-offs are nudged back a little so they're before a note-on at the same time
     // (see MidiNote::getPlaybackTime)

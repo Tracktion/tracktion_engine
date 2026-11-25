@@ -178,6 +178,16 @@ void Project::setNewProjectId (ProjectID newID)                             { im
 //==============================================================================
 extern void deleteQueuedPlugins();
 
+/** Returns the file a relative path ref resolves to if it's in the folder, or an empty file. */
+static juce::File findRelativeFileInFolder (Edit& edit, const ProjectItemRef& ref, const juce::File& folder)
+{
+    if (ref.isProjectItemID() || juce::File::isAbsolutePath (ref.toString()))
+        return {};
+
+    auto file = SourceFileReference::findFileFromString (edit, ref.toString());
+    return file.existsAsFile() && file.isAChildOf (folder) ? file : juce::File();
+}
+
 Project::Ptr convertToFolderBasedProject (Project& project)
 {
     // Only convert valid file-based projects
@@ -216,7 +226,11 @@ Project::Ptr convertToFolderBasedProject (Project& project)
                         {
                             if (ref.itemRef.isValid())
                             {
-                                if (auto projItem = project.getProjectItemFor (ref.itemRef))
+                                // A relative path into the project folder is resolved directly, as
+                                // looking it up as a project item searches every item in the project
+                                if (auto file = findRelativeFileInFolder (*edit, ref.itemRef, projectDir); file != juce::File())
+                                    exportable->reassignReferencedItem (ref, ProjectItemRef::fromAbsolutePath (file), 0.0);
+                                else if (auto projItem = project.getProjectItemFor (ref.itemRef))
                                     exportable->reassignReferencedItem (ref, ProjectItemRef::fromAbsolutePath (projItem->getSourceFile()), 0.0);
                             }
                         }

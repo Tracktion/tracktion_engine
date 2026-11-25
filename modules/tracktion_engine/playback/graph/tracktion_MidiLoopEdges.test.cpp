@@ -156,6 +156,30 @@ TEST_SUITE ("tracktion_engine")
             e.isLeftOn (60);
         }
     }
+
+    TEST_CASE ("MIDI: a program change before where playback starts is sent before the notes held there")
+    {
+        auto& engine = *Engine::getEngines()[0];
+
+        for (bool beatBased : { false, true })
+        {
+            CAPTURE (beatBased);
+            LoopedMidiEdit e (engine, 60.0);
+
+            // A program change at the clip's start and a note held over where playback starts
+            auto& clip = e.addClip ({ 0_tp, 8_tp }, beatBased);
+            clip.getSequence().addControllerEvent (0_bp, MidiControllerEvent::programChangeType, 5 << 7, nullptr);
+            clip.getSequence().addNote (60, 1.5_bp, 1_bd, 100, 0, nullptr);
+
+            e.playLooped ({ 2_tp, 6_tp }, 2_tp, 1s);
+
+            REQUIRE (e.probe->programChangeTimes.size() == 1);
+            REQUIRE (e.countNoteOns (60) == 1);
+            const auto noteOn = std::find_if (e.probe->events.begin(), e.probe->events.end(),
+                                              [] (auto& ev) { return ev.isNoteOn && ev.noteNumber == 60; });
+            CHECK (e.probe->programChangeTimes[0] <= noteOn->outputTime);
+        }
+    }
 }
 
 } // namespace tracktion::inline engine

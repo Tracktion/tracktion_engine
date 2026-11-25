@@ -15,7 +15,7 @@ A tempo change is heard straight away, before the graph's rebuilt. Playing in se
 ___
 
 ### Change
-`TracktionNodePlayer` now splits a block at every tempo change in it, however close together they are.
+`TracktionNodePlayer` now splits a block at the tempo changes in it, keeping each section to at least 64 samples.
 
 #### Possible Issues
 Nodes and plugins get more, shorter, process calls where the tempo changes, most of all with curved tempos, which change every quarter of a beat or so.

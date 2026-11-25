@@ -12,7 +12,7 @@ Changing the tempo whilst playing, e.g. dragging a tempo curve point, keeps play
    - Beat-based audio clips read their source by beats (`WaveNodeRealTime` with a `BeatRangeReader`), and their fades (`FadeInOutNode`) are positioned by the clip's beats and worked out with the current tempo each block.
    - `CombiningNode` groups its inputs by beats, so the playhead's new time can't land in a group that doesn't list a clip it's in.
    - Launched clips run on the monotonic beat, which carries on through tempo changes and the arrangement loop.
-5. **Splitting blocks.** `TracktionNodePlayer` splits each block at every tempo change in it, so each section has one tempo and events are placed exactly.
+5. **Splitting blocks.** `TracktionNodePlayer` splits each block at the tempo changes in it, so a section has one tempo and its events are placed exactly. Sections are kept to at least 64 samples, as not all plugins cope with tiny blocks, so changes closer together than that share one. Its events are placed as if it had the average of its tempos, which puts them out by less than 64 samples and doesn't build up, as every section still starts and ends on the right beats.
 6. **The rebuild** that follows (clips moved, tempo properties changed) is seamless for all of these, as each node takes over its predecessor's state: wave readers with the same beat-domain state hash are reused, and MIDI nodes keep their active notes.
 
 ## Things that must stay true
@@ -31,4 +31,4 @@ Changing the tempo whilst playing, e.g. dragging a tempo curve point, keeps play
 
 ## Known limitations
 
-- A time-stretched beat-based clip is reset where it loops, so its output isn't seamless there whatever the tempo, and it takes the stretcher's latency (longer the more it's stretched) to start a clip. Neither is to do with tempo changes.
+- It takes the time-stretcher's latency (longer the more it's stretched) to start a time-stretched beat-based clip. That isn't to do with tempo changes.
