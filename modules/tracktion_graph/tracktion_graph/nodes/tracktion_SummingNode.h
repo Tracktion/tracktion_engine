@@ -75,6 +75,8 @@ public:
         props.hasMidi = false;
         props.numberOfChannels = 0;
         props.latencyNumSamples = nodes.empty() ? 0 : std::numeric_limits<int>::min();
+        int latencyOfBypassingInputs = props.latencyNumSamples;
+        bool hasCompensatedInputs = false;
 
         for (auto& node : nodes)
         {
@@ -82,10 +84,27 @@ public:
             props.hasAudio = props.hasAudio || nodeProps.hasAudio;
             props.hasMidi = props.hasMidi || nodeProps.hasMidi;
             props.numberOfChannels = std::max (props.numberOfChannels, nodeProps.numberOfChannels);
-            props.latencyNumSamples = std::max (props.latencyNumSamples, nodeProps.latencyNumSamples);
+
+            if (nodeProps.bypassLatencyCompensation)
+            {
+                latencyOfBypassingInputs = std::max (latencyOfBypassingInputs, nodeProps.latencyNumSamples);
+            }
+            else
+            {
+                props.latencyNumSamples = std::max (props.latencyNumSamples, nodeProps.latencyNumSamples);
+                hasCompensatedInputs = true;
+            }
 
             if (props.nodeID != 0 || nodeProps.nodeID != 0)
                 hash_combine (props.nodeID, nodeProps.nodeID);
+        }
+
+        // Inputs that bypass latency compensation aren't lined up with the rest, so they don't count towards
+        // the latency. If they're all there is though, this is the sum of them alone so it bypasses it too
+        if (! hasCompensatedInputs)
+        {
+            props.latencyNumSamples = latencyOfBypassingInputs;
+            props.bypassLatencyCompensation = ! nodes.empty();
         }
 
         cachedNodeProperties = props;
@@ -279,7 +298,7 @@ private:
             const int nodeLatency = props.latencyNumSamples;
             const int latencyToAdd = subtractNoWrap (maxLatency, nodeLatency);
 
-            if (latencyToAdd <= 0)
+            if (latencyToAdd <= 0 || props.bypassLatencyCompensation)
                 continue;
 
             auto getOwnedNode = [this] (auto nodeToFind)

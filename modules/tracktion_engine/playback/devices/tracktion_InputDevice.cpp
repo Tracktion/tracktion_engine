@@ -277,8 +277,11 @@ void InputDeviceInstance::updateRecordingStatus()
         const bool wasRecording = ! clips.isEmpty();
         const bool isLivePlayActive = isLivePlayEnabled (*track);
 
-        // This logic rebuilds the audio graph if the monitor state changes as it's a static node-type in the graph
-        if (destinationsChanged || (! wasRecording && wasLivePlayActive != isLivePlayActive))
+        // This logic rebuilds the audio graph if the monitor state changes as it's a static node-type in the graph.
+        // So is a live MIDI input's track bypassing latency compensation, which it only does whilst record enabled
+        const bool isLiveMidi = isLivePlayActive && dynamic_cast<MidiInputDevice*> (&owner) != nullptr;
+
+        if (destinationsChanged || (! wasRecording && (wasLivePlayActive != isLivePlayActive || isLiveMidi)))
             restartPlayback = true;
 
         wasLivePlayActive = isLivePlayActive;
