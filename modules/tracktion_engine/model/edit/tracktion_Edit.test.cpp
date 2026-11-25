@@ -241,6 +241,23 @@ TEST_SUITE ("tracktion_engine")
         CHECK (edit != nullptr);
         CHECK (! couldMatchTempo);
     }
+
+    TEST_CASE ("Edit: undoable changes are tracked straight after construction")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine, Edit::EditRole::forRendering);
+        auto& um = edit->getUndoManager();
+
+        // Changes made whilst the Edit was initialising don't count
+        um.dispatchPendingMessages();
+        CHECK (! edit->hasChangedSinceSaved());
+
+        // N.B. the message loop isn't run here, so this only passes if the Edit is
+        // listening to its UndoManager by the time it's constructed
+        edit->tempoSequence.getTempo (0)->setBpm (90.0);
+        um.dispatchPendingMessages();
+        CHECK (edit->hasChangedSinceSaved());
+    }
 }
 
 } // namespace tracktion::inline engine
