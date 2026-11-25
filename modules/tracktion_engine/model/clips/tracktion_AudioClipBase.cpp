@@ -205,10 +205,16 @@ private:
 //==============================================================================
 AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, ClipOwner& targetParent)
     : Clip (v, targetParent, id, t),
-      loopInfo (edit.engine, state.getOrCreateChildWithName (IDs::LOOPINFO, getUndoManager()), getUndoManager()),
+      loopInfo (edit.engine, state.getOrCreateChildWithName (IDs::LOOPINFO, nullptr), getUndoManager()),
       pluginList (edit),
       lastProxy (edit.engine)
 {
+    // N.B. Nothing in this constructor may write to the state via the UndoManager.
+    // A clip can be constructed whilst an undo is in progress (undoing a record or a
+    // clip deletion re-adds the clip's state), and UndoManager::perform refuses to
+    // re-enter, so any undoable write made here is silently discarded.
+    // Corrections to derived geometry and old-Edit migrations are made with a null
+    // UndoManager instead.
     auto um = getUndoManager();
 
     level->dbGain.referTo (state, IDs::gain, um);
@@ -245,9 +251,9 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
 
     // Keep this in to handle old edits..
     if (state.getProperty (IDs::timeStretch))
-        timeStretchMode = juce::VariantConverter<TimeStretcher::Mode>::fromVar (state.getProperty (IDs::stretchMode));
+        timeStretchMode.setValue (juce::VariantConverter<TimeStretcher::Mode>::fromVar (state.getProperty (IDs::stretchMode)), nullptr);
 
-    timeStretchMode = TimeStretcher::checkModeIsAvailable (timeStretchMode);
+    timeStretchMode.setValue (TimeStretcher::checkModeIsAvailable (timeStretchMode), nullptr);
 
     autoPitch.referTo (state, IDs::autoPitch, um);
     autoPitchMode.referTo (state, IDs::autoPitchMode, um);
@@ -256,7 +262,7 @@ AudioClipBase::AudioClipBase (const juce::ValueTree& v, EditItemID id, Type t, C
     isReversed.referTo (state, IDs::isReversed, um);
     autoDetectBeats.referTo (state, IDs::autoDetectBeats, um);
 
-    level->pan = juce::jlimit (-1.0f, 1.0f, static_cast<float> (level->pan.get()));
+    level->pan.setValue (juce::jlimit (-1.0f, 1.0f, static_cast<float> (level->pan.get())), nullptr);
     checkFadeLengthsForOverrun();
 
     useClipLaunchQuantisation.referTo (state, IDs::useClipLaunchQuantisation, um);
@@ -345,7 +351,7 @@ void AudioClipBase::cloneFrom (Clip* c)
     {
         Clip::cloneFrom (other);
 
-        const bool wasLooping = loopLengthBeats.get() > BeatDuration() || loopLength.get() > TimeDuration();
+        const bool wasLooping = hasLoop (true) || hasLoop (false);
 
         level->dbGain       .setValue (other->level->dbGain, nullptr);
         level->pan          .setValue (other->level->pan, nullptr);
@@ -379,7 +385,7 @@ void AudioClipBase::cloneFrom (Clip* c)
 
         copyValueTree (loopInfo.state, other->loopInfo.state, nullptr);
 
-        const bool isLooping = loopLengthBeats.get() > BeatDuration() || loopLength.get() > TimeDuration();
+        const bool isLooping = hasLoop (true) || hasLoop (false);
 
         if (! isLooping && wasLooping)
             disableLooping();
@@ -750,8 +756,12 @@ void AudioClipBase::checkFadeLengthsForOverrun()
     if (fadeIn + fadeOut > len)
     {
         const double scale = len / (fadeIn + fadeOut);
-        fadeIn = fadeIn * scale;
-        fadeOut = fadeOut * scale;
+
+        // This is derived geometry, not user data, and it can be corrected whilst a clip is
+        // being constructed. If that happens during an undo, an undoable write would re-enter
+        // UndoManager::perform, which refuses it and silently discards the correction.
+        fadeIn.setValue (fadeIn * scale, nullptr);
+        fadeOut.setValue (fadeOut * scale, nullptr);
     }
 
     // also check the auto fades
@@ -1061,14 +1071,26 @@ BeatDuration AudioClipBase::getLoopLengthBeats() const
     return BeatDuration::fromBeats (loopLength.get().inSeconds() * edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart()));
 }
 
+static TimeRange clampTimeLoopRange (TimeRange range, TimeDuration sourceLen, double speedRatio)
+{
+    // limits the number of times longer than the source file length the loop length can be
+    const double maxMultiplesOfSourceLengthForLooping = 50.0;
+
+    auto start  = juce::jlimit (0_tp, toPosition (sourceLen) / speedRatio, range.getStart());
+    auto length = juce::jlimit (0_td, sourceLen * maxMultiplesOfSourceLengthForLooping / speedRatio, range.getLength());
+
+    return { start, start + length };
+}
+
 void AudioClipBase::setLoopRange (TimeRange newRange)
 {
     if (autoTempo)
     {
-        auto pos = getPosition();
-        auto& ts = edit.tempoSequence;
-        auto newStart = BeatPosition::fromBeats (newRange.getStart().inSeconds() * ts.getBeatsPerSecondAt (pos.getStart()));
-        auto newLength = ts.toBeats (pos.getStart() + newRange.getLength()) - ts.toBeats (pos.getStart());
+        // Use the single tempo at the clip start, the same conversion as the loop getters,
+        // so setting the range they report leaves the loop unchanged
+        auto bps = edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart());
+        auto newStart  = BeatPosition::fromBeats (newRange.getStart().inSeconds() * bps);
+        auto newLength = BeatDuration::fromBeats (newRange.getLength().inSeconds() * bps);
         setLoopRangeBeats ({ newStart, newStart + newLength });
     }
     else
@@ -1077,11 +1099,9 @@ void AudioClipBase::setLoopRange (TimeRange newRange)
 
         if (sourceLen > 0s)
         {
-            // limits the number of times longer than the source file length the loop length can be
-            const double maxMultiplesOfSourceLengthForLooping = 50.0;
-
-            auto newStart  = juce::jlimit (0_tp, toPosition (sourceLen) / getSpeedRatio(), newRange.getStart());
-            auto newLength = juce::jlimit (0_td, sourceLen * maxMultiplesOfSourceLengthForLooping / getSpeedRatio(), newRange.getLength());
+            auto clamped   = clampTimeLoopRange (newRange, sourceLen, getSpeedRatio());
+            auto newStart  = clamped.getStart();
+            auto newLength = clamped.getLength();
 
             if (loopStart != newStart || loopLength != newLength)
             {
@@ -1634,7 +1654,9 @@ juce::Array<Exportable::ReferencedItem> AudioClipBase::getReferencedItems()
     {
         for (auto& ref : results)
         {
-            auto wi = edit.engine.getAudioFileManager().getAudioFile (ref.itemRef).getInfo();
+            // Resolve via the Edit as the clip does. Looking a path up through the
+            // ProjectManager searches every item of every open project
+            auto wi = AudioFile (edit.engine, SourceFileReference::findFileFromString (edit, ref.itemRef.toString())).getInfo();
 
             if (wi.sampleRate > 0)
             {
@@ -1652,7 +1674,9 @@ void AudioClipBase::reassignReferencedItem (const ReferencedItem& item,
 {
     Clip::reassignReferencedItem (item, newRef, newStartTime);
 
-    if (getReferencedItems().size() == 1 && item == getReferencedItems().getFirst())
+    auto referencedItems = getReferencedItems();
+
+    if (referencedItems.size() == 1 && item == referencedItems.getFirst())
     {
         if (newRef.isProjectItemID())
         {
@@ -1665,8 +1689,10 @@ void AudioClipBase::reassignReferencedItem (const ReferencedItem& item,
         }
         else
         {
+            // A path is only reassigned to follow a file that has changed on disk. That can't
+            // be undone so this mustn't be either, or an undo would restore the old path
             auto newFile = newRef.resolve (edit.engine);
-            sourceFileReference.setToFile (newFile, SourceFileReference::PathStyle::chooseBest, false);
+            sourceFileReference.source.setValue (SourceFileReference::findPathFromFile (edit, newFile, true), nullptr);
         }
     }
     else
@@ -2425,6 +2451,25 @@ void AudioClipBase::beginRenderingNewProxyIfNeeded()
             createNewProxyAsync();
 }
 
+bool AudioClipBase::isGeneratingPlaybackFile()
+{
+    // A source the clip renders itself (an EditClip, say) only exists once that render
+    // has run, and a failed render sets lastRenderJobFailed so we stop claiming it's coming
+    if (shouldAttemptRender() && ! getAudioFile().isValid())
+        return true;
+
+    if (! canUseProxy())
+        return false;
+
+    // A stretched proxy is rendered from the segment list, so with no segments it can never be made
+    if (usesTimeStretchedProxy() && getAudioSegmentList().getSegments().isEmpty())
+        return false;
+
+    // Proxies are generated by the timer started in beginRenderingNewProxyIfNeeded, so the
+    // job may not exist yet - go by whether one is needed rather than whether one is running
+    return usesTimeStretchedProxy() || getAudioFile().getInfo().needsCachedProxy;
+}
+
 //==============================================================================
 void AudioClipBase::jobFinished (RenderManager::Job& job, bool completedOk)
 {
@@ -2701,13 +2746,16 @@ void AudioClipBase::updateReversedState()
 
 void AudioClipBase::updateAutoTempoState()
 {
-    if (isLooping())
+    // autoTempo has already been toggled by the time this is called, so the loop
+    // is held in the *other* representation (isLooping() would look at the new, empty one)
+    if (hasLoop (! autoTempo))
     {
         auto bps = edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart());
 
         if (autoTempo)
         {
             // convert time based looping to beat based looping
+            // (uses a single tempo, the same as getLoopLength() etc., so the reported loop doesn't change)
             loopStartBeats  = BeatPosition::fromBeats (loopStart.get().inSeconds()  * bps);
             loopLengthBeats = BeatDuration::fromBeats (loopLength.get().inSeconds() * bps);
 
@@ -2717,8 +2765,15 @@ void AudioClipBase::updateAutoTempoState()
         else
         {
             // convert beat based looping to time based looping
-            loopStart  = TimePosition::fromSeconds (loopStartBeats.get().inBeats()  / bps);
-            loopLength = TimeDuration::fromSeconds (loopLengthBeats.get().inBeats() / bps);
+            auto newStart  = TimePosition::fromSeconds (loopStartBeats.get().inBeats()  / bps);
+            auto newLength = TimeDuration::fromSeconds (loopLengthBeats.get().inBeats() / bps);
+            TimeRange range (newStart, newStart + newLength);
+
+            if (auto sourceLen = getSourceLength(); sourceLen > 0s)
+                range = clampTimeLoopRange (range, sourceLen, getSpeedRatio());
+
+            loopStart  = range.getStart();
+            loopLength = range.getLength();
 
             loopStartBeats  = 0_bp;
             loopLengthBeats = 0_bd;

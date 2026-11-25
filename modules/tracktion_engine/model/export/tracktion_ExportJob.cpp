@@ -161,28 +161,7 @@ void ExportJob::copyEditFilesToTempDir()
     jassert (edit != nullptr);
 
     if (! includeClips)
-    {
-        for (auto t : getClipTracks (*edit))
-        {
-            for (int j = t->getClips().size(); --j >= 0;)
-            {
-                auto clip = t->getClips().getUnchecked (j);
-
-                if (clip->type != TrackItem::Type::video
-                      && clip->type != TrackItem::Type::marker)
-                {
-                    clip->removeFromParent();
-                }
-            }
-        }
-
-        for (auto t : getAudioTracks (*edit))
-        {
-            for (auto s : t->getClipSlotList().getClipSlots())
-                if (auto c = s->getClip())
-                    c->removeFromParent();
-        }
-    }
+        removeAllContentClips (*edit);
 
     auto allExportables = Exportable::addAllExportables (*edit);
 

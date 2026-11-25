@@ -307,13 +307,21 @@ public:
     /** Returns the LoopInfo being used to describe this clip. */
     LoopInfo& getLoopInfo()                             { return loopInfo; }
 
-    /** Returns the loop range in seconds. */
+    /** Returns the loop range in seconds.
+
+        With auto tempo on, the loop is stored in beats and this converts it with the
+        single tempo at the clip start, as do getLoopStart(), getLoopLength() and
+        setLoopRange(). That keeps setLoopRange (getLoopRange()) from changing the loop,
+        but if the tempo changes inside the loop the seconds won't match how long it
+        plays on the timeline. Use getLoopRangeBeats() and setLoopRangeBeats() when the
+        exact loop matters.
+    */
     TimeRange getLoopRange() const;
 
     /** @internal */
     bool canLoop() const override;
     /** @internal */
-    bool isLooping() const override                     { return getAutoTempo() ? (loopLengthBeats > BeatDuration()) : (loopLength > TimeDuration()); }
+    bool isLooping() const override                     { return hasLoop (getAutoTempo()); }
     /** @internal */
     bool beatBasedLooping() const override              { return isLooping() && getAutoTempo(); }
     /** @internal */
@@ -552,6 +560,19 @@ public:
     /** Triggers creation of a new proxy file if one is required. */
     void beginRenderingNewProxyIfNeeded();
 
+    /** Returns true if the playback file is one the clip is going to generate,
+        i.e. a proxy or a rendered source.
+
+        A playback file that doesn't exist yet is normal for these clips and will
+        appear once the render completes, so callers should wait for it. If this
+        returns false and the playback file still can't be read, the source has
+        been deleted, moved or is otherwise unreadable and will never appear.
+
+        N.B. Call this after beginRenderingNewProxyIfNeeded so any render that is
+        needed has been started.
+    */
+    bool isGeneratingPlaybackFile();
+
     /** Returns an AudioSegmentList describing this file if it is using auto-tempo.
         This can be useful for drawing waveforms.
         [[ message_thread ]]
@@ -775,6 +796,9 @@ private:
     void updateReversedState();
     void updateAutoTempoState();
     void updateClipEffectsState();
+
+    /** Returns true if the beat-based or time-based loop representation holds a loop. */
+    bool hasLoop (bool beatBased) const     { return beatBased ? (loopLengthBeats > BeatDuration()) : (loopLength > TimeDuration()); }
 
     enum { updateCrossfadesFlag = 0, updateCrossfadesOverlappedFlag = 1 };
     void updateAutoCrossfades (bool updateOverlapped);

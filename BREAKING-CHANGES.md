@@ -3,6 +3,17 @@
 ___
 
 ### Change
+A clip whose playback file can't be read, and that isn't going to generate one, no longer gets a node in the playback graph.
+
+#### Possible Issues
+`createNodeForAudioClip` already returned no node for a null playback file; it now also returns none when the playback file is invalid and `AudioClipBase::isGeneratingPlaybackFile()` is false, i.e. the source has been deleted, moved or is unreadable and no proxy or source render is going to produce it. Such a clip is silent, as before, but it no longer appears in the graph at all, so code walking the graph won't find a node for it. A subclass that produces its playback file through a mechanism the engine doesn't know about should override `needsRender()`/`requiresRenderingSource()` so `isGeneratingPlaybackFile()` reports it, otherwise its clips will be dropped from the graph instead of waited for.
+
+#### Rationale
+`WaveNode::isReadyToProcess` returns false until its file can be read, which is how a render waits for proxies. For a source that will never appear that wait never ended, so `Renderer::renderToFile` retried forever with no error. Not building the node keeps the wait for files that really are coming and removes it for files that aren't.
+
+___
+
+### Change
 `EngineBehaviour::newClipAdded` is deprecated and replaced by `EngineBehaviour::newClipCreated`. It's now only called when a clip is created, and it's called later than before.
 
 #### Possible Issues

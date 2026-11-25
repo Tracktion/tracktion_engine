@@ -197,17 +197,6 @@ EditRenderJob::RenderPass::~RenderPass()
     const bool completedOk = task != nullptr ? task->getCurrentTaskProgress() == 1.0f : false;
     task = nullptr;
 
-    if (owner.editDeleter.willDeleteObject())
-    {
-        try
-        {
-            callBlocking ([this] { Renderer::turnOffAllPlugins (*r.edit); });
-        }
-        catch (std::runtime_error&)
-        {
-        }
-    }
-
     // overwite with temp file
     if (! errorMessage.isEmpty() && owner.silenceOnBackup)
         owner.generateSilence (tempFile.getFile());
@@ -299,7 +288,6 @@ bool EditRenderJob::RenderPass::initialise()
     {
         callBlocking ([this]
                       {
-                          Renderer::turnOffAllPlugins (*r.edit);
                           r.edit->initialiseAllPlugins();
                           r.edit->getTransport().stop (false, true);
                       });

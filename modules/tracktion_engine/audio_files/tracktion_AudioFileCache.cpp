@@ -751,12 +751,8 @@ void AudioFileCache::touchReaders()
 
 bool AudioFileCache::hasCacheMissed (bool clearMissedFlag)
 {
-    const bool didMiss = cacheMissed;
-
-    if (clearMissedFlag)
-        cacheMissed = false;
-
-    return didMiss;
+    return clearMissedFlag ? cacheMissed.exchange (false, std::memory_order_relaxed)
+                           : cacheMissed.load (std::memory_order_relaxed);
 }
 
 TimeDuration AudioFileCache::getCpuUsage() const
@@ -1032,7 +1028,7 @@ bool AudioFileCache::Reader::readSamples (int* const* destSamples, int numDestCh
     }
 
     if (! allOk)
-        cache.cacheMissed = true;
+        cache.cacheMissed.store (true, std::memory_order_relaxed);
 
     return allOk;
 }

@@ -572,7 +572,7 @@ Clip* insertClipWithState (ClipOwner& parent,
         position.time.getEnd() = Edit::getMaximumEditEnd();
 
     if (auto track = dynamic_cast<Track*> (&parent))
-        track->setFrozen (false, Track::groupFreeze);
+        track->unfreeze (Track::groupFreeze);
 
     if (deleteExistingClips == DeleteExistingClips::yes)
         deleteRegion (parent, position.time);
@@ -757,8 +757,7 @@ juce::Array<Clip*> deleteRegion (ClipOwner& parent, TimeRange range)
     CRASH_TRACER
     if (auto track = dynamic_cast<Track*> (&parent))
     {
-        track->setFrozen (false, Track::groupFreeze);
-        track->setFrozen (false, Track::individualFreeze);
+        track->unfreeze (Track::anyFreeze);
     }
 
     // make a copied list first, as they'll get moved out-of-order..
@@ -781,8 +780,7 @@ juce::Array<Clip*> deleteRegion (Clip& c, TimeRange range)
     CRASH_TRACER
     if (auto track = dynamic_cast<Track*> (c.getParent()))
     {
-        track->setFrozen (false, Track::groupFreeze);
-        track->setFrozen (false, Track::individualFreeze);
+        track->unfreeze (Track::anyFreeze);
     }
 
     auto pos = c.getPosition();
@@ -805,6 +803,10 @@ juce::Array<Clip*> deleteRegion (Clip& c, TimeRange range)
     else
     {
         c.trimAwayOverlap (range);
+
+        // A range ending a rounding error inside the clip would otherwise leave a sliver of it behind
+        if (c.getPosition().getLength() < Clip::minimumLength)
+            c.removeFromParent();
     }
 
     return newClips;
@@ -836,10 +838,14 @@ Clip* split (Clip& clip, const TimePosition time)
     if (parent == nullptr)
         return {};
 
+    // A slot holds one clip, so inserting the second half would evict the first
+    if (clip.getClipSlot() != nullptr)
+        return {};
+
     auto& edit = clip.edit;
 
     if (auto track = dynamic_cast<Track*> (parent))
-        track->setFrozen (false, Track::groupFreeze);
+        track->unfreeze (Track::groupFreeze);
 
     if (clip.getPosition().time.reduced (0.001s).contains (time)
          && ! clip.isGrouped())

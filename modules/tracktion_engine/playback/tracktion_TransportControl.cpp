@@ -850,6 +850,10 @@ void TransportControl::ensureContextAllocated (bool alwaysReallocate)
 
 void TransportControl::freePlaybackContext()
 {
+    if (playbackContext)
+        if (auto syncPoint = playbackContext->getSyncPoint())
+            lastContextMonotonicBeat = syncPoint->monotonicBeat;
+
     playbackContext.reset();
     clearPlayingFlags();
     transportState->playbackContextAllocation = std::max (0, transportState->playbackContextAllocation - 1);
@@ -1169,6 +1173,20 @@ void TransportControl::setPosition (TimePosition timeToMoveTo, TimePosition time
         epc->postPosition (timeToMoveTo, timeToPerformJump);
 
     sendChangeMessage();
+}
+
+void TransportControl::jumpTo (TimePosition t)
+{
+    if (isPlaying())
+    {
+        if (auto timeToJumpAt = engine.getEngineBehaviour().getTimeToJumpAt (*this, t))
+        {
+            setPosition (t, *timeToJumpAt);
+            return;
+        }
+    }
+
+    setPosition (t);
 }
 
 void TransportControl::setUserDragging (bool b)

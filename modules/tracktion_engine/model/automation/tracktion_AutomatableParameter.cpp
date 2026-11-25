@@ -582,13 +582,10 @@ private:
 
             std::unique_ptr<AutomationIterator> newStream;
 
+            // Unlike track automation, a clip curve with a single point holds
+            // that value, as the curve editor draws it
             if (curveInfo.curve.getNumPoints() > 0)
-            {
-                auto s = std::make_unique<AutomationIterator> (curveInfo.curve.edit, curveInfo.curve);
-
-                if (! s->isEmpty())
-                    newStream = std::move (s);
-            }
+                newStream = std::make_unique<AutomationIterator> (curveInfo.curve.edit, curveInfo.curve);
 
             {
                 const juce::ScopedLock sl (parameterStreamLock);
@@ -712,6 +709,20 @@ struct AutomatableParameter::AutomationSourceList  : private ValueTreeObjectList
                 return o;
 
         return {};
+    }
+
+    /** An assignment added before its AutomationCurveModifier existed has no source,
+        so this creates it as if the assignment had just been added.
+    */
+    void addMissingSourceForAutomationCurve (EditItemID automationCurveModifierID)
+    {
+        TRACKTION_ASSERT_MESSAGE_THREAD
+
+        for (auto v : parent)
+            if (v.hasType (IDs::AUTOMATIONCURVE)
+                && EditItemID::fromProperty (v, IDs::source) == automationCurveModifierID
+                && indexOf (v) < 0)
+                valueTreeChildAdded (parent, v);
     }
 
 private:
@@ -1114,6 +1125,13 @@ bool AutomatableParameter::removeModifier (ModifierSource& source)
     }
 
     return false;
+}
+
+void AutomatableParameter::automationCurveModifierCreated (EditItemID automationCurveModifierID)
+{
+    // A source list created later will find the modifier itself
+    if (automationSourceList)
+        automationSourceList->addMissingSourceForAutomationCurve (automationCurveModifierID);
 }
 
 bool AutomatableParameter::hasActiveModifierAssignments() const

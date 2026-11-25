@@ -376,6 +376,87 @@ TEST_SUITE ("tracktion_engine")
         cleanup();
     }
 
+    TEST_CASE ("FolderBasedProject: Edit outside the root of its owner project finds files beside it")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto cleanup = [&tempDir]
+        {
+            tempDir.deleteRecursively (false);
+        };
+
+        // Outer/Inner/Inner Edit 1.tracktionedit uses Outer/Inner/Recorded/take.wav
+        auto outerFolder = tempDir.getChildFile ("Outer");
+        auto innerFolder = outerFolder.getChildFile ("Inner");
+        auto editFile = innerFolder.getChildFile ("Inner Edit 1.tracktionedit");
+        auto audioFile = innerFolder.getChildFile ("Recorded").getChildFile ("take.wav");
+        REQUIRE (audioFile.getParentDirectory().createDirectory());
+
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+        REQUIRE (sinFile != nullptr);
+        REQUIRE (sinFile->getFile().copyFileTo (audioFile));
+
+        // Save an Edit whose clip refers to the audio file relative to the Edit file
+        {
+            auto edit = createEmptyEdit (engine, editFile);
+            edit->ensureNumberOfAudioTracks (1);
+
+            // The Edit file has to exist for paths to be made relative to its folder
+            REQUIRE (test_utilities::saveEditSync (*edit));
+
+            auto clip = insertWaveClip (*getAudioTracks (*edit)[0], "Take", audioFile,
+                                        { { 0_tp, TimePosition::fromSeconds (2.0) } },
+                                        DeleteExistingClips::no);
+            REQUIRE (clip != nullptr);
+            REQUIRE (clip->getSourceFileReference().source.get()
+                        == juce::String ("Recorded") + juce::File::getSeparatorString() + "take.wav");
+            REQUIRE (test_utilities::saveEditSync (*edit));
+        }
+
+        // Loads the Edit as an app does, identified by the owner project's item for it
+        auto expectClipFileFoundThrough = [&] (Project& owner)
+        {
+            auto editItem = owner.getProjectItemForFile (editFile);
+            REQUIRE (editItem != nullptr);
+
+            auto itemRef = editItem->getProjectItemRef();
+            REQUIRE (itemRef.getProject().get() == &owner);
+
+            auto edit = Edit::createEdit ({ engine, loadEditFromFile (engine, editFile, itemRef), itemRef });
+            REQUIRE (edit != nullptr);
+
+            auto clips = getAudioTracks (*edit)[0]->getClips();
+            REQUIRE (clips.size() == 1);
+
+            auto clip = dynamic_cast<WaveAudioClip*> (clips[0]);
+            REQUIRE (clip != nullptr);
+            CHECK (clip->getSourceFileReference().getFile() == audioFile);
+            CHECK (clip->getCurrentSourceFile() == audioFile);
+        };
+
+        SUBCASE ("Edit in a subfolder of its project")
+        {
+            ProjectManager::TempProject outer (pm, outerFolder, false);
+            REQUIRE (outer.project != nullptr);
+            expectClipFileFoundThrough (*outer.project);
+        }
+
+        SUBCASE ("Edit in a project inside another project, opened through the outer one")
+        {
+            ProjectManager::TempProject inner (pm, innerFolder, false);
+            ProjectManager::TempProject outer (pm, outerFolder, false);
+            REQUIRE (inner.project != nullptr);
+            REQUIRE (outer.project != nullptr);
+            expectClipFileFoundThrough (*outer.project);
+        }
+
+        cleanup();
+    }
+
     TEST_CASE ("Project: archive and unarchive round-trip")
     {
         auto& engine = *Engine::getEngines()[0];
@@ -1917,6 +1998,90 @@ TEST_SUITE ("tracktion_engine")
         }
     }
 
+    TEST_CASE ("FolderBasedProject: undoing a clip rename keeps clips on their renamed source file")
+    {
+        // Renaming a clip can also rename its source file. Moving the file can't be undone,
+        // so undoing the rename has to leave every clip that uses it on the renamed file
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto projectPath = tempDir.getChildFile ("test_folder_project");
+        projectPath.createDirectory();
+
+        {
+            ProjectManager::TempProject tp (pm, projectPath, false);
+            auto project = tp.project;
+            REQUIRE (project != nullptr);
+            REQUIRE (project->isValid());
+
+            auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 2.0);
+            REQUIRE (sinFile != nullptr);
+
+            auto wavFile = project->getDefaultDirectory().getChildFile ("source_audio.wav");
+            sinFile->getFile().copyFileTo (wavFile);
+            REQUIRE (wavFile.existsAsFile());
+
+            auto audioItem = project->createNewItem (wavFile, ProjectItem::waveItemType(),
+                                                     "source_audio", {},
+                                                     ProjectItem::Category::imported, false);
+            REQUIRE (audioItem != nullptr);
+
+            auto editItem = project->createNewEdit();
+            REQUIRE (editItem != nullptr);
+
+            auto edit = createEmptyEdit (engine, editItem->getSourceFile());
+            edit->setProjectItemRef (editItem->getProjectItemRef());
+            edit->ensureNumberOfAudioTracks (1);
+
+            auto audioTracks = getAudioTracks (*edit);
+            REQUIRE (audioTracks.size() >= 1);
+
+            auto clip1 = insertWaveClip (*audioTracks[0], "Clip", wavFile,
+                                         { { 0_tp, TimePosition::fromSeconds (1.0) } },
+                                         DeleteExistingClips::no);
+            auto clip2 = insertWaveClip (*audioTracks[0], "Clip", wavFile,
+                                         { { TimePosition::fromSeconds (1.0), TimePosition::fromSeconds (2.0) } },
+                                         DeleteExistingClips::no);
+            REQUIRE (clip1 != nullptr);
+            REQUIRE (clip2 != nullptr);
+            CHECK (test_utilities::saveEditSync (*edit));
+
+            // Clip::setName renames the source item itself when this is on, but asynchronously
+            auto& storage = engine.getPropertyStorage();
+            const auto renamesSource = storage.getProperty (SettingID::renameClipRenamesSource);
+            storage.setProperty (SettingID::renameClipRenamesSource, false);
+
+            auto& um = edit->getUndoManager();
+            um.beginNewTransaction();
+
+            clip1->setName ("Renamed");
+            audioItem->setName ("Renamed", ProjectItem::SetNameMode::forceRenameSynchronous);
+
+            storage.setProperty (SettingID::renameClipRenamesSource, renamesSource);
+
+            auto renamedFile = wavFile.getSiblingFile ("Renamed.wav");
+            REQUIRE (renamedFile.existsAsFile());
+            REQUIRE (! wavFile.existsAsFile());
+            CHECK (clip1->getSourceFileReference().getFile() == renamedFile);
+            CHECK (clip2->getSourceFileReference().getFile() == renamedFile);
+
+            CHECK (um.undo());
+            CHECK (clip1->getName() == "Clip");
+            CHECK (clip1->getSourceFileReference().getFile() == renamedFile);
+            CHECK (clip2->getSourceFileReference().getFile() == renamedFile);
+
+            CHECK (um.redo());
+            CHECK (clip1->getName() == "Renamed");
+            CHECK (clip1->getSourceFileReference().getFile() == renamedFile);
+            CHECK (clip2->getSourceFileReference().getFile() == renamedFile);
+        }
+
+        tempDir.deleteRecursively (false);
+    }
+
     TEST_CASE ("FolderBasedProject: renaming an Edit doesn't re-save Edits that don't reference it")
     {
         // Creating a project from a template renames each Edit. That used to re-save
@@ -2830,6 +2995,146 @@ TEST_SUITE ("tracktion_engine")
         CHECK (project->getProjectItemAt (9999) == nullptr);
 
         cleanup();
+    }
+
+    TEST_CASE ("Project: convert file-based to folder-based converts comp takes and their clip's source")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        auto projectFile = tempDir.getChildFile ("takes_project.tracktion");
+        ProjectManager::TempProject tp (pm, projectFile, true);
+        auto project = tp.project;
+        REQUIRE (project != nullptr);
+        auto projectDir = project->getDefaultDirectory();
+
+        // Registered takes in the project folder, each a different length
+        auto addTakeItem = [&] (const juce::String& name, double seconds) -> ProjectItem::Ptr
+        {
+            auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, seconds);
+            auto file = projectDir.getChildFile ("Recorded").getChildFile (name + ".wav");
+            file.getParentDirectory().createDirectory();
+
+            if (! sinFile->getFile().copyFileTo (file))
+                return {};
+
+            return project->createNewItem (file, ProjectItem::waveItemType(), name, {},
+                                           ProjectItem::Category::recorded, false);
+        };
+
+        auto a = addTakeItem ("a", 1.0);
+        auto b = addTakeItem ("b", 2.0);
+        auto c = addTakeItem ("c", 3.0);
+        REQUIRE (a != nullptr);
+        REQUIRE (b != nullptr);
+        REQUIRE (c != nullptr);
+
+        auto idOf = [] (const ProjectItem::Ptr& item)            { return item->getProjectItemRef().toString(); };
+        auto relativePathOf = [] (const ProjectItem::Ptr& item)  { return "Recorded/" + item->getSourceFile().getFileName(); };
+
+        auto editItem = project->createNewEdit();
+        REQUIRE (editItem != nullptr);
+        auto editFile = editItem->getSourceFile();
+
+        // The relative paths below are relative to the Edit, as SourceFileReference writes them
+        REQUIRE (editFile.getParentDirectory() == projectDir);
+
+        // Each clip's source and takes, with the item each should resolve to. The clip's current take
+        // is the one whose source matches the clip's, and the clip's source is only rewritten along with it
+        struct ClipSetup
+        {
+            juce::String name, source;
+            juce::StringArray takeSources;
+            juce::Array<ProjectItem::Ptr> expectedTakes;
+            ProjectItem::Ptr expectedSource;
+        };
+
+        const std::vector<ClipSetup> clipSetups
+        {
+            // Everything as project item IDs, as a Waveform 13 Edit has them
+            { "ids", idOf (a), { idOf (a), idOf (b) }, { a, b }, a },
+
+            // As above, with a current take that isn't the first
+            { "ids, second take current", idOf (b), { idOf (a), idOf (b), idOf (c) }, { a, b, c }, b },
+
+            // Everything already a relative path, as a part-converted Edit has them
+            { "relative", relativePathOf (a), { relativePathOf (c), relativePathOf (a) }, { c, a }, a },
+        };
+
+        {
+            auto edit = createEmptyEdit (engine, editFile);
+            edit->setProjectItemRef (editItem->getProjectItemRef());
+            edit->ensureNumberOfAudioTracks (1);
+            REQUIRE (test_utilities::saveEditSync (*edit));
+
+            double start = 0.0;
+
+            for (auto& setup : clipSetups)
+            {
+                auto clip = insertWaveClip (*getAudioTracks (*edit)[0], setup.name, a->getSourceFile(),
+                                            { { TimePosition::fromSeconds (start), TimePosition::fromSeconds (start + 1.0) } },
+                                            DeleteExistingClips::no);
+                REQUIRE (clip != nullptr);
+                start += 2.0;
+
+                clip->state.setProperty (IDs::source, setup.source, nullptr);
+                auto takesTree = clip->state.getOrCreateChildWithName (IDs::TAKES, nullptr);
+
+                for (auto& takeSource : setup.takeSources)
+                {
+                    juce::ValueTree take (IDs::TAKE);
+                    take.setProperty (IDs::source, takeSource, nullptr);
+                    takesTree.appendChild (take, nullptr);
+                }
+            }
+
+            REQUIRE (test_utilities::saveEditSync (*edit));
+        }
+
+        project->save();
+
+        auto newProject = convertToFolderBasedProject (*project);
+        REQUIRE (newProject != nullptr);
+
+        auto edit = loadEditFromFile (engine, editFile);
+        REQUIRE (edit != nullptr);
+
+        auto checkResolvesTo = [&] (const juce::String& source, const ProjectItem::Ptr& expected)
+        {
+            CHECK_MESSAGE (! ProjectItemID (source).isValid(), "Still a project item ID: " << source);
+            CHECK_MESSAGE (SourceFileReference::findFileFromString (*edit, source) == expected->getSourceFile(),
+                           source << " should resolve to " << expected->getSourceFile().getFullPathName());
+        };
+
+        int numClipsChecked = 0;
+
+        for (auto clip : getAudioTracks (*edit)[0]->getClips())
+        {
+            for (auto& setup : clipSetups)
+            {
+                if (clip->getName() != setup.name)
+                    continue;
+
+                INFO ("Clip: " << setup.name);
+                ++numClipsChecked;
+
+                auto takesTree = clip->state.getChildWithName (IDs::TAKES);
+                REQUIRE (takesTree.getNumChildren() == setup.expectedTakes.size());
+
+                for (int i = 0; i < takesTree.getNumChildren(); ++i)
+                    checkResolvesTo (takesTree.getChild (i)[IDs::source].toString(), setup.expectedTakes[i]);
+
+                checkResolvesTo (clip->state[IDs::source].toString(), setup.expectedSource);
+            }
+        }
+
+        CHECK (numClipsChecked == (int) clipSetups.size());
+
+        edit.reset();
+        tempDir.deleteRecursively (false);
     }
 
     TEST_CASE ("Project: convertToFolderBasedProject with invalid project returns nullptr")
@@ -3860,6 +4165,144 @@ TEST_SUITE ("tracktion_engine")
         }
 
         cleanup();
+    }
+
+    TEST_CASE ("FolderBasedProject: names containing dots are not truncated")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+        const juce::ScopeGuard cleanup { [&tempDir] { tempDir.deleteRecursively (false); } };
+
+        auto projectFolder = tempDir.getChildFile ("Song v1.0.26c");
+        projectFolder.createDirectory();
+
+        // An Edit from before the fix, named after the truncated project name
+        projectFolder.getChildFile ("Song v1.0 Edit 3" + juce::String (editFileSuffix)).create();
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        REQUIRE (tp.project != nullptr);
+
+        CHECK (tp.project->getName() == "Song v1.0.26c");
+
+        auto newEdit = tp.project->createNewEdit();
+        REQUIRE (newEdit != nullptr);
+        CHECK (newEdit->getName() == "Song v1.0.26c Edit 4");
+    }
+
+    TEST_CASE ("FolderBasedProject: setName with illegal characters is a no-op the second time")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+        const juce::ScopeGuard cleanup { [&tempDir] { tempDir.deleteRecursively (false); } };
+
+        auto projectFolder = tempDir.getChildFile ("Song");
+        projectFolder.createDirectory();
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        REQUIRE (tp.project != nullptr);
+
+        tp.project->setName ("Song: v1.0");
+        const auto legalName = juce::File::createLegalFileName ("Song: v1.0");
+        CHECK (tp.project->getName() == legalName);
+
+        test_utilities::runDispatchLoop (50);
+
+        struct ChangeListener : public SelectableListener
+        {
+            bool notified = false;
+            void selectableObjectChanged (Selectable*) override { notified = true; }
+            void selectableObjectAboutToBeDeleted (Selectable*) override {}
+        } changeListener;
+
+        // Setting the same name again, or a name with no legal characters, shouldn't
+        // try to move the folder or report a change
+        {
+            tp.project->addSelectableListener (&changeListener);
+            const juce::ScopeGuard removeListener { [&] { tp.project->removeSelectableListener (&changeListener); } };
+
+            tp.project->setName ("Song: v1.0");
+            tp.project->setName ({});
+            test_utilities::runDispatchLoop (50);
+        }
+
+        CHECK_FALSE (changeListener.notified);
+        CHECK (tp.project->getName() == legalName);
+        CHECK (tempDir.getChildFile (legalName).isDirectory());
+    }
+
+    TEST_CASE ("FolderBasedProject: setName doesn't replace an existing file or folder")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+        const juce::ScopeGuard cleanup { [&tempDir] { tempDir.deleteRecursively (false); } };
+
+        auto projectFolder = tempDir.getChildFile ("Song");
+        projectFolder.createDirectory();
+
+        auto existingFile = tempDir.getChildFile ("Mix");
+        REQUIRE (existingFile.replaceWithText ("keep me"));
+
+        auto existingFolder = tempDir.getChildFile ("Master");
+        REQUIRE (existingFolder.createDirectory());
+
+        ProjectManager::TempProject tp (pm, projectFolder, false);
+        REQUIRE (tp.project != nullptr);
+
+        tp.project->setName ("Mix");
+        CHECK (existingFile.loadFileAsString() == "keep me");
+
+        tp.project->setName ("Master");
+        CHECK (existingFolder.isDirectory());
+
+        CHECK (tp.project->getProjectFile() == projectFolder);
+        CHECK (tp.project->getName() == "Song");
+        CHECK (projectFolder.isDirectory());
+    }
+
+    TEST_CASE ("ProjectManager: creating a folder-based project keeps dots in its name")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+        const juce::ScopeGuard cleanup { [&tempDir] { tempDir.deleteRecursively (false); } };
+
+        auto projectFolder = tempDir.getChildFile ("Song v1.0.26c");
+        REQUIRE (projectFolder.createDirectory());
+
+        auto proj = pm.createNewProject (projectFolder, pm.getActiveProjectsFolder(), ProjectType::folderBased);
+        const juce::ScopeGuard removeProject { [&] { pm.removeProjectFromList (projectFolder); proj = nullptr; } };
+        REQUIRE (proj != nullptr);
+
+        // The folder mustn't be renamed to the name truncated at the last dot
+        CHECK (projectFolder.isDirectory());
+        CHECK_FALSE (tempDir.getChildFile ("Song v1.0").exists());
+        CHECK (proj->getProjectFile() == projectFolder);
+        CHECK (proj->getName() == "Song v1.0.26c");
+        CHECK (pm.getProject (projectFolder) == proj);
+
+        int numEdits = 0;
+
+        for (int i = 0; i < proj->getNumProjectItems(); ++i)
+        {
+            if (auto item = proj->getProjectItemAt (i); item != nullptr && item->isEdit())
+            {
+                ++numEdits;
+                CHECK (item->getName() == "Song v1.0.26c Edit 1");
+            }
+        }
+
+        CHECK (numEdits == 1);
     }
 }
 

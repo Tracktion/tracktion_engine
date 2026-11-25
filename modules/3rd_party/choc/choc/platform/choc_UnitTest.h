@@ -76,6 +76,7 @@ private:
 #define CHOC_EXPECT_EQ(a, b)             { auto x = a; auto y = b; progress.check (x == y, __FILE__, __LINE__, "Expected " #a " (" + choc::test::convertToString (x) + ") == " #b " (" + choc::test::convertToString (y) + ")"); }
 #define CHOC_EXPECT_NE(a, b)             { auto x = a; auto y = b; progress.check (x != y, __FILE__, __LINE__, "Expected " #a " (" + choc::test::convertToString (x) + ") != " #b); }
 #define CHOC_EXPECT_NEAR(a, b, diff)     { auto x = a; auto y = b; auto d = diff; progress.check (std::abs (x - y) <= d, __FILE__, __LINE__, #a " (" + choc::test::convertToString (x) + ") and " #b " (" + choc::test::convertToString (y) + ") differ by more than " + choc::test::convertToString (d)); }
+#define CHOC_EXPECT_THROW(expr)          { bool didThrow = false; try { (void) (expr); } catch (...) { didThrow = true; } progress.check (didThrow, __FILE__, __LINE__, "Expected " #expr " to throw an exception"); }
 #define CHOC_CATCH_UNEXPECTED_EXCEPTION  catch (...) { CHOC_FAIL ("Unexpected exception thrown"); }
 
 

@@ -49,6 +49,10 @@ public:
     /** Determines if the track's arrange clips or clip slots should be audible. */
     juce::CachedValue<AtomicWrapper<bool>> playSlotClips;
 
+    /** @internal Set on the audio thread by a "Return to arrangement" follow action,
+        and applied to playSlotClips on the message thread. */
+    std::atomic<bool> returnToArrangementRequested { false };
+
     //==============================================================================
     /** returns a warning message about this track not being playable, or "" if it's ok */
     juce::String getTrackPlayabilityWarning() const;
@@ -100,10 +104,16 @@ public:
 
     //==============================================================================
     bool isFrozen (FreezeType) const override;
-    void setFrozen (bool, FreezeType) override;
+    [[nodiscard]] juce::Result setFrozen (bool, FreezeType) override;
     void insertFreezePointAfterPlugin (const Plugin::Ptr&);
     void removeFreezePoint();
     void freezeTrackAsync() const;
+
+    /** Returns the other tracks fed by the plugins before this track's Freeze Point, through a
+        shared Rack or an aux send. Freezing bypasses those plugins, which would break those
+        connections, so the track can't be frozen individually.
+    */
+    juce::Array<Track*> getTracksFedByFreezablePlugins();
 
     //==============================================================================
     bool hasAnyLiveInputs();

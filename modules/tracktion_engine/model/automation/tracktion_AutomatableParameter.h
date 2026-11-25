@@ -235,6 +235,12 @@ public:
         const AutomatableParameter& parameter;
     };
 
+    /** @internal
+        Connects an AutomationCurveModifier's assignment that was added before the
+        modifier was created, e.g. by a redo that re-adds them in that order.
+    */
+    void automationCurveModifierCreated (EditItemID automationCurveModifierID);
+
     /** @internal */
     void resetRecordingStatus();
     /** @internal */

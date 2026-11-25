@@ -160,6 +160,12 @@ public:
     /** Sets a new transport position to take effect at a given time. */
     void setPosition (TimePosition timeToMoveTo, TimePosition timeToPerformJump);
 
+    /** Moves the transport as a user's jump, e.g. to a marker. While playing, the
+        EngineBehaviour can defer it (see EngineBehaviour::getTimeToJumpAt),
+        otherwise it moves straight away.
+    */
+    void jumpTo (TimePosition);
+
     /** Signifies a scrub-drag operation has started/stopped.
         While dragging, a short section of the play position is looped repeatedly.
     */
@@ -203,6 +209,10 @@ public:
     //==============================================================================
     /** Returns the active EditPlaybackContext if this Edit is attached to the DeviceManager for playback. */
     EditPlaybackContext* getCurrentPlaybackContext() const      { return playbackContext.get(); }
+
+    /** @internal Where the last freed playback context's monotonic beat count got to,
+        so a new one carries on from it. */
+    MonotonicBeat getLastContextMonotonicBeat() const           { return lastContextMonotonicBeat; }
 
     /** Returns true if this Edit is attached to the DeviceManager for playback. */
     bool isPlayContextActive() const                            { return playbackContext != nullptr; }
@@ -398,6 +408,7 @@ private:
     struct TransportState;
     std::unique_ptr<TransportState> transportState;
     std::unique_ptr<EditPlaybackContext> playbackContext;
+    MonotonicBeat lastContextMonotonicBeat;     // where a freed context's beat count got to
     juce::ListenerList<Listener> listeners;
 
     TimecodeSnapType currentSnapType;

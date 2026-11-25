@@ -85,6 +85,12 @@ void SlotControlNode::prepareToPlay (const tracktion::graph::PlaybackInitialisat
     for (auto& i : orderedNodes)
         i->initialise (info2);
 
+    // Carry on from the node playing this clip in the old graph. It's found by its
+    // LaunchHandle rather than slot, so this follows the clip if it moves slots
+    if (auto oldGraph = info.nodeGraphToReplace)
+        if (auto oldNode = findNode<SlotControlNode> (*oldGraph, [this] (auto& n) { return n.launchHandle == launchHandle; }))
+            playbackState = oldNode->playbackState;
+
     // Find the lastSamples
     const auto numChans = static_cast<size_t> (getNodeProperties().numberOfChannels);
 
@@ -120,9 +126,9 @@ void SlotControlNode::prefetchBlock (juce::Range<int64_t> referenceSampleRange)
 void SlotControlNode::process (ProcessContext& pc)
 {
     // If the playhead has just stopped, let it run to fade the audio/stop MIDI notes etc.
-    if (wasPlaying && ! getPlayHead().isPlaying())
+    if (playbackState->wasPlaying && ! getPlayHead().isPlaying())
     {
-        wasPlaying = false;
+        playbackState->wasPlaying = false;
         processStop (pc, 0.0);
         return;
     }
@@ -139,14 +145,8 @@ void SlotControlNode::process (ProcessContext& pc)
                 const auto stopPoint = MonotonicBeat { playedMonotonicRange->v.getStart() + *stopDuration };
 
                 if (blockRange.v.contains (stopPoint.v))
-                {
-                    const auto stopQueued = launchHandle->getQueuedStatus() == LaunchHandle::QueueState::stopQueued;
-                    launchHandle->stop (stopPoint);
-
-                    // If there was a stop already queued, ignore the follow action
-                    if (! stopQueued && stopFunction)
+                    if (launchHandle->stopAtEndOfPlay (stopPoint) && stopFunction)
                         stopFunction (stopPoint);
-                }
             }
         }
 
@@ -194,7 +194,9 @@ void SlotControlNode::processSplitSection (ProcessContext& pc, LaunchHandle::Spl
 
         const auto sectionNumFrames = endFrame - startFrame;
 
-        if (sectionNumFrames == 0)
+        // A stop less than half a sample before the end of the block has no frames,
+        // but still has to send the note-offs of what was playing
+        if (sectionNumFrames == 0 && (isPlaying || ! playbackState->wasPlaying))
             return;
 
         const auto numRefSamples = pc.referenceSampleRange.getLength();
@@ -232,21 +234,21 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
 {
     const juce::ScopeGuard scope { [this, isPlaying]
                                    {
-                                       wasPlaying = isPlaying;
+                                       playbackState->wasPlaying = isPlaying;
                                        localPlayheadState.playheadJumped = false;
                                        localPlayheadState.firstBlockOfLoop = false;
                                    } };
 
     if (! isPlaying)
     {
-        if (wasPlaying != isPlaying)
+        if (playbackState->wasPlaying != isPlaying)
             processStop (pc, (editTimeRange.getStart() - getEditTimeRange().getStart()).inSeconds());
         else
             pc.buffers.audio.clear();
 
         return;
     }
-    else if (! wasPlaying)
+    else if (! playbackState->wasPlaying)
     {
         // Force the playheadJumped state to true in order to resync MIDI streams etc.
         localPlayheadState.playheadJumped = true;
@@ -269,18 +271,31 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
         const auto clipEditOffset = editBeatRange.getStart() - unloopedClipBeatRange.getStart();
         const auto offset = clipEditOffset + toDuration (*playStartTime);
 
-        if (! almostEqual (lastOffset.inBeats(), offset.inBeats(), 0.0000001))
+        if (! almostEqual (playbackState->lastOffset.inBeats(), offset.inBeats(), 0.0000001))
         {
-            lastOffset = offset;
-            retriggered = wasPlaying;
+            // An Edit position jump (e.g. an arrangement loop wrap) changes the offset but not the
+            // clip position, so the clip carries on without sending note-offs or restriking held notes
+            const auto clipStart = editBeatRange.getStart() - offset;
+            const bool clipPositionJumped = ! playbackState->wasPlaying || std::abs ((clipStart - playbackState->nextClipStart).inBeats()) > 0.001;
+
+            playbackState->lastOffset = offset;
+            retriggered = playbackState->wasPlaying && clipPositionJumped;
 
             // Force the playheadJumped state to true in order to send note-offs.
-            localPlayheadState.playheadJumped = true;
+            if (clipPositionJumped)
+                localPlayheadState.playheadJumped = true;
 
+            offsetNodesNeedOffset = true;
+        }
+
+        // The offset is shared across graph rebuilds but not every inner node keeps
+        // its own, so a new graph's nodes are given it when they first play
+        if (std::exchange (offsetNodesNeedOffset, false))
             for (auto n : offsetNodes)
                 n->setDynamicOffsetBeats (offset);
-        }
     }
+
+    playbackState->nextClipStart = editBeatRange.getEnd() - playbackState->lastOffset;
 
     // Prepare ordered Nodes
     for (auto& node : orderedNodes)
@@ -294,7 +309,9 @@ void SlotControlNode::processSection (ProcessContext& pc, BeatRange editBeatRang
     auto sourceBuffers = input->getProcessedOutput();
     assert (sourceBuffers.audio.size == pc.buffers.audio.size);
     copyIfNotAliased (pc.buffers.audio, sourceBuffers.audio);
-    pc.buffers.midi.copyFrom (sourceBuffers.midi);
+
+    // The MIDI buffer is the whole block's, which may have the MIDI of an earlier section in it
+    pc.buffers.midi.mergeFromWithOffset (sourceBuffers.midi, (editTimeRange.getStart() - getEditTimeRange().getStart()).inSeconds());
 
     // Update last samples. If the clip has jumped back to its start whilst playing, fade out the
     // jump from the last sample rather than fading in the new audio, so its start transient is kept

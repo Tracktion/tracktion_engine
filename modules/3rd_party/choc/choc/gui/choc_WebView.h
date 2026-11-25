@@ -137,6 +137,47 @@ public:
         /// otherwise wouldn't work by default. This lets you turn that off if you
         /// need to.
         bool enableDefaultClipboardKeyShortcutsInSafari = true;
+
+        /// Describes a request that the page has made, which can be allowed or
+        /// refused by the shouldAllowRequest callback.
+        struct Request
+        {
+            enum class Type
+            {
+                navigation,  ///< The page or one of its frames wants to load a new URI
+                newWindow    ///< The page wants to open a URI in a new window (e.g. window.open, or a target="_blank" link)
+            };
+
+            Type type = Type::navigation;
+
+            /// The URI being requested.
+            std::string uri;
+
+            /// For a navigation, true if it's the top-level document that's being
+            /// navigated, or false if it's a frame inside it. (On Linux, WebKitGTK
+            /// doesn't report this reliably, so it's always true there).
+            bool isMainFrame = true;
+        };
+
+        /// Optional. If you provide this callback, it'll be called on the message thread
+        /// before the browser navigates anywhere or opens a new window, and the request
+        /// will only go ahead if it returns true. A refused navigation is cancelled, and
+        /// a refused new window simply isn't opened. Leave it empty for the default
+        /// behaviour, which allows everything.
+        ///
+        /// Navigations that choc itself performs to show your content (i.e. the page
+        /// served by setHTML(), and anything served from the fetchResource home URI)
+        /// are always allowed and aren't passed to this function. Any other navigation,
+        /// including those triggered by calling navigate(), will be.
+        ///
+        /// Be aware that the URIs you receive can include things like `about:blank`,
+        /// `about:srcdoc`, `data:` URIs, and the targets of redirects, so if you're
+        /// using this to restrict where the page can go, an allow-list is safer than
+        /// a deny-list.
+        ///
+        /// Note that when a new window is allowed, what happens next is platform-specific:
+        /// WebView2 will open a popup window, but WKWebView and WebKitGTK won't open one.
+        std::function<bool(const Request&)> shouldAllowRequest;
     };
 
     /// Creates a WebView with default options.
@@ -204,6 +245,8 @@ private:
     void invokeBinding (const std::string&);
     static std::string getURIScheme (const Options&);
     static std::string getURIHome (const Options&);
+    static bool isInternalURI (const Options&, std::string_view uri);
+    static bool shouldAllowRequest (const Options&, Options::Request::Type, std::string uri, bool isMainFrame);
     struct DeletionChecker { bool deleted = false; };
 };
 
@@ -273,6 +316,14 @@ struct choc::ui::WebView::Pimpl
                                             this);
 
         webkit_user_content_manager_register_script_message_handler (manager, "external");
+
+        if (options.shouldAllowRequest)
+            decidePolicyHandlerID = g_signal_connect (webview, "decide-policy",
+                                                      G_CALLBACK (+[] (WebKitWebView*, WebKitPolicyDecision* d, WebKitPolicyDecisionType t, gpointer arg) -> gboolean
+                                                      {
+                                                          return static_cast<Pimpl*> (arg)->decidePolicy (d, t);
+                                                      }),
+                                                      this);
 
         WebKitSettings* settings = webkit_web_view_get_settings (WEBKIT_WEB_VIEW (webview));
         webkit_settings_set_javascript_can_access_clipboard (settings, true);
@@ -358,6 +409,9 @@ struct choc::ui::WebView::Pimpl
 
         if (signalHandlerID != 0 && webview != nullptr)
             g_signal_handler_disconnect (manager, signalHandlerID);
+
+        if (decidePolicyHandlerID != 0 && webview != nullptr)
+            g_signal_handler_disconnect (webview, decidePolicyHandlerID);
 
         g_clear_object (&webview);
         g_clear_object (&webviewContext);
@@ -498,7 +552,29 @@ struct choc::ui::WebView::Pimpl
     GtkWidget* webview = {};
     WebKitUserContentManager* manager = {};
     std::string defaultURI;
-    unsigned long signalHandlerID = 0;
+    unsigned long signalHandlerID = 0, decidePolicyHandlerID = 0;
+
+    // Returning true means we've made the decision, false lets WebKit apply its default.
+    gboolean decidePolicy (WebKitPolicyDecision* decision, WebKitPolicyDecisionType type)
+    {
+        const bool isNewWindow = type == WEBKIT_POLICY_DECISION_TYPE_NEW_WINDOW_ACTION;
+
+        if (! isNewWindow && type != WEBKIT_POLICY_DECISION_TYPE_NAVIGATION_ACTION)
+            return false;
+
+        auto action = webkit_navigation_policy_decision_get_navigation_action (WEBKIT_NAVIGATION_POLICY_DECISION (decision));
+        auto request = action != nullptr ? webkit_navigation_action_get_request (action) : nullptr;
+        auto uri = request != nullptr ? webkit_uri_request_get_uri (request) : nullptr;
+
+        // WebKitGTK doesn't tell us whether a navigation is in the main frame, so this is always reported as true
+        if (WebView::shouldAllowRequest (options, isNewWindow ? Options::Request::Type::newWindow
+                                                              : Options::Request::Type::navigation,
+                                         uri != nullptr ? std::string (uri) : std::string(), true))
+            return false;
+
+        webkit_policy_decision_ignore (decision);
+        return true;
+    }
 };
 
 //==============================================================================
@@ -814,11 +890,35 @@ private:
         return false;
     }
 
+    bool shouldAllowNavigationAction (id action)
+    {
+        if (! options->shouldAllowRequest)
+            return true;
+
+        CHOC_AUTORELEASE_BEGIN
+        auto uri = objc::getString (objc::call<id> (objc::call<id> (objc::call<id> (action, "request"), "URL"), "absoluteString"));
+        id targetFrame = objc::call<id> (action, "targetFrame");
+
+        // a nil target frame means that the page is asking for a new window
+        if (targetFrame == nil)
+            return WebView::shouldAllowRequest (*options, Options::Request::Type::newWindow, std::move (uri), true);
+
+        return WebView::shouldAllowRequest (*options, Options::Request::Type::navigation, std::move (uri),
+                                            objc::call<BOOL> (targetFrame, "isMainFrame"));
+        CHOC_AUTORELEASE_END
+    }
+
     void handleError (id error)
     {
         static constexpr int NSURLErrorCancelled = -999;
+        static constexpr int WebKitErrorFrameLoadInterruptedByPolicyChange = 102;
 
         if (objc::call<int> (error, "code") == NSURLErrorCancelled)
+            return;
+
+        // This is what WebKit reports when a navigation is refused by shouldAllowRequest
+        if (objc::call<int> (error, "code") == WebKitErrorFrameLoadInterruptedByPolicyChange
+             && objc::getString (objc::call<id> (error, "domain")) == "WebKitErrorDomain")
             return;
 
         setHTML ("<!DOCTYPE html><html><head><title>Error</title></head>"
@@ -913,6 +1013,18 @@ private:
                              }),
                              "v@:@@@");
 
+            class_addMethod (delegateClass, sel_registerName ("webView:decidePolicyForNavigationAction:decisionHandler:"),
+                             (IMP) (+[](id self, SEL, id, id action, void (^decisionHandler)(long))
+                             {
+                                 bool allow = true;
+
+                                 if (auto p = getPimpl (self))
+                                     allow = p->shouldAllowNavigationAction (action);
+
+                                 decisionHandler (allow ? WKNavigationActionPolicyAllow : WKNavigationActionPolicyCancel);
+                             }),
+                             "v@:@@?");
+
             class_addMethod (delegateClass, sel_registerName ("webView:stopURLSchemeTask:"), (IMP) (+[](id, SEL, id, id) {}), "v@:@@");
 
             class_addMethod (delegateClass, sel_registerName ("webView:runOpenPanelWithParameters:initiatedByFrame:completionHandler:"),
@@ -953,6 +1065,8 @@ private:
     };
 
     static constexpr long WKUserScriptInjectionTimeAtDocumentStart = 0;
+    static constexpr long WKNavigationActionPolicyCancel = 0;
+    static constexpr long WKNavigationActionPolicyAllow = 1;
 };
 
 //==============================================================================
@@ -1161,6 +1275,47 @@ ICoreWebView2PermissionRequestedEventHandler : public IUnknown
 {
 public:
      virtual HRESULT STDMETHODCALLTYPE Invoke(ICoreWebView2*, ICoreWebView2PermissionRequestedEventArgs*) = 0;
+};
+
+MIDL_INTERFACE("5b495469-e119-438a-9b18-7604f25f2e49")
+ICoreWebView2NavigationStartingEventArgs : public IUnknown
+{
+public:
+    virtual HRESULT STDMETHODCALLTYPE get_Uri(LPWSTR*) = 0;
+    virtual HRESULT STDMETHODCALLTYPE get_IsUserInitiated(BOOL*) = 0;
+    virtual HRESULT STDMETHODCALLTYPE get_IsRedirected(BOOL*) = 0;
+    virtual HRESULT STDMETHODCALLTYPE get_RequestHeaders(ICoreWebView2HttpRequestHeaders**) = 0;
+    virtual HRESULT STDMETHODCALLTYPE get_Cancel(BOOL*) = 0;
+    virtual HRESULT STDMETHODCALLTYPE put_Cancel(BOOL) = 0;
+    virtual HRESULT STDMETHODCALLTYPE get_NavigationId(UINT64*) = 0;
+};
+
+MIDL_INTERFACE("9adbe429-f36d-432b-9ddc-f8881fbd76e3")
+ICoreWebView2NavigationStartingEventHandler : public IUnknown
+{
+public:
+    virtual HRESULT STDMETHODCALLTYPE Invoke(ICoreWebView2*, ICoreWebView2NavigationStartingEventArgs*) = 0;
+};
+
+MIDL_INTERFACE("34acb11c-fc37-4418-9132-f9c21d1eafb9")
+ICoreWebView2NewWindowRequestedEventArgs : public IUnknown
+{
+public:
+    virtual HRESULT STDMETHODCALLTYPE get_Uri(LPWSTR*) = 0;
+    virtual HRESULT STDMETHODCALLTYPE put_NewWindow(ICoreWebView2*) = 0;
+    virtual HRESULT STDMETHODCALLTYPE get_NewWindow(ICoreWebView2**) = 0;
+    virtual HRESULT STDMETHODCALLTYPE put_Handled(BOOL) = 0;
+    virtual HRESULT STDMETHODCALLTYPE get_Handled(BOOL*) = 0;
+    virtual HRESULT STDMETHODCALLTYPE get_IsUserInitiated(BOOL*) = 0;
+    virtual HRESULT STDMETHODCALLTYPE GetDeferral(ICoreWebView2Deferral**) = 0;
+    virtual HRESULT STDMETHODCALLTYPE get_WindowFeatures(void**) = 0;
+};
+
+MIDL_INTERFACE("d4c185fe-c81c-4989-97af-2d3fa7ab5651")
+ICoreWebView2NewWindowRequestedEventHandler : public IUnknown
+{
+public:
+    virtual HRESULT STDMETHODCALLTYPE Invoke(ICoreWebView2*, ICoreWebView2NewWindowRequestedEventArgs*) = 0;
 };
 
 MIDL_INTERFACE("76eceacb-0462-4d94-ac83-423a6793775e")
@@ -1714,6 +1869,10 @@ private:
             EventRegistrationToken token;
             view->add_WebMessageReceived (this, std::addressof (token));
             view->add_PermissionRequested (this, std::addressof (token));
+
+            if (ownerPimpl.options.shouldAllowRequest)
+                ownerPimpl.addRequestFilters (view);
+
             ownerPimpl.webviewControllerCreationComplete (controller, view);
             return S_OK;
         }
@@ -1733,8 +1892,13 @@ private:
 
         HRESULT STDMETHODCALLTYPE Invoke (ICoreWebView2*, ICoreWebView2PermissionRequestedEventArgs* args) override
         {
-            COREWEBVIEW2_PERMISSION_KIND permissionKind;
-            args->get_PermissionKind (std::addressof (permissionKind));
+            if (args == nullptr)
+                return S_OK;
+
+            auto permissionKind = COREWEBVIEW2_PERMISSION_KIND_UNKNOWN_PERMISSION;
+
+            if (args->get_PermissionKind (std::addressof (permissionKind)) != S_OK)
+                return S_OK;
 
             if (permissionKind == COREWEBVIEW2_PERMISSION_KIND_CLIPBOARD_READ)
                 args->put_State (COREWEBVIEW2_PERMISSION_STATE_ALLOW);
@@ -1754,6 +1918,77 @@ private:
         std::atomic<ULONG> refCount { 0 };
         std::shared_ptr<DeletionChecker> deletionCheckerRef;
     };
+
+    //==============================================================================
+    // These are only registered if options.shouldAllowRequest is set. Each instance handles
+    // a single event type, as page and frame navigations share the same handler interface.
+    template <typename HandlerInterface, typename ArgsType>
+    struct RequestFilter  : public HandlerInterface
+    {
+        RequestFilter (Pimpl& p, Options::Request::Type t, bool mainFrame)
+            : ownerPimpl (p), deletionCheckerRef (p.deletionChecker), type (t), isMainFrame (mainFrame) {}
+
+        RequestFilter (const RequestFilter&) = delete;
+        RequestFilter& operator= (const RequestFilter&) = delete;
+        virtual ~RequestFilter() {}
+
+        HRESULT STDMETHODCALLTYPE QueryInterface (REFIID, LPVOID*) override   { return E_NOINTERFACE; }
+        ULONG STDMETHODCALLTYPE AddRef() override     { return ++refCount; }
+        ULONG STDMETHODCALLTYPE Release() override    { auto newCount = --refCount; if (newCount == 0) delete this; return newCount; }
+
+        HRESULT STDMETHODCALLTYPE Invoke (ICoreWebView2*, ArgsType* args) override
+        {
+            if (args == nullptr || deletionCheckerRef->deleted)
+                return S_OK;
+
+            LPWSTR uri = {};
+            args->get_Uri (std::addressof (uri));
+            auto uriString = takeUTF8 (uri);
+
+            // NB: the callback may delete the WebView, so nothing in ownerPimpl
+            // can be touched after this call - but refusing via the args is safe.
+            if (! WebView::shouldAllowRequest (ownerPimpl.options, type, std::move (uriString), isMainFrame))
+                refuse (args);
+
+            return S_OK;
+        }
+
+        static void refuse (ICoreWebView2NavigationStartingEventArgs* args)  { args->put_Cancel (TRUE); }
+        static void refuse (ICoreWebView2NewWindowRequestedEventArgs* args)  { args->put_Handled (TRUE); } // handled, but with no window provided, so none opens
+
+        Pimpl& ownerPimpl;
+        std::shared_ptr<DeletionChecker> deletionCheckerRef;
+        const Options::Request::Type type;
+        const bool isMainFrame;
+        std::atomic<ULONG> refCount { 0 };
+    };
+
+    using NavigationFilter = RequestFilter<ICoreWebView2NavigationStartingEventHandler, ICoreWebView2NavigationStartingEventArgs>;
+    using NewWindowFilter  = RequestFilter<ICoreWebView2NewWindowRequestedEventHandler, ICoreWebView2NewWindowRequestedEventArgs>;
+
+    void addRequestFilters (ICoreWebView2* view)
+    {
+        COMPtr<NavigationFilter> pageFilter (new NavigationFilter (*this, Options::Request::Type::navigation, true));
+        COMPtr<NavigationFilter> frameFilter (new NavigationFilter (*this, Options::Request::Type::navigation, false));
+        COMPtr<NewWindowFilter> newWindowFilter (new NewWindowFilter (*this, Options::Request::Type::newWindow, true));
+
+        // NB: the add_ functions take a void*, so it's important to pass the correct interface pointer
+        EventRegistrationToken token;
+        view->add_NavigationStarting (static_cast<ICoreWebView2NavigationStartingEventHandler*> (pageFilter.object), std::addressof (token));
+        view->add_FrameNavigationStarting (static_cast<ICoreWebView2NavigationStartingEventHandler*> (frameFilter.object), std::addressof (token));
+        view->add_NewWindowRequested (static_cast<ICoreWebView2NewWindowRequestedEventHandler*> (newWindowFilter.object), std::addressof (token));
+    }
+
+    // Converts a string that WebView2 has allocated, and frees it
+    static std::string takeUTF8 (LPWSTR s)
+    {
+        if (s == nullptr)
+            return {};
+
+        auto result = createUTF8FromUTF16 (std::wstring (s));
+        CoTaskMemFree (s);
+        return result;
+    }
 
     //==============================================================================
     struct ExecuteScriptCompletedCallback  : public ICoreWebView2ExecuteScriptCompletedHandler
@@ -2000,6 +2235,35 @@ inline std::string WebView::getURIScheme (const Options& options)
     auto colon = uri.find (":");
     CHOC_ASSERT (colon != std::string::npos && colon != 0); // need to provide a valid URI with a scheme at the start.
     return uri.substr (0, colon);
+}
+
+inline bool WebView::isInternalURI (const Options& options, std::string_view uri)
+{
+    // On Mac and Linux, setHTML() loads its content with no base URL, so the page appears as about:blank
+    if (uri == "about:blank")
+        return true;
+
+    // Anything under the home URI is served by choc itself (via fetchResource, or setHTML() on Windows)
+    return choc::text::startsWith (choc::text::toLowerCase (std::string (uri)),
+                                   choc::text::toLowerCase (getURIHome (options)));
+}
+
+inline bool WebView::shouldAllowRequest (const Options& options, Options::Request::Type type, std::string uri, bool isMainFrame)
+{
+    if (! options.shouldAllowRequest)
+        return true;
+
+    if (type == Options::Request::Type::navigation && isInternalURI (options, uri))
+        return true;
+
+    Options::Request request;
+    request.type = type;
+    request.uri = std::move (uri);
+    request.isMainFrame = isMainFrame;
+
+    // take a copy of the function, in case the callback deletes the WebView (and its options)
+    auto callback = options.shouldAllowRequest;
+    return callback (request);
 }
 
 inline WebView::Options::Resource::Resource (std::string_view content, std::string mime)

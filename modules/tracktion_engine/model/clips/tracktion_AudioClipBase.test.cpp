@@ -156,3 +156,175 @@ TEST_SUITE ("tracktion_engine")
 } // namespace tracktion::inline engine
 
 #endif // TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_AUDIOCLIPBASE_CHANNELS
+
+#if TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_AUDIOCLIPBASE_LOOPING
+
+#include <tracktion_engine/../3rd_party/doctest/tracktion_doctest.hpp>
+#include <tracktion_engine/utilities/tracktion_TestUtilities.h>
+#include <tracktion_graph/tracktion_graph/tracktion_TestUtilities.h>
+
+namespace tracktion::inline engine
+{
+
+struct AudioClipBaseLoopTestContext
+{
+    static std::unique_ptr<AudioClipBaseLoopTestContext> create (Engine& engine)
+    {
+        auto context = std::make_unique<AudioClipBaseLoopTestContext>();
+
+        context->edit = test_utilities::createTestEdit (engine);
+        context->sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, 1.0, 2);
+        context->track = getAudioTracks (*context->edit)[0];
+
+        return context;
+    }
+
+    WaveAudioClip::Ptr insertClip (TimeRange time)
+    {
+        return insertWaveClip (*track, {}, sinFile->getFile(), { .time = time }, DeleteExistingClips::no);
+    }
+
+    std::unique_ptr<Edit> edit;
+    std::unique_ptr<juce::TemporaryFile> sinFile;
+    AudioTrack::Ptr track;
+};
+
+TEST_SUITE ("tracktion_engine")
+{
+    TEST_CASE ("AudioClipBase: a sliver of an auto-tempo clip doesn't stop the Edit rendering")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto context = AudioClipBaseLoopTestContext::create (engine);
+        auto& ts = context->edit->tempoSequence;
+        ts.getTempo (0)->setBpm (150.0);
+
+        REQUIRE (context->insertClip ({ 177_tp, 178_tp }) != nullptr);
+
+        // At 150 BPM beat 444 converts to one rounding error after 177.6s. A clip ending there gets
+        // no stretch segments, so its proxy can never be made and its node would never be ready
+        const auto sliverStart = TimePosition::fromSeconds (177.6);
+        auto sliver = context->insertClip ({ sliverStart, 178_tp });
+        REQUIRE (sliver != nullptr);
+        sliver->setAutoTempo (true);
+        sliver->setPosition ({ { sliverStart, ts.toTime (444_bp) } });
+        REQUIRE (sliver->getPosition().getLength() > 0_td);
+        REQUIRE (sliver->getAudioSegmentList().getSegments().isEmpty());
+
+        auto result = test_utilities::renderToAudioBufferDispatchingMessageThread (*context->edit, TimeRange (177_tp, 178_tp));
+        CHECK (result.buffer.getMagnitude (0, result.buffer.getNumSamples()) > 0.5f);
+    }
+
+    TEST_CASE ("AudioClipBase: loop range survives toggling auto tempo")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto context = AudioClipBaseLoopTestContext::create (engine);
+        auto clip = context->insertClip ({ 0_tp, 1_tp });
+        REQUIRE (clip != nullptr);
+
+        clip->setLoopRange ({ TimePosition::fromSeconds (0.25), TimePosition::fromSeconds (0.75) });
+        REQUIRE (clip->isLooping());
+
+        const auto bps = context->edit->tempoSequence.getBeatsPerSecondAt (0_tp);
+
+        clip->setAutoTempo (true);
+        CHECK (clip->isLooping());
+        CHECK (clip->getLoopStartBeats().inBeats() == doctest::Approx (0.25 * bps));
+        CHECK (clip->getLoopLengthBeats().inBeats() == doctest::Approx (0.5 * bps));
+
+        clip->setAutoTempo (false);
+        CHECK (clip->isLooping());
+        CHECK (clip->getLoopStart().inSeconds() == doctest::Approx (0.25));
+        CHECK (clip->getLoopLength().inSeconds() == doctest::Approx (0.5));
+    }
+
+    TEST_CASE ("AudioClipBase: toggling auto tempo keeps the reported loop with a tempo change")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto context = AudioClipBaseLoopTestContext::create (engine);
+        auto& ts = context->edit->tempoSequence;
+        ts.insertTempo (1_bp, ts.getBeatsPerSecondAt (0_tp) * 60.0 * 2.0, 0.0f);
+
+        auto clip = context->insertClip ({ 0_tp, 1_tp });
+        REQUIRE (clip != nullptr);
+
+        // The tempo doubles inside the loop
+        clip->setLoopRange ({ TimePosition::fromSeconds (0.5), TimePosition::fromSeconds (2.5) });
+        REQUIRE (clip->isLooping());
+
+        const auto startBeats  = clip->getLoopStartBeats().inBeats();
+        const auto lengthBeats = clip->getLoopLengthBeats().inBeats();
+
+        clip->setAutoTempo (true);
+        CHECK (clip->getLoopStart().inSeconds() == doctest::Approx (0.5));
+        CHECK (clip->getLoopLength().inSeconds() == doctest::Approx (2.0));
+        CHECK (clip->getLoopStartBeats().inBeats() == doctest::Approx (startBeats));
+        CHECK (clip->getLoopLengthBeats().inBeats() == doctest::Approx (lengthBeats));
+
+        clip->setAutoTempo (false);
+        CHECK (clip->getLoopStart().inSeconds() == doctest::Approx (0.5));
+        CHECK (clip->getLoopLength().inSeconds() == doctest::Approx (2.0));
+    }
+
+    TEST_CASE ("AudioClipBase: setting the reported loop range with a tempo change keeps the loop")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto context = AudioClipBaseLoopTestContext::create (engine);
+        auto& ts = context->edit->tempoSequence;
+        const auto bps = ts.getBeatsPerSecondAt (0_tp);
+        ts.insertTempo (1_bp, bps * 60.0 * 2.0, 0.0f);
+
+        auto clip = context->insertClip ({ 0_tp, 1_tp });
+        REQUIRE (clip != nullptr);
+        clip->setAutoTempo (true);
+
+        // The tempo doubles at beat 1, inside the loop
+        const TimeRange loopRange { TimePosition::fromSeconds (0.25 / bps), TimePosition::fromSeconds (1.5 / bps) };
+        clip->setLoopRange (loopRange);
+        REQUIRE (clip->beatBasedLooping());
+
+        CHECK (clip->getLoopStartBeats().inBeats() == doctest::Approx (0.25));
+        CHECK (clip->getLoopLengthBeats().inBeats() == doctest::Approx (1.25));
+        CHECK (clip->getLoopRange().getStart().inSeconds() == doctest::Approx (loopRange.getStart().inSeconds()));
+        CHECK (clip->getLoopRange().getEnd().inSeconds() == doctest::Approx (loopRange.getEnd().inSeconds()));
+
+        // The seconds and beats ranges differ only by the clip start tempo
+        const auto loopRangeBeats = clip->getLoopRangeBeats();
+        CHECK (loopRangeBeats.getStart().inBeats() == doctest::Approx (clip->getLoopRange().getStart().inSeconds() * bps));
+        CHECK (loopRangeBeats.getEnd().inBeats() == doctest::Approx (clip->getLoopRange().getEnd().inSeconds() * bps));
+
+        const auto startBeats  = clip->getLoopStartBeats().inBeats();
+        const auto lengthBeats = clip->getLoopLengthBeats().inBeats();
+
+        for (int i = 0; i < 3; ++i)
+        {
+            clip->setLoopRange (clip->getLoopRange());
+            CHECK (clip->getLoopStartBeats().inBeats() == doctest::Approx (startBeats));
+            CHECK (clip->getLoopLengthBeats().inBeats() == doctest::Approx (lengthBeats));
+        }
+    }
+
+    TEST_CASE ("AudioClipBase: cloning a beat-based loop into a time-based clip keeps the loop")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        auto context = AudioClipBaseLoopTestContext::create (engine);
+        auto source = context->insertClip ({ 0_tp, 1_tp });
+        auto dest = context->insertClip ({ 2_tp, 3_tp });
+        REQUIRE (source != nullptr);
+        REQUIRE (dest != nullptr);
+
+        source->setLoopRange ({ TimePosition::fromSeconds (0.25), TimePosition::fromSeconds (0.75) });
+        source->setAutoTempo (true);
+        REQUIRE (source->beatBasedLooping());
+        REQUIRE (! dest->getAutoTempo());
+
+        dest->cloneFrom (source.get());
+        CHECK (dest->getAutoTempo());
+        CHECK (dest->isLooping());
+        CHECK (dest->getLoopStartBeats().inBeats() == doctest::Approx (source->getLoopStartBeats().inBeats()));
+        CHECK (dest->getLoopLengthBeats().inBeats() == doctest::Approx (source->getLoopLengthBeats().inBeats()));
+    }
+}
+
+} // namespace tracktion::inline engine
+
+#endif // TRACKTION_UNIT_TESTS && ENGINE_UNIT_TESTS_AUDIOCLIPBASE_LOOPING

@@ -511,21 +511,38 @@ struct MemoryBufferReader  : public AudioFormatReaderWithTimeout
                       juce::int64 startSampleInFile,
                       int numSamples) override
     {
-        auto destOffset = static_cast<choc::buffer::FrameCount> (startOffsetInDestBuffer);
-        auto destEnd = static_cast<choc::buffer::FrameCount> (startOffsetInDestBuffer + numSamples);
-        auto srcStart = static_cast<choc::buffer::FrameCount> (startSampleInFile);
-        auto srcAvailable = sourceBuffer.getNumFrames() - std::min (srcStart, sourceBuffer.getNumFrames());
+        using choc::buffer::FrameCount;
+        using choc::buffer::ChannelCount;
+
+        // Frames before the start or after the end of the buffer are silent
+        const auto numSourceFrames = static_cast<juce::int64> (sourceBuffer.getNumFrames());
+        const auto srcStart = std::clamp (startSampleInFile, juce::int64 (0), numSourceFrames);
+        const auto srcEnd = std::clamp (startSampleInFile + numSamples, juce::int64 (0), numSourceFrames);
+        const auto numSourceChannels = static_cast<int> (sourceBuffer.getNumChannels());
 
         // usesFloatingPointData = true, so int** is really float**
-        auto dest = choc::buffer::createChannelArrayView (reinterpret_cast<float* const*> (destSamples),
-                                                          static_cast<choc::buffer::ChannelCount> (numDestChannels),
-                                                          destEnd)
-                        .getFrameRange ({ destOffset, destEnd });
+        auto destChannels = reinterpret_cast<float* const*> (destSamples);
 
-        auto src = sourceBuffer.getFrameRange ({ srcStart, srcStart + std::min (srcAvailable,
-                                                                                static_cast<choc::buffer::FrameCount> (numSamples)) });
+        for (int chan = 0; chan < numDestChannels; ++chan)
+        {
+            // Callers such as AudioFormatReader::read pass null for channels they don't want
+            auto destChannel = destChannels[chan];
 
-        choc::buffer::copyIntersectionAndClearOutside (dest, src);
+            if (destChannel == nullptr)
+                continue;
+
+            auto dest = choc::buffer::createMonoView (destChannel + startOffsetInDestBuffer,
+                                                      static_cast<FrameCount> (numSamples));
+            dest.clear();
+
+            if (chan < numSourceChannels && srcEnd > srcStart)
+                choc::buffer::copy (dest.getFrameRange ({ static_cast<FrameCount> (srcStart - startSampleInFile),
+                                                          static_cast<FrameCount> (srcEnd - startSampleInFile) }),
+                                    sourceBuffer.getChannel (static_cast<ChannelCount> (chan))
+                                                .getFrameRange ({ static_cast<FrameCount> (srcStart),
+                                                                  static_cast<FrameCount> (srcEnd) }));
+        }
+
         return true;
     }
 

@@ -184,6 +184,16 @@ SelectableList getClipSelectionWithCollectionClipContents (const SelectableList&
 /** Returns all clip effects */
 juce::Array<ClipEffect*> getAllClipEffects (Edit& edit);
 
+/** Removes all the content clips from an Edit, leaving its structure intact.
+
+    Video and marker clips are kept, as they describe the Edit rather than its
+    content. Clips in clip slots are removed along with those on the timeline.
+
+    This is used when exporting or archiving an Edit without its material, e.g.
+    when saving it as a template.
+*/
+void removeAllContentClips (Edit&);
+
 //==============================================================================
 // MIDI
 //==============================================================================
@@ -191,7 +201,9 @@ juce::Array<ClipEffect*> getAllClipEffects (Edit& edit);
 /** Returns the MidiNote with a given state. */
 MidiNote* findNoteForState (const Edit&, const juce::ValueTree&);
 
-/** Merges a set of MIDI clips in to one new one. */
+/** Merges a set of MIDI clips in to one new one.
+    Fails if any of the clips are in a ClipSlot.
+*/
 juce::Result mergeMidiClips (juce::Array<MidiClip*>, SelectionManager* sm = nullptr);
 
 /** Helper function to read a file to a number of MidiLists. */

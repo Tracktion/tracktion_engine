@@ -89,7 +89,7 @@ public:
     template<typename Buffer>
     void applyAt (Buffer& buffer, choc::buffer::FrameCount frameNum, FadeType fadeType)
     {
-        apply (buffer.getFrameRange (choc::buffer::FrameRange { .start = frameNum, .end = buffer.getNumFrames() - frameNum }),
+        apply (buffer.getFrameRange (choc::buffer::FrameRange { .start = frameNum, .end = buffer.getNumFrames() }),
                fadeType);
     }
 
@@ -144,6 +144,7 @@ private:
     std::unique_ptr<Node> arrangerNode;
     std::vector<std::unique_ptr<SlotControlNode>> launcherNodes;
     std::vector<SlotControlNode*> launcherNodesCopy;
+    std::vector<std::pair<int, std::unique_ptr<SlotControlNode>>> rankedLauncherNodes; // Reserved scratch space for sorting on the audio thread
     std::shared_ptr<SampleFader> launcherSampleFader, arrangerSampleFader;
     std::shared_ptr<ActiveNoteList> arrangerActiveNoteList;
     std::shared_ptr<std::atomic<ArrangerLauncherSwitchingNode*>> activeNode;
@@ -166,7 +167,6 @@ private:
         bool anyClipsQueued = false;
         std::optional<BeatDuration> beatsUntilQueuedStart;
         std::optional<BeatDuration> beatsUntilQueuedStartTrimmedToBlock;
-        std::optional<BeatDuration> beatsUntilQueuedStopTrimmedToBlock;
     };
 
     static SlotClipStatus getSlotsStatus (const std::vector<std::unique_ptr<SlotControlNode>>&,

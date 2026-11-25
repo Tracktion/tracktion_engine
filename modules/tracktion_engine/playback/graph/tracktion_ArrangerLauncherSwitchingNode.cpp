@@ -32,6 +32,8 @@ ArrangerLauncherSwitchingNode::ArrangerLauncherSwitchingNode (ProcessState& ps,
         [] (auto& n) { return n.get(); });
     assert (launcherNodesCopy.size() == launcherNodes.size());
     assert (! contains_v (launcherNodesCopy, nullptr));
+
+    rankedLauncherNodes.reserve (launcherNodes.size());
 }
 
 //==============================================================================
@@ -150,7 +152,7 @@ void ArrangerLauncherSwitchingNode::process (ProcessContext& pc)
     const auto playArranger = ! track->playSlotClips.get();
     const auto slotStatus = getSlotsStatus (launcherNodes,
                                             editBeatRange,
-                                            getProcessState().getSyncPoint().monotonicBeat);
+                                            getProcessState().getSyncRange().start.monotonicBeat);
 
     launcherSampleFader->apply (destAudioView, SampleFader::FadeType::fadeOut);
     arrangerSampleFader->apply (destAudioView, SampleFader::FadeType::fadeOut);
@@ -165,8 +167,6 @@ void ArrangerLauncherSwitchingNode::process (ProcessContext& pc)
 void ArrangerLauncherSwitchingNode::processLauncher (ProcessContext& pc, const SlotClipStatus& slotStatus)
 {
     auto destAudioView = pc.buffers.audio;
-    const auto numFrames = destAudioView.getNumFrames();
-    const auto editBeatRange = getEditBeatRange();
 
     if (! launcherNodes.empty())
     {
@@ -187,22 +187,13 @@ void ArrangerLauncherSwitchingNode::processLauncher (ProcessContext& pc, const S
 
                 launcherNode->Node::process (pc.numSamples, pc.referenceSampleRange);
 
-                const bool slotIsPlaying = lh.getPlayingStatus() == playing;
                 auto sourceBuffers = launcherNode->getProcessedOutput();
                 const auto numSourceChannels = sourceBuffers.audio.getNumChannels();
 
-                // We can add the whole block here as if the slot is stopped, part of the buffer will just be silent
+                // We can add the whole block here as if the slot is stopped, part of the buffer will just be silent.
+                // A slot that stops fades itself out (see SlotControlNode::processStop)
                 choc::buffer::add (destAudioView.getFirstChannels (numSourceChannels), sourceBuffers.audio);
                 pc.buffers.midi.mergeFrom (sourceBuffers.midi);
-
-                if (slotWasPlaying && ! slotIsPlaying)
-                {
-                    // Ramp out last 10 samples
-                    const auto endFrame = beatToSamplePosition (slotStatus.beatsUntilQueuedStopTrimmedToBlock,
-                                                                editBeatRange.getLength(), numFrames);
-                    launcherSampleFader->trigger (10);
-                    launcherSampleFader->applyAt (destAudioView,  endFrame, SampleFader::FadeType::fadeOut);
-                }
             }
         }
     }
@@ -316,8 +307,9 @@ void ArrangerLauncherSwitchingNode::sortPlayingOrQueuedClipsFirst()
     // is updated by the audio thread, so re-reading it inside the comparator
     // could give a node different ranks across comparisons - that breaks the
     // strict weak ordering std::sort requires and is undefined behaviour.
-    std::vector<std::pair<int, std::unique_ptr<SlotControlNode>>> ranked;
-    ranked.reserve (launcherNodes.size());
+    // The scratch space is reserved when the node is built, so this doesn't allocate.
+    auto& ranked = rankedLauncherNodes;
+    assert (ranked.empty() && ranked.capacity() >= launcherNodes.size());
 
     for (auto& n : launcherNodes)
         ranked.emplace_back (stateToValue (n->getLaunchHandle()), std::move (n));
@@ -328,6 +320,8 @@ void ArrangerLauncherSwitchingNode::sortPlayingOrQueuedClipsFirst()
 
     for (auto& r : ranked)
         launcherNodes.push_back (std::move (r.second));
+
+    ranked.clear();
 }
 
 void ArrangerLauncherSwitchingNode::updatePlaySlotsState()
@@ -389,16 +383,7 @@ ArrangerLauncherSwitchingNode::SlotClipStatus ArrangerLauncherSwitchingNode::get
         }
 
         if (lh.getQueuedStatus() == LaunchHandle::QueueState::stopQueued)
-        {
             status.anyClipsQueued = true;
-            const auto queuedPos = lh.getQueuedEventPosition();
-
-            if (! queuedPos)
-                status.beatsUntilQueuedStopTrimmedToBlock = 0_bd;
-
-            if (queuedPos && blockRange.contains (queuedPos->v))
-                status.beatsUntilQueuedStopTrimmedToBlock = queuedPos->v - blockRange.getStart();
-        }
     }
 
     return status;
@@ -407,8 +392,18 @@ ArrangerLauncherSwitchingNode::SlotClipStatus ArrangerLauncherSwitchingNode::get
 //==============================================================================
 void ArrangerLauncherSwitchingNode::sharedTimerCallback()
 {
-    if (activeNode && activeNode->load (std::memory_order_acquire) == this)
-        updatePlaySlotsState();
+    if (! (activeNode && activeNode->load (std::memory_order_acquire) == this))
+        return;
+
+    // A "Return to arrangement" follow action. This stops the track's launcher
+    // clips, so skip switching back to them whilst the one that ran it stops
+    if (track->returnToArrangementRequested.exchange (false, std::memory_order_acq_rel))
+    {
+        track->playSlotClips = false;
+        return;
+    }
+
+    updatePlaySlotsState();
 }
 
 } // namespace tracktion::inline engine

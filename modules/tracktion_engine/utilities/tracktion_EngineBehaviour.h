@@ -54,6 +54,14 @@ public:
     /// Gives an opportunity to load custom plugins for those that have been registered as custom formats but not added to the list.
     virtual std::unique_ptr<juce::PluginDescription> findDescriptionForFileOrID (const juce::String&)   { return {}; }
 
+    /// Like findDescriptionForFileOrID, but called with the Edit the plugin is being loaded
+    /// into, so the host can resolve references against that Edit's project first (e.g.
+    /// plugin resources copied along with a project folder). Defaults to findDescriptionForFileOrID.
+    virtual std::unique_ptr<juce::PluginDescription> findDescriptionForFileOrIDInEdit (Edit&, const juce::String& fileOrID)
+    {
+        return findDescriptionForFileOrID (fileOrID);
+    }
+
     /// Should return if the given plugin is disabled or not.
     /// ExternalPlugins will use this to determine if they should load themselves or not.
     /// This can be called often so should be quick to execute.
@@ -187,12 +195,25 @@ public:
     /// If you have any special plugins that access items in the Edit, you need to reassign them
     virtual void reassignReferencedItem (ExternalPlugin&, const Exportable::ReferencedItem&, ProjectItemRef, double)  {}
 
+    /// A loose file to bundle into an archive, and the relative path (using '/'
+    /// separators) it should take inside the archived project.
+    struct ExtraFileToArchive
+    {
+        juce::File file;
+        juce::String pathInArchive;
+    };
+
     /// Return any extra loose files the Edit depends on that aren't tracked as
-    /// ProjectItems (e.g. plugin patch files living in a project subfolder).
-    /// These are bundled when archiving a single Edit so they survive the
-    /// round-trip. Paths should live under the source project's directory so the
-    /// archive can recreate their relative layout.
-    virtual juce::Array<juce::File> getExtraFilesToArchive (Edit&)                   { return {}; }
+    /// ProjectItems (e.g. plugin patch files), each with its path inside the
+    /// archived project. These are bundled when archiving a single Edit so they
+    /// survive the round-trip, wherever the files live.
+    virtual std::vector<ExtraFileToArchive> getExtraFilesToArchive (Edit&)          { return {}; }
+
+    /// Called when the user moves the transport while it's playing (e.g. jumping
+    /// to a marker) via
+    /// TransportControl::jumpTo(). Return a time to defer the jump until, e.g. to
+    /// quantise it to the launch quantisation, or nothing to jump straight away.
+    virtual std::optional<TimePosition> getTimeToJumpAt (TransportControl&, TimePosition /*newPosition*/)  { return {}; }
 
     /// If this returns false, ClipSlot Clips won't be included in the playback graph
     /// and arranger track clips will always be audible.

@@ -32,6 +32,9 @@ namespace
             {
                 for (auto t : onlyTheseTracks)
                 {
+                    if (t == nullptr)
+                        continue;
+
                     if (auto ct = dynamic_cast<ClipTrack*> (t))
                         clipTracks.push_back (ct);
 
@@ -303,7 +306,8 @@ ClipTrack* findFirstClipTrackFromSelection (const SelectableList& items)
 
     if (clipTracks.isEmpty())
         for (auto& clip : items.getItemsOfType<Clip>())
-            clipTracks.add (clip->getClipTrack());
+            if (auto ct = clip->getClipTrack())
+                clipTracks.add (ct);
 
     ClipTrack* firstTrack = nullptr;
     auto firstIndex = std::numeric_limits<int>::max();
@@ -367,8 +371,7 @@ void deleteRegionOfClip (Clip& c, TimeRange timeRangeToDelete)
 
     if (auto track = c.getClipTrack())
     {
-        track->setFrozen (false, Track::groupFreeze);
-        track->setFrozen (false, Track::individualFreeze);
+        track->unfreeze (Track::anyFreeze);
 
         const auto clipTimeRange = c.getEditTimeRange();
 
@@ -387,6 +390,10 @@ void deleteRegionOfClip (Clip& c, TimeRange timeRangeToDelete)
         else
         {
             c.trimAwayOverlap (timeRangeToDelete);
+
+            // A range ending a rounding error inside the clip would otherwise leave a sliver of it behind
+            if (c.getPosition().getLength() < Clip::minimumLength)
+                c.removeFromParent();
         }
     }
 }
@@ -684,6 +691,26 @@ juce::Array<ClipEffect*> getAllClipEffects (Edit& edit)
     return res;
 }
 
+void removeAllContentClips (Edit& edit)
+{
+    for (auto t : getClipTracks (edit))
+    {
+        for (int i = t->getClips().size(); --i >= 0;)
+        {
+            auto clip = t->getClips().getUnchecked (i);
+
+            if (clip->type != TrackItem::Type::video
+                  && clip->type != TrackItem::Type::marker)
+                clip->removeFromParent();
+        }
+    }
+
+    for (auto t : getAudioTracks (edit))
+        for (auto s : t->getClipSlotList().getClipSlots())
+            if (auto c = s->getClip())
+                c->removeFromParent();
+}
+
 
 //==============================================================================
 ClipOwner* findClipOwnerForID (const Edit& edit, EditItemID id)
@@ -872,6 +899,11 @@ MidiNote* findNoteForState (const Edit& edit, const juce::ValueTree& v)
 
 juce::Result mergeMidiClips (juce::Array<MidiClip*> clips, SelectionManager* sm)
 {
+    // The merged clip goes on the arranger, so a launcher clip would be lost from its slot
+    for (auto c : clips)
+        if (c->getClipSlot() != nullptr)
+            return juce::Result::fail (TRANS("Unable to merge launcher clips"));
+
     for (auto c : clips)
         if (c->getClipTrack() == nullptr || c->getClipTrack()->isFrozen (Track::anyFreeze))
             return juce::Result::fail (TRANS("Unable to merge clips on frozen tracks"));

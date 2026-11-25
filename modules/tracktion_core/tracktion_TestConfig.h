@@ -21,6 +21,7 @@
 #define GRAPH_UNIT_TESTS_EDITNODE                       1
 
 #define ENGINE_UNIT_TESTS_AUDIOCLIPBASE_CHANNELS        1
+#define ENGINE_UNIT_TESTS_AUDIOCLIPBASE_LOOPING         1
 #define ENGINE_UNIT_TESTS_AUTOMATION                    1
 #define ENGINE_UNIT_TESTS_AUTOMATION_CURVE_LIST         1
 #define ENGINE_UNIT_TESTS_AUX_SEND                      1

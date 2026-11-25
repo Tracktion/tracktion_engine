@@ -35,8 +35,8 @@ struct ClipContext
     AudioTrack::Ptr track;
     std::shared_ptr<LaunchHandle> launchHandle;
     std::vector<std::shared_ptr<LaunchHandle>> allSceneHandles;
-    std::vector<std::shared_ptr<LaunchHandle>> validSceneHandles;
-    std::vector<std::vector<std::shared_ptr<LaunchHandle>>> groups;
+    std::vector<std::shared_ptr<LaunchHandle>> validSceneHandles;   // enabled clips
+    std::vector<std::vector<std::shared_ptr<LaunchHandle>>> groups; // enabled clips
     size_t sceneIndex = 0, groupIndex = 0, indexInGroup = 0;
     juce::Random random;
 
@@ -93,7 +93,7 @@ inline std::shared_ptr<ClipContext> createClipContext (Clip& c)
     ctx->track = audioTrack;
     ctx->launchHandle = c.getLaunchHandle();
 
-    std::vector<std::shared_ptr<LaunchHandle>> allSceneHandles;
+    std::vector<std::shared_ptr<LaunchHandle>> allSceneHandles, disabledHandles;
 
     for (auto cs : audioTrack->getClipSlotList().getClipSlots())
     {
@@ -102,7 +102,13 @@ inline std::shared_ptr<ClipContext> createClipContext (Clip& c)
             auto lh = clip->getLaunchHandle();
             allSceneHandles.push_back (lh);
 
-            if (lh)
+            // Disabled clips can't be launched, so no action chooses them. They still
+            // count as clips when splitting the groups, so the groups' shape doesn't
+            // change, but a group of only disabled clips is left out. The clip itself
+            // is playing
+            if (lh && clip->disabled.get() && clip != &c)
+                disabledHandles.push_back (std::move (lh));
+            else if (lh)
                 ctx->validSceneHandles.emplace_back (std::move (lh));
         }
         else
@@ -123,6 +129,9 @@ inline std::shared_ptr<ClipContext> createClipContext (Clip& c)
 
         for (auto lh : groupView)
         {
+            if (contains_v (disabledHandles, lh))
+                continue;
+
             if (ctx->launchHandle == lh)
             {
                 ctx->groupIndex = ctx->groups.size();
@@ -276,8 +285,9 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
     {
         case globalReturnToArrangement:
         {
+            // This runs on the audio thread, so it can't set the property itself
             return [ctx] (auto)
-                   { ctx->track->playSlotClips = true; };
+                   { ctx->track->returnToArrangementRequested.store (true, std::memory_order_release); };
         }
         case trackAny:
         {
@@ -295,11 +305,12 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
                            for (;;)
                            {
                                const auto index = static_cast<size_t> (ctx->random.nextInt ({ 0, static_cast<int> (ctx->validSceneHandles.size()) }));
+                               const auto& handle = ctx->validSceneHandles[index];
 
-                               if (index == ctx->sceneIndex)
+                               if (handle == ctx->launchHandle)
                                    continue;
 
-                               ctx->validSceneHandles[index]->play (b);
+                               handle->play (b);
                                break;
                            }
                        };
@@ -414,6 +425,11 @@ inline std::function<void (MonotonicBeat)> createFollowAction (std::shared_ptr<f
 
 std::function<void (MonotonicBeat)> createFollowAction (Clip& c)
 {
+    // Without any follow actions there's nothing to create, and getFollowActions()
+    // would add their state to the clip, an undoable change whilst building the graph
+    if (! c.state.getChildWithName (IDs::FOLLOWACTIONS).isValid())
+        return {};
+
     auto followActions = c.getFollowActions();
 
     if (! followActions)

@@ -351,6 +351,35 @@ TEST_SUITE ("tracktion_engine")
             CHECK_LT(getRMS (toBufferView (buffer).getChannel (0)), 0.01f);
         }
     }
+
+    TEST_CASE ("Modifier value history")
+    {
+        // Plays an LFO for longer than the stored history so the ring buffer
+        // wraps, then checks getValues returns the most recent values first
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = engine::test_utilities::createTestEdit (engine, 1, Edit::forEditing);
+        auto& track = *getAudioTracks (*edit)[0];
+
+        auto lfo = track.getModifierList()->insertModifier (juce::ValueTree (IDs::LFO), 0, nullptr);
+        REQUIRE (lfo != nullptr);
+        track.getVolumePlugin()->volParam->addModifier (*lfo);
+
+        auto player = test_utilities::createEnginePlayer (*edit, {});
+        process (*player, Modifier::maxHistoryTime + 1s);
+
+        const auto sampleRate = lfo->getSampleRate();
+        const auto values = lfo->getValues (Modifier::maxHistoryTime);
+        REQUIRE (values.size() == (size_t) tracktion::toSamples (Modifier::maxHistoryTime, sampleRate));
+
+        for (auto i : { 0, 1, 100, 1000, 44100, (int) values.size() - 1 })
+            CHECK (std::abs (values[(size_t) i] - lfo->getValueAt (TimeDuration::fromSamples (i, sampleRate))) < 0.001f);
+
+        // The values aren't all the same so the order is actually being tested
+        CHECK (*std::min_element (values.begin(), values.end()) < *std::max_element (values.begin(), values.end()));
+
+        const auto halfSecond = TimeDuration::fromSeconds (0.5);
+        CHECK (lfo->getValues (halfSecond).size() == (size_t) tracktion::toSamples (halfSecond, sampleRate));
+    }
 }
 
 

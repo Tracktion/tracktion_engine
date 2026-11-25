@@ -57,21 +57,17 @@ public:
 
     [[nodiscard]] std::vector<float> getValues (TimeDuration numSecondsBeforeNow) const
     {
-        std::vector<float> v;
-
         const auto numValues = std::min (values.size(),
                                          (size_t) tracktion::toSamples (numSecondsBeforeNow, sampleRate));
-        v.reserve (numValues);
+        std::vector<float> v (numValues);
 
-        int index = (int) headIndex;
-
-        for (int i = (int) numValues; --i >= 0;)
-        {
-            v.push_back (values[(size_t) index]);
-
-            if (--index < 0)
-                index = (int) values.size() - 1;
-        }
+        // Most recent first: back from the head to the start of the
+        // buffer, then back from the end of the buffer for the rest
+        const auto numBeforeWrap = std::min (numValues, headIndex + 1);
+        const auto head = values.begin() + (std::ptrdiff_t) (headIndex + 1);
+        std::reverse_copy (head - (std::ptrdiff_t) numBeforeWrap, head, v.begin());
+        std::reverse_copy (values.end() - (std::ptrdiff_t) (numValues - numBeforeWrap), values.end(),
+                           v.begin() + (std::ptrdiff_t) numBeforeWrap);
 
         return v;
     }

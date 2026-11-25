@@ -117,6 +117,11 @@ void Clip::initialise()
 
     const juce::ScopedValueSetter<bool> initialiser (isInitialised, false, true);
 
+    // The constructor creates the curve list before the subclass can supply its
+    // launch handle, so a launcher clip's curves need their position delegate updating
+    if (automationCurveList)
+        automationCurveList->setPositionDelegate (getAutomationCurveListDelegates().first);
+
     if (sourceFileReference.isUsingProjectReference())
         sourceMediaChanged();
 
@@ -127,7 +132,7 @@ void Clip::initialise()
         if (auto f = track->getParentFolderTrack())
             f->setDirtyClips();
 
-        track->setFrozen (false, Track::groupFreeze);
+        track->unfreeze (Track::groupFreeze);
     }
 
     cancelAnyPendingUpdates();
@@ -311,10 +316,9 @@ void Clip::updateAutomationCurveListDestinations()
     if (auto automation = getAutomationCurveList (false))
     {
         for (auto curve : automation->getItems())
-        {
             updateRelativeDestinationOrRemove (*automation, *curve, *this);
-            curve->setPositionDelegate (getAutomationCurveListDelegates().first);
-        }
+
+        automation->setPositionDelegate (getAutomationCurveListDelegates().first);
     }
 }
 
@@ -350,7 +354,7 @@ void Clip::changed()
     Selectable::changed();
 
     if (auto track = getTrack())
-        track->setFrozen (false, Track::groupFreeze);
+        track->unfreeze (Track::groupFreeze);
 
     if (! cloneInProgress && isLinked() && ! edit.isLoading())
         updateLinkedClipsCaller.triggerAsyncUpdate();
@@ -592,6 +596,16 @@ void Clip::valueTreePropertyChanged (juce::ValueTree& tree, const juce::Identifi
             sourceFileReference.source.forceUpdateOfCachedValue();
             sourceMediaChanged();
         }
+        else if (id == IDs::disabled)
+        {
+            // A disabled launcher clip has no playback node, so a launched or queued
+            // one would otherwise carry on part way through when it's enabled again
+            disabled.forceUpdateOfCachedValue();
+
+            if (disabled.get() && getClipSlot() != nullptr)
+                if (auto lh = getLaunchHandle())
+                    lh->stop ({});
+        }
         else if (id == IDs::colour || id == IDs::speed
                  || id == IDs::sync || id == IDs::linkID)
         {
@@ -682,8 +696,14 @@ std::pair<std::function<CurvePosition()>, std::function<ClipPositionInfo()>> Cli
         [position = clipPosition, handle = std::move (clipLauncherHandle)]
         {
             if (handle)
+            {
                 if (auto playedRange = handle->getPlayedRange())
                     return CurvePosition { playedRange->getStart() - position->getOffsetInBeats(), *playedRange };
+
+                // A launcher clip that isn't playing has no range in the Edit,
+                // so its curves mustn't apply to the track's other clips
+                return CurvePosition { position->getContentStartBeat(), BeatRange() };
+            }
 
             return CurvePosition { position->getContentStartBeat(), position->getEditBeatRange() };
         };
@@ -877,6 +897,125 @@ TEST_SUITE("tracktion_engine")
         {
             clip->trimAwayOverlap ({ 10_tp, 12_tp });
             CHECK (clip->getPosition().time == positionBeforeTrim.time);
+        }
+    }
+
+    TEST_CASE("Deleting a region doesn't leave a rounding-error sliver of a clip")
+    {
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine);
+        edit->tempoSequence.getTempo (0)->setBpm (150.0);
+        auto track = getAudioTracks (*edit)[0];
+
+        // At 150 BPM beat 444 converts to a time one rounding error after 177.6s
+        const auto clipStart = TimePosition::fromSeconds (177.6);
+        const auto rangeStart = edit->tempoSequence.toTime (444_bp);
+        REQUIRE (rangeStart > clipStart);
+        REQUIRE (rangeStart - clipStart < Clip::minimumLength);
+
+        auto clip = track->insertMIDIClip ({ clipStart, 180_tp }, nullptr);
+        REQUIRE (clip != nullptr);
+
+        SUBCASE ("ClipTrack::deleteRegion")
+        {
+            track->deleteRegion ({ rangeStart, 181_tp }, nullptr);
+            CHECK (track->getClips().isEmpty());
+        }
+
+        SUBCASE ("deleteRegionOfClip")
+        {
+            deleteRegionOfClip (*clip, { rangeStart, 181_tp });
+            CHECK (track->getClips().isEmpty());
+        }
+
+        SUBCASE ("Inserting a clip over it")
+        {
+            insertClipWithState (*track, {}, "New", TrackItem::Type::midi, { { rangeStart, 181_tp } },
+                                 DeleteExistingClips::yes, false);
+            REQUIRE (track->getClips().size() == 1);
+            CHECK (track->getClips()[0]->getPosition().getStart() == rangeStart);
+        }
+    }
+
+    TEST_CASE("Clips shorter than the minimum length are removed on load")
+    {
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        juce::ValueTree editState;
+
+        {
+            auto edit = Edit::createSingleTrackEdit (engine);
+            auto track = getAudioTracks (*edit)[0];
+            track->insertMIDIClip ({ 1_tp, 2_tp }, nullptr);
+            auto sliver = track->insertMIDIClip ({ 4_tp, 5_tp }, nullptr);
+            sliver->setPosition ({ { 4_tp, TimeDuration::fromSeconds (1.0e-14) } });
+            REQUIRE (getAudioTracks (*edit)[0]->getClips().size() == 2);
+            editState = edit->state.createCopy();
+        }
+
+        auto edit = loadEditFromState (engine, editState);
+        auto clips = getAudioTracks (*edit)[0]->getClips();
+        REQUIRE (clips.size() == 1);
+        CHECK (clips[0]->getPosition().time == TimeRange (1_tp, 2_tp));
+    }
+
+    TEST_CASE("Fade length correction isn't undoable")
+    {
+        auto& engine = *tracktion::engine::Engine::getEngines()[0];
+        auto edit = Edit::createSingleTrackEdit (engine);
+        auto track = getAudioTracks (*edit)[0];
+        auto& undoManager = edit->getUndoManager();
+
+        auto clip = dynamic_cast<AudioClipBase*> (insertNewClip (*track, TrackItem::Type::wave, { 2_tp, 3_tp }));
+        REQUIRE (clip != nullptr);
+
+        // A comp remnant can be left with fades that are longer than the clip itself
+        const auto length = TimeDuration::fromSeconds (0.00999999999999979);
+        auto clipState = clip->state;
+        clipState.setProperty (IDs::length, length.inSeconds(), nullptr);
+        clipState.setProperty (IDs::fadeIn, 0.0, nullptr);
+        clipState.setProperty (IDs::fadeOut, 0.02, nullptr);
+
+        SUBCASE ("Correcting the fades during construction isn't undoable")
+        {
+            track->state.removeChild (clipState, nullptr);
+            undoManager.clearUndoHistory();
+            undoManager.beginNewTransaction();
+
+            track->state.addChild (clipState, -1, nullptr);
+            const double correctedFadeOut = clipState[IDs::fadeOut];
+            CHECK (correctedFadeOut == doctest::Approx (length.inSeconds()));
+
+            // Undoing back past the clip's construction mustn't revert the correction
+            while (undoManager.canUndo())
+                undoManager.undo();
+
+            CHECK (double (clipState[IDs::fadeOut]) == doctest::Approx (correctedFadeOut));
+        }
+
+        SUBCASE ("Fades are corrected when a clip is rebuilt during an undo")
+        {
+            undoManager.clearUndoHistory();
+            undoManager.beginNewTransaction();
+            clip->removeFromParent();
+            REQUIRE (track->getClips().isEmpty());
+
+            undoManager.beginNewTransaction();
+            undoManager.undo();
+
+            REQUIRE (track->getClips().size() == 1);
+            auto rebuiltClip = dynamic_cast<AudioClipBase*> (track->getClips()[0]);
+            REQUIRE (rebuiltClip != nullptr);
+            CHECK (rebuiltClip->getFadeIn() + rebuiltClip->getFadeOut() <= length);
+
+            // The correction has to reach the state, not just the CachedValue, or it's
+            // lost the next time the Edit is loaded
+            const double fadeInInState  = rebuiltClip->state[IDs::fadeIn];
+            const double fadeOutInState = rebuiltClip->state[IDs::fadeOut];
+            CHECK (fadeInInState + fadeOutInState <= length.inSeconds());
+            CHECK (fadeOutInState == doctest::Approx (length.inSeconds()));
+
+            // The undo history must still be intact
+            CHECK (undoManager.canRedo());
         }
     }
 }

@@ -117,6 +117,7 @@ private:
     int64_t samplesTrimmed = 0;
     bool hasStartedSavingToFile = 0;
     int64_t samplesToWrite = 0, numSamplesWrittenToSource = 0;
+    int64_t samplesPastRangeStart = 0, rangeLengthInSamples = 0;
 
     std::unique_ptr<juce::TemporaryFile> intermediateFile;
     juce::AudioFormatWriter::ThreadedWriter::IncomingDataReceiver* sourceToUpdate;

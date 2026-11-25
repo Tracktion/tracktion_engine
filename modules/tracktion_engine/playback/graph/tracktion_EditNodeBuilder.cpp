@@ -28,6 +28,18 @@ namespace
         launcher
     };
 
+    /** The range of a launched clip's content, from 0, where its SlotControlNode's offset
+        puts the clip's start. A one-shot's ends at its length, so when it carries on to
+        a queued relaunch, nothing past its end plays.
+    */
+    BeatRange getLauncherContentRange (const Clip& clip)
+    {
+        if (clip.isLooping())
+            return { 0_bp, BeatPosition::fromBeats (std::numeric_limits<double>::max()) };
+
+        return { 0_bp, clip.getLengthInBeats() };
+    }
+
     template<typename PluginType>
     juce::Array<PluginType*> getAllPluginsOfType (Edit& edit)
     {
@@ -419,6 +431,12 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
     // Trigger proxy render if it needs it
     clip.beginRenderingNewProxyIfNeeded();
 
+    // A playback file that can't be read and that the clip isn't going to generate will never
+    // appear - the source has been deleted, moved or is unreadable. Building a node for it would
+    // leave a leaf that never reports itself ready, which makes an offline render wait forever
+    if (! playFile.isValid() && ! clip.isGeneratingPlaybackFile())
+        return {};
+
     std::unique_ptr<Node> node;
 
     if (clip.canUseProxy())
@@ -548,7 +566,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
                     .audioFile = playFile,
                     .timeStretchMode = timeStretcherMode,
                     .elastiqueProOptions = timeStretcherOpts,
-                    .editTime = BeatRange (0_bp, BeatPosition::fromBeats (std::numeric_limits<double>::max())),
+                    .editTime = getLauncherContentRange (clip),
                     .offset = clip.getOffsetInBeats(),
                     .loopSection = clip.getLoopRangeBeats(),
                     .liveClipLevel = clip.getLiveClipLevel(),
@@ -639,6 +657,9 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& c
 std::unique_ptr<tracktion::graph::Node> createNodeForAudioClip (AudioClipBase& clip, bool includeARA,
                                                                 const CreateNodeParams& params, ClipRole role)
 {
+    if (clip.getPosition().getLength() < Clip::minimumLength)
+        return {};
+
     if (clip.canUseProxy())
     {
         assert (role == ClipRole::arranger);
@@ -667,7 +688,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, c
     {
         std::vector<juce::MidiMessageSequence> sequences;
         sequences.emplace_back (clip.getSequence().exportToPlaybackMidiSequence (clip, timeBase, generateMPE));
-        const auto clipBeatRange = role == ClipRole::launcher ? BeatRange (0_bp, BeatPosition::fromBeats (std::numeric_limits<double>::max()))
+        const auto clipBeatRange = role == ClipRole::launcher ? getLauncherContentRange (clip)
                                                               : BeatRange (clip.getStartBeat(), clip.getEndBeat());
 
         return graph::makeNode<LoopingMidiNode> (std::move (sequences),
@@ -730,7 +751,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForStepClip (StepClip& clip, c
         for (int i = clip.usesProbability() ? 64 : 1; --i >= 0;)
             sequences.push_back (clip.generateMidiSequence (MidiList::TimeBase::beatsRaw));
 
-        const auto clipBeatRange = BeatRange (0_bp, BeatPosition::fromBeats (std::numeric_limits<double>::max()));
+        const auto clipBeatRange = getLauncherContentRange (clip);
         node = graph::makeNode<LoopingMidiNode> (std::move (sequences),
                                                  juce::Range<int> (1, 16),
                                                  false,
@@ -820,7 +841,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForContainerClip (ContainerCli
 
         auto offsetNode = std::make_unique<DynamicOffsetNode> (params.processState,
                                                                clip.itemID,
-                                                               role == ClipRole::launcher ? BeatRange (0_bp, BeatPosition::fromBeats (std::numeric_limits<double>::max()))
+                                                               role == ClipRole::launcher ? getLauncherContentRange (clip)
                                                                                           : clip.getEditBeatRange(),
                                                                clip.getOffsetInBeats(),
                                                                clip.getLoopRangeBeats(),
@@ -861,7 +882,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForContainerClip (ContainerCli
 std::unique_ptr<tracktion::graph::Node> createNodeForClip (Clip& clip, const TrackMuteState& trackMuteState,
                                                            const CreateNodeParams& params, ClipRole role)
 {
-    if (clip.disabled)
+    if (clip.disabled || clip.getPosition().getLength() < Clip::minimumLength)
         return {};
 
     // N.B. This must be checked first as a ContainerClip is an AudioClipBase
@@ -1116,6 +1137,24 @@ std::unique_ptr<tracktion::graph::Node> createARAClipsNode (const juce::Array<Cl
 std::unique_ptr<tracktion::graph::Node> createClipsNode (AudioTrack& at, const TrackMuteState& trackMuteState,
                                                          const CreateNodeParams& params)
 {
+    // Renders play what's heard with nothing launched, so a track left playing its
+    // launcher is silent. Its launcher clips aren't rendered either, so a render
+    // doesn't advance their live launch handles. A render of particular arranger
+    // clips (a clip render) still plays them
+    auto isRenderingArrangerClipsOnTrack = [&at, &params]
+    {
+        if (params.allowedClips != nullptr)
+            for (auto c : *params.allowedClips)
+                if (c->getClipSlot() == nullptr && c->getTrack() == &at)
+                    return true;
+
+        return false;
+    };
+
+    if (params.allowClipSlots && params.forRendering && at.playSlotClips.get()
+         && ! isRenderingArrangerClipsOnTrack())
+        return {};
+
     std::vector<std::unique_ptr<Node>> arrangerNodes;
     const auto trackID = at.itemID;
     const auto& clips = at.getClips();
@@ -1126,7 +1165,7 @@ std::unique_ptr<tracktion::graph::Node> createClipsNode (AudioTrack& at, const T
     if (auto araNode = createARAClipsNode (clips, trackMuteState, params))
         arrangerNodes.push_back (std::move (araNode));
 
-    if (! params.allowClipSlots)
+    if (! params.allowClipSlots || params.forRendering)
     {
         if (arrangerNodes.empty())
             return {};

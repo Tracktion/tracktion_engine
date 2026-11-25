@@ -168,6 +168,19 @@ Track* Track::getSiblingTrack (int delta, bool keepWithinSameParent) const
 }
 
 //==============================================================================
+void Track::unfreeze (FreezeType type)
+{
+    if (type == anyFreeze)
+    {
+        unfreeze (groupFreeze);
+        unfreeze (individualFreeze);
+        return;
+    }
+
+    [[maybe_unused]] const auto result = setFrozen (false, type);
+    jassert (result.wasOk()); // Unfreezing shouldn't be able to fail
+}
+
 bool Track::isProcessing (bool includeParents) const
 {
     if (includeParents)

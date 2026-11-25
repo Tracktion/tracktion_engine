@@ -485,14 +485,14 @@ void ClipTrack::clipCreated (Clip& c)
 void ClipTrack::clipAddedOrRemoved()
 {
     changed();
-    setFrozen (false, Track::groupFreeze);
+    unfreeze (Track::groupFreeze);
     trackItemsDirty = true;
 }
 
 void ClipTrack::clipOrderChanged()
 {
     changed();
-    setFrozen (false, Track::groupFreeze);
+    unfreeze (Track::groupFreeze);
     trackItemsDirty = true;
 }
 

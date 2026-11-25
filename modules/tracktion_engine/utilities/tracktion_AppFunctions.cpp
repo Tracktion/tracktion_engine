@@ -440,14 +440,14 @@ namespace AppFunctions
     {
         if (auto transport = getActiveTransport())
             if (auto clip = transport->edit.getMarkerManager().getNextMarker (transport->getPosition()))
-                transport->setPosition (clip->getPosition().getStart());
+                transport->jumpTo (clip->getPosition().getStart());
     }
 
     void moveToPrevMarker()
     {
         if (auto transport = getActiveTransport())
             if (auto clip = transport->edit.getMarkerManager().getPrevMarker (transport->getPosition()))
-                transport->setPosition (clip->getPosition().getStart());
+                transport->jumpTo (clip->getPosition().getStart());
     }
 
     void redo()
@@ -674,18 +674,24 @@ namespace AppFunctions
 
             if (freezeCount == 0)
             {
+                juce::StringArray errors;
+
                 for (auto t : tracks)
                     if (! t->isFrozen (Track::anyFreeze))
-                        t->setFrozen (true, Track::individualFreeze);
+                        if (auto r = t->setFrozen (true, Track::individualFreeze); r.failed())
+                            errors.add (r.getErrorMessage());
+
+                if (! errors.isEmpty())
+                    getCurrentUIBehaviour().showWarningMessage (errors.joinIntoString ("\n\n"));
             }
             else
             {
                 for (auto t : tracks)
                 {
                     if (t->isFrozen (Track::groupFreeze))
-                        t->setFrozen (false, Track::groupFreeze);
+                        t->unfreeze (Track::groupFreeze);
                     else if (t->isFrozen (Track::individualFreeze))
-                        t->setFrozen (false, Track::individualFreeze);
+                        t->unfreeze (Track::individualFreeze);
                 }
             }
         }

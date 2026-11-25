@@ -517,6 +517,16 @@ void Plugin::baseClassInitialise (const PluginInitialisationInfo& info)
     if (initialiseCount++ == 0 || sampleRateOrBlockSizeChanged)
     {
         CRASH_TRACER
+
+        // initialise() must never run whilst another graph still holds (and may be
+        // processing) this plugin. If you hit this, the graph using the old rate or
+        // block size should have been destroyed before this one was built
+        if (initialiseCount > 1)
+        {
+            TRACKTION_LOG_ERROR ("Plugin re-initialised whilst still in use by another graph: " + getName());
+            jassertfalse;
+        }
+
         isInitialisingFlag = true;
         initialise (info);
         isInitialisingFlag = false;

@@ -190,8 +190,18 @@ private:
     void start() override {}
     void stop() override {}
 
-    void handleAudioError (RtAudioErrorType, const std::string& errorText)
+    void handleAudioError (RtAudioErrorType type, const std::string& errorText)
     {
+        // Warnings are non-fatal, and are often emitted by devices which go on to
+        // open and run perfectly happily, so they mustn't be treated as failures
+        if (type == RTAUDIO_WARNING)
+        {
+            if (log)
+                log (errorText);
+
+            return;
+        }
+
         lastError = errorText;
     }
 
@@ -325,13 +335,38 @@ private:
         RtAudio::StreamOptions streamOptions;
         streamOptions.flags = RTAUDIO_NONINTERLEAVED | RTAUDIO_SCHEDULE_REALTIME | RTAUDIO_ALSA_USE_DEFAULT;
 
-        auto error = rtAudio->openStream (outputDeviceInfo != nullptr ? std::addressof (outParams) : nullptr,
-                                          inputDeviceInfo != nullptr ? std::addressof (inParams) : nullptr,
-                                          RTAUDIO_FLOAT32,
-                                          (unsigned int) chooseBestSampleRate(),
-                                          std::addressof (framesPerBuffer),
-                                          rtAudioCallback,
-                                          this, std::addressof (streamOptions));
+        auto tryToOpenStream = [&]
+        {
+            return rtAudio->openStream (outputDeviceInfo != nullptr ? std::addressof (outParams) : nullptr,
+                                        inputDeviceInfo != nullptr ? std::addressof (inParams) : nullptr,
+                                        RTAUDIO_FLOAT32,
+                                        (unsigned int) chooseBestSampleRate(),
+                                        std::addressof (framesPerBuffer),
+                                        rtAudioCallback,
+                                        this, std::addressof (streamOptions));
+        };
+
+        auto error = tryToOpenStream();
+
+        // Some drivers (especially ALSA ones) refuse to open a device for full-duplex
+        // use even when they're perfectly happy to play its output, so rather than
+        // failing completely, it's worth a second attempt with the input disabled
+        if (error != RTAUDIO_NO_ERROR && inputDeviceInfo != nullptr && outputDeviceInfo != nullptr)
+        {
+            if (log)
+                log ("Failed to open the audio input and output together ("
+                       + (lastError.empty() ? rtAudio->getErrorText() : lastError)
+                       + ") - retrying with the audio input disabled");
+
+            inputDeviceInfo = nullptr;
+            inputDeviceName = {};
+            options.inputDeviceID = {};
+            numInputChannels = {};
+            inputChannelPointers.clear();
+            lastError = {};
+
+            error = tryToOpenStream();
+        }
 
         if (error != RTAUDIO_NO_ERROR)
         {
@@ -348,6 +383,10 @@ private:
 
             return false;
         }
+
+        // Now that a stream is successfully open, any errors that were reported while
+        // probing the other devices are irrelevant
+        lastError = {};
 
         options.audioAPI = RtAudio::getApiDisplayName (rtAudio->getCurrentApi());
         options.sampleRate = static_cast<uint32_t> (rtAudio->getStreamSampleRate());

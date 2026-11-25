@@ -146,6 +146,9 @@ public:
     /** Deletes a specific Scene. */
     void deleteScene (Scene&);
 
+    /** Moves a Scene to a new index, along with the ClipSlot at its index on every track. */
+    void moveScene (int currentIndex, int newIndex);
+
     juce::ValueTree state;  /**< The state of this SceneList. */
     Edit& edit;             /**< The Edit this SceneList belongs to. */
 
