@@ -96,13 +96,33 @@ void FolderBasedProject::scanFolder() const
     for (auto& ext : juce::StringArray::fromTokens (videoFileExtensions, ";", ""))
         wildcards += ";*" + ext;
 
+    // A subfolder with its own info file is a project in its own right, so its
+    // files are left to that project rather than being listed here as well
+    const auto infoFileName = getInfoFile().getFileName();
+    wildcards += ";" + infoFileName;
+
     auto files = folder.findChildFiles (juce::File::findFiles, true, wildcards);
+
+    juce::Array<juce::File> nestedProjectFolders;
+
+    for (auto& f : files)
+        if (f.getFileName() == infoFileName && f.getParentDirectory() != folder)
+            nestedProjectFolders.add (f.getParentDirectory());
+
+    auto isInNestedProject = [&nestedProjectFolders] (const juce::File& f)
+    {
+        for (auto& nestedFolder : nestedProjectFolders)
+            if (f.isAChildOf (nestedFolder))
+                return true;
+
+        return false;
+    };
 
     for (auto& f : files)
     {
         auto type = inferType (f);
 
-        if (type.isEmpty())
+        if (type.isEmpty() || isInNestedProject (f))
             continue;
 
         auto category = inferCategory (f, folder);
