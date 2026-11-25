@@ -401,7 +401,8 @@ inline std::shared_ptr<std::istream> ZipFile::Item::createReader() const
     auto zs = std::make_shared<ZipStream> (*this);
 
     if (isCompressed)
-        return std::make_shared<zlib::InflaterStream> (zs, zlib::InflaterStream::FormatType::deflate);
+        return std::make_shared<zlib::InflaterStream> (zs, zlib::InflaterStream::FormatType::deflate,
+                                                       static_cast<zlib::InflaterStream::off_type> (uncompressedSize));
 
     return zs;
 }

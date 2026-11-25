@@ -93,6 +93,66 @@ struct CompManagerTestContext
     WaveAudioClip::Ptr clip;
 };
 
+
+namespace comp_manager_test
+{
+    /** Writes a sine wave of the given length to a file, creating its folder. */
+    inline juce::File writeSinFile (const juce::File& dest, double seconds)
+    {
+        auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (44100.0, seconds);
+        dest.getParentDirectory().createDirectory();
+        return sinFile->getFile().copyFileTo (dest) ? dest : juce::File();
+    }
+
+    /** Loads an Edit as the app does, identified by its owner project's item for it. */
+    inline std::unique_ptr<Edit> loadEditThrough (Project& owner, const juce::File& editFile)
+    {
+        auto editItem = owner.getProjectItemForFile (editFile);
+
+        if (editItem == nullptr)
+            return {};
+
+        auto itemRef = editItem->getProjectItemRef();
+        return Edit::createEdit ({ owner.engine, loadEditFromFile (owner.engine, editFile, itemRef), itemRef, Edit::forExamining });
+    }
+
+    inline WaveAudioClip* getFirstWaveClip (Edit& edit)
+    {
+        for (auto track : getAudioTracks (edit))
+            for (auto clip : track->getClips())
+                if (auto waveClip = dynamic_cast<WaveAudioClip*> (clip))
+                    return waveClip;
+
+        return nullptr;
+    }
+
+    /** Saves an Edit with one clip whose takes are the given files, in order. */
+    inline bool saveEditWithTakes (Edit& edit, const juce::Array<juce::File>& takeFiles,
+                                   const juce::Array<ProjectItem::Ptr>& takeItems = {})
+    {
+        edit.ensureNumberOfAudioTracks (1);
+
+        // The Edit file has to exist for take paths to be made relative to its folder
+        if (! test_utilities::saveEditSync (edit))
+            return false;
+
+        auto clip = insertWaveClip (*getAudioTracks (edit)[0], "Takes", takeFiles[0],
+                                    { { 0_tp, TimePosition::fromSeconds (1.0) } },
+                                    DeleteExistingClips::no);
+
+        if (clip == nullptr)
+            return false;
+
+        for (auto& f : takeFiles)
+            clip->addTake (f);
+
+        for (auto& item : takeItems)
+            clip->addTake (item->getProjectItemRef());
+
+        return test_utilities::saveEditSync (edit);
+    }
+}
+
 TEST_SUITE ("tracktion_engine")
 {
     TEST_CASE ("CompManager: addNewComp creates valid comp for file-based project")
@@ -322,6 +382,159 @@ TEST_SUITE ("tracktion_engine")
         CHECK (compTree.getNumChildren() == 1);
         CHECK (compTree.getChild (0).hasType (IDs::COMPSECTION));
         CHECK (int (compTree.getChild (0).getProperty (IDs::takeIndex)) == -1);
+    }
+
+    TEST_CASE ("CompManager: take lengths come from each take's own file")
+    {
+        using namespace comp_manager_test;
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        // One take added by file and one by its project item, each a different length
+        auto checkTakeLengths = [&] (ProjectType projectType)
+        {
+            auto projectDir = tempDir.getChildFile ("project");
+            REQUIRE (projectDir.createDirectory());
+
+            ProjectManager::TempProject tp (pm, projectType == ProjectType::folderBased ? projectDir
+                                                                                          : projectDir.getChildFile ("project.tracktion"),
+                                            true, projectType);
+            REQUIRE (tp.project != nullptr);
+            REQUIRE (tp.project->getDefaultDirectory() == projectDir);
+
+            auto byFile = writeSinFile (projectDir.getChildFile ("Recorded").getChildFile ("by_file.wav"), 1.0);
+            auto byItem = writeSinFile (projectDir.getChildFile ("Recorded").getChildFile ("by_item.wav"), 3.0);
+            REQUIRE (byFile.existsAsFile());
+            REQUIRE (byItem.existsAsFile());
+
+            auto item = tp.project->createNewItem (byItem, ProjectItem::waveItemType(), "by_item", {},
+                                                   ProjectItem::Category::recorded, false);
+            REQUIRE (item != nullptr);
+
+            auto editItem = tp.project->createNewEdit();
+            REQUIRE (editItem != nullptr);
+            auto editFile = editItem->getSourceFile();
+
+            {
+                auto edit = createEmptyEdit (engine, editFile);
+                edit->setProjectItemRef (editItem->getProjectItemRef());
+                REQUIRE (saveEditWithTakes (*edit, { byFile }, { item }));
+            }
+
+            auto edit = loadEditThrough (*tp.project, editFile);
+            REQUIRE (edit != nullptr);
+
+            auto clip = getFirstWaveClip (*edit);
+            REQUIRE (clip != nullptr);
+
+            auto& cm = clip->getCompManager();
+            REQUIRE (cm.getNumTakes() == 2);
+            CHECK (cm.getTakeLength (0) == doctest::Approx (1.0));
+            CHECK (cm.getTakeLength (1) == doctest::Approx (3.0));
+            CHECK (cm.getMaxCompLength() == doctest::Approx (3.0));
+        };
+
+        SUBCASE ("File-based project")      { checkTakeLengths (ProjectType::fileBased); }
+        SUBCASE ("Folder-based project")    { checkTakeLengths (ProjectType::folderBased); }
+
+        tempDir.deleteRecursively (false);
+    }
+
+    TEST_CASE ("CompManager: takes that aren't project items still find their files")
+    {
+        using namespace comp_manager_test;
+        auto& engine = *Engine::getEngines()[0];
+        auto& pm = engine.getProjectManager();
+
+        auto tempDir = juce::File::createTempFile ({});
+        tempDir.createDirectory();
+
+        // A take recorded outside the project folder is written as a path, and no project has an item for it
+        auto checkTakeOutsideProject = [&] (ProjectType projectType)
+        {
+            auto projectDir = tempDir.getChildFile ("project");
+            REQUIRE (projectDir.createDirectory());
+
+            ProjectManager::TempProject tp (pm, projectType == ProjectType::folderBased ? projectDir
+                                                                                          : projectDir.getChildFile ("project.tracktion"),
+                                            true, projectType);
+            REQUIRE (tp.project != nullptr);
+
+            auto inside = writeSinFile (projectDir.getChildFile ("Recorded").getChildFile ("inside.wav"), 1.0);
+            auto outside = writeSinFile (tempDir.getChildFile ("elsewhere").getChildFile ("outside.wav"), 2.0);
+            REQUIRE (inside.existsAsFile());
+            REQUIRE (outside.existsAsFile());
+
+            auto editItem = tp.project->createNewEdit();
+            REQUIRE (editItem != nullptr);
+            auto editFile = editItem->getSourceFile();
+
+            {
+                auto edit = createEmptyEdit (engine, editFile);
+                edit->setProjectItemRef (editItem->getProjectItemRef());
+                REQUIRE (saveEditWithTakes (*edit, { inside, outside }));
+            }
+
+            // A file-based project registers the take as an item, a folder-based one can't
+            if (projectType == ProjectType::folderBased)
+                REQUIRE (tp.project->getProjectItemForFile (outside) == nullptr);
+
+            auto edit = loadEditThrough (*tp.project, editFile);
+            REQUIRE (edit != nullptr);
+
+            auto clip = getFirstWaveClip (*edit);
+            REQUIRE (clip != nullptr);
+
+            auto& cm = clip->getCompManager();
+            REQUIRE (cm.getNumTakes() == 2);
+            CHECK (cm.getTakeLength (0) == doctest::Approx (1.0));
+            CHECK (cm.getTakeLength (1) == doctest::Approx (2.0));
+            CHECK (cm.getMaxCompLength() == doctest::Approx (2.0));
+        };
+
+        SUBCASE ("Take outside a file-based project")      { checkTakeOutsideProject (ProjectType::fileBased); }
+        SUBCASE ("Take outside a folder-based project")    { checkTakeOutsideProject (ProjectType::folderBased); }
+
+        SUBCASE ("Edit in a subfolder of its project")
+        {
+            // Outer/Inner/Inner Edit.tracktionedit uses Outer/Inner/Recorded/take_*.wav, written relative to the Edit
+            auto outerFolder = tempDir.getChildFile ("Outer");
+            auto innerFolder = outerFolder.getChildFile ("Inner");
+            auto editFile = innerFolder.getChildFile ("Inner Edit.tracktionedit");
+            auto take1 = writeSinFile (innerFolder.getChildFile ("Recorded").getChildFile ("take_1.wav"), 1.0);
+            auto take2 = writeSinFile (innerFolder.getChildFile ("Recorded").getChildFile ("take_2.wav"), 2.0);
+            REQUIRE (take1.existsAsFile());
+            REQUIRE (take2.existsAsFile());
+
+            {
+                auto edit = createEmptyEdit (engine, editFile);
+                REQUIRE (saveEditWithTakes (*edit, { take1, take2 }));
+
+                auto takes = getFirstWaveClip (*edit)->getTakes();
+                REQUIRE (takes.size() == 2);
+                REQUIRE_FALSE (juce::File::isAbsolutePath (takes[0].toString()));
+            }
+
+            ProjectManager::TempProject outer (pm, outerFolder, false, ProjectType::folderBased);
+            REQUIRE (outer.project != nullptr);
+
+            auto edit = loadEditThrough (*outer.project, editFile);
+            REQUIRE (edit != nullptr);
+
+            auto clip = getFirstWaveClip (*edit);
+            REQUIRE (clip != nullptr);
+
+            auto& cm = clip->getCompManager();
+            REQUIRE (cm.getNumTakes() == 2);
+            CHECK (cm.getTakeLength (0) == doctest::Approx (1.0));
+            CHECK (cm.getTakeLength (1) == doctest::Approx (2.0));
+            CHECK (cm.getMaxCompLength() == doctest::Approx (2.0));
+        }
+
+        tempDir.deleteRecursively (false);
     }
 }
 

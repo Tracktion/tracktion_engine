@@ -46,14 +46,13 @@ public:
         gzip
     };
 
-    InflaterStream (std::shared_ptr<std::istream> compressedData,
-                    FormatType);
-
-    ~InflaterStream() override;
-
-    using pos_type = std::streambuf::pos_type;
-    using off_type = std::streambuf::off_type;
+    using pos_type  = std::streambuf::pos_type;
+    using off_type  = std::streambuf::off_type;
     using char_type = std::streambuf::char_type;
+
+    InflaterStream (std::shared_ptr<std::istream>, FormatType);
+    InflaterStream (std::shared_ptr<std::istream>, FormatType, off_type knownUncompressedSize);
+    ~InflaterStream() override;
 
 private:
     struct Pimpl;
@@ -82,13 +81,11 @@ public:
         defaultLevel  = -1
     };
 
-    DeflaterStream (std::shared_ptr<std::ostream> destData,
-                    CompressionLevel compressionLevel,
-                    int windowBits);
+    DeflaterStream (std::shared_ptr<std::ostream>, CompressionLevel, int windowBits);
     ~DeflaterStream() override;
 
-    using pos_type = std::streambuf::pos_type;
-    using off_type = std::streambuf::off_type;
+    using pos_type  = std::streambuf::pos_type;
+    using off_type  = std::streambuf::off_type;
     using char_type = std::streambuf::char_type;
 
 private:
@@ -3809,12 +3806,22 @@ struct InflaterStream::Pimpl
     std::vector<char_type> buffer, decompressed;
     off_type decompressedPosition = {};
     size_t decompressedSize = 0;
+    off_type knownUncompressedSize = -1;
 };
 
 inline InflaterStream::InflaterStream (std::shared_ptr<std::istream> source, FormatType format)
    : std::istream (nullptr),
      pimpl (std::make_unique<Pimpl> (std::move (source), format))
 {
+    rdbuf (this);
+}
+
+inline InflaterStream::InflaterStream (std::shared_ptr<std::istream> source, FormatType format,
+                                       off_type uncompressedSize)
+   : std::istream (nullptr),
+     pimpl (std::make_unique<Pimpl> (std::move (source), format))
+{
+    pimpl->knownUncompressedSize = uncompressedSize;
     rdbuf (this);
 }
 
@@ -3826,7 +3833,17 @@ inline InflaterStream::pos_type InflaterStream::seekoff (off_type off, std::ios_
         return getPosition();
 
     if (dir == std::ios_base::end)
-        return pos_type (off_type (-1));
+    {
+        if (pimpl->knownUncompressedSize < 0)
+            return pos_type (off_type (-1));
+
+        auto target = pimpl->knownUncompressedSize + off;
+
+        if (target < 0)
+            return pos_type (off_type (-1));
+
+        return seekpos (static_cast<pos_type> (target), mode);
+    }
 
     return seekpos (dir == std::ios_base::cur ? static_cast<pos_type> (getPosition() + off)
                                               : static_cast<pos_type> (off), mode);
@@ -3834,6 +3851,16 @@ inline InflaterStream::pos_type InflaterStream::seekoff (off_type off, std::ios_
 
 inline InflaterStream::pos_type InflaterStream::seekpos (pos_type newPosition, std::ios_base::openmode)
 {
+    if (pimpl->knownUncompressedSize >= 0
+         && static_cast<off_type> (newPosition) >= pimpl->knownUncompressedSize)
+    {
+        pimpl->deleteStream();
+        pimpl->decompressedPosition = pimpl->knownUncompressedSize;
+        setg ({}, {}, {});
+        clear();
+        return newPosition;
+    }
+
     auto currentPos = getPosition();
 
     if (newPosition < currentPos)
@@ -3885,7 +3912,10 @@ inline std::streambuf::int_type InflaterStream::underflow()
 
 inline InflaterStream::pos_type InflaterStream::getPosition() const
 {
-    return gptr() != nullptr ? pimpl->decompressedPosition + (gptr() - eback()) : 0;
+    if (gptr() != nullptr)
+        return pimpl->decompressedPosition + (gptr() - eback());
+
+    return static_cast<pos_type> (pimpl->decompressedPosition);
 }
 
 //==============================================================================

@@ -803,6 +803,10 @@ juce::Array<Clip*> deleteRegion (Clip& c, TimeRange range)
     else
     {
         c.trimAwayOverlap (range);
+
+        // A range ending a rounding error inside the clip would otherwise leave a sliver of it behind
+        if (c.getPosition().getLength() < Clip::minimumLength)
+            c.removeFromParent();
     }
 
     return newClips;
@@ -891,7 +895,8 @@ Clip* split (Clip& clip, const TimePosition time)
                 if (extra != 0)
                 {
                     auto newOffsetBeats = newClip->getOffsetInBeats() - (newClip->getLoopLengthBeats() * extra);
-                    auto offset = TimeDuration::fromSeconds (newOffsetBeats.inBeats() / edit.tempoSequence.getBeatsPerSecondAt (newClip->getPosition().getStart()));
+                    // The inverse of getOffsetInBeats(): the time back from the clip start to the new content start
+                    auto offset = newClip->getPosition().getStart() - edit.tempoSequence.toTime (newClip->getStartBeat() - newOffsetBeats);
 
                     newClip->setOffset (offset);
                 }

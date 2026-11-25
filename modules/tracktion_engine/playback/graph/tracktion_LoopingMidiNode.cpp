@@ -534,8 +534,10 @@ namespace MidiHelpers
                 for (int i = channelNumbers.getStart(); i < channelNumbers.getEnd(); ++i)
                     chocMidiHelpers::createControllerUpdatesForTime (sourceSequence, (uint8_t) i, time, controllerMessagesScratchBuffer);
 
+                // Some of these are timestamped with their position in the sequence, so put them
+                // all at the start, in order, before the notes
                 for (auto& m : controllerMessagesScratchBuffer)
-                    destBuffer.addMidiMessage (m, midiSourceID);
+                    destBuffer.addMidiMessage (m, 0.0, midiSourceID);
             }
 
             if (! clipLevel.isMute())
@@ -1286,10 +1288,21 @@ public:
 
         if (shouldCreateMessagesForTime)
         {
-            generator->createMessagesForTime (destBuffer, sectionStart,
-                                              *activeNoteList,
-                                              channelNumbers, clipLevel, useMPEChannelMode, midiSourceID,
-                                              controllerMessagesScratchBuffer);
+            // Notes on at the start are struck just after it, so if the clip ends before then, e.g. a loop
+            // has wrapped to just before its end, they're not, as they'd be stopped before they're struck
+            const auto oneSampleSeconds = numSamples > 0 ? sectionEditTimeRange.getLength().inSeconds() / numSamples : 0.0;
+            const auto secondsUntilClipEnd = ((editRange.getEnd() + *dynamicOffsetBeats) - sectionEditBeatRange.getStart()).inBeats() * secondsPerBeat.inSeconds();
+
+            if (! (isLastBlockOfClip && secondsUntilClipEnd <= 0.0001 + oneSampleSeconds))
+            {
+                const auto numEventsBefore = destBuffer.size();
+                generator->createMessagesForTime (destBuffer, sectionStart,
+                                                  *activeNoteList,
+                                                  channelNumbers, clipLevel, useMPEChannelMode, midiSourceID,
+                                                  controllerMessagesScratchBuffer);
+                MidiNodeHelpers::clampTimeStamps (destBuffer, numEventsBefore, timePositionOfLastSample);
+            }
+
             shouldCreateMessagesForTime = false;
 
             // Ensure generator is initialised
@@ -1331,6 +1344,15 @@ public:
 
                 e.multiplyVelocity (volScale);
                 const auto eventTimeSeconds = blockBeatPosition * secondsPerBeat.inSeconds();
+
+                // A note starting on the last sample before the loop ends would be stopped straight away,
+                // and as that's done at the sample's start it would end up before the note-on and leave it on
+                if (lastBlockOfLoop && e.isNoteOn() && eventTimeSeconds >= timePositionOfLastSample)
+                {
+                    generator->advance();
+                    continue;
+                }
+
                 destBuffer.addMidiMessage (e, eventTimeSeconds, midiSourceID);
 
                 // Update note list
