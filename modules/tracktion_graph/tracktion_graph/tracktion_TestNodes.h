@@ -793,4 +793,56 @@ private:
 };
 
 
+//==============================================================================
+//==============================================================================
+/** Passes its input straight through but marks it as bypassing latency compensation,
+    so a SummingNode doesn't delay it to line it up with its other inputs.
+    Use this for something that should be heard as soon as possible rather than in
+    time with everything else, e.g. a track that's being played live.
+*/
+class LatencyCompensationBypassNode final   : public Node
+{
+public:
+    LatencyCompensationBypassNode (std::unique_ptr<Node> inputNode)
+        : input (std::move (inputNode))
+    {
+        jassert (input);
+        setOptimisations ({ ClearBuffers::no,
+                            AllocateAudioBuffer::no });
+    }
+
+    NodeProperties getNodeProperties() override
+    {
+        constexpr size_t bypassNodeMagicHash = size_t (0x6c61746279706173); // "latbypas"
+        auto props = input->getNodeProperties();
+        props.bypassLatencyCompensation = true;
+
+        if (props.nodeID != 0)
+            hash_combine (props.nodeID, bypassNodeMagicHash);
+
+        return props;
+    }
+
+    std::vector<Node*> getDirectInputNodes() override
+    {
+        return { input.get() };
+    }
+
+    bool isReadyToProcess() override
+    {
+        return input->hasProcessed();
+    }
+
+    void process (ProcessContext& pc) override
+    {
+        auto sourceBuffers = input->getProcessedOutput();
+        setAudioOutput (input.get(), sourceBuffers.audio);
+        pc.buffers.midi.copyFrom (sourceBuffers.midi);
+    }
+
+private:
+    std::unique_ptr<Node> input;
+};
+
+
 }

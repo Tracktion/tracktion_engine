@@ -479,6 +479,57 @@ TEST_SUITE ("tracktion_graph")
             }
         }
     }
+
+    TEST_CASE ("Node: SummingNode doesn't delay an input that bypasses latency compensation")
+    {
+        for (auto setup : getTestSetups())
+        {
+            CAPTURE (setup.sampleRate);
+            CAPTURE (setup.blockSize);
+
+            // Two half-level sins, one delayed by half a cycle
+            const double sinFrequency = setup.sampleRate / 100.0;
+            const int numLatencySamples = 50;
+
+            auto makeSin = [&]                  { return makeGainNode (makeNode<SinNode> ((float) sinFrequency), 0.5f); };
+            auto makeLatentSin = [&]            { return makeNode<LatencyNode> (makeSin(), numLatencySamples); };
+            auto makeBypassingSin = [&] (int latency = 0)
+            {
+                return makeNode<LatencyCompensationBypassNode> (makeNode<LatencyNode> (makeSin(), latency));
+            };
+
+            // It isn't delayed to line up with a compensated input
+            {
+                auto node = makeSummingNode ({ makeBypassingSin().release(), makeLatentSin().release() });
+                CHECK_EQ (node->getNodeProperties().latencyNumSamples, numLatencySamples);
+                CHECK (! node->getNodeProperties().bypassLatencyCompensation);
+
+                // The bypassing sin is heard straight away, then the latent one comes in out of phase and cancels it.
+                // If it had been compensated it would start with the latent one, in phase, as in the test above
+                auto testContext = createBasicTestContext (std::move (node), setup, 1, 5.0);
+                expectAudioBuffer (testContext->buffer, 0, numLatencySamples, 0.5f, 0.354f, 0.0f, 0.0f);
+            }
+
+            // It doesn't add to the latency, so compensated inputs aren't delayed for it
+            {
+                auto node = makeSummingNode ({ makeBypassingSin (numLatencySamples).release(), makeSin().release() });
+                CHECK_EQ (node->getNodeProperties().latencyNumSamples, 0);
+
+                auto testContext = createBasicTestContext (std::move (node), setup, 1, 5.0);
+                expectAudioBuffer (testContext->buffer, 0, numLatencySamples, 0.5f, 0.354f, 0.0f, 0.0f);
+            }
+
+            // A sum of only bypassing inputs bypasses compensation too
+            {
+                auto node = makeSummingNode ({ makeBypassingSin().release(), makeBypassingSin (numLatencySamples).release() });
+                CHECK_EQ (node->getNodeProperties().latencyNumSamples, numLatencySamples);
+                CHECK (node->getNodeProperties().bypassLatencyCompensation);
+
+                auto testContext = createBasicTestContext (std::move (node), setup, 1, 5.0);
+                expectAudioBuffer (testContext->buffer, 0, numLatencySamples, 0.5f, 0.354f, 0.0f, 0.0f);
+            }
+        }
+    }
 }
 
 } // namespace tracktion::inline graph

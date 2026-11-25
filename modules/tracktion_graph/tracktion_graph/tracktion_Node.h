@@ -155,6 +155,11 @@ struct NodeProperties
     int numberOfChannels = 0;
     int latencyNumSamples = 0;
     size_t nodeID = 0;
+
+    /** If true, this is to be heard as soon as possible rather than in time with everything else, so a
+        SummingNode won't delay it to line it up with its other inputs (see LatencyCompensationBypassNode).
+    */
+    bool bypassLatencyCompensation = false;
 };
 
 //==============================================================================

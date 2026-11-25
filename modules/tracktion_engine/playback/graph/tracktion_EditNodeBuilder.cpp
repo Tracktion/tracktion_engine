@@ -1245,6 +1245,21 @@ std::unique_ptr<tracktion::graph::Node> createLiveInputsNode (AudioTrack& track,
     return std::make_unique<SummingNode> (std::move (nodes));
 }
 
+/** Returns true if a track is being played live through a record enabled MIDI input. */
+bool isPlayingRecordEnabledMidiInputLive (AudioTrack& track, const CreateNodeParams& params)
+{
+    if (params.forRendering)
+        return false;
+
+    if (auto context = track.edit.getCurrentPlaybackContext())
+        for (auto in : context->getAllInputs())
+            if (auto midiDevice = dynamic_cast<MidiInputDevice*> (&in->getInputDevice()))
+                if (! midiDevice->isTrackDevice() && in->isLivePlayEnabled (track) && in->isRecordingEnabled (track.itemID))
+                    return true;
+
+    return false;
+}
+
 std::unique_ptr<tracktion::graph::Node> createSidechainInputNodeForPlugin (Plugin& plugin, std::unique_ptr<Node> node)
 {
     const auto sidechainSourceID = plugin.getSidechainSourceID();
@@ -1690,6 +1705,11 @@ std::unique_ptr<tracktion::graph::Node> createNodeForAudioTrack (AudioTrack& at,
         if (at.getMidiInputDevice().isEnabled())
             node = makeNode<SendNode> (std::move (node), getMidiInputDeviceBusID (at.itemID));
     }
+
+    // A track being played live is heard as soon as its own plugins allow, rather than being delayed
+    // to line it up with tracks with more latency. N.B. This is the whole track, so its clips play early too
+    if (isPlayingRecordEnabledMidiInputLive (at, params))
+        node = makeNode<LatencyCompensationBypassNode> (std::move (node));
 
     return node;
 }
