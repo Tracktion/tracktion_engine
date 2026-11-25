@@ -586,13 +586,6 @@ void DeviceManager::removeHostedAudioDeviceInterface()
     }
 
     hostedAudioDeviceInterface.reset();
-
-    // Its MIDI devices only work with it, so make sure the next scan doesn't keep them for a new interface
-    if (lastMIDIDeviceList)
-    {
-        lastMIDIDeviceList->hostedMidiIn.reset();
-        lastMIDIDeviceList->hostedMidiOut.reset();
-    }
 }
 
 juce::String DeviceManager::getDefaultAudioOutDeviceName (bool translated)
