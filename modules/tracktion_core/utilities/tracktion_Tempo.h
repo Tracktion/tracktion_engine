@@ -810,21 +810,15 @@ inline void Sequence::Position::set (TimePosition t)
     const auto maxIndex = sequence.sections.size() - 1;
 
     if (index > maxIndex)
-    {
         index = maxIndex;
-        time = sequence.sections[index].startTime;
-    }
 
-    if (t >= time)
-    {
-        while (index < maxIndex && sequence.sections[index + 1].startTime <= t)
-            ++index;
-    }
-    else
-    {
-        while (index > 0 && sequence.sections[index].startTime > t)
-            --index;
-    }
+    // Walk both ways from the last section, as the Sequence may have been replaced since
+    // (e.g. the tempo has changed) so it might be before or after t whatever the last time was
+    while (index > 0 && sequence.sections[index].startTime > t)
+        --index;
+
+    while (index < maxIndex && sequence.sections[index + 1].startTime <= t)
+        ++index;
 
     time = t;
 }

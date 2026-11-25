@@ -290,16 +290,34 @@ struct EditPlaybackContext::NodePlaybackContext
         blockLengthScaleFactor = 1.0 + std::clamp (plusOrMinusProportion, -0.5, 0.5);
     }
 
+    void setLoopBeats (BeatRange beats)
+    {
+        loopBeats.store (beats);
+    }
+
+    /** If the tempo has changed since the last block, puts the playhead back on the beat
+        it got to, so playback carries on seamlessly. The loop is kept on the same beats too,
+        as the Edit's is (see EditTimecodeRemapperSnapshot).
+    */
     void checkForTempoSequenceChanges()
     {
         const auto& internalSequence = tempoSequence.getInternalSequence();
 
-        if (internalSequence.hash() == tempoState.hash)
+        // Nothing has played yet, so there's no beat to keep the playhead on
+        if (! tempoState.hash || internalSequence.hash() == *tempoState.hash)
             return;
 
-        const auto lastPositionRemapped = internalSequence.toTime (tempoState.lastBeatPosition);
-        const auto lastSampleRemapped = toSamples (lastPositionRemapped, getSampleRate());
-        playHead.overridePosition (lastSampleRemapped);
+        const auto sampleRate = getSampleRate();
+
+        // This is first as the position is clipped to the loop
+        if (const auto beats = loopBeats.load(); playHead.isLooping() && ! beats.isEmpty())
+            playHead.setLoopRange (true, toSamples (toTime (beats, internalSequence), sampleRate), false);
+
+        playHead.overridePosition (toSamples (internalSequence.toTime (tempoState.lastBeatPosition), sampleRate));
+
+        // That's the nearest sample to the beat, so make up the difference to carry on from exactly it
+        const auto newPosition = TimePosition::fromSamples (playHead.getPosition(), sampleRate);
+        processState.setBeatOffset (tempoState.lastBeatPosition - internalSequence.toBeats (newPosition));
     }
 
     void nextBlockStarted()
@@ -466,11 +484,14 @@ private:
 
     struct TempoState
     {
-        size_t hash = 0;
-        BeatPosition lastBeatPosition;
+        std::optional<size_t> hash;             // Of the tempo map the last block was played with
+        BeatPosition lastBeatPosition;          // Where the last block ended
     };
 
     TempoState tempoState;
+
+    // The beats of the loop the transport last gave the playhead, which is only in whole samples
+    crill::seqlock_object<BeatRange> loopBeats { BeatRange() };
 
     juce::Range<int64_t> getReferenceSampleRange() const
     {
@@ -1148,6 +1169,13 @@ void EditPlaybackContext::setSpeedCompensation (double plusOrMinus)
 {
     if (nodePlaybackContext)
         nodePlaybackContext->setSpeedCompensation (plusOrMinus);
+}
+
+void EditPlaybackContext::setLoopBeats (BeatRange beats)
+{
+    TRACKTION_ASSERT_MESSAGE_THREAD // Only one thread can store these
+    if (nodePlaybackContext)
+        nodePlaybackContext->setLoopBeats (beats);
 }
 
 void EditPlaybackContext::setTempoAdjustment (double plusOrMinusProportion)
