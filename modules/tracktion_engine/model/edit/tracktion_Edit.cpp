@@ -622,7 +622,19 @@ Edit::Edit (Options options)
                 return path;
 
             if (auto proj = editProjectItemRef.getProject())
-                return proj->getProjectFile().getChildFile (path);
+            {
+                auto fileInProject = proj->getProjectFile().getChildFile (path);
+
+                // Paths are written relative to the Edit file, which isn't always in the root of
+                // its owner project (it can be in a subfolder, or have been opened through a
+                // parent folder that is also a project), so look beside the Edit as well
+                if (! fileInProject.existsAsFile() && editFileRetriever)
+                    if (auto editFile = editFileRetriever(); editFile != juce::File())
+                        if (auto fileBesideEdit = editFile.getSiblingFile (path); fileBesideEdit.existsAsFile())
+                            return fileBesideEdit;
+
+                return fileInProject;
+            }
 
             if (editFileRetriever)
                 if (auto f = editFileRetriever(); f != juce::File())
@@ -1033,7 +1045,7 @@ void Edit::removeZeroLengthClips()
 
     for (auto t : getClipTracks (*this))
         for (auto& c : t->getClips())
-            if (c->getPosition().getLength().inSeconds() <= 0.0)
+            if (c->getPosition().getLength() < Clip::minimumLength)
                 clipsToRemove.add (c);
 
     for (auto& c : clipsToRemove)

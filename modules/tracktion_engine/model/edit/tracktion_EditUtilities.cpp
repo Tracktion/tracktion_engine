@@ -390,6 +390,10 @@ void deleteRegionOfClip (Clip& c, TimeRange timeRangeToDelete)
         else
         {
             c.trimAwayOverlap (timeRangeToDelete);
+
+            // A range ending a rounding error inside the clip would otherwise leave a sliver of it behind
+            if (c.getPosition().getLength() < Clip::minimumLength)
+                c.removeFromParent();
         }
     }
 }
@@ -935,7 +939,7 @@ juce::Result mergeMidiClips (juce::Array<MidiClip*> clips, SelectionManager* sm)
                     MidiList sourceList;
                     sourceList.copyFrom (c->getSequenceLooped(), nullptr);
 
-                    const auto offset = BeatDuration::fromBeats (c->getPosition().getOffset().inSeconds() * c->edit.tempoSequence.getBeatsPerSecondAt (c->getPosition().getStart(), true));
+                    const auto offset = BeatDuration::fromBeats (c->getPosition().getOffset().inSeconds() * c->edit.tempoSequence.getTimeSigBeatsPerSecondAt (c->getPosition().getStart()));
 
                     sourceList.trimOutside (toPosition (offset), toPosition (offset + c->getLengthInBeats()), nullptr);
                     sourceList.moveAllBeatPositions (c->getStartBeat() - startBeat - offset, nullptr);

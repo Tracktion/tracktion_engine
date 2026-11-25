@@ -692,7 +692,8 @@ void AudioClipBase::reverseLoopPoints()
 
     if (beatBased)
     {
-        auto bps = edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart());
+        // A ratio of two tempos, and the file's tempo is its bpm / 60, so this compares quarter notes
+        auto bps = edit.tempoSequence.getQuarterNotesPerSecondAt (getPosition().getStart());
         ratio = bps / std::max (1.0, loopInfo.getBeatsPerSecond (wi));
     }
 
@@ -987,8 +988,7 @@ void AudioClipBase::setNumberOfLoops (int num)
 
     if (autoTempo)
     {
-        auto& ts = edit.tempoSequence;
-        auto newStart = BeatPosition::fromBeats (pos.getOffset().inSeconds() * ts.getBeatsPerSecondAt (pos.getStart()));
+        auto newStart = toPosition (getOffsetInBeats());
         setLoopRangeBeats ({ newStart, newStart + getLengthInBeats() });
         setLength (pos.getLength() * num, true);
     }
@@ -1028,7 +1028,7 @@ TimeRange AudioClipBase::getLoopRange() const
     if (! beatBasedLooping())
         return { loopStart, loopStart + loopLength };
 
-    auto bps = edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart());
+    auto bps = edit.tempoSequence.getTimeSigBeatsPerSecondAt (getPosition().getStart());
 
     return { TimePosition::fromSeconds (loopStartBeats.get().inBeats() / bps),
              TimePosition::fromSeconds ((loopStartBeats + loopLengthBeats).inBeats() / bps) };
@@ -1044,7 +1044,7 @@ TimePosition AudioClipBase::getLoopStart() const
     if (! beatBasedLooping())
         return loopStart;
 
-    return TimePosition::fromSeconds (loopStartBeats.get().inBeats() / edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart()));
+    return TimePosition::fromSeconds (loopStartBeats.get().inBeats() / edit.tempoSequence.getTimeSigBeatsPerSecondAt (getPosition().getStart()));
 }
 
 TimeDuration AudioClipBase::getLoopLength() const
@@ -1052,7 +1052,7 @@ TimeDuration AudioClipBase::getLoopLength() const
     if (! beatBasedLooping())
         return loopLength;
 
-    return TimeDuration::fromSeconds (loopLengthBeats.get().inBeats() / edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart()));
+    return TimeDuration::fromSeconds (loopLengthBeats.get().inBeats() / edit.tempoSequence.getTimeSigBeatsPerSecondAt (getPosition().getStart()));
 }
 
 BeatPosition AudioClipBase::getLoopStartBeats() const
@@ -1060,7 +1060,7 @@ BeatPosition AudioClipBase::getLoopStartBeats() const
     if (beatBasedLooping())
         return loopStartBeats;
 
-    return BeatPosition::fromBeats (loopStart.get().inSeconds() * edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart()));
+    return BeatPosition::fromBeats (loopStart.get().inSeconds() * edit.tempoSequence.getTimeSigBeatsPerSecondAt (getPosition().getStart()));
 }
 
 BeatDuration AudioClipBase::getLoopLengthBeats() const
@@ -1068,7 +1068,7 @@ BeatDuration AudioClipBase::getLoopLengthBeats() const
     if (beatBasedLooping())
         return loopLengthBeats;
 
-    return BeatDuration::fromBeats (loopLength.get().inSeconds() * edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart()));
+    return BeatDuration::fromBeats (loopLength.get().inSeconds() * edit.tempoSequence.getTimeSigBeatsPerSecondAt (getPosition().getStart()));
 }
 
 static TimeRange clampTimeLoopRange (TimeRange range, TimeDuration sourceLen, double speedRatio)
@@ -1088,7 +1088,7 @@ void AudioClipBase::setLoopRange (TimeRange newRange)
     {
         // Use the single tempo at the clip start, the same conversion as the loop getters,
         // so setting the range they report leaves the loop unchanged
-        auto bps = edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart());
+        auto bps = edit.tempoSequence.getTimeSigBeatsPerSecondAt (getPosition().getStart());
         auto newStart  = BeatPosition::fromBeats (newRange.getStart().inSeconds() * bps);
         auto newLength = BeatDuration::fromBeats (newRange.getLength().inSeconds() * bps);
         setLoopRangeBeats ({ newStart, newStart + newLength });
@@ -1654,7 +1654,9 @@ juce::Array<Exportable::ReferencedItem> AudioClipBase::getReferencedItems()
     {
         for (auto& ref : results)
         {
-            auto wi = edit.engine.getAudioFileManager().getAudioFile (ref.itemRef).getInfo();
+            // Resolve via the Edit as the clip does. Looking a path up through the
+            // ProjectManager searches every item of every open project
+            auto wi = AudioFile (edit.engine, SourceFileReference::findFileFromString (edit, ref.itemRef.toString())).getInfo();
 
             if (wi.sampleRate > 0)
             {
@@ -1672,7 +1674,9 @@ void AudioClipBase::reassignReferencedItem (const ReferencedItem& item,
 {
     Clip::reassignReferencedItem (item, newRef, newStartTime);
 
-    if (getReferencedItems().size() == 1 && item == getReferencedItems().getFirst())
+    auto referencedItems = getReferencedItems();
+
+    if (referencedItems.size() == 1 && item == referencedItems.getFirst())
     {
         if (newRef.isProjectItemID())
         {
@@ -1685,8 +1689,10 @@ void AudioClipBase::reassignReferencedItem (const ReferencedItem& item,
         }
         else
         {
+            // A path is only reassigned to follow a file that has changed on disk. That can't
+            // be undone so this mustn't be either, or an undo would restore the old path
             auto newFile = newRef.resolve (edit.engine);
-            sourceFileReference.setToFile (newFile, SourceFileReference::PathStyle::chooseBest, false);
+            sourceFileReference.source.setValue (SourceFileReference::findPathFromFile (edit, newFile, true), nullptr);
         }
     }
     else
@@ -2455,6 +2461,10 @@ bool AudioClipBase::isGeneratingPlaybackFile()
     if (! canUseProxy())
         return false;
 
+    // A stretched proxy is rendered from the segment list, so with no segments it can never be made
+    if (usesTimeStretchedProxy() && getAudioSegmentList().getSegments().isEmpty())
+        return false;
+
     // Proxies are generated by the timer started in beginRenderingNewProxyIfNeeded, so the
     // job may not exist yet - go by whether one is needed rather than whether one is running
     return usesTimeStretchedProxy() || getAudioFile().getInfo().needsCachedProxy;
@@ -2740,7 +2750,7 @@ void AudioClipBase::updateAutoTempoState()
     // is held in the *other* representation (isLooping() would look at the new, empty one)
     if (hasLoop (! autoTempo))
     {
-        auto bps = edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart());
+        auto bps = edit.tempoSequence.getTimeSigBeatsPerSecondAt (getPosition().getStart());
 
         if (autoTempo)
         {

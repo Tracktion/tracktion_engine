@@ -1430,15 +1430,19 @@ PluginEffect::PluginEffect (const juce::ValueTree& v, ClipEffects& o)
         {
             if (plugin != nullptr)
             {
+                // getAutomatableParameter returns nullptr for an out-of-range index, so check
+                // it rather than dereferencing (GCC 15 flags that path with -Wstringop-overflow)
                 if (plugin->isProcessingEnabled())
                 {
                     for (int i = 0; i < plugin->getNumAutomatableParameters(); i++)
-                        plugin->getAutomatableParameter (i)->addListener (this);
+                        if (auto param = plugin->getAutomatableParameter (i))
+                            param->addListener (this);
                 }
                 else
                 {
                     for (int i = 0; i < plugin->getNumAutomatableParameters(); i++)
-                        plugin->getAutomatableParameter (i)->removeListener (this);
+                        if (auto param = plugin->getAutomatableParameter (i))
+                            param->removeListener (this);
                 }
             }
         };

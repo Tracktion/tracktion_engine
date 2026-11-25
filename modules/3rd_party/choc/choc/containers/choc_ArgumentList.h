@@ -48,6 +48,7 @@ struct ArgumentList
 {
     ArgumentList() = default;
     ArgumentList (int argc, const char* const* argv);
+    ArgumentList (std::vector<std::string> tokens);
 
     /// Returns the number of tokens in the list
     size_t size() const;
@@ -181,6 +182,10 @@ inline ArgumentList::ArgumentList (int argc, const char* const* argv)
    #endif
 }
 
+inline ArgumentList::ArgumentList (std::vector<std::string> tokens_) : tokens (tokens_)
+{
+}
+
 inline size_t ArgumentList::size() const
 {
     return tokens.size();
@@ -218,6 +223,16 @@ inline bool ArgumentList::removeIfFound (std::string_view arg)
 inline int ArgumentList::indexOf (std::string_view arg) const
 {
     CHOC_ASSERT (! choc::text::trim (arg).empty());
+
+    if (! isOption (arg))
+    {
+        if (auto singleIndex = indexOf ("-" + std::string (arg)); singleIndex != -1)
+            return singleIndex;
+
+        if (auto doubleIndex = indexOf ("--" + std::string (arg)); doubleIndex != -1)
+            return doubleIndex;
+    }
+
     bool isDoubleDash = isDoubleDashOption (arg);
 
     for (size_t i = 0; i < tokens.size(); ++i)
@@ -241,10 +256,16 @@ inline void ArgumentList::throwIfNotFound (std::string_view arg) const
 
 inline std::optional<std::string> ArgumentList::getValueFor (std::string_view argToFind, bool remove)
 {
+    if (! isOption (argToFind))
+    {
+        if (auto v = getValueFor ("-" + std::string (argToFind), remove); v.has_value())
+            return v;
+
+        return getValueFor ("--" + std::string (argToFind), remove);
+    }
+
     bool isDoubleDash = isDoubleDashOption (argToFind);
     bool isSingleDash = isSingleDashOption (argToFind);
-
-    CHOC_ASSERT (isDoubleDash || isSingleDash); // the arg you pass in needs to be a "--option" or "-option"
 
     if (auto i = indexOf (argToFind); i >= 0)
     {

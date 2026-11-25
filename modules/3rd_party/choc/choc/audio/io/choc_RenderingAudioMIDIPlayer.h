@@ -90,6 +90,10 @@ inline RenderingAudioMIDIPlayer::RenderingAudioMIDIPlayer (const AudioDeviceOpti
     // be specified by the caller
     CHOC_ASSERT (options.blockSize != 0);
     CHOC_ASSERT (options.sampleRate != 0);
+
+    // The base class's silent preroll is there to let real devices settle, which
+    // isn't needed here, and would delay the start of the rendered output
+    prerollFrames = 0;
 }
 
 inline RenderingAudioMIDIPlayer::~RenderingAudioMIDIPlayer()

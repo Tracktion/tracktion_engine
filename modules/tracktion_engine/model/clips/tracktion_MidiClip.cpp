@@ -693,7 +693,7 @@ void MidiClip::setNumberOfLoops (int num)
 
     auto& ts = edit.tempoSequence;
     auto pos = getPosition();
-    auto newStartBeat = BeatPosition::fromBeats (pos.getOffset().inSeconds() * ts.getBeatsPerSecondAt (pos.getStart()));
+    auto newStartBeat = toPosition (getOffsetInBeats());
     setLoopRangeBeats ({ newStartBeat, newStartBeat + originalLength.get() });
 
     auto endTime = ts.toTime (getStartBeat() + originalLength.get() * num);
@@ -741,22 +741,24 @@ void MidiClip::setLoopRange (TimeRange newRange)
 {
     jassert (newRange.getStart() >= TimePosition());
 
+    // Measured in the Edit's beats from the clip start, so it holds across tempo and time signature changes
     auto& ts = edit.tempoSequence;
-    auto pos = getPosition();
-    auto newStartBeat = BeatPosition::fromBeats (newRange.getStart().inSeconds() * ts.getBeatsPerSecondAt (pos.getStart()));
-    auto newLengthBeats = ts.toBeats (pos.getStart() + newRange.getLength()) - ts.toBeats (pos.getStart());
+    auto clipStartBeat = getStartBeat();
+    auto newStartBeat = toPosition (ts.toBeats (getPosition().getStart() + toDuration (newRange.getStart())) - clipStartBeat);
+    auto newEndBeat   = toPosition (ts.toBeats (getPosition().getStart() + toDuration (newRange.getEnd())) - clipStartBeat);
 
-    setLoopRangeBeats ({ newStartBeat, newStartBeat + newLengthBeats });
+    setLoopRangeBeats ({ newStartBeat, newEndBeat });
 }
 
 TimePosition MidiClip::getLoopStart() const
 {
-    return TimePosition::fromSeconds (loopStartBeats.get().inBeats() / edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart()));
+    return toPosition (getTimeOfRelativeBeat (toDuration (loopStartBeats.get())) - getPosition().getStart());
 }
 
 TimeDuration MidiClip::getLoopLength() const
 {
-    return TimeDuration::fromSeconds (loopLengthBeats.get().inBeats() / edit.tempoSequence.getBeatsPerSecondAt (getPosition().getStart()));
+    return getTimeOfRelativeBeat (toDuration (loopStartBeats.get()) + loopLengthBeats.get())
+            - getTimeOfRelativeBeat (toDuration (loopStartBeats.get()));
 }
 
 //==============================================================================

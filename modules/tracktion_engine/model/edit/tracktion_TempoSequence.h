@@ -101,10 +101,30 @@ public:
     */
     double getBpmAt (TimePosition) const; // takes ramping into account
 
-    /** Returns the tempo at a given position.
+    /** Returns the tempo at a given position in quarter notes per second, i.e. the bpm / 60,
+        whatever the time signature.
+        Use this to compare tempos, e.g. an Edit's tempo with an audio file's.
+        To convert between seconds and the beats clips and notes use, call
+        getTimeSigBeatsPerSecondAt() or, better for a span, toBeats() on both ends.
         N.B. This is the actual tempo at the time, including any curves.
-        I.e. it is not just the bpm of the previous TempoSetting
     */
+    double getQuarterNotesPerSecondAt (TimePosition) const;
+
+    /** Returns the number of beats per second at a given position, in the beats toBeats()
+        and toTime() use: when EngineBehaviour::lengthOfOneBeatDependsOnTimeSignature() is
+        true (the default) a beat is the time signature's beat, so an eighth note in 6/8 and
+        a half note in 3/2.
+        This is the rate for converting seconds to a BeatPosition or BeatDuration, e.g. a
+        clip's offset, loop range or note positions.
+        N.B. This is the actual tempo at the time, including any curves.
+    */
+    double getTimeSigBeatsPerSecondAt (TimePosition) const;
+
+    /** @deprecated Ambiguous: by default this returns quarter notes per second, which only
+        matches toBeats() in x/4 time signatures. Use getQuarterNotesPerSecondAt() to compare
+        tempos or getTimeSigBeatsPerSecondAt() to convert to the beats clips and notes use.
+    */
+    [[ deprecated ("Use getQuarterNotesPerSecondAt() or getTimeSigBeatsPerSecondAt()") ]]
     double getBeatsPerSecondAt (TimePosition, bool lengthOfOneBeatDependsOnTimeSignature = false) const;
 
     /** Returns true if the TempoSetting is triplets at the given time. */

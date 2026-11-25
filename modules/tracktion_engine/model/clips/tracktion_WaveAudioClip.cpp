@@ -165,16 +165,17 @@ void WaveAudioClip::reassignReferencedItem (const ReferencedItem& item,
         }
         else
         {
+            // Not undoable, see AudioClipBase::reassignReferencedItem
             auto newFile = newRef.resolve (edit.engine);
             auto path = SourceFileReference::findPathFromFile (edit, newFile, true);
 
             if (indexInList == getCurrentTake())
-                sourceFileReference.setToFile (newFile, SourceFileReference::PathStyle::chooseBest, false);
+                sourceFileReference.source.setValue (path, nullptr);
 
             auto take = getTakesTree().getChild (indexInList);
 
             if (take.isValid())
-                take.setProperty (IDs::source, path, getUndoManager());
+                take.setProperty (IDs::source, path, nullptr);
         }
     }
     else
@@ -366,9 +367,10 @@ void WaveAudioClip::deleteAllUnusedTakesConfirmingWithUser (bool)
                                 std::function<void (bool okPressed, bool delFiles)> callback)
     {
         auto w = std::shared_ptr<juce::AlertWindow> (juce::LookAndFeel::getDefaultLookAndFeel()
-                                                        .createAlertWindow (title, message,
-                                                                            {}, {}, {},
-                                                                            juce::AlertWindow::QuestionIcon, 0, nullptr));
+                                                        .createAlertWindowForOptions (juce::MessageBoxOptions()
+                                                                                        .withIconType (juce::MessageBoxIconType::QuestionIcon)
+                                                                                        .withTitle (title)
+                                                                                        .withMessage (message)));
 
         auto delFilesButton = std::make_shared<juce::ToggleButton> (TRANS("Delete Source Files?"));
         delFilesButton->setSize (400, 20);

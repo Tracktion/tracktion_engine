@@ -181,6 +181,9 @@ private:
 #include <cstdlib>
 #include <vector>
 #include <thread>
+#include <atomic>
+#include <chrono>
+#include <algorithm>
 #include "choc_MIMETypes.h"
 
 #define BOOST_STATIC_STRING_STANDALONE 1
@@ -204,7 +207,24 @@ namespace asio = boost::asio;
 
 static constexpr uint32_t defaultNumThreads = 4;
 static constexpr uint64_t messageBodySizeLimit = 10000;
-static constexpr int timeoutSeconds = 30;
+static constexpr std::chrono::seconds timeout (30);
+static constexpr std::chrono::seconds gracefulShutdownTimeout (2);
+static constexpr std::chrono::seconds forcedShutdownTimeout (1);
+
+//==============================================================================
+/// Base class for the HTTP and websocket sessions, which lets the server keep track
+/// of the connections which are currently open, so that it can shut them all down
+/// cleanly when it stops.
+struct ActiveSession
+{
+    virtual ~ActiveSession() = default;
+
+    /// Begins an orderly shutdown of this session's connection.
+    virtual void requestClose() = 0;
+
+    /// Closes the socket immediately, abandoning anything still in flight.
+    virtual void abortConnection() = 0;
+};
 
 //==============================================================================
 struct HTTPServer::Pimpl  : public std::enable_shared_from_this<HTTPServer::Pimpl>
@@ -280,7 +300,9 @@ struct HTTPServer::Pimpl  : public std::enable_shared_from_this<HTTPServer::Pimp
 
         if (auto client = createClient())
         {
-            std::make_shared<ClientSession> (*this, std::move (socket), std::move (client))->run();
+            auto session = std::make_shared<ClientSession> (*this, std::move (socket), std::move (client));
+            addActiveSession (session);
+            session->run();
             asyncAccept();
         }
     }
@@ -295,6 +317,8 @@ struct HTTPServer::Pimpl  : public std::enable_shared_from_this<HTTPServer::Pimp
 
         for (uint32_t i = 0; i < numThreads; ++i)
         {
+            ++numRunningThreads;
+
             threadPool.emplace_back ([this]
             {
                 try
@@ -305,17 +329,83 @@ struct HTTPServer::Pimpl  : public std::enable_shared_from_this<HTTPServer::Pimp
                 {
                     reportError (e.what());
                 }
+
+                --numRunningThreads;
             });
         }
     }
 
     void stop()
     {
-        if (! ioContext.stopped())
-            ioContext.stop();
+        isShuttingDown = true;
+
+        if (acceptor != nullptr)
+        {
+            beast::error_code errorCode;
+            acceptor->close (errorCode);
+        }
+
+        for (auto& session : getActiveSessions())
+            session->requestClose();
+
+        if (! waitForThreadsToFinish (gracefulShutdownTimeout))
+        {
+            // Abort connections which have failed to shut down cleanly
+            for (auto& session : getActiveSessions())
+                session->abortConnection();
+
+            if (! waitForThreadsToFinish (forcedShutdownTimeout))
+                if (! ioContext.stopped())
+                    ioContext.stop();
+        }
 
         for (auto& t : threadPool)
-            t.join();
+            if (t.joinable())
+                t.join();
+
+        threadPool.clear();
+        acceptor.reset();
+
+        const std::scoped_lock lock (activeSessionLock);
+        activeSessions.clear();
+    }
+
+    bool waitForThreadsToFinish (std::chrono::milliseconds timeoutMs)
+    {
+        auto deadline = std::chrono::steady_clock::now() + timeoutMs;
+
+        while (numRunningThreads != 0)
+        {
+            if (std::chrono::steady_clock::now() >= deadline)
+                return false;
+
+            std::this_thread::sleep_for (std::chrono::milliseconds (1));
+        }
+
+        return true;
+    }
+
+    void addActiveSession (std::shared_ptr<ActiveSession> session)
+    {
+        const std::scoped_lock lock (activeSessionLock);
+
+        // Remove any expired sessions
+        activeSessions.erase (std::remove_if (activeSessions.begin(), activeSessions.end(), [] (auto& s) { return s.expired(); }),
+                              activeSessions.end());
+
+        activeSessions.push_back (std::move (session));
+    }
+
+    std::vector<std::shared_ptr<ActiveSession>> getActiveSessions()
+    {
+        std::vector<std::shared_ptr<ActiveSession>> result;
+        const std::scoped_lock lock (activeSessionLock);
+
+        for (auto& s : activeSessions)
+            if (auto session = s.lock())
+                result.push_back (std::move (session));
+
+        return result;
     }
 
     void reportError (const std::string& message)
@@ -326,8 +416,11 @@ struct HTTPServer::Pimpl  : public std::enable_shared_from_this<HTTPServer::Pimp
 
     void reportErrorIfFatal (beast::error_code errorCode, const std::string& context)
     {
-        if (errorCode != asio::error::operation_aborted
-             && errorCode != beast::websocket::error::closed)
+        // Don't report errors during shutdown
+        if (isShuttingDown)
+            return;
+
+        if (errorCode != asio::error::operation_aborted && errorCode != beast::websocket::error::closed)
             reportError (context + ": " + errorCode.message());
     }
 
@@ -340,19 +433,25 @@ struct HTTPServer::Pimpl  : public std::enable_shared_from_this<HTTPServer::Pimp
     asio::io_context ioContext;
     std::unique_ptr<asio::ip::tcp::acceptor> acceptor;
     std::vector<std::thread> threadPool;
+    std::atomic<uint32_t> numRunningThreads { 0 };
+    std::atomic<bool> isShuttingDown { false };
+
+    std::mutex activeSessionLock;
+    std::vector<std::weak_ptr<ActiveSession>> activeSessions;
 
     using ParserType = http::request_parser<http::string_body>;
     using MessageType = ParserType::value_type;
 
     //==============================================================================
-    struct WebsocketSession   : public std::enable_shared_from_this<WebsocketSession>
+    struct WebsocketSession   : public ActiveSession,
+                                public std::enable_shared_from_this<WebsocketSession>
     {
         WebsocketSession (Pimpl& p, std::shared_ptr<HTTPServer::ClientInstance> c, asio::ip::tcp::socket&& socket)
             : owner (p), clientInstance (std::move (c)), websocketStream (std::move (socket))
         {
         }
 
-        ~WebsocketSession()
+        ~WebsocketSession() override
         {
             clientInstance->sendFn = {};
             clientInstance.reset();
@@ -370,12 +469,27 @@ struct HTTPServer::Pimpl  : public std::enable_shared_from_this<HTTPServer::Pimp
             websocketStream.async_accept (req, beast::bind_front_handler (&WebsocketSession::handleAccept, shared_from_this()));
         }
 
+        void requestClose() override
+        {
+            asio::post (websocketStream.get_executor(),
+                        beast::bind_front_handler (&WebsocketSession::handleCloseRequest, shared_from_this()));
+        }
+
+        void abortConnection() override
+        {
+            asio::post (websocketStream.get_executor(),
+                        beast::bind_front_handler (&WebsocketSession::closeSocket, shared_from_this()));
+        }
+
     private:
         Pimpl& owner;
         std::shared_ptr<HTTPServer::ClientInstance> clientInstance;
         beast::flat_buffer buffer;
         beast::websocket::stream<beast::tcp_stream> websocketStream;
         std::vector<std::shared_ptr<const std::string>> queue;
+        bool isHandshakeComplete = false;
+        bool isCloseRequested = false;
+        bool isClosing = false;
 
         bool send (const std::shared_ptr<const std::string>& message)
         {
@@ -390,12 +504,23 @@ struct HTTPServer::Pimpl  : public std::enable_shared_from_this<HTTPServer::Pimp
             if (errorCode)
                 return owner.reportErrorIfFatal (errorCode, "WebSocket accept");
 
-            websocketStream.async_read (buffer, beast::bind_front_handler (&WebsocketSession::handleRead, shared_from_this()));
+            isHandshakeComplete = true;
+            performRead();
 
             clientInstance->sendFn = [this] (std::string m)
             {
                 return this->send (std::make_shared<const std::string> (std::move (m)));
             };
+
+            // if a close was requested while the handshake was still in progress,
+            // it was deferred until there was a websocket to close
+            if (isCloseRequested)
+                beginClosingHandshake();
+        }
+
+        void performRead()
+        {
+            websocketStream.async_read (buffer, beast::bind_front_handler (&WebsocketSession::handleRead, shared_from_this()));
         }
 
         void handleRead (beast::error_code errorCode, std::size_t)
@@ -403,18 +528,30 @@ struct HTTPServer::Pimpl  : public std::enable_shared_from_this<HTTPServer::Pimp
             if (errorCode)
                 return owner.reportErrorIfFatal (errorCode, "WebSocket read");
 
-            clientInstance->handleWebSocketMessage (beast::buffers_to_string (buffer.data()));
+            // once closing has begun, incoming messages are ignored, but reads must
+            // continue, as that's what receives the client's reply to our close frame
+            if (! isCloseRequested)
+                clientInstance->handleWebSocketMessage (beast::buffers_to_string (buffer.data()));
+
             buffer.consume (buffer.size());
-            websocketStream.async_read (buffer, beast::bind_front_handler (&WebsocketSession::handleRead, shared_from_this()));
+            performRead();
+        }
+
+        void performWrite()
+        {
+            websocketStream.async_write (asio::buffer (*queue.front()),
+                                         beast::bind_front_handler (&WebsocketSession::handleWrite, shared_from_this()));
         }
 
         void handleSend (std::shared_ptr<const std::string>&& ss)
         {
+            if (isCloseRequested)
+                return; // no more writes are allowed once the stream is being closed
+
             queue.push_back (std::move (ss));
 
             if (queue.size() <= 1)
-                websocketStream.async_write (asio::buffer (*queue.front()),
-                                             beast::bind_front_handler (&WebsocketSession::handleWrite, shared_from_this()));
+                performWrite();
         }
 
         void handleWrite (beast::error_code errorCode, std::size_t)
@@ -425,25 +562,87 @@ struct HTTPServer::Pimpl  : public std::enable_shared_from_this<HTTPServer::Pimp
             queue.erase (queue.begin());
 
             if (! queue.empty())
-                websocketStream.async_write (asio::buffer (*queue.front()),
-                                             beast::bind_front_handler (&WebsocketSession::handleWrite, shared_from_this()));
+                return performWrite();
+
+            if (isCloseRequested)
+                beginClosingHandshake();
+        }
+
+        void handleCloseRequest()
+        {
+            if (isCloseRequested)
+                return;
+
+            isCloseRequested = true;
+
+            // A close frame counts as a write, so if one is already in flight, the close
+            // has to wait until the queue has drained (see handleWrite())
+            if (queue.empty())
+                beginClosingHandshake();
+        }
+
+        void beginClosingHandshake()
+        {
+            if (isClosing)
+                return;
+
+            isClosing = true;
+
+            if (! isHandshakeComplete)
+                return closeSocket(); // there's no websocket to close cleanly yet
+
+            websocketStream.async_close (beast::websocket::close_code::going_away,
+                                         beast::bind_front_handler (&WebsocketSession::handleCloseSent, shared_from_this()));
+        }
+
+        void handleCloseSent (beast::error_code errorCode)
+        {
+            if (errorCode)
+            {
+                owner.reportErrorIfFatal (errorCode, "WebSocket close");
+                return closeSocket();
+            }
+
+            // Our close frame has gone out, and the pending read will keep running until
+            // the client's reply to it arrives, at which point beast tears the socket down
+        }
+
+        void closeSocket()
+        {
+            isCloseRequested = true;
+            isClosing = true;
+
+            // this cancels all the outstanding operations on the socket, so that the
+            // handlers holding references to this session get released
+            beast::get_lowest_layer (websocketStream).close();
         }
     };
 
     //==============================================================================
-    struct ClientSession  : public std::enable_shared_from_this<ClientSession>
+    struct ClientSession  : public ActiveSession,
+                            public std::enable_shared_from_this<ClientSession>
     {
         ClientSession (Pimpl& p, asio::ip::tcp::socket&& socket, std::shared_ptr<HTTPServer::ClientInstance> client)
             : owner (p), tcpStream (std::move (socket)), clientInstance (std::move (client))
         {
         }
 
-        ~ClientSession()
+        ~ClientSession() override
         {
             clientInstance.reset();
         }
 
         void run()  { performRead(); }
+
+        /// A HTTP connection has no shutdown handshake to perform, so both of these just
+        /// close the socket, which makes any pending read or write on it fail
+        void requestClose() override        { abortConnection(); }
+
+        void abortConnection() override
+        {
+            asio::post (tcpStream.get_executor(),
+                        beast::bind_front_handler (&ClientSession::closeSocket, shared_from_this()));
+        }
 
     private:
         //==============================================================================
@@ -457,18 +656,24 @@ struct HTTPServer::Pimpl  : public std::enable_shared_from_this<HTTPServer::Pimp
         {
             parser.emplace(); // Construct a new parser for each message
             parser->body_limit (messageBodySizeLimit);
-            tcpStream.expires_after (std::chrono::seconds (timeoutSeconds));
+            tcpStream.expires_after (timeout);
 
             http::async_read (tcpStream, flatBuffer, parser->get(),
                               beast::bind_front_handler (&ClientSession::handleRead, shared_from_this()));
+        }
+
+        void closeSocket()
+        {
+            tcpStream.close();
         }
 
         void upgradeToWebsocket (asio::ip::tcp::socket&& socket, MessageType&& req)
         {
             auto target = std::string (req.target());
 
-            std::make_shared<WebsocketSession> (owner, clientInstance, std::move (socket))
-               ->run (std::move (req));
+            auto websocketSession = std::make_shared<WebsocketSession> (owner, clientInstance, std::move (socket));
+            owner.addActiveSession (websocketSession);
+            websocketSession->run (std::move (req));
 
             clientInstance->upgradedToWebSocket (target);
         }
@@ -546,7 +751,7 @@ struct HTTPServer::Pimpl  : public std::enable_shared_from_this<HTTPServer::Pimp
                  || request.path.find("..") != std::string_view::npos)
                 return sendFailureResponse (req, http::status::bad_request, "Illegal request-target");
 
-            request.method = std::string (req.method_string());
+            request.method = req.method_string();
             request.postData = req.body();
 
             for (auto& header : req.base())

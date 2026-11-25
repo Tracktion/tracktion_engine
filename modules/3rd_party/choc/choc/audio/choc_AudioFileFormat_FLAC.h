@@ -17761,7 +17761,7 @@ struct FLACAudioFileFormat<supportWriting>::Implementation
 
             auto bits = encoder->protected_->bits_per_sample;
             CHOC_ASSERT (bits != 0);
-            floatToIntScaleFactor = static_cast<double> ((1u << (31u - bits)) - 1);
+            floatToIntScaleFactor = static_cast<double> ((1u << (bits - 1u)) - 1);
         }
 
         ~FLACWriter() override

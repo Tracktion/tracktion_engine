@@ -302,19 +302,10 @@ inline UnicodeChar UTF8Pointer::operator*() const
 inline UTF8Pointer& UTF8Pointer::operator++()
 {
     CHOC_ASSERT (! empty());  // can't advance past the zero-terminator
-    auto firstByte = static_cast<signed char> (*text++);
 
-    if (firstByte >= 0)
-        return *this;
-
-    uint32_t testBit = 0x40, unicodeChar = static_cast<unsigned char> (firstByte);
-
-    while ((unicodeChar & testBit) != 0 && testBit > 8)
-    {
-        ++text;
-        testBit >>= 1;
-    }
-
+    // Uses popFirstChar so that operator++ and operator* always agree on how
+    // many bytes a (possibly malformed) sequence occupies.
+    popFirstChar();
     return *this;
 }
 
@@ -390,8 +381,11 @@ inline UnicodeChar UTF8Pointer::popFirstChar()
         {
             uint32_t nextByte = static_cast<unsigned char> (*text);
 
-            CHOC_ASSERT ((nextByte & 0xc0) == 0x80); // error in the data - you should always make sure the source
-                                                        // gets validated before iterating a UTF8Pointer over it
+            // A truncated or malformed sequence (which includes one that's cut short by the
+            // null terminator) is returned as U+FFFD, and the offending byte is left unconsumed,
+            // so we can never step over the terminator.
+            if ((nextByte & 0xc0) != 0x80)
+                return 0xfffd;
 
             unicodeChar = (unicodeChar << 6) | (nextByte & 0x3f);
             ++text;
