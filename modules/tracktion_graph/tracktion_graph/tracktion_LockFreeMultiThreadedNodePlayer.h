@@ -59,8 +59,9 @@ private:
         const size_t numInputs;
         std::vector<Node*> outputs;
         std::atomic<size_t> numInputsToBeProcessed { 0 };
-        std::atomic<bool> hasBeenQueued { true };
        #if JUCE_DEBUG
+        // These are only used to check the queueing logic
+        std::atomic<bool> hasBeenQueued { true };
         std::atomic<bool> hasBeenDequeued { false };
        #endif
     };

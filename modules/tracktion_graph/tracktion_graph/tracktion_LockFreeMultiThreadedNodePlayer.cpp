@@ -347,8 +347,10 @@ void LockFreeMultiThreadedNodePlayer::resetProcessQueue (PreparedNode& preparedN
     // And then move any Nodes that are ready to the correct queue
     for (auto& playbackNode : preparedNode.playbackNodes)
     {
+       #if JUCE_DEBUG
         jassert (playbackNode->hasBeenQueued);
         playbackNode->hasBeenQueued = false;
+       #endif
         playbackNode->numInputsToBeProcessed.store (playbackNode->numInputs, std::memory_order_release);
 
         // Check only ready nodes will be queued
@@ -383,8 +385,10 @@ void LockFreeMultiThreadedNodePlayer::resetProcessQueue (PreparedNode& preparedN
     {
         if (playbackNode->numInputs == 0)
         {
+           #if JUCE_DEBUG
             jassert (! playbackNode->hasBeenQueued);
             playbackNode->hasBeenQueued = true;
+           #endif
             preparedNode.nodesReadyToBeProcessed->try_enqueue (&playbackNode->node);
             ++numNodesJustQueued;
         }
@@ -414,8 +418,10 @@ Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (PreparedNode& 
         if (outputPlaybackNode->numInputsToBeProcessed.fetch_sub (1, std::memory_order_acq_rel) == 1)
         {
             jassert (outputPlaybackNode->node.isReadyToProcess());
+           #if JUCE_DEBUG
             jassert (! outputPlaybackNode->hasBeenQueued);
             outputPlaybackNode->hasBeenQueued = true;
+           #endif
 
            #if RETURN_MID_NODES_OPTIMISATION
             // We can return one Node to be processed on this thread, otherwise we can
