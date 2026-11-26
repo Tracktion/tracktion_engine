@@ -155,6 +155,23 @@ juce::ReferenceCountedArray<Project> ProjectManager::getAllProjects (const juce:
     return list;
 }
 
+static void findProjectFiles (const juce::ValueTree& v, juce::Array<juce::File>& files)
+{
+    if (v.hasType (IDs::PROJECT))
+        files.add (juce::File (v[IDs::file]));
+
+    for (int i = 0; i < v.getNumChildren(); ++i)
+        findProjectFiles (v.getChild (i), files);
+}
+
+juce::Array<juce::File> ProjectManager::getAllProjectFiles() const
+{
+    const juce::ScopedLock sl (lock);
+    juce::Array<juce::File> files;
+    findProjectFiles (folders, files);
+    return files;
+}
+
 juce::ValueTree ProjectManager::getActiveProjectsFolder()                      { return folders.getChildWithName (IDs::ACTIVE); }
 juce::ValueTree ProjectManager::getLibraryProjectsFolder()                     { return folders.getChildWithName (IDs::LIBRARY); }
 

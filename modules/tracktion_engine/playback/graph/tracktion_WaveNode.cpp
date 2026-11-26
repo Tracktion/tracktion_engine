@@ -88,11 +88,14 @@ public:
 
     SampleCount getPosition() override
     {
-        return reader->getReadPosition();
+        return position;
     }
 
     void setPosition (SampleCount t) override
     {
+        // When looping, the reader wraps this in to the loop but the position returned carries on
+        // from it, so readers above don't see it jump back at each loop end
+        position = t;
         reader->setReadPosition (t);
     }
 
@@ -116,6 +119,8 @@ public:
 
     bool readSamples (choc::buffer::ChannelArrayView<float>& destBuffer) override
     {
+        position += (SampleCount) destBuffer.getNumFrames();
+
         auto buffer = toAudioBuffer (destBuffer);
         return reader->readSamples ((int) destBuffer.getNumFrames(),
                                     buffer,
@@ -126,6 +131,7 @@ public:
     }
 
     AudioFileCache::Reader::Ptr reader;
+    SampleCount position = 0;
     int timeoutMs;
     const ChannelConfiguration destChannelConfig;
     const ChannelConfiguration sourceChannelConfig;
@@ -155,88 +161,6 @@ public:
 
     std::unique_ptr<AudioReader> source;
 };
-
-//==============================================================================
-class LoopReader final  : public SingleInputAudioReader
-{
-public:
-    LoopReader (std::unique_ptr<AudioReader> input, SampleRange loopRangeToUse)
-        : SingleInputAudioReader (std::move (input)), loopRange (loopRangeToUse)
-    {
-    }
-
-    LoopReader (std::unique_ptr<AudioReader> input, TimeRange loopRangeToUse)
-        : SingleInputAudioReader (std::move (input)), loopRange (toSamples (loopRangeToUse, source->getSampleRate()))
-    {
-    }
-
-    void setPosition (SampleCount t) override
-    {
-        const auto loopStart = loopRange.getStart();
-        const auto loopLength = loopRange.getLength();
-
-        if (loopLength > 0)
-        {
-            if (t >= 0)
-                t = loopStart + (t % loopLength);
-            else
-                t = loopStart + juce::negativeAwareModulo (t, loopLength);
-        }
-
-        source->setPosition (t);
-    }
-
-    void setPosition (TimePosition t) override
-    {
-        setPosition (toSamples (t, getSampleRate()));
-    }
-
-    bool readSamples (choc::buffer::ChannelArrayView<float>& destBuffer) override
-    {
-        using choc::buffer::FrameCount;
-
-        const auto loopStart = loopRange.getStart();
-        const auto loopLength = loopRange.getLength();
-
-        if (loopLength == 0)
-            return source->readSamples (destBuffer);
-
-        const auto numFrames = static_cast<SampleCount> (destBuffer.getNumFrames());
-
-        auto readPos = source->getPosition();
-
-        if (readPos >= loopStart + loopLength)
-            readPos -= loopLength;
-
-        int numSamplesToDo = (int) numFrames;
-        SampleCount startOffsetInDestBuffer = 0;
-        bool allOk = true;
-
-        while (numSamplesToDo > 0)
-        {
-            jassert (juce::isPositiveAndBelow (readPos - loopStart, loopLength));
-
-            const auto numToRead = std::min ((SampleCount) numSamplesToDo, loopStart + loopLength - readPos);
-
-            source->setPosition (readPos);
-            auto destSubsection = destBuffer.getFrameRange ({ (FrameCount) startOffsetInDestBuffer, (FrameCount) (startOffsetInDestBuffer + numToRead) });
-            allOk = source->readSamples (destSubsection) && allOk;
-
-            readPos += numToRead;
-
-            if (readPos >= loopStart + loopLength)
-                readPos -= loopLength;
-
-            startOffsetInDestBuffer += numToRead;
-            numSamplesToDo -= (int) numToRead;
-        }
-
-        return allOk;
-    }
-
-    const SampleRange loopRange;
-};
-
 
 //==============================================================================
 class ResamplerReader : public SingleInputAudioReader
@@ -273,29 +197,30 @@ public:
         for (auto& r : resamplers)
             r.reset();
 
+        subSamplePos = 1.0;
         hasBeenReset = true;
-        timeSourceIsAheadDueToLatency = {};
     }
 
     SampleCount getPosition() override
     {
-        const auto sourcePosition = TimePosition::fromSamples (source->getPosition(), source->getSampleRate());
-        return toSamples (sourcePosition - timeSourceIsAheadDueToLatency, destSampleRate);
+        return getReadPosition();
     }
 
     void setPosition (SampleCount t) override
     {
-        setPosition (TimePosition::fromSamples (t, destSampleRate));
+        // Carry on from where the last block ended rather than re-seeking the source to a rounded
+        // position, which would skip or repeat a sample under the interpolators
+        if (! hasBeenReset && std::abs (t - getReadPosition()) <= 1)
+            return;
+
+        // The position has jumped, so reset to stop the interpolators blending in samples from the old position
+        readPosition = (double) t;
+        reset();
     }
 
     void setPosition (TimePosition t) override
     {
-        // If the position has jumped, reset so the interpolator doesn't blend in samples from the
-        // old position. This also clears the latency offset so it's re-compensated on the next read
-        if (std::abs (toSamples (t, destSampleRate) - getPosition()) > 1)
-            reset();
-
-        source->setPosition (t + timeSourceIsAheadDueToLatency);
+        setPosition (toSamples (t, destSampleRate));
     }
 
     /** Sets a ratio to increase or decrease playback speed. */
@@ -319,71 +244,83 @@ public:
 
     bool readSamples (choc::buffer::ChannelArrayView<float>& destBuffer) override
     {
-        using namespace choc::buffer;
         const auto numChannels = destBuffer.getNumChannels();
-        assert (numChannels <= (ChannelCount) resamplers.size());
-        assert (destBuffer.getNumChannels() == numChannels);
-
-        const auto ratio = sampleRatio * speedRatio;
-        const auto numDestFrames = destBuffer.getNumFrames();
-        const int numSourceFramesToRead = static_cast<int> ((numDestFrames * ratio) + 0.5);
+        assert (numChannels <= (choc::buffer::ChannelCount) resamplers.size());
+        bool ok = true;
 
         if (std::exchange (hasBeenReset, false))
         {
-            constexpr auto baseLatencyNumSamples = static_cast<FrameCount> (juce::LagrangeInterpolator::getBaseLatency());
-            timeSourceIsAheadDueToLatency = TimeDuration::fromSamples (baseLatencyNumSamples, destSampleRate);
-            const auto modifiedNumSourceFramesToRead = numSourceFramesToRead + static_cast<int> (baseLatencyNumSamples);
-            const auto numFramesToDrop = static_cast<FrameCount> (std::lround (baseLatencyNumSamples / ratio));
-            const auto modifiedNumDestFrames = numDestFrames + numFramesToDrop;
+            // Start the source at the read position and give the interpolators their latency's worth of it
+            // at unity speed, so the first frame they produce lines up with the read position
+            source->setPosition (TimePosition::fromSamples (getReadPosition(), destSampleRate));
 
-            AudioScratchBuffer destDataScratch ((int) numChannels, static_cast<int> (modifiedNumDestFrames));
-            auto destScratchView = toBufferView (destDataScratch.buffer);
-            destScratchView.clear();
-
-            if (! readResampling (destScratchView, *source, modifiedNumSourceFramesToRead,
-                                  resamplers, std::to_array (gains)))
-                return false;
-
-            copy (destBuffer, destScratchView.fromFrame (numFramesToDrop));
-            return true;
+            constexpr auto latencyNumFrames = static_cast<int> (juce::LagrangeInterpolator::getBaseLatency());
+            AudioScratchBuffer latencyScratch ((int) numChannels, latencyNumFrames);
+            auto latencyView = toBufferView (latencyScratch.buffer);
+            latencyView.clear();
+            ok = readResampling (latencyView, 1.0);
         }
 
-        return readResampling (destBuffer, *source, numSourceFramesToRead,
-                               resamplers, std::to_array (gains));
+        readPosition += destBuffer.getNumFrames() * speedRatio;
+
+        return readResampling (destBuffer, sampleRatio * speedRatio) && ok;
     }
 
     const double destSampleRate;
     const double sourceSampleRate { source->getSampleRate() };
     const double sampleRatio { sourceSampleRate / destSampleRate  };
-    double speedRatio = 1.0;
+    double speedRatio = 1.0, readPosition = 0.0, subSamplePos = 1.0;
     std::vector<juce::LagrangeInterpolator> resamplers;
     float gains[2] = { 1.0f, 1.0f };
-    TimeDuration timeSourceIsAheadDueToLatency;
     bool hasBeenReset = true;
 
-    static bool readResampling (choc::buffer::ChannelArrayView<float> destBuffer,
-                                AudioReader& sourceReader, int numSourceFramesToRead,
-                                std::vector<juce::LagrangeInterpolator>& resamplers_,
-                                const std::array<float, 2> gains)
+    SampleCount getReadPosition() const
+    {
+        // Rounds rather than truncates as a block straddling the start of a clip reads from before it
+        return static_cast<SampleCount> (std::llround (readPosition));
+    }
+
+    /** Steps the interpolators' sub-sample position on by a number of frames, returning how many source
+        samples they'll use. This mirrors juce::GenericInterpolator so the source can be read exactly as
+        far as they get, rather than skipping or repeating samples between blocks.
+    */
+    int advanceSubSamplePos (double ratio, choc::buffer::FrameCount numFrames)
+    {
+        int numSourceFrames = 0;
+
+        for (choc::buffer::FrameCount i = 0; i < numFrames; ++i)
+        {
+            while (subSamplePos >= 1.0)
+            {
+                ++numSourceFrames;
+                subSamplePos -= 1.0;
+            }
+
+            subSamplePos += ratio;
+        }
+
+        return numSourceFrames;
+    }
+
+    bool readResampling (choc::buffer::ChannelArrayView<float> destBuffer, double ratio)
     {
         const auto numChannels = destBuffer.getNumChannels();
         const auto numDestFrames = destBuffer.getNumFrames();
+        const auto numSourceFrames = advanceSubSamplePos (ratio, numDestFrames);
 
-        AudioScratchBuffer fileData ((int) numChannels, numSourceFramesToRead);
+        AudioScratchBuffer fileData ((int) numChannels, numSourceFrames);
         auto fileDataView = toBufferView (fileData.buffer);
-        const bool ok = sourceReader.readSamples (fileDataView);
-
-        const auto resamplerRatio = static_cast<double> (numSourceFramesToRead) / numDestFrames;
+        const bool ok = source->readSamples (fileDataView);
 
         for (choc::buffer::ChannelCount channel = 0; channel < numChannels; ++channel)
         {
-            if (channel < (choc::buffer::ChannelCount) resamplers_.size())
+            if (channel < (choc::buffer::ChannelCount) resamplers.size())
             {
                 const auto src = fileData.buffer.getReadPointer ((int) channel);
                 const auto dest = destBuffer.getChannel (channel).data.data;
 
-                auto& resampler = resamplers_[(size_t) channel];
-                resampler.processAdding (resamplerRatio, src, dest, (int) numDestFrames, gains[channel & 1]);
+                [[maybe_unused]] const auto numUsed = resamplers[(size_t) channel].processAdding (ratio, src, dest, (int) numDestFrames, gains[channel & 1]);
+                assert (numUsed == numSourceFrames);
             }
             else
             {
@@ -571,7 +508,7 @@ public:
         }
 
         choc::buffer::copy (destBuffer, interleavedOutputScratchBuffer.getStart (numFramesToDo));
-        readPosition += numFramesToDo;
+        readPosition += numFramesToDo * speedRatio;
 
         return true;
     }
@@ -1000,16 +937,34 @@ inline WarpedTime warpTime (const WarpMap& map, TimePosition time)
 }
 
 //==============================================================================
+/** Reads a source through a time-stretcher, following a warp map.
+
+    If the clip loops, loopRange is the loop in warped time and positions in it count from its
+    start, the same as a looped AudioFileCacheReader. The source must be looped by the source
+    times of the loop (getSourceLoopRange), below the time-stretcher, so it plays one continuous
+    stream through the loop points rather than being reset at each. This therefore reads the
+    source as if it wasn't looped.
+*/
 class WarpReader final  : public SingleInputAudioReader
 {
 public:
     WarpReader (std::unique_ptr<AudioReader> input,
                 WarpMap warpMap,
+                SampleRange loopRangeToUse,
                 TimeStretcher::Mode mode,
                 TimeStretcher::ElastiqueProOptions options)
         : SingleInputAudioReader (std::make_unique<TimeStretchReader> (std::move (input), mode, options)),
-          reader (static_cast<TimeStretchReader*> (source.get())), map (std::move (warpMap))
+          reader (static_cast<TimeStretchReader*> (source.get())), map (std::move (warpMap)),
+          loopRange (loopRangeToUse), sourceLoopRange (getSourceLoopRange (map, loopRange, getSampleRate()))
     {
+    }
+
+    /** Returns the source samples a loop in warped time plays, which the source must loop. */
+    static SampleRange getSourceLoopRange (const WarpMap& map, SampleRange loopRange, double sampleRate)
+    {
+        auto toSource = [&] (SampleCount warped) { return toSamples (warpTime (map, TimePosition::fromSamples (warped, sampleRate)).position, sampleRate); };
+
+        return { toSource (loopRange.getStart()), toSource (loopRange.getEnd()) };
     }
 
     SampleCount getPosition() override
@@ -1028,32 +983,47 @@ public:
             return;
 
         readPosition = t;
-        setSourcePosition (t);
+        source->setPosition ((SampleCount) std::llround (getSourcePosition (t)));
     }
 
     bool readSamples (choc::buffer::ChannelArrayView<float>& destBuffer) override
     {
-        const auto unwarpedStartTime = TimePosition::fromSamples (readPosition, getSampleRate());
-        const auto ratio = warpTime (map, unwarpedStartTime).stretchRatio;
-
-        reader->setSpeed (ratio);
-        readPosition += (SampleCount) destBuffer.getNumFrames();
+        if (const auto numFrames = (SampleCount) destBuffer.getNumFrames(); numFrames > 0)
+        {
+            // Plays the source this block covers, so the time-stretcher follows the warp map
+            // however the block lines up with its markers and loop points, and doesn't drift from it
+            const auto sourceStart = getSourcePosition (readPosition);
+            readPosition += numFrames;
+            reader->setSpeed ((getSourcePosition (readPosition) - sourceStart) / (double) numFrames);
+        }
 
         return reader->readSamples (destBuffer);
     }
 
 private:
     TimeStretchReader* reader = nullptr;
-    WarpMap map;
+    const WarpMap map;
+    const SampleRange loopRange, sourceLoopRange;
     SampleCount readPosition = 0;
 
-    void setSourcePosition (SampleCount pos)
+    /** Returns the source position, in samples, to read a warped position from.
+        A looped position carries on through the loops a source loop length at a time.
+    */
+    double getSourcePosition (SampleCount position)
+    {
+        if (loopRange.isEmpty())
+            return toSourceSamples (position);
+
+        const auto numLoops = (SampleCount) std::floor ((double) position / (double) loopRange.getLength());
+
+        return (double) (numLoops * sourceLoopRange.getLength() - sourceLoopRange.getStart())
+                + toSourceSamples (loopRange.getStart() + position - numLoops * loopRange.getLength());
+    }
+
+    double toSourceSamples (SampleCount warpedPosition)
     {
         const auto sampleRate = getSampleRate();
-        const auto sourceTime = TimePosition::fromSamples (pos, sampleRate);
-        const auto warpedTime = warpTime (map, sourceTime).position;
-        const auto warpedSamplePos = toSamples (warpedTime, sampleRate);
-        source->setPosition (warpedSamplePos);
+        return warpTime (map, TimePosition::fromSamples (warpedPosition, sampleRate)).position.inSeconds() * sampleRate;
     }
 };
 
@@ -1250,17 +1220,22 @@ public:
 //==============================================================================
 /** N.B. This has to assume a constant Edit tempo per block.
     The top level Edit player should chunk at tempo changes.
+
+    If the clip loops, its source is looped below this, in source time (sourceLoopRange), so
+    the time-stretcher plays one continuous stream through the loop points rather than
+    being reset at each. This therefore reads the source times as if it wasn't looped.
 */
 class BeatRangeReader final : public AudioReader
 {
 public:
     BeatRangeReader (std::unique_ptr<TimeRangeReader> input,
                      BeatRange loopRange_,
+                     TimeRange sourceLoopRange_,
                      BeatDuration offset_,
                      std::shared_ptr<BeatDuration> dynamicOffset_,
                      tempo::Sequence::Position sourceSequencePosition_)
         : source (std::move (input)),
-          loopRange (loopRange_), offset (offset_),
+          loopRange (loopRange_), sourceLoopRange (sourceLoopRange_), offset (offset_),
           dynamicOffset (std::move (dynamicOffset_)),
           sourceSequencePosition (sourceSequencePosition_)
     {
@@ -1276,7 +1251,8 @@ public:
         // Apply offset first
         const auto beatRangeToRead = br + offset - *dynamicOffset;
 
-        return readLoopedBeatRange (beatRangeToRead, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
+        return source->read ({ getSourceTime (beatRangeToRead.getStart()), getSourceTime (beatRangeToRead.getEnd()) },
+                             destBuffer, editDuration, isContiguous, playbackSpeedRatio);
     }
 
     choc::buffer::ChannelCount getNumChannels() override    { return source->getNumChannels(); }
@@ -1294,69 +1270,29 @@ public:
 private:
     std::unique_ptr<TimeRangeReader> source;
     const BeatRange loopRange;
+    const TimeRange sourceLoopRange;
     const BeatDuration offset;
     std::shared_ptr<BeatDuration> dynamicOffset;
     tempo::Sequence::Position sourceSequencePosition;
 
-    bool readLoopedBeatRange (BeatRange br,
-                              choc::buffer::ChannelArrayView<float>& destBuffer,
-                              TimeDuration editDuration,
-                              bool isContiguous,
-                              double playbackSpeedRatio)
+    /** Returns the source time to read a beat from.
+        A looped beat counts from the loop start, and the looped source wraps a time in to its
+        loop the same way, so this counts on through the loops a source loop length at a time.
+        That's the loop's length in the source's samples, so the two don't drift apart.
+    */
+    TimePosition getSourceTime (BeatPosition beat)
     {
-        using choc::buffer::FrameCount;
-
         if (loopRange.isEmpty())
-            return readBeatRange (br, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
-
-        const auto s = linearPositionToLoopPosition (br.getStart(), loopRange);
-        const auto e = linearPositionToLoopPosition (br.getEnd(), loopRange);
-
-        if (s > e)
         {
-            if (s >= loopRange.getEnd())
-                return readBeatRange ({ loopRange.getStart(), e }, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
-
-            if (e <= loopRange.getStart())
-                return readBeatRange ({ s, loopRange.getEnd() }, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
-
-            // Otherwise range is split
-            const BeatRange br1 (s, loopRange.getEnd());
-            const BeatRange br2 (loopRange.getStart(), e);
-            const auto prop1 = br1.getLength() / br.getLength();
-            const auto prop2 = 1.0 - prop1;
-
-            const auto numFrames = destBuffer.getNumFrames();
-            const auto numFrames1 = static_cast<FrameCount> (std::llround (numFrames * prop1));
-
-            auto buffer1 = destBuffer.getStart (numFrames1);
-            auto buffer2 = destBuffer.getFrameRange ({ numFrames1, numFrames });
-
-            return readBeatRange (br1, buffer1, editDuration * prop1, isContiguous, playbackSpeedRatio)
-                && readBeatRange (br2, buffer2, editDuration * prop2, false, playbackSpeedRatio);
+            sourceSequencePosition.set (beat);
+            return sourceSequencePosition.getTime();
         }
 
-        return readBeatRange ({ s, e }, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
-    }
+        const auto loopLength = loopRange.getLength().inBeats();
+        const auto numLoops = std::floor (beat.inBeats() / loopLength);
+        sourceSequencePosition.set (loopRange.getStart() + BeatDuration::fromBeats (beat.inBeats() - numLoops * loopLength));
 
-    bool readBeatRange (BeatRange br,
-                        choc::buffer::ChannelArrayView<float>& destBuffer,
-                        TimeDuration editDuration,
-                        bool isContiguous,
-                        double playbackSpeedRatio)
-    {
-        // Convert source beat range to source time range
-        sourceSequencePosition.set (br.getStart());
-        const auto startTime = (sourceSequencePosition.getTime());
-        sourceSequencePosition.set (br.getEnd());
-        const auto endTime = (sourceSequencePosition.getTime());
-
-        return source->read ({ startTime, endTime }, destBuffer, editDuration, isContiguous, playbackSpeedRatio);
-    }
-
-    static inline BeatPosition linearPositionToLoopPosition (BeatPosition position, BeatRange loopRange)
-    {
-        return loopRange.getStart() + BeatDuration::fromBeats (std::fmod (position.inBeats(), loopRange.getLength().inBeats()));
+        return toPosition (sourceSequencePosition.getTime() - sourceLoopRange.getStart()) + sourceLoopRange.getLength() * numLoops;
     }
 };
 
@@ -2217,20 +2153,34 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
 
     auto audioFileCacheReader = std::make_unique<AudioFileCacheReader> (std::move (fileCacheReader), isOfflineRender ? 5s : 0ms,
                                                                         destChannels, channelsToUse);
+    const bool isBeatBased = syncTempo == SyncTempo::yes || syncPitch == SyncPitch::yes;
+    auto sourceLoopRange = loopSectionTime;
+
+    // Beat-based clips loop their source in time here too, below the time-stretcher, so it plays one
+    // continuous stream through the loop points rather than being reset at each (see BeatRangeReader).
+    // It's rounded to the file's samples as that's how it loops
+    if (isBeatBased && ! loopSectionBeats.isEmpty())
+    {
+        const auto fileSampleRate = audioFileCacheReader->getSampleRate();
+        const auto loopSamples = toSamples (toTime (*fileTempoSequence, loopSectionBeats), fileSampleRate);
+        sourceLoopRange = { TimePosition::fromSamples (loopSamples.getStart(), fileSampleRate),
+                            TimePosition::fromSamples (loopSamples.getEnd(), fileSampleRate) };
+    }
+
     std::unique_ptr<AudioReader> loopReader;
 
     if (warpMap)
     {
-        // If we're using a warp map, the looping as to be applied above the warp so the loop times don't get warped
-        // This can have performance hits though
-        loopReader = std::make_unique<WarpReader> (std::move (audioFileCacheReader), std::move (*warpMap), timeStretcherMode, elastiqueProOptions);
-
-        if (! loopSectionTime.isEmpty())
-            loopReader = std::make_unique<LoopReader> (std::move (loopReader), loopSectionTime);
+        // With a warp map, the loop is in warped time. The source is looped by its source times, below
+        // the WarpReader's time-stretcher, so that plays one continuous stream through the loop points too
+        const auto fileSampleRate = audioFileCacheReader->getSampleRate();
+        const auto warpedLoopRange = toSamples (sourceLoopRange, fileSampleRate);
+        audioFileCacheReader->reader->setLoopRange (WarpReader::getSourceLoopRange (*warpMap, warpedLoopRange, fileSampleRate));
+        loopReader = std::make_unique<WarpReader> (std::move (audioFileCacheReader), std::move (*warpMap), warpedLoopRange, timeStretcherMode, elastiqueProOptions);
     }
     else
     {
-        audioFileCacheReader->setLoopRange (loopSectionTime);
+        audioFileCacheReader->setLoopRange (sourceLoopRange);
         loopReader = std::move (audioFileCacheReader);
     }
 
@@ -2285,11 +2235,11 @@ bool WaveNodeRealTime::buildAudioReaderGraph()
         }
     }
 
-    if (syncTempo == SyncTempo::yes || syncPitch == SyncPitch::yes)
+    if (isBeatBased)
     {
         assert (fileTempoSequence);
         auto beatRangeReader    = std::make_unique<BeatRangeReader> (std::move (timeRangeReader),
-                                                                     loopSectionBeats, offsetBeats, dynamicOffsetBeats, *fileTempoPosition);
+                                                                     loopSectionBeats, sourceLoopRange, offsetBeats, dynamicOffsetBeats, *fileTempoPosition);
         auto editToClipBeatReader    = std::make_unique<EditToClipBeatReader> (std::move (beatRangeReader), editPositionBeats, dynamicOffsetBeats);
         basicEditReader = std::make_unique<EditReader> (std::move (editToClipBeatReader), nullptr);
     }

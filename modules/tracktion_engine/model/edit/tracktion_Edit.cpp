@@ -24,13 +24,14 @@ struct Edit::UndoTransactionTimer   : private juce::Timer,
     UndoTransactionTimer (Edit& e)
         : edit (e)
     {
-        // Add the change listener asyncronously to avoid messages coming in
-        // from the Edit initialisation phase
-        juce::MessageManager::callAsync ([ref = makeWeakRef (*this)]
-                                         {
-                                             if (ref != nullptr)
-                                                 ref->edit.getUndoManager().addChangeListener (ref.get());
-                                         });
+        // Flush any change messages from the Edit initialisation phase before listening, so they
+        // don't count as changes. This is done on the message thread as adding a listener needs it,
+        // and blocking so changes are tracked as soon as the Edit's constructed
+        callBlocking ([this]
+                      {
+                          edit.getUndoManager().dispatchPendingMessages();
+                          edit.getUndoManager().addChangeListener (this);
+                      });
     }
 
     ~UndoTransactionTimer() override
@@ -58,7 +59,6 @@ struct Edit::UndoTransactionTimer   : private juce::Timer,
 
     Edit& edit;
 
-    JUCE_DECLARE_WEAK_REFERENCEABLE (UndoTransactionTimer)
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (UndoTransactionTimer)
 };
 

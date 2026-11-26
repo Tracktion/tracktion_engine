@@ -530,6 +530,59 @@ TEST_SUITE ("tracktion_graph")
             }
         }
     }
+
+    TEST_CASE ("LatencyNode: a change in latency when a graph is replaced is crossfaded")
+    {
+        for (auto setup : getTestSetups())
+        {
+            CAPTURE (setup.sampleRate);
+            CAPTURE (setup.blockSize);
+            CAPTURE (setup.randomiseBlockSizes);
+
+            // Not a whole number of cycles, so the delayed sin is out of phase with the undelayed one
+            const float sinFrequency = 220.0f;
+            const int latency = juce::roundToInt (setup.sampleRate * (0.1 + 0.25 / sinFrequency));
+
+            // The most a sin steps between samples, plus a little for the crossfade's own slope
+            const float maxStep = 1.5f * juce::MathConstants<float>::twoPi * sinFrequency / (float) setup.sampleRate;
+
+            for (auto [latencyBefore, latencyAfter] : { std::pair { latency, 0 }, std::pair { 0, latency },
+                                                        std::pair { latency, latency * 2 }, std::pair { latency * 2, latency } })
+            {
+                CAPTURE (latencyBefore);
+                CAPTURE (latencyAfter);
+
+                auto makeSinNode = [] (int latencyNumSamples)
+                {
+                    size_t nodeID = 1234;
+                    return makeNode<LatencyNode> (makeNode<SinNode> (220.0f, 1, nodeID), latencyNumSamples);
+                };
+
+                const double totalDuration = 3.0;
+                const int totalNumSamples = (int) std::floor (totalDuration * setup.sampleRate);
+                TestProcess<NodePlayer> playerContext (std::make_unique<NodePlayer> (makeSinNode (latencyBefore)),
+                                                       setup, 1, totalDuration, true);
+                playerContext.process (totalNumSamples / 2);
+                playerContext.setNode (makeSinNode (latencyAfter));
+                playerContext.process (totalNumSamples - totalNumSamples / 2);
+                auto testContext = playerContext.getTestResult();
+
+                // The sin is never cut off or started abruptly
+                const auto samples = testContext->buffer.getReadPointer (0);
+                float biggestStep = 0.0f;
+
+                for (int i = 1; i < testContext->buffer.getNumSamples(); ++i)
+                    biggestStep = std::max (biggestStep, std::abs (samples[i] - samples[i - 1]));
+
+                CHECK_LT (biggestStep, maxStep);
+
+                // And it ends up playing at full level with the new latency
+                test_utilities::expectAudioBuffer (testContext->buffer, 0,
+                                                   juce::Range<int>::withStartAndLength (totalNumSamples / 2 + latencyAfter + latency, latency),
+                                                   1.0f, 0.707f);
+            }
+        }
+    }
 }
 
 } // namespace tracktion::inline graph

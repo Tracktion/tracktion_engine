@@ -385,12 +385,21 @@ std::unique_ptr<tracktion::graph::Node> createFadeNodeForClip (AudioClipBase& cl
         const bool speedIn = clip.getFadeInBehaviour() == AudioClipBase::speedRamp && fIn > 0_td;
         const bool speedOut = clip.getFadeOutBehaviour() == AudioClipBase::speedRamp && fOut > 0_td;
 
+        const auto fadeInLength = speedIn ? juce::jmin (TimeDuration (3ms), fIn) : fIn;
+        const auto fadeOutLength = speedOut ? juce::jmin (TimeDuration (3ms), fOut) : fOut;
+
+        // A beat-based clip's fades move with it if the tempo changes
+        if (clipTimeRangeToUse.isBeats())
+            return makeNode<FadeInOutNode> (std::move (node), params.processState,
+                                            toBeats (clipTimeRangeToUse, clip.edit.tempoSequence),
+                                            fadeInLength, fadeOutLength,
+                                            clip.getFadeInType(), clip.getFadeOutType(),
+                                            true);
+
         auto pos = toTime (clipTimeRangeToUse, clip.edit.tempoSequence);
         node = makeNode<FadeInOutNode> (std::move (node), params.processState,
-                                        speedIn ? TimeRange (pos.getStart(), pos.getStart() + juce::jmin (TimeDuration::fromSeconds (0.003), fIn))
-                                                : TimeRange (pos.getStart(), pos.getStart() + fIn),
-                                        speedOut ? TimeRange (pos.getEnd() - juce::jmin (TimeDuration::fromSeconds (0.003), fOut), pos.getEnd())
-                                                 : TimeRange (pos.getEnd() - fOut, pos.getEnd()),
+                                        TimeRange (pos.getStart(), pos.getStart() + fadeInLength),
+                                        TimeRange (pos.getEnd() - fadeOutLength, pos.getEnd()),
                                         clip.getFadeInType(), clip.getFadeOutType(),
                                         true);
     }
@@ -678,7 +687,9 @@ std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, c
 {
     CRASH_TRACER
     const bool generateMPE = clip.getMPEMode();
-    const auto timeBase = clip.canUseProxy() ? MidiList::TimeBase::seconds
+
+    // Both are in beats so the notes stay on their beats if the tempo changes before the graph's rebuilt
+    const auto timeBase = clip.canUseProxy() ? MidiList::TimeBase::beats
                                              : MidiList::TimeBase::beatsRaw;
 
     const auto channels = generateMPE ? juce::Range<int> (2, 15)
@@ -712,10 +723,10 @@ std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, c
                                                  });
     }
 
-    // Use looped sequence in seconds time base
+    // Use looped sequence in beats time base
     assert (role != ClipRole::launcher);
-    const auto clipTimeRange = clip.getEditTimeRange();
-    const juce::Range<double> editTimeRange { clipTimeRange.getStart().inSeconds(), clipTimeRange.getEnd().inSeconds() };
+    const auto clipBeatRange = clip.getEditBeatRange();
+    const juce::Range<double> editBeatRange { clipBeatRange.getStart().inBeats(), clipBeatRange.getEnd().inBeats() };
 
     std::vector<juce::MidiMessageSequence> sequences;
     sequences.emplace_back (clip.getSequenceLooped().exportToPlaybackMidiSequence (clip, timeBase, generateMPE));
@@ -724,7 +735,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForMidiClip (MidiClip& clip, c
                                       timeBase,
                                       channels,
                                       generateMPE,
-                                      editTimeRange,
+                                      editBeatRange,
                                       clip.getLiveClipLevel(),
                                       params.processState,
                                       clip.itemID,
@@ -774,22 +785,24 @@ std::unique_ptr<tracktion::graph::Node> createNodeForStepClip (StepClip& clip, c
     }
     else
     {
+        // In beats so the notes stay on their beats if the tempo changes before the graph's rebuilt
+        const auto clipBeatRange = clip.getEditBeatRange();
         std::vector<juce::MidiMessageSequence> sequences;
 
         for (int i = clip.usesProbability() ? 64 : 1; --i >= 0;)
         {
             juce::MidiMessageSequence sequence;
-            clip.generateMidiSequence (sequence);
+            clip.generateMidiSequence (sequence, false);
+            sequence.addTimeToMessages (-clipBeatRange.getStart().inBeats());
             sequences.push_back (sequence);
         }
 
-        const auto clipRange = clip.getEditTimeRange ();
-        const juce::Range<double> editTimeRange (clipRange.getStart ().inSeconds (), clipRange.getEnd ().inSeconds ());
+        const juce::Range<double> editBeatRange (clipBeatRange.getStart().inBeats(), clipBeatRange.getEnd().inBeats());
         node = graph::makeNode<MidiNode> (std::move (sequences),
-                                          MidiList::TimeBase::seconds,
+                                          MidiList::TimeBase::beats,
                                           juce::Range<int> (1, 16),
                                           false,
-                                          editTimeRange,
+                                          editBeatRange,
                                           clip.getLiveClipLevel(),
                                           params.processState,
                                           clip.itemID,
@@ -874,7 +887,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForContainerClip (ContainerCli
 
     // Create FadeInOutNode
     if (role != ClipRole::launcher)
-        return createFadeNodeForClip (clip, clip.getEditTimeRange(), std::move (node), params);
+        return createFadeNodeForClip (clip, clip.getEditBeatRange(), std::move (node), params);
 
     return node;
 }

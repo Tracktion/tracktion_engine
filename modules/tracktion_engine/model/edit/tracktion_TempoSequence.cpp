@@ -360,7 +360,7 @@ void TempoSequence::insertSpaceIntoSequence (TimePosition time, TimeDuration amo
 {
     // there may be a temp change at this time so we need to find the tempo to the left of it hence the nudge
     time = time - TimeDuration::fromSeconds (0.00001);
-    const auto beatsToInsert = BeatDuration::fromBeats (getBeatsPerSecondAt (time) * amountOfSpaceInSeconds.inSeconds());
+    const auto beatsToInsert = BeatDuration::fromBeats (getTimeSigBeatsPerSecondAt (time) * amountOfSpaceInSeconds.inSeconds());
 
     // Move timesig settings
     {
@@ -484,15 +484,21 @@ double TempoSequence::getBpmAt (TimePosition time) const
     return internalSequence.getBpmAt (time);
 }
 
+double TempoSequence::getQuarterNotesPerSecondAt (TimePosition time) const
+{
+    return getBpmAt (time) / 60.0;
+}
+
+double TempoSequence::getTimeSigBeatsPerSecondAt (TimePosition time) const
+{
+    updateTempoDataIfNeeded();
+    return internalSequence.getBeatsPerSecondAt (time).v;
+}
+
 double TempoSequence::getBeatsPerSecondAt (TimePosition time, bool lengthOfOneBeatDependsOnTimeSignature) const
 {
-    if (lengthOfOneBeatDependsOnTimeSignature)
-    {
-        updateTempoDataIfNeeded();
-        return internalSequence.getBeatsPerSecondAt (time).v;
-    }
-
-    return getBpmAt (time) / 60.0;
+    return lengthOfOneBeatDependsOnTimeSignature ? getTimeSigBeatsPerSecondAt (time)
+                                                 : getQuarterNotesPerSecondAt (time);
 }
 
 bool TempoSequence::isTripletsAtTime (TimePosition time) const
@@ -784,9 +790,11 @@ void EditTimecodeRemapperSnapshot::remapEdit (Edit& ed)
 
             auto pos = c->getPosition();
 
+            // Any change has to be applied, however small, as dragging a tempo makes many small
+            // changes and skipping them would leave the clip off its beats
             if (std::abs ((pos.getStart() - newStart).inSeconds())
                  + std::abs ((pos.getEnd() - newEnd).inSeconds())
-                 + std::abs ((pos.getOffset() - newOffset).inSeconds()) > 0.001)
+                 + std::abs ((pos.getOffset() - newOffset).inSeconds()) > 1.0e-9)
             {
                 if (c->getSyncType() == Clip::syncAbsolute)
                     continue;

@@ -218,7 +218,7 @@ void PitchSequence::insertSpaceIntoSequence (TimePosition time, TimeDuration amo
 {
     // there may be a tempo change at this time so we need to find the tempo to the left of it hence the nudge
     time = time - TimeDuration::fromSeconds (0.00001);
-    auto beatsToInsert = getEdit().tempoSequence.getBeatsPerSecondAt (time) * amountOfSpaceInSeconds.inSeconds();
+    auto beatsToInsert = getEdit().tempoSequence.getTimeSigBeatsPerSecondAt (time) * amountOfSpaceInSeconds.inSeconds();
     auto endIndex = indexOfNextPitchAt (time);
 
     for (int i = getNumPitches(); --i >= endIndex;)

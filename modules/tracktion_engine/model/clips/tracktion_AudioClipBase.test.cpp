@@ -224,7 +224,7 @@ TEST_SUITE ("tracktion_engine")
         clip->setLoopRange ({ TimePosition::fromSeconds (0.25), TimePosition::fromSeconds (0.75) });
         REQUIRE (clip->isLooping());
 
-        const auto bps = context->edit->tempoSequence.getBeatsPerSecondAt (0_tp);
+        const auto bps = context->edit->tempoSequence.getTimeSigBeatsPerSecondAt (0_tp);
 
         clip->setAutoTempo (true);
         CHECK (clip->isLooping());
@@ -242,7 +242,7 @@ TEST_SUITE ("tracktion_engine")
         auto& engine = *Engine::getEngines()[0];
         auto context = AudioClipBaseLoopTestContext::create (engine);
         auto& ts = context->edit->tempoSequence;
-        ts.insertTempo (1_bp, ts.getBeatsPerSecondAt (0_tp) * 60.0 * 2.0, 0.0f);
+        ts.insertTempo (1_bp, ts.getQuarterNotesPerSecondAt (0_tp) * 60.0 * 2.0, 0.0f);
 
         auto clip = context->insertClip ({ 0_tp, 1_tp });
         REQUIRE (clip != nullptr);
@@ -270,7 +270,7 @@ TEST_SUITE ("tracktion_engine")
         auto& engine = *Engine::getEngines()[0];
         auto context = AudioClipBaseLoopTestContext::create (engine);
         auto& ts = context->edit->tempoSequence;
-        const auto bps = ts.getBeatsPerSecondAt (0_tp);
+        const auto bps = ts.getTimeSigBeatsPerSecondAt (0_tp);
         ts.insertTempo (1_bp, bps * 60.0 * 2.0, 0.0f);
 
         auto clip = context->insertClip ({ 0_tp, 1_tp });

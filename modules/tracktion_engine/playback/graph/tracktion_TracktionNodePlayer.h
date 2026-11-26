@@ -21,6 +21,9 @@ namespace tracktion::inline engine {
 class TracktionNodePlayer
 {
 public:
+    /** The fewest samples a block is split in to where the tempo changes in it. */
+    static constexpr int minSectionNumSamples = 64;
+
     /** Creates an NodePlayer to process a Node. */
     TracktionNodePlayer (ProcessState& processStateToUse)
         : playHeadState (processStateToUse.playHeadState),
@@ -137,6 +140,8 @@ private:
     tracktion::graph::PlayHeadState& playHeadState;
     ProcessState& processState;
     MidiMessageArray scratchMidi;
+    const tempo::Sequence* tempoChangeSequence = nullptr;
+    std::optional<tempo::Sequence::Position> tempoChangePosition;   // Finds the tempo changes in each block
     tracktion::graph::LockFreeMultiThreadedNodePlayer nodePlayer;
 
     tracktion::graph::Node::ProcessContext getSubProcessContext (const tracktion::graph::Node::ProcessContext& pc, juce::Range<int64_t> subReferenceSampleRange)
@@ -171,27 +176,37 @@ private:
         processState.update (sampleRate, pc.referenceSampleRange, ProcessState::UpdateContinuityFlags::no);
         const auto timeRange = processState.editTimeRange;
 
-        if (auto tempoPosition = processState.getTempoSequencePosition())
+        if (auto tempoSequence = processState.getTempoSequence())
         {
+            if (tempoSequence != tempoChangeSequence)
+            {
+                tempoChangeSequence = tempoSequence;
+                tempoChangePosition.emplace (*tempoSequence);
+            }
+
+            // Split the block at each change in it, so each section has a single tempo
+            auto& position = *tempoChangePosition;
+            position.set (timeRange.getStart());
             double startProportion = 0.0;
-            auto lastEventPosition = timeRange.getStart();
 
             for (;;)
             {
-                const auto nextTempoChangePosition = tempoPosition->getTimeOfNextChange();
+                const auto nextTempoChangePosition = position.getTimeOfNextChange();
 
-                if (nextTempoChangePosition == lastEventPosition)
+                if (nextTempoChangePosition <= position.getTime()
+                    || ! timeRange.contains (nextTempoChangePosition))
                     break;
 
-                if (! timeRange.contains (nextTempoChangePosition))
-                    break;
-
+                position.set (nextTempoChangePosition);
                 const double proportion = (nextTempoChangePosition - timeRange.getStart()) / timeRange.getLength();
-                const auto numSamples = static_cast<decltype(pc.numSamples)> (std::llround (pc.numSamples * proportion));
-                lastEventPosition = nextTempoChangePosition;
+                const auto numSamples = std::llround (pc.numSamples * (proportion - startProportion));
+                const auto numSamplesLeft = std::llround (pc.numSamples * (1.0 - proportion));
 
-                // Min chunk size of 128 samples to avoid large jitter
-                if (numSamples < 128)
+                // Sections are kept to a minimum size as not all plugins cope with tiny blocks, so close
+                // changes share one. That has its events placed as if it had the average of its tempos,
+                // which puts them out by less than the minimum size, and doesn't build up as every
+                // section still starts and ends on the right beats
+                if (numSamples < minSectionNumSamples || numSamplesLeft < minSectionNumSamples)
                     continue;
 
                 processSubRange (pc, { startProportion, proportion });

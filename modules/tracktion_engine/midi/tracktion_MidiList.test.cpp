@@ -24,11 +24,6 @@ TEST_SUITE ("tracktion_engine")
 
         auto& engine = *Engine::getEngines()[0];
         auto edit = createTestEdit (engine);
-
-        // We need to pump the dispatch loop here to ensure the Edit has attached the undo manager
-        // This may be handled better in a more syncronous way in the future
-        juce::MessageManager::getInstance()->runDispatchLoopUntil (20);
-
         auto um = &edit->getUndoManager();
         auto track = getAudioTracks (*edit)[0];
         auto mc = insertMIDIClip (*track, { 0_tp, 4_tp });
