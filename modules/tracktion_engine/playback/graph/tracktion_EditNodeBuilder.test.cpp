@@ -998,6 +998,96 @@ TEST_CASE ("Edit Node Builder: live device graph routing")
     engine.getAudioFileManager().releaseAllFiles();
 }
 
+TEST_CASE ("Edit Node Builder: a track played live through a record enabled MIDI input isn't latency compensated")
+{
+    constexpr double sampleRate = 44100.0;
+    constexpr float latencySeconds = 0.5f;
+    auto& engine = *Engine::getEngines()[0];
+    engine.getPluginManager().createBuiltInType<LatencyPlugin>();
+    test_utilities::EnginePlayer player (engine, { .sampleRate = sampleRate, .blockSize = 512, .inputChannels = 0, .outputChannels = 1,
+                                                   .inputNames = {}, .outputNames = {} });
+
+    // A synth track to play live and a track with a lot of latency, which the synth would be lined up with
+    auto edit = test_utilities::createTestEdit (engine, 2, Edit::EditRole::forEditing);
+    auto tracks = getAudioTracks (*edit);
+    tracks[0]->pluginList.insertPlugin (edit->getPluginCache().createNewPlugin (FourOscPlugin::xmlTypeName, {}), 0, nullptr);
+
+    for (auto track : tracks)
+        insertMIDIClip (*track, { 0_tp, 1_tp });
+
+    insertNewPlugin<LatencyPlugin> (*tracks[1], 0)->latencyTimeSeconds = latencySeconds;
+
+    // The hosted MIDI input is added when the DeviceManager scans its MIDI devices, which it does on a timer
+    engine.getDeviceManager().rescanMidiDeviceList();
+    auto& tc = edit->getTransport();
+    tc.ensureContextAllocated();
+
+    auto findMidiInput = [&]() -> InputDeviceInstance*
+    {
+        for (auto in : edit->getCurrentPlaybackContext()->getAllInputs())
+            if (auto midiDevice = dynamic_cast<MidiInputDevice*> (&in->getInputDevice()))
+                if (HostedAudioDeviceInterface::isHostedMidiInputDevice (*midiDevice))
+                    return in;
+
+        for (auto midiDevice : engine.getDeviceManager().getMidiInDevices())
+            if (HostedAudioDeviceInterface::isHostedMidiInputDevice (*midiDevice))
+                midiDevice->setEnabled (true);
+
+        return nullptr;
+    };
+
+    auto midiInput = findMidiInput();
+
+    for (int i = 0; i < 2000 && midiInput == nullptr; ++i)
+    {
+        test_utilities::runDispatchLoop (1);
+        tc.ensureContextAllocated (true);
+        midiInput = findMidiInput();
+    }
+
+    REQUIRE (midiInput != nullptr);
+
+    // Monitoring is always on, so the track is played live whether it's record enabled or not
+    auto& midiDevice = midiInput->getInputDevice();
+    const juce::ScopeGuard restoreMidiDevice { [&midiDevice, mode = midiDevice.getMonitorMode()]
+                                               {
+                                                   midiDevice.setMonitorMode (mode);
+                                                   midiDevice.setEnabled (false);
+                                               } };
+    midiDevice.setMonitorMode (InputDevice::MonitorMode::on);
+    REQUIRE (midiInput->setTarget (tracks[0]->itemID, false, nullptr));
+
+    // Rebuilds the graph, then starts or stops a note on the track and plays a second.
+    // N.B. The note is injected in to the track rather than sent through the device, as a hosted
+    // MIDI device only passes on MIDI from the first EnginePlayer to have its devices scanned
+    auto play = [&, midiSourceID = createUniqueMPESourceID()] (bool recordEnabled, bool noteOn)
+    {
+        findMidiInput()->setRecordingEnabled (tracks[0]->itemID, recordEnabled);
+        edit->dispatchPendingUpdatesSynchronously();
+        tc.ensureContextAllocated (true);
+
+        tracks[0]->injectLiveMidiMessage (noteOn ? juce::MidiMessage::noteOn (1, 69, 1.0f)
+                                                 : juce::MidiMessage::noteOff (1, 69), midiSourceID);
+        return player.process ((int) sampleRate);
+    };
+
+    auto getRMS = [&] (const juce::AudioBuffer<float>& buffer, double startSeconds, double endSeconds)
+    {
+        const auto start = (int) (startSeconds * sampleRate);
+        return buffer.getRMSLevel (0, start, (int) (endSeconds * sampleRate) - start);
+    };
+
+    // Record enabled, it's heard straight away
+    CHECK_GT (getRMS (play (true, true), 0.05, 0.4), 0.01f);
+    CHECK_EQ (edit->getCurrentPlaybackContext()->getLatencySamples(), (int) (latencySeconds * sampleRate));
+
+    // Otherwise it's lined up with the other track, so is heard once that track's latency has passed
+    play (true, false);
+    const auto compensated = play (false, true);
+    CHECK_LT (getRMS (compensated, 0.0, 0.4), 0.0001f);
+    CHECK_GT (getRMS (compensated, 0.6, 0.9), 0.01f);
+}
+
 TEST_CASE ("Edit Node Builder: node IDs are stable between graph builds")
 {
     // Nodes find their counterpart in the previous graph by ID to carry state over a

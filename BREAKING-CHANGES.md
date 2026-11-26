@@ -3,6 +3,21 @@
 ___
 
 ### Change
+An audio track that's being played live through a record enabled MIDI input is no longer latency compensated.
+
+#### Possible Issues
+The track is heard as soon as its own plugins allow, rather than being delayed to line it up with tracks that have more latency. That's the whole track, so its clips play early by the same amount whilst it's record enabled and its input is monitored. Latency after the track, e.g. in the master plugins, is still heard.
+`NodeProperties` has a new `bypassLatencyCompensation` member, which a `SummingNode` uses to leave an input undelayed and out of its own latency.
+
+#### Workaround
+Disable record or monitoring for the track's MIDI input to have it lined up with the other tracks again.
+
+#### Rationale
+Latency anywhere in an Edit delayed what was played on a MIDI keyboard by the same amount, which made it hard to play in time.
+
+___
+
+### Change
 Arrangement MIDI clips that play a pre-looped sequence (`MidiClip::canUseProxy()`, the default) and arrangement step clips now play it in beats rather than seconds.
 
 #### Possible Issues
