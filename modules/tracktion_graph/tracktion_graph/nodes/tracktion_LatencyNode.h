@@ -75,7 +75,7 @@ public:
 
         if (previousProcessor)
         {
-            numFadeFrames = std::max (1, juce::roundToInt (info.sampleRate * 0.01));
+            numFadeFrames = std::max (1, (int) timeToSample (0.01, info.sampleRate));
             previousOutput.resize ({ (choc::buffer::ChannelCount) numChannels,
                                      (choc::buffer::FrameCount) info.blockSize });
         }
