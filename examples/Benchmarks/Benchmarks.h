@@ -76,16 +76,27 @@ inline bool publishToBenchmarkAPI (juce::String apiKey, juce::String branchName,
                         .withParameter ("request", "push_results")
                         .withParameter ("content", jsonString);
 
+    // N.B. The server's firewall resets connections that use old browser
+    // User-Agents such as "Mozilla/2.2", so use a descriptive one instead
+    int statusCode = 0;
+
     if (auto inputStream = url.createInputStream (URL::InputStreamOptions (URL::ParameterHandling::inPostData)
-                                                                        .withExtraHeaders ("User-Agent: Mozilla/2.2")))
+                                                    .withExtraHeaders ("User-Agent: Tracktion-Benchmarks/1.0")
+                                                    .withConnectionTimeoutMs (60'000)
+                                                    .withStatusCode (&statusCode)))
     {
         const auto returnVal = inputStream->readEntireStreamAsString();
-        std::cout << returnVal << "\n";
+        std::cout << "HTTP status: " << statusCode << "\n"
+                  << returnVal << "\n";
 
-        if (returnVal.isEmpty())
+        if (statusCode == 200 && returnVal.isEmpty())
             return true;
     }
-    
+    else
+    {
+        std::cout << "ERROR: Unable to connect to benchmark API (HTTP status: " << statusCode << ")\n";
+    }
+
     return false;
 }
 
