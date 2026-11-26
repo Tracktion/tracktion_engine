@@ -123,6 +123,8 @@ void MidiNode::processSection (Node::ProcessContext& pc,
 
     const auto localTime = sectionEditRange - editRange.getStart();
     const bool mute = clipLevel.isMute();
+    const bool lastSectionWasInClip = lastSectionEnd && std::abs (*lastSectionEnd - sectionEditRange.getStart()) < 1.0e-9;
+    lastSectionEnd = sectionEditRange.getEnd();
 
     if (mute)
     {
@@ -135,7 +137,11 @@ void MidiNode::processSection (Node::ProcessContext& pc,
         return;
     }
 
-    if (! getPlayHeadState().isContiguousWithPreviousBlock() || localTime.getStart() <= 0.00001 || shouldCreateMessagesForTime)
+    // A section starting just after the clip's start only needs to play notes on at its start if the
+    // last section didn't, as it would if it ended just after the start
+    if (! getPlayHeadState().isContiguousWithPreviousBlock()
+        || (localTime.getStart() <= 0.00001 && ! lastSectionWasInClip)
+        || shouldCreateMessagesForTime)
     {
         const auto numEventsBefore = pc.buffers.midi.size();
         MidiNodeHelpers::createMessagesForTime (pc.buffers.midi, sequence, localTime.getStart(),
@@ -201,7 +207,7 @@ void MidiNode::processSection (Node::ProcessContext& pc,
     if (getPlayHeadState().isLastBlockOfLoop())
         MidiNodeHelpers::createNoteOffs (pc.buffers.midi, sequence, midiSourceID,
                                          localTime.getEnd(),
-                                         localTime.getLength() - 0.00001,
+                                         localTime.getLength() * secondsPerTimeBase - 0.00001,
                                          getPlayHead().isPlaying());
 
    #if TRACKTION_SANITY_CHECK_MIDI_BUFFERS
