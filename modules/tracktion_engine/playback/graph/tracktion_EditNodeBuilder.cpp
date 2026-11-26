@@ -1270,9 +1270,9 @@ std::unique_ptr<tracktion::graph::Node> createSidechainInputNodeForPlugin (Plugi
             const int destIndex = w->destChannelIndex;
 
             if (sourceIndex < trackChannels)
-                directChannelMap.entries.emplace_back (sourceIndex, destIndex);
+                directChannelMap.entries.push_back ({ sourceIndex, destIndex });
             else
-                sidechainChannelMap.entries.emplace_back (sourceIndex - trackChannels, destIndex);
+                sidechainChannelMap.entries.push_back ({ sourceIndex - trackChannels, destIndex });
         }
     }
 
@@ -1916,7 +1916,7 @@ std::unique_ptr<tracktion::graph::Node> createNodeForDevice (EditPlaybackContext
         for (const auto& channel : waveDevice->getChannels())
         {
             if (channel.indexInDevice != -1)
-                channelMap.entries.emplace_back (sourceIndex, channel.indexInDevice);
+                channelMap.entries.push_back ({ sourceIndex, channel.indexInDevice });
 
             ++sourceIndex;
         }
