@@ -238,7 +238,49 @@ public:
                 renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::no, ShareNodeMemory::yes });
             }
         }
+
+       #if ENGINE_BENCHMARKS_RACKS_REALTIME
+        runRackMixBusRealTimeBenchmark (*edit, editName, ts);
+       #endif
     }
+
+   #if ENGINE_BENCHMARKS_RACKS_REALTIME
+    /** Processes the Edit at the cadence of a real audio device to compare how
+        reliably each thread pool strategy processes a block when its threads
+        have to sleep and wake up between blocks. The time this takes in total
+        is meaningless, the timings of the individual blocks are the result.
+        @see test_utilities::TestProcess::processAllInRealTime
+    */
+    void runRackMixBusRealTimeBenchmark (Edit& edit, juce::String editName, graph::test_utilities::TestSetup ts)
+    {
+        using namespace benchmark_utilities;
+        using namespace tracktion::graph;
+        const double warmUpSeconds = 0.5;
+        const double measuredSeconds = 5.0;
+
+        for (int blockSize : { 128, 512 })
+        {
+            ts.blockSize = blockSize;
+
+            BenchmarkOptions opts { &edit, editName, ts, MultiThreaded::no, LockFree::yes, ThreadPoolStrategy::conditionVariable };
+            opts.isRealTime = RealTime::yes;
+            opts.numWarmUpBlocks = juce::roundToInt (warmUpSeconds * ts.sampleRate / blockSize);
+            opts.durationToRender = warmUpSeconds + measuredSeconds;
+
+            // The thread pool isn't used when single threaded so this only needs to run
+            // once and is then the reference the strategies are compared with
+            renderEdit (*this, opts);
+
+            opts.isMultiThreaded = MultiThreaded::yes;
+
+            for (auto strategy : graph::test_utilities::getThreadPoolStrategies())
+            {
+                opts.poolType = strategy;
+                renderEdit (*this, opts);
+            }
+        }
+    }
+   #endif
 
     void runMultipleSerialRacksBenchmark (Engine& engine)
     {

@@ -118,4 +118,132 @@ bool setThreadPriority (std::thread& t, int priority)
     return setThreadPriority (t.native_handle(), priority);
 }
 
+//==============================================================================
+#ifdef _WIN32
+    std::string getCurrentThreadPriorityDescription()
+    {
+        auto getThreadPriorityName = []() -> std::string
+        {
+            switch (GetThreadPriority (GetCurrentThread()))
+            {
+                case THREAD_PRIORITY_TIME_CRITICAL:     return "TIME_CRITICAL";
+                case THREAD_PRIORITY_HIGHEST:           return "HIGHEST";
+                case THREAD_PRIORITY_ABOVE_NORMAL:      return "ABOVE_NORMAL";
+                case THREAD_PRIORITY_NORMAL:            return "NORMAL";
+                case THREAD_PRIORITY_BELOW_NORMAL:      return "BELOW_NORMAL";
+                case THREAD_PRIORITY_LOWEST:            return "LOWEST";
+                case THREAD_PRIORITY_IDLE:              return "IDLE";
+                default:                                return "unknown";
+            }
+        };
+
+        auto getPriorityClassName = []() -> std::string
+        {
+            switch (GetPriorityClass (GetCurrentProcess()))
+            {
+                case REALTIME_PRIORITY_CLASS:           return "REALTIME";
+                case HIGH_PRIORITY_CLASS:               return "HIGH";
+                case ABOVE_NORMAL_PRIORITY_CLASS:       return "ABOVE_NORMAL";
+                case NORMAL_PRIORITY_CLASS:             return "NORMAL";
+                case BELOW_NORMAL_PRIORITY_CLASS:       return "BELOW_NORMAL";
+                case IDLE_PRIORITY_CLASS:               return "IDLE";
+                default:                                return "unknown";
+            }
+        };
+
+        return "thread priority " + getThreadPriorityName() + " in a " + getPriorityClassName() + " priority class process";
+    }
+
+    HighResolutionSleeper::HighResolutionSleeper()
+    {
+        // CREATE_WAITABLE_TIMER_HIGH_RESOLUTION, which needs Windows 10 1803 and isn't in older SDKs
+        constexpr DWORD highResolutionFlag = 0x00000002;
+        timer = CreateWaitableTimerExW (nullptr, nullptr, highResolutionFlag, TIMER_ALL_ACCESS);
+        isHighResolution = timer != nullptr;
+
+        if (timer == nullptr)
+            timer = CreateWaitableTimerExW (nullptr, nullptr, 0, TIMER_ALL_ACCESS);
+    }
+
+    HighResolutionSleeper::~HighResolutionSleeper()
+    {
+        if (timer != nullptr)
+            CloseHandle (timer);
+    }
+
+    void HighResolutionSleeper::sleepUntil (std::chrono::steady_clock::time_point wakeUpTime)
+    {
+        const auto timeToWait = wakeUpTime - std::chrono::steady_clock::now();
+
+        if (timeToWait <= std::chrono::steady_clock::duration::zero())
+            return;
+
+        // A negative due time is relative, in 100ns units
+        LARGE_INTEGER dueTime;
+        dueTime.QuadPart = -static_cast<LONGLONG> (std::chrono::duration_cast<std::chrono::nanoseconds> (timeToWait).count() / 100);
+
+        if (timer != nullptr && dueTime.QuadPart < 0 && SetWaitableTimer (timer, &dueTime, 0, nullptr, nullptr, FALSE) != FALSE)
+            WaitForSingleObject (timer, INFINITE);
+        else
+            std::this_thread::sleep_until (wakeUpTime);
+    }
+
+    std::string HighResolutionSleeper::getDescription() const
+    {
+        return isHighResolution ? "high-resolution waitable timer"
+                                : (timer != nullptr ? "standard-resolution waitable timer" : "std::this_thread::sleep_until");
+    }
+#else
+    std::string getCurrentThreadPriorityDescription()
+    {
+       #if JUCE_MAC
+        {
+            thread_time_constraint_policy_data_t policy;
+            mach_msg_type_number_t count = THREAD_TIME_CONSTRAINT_POLICY_COUNT;
+            boolean_t isDefault = FALSE;
+
+            if (thread_policy_get (pthread_mach_thread_np (pthread_self()),
+                                   THREAD_TIME_CONSTRAINT_POLICY,
+                                   (thread_policy_t) &policy, &count, &isDefault) == KERN_SUCCESS
+                && ! isDefault)
+            {
+                auto toMs = [] (uint32_t ticks) { return juce::String (juce::Time::highResolutionTicksToSeconds (ticks) * 1000.0, 2); };
+
+                return ("real-time time-constraint policy (period " + toMs (policy.period)
+                        + "ms, computation " + toMs (policy.computation)
+                        + "ms, constraint " + toMs (policy.constraint) + "ms)").toStdString();
+            }
+        }
+       #endif
+
+        struct sched_param param;
+        int policy = 0;
+
+        if (pthread_getschedparam (pthread_self(), &policy, &param) != 0)
+            return "unknown";
+
+        const auto policyName = policy == SCHED_FIFO ? "SCHED_FIFO"
+                                                     : (policy == SCHED_RR ? "SCHED_RR"
+                                                                           : (policy == SCHED_OTHER ? "SCHED_OTHER (not real-time)"
+                                                                                                    : "unknown policy"));
+
+        return std::string (policyName) + ", priority " + std::to_string (param.sched_priority)
+                + " in the range " + std::to_string (sched_get_priority_min (policy))
+                + " to " + std::to_string (sched_get_priority_max (policy));
+    }
+
+    HighResolutionSleeper::HighResolutionSleeper() = default;
+    HighResolutionSleeper::~HighResolutionSleeper() = default;
+
+    void HighResolutionSleeper::sleepUntil (std::chrono::steady_clock::time_point wakeUpTime)
+    {
+        std::this_thread::sleep_until (wakeUpTime);
+    }
+
+    std::string HighResolutionSleeper::getDescription() const
+    {
+        return "std::this_thread::sleep_until";
+    }
+#endif
+
 } // namespace tracktion::inline graph

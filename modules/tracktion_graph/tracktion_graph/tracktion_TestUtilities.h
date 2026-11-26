@@ -12,6 +12,7 @@
 
 
 #include <numeric>
+#include <future>
 #include <juce_audio_formats/juce_audio_formats.h>
 #include "../../tracktion_engine/audio_files/formats/tracktion_FloatAudioFileFormat.h"
 
@@ -748,6 +749,24 @@ namespace test_utilities
             return performanceMeasurement.getStatisticsAndReset();
         }
 
+        /** Sets a number of blocks to process before the block timings start
+            being collected, so they aren't skewed by page faults and cold caches.
+            N.B. The statistics from getStatisticsAndReset always include every block.
+        */
+        void setNumWarmUpBlocks (int numBlocks)
+        {
+            numWarmUpBlocks = numBlocks;
+        }
+
+        /** Returns the timings of the blocks processed after the warm-up blocks. */
+        BlockTimingStatistics getBlockTimingStatistics() const
+        {
+            auto stats = blockTimings;
+            stats.blockPeriodSeconds = testSetup.blockSize / testSetup.sampleRate;
+            stats.numWarmUpBlocks = std::min (numWarmUpBlocks, numBlocksDone);
+            return stats;
+        }
+
         Node& getNode() const
         {
             return *player->getNode();
@@ -783,39 +802,7 @@ namespace test_utilities
         {
             for (;;)
             {
-                const ScopedPerformanceMeasurement spm (performanceMeasurement);
-
-                auto maxNumThisTime = testSetup.randomiseBlockSizes ? std::min (testSetup.random.nextInt ({ 1, testSetup.blockSize }), numSamplesToDo)
-                                                                    : std::min (testSetup.blockSize, numSamplesToDo);
-                auto numThisTime = std::min (maxNumSamples, maxNumThisTime);
-                midi.clear();
-
-                auto subSectionView = buffer.getStart ((choc::buffer::FrameCount) numThisTime);
-                subSectionView.clear();
-
-                const auto referenceSampleRange = juce::Range<int64_t>::withStartAndLength ((int64_t) numSamplesDone, (int64_t) numThisTime);
-
-                if (playHead)
-                    playHead->setReferenceSampleRange (referenceSampleRange);
-
-                numProcessMisses += player->process ({ (choc::buffer::FrameCount) numThisTime, referenceSampleRange, { subSectionView, midi } });
-
-                if (writer)
-                {
-                    auto audioBuffer = tracktion::graph::toAudioBuffer (subSectionView);
-                    writer->writeFromAudioSampleBuffer (audioBuffer, 0, audioBuffer.getNumSamples());
-                }
-
-                // Copy MIDI to buffer
-                for (const auto& m : midi)
-                {
-                    const int sampleNumber = (int) std::floor (m.getTimeStamp() * testSetup.sampleRate);
-                    context->midi.addEvent (m, numSamplesDone + sampleNumber);
-                }
-
-                numSamplesToDo -= numThisTime;
-                numSamplesDone += numThisTime;
-                maxNumSamples -=  numThisTime;
+                maxNumSamples -= processBlock (maxNumSamples);
 
                 if (maxNumSamples <= 0)
                     break;
@@ -827,6 +814,73 @@ namespace test_utilities
         std::shared_ptr<TestContext> processAll()
         {
             process (numSamplesToDo);
+            return getTestResult();
+        }
+
+        /** Processes all the blocks at the cadence a real audio device would
+            ask for them, on a dedicated high-priority thread.
+
+            The thread blocks until each block's deadline and then processes one
+            block, so the player's worker threads have to sleep and wake up
+            between blocks as they do in real use. As well as the time taken to
+            process each block, the block timings then hold how late the thread
+            woke up and how many blocks finished after the next one was due.
+            How long this takes in total isn't a useful measure.
+
+            N.B. No audio device is involved so, unlike in an app, the worker
+            threads don't join an audio workgroup on macOS.
+        */
+        std::shared_ptr<TestContext> processAllInRealTime()
+        {
+            blockTimings.isRealTime = true;
+            std::promise<void> priorityHasBeenSet;
+
+            std::thread driverThread ([this, &priorityHasBeenSet]
+            {
+                using Clock = std::chrono::steady_clock;
+                priorityHasBeenSet.get_future().wait();
+
+                const auto wasUpgraded = tryToUpgradeCurrentThreadToRealtime (juce::Thread::RealtimeOptions()
+                                                                                .withPriority (10)
+                                                                                .withApproximateAudioProcessingTime (testSetup.blockSize, testSetup.sampleRate));
+                juce::ignoreUnused (wasUpgraded);
+
+                HighResolutionSleeper sleeper;
+                blockTimings.driverThreadDescription = getCurrentThreadPriorityDescription() + ", " + sleeper.getDescription();
+
+                const auto period = std::chrono::duration_cast<Clock::duration> (std::chrono::duration<double> (testSetup.blockSize / testSetup.sampleRate));
+                auto deadline = Clock::now() + period;
+
+                while (numSamplesToDo > 0)
+                {
+                    sleeper.sleepUntil (deadline);
+                    const auto startTime = Clock::now();
+                    const auto isWarmUpBlock = numBlocksDone < numWarmUpBlocks;
+
+                    processBlock (testSetup.blockSize);
+
+                    const auto endTime = Clock::now();
+                    const auto nextDeadline = deadline + period;
+
+                    if (! isWarmUpBlock)
+                    {
+                        blockTimings.wakeUpLateness.addResult (std::chrono::duration<double> (startTime - deadline).count());
+
+                        if (endTime > nextDeadline)
+                            ++blockTimings.numMissedDeadlines;
+                    }
+
+                    // If this block overran, skip the blocks a device would have had to drop
+                    for (deadline = nextDeadline; deadline < endTime;)
+                        deadline += period;
+                }
+            });
+
+            const auto wasPrioritySet = setThreadPriority (driverThread, 10);
+            juce::ignoreUnused (wasPrioritySet);
+            priorityHasBeenSet.set_value();
+            driverThread.join();
+
             return getTestResult();
         }
 
@@ -852,6 +906,50 @@ namespace test_utilities
         }
 
     private:
+        /** Processes a single block and returns the number of samples processed. */
+        int processBlock (int maxNumSamples)
+        {
+            performanceMeasurement.start();
+
+            auto maxNumThisTime = testSetup.randomiseBlockSizes ? std::min (testSetup.random.nextInt ({ 1, testSetup.blockSize }), numSamplesToDo)
+                                                                : std::min (testSetup.blockSize, numSamplesToDo);
+            auto numThisTime = std::min (maxNumSamples, maxNumThisTime);
+            midi.clear();
+
+            auto subSectionView = buffer.getStart ((choc::buffer::FrameCount) numThisTime);
+            subSectionView.clear();
+
+            const auto referenceSampleRange = juce::Range<int64_t>::withStartAndLength ((int64_t) numSamplesDone, (int64_t) numThisTime);
+
+            if (playHead)
+                playHead->setReferenceSampleRange (referenceSampleRange);
+
+            numProcessMisses += player->process ({ (choc::buffer::FrameCount) numThisTime, referenceSampleRange, { subSectionView, midi } });
+
+            if (writer)
+            {
+                auto audioBuffer = tracktion::graph::toAudioBuffer (subSectionView);
+                writer->writeFromAudioSampleBuffer (audioBuffer, 0, audioBuffer.getNumSamples());
+            }
+
+            // Copy MIDI to buffer
+            for (const auto& m : midi)
+            {
+                const int sampleNumber = (int) std::floor (m.getTimeStamp() * testSetup.sampleRate);
+                context->midi.addEvent (m, numSamplesDone + sampleNumber);
+            }
+
+            numSamplesToDo -= numThisTime;
+            numSamplesDone += numThisTime;
+
+            performanceMeasurement.stop();
+
+            if (numBlocksDone++ >= numWarmUpBlocks)
+                blockTimings.addBlock (performanceMeasurement.getLastDurationSeconds(), numThisTime / testSetup.sampleRate);
+
+            return numThisTime;
+        }
+
         std::unique_ptr<NodePlayerType> player;
         TestSetup testSetup;
         const int numChannels;
@@ -869,6 +967,9 @@ namespace test_utilities
         int numProcessMisses = 0;
 
         PerformanceMeasurement performanceMeasurement { "TestProcess" , -1 };
+        BlockTimingStatistics blockTimings;
+        int numWarmUpBlocks = 0;
+        int numBlocksDone = 0;
     };
 
     template<typename NodePlayerType>

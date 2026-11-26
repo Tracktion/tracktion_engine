@@ -105,10 +105,13 @@ inline bool publishToBenchmarkAPI (juce::String apiKey, juce::String branchName,
 
 //==============================================================================
 //==============================================================================
-int main (int, char**)
+int main (int argc, char** argv)
 {
     ScopedJuceInitialiser_GUI init;
-    const auto anyFailed = TestRunner::runTests ({}, "tracktion_benchmarks", nullptr);
+
+    // Pass the name of a benchmark to run only that one, e.g. Benchmarks "Rack Benchmarks"
+    const auto anyFailed = argc > 1 ? TestRunner::runSingleTest ({}, juce::String (argv[1]))
+                                    : TestRunner::runTests ({}, "tracktion_benchmarks", nullptr);
     auto results = BenchmarkList::getInstance().getResults();
     
     for (const auto& r : results)
@@ -116,6 +119,9 @@ int main (int, char**)
                   << "\n\t" << r.description.description
                   << "\n\t[seconds]\t" << r.totalSeconds << "\t(min: " << r.minSeconds << ", max: " << r.maxSeconds  << ", mean: " << r.meanSeconds << ", var: " << r.varianceSeconds << ")"
                   << "\n\t[cycles]\t" << r.totalCycles << "\t(min: " << r.minCycles << ", max: " << r.maxCycles  << ", mean: " << r.meanCycles << ", var: " << r.varianceCycles << ")\n\n";
+
+    // These are only printed as the benchmark database doesn't have fields for them
+    std::cout << createBlockTimingTable (results) << "\n";
 
     if (publishToBenchmarkAPI (SystemStats::getEnvironmentVariable ("BM_API_KEY", {}),
                                SystemStats::getEnvironmentVariable ("BM_BRANCH_NAME", {}),
