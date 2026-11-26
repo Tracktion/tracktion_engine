@@ -130,6 +130,11 @@ jobs:
         id: generate
         shell: bash
         run: |
+          # The real-time benchmarks are off by default as they take over a minute
+          if [[ "${{ matrix.target }}" == "Benchmarks" ]]; then
+            export CXXFLAGS="-DENGINE_BENCHMARKS_RACKS_REALTIME=1"
+          fi
+
           cmake --preset ${{ matrix.config_preset }}
 
       # Build products
