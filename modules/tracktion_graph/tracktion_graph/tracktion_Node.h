@@ -124,6 +124,12 @@ struct NodeGraph
     std::unique_ptr<Node> rootNode;
     std::vector<Node*> orderedNodes;
     std::vector<NodeAndID> sortedNodes;
+
+    /** @internal
+        A count of the blocks processed which a player can share with the Nodes.
+        @see Node::setSharedBlockCounter
+    */
+    std::atomic<uint64_t> blockCounter { 1 };
 };
 
 
@@ -232,6 +238,24 @@ public:
 
     /** Call before processing the next block, used to reset the process status. */
     void prepareForNextBlock (juce::Range<int64_t> referenceSampleRange);
+
+    /** @internal
+        Players can give all the Nodes in a graph a counter which they change
+        before each block. A Node then only counts as processed if that happened
+        since the counter last changed, so the player resets every Node with a
+        single store rather than having to call prepareForNextBlock on each one.
+        The counter has to outlive the Node, or the Node be initialised again.
+        @see needsPreparingForEachBlock
+    */
+    void setSharedBlockCounter (const std::atomic<uint64_t>*);
+
+    /** @internal
+        Returns true if prepareForNextBlock still has to be called every block
+        for a Node with a shared block counter. That's the case if its buffers
+        are pooled or it overrides prefetchBlock, which is only known once
+        prepareForNextBlock has been called once.
+    */
+    bool needsPreparingForEachBlock() const;
 
     /** Call to process the node, which will in turn call the process method with the
         buffers to fill.
@@ -357,8 +381,11 @@ protected:
 
     /** Called before once on all Nodes before they are processed.
         This can be used to prefetch audio data or update mute statuses etc..
+
+        N.B. Don't call this base class method from your override. It records
+        that the Node doesn't use prefetchBlock so players can avoid calling it.
     */
-    virtual void prefetchBlock (juce::Range<int64_t> /*referenceSampleRange*/) {}
+    virtual void prefetchBlock (juce::Range<int64_t> /*referenceSampleRange*/)     { overridesPrefetchBlock = false; }
 
     /** Called when the node is to be processed.
         This should add in to the buffers available making sure not to change their size at all.
@@ -400,6 +427,9 @@ private:
     tracktion_engine::MidiMessageArray midiBuffer;
     std::atomic<int> numSamplesProcessed { 0 }, retainCount { 0 };
     bool usesRetainCount = false;
+    bool overridesPrefetchBlock = true;
+    const std::atomic<uint64_t>* sharedBlockCounter = nullptr;
+    std::atomic<uint64_t> blockLastProcessed { 0 };
     NodeOptimisations nodeOptimisations;
 
 
@@ -507,6 +537,9 @@ inline void Node::initialise (const PlaybackInitialisationInfo& info)
     // operations on each Node and its inputs every block
     usesRetainCount = static_cast<bool> (deallocateAudioBuffer);
 
+    // The player will set this again if it uses one
+    sharedBlockCounter = nullptr;
+
     directInputNodes = getDirectInputNodes();
 }
 
@@ -600,12 +633,28 @@ inline void Node::process (choc::buffer::FrameCount numSamples, juce::Range<int6
    #endif
 
     // N.B. This must be set last to release the Node back to the player
-    hasBeenProcessed.store (true, std::memory_order_release);
+    if (sharedBlockCounter != nullptr)
+        blockLastProcessed.store (sharedBlockCounter->load (std::memory_order_acquire), std::memory_order_release);
+    else
+        hasBeenProcessed.store (true, std::memory_order_release);
 }
 
 inline bool Node::hasProcessed() const
 {
+    if (sharedBlockCounter != nullptr)
+        return blockLastProcessed.load (std::memory_order_acquire) == sharedBlockCounter->load (std::memory_order_acquire);
+
     return hasBeenProcessed.load (std::memory_order_acquire);
+}
+
+inline void Node::setSharedBlockCounter (const std::atomic<uint64_t>* counter)
+{
+    sharedBlockCounter = counter;
+}
+
+inline bool Node::needsPreparingForEachBlock() const
+{
+    return usesRetainCount || overridesPrefetchBlock;
 }
 
 inline Node::AudioAndMidiBuffer Node::getProcessedOutput()

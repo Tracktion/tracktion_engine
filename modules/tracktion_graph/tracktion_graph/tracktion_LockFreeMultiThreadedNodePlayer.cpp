@@ -113,9 +113,30 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
     numSamplesToProcess = pc.numSamples;
     referenceSampleRange = pc.referenceSampleRange;
 
-    // Prepare all the nodes to be played back
-    for (auto node : preparedNode->graph->orderedNodes)
-        node->prepareForNextBlock (referenceSampleRange);
+    // Changing the block counter marks all of the Nodes as not processed, which
+    // avoids writing to every Node here after another thread has processed it
+    preparedNode->graph->blockCounter.fetch_add (1, std::memory_order_release);
+
+    // That leaves only the Nodes that prefetch or have pooled buffers to prepare
+    if (preparedNode->hasFoundNodesToPrepare)
+    {
+        for (auto node : preparedNode->nodesToPrepare)
+            node->prepareForNextBlock (referenceSampleRange);
+    }
+    else
+    {
+        // Which Nodes these are is only known once they've all been prepared once
+        // N.B. The capacity has been reserved so this won't allocate
+        for (auto node : preparedNode->graph->orderedNodes)
+        {
+            node->prepareForNextBlock (referenceSampleRange);
+
+            if (node->needsPreparingForEachBlock())
+                preparedNode->nodesToPrepare.push_back (node);
+        }
+
+        preparedNode->hasFoundNodesToPrepare = true;
+    }
 
     // We need to retain the root so we can get the output from it
     preparedNode->graph->rootNode->retain();
@@ -315,7 +336,12 @@ void LockFreeMultiThreadedNodePlayer::buildNodesOutputLists (PreparedNode& prepa
         preparedNode.playbackNodes.push_back (std::make_unique<PlaybackNode> (*n));
         n->internal = preparedNode.playbackNodes.back().get();
         n->numOutputNodes = 0;
+        n->setSharedBlockCounter (&preparedNode.graph->blockCounter);
     }
+
+    preparedNode.nodesToPrepare.clear();
+    preparedNode.nodesToPrepare.reserve (preparedNode.graph->orderedNodes.size());
+    preparedNode.hasFoundNodesToPrepare = false;
 
     // Iterate all nodes, for each input, add to the current Nodes output list
     for (auto node : preparedNode.graph->orderedNodes)
