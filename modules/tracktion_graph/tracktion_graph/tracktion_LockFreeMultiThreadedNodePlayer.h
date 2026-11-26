@@ -52,13 +52,20 @@ private:
     struct PlaybackNode
     {
         PlaybackNode (Node& n)
-            : node (n), numInputs (node.getDirectInputNodes().size())
+            : node (n), numInputs (node.getDirectInputNodes().size()),
+              numInputsToBeProcessed (numInputs)
         {}
 
         Node& node;
         const size_t numInputs;
         std::vector<Node*> outputs;
-        std::atomic<size_t> numInputsToBeProcessed { 0 };
+
+        /** This counts down as each input is processed. When it reaches 0 the
+            Node is ready to be processed and the thread that got it there
+            resets it to numInputs, ready for the next block. That avoids the
+            audio thread having to reset every Node at the start of each block.
+        */
+        std::atomic<size_t> numInputsToBeProcessed;
        #if JUCE_DEBUG
         // These are only used to check the queueing logic
         std::atomic<bool> hasBeenQueued { true };
@@ -70,6 +77,7 @@ private:
     {
         std::unique_ptr<NodeGraph> graph;
         std::vector<std::unique_ptr<PlaybackNode>> playbackNodes;
+        std::vector<Node*> leafNodes; /**< The Nodes with no inputs, which can be processed straight away. */
         std::unique_ptr<LockFreeFifo<Node*>> nodesReadyToBeProcessed;
         std::unique_ptr<AudioBufferPool> audioBufferPool;
     };
