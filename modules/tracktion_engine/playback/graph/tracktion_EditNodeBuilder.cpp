@@ -385,8 +385,8 @@ std::unique_ptr<tracktion::graph::Node> createFadeNodeForClip (AudioClipBase& cl
         const bool speedIn = clip.getFadeInBehaviour() == AudioClipBase::speedRamp && fIn > 0_td;
         const bool speedOut = clip.getFadeOutBehaviour() == AudioClipBase::speedRamp && fOut > 0_td;
 
-        const auto fadeInLength = speedIn ? juce::jmin (TimeDuration::fromSeconds (0.003), fIn) : fIn;
-        const auto fadeOutLength = speedOut ? juce::jmin (TimeDuration::fromSeconds (0.003), fOut) : fOut;
+        const auto fadeInLength = speedIn ? juce::jmin (TimeDuration (3ms), fIn) : fIn;
+        const auto fadeOutLength = speedOut ? juce::jmin (TimeDuration (3ms), fOut) : fOut;
 
         // A beat-based clip's fades move with it if the tempo changes
         if (clipTimeRangeToUse.isBeats())

@@ -1740,6 +1740,78 @@ TEST_SUITE ("tracktion_engine")
         CHECK (getLevel (*e.probes[0], start + 0.5, start + 2.5) == doctest::Approx (toneLevel / std::sqrt (2.0)).epsilon (0.1));
     }
 
+    TEST_CASE ("Tempo change: a beat-based audio clip's fades stay at its start and end")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        ProbedEdit e (engine);
+        auto& ts = e.getTempoSequence();
+        ts.getTempo (0)->set (0_bp, 120.0, 1.0f, false);
+        ts.updateTempoData();
+
+        auto addClip = [&] (BeatRange beats, TimeDuration fadeLength)
+        {
+            const TimeRange range (ts.toTime (beats.getStart()), ts.toTime (beats.getEnd()));
+            e.files.push_back (createToneFile (engine, beats.getLength().inBeats()));
+            auto clip = insertWaveClip (e.getTrack (0), {}, e.files.back()->getFile(), { range }, DeleteExistingClips::no);
+            makeBeatBased (*clip, beats.getLength().inBeats());
+            clip->setPosition ({ range });
+            clip->setFadeInType (AudioFadeCurve::linear);
+            clip->setFadeOutType (AudioFadeCurve::linear);
+            clip->setFadeIn (fadeLength);
+            clip->setFadeOut (fadeLength);
+        };
+
+        // The output time of a beat played after the tempo change
+        auto getOutputSeconds = [&] (BeatPosition beat) { return e.getOutputSeconds (0, ts.toTime (beat)); };
+
+        // The level around an output time, as a proportion of the tone's
+        auto getGain = [&] (double outputSeconds)
+        {
+            return getLevel (*e.probes[0], outputSeconds - 0.05, outputSeconds + 0.05) / (toneLevel / std::sqrt (2.0));
+        };
+
+        SUBCASE ("A tempo change before the clip")
+        {
+            addClip ({ 4_bp, 12_bp }, 1s);
+            e.getTransport().play (false);
+            e.process (1s);
+
+            // Halving the tempo at beat 2 moves the clip from 2-6s to 4-12s
+            e.setBpm (0, 60.0);
+            e.process (10.5s);
+
+            const auto start = getOutputSeconds (4_bp);
+            const auto end = getOutputSeconds (12_bp);
+            CHECK (end - start == doctest::Approx (8.0));
+
+            CHECK (getGain (start - 0.1) < 0.01);
+            CHECK (getGain (start + 0.75) == doctest::Approx (0.75).epsilon (0.15));
+            CHECK (getGain (start + 4.0) == doctest::Approx (1.0).epsilon (0.1));
+            CHECK (getGain (end - 0.5) == doctest::Approx (0.5).epsilon (0.15));
+            CHECK (getGain (end + 0.1) < 0.01);
+        }
+
+        SUBCASE ("A tempo change during the fade out")
+        {
+            // Beats 0-8, fading out from beat 4
+            addClip ({ 0_bp, 8_bp }, 2s);
+            e.getTransport().play (false);
+            e.process (3s);
+            CHECK (getGain (2.5) == doctest::Approx (0.75).epsilon (0.15));
+
+            // Halving the tempo at beat 6 leaves 2s to the clip's end rather than 1s. The fade's
+            // length is in time, so it carries on from where that puts it and still ends with the clip
+            e.setBpm (0, 60.0);
+            e.process (2.5s);
+
+            const auto end = getOutputSeconds (8_bp);
+            CHECK (end == doctest::Approx (5.0).epsilon (0.01));
+            CHECK (getGain (end - 1.0) == doctest::Approx (0.5).epsilon (0.15));
+            CHECK (getGain (end - 0.25) == doctest::Approx (0.125).epsilon (0.3));
+            CHECK (getGain (end + 0.1) < 0.01);
+        }
+    }
+
     TEST_CASE ("Tempo change: dragging a tempo in small steps keeps clips on their beats")
     {
         auto& engine = *Engine::getEngines()[0];
@@ -1889,6 +1961,92 @@ TEST_SUITE ("tracktion_engine")
         }
 
         CHECK (checkNoteBalance (e.probes[0]->events).empty());
+    }
+
+    TEST_CASE ("Tempo change: a launched clip and the metronome stay on the beat with the arrangement")
+    {
+        auto& engine = *Engine::getEngines()[0];
+        ProbedEdit e (engine, 2);
+        auto& ts = e.getTempoSequence();
+        ts.getTempo (0)->set (0_bp, 60.0, 1.0f, false);
+        ts.updateTempoData();
+
+        // A click on every beat, all the same so they start the same
+        e.edit->clickTrackEnabled = true;
+        e.edit->clickTrackEmphasiseBars = false;
+        e.edit->setClickTrackVolume (1.0f);
+
+        // A note on every beat in the arrangement
+        auto clip = insertMIDIClip (e.getTrack (0), { 0_tp, ts.toTime (24_bp) });
+        clip->setUsesProxy (false);
+
+        for (int beat = 0; beat < 24; ++beat)
+            clip->getSequence().addNote (60, BeatPosition::fromBeats (beat), 0.5_bd, 100, 0, nullptr);
+
+        // And in a launched clip, which loops every two
+        e.edit->getSceneList().ensureNumberOfScenes (1);
+        e.getTrack (1).getClipSlotList().ensureNumberOfSlots (1);
+        auto launched = insertMIDIClip (*e.getTrack (1).getClipSlotList().getClipSlots()[0], { 0_tp, ts.toTime (2_bp) });
+        launched->setUsesProxy (false);
+        launched->setLoopRangeBeats ({ 0_bp, 2_bp });
+
+        for (int beat = 0; beat < 2; ++beat)
+            launched->getSequence().addNote (60, BeatPosition::fromBeats (beat), 0.5_bd, 100, 0, nullptr);
+
+        e.getTransport().play (false);
+        e.process (0.5s);
+
+        // Launched on the next bar, as the clip launcher does, which is beat 4
+        const auto launchPosition = getNextQuantisedLaunchPosition (*e.edit, LaunchQType::bar);
+        REQUIRE (launchPosition);
+        launched->getLaunchHandle()->play (launchPosition->monotonicBeat);
+        e.process (5s);
+
+        // Speed up and slow down, between the beats
+        for (auto [bpm, duration] : { std::pair { 120.0, 1.6s }, std::pair { 90.0, 2.3s }, std::pair { 137.0, 2.9s } })
+        {
+            e.setBpm (0, bpm);
+            e.process (duration);
+        }
+
+        const auto arrangementOns = e.getNoteOns (0, 60);
+        const auto launchedOns = e.getNoteOns (1, 60);
+        REQUIRE (arrangementOns.size() >= 18);
+        REQUIRE (launchedOns.size() == arrangementOns.size() - 4);
+
+        const auto output = e.player.getOutput();
+        const auto click = output.getChannel (0);
+        REQUIRE ((int64_t) click.getNumFrames() == e.probes[0]->numSamplesProcessed);
+        std::optional<int64_t> firstClickOffset;
+
+        for (size_t i = 0; i < arrangementOns.size(); ++i)
+        {
+            CAPTURE (i);
+            const auto noteOn = arrangementOns[i].outputSample;
+            const auto beat = e.getEditBeat (0, noteOn);
+            REQUIRE (beat);
+            CHECK (*beat == doctest::Approx ((double) i).epsilon (0.00001));
+
+            // A launched clip's start can be a sample or two out (as the clip launcher fuzz allows)
+            if (i >= 4)
+                CHECK (std::abs (launchedOns[i - 4].outputSample - noteOn) <= 2.5);
+
+            // The click starts where the note does, give or take the silence at the start of its
+            // sample, which is the same for every click
+            const auto searchStart = std::max ((int64_t) 0, (int64_t) noteOn - 256);
+            auto clickStart = searchStart;
+
+            while (clickStart < (int64_t) click.getNumFrames() && std::abs (click.getSample (0, (uint32_t) clickStart)) < 0.02f)
+                ++clickStart;
+
+            const auto offset = clickStart - (int64_t) std::llround (noteOn);
+
+            if (! firstClickOffset)
+                firstClickOffset = offset;
+
+            CHECK (offset >= -1);
+            CHECK (std::abs (offset - *firstClickOffset) <= 2);
+        }
     }
 
     TEST_CASE ("PlayHead: a loop range change that leaves the playhead where it is isn't a jump")

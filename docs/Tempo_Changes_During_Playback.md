@@ -25,10 +25,11 @@ Changing the tempo whilst playing, e.g. dragging a tempo curve point, keeps play
 ## Tests
 
 - `playback/graph/tracktion_TempoChangePlayback.test.cpp`
-  - Regression tests for each of the above.
+  - Regression tests for each of the above, for a beat-based clip's fades moving with it, and for a launched clip and the metronome staying on the arrangement's beats.
   - A fuzz test: random tempo curves, arrangement and launched MIDI and audio clips, a random schedule of tempo changes, drags and moves, with and without the arrangement loop and graph rebuilds. A model of the playhead (on the same beat after every change, looping on the same beats) is checked against what each track's plugins get: every section's position, every note-on and note-off to a couple of samples, each beat-based clip's source position and its output's continuity. Set `TE_TEMPO_CHANGE_FUZZ_SEEDS` to run more seeds and `TE_TEMPO_CHANGE_FUZZ_SEED` to run one; `TE_TEMPO_CHANGE_FUZZ_DUMP` prints the sections around the first problem.
 - `playback/tracktion_TransportControl.test.cpp` and `tracktion_core/utilities/tracktion_Tempo.test.cpp` (`Position` following a replaced Sequence).
 
 ## Known limitations
 
 - It takes the time-stretcher's latency (longer the more it's stretched) to start a time-stretched beat-based clip. That isn't to do with tempo changes.
+- A fade's length is in time, so if the tempo changes while the playhead's in a beat-based clip's fade, its gain steps to where the clip's new start or end puts it.

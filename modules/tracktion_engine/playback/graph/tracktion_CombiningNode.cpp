@@ -21,7 +21,9 @@ namespace combining_node_utils
     static constexpr BeatDuration decayTimeAllowance { 8_bd };
 
     // Groups are in beats, as that's what the inputs' ranges are, so a tempo change doesn't
-    // put the playhead in a group that its inputs weren't added to
+    // put the playhead in a group that its inputs weren't added to. They only narrow down
+    // which inputs a block looks at, so their size isn't heard: 16 beats is the 8s they used
+    // to be at 120bpm, and a block only has to be shorter than the overlap between them
     static constexpr int beatsPerGroup = 16;
 
     static inline constexpr int beatToGroupIndex (BeatPosition b) noexcept
