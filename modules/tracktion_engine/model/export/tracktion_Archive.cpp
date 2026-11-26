@@ -363,7 +363,7 @@ bool ArchiveJob::copyToTempDir()
                                                                 f.itemDescription,
                                                                 f.itemCategory,
                                                                 true);
-                    exportablesToUpdate.push_back (ExportableUpdate (f.oldRef, destItem->getProjectItemRef()));
+                    exportablesToUpdate.push_back (ExportableUpdate { f.oldRef, destItem->getProjectItemRef() });
                 }
 
                 progress = 0.1f + (0.2f * (float) (i + 1) / (float) totalFiles);
