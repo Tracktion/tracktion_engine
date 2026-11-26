@@ -40,6 +40,26 @@ The transport re-sends the loop to the playhead periodically and moves it with i
 ___
 
 ### Change
+`TempoSequence::getBeatsPerSecondAt` is deprecated and replaced by `getQuarterNotesPerSecondAt` (the bpm / 60) and `getTimeSigBeatsPerSecondAt` (the beats `toBeats()` uses). The engine's own seconds to beats conversions on clips now use the beats `toBeats()` uses, or `toBeats()`/`toTime()` directly.
+
+#### Possible Issues
+With `EngineBehaviour::lengthOfOneBeatDependsOnTimeSignature()` true (the default), a beat is the time signature's beat, but `getBeatsPerSecondAt`'s default returned quarter notes. In any time signature whose denominator isn't 4 these now give different results from before:
+- MIDI and step clip `setLoopRange`/`getLoopStart`/`getLoopLength`, and `setNumberOfLoops` on MIDI, step and audio clips
+- audio clip loop beats from seconds (`setLoopRange`, `getLoopRange`, `getLoopStartBeats`/`getLoopLengthBeats` for time-based loops, toggling auto tempo)
+- the offset of a looped clip's second half after a split, and of a pasted clip
+- `TempoSequence::insertSpaceIntoSequence` and `PitchSequence::insertSpaceIntoSequence`
+
+In those signatures the old results disagreed with note positions and playback, e.g. `setLoopRange (0.5s..2s)` on a MIDI clip in 8/8 started the loop at half the intended beat. Separately, MIDI and step clip loop ranges in seconds, and clip offsets copied to the clipboard or wrapped on a split, are now converted with `toBeats()`/`toTime()` instead of the tempo at the clip start, so they also change in 4/4 when a tempo or time signature change falls inside them. Loop ranges already stored in beats are not changed, so a saved Edit plays as before; only the seconds reported for, or set from, them differ.
+
+#### Workaround
+Replace `getBeatsPerSecondAt (t)` with `getQuarterNotesPerSecondAt (t)` to compare tempos (e.g. with an audio file's tempo) and with `getTimeSigBeatsPerSecondAt (t)`, or better `toBeats()` on both ends of a span, to convert seconds to a `BeatPosition` or `BeatDuration`. `getBeatsPerSecondAt (t, true)` is `getTimeSigBeatsPerSecondAt (t)`.
+
+#### Rationale
+The two meanings of "beat" made it easy to convert with the wrong one, and every caller in the engine that converted a clip's seconds to beats used the quarter-note default. `TrackItem::getOffsetInBeats` doing so made dragging a MIDI note's end clamp it to 1 tick in x/8 time signatures (Tracktion/waveform_beta#1316). Separate names make the unit explicit, and the deprecation warning points out callers that still need to choose.
+
+___
+
+### Change
 A clip whose playback file can't be read, and that isn't going to generate one, no longer gets a node in the playback graph.
 
 #### Possible Issues

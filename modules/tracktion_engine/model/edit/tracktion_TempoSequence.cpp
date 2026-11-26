@@ -360,7 +360,7 @@ void TempoSequence::insertSpaceIntoSequence (TimePosition time, TimeDuration amo
 {
     // there may be a temp change at this time so we need to find the tempo to the left of it hence the nudge
     time = time - TimeDuration::fromSeconds (0.00001);
-    const auto beatsToInsert = BeatDuration::fromBeats (getBeatsPerSecondAt (time) * amountOfSpaceInSeconds.inSeconds());
+    const auto beatsToInsert = BeatDuration::fromBeats (getTimeSigBeatsPerSecondAt (time) * amountOfSpaceInSeconds.inSeconds());
 
     // Move timesig settings
     {
@@ -484,15 +484,21 @@ double TempoSequence::getBpmAt (TimePosition time) const
     return internalSequence.getBpmAt (time);
 }
 
+double TempoSequence::getQuarterNotesPerSecondAt (TimePosition time) const
+{
+    return getBpmAt (time) / 60.0;
+}
+
+double TempoSequence::getTimeSigBeatsPerSecondAt (TimePosition time) const
+{
+    updateTempoDataIfNeeded();
+    return internalSequence.getBeatsPerSecondAt (time).v;
+}
+
 double TempoSequence::getBeatsPerSecondAt (TimePosition time, bool lengthOfOneBeatDependsOnTimeSignature) const
 {
-    if (lengthOfOneBeatDependsOnTimeSignature)
-    {
-        updateTempoDataIfNeeded();
-        return internalSequence.getBeatsPerSecondAt (time).v;
-    }
-
-    return getBpmAt (time) / 60.0;
+    return lengthOfOneBeatDependsOnTimeSignature ? getTimeSigBeatsPerSecondAt (time)
+                                                 : getQuarterNotesPerSecondAt (time);
 }
 
 bool TempoSequence::isTripletsAtTime (TimePosition time) const
