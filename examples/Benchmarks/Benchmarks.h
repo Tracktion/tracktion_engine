@@ -89,7 +89,9 @@ inline bool publishToBenchmarkAPI (juce::String apiKey, juce::String branchName,
         std::cout << "HTTP status: " << statusCode << "\n"
                   << returnVal << "\n";
 
-        if (statusCode == 200 && returnVal.isEmpty())
+        // N.B. Don't require a 200 status here as older versions of the API
+        // can return a server error after successfully inserting the results
+        if (returnVal.isEmpty())
             return true;
     }
     else
