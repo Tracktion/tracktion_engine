@@ -29,6 +29,12 @@ namespace benchmark_utilities
 
     enum class ShareNodeMemory          { no, yes };
 
+    /** Whether to process blocks back to back as fast as possible or at the
+        cadence a real audio device would ask for them.
+        @see test_utilities::TestProcess::processAllInRealTime
+    */
+    enum class RealTime                 { no, yes };
+
     struct BenchmarkOptions
     {
         Edit* edit = nullptr;
@@ -39,7 +45,16 @@ namespace benchmark_utilities
         tracktion::graph::ThreadPoolStrategy poolType;
         PoolMemoryAllocations poolMemoryAllocations = PoolMemoryAllocations::no;
         ShareNodeMemory shareNodeMemory = ShareNodeMemory::no;
+        RealTime isRealTime = RealTime::no;
+        int numWarmUpBlocks = 32;           /**< Blocks to process before collecting the block timings. */
+        double durationToRender = 0.0;      /**< In seconds, or 0 to render the whole Edit. */
     };
+
+    inline double getDurationToRender (const BenchmarkOptions& opts)
+    {
+        return opts.durationToRender > 0.0 ? opts.durationToRender
+                                           : opts.edit->getLength().inSeconds();
+    }
 
     inline juce::String getDescription (const BenchmarkOptions& opts)
     {
@@ -59,6 +74,9 @@ namespace benchmark_utilities
         if (opts.isMultiThreaded == MultiThreaded::yes)
             s << ", " + graph::test_utilities::getName (opts.poolType);
 
+        if (opts.isRealTime == RealTime::yes)
+            s << ", real-time";
+
         return s;
     }
 
@@ -73,11 +91,36 @@ namespace benchmark_utilities
         return createNodeForEdit (edit, params);
     }
 
+    /** Renders all the blocks, then prints and adds the "rendering" result. */
+    template<typename NodePlayerType>
+    std::shared_ptr<tracktion::graph::test_utilities::TestContext> renderAndAddResult (const juce::String& editName, const juce::String& description,
+                                                                                       tracktion::graph::test_utilities::TestProcess<NodePlayerType>& testContext,
+                                                                                       RealTime isRealTime)
+    {
+        const StopwatchTimer sw;
+        auto result = isRealTime == RealTime::yes ? testContext.processAllInRealTime()
+                                                  : testContext.processAll();
+        const auto stats = testContext.getStatisticsAndReset();
+        const auto blockTimings = testContext.getBlockTimingStatistics();
+
+        BenchmarkList::getInstance().addResult (createBenchmarkResult (createBenchmarkDescription ("Node",
+                                                                                                   (editName + (isRealTime == RealTime::yes ? ": real-time rendering" : ": rendering")).toStdString(),
+                                                                                                   description.toStdString()),
+                                                                       stats, blockTimings));
+
+        std::cout << sw.getDescription() << "\n";
+        std::cout << stats.toString (testContext.getPerformanceMeasurement().getName()) << "\n";
+        std::cout << blockTimings.toString() << "\n";
+
+        return result;
+    }
+
     template<typename NodePlayerType>
     void prepareRenderAndDestroy (juce::UnitTest& ut, juce::String editName, juce::String description,
                                   tracktion::graph::test_utilities::TestProcess<NodePlayerType>& testContext,
                                   tracktion::graph::PlayHeadState& playHeadState,
-                                  MultiThreaded isMultiThreaded)
+                                  MultiThreaded isMultiThreaded,
+                                  RealTime isRealTime = RealTime::no)
     {
         description += ", " + juce::String (testContext.getDescription());
         ut.beginTest (editName + " - preparing: " + description);
@@ -105,17 +148,7 @@ namespace benchmark_utilities
         ut.expect (true);
 
         ut.beginTest (editName + " - rendering: " + description);
-        const StopwatchTimer sw;
-        auto result = testContext.processAll();
-        const auto stats = testContext.getStatisticsAndReset();
-
-        BenchmarkList::getInstance().addResult (createBenchmarkResult (createBenchmarkDescription ("Node",
-                                                                                                   (editName + ": rendering").toStdString(),
-                                                                                                   description.toStdString()),
-                                                                       stats));
-
-        std::cout << sw.getDescription() << "\n";
-        std::cout << stats.toString (testContext.getPerformanceMeasurement().getName()) << "\n";
+        auto result = renderAndAddResult (editName, description, testContext, isRealTime);
         ut.expect (true);
 
         ut.beginTest (editName + " - destroying: " + description);
@@ -150,7 +183,9 @@ namespace benchmark_utilities
             tracktion::graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::unique_ptr<Node>(),
                                                                                                                                    processState, opts.testSetup.sampleRate, opts.testSetup.blockSize,
                                                                                                                                    tracktion::graph::getPoolCreatorFunction (opts.poolType)),
-                                                                                           opts.testSetup, 2, opts.edit->getLength().inSeconds(), false);
+                                                                                           opts.testSetup, 2, getDurationToRender (opts), false);
+
+            testContext.setNumWarmUpBlocks (opts.numWarmUpBlocks);
 
             if (opts.poolMemoryAllocations == PoolMemoryAllocations::yes)
                 testContext.getNodePlayer().enablePooledMemoryAllocations (true);
@@ -163,13 +198,14 @@ namespace benchmark_utilities
                 testContext.setNode(std::move(node));
             }
 
-            prepareRenderAndDestroy (ut, opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);
+            prepareRenderAndDestroy (ut, opts.editName, description, testContext, playHeadState, opts.isMultiThreaded, opts.isRealTime);
         }
         else
         {
             tracktion::graph::test_utilities::TestProcess<MultiThreadedNodePlayer> testContext (std::make_unique<engine::MultiThreadedNodePlayer> (std::move (node), processState, opts.testSetup.sampleRate, opts.testSetup.blockSize),
-                                                                                                opts.testSetup, 2, opts.edit->getLength().inSeconds(), false);
-            prepareRenderAndDestroy (ut, opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);
+                                                                                                opts.testSetup, 2, getDurationToRender (opts), false);
+            testContext.setNumWarmUpBlocks (opts.numWarmUpBlocks);
+            prepareRenderAndDestroy (ut, opts.editName, description, testContext, playHeadState, opts.isMultiThreaded, opts.isRealTime);
         }
 
         ut.beginTest (opts.editName + " - cleanup: " + description);
@@ -193,7 +229,8 @@ namespace benchmark_utilities
     void prepareRenderAndDestroy (juce::String editName, juce::String description,
                                   tracktion::graph::test_utilities::TestProcess<NodePlayerType>& testContext,
                                   tracktion::graph::PlayHeadState& playHeadState,
-                                  MultiThreaded isMultiThreaded)
+                                  MultiThreaded isMultiThreaded,
+                                  RealTime isRealTime = RealTime::no)
     {
         description += ", " + juce::String (testContext.getDescription());
 
@@ -219,17 +256,7 @@ namespace benchmark_utilities
         }
 
         // rendering
-        const StopwatchTimer sw;
-        auto result = testContext.processAll();
-        const auto stats = testContext.getStatisticsAndReset();
-
-        BenchmarkList::getInstance().addResult (createBenchmarkResult (createBenchmarkDescription ("Node",
-                                                                                                   (editName + ": rendering").toStdString(),
-                                                                                                   description.toStdString()),
-                                                                       stats));
-
-        std::cout << sw.getDescription() << "\n";
-        std::cout << stats.toString (testContext.getPerformanceMeasurement().getName()) << "\n";
+        auto result = renderAndAddResult (editName, description, testContext, isRealTime);
 
         // destroying
         {
@@ -259,7 +286,9 @@ namespace benchmark_utilities
             tracktion::graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::unique_ptr<Node>(),
                                                                                                                                    processState, opts.testSetup.sampleRate, opts.testSetup.blockSize,
                                                                                                                                    tracktion::graph::getPoolCreatorFunction (opts.poolType)),
-                                                                                           opts.testSetup, 2, opts.edit->getLength().inSeconds(), false);
+                                                                                           opts.testSetup, 2, getDurationToRender (opts), false);
+
+            testContext.setNumWarmUpBlocks (opts.numWarmUpBlocks);
 
             if (opts.poolMemoryAllocations == PoolMemoryAllocations::yes)
                 testContext.getNodePlayer().enablePooledMemoryAllocations (true);
@@ -272,13 +301,14 @@ namespace benchmark_utilities
                 testContext.setNode(std::move(node));
             }
 
-            prepareRenderAndDestroy (opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);
+            prepareRenderAndDestroy (opts.editName, description, testContext, playHeadState, opts.isMultiThreaded, opts.isRealTime);
         }
         else
         {
             tracktion::graph::test_utilities::TestProcess<MultiThreadedNodePlayer> testContext (std::make_unique<engine::MultiThreadedNodePlayer> (std::move (node), processState, opts.testSetup.sampleRate, opts.testSetup.blockSize),
-                                                                                                opts.testSetup, 2, opts.edit->getLength().inSeconds(), false);
-            prepareRenderAndDestroy (opts.editName, description, testContext, playHeadState, opts.isMultiThreaded);
+                                                                                                opts.testSetup, 2, getDurationToRender (opts), false);
+            testContext.setNumWarmUpBlocks (opts.numWarmUpBlocks);
+            prepareRenderAndDestroy (opts.editName, description, testContext, playHeadState, opts.isMultiThreaded, opts.isRealTime);
         }
     }
    #endif // DOCTEST_LIBRARY_INCLUDED
