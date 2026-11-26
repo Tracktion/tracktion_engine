@@ -399,6 +399,7 @@ private:
     std::optional<choc::buffer::ChannelArrayView<float>> referencedViewToUse;
     tracktion_engine::MidiMessageArray midiBuffer;
     std::atomic<int> numSamplesProcessed { 0 }, retainCount { 0 };
+    bool usesRetainCount = false;
     NodeOptimisations nodeOptimisations;
 
 
@@ -500,13 +501,19 @@ inline void Node::initialise (const PlaybackInitialisationInfo& info)
         audioBuffer.resize (audioBufferSize);
     }
 
+    // Retaining Nodes only keeps their buffers alive until the Nodes using them
+    // have been processed. Buffers are only ever given back if they came from a
+    // pool so without one there's no need to count, which saves several atomic
+    // operations on each Node and its inputs every block
+    usesRetainCount = static_cast<bool> (deallocateAudioBuffer);
+
     directInputNodes = getDirectInputNodes();
 }
 
 inline void Node::prepareForNextBlock (juce::Range<int64_t> referenceSampleRange)
 {
     // Only do this once as prepare may be called multiple times
-    if (retainCount == 0)
+    if (usesRetainCount && retainCount == 0)
     {
         nodeToRelease.store (nullptr, std::memory_order_relaxed); // Reset in case the output node behaviour changes
 
@@ -577,10 +584,13 @@ inline void Node::process (choc::buffer::FrameCount numSamples, juce::Range<int6
     jassert (numChannelsBeforeProcessing == audioBuffer.getNumChannels());
     jassert (numSamplesBeforeProcessing == audioBuffer.getNumFrames());
 
-    release();
+    if (usesRetainCount)
+    {
+        release();
 
-    for (auto& n : directInputNodes)
-        n->release();
+        for (auto& n : directInputNodes)
+            n->release();
+    }
 
     // If you've set a new view with setAudioOutput, they must be the same size!
     jassert (destAudioView.getSize() == audioView.getSize());
@@ -629,7 +639,7 @@ inline bool Node::canShareOutputBuffer() const
 
 inline void Node::setBufferViewToUse (Node* sourceNode, const choc::buffer::ChannelArrayView<float>& view)
 {
-    if (sourceNode)
+    if (sourceNode && usesRetainCount)
     {
         sourceNode->retain();
         nodeToRelease.store (sourceNode, std::memory_order_relaxed);
@@ -644,7 +654,7 @@ inline void Node::setAudioOutput (Node* sourceNode, const choc::buffer::ChannelA
     {
         assert (sourceNode == node);
     }
-    else if (sourceNode)
+    else if (sourceNode && usesRetainCount)
     {
         sourceNode->retain();
         nodeToRelease.store (sourceNode, std::memory_order_relaxed);
