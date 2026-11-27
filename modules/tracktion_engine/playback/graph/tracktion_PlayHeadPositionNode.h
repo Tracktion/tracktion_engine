@@ -23,8 +23,9 @@ public:
           input (std::move (inputNode)),
           playHeadTime (playHeadTimeToUpdate)
     {
-        setOptimisations ({ ClearBuffers::no,
-                            AllocateAudioBuffer::no });
+        setOptimisations ({ .clear = ClearBuffers::no,
+                            .allocate = AllocateAudioBuffer::no,
+                            .prefetch = PrefetchBlock::no });
     }
 
     tracktion::graph::NodeProperties getNodeProperties() override

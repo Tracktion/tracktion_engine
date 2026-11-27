@@ -21,8 +21,9 @@ ChannelRemappingNode::ChannelRemappingNode (std::unique_ptr<tracktion::graph::No
     jassert (input != nullptr);
 
     // Need to clear buffers since we use add() for accumulation
-    setOptimisations ({ tracktion::graph::ClearBuffers::yes,
-                        tracktion::graph::AllocateAudioBuffer::yes });
+    setOptimisations ({ .clear = tracktion::graph::ClearBuffers::yes,
+                        .allocate = tracktion::graph::AllocateAudioBuffer::yes,
+                        .prefetch = tracktion::graph::PrefetchBlock::no });
 }
 
 ChannelRemappingNode::ChannelRemappingNode (std::unique_ptr<tracktion::graph::Node> processorNode,
@@ -48,8 +49,9 @@ ChannelRemappingNode::ChannelRemappingNode (std::unique_ptr<tracktion::graph::No
     if (! processorInputs.empty())
         originalInputNode = processorInputs[0];
 
-    setOptimisations ({ tracktion::graph::ClearBuffers::no,
-                        tracktion::graph::AllocateAudioBuffer::yes });
+    setOptimisations ({ .clear = tracktion::graph::ClearBuffers::no,
+                        .allocate = tracktion::graph::AllocateAudioBuffer::yes,
+                        .prefetch = tracktion::graph::PrefetchBlock::no });
 }
 
 //==============================================================================

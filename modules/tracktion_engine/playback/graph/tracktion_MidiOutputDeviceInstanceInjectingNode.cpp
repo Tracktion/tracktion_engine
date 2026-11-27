@@ -17,6 +17,7 @@ MidiOutputDeviceInstanceInjectingNode::MidiOutputDeviceInstanceInjectingNode (Mi
                                                                               tracktion::graph::PlayHead& playHeadToUse)
     : deviceInstance (instance), input (std::move (inputNode)), playHead (playHeadToUse)
 {
+    setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
 }
 
 //==============================================================================

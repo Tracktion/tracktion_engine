@@ -18,6 +18,7 @@ MidiInputDeviceNode::MidiInputDeviceNode (InputDeviceInstance& idi, MidiInputDev
       playHeadState (phs),
       targetID (targetID_)
 {
+    setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
 }
 
 MidiInputDeviceNode::~MidiInputDeviceNode()

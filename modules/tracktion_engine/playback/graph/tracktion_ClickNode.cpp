@@ -257,6 +257,7 @@ ClickNode::ClickNode (Edit& e, int numAudioChannels, bool isMidi, tracktion::gra
       clickGenerator (edit, isMidi),
       numChannels (numAudioChannels), generateMidi (isMidi)
 {
+    setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
 }
 
 std::vector<tracktion::graph::Node*> ClickNode::getDirectInputNodes()

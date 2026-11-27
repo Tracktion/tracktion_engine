@@ -137,8 +137,9 @@ FadeInOutNode::FadeInOutNode (std::unique_ptr<tracktion::graph::Node> inputNode,
       fadeOutType (fadeOutType_),
       clearExtraSamples (clearSamplesOutsideFade)
 {
-    setOptimisations ({ tracktion::graph::ClearBuffers::no,
-                        tracktion::graph::AllocateAudioBuffer::yes });
+    setOptimisations ({ .clear = tracktion::graph::ClearBuffers::no,
+                        .allocate = tracktion::graph::AllocateAudioBuffer::yes,
+                        .prefetch = tracktion::graph::PrefetchBlock::no });
 }
 
 //==============================================================================

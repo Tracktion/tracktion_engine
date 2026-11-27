@@ -1633,6 +1633,7 @@ WaveNode::WaveNode (const AudioFile& af,
      sourceChannels (channelSetToUse),
      destChannels (destChannelsToFill)
 {
+    setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
 }
 
 tracktion::graph::NodeProperties WaveNode::getNodeProperties()
@@ -1964,6 +1965,8 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
       pitchChangeSemitones (pitchChange),
       readAhead (readAhead_)
 {
+    setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
+
     // This won't work with invalid or non-existent files!
     jassert (! audioFile.isNull());
 
@@ -2008,6 +2011,8 @@ WaveNodeRealTime::WaveNodeRealTime (BeatConfig c)
       syncTempo (c.syncTempo),
       syncPitch (c.syncPitch)
 {
+    setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
+
     fileTempoSequence = std::make_shared<tempo::Sequence> (std::move (c.sourceFileTempoMap));
     fileTempoPosition = std::make_shared<tempo::Sequence::Position> (*fileTempoSequence);
 
@@ -2092,6 +2097,8 @@ WaveNodeRealTime::WaveNodeRealTime (const AudioFile& af,
       pitchChangeSemitones (pitchChange),
       readAhead (readAhead_)
 {
+    setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
+
     syncTempo = syncTempo_;
     syncPitch = syncPitch_;
 

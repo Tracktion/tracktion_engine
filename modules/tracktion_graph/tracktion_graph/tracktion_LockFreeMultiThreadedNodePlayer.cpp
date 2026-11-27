@@ -118,25 +118,8 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
     preparedNode->graph->blockCounter.fetch_add (1, std::memory_order_release);
 
     // That leaves only the Nodes that prefetch or have pooled buffers to prepare
-    if (preparedNode->hasFoundNodesToPrepare)
-    {
-        for (auto node : preparedNode->nodesToPrepare)
-            node->prepareForNextBlock (referenceSampleRange);
-    }
-    else
-    {
-        // Which Nodes these are is only known once they've all been prepared once
-        // N.B. The capacity has been reserved so this won't allocate
-        for (auto node : preparedNode->graph->orderedNodes)
-        {
-            node->prepareForNextBlock (referenceSampleRange);
-
-            if (node->needsPreparingForEachBlock())
-                preparedNode->nodesToPrepare.push_back (node);
-        }
-
-        preparedNode->hasFoundNodesToPrepare = true;
-    }
+    for (auto node : preparedNode->nodesToPrepare)
+        node->prepareForNextBlock (referenceSampleRange);
 
     // We need to retain the root so we can get the output from it
     preparedNode->graph->rootNode->retain();
@@ -339,9 +322,12 @@ void LockFreeMultiThreadedNodePlayer::buildNodesOutputLists (PreparedNode& prepa
         n->setSharedBlockCounter (&preparedNode.graph->blockCounter);
     }
 
+    // The Nodes have been initialised by now so this won't change
     preparedNode.nodesToPrepare.clear();
-    preparedNode.nodesToPrepare.reserve (preparedNode.graph->orderedNodes.size());
-    preparedNode.hasFoundNodesToPrepare = false;
+
+    for (auto n : preparedNode.graph->orderedNodes)
+        if (n->needsPreparingForEachBlock())
+            preparedNode.nodesToPrepare.push_back (n);
 
     // Iterate all nodes, for each input, add to the current Nodes output list
     for (auto node : preparedNode.graph->orderedNodes)

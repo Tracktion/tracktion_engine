@@ -15,8 +15,9 @@ namespace tracktion::inline engine {
 LiveMidiInjectingNode::LiveMidiInjectingNode (AudioTrack& at, std::unique_ptr<tracktion::graph::Node> inputNode)
     : track (at), input (std::move (inputNode))
 {
-    setOptimisations ({ tracktion::graph::ClearBuffers::no,
-                        tracktion::graph::AllocateAudioBuffer::no });
+    setOptimisations ({ .clear = tracktion::graph::ClearBuffers::no,
+                        .allocate = tracktion::graph::AllocateAudioBuffer::no,
+                        .prefetch = tracktion::graph::PrefetchBlock::no });
 
     track->addListener (this);
 }

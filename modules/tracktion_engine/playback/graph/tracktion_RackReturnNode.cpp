@@ -19,6 +19,8 @@ RackReturnNode::RackReturnNode (std::unique_ptr<Node> wetNode,
       wetGainFunction (std::move (wetGainFunc)),
       dryGainFunction (std::move (dryGainFunc))
 {
+    setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
+
     assert (wetInput);
     assert (wetGainFunction);
     assert (dryInput);
@@ -88,8 +90,9 @@ void RackReturnNode::prepareToPlay (const tracktion::graph::PlaybackInitialisati
     if (inputNumChannels >= desiredNumChannels)
     {
         canUseWetSourceBuffers = true;
-        setOptimisations ({ tracktion::graph::ClearBuffers::no,
-                            tracktion::graph::AllocateAudioBuffer::no });
+        setOptimisations ({ .clear = tracktion::graph::ClearBuffers::no,
+                            .allocate = tracktion::graph::AllocateAudioBuffer::no,
+                            .prefetch = tracktion::graph::PrefetchBlock::no });
     }
 }
 
