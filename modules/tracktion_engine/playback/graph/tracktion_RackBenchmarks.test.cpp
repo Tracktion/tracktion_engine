@@ -41,7 +41,9 @@ public:
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
 
         runRackMixBusTest (engine, ts);
-        runMultipleSerialRacksBenchmark (engine);
+
+        if (! isRealTimeOnly())
+            runMultipleSerialRacksBenchmark (engine);
     }
 
     void runRackMixBusTest (Engine& engine, graph::test_utilities::TestSetup ts)
@@ -200,6 +202,14 @@ public:
             expectEquals (edit->getLength().inSeconds(), fileLength);
         }
 
+       #if ENGINE_BENCHMARKS_RACKS_REALTIME
+        if (isRealTimeOnly())
+        {
+            runRackMixBusRealTimeBenchmark (*edit, editName, ts);
+            return;
+        }
+       #endif
+
         // Render single threaded first
         renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::no, LockFree::no, ThreadPoolStrategy::conditionVariable });
         renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::no, LockFree::yes, ThreadPoolStrategy::conditionVariable });
@@ -244,6 +254,12 @@ public:
        #endif
     }
 
+    /** Set the TE_RT_ONLY environment variable to only run the real-time benchmark. */
+    static bool isRealTimeOnly()
+    {
+        return juce::SystemStats::getEnvironmentVariable ("TE_RT_ONLY", {}).isNotEmpty();
+    }
+
    #if ENGINE_BENCHMARKS_RACKS_REALTIME
     /** Processes the Edit at the cadence of a real audio device to compare how
         reliably each thread pool strategy processes a block when its threads
@@ -256,7 +272,23 @@ public:
         using namespace benchmark_utilities;
         using namespace tracktion::graph;
         const double warmUpSeconds = 0.5;
-        const double measuredSeconds = 5.0;
+        const double measuredSeconds = juce::SystemStats::getEnvironmentVariable ("TE_RT_SECONDS", "5").getDoubleValue();
+
+        // The experimental strategies are included to compare how the threads
+        // are woken and suspended. Setting TE_RT_ROTATE changes the order so
+        // that the strategies aren't always measured in the same position
+        auto strategies = graph::test_utilities::getThreadPoolStrategies();
+
+        for (auto strategy : graph::test_utilities::getExperimentalThreadPoolStrategies())
+            strategies.push_back (strategy);
+
+        std::rotate (strategies.begin(),
+                     strategies.begin() + (juce::SystemStats::getEnvironmentVariable ("TE_RT_ROTATE", "0").getIntValue() % static_cast<int> (strategies.size())),
+                     strategies.end());
+
+        // Reports where the time in each block goes and the CPU time used
+        graph::wake_experiment::isEnabled = true;
+        const juce::ScopeGuard disableMeasurements { [] { graph::wake_experiment::isEnabled = false; } };
 
         for (int blockSize : { 128, 512 })
         {
@@ -273,7 +305,7 @@ public:
 
             opts.isMultiThreaded = MultiThreaded::yes;
 
-            for (auto strategy : graph::test_utilities::getThreadPoolStrategies())
+            for (auto strategy : strategies)
             {
                 opts.poolType = strategy;
                 renderEdit (*this, opts);

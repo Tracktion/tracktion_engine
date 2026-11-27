@@ -34,6 +34,9 @@ bool tryToUpgradeCurrentThreadToRealtime (const juce::Thread::RealtimeOptions&);
 */
 std::string getCurrentThreadPriorityDescription();
 
+/** Returns the CPU time used by all the threads of this process so far. */
+double getProcessCpuTimeSeconds();
+
 //==============================================================================
 /**
     Blocks a thread until a point in time using the most accurate timer the

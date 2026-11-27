@@ -30,8 +30,30 @@ LockFreeMultiThreadedNodePlayer::LockFreeMultiThreadedNodePlayer (ThreadPoolCrea
 
 LockFreeMultiThreadedNodePlayer::~LockFreeMultiThreadedNodePlayer()
 {
+    namespace we = wake_experiment;
+    const auto cpuSeconds = getProcessCpuTimeSeconds() - we::cpuSecondsAtStart;
+
     if (numThreadsToUse > 0)
         clearThreads();
+
+    if (we::numBlocks > 0)
+    {
+        const auto n = (double) we::numBlocks;
+        std::cout << "PHASES blocks=" << we::numBlocks
+                  << " cpu_us_per_block=" << 1.0e6 * cpuSeconds / n
+                  << " prepare_us=" << 1.0e6 * we::prepare / n
+                  << " reset_us=" << 1.0e6 * we::reset / n
+                  << " signal_us=" << 1.0e6 * we::signalTime / n
+                  << " processing_us=" << 1.0e6 * we::processing / n
+                  << " output_us=" << 1.0e6 * we::output / n
+                  << " wakes_per_block=" << (double) we::numWakes.load() / n
+                  << " empty_wakes_per_block=" << (double) we::numEmptyWakes.load() / n
+                  << " nodes_to_prepare=" << we::numToPrepare << "\n";
+        we::prepare = we::reset = we::signalTime = we::processing = we::output = 0;
+        we::numBlocks = 0;
+        we::numWakes = 0;
+        we::numEmptyWakes = 0;
+    }
 }
 
 void LockFreeMultiThreadedNodePlayer::setNumThreads (size_t newNumThreads)
@@ -113,6 +135,11 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
     numSamplesToProcess = pc.numSamples;
     referenceSampleRange = pc.referenceSampleRange;
 
+    wake_experiment::PhaseTimer phaseTimer;
+
+    if (phaseTimer.enabled && wake_experiment::numBlocks == 0)
+        wake_experiment::cpuSecondsAtStart = getProcessCpuTimeSeconds();
+
     // Changing the block counter marks all of the Nodes as not processed, which
     // avoids writing to every Node here after another thread has processed it
     preparedNode->graph->blockCounter.fetch_add (1, std::memory_order_release);
@@ -120,6 +147,9 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
     // That leaves only the Nodes that prefetch or have pooled buffers to prepare
     for (auto node : preparedNode->nodesToPrepare)
         node->prepareForNextBlock (referenceSampleRange);
+
+    wake_experiment::numToPrepare = (int64_t) preparedNode->nodesToPrepare.size();
+    phaseTimer.lap (wake_experiment::prepare);
 
     // We need to retain the root so we can get the output from it
     preparedNode->graph->rootNode->retain();
@@ -133,7 +163,9 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
     {
         // Reset the queue to be processed
         jassert (preparedNode->playbackNodes.size() == preparedNode->graph->orderedNodes.size());
+        isProcessingBlock.store (true, std::memory_order_release);
         resetProcessQueue (*preparedNode);
+        phaseTimer.lap (wake_experiment::reset);
 
         // Try to process Nodes until the root is ready
         for (;;)
@@ -144,7 +176,14 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
             if (! processNextFreeNode (*preparedNode))
                 threadPool->waitForFinalNode();
         }
+
+        isProcessingBlock.store (false, std::memory_order_release);
     }
+
+    phaseTimer.lap (wake_experiment::processing);
+
+    if (phaseTimer.enabled)
+        ++wake_experiment::numBlocks;
 
     // Add output from graph to buffers
     {
@@ -160,6 +199,7 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
 
     // We need to release the root to match the previous retain
     preparedNode->graph->rootNode->release();
+    phaseTimer.lap (wake_experiment::output);
 
     return -1;
 }
@@ -395,7 +435,11 @@ void LockFreeMultiThreadedNodePlayer::resetProcessQueue (PreparedNode& preparedN
     numNodesQueued += numNodesJustQueued;
 
     if (int numThreadsToSignal = (int) numNodesQueued.load(); numThreadsToSignal > 1)
+    {
+        wake_experiment::PhaseTimer signalTimer;
         threadPool->signal (numThreadsToSignal);
+        signalTimer.lap (wake_experiment::signalTime);
+    }
 }
 
 Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (PreparedNode& preparedNode, Node& node)

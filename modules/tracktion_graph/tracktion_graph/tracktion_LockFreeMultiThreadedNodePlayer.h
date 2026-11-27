@@ -21,6 +21,44 @@
 
 namespace tracktion::inline graph {
 
+/** @internal
+    Temporary measurements for comparing the experimental ThreadPoolStrategy
+    variants. These are only taken whilst isEnabled is set, which the real-time
+    Rack benchmark does, and assume only one player is processing at a time.
+*/
+namespace wake_experiment
+{
+    using Clock = std::chrono::steady_clock;
+    inline std::atomic<bool> isEnabled { false };
+    inline double prepare = 0, reset = 0, signalTime = 0, processing = 0, output = 0;
+    inline double cpuSecondsAtStart = 0;
+    inline int64_t numBlocks = 0, numToPrepare = 0;
+    inline std::atomic<int64_t> numWakes { 0 }, numEmptyWakes { 0 };
+
+    /** Adds the time since the last lap to a total. */
+    struct PhaseTimer
+    {
+        void lap (double& total)
+        {
+            if (! enabled)
+                return;
+
+            const auto now = Clock::now();
+            total += std::chrono::duration<double> (now - last).count();
+            last = now;
+        }
+
+        const bool enabled = isEnabled.load (std::memory_order_relaxed);
+        Clock::time_point last = enabled ? Clock::now() : Clock::time_point();
+    };
+
+    inline void count (std::atomic<int64_t>& counter)
+    {
+        if (isEnabled.load (std::memory_order_relaxed))
+            counter.fetch_add (1, std::memory_order_relaxed);
+    }
+}
+
 //==============================================================================
 //==============================================================================
 /**
@@ -156,6 +194,17 @@ public:
                 return false;
 
             return player.numNodesQueued == 0;
+        }
+
+        /** Returns true whilst the audio thread is processing a block. */
+        bool isBlockInProgress() const
+        {
+            return player.isProcessingBlock.load (std::memory_order_acquire);
+        }
+
+        int getNumNodesQueued() const
+        {
+            return static_cast<int> (player.numNodesQueued.load (std::memory_order_acquire));
         }
 
         /** Returns true if all the Nodes have been processed. */
@@ -317,6 +366,7 @@ private:
     AudioBufferPool* lastAudioBufferPoolPosted = nullptr;
 
     std::atomic<size_t> numNodesQueued { 0 };
+    std::atomic<bool> isProcessingBlock { false };
 
     //==============================================================================
     std::atomic<double> sampleRate { 44100.0 };

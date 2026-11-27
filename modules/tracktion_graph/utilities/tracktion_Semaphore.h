@@ -29,6 +29,7 @@ public:
     //==============================================================================
     /** Creates a semaphore with an initial count. */
     Semaphore (int initialCount = 0);
+    Semaphore (int initialCount, int /*maxSpins*/) : Semaphore (initialCount) {}
 
     /** Destructor. */
     ~Semaphore();
@@ -59,6 +60,9 @@ public:
         If the count goes above zero, this will signal waiting threads, unblocking them.
     */
     void signal (int count = 1);
+    void signalWakingAll (int count);
+    void signalCapped (int count);
+    void wakeAllWaiters();
 
 private:
     //==============================================================================
@@ -81,6 +85,7 @@ public:
     //==============================================================================
     /** Creates a semaphore with an initial count. */
     LightweightSemaphore (int initialCount = 0);
+    LightweightSemaphore (int initialCount, int maxSpins);
 
     /** Destructor. */
     ~LightweightSemaphore();
@@ -111,6 +116,9 @@ public:
         If the count goes above zero, this will signal waiting threads, unblocking them.
     */
     void signal (int count = 1);
+    void signalWakingAll (int count);
+    void signalCapped (int count);
+    void wakeAllWaiters();
 
 private:
     //==============================================================================

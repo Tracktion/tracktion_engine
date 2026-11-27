@@ -26,7 +26,17 @@ enum class ThreadPoolStrategy
     hybrid,                 /**< Uses a combination of the above, avoiding CVs on the audio thread. */
     semaphore,              /**< Uses a semaphore to suspend threads. */
     lightweightSemaphore,   /**< Uses a semaphore/spin mechanism to suspend threads.*/
-    lightweightSemHybrid    /**< Uses a combination of semaphores/spin and yields to suspend threads.*/
+    lightweightSemHybrid,   /**< Uses a combination of semaphores/spin and yields to suspend threads.*/
+
+    // Experimental variants for comparing how threads are woken and suspended
+    lightweightSemHybridWakeAll,    /**< lightweightSemHybrid, waking sleeping threads with a single call. */
+    lightweightSemHybridCascade,    /**< lightweightSemHybrid, waking two threads which each wake two more. */
+    lightweightSemHybridCapped,     /**< lightweightSemHybrid, without letting unused semaphore counts build up. */
+    lightweightSemHybridNoSemSpin,  /**< lightweightSemHybrid, without the semaphore spinning before it sleeps. */
+    lightweightSemaphoreNoSemSpin,  /**< lightweightSemaphore, without the semaphore spinning before it sleeps. */
+    blockEvent,                     /**< Threads sleep on a block counter as soon as there are no Nodes queued. */
+    blockEventHybrid,               /**< Threads spin while a block is being processed and sleep on a block counter between blocks. */
+    blockEventSpin                  /**< Threads never sleep. For measuring the cost of waking threads only. */
 };
 
 /** Returns a function to create a ThreadPool for the given stategy. */
