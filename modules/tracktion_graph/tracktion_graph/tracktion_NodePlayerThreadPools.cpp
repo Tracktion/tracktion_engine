@@ -458,6 +458,7 @@ struct SemPoolOptions
 
     Wake wake = Wake::each;
     int semaphoreSpins = 10'000;
+    bool yieldBeforeSleeping = true;    // Only used by ThreadPoolSemHybrid
 };
 
 template<typename SemaphoreType>
@@ -703,7 +704,10 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
             }
             else if (pauseCount < 50)
             {
-                std::this_thread::yield();
+                if (options.yieldBeforeSleeping)
+                    std::this_thread::yield();
+                else
+                    pause();
             }
             else
             {
@@ -945,6 +949,8 @@ LockFreeMultiThreadedNodePlayer::ThreadPoolCreator getPoolCreatorFunction (Threa
             return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSemHybrid<LightweightSemaphore>> (p, SemPoolOptions { .wake = SemPoolOptions::Wake::capped }); };
         case ThreadPoolStrategy::lightweightSemHybridNoSemSpin:
             return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSemHybrid<LightweightSemaphore>> (p, SemPoolOptions { .semaphoreSpins = 0 }); };
+        case ThreadPoolStrategy::lightweightSemHybridPause:
+            return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSemHybrid<LightweightSemaphore>> (p, SemPoolOptions { .yieldBeforeSleeping = false }); };
         case ThreadPoolStrategy::lightweightSemaphoreNoSemSpin:
             return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSem<LightweightSemaphore>> (p, SemPoolOptions { .semaphoreSpins = 0 }); };
         case ThreadPoolStrategy::blockEvent:

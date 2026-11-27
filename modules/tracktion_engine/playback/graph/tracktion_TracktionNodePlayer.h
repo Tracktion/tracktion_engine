@@ -42,8 +42,9 @@ public:
     TracktionNodePlayer (std::unique_ptr<tracktion::graph::Node> node,
                          ProcessState& processStateToUse,
                          double sampleRate, int blockSize,
-                         tracktion::graph::LockFreeMultiThreadedNodePlayer::ThreadPoolCreator poolCreator)
-        : TracktionNodePlayer (processStateToUse, std::move (poolCreator))
+                         tracktion::graph::LockFreeMultiThreadedNodePlayer::ThreadPoolCreator poolCreator,
+                         juce::AudioWorkgroup audioWorkgroup = {})
+        : TracktionNodePlayer (processStateToUse, std::move (poolCreator), std::move (audioWorkgroup))
     {
         nodePlayer.setNode (std::move (node), sampleRate, blockSize);
     }

@@ -232,6 +232,7 @@ namespace test_utilities
             case ThreadPoolStrategy::lightweightSemHybridCascade:   return "lwSemHybridCascade";
             case ThreadPoolStrategy::lightweightSemHybridCapped:    return "lwSemHybridCapped";
             case ThreadPoolStrategy::lightweightSemHybridNoSemSpin: return "lwSemHybridNoSemSpin";
+            case ThreadPoolStrategy::lightweightSemHybridPause:     return "lwSemHybridPause";
             case ThreadPoolStrategy::lightweightSemaphoreNoSemSpin: return "lwSemNoSemSpin";
             case ThreadPoolStrategy::blockEvent:                    return "blockEvent";
             case ThreadPoolStrategy::blockEventHybrid:              return "blockEventHybrid";
@@ -259,6 +260,7 @@ namespace test_utilities
                  ThreadPoolStrategy::lightweightSemHybridCascade,
                  ThreadPoolStrategy::lightweightSemHybridCapped,
                  ThreadPoolStrategy::lightweightSemHybridNoSemSpin,
+                 ThreadPoolStrategy::lightweightSemHybridPause,
                  ThreadPoolStrategy::lightweightSemaphoreNoSemSpin,
                  ThreadPoolStrategy::blockEvent,
                  ThreadPoolStrategy::blockEventHybrid,
@@ -779,6 +781,16 @@ namespace test_utilities
             numWarmUpBlocks = numBlocks;
         }
 
+        /** Sets a workgroup for the thread that processAllInRealTime uses to join
+            and tell about the deadline of each block. Give the same workgroup to
+            the player for its threads to join, as an app does with its audio
+            device's workgroup. This has to outlive this object.
+        */
+        void setRealTimeWorkgroup (RealTimeWorkgroup* workgroupToUse)
+        {
+            realTimeWorkgroup = workgroupToUse;
+        }
+
         /** Returns the timings of the blocks processed after the warm-up blocks. */
         BlockTimingStatistics getBlockTimingStatistics() const
         {
@@ -848,8 +860,9 @@ namespace test_utilities
             woke up and how many blocks finished after the next one was due.
             How long this takes in total isn't a useful measure.
 
-            N.B. No audio device is involved so, unlike in an app, the worker
-            threads don't join an audio workgroup on macOS.
+            N.B. No audio device is involved so, unlike in an app, the threads
+            aren't in an audio workgroup on macOS unless you provide one.
+            @see setRealTimeWorkgroup
         */
         std::shared_ptr<TestContext> processAllInRealTime()
         {
@@ -866,6 +879,15 @@ namespace test_utilities
                                                                                 .withApproximateAudioProcessingTime (testSetup.blockSize, testSetup.sampleRate));
                 juce::ignoreUnused (wasUpgraded);
 
+                // This has to be joined after the thread has been made real-time
+                juce::WorkgroupToken workgroupToken;
+
+                if (realTimeWorkgroup != nullptr)
+                    realTimeWorkgroup->getAudioWorkgroup().join (workgroupToken);
+
+                const auto hasJoinedWorkgroup = static_cast<bool> (workgroupToken);
+                int numBlocksWorkgroupRefused = 0;
+
                 HighResolutionSleeper sleeper;
                 blockTimings.driverThreadDescription = getCurrentThreadPriorityDescription() + ", " + sleeper.getDescription();
 
@@ -877,11 +899,17 @@ namespace test_utilities
                     sleeper.sleepUntil (deadline);
                     const auto startTime = Clock::now();
                     const auto isWarmUpBlock = numBlocksDone < numWarmUpBlocks;
+                    const auto nextDeadline = deadline + period;
+
+                    if (hasJoinedWorkgroup && ! realTimeWorkgroup->blockWillStart (nextDeadline - startTime))
+                        ++numBlocksWorkgroupRefused;
 
                     processBlock (testSetup.blockSize);
 
+                    if (hasJoinedWorkgroup)
+                        realTimeWorkgroup->blockDidFinish();
+
                     const auto endTime = Clock::now();
-                    const auto nextDeadline = deadline + period;
 
                     if (! isWarmUpBlock)
                     {
@@ -895,6 +923,11 @@ namespace test_utilities
                     for (deadline = nextDeadline; deadline < endTime;)
                         deadline += period;
                 }
+
+                if (hasJoinedWorkgroup)
+                    blockTimings.driverThreadDescription += ", in an audio workgroup"
+                                                              + (numBlocksWorkgroupRefused > 0 ? " which refused " + std::to_string (numBlocksWorkgroupRefused) + " blocks"
+                                                                                               : std::string());
             });
 
             const auto wasPrioritySet = setThreadPriority (driverThread, 10);
@@ -989,6 +1022,7 @@ namespace test_utilities
 
         PerformanceMeasurement performanceMeasurement { "TestProcess" , -1 };
         BlockTimingStatistics blockTimings;
+        RealTimeWorkgroup* realTimeWorkgroup = nullptr;
         int numWarmUpBlocks = 0;
         int numBlocksDone = 0;
     };

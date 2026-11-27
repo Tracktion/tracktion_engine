@@ -33,6 +33,7 @@ enum class ThreadPoolStrategy
     lightweightSemHybridCascade,    /**< lightweightSemHybrid, waking two threads which each wake two more. */
     lightweightSemHybridCapped,     /**< lightweightSemHybrid, without letting unused semaphore counts build up. */
     lightweightSemHybridNoSemSpin,  /**< lightweightSemHybrid, without the semaphore spinning before it sleeps. */
+    lightweightSemHybridPause,      /**< lightweightSemHybrid, pausing instead of yielding before it sleeps. */
     lightweightSemaphoreNoSemSpin,  /**< lightweightSemaphore, without the semaphore spinning before it sleeps. */
     blockEvent,                     /**< Threads sleep on a block counter as soon as there are no Nodes queued. */
     blockEventHybrid,               /**< Threads spin while a block is being processed and sleep on a block counter between blocks. */

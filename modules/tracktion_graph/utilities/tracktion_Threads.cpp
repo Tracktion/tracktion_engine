@@ -16,6 +16,17 @@
  #include <windows.h>
 #endif
 
+#if JUCE_MAC
+ #include <AudioToolbox/AudioWorkInterval.h>
+ #include <mach/mach_time.h>
+ #include <os/workgroup.h>
+
+ // JUCE defines this in an Objective-C++ file, where os_workgroup_t is a pointer
+ // to this type, so it has to be declared with it to be linked to from C++
+ struct OS_os_workgroup;
+ namespace juce { AudioWorkgroup makeRealAudioWorkgroup (OS_os_workgroup*); }
+#endif
+
 namespace tracktion::inline graph {
 
 #ifdef _WIN32
@@ -274,6 +285,84 @@ bool setCurrentThreadPriority (int priority)
     {
         return "std::this_thread::sleep_until";
     }
+#endif
+
+//==============================================================================
+#if JUCE_MAC
+struct RealTimeWorkgroup::Impl
+{
+    Impl()
+    {
+        if (__builtin_available (macOS 11.0, *))
+            workgroup = AudioWorkIntervalCreate ("tracktion_graph real-time workgroup", OS_CLOCK_MACH_ABSOLUTE_TIME, nullptr);
+
+        mach_timebase_info (&timebase);
+    }
+
+    ~Impl()
+    {
+        if (workgroup != nullptr)
+            os_release (workgroup);
+    }
+
+    os_workgroup_interval_t workgroup = nullptr;
+    mach_timebase_info_data_t timebase {};
+};
+
+RealTimeWorkgroup::RealTimeWorkgroup()
+    : impl (std::make_unique<Impl>())
+{
+}
+
+RealTimeWorkgroup::~RealTimeWorkgroup() = default;
+
+bool RealTimeWorkgroup::isValid() const
+{
+    return impl->workgroup != nullptr;
+}
+
+juce::AudioWorkgroup RealTimeWorkgroup::getAudioWorkgroup() const
+{
+    if (! isValid())
+        return {};
+
+    return juce::makeRealAudioWorkgroup (reinterpret_cast<OS_os_workgroup*> (impl->workgroup));
+}
+
+bool RealTimeWorkgroup::blockWillStart (std::chrono::duration<double> timeUntilDeadline)
+{
+    if (! isValid())
+        return false;
+
+    if (__builtin_available (macOS 11.0, *))
+    {
+        const auto nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds> (timeUntilDeadline).count();
+        const auto ticks = static_cast<uint64_t> (nanoseconds) * impl->timebase.denom / impl->timebase.numer;
+        const auto now = mach_absolute_time();
+
+        return os_workgroup_interval_start (impl->workgroup, now, now + ticks, nullptr) == 0;
+    }
+
+    return false;
+}
+
+void RealTimeWorkgroup::blockDidFinish()
+{
+    if (! isValid())
+        return;
+
+    if (__builtin_available (macOS 11.0, *))
+        juce::ignoreUnused (os_workgroup_interval_finish (impl->workgroup, nullptr));
+}
+#else
+struct RealTimeWorkgroup::Impl {};
+
+RealTimeWorkgroup::RealTimeWorkgroup() = default;
+RealTimeWorkgroup::~RealTimeWorkgroup() = default;
+bool RealTimeWorkgroup::isValid() const                                     { return false; }
+juce::AudioWorkgroup RealTimeWorkgroup::getAudioWorkgroup() const           { return {}; }
+bool RealTimeWorkgroup::blockWillStart (std::chrono::duration<double>)      { return false; }
+void RealTimeWorkgroup::blockDidFinish()                                    {}
 #endif
 
 } // namespace tracktion::inline graph

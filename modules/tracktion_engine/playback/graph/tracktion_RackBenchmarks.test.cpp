@@ -282,6 +282,21 @@ public:
         for (auto strategy : graph::test_utilities::getExperimentalThreadPoolStrategies())
             strategies.push_back (strategy);
 
+        // TE_RT_STRATEGIES can be set to a comma separated list of the names to run
+        if (const auto names = juce::StringArray::fromTokens (juce::SystemStats::getEnvironmentVariable ("TE_RT_STRATEGIES", {}), ",", {});
+            ! names.isEmpty())
+        {
+            std::erase_if (strategies, [&names] (auto strategy) { return ! names.contains (graph::test_utilities::getName (strategy)); });
+        }
+
+        if (strategies.empty())
+            return;
+
+        // On macOS the threads join a workgroup, as they would with an audio
+        // device, unless TE_RT_WORKGROUP is set to 0
+        graph::RealTimeWorkgroup workgroup;
+        const auto useWorkgroup = juce::SystemStats::getEnvironmentVariable ("TE_RT_WORKGROUP", "1").getIntValue() != 0;
+
         std::rotate (strategies.begin(),
                      strategies.begin() + (juce::SystemStats::getEnvironmentVariable ("TE_RT_ROTATE", "0").getIntValue() % static_cast<int> (strategies.size())),
                      strategies.end());
@@ -296,6 +311,7 @@ public:
 
             BenchmarkOptions opts { &edit, editName, ts, MultiThreaded::no, LockFree::yes, ThreadPoolStrategy::conditionVariable };
             opts.isRealTime = RealTime::yes;
+            opts.realTimeWorkgroup = useWorkgroup ? &workgroup : nullptr;
             opts.numWarmUpBlocks = juce::roundToInt (warmUpSeconds * ts.sampleRate / blockSize);
             opts.durationToRender = warmUpSeconds + measuredSeconds;
 

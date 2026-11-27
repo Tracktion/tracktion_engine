@@ -48,7 +48,16 @@ namespace benchmark_utilities
         RealTime isRealTime = RealTime::no;
         int numWarmUpBlocks = 32;           /**< Blocks to process before collecting the block timings. */
         double durationToRender = 0.0;      /**< In seconds, or 0 to render the whole Edit. */
+        graph::RealTimeWorkgroup* realTimeWorkgroup = nullptr; /**< For the threads to join when isRealTime is set, with the lock-free player. */
     };
+
+    inline bool usesRealTimeWorkgroup (const BenchmarkOptions& opts)
+    {
+        return opts.isRealTime == RealTime::yes
+            && opts.isLockFree == LockFree::yes
+            && opts.realTimeWorkgroup != nullptr
+            && opts.realTimeWorkgroup->isValid();
+    }
 
     inline double getDurationToRender (const BenchmarkOptions& opts)
     {
@@ -76,6 +85,9 @@ namespace benchmark_utilities
 
         if (opts.isRealTime == RealTime::yes)
             s << ", real-time";
+
+        if (usesRealTimeWorkgroup (opts))
+            s << ", workgroup";
 
         return s;
     }
@@ -182,10 +194,15 @@ namespace benchmark_utilities
             // N.B. Don't set the Node until after the pooled and shared options or they won't get picked up
             tracktion::graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::unique_ptr<Node>(),
                                                                                                                                    processState, opts.testSetup.sampleRate, opts.testSetup.blockSize,
-                                                                                                                                   tracktion::graph::getPoolCreatorFunction (opts.poolType)),
+                                                                                                                                   tracktion::graph::getPoolCreatorFunction (opts.poolType),
+                                                                                                                                   usesRealTimeWorkgroup (opts) ? opts.realTimeWorkgroup->getAudioWorkgroup()
+                                                                                                                                                                : juce::AudioWorkgroup()),
                                                                                            opts.testSetup, 2, getDurationToRender (opts), false);
 
             testContext.setNumWarmUpBlocks (opts.numWarmUpBlocks);
+
+            if (usesRealTimeWorkgroup (opts))
+                testContext.setRealTimeWorkgroup (opts.realTimeWorkgroup);
 
             if (opts.poolMemoryAllocations == PoolMemoryAllocations::yes)
                 testContext.getNodePlayer().enablePooledMemoryAllocations (true);
@@ -285,10 +302,15 @@ namespace benchmark_utilities
         {
             tracktion::graph::test_utilities::TestProcess<TracktionNodePlayer> testContext (std::make_unique<TracktionNodePlayer> (std::unique_ptr<Node>(),
                                                                                                                                    processState, opts.testSetup.sampleRate, opts.testSetup.blockSize,
-                                                                                                                                   tracktion::graph::getPoolCreatorFunction (opts.poolType)),
+                                                                                                                                   tracktion::graph::getPoolCreatorFunction (opts.poolType),
+                                                                                                                                   usesRealTimeWorkgroup (opts) ? opts.realTimeWorkgroup->getAudioWorkgroup()
+                                                                                                                                                                : juce::AudioWorkgroup()),
                                                                                            opts.testSetup, 2, getDurationToRender (opts), false);
 
             testContext.setNumWarmUpBlocks (opts.numWarmUpBlocks);
+
+            if (usesRealTimeWorkgroup (opts))
+                testContext.setRealTimeWorkgroup (opts.realTimeWorkgroup);
 
             if (opts.poolMemoryAllocations == PoolMemoryAllocations::yes)
                 testContext.getNodePlayer().enablePooledMemoryAllocations (true);
