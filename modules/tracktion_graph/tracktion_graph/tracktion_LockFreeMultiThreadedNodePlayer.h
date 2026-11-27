@@ -159,6 +159,12 @@ public:
         */
         virtual void signalAll() = 0;
 
+        /** Called by a thread that has queued Nodes for others to process part
+            way through a block. Subclasses can use this to wake threads that
+            went to sleep when there were no Nodes queued.
+        */
+        virtual void nodesQueuedDuringBlock (int /*numNodes*/) {}
+
         /** Called by the player when the audio thread has no free Nodes to process.
             Subclasses should can use this to either spin, pause or wait until a Node does
             become free or isFinalNodeReady returns true.
