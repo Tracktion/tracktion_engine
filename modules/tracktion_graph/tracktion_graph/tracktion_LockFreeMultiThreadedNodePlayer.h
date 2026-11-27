@@ -180,7 +180,13 @@ public:
             // current PreparedNode from pool threads so that
             // waitForThreadsToQuiesce can tell when a retired PreparedNode can
             // no longer be being read and is safe to destroy. The default
-            // sequentially-consistent ordering is required for that guarantee
+            // sequentially-consistent ordering is required for that guarantee.
+            // If nothing is queued the PreparedNode won't be read so return
+            // first, which stops threads that are waiting for Nodes from
+            // continually writing to a counter that all the threads share
+            if (player.numNodesQueued.load (std::memory_order_acquire) == 0)
+                return false;
+
             numActiveProcessCalls.fetch_add (1);
             bool processedAnyNodes = false;
 
