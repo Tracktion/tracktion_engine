@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <ctime>
+
 #ifdef _WIN32
  #include <windows.h>
 #endif
@@ -116,6 +118,25 @@ namespace tracktion::inline graph {
 bool setThreadPriority (std::thread& t, int priority)
 {
     return setThreadPriority (t.native_handle(), priority);
+}
+
+double getProcessCpuTimeSeconds()
+{
+   #ifdef _WIN32
+    FILETIME creationTime, exitTime, kernelTime, userTime;
+
+    if (! GetProcessTimes (GetCurrentProcess(), &creationTime, &exitTime, &kernelTime, &userTime))
+        return 0.0;
+
+    const auto toSeconds = [] (const FILETIME& ft)
+    {
+        return static_cast<double> ((static_cast<uint64_t> (ft.dwHighDateTime) << 32) | ft.dwLowDateTime) * 100.0e-9;
+    };
+
+    return toSeconds (kernelTime) + toSeconds (userTime);
+   #else
+    return static_cast<double> (std::clock()) / static_cast<double> (CLOCKS_PER_SEC);
+   #endif
 }
 
 bool setCurrentThreadPriority (int priority)

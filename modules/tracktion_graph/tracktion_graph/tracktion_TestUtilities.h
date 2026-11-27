@@ -228,6 +228,14 @@ namespace test_utilities
             case ThreadPoolStrategy::semaphore:             return "semaphore";
             case ThreadPoolStrategy::lightweightSemaphore:  return "lightweightSemaphore";
             case ThreadPoolStrategy::lightweightSemHybrid:  return "lightweightSemaphoreHybrid";
+            case ThreadPoolStrategy::lightweightSemHybridWakeAll:   return "lwSemHybridWakeAll";
+            case ThreadPoolStrategy::lightweightSemHybridCascade:   return "lwSemHybridCascade";
+            case ThreadPoolStrategy::lightweightSemHybridCapped:    return "lwSemHybridCapped";
+            case ThreadPoolStrategy::lightweightSemHybridNoSemSpin: return "lwSemHybridNoSemSpin";
+            case ThreadPoolStrategy::lightweightSemaphoreNoSemSpin: return "lwSemNoSemSpin";
+            case ThreadPoolStrategy::blockEvent:                    return "blockEvent";
+            case ThreadPoolStrategy::blockEventHybrid:              return "blockEventHybrid";
+            case ThreadPoolStrategy::blockEventSpin:                return "blockEventSpin";
         }
 
         jassertfalse;
@@ -242,6 +250,19 @@ namespace test_utilities
                  ThreadPoolStrategy::conditionVariable,
                  ThreadPoolStrategy::realTime,
                  ThreadPoolStrategy::hybrid };
+    }
+
+    /** The experimental strategies for comparing how threads are woken and suspended. */
+    inline std::vector<ThreadPoolStrategy> getExperimentalThreadPoolStrategies()
+    {
+        return { ThreadPoolStrategy::lightweightSemHybridWakeAll,
+                 ThreadPoolStrategy::lightweightSemHybridCascade,
+                 ThreadPoolStrategy::lightweightSemHybridCapped,
+                 ThreadPoolStrategy::lightweightSemHybridNoSemSpin,
+                 ThreadPoolStrategy::lightweightSemaphoreNoSemSpin,
+                 ThreadPoolStrategy::blockEvent,
+                 ThreadPoolStrategy::blockEventHybrid,
+                 ThreadPoolStrategy::blockEventSpin };
     }
 
     /** Logs the graph structure to the console. */

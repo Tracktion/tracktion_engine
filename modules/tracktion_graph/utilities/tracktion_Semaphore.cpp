@@ -46,6 +46,11 @@ void Semaphore::signal (int count)
     return pimpl->signal (count);
 }
 
+// These are only for the experimental pools which use LightweightSemaphore
+void Semaphore::signalWakingAll (int count) { pimpl->signal (count); }
+void Semaphore::signalCapped (int count)    { pimpl->signal (count); }
+void Semaphore::wakeAllWaiters()            {}
+
 
 //==============================================================================
 //==============================================================================
@@ -76,6 +81,15 @@ bool LightweightSemaphore::timed_wait (std::uint64_t usecs)
 void LightweightSemaphore::signal (int count)
 {
     return pimpl->signal (count);
+}
+
+void LightweightSemaphore::signalWakingAll (int count)  { pimpl->signalWakingAll (count); }
+void LightweightSemaphore::wakeAllWaiters()             { pimpl->wakeAllWaiters(); }
+void LightweightSemaphore::signalCapped (int count)     { pimpl->signalCapped (count); }
+
+LightweightSemaphore::LightweightSemaphore (int initialCount, int maxSpins)
+{
+    pimpl = std::make_unique<moodycamel::LightweightSemaphore> (initialCount, maxSpins);
 }
 
 } // namespace tracktion::inline graph
