@@ -53,6 +53,27 @@ cmaj::CacheDatabaseInterface::Ptr createCompilerCache (tracktion::Engine& engine
     return {};
 }
 
+/** Returns true if a rebuilt patch has parameter endpoints that differ from the
+    hosted parameters the plugin was created with.
+*/
+static bool hasParameterSetChanged (cmaj::plugin::SinglePatchJITPlugin& plugin)
+{
+    std::set<juce::String> endpointIDs, hostedIDs;
+
+    for (auto& p : plugin.patch->getParameterList())
+        endpointIDs.insert (juce::String (p->properties.endpointID));
+
+    // While a new build is being swapped in, the patch reports an empty list
+    if (endpointIDs.empty())
+        return false;
+
+    for (auto p : plugin.getParameters())
+        if (auto hosted = dynamic_cast<juce::HostedAudioProcessorParameter*> (p))
+            hostedIDs.insert (hosted->getParameterID());
+
+    return endpointIDs != hostedIDs;
+}
+
 std::unique_ptr<juce::AudioPluginFormat> createCmajorPatchPluginFormat (tracktion::Engine& engine)
 {
     TRACKTION_LOG ("Cmajor plugin format enabled");
@@ -71,7 +92,20 @@ std::unique_ptr<juce::AudioPluginFormat> createCmajorPatchPluginFormat (tracktio
                     {
                         plugin.suspendProcessing (true);
                         plugin.fillInPluginDescription (ex->desc);
-                        ex->forceFullReinitialise();
+
+                        // A fixed patch's hosted parameters can't be added to or removed
+                        // after it's created, so if the rebuild changed the set, the
+                        // instance has to be re-created for the host to see the new set.
+                        // That deletes this plugin, so it can't happen in its own callback.
+                        if (hasParameterSetChanged (plugin))
+                            juce::MessageManager::callAsync ([ref = makeSafeRef (*ex)]
+                                                             {
+                                                                 if (ref != nullptr)
+                                                                     ref->recreatePluginInstance();
+                                                             });
+                        else
+                            ex->forceFullReinitialise();
+
                         plugin.suspendProcessing (false);
                     }
                     else

@@ -529,6 +529,36 @@ TEST_SUITE ("tracktion_engine")
             CHECK(! volPlugin->isActiveParameter (*volParam));
         }
     }
+
+    TEST_CASE ("Clearing the parameter list drops active parameters")
+    {
+        // e.g. an ExternalPlugin rebuilding its list after the plugin's parameters change
+        struct TestItem  : public AutomatableEditItem
+        {
+            TestItem (Edit& e) : AutomatableEditItem (e, juce::ValueTree (IDs::PLUGIN)) {}
+            juce::String getName() const override   { return "Test"; }
+
+            using AutomatableEditItem::addAutomatableParameter;
+            using AutomatableEditItem::clearParameterList;
+        };
+
+        auto& engine = *Engine::getEngines()[0];
+        auto edit = engine::test_utilities::createTestEdit (engine, 1);
+
+        TestItem item (*edit);
+        AutomatableParameter::Ptr param (new AutomatableParameter ("p", "P", item, { 0.0f, 1.0f }));
+        item.addAutomatableParameter (param);
+
+        {
+            const AutomatableParameter::ScopedActiveParameter active (*param);
+            CHECK(item.isActiveParameter (*param));
+
+            item.clearParameterList();
+            CHECK(! item.isActiveParameter (*param));
+        }
+
+        CHECK_EQ (param->getReferenceCount(), 1);
+    }
 }
 #endif
 
