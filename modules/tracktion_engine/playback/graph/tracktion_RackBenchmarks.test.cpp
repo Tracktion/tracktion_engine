@@ -32,8 +32,10 @@ public:
     SyntheticLoadPlugin (PluginCreationInfo info)  : Plugin (info) {}
     ~SyntheticLoadPlugin() override                         { notifyListenersOfDeletion(); }
 
-    /** This takes about 50us for a 128 sample block on an M2 Max. */
-    static constexpr int iterationsPerSample = 250;
+    /** The work done for each sample, which has to be set before the Edit is
+        played back. 250 takes about 50us for a 128 sample block on an M2 Max.
+    */
+    int iterationsPerSample = 250;
 
     static const char* getPluginName()                      { return "Synthetic Load"; }
     static constexpr const char* xmlTypeName = "syntheticLoad";
@@ -68,13 +70,31 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SyntheticLoadPlugin)
 };
 
-/** Adds a SyntheticLoadPlugin to the start of a track's plugins. */
-inline void addSyntheticLoadPlugin (AudioTrack& track)
+/** Adds a SyntheticLoadPlugin to a track's plugins. An index of -1 adds it to the end. */
+inline void addSyntheticLoadPlugin (AudioTrack& track, int index, int iterationsPerSample)
 {
     track.edit.engine.getPluginManager().createBuiltInType<SyntheticLoadPlugin>();
     auto plugin = track.edit.getPluginCache().createNewPlugin (SyntheticLoadPlugin::xmlTypeName, {});
-    assert (plugin != nullptr);
-    track.pluginList.insertPlugin (*plugin, 0, nullptr);
+    auto loadPlugin = dynamic_cast<SyntheticLoadPlugin*> (plugin.get());
+
+    if (loadPlugin == nullptr)
+    {
+        assert (false);
+        return;
+    }
+
+    loadPlugin->iterationsPerSample = iterationsPerSample;
+    track.pluginList.insertPlugin (*plugin, index, nullptr);
+}
+
+/** Returns the ID of the Rack the track has an instance of, if it has one. */
+inline EditItemID getRackIDForTrack (AudioTrack& track)
+{
+    for (auto plugin : track.pluginList.getPlugins())
+        if (auto rackInstance = dynamic_cast<RackInstance*> (plugin))
+            return rackInstance->rackTypeID;
+
+    return {};
 }
 
 //==============================================================================
@@ -97,19 +117,43 @@ public:
 
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
 
-        runRackMixBusTest (engine, ts, SyntheticLoad::no);
-        runRackMixBusTest (engine, ts, SyntheticLoad::yes);
+        runRackMixBusTest (engine, ts, SyntheticLoad::none);
+
+        // These take too long in a debug build to be worth running there
+       #if ! JUCE_DEBUG
+        runRackMixBusTest (engine, ts, SyntheticLoad::allTracks);
+        runRackMixBusTest (engine, ts, SyntheticLoad::blockedRack);
+       #endif
 
         if (! isRealTimeOnly())
             runMultipleSerialRacksBenchmark (engine);
     }
 
-    /** Whether the first 16 audio tracks get a SyntheticLoadPlugin. Without them
-        the Edit only has cheap Nodes, so the results show the overhead of the
-        player. With them most of the time is spent in Nodes that can be processed
-        in parallel, as it is with an Edit full of plugins.
-    */
-    enum class SyntheticLoad { no, yes };
+    /** Which tracks get a SyntheticLoadPlugin. */
+    enum class SyntheticLoad
+    {
+        none,           /**< The Edit only has cheap Nodes, so the results show the
+                             overhead of the player. */
+        allTracks,      /**< Every audio track has a small load, so most of the time is
+                             spent in Nodes that can be processed in parallel, as it is
+                             with an Edit full of plugins. */
+        blockedRack     /**< One track has a large load in front of its Rack and all of
+                             the tracks sharing that Rack have a load after it. The
+                             threads run out of Nodes while the large load is processed
+                             and then several Nodes are ready at once. */
+    };
+
+    static const char* getEditName (SyntheticLoad syntheticLoad)
+    {
+        switch (syntheticLoad)
+        {
+            case SyntheticLoad::allTracks:      return "RackMixBusLoaded";
+            case SyntheticLoad::blockedRack:    return "RackMixBusBlocked";
+            case SyntheticLoad::none:           break;
+        }
+
+        return "RackMixBus";
+    }
 
     void runRackMixBusTest (Engine& engine, graph::test_utilities::TestSetup ts, SyntheticLoad syntheticLoad)
     {
@@ -248,7 +292,7 @@ public:
         249,225,73,19,199,49,72,45,146,45,45,77,54,184,49,40,190,15,202,118,12,198,79,29,232,198,32,205,236,198,64,96,243,195,35,136,227,24,8,139,100,19,165,201,6,55,6,89,82,101,12,198,74,180,110,12,228,85,183,213,24,100,204,252,240,100,220,113,12,50,243,100,
         67,73,105,178,129,141,129,60,41,87,57,39,175,26,3,89,180,173,198,64,198,157,197,225,201,220,198,0,33,243,100,67,168,52,217,220,199,224,255,1,148,170,60,43,0,0 };
 
-        const auto editName = syntheticLoad == SyntheticLoad::yes ? "RackMixBusLoaded" : "RackMixBus";
+        const auto editName = getEditName (syntheticLoad);
 
         // TE_RACK_EDITS can be set to a comma separated list of the Edit names to run
         if (const auto names = juce::StringArray::fromTokens (juce::SystemStats::getEnvironmentVariable ("TE_RACK_EDITS", {}), ",", {});
@@ -275,15 +319,40 @@ public:
             expectEquals (edit->getLength().inSeconds(), fileLength);
         }
 
-        if (syntheticLoad == SyntheticLoad::yes)
+        if (syntheticLoad == SyntheticLoad::allTracks)
         {
             beginTest ("Add synthetic load");
-            const int numTracksToLoad = 16;
-            const auto audioTracks = getAudioTracks (*edit);
-            expectGreaterOrEqual (audioTracks.size(), numTracksToLoad);
 
-            for (int i = 0; i < numTracksToLoad; ++i)
-                addSyntheticLoadPlugin (*audioTracks[i]);
+            // About 10us for each track with a 128 sample block
+            for (auto at : getAudioTracks (*edit))
+                addSyntheticLoadPlugin (*at, 0, 50);
+        }
+        else if (syntheticLoad == SyntheticLoad::blockedRack)
+        {
+            beginTest ("Add synthetic load");
+            juce::Array<AudioTrack*> tracksSharingRack;
+
+            for (auto at : getAudioTracks (*edit))
+                if (const auto rackID = getRackIDForTrack (*at); rackID.isValid())
+                    if (tracksSharingRack.isEmpty() || rackID == getRackIDForTrack (*tracksSharingRack.getFirst()))
+                        tracksSharingRack.add (at);
+
+            expectGreaterOrEqual (tracksSharingRack.size(), 4);
+            logMessage (juce::String (tracksSharingRack.size()) + " tracks share the blocked Rack");
+
+            // The Rack can't be processed until this has finished, which
+            // takes about 375us with a 128 sample block
+            if (! tracksSharingRack.isEmpty())
+                addSyntheticLoadPlugin (*tracksSharingRack.getFirst(), 0, 2000);
+
+            // These are after the Rack and take about 50us each
+            for (auto at : tracksSharingRack)
+            {
+                addSyntheticLoadPlugin (*at, -1, 250);
+
+                const auto plugins = at->pluginList.getPlugins();
+                expect (dynamic_cast<SyntheticLoadPlugin*> (plugins.getLast().get()) != nullptr);
+            }
         }
 
        #if ENGINE_BENCHMARKS_RACKS_REALTIME
@@ -294,7 +363,7 @@ public:
         }
        #endif
 
-        if (syntheticLoad == SyntheticLoad::yes)
+        if (syntheticLoad != SyntheticLoad::none)
         {
             // Single threaded first, then with each strategy
             renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::no, LockFree::yes, ThreadPoolStrategy::conditionVariable });
