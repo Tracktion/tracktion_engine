@@ -26,6 +26,8 @@ ModifierNode::ModifierNode (std::unique_ptr<Node> inputNode,
       isRendering (rendering),
       clearOutputs (clearOutputs_)
 {
+    setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
+
     jassert (input != nullptr);
     jassert (modifier != nullptr);
     initialiseModifier (sampleRateToUse, blockSizeToUse);
@@ -39,6 +41,8 @@ ModifierNode::ModifierNode (std::unique_ptr<Node> inputNode,
       modifier (std::move (modifierToProcess)),
       audioRenderContextProvider (std::move (contextProvider))
 {
+    setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
+
     jassert (input != nullptr);
     jassert (modifier != nullptr);
     initialiseModifier (sampleRateToUse, blockSizeToUse);

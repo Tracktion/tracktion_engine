@@ -14,8 +14,9 @@ namespace tracktion::inline engine {
 LevelMeasuringNode::LevelMeasuringNode (std::unique_ptr<tracktion::graph::Node> inputNode, LevelMeasurer& measurer)
     : input (std::move (inputNode)), levelMeasurer (measurer)
 {
-    setOptimisations ({ tracktion::graph::ClearBuffers::no,
-                        tracktion::graph::AllocateAudioBuffer::no });
+    setOptimisations ({ .clear = tracktion::graph::ClearBuffers::no,
+                        .allocate = tracktion::graph::AllocateAudioBuffer::no,
+                        .prefetch = tracktion::graph::PrefetchBlock::no });
 }
 
 tracktion::graph::NodeProperties LevelMeasuringNode::getNodeProperties()

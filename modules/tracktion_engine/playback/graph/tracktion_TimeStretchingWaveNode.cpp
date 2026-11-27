@@ -19,6 +19,8 @@ TimeStretchingWaveNode::TimeStretchingWaveNode (AudioClipBase& clip, tracktion::
       sampleRate (fileInfo.sampleRate),
       fifo ((choc::buffer::ChannelCount) std::max (1, fileInfo.numChannels), 8192)
 {
+    setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
+
     CRASH_TRACER
 
     reader = c.edit.engine.getAudioFileManager().cache.createReader (file);

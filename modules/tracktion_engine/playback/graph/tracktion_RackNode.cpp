@@ -25,6 +25,8 @@ public:
         : input (std::move (inputNode)),
           inputProvider (std::move (inputProviderToUse))
     {
+        setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
+
         assert (input);
         assert (inputProvider);
     }
@@ -72,6 +74,7 @@ public:
           numChannels (numAudioChannels),
           hasMidi (hasMidiInput)
     {
+        setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
     }
 
     InputNode (std::shared_ptr<InputProvider> inputProviderToUse)
@@ -80,6 +83,7 @@ public:
                                                              : inputProvider->audio.getNumChannels())),
           hasMidi (true)
     {
+        setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
     }
 
     void setInputDependancy (Node* dependancy)
@@ -167,6 +171,7 @@ public:
         : nodes (std::move (nodesToStore)),
           nodeID ((size_t) rackID.getRawID())
     {
+        setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
     }
 
     tracktion::graph::NodeProperties getNodeProperties() override

@@ -20,9 +20,10 @@ TrackMidiInputDeviceNode::TrackMidiInputDeviceNode (MidiInputDevice& owner, std:
 {
     jassert (midiInputDevice.isTrackDevice());
 
-    setOptimisations ({ tracktion::graph::ClearBuffers::yes,
-                        copyInputsToOutputs ? tracktion::graph::AllocateAudioBuffer::no
-                                            : tracktion::graph::AllocateAudioBuffer::yes });
+    setOptimisations ({ .clear = tracktion::graph::ClearBuffers::yes,
+                        .allocate = copyInputsToOutputs ? tracktion::graph::AllocateAudioBuffer::no
+                                                        : tracktion::graph::AllocateAudioBuffer::yes,
+                        .prefetch = tracktion::graph::PrefetchBlock::no });
 }
 
 std::vector<tracktion::graph::Node*> TrackMidiInputDeviceNode::getDirectInputNodes()

@@ -21,11 +21,16 @@ namespace tracktion::inline graph {
 class SummingNode final : public Node
 {
 public:
-    SummingNode() = default;
+    SummingNode()
+    {
+        setOptimisations ({ .prefetch = PrefetchBlock::no });
+    }
 
     SummingNode (std::vector<std::unique_ptr<Node>> inputs)
         : ownedNodes (std::move (inputs))
     {
+        setOptimisations ({ .prefetch = PrefetchBlock::no });
+
         for (auto& ownedNode : ownedNodes)
             nodes.push_back (ownedNode.get());
 
@@ -35,6 +40,8 @@ public:
     SummingNode (std::vector<Node*> inputs)
         : nodes (std::move (inputs))
     {
+        setOptimisations ({ .prefetch = PrefetchBlock::no });
+
         assert (std::find (nodes.begin(), nodes.end(), nullptr) == nodes.end());
     }
 

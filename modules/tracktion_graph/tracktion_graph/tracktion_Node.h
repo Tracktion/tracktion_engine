@@ -191,12 +191,19 @@ enum class ShareOutputBuffer : std::uint8_t
     yes /**< Downstream Nodes may adopt this Node's output buffer and process in place, overwriting its contents. */
 };
 
+enum class PrefetchBlock : std::uint8_t
+{
+    no, /**< Don't call prefetchBlock, your subclass doesn't override it. This lets players skip the Node when preparing each block. */
+    yes /**< Do call prefetchBlock on the Node before each block is processed. */
+};
+
 /** Holds some hints that _might_ be used by the Node or players to improve efficiency. */
 struct NodeOptimisations
 {
     ClearBuffers clear = ClearBuffers::yes;
     AllocateAudioBuffer allocate = AllocateAudioBuffer::yes;
     ShareOutputBuffer share = ShareOutputBuffer::yes;
+    PrefetchBlock prefetch = PrefetchBlock::yes;
 };
 
 //==============================================================================
@@ -252,8 +259,9 @@ public:
     /** @internal
         Returns true if prepareForNextBlock still has to be called every block
         for a Node with a shared block counter. That's the case if its buffers
-        are pooled or it overrides prefetchBlock, which is only known once
-        prepareForNextBlock has been called once.
+        are pooled or it hasn't opted out of prefetchBlock, which is known once
+        the Node has been initialised.
+        @see PrefetchBlock
     */
     bool needsPreparingForEachBlock() const;
 
@@ -382,10 +390,10 @@ protected:
     /** Called before once on all Nodes before they are processed.
         This can be used to prefetch audio data or update mute statuses etc..
 
-        N.B. Don't call this base class method from your override. It records
-        that the Node doesn't use prefetchBlock so players can avoid calling it.
+        If you don't override this, set PrefetchBlock::no with setOptimisations
+        so that players don't have to visit the Node before each block.
     */
-    virtual void prefetchBlock (juce::Range<int64_t> /*referenceSampleRange*/)     { overridesPrefetchBlock = false; }
+    virtual void prefetchBlock (juce::Range<int64_t> /*referenceSampleRange*/) {}
 
     /** Called when the node is to be processed.
         This should add in to the buffers available making sure not to change their size at all.
@@ -427,7 +435,6 @@ private:
     tracktion_engine::MidiMessageArray midiBuffer;
     std::atomic<int> numSamplesProcessed { 0 }, retainCount { 0 };
     bool usesRetainCount = false;
-    bool overridesPrefetchBlock = true;
     const std::atomic<uint64_t>* sharedBlockCounter = nullptr;
     std::atomic<uint64_t> blockLastProcessed { 0 };
     NodeOptimisations nodeOptimisations;
@@ -557,7 +564,9 @@ inline void Node::prepareForNextBlock (juce::Range<int64_t> referenceSampleRange
     }
 
     hasBeenProcessed.store (false, std::memory_order_release);
-    prefetchBlock (referenceSampleRange);
+
+    if (nodeOptimisations.prefetch == PrefetchBlock::yes)
+        prefetchBlock (referenceSampleRange);
 }
 
 inline void Node::process (choc::buffer::FrameCount numSamples, juce::Range<int64_t> referenceSampleRange)
@@ -654,7 +663,7 @@ inline void Node::setSharedBlockCounter (const std::atomic<uint64_t>* counter)
 
 inline bool Node::needsPreparingForEachBlock() const
 {
-    return usesRetainCount || overridesPrefetchBlock;
+    return usesRetainCount || nodeOptimisations.prefetch == PrefetchBlock::yes;
 }
 
 inline Node::AudioAndMidiBuffer Node::getProcessedOutput()

@@ -16,11 +16,14 @@ TrackWaveInputDeviceNode::TrackWaveInputDeviceNode (ProcessState& processState_,
     : TracktionEngineNode (processState_),
       waveInputDevice (owner), input (std::move (inputNode)), copyInputsToOutputs (copyInputsToOutputs_)
 {
+    setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
+
     jassert (waveInputDevice.isTrackDevice());
 
     if (copyInputsToOutputs)
-        setOptimisations ({ tracktion::graph::ClearBuffers::no,
-                            tracktion::graph::AllocateAudioBuffer::no });
+        setOptimisations ({ .clear = tracktion::graph::ClearBuffers::no,
+                            .allocate = tracktion::graph::AllocateAudioBuffer::no,
+                            .prefetch = tracktion::graph::PrefetchBlock::no });
 }
 
 std::vector<tracktion::graph::Node*> TrackWaveInputDeviceNode::getDirectInputNodes()

@@ -44,7 +44,7 @@ class ConnectedNode : public Node
 {
 public:
     /** Creates a ConnectedNode with no connections. */
-    ConnectedNode() = default;
+    ConnectedNode() : ConnectedNode (0) {}
 
     /** Creates a ConnectedNode with no connections but a base nodeID. */
     ConnectedNode (size_t nodeID);
@@ -100,6 +100,7 @@ private:
 inline ConnectedNode::ConnectedNode (size_t nodeIDToUse)
     : nodeID (nodeIDToUse)
 {
+    setOptimisations ({ .prefetch = PrefetchBlock::no });
 }
 
 inline bool ConnectedNode::addAudioConnection (std::shared_ptr<Node> input, ChannelConnection newConnection)

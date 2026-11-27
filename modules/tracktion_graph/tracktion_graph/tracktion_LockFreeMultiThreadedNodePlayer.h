@@ -79,7 +79,6 @@ private:
         std::vector<std::unique_ptr<PlaybackNode>> playbackNodes;
         std::vector<Node*> leafNodes; /**< The Nodes with no inputs, which can be processed straight away. */
         std::vector<Node*> nodesToPrepare; /**< The Nodes which need prepareForNextBlock calling each block. */
-        bool hasFoundNodesToPrepare = false;
         std::unique_ptr<LockFreeFifo<Node*>> nodesReadyToBeProcessed;
         std::unique_ptr<AudioBufferPool> audioBufferPool;
     };

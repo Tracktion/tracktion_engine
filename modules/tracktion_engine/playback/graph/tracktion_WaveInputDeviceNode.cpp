@@ -17,6 +17,7 @@ WaveInputDeviceNode::WaveInputDeviceNode (InputDeviceInstance& idi, WaveInputDev
       waveInputDevice (owner),
       destChannels (destChannelsToFill)
 {
+    setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
 }
 
 WaveInputDeviceNode::~WaveInputDeviceNode()
