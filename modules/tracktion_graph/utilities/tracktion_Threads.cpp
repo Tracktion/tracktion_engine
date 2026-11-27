@@ -118,6 +118,15 @@ bool setThreadPriority (std::thread& t, int priority)
     return setThreadPriority (t.native_handle(), priority);
 }
 
+bool setCurrentThreadPriority (int priority)
+{
+   #ifdef _WIN32
+    return setThreadPriority (GetCurrentThread(), priority);
+   #else
+    return setThreadPriority (pthread_self(), priority);
+   #endif
+}
+
 //==============================================================================
 #ifdef _WIN32
     std::string getCurrentThreadPriorityDescription()

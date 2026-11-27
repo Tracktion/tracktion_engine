@@ -23,6 +23,17 @@ namespace
 {
     constexpr int timeOutMilliseconds = -1;
 
+    /** Call this from each pool thread when it starts.
+        These have to be set by the thread itself as a thread can only be
+        upgraded to real-time from within it, and that has to happen after its
+        priority is set or it would be replaced.
+    */
+    inline void setUpThreadPriority (const juce::Thread::RealtimeOptions& rtOpts)
+    {
+        setCurrentThreadPriority (10);
+        tryToUpgradeCurrentThreadToRealtime (rtOpts);
+    }
+
     inline void pause()
     {
         tracktion::core::pause();
@@ -54,9 +65,7 @@ struct ThreadPoolCV : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
         for (size_t i = 0; i < numThreads; ++i)
         {
-            threads.emplace_back ([this] { runThread(); });
-            setThreadPriority (threads.back(), 10);
-            tryToUpgradeCurrentThreadToRealtime (rtOpts);
+            threads.emplace_back ([this, rtOpts] { runThread (rtOpts); });
         }
     }
 
@@ -149,8 +158,10 @@ private:
         return shouldWait();
     }
 
-    void runThread()
+    void runThread (const juce::Thread::RealtimeOptions& rtOpts)
     {
+        setUpThreadPriority (rtOpts);
+
         juce::WorkgroupToken token;
         workgroup.join (token);
 
@@ -189,9 +200,7 @@ struct ThreadPoolRT : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
         for (size_t i = 0; i < numThreads; ++i)
         {
-            threads.emplace_back ([this] { runThread(); });
-            setThreadPriority (threads.back(), 10);
-            tryToUpgradeCurrentThreadToRealtime (rtOpts);
+            threads.emplace_back ([this, rtOpts] { runThread (rtOpts); });
         }
     }
 
@@ -253,8 +262,10 @@ private:
     std::vector<std::thread> threads;
     juce::AudioWorkgroup workgroup;
 
-    void runThread()
+    void runThread (const juce::Thread::RealtimeOptions& rtOpts)
     {
+        setUpThreadPriority (rtOpts);
+
         juce::WorkgroupToken token;
         workgroup.join (token);
 
@@ -299,9 +310,7 @@ struct ThreadPoolHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
         for (size_t i = 0; i < numThreads; ++i)
         {
-            threads.emplace_back ([this] { runThread(); });
-            setThreadPriority (threads.back(), 10);
-            tryToUpgradeCurrentThreadToRealtime (rtOpts);
+            threads.emplace_back ([this, rtOpts] { runThread (rtOpts); });
         }
     }
 
@@ -413,8 +422,10 @@ private:
         return shouldWait();
     }
 
-    void runThread()
+    void runThread (const juce::Thread::RealtimeOptions& rtOpts)
     {
+        setUpThreadPriority (rtOpts);
+
         juce::WorkgroupToken token;
         workgroup.join (token);
 
@@ -455,9 +466,7 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
         for (size_t i = 0; i < numThreads; ++i)
         {
-            threads.emplace_back ([this] { runThread(); });
-            setThreadPriority (threads.back(), 10);
-            tryToUpgradeCurrentThreadToRealtime (rtOpts);
+            threads.emplace_back ([this, rtOpts] { runThread (rtOpts); });
         }
     }
 
@@ -520,8 +529,10 @@ private:
     std::unique_ptr<SemaphoreType> semaphore;
     juce::AudioWorkgroup workgroup;
 
-    void runThread()
+    void runThread (const juce::Thread::RealtimeOptions& rtOpts)
     {
+        setUpThreadPriority (rtOpts);
+
         juce::WorkgroupToken token;
         workgroup.join (token);
 
@@ -562,9 +573,7 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
         for (size_t i = 0; i < numThreads; ++i)
         {
-            threads.emplace_back ([this] { runThread(); });
-            setThreadPriority (threads.back(), 10);
-            tryToUpgradeCurrentThreadToRealtime (rtOpts);
+            threads.emplace_back ([this, rtOpts] { runThread (rtOpts); });
         }
     }
 
@@ -652,8 +661,10 @@ private:
     std::unique_ptr<SemaphoreType> semaphore;
     juce::AudioWorkgroup workgroup;
 
-    void runThread()
+    void runThread (const juce::Thread::RealtimeOptions& rtOpts)
     {
+        setUpThreadPriority (rtOpts);
+
         juce::WorkgroupToken token;
         workgroup.join (token);
         

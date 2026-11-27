@@ -21,6 +21,11 @@ namespace tracktion::inline graph {
 */
 bool setThreadPriority (std::thread&, int priority);
 
+/** Changes the priority of the thread this is called from.
+    @see setThreadPriority
+*/
+bool setCurrentThreadPriority (int priority);
+
 /** Tries to upgrade the current thread to realtime priority. */
 bool tryToUpgradeCurrentThreadToRealtime (const juce::Thread::RealtimeOptions&);
 

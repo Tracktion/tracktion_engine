@@ -207,10 +207,11 @@ std::unique_ptr<NodeGraph> LockFreeMultiThreadedNodePlayer::prepareToPlay (std::
                                                                            bool useCurrentAudioBufferPool,
                                                                            bool disableLatencyCompensation)
 {
-    createThreads();
-
+    // These need to be set first as the threads use them for their real-time options
     sampleRate.store (sampleRateToUse, std::memory_order_release);
-    blockSize.store (blockSizeToUse, std::memory_order_release);;
+    blockSize.store (blockSizeToUse, std::memory_order_release);
+
+    createThreads();
 
     if (! useCurrentAudioBufferPool)
         return node_player_utils::prepareToPlay (std::move (node), oldGraph,
