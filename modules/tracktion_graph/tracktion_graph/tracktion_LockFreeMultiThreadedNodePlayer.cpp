@@ -453,6 +453,7 @@ Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (PreparedNode& 
 
    #if RETURN_MID_NODES_OPTIMISATION
     Node* nodeToReturn = nullptr;
+    int numNodesJustQueued = 0;
    #endif
 
     for (auto output : playbackNode->outputs)
@@ -483,6 +484,7 @@ Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (PreparedNode& 
             {
                 preparedNode.nodesReadyToBeProcessed->try_enqueue (&outputPlaybackNode->node);
                 numNodesQueued.fetch_add (1, std::memory_order_acq_rel);
+                ++numNodesJustQueued;
             }
            #else
             // If there is only one Node or we're at the last Node we can return this to be processed by the same thread
@@ -497,6 +499,9 @@ Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (PreparedNode& 
     }
 
    #if RETURN_MID_NODES_OPTIMISATION
+    if (numNodesJustQueued > 0)
+        threadPool->nodesQueuedDuringBlock (numNodesJustQueued);
+
     return nodeToReturn;
    #else
     return nullptr;

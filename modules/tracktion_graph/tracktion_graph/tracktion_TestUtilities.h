@@ -237,6 +237,9 @@ namespace test_utilities
             case ThreadPoolStrategy::blockEvent:                    return "blockEvent";
             case ThreadPoolStrategy::blockEventHybrid:              return "blockEventHybrid";
             case ThreadPoolStrategy::blockEventSpin:                return "blockEventSpin";
+            case ThreadPoolStrategy::lightweightSemaphoreWakeQueued:        return "lwSemWakeQueued";
+            case ThreadPoolStrategy::lightweightSemHybridPauseWakeQueued:   return "lwSemHybridPauseWakeQueued";
+            case ThreadPoolStrategy::blockEventWakeQueued:                  return "blockEventWakeQueued";
         }
 
         jassertfalse;
@@ -264,7 +267,10 @@ namespace test_utilities
                  ThreadPoolStrategy::lightweightSemaphoreNoSemSpin,
                  ThreadPoolStrategy::blockEvent,
                  ThreadPoolStrategy::blockEventHybrid,
-                 ThreadPoolStrategy::blockEventSpin };
+                 ThreadPoolStrategy::blockEventSpin,
+                 ThreadPoolStrategy::lightweightSemaphoreWakeQueued,
+                 ThreadPoolStrategy::lightweightSemHybridPauseWakeQueued,
+                 ThreadPoolStrategy::blockEventWakeQueued };
     }
 
     /** Logs the graph structure to the console. */

@@ -37,7 +37,10 @@ enum class ThreadPoolStrategy
     lightweightSemaphoreNoSemSpin,  /**< lightweightSemaphore, without the semaphore spinning before it sleeps. */
     blockEvent,                     /**< Threads sleep on a block counter as soon as there are no Nodes queued. */
     blockEventHybrid,               /**< Threads spin while a block is being processed and sleep on a block counter between blocks. */
-    blockEventSpin                  /**< Threads never sleep. For measuring the cost of waking threads only. */
+    blockEventSpin,                 /**< Threads never sleep. For measuring the cost of waking threads only. */
+    lightweightSemaphoreWakeQueued,         /**< lightweightSemaphore, waking threads when Nodes are queued during a block. */
+    lightweightSemHybridPauseWakeQueued,    /**< lightweightSemHybridPause, waking threads when Nodes are queued during a block. */
+    blockEventWakeQueued                    /**< blockEvent, waking threads when Nodes are queued during a block. */
 };
 
 /** Returns a function to create a ThreadPool for the given stategy. */
