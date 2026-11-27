@@ -177,7 +177,7 @@ inline std::string createBlockTimingTable (const std::vector<BenchmarkResult>& r
             for (const auto& driverThread : driverThreads)
                 s += "Driver thread: " + driverThread + "\n";
 
-            s += "N.B. There is no audio device so on macOS the worker threads haven't joined an audio workgroup.\n";
+            s += "N.B. There is no audio device so on macOS the threads are only in an audio workgroup if the driver thread says so.\n";
         }
     }
 
