@@ -445,6 +445,57 @@ private:
 //==============================================================================
 //==============================================================================
 //==============================================================================
+/** Counts the threads that are sleeping, or about to, so that only those are
+    signalled. A thread adds itself before it looks for Nodes one last time so
+    a signal can't be missed, and each signal is for one of the threads counted
+    here, so nothing is left on the semaphore for a thread to wake up to later.
+*/
+struct SleepingThreads
+{
+    /** A thread must call this before its last look for Nodes. */
+    void add()
+    {
+        numSleeping.fetch_add (1);
+    }
+
+    /** A thread must call this if that last look found Nodes. If it returns
+        false a signal has already been sent for the thread, which has to wait
+        for it.
+    */
+    bool tryToRemove()
+    {
+        for (auto n = numSleeping.load();;)
+        {
+            if (n <= 0)
+                return false;
+
+            if (numSleeping.compare_exchange_weak (n, n - 1))
+                return true;
+        }
+    }
+
+    /** Returns the number of threads to signal, which will be no more than maxNum. */
+    int claim (int maxNum)
+    {
+        // The Nodes that have just been queued have to be visible to any
+        // thread that adds itself after the count is read here
+        std::atomic_thread_fence (std::memory_order_seq_cst);
+
+        for (auto n = numSleeping.load();;)
+        {
+            const auto numToClaim = std::min (n, maxNum);
+
+            if (numToClaim <= 0)
+                return 0;
+
+            if (numSleeping.compare_exchange_weak (n, n - numToClaim))
+                return numToClaim;
+        }
+    }
+
+    std::atomic<int> numSleeping { 0 };
+};
+
 /** Options for the semaphore based pools so their variants can be compared. */
 struct SemPoolOptions
 {
@@ -476,7 +527,9 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
             return;
 
         resetExitSignal();
-        semaphore = std::make_unique<SemaphoreType> ((int) numThreads, options.semaphoreSpins);
+        // When only sleeping threads are signalled there mustn't be any counts
+        // on the semaphore that a thread could wake up to without being signalled
+        semaphore = std::make_unique<SemaphoreType> (options.wakeWhenNodesAreQueued ? 0 : (int) numThreads, options.semaphoreSpins);
         workgroup = workgroupToUse;
 
         const auto rtOpts = juce::Thread::RealtimeOptions()
@@ -516,6 +569,12 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
         const auto num = std::min (numToSignal, (int) threads.size());
 
+        if (options.wakeWhenNodesAreQueued)
+        {
+            signalSleepingThreads (num);
+            return;
+        }
+
         switch (options.wake)
         {
             case SemPoolOptions::Wake::all:     semaphore->signalWakingAll (num); break;
@@ -542,15 +601,32 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
     void nodesQueuedDuringBlock (int numNodes) override
     {
-        // Capped so that counts don't build up if the threads are already awake
         if (options.wakeWhenNodesAreQueued && semaphore)
-            semaphore->signalCapped (std::min (numNodes, (int) threads.size()));
+            signalSleepingThreads (numNodes);
     }
 
-    bool wait()
+    /** Signals up to maxNum of the threads that are sleeping, and none that aren't. */
+    void signalSleepingThreads (int maxNum)
     {
-        if (! shouldWait())
-            return false;
+        if (const auto numToSignal = sleepingThreads.claim (maxNum); numToSignal > 0)
+            semaphore->signal (numToSignal);
+    }
+
+    /** Returns false if Nodes were queued before the thread could sleep. */
+    bool sleepOnSemaphore()
+    {
+        if (options.wakeWhenNodesAreQueued)
+        {
+            sleepingThreads.add();
+
+            // If Nodes have been queued since the thread last looked, it only
+            // sleeps if a signal has already been sent for it
+            if (! shouldWait() && sleepingThreads.tryToRemove())
+                return false;
+
+            semaphore->wait();
+            return true;
+        }
 
         if (timeOutMilliseconds < 0)
         {
@@ -561,6 +637,17 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
             using namespace std::chrono;
             semaphore->timed_wait ((std::uint64_t) duration_cast<microseconds> (milliseconds (timeOutMilliseconds)).count());
         }
+
+        return true;
+    }
+
+    bool wait()
+    {
+        if (! shouldWait())
+            return false;
+
+        if (! sleepOnSemaphore())
+            return false;
 
         wake_experiment::count (wake_experiment::numWakes);
         wakeMoreThreads();
@@ -581,6 +668,7 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
 private:
     const SemPoolOptions options;
+    SleepingThreads sleepingThreads;
     std::vector<std::thread> threads;
     std::unique_ptr<SemaphoreType> semaphore;
     juce::AudioWorkgroup workgroup;
@@ -631,7 +719,9 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
             return;
 
         resetExitSignal();
-        semaphore = std::make_unique<SemaphoreType> ((int) numThreads, options.semaphoreSpins);
+        // When only sleeping threads are signalled there mustn't be any counts
+        // on the semaphore that a thread could wake up to without being signalled
+        semaphore = std::make_unique<SemaphoreType> (options.wakeWhenNodesAreQueued ? 0 : (int) numThreads, options.semaphoreSpins);
         workgroup = workgroupToUse;
 
         const auto rtOpts = juce::Thread::RealtimeOptions()
@@ -671,6 +761,12 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
         const auto num = std::min (numToSignal, (int) threads.size());
 
+        if (options.wakeWhenNodesAreQueued)
+        {
+            signalSleepingThreads (num);
+            return;
+        }
+
         switch (options.wake)
         {
             case SemPoolOptions::Wake::all:     semaphore->signalWakingAll (num); break;
@@ -697,9 +793,44 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
     void nodesQueuedDuringBlock (int numNodes) override
     {
-        // Capped so that counts don't build up if the threads are already awake
         if (options.wakeWhenNodesAreQueued && semaphore)
-            semaphore->signalCapped (std::min (numNodes, (int) threads.size()));
+            signalSleepingThreads (numNodes);
+    }
+
+    /** Signals up to maxNum of the threads that are sleeping, and none that aren't. */
+    void signalSleepingThreads (int maxNum)
+    {
+        if (const auto numToSignal = sleepingThreads.claim (maxNum); numToSignal > 0)
+            semaphore->signal (numToSignal);
+    }
+
+    /** Returns false if Nodes were queued before the thread could sleep. */
+    bool sleepOnSemaphore()
+    {
+        if (options.wakeWhenNodesAreQueued)
+        {
+            sleepingThreads.add();
+
+            // If Nodes have been queued since the thread last looked, it only
+            // sleeps if a signal has already been sent for it
+            if (! shouldWait() && sleepingThreads.tryToRemove())
+                return false;
+
+            semaphore->wait();
+            return true;
+        }
+
+        if (timeOutMilliseconds < 0)
+        {
+            semaphore->wait();
+        }
+        else
+        {
+            using namespace std::chrono;
+            semaphore->timed_wait ((std::uint64_t) duration_cast<microseconds> (milliseconds (timeOutMilliseconds)).count());
+        }
+
+        return true;
     }
 
     bool wait()
@@ -729,15 +860,8 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
                 pauseCount = 0;
 
                 // Fall back to locking
-                if (timeOutMilliseconds < 0)
-                {
-                    semaphore->wait();
-                }
-                else
-                {
-                    using namespace std::chrono;
-                    semaphore->timed_wait ((std::uint64_t) duration_cast<microseconds> (milliseconds (timeOutMilliseconds)).count());
-                }
+                if (! sleepOnSemaphore())
+                    return false;
 
                 wake_experiment::count (wake_experiment::numWakes);
                 wakeMoreThreads();
@@ -766,6 +890,7 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
 private:
     const SemPoolOptions options;
+    SleepingThreads sleepingThreads;
     std::vector<std::thread> threads;
     std::unique_ptr<SemaphoreType> semaphore;
     juce::AudioWorkgroup workgroup;
