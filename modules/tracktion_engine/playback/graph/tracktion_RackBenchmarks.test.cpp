@@ -21,6 +21,63 @@ namespace tracktion::inline engine {
 using namespace tracktion::graph;
 
 //==============================================================================
+/** A benchmark-only plugin that does a fixed amount of work for every sample
+    it's given and leaves the audio untouched. This stands in for the DSP of a
+    real plugin, which is where most of the time goes when a typical Edit is
+    played back.
+*/
+class SyntheticLoadPlugin  : public Plugin
+{
+public:
+    SyntheticLoadPlugin (PluginCreationInfo info)  : Plugin (info) {}
+    ~SyntheticLoadPlugin() override                         { notifyListenersOfDeletion(); }
+
+    /** This takes about 50us for a 128 sample block on an M2 Max. */
+    static constexpr int iterationsPerSample = 250;
+
+    static const char* getPluginName()                      { return "Synthetic Load"; }
+    static constexpr const char* xmlTypeName = "syntheticLoad";
+
+    juce::String getName() const override                   { return getPluginName(); }
+    juce::String getPluginType() override                   { return xmlTypeName; }
+    juce::String getSelectableDescription() override        { return getName(); }
+    BusLayout getBusses() const override                    { return BusLayout::singleStereoInOut(); }
+
+    void initialise (const PluginInitialisationInfo&) override {}
+    void deinitialise() override {}
+    void restorePluginStateFromValueTree (const juce::ValueTree&) override {}
+
+    void applyToBuffer (const PluginRenderContext& fc) override
+    {
+        // Each step needs the result of the last one so the
+        // compiler can't vectorise the loop or work out its result
+        auto s = loadState;
+
+        for (auto i = static_cast<std::int64_t> (fc.bufferNumSamples) * iterationsPerSample; --i >= 0;)
+        {
+            s ^= s >> 29;
+            s *= 0xbf58476d1ce4e5b9ull;
+        }
+
+        loadState = s;
+    }
+
+private:
+    std::uint64_t loadState = 0x9e3779b97f4a7c15ull;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SyntheticLoadPlugin)
+};
+
+/** Adds a SyntheticLoadPlugin to the start of a track's plugins. */
+inline void addSyntheticLoadPlugin (AudioTrack& track)
+{
+    track.edit.engine.getPluginManager().createBuiltInType<SyntheticLoadPlugin>();
+    auto plugin = track.edit.getPluginCache().createNewPlugin (SyntheticLoadPlugin::xmlTypeName, {});
+    assert (plugin != nullptr);
+    track.pluginList.insertPlugin (*plugin, 0, nullptr);
+}
+
+//==============================================================================
 //==============================================================================
 class RackBenchmarks : public juce::UnitTest
 {
@@ -40,13 +97,21 @@ public:
 
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
 
-        runRackMixBusTest (engine, ts);
+        runRackMixBusTest (engine, ts, SyntheticLoad::no);
+        runRackMixBusTest (engine, ts, SyntheticLoad::yes);
 
         if (! isRealTimeOnly())
             runMultipleSerialRacksBenchmark (engine);
     }
 
-    void runRackMixBusTest (Engine& engine, graph::test_utilities::TestSetup ts)
+    /** Whether the first 16 audio tracks get a SyntheticLoadPlugin. Without them
+        the Edit only has cheap Nodes, so the results show the overhead of the
+        player. With them most of the time is spent in Nodes that can be processed
+        in parallel, as it is with an Edit full of plugins.
+    */
+    enum class SyntheticLoad { no, yes };
+
+    void runRackMixBusTest (Engine& engine, graph::test_utilities::TestSetup ts, SyntheticLoad syntheticLoad)
     {
         using namespace benchmark_utilities;
         using namespace tracktion::graph;
@@ -183,7 +248,15 @@ public:
         249,225,73,19,199,49,72,45,146,45,45,77,54,184,49,40,190,15,202,118,12,198,79,29,232,198,32,205,236,198,64,96,243,195,35,136,227,24,8,139,100,19,165,201,6,55,6,89,82,101,12,198,74,180,110,12,228,85,183,213,24,100,204,252,240,100,220,113,12,50,243,100,
         67,73,105,178,129,141,129,60,41,87,57,39,175,26,3,89,180,173,198,64,198,157,197,225,201,220,198,0,33,243,100,67,168,52,217,220,199,224,255,1,148,170,60,43,0,0 };
 
-        const auto editName = "RackMixBus";
+        const auto editName = syntheticLoad == SyntheticLoad::yes ? "RackMixBusLoaded" : "RackMixBus";
+
+        // TE_RACK_EDITS can be set to a comma separated list of the Edit names to run
+        if (const auto names = juce::StringArray::fromTokens (juce::SystemStats::getEnvironmentVariable ("TE_RACK_EDITS", {}), ",", {});
+            ! names.isEmpty() && ! names.contains (editName))
+        {
+            return;
+        }
+
         auto edit = openEditFromZipData (engine, RackMixBus_zip, sizeof (RackMixBus_zip));
         const double fileLength = 20.0;
         auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, fileLength, 2);
@@ -202,6 +275,17 @@ public:
             expectEquals (edit->getLength().inSeconds(), fileLength);
         }
 
+        if (syntheticLoad == SyntheticLoad::yes)
+        {
+            beginTest ("Add synthetic load");
+            const int numTracksToLoad = 16;
+            const auto audioTracks = getAudioTracks (*edit);
+            expectGreaterOrEqual (audioTracks.size(), numTracksToLoad);
+
+            for (int i = 0; i < numTracksToLoad; ++i)
+                addSyntheticLoadPlugin (*audioTracks[i]);
+        }
+
        #if ENGINE_BENCHMARKS_RACKS_REALTIME
         if (isRealTimeOnly())
         {
@@ -209,6 +293,26 @@ public:
             return;
         }
        #endif
+
+        if (syntheticLoad == SyntheticLoad::yes)
+        {
+            // Single threaded first, then with each strategy
+            renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::no, LockFree::yes, ThreadPoolStrategy::conditionVariable });
+
+            auto strategies = graph::test_utilities::getThreadPoolStrategies();
+
+            for (auto strategy : graph::test_utilities::getExperimentalThreadPoolStrategies())
+                strategies.push_back (strategy);
+
+            for (auto strategy : strategies)
+                renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, strategy });
+
+           #if ENGINE_BENCHMARKS_RACKS_REALTIME
+            runRackMixBusRealTimeBenchmark (*edit, editName, ts);
+           #endif
+
+            return;
+        }
 
         // Render single threaded first
         renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::no, LockFree::no, ThreadPoolStrategy::conditionVariable });
