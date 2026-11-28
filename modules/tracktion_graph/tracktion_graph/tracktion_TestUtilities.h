@@ -229,17 +229,6 @@ namespace test_utilities
             case ThreadPoolStrategy::lightweightSemaphore:  return "lightweightSemaphore";
             case ThreadPoolStrategy::lightweightSemHybrid:  return "lightweightSemaphoreHybrid";
             case ThreadPoolStrategy::lightweightSemaphoreWakeQueued:    return "lightweightSemaphoreWakeQueued";
-            case ThreadPoolStrategy::lightweightSemHybridWakeAll:   return "lwSemHybridWakeAll";
-            case ThreadPoolStrategy::lightweightSemHybridCascade:   return "lwSemHybridCascade";
-            case ThreadPoolStrategy::lightweightSemHybridCapped:    return "lwSemHybridCapped";
-            case ThreadPoolStrategy::lightweightSemHybridNoSemSpin: return "lwSemHybridNoSemSpin";
-            case ThreadPoolStrategy::lightweightSemHybridPause:     return "lwSemHybridPause";
-            case ThreadPoolStrategy::lightweightSemaphoreNoSemSpin: return "lwSemNoSemSpin";
-            case ThreadPoolStrategy::blockEvent:                    return "blockEvent";
-            case ThreadPoolStrategy::blockEventHybrid:              return "blockEventHybrid";
-            case ThreadPoolStrategy::blockEventSpin:                return "blockEventSpin";
-            case ThreadPoolStrategy::lightweightSemHybridPauseWakeQueued:   return "lwSemHybridPauseWakeQueued";
-            case ThreadPoolStrategy::blockEventWakeQueued:                  return "blockEventWakeQueued";
         }
 
         jassertfalse;
@@ -255,22 +244,6 @@ namespace test_utilities
                  ThreadPoolStrategy::conditionVariable,
                  ThreadPoolStrategy::realTime,
                  ThreadPoolStrategy::hybrid };
-    }
-
-    /** The experimental strategies for comparing how threads are woken and suspended. */
-    inline std::vector<ThreadPoolStrategy> getExperimentalThreadPoolStrategies()
-    {
-        return { ThreadPoolStrategy::lightweightSemHybridWakeAll,
-                 ThreadPoolStrategy::lightweightSemHybridCascade,
-                 ThreadPoolStrategy::lightweightSemHybridCapped,
-                 ThreadPoolStrategy::lightweightSemHybridNoSemSpin,
-                 ThreadPoolStrategy::lightweightSemHybridPause,
-                 ThreadPoolStrategy::lightweightSemaphoreNoSemSpin,
-                 ThreadPoolStrategy::blockEvent,
-                 ThreadPoolStrategy::blockEventHybrid,
-                 ThreadPoolStrategy::blockEventSpin,
-                 ThreadPoolStrategy::lightweightSemHybridPauseWakeQueued,
-                 ThreadPoolStrategy::blockEventWakeQueued };
     }
 
     /** Logs the graph structure to the console. */

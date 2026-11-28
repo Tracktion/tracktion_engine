@@ -158,11 +158,6 @@ public:
 			while (semaphore_signal(m_sema) != KERN_SUCCESS);
 		}
 	}
-
-	void signalAll()
-	{
-		while (semaphore_signal_all(m_sema) != KERN_SUCCESS);
-	}
 };
 #elif defined(__unix__)
 //---------------------------------------------------------
@@ -403,48 +398,6 @@ public:
 		if (toRelease > 0)
 		{
 			m_sema.signal((int)toRelease);
-		}
-	}
-
-	void signalWakingAll(ssize_t count)
-	{
-		ssize_t oldCount = m_count.fetch_add(count, std::memory_order_release);
-		ssize_t toRelease = -oldCount < count ? -oldCount : count;
-		if (toRelease > 0)
-		{
-#if defined(__MACH__)
-			// Only safe if every waiting thread is being released
-			if (toRelease == -oldCount)
-				m_sema.signalAll();
-			else
-#endif
-				m_sema.signal((int)toRelease);
-		}
-	}
-
-	void wakeAllWaiters()
-	{
-#if defined(__MACH__)
-		m_sema.signalAll();
-#endif
-	}
-
-	// Like signal but counts that nobody was waiting for don't build up past count
-	void signalCapped(ssize_t count)
-	{
-		ssize_t oldCount = m_count.load(std::memory_order_relaxed);
-		for (;;)
-		{
-			if (oldCount >= count)
-				return;
-			ssize_t newCount = oldCount >= 0 ? count : oldCount + count;
-			if (m_count.compare_exchange_weak(oldCount, newCount, std::memory_order_release, std::memory_order_relaxed))
-			{
-				ssize_t toRelease = -oldCount < count ? -oldCount : count;
-				if (toRelease > 0)
-					m_sema.signal((int)toRelease);
-				return;
-			}
 		}
 	}
 	

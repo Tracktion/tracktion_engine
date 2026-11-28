@@ -9,7 +9,7 @@ The aim was fewer peak overruns and better use of the threads during real-time p
 - **Default strategy: unchanged.** `ThreadPoolStrategy::lightweightSemHybrid` (24 pause rounds, 25 `yield()` rounds, then a semaphore).
 - **Candidate to replace it: `lightweightSemaphoreWakeQueued`.** Threads go straight to the semaphore when no Nodes are queued. Only threads that are asleep are signalled, at the start of a block and again whenever a Node queues work for other threads part way through one. Selectable with `EditPlaybackContext::setThreadPoolStrategy`.
 - **Tracked in CI:** the Rack benchmarks run single threaded, the default and the candidate, offline and at a real-time cadence, on three Edits (see below).
-- **Still in the code at the time of writing:** eleven experimental strategies and the `wake_experiment` counters in the player. They are only reachable through `TE_RT_STRATEGIES` and can be removed; this document and the history of the pull request that added it are the record.
+- **Removed again:** the eleven experimental strategies in "What was tried and dropped" and the `wake_experiment` counters in the player that produced the CPU, wake-up and signal timings quoted here. The code is in the history of the pull request that added this document (tracktion_engine#508), in the commits before "Removed the experimental thread pool strategies".
 
 ## How it was measured
 
@@ -17,7 +17,7 @@ All of this lives in `modules/tracktion_engine/playback/graph/tracktion_RackBenc
 
 - **Edits.** `RackMixBus` (86 audio tracks, 1,062 Nodes, all cheap), `RackMixBusLoaded` (a 10 us synthetic plugin load on every track) and `RackMixBusBlocked` (one 375 us load in front of a Rack, a 50 us load on each of the nine tracks sharing it). 96 kHz, 128 and 512 sample blocks.
 - **Real-time cadence.** A driver thread sleeps until each block's deadline and then processes one block, so the workers really do sleep between blocks. Built with `ENGINE_BENCHMARKS_RACKS_REALTIME=1`. On macOS the threads join an audio workgroup the benchmark creates.
-- **Switches** (environment variables): `TE_RT_ONLY`, `TE_RT_SECONDS`, `TE_RT_STRATEGIES` (names, including experimental ones), `TE_RT_ROTATE` (run order), `TE_RT_WORKGROUP=0`, `TE_RACK_EDITS`.
+- **Switches** (environment variables): `TE_RT_ONLY`, `TE_RT_SECONDS`, `TE_RT_STRATEGIES` (names of the strategies to run), `TE_RT_ROTATE` (run order), `TE_RT_WORKGROUP=0`, `TE_RACK_EDITS`.
 - **Numbers** are the wall-clock time of one `process()` call for the whole graph, in microseconds. Percentiles come from a log-bucketed histogram with about 3% resolution, so many values are bucket edges.
 - **Machines.** An M2 Max (8 performance and 4 efficiency cores, 11 workers), and the hosted CI runners (4 vCPU Linux and Windows VMs, 3 workers).
 

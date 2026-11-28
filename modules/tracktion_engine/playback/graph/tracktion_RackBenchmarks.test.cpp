@@ -453,17 +453,12 @@ public:
 
         auto strategies = getTrackedThreadPoolStrategies();
 
-        // TE_RT_STRATEGIES can be set to a comma separated list of the names to
-        // run instead, which can include the experimental strategies that
-        // compare how the threads are woken and suspended
+        // TE_RT_STRATEGIES can be set to a comma separated list of the names of
+        // any of the strategies to run instead
         if (const auto names = juce::StringArray::fromTokens (juce::SystemStats::getEnvironmentVariable ("TE_RT_STRATEGIES", {}), ",", {});
             ! names.isEmpty())
         {
             strategies = graph::test_utilities::getThreadPoolStrategies();
-
-            for (auto strategy : graph::test_utilities::getExperimentalThreadPoolStrategies())
-                strategies.push_back (strategy);
-
             std::erase_if (strategies, [&names] (auto strategy) { return ! names.contains (graph::test_utilities::getName (strategy)); });
         }
 
@@ -480,10 +475,6 @@ public:
         std::rotate (strategies.begin(),
                      strategies.begin() + (juce::SystemStats::getEnvironmentVariable ("TE_RT_ROTATE", "0").getIntValue() % static_cast<int> (strategies.size())),
                      strategies.end());
-
-        // Reports where the time in each block goes and the CPU time used
-        graph::wake_experiment::isEnabled = true;
-        const juce::ScopeGuard disableMeasurements { [] { graph::wake_experiment::isEnabled = false; } };
 
         for (int blockSize : { 128, 512 })
         {

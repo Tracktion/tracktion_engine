@@ -443,8 +443,6 @@ private:
 
 //==============================================================================
 //==============================================================================
-//==============================================================================
-//==============================================================================
 /** Counts the threads that are sleeping, or about to, so that only those are
     signalled. A thread adds itself before it looks for Nodes one last time so
     a signal can't be missed, and each signal is for one of the threads counted
@@ -502,28 +500,15 @@ struct SleepingThreads
     std::atomic<int> numSleeping { 0 };
 };
 
-/** Options for the semaphore based pools so their variants can be compared. */
-struct SemPoolOptions
-{
-    enum class Wake
-    {
-        each,       // Signals the semaphore once for each thread
-        all,        // Wakes all the sleeping threads with a single call
-        cascade,    // Wakes two threads, which each wake two more if there are Nodes queued
-        capped      // As each, but doesn't let unused counts build up
-    };
-
-    Wake wake = Wake::each;
-    int semaphoreSpins = 10'000;
-    bool yieldBeforeSleeping = true;    // Only used by ThreadPoolSemHybrid
-    bool wakeWhenNodesAreQueued = false;    // Wakes threads when Nodes are queued part way through a block
-};
-
 template<typename SemaphoreType>
 struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
 {
-    ThreadPoolSem (LockFreeMultiThreadedNodePlayer& p, SemPoolOptions o = {})
-        : ThreadPool (p), options (o)
+    /** If wakeWhenNodesAreQueued is true, only the threads that are sleeping
+        are signalled, both at the start of a block and when Nodes are queued
+        during one.
+    */
+    ThreadPoolSem (LockFreeMultiThreadedNodePlayer& p, bool wakeWhenNodesAreQueuedToUse = false)
+        : ThreadPool (p), wakeWhenNodesAreQueued (wakeWhenNodesAreQueuedToUse)
     {
     }
 
@@ -537,7 +522,7 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
         // When only sleeping threads are signalled there mustn't be any counts
         // on the semaphore that a thread could wake up to without being signalled
-        semaphore = std::make_unique<SemaphoreType> (options.wakeWhenNodesAreQueued ? 0 : (int) numThreads, options.semaphoreSpins);
+        semaphore = std::make_unique<SemaphoreType> (wakeWhenNodesAreQueued ? 0 : (int) numThreads);
         workgroup = workgroupToUse;
 
         const auto rtOpts = juce::Thread::RealtimeOptions()
@@ -553,10 +538,6 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
     void clearThreads() override
     {
         signalShouldExit();
-
-        // Wakes any threads that missed a semaphore_signal_all
-        if (semaphore && options.wake == SemPoolOptions::Wake::all)
-            semaphore->wakeAllWaiters();
 
         for (auto& t : threads)
             t.join();
@@ -577,73 +558,41 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
         const auto num = std::min (numToSignal, (int) threads.size());
 
-        if (options.wakeWhenNodesAreQueued)
-        {
+        // A signal that isn't for a counted thread would be left on the semaphore
+        if (wakeWhenNodesAreQueued)
             signalSleepingThreads (num);
-            return;
-        }
-
-        switch (options.wake)
-        {
-            case SemPoolOptions::Wake::all:     semaphore->signalWakingAll (num); break;
-            case SemPoolOptions::Wake::cascade: semaphore->signal (std::min (num, 2)); break;
-            case SemPoolOptions::Wake::capped:  semaphore->signalCapped (num); break;
-            case SemPoolOptions::Wake::each:    semaphore->signal (num); break;
-        }
-    }
-
-    void wakeMoreThreads()
-    {
-        if (options.wake != SemPoolOptions::Wake::cascade)
-            return;
-
-        // This thread is about to take one of the queued Nodes so only wake others if there are more
-        if (const auto numSpareNodes = getNumNodesQueued() - 1; numSpareNodes > 0)
-            semaphore->signal (std::min (numSpareNodes, 2));
+        else
+            semaphore->signal (num);
     }
 
     void signalAll() override
     {
-        if (! semaphore)
-            return;
-
-        // A signal that isn't for a counted thread would be left on the semaphore
-        if (options.wakeWhenNodesAreQueued)
-            signalSleepingThreads ((int) threads.size());
-        else
-            semaphore->signal ((int) threads.size());
+        signal ((int) threads.size());
     }
 
     void nodesQueuedDuringBlock (int numNodes) override
     {
-        if (options.wakeWhenNodesAreQueued && semaphore)
+        if (wakeWhenNodesAreQueued && semaphore)
             signalSleepingThreads (numNodes);
     }
 
-    /** Signals up to maxNum of the threads that are sleeping, and none that aren't. */
-    void signalSleepingThreads (int maxNum)
+    void wait()
     {
-        if (const auto numToSignal = sleepingThreads.claim (maxNum); numToSignal > 0)
-            semaphore->signal (numToSignal);
-    }
+        if (! shouldWait())
+            return;
 
-    /** Returns false if Nodes were queued before the thread could sleep. */
-    bool sleepOnSemaphore()
-    {
-        if (options.wakeWhenNodesAreQueued)
+        if (wakeWhenNodesAreQueued)
         {
             sleepingThreads.add();
 
             // If Nodes have been queued since the thread last looked, it only
             // sleeps if a signal has already been sent for it
             if (! shouldWait() && sleepingThreads.tryToRemove())
-                return false;
+                return;
 
             semaphore->wait();
-            return true;
         }
-
-        if (timeOutMilliseconds < 0)
+        else if (timeOutMilliseconds < 0)
         {
             semaphore->wait();
         }
@@ -652,21 +601,6 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
             using namespace std::chrono;
             semaphore->timed_wait ((std::uint64_t) duration_cast<microseconds> (milliseconds (timeOutMilliseconds)).count());
         }
-
-        return true;
-    }
-
-    bool wait()
-    {
-        if (! shouldWait())
-            return false;
-
-        if (! sleepOnSemaphore())
-            return false;
-
-        wake_experiment::count (wake_experiment::numWakes);
-        wakeMoreThreads();
-        return true;
     }
 
     void waitForFinalNode() override
@@ -682,11 +616,18 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
     }
 
 private:
-    const SemPoolOptions options;
+    const bool wakeWhenNodesAreQueued;
     SleepingThreads sleepingThreads;
     std::vector<std::thread> threads;
     std::unique_ptr<SemaphoreType> semaphore;
     juce::AudioWorkgroup workgroup;
+
+    /** Signals up to maxNum of the threads that are sleeping, and none that aren't. */
+    void signalSleepingThreads (int maxNum)
+    {
+        if (const auto numToSignal = sleepingThreads.claim (maxNum); numToSignal > 0)
+            semaphore->signal (numToSignal);
+    }
 
     void runThread (const juce::Thread::RealtimeOptions& rtOpts)
     {
@@ -697,24 +638,13 @@ private:
 
         juce::FloatVectorOperations::disableDenormalisedNumberSupport();
 
-        bool justWoke = false;
-
         for (;;)
         {
             if (shouldExit())
                 return;
 
-            if (process())
-            {
-                justWoke = false;
-            }
-            else
-            {
-                if (justWoke)
-                    wake_experiment::count (wake_experiment::numEmptyWakes);
-
-                justWoke = wait();
-            }
+            if (! process())
+                wait();
         }
     }
 };
@@ -725,8 +655,8 @@ private:
 template<typename SemaphoreType>
 struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
 {
-    ThreadPoolSemHybrid (LockFreeMultiThreadedNodePlayer& p, SemPoolOptions o = {})
-        : ThreadPool (p), options (o)
+    ThreadPoolSemHybrid (LockFreeMultiThreadedNodePlayer& p)
+        : ThreadPool (p)
     {
     }
 
@@ -736,11 +666,7 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
             return;
 
         resetExitSignal();
-        sleepingThreads.reset();
-
-        // When only sleeping threads are signalled there mustn't be any counts
-        // on the semaphore that a thread could wake up to without being signalled
-        semaphore = std::make_unique<SemaphoreType> (options.wakeWhenNodesAreQueued ? 0 : (int) numThreads, options.semaphoreSpins);
+        semaphore = std::make_unique<SemaphoreType> ((int) numThreads);
         workgroup = workgroupToUse;
 
         const auto rtOpts = juce::Thread::RealtimeOptions()
@@ -757,10 +683,6 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
     {
         signalShouldExit();
 
-        // Wakes any threads that missed a semaphore_signal_all
-        if (semaphore && options.wake == SemPoolOptions::Wake::all)
-            semaphore->wakeAllWaiters();
-
         for (auto& t : threads)
             t.join();
 
@@ -770,101 +692,25 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
     void signalOne() override
     {
-        signal (1);
+        if (semaphore) semaphore->signal();
     }
 
     void signal (int numToSignal) override
     {
-        if (! semaphore)
-            return;
-
-        const auto num = std::min (numToSignal, (int) threads.size());
-
-        if (options.wakeWhenNodesAreQueued)
-        {
-            signalSleepingThreads (num);
-            return;
-        }
-
-        switch (options.wake)
-        {
-            case SemPoolOptions::Wake::all:     semaphore->signalWakingAll (num); break;
-            case SemPoolOptions::Wake::cascade: semaphore->signal (std::min (num, 2)); break;
-            case SemPoolOptions::Wake::capped:  semaphore->signalCapped (num); break;
-            case SemPoolOptions::Wake::each:    semaphore->signal (num); break;
-        }
-    }
-
-    void wakeMoreThreads()
-    {
-        if (options.wake != SemPoolOptions::Wake::cascade)
-            return;
-
-        // This thread is about to take one of the queued Nodes so only wake others if there are more
-        if (const auto numSpareNodes = getNumNodesQueued() - 1; numSpareNodes > 0)
-            semaphore->signal (std::min (numSpareNodes, 2));
+        if (semaphore) semaphore->signal (std::min (numToSignal, (int) threads.size()));
     }
 
     void signalAll() override
     {
-        if (! semaphore)
-            return;
-
-        // A signal that isn't for a counted thread would be left on the semaphore
-        if (options.wakeWhenNodesAreQueued)
-            signalSleepingThreads ((int) threads.size());
-        else
-            semaphore->signal ((int) threads.size());
+        if (semaphore) semaphore->signal ((int) threads.size());
     }
 
-    void nodesQueuedDuringBlock (int numNodes) override
-    {
-        if (options.wakeWhenNodesAreQueued && semaphore)
-            signalSleepingThreads (numNodes);
-    }
-
-    /** Signals up to maxNum of the threads that are sleeping, and none that aren't. */
-    void signalSleepingThreads (int maxNum)
-    {
-        if (const auto numToSignal = sleepingThreads.claim (maxNum); numToSignal > 0)
-            semaphore->signal (numToSignal);
-    }
-
-    /** Returns false if Nodes were queued before the thread could sleep. */
-    bool sleepOnSemaphore()
-    {
-        if (options.wakeWhenNodesAreQueued)
-        {
-            sleepingThreads.add();
-
-            // If Nodes have been queued since the thread last looked, it only
-            // sleeps if a signal has already been sent for it
-            if (! shouldWait() && sleepingThreads.tryToRemove())
-                return false;
-
-            semaphore->wait();
-            return true;
-        }
-
-        if (timeOutMilliseconds < 0)
-        {
-            semaphore->wait();
-        }
-        else
-        {
-            using namespace std::chrono;
-            semaphore->timed_wait ((std::uint64_t) duration_cast<microseconds> (milliseconds (timeOutMilliseconds)).count());
-        }
-
-        return true;
-    }
-
-    bool wait()
+    void wait()
     {
         thread_local int pauseCount = 0;
 
         if (shouldExit())
-            return false;
+            return;
 
         if (shouldWait())
         {
@@ -876,30 +722,28 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
             }
             else if (pauseCount < 50)
             {
-                if (options.yieldBeforeSleeping)
-                    std::this_thread::yield();
-                else
-                    pause();
+                std::this_thread::yield();
             }
             else
             {
                 pauseCount = 0;
 
                 // Fall back to locking
-                if (! sleepOnSemaphore())
-                    return false;
-
-                wake_experiment::count (wake_experiment::numWakes);
-                wakeMoreThreads();
-                return true;
+                if (timeOutMilliseconds < 0)
+                {
+                    semaphore->wait();
+                }
+                else
+                {
+                    using namespace std::chrono;
+                    semaphore->timed_wait ((std::uint64_t) duration_cast<microseconds> (milliseconds (timeOutMilliseconds)).count());
+                }
             }
         }
         else
         {
             pauseCount = 0;
         }
-
-        return false;
     }
 
     void waitForFinalNode() override
@@ -915,8 +759,6 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
     }
 
 private:
-    const SemPoolOptions options;
-    SleepingThreads sleepingThreads;
     std::vector<std::thread> threads;
     std::unique_ptr<SemaphoreType> semaphore;
     juce::AudioWorkgroup workgroup;
@@ -930,176 +772,18 @@ private:
         
         juce::FloatVectorOperations::disableDenormalisedNumberSupport();
 
-        bool justWoke = false;
-
         for (;;)
         {
             if (shouldExit())
                 return;
 
-            if (process())
-            {
-                justWoke = false;
-            }
-            else
-            {
-                if (justWoke)
-                    wake_experiment::count (wake_experiment::numEmptyWakes);
-
-                justWoke = wait();
-            }
+            if (! process())
+                wait();
         }
     }
 };
 //==============================================================================
 //==============================================================================
-//==============================================================================
-//==============================================================================
-/** Threads sleep on a counter which the audio thread changes at the start of
-    each block. As a thread only sleeps if the counter hasn't changed since it
-    last looked for Nodes, a wake-up can't be missed and nothing needs to be
-    counted, so all the threads are woken with a single call.
-*/
-struct ThreadPoolBlockEvent : public LockFreeMultiThreadedNodePlayer::ThreadPool
-{
-    enum class Idle
-    {
-        sleep,              // Sleep as soon as there are no Nodes queued
-        spinDuringBlock,    // Look for Nodes until the block has finished, then sleep
-        spin                // Never sleep
-    };
-
-    ThreadPoolBlockEvent (LockFreeMultiThreadedNodePlayer& p, Idle i, bool wakeWhenNodesAreQueuedToUse = false)
-        : ThreadPool (p), idle (i), wakeWhenNodesAreQueued (wakeWhenNodesAreQueuedToUse)
-    {
-    }
-
-    void createThreads (size_t numThreads, juce::AudioWorkgroup workgroupToUse) override
-    {
-        if (threads.size() == numThreads)
-            return;
-
-        resetExitSignal();
-        workgroup = workgroupToUse;
-
-        const auto rtOpts = juce::Thread::RealtimeOptions()
-                              .withPriority (10)
-                              .withApproximateAudioProcessingTime (player.getBlockSize(), player.getSampleRate());
-
-        for (size_t i = 0; i < numThreads; ++i)
-            threads.emplace_back ([this, rtOpts] { runThread (rtOpts); });
-    }
-
-    void clearThreads() override
-    {
-        signalShouldExit();
-
-        for (auto& t : threads)
-            t.join();
-
-        threads.clear();
-    }
-
-    void signalOne() override               { signalAll(); }
-    void signal (int) override              { signalAll(); }
-
-    void signalAll() override
-    {
-        blockCounter.fetch_add (1, std::memory_order_release);
-
-        if (idle != Idle::spin)
-            blockCounter.notify_all();
-    }
-
-    void nodesQueuedDuringBlock (int) override
-    {
-        if (wakeWhenNodesAreQueued)
-            signalAll();
-    }
-
-    void waitForFinalNode() override
-    {
-        if (isFinalNodeReady())
-            return;
-
-        if (! shouldWait())
-            return;
-
-        pause();
-    }
-
-private:
-    const Idle idle;
-    const bool wakeWhenNodesAreQueued;
-    std::vector<std::thread> threads;
-    juce::AudioWorkgroup workgroup;
-    std::atomic<uint32_t> blockCounter { 0 };
-
-    /** Returns true if the thread slept. */
-    bool wait()
-    {
-        thread_local int pauseCount = 0;
-
-        if (! shouldWait())
-        {
-            pauseCount = 0;
-            return false;
-        }
-
-        if (idle == Idle::spin || (idle == Idle::spinDuringBlock && isBlockInProgress()))
-        {
-            if (++pauseCount < 25)
-                pause();
-            else
-                std::this_thread::yield();
-
-            return false;
-        }
-
-        pauseCount = 0;
-        const auto counterBeforeLooking = blockCounter.load (std::memory_order_acquire);
-
-        // Look again now the counter has been read as if Nodes have been queued
-        // since, the counter may already have changed and the wait would return
-        if (! shouldWait())
-            return false;
-
-        blockCounter.wait (counterBeforeLooking, std::memory_order_acquire);
-        wake_experiment::count (wake_experiment::numWakes);
-        return true;
-    }
-
-    void runThread (const juce::Thread::RealtimeOptions& rtOpts)
-    {
-        setUpThreadPriority (rtOpts);
-
-        juce::WorkgroupToken token;
-        workgroup.join (token);
-
-        juce::FloatVectorOperations::disableDenormalisedNumberSupport();
-        bool justWoke = false;
-
-        for (;;)
-        {
-            if (shouldExit())
-                return;
-
-            if (process())
-            {
-                justWoke = false;
-            }
-            else
-            {
-                if (justWoke)
-                    wake_experiment::count (wake_experiment::numEmptyWakes);
-
-                justWoke = wait();
-            }
-        }
-    }
-};
-
-
 LockFreeMultiThreadedNodePlayer::ThreadPoolCreator getPoolCreatorFunction (ThreadPoolStrategy poolType)
 {
     switch (poolType)
@@ -1115,29 +799,7 @@ LockFreeMultiThreadedNodePlayer::ThreadPoolCreator getPoolCreatorFunction (Threa
         case ThreadPoolStrategy::lightweightSemHybrid:
             return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSemHybrid<LightweightSemaphore>> (p); };
         case ThreadPoolStrategy::lightweightSemaphoreWakeQueued:
-            return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSem<LightweightSemaphore>> (p, SemPoolOptions { .wakeWhenNodesAreQueued = true }); };
-        case ThreadPoolStrategy::lightweightSemHybridWakeAll:
-            return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSemHybrid<LightweightSemaphore>> (p, SemPoolOptions { .wake = SemPoolOptions::Wake::all }); };
-        case ThreadPoolStrategy::lightweightSemHybridCascade:
-            return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSemHybrid<LightweightSemaphore>> (p, SemPoolOptions { .wake = SemPoolOptions::Wake::cascade }); };
-        case ThreadPoolStrategy::lightweightSemHybridCapped:
-            return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSemHybrid<LightweightSemaphore>> (p, SemPoolOptions { .wake = SemPoolOptions::Wake::capped }); };
-        case ThreadPoolStrategy::lightweightSemHybridNoSemSpin:
-            return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSemHybrid<LightweightSemaphore>> (p, SemPoolOptions { .semaphoreSpins = 0 }); };
-        case ThreadPoolStrategy::lightweightSemHybridPause:
-            return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSemHybrid<LightweightSemaphore>> (p, SemPoolOptions { .yieldBeforeSleeping = false }); };
-        case ThreadPoolStrategy::lightweightSemaphoreNoSemSpin:
-            return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSem<LightweightSemaphore>> (p, SemPoolOptions { .semaphoreSpins = 0 }); };
-        case ThreadPoolStrategy::blockEvent:
-            return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolBlockEvent> (p, ThreadPoolBlockEvent::Idle::sleep); };
-        case ThreadPoolStrategy::blockEventHybrid:
-            return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolBlockEvent> (p, ThreadPoolBlockEvent::Idle::spinDuringBlock); };
-        case ThreadPoolStrategy::blockEventSpin:
-            return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolBlockEvent> (p, ThreadPoolBlockEvent::Idle::spin); };
-        case ThreadPoolStrategy::lightweightSemHybridPauseWakeQueued:
-            return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSemHybrid<LightweightSemaphore>> (p, SemPoolOptions { .yieldBeforeSleeping = false, .wakeWhenNodesAreQueued = true }); };
-        case ThreadPoolStrategy::blockEventWakeQueued:
-            return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolBlockEvent> (p, ThreadPoolBlockEvent::Idle::sleep, true); };
+            return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSem<LightweightSemaphore>> (p, true); };
         case ThreadPoolStrategy::realTime:
         default:
             return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolRT> (p); };
