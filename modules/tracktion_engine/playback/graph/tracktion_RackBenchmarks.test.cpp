@@ -368,12 +368,7 @@ public:
             // Single threaded first, then with each strategy
             renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::no, LockFree::yes, ThreadPoolStrategy::conditionVariable });
 
-            auto strategies = graph::test_utilities::getThreadPoolStrategies();
-
-            for (auto strategy : graph::test_utilities::getExperimentalThreadPoolStrategies())
-                strategies.push_back (strategy);
-
-            for (auto strategy : strategies)
+            for (auto strategy : getTrackedThreadPoolStrategies())
                 renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, strategy });
 
            #if ENGINE_BENCHMARKS_RACKS_REALTIME
@@ -427,6 +422,15 @@ public:
        #endif
     }
 
+    /** The strategies whose results are tracked with the loaded Edits and at a
+        real-time cadence: the default and the candidates to replace it.
+    */
+    static std::vector<ThreadPoolStrategy> getTrackedThreadPoolStrategies()
+    {
+        return { ThreadPoolStrategy::lightweightSemHybrid,
+                 ThreadPoolStrategy::lightweightSemaphoreWakeQueued };
+    }
+
     /** Set the TE_RT_ONLY environment variable to only run the real-time benchmark. */
     static bool isRealTimeOnly()
     {
@@ -447,18 +451,19 @@ public:
         const double warmUpSeconds = 0.5;
         const double measuredSeconds = juce::SystemStats::getEnvironmentVariable ("TE_RT_SECONDS", "5").getDoubleValue();
 
-        // The experimental strategies are included to compare how the threads
-        // are woken and suspended. Setting TE_RT_ROTATE changes the order so
-        // that the strategies aren't always measured in the same position
-        auto strategies = graph::test_utilities::getThreadPoolStrategies();
+        auto strategies = getTrackedThreadPoolStrategies();
 
-        for (auto strategy : graph::test_utilities::getExperimentalThreadPoolStrategies())
-            strategies.push_back (strategy);
-
-        // TE_RT_STRATEGIES can be set to a comma separated list of the names to run
+        // TE_RT_STRATEGIES can be set to a comma separated list of the names to
+        // run instead, which can include the experimental strategies that
+        // compare how the threads are woken and suspended
         if (const auto names = juce::StringArray::fromTokens (juce::SystemStats::getEnvironmentVariable ("TE_RT_STRATEGIES", {}), ",", {});
             ! names.isEmpty())
         {
+            strategies = graph::test_utilities::getThreadPoolStrategies();
+
+            for (auto strategy : graph::test_utilities::getExperimentalThreadPoolStrategies())
+                strategies.push_back (strategy);
+
             std::erase_if (strategies, [&names] (auto strategy) { return ! names.contains (graph::test_utilities::getName (strategy)); });
         }
 
@@ -470,6 +475,8 @@ public:
         graph::RealTimeWorkgroup workgroup;
         const auto useWorkgroup = juce::SystemStats::getEnvironmentVariable ("TE_RT_WORKGROUP", "1").getIntValue() != 0;
 
+        // Setting TE_RT_ROTATE changes the order so that the strategies
+        // aren't always measured in the same position
         std::rotate (strategies.begin(),
                      strategies.begin() + (juce::SystemStats::getEnvironmentVariable ("TE_RT_ROTATE", "0").getIntValue() % static_cast<int> (strategies.size())),
                      strategies.end());

@@ -114,8 +114,9 @@
 #define ENGINE_BENCHMARKS_SELECTABLE                    1
 #define ENGINE_BENCHMARKS_PLUGINNODE                    1
 
-// Processes RackMixBus at a real-time cadence with each thread pool strategy.
-// This takes over a minute so is off unless you define it to 1 in your build
+// Processes the RackMixBus Edits at a real-time cadence with the default thread
+// pool strategy and the candidates to replace it. This takes a couple of
+// minutes so is off unless you define it to 1 in your build
 #ifndef ENGINE_BENCHMARKS_RACKS_REALTIME
  #define ENGINE_BENCHMARKS_RACKS_REALTIME               0
 #endif
