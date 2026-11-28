@@ -493,6 +493,12 @@ struct SleepingThreads
         }
     }
 
+    /** Call this when there are no threads running. */
+    void reset()
+    {
+        numSleeping = 0;
+    }
+
     std::atomic<int> numSleeping { 0 };
 };
 
@@ -527,6 +533,8 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
             return;
 
         resetExitSignal();
+        sleepingThreads.reset();
+
         // When only sleeping threads are signalled there mustn't be any counts
         // on the semaphore that a thread could wake up to without being signalled
         semaphore = std::make_unique<SemaphoreType> (options.wakeWhenNodesAreQueued ? 0 : (int) numThreads, options.semaphoreSpins);
@@ -559,7 +567,7 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
     void signalOne() override
     {
-        if (semaphore) semaphore->signal();
+        signal (1);
     }
 
     void signal (int numToSignal) override
@@ -596,7 +604,14 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
     void signalAll() override
     {
-        if (semaphore) semaphore->signal ((int) threads.size());
+        if (! semaphore)
+            return;
+
+        // A signal that isn't for a counted thread would be left on the semaphore
+        if (options.wakeWhenNodesAreQueued)
+            signalSleepingThreads ((int) threads.size());
+        else
+            semaphore->signal ((int) threads.size());
     }
 
     void nodesQueuedDuringBlock (int numNodes) override
@@ -680,6 +695,8 @@ private:
         juce::WorkgroupToken token;
         workgroup.join (token);
 
+        juce::FloatVectorOperations::disableDenormalisedNumberSupport();
+
         bool justWoke = false;
 
         for (;;)
@@ -719,6 +736,8 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
             return;
 
         resetExitSignal();
+        sleepingThreads.reset();
+
         // When only sleeping threads are signalled there mustn't be any counts
         // on the semaphore that a thread could wake up to without being signalled
         semaphore = std::make_unique<SemaphoreType> (options.wakeWhenNodesAreQueued ? 0 : (int) numThreads, options.semaphoreSpins);
@@ -751,7 +770,7 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
     void signalOne() override
     {
-        if (semaphore) semaphore->signal();
+        signal (1);
     }
 
     void signal (int numToSignal) override
@@ -788,7 +807,14 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
     void signalAll() override
     {
-        if (semaphore) semaphore->signal ((int) threads.size());
+        if (! semaphore)
+            return;
+
+        // A signal that isn't for a counted thread would be left on the semaphore
+        if (options.wakeWhenNodesAreQueued)
+            signalSleepingThreads ((int) threads.size());
+        else
+            semaphore->signal ((int) threads.size());
     }
 
     void nodesQueuedDuringBlock (int numNodes) override
@@ -1088,6 +1114,8 @@ LockFreeMultiThreadedNodePlayer::ThreadPoolCreator getPoolCreatorFunction (Threa
             return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSem<LightweightSemaphore>> (p); };
         case ThreadPoolStrategy::lightweightSemHybrid:
             return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSemHybrid<LightweightSemaphore>> (p); };
+        case ThreadPoolStrategy::lightweightSemaphoreWakeQueued:
+            return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSem<LightweightSemaphore>> (p, SemPoolOptions { .wakeWhenNodesAreQueued = true }); };
         case ThreadPoolStrategy::lightweightSemHybridWakeAll:
             return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSemHybrid<LightweightSemaphore>> (p, SemPoolOptions { .wake = SemPoolOptions::Wake::all }); };
         case ThreadPoolStrategy::lightweightSemHybridCascade:
@@ -1106,8 +1134,6 @@ LockFreeMultiThreadedNodePlayer::ThreadPoolCreator getPoolCreatorFunction (Threa
             return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolBlockEvent> (p, ThreadPoolBlockEvent::Idle::spinDuringBlock); };
         case ThreadPoolStrategy::blockEventSpin:
             return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolBlockEvent> (p, ThreadPoolBlockEvent::Idle::spin); };
-        case ThreadPoolStrategy::lightweightSemaphoreWakeQueued:
-            return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSem<LightweightSemaphore>> (p, SemPoolOptions { .wakeWhenNodesAreQueued = true }); };
         case ThreadPoolStrategy::lightweightSemHybridPauseWakeQueued:
             return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSemHybrid<LightweightSemaphore>> (p, SemPoolOptions { .yieldBeforeSleeping = false, .wakeWhenNodesAreQueued = true }); };
         case ThreadPoolStrategy::blockEventWakeQueued:
