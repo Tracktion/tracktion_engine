@@ -228,6 +228,7 @@ namespace test_utilities
             case ThreadPoolStrategy::semaphore:             return "semaphore";
             case ThreadPoolStrategy::lightweightSemaphore:  return "lightweightSemaphore";
             case ThreadPoolStrategy::lightweightSemHybrid:  return "lightweightSemaphoreHybrid";
+            case ThreadPoolStrategy::lightweightSemaphoreWakeQueued:    return "lightweightSemaphoreWakeQueued";
             case ThreadPoolStrategy::lightweightSemHybridWakeAll:   return "lwSemHybridWakeAll";
             case ThreadPoolStrategy::lightweightSemHybridCascade:   return "lwSemHybridCascade";
             case ThreadPoolStrategy::lightweightSemHybridCapped:    return "lwSemHybridCapped";
@@ -237,7 +238,6 @@ namespace test_utilities
             case ThreadPoolStrategy::blockEvent:                    return "blockEvent";
             case ThreadPoolStrategy::blockEventHybrid:              return "blockEventHybrid";
             case ThreadPoolStrategy::blockEventSpin:                return "blockEventSpin";
-            case ThreadPoolStrategy::lightweightSemaphoreWakeQueued:        return "lwSemWakeQueued";
             case ThreadPoolStrategy::lightweightSemHybridPauseWakeQueued:   return "lwSemHybridPauseWakeQueued";
             case ThreadPoolStrategy::blockEventWakeQueued:                  return "blockEventWakeQueued";
         }
@@ -249,6 +249,7 @@ namespace test_utilities
     inline std::vector<ThreadPoolStrategy> getThreadPoolStrategies()
     {
         return { ThreadPoolStrategy::lightweightSemHybrid,
+                 ThreadPoolStrategy::lightweightSemaphoreWakeQueued,
                  ThreadPoolStrategy::lightweightSemaphore,
                  ThreadPoolStrategy::semaphore,
                  ThreadPoolStrategy::conditionVariable,
@@ -268,7 +269,6 @@ namespace test_utilities
                  ThreadPoolStrategy::blockEvent,
                  ThreadPoolStrategy::blockEventHybrid,
                  ThreadPoolStrategy::blockEventSpin,
-                 ThreadPoolStrategy::lightweightSemaphoreWakeQueued,
                  ThreadPoolStrategy::lightweightSemHybridPauseWakeQueued,
                  ThreadPoolStrategy::blockEventWakeQueued };
     }

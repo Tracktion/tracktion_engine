@@ -1245,7 +1245,7 @@ void EditPlaybackContext::resyncToGlobalStreamTime (juce::Range<double> globalSt
 void EditPlaybackContext::setThreadPoolStrategy (int type)
 {
     type = juce::jlimit (static_cast<int> (tracktion::graph::ThreadPoolStrategy::conditionVariable),
-                         static_cast<int> (tracktion::graph::ThreadPoolStrategy::lightweightSemHybrid),
+                         static_cast<int> (tracktion::graph::ThreadPoolStrategy::lightweightSemaphoreWakeQueued),
                          type);
 
     EditPlaybackContextInternal::getThreadPoolStrategyType() = type;
@@ -1254,7 +1254,7 @@ void EditPlaybackContext::setThreadPoolStrategy (int type)
 int EditPlaybackContext::getThreadPoolStrategy()
 {
     const int type = juce::jlimit (static_cast<int> (tracktion::graph::ThreadPoolStrategy::conditionVariable),
-                                   static_cast<int> (tracktion::graph::ThreadPoolStrategy::lightweightSemHybrid),
+                                   static_cast<int> (tracktion::graph::ThreadPoolStrategy::lightweightSemaphoreWakeQueued),
                                    EditPlaybackContextInternal::getThreadPoolStrategyType());
 
     return type;

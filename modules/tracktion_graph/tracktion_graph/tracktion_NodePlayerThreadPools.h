@@ -27,6 +27,10 @@ enum class ThreadPoolStrategy
     semaphore,              /**< Uses a semaphore to suspend threads. */
     lightweightSemaphore,   /**< Uses a semaphore/spin mechanism to suspend threads.*/
     lightweightSemHybrid,   /**< Uses a combination of semaphores/spin and yields to suspend threads.*/
+    lightweightSemaphoreWakeQueued, /**< Uses a semaphore/spin mechanism to suspend threads as soon as
+                                         there are no Nodes queued. Only threads that are suspended are
+                                         signalled, both at the start of a block and when Nodes are queued
+                                         during one, so threads can come back to a block they left. */
 
     // Experimental variants for comparing how threads are woken and suspended
     lightweightSemHybridWakeAll,    /**< lightweightSemHybrid, waking sleeping threads with a single call. */
@@ -38,7 +42,6 @@ enum class ThreadPoolStrategy
     blockEvent,                     /**< Threads sleep on a block counter as soon as there are no Nodes queued. */
     blockEventHybrid,               /**< Threads spin while a block is being processed and sleep on a block counter between blocks. */
     blockEventSpin,                 /**< Threads never sleep. For measuring the cost of waking threads only. */
-    lightweightSemaphoreWakeQueued,         /**< lightweightSemaphore, waking threads when Nodes are queued during a block. */
     lightweightSemHybridPauseWakeQueued,    /**< lightweightSemHybridPause, waking threads when Nodes are queued during a block. */
     blockEventWakeQueued                    /**< blockEvent, waking threads when Nodes are queued during a block. */
 };
