@@ -15,6 +15,7 @@ HostedMidiInputDeviceNode::HostedMidiInputDeviceNode (InputDeviceInstance& idi, 
     : TracktionEngineNode (ps),
       instance (idi)
 {
+    setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
 }
 
 HostedMidiInputDeviceNode::~HostedMidiInputDeviceNode()

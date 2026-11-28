@@ -26,7 +26,11 @@ enum class ThreadPoolStrategy
     hybrid,                 /**< Uses a combination of the above, avoiding CVs on the audio thread. */
     semaphore,              /**< Uses a semaphore to suspend threads. */
     lightweightSemaphore,   /**< Uses a semaphore/spin mechanism to suspend threads.*/
-    lightweightSemHybrid    /**< Uses a combination of semaphores/spin and yields to suspend threads.*/
+    lightweightSemHybrid,   /**< Uses a combination of semaphores/spin and yields to suspend threads.*/
+    lightweightSemaphoreWakeQueued  /**< Uses a semaphore/spin mechanism to suspend threads as soon as
+                                         there are no Nodes queued. Only threads that are suspended are
+                                         signalled, both at the start of a block and when Nodes are queued
+                                         during one, so threads can come back to a block they left. */
 };
 
 /** Returns a function to create a ThreadPool for the given stategy. */

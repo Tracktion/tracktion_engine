@@ -21,6 +21,83 @@ namespace tracktion::inline engine {
 using namespace tracktion::graph;
 
 //==============================================================================
+/** A benchmark-only plugin that does a fixed amount of work for every sample
+    it's given and leaves the audio untouched. This stands in for the DSP of a
+    real plugin, which is where most of the time goes when a typical Edit is
+    played back.
+*/
+class SyntheticLoadPlugin  : public Plugin
+{
+public:
+    SyntheticLoadPlugin (PluginCreationInfo info)  : Plugin (info) {}
+    ~SyntheticLoadPlugin() override                         { notifyListenersOfDeletion(); }
+
+    /** The work done for each sample, which has to be set before the Edit is
+        played back. 250 takes about 50us for a 128 sample block on an M2 Max.
+    */
+    int iterationsPerSample = 250;
+
+    static const char* getPluginName()                      { return "Synthetic Load"; }
+    static constexpr const char* xmlTypeName = "syntheticLoad";
+
+    juce::String getName() const override                   { return getPluginName(); }
+    juce::String getPluginType() override                   { return xmlTypeName; }
+    juce::String getSelectableDescription() override        { return getName(); }
+    BusLayout getBusses() const override                    { return BusLayout::singleStereoInOut(); }
+
+    void initialise (const PluginInitialisationInfo&) override {}
+    void deinitialise() override {}
+    void restorePluginStateFromValueTree (const juce::ValueTree&) override {}
+
+    void applyToBuffer (const PluginRenderContext& fc) override
+    {
+        // Each step needs the result of the last one so the
+        // compiler can't vectorise the loop or work out its result
+        auto s = loadState;
+
+        for (auto i = static_cast<std::int64_t> (fc.bufferNumSamples) * iterationsPerSample; --i >= 0;)
+        {
+            s ^= s >> 29;
+            s *= 0xbf58476d1ce4e5b9ull;
+        }
+
+        loadState = s;
+    }
+
+private:
+    std::uint64_t loadState = 0x9e3779b97f4a7c15ull;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SyntheticLoadPlugin)
+};
+
+/** Adds a SyntheticLoadPlugin to a track's plugins. An index of -1 adds it to the end. */
+inline void addSyntheticLoadPlugin (AudioTrack& track, int index, int iterationsPerSample)
+{
+    track.edit.engine.getPluginManager().createBuiltInType<SyntheticLoadPlugin>();
+    auto plugin = track.edit.getPluginCache().createNewPlugin (SyntheticLoadPlugin::xmlTypeName, {});
+    auto loadPlugin = dynamic_cast<SyntheticLoadPlugin*> (plugin.get());
+
+    if (loadPlugin == nullptr)
+    {
+        assert (false);
+        return;
+    }
+
+    loadPlugin->iterationsPerSample = iterationsPerSample;
+    track.pluginList.insertPlugin (*plugin, index, nullptr);
+}
+
+/** Returns the ID of the Rack the track has an instance of, if it has one. */
+inline EditItemID getRackIDForTrack (AudioTrack& track)
+{
+    for (auto plugin : track.pluginList.getPlugins())
+        if (auto rackInstance = dynamic_cast<RackInstance*> (plugin))
+            return rackInstance->rackTypeID;
+
+    return {};
+}
+
+//==============================================================================
 //==============================================================================
 class RackBenchmarks : public juce::UnitTest
 {
@@ -40,11 +117,45 @@ public:
 
         auto& engine = *tracktion::engine::Engine::getEngines()[0];
 
-        runRackMixBusTest (engine, ts);
-        runMultipleSerialRacksBenchmark (engine);
+        runRackMixBusTest (engine, ts, SyntheticLoad::none);
+
+        // These take too long in a debug build to be worth running there
+       #if ! JUCE_DEBUG
+        runRackMixBusTest (engine, ts, SyntheticLoad::allTracks);
+        runRackMixBusTest (engine, ts, SyntheticLoad::blockedRack);
+       #endif
+
+        if (! isRealTimeOnly())
+            runMultipleSerialRacksBenchmark (engine);
     }
 
-    void runRackMixBusTest (Engine& engine, graph::test_utilities::TestSetup ts)
+    /** Which tracks get a SyntheticLoadPlugin. */
+    enum class SyntheticLoad
+    {
+        none,           /**< The Edit only has cheap Nodes, so the results show the
+                             overhead of the player. */
+        allTracks,      /**< Every audio track has a small load, so most of the time is
+                             spent in Nodes that can be processed in parallel, as it is
+                             with an Edit full of plugins. */
+        blockedRack     /**< One track has a large load in front of its Rack and all of
+                             the tracks sharing that Rack have a load after it. The
+                             threads run out of Nodes while the large load is processed
+                             and then several Nodes are ready at once. */
+    };
+
+    static const char* getEditName (SyntheticLoad syntheticLoad)
+    {
+        switch (syntheticLoad)
+        {
+            case SyntheticLoad::allTracks:      return "RackMixBusLoaded";
+            case SyntheticLoad::blockedRack:    return "RackMixBusBlocked";
+            case SyntheticLoad::none:           break;
+        }
+
+        return "RackMixBus";
+    }
+
+    void runRackMixBusTest (Engine& engine, graph::test_utilities::TestSetup ts, SyntheticLoad syntheticLoad)
     {
         using namespace benchmark_utilities;
         using namespace tracktion::graph;
@@ -181,7 +292,15 @@ public:
         249,225,73,19,199,49,72,45,146,45,45,77,54,184,49,40,190,15,202,118,12,198,79,29,232,198,32,205,236,198,64,96,243,195,35,136,227,24,8,139,100,19,165,201,6,55,6,89,82,101,12,198,74,180,110,12,228,85,183,213,24,100,204,252,240,100,220,113,12,50,243,100,
         67,73,105,178,129,141,129,60,41,87,57,39,175,26,3,89,180,173,198,64,198,157,197,225,201,220,198,0,33,243,100,67,168,52,217,220,199,224,255,1,148,170,60,43,0,0 };
 
-        const auto editName = "RackMixBus";
+        const auto editName = getEditName (syntheticLoad);
+
+        // TE_RACK_EDITS can be set to a comma separated list of the Edit names to run
+        if (const auto names = juce::StringArray::fromTokens (juce::SystemStats::getEnvironmentVariable ("TE_RACK_EDITS", {}), ",", {});
+            ! names.isEmpty() && ! names.contains (editName))
+        {
+            return;
+        }
+
         auto edit = openEditFromZipData (engine, RackMixBus_zip, sizeof (RackMixBus_zip));
         const double fileLength = 20.0;
         auto sinFile = graph::test_utilities::getSinFile<juce::WavAudioFormat> (ts.sampleRate, fileLength, 2);
@@ -198,6 +317,65 @@ public:
                 audioTracks[i]->insertMIDIClip (TimeRange (0.0s, TimeDuration::fromSeconds (fileLength)), nullptr);
 
             expectEquals (edit->getLength().inSeconds(), fileLength);
+        }
+
+        if (syntheticLoad == SyntheticLoad::allTracks)
+        {
+            beginTest ("Add synthetic load");
+
+            // About 10us for each track with a 128 sample block
+            for (auto at : getAudioTracks (*edit))
+                addSyntheticLoadPlugin (*at, 0, 50);
+        }
+        else if (syntheticLoad == SyntheticLoad::blockedRack)
+        {
+            beginTest ("Add synthetic load");
+            juce::Array<AudioTrack*> tracksSharingRack;
+
+            for (auto at : getAudioTracks (*edit))
+                if (const auto rackID = getRackIDForTrack (*at); rackID.isValid())
+                    if (tracksSharingRack.isEmpty() || rackID == getRackIDForTrack (*tracksSharingRack.getFirst()))
+                        tracksSharingRack.add (at);
+
+            expectGreaterOrEqual (tracksSharingRack.size(), 4);
+            logMessage (juce::String (tracksSharingRack.size()) + " tracks share the blocked Rack");
+
+            // The Rack can't be processed until this has finished, which
+            // takes about 375us with a 128 sample block
+            if (! tracksSharingRack.isEmpty())
+                addSyntheticLoadPlugin (*tracksSharingRack.getFirst(), 0, 2000);
+
+            // These are after the Rack and take about 50us each
+            for (auto at : tracksSharingRack)
+            {
+                addSyntheticLoadPlugin (*at, -1, 250);
+
+                const auto plugins = at->pluginList.getPlugins();
+                expect (dynamic_cast<SyntheticLoadPlugin*> (plugins.getLast().get()) != nullptr);
+            }
+        }
+
+       #if ENGINE_BENCHMARKS_RACKS_REALTIME
+        if (isRealTimeOnly())
+        {
+            runRackMixBusRealTimeBenchmark (*edit, editName, ts);
+            return;
+        }
+       #endif
+
+        if (syntheticLoad != SyntheticLoad::none)
+        {
+            // Single threaded first, then with each strategy
+            renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::no, LockFree::yes, ThreadPoolStrategy::conditionVariable });
+
+            for (auto strategy : getTrackedThreadPoolStrategies())
+                renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, strategy });
+
+           #if ENGINE_BENCHMARKS_RACKS_REALTIME
+            runRackMixBusRealTimeBenchmark (*edit, editName, ts);
+           #endif
+
+            return;
         }
 
         // Render single threaded first
@@ -238,7 +416,90 @@ public:
                 renderEdit (*this, { edit.get(), editName, ts, MultiThreaded::yes, LockFree::yes, ThreadPoolStrategy::lightweightSemaphore, PoolMemoryAllocations::no, ShareNodeMemory::yes });
             }
         }
+
+       #if ENGINE_BENCHMARKS_RACKS_REALTIME
+        runRackMixBusRealTimeBenchmark (*edit, editName, ts);
+       #endif
     }
+
+    /** The strategies whose results are tracked with the loaded Edits and at a
+        real-time cadence: the default and the candidates to replace it.
+    */
+    static std::vector<ThreadPoolStrategy> getTrackedThreadPoolStrategies()
+    {
+        return { ThreadPoolStrategy::lightweightSemHybrid,
+                 ThreadPoolStrategy::lightweightSemaphoreWakeQueued };
+    }
+
+    /** Set the TE_RT_ONLY environment variable to only run the real-time benchmark. */
+    static bool isRealTimeOnly()
+    {
+        return juce::SystemStats::getEnvironmentVariable ("TE_RT_ONLY", {}).isNotEmpty();
+    }
+
+   #if ENGINE_BENCHMARKS_RACKS_REALTIME
+    /** Processes the Edit at the cadence of a real audio device to compare how
+        reliably each thread pool strategy processes a block when its threads
+        have to sleep and wake up between blocks. The time this takes in total
+        is meaningless, the timings of the individual blocks are the result.
+        @see test_utilities::TestProcess::processAllInRealTime
+    */
+    void runRackMixBusRealTimeBenchmark (Edit& edit, juce::String editName, graph::test_utilities::TestSetup ts)
+    {
+        using namespace benchmark_utilities;
+        using namespace tracktion::graph;
+        const double warmUpSeconds = 0.5;
+        const double measuredSeconds = juce::SystemStats::getEnvironmentVariable ("TE_RT_SECONDS", "5").getDoubleValue();
+
+        auto strategies = getTrackedThreadPoolStrategies();
+
+        // TE_RT_STRATEGIES can be set to a comma separated list of the names of
+        // any of the strategies to run instead
+        if (const auto names = juce::StringArray::fromTokens (juce::SystemStats::getEnvironmentVariable ("TE_RT_STRATEGIES", {}), ",", {});
+            ! names.isEmpty())
+        {
+            strategies = graph::test_utilities::getThreadPoolStrategies();
+            std::erase_if (strategies, [&names] (auto strategy) { return ! names.contains (graph::test_utilities::getName (strategy)); });
+        }
+
+        if (strategies.empty())
+            return;
+
+        // On macOS the threads join a workgroup, as they would with an audio
+        // device, unless TE_RT_WORKGROUP is set to 0
+        graph::RealTimeWorkgroup workgroup;
+        const auto useWorkgroup = juce::SystemStats::getEnvironmentVariable ("TE_RT_WORKGROUP", "1").getIntValue() != 0;
+
+        // Setting TE_RT_ROTATE changes the order so that the strategies
+        // aren't always measured in the same position
+        std::rotate (strategies.begin(),
+                     strategies.begin() + (juce::SystemStats::getEnvironmentVariable ("TE_RT_ROTATE", "0").getIntValue() % static_cast<int> (strategies.size())),
+                     strategies.end());
+
+        for (int blockSize : { 128, 512 })
+        {
+            ts.blockSize = blockSize;
+
+            BenchmarkOptions opts { &edit, editName, ts, MultiThreaded::no, LockFree::yes, ThreadPoolStrategy::conditionVariable };
+            opts.isRealTime = RealTime::yes;
+            opts.realTimeWorkgroup = useWorkgroup ? &workgroup : nullptr;
+            opts.numWarmUpBlocks = juce::roundToInt (warmUpSeconds * ts.sampleRate / blockSize);
+            opts.durationToRender = warmUpSeconds + measuredSeconds;
+
+            // The thread pool isn't used when single threaded so this only needs to run
+            // once and is then the reference the strategies are compared with
+            renderEdit (*this, opts);
+
+            opts.isMultiThreaded = MultiThreaded::yes;
+
+            for (auto strategy : strategies)
+            {
+                opts.poolType = strategy;
+                renderEdit (*this, opts);
+            }
+        }
+    }
+   #endif
 
     void runMultipleSerialRacksBenchmark (Engine& engine)
     {

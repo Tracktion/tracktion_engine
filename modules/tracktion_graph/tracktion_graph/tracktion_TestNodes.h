@@ -22,6 +22,8 @@ public:
                     std::optional<size_t> nodeIDToUse = {})
         : input (inputNode)
     {
+        setOptimisations ({ .prefetch = PrefetchBlock::no });
+
         if (nodeIDToUse)
             nodeID = *nodeIDToUse;
 
@@ -81,6 +83,7 @@ public:
     MidiNode (juce::MidiMessageSequence sequenceToPlay)
         : sequence (std::move (sequenceToPlay))
     {
+        setOptimisations ({ .prefetch = PrefetchBlock::no });
     }
 
     NodeProperties getNodeProperties() override
@@ -138,6 +141,7 @@ public:
     SinNode (float frequencyToUse, int numChannelsToUse = 1, size_t nodeIDToUse = 0)
         : numChannels (numChannelsToUse), nodeID (nodeIDToUse), frequency (frequencyToUse)
     {
+        setOptimisations ({ .prefetch = PrefetchBlock::no });
     }
 
     NodeProperties getNodeProperties() override
@@ -187,9 +191,10 @@ public:
     {
         // The buffer is cleared once in prepareToPlay and never re-written, so downstream
         // Nodes must not process in place on it or its silence guarantee is lost.
-        setOptimisations ({ ClearBuffers::no,
-                            AllocateAudioBuffer::no,
-                            ShareOutputBuffer::no });
+        setOptimisations ({ .clear = ClearBuffers::no,
+                            .allocate = AllocateAudioBuffer::no,
+                            .share = ShareOutputBuffer::no,
+                            .prefetch = PrefetchBlock::no });
     }
 
     NodeProperties getNodeProperties() override
@@ -234,6 +239,7 @@ public:
     BasicSummingNode (std::vector<std::unique_ptr<Node>> inputs)
         : nodes (std::move (inputs))
     {
+        setOptimisations ({ .prefetch = PrefetchBlock::no });
     }
 
     NodeProperties getNodeProperties() override
@@ -317,6 +323,8 @@ public:
         : node (std::move (input)),
           function (std::move (fn))
     {
+        setOptimisations ({ .prefetch = PrefetchBlock::no });
+
         jassert (function);
     }
 
@@ -379,6 +387,8 @@ public:
     GainNode (Node* inputNode, std::function<float()> gainFunc, size_t nodeHashToUse = 0)
         : input (inputNode), gainFunction (std::move (gainFunc)), nodeHash (nodeHashToUse)
     {
+        setOptimisations ({ .prefetch = PrefetchBlock::no });
+
         assert (input != nullptr);
         assert (gainFunction);
         lastGain = gainFunction();
@@ -389,6 +399,8 @@ public:
         : ownedInput (std::move (inputNode)), input (ownedInput.get()),
           gainFunction (std::move (gainFunc)), nodeHash (nodeHashToUse)
     {
+        setOptimisations ({ .prefetch = PrefetchBlock::no });
+
         assert (ownedInput != nullptr);
         assert (input != nullptr);
         assert (gainFunction);
@@ -468,8 +480,9 @@ public:
           gainFunction (std::move (getGainFunc)),
           extraHashToUse (extraHashToUse_)
     {
-        setOptimisations ({ ClearBuffers::no,
-                            AllocateAudioBuffer::no });
+        setOptimisations ({ .clear = ClearBuffers::no,
+                            .allocate = AllocateAudioBuffer::no,
+                            .prefetch = PrefetchBlock::no });
     }
 
     int getBusID() const
@@ -541,15 +554,17 @@ public:
     ReturnNode (int busIDToUse, std::optional<size_t> extraHashToUse = {})
         : extraHash (extraHashToUse), busID (busIDToUse)
     {
-        setOptimisations ({ ClearBuffers::no,
-                            AllocateAudioBuffer::yes });
+        setOptimisations ({ .clear = ClearBuffers::no,
+                            .allocate = AllocateAudioBuffer::yes,
+                            .prefetch = PrefetchBlock::no });
     }
 
     ReturnNode (std::unique_ptr<Node> inputNode, int busIDToUse)
         : input (std::move (inputNode)), busID (busIDToUse)
     {
-        setOptimisations ({ ClearBuffers::no,
-                            AllocateAudioBuffer::yes });
+        setOptimisations ({ .clear = ClearBuffers::no,
+                            .allocate = AllocateAudioBuffer::yes,
+                            .prefetch = PrefetchBlock::no });
     }
 
     NodeProperties getNodeProperties() override
@@ -621,8 +636,9 @@ public:
         if (inputNumChannels >= desiredNumChannels)
         {
             canUseSourceBuffers = true;
-            setOptimisations ({ tracktion::graph::ClearBuffers::no,
-                                tracktion::graph::AllocateAudioBuffer::no });
+            setOptimisations ({ .clear = tracktion::graph::ClearBuffers::no,
+                                .allocate = tracktion::graph::AllocateAudioBuffer::no,
+                                .prefetch = tracktion::graph::PrefetchBlock::no });
         }
     }
 
@@ -757,6 +773,8 @@ public:
     SinkNode (std::unique_ptr<Node> inputNode)
         : input (std::move (inputNode))
     {
+        setOptimisations ({ .prefetch = PrefetchBlock::no });
+
         jassert (input);
     }
 

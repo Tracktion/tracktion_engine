@@ -23,6 +23,17 @@ namespace
 {
     constexpr int timeOutMilliseconds = -1;
 
+    /** Call this from each pool thread when it starts.
+        These have to be set by the thread itself as a thread can only be
+        upgraded to real-time from within it, and that has to happen after its
+        priority is set or it would be replaced.
+    */
+    inline void setUpThreadPriority (const juce::Thread::RealtimeOptions& rtOpts)
+    {
+        setCurrentThreadPriority (10);
+        tryToUpgradeCurrentThreadToRealtime (rtOpts);
+    }
+
     inline void pause()
     {
         tracktion::core::pause();
@@ -54,9 +65,7 @@ struct ThreadPoolCV : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
         for (size_t i = 0; i < numThreads; ++i)
         {
-            threads.emplace_back ([this] { runThread(); });
-            setThreadPriority (threads.back(), 10);
-            tryToUpgradeCurrentThreadToRealtime (rtOpts);
+            threads.emplace_back ([this, rtOpts] { runThread (rtOpts); });
         }
     }
 
@@ -149,8 +158,10 @@ private:
         return shouldWait();
     }
 
-    void runThread()
+    void runThread (const juce::Thread::RealtimeOptions& rtOpts)
     {
+        setUpThreadPriority (rtOpts);
+
         juce::WorkgroupToken token;
         workgroup.join (token);
 
@@ -189,9 +200,7 @@ struct ThreadPoolRT : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
         for (size_t i = 0; i < numThreads; ++i)
         {
-            threads.emplace_back ([this] { runThread(); });
-            setThreadPriority (threads.back(), 10);
-            tryToUpgradeCurrentThreadToRealtime (rtOpts);
+            threads.emplace_back ([this, rtOpts] { runThread (rtOpts); });
         }
     }
 
@@ -253,8 +262,10 @@ private:
     std::vector<std::thread> threads;
     juce::AudioWorkgroup workgroup;
 
-    void runThread()
+    void runThread (const juce::Thread::RealtimeOptions& rtOpts)
     {
+        setUpThreadPriority (rtOpts);
+
         juce::WorkgroupToken token;
         workgroup.join (token);
 
@@ -299,9 +310,7 @@ struct ThreadPoolHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
         for (size_t i = 0; i < numThreads; ++i)
         {
-            threads.emplace_back ([this] { runThread(); });
-            setThreadPriority (threads.back(), 10);
-            tryToUpgradeCurrentThreadToRealtime (rtOpts);
+            threads.emplace_back ([this, rtOpts] { runThread (rtOpts); });
         }
     }
 
@@ -413,8 +422,10 @@ private:
         return shouldWait();
     }
 
-    void runThread()
+    void runThread (const juce::Thread::RealtimeOptions& rtOpts)
     {
+        setUpThreadPriority (rtOpts);
+
         juce::WorkgroupToken token;
         workgroup.join (token);
 
@@ -432,11 +443,72 @@ private:
 
 //==============================================================================
 //==============================================================================
+/** Counts the threads that are sleeping, or about to, so that only those are
+    signalled. A thread adds itself before it looks for Nodes one last time so
+    a signal can't be missed, and each signal is for one of the threads counted
+    here, so nothing is left on the semaphore for a thread to wake up to later.
+*/
+struct SleepingThreads
+{
+    /** A thread must call this before its last look for Nodes. */
+    void add()
+    {
+        numSleeping.fetch_add (1);
+    }
+
+    /** A thread must call this if that last look found Nodes. If it returns
+        false a signal has already been sent for the thread, which has to wait
+        for it.
+    */
+    bool tryToRemove()
+    {
+        for (auto n = numSleeping.load();;)
+        {
+            if (n <= 0)
+                return false;
+
+            if (numSleeping.compare_exchange_weak (n, n - 1))
+                return true;
+        }
+    }
+
+    /** Returns the number of threads to signal, which will be no more than maxNum. */
+    int claim (int maxNum)
+    {
+        // The Nodes that have just been queued have to be visible to any
+        // thread that adds itself after the count is read here
+        std::atomic_thread_fence (std::memory_order_seq_cst);
+
+        for (auto n = numSleeping.load();;)
+        {
+            const auto numToClaim = std::min (n, maxNum);
+
+            if (numToClaim <= 0)
+                return 0;
+
+            if (numSleeping.compare_exchange_weak (n, n - numToClaim))
+                return numToClaim;
+        }
+    }
+
+    /** Call this when there are no threads running. */
+    void reset()
+    {
+        numSleeping = 0;
+    }
+
+    std::atomic<int> numSleeping { 0 };
+};
+
 template<typename SemaphoreType>
 struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
 {
-    ThreadPoolSem (LockFreeMultiThreadedNodePlayer& p)
-        : ThreadPool (p)
+    /** If wakeWhenNodesAreQueued is true, only the threads that are sleeping
+        are signalled, both at the start of a block and when Nodes are queued
+        during one.
+    */
+    ThreadPoolSem (LockFreeMultiThreadedNodePlayer& p, bool wakeWhenNodesAreQueuedToUse = false)
+        : ThreadPool (p), wakeWhenNodesAreQueued (wakeWhenNodesAreQueuedToUse)
     {
     }
 
@@ -446,7 +518,11 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
             return;
 
         resetExitSignal();
-        semaphore = std::make_unique<SemaphoreType> ((int) numThreads);
+        sleepingThreads.reset();
+
+        // When only sleeping threads are signalled there mustn't be any counts
+        // on the semaphore that a thread could wake up to without being signalled
+        semaphore = std::make_unique<SemaphoreType> (wakeWhenNodesAreQueued ? 0 : (int) numThreads);
         workgroup = workgroupToUse;
 
         const auto rtOpts = juce::Thread::RealtimeOptions()
@@ -455,9 +531,7 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
         for (size_t i = 0; i < numThreads; ++i)
         {
-            threads.emplace_back ([this] { runThread(); });
-            setThreadPriority (threads.back(), 10);
-            tryToUpgradeCurrentThreadToRealtime (rtOpts);
+            threads.emplace_back ([this, rtOpts] { runThread (rtOpts); });
         }
     }
 
@@ -474,17 +548,32 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
     void signalOne() override
     {
-        if (semaphore) semaphore->signal();
+        signal (1);
     }
 
     void signal (int numToSignal) override
     {
-        if (semaphore) semaphore->signal (std::min (numToSignal, (int) threads.size()));
+        if (! semaphore)
+            return;
+
+        const auto num = std::min (numToSignal, (int) threads.size());
+
+        // A signal that isn't for a counted thread would be left on the semaphore
+        if (wakeWhenNodesAreQueued)
+            signalSleepingThreads (num);
+        else
+            semaphore->signal (num);
     }
 
     void signalAll() override
     {
-        if (semaphore) semaphore->signal ((int) threads.size());
+        signal ((int) threads.size());
+    }
+
+    void nodesQueuedDuringBlock (int numNodes) override
+    {
+        if (wakeWhenNodesAreQueued && semaphore)
+            signalSleepingThreads (numNodes);
     }
 
     void wait()
@@ -492,7 +581,18 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
         if (! shouldWait())
             return;
 
-        if (timeOutMilliseconds < 0)
+        if (wakeWhenNodesAreQueued)
+        {
+            sleepingThreads.add();
+
+            // If Nodes have been queued since the thread last looked, it only
+            // sleeps if a signal has already been sent for it
+            if (! shouldWait() && sleepingThreads.tryToRemove())
+                return;
+
+            semaphore->wait();
+        }
+        else if (timeOutMilliseconds < 0)
         {
             semaphore->wait();
         }
@@ -516,14 +616,27 @@ struct ThreadPoolSem : public LockFreeMultiThreadedNodePlayer::ThreadPool
     }
 
 private:
+    const bool wakeWhenNodesAreQueued;
+    SleepingThreads sleepingThreads;
     std::vector<std::thread> threads;
     std::unique_ptr<SemaphoreType> semaphore;
     juce::AudioWorkgroup workgroup;
 
-    void runThread()
+    /** Signals up to maxNum of the threads that are sleeping, and none that aren't. */
+    void signalSleepingThreads (int maxNum)
     {
+        if (const auto numToSignal = sleepingThreads.claim (maxNum); numToSignal > 0)
+            semaphore->signal (numToSignal);
+    }
+
+    void runThread (const juce::Thread::RealtimeOptions& rtOpts)
+    {
+        setUpThreadPriority (rtOpts);
+
         juce::WorkgroupToken token;
         workgroup.join (token);
+
+        juce::FloatVectorOperations::disableDenormalisedNumberSupport();
 
         for (;;)
         {
@@ -562,9 +675,7 @@ struct ThreadPoolSemHybrid : public LockFreeMultiThreadedNodePlayer::ThreadPool
 
         for (size_t i = 0; i < numThreads; ++i)
         {
-            threads.emplace_back ([this] { runThread(); });
-            setThreadPriority (threads.back(), 10);
-            tryToUpgradeCurrentThreadToRealtime (rtOpts);
+            threads.emplace_back ([this, rtOpts] { runThread (rtOpts); });
         }
     }
 
@@ -652,8 +763,10 @@ private:
     std::unique_ptr<SemaphoreType> semaphore;
     juce::AudioWorkgroup workgroup;
 
-    void runThread()
+    void runThread (const juce::Thread::RealtimeOptions& rtOpts)
     {
+        setUpThreadPriority (rtOpts);
+
         juce::WorkgroupToken token;
         workgroup.join (token);
         
@@ -685,6 +798,8 @@ LockFreeMultiThreadedNodePlayer::ThreadPoolCreator getPoolCreatorFunction (Threa
             return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSem<LightweightSemaphore>> (p); };
         case ThreadPoolStrategy::lightweightSemHybrid:
             return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSemHybrid<LightweightSemaphore>> (p); };
+        case ThreadPoolStrategy::lightweightSemaphoreWakeQueued:
+            return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolSem<LightweightSemaphore>> (p, true); };
         case ThreadPoolStrategy::realTime:
         default:
             return [] (LockFreeMultiThreadedNodePlayer& p) { return std::make_unique<ThreadPoolRT> (p); };

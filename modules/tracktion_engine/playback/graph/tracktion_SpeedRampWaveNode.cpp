@@ -50,6 +50,8 @@ SpeedRampWaveNode::SpeedRampWaveNode (const AudioFile& af,
      channelsToUse (channelSetToUse),
      destChannels (destChannelsToFill)
 {
+    setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
+
     // Both ramp times should not be empty!
     assert ((! speedFadeDescription.inTimeRange.isEmpty())
             || (! speedFadeDescription.outTimeRange.isEmpty()));

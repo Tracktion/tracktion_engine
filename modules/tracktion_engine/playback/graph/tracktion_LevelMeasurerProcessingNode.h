@@ -20,6 +20,7 @@ public:
         : input (std::move (inputNode)),
           meterPlugin (levelMeterPlugin)
     {
+        setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
     }
 
     ~LevelMeasurerProcessingNode() override
@@ -66,8 +67,9 @@ public:
             if (inputNumChannels >= desiredNumChannels)
             {
                 canUseSourceBuffers = true;
-                setOptimisations ({ tracktion::graph::ClearBuffers::no,
-                                    tracktion::graph::AllocateAudioBuffer::no });
+                setOptimisations ({ .clear = tracktion::graph::ClearBuffers::no,
+                                    .allocate = tracktion::graph::AllocateAudioBuffer::no,
+                                    .prefetch = tracktion::graph::PrefetchBlock::no });
             }
         }
 

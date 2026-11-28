@@ -113,8 +113,12 @@ int LockFreeMultiThreadedNodePlayer::process (const Node::ProcessContext& pc)
     numSamplesToProcess = pc.numSamples;
     referenceSampleRange = pc.referenceSampleRange;
 
-    // Prepare all the nodes to be played back
-    for (auto node : preparedNode->graph->orderedNodes)
+    // Changing the block counter marks all of the Nodes as not processed, which
+    // avoids writing to every Node here after another thread has processed it
+    preparedNode->graph->blockCounter.fetch_add (1, std::memory_order_release);
+
+    // That leaves only the Nodes that prefetch or have pooled buffers to prepare
+    for (auto node : preparedNode->nodesToPrepare)
         node->prepareForNextBlock (referenceSampleRange);
 
     // We need to retain the root so we can get the output from it
@@ -203,10 +207,11 @@ std::unique_ptr<NodeGraph> LockFreeMultiThreadedNodePlayer::prepareToPlay (std::
                                                                            bool useCurrentAudioBufferPool,
                                                                            bool disableLatencyCompensation)
 {
-    createThreads();
-
+    // These need to be set first as the threads use them for their real-time options
     sampleRate.store (sampleRateToUse, std::memory_order_release);
-    blockSize.store (blockSizeToUse, std::memory_order_release);;
+    blockSize.store (blockSizeToUse, std::memory_order_release);
+
+    createThreads();
 
     if (! useCurrentAudioBufferPool)
         return node_player_utils::prepareToPlay (std::move (node), oldGraph,
@@ -315,7 +320,15 @@ void LockFreeMultiThreadedNodePlayer::buildNodesOutputLists (PreparedNode& prepa
         preparedNode.playbackNodes.push_back (std::make_unique<PlaybackNode> (*n));
         n->internal = preparedNode.playbackNodes.back().get();
         n->numOutputNodes = 0;
+        n->setSharedBlockCounter (&preparedNode.graph->blockCounter);
     }
+
+    // The Nodes have been initialised by now so this won't change
+    preparedNode.nodesToPrepare.clear();
+
+    for (auto n : preparedNode.graph->orderedNodes)
+        if (n->needsPreparingForEachBlock())
+            preparedNode.nodesToPrepare.push_back (n);
 
     // Iterate all nodes, for each input, add to the current Nodes output list
     for (auto node : preparedNode.graph->orderedNodes)
@@ -328,6 +341,13 @@ void LockFreeMultiThreadedNodePlayer::buildNodesOutputLists (PreparedNode& prepa
             ++inputNode->numOutputNodes;
         }
     }
+
+    // Find the Nodes that are queued at the start of each block
+    preparedNode.leafNodes.clear();
+
+    for (auto& playbackNode : preparedNode.playbackNodes)
+        if (playbackNode->numInputs == 0)
+            preparedNode.leafNodes.push_back (&playbackNode->node);
 }
 
 void LockFreeMultiThreadedNodePlayer::resetProcessQueue (PreparedNode& preparedNode)
@@ -343,52 +363,37 @@ void LockFreeMultiThreadedNodePlayer::resetProcessQueue (PreparedNode& preparedN
 
     numNodesQueued.store (0, std::memory_order_release);
 
-    // Reset all the counters
-    // And then move any Nodes that are ready to the correct queue
+    // The input counters don't need resetting here as they are reset by the
+    // thread that queues each Node, so they should all be ready for this block
+   #if JUCE_DEBUG
     for (auto& playbackNode : preparedNode.playbackNodes)
     {
         jassert (playbackNode->hasBeenQueued);
         playbackNode->hasBeenQueued = false;
-        playbackNode->numInputsToBeProcessed.store (playbackNode->numInputs, std::memory_order_release);
+        playbackNode->hasBeenDequeued = false;
+        jassert (playbackNode->numInputsToBeProcessed.load (std::memory_order_acquire) == playbackNode->numInputs);
 
         // Check only ready nodes will be queued
-       #if JUCE_DEBUG
-        if (playbackNode->node.isReadyToProcess())
-            jassert (playbackNode->numInputsToBeProcessed == 0);
-
-        if (playbackNode->numInputsToBeProcessed == 0)
-            jassert (playbackNode->node.isReadyToProcess());
-       #endif
-    }
-
-   #if JUCE_DEBUG
-    for (auto& playbackNode : preparedNode.playbackNodes)
-    {
-        playbackNode->hasBeenDequeued = false;
-        jassert (! playbackNode->hasBeenQueued);
-        jassert (playbackNode->numInputsToBeProcessed == playbackNode->numInputs);
-        jassert (playbackNode->numInputsToBeProcessed.load (std::memory_order_acquire) == playbackNode->numInputs);
+        jassert (playbackNode->node.isReadyToProcess() == (playbackNode->numInputs == 0));
     }
    #endif
 
-    size_t numNodesJustQueued = 0;
-
-    // Make sure the counters are reset for all nodes before queueing any.
-    // Only queue the leaf Nodes, going by their input count rather than their counter:
-    // a pool thread that saw numNodesQueued > 0 at the end of the last block can still
-    // dequeue and process a leaf queued here, and so take a later Node's counter to 0
-    // whilst this loop is running. That Node is then queued by that thread, so queueing
-    // it here too would process it twice
-    for (auto& playbackNode : preparedNode.playbackNodes)
+    // Queue the Nodes which don't have any inputs. These are picked by their
+    // input count rather than their counter: a pool thread that saw
+    // numNodesQueued > 0 at the end of the last block can still dequeue and
+    // process a leaf queued here, and so take a later Node's counter to 0
+    // whilst this loop is running. That Node is then queued by that thread, so
+    // queueing it here too would process it twice
+    for (auto node : preparedNode.leafNodes)
     {
-        if (playbackNode->numInputs == 0)
-        {
-            jassert (! playbackNode->hasBeenQueued);
-            playbackNode->hasBeenQueued = true;
-            preparedNode.nodesReadyToBeProcessed->try_enqueue (&playbackNode->node);
-            ++numNodesJustQueued;
-        }
+       #if JUCE_DEBUG
+        static_cast<PlaybackNode*> (node->internal)->hasBeenQueued = true;
+       #endif
+
+        preparedNode.nodesReadyToBeProcessed->try_enqueue (std::move (node));
     }
+
+    const auto numNodesJustQueued = preparedNode.leafNodes.size();
 
     // Make sure this is only incremented after all the nodes have been queued
     // or the threads will start queueing Nodes at the same time
@@ -404,6 +409,7 @@ Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (PreparedNode& 
 
    #if RETURN_MID_NODES_OPTIMISATION
     Node* nodeToReturn = nullptr;
+    int numNodesJustQueued = 0;
    #endif
 
     for (auto output : playbackNode->outputs)
@@ -413,9 +419,15 @@ Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (PreparedNode& 
         // fetch_sub returns the previous value so it will now be 0
         if (outputPlaybackNode->numInputsToBeProcessed.fetch_sub (1, std::memory_order_acq_rel) == 1)
         {
+            // All of the inputs have now been processed so nothing else will
+            // change this until the next block and it can be reset for that now
+            outputPlaybackNode->numInputsToBeProcessed.store (outputPlaybackNode->numInputs, std::memory_order_release);
+
             jassert (outputPlaybackNode->node.isReadyToProcess());
+           #if JUCE_DEBUG
             jassert (! outputPlaybackNode->hasBeenQueued);
             outputPlaybackNode->hasBeenQueued = true;
+           #endif
 
            #if RETURN_MID_NODES_OPTIMISATION
             // We can return one Node to be processed on this thread, otherwise we can
@@ -428,6 +440,7 @@ Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (PreparedNode& 
             {
                 preparedNode.nodesReadyToBeProcessed->try_enqueue (&outputPlaybackNode->node);
                 numNodesQueued.fetch_add (1, std::memory_order_acq_rel);
+                ++numNodesJustQueued;
             }
            #else
             // If there is only one Node or we're at the last Node we can return this to be processed by the same thread
@@ -442,6 +455,9 @@ Node* LockFreeMultiThreadedNodePlayer::updateProcessQueueForNode (PreparedNode& 
     }
 
    #if RETURN_MID_NODES_OPTIMISATION
+    if (numNodesJustQueued > 0)
+        threadPool->nodesQueuedDuringBlock (numNodesJustQueued);
+
     return nodeToReturn;
    #else
     return nullptr;

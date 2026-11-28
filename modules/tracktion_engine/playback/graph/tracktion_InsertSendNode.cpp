@@ -18,8 +18,9 @@ InsertNode::InsertNode (std::unique_ptr<Node> input_, InsertPlugin& ip, std::uni
     assert (input);
     assert (returnNode);
 
-    setOptimisations ({ tracktion::graph::ClearBuffers::no,
-                        tracktion::graph::AllocateAudioBuffer::no });
+    setOptimisations ({ .clear = tracktion::graph::ClearBuffers::no,
+                        .allocate = tracktion::graph::AllocateAudioBuffer::no,
+                        .prefetch = tracktion::graph::PrefetchBlock::no });
 
     plugin->baseClassInitialise ({ TimePosition(), info.sampleRate, info.blockSize });
     isInitialised = true;
@@ -92,6 +93,7 @@ void InsertNode::process (ProcessContext& pc)
 InsertSendNode::InsertSendNode (InsertPlugin& ip)
     : owner (ip), plugin (ip)
 {
+    setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
 }
 
 int InsertSendNode::getLatencyAtInput()
@@ -154,8 +156,9 @@ TransformResult InsertSendNode::transform (TransformOptions& options)
 void InsertSendNode::prepareToPlay (const tracktion::graph::PlaybackInitialisationInfo&)
 {
     if (input)
-        setOptimisations ({ tracktion::graph::ClearBuffers::no,
-                            tracktion::graph::AllocateAudioBuffer::no });
+        setOptimisations ({ .clear = tracktion::graph::ClearBuffers::no,
+                            .allocate = tracktion::graph::AllocateAudioBuffer::no,
+                            .prefetch = tracktion::graph::PrefetchBlock::no });
 }
 
 bool InsertSendNode::isReadyToProcess()

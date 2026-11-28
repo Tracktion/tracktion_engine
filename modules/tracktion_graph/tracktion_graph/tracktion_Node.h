@@ -124,6 +124,12 @@ struct NodeGraph
     std::unique_ptr<Node> rootNode;
     std::vector<Node*> orderedNodes;
     std::vector<NodeAndID> sortedNodes;
+
+    /** @internal
+        A count of the blocks processed which a player can share with the Nodes.
+        @see Node::setSharedBlockCounter
+    */
+    std::atomic<uint64_t> blockCounter { 1 };
 };
 
 
@@ -185,12 +191,19 @@ enum class ShareOutputBuffer : std::uint8_t
     yes /**< Downstream Nodes may adopt this Node's output buffer and process in place, overwriting its contents. */
 };
 
+enum class PrefetchBlock : std::uint8_t
+{
+    no, /**< Don't call prefetchBlock, your subclass doesn't override it. This lets players skip the Node when preparing each block. */
+    yes /**< Do call prefetchBlock on the Node before each block is processed. */
+};
+
 /** Holds some hints that _might_ be used by the Node or players to improve efficiency. */
 struct NodeOptimisations
 {
     ClearBuffers clear = ClearBuffers::yes;
     AllocateAudioBuffer allocate = AllocateAudioBuffer::yes;
     ShareOutputBuffer share = ShareOutputBuffer::yes;
+    PrefetchBlock prefetch = PrefetchBlock::yes;
 };
 
 //==============================================================================
@@ -232,6 +245,25 @@ public:
 
     /** Call before processing the next block, used to reset the process status. */
     void prepareForNextBlock (juce::Range<int64_t> referenceSampleRange);
+
+    /** @internal
+        Players can give all the Nodes in a graph a counter which they change
+        before each block. A Node then only counts as processed if that happened
+        since the counter last changed, so the player resets every Node with a
+        single store rather than having to call prepareForNextBlock on each one.
+        The counter has to outlive the Node, or the Node be initialised again.
+        @see needsPreparingForEachBlock
+    */
+    void setSharedBlockCounter (const std::atomic<uint64_t>*);
+
+    /** @internal
+        Returns true if prepareForNextBlock still has to be called every block
+        for a Node with a shared block counter. That's the case if its buffers
+        are pooled or it hasn't opted out of prefetchBlock, which is known once
+        the Node has been initialised.
+        @see PrefetchBlock
+    */
+    bool needsPreparingForEachBlock() const;
 
     /** Call to process the node, which will in turn call the process method with the
         buffers to fill.
@@ -357,6 +389,9 @@ protected:
 
     /** Called before once on all Nodes before they are processed.
         This can be used to prefetch audio data or update mute statuses etc..
+
+        If you don't override this, set PrefetchBlock::no with setOptimisations
+        so that players don't have to visit the Node before each block.
     */
     virtual void prefetchBlock (juce::Range<int64_t> /*referenceSampleRange*/) {}
 
@@ -399,6 +434,9 @@ private:
     std::optional<choc::buffer::ChannelArrayView<float>> referencedViewToUse;
     tracktion_engine::MidiMessageArray midiBuffer;
     std::atomic<int> numSamplesProcessed { 0 }, retainCount { 0 };
+    bool usesRetainCount = false;
+    const std::atomic<uint64_t>* sharedBlockCounter = nullptr;
+    std::atomic<uint64_t> blockLastProcessed { 0 };
     NodeOptimisations nodeOptimisations;
 
 
@@ -500,13 +538,22 @@ inline void Node::initialise (const PlaybackInitialisationInfo& info)
         audioBuffer.resize (audioBufferSize);
     }
 
+    // Retaining Nodes only keeps their buffers alive until the Nodes using them
+    // have been processed. Buffers are only ever given back if they came from a
+    // pool so without one there's no need to count, which saves several atomic
+    // operations on each Node and its inputs every block
+    usesRetainCount = static_cast<bool> (deallocateAudioBuffer);
+
+    // The player will set this again if it uses one
+    sharedBlockCounter = nullptr;
+
     directInputNodes = getDirectInputNodes();
 }
 
 inline void Node::prepareForNextBlock (juce::Range<int64_t> referenceSampleRange)
 {
     // Only do this once as prepare may be called multiple times
-    if (retainCount == 0)
+    if (usesRetainCount && retainCount == 0)
     {
         nodeToRelease.store (nullptr, std::memory_order_relaxed); // Reset in case the output node behaviour changes
 
@@ -517,7 +564,9 @@ inline void Node::prepareForNextBlock (juce::Range<int64_t> referenceSampleRange
     }
 
     hasBeenProcessed.store (false, std::memory_order_release);
-    prefetchBlock (referenceSampleRange);
+
+    if (nodeOptimisations.prefetch == PrefetchBlock::yes)
+        prefetchBlock (referenceSampleRange);
 }
 
 inline void Node::process (choc::buffer::FrameCount numSamples, juce::Range<int64_t> referenceSampleRange)
@@ -577,10 +626,13 @@ inline void Node::process (choc::buffer::FrameCount numSamples, juce::Range<int6
     jassert (numChannelsBeforeProcessing == audioBuffer.getNumChannels());
     jassert (numSamplesBeforeProcessing == audioBuffer.getNumFrames());
 
-    release();
+    if (usesRetainCount)
+    {
+        release();
 
-    for (auto& n : directInputNodes)
-        n->release();
+        for (auto& n : directInputNodes)
+            n->release();
+    }
 
     // If you've set a new view with setAudioOutput, they must be the same size!
     jassert (destAudioView.getSize() == audioView.getSize());
@@ -590,12 +642,28 @@ inline void Node::process (choc::buffer::FrameCount numSamples, juce::Range<int6
    #endif
 
     // N.B. This must be set last to release the Node back to the player
-    hasBeenProcessed.store (true, std::memory_order_release);
+    if (sharedBlockCounter != nullptr)
+        blockLastProcessed.store (sharedBlockCounter->load (std::memory_order_acquire), std::memory_order_release);
+    else
+        hasBeenProcessed.store (true, std::memory_order_release);
 }
 
 inline bool Node::hasProcessed() const
 {
+    if (sharedBlockCounter != nullptr)
+        return blockLastProcessed.load (std::memory_order_acquire) == sharedBlockCounter->load (std::memory_order_acquire);
+
     return hasBeenProcessed.load (std::memory_order_acquire);
+}
+
+inline void Node::setSharedBlockCounter (const std::atomic<uint64_t>* counter)
+{
+    sharedBlockCounter = counter;
+}
+
+inline bool Node::needsPreparingForEachBlock() const
+{
+    return usesRetainCount || nodeOptimisations.prefetch == PrefetchBlock::yes;
 }
 
 inline Node::AudioAndMidiBuffer Node::getProcessedOutput()
@@ -629,7 +697,7 @@ inline bool Node::canShareOutputBuffer() const
 
 inline void Node::setBufferViewToUse (Node* sourceNode, const choc::buffer::ChannelArrayView<float>& view)
 {
-    if (sourceNode)
+    if (sourceNode && usesRetainCount)
     {
         sourceNode->retain();
         nodeToRelease.store (sourceNode, std::memory_order_relaxed);
@@ -644,7 +712,7 @@ inline void Node::setAudioOutput (Node* sourceNode, const choc::buffer::ChannelA
     {
         assert (sourceNode == node);
     }
-    else if (sourceNode)
+    else if (sourceNode && usesRetainCount)
     {
         sourceNode->retain();
         nodeToRelease.store (sourceNode, std::memory_order_relaxed);

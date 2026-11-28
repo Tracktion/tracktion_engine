@@ -406,8 +406,10 @@ void MultiThreadedNodePlayer::resetProcessQueue()
     // And then move any Nodes that are ready to the correct queue
     for (auto& playbackNode : preparedNode->playbackNodes)
     {
+       #if JUCE_DEBUG
         jassert (playbackNode->hasBeenQueued);
         playbackNode->hasBeenQueued = false;
+       #endif
         playbackNode->numInputsToBeProcessed.store (playbackNode->numInputs, std::memory_order_release);
 
         // Check only ready nodes will be queued
@@ -437,8 +439,10 @@ void MultiThreadedNodePlayer::resetProcessQueue()
     {
         if (playbackNode->numInputsToBeProcessed.load (std::memory_order_acquire) == 0)
         {
+           #if JUCE_DEBUG
             jassert (! playbackNode->hasBeenQueued);
             playbackNode->hasBeenQueued = true;
+           #endif
             preparedNode->nodesReadyToBeProcessed.push (&playbackNode->node);
             ++numNodesJustQueued;
         }
@@ -466,8 +470,10 @@ Node* MultiThreadedNodePlayer::updateProcessQueueForNode (Node& node)
         if (outputPlaybackNode->numInputsToBeProcessed.fetch_sub (1, std::memory_order_acq_rel) == 1)
         {
             jassert (outputPlaybackNode->node.isReadyToProcess());
+           #if JUCE_DEBUG
             jassert (! outputPlaybackNode->hasBeenQueued);
             outputPlaybackNode->hasBeenQueued = true;
+           #endif
 
            #if RETURN_MID_NODES_OPTIMISATION
             // We can return one Node to be processed on this thread, otherwise we can

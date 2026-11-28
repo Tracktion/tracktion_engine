@@ -102,6 +102,8 @@ ARANode::ARANode (AudioClipBase& c, tracktion::graph::PlayHead& ph, bool isRende
       fileInfo (clip.getAudioFile().getInfo()),
       isOfflineRender (isRendering)
 {
+    setOptimisations ({ .prefetch = tracktion::graph::PrefetchBlock::no });
+
     // Only need to check the analysing state when we're rendering
     if (isOfflineRender)
     {

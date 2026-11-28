@@ -44,6 +44,11 @@ struct BenchmarkResult
     uint64_t totalCycles = 0, meanCycles = 0, minCycles = 0, maxCycles = 0;
     double varianceCycles = 0.0;
     juce::Time date { juce::Time::getCurrentTime() };
+
+    /** Timings of the individual blocks, if the benchmark processed a stream of them.
+        N.B. These are only printed, they aren't published.
+    */
+    std::optional<tracktion::graph::BlockTimingStatistics> blockTimings = std::nullopt;
 };
 
 /** Creates a BenchmarkResult from a set of Statistics. */
@@ -53,6 +58,130 @@ inline BenchmarkResult createBenchmarkResult (BenchmarkDescription description,
     return { description,
              stats.totalSeconds, stats.meanSeconds, stats.minimumSeconds, stats.maximumSeconds, stats.getVarianceSeconds(),
              stats.totalCycles, (uint64_t) stats.meanCycles, stats.minimumCycles, stats.maximumCycles, stats.getVarianceCycles() };
+}
+
+/** Creates a BenchmarkResult from a set of Statistics and the timings of the blocks processed. */
+inline BenchmarkResult createBenchmarkResult (BenchmarkDescription description,
+                                              const tracktion::graph::PerformanceMeasurement::Statistics& stats,
+                                              const tracktion::graph::BlockTimingStatistics& blockTimings)
+{
+    auto result = createBenchmarkResult (std::move (description), stats);
+    result.blockTimings = blockTimings;
+    return result;
+}
+
+/** Creates a table of the results which have block timings, grouped by benchmark name.
+
+    Timings from different runs, especially on shared CI machines, aren't
+    comparable so each row also has its mean and 99th percentile relative to the
+    first row in its group with the same block period. That is the number to use
+    to compare configurations.
+*/
+inline std::string createBlockTimingTable (const std::vector<BenchmarkResult>& results)
+{
+    using tracktion::graph::BlockTimingStatistics;
+    std::vector<std::string> names;
+
+    for (const auto& r : results)
+        if (r.blockTimings && std::find (names.begin(), names.end(), r.description.name) == names.end())
+            names.push_back (r.description.name);
+
+    if (names.empty())
+        return {};
+
+    auto pad = [] (const std::string& text, size_t width)
+    {
+        return text.size() < width ? std::string (width - text.size(), ' ') + text : text;
+    };
+
+    auto us = [&pad] (double seconds)                       { return pad (BlockTimingStatistics::toMicroseconds (seconds), 10); };
+    auto count = [&pad] (int64_t n)                         { return pad (std::to_string (n), 8); };
+    auto ratio = [&pad] (double value, double reference)
+    {
+        return pad (juce::String (reference > 0.0 ? value / reference : 0.0, 2).toStdString(), 8);
+    };
+
+    std::string s = "Block timings in microseconds. \"x mean\" and \"x p99\" are relative to the first row with the same period in each group.\n"
+                    "\"over\" is the number of blocks that took longer to process than the block period.\n";
+
+    for (const auto& name : names)
+    {
+        bool hasRealTimeRows = false;
+        std::vector<std::string> driverThreads;
+
+        for (const auto& r : results)
+            if (r.blockTimings && r.description.name == name)
+                hasRealTimeRows = hasRealTimeRows || r.blockTimings->isRealTime;
+
+        s += "\n" + name + "\n"
+                + pad ("period", 10) + pad ("blocks", 8) + pad ("min", 10) + pad ("mean", 10) + pad ("p50", 10) + pad ("p90", 10)
+                + pad ("p99", 10) + pad ("p99.9", 10) + pad ("max", 10) + pad ("x mean", 8) + pad ("x p99", 8) + pad ("over", 8);
+
+        if (hasRealTimeRows)
+            s += pad ("missed", 8) + pad ("late p50", 10) + pad ("late p99", 10) + pad ("late max", 10);
+
+        s += "  description\n";
+
+        for (const auto& r : results)
+        {
+            if (! r.blockTimings || r.description.name != name)
+                continue;
+
+            const auto& bt = *r.blockTimings;
+            const auto& processing = bt.processingTime;
+
+            // Find the first row with the same period to compare with
+            const BlockTimingStatistics* reference = nullptr;
+
+            for (const auto& other : results)
+            {
+                if (other.blockTimings && other.description.name == name
+                    && std::abs (other.blockTimings->blockPeriodSeconds - bt.blockPeriodSeconds) < 1.0e-9)
+                {
+                    reference = &*other.blockTimings;
+                    break;
+                }
+            }
+
+            s += us (bt.blockPeriodSeconds) + count (processing.getNumResults())
+                    + us (processing.getMinimumSeconds()) + us (processing.getMeanSeconds())
+                    + us (processing.getPercentileSeconds (50.0)) + us (processing.getPercentileSeconds (90.0))
+                    + us (processing.getPercentileSeconds (99.0)) + us (processing.getPercentileSeconds (99.9))
+                    + us (processing.getMaximumSeconds())
+                    + ratio (processing.getMeanSeconds(), reference->processingTime.getMeanSeconds())
+                    + ratio (processing.getPercentileSeconds (99.0), reference->processingTime.getPercentileSeconds (99.0))
+                    + count (bt.numBlocksOverPeriod);
+
+            if (bt.isRealTime)
+            {
+                s += count (bt.numMissedDeadlines)
+                        + us (bt.wakeUpLateness.getPercentileSeconds (50.0))
+                        + us (bt.wakeUpLateness.getPercentileSeconds (99.0))
+                        + us (bt.wakeUpLateness.getMaximumSeconds());
+
+                if (std::find (driverThreads.begin(), driverThreads.end(), bt.driverThreadDescription) == driverThreads.end())
+                    driverThreads.push_back (bt.driverThreadDescription);
+            }
+            else if (hasRealTimeRows)
+            {
+                s += std::string (38, ' ');
+            }
+
+            s += "  " + r.description.description + "\n";
+        }
+
+        if (hasRealTimeRows)
+        {
+            s += "\"missed\" is the number of blocks that finished after the next block was due, \"late\" is how long after its deadline the driver thread woke up.\n";
+
+            for (const auto& driverThread : driverThreads)
+                s += "Driver thread: " + driverThread + "\n";
+
+            s += "N.B. There is no audio device so on macOS the threads are only in an audio workgroup if the driver thread says so.\n";
+        }
+    }
+
+    return s;
 }
 
 //==============================================================================

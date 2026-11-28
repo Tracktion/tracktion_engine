@@ -52,15 +52,23 @@ private:
     struct PlaybackNode
     {
         PlaybackNode (Node& n)
-            : node (n), numInputs (node.getDirectInputNodes().size())
+            : node (n), numInputs (node.getDirectInputNodes().size()),
+              numInputsToBeProcessed (numInputs)
         {}
 
         Node& node;
         const size_t numInputs;
         std::vector<Node*> outputs;
-        std::atomic<size_t> numInputsToBeProcessed { 0 };
-        std::atomic<bool> hasBeenQueued { true };
+
+        /** This counts down as each input is processed. When it reaches 0 the
+            Node is ready to be processed and the thread that got it there
+            resets it to numInputs, ready for the next block. That avoids the
+            audio thread having to reset every Node at the start of each block.
+        */
+        std::atomic<size_t> numInputsToBeProcessed;
        #if JUCE_DEBUG
+        // These are only used to check the queueing logic
+        std::atomic<bool> hasBeenQueued { true };
         std::atomic<bool> hasBeenDequeued { false };
        #endif
     };
@@ -69,6 +77,8 @@ private:
     {
         std::unique_ptr<NodeGraph> graph;
         std::vector<std::unique_ptr<PlaybackNode>> playbackNodes;
+        std::vector<Node*> leafNodes; /**< The Nodes with no inputs, which can be processed straight away. */
+        std::vector<Node*> nodesToPrepare; /**< The Nodes which need prepareForNextBlock calling each block. */
         std::unique_ptr<LockFreeFifo<Node*>> nodesReadyToBeProcessed;
         std::unique_ptr<AudioBufferPool> audioBufferPool;
     };
@@ -110,6 +120,12 @@ public:
             Subclasses should use this to try and get a thread to call process as soon as possible.
         */
         virtual void signalAll() = 0;
+
+        /** Called by a thread that has queued Nodes for others to process part
+            way through a block. Subclasses can use this to wake threads that
+            went to sleep when there were no Nodes queued.
+        */
+        virtual void nodesQueuedDuringBlock (int /*numNodes*/) {}
 
         /** Called by the player when the audio thread has no free Nodes to process.
             Subclasses should can use this to either spin, pause or wait until a Node does
@@ -169,7 +185,13 @@ public:
             // current PreparedNode from pool threads so that
             // waitForThreadsToQuiesce can tell when a retired PreparedNode can
             // no longer be being read and is safe to destroy. The default
-            // sequentially-consistent ordering is required for that guarantee
+            // sequentially-consistent ordering is required for that guarantee.
+            // If nothing is queued the PreparedNode won't be read so return
+            // first, which stops threads that are waiting for Nodes from
+            // continually writing to a counter that all the threads share
+            if (player.numNodesQueued.load (std::memory_order_acquire) == 0)
+                return false;
+
             numActiveProcessCalls.fetch_add (1);
             bool processedAnyNodes = false;
 
