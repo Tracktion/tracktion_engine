@@ -153,6 +153,107 @@ namespace tracktion::inline engine {
             CHECK (! edit->isRendering());
             CHECK (tc.getCurrentPlaybackContext() != nullptr);
         }
+
+        TEST_CASE ("Tempo changes keep the playhead on the same beat")
+        {
+            constexpr double sampleRate = 44100.0;
+            constexpr int blockSize = 512;
+            const auto blockDuration = TimeDuration::fromSamples (blockSize, sampleRate);
+
+            auto& engine = *Engine::getEngines()[0];
+            test_utilities::EnginePlayer player (engine, { .sampleRate = sampleRate, .blockSize = blockSize, .inputChannels = 0, .outputChannels = 1,
+                                                           .inputNames = {}, .outputNames = {} });
+
+            auto edit = engine::test_utilities::createTestEdit (engine, 1, Edit::EditRole::forEditing);
+            auto& tc = edit->getTransport();
+            auto& ts = edit->tempoSequence;
+
+            // A curve of 1 makes each tempo a step, so there's one section per tempo change
+            ts.getTempo (0)->set (0_bp, 120.0, 1.0f, false);
+
+            // Plays from a position for a few blocks, then returns the beat the next block will start at
+            auto playFrom = [&] (TimePosition start)
+            {
+                // Tempo edits only reach the internal sequence lazily, so apply them before playing
+                ts.updateTempoData();
+                tc.setPosition (start);
+                tc.play (false);
+                player.process (blockSize * 4);
+
+                auto epc = tc.getCurrentPlaybackContext();
+                REQUIRE (epc != nullptr);
+                REQUIRE (epc->getSyncPoint());
+                return ts.toBeats (epc->getSyncPoint()->time);
+            };
+
+            // Processes one block after a tempo change and checks it carried on from expectedStartBeat.
+            // The playhead's beat is checked against the new tempo map, and the beat the
+            // graph was given (the sync point) is checked separately
+            auto checkNextBlockContinuesFrom = [&] (BeatPosition expectedStartBeat)
+            {
+                player.process (blockSize);
+
+                const auto syncPoint = tc.getCurrentPlaybackContext()->getSyncPoint();
+                REQUIRE (syncPoint);
+
+                const auto expectedEndBeat = ts.toBeats (ts.toTime (expectedStartBeat) + blockDuration);
+                CHECK (ts.toBeats (syncPoint->time).inBeats() == doctest::Approx (expectedEndBeat.inBeats()).epsilon (0.0001));
+                CHECK (syncPoint->beat.inBeats() == doctest::Approx (expectedEndBeat.inBeats()).epsilon (0.0001));
+            };
+
+            SUBCASE ("Changing the bpm whilst playing")
+            {
+                const auto beatBeforeChange = playFrom (2_tp);
+
+                ts.getTempo (0)->setBpm (60.0);
+                checkNextBlockContinuesFrom (beatBeforeChange);
+            }
+
+            SUBCASE ("Slowing down near the end of a loop")
+            {
+                // Loop beats 0-8. After slowing to 100bpm the playhead's beat is later
+                // than the playhead's old loop end time, but still inside the remapped loop
+                tc.looping = true;
+                tc.setLoopRange ({ 0_tp, 4_tp });
+
+                const auto beatBeforeChange = playFrom (3.5_tp);
+
+                ts.getTempo (0)->setBpm (100.0);
+                checkNextBlockContinuesFrom (beatBeforeChange);
+            }
+
+            SUBCASE ("Moving a tempo change from before the playhead to after it")
+            {
+                // 120bpm then 240bpm from beat 8 (4s). Playing from beat 10 (4.5s)
+                auto tempoChange = ts.insertTempo (8_bp, 240.0, 1.0f);
+                REQUIRE (tempoChange != nullptr);
+
+                const auto beatBeforeChange = playFrom (4.5_tp);
+                REQUIRE (beatBeforeChange > 10_bp);
+
+                // Moving the change to beat 12 puts the playhead back in the 120bpm section
+                tempoChange->set (12_bp, 240.0, 1.0f, true);
+                checkNextBlockContinuesFrom (beatBeforeChange);
+            }
+
+            SUBCASE ("Recreating the playback context keeps the position")
+            {
+                tc.ensureContextAllocated();
+                tc.setPosition (10_tp);
+                player.process (blockSize * 4);
+                REQUIRE (tc.getCurrentPlaybackContext()->getPosition().inSeconds() == doctest::Approx (10.0));
+
+                tc.freePlaybackContext();
+                tc.ensureContextAllocated();
+                player.process (blockSize);
+
+                auto epc = tc.getCurrentPlaybackContext();
+                REQUIRE (epc != nullptr);
+                CHECK (epc->getPosition().inSeconds() == doctest::Approx (10.0));
+            }
+
+            tc.stop (false, true);
+        }
     }
 #endif
 

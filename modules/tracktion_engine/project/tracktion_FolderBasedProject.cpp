@@ -69,10 +69,20 @@ bool FolderBasedProject::savePropertiesToFile()
 //==============================================================================
 void FolderBasedProject::ensureScanned() const
 {
+    {
+        const juce::ScopedLock sl (itemLock);
+
+        if (itemsScanned)
+            return;
+    }
+
+    // The ProjectManager calls in here with its lock held, so to keep the locks
+    // in the same order it's asked for these before taking the item lock
+    const auto otherProjects = owner.engine.getProjectManager().getAllProjectFiles();
     const juce::ScopedLock sl (itemLock);
 
     if (! itemsScanned)
-        scanFolder();
+        scanFolder (otherProjects);
 }
 
 // All video extensions Waveform can import. Kept in sync with
@@ -80,7 +90,7 @@ void FolderBasedProject::ensureScanned() const
 // imported videos are transcoded to, so video items are re-indexed on rescan.
 static const char* const videoFileExtensions = ".mov;.avi;.webm;.wmv;.mp4;.m4v;.mpg;.mp2;.mpeg;.mpe;.mpv;.mkv";
 
-void FolderBasedProject::scanFolder() const
+void FolderBasedProject::scanFolder (const juce::Array<juce::File>& otherProjects) const
 {
     // Keep items for files outside the project folder (e.g. renders to a custom
     // directory) — scanning can't rediscover them, so clearing them here would
@@ -96,13 +106,38 @@ void FolderBasedProject::scanFolder() const
     for (auto& ext : juce::StringArray::fromTokens (videoFileExtensions, ";", ""))
         wildcards += ";*" + ext;
 
+    // A subfolder that's in the project list, or has its own info file, is a project in its own
+    // right, so its files are left to that project rather than being listed here as well.
+    // N.B. The info file only exists if the project has properties, so can't be relied on alone
+    const auto infoFileName = getInfoFile().getFileName();
+    wildcards += ";" + infoFileName;
+
     auto files = folder.findChildFiles (juce::File::findFiles, true, wildcards);
+
+    juce::Array<juce::File> nestedProjectFolders;
+
+    for (auto& f : otherProjects)
+        if (f.isAChildOf (folder) && f.isDirectory())
+            nestedProjectFolders.add (f);
+
+    for (auto& f : files)
+        if (f.getFileName() == infoFileName && f.getParentDirectory() != folder)
+            nestedProjectFolders.add (f.getParentDirectory());
+
+    auto isInNestedProject = [&nestedProjectFolders] (const juce::File& f)
+    {
+        for (auto& nestedFolder : nestedProjectFolders)
+            if (f.isAChildOf (nestedFolder))
+                return true;
+
+        return false;
+    };
 
     for (auto& f : files)
     {
         auto type = inferType (f);
 
-        if (type.isEmpty())
+        if (type.isEmpty() || isInNestedProject (f))
             continue;
 
         auto category = inferCategory (f, folder);
@@ -682,14 +717,15 @@ void FolderBasedProject::sourceFileMoved (const juce::File& oldFile, const juce:
 
 void FolderBasedProject::reload (ReloadMode mode)
 {
-    const juce::ScopedLock sl (itemLock);
-
-    // In-folder items are cleared and rebuilt by scanFolder(), which also
-    // preserves items for files outside the project folder
-    itemsScanned = false;
+    {
+        // In-folder items are cleared and rebuilt by scanFolder(), which also
+        // preserves items for files outside the project folder
+        const juce::ScopedLock sl (itemLock);
+        itemsScanned = false;
+    }
 
     if (mode == ReloadMode::immediate)
-        scanFolder();
+        ensureScanned();
 }
 
 } // namespace tracktion::inline engine

@@ -69,8 +69,16 @@ public:
 
     void prepareToPlay (const PlaybackInitialisationInfo& info) override
     {
-        latencyProcessor->prepareToPlay (info.sampleRate, info.blockSize, getNodeProperties().numberOfChannels);
-        replaceLatencyProcessorIfPossible (info.nodeGraphToReplace);
+        const auto numChannels = getNodeProperties().numberOfChannels;
+        latencyProcessor->prepareToPlay (info.sampleRate, info.blockSize, numChannels);
+        replaceLatencyProcessorIfPossible (info, numChannels);
+
+        if (previousProcessor)
+        {
+            numFadeFrames = std::max (1, (int) timeToSample (0.01, info.sampleRate));
+            previousOutput.resize ({ (choc::buffer::ChannelCount) numChannels,
+                                     (choc::buffer::FrameCount) info.blockSize });
+        }
     }
 
     void process (ProcessContext& pc) override
@@ -86,6 +94,9 @@ public:
         pc.buffers.midi.clear();
         latencyProcessor->readAudioOverwriting (pc.buffers.audio);
         latencyProcessor->readMIDI (pc.buffers.midi, numSamples);
+
+        if (previousProcessor && numFramesFaded < latencyProcessor->getLatencyNumSamples() + numFadeFrames)
+            crossfadeFromPreviousProcessor (inputBuffer, pc.buffers.audio);
     }
 
 private:
@@ -94,9 +105,14 @@ private:
     Node* input = nullptr;
     std::shared_ptr<LatencyProcessor> latencyProcessor { std::make_shared<LatencyProcessor>() };
 
-    void replaceLatencyProcessorIfPossible (NodeGraph* nodeGraphToReplace)
+    // The delay of the LatencyNode this replaced, if only its latency was different
+    std::shared_ptr<LatencyProcessor> previousProcessor;
+    choc::buffer::ChannelArrayBuffer<float> previousOutput;
+    int numFadeFrames = 0, numFramesFaded = 0;
+
+    void replaceLatencyProcessorIfPossible (const PlaybackInitialisationInfo& info, int numChannels)
     {
-        if (nodeGraphToReplace == nullptr)
+        if (info.nodeGraphToReplace == nullptr)
             return;
 
         const auto nodeIDToLookFor = getNodeProperties().nodeID;
@@ -104,9 +120,43 @@ private:
         if (nodeIDToLookFor == 0)
             return;
 
-        if (auto oldNode = findNodeWithID<LatencyNode> (*nodeGraphToReplace, nodeIDToLookFor))
-            if (latencyProcessor->hasSameConfigurationAs (*oldNode->latencyProcessor))
-                latencyProcessor = oldNode->latencyProcessor;
+        if (auto oldNode = findNodeWithID<LatencyNode> (*info.nodeGraphToReplace, nodeIDToLookFor))
+        {
+            auto& old = oldNode->latencyProcessor;
+
+            if (latencyProcessor->hasSameConfigurationAs (*old))
+                latencyProcessor = old;
+            else if (old->hasConfiguration (old->getLatencyNumSamples(), info.sampleRate, numChannels))
+                previousProcessor = old;
+        }
+    }
+
+    /** Carries on the delay this replaced alongside the new one for a few ms, fading it out, and
+        fades the new one in from when its audio arrives, so the change in delay doesn't click.
+    */
+    void crossfadeFromPreviousProcessor (choc::buffer::ChannelArrayView<float> inputAudio,
+                                         choc::buffer::ChannelArrayView<float> output)
+    {
+        const auto numFrames = output.getNumFrames();
+        const auto newLatency = latencyProcessor->getLatencyNumSamples();
+        const bool previousIsAudible = numFramesFaded < numFadeFrames && numFrames <= previousOutput.getNumFrames();
+        auto previous = previousOutput.getStart (std::min (numFrames, previousOutput.getNumFrames()));
+
+        if (previousIsAudible)
+        {
+            previousProcessor->writeAudio (inputAudio);
+            previousProcessor->readAudioOverwriting (previous);
+        }
+
+        for (choc::buffer::FrameCount frame = 0; frame < numFrames; ++frame, ++numFramesFaded)
+        {
+            const auto fadeIn  = std::clamp ((float) (numFramesFaded - newLatency) / (float) numFadeFrames, 0.0f, 1.0f);
+            const auto fadeOut = std::clamp (1.0f - (float) numFramesFaded / (float) numFadeFrames, 0.0f, 1.0f);
+
+            for (choc::buffer::ChannelCount channel = 0; channel < output.getNumChannels(); ++channel)
+                output.getSample (channel, frame) = output.getSample (channel, frame) * fadeIn
+                                                     + (previousIsAudible ? previous.getSample (channel, frame) * fadeOut : 0.0f);
+        }
     }
 };
 

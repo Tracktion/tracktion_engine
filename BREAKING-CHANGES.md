@@ -3,6 +3,63 @@
 ___
 
 ### Change
+Arrangement MIDI clips that play a pre-looped sequence (`MidiClip::canUseProxy()`, the default) and arrangement step clips now play it in beats rather than seconds.
+
+#### Possible Issues
+Their `MidiNode` is now built with `MidiList::TimeBase::beats` and the clip's range in beats, so code walking the playback graph that relied on these being in seconds will see beats. A clip with absolute sync, which doesn't move with a tempo change, plays on its old beats rather than its old times until the graph's rebuilt.
+A step clip's groove is now applied on the Edit's beats, as a MIDI clip's is, rather than from the clip's start, so a clip starting off the groove's grid swings differently.
+
+#### Rationale
+A tempo change is heard straight away, before the graph's rebuilt. Playing in seconds left the notes at their old times until then, so playback skipped or struck notes twice whilst a tempo was being changed (see docs/Tempo_Changes_During_Playback.md).
+
+___
+
+### Change
+`TracktionNodePlayer` now splits a block at the tempo changes in it, keeping each section to at least 64 samples.
+
+#### Possible Issues
+Nodes and plugins get more, shorter, process calls where the tempo changes, most of all with curved tempos, which change every quarter of a beat or so.
+
+#### Rationale
+It used to look for the next change from the end of the block, so it rarely split one, and never within 128 samples of its start. A block with more than one tempo has its events placed as if it had their average, which put them up to tens of samples out.
+
+___
+
+### Change
+`PlayHead::setLoopRange` with `updatePosition` only counts as a jump (a user interaction) if the playhead's position isn't in the new loop.
+
+#### Possible Issues
+Changing the loop range whilst playing used to be a jump almost every time, so nodes stopped their notes and crossfaded their audio. They now carry on unless the playhead has to move.
+
+#### Workaround
+To force a jump, call `PlayHead::setPosition` after changing the range.
+
+#### Rationale
+The transport re-sends the loop to the playhead periodically and moves it with its beats when the tempo changes. Each of those was a jump, which interrupted playback whilst the tempo was being changed.
+
+___
+
+### Change
+`TempoSequence::getBeatsPerSecondAt` is deprecated and replaced by `getQuarterNotesPerSecondAt` (the bpm / 60) and `getTimeSigBeatsPerSecondAt` (the beats `toBeats()` uses). The engine's own seconds to beats conversions on clips now use the beats `toBeats()` uses, or `toBeats()`/`toTime()` directly.
+
+#### Possible Issues
+With `EngineBehaviour::lengthOfOneBeatDependsOnTimeSignature()` true (the default), a beat is the time signature's beat, but `getBeatsPerSecondAt`'s default returned quarter notes. In any time signature whose denominator isn't 4 these now give different results from before:
+- MIDI and step clip `setLoopRange`/`getLoopStart`/`getLoopLength`, and `setNumberOfLoops` on MIDI, step and audio clips
+- audio clip loop beats from seconds (`setLoopRange`, `getLoopRange`, `getLoopStartBeats`/`getLoopLengthBeats` for time-based loops, toggling auto tempo)
+- the offset of a looped clip's second half after a split, and of a pasted clip
+- `TempoSequence::insertSpaceIntoSequence` and `PitchSequence::insertSpaceIntoSequence`
+
+In those signatures the old results disagreed with note positions and playback, e.g. `setLoopRange (0.5s..2s)` on a MIDI clip in 8/8 started the loop at half the intended beat. Separately, MIDI and step clip loop ranges in seconds, and clip offsets copied to the clipboard or wrapped on a split, are now converted with `toBeats()`/`toTime()` instead of the tempo at the clip start, so they also change in 4/4 when a tempo or time signature change falls inside them. Loop ranges already stored in beats are not changed, so a saved Edit plays as before; only the seconds reported for, or set from, them differ.
+
+#### Workaround
+Replace `getBeatsPerSecondAt (t)` with `getQuarterNotesPerSecondAt (t)` to compare tempos (e.g. with an audio file's tempo) and with `getTimeSigBeatsPerSecondAt (t)`, or better `toBeats()` on both ends of a span, to convert seconds to a `BeatPosition` or `BeatDuration`. `getBeatsPerSecondAt (t, true)` is `getTimeSigBeatsPerSecondAt (t)`.
+
+#### Rationale
+The two meanings of "beat" made it easy to convert with the wrong one, and every caller in the engine that converted a clip's seconds to beats used the quarter-note default. `TrackItem::getOffsetInBeats` doing so made dragging a MIDI note's end clamp it to 1 tick in x/8 time signatures (Tracktion/waveform_beta#1316). Separate names make the unit explicit, and the deprecation warning points out callers that still need to choose.
+
+___
+
+### Change
 A clip whose playback file can't be read, and that isn't going to generate one, no longer gets a node in the playback graph.
 
 #### Possible Issues
